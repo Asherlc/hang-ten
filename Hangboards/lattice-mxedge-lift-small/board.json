@@ -46,10 +46,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.394,
-            "y": 0.163,
-            "width": 0.316,
-            "height": 0.089
+          "x": 0.365,
+          "y": 0.385,
+          "width": 0.39,
+          "height": 0.11
           },
           "shape": {
             "type": "path",
@@ -161,10 +161,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.313,
-            "y": 0.321,
-            "width": 0.397,
-            "height": 0.044
+          "x": 0.29,
+          "y": 0.585,
+          "width": 0.45,
+          "height": 0.06
           },
           "shape": {
             "type": "path",
@@ -391,10 +391,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.766,
-            "y": 0.314,
-            "width": 0.071,
-            "height": 0.071
+          "x": 0.55,
+          "y": 0.28,
+          "width": 0.10,
+          "height": 0.10
           },
           "shape": {
             "type": "path",

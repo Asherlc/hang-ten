@@ -658,22 +658,26 @@ takeover from the following explicit prompts and published inputs:
 
 Both accepted canonical assets are 1536 x 1024, 8-bit RGB PNGs. They preserve
 the source-published pale beech, pill silhouette, three front recesses, two
-end holes, engraved depth labels/logo, and red-white cord. Both are strictly
+empty end passage holes, and engraved depth labels/logo. By explicit user
+choice, every raster now follows a board-only convention: the red-white
+suspension cord is omitted while the real through-holes remain, so inverted
+positions do not show a gravity-defying dangling accessory. Both are strictly
 head-on to their own working plane: their long axes and long edges are
 horizontal, their ends and holes are bilaterally matched, and neither exposes
 perspective thickness or foreshortening. They share the same off-white studio
 field, pale-beech grain, soft recess lighting, edge softness, and smoothing.
-No raster mutation was made during the geometry takeover. The two additional
-assets are exact, non-interpolated 180-degree pixel rotations of their
-canonical sources; a decoded-pixel comparison verified every RGBA sample at
-`(x, y)` against `(width - 1 - x, height - 1 - y)`.
+The two base views were source-constrained cord-removal edits of the accepted
+front and reverse renders. Original-resolution review found continuous natural
+wood/background and no patch rectangles, seams, altered holds, or altered
+markings. The two additional assets are exact 180-degree pixel rotations of
+those cord-free canonical sources.
 
 | Presentation | Asset | Canonical hold inventory | Old SHA-256 | New SHA-256 | Dimensions | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `primary` — front, 14/10 mm upright (default) | `assets/primary.png` | `edge-14` (2 pieces), `center-edge-18` (1), `edge-22` (2), `center-edge-10` (1), `top-jug` (1) | `7283a9e58ca9e1176fb5517061fb9a78e611e7af9fcd6943a021edcb70c56b7c` | `1a031e83bf62533046d1571ad9c5c96844b354bfeeffb76611053e7a8036e161` | 1536 x 1024 | accepted head-on canonical front |
-| `front-inverted` — front, 22/18 mm upright | `assets/front-inverted.png` | alias of all 7 `primary` pieces | absent | `873a7a68577cffc5f0a8e10cec5864b338197c842464490549873f2edb1e45a5` | 1536 x 1024 | exact 180-degree primary rotation; `sourcePresentationID: primary`, `isInverted: true` |
-| `reverse` — back, sloper upright | `assets/reverse.png` | `back-jug-sloper` (1 piece) | `74804c611a453220579c5728ac7964d3ab6956ebfbd197871b3bf881a0612429` | `f63c32694b7bd2150fbdc8141e60bad936910939b8051d3d5b537a65e63fa5da` | 1536 x 1024 | accepted head-on canonical back |
-| `reverse-inverted` — back, jug upright | `assets/reverse-inverted.png` | alias of the 1 `reverse` piece | absent | `ca157604706f06df353a64d7d90825a1532a222d650845ea887d3df15a3775ba` | 1536 x 1024 | exact 180-degree reverse rotation; `sourcePresentationID: reverse`, `isInverted: true` |
+| `primary` — front, 14/10 mm upright (default) | `assets/primary.png` | `edge-14` (2 pieces), `center-edge-18` (1), `edge-22` (2), `center-edge-10` (1), `top-jug` (1) | `7283a9e58ca9e1176fb5517061fb9a78e611e7af9fcd6943a021edcb70c56b7c` | `aaca10de93a6899a6ba3520ea722524d97d08aae45488beb280191a7f14092fc` | 1536 x 1024 | accepted board-only head-on canonical front |
+| `front-inverted` — front, 22/18 mm upright | `assets/front-inverted.png` | alias of all 7 `primary` pieces | absent | `7b04a27032e2f4f140b2b38ebe7fb936d6cc622620c07112c761db2cd43cc057` | 1536 x 1024 | exact 180-degree primary rotation; `sourcePresentationID: primary`, `isInverted: true` |
+| `reverse` — back, sloper upright | `assets/reverse.png` | `back-jug-sloper` (1 piece) | `74804c611a453220579c5728ac7964d3ab6956ebfbd197871b3bf881a0612429` | `a42c5a9c9252d7cadc336b2baa1ef1da75ee434342b4bf6b9a094b6f36b292ee` | 1536 x 1024 | accepted board-only head-on canonical back |
+| `reverse-inverted` — back, jug upright | `assets/reverse-inverted.png` | alias of the 1 `reverse` piece | absent | `40813b47d90a4bc2e6782eb7c82e40d302cdafa730b134e866724cbc6a05f341` | 1536 x 1024 | exact 180-degree reverse rotation; `sourcePresentationID: reverse`, `isInverted: true` |
 
 The checked-in orientation-alias schema and Tension Flash package precedent
 allow each inverted presentation to reuse one canonical surface and its stable
@@ -936,17 +940,18 @@ product metadata found an unresolved material conflict. The current US
 specifies **beech** and 5 x 5.5 x 1.8 inches (128 x 140 x 48 mm), while the live
 [Canadian storefront](https://frictitiousclimbing.com/en-ca/products/the-port-a-board-portable-and-mountable-portable-hangboard)
 specifies **durable poplar wood** and 5.5 x 5 x 1.6 inches. The canonical
-rasters are exact current US official shots, and this package therefore follows
-the US beech listing and assets for the represented variant. The US page's
+rasters are source-constrained board-only derivatives of current US official
+shots, and this package therefore follows the US beech listing and assets for
+the represented variant. The US page's
 published [front](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840),
 [back](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840),
 and [side](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840)
-photos match the three byte-preserved canonical package assets: the same eight
-30/open, 30, 25, 20, 15, 12, 10, and 8 mm contacts, branding, black cord,
-grommets, grain, and framing. The current canonical hashes remain
-`13bef16f346030dbe383d320beedc4034ae2da6c82b122ed8b349590132c0a17`,
-`5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092`,
-and `ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866`.
+photos establish the same eight 30/open, 30, 25, 20, 15, 12, 10, and 8 mm
+contacts, branding, black-rimmed passage holes, grain, and framing. By explicit
+user choice, the rated cord is omitted from every raster while the two real
+eyelets remain as empty through-holes. This board-only convention keeps the
+front, back, inverted, and pinch positions readable without a gravity-defying
+dangling accessory.
 
 The material evidence is revision- and region-sensitive. The live Canadian
 poplar specification is current regional metadata and is not characterized as
@@ -965,18 +970,21 @@ feed](https://loox.io/s/E1bdwTzdzp) contains both seven-contact owner reports
 and current product photos, further supporting the need not to merge revision
 claims.
 
-The two generated inverted images were removed. `front-inverted.png` is now a
-decoded-pixel-exact 180-degree rotation of `primary.png`, and
-`back-inverted.png` is the same exact rotation of `back.png`; an RGBA pixel
-comparison checked every output coordinate against the opposite source
-coordinate. Their hashes are
-`52010a47bd55f82ad00acfbc8511b0a69e7d983b7dddb31ce64652181fb76a58`
-and `bee1249b2f07b798c4d31b5edd69e9f01289345ad0f519ff4d3df22510614975`,
-both 1440 x 1440. There was no generation, interpolation, resize, crop,
-padding, warp, smoothing, masking, segmentation, registration, redraw, or new
-product pixel. All five retained assets therefore share the manufacturer's
-published photographic material, smoothing, grain, lighting, and head-on
-framing.
+The front, back, and pinch-side bases were edited from the official images with
+a narrow cord-removal instruction, then normalized to the existing 1400 x
+1400 package canvas. Original-resolution review found continuous beech grain,
+clean background, empty eyelets, and no patch rectangles, seams, changed
+labels, or changed hold topology. The inverted assets are exact 180-degree
+rotations of the cord-free front and back bases. Current hashes are `primary`
+`6caacd3a5fc173aab8851de421ef32cb9c532756cf27ffcf47f396b89ee1b52e`,
+`front-inverted`
+`65fc9c6a376c845c66c43e7103d89950e1b790cbf3c0c54287ecb5c2266281b8`,
+`back` `c742848ff831ded24249cc3a26c0ecab2de2a4f33155087fa54ad9a4b2c7927d`,
+`back-inverted`
+`011abca96fcf2522cd4d22a9ca2b3e9779273fd92faf688aa145806677947ebe`,
+and `side` `e7e23884e3815decb74b8658bebd9c94ff0f89ae623f6849cb1196e0118de6a6`.
+No crop, perspective warp, detection, segmentation, or image-derived geometry
+was used. All five assets share one head-on studio and smoothing treatment.
 
 `front-inverted` and `back-inverted` are now schema aliases of `primary` and
 `back` with `isInverted: true`. The physical `edge-20` and `edge-15` records
@@ -1007,16 +1015,16 @@ semantics; the live product page and official photos remain the truth for the
 current board pixels and hold inventory. Option 4 changes suspension routing
 and the resulting board pitch, not the current board's machined front face.
 Once the camera is kept exactly head-on to that 20 mm working surface, the
-orthographic face is pixel-identical to Front Inverted: the routing/pitch
-difference lies outside the square canonical crop or in depth and cannot be
-made visible without violating the head-on requirement. The new presentation
-therefore reuses the exact `assets/front-inverted.png` bytes
-(`52010a47bd55f82ad00acfbc8511b0a69e7d983b7dddb31ce64652181fb76a58`,
-1440 x 1440 RGB), aliases canonical `primary` with `isInverted: true`, and
+orthographic board-only face is pixel-identical to Front Inverted: routing and
+pitch are intentionally omitted with the accessory and cannot be shown without
+abandoning the head-on board-only convention. The presentation therefore
+reuses the exact `assets/front-inverted.png` bytes
+(`65fc9c6a376c845c66c43e7103d89950e1b790cbf3c0c54287ecb5c2266281b8`,
+1400 x 1400 RGB), aliases canonical `primary` with `isInverted: true`, and
 introduces no raster, hold, or geometry duplication. Workbench resolved its
 source-owned regions and included the transformed `edge-20-piece-0` hit target.
 
-Final-inventory validation and package status passed with 61 packages and no
+Final-inventory validation and package status passed with 62 packages and no
 drafts. The focused approved-package test passed and explicitly checked the
 option-4 alias, exact reused asset path, inversion metadata, and 20 mm region.
 
@@ -1028,10 +1036,11 @@ identifies both as beech lifting edges with the same 20 x 11 x 5 cm form and
 cord system, but the contact inventories remain size-specific: MXLarge has
 MX22, MX16, MX12, and a 28 mm mono; MXSmall has MX18, MX14, MX8, and a 25 mm
 mono. The original 1000 x 1000 images are the current manufacturer gallery's
-straight-on front photographs. Their pale beech grain, routed recesses,
-blue/yellow cord, knots, authentic `MXL` / `MXS` marks, and size labels are
-therefore preserved rather than removed under the earlier internal unbranded
-illustration rule.
+straight-on front photographs. Their pale beech body, routed recesses,
+authentic `MXL` / `MXS` marks, and size labels remain the product truth. By
+explicit user choice, every raster follows the board-only convention: the
+external blue/yellow cord and knot are omitted while all board contacts and
+working rotations remain.
 
 Freshly opened evidence:
 
@@ -1065,44 +1074,45 @@ not invented.
 
 | Package | Presentation | Scoped holds | Asset SHA-256 / dimensions |
 | --- | --- | --- | --- |
-| `lattice.mxedge-lift-large` | `primary` — Small Edge Position, 0 degrees | `edge-12` | `091078ab355d81fbc109fe04065b39b2ccc5f4eb79093c5de215347d2789b8a3` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-large` | `large-medium-edge-position` — 180 degrees | `edge-22`, `edge-16` | `f12612ec74f48e5348cb162b32c7d467ad2f8b934716c395ee1a5094a459989b` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-large` | `mono-position` — 90 degrees counterclockwise | `mono-28` | `a2ae3e93e76681cf8f2f35ac656ba013bebb5960a7832f9ab8b761a101c8438c` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-small` | `primary` — Small Edge Position, 0 degrees | `edge-8` | `6a0d7b0167a53d54b2849773000512d12c1343107fe01d16af4d81a7559cd822` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-small` | `large-medium-edge-position` — 180 degrees | `edge-18`, `edge-14` | `4ba1572348f3eeba6dc8bcea1a511034a41013d2daab6aa178d06dd7a753affa` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-small` | `mono-position` — 90 degrees counterclockwise | `mono-25` | `4402440fdca676232a3dcbef3c5fdaf1c6713fe9d95bd45a01f41173503f3653` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `primary` — Small Edge Position, 0 degrees | `edge-12` | `e3e4fe908dc4d28d0dc8298c5a33bcf44680c45d0ff8b04002fd84db6894b59c` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `large-medium-edge-position` — 180 degrees | `edge-22`, `edge-16` | `878b6636850c632d41a5c0d67cd669da33f01c4a7c89357fa2cd1cab7fcf683f` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `mono-position` — 90 degrees counterclockwise | `mono-28` | `de6818e6d28b50b67ce56f3709ab96b8ca43cbf2a26ecbea4ddaebaa999650d0` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-small` | `primary` — Small Edge Position, 0 degrees | `edge-8` | `e18410cf14375e9dcfb2a2aec22aa01c29f98a1d8f41fd5f94dcd6a39bbf1f16` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-small` | `large-medium-edge-position` — 180 degrees | `edge-18`, `edge-14` | `2ab477d5152b7b4bc7e88e14e0f6896cfedf308a30345f8d69f56aa85183c18e` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-small` | `mono-position` — 90 degrees counterclockwise | `mono-25` | `c962b21d82b0b4cb19d112822f75fb1a3cfa3a2d6436378e6ab0f2a445831c62` / 1000 x 1000 RGB |
 
-The four new PNGs are exact decoded-pixel rotations of the untouched official
-assets: automated verification returned `180=true` and `ccw=true` for both
-sizes. There was no generation, crop, padding, rescaling, smoothing, mask,
-segmentation, registration, perspective warp, redraw, or invented product
-detail. As a result every position remains independently head-on and the whole
-family has exactly the same published photographic lighting, wood texture,
-edge softness, off-white background, and smoothing treatment.
+Each size's source-constrained base edit removes the external cord/knot, keeps
+the published board topology and markings, and is normalized back to the 1000
+x 1000 package canvas. The 180-degree and 90-degree assets are exact pixel
+rotations of that cord-free base. Original-resolution review found no seams,
+halos, rectangular patches, altered contacts, or altered labels. No crop,
+detection, segmentation, registration, perspective warp, or image-derived
+geometry was used. Every position remains independently head-on, and both
+sizes share one beech, off-white, lighting, edge-softness, and smoothing
+treatment.
 
 The existing hold paths were deliberately reassigned without duplicating hold
-identity or changing physical metadata. For both sizes, the Large frame became
-`(0.394, 0.163, 0.316, 0.089)` and the Medium frame became
-`(0.313, 0.321, 0.397, 0.044)` under the exact 180-degree transform
-`x' = 1 - x - width`, `y' = 1 - y - height`. The circular mono frame became
-`(0.766, 0.314, 0.071, 0.071)` under the 90-degree counterclockwise transform
-`x' = y`, `y' = 1 - x - width`. The Small frame remains unchanged on the
+identity or changing physical metadata. Direct Workbench review placed the
+MXLarge frames at `edge-22 (0.35, 0.329, 0.405, 0.11)`, `edge-16 (0.29,
+0.552, 0.46, 0.066)`, and `mono-28 (0.58, 0.252, 0.09, 0.09)`. MXSmall uses
+`edge-18 (0.365, 0.385, 0.39, 0.11)`, `edge-14 (0.29, 0.585, 0.45, 0.06)`,
+and `mono-25 (0.55, 0.28, 0.10, 0.10)`. The Small frame remains unchanged on the
 default source image. The schema's inversion alias cannot safely scope only a
 subset of source holds and has no quarter-turn mode, so these are explicit
 presentation assets and direct presentation-scoped paths. Large `board.json`
 changed from
 `680b7a01d6145300c42783db326f3e7aa24d61c49290761f097537dcec0dd3de`
-to `bb5eb42dd2238742850261dd000c947cc249ee914cc383a2a2fe64ae49569c0b`;
+to `12e7971d6bc3d9743475e57057b9afa2e0592e23cd071656a8ea2bb9d9903604`;
 Small changed from
 `e017d237e187d731851c2c1fbf9419cff2efb8437e8442e75b6a0ad7cce5cd55`
-to `8e139c70740bf49c55a5f8cd52957b57c71ff776d44154981cb4e329cb24d362`.
+to `73926b56f59250bcb9cddd6fff714513cff66dd82163fb439101286c0b01867a`.
 
 Workbench loaded all six presentation surfaces. Normal/all-path overlays
 aligned to the visible Small edge, both shared inverted edges, and each mono.
 Every hold was clicked individually and returned the expected hit target:
 `edge-12`, `edge-22`, `edge-16`, `mono-28`, `edge-8`, `edge-18`, `edge-14`,
 and `mono-25`. Final-inventory package validation and package status passed
-with 61 packages and no drafts. The focused Workbench package suite passed 159
+with 62 packages and no drafts. The focused Workbench package suite passed 159
 tests; the approved-package subset passed 13 tests with the concurrently owned
 Port-A-Board assertion intentionally deselected. The schema-2 machine manifest
 is intentionally unchanged in this bounded pass.
