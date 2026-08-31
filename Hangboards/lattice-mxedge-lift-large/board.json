@@ -15,10 +15,24 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Primary",
+      "name": "Small Edge Position",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.0,
       "default": true
+    },
+    {
+      "id": "large-medium-edge-position",
+      "name": "Large / Medium Edge Position",
+      "assetPath": "assets/large-medium.png",
+      "aspectRatio": 1.0,
+      "default": false
+    },
+    {
+      "id": "mono-position",
+      "name": "Mono Position",
+      "assetPath": "assets/mono.png",
+      "aspectRatio": 1.0,
+      "default": false
     }
   ],
   "holds": [
@@ -28,12 +42,12 @@
       "name": "MX22 edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "large-medium-edge-position",
       "geometry": [
         {
           "frame": {
-            "x": 0.29,
-            "y": 0.748,
+            "x": 0.394,
+            "y": 0.163,
             "width": 0.316,
             "height": 0.089
           },
@@ -143,12 +157,12 @@
       "name": "MX16 edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "large-medium-edge-position",
       "geometry": [
         {
           "frame": {
-            "x": 0.29,
-            "y": 0.635,
+            "x": 0.313,
+            "y": 0.321,
             "width": 0.397,
             "height": 0.044
           },
@@ -373,12 +387,12 @@
       "name": "28 mm mono",
       "kind": "pocket",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "mono-position",
       "geometry": [
         {
           "frame": {
-            "x": 0.615,
-            "y": 0.766,
+            "x": 0.766,
+            "y": 0.314,
             "width": 0.071,
             "height": 0.071
           },

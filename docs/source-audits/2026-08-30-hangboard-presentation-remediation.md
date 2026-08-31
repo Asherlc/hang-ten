@@ -945,3 +945,90 @@ new positions at `(0.308, 0.633, 0.378, 0.067)` and
 occupy the correct recesses on the individually head-on inverted assets; the
 other three assets and geometry are unchanged. Final package validation and
 focused test results are recorded with the implementing commit.
+
+## Lattice MXEdge Lift Large and Small three-position repair (2026-08-31)
+
+The two current MXEdge Lift sizes were freshly reviewed as distinct physical
+revisions and then repaired as one source-backed family. The manufacturer
+identifies both as beech lifting edges with the same 20 x 11 x 5 cm form and
+cord system, but the contact inventories remain size-specific: MXLarge has
+MX22, MX16, MX12, and a 28 mm mono; MXSmall has MX18, MX14, MX8, and a 25 mm
+mono. The original 1000 x 1000 images are the current manufacturer gallery's
+straight-on front photographs. Their pale beech grain, routed recesses,
+blue/yellow cord, knots, authentic `MXL` / `MXS` marks, and size labels are
+therefore preserved rather than removed under the earlier internal unbranded
+illustration rule.
+
+Freshly opened evidence:
+
+- Lattice's current [MXEdge Lift product
+  page](https://latticetraining.com/product/mxedge-lift/) and its first-party
+  gallery, specification, and size-specific contact list.
+- Lattice's published [How to use the MXEdge Lift
+  video](https://latticetraining.com/app/uploads/2024/05/MXEdge-Lift-How-to.mp4).
+  Its labeled in-use frames establish Large at 0:16, Medium at 0:28, Mono at
+  0:36, and Small at 0:50.
+- Lattice's current [product catalogue
+  PDF](https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf),
+  which independently enumerates the MXLarge and MXSmall contact sets and
+  specifies beech.
+- The independent retailer galleries from [Up and
+  Under](https://upandunder.co.uk/lattice-training-mxedge-lift-h_34246) and
+  [Needle
+  Sports](https://www.needlesports.com/Catalogue/Climbing/Bouldering-Training-Sport/Training-Equipment/Lattice-MXEdge-Lift),
+  plus [Max Climbing's retailer
+  review](https://www.maxclimbing.com/en-nl/products/lattice-mxedge-lift-portable-finger-strength-lifting-edge).
+  These corroborate the production beech body, cord, both labeled sizes, and
+  the same current face; none establishes a separate rear working surface.
+
+The official use video resolves four contacts into three distinct physical
+orientations per size, not four duplicate presentations. Large and Medium use
+the same board orientation, 180 degrees from the existing catalogue front,
+with different contacts and cord routing. Small uses the catalogue front at
+0 degrees. Mono uses that face at 90 degrees counterclockwise. A fourth
+quarter-turn would not represent another published working position and was
+not invented.
+
+| Package | Presentation | Scoped holds | Asset SHA-256 / dimensions |
+| --- | --- | --- | --- |
+| `lattice.mxedge-lift-large` | `primary` — Small Edge Position, 0 degrees | `edge-12` | `091078ab355d81fbc109fe04065b39b2ccc5f4eb79093c5de215347d2789b8a3` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `large-medium-edge-position` — 180 degrees | `edge-22`, `edge-16` | `f12612ec74f48e5348cb162b32c7d467ad2f8b934716c395ee1a5094a459989b` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `mono-position` — 90 degrees counterclockwise | `mono-28` | `a2ae3e93e76681cf8f2f35ac656ba013bebb5960a7832f9ab8b761a101c8438c` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-small` | `primary` — Small Edge Position, 0 degrees | `edge-8` | `6a0d7b0167a53d54b2849773000512d12c1343107fe01d16af4d81a7559cd822` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-small` | `large-medium-edge-position` — 180 degrees | `edge-18`, `edge-14` | `4ba1572348f3eeba6dc8bcea1a511034a41013d2daab6aa178d06dd7a753affa` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-small` | `mono-position` — 90 degrees counterclockwise | `mono-25` | `4402440fdca676232a3dcbef3c5fdaf1c6713fe9d95bd45a01f41173503f3653` / 1000 x 1000 RGB |
+
+The four new PNGs are exact decoded-pixel rotations of the untouched official
+assets: automated verification returned `180=true` and `ccw=true` for both
+sizes. There was no generation, crop, padding, rescaling, smoothing, mask,
+segmentation, registration, perspective warp, redraw, or invented product
+detail. As a result every position remains independently head-on and the whole
+family has exactly the same published photographic lighting, wood texture,
+edge softness, off-white background, and smoothing treatment.
+
+The existing hold paths were deliberately reassigned without duplicating hold
+identity or changing physical metadata. For both sizes, the Large frame became
+`(0.394, 0.163, 0.316, 0.089)` and the Medium frame became
+`(0.313, 0.321, 0.397, 0.044)` under the exact 180-degree transform
+`x' = 1 - x - width`, `y' = 1 - y - height`. The circular mono frame became
+`(0.766, 0.314, 0.071, 0.071)` under the 90-degree counterclockwise transform
+`x' = y`, `y' = 1 - x - width`. The Small frame remains unchanged on the
+default source image. The schema's inversion alias cannot safely scope only a
+subset of source holds and has no quarter-turn mode, so these are explicit
+presentation assets and direct presentation-scoped paths. Large `board.json`
+changed from
+`680b7a01d6145300c42783db326f3e7aa24d61c49290761f097537dcec0dd3de`
+to `bb5eb42dd2238742850261dd000c947cc249ee914cc383a2a2fe64ae49569c0b`;
+Small changed from
+`e017d237e187d731851c2c1fbf9419cff2efb8437e8442e75b6a0ad7cce5cd55`
+to `8e139c70740bf49c55a5f8cd52957b57c71ff776d44154981cb4e329cb24d362`.
+
+Workbench loaded all six presentation surfaces. Normal/all-path overlays
+aligned to the visible Small edge, both shared inverted edges, and each mono.
+Every hold was clicked individually and returned the expected hit target:
+`edge-12`, `edge-22`, `edge-16`, `mono-28`, `edge-8`, `edge-18`, `edge-14`,
+and `mono-25`. Final-inventory package validation and package status passed
+with 61 packages and no drafts. The focused Workbench package suite passed 159
+tests; the approved-package subset passed 13 tests with the concurrently owned
+Port-A-Board assertion intentionally deselected. The schema-2 machine manifest
+is intentionally unchanged in this bounded pass.
