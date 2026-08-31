@@ -2124,7 +2124,7 @@
       "presentationID": "primary",
       "assetPath": "Hangboards/frictitious-nug/assets/primary.png",
       "workingSurface": "Published 20/25 mm working face",
-      "physicalRevision": "Current beech NUG with 6 mm cord",
+      "physicalRevision": "Current official beech NUG with 6 mm cord; independent review reports poplar without a named revision",
       "manufacturer": "Frictitious Climbing",
       "materials": [
         "wood",
@@ -2144,7 +2144,7 @@
         },
         "material": {
           "outcome": "nonconforming",
-          "explanation": "The sourced beech body is represented, but the supplied 6 mm rated rope-cord component is omitted."
+          "explanation": "The supplied 6 mm rope is omitted; the current official page specifies beech while the independent review reports poplar without a named revision, so Phase 2 must use the current official species claim and preserve the conflict note."
         },
         "topology": {
           "outcome": "nonconforming",
@@ -2185,9 +2185,9 @@
             "publisher": "The Hangboard",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious NUG exact-product section",
-            "imageRole": "The exact NUG section independently corroborates the ultra-compact five-edge-plus-pinch inventory and portable cord use; official face-specific gallery images remain the source for 20/25 versus 8/13 orientation.",
-            "supportedClaim": "The NUG product identity, compact wood construction, grip inventory, and portable suspension use are independently corroborated."
+            "revisionApplicability": "Current NUG exact-product review; material species conflicts with the current official page",
+            "imageRole": "The exact NUG section independently corroborates the ultra-compact five-edge-plus-pinch inventory and portable cord use; it reports poplar rather than the current official page's beech and does not establish face orientation.",
+            "supportedClaim": "The NUG identity, grip inventory, and portable suspension use are corroborated; the review's poplar claim conflicts with current official beech and is not used as material-species proof."
           }
         ],
         "officialEvidenceGap": null,
@@ -2254,7 +2254,7 @@
       "presentationID": "reverse",
       "assetPath": "Hangboards/frictitious-nug/assets/reverse.png",
       "workingSurface": "Published 8/13 mm working face",
-      "physicalRevision": "Current beech NUG with 6 mm cord",
+      "physicalRevision": "Current official beech NUG with 6 mm cord; independent review reports poplar without a named revision",
       "manufacturer": "Frictitious Climbing",
       "materials": [
         "wood",
@@ -2274,7 +2274,7 @@
         },
         "material": {
           "outcome": "nonconforming",
-          "explanation": "The sourced beech body is represented, but the supplied 6 mm rated rope-cord component is omitted."
+          "explanation": "The supplied 6 mm rope is omitted; the current official page specifies beech while the independent review reports poplar without a named revision, so Phase 2 must use the current official species claim and preserve the conflict note."
         },
         "topology": {
           "outcome": "nonconforming",
@@ -2315,9 +2315,9 @@
             "publisher": "The Hangboard",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious NUG exact-product section",
-            "imageRole": "The exact NUG section independently corroborates the ultra-compact five-edge-plus-pinch inventory and portable cord use; official face-specific gallery images remain the source for 20/25 versus 8/13 orientation.",
-            "supportedClaim": "The NUG product identity, compact wood construction, grip inventory, and portable suspension use are independently corroborated."
+            "revisionApplicability": "Current NUG exact-product review; material species conflicts with the current official page",
+            "imageRole": "The exact NUG section independently corroborates the ultra-compact five-edge-plus-pinch inventory and portable cord use; it reports poplar rather than the current official page's beech and does not establish face orientation.",
+            "supportedClaim": "The NUG identity, grip inventory, and portable suspension use are corroborated; the review's poplar claim conflicts with current official beech and is not used as material-species proof."
           }
         ],
         "officialEvidenceGap": null,
@@ -2384,7 +2384,7 @@
       "presentationID": "primary",
       "assetPath": "Hangboards/frictitious-port-a-board/assets/primary.png",
       "workingSurface": "Published front edge-and-pocket working face",
-      "physicalRevision": "Current beech Port-A-Board",
+      "physicalRevision": "Current official beech Port-A-Board; independent review reports poplar without a named revision",
       "manufacturer": "Frictitious Climbing",
       "materials": [
         "wood",
@@ -2403,8 +2403,8 @@
           "explanation": "The official face-specific gallery establishes the same published working orientation and compact silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The beech body and rated rope cord conform to the current official specification."
+          "outcome": "uncertain",
+          "explanation": "Wood and rated cord are established, but the current official page specifies beech while the independent review reports poplar without a named revision; Phase 2 must follow the current official species claim and preserve the conflict note."
         },
         "topology": {
           "outcome": "conforms",
@@ -2445,9 +2445,9 @@
             "publisher": "The Hangboard",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious Port-A-Board exact-product section",
-            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation wood product, eight edges, pinch options, and rated cord; official gallery images remain the face-specific source.",
-            "supportedClaim": "The Port-A-Board identity, compact wood construction, eight-edge inventory, pinch use, and rated cord are independently corroborated."
+            "revisionApplicability": "Current Port-A-Board exact-product review; material species conflicts with the current official page",
+            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation product, eight edges, pinch options, and rated cord; it reports poplar rather than the current official page's beech, and official gallery images remain the face-specific source.",
+            "supportedClaim": "The Port-A-Board identity, grip inventory, and rated cord are corroborated; the review's poplar claim conflicts with current official beech and is not used as material-species proof."
           }
         ],
         "officialEvidenceGap": null,
@@ -2514,7 +2514,7 @@
       "presentationID": "back",
       "assetPath": "Hangboards/frictitious-port-a-board/assets/back.png",
       "workingSurface": "Published back edge-and-jug working face",
-      "physicalRevision": "Current beech Port-A-Board",
+      "physicalRevision": "Current official beech Port-A-Board; independent review reports poplar without a named revision",
       "manufacturer": "Frictitious Climbing",
       "materials": [
         "wood",
@@ -2533,8 +2533,8 @@
           "explanation": "The official face-specific gallery establishes the same published working orientation and compact silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The beech body and rated rope cord conform to the current official specification."
+          "outcome": "uncertain",
+          "explanation": "Wood and rated cord are established, but the current official page specifies beech while the independent review reports poplar without a named revision; Phase 2 must follow the current official species claim and preserve the conflict note."
         },
         "topology": {
           "outcome": "conforms",
@@ -2575,9 +2575,9 @@
             "publisher": "The Hangboard",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious Port-A-Board exact-product section",
-            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation wood product, eight edges, pinch options, and rated cord; official gallery images remain the face-specific source.",
-            "supportedClaim": "The Port-A-Board identity, compact wood construction, eight-edge inventory, pinch use, and rated cord are independently corroborated."
+            "revisionApplicability": "Current Port-A-Board exact-product review; material species conflicts with the current official page",
+            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation product, eight edges, pinch options, and rated cord; it reports poplar rather than the current official page's beech, and official gallery images remain the face-specific source.",
+            "supportedClaim": "The Port-A-Board identity, grip inventory, and rated cord are corroborated; the review's poplar claim conflicts with current official beech and is not used as material-species proof."
           }
         ],
         "officialEvidenceGap": null,
@@ -2644,7 +2644,7 @@
       "presentationID": "side",
       "assetPath": "Hangboards/frictitious-port-a-board/assets/side.png",
       "workingSurface": "Published narrow side pinch working surface",
-      "physicalRevision": "Current beech Port-A-Board",
+      "physicalRevision": "Current official beech Port-A-Board; independent review reports poplar without a named revision",
       "manufacturer": "Frictitious Climbing",
       "materials": [
         "wood",
@@ -2663,8 +2663,8 @@
           "explanation": "The official face-specific gallery establishes the same published working orientation and compact silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The beech body and rated rope cord conform to the current official specification."
+          "outcome": "uncertain",
+          "explanation": "Wood and rated cord are established, but the current official page specifies beech while the independent review reports poplar without a named revision; Phase 2 must follow the current official species claim and preserve the conflict note."
         },
         "topology": {
           "outcome": "conforms",
@@ -2705,9 +2705,9 @@
             "publisher": "The Hangboard",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious Port-A-Board exact-product section",
-            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation wood product, eight edges, pinch options, and rated cord; official gallery images remain the face-specific source.",
-            "supportedClaim": "The Port-A-Board identity, compact wood construction, eight-edge inventory, pinch use, and rated cord are independently corroborated."
+            "revisionApplicability": "Current Port-A-Board exact-product review; material species conflicts with the current official page",
+            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation product, eight edges, pinch options, and rated cord; it reports poplar rather than the current official page's beech, and official gallery images remain the face-specific source.",
+            "supportedClaim": "The Port-A-Board identity, grip inventory, and rated cord are corroborated; the review's poplar claim conflicts with current official beech and is not used as material-species proof."
           }
         ],
         "officialEvidenceGap": null,

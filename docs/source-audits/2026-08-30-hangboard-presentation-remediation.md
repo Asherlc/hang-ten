@@ -61,7 +61,11 @@ Resolutions are added only when direct live sources establish the named revision
   The Hangboard's direct portable-hangboard review instead of the generic
   Shop.app seller storefront. Evolv Long uses an exact Backcountry variant
   listing, and Escape Unlimited uses an exact retailer listing whose product
-  imagery and customer reports establish mounting positions and screws.
+  imagery and customer reports establish mounting positions and screws. The
+  independent NUG/Port review reports poplar while the current official pages
+  specify beech; the review is therefore used only for identity, grip inventory,
+  and cord corroboration, while the current official species claim governs
+  Phase 2 and the unresolved species conflict remains recorded.
 - `lattice.mini-bar/end` is `removeUnsupportedPresentation`: Lattice and an
   independent retailer identify four lengthwise grips selected by flipping the
   bar, while the declared end cap is not a usable working surface. Removal is a
