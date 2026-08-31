@@ -6679,7 +6679,7 @@
       "presentationID": "primary",
       "assetPath": "Hangboards/target10a-linebreaker-base/assets/primary.png",
       "workingSurface": "front jug, sloper, bar, and pocket training face",
-      "physicalRevision": "Linebreaker BASE Yellow Poplar geometry; cosmetic B-stock shares the layout",
+      "physicalRevision": "Linebreaker BASE Yellow Poplar geometry",
       "manufacturer": "target10a",
       "materials": [
         "wood"
@@ -6724,11 +6724,11 @@
       "evidence": {
         "official": [
           {
-            "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+            "url": "https://www.target10a.com/magazin/2017/01/01/linebreaker-base/",
             "publisher": "target10a",
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Linebreaker BASE exact geometry",
+            "revisionApplicability": "Linebreaker BASE exact manufacturer article",
             "imageRole": "First-party source-published product, detail, or in-use views establish Yellow Poplar, dimensions, and the complete jug/sloper/bar/pocket inventory. This presentation-specific review addresses front jug, sloper, bar, and pocket training face.",
             "supportedClaim": "The exact source establishes Yellow Poplar, dimensions, and the complete jug/sloper/bar/pocket inventory."
           }
@@ -6740,8 +6740,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Linebreaker BASE",
-            "imageRole": "Independent source-published product, detail, or in-use views establish straight-on production layout, Yellow Poplar body, dimensions, and exact grip depths. This presentation-specific review addresses front jug, sloper, bar, and pocket training face.",
-            "supportedClaim": "The exact source establishes straight-on production layout, Yellow Poplar body, dimensions, and exact grip depths."
+            "imageRole": "Independent source-published product, detail, or in-use views establish the straight-on production layout, dimensions, and exact grip depths. This presentation-specific review addresses front jug, sloper, bar, and pocket training face.",
+            "supportedClaim": "The exact source establishes the straight-on production layout, dimensions, and exact grip depths; material species is supported only by target10a."
           }
         ],
         "officialEvidenceGap": null,
@@ -6862,8 +6862,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Flash Board",
-            "imageRole": "First-party source-published product, detail, or in-use views establish cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges. This presentation-specific review addresses upright three-edge cylindrical surface.",
-            "supportedClaim": "The exact source establishes cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges."
+            "imageRole": "First-party source-published product, detail, or in-use views establish the cylindrical body, adjustable suspension, and Small Crimps plus 8/10/15/20 mm edges. This presentation-specific review addresses upright three-edge cylindrical surface.",
+            "supportedClaim": "The exact source establishes the cylindrical body, adjustable suspension, and manufacturer-named Small Crimps plus 8/10/15/20 mm edges."
           },
           {
             "url": "https://www.youtube.com/watch?v=dQRX0RNL9EE",
@@ -7001,8 +7001,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Flash Board",
-            "imageRole": "First-party source-published product, detail, or in-use views establish cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges. This presentation-specific review addresses inverted three-edge cylindrical surface.",
-            "supportedClaim": "The exact source establishes cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges."
+            "imageRole": "First-party source-published product, detail, or in-use views establish the cylindrical body, adjustable suspension, and Small Crimps plus 8/10/15/20 mm edges. This presentation-specific review addresses inverted three-edge cylindrical surface.",
+            "supportedClaim": "The exact source establishes the cylindrical body, adjustable suspension, and manufacturer-named Small Crimps plus 8/10/15/20 mm edges."
           },
           {
             "url": "https://www.youtube.com/watch?v=dQRX0RNL9EE",
@@ -7140,8 +7140,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Flash Board",
-            "imageRole": "First-party source-published product, detail, or in-use views establish cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges. This presentation-specific review addresses upright two-edge cylindrical surface.",
-            "supportedClaim": "The exact source establishes cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges."
+            "imageRole": "First-party source-published product, detail, or in-use views establish the cylindrical body, adjustable suspension, and Small Crimps plus 8/10/15/20 mm edges. This presentation-specific review addresses upright two-edge cylindrical surface.",
+            "supportedClaim": "The exact source establishes the cylindrical body, adjustable suspension, and manufacturer-named Small Crimps plus 8/10/15/20 mm edges."
           },
           {
             "url": "https://www.youtube.com/watch?v=dQRX0RNL9EE",
@@ -7279,8 +7279,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Flash Board",
-            "imageRole": "First-party source-published product, detail, or in-use views establish cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges. This presentation-specific review addresses inverted two-edge cylindrical surface.",
-            "supportedClaim": "The exact source establishes cylindrical body, adjustable suspension, and 6/8/10/15/20 mm edges."
+            "imageRole": "First-party source-published product, detail, or in-use views establish the cylindrical body, adjustable suspension, and Small Crimps plus 8/10/15/20 mm edges. This presentation-specific review addresses inverted two-edge cylindrical surface.",
+            "supportedClaim": "The exact source establishes the cylindrical body, adjustable suspension, and manufacturer-named Small Crimps plus 8/10/15/20 mm edges."
           },
           {
             "url": "https://www.youtube.com/watch?v=dQRX0RNL9EE",
@@ -7366,7 +7366,7 @@
       "productName": "Grindstone",
       "presentationID": "primary",
       "assetPath": "Hangboards/tension-grindstone-original/assets/primary.png",
-      "workingSurface": "original front pocket-and-edge face",
+      "workingSurface": "2017 base-board jug and all-edge front face",
       "physicalRevision": "2017 first-generation Grindstone",
       "manufacturer": "Tension Climbing",
       "materials": [
@@ -7378,23 +7378,23 @@
         "widthPixels": 1537,
         "heightPixels": 1023
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
-          "outcome": "conforms",
-          "explanation": "The underlying original front pocket-and-edge face body remains recognizable against exact-revision sources."
+          "outcome": "nonconforming",
+          "explanation": "The current pocket-heavy body does not depict the 2017 base Grindstone, which the launch-period founder interview distinguishes from the pocketed Pro as jugs plus an edge-only series."
         },
         "material": {
           "outcome": "conforms",
           "explanation": "The visible body material is consistent with the sourced production composition."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The source-verified contact layout is preserved."
+          "outcome": "nonconforming",
+          "explanation": "Phase 2 must regenerate the base board with jugs, paired 35/30/25/20/15 mm edges, and central 50/22 mm edges rather than the current Pro-like pocket topology."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared original front pocket-and-edge face itself is shown head-on."
+          "explanation": "The depicted face is head-on, but perspective cannot cure the wrong physical-revision topology."
         },
         "smoothing": {
           "outcome": "conforms",
@@ -7406,7 +7406,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The transparent cutout violates the off-white studio background."
+          "explanation": "The Pro-like pocket topology and transparent cutout violate the source-faithful catalog contract for the 2017 base Grindstone."
         }
       },
       "evidence": {
@@ -7418,17 +7418,8 @@
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "2017 original Grindstone founder interview",
-            "imageRole": "Independent source-published product, detail, or in-use views establish release identity, wood body, and contemporary imagery. This presentation-specific review addresses original front pocket-and-edge face.",
-            "supportedClaim": "The exact source establishes release identity, wood body, and contemporary imagery."
-          },
-          {
-            "url": "https://www.reddit.com/r/climbharder/comments/chdw8h",
-            "publisher": "r/climbharder owners",
-            "sourceKind": "ownerPhoto",
-            "reviewedAt": "2026-08-30",
-            "revisionApplicability": "first-generation Grindstone before Mk2",
-            "imageRole": "Independent source-published product, detail, or in-use views establish the pocket-heavy original's distinction from Mk2. This presentation-specific review addresses original front pocket-and-edge face.",
-            "supportedClaim": "The exact source establishes the pocket-heavy original's distinction from Mk2."
+            "imageRole": "The launch-period founder interview distinguishes the 2017 base Grindstone from the Pro: the base has jugs plus a series of edges, while the Pro adds mono- and two-finger pockets and greater row offset. This presentation-specific review addresses the 2017 base-board jug and all-edge front face.",
+            "supportedClaim": "The exact source establishes paired 35/30/25/20/15 mm edges plus central 50/22 mm edges and jugs for the base Grindstone, explicitly reserving pockets for the Pro."
           }
         ],
         "officialEvidenceGap": "Fresh exact-product searches of Tension's current site, manuals, catalogs, and indexed archives found no retrievable first-party page preserving the 2017 original Grindstone layout.",
@@ -7811,13 +7802,13 @@
         ],
         "independent": [
           {
-            "url": "https://sports.yahoo.com/tension-honestone-one-hangboard-board-035540029.html",
-            "publisher": "Yahoo Sports / Climbing",
+            "url": "https://www.climbing.com/gear/tension-honestone-review/",
+            "publisher": "Climbing",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Honestone",
-            "imageRole": "Independent source-published product, detail, or in-use views establish tested production body, asymmetric holds, macro slopers, pockets, and poplar. This presentation-specific review addresses advanced front edge, mono, and sloper face.",
-            "supportedClaim": "The exact source establishes tested production body, asymmetric holds, macro slopers, pockets, and poplar."
+            "imageRole": "The opened direct hands-on review establishes the tested production body, asymmetric 20/15/10/8 mm edges, 25 mm monos and center edge, 35°/45° macro slopers, and poplar. This presentation-specific review addresses advanced front edge, mono, and sloper face.",
+            "supportedClaim": "The exact direct review establishes the tested asymmetric edge, mono, center-edge, and sloper layout plus poplar construction."
           }
         ],
         "officialEvidenceGap": null,
@@ -8181,8 +8172,8 @@
           "explanation": "The declared two-piece advanced front face itself is shown head-on."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "The current edge transitions remain controlled and legible."
+          "outcome": "nonconforming",
+          "explanation": "The white-on-white polyurethane treatment makes recess depth materially weak; Phase 2 must add controlled relief shading appropriate to molded PU without inventing geometry."
         },
         "framing": {
           "outcome": "conforms",
@@ -8190,7 +8181,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete production mounting points and hardware context treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted mounting context and materially weak PU relief violate the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -8457,8 +8448,8 @@
           "explanation": "The declared orientation 1 jug, sloper, pinch, and supported-crimp face itself is shown head-on."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "The current edge transitions remain controlled and legible."
+          "outcome": "nonconforming",
+          "explanation": "The shallow white-on-white treatment materially weakens orientation-1 recess depth; Phase 2 must add controlled relief shading appropriate to molded PU."
         },
         "framing": {
           "outcome": "conforms",
@@ -8466,7 +8457,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete quad-cleat rail, board cleats, martini bolts, and fasteners treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted quad-cleat assembly and materially weak orientation-1 PU relief violate the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -8595,8 +8586,8 @@
           "explanation": "The declared orientation 2 mono, gaston, and small-crimp face itself is shown head-on."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "The current edge transitions remain controlled and legible."
+          "outcome": "nonconforming",
+          "explanation": "The shallow white-on-white treatment materially weakens orientation-2 recess depth; Phase 2 must add controlled relief shading appropriate to molded PU."
         },
         "framing": {
           "outcome": "conforms",
@@ -8604,7 +8595,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete quad-cleat rail, board cleats, martini bolts, and fasteners treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted quad-cleat assembly and materially weak orientation-2 PU relief violate the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -8733,8 +8724,8 @@
           "explanation": "The declared orientation 3 pocket, supported-crimp, and sloper face itself is shown head-on."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "The current edge transitions remain controlled and legible."
+          "outcome": "nonconforming",
+          "explanation": "The shallow white-on-white treatment materially weakens orientation-3 recess depth; Phase 2 must add controlled relief shading appropriate to molded PU."
         },
         "framing": {
           "outcome": "conforms",
@@ -8742,7 +8733,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete quad-cleat rail, board cleats, martini bolts, and fasteners treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted quad-cleat assembly and materially weak orientation-3 PU relief violate the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -8871,8 +8862,8 @@
           "explanation": "The declared orientation 4 compression-pinch and mono face itself is shown head-on."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "The current edge transitions remain controlled and legible."
+          "outcome": "nonconforming",
+          "explanation": "The shallow white-on-white treatment materially weakens orientation-4 recess depth; Phase 2 must add controlled relief shading appropriate to molded PU."
         },
         "framing": {
           "outcome": "conforms",
@@ -8880,7 +8871,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete quad-cleat rail, board cleats, martini bolts, and fasteners treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted quad-cleat assembly and materially weak orientation-4 PU relief violate the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -9002,15 +8993,15 @@
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "Phase 2 must restore production mounting points while preserving verified contacts."
+          "explanation": "Phase 2 must restore production mounting points and installed-body context while preserving verified contacts; mounting screws must not be shown or described as supplied."
         },
         "headOnPerspective": {
           "outcome": "conforms",
           "explanation": "The declared two-piece front training face itself is shown head-on."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "The current edge transitions remain controlled and legible."
+          "outcome": "nonconforming",
+          "explanation": "The white-on-white polyurethane treatment makes contact depth materially weak; Phase 2 must add controlled relief shading appropriate to molded PU."
         },
         "framing": {
           "outcome": "conforms",
@@ -9018,7 +9009,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete production mounting points treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted mounting-point context and materially weak PU relief violate the source-faithful catalog contract; no supplied screws may be invented."
         }
       },
       "evidence": {
@@ -9174,13 +9165,13 @@
         ],
         "independent": [
           {
-            "url": "https://www.maxclimbing.com/products/la-baguette-evo",
-            "publisher": "Max Climbing",
+            "url": "https://varuste.net/en/p135968/yy-vertical-baguette-evo",
+            "publisher": "Varuste.net",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Baguette Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots. This presentation-specific review addresses paired 25/20/15/10 mm surface.",
-            "supportedClaim": "The exact source establishes 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots."
+            "imageRole": "The opened exact current listing establishes a 52 cm × 5 cm, 550 g recycled-rubberwood body, Turn & Pull system, and twelve grips spanning 6–30 mm plus top jugs. This presentation-specific review addresses paired 25/20/15/10 mm surface; exact surface distribution comes from YY Vertical.",
+            "supportedClaim": "The exact current listing corroborates the current 550 g, 52 cm recycled-rubberwood Turn & Pull configuration and 6–30 mm grip range."
           }
         ],
         "officialEvidenceGap": null,
@@ -9304,13 +9295,13 @@
         ],
         "independent": [
           {
-            "url": "https://www.maxclimbing.com/products/la-baguette-evo",
-            "publisher": "Max Climbing",
+            "url": "https://varuste.net/en/p135968/yy-vertical-baguette-evo",
+            "publisher": "Varuste.net",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Baguette Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots. This presentation-specific review addresses paired 12/8/6 mm surface.",
-            "supportedClaim": "The exact source establishes 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots."
+            "imageRole": "The opened exact current listing establishes a 52 cm × 5 cm, 550 g recycled-rubberwood body, Turn & Pull system, and twelve grips spanning 6–30 mm plus top jugs. This presentation-specific review addresses paired 12/8/6 mm surface; exact surface distribution comes from YY Vertical.",
+            "supportedClaim": "The exact current listing corroborates the current 550 g, 52 cm recycled-rubberwood Turn & Pull configuration and 6–30 mm grip range."
           }
         ],
         "officialEvidenceGap": null,
@@ -9434,13 +9425,13 @@
         ],
         "independent": [
           {
-            "url": "https://www.maxclimbing.com/products/la-baguette-evo",
-            "publisher": "Max Climbing",
+            "url": "https://varuste.net/en/p135968/yy-vertical-baguette-evo",
+            "publisher": "Varuste.net",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Baguette Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots. This presentation-specific review addresses central 30/25 mm surface.",
-            "supportedClaim": "The exact source establishes 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots."
+            "imageRole": "The opened exact current listing establishes a 52 cm × 5 cm, 550 g recycled-rubberwood body, Turn & Pull system, and twelve grips spanning 6–30 mm plus top jugs. This presentation-specific review addresses central 30/25 mm surface; exact surface distribution comes from YY Vertical.",
+            "supportedClaim": "The exact current listing corroborates the current 550 g, 52 cm recycled-rubberwood Turn & Pull configuration and 6–30 mm grip range."
           }
         ],
         "officialEvidenceGap": null,
@@ -9564,13 +9555,13 @@
         ],
         "independent": [
           {
-            "url": "https://www.maxclimbing.com/products/la-baguette-evo",
-            "publisher": "Max Climbing",
+            "url": "https://varuste.net/en/p135968/yy-vertical-baguette-evo",
+            "publisher": "Varuste.net",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Baguette Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots. This presentation-specific review addresses central 20/6 mm surface.",
-            "supportedClaim": "The exact source establishes 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots."
+            "imageRole": "The opened exact current listing establishes a 52 cm × 5 cm, 550 g recycled-rubberwood body, Turn & Pull system, and twelve grips spanning 6–30 mm plus top jugs. This presentation-specific review addresses central 20/6 mm surface; exact surface distribution comes from YY Vertical.",
+            "supportedClaim": "The exact current listing corroborates the current 550 g, 52 cm recycled-rubberwood Turn & Pull configuration and 6–30 mm grip range."
           }
         ],
         "officialEvidenceGap": null,
@@ -9694,13 +9685,13 @@
         ],
         "independent": [
           {
-            "url": "https://www.maxclimbing.com/products/la-baguette-evo",
-            "publisher": "Max Climbing",
+            "url": "https://varuste.net/en/p135968/yy-vertical-baguette-evo",
+            "publisher": "Varuste.net",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Baguette Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots. This presentation-specific review addresses rounded tray surface.",
-            "supportedClaim": "The exact source establishes 52 cm rubberwood body, twelve grips, cord system, and multi-face packshots."
+            "imageRole": "The opened exact current listing establishes a 52 cm × 5 cm, 550 g recycled-rubberwood body, Turn & Pull system, and twelve grips spanning 6–30 mm plus top jugs. This presentation-specific review addresses rounded tray surface; exact surface distribution comes from YY Vertical.",
+            "supportedClaim": "The exact current listing corroborates the current 550 g, 52 cm recycled-rubberwood Turn & Pull configuration and 6–30 mm grip range."
           }
         ],
         "officialEvidenceGap": null,
@@ -9827,13 +9818,13 @@
         ],
         "independent": [
           {
-            "url": "https://varuste.net/en/p111331/yy-vertical-the-baguette",
-            "publisher": "Varuste.net",
+            "url": "https://lockwoods.com/products/yy-vertical-the-baguette",
+            "publisher": "Lockwoods Ski & Outdoor",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current La Baguette",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 47 cm rubberwood body, exact depths, cord, and turned use. This presentation-specific review addresses stepped 10/15/20/25/30 mm grip face.",
-            "supportedClaim": "The exact source establishes 47 cm rubberwood body, exact depths, cord, and turned use."
+            "imageRole": "The opened exact classic-product listing and gallery establish the 47 cm recycled-wood body, six 10–30 mm plus tray grips, two inclinations, and suspended use. This presentation-specific review addresses stepped 10/15/20/25/30 mm grip face; polyester cord composition comes only from YY Vertical.",
+            "supportedClaim": "The exact classic-product source corroborates the 47 cm recycled-wood body, six 10–30 mm plus tray grips, two inclinations, and suspended configuration."
           }
         ],
         "officialEvidenceGap": null,
@@ -9960,13 +9951,13 @@
         ],
         "independent": [
           {
-            "url": "https://varuste.net/en/p111331/yy-vertical-the-baguette",
-            "publisher": "Varuste.net",
+            "url": "https://lockwoods.com/products/yy-vertical-the-baguette",
+            "publisher": "Lockwoods Ski & Outdoor",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current La Baguette",
-            "imageRole": "Independent source-published product, detail, or in-use views establish 47 cm rubberwood body, exact depths, cord, and turned use. This presentation-specific review addresses turned reverse face and alternate inclination.",
-            "supportedClaim": "The exact source establishes 47 cm rubberwood body, exact depths, cord, and turned use."
+            "imageRole": "The opened exact classic-product listing and gallery establish the 47 cm recycled-wood body, six 10–30 mm plus tray grips, two inclinations, and suspended use. This presentation-specific review addresses turned reverse face and alternate inclination; polyester cord composition comes only from YY Vertical.",
+            "supportedClaim": "The exact classic-product source corroborates the 47 cm recycled-wood body, six 10–30 mm plus tray grips, two inclinations, and suspended configuration."
           }
         ],
         "officialEvidenceGap": null,
@@ -10076,7 +10067,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete both complete suspension cords and second ring-use cord set treatment violates the source-faithful catalog contract."
+          "explanation": "The omitted or cropped suspension cords and separate ring-use cord set violate the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -10087,8 +10078,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Penta Evo",
-            "imageRole": "First-party source-published product, detail, or in-use views establish paired plywood bodies, seven grip types, 360° rotation, and two cord sets. This presentation-specific review addresses paired front orientation with ring jug and distributed contacts.",
-            "supportedClaim": "The exact source establishes paired plywood bodies, seven grip types, 360° rotation, and two cord sets."
+            "imageRole": "The opened current page establishes paired plywood bodies, 360° rotation, and two cord sets, while its heading says eight grips and its body says seven technical grips. This presentation-specific review addresses paired front orientation with ring jug and distributed contacts without resolving that count conflict.",
+            "supportedClaim": "The exact source establishes the paired bodies, rotation, and two cord systems; its eight-versus-seven grip-count inconsistency remains unresolved."
           }
         ],
         "independent": [
@@ -10449,7 +10440,7 @@
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "Phase 2 must restore source-published pre-drilled mounting points and wall-fastener context while preserving verified contacts."
+          "explanation": "Phase 2 must restore or clearly preserve both included -10 mm magnetic wedges with integrated side storage and the hidden-anchor/inserts six-screw mounting context; do not invent visible front mounting holes."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -10465,7 +10456,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete source-published pre-drilled mounting points and wall-fastener context treatment violates the source-faithful catalog contract."
+          "explanation": "Missing or illegible magnetic wedges/storage and hidden mounting context violate the source-faithful current-Evo contract."
         }
       },
       "evidence": {
@@ -10476,8 +10467,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current VerticalBoard Evo",
-            "imageRole": "First-party source-published product, detail, or in-use views establish poplar body, fine edges, monos/bidoigts, slopers, inserts, and six-screw mounting. This presentation-specific review addresses expert front face with fine contacts and inserts.",
-            "supportedClaim": "The exact source establishes poplar body, fine edges, monos/bidoigts, slopers, inserts, and six-screw mounting."
+            "imageRole": "The opened current product page establishes the poplar body, exact advanced contact family, two included -10 mm magnetic wedges with integrated side storage, discreet hidden anchor/inserts, and six supplied wall screws. This presentation-specific review addresses expert front face with fine contacts and inserts.",
+            "supportedClaim": "The exact source establishes two included magnetic wedges, integrated side storage, hidden mounting, six wall screws, and the current advanced grip inventory."
           }
         ],
         "independent": [
@@ -10486,9 +10477,9 @@
             "publisher": "Rock+Run",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current VerticalBoard Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish tested advanced grip layout and poplar construction. This presentation-specific review addresses expert front face with fine contacts and inserts.",
-            "supportedClaim": "The exact source establishes tested advanced grip layout and poplar construction."
+            "revisionApplicability": "VerticalBoard Evo family; grip-layout corroboration only",
+            "imageRole": "The opened hands-on family review corroborates a tested advanced VerticalBoard layout and poplar construction but is not used for current hidden mounting or wedge inventory. This presentation-specific review addresses expert front face with fine contacts and inserts.",
+            "supportedClaim": "The source independently corroborates the tested advanced layout and poplar family only; YY Vertical governs current components."
           }
         ],
         "officialEvidenceGap": null,
@@ -10578,7 +10569,7 @@
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "Phase 2 must restore source-published pre-drilled mounting points and wall-fastener context while preserving verified contacts."
+          "explanation": "Phase 2 must restore the supplied four wall screws and installation context without inventing unsupported front-visible holes; compatible magnetic inserts are optional and not included."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -10594,7 +10585,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete source-published pre-drilled mounting points and wall-fastener context treatment violates the source-faithful catalog contract."
+          "explanation": "The absent installation context must distinguish four included wall screws from optional, non-included magnetic inserts."
         }
       },
       "evidence": {
@@ -10605,8 +10596,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current VerticalBoard First",
-            "imageRole": "First-party source-published product, detail, or in-use views establish poplar, progressive edges, slopers, jugs, center notch, and mounting points. This presentation-specific review addresses intermediate front face with progressive contacts.",
-            "supportedClaim": "The exact source establishes poplar, progressive edges, slopers, jugs, center notch, and mounting points."
+            "imageRole": "The opened current product page establishes poplar, progressive edges, slopers, jugs, the center notch, four supplied wall screws, and compatibility with separately sold magnetic inserts. This presentation-specific review addresses intermediate front face with progressive contacts.",
+            "supportedClaim": "The exact source establishes the current grip inventory, four included wall screws, and optional non-included magnetic inserts; it does not establish visible front mounting holes."
           }
         ],
         "independent": [
@@ -10615,9 +10606,9 @@
             "publisher": "Rock+Run",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current VerticalBoard First",
-            "imageRole": "Independent source-published product, detail, or in-use views establish tested exact intermediate layout. This presentation-specific review addresses intermediate front face with progressive contacts.",
-            "supportedClaim": "The exact source establishes tested exact intermediate layout."
+            "revisionApplicability": "VerticalBoard First family; layout corroboration only",
+            "imageRole": "The opened hands-on family review corroborates the tested intermediate VerticalBoard layout but is not used for current package contents or mounting details. This presentation-specific review addresses intermediate front face with progressive contacts.",
+            "supportedClaim": "The source independently corroborates the tested intermediate layout only; YY Vertical governs current components."
           }
         ],
         "officialEvidenceGap": null,
@@ -10707,7 +10698,7 @@
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "Phase 2 must restore source-published pre-drilled mounting points and wall-fastener context while preserving verified contacts."
+          "explanation": "Phase 2 must restore the four source-published mounting points and four-screw installation context while preserving the verified seven-grip body."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -10723,7 +10714,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete source-published pre-drilled mounting points and wall-fastener context treatment violates the source-faithful catalog contract."
+          "explanation": "The suppressed four-point mounting and four-screw installation context violates the source-faithful catalog contract."
         }
       },
       "evidence": {
@@ -10734,8 +10725,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current VerticalBoard Light",
-            "imageRole": "First-party source-published product, detail, or in-use views establish compact poplar body, seven grip types, and four pre-drilled anchors. This presentation-specific review addresses beginner front face with deep contacts.",
-            "supportedClaim": "The exact source establishes compact poplar body, seven grip types, and four pre-drilled anchors."
+            "imageRole": "The raw direct page was not parseable in the web reader; its exact same-URL first-party extraction establishes the compact poplar body, seven grip types, four mounting points, and four screws. This presentation-specific review addresses beginner front face with deep contacts and does not claim a fully opened raw page.",
+            "supportedClaim": "The exact same-URL first-party extraction, limited by raw-page parsing access, establishes poplar, seven grips, four mounting points, and four screws."
           }
         ],
         "independent": [
@@ -10744,9 +10735,9 @@
             "publisher": "Rock+Run",
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current VerticalBoard Light",
-            "imageRole": "Independent source-published product, detail, or in-use views establish tested two-row beginner layout. This presentation-specific review addresses beginner front face with deep contacts.",
-            "supportedClaim": "The exact source establishes tested two-row beginner layout."
+            "revisionApplicability": "VerticalBoard Light family; opened layout corroboration",
+            "imageRole": "The opened hands-on family review independently corroborates the two-row beginner layout, four mounting points, and installed-board context. This presentation-specific review addresses beginner front face with deep contacts.",
+            "supportedClaim": "The source independently corroborates the tested two-row beginner layout and four-point installation context."
           }
         ],
         "officialEvidenceGap": null,
@@ -10836,7 +10827,7 @@
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "Phase 2 must restore source-published pre-drilled mounting points and wall-fastener context while preserving verified contacts."
+          "explanation": "Phase 2 must preserve or make legible the two included -10 mm magnetic wedges with integrated side storage and restore the current hidden-insert/four-screw installation context without visible front holes."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -10852,7 +10843,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The incomplete source-published pre-drilled mounting points and wall-fastener context treatment violates the source-faithful catalog contract."
+          "explanation": "The current wedge/storage and hidden-mount installation context is incomplete or illegible in the bare-board render."
         }
       },
       "evidence": {
@@ -10863,8 +10854,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current VerticalBoard One",
-            "imageRole": "First-party source-published product, detail, or in-use views establish poplar, edges, bidoigts, slopers, center handle, inserts, and wall fasteners. This presentation-specific review addresses all-level front face with progressive contacts and inserts.",
-            "supportedClaim": "The exact source establishes poplar, edges, bidoigts, slopers, center handle, inserts, and wall fasteners."
+            "imageRole": "The opened current product page establishes poplar, the exact grip family, two included -10 mm magnetic wedges with integrated side storage, invisible mounting inserts, and four supplied wall screws. This presentation-specific review addresses all-level front face with progressive contacts and inserts.",
+            "supportedClaim": "The exact source establishes two included magnetic wedges, integrated storage, hidden mounting inserts, four wall screws, and the current grip inventory."
           }
         ],
         "independent": [
@@ -10874,8 +10865,8 @@
             "sourceKind": "review",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current VerticalBoard One",
-            "imageRole": "Independent source-published product, detail, or in-use views establish tested exact grip system and poplar body. This presentation-specific review addresses all-level front face with progressive contacts and inserts.",
-            "supportedClaim": "The exact source establishes tested exact grip system and poplar body."
+            "imageRole": "The opened 2025 hands-on review corroborates the current grip system, poplar body, two magnetic wedges, and installation context. This presentation-specific review addresses all-level front face with progressive contacts and inserts.",
+            "supportedClaim": "The exact hands-on source corroborates the current grip system, poplar body, two wedges, and installed-board context."
           }
         ],
         "officialEvidenceGap": null,
@@ -11014,8 +11005,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Zlagboard Evo",
-            "imageRole": "Independent source-published product, detail, or in-use views establish compact Evo body, metal support, phone mount, and eye bolts. This presentation-specific review addresses Evo front app-triggered training face.",
-            "supportedClaim": "The exact source establishes compact Evo body, metal support, phone mount, and eye bolts."
+            "imageRole": "The opened exact retailer page establishes the compact Evo body, silicone phone mount, and three eye bolts. This presentation-specific review addresses Evo front app-triggered training face; metal support/components come only from official Zlagboard evidence.",
+            "supportedClaim": "The exact source establishes the compact Evo, silicone phone mount, and three eye bolts only."
           }
         ],
         "officialEvidenceGap": null,

@@ -138,46 +138,68 @@ Resolutions are added only when direct live sources establish the named revision
   validated lane report contains 19 packages and 24 presentations; all five
   keeps are accepted current assets, all nineteen repairs remain pending Phase
   2, and Plateau primary is the lane's only evidence-blocked asset.
-- Linebreaker BASE is an accepted `keep`: the exact target10a cosmetic-B-stock
-  page states that B-stock preserves the production geometry, while Basislager
-  independently corroborates the Yellow Poplar body and grip layout.
-- All four Flash Board orientations are `edit`. The manufacturer demonstration
-  directly establishes that flipping exposes the declared working surfaces;
-  each current asset omits or crops the adjustable cord and knots, and the
-  three-edge-inverted asset also uses a transparent cutout. The current
-  Grindstone Mk2, Honestone, and Whetstone are accepted `keep` records. The
-  distinct 2017 Grindstone and Grindstone Pro are `edit` for transparent
-  cutouts, but remain explicitly first-party-evidence-blocked because fresh
-  manufacturer, manual, catalog, and archive searches found no retrievable
-  exact-revision first-party page; independent launch-period sources establish
-  their separate layouts.
-- The Hangboard is an accepted `keep`. Forge, Natural, all four Pivot
-  orientations, and the Rock Prodigy Training Center are `edit`: their verified
-  working contacts remain usable, while Phase 2 must restore the sourced
-  mounting/components context. Natural additionally needs its transparent
-  cutout replaced. Pivot's official quick-start guide separately establishes
-  the four intended rotations and the quad-cleat mounting assembly, so no
-  orientation is inferred from another presentation.
-- Baguette Evo's rounded-tray view and both original La Baguette faces are
-  accepted `keep` records. The other four Baguette Evo surfaces, Penta Evo, and
-  both TravelBoard faces are `edit` because the complete suspension cords are
-  cropped or omitted. Current Baguette Evo documentation specifies polyester
-  cord, while a retailer for the older La Baguette calls its cord polyamide;
-  those revision-specific claims are not merged.
-- All four VerticalBoard models are `edit` because the recognizable wood grip
-  layouts omit their source-published mounting points and fastener context.
-  TravelBoard has a source conflict: its English introduction says beech, while
-  its first-party materials/features content and exact independent listing say
-  recycled rubberwood. Phase 2 must preserve that conflict and may not silently
-  normalize the species.
+- Linebreaker BASE is an accepted `keep`: the opened exact target10a
+  manufacturer article establishes Yellow Poplar and the complete BASE layout.
+  Basislager independently corroborates the layout, dimensions, and depths but
+  is not used for the species claim.
+- All four Flash Board orientations are `edit`. The current official page calls
+  the smallest contacts `Small Crimps` and separately names 8/10/15/20 mm; the
+  audit no longer attributes 6 mm to Tension. The manufacturer demonstration
+  establishes the intended flipped surfaces, while each current asset omits or
+  crops the adjustable cord and knots and the three-edge-inverted asset also
+  uses a transparent cutout.
+- The 2017 base Grindstone is `regenerate`, not a background-only edit. The
+  launch-period founder interview describes jugs plus paired
+  35/30/25/20/15 mm edges and central 50/22 mm edges, and explicitly reserves
+  mono/two-finger pockets and increased row offset for the Pro. The current
+  pocket-heavy PNG therefore has the wrong physical-revision topology. The
+  unsubstantiated Reddit owner-photo mapping was removed. The separate
+  Grindstone Pro remains `edit` for its transparent cutout; both discontinued
+  revisions retain explicit first-party gaps. Current Grindstone Mk2,
+  Honestone, and Whetstone remain accepted `keep`s, with Honestone now backed by
+  the opened direct Climbing hands-on review rather than the unavailable Yahoo
+  syndication URL.
+- The Hangboard is an accepted wood-board `keep`. Forge, Natural, all four
+  Pivot orientations, and the Rock Prodigy Training Center are `edit`. Natural
+  needs its complete cleat/fastener assembly and studio background. Forge,
+  Pivot, and Training Center also need controlled relief shading appropriate
+  to molded polyurethane because the current white-on-white recess depth is
+  materially weak. Pivot's quick-start guide separately establishes all four
+  rotations and the quad-cleat assembly. Training Center must restore body
+  mounting-point/installed context without depicting screws as supplied;
+  Trango explicitly excludes mounting hardware.
+- Baguette Evo's rounded-tray view and both classic La Baguette faces remain
+  accepted `keep`s. The other four Baguette Evo surfaces, Penta Evo, and both
+  TravelBoard faces remain cord-completion `edit`s. The earlier/different
+  5 mm/12–5 mm/415 g Max Climbing configuration was replaced by an opened exact
+  current Varuste Evo listing that corroborates 6–30 mm, 52 cm, and 550 g;
+  YY Vertical governs exact surface distribution. The stale classic Varuste
+  redirect was replaced by Lockwoods' opened exact La Baguette page. Current YY
+  documentation supplies polyester cord, and the untraceable polyamide claim
+  was removed. Penta Evo's current page separately conflicts between an
+  eight-grip heading and seven-technical-grip body copy; the audit preserves
+  that count conflict instead of assigning either number to the presentation.
+- All four VerticalBoard models remain `edit`, with revision-specific component
+  scope. Evo must preserve two included -10 mm magnetic wedges, their integrated
+  side storage, and hidden-anchor/inserts six-screw mounting without invented
+  front holes. First includes four wall screws while magnetic inserts are
+  optional and not included. Light's raw official page was not parseable, so
+  its claim is limited to the exact same-URL first-party extraction plus the
+  opened Rock+Run support for seven grips and four-point installation. One must
+  preserve its two included wedges, integrated storage, hidden inserts, and
+  four-screw system. TravelBoard separately retains the source conflict between
+  introductory `beech` and detailed first-party/independent recycled
+  rubberwood claims.
 - Zlagboard.Evo and Zlagboard.Pro 2.0 are `regenerate`: the current bare wood
   rails omit the source-published electronic/metal assembly, including steel
   support, plates, phone interface, and fasteners, so the physical topology and
   mixed-material identity are not repairable as a bounded edit. Current
   Zlagboard copy calls the wood noble lime, while contemporary catalog and
   retailer evidence calls it alder; the manifest therefore preserves the
-  wood/metal mixed construction without choosing a species.
-- Lane C classification: 8 `keep`, 24 `edit`, and 2 `regenerate` records. The
+  wood/metal mixed construction without choosing a species. BananaFingers is
+  used only for the compact Evo, silicone phone mount, and three eye bolts;
+  metal support/components come solely from official evidence.
+- Lane C classification: 8 `keep`, 23 `edit`, and 3 `regenerate` records. The
   validated lane report contains exactly 22 packages and 34 presentations; all
   eight keeps are accepted current assets, and all twenty-six repairs remain
   pending Phase 2.
