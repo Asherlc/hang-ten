@@ -79,36 +79,48 @@ SHARED_CDN_PREFIXES_BY_PRODUCT_HOST = {
     "trango.com": (
         "https://cdn.shopify.com/s/files/1/0282/7557/2841/",
     ),
+    "soillholds.com": (
+        "https://cdn.shopify.com/s/files/1/0424/1145/",
+    ),
+    "thehangboard.com": (
+        "https://cdn.shopify.com/s/files/1/0764/5210/2426/",
+    ),
+    "yyvertical.com": (
+        "https://cdn.shopify.com/s/files/1/0285/5010/3128/",
+    ),
 }
 EXPLICIT_MEDIA_HOSTS_BY_PRODUCT_HOST = {
+    "evolvsports.com": frozenset({"oberalp.imgix.net"}),
     "mammut.com": frozenset({"static.mammut.com"}),
+    "yyvertical.com": frozenset({"youtu.be"}),
 }
-ALLOWED_ATTEMPTED_SOURCE_CLASSES = frozenset(
-    {"catalogs", "direct images", "guides", "manuals", "model-specific diagrams"}
-)
-MISSING_MEDIA_LIMITATION_PATTERN = re.compile(
-    r"product=([^<]+)<br>attempted=([^<]+)<br>unavailable=(.+)"
-)
-PLACEHOLDER_LIMITATIONS = frozenset(
-    {
-        "",
-        "-",
-        "—",
-        "n/a",
-        "na",
-        "none",
-        "none.",
-        "not applicable",
-        "not applicable.",
-    }
-)
-GENERIC_UNAVAILABLE_REASON_PATTERNS = (
-    re.compile(
-        r"^no (?:separately addressable )?(?:first-party )?media(?: url)? "
-        r"(?:was |were )?(?:found|recorded)",
-        re.IGNORECASE,
+NO_MEDIA_REVIEW_PREFIX = "no-media-review="
+NO_MEDIA_ATTEMPT_SCHEMAS = {
+    "rendered_gallery": frozenset(
+        {
+            "source_url",
+            "rendered_items",
+            "separately_addressable_urls",
+            "observation",
+        }
     ),
-    re.compile(r"^no (?:direct|stable|usable) media\b", re.IGNORECASE),
+    "html_media": frozenset(
+        {"source_url", "candidate_urls", "observation"}
+    ),
+    "documents": frozenset(
+        {"source_url", "candidate_urls", "observation"}
+    ),
+    "structured_data": frozenset(
+        {"source_url", "status", "candidate_urls", "observation"}
+    ),
+}
+STRUCTURED_DATA_STATUSES = frozenset(
+    {"absent", "available", "http-error", "not-applicable"}
+)
+GENERIC_NO_MEDIA_TEXT_PATTERNS = (
+    re.compile(r"^no media (?:was |were )?(?:found|available)\b", re.IGNORECASE),
+    re.compile(r"^nothing (?:was )?(?:found|available)\b", re.IGNORECASE),
+    re.compile(r"^all (?:available )?sources (?:were )?checked\b", re.IGNORECASE),
 )
 
 
@@ -191,6 +203,146 @@ def _has_first_party_relationship(
     return False
 
 
+def _parse_no_media_review(package: str, limitation: str) -> dict[str, object]:
+    missing_review_message = (
+        f"{package}: structured missing-media limitation requires a "
+        "reproducible no-media review with product-specific results"
+    )
+    assert limitation.startswith(NO_MEDIA_REVIEW_PREFIX), missing_review_message
+    try:
+        review = json.loads(limitation.removeprefix(NO_MEDIA_REVIEW_PREFIX))
+    except json.JSONDecodeError as error:
+        raise AssertionError(missing_review_message) from error
+    assert isinstance(review, dict), missing_review_message
+    assert set(review) == {
+        "reviewed_date",
+        "inspected_pages",
+        "attempts",
+        "result",
+    }, f"{package}: no-media review has an invalid top-level schema"
+    return review
+
+
+def _validate_no_media_review(
+    record: OrientationAuditRecord,
+) -> None:
+    package = record.package
+    review = _parse_no_media_review(package, record.limitation)
+
+    assert review["reviewed_date"] == record.reviewed_date, (
+        f"{package}: no-media review date must match the record review date"
+    )
+    inspected_pages = review["inspected_pages"]
+    assert isinstance(inspected_pages, list) and inspected_pages, (
+        f"{package}: no-media review must name exact inspected pages"
+    )
+    assert all(isinstance(url, str) and url.startswith("https://") for url in inspected_pages), (
+        f"{package}: inspected pages must be exact HTTPS URLs"
+    )
+    assert tuple(inspected_pages) == record.primary_urls, (
+        f"{package}: inspected pages must exactly match primary source URLs"
+    )
+
+    attempts = review["attempts"]
+    assert isinstance(attempts, dict), (
+        f"{package}: no-media attempts must be a structured object"
+    )
+    assert set(attempts) == set(NO_MEDIA_ATTEMPT_SCHEMAS), (
+        f"{package}: no-media review must record every required extraction attempt"
+    )
+
+    observations: list[str] = []
+    for method, expected_keys in NO_MEDIA_ATTEMPT_SCHEMAS.items():
+        method_attempts = attempts[method]
+        assert isinstance(method_attempts, list) and method_attempts, (
+            f"{package}: {method} must contain at least one attempted source"
+        )
+        source_urls: set[str] = set()
+        for attempt in method_attempts:
+            assert isinstance(attempt, dict), (
+                f"{package}: {method} attempt must be a structured object"
+            )
+            assert "source_url" in attempt, (
+                f"{package}: {method} attempt must include source_url"
+            )
+            assert set(attempt) == expected_keys, (
+                f"{package}: {method} attempt has an invalid schema"
+            )
+            source_url = attempt["source_url"]
+            assert isinstance(source_url, str) and source_url.startswith("https://"), (
+                f"{package}: attempted source URLs must be exact HTTPS URLs"
+            )
+            assert _has_first_party_relationship(source_url, record.primary_urls), (
+                f"{package}: attempted source URL lacks a first-party relationship"
+            )
+            source_urls.add(source_url)
+
+            observation = attempt["observation"]
+            assert isinstance(observation, str) and len(observation.strip()) >= 60, (
+                f"{package}: attempt observation must be specific and reproducible"
+            )
+            assert not any(
+                pattern.search(observation.strip())
+                for pattern in GENERIC_NO_MEDIA_TEXT_PATTERNS
+            ), f"{package}: no-media review contains generic boilerplate"
+            observations.append(observation.strip())
+
+            candidate_key = (
+                "separately_addressable_urls"
+                if method == "rendered_gallery"
+                else "candidate_urls"
+            )
+            candidate_urls = attempt[candidate_key]
+            assert isinstance(candidate_urls, list), (
+                f"{package}: {method} candidate URLs must be a list"
+            )
+            assert not candidate_urls, (
+                f"{package}: cannot claim no media when an attempt records "
+                "a candidate URL"
+            )
+            if method == "rendered_gallery":
+                rendered_items = attempt["rendered_items"]
+                assert (
+                    isinstance(rendered_items, int)
+                    and not isinstance(rendered_items, bool)
+                    and rendered_items >= 0
+                ), f"{package}: rendered_items must be a non-negative integer"
+            elif method == "structured_data":
+                assert attempt["status"] in STRUCTURED_DATA_STATUSES, (
+                    f"{package}: structured-data status is invalid"
+                )
+
+        if method != "structured_data":
+            assert set(inspected_pages) <= source_urls, (
+                f"{package}: {method} must attempt every inspected page URL"
+            )
+
+    assert len(set(observations)) == len(observations), (
+        f"{package}: no-media review contains generic boilerplate"
+    )
+
+    result = review["result"]
+    assert isinstance(result, dict) and set(result) == {
+        "code",
+        "physical_revision",
+        "reason",
+    }, f"{package}: no-media result has an invalid schema"
+    assert result["code"] == "no-separately-addressable-first-party-media", (
+        f"{package}: no-media result code is invalid"
+    )
+    assert result["physical_revision"] == record.physical_revision, (
+        f"{package}: no-media result must name the exact physical revision"
+    )
+    reason = result["reason"]
+    assert isinstance(reason, str) and len(reason.strip()) >= 80, (
+        f"{package}: no-media result must give a specific reproducible reason"
+    )
+    assert not any(
+        pattern.search(reason.strip())
+        for pattern in GENERIC_NO_MEDIA_TEXT_PATTERNS
+    ), f"{package}: no-media review contains generic boilerplate"
+
+
 def parse_orientation_audit(path: Path) -> dict[str, OrientationAuditRecord]:
     lines = path.read_text(encoding="utf-8").splitlines()
     header_index = next(
@@ -235,33 +387,7 @@ def _validate_record(
     assert record.primary_urls, f"{record.package}: no first-party source URL"
     assert all(url.startswith("https://") for url in record.primary_urls)
     if not record.media_evidence:
-        limitation_match = MISSING_MEDIA_LIMITATION_PATTERN.fullmatch(
-            record.limitation
-        )
-        assert limitation_match, (
-            f"{package}: missing media requires a structured missing-media limitation"
-        )
-        product, attempted, unavailable = limitation_match.groups()
-        attempted_classes = {
-            source_class.strip() for source_class in attempted.split(",")
-        }
-        assert product == record.physical_revision, (
-            f"{package}: limitation product must match the physical revision"
-        )
-        assert attempted_classes and attempted_classes <= (
-            ALLOWED_ATTEMPTED_SOURCE_CLASSES
-        ), f"{package}: limitation must name allowed attempted source classes"
-        assert unavailable.startswith(f"{record.physical_revision}: "), (
-            f"{package}: unavailable reason must name the physical revision"
-        )
-        reason = unavailable.removeprefix(f"{record.physical_revision}: ").strip()
-        assert reason.lower() not in PLACEHOLDER_LIMITATIONS and len(reason) >= 40, (
-            f"{package}: unavailable reason must be product-specific"
-        )
-        assert not any(
-            pattern.search(reason)
-            for pattern in GENERIC_UNAVAILABLE_REASON_PATTERNS
-        ), f"{package}: unavailable reason must be product-specific"
+        _validate_no_media_review(record)
     assert len({item.url for item in record.media_evidence}) == len(
         record.media_evidence
     ), f"{package}: duplicate reviewed-media URL"
@@ -308,6 +434,142 @@ def _record(
     )
 
 
+def _strict_no_media_limitation(
+    *,
+    html_candidates: list[str] | None = None,
+    include_html_source_url: bool = True,
+    generic_observations: bool = False,
+) -> str:
+    html_attempt: dict[str, object] = {
+        "candidate_urls": html_candidates or [],
+        "observation": (
+            "The product-content image and source attributes contained zero "
+            "revision-specific asset URLs after site-chrome assets were excluded."
+        ),
+    }
+    if include_html_source_url:
+        html_attempt["source_url"] = (
+            "https://manufacturer.example/products/example"
+        )
+    review = {
+        "reviewed_date": "2026-08-30",
+        "inspected_pages": [
+            "https://manufacturer.example/products/example",
+        ],
+        "attempts": {
+            "rendered_gallery": [
+                {
+                    "source_url": "https://manufacturer.example/products/example",
+                    "rendered_items": 0,
+                    "separately_addressable_urls": [],
+                    "observation": (
+                        "The rendered product region contained no gallery item or "
+                        "media control for the Example revision."
+                    ),
+                }
+            ],
+            "html_media": [html_attempt],
+            "documents": [
+                {
+                    "source_url": "https://manufacturer.example/products/example",
+                    "candidate_urls": [],
+                    "observation": (
+                        "The product-content links contained zero PDF, manual, "
+                        "installation-guide, or model-guide URLs."
+                    ),
+                }
+            ],
+            "structured_data": [
+                {
+                    "source_url": "https://manufacturer.example/products/example.js",
+                    "status": "absent",
+                    "candidate_urls": [],
+                    "observation": (
+                        "The exact product JSON endpoint returned no structured "
+                        "product record for the Example revision."
+                    ),
+                }
+            ],
+        },
+        "result": {
+            "code": "no-separately-addressable-first-party-media",
+            "physical_revision": "Example revision",
+            "reason": (
+                "The inspected product record exposes only revision prose; the "
+                "four recorded extraction paths expose no product asset or document."
+            ),
+        },
+    }
+    if generic_observations:
+        for attempts in review["attempts"].values():
+            for attempt in attempts:
+                attempt["observation"] = (
+                    "No media was found after checking this exact source page "
+                    "and each available source category carefully."
+                )
+        review["result"]["reason"] = (
+            "No media was found after checking this exact source page and each "
+            "available source category carefully."
+        )
+    return "no-media-review=" + json.dumps(review, separators=(",", ":"))
+
+
+def test_orientation_audit_accepts_reproducible_missing_media_review() -> None:
+    record = _record(media=(), limitation=_strict_no_media_limitation())
+
+    _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_false_no_media_claim() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            html_candidates=[
+                "https://manufacturer.example/media/front.jpg",
+            ]
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="cannot claim no media"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_missing_attempted_source_url() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            include_html_source_url=False,
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="attempt must include source_url"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_revision_prefixed_boilerplate() -> None:
+    record = _record(
+        media=(),
+        limitation=(
+            "product=Example revision<br>attempted=direct images, manuals<br>"
+            "unavailable=Example revision: the official product page did not "
+            "yield usable model assets after reviewing every source category"
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="reproducible no-media review"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_structured_generic_boilerplate() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(generic_observations=True),
+    )
+
+    with pytest.raises(AssertionError, match="generic boilerplate"):
+        _validate_record(record, {"primary"})
+
+
 def test_orientation_audit_rejects_ambiguous_media_role() -> None:
     record = _record(
         media=(
@@ -320,6 +582,20 @@ def test_orientation_audit_rejects_ambiguous_media_role() -> None:
 
     with pytest.raises(AssertionError, match="allowed evidence role"):
         _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_accepts_manufacturer_linked_video_host() -> None:
+    record = _record(
+        primary_urls=("https://www.yyvertical.com/en/products/baguette-evo",),
+        media=(
+            MediaEvidence(
+                role="product-use guide",
+                url="https://youtu.be/M4zTMJRORYg",
+            ),
+        ),
+    )
+
+    _validate_record(record, {"primary"})
 
 
 def test_orientation_audit_rejects_unrelated_media_host() -> None:
