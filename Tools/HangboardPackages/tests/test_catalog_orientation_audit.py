@@ -52,8 +52,10 @@ ALLOWED_MEDIA_ROLES = frozenset(
         "product-use guide",
         "rail detail image",
         "reverse product image",
+        "right-half product detail image",
         "safety guide",
         "side product image",
+        "top-and-bottom product profile image",
         "training guide",
     }
 )
@@ -89,10 +91,26 @@ SHARED_CDN_PREFIXES_BY_PRODUCT_HOST = {
         "https://cdn.shopify.com/s/files/1/0285/5010/3128/",
     ),
 }
-EXPLICIT_MEDIA_HOSTS_BY_PRODUCT_HOST = {
-    "evolvsports.com": frozenset({"oberalp.imgix.net"}),
-    "mammut.com": frozenset({"static.mammut.com"}),
-    "yyvertical.com": frozenset({"youtu.be"}),
+EXPLICIT_MEDIA_URLS_BY_PRIMARY_URL = {
+    "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105": frozenset(
+        {
+            "https://oberalp.imgix.net/ef857c73-13f1-4205-ac47-706cd101e1bb.jpg?auto=format&cs=srgb&fit=clip&type=still&w=628",
+            "https://oberalp.imgix.net/f8a564c9-b501-445f-bd43-af630730abfd.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628",
+            "https://oberalp.imgix.net/e3b05632-02ce-467f-9226-d2a2862c482a.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628",
+            "https://oberalp.imgix.net/88ad8128-f05a-45e1-8060-6a5dc3c74052.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628",
+        }
+    ),
+    "https://www.mammut.com/int/en/products/2060-00020/diamond-finger-hangboard": frozenset(
+        {
+            "https://static.mammut.com/file/2060-00020_man_en_070420_DiamondFingerHangboard_Manual.pdf",
+        }
+    ),
+    "https://www.yyvertical.com/en/products/baguette-evo": frozenset(
+        {"https://youtu.be/M4zTMJRORYg"}
+    ),
+    "https://www.yyvertical.com/en/products/penta-evo": frozenset(
+        {"https://youtu.be/GIAO1XCpUQE"}
+    ),
 }
 NO_MEDIA_REVIEW_PREFIX = "no-media-review="
 NO_MEDIA_ATTEMPT_SCHEMAS = {
@@ -111,12 +129,15 @@ NO_MEDIA_ATTEMPT_SCHEMAS = {
         {"source_url", "candidate_urls", "observation"}
     ),
     "structured_data": frozenset(
-        {"source_url", "status", "candidate_urls", "observation"}
+        {"source_url", "status", "reason", "candidate_urls", "observation"}
     ),
 }
-STRUCTURED_DATA_STATUSES = frozenset(
-    {"absent", "available", "http-error", "not-applicable"}
-)
+STRUCTURED_DATA_REASONS_BY_STATUS = {
+    "absent": frozenset({"no-media-properties", "no-product-record"}),
+    "available": frozenset({"media-candidates-present"}),
+    "http-error": frozenset({"http-404", "http-410", "request-timeout"}),
+    "not-applicable": frozenset({"no-structured-data-source"}),
+}
 GENERIC_NO_MEDIA_TEXT_PATTERNS = (
     re.compile(r"^no media (?:was |were )?(?:found|available)\b", re.IGNORECASE),
     re.compile(r"^nothing (?:was )?(?:found|available)\b", re.IGNORECASE),
@@ -190,8 +211,8 @@ def _has_first_party_relationship(
         primary_host = _normalized_host(primary_url)
         if (
             media_host == primary_host
-            or media_host
-            in EXPLICIT_MEDIA_HOSTS_BY_PRODUCT_HOST.get(primary_host, frozenset())
+            or media_url
+            in EXPLICIT_MEDIA_URLS_BY_PRIMARY_URL.get(primary_url, frozenset())
             or any(
                 media_url.startswith(prefix)
                 for prefix in SHARED_CDN_PREFIXES_BY_PRODUCT_HOST.get(
@@ -285,6 +306,9 @@ def _validate_no_media_review(
                 pattern.search(observation.strip())
                 for pattern in GENERIC_NO_MEDIA_TEXT_PATTERNS
             ), f"{package}: no-media review contains generic boilerplate"
+            assert record.physical_revision.casefold() in observation.casefold(), (
+                f"{package}: attempt observation must name the physical revision"
+            )
             observations.append(observation.strip())
 
             candidate_key = (
@@ -296,6 +320,18 @@ def _validate_no_media_review(
             assert isinstance(candidate_urls, list), (
                 f"{package}: {method} candidate URLs must be a list"
             )
+            if method == "structured_data":
+                status = attempt["status"]
+                reason = attempt["reason"]
+                assert (
+                    isinstance(status, str)
+                    and isinstance(reason, str)
+                    and reason
+                    in STRUCTURED_DATA_REASONS_BY_STATUS.get(status, frozenset())
+                ), f"{package}: structured-data status/reason is invalid"
+                assert bool(candidate_urls) == (status == "available"), (
+                    f"{package}: structured-data status/candidates are contradictory"
+                )
             assert not candidate_urls, (
                 f"{package}: cannot claim no media when an attempt records "
                 "a candidate URL"
@@ -307,10 +343,6 @@ def _validate_no_media_review(
                     and not isinstance(rendered_items, bool)
                     and rendered_items >= 0
                 ), f"{package}: rendered_items must be a non-negative integer"
-            elif method == "structured_data":
-                assert attempt["status"] in STRUCTURED_DATA_STATUSES, (
-                    f"{package}: structured-data status is invalid"
-                )
 
         if method != "structured_data":
             assert set(inspected_pages) <= source_urls, (
@@ -341,6 +373,9 @@ def _validate_no_media_review(
         pattern.search(reason.strip())
         for pattern in GENERIC_NO_MEDIA_TEXT_PATTERNS
     ), f"{package}: no-media review contains generic boilerplate"
+    assert record.physical_revision.casefold() in reason.casefold(), (
+        f"{package}: no-media result must name the physical revision"
+    )
 
 
 def parse_orientation_audit(path: Path) -> dict[str, OrientationAuditRecord]:
@@ -439,12 +474,19 @@ def _strict_no_media_limitation(
     html_candidates: list[str] | None = None,
     include_html_source_url: bool = True,
     generic_observations: bool = False,
+    include_structured_reason: bool = True,
+    structured_status: str = "absent",
+    structured_reason: str = "no-product-record",
+    structured_candidates: list[str] | None = None,
+    structured_observation: str | None = None,
+    result_reason: str | None = None,
 ) -> str:
     html_attempt: dict[str, object] = {
         "candidate_urls": html_candidates or [],
         "observation": (
-            "The product-content image and source attributes contained zero "
-            "revision-specific asset URLs after site-chrome assets were excluded."
+            "The Example revision product-content image and source attributes "
+            "contained zero revision-specific asset URLs after site-chrome assets "
+            "were excluded."
         ),
     }
     if include_html_source_url:
@@ -474,17 +516,18 @@ def _strict_no_media_limitation(
                     "source_url": "https://manufacturer.example/products/example",
                     "candidate_urls": [],
                     "observation": (
-                        "The product-content links contained zero PDF, manual, "
-                        "installation-guide, or model-guide URLs."
+                        "The Example revision product-content links contained zero "
+                        "PDF, manual, installation-guide, or model-guide URLs."
                     ),
                 }
             ],
             "structured_data": [
                 {
                     "source_url": "https://manufacturer.example/products/example.js",
-                    "status": "absent",
-                    "candidate_urls": [],
-                    "observation": (
+                    "status": structured_status,
+                    "candidate_urls": structured_candidates or [],
+                    "observation": structured_observation
+                    or (
                         "The exact product JSON endpoint returned no structured "
                         "product record for the Example revision."
                     ),
@@ -494,12 +537,16 @@ def _strict_no_media_limitation(
         "result": {
             "code": "no-separately-addressable-first-party-media",
             "physical_revision": "Example revision",
-            "reason": (
-                "The inspected product record exposes only revision prose; the "
-                "four recorded extraction paths expose no product asset or document."
+            "reason": result_reason
+            or (
+                "The Example revision product record exposes only revision prose; "
+                "the four recorded extraction paths expose no product asset or "
+                "document."
             ),
         },
     }
+    if include_structured_reason:
+        review["attempts"]["structured_data"][0]["reason"] = structured_reason
     if generic_observations:
         for attempts in review["attempts"].values():
             for attempt in attempts:
@@ -570,6 +617,88 @@ def test_orientation_audit_rejects_structured_generic_boilerplate() -> None:
         _validate_record(record, {"primary"})
 
 
+def test_orientation_audit_rejects_missing_structured_data_reason() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            include_structured_reason=False,
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="invalid schema"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_unallowable_structured_status_reason() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            structured_status="absent",
+            structured_reason="request-failed",
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="status/reason"):
+        _validate_record(record, {"primary"})
+
+
+@pytest.mark.parametrize(
+    ("status", "reason", "candidate_urls"),
+    (
+        ("available", "media-candidates-present", []),
+        (
+            "absent",
+            "no-product-record",
+            ["https://manufacturer.example/media/front.jpg"],
+        ),
+    ),
+)
+def test_orientation_audit_rejects_contradictory_structured_status_candidates(
+    status: str, reason: str, candidate_urls: list[str]
+) -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            structured_status=status,
+            structured_reason=reason,
+            structured_candidates=candidate_urls,
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="status/candidates are contradictory"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_generic_structured_observation() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            structured_observation=(
+                "The structured-data inspection completed successfully and no usable "
+                "media candidates were returned by the checked source."
+            ),
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="must name the physical revision"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_generic_no_media_result() -> None:
+    record = _record(
+        media=(),
+        limitation=_strict_no_media_limitation(
+            result_reason=(
+                "The required source checks completed successfully and returned no "
+                "separately addressable product media or documents for this record."
+            ),
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="must name the physical revision"):
+        _validate_record(record, {"primary"})
+
+
 def test_orientation_audit_rejects_ambiguous_media_role() -> None:
     record = _record(
         media=(
@@ -584,7 +713,7 @@ def test_orientation_audit_rejects_ambiguous_media_role() -> None:
         _validate_record(record, {"primary"})
 
 
-def test_orientation_audit_accepts_manufacturer_linked_video_host() -> None:
+def test_orientation_audit_accepts_exact_manufacturer_linked_video() -> None:
     record = _record(
         primary_urls=("https://www.yyvertical.com/en/products/baguette-evo",),
         media=(
@@ -596,6 +725,46 @@ def test_orientation_audit_accepts_manufacturer_linked_video_host() -> None:
     )
 
     _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_unrecorded_video_on_linked_host() -> None:
+    record = _record(
+        primary_urls=("https://www.yyvertical.com/en/products/baguette-evo",),
+        media=(
+            MediaEvidence(
+                role="product-use guide",
+                url="https://youtu.be/arbitrary-video-id",
+            ),
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="first-party relationship"):
+        _validate_record(record, {"primary"})
+
+
+@pytest.mark.parametrize(
+    ("primary_url", "media_url"),
+    (
+        (
+            "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+            "https://oberalp.imgix.net/arbitrary-product.jpg",
+        ),
+        (
+            "https://www.mammut.com/int/en/products/2060-00020/diamond-finger-hangboard",
+            "https://static.mammut.com/file/arbitrary-manual.pdf",
+        ),
+    ),
+)
+def test_orientation_audit_rejects_unrecorded_media_on_hosted_media_domain(
+    primary_url: str, media_url: str
+) -> None:
+    record = _record(
+        primary_urls=(primary_url,),
+        media=(MediaEvidence(role="product specification", url=media_url),),
+    )
+
+    with pytest.raises(AssertionError, match="first-party relationship"):
+        _validate_record(record, {"primary"})
 
 
 def test_orientation_audit_rejects_unrelated_media_host() -> None:
@@ -707,3 +876,53 @@ def test_orientation_audit_covers_every_discovered_package() -> None:
         }
 
         _validate_record(record, declared_presentations)
+
+
+def test_orientation_audit_records_the_hangboard_structured_gallery() -> None:
+    record = parse_orientation_audit(AUDIT_PATH)["the-hangboard"]
+
+    assert record.primary_urls == (
+        "https://thehangboard.com/products/hangboard",
+        "https://thehangboard.com/products/hangboard.js",
+    )
+    gallery_prefix = "https://cdn.shopify.com/s/files/1/0764/5210/2426/files/"
+    assert tuple(
+        item for item in record.media_evidence if item.url.startswith(gallery_prefix)
+    ) == (
+        MediaEvidence(
+            role="front product image",
+            url=(
+                gallery_prefix
+                + "hangboard-straight-2_ddf25e96-22ac-422d-9a62-7db961398ca4.png"
+                "?v=1747623739"
+            ),
+        ),
+        MediaEvidence(
+            role="reverse product image",
+            url=gallery_prefix + "hangboard-back-2.png?v=1747623739",
+        ),
+        MediaEvidence(
+            role="right-half product detail image",
+            url=gallery_prefix + "half-right-hangboard.png?v=1747623739",
+        ),
+        MediaEvidence(
+            role="side product image",
+            url=gallery_prefix + "hangboard-side-2-right.png?v=1747623739",
+        ),
+        MediaEvidence(
+            role="side product image",
+            url=gallery_prefix + "hangboard-side-2.png?v=1747623739",
+        ),
+        MediaEvidence(
+            role="top-and-bottom product profile image",
+            url=gallery_prefix + "hangboard-top-bottom-2.png?v=1747623739",
+        ),
+        MediaEvidence(
+            role="oblique product image",
+            url=gallery_prefix + "IMG_0761-Photoroom-Photoroom.png?v=1747623739",
+        ),
+        MediaEvidence(
+            role="oblique product image",
+            url=gallery_prefix + "IMG_0762-Photoroom-Photoroom.png?v=1747623739",
+        ),
+    )
