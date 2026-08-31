@@ -55,6 +55,13 @@ source-audited ledger against its hold metadata, and prints a sorted coverage
 report. Like the other package commands, it is source-only and read-only: it
 does not alter packages or the ledger.
 
+Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
+must have one outcome for each supported metadata field. Boards in the
+disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`
+outcome for every hold and may not have records for unrelated fields. This
+supplemental scope records a complete sloper audit without claiming that the
+board's other metadata fields have been source-audited.
+
 `audit-presentations` requires a complete final inventory and cross-checks the
 closed remediation manifest against every declared presentation's package ID,
 asset path, PNG hash, and dimensions. It prints a sorted decision report. A
@@ -89,13 +96,6 @@ Final mode accepts no batch or transient files and requires the complete termina
 catalog. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH`
 pairs are accepted only in preflight or partial mode and only for declarations
 owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
-
-Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
-must have one outcome for each supported metadata field. Boards in the
-disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`
-outcome for every hold and may not have records for unrelated fields. This
-supplemental scope records a complete sloper audit without claiming that the
-board's other metadata fields have been source-audited.
 
 The current repository inventory contains 61 complete packages and zero
 drafts.

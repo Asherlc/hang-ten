@@ -11,11 +11,11 @@ from conftest import (
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
-from test_presentation_remediation_audit import (
-    _empty_phase2_document,
-    _manifest,
-    _record,
-    _write_manifest,
+from presentation_remediation_helpers import (
+    empty_phase2_document as _empty_phase2_document,
+    manifest as _manifest,
+    record as _record,
+    write_manifest as _write_manifest,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
