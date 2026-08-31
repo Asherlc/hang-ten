@@ -193,35 +193,35 @@
         "widthPixels": 1000,
         "heightPixels": 259
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published front pocket-and-sloper working face."
+          "explanation": "Official and independent exact-product views establish the same 1000 Series silhouette and hold layout."
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "explanation": "The visible wood and face grain conform to the sourced current wood production board."
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "explanation": "The published jugs, slopers, pockets, and identity-bearing board body are represented."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The front working face is legible without material foreshortening."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The rounded pocket and edge transitions follow the cited production treatment."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The transparent photo-like cutout lacks the common off-white studio field required for the catalog cohort."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Photographic transparency, lighting, and high-frequency wood texture require a bounded studio-style edit."
         }
       },
       "evidence": {
@@ -251,9 +251,9 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced wood-body composition with bounded fine face-grain texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -264,12 +264,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "8d89a500122aac4d5bb4bb03c47202f881fd8cf66f9a321b620507dccad36289",
-        "finalDimensions": {
-          "widthPixels": 1000,
-          "heightPixels": 259
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -383,9 +380,9 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/frictitious-megalith/assets/primary.png",
+        "materialMatch": "Sourced wood-body composition with bounded fine face-grain texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -458,35 +455,35 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published straight 20 mm working face."
+          "explanation": "The exact source galleries establish the same straight 20 mm wood-body silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "The sourced wood body is represented, but the declared and supplied rope-cord component is omitted."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The face contacts are source-faithful, but empty pass-through holes replace the sourced routed suspension rope."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared working face remains head-on and its contact geometry is legible."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The restrained plywood grain and rounded working edges follow the cited production views."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while its suspension rope is absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "The missing identity-bearing rope makes the component inventory inconsistent with accepted portable presentations."
         }
       },
       "evidence": {
@@ -516,11 +513,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -529,12 +526,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "5e411d8ba5cdb88c53afbca4bd79382457b1ddbbd62f03f4d786bdb4ee1f017e",
-        "finalDimensions": {
-          "widthPixels": 1536,
-          "heightPixels": 1024
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -591,35 +585,35 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published curved 20 mm working face."
+          "explanation": "The exact source galleries establish the same curved 20 mm wood-body silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "The sourced wood body is represented, but the declared and supplied rope-cord component is omitted."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The face contacts are source-faithful, but empty pass-through holes replace the sourced routed suspension rope."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared working face remains head-on and its contact geometry is legible."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The restrained plywood grain and rounded working edges follow the cited production views."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while its suspension rope is absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "The missing identity-bearing rope makes the component inventory inconsistent with accepted portable presentations."
         }
       },
       "evidence": {
@@ -649,11 +643,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-dual/assets/reverse.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -662,12 +656,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "4006a43154becf5652a5f4f98d5a54f0bc43f538c3e8d552c41b240bbc05513d",
-        "finalDimensions": {
-          "widthPixels": 1536,
-          "heightPixels": 1024
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -724,35 +715,35 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published 15/20 mm face and outer working contacts."
+          "explanation": "The exact source galleries establish the same 15/20 mm and outer-contact wood-body silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "The sourced wood body is represented, but the declared and supplied rope-cord component is omitted."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The face contacts are source-faithful, but empty pass-through holes replace the sourced routed suspension rope."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared working face remains head-on and its contact geometry is legible."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The restrained plywood grain and rounded working edges follow the cited production views."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while its suspension rope is absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "The missing identity-bearing rope makes the component inventory inconsistent with accepted portable presentations."
         }
       },
       "evidence": {
@@ -782,11 +773,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-pocket/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -795,12 +786,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "321abde36f5648af6d8aa86feb797de5a1b25d0d571d4f5a5a08855e83058b4b",
-        "finalDimensions": {
-          "widthPixels": 1536,
-          "heightPixels": 1024
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -857,35 +845,35 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published curved 20 mm working face."
+          "explanation": "The exact source galleries establish the same curved 20 mm wood-body silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "The sourced wood body is represented, but the declared and supplied rope-cord component is omitted."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The face contacts are source-faithful, but empty pass-through holes replace the sourced routed suspension rope."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared working face remains head-on and its contact geometry is legible."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The restrained plywood grain and rounded working edges follow the cited production views."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while its suspension rope is absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "The missing identity-bearing rope makes the component inventory inconsistent with accepted portable presentations."
         }
       },
       "evidence": {
@@ -915,11 +903,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-unlevel/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -928,12 +916,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "e6f72523d77b20ffd7cd4d9029636d9085f8b76c9936781055adf2156632b17f",
-        "finalDimensions": {
-          "widthPixels": 1536,
-          "heightPixels": 1024
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -990,35 +975,35 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published curved 25 mm working face."
+          "explanation": "The exact source galleries establish the same curved 25 mm wood-body silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "The sourced wood body is represented, but the declared and supplied rope-cord component is omitted."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The face contacts are source-faithful, but empty pass-through holes replace the sourced routed suspension rope."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared working face remains head-on and its contact geometry is legible."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The restrained plywood grain and rounded working edges follow the cited production views."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while its suspension rope is absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "The missing identity-bearing rope makes the component inventory inconsistent with accepted portable presentations."
         }
       },
       "evidence": {
@@ -1048,11 +1033,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-unlevel/assets/reverse.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -1061,12 +1046,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "5a63511d31a4b991e8e309f2f35360781cbc61c0477d4714f9153af2e5d72cf3",
-        "finalDimensions": {
-          "widthPixels": 1536,
-          "heightPixels": 1024
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -1111,7 +1093,7 @@
       "presentationID": "primary",
       "assetPath": "Hangboards/crimptonite-helium-mobile/assets/primary.png",
       "workingSurface": "Published updated front edge-and-jug working face",
-      "physicalRevision": "Updated Helium Mobile revision succeeding the Mobile Nano",
+      "physicalRevision": "Updated Helium Mobile succeeding Mobile Nano; one verified owner specimen reports nominal-depth and side-finish variance",
       "manufacturer": "Crimptonite",
       "materials": [
         "wood",
@@ -1123,35 +1105,35 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "regenerate",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
-          "outcome": "nonconforming",
-          "explanation": "The current image substitutes three broad recessed slots for the cited 14/22/10/18 mm edge inventory and top jug."
+          "outcome": "conforms",
+          "explanation": "The official gallery establishes the same high-level three-recess front silhouette and exterior top jug."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "uncertain",
+          "explanation": "Wood and cord conform, but the verified owner reports rough side finishing that conflicts with the uniformly smooth local treatment."
         },
         "topology": {
-          "outcome": "nonconforming",
-          "explanation": "The current image substitutes three broad recessed slots for the cited 14/22/10/18 mm edge inventory and top jug."
+          "outcome": "conforms",
+          "explanation": "The three recesses realize the cited 14 mm, 22 mm, and stepped 10/18 mm contacts; topology regeneration is not supported."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "explanation": "The front working face is presented head-on and all three recesses are visible."
         },
         "smoothing": {
           "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "explanation": "Phase 2 must preserve smooth finger contacts while resolving the cited rough-side production variance without inventing a universal defect."
         },
         "framing": {
           "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "explanation": "The complete wood body and suspension cord are centered and uncropped."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "The stepped center depth and material transitions need clearer bounded cues in the simplified studio treatment."
         }
       },
       "evidence": {
@@ -1172,20 +1154,20 @@
             "publisher": "9c Bouldering",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Updated Helium Mobile",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published updated front edge-and-jug working face.",
-            "supportedClaim": "The exact retailer page and owner review corroborate the Nano-successor hold inventory, natural wood body, cord, and usable back jug/sloper."
+            "revisionApplicability": "Updated Helium Mobile with a verified-owner production-variance report",
+            "imageRole": "Exact product imagery establishes the three front recesses and distinct back jug/sloper. The verified owner measured the nominal 22 mm edge at 20 mm, the 14 mm edge near 13 mm, and reported rough side finishing while finger contacts were smooth.",
+            "supportedClaim": "The updated production identity and face inventory are corroborated, but one owner specimen conflicts with nominal depth and side-finish claims."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component and style review."
       },
       "generation": {
         "prompt": null,
@@ -1241,7 +1223,7 @@
       "presentationID": "reverse",
       "assetPath": "Hangboards/crimptonite-helium-mobile/assets/reverse.png",
       "workingSurface": "Published back jug/sloper working face",
-      "physicalRevision": "Updated Helium Mobile revision succeeding the Mobile Nano",
+      "physicalRevision": "Updated Helium Mobile succeeding Mobile Nano; one verified owner specimen reports nominal-depth and side-finish variance",
       "manufacturer": "Crimptonite",
       "materials": [
         "wood",
@@ -1256,32 +1238,32 @@
       "decision": "edit",
       "findings": {
         "productLikeness": {
-          "outcome": "nonconforming",
-          "explanation": "The current oblique plain-slab treatment does not clearly resolve the cited back jug/sloper contact or a head-on working-surface view."
+          "outcome": "conforms",
+          "explanation": "The official reverse gallery establishes the same distinct plain/sloped back body and cord arrangement."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "uncertain",
+          "explanation": "Wood and cord conform, but the verified owner reports rough side finishing that conflicts with the uniformly smooth local treatment."
         },
         "topology": {
-          "outcome": "nonconforming",
-          "explanation": "The current oblique plain-slab treatment does not clearly resolve the cited back jug/sloper contact or a head-on working-surface view."
+          "outcome": "conforms",
+          "explanation": "The cited back jug/sloper is present in the distinct reverse body; the defect is legibility and angle, not missing topology."
         },
         "headOnPerspective": {
-          "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "outcome": "nonconforming",
+          "explanation": "The current oblique view does not clearly resolve the back jug/sloper as a head-on working surface."
         },
         "smoothing": {
           "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "explanation": "Phase 2 must reconcile the source-visible back transition and the owner-reported finish variance."
         },
         "framing": {
           "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "explanation": "The complete reverse body and suspension cord are centered and uncropped."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "The reverse contact needs a bounded perspective and contrast edit to match the catalog's working-surface legibility."
         }
       },
       "evidence": {
@@ -1302,20 +1284,20 @@
             "publisher": "9c Bouldering",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Updated Helium Mobile",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published back jug/sloper working face.",
-            "supportedClaim": "The exact retailer page and owner review corroborate the Nano-successor hold inventory, natural wood body, cord, and usable back jug/sloper."
+            "revisionApplicability": "Updated Helium Mobile with a verified-owner production-variance report",
+            "imageRole": "Exact product imagery establishes the three front recesses and distinct back jug/sloper. The verified owner measured the nominal 22 mm edge at 20 mm, the 14 mm edge near 13 mm, and reported rough side finishing while finger contacts were smooth.",
+            "supportedClaim": "The updated production identity and face inventory are corroborated, but one owner specimen conflicts with nominal depth and side-finish claims."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component and style review."
       },
       "generation": {
         "prompt": null,
@@ -1374,7 +1356,8 @@
       "physicalRevision": "Woodbord bamboo production model; first-party revision remains unproved",
       "manufacturer": "deWoodstok",
       "materials": [
-        "wood"
+        "wood",
+        "metal"
       ],
       "formFactor": "fullWidthFixedBoard",
       "currentAsset": {
@@ -1386,31 +1369,31 @@
       "findings": {
         "productLikeness": {
           "outcome": "uncertain",
-          "explanation": "The current silhouette is plausible, but the evidence gaps prevent exact physical-revision acceptance."
+          "explanation": "The retailer silhouette is close, but the missing first-party revision history prevents exact acceptance."
         },
         "material": {
           "outcome": "uncertain",
-          "explanation": "The visible material is plausible, but the missing exact first-party or independent production evidence prevents final confirmation."
+          "explanation": "Bamboo is corroborated, but the current file omits retailer-shown metal mounting screws and exact revision applicability is unresolved."
         },
         "topology": {
           "outcome": "uncertain",
-          "explanation": "The current contacts appear coherent, but exact revision topology is not fully proved by live direct evidence."
+          "explanation": "Pocket placement is plausible, but five retailer-visible mounting positions and screws are absent and no first-party revision source resolves the discrepancy."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface remains legible and is not materially foreshortened."
+          "explanation": "The front working face is legible and not materially foreshortened."
         },
         "smoothing": {
           "outcome": "uncertain",
-          "explanation": "No complete exact-revision evidence set proves the production edge and finish treatment."
+          "explanation": "No exact first-party revision view proves the production edge and finish treatment."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete current product is centered and uncropped."
+          "outcome": "uncertain",
+          "explanation": "The wood body is centered, but complete installation-component framing remains unresolved."
         },
         "crossCatalogConsistency": {
           "outcome": "uncertain",
-          "explanation": "Catalog style cannot be finally accepted while exact product evidence remains incomplete."
+          "explanation": "The source gap and omitted mounting components prevent final catalog-style acceptance."
         }
       },
       "evidence": {
@@ -1422,17 +1405,17 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "deWOODSTOK Woodbord",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front pocket-and-edge working face.",
-            "supportedClaim": "The retailer gallery and specification establish a bamboo Woodbord measuring about 59 by 14.8 by 4 cm with the published edge and pocket inventory."
+            "imageRole": "The exact retailer gallery establishes bamboo, pocket topology, five visible mounting positions, and supplied metal screws; this exposes a component discrepancy but cannot resolve the missing first-party revision history.",
+            "supportedClaim": "The bamboo pocket layout is broadly corroborated, while the local image omits all five retailer-visible mounting holes and supplied screws."
           }
         ],
-        "officialEvidenceGap": "Exact searches for deWOODSTOK Woodbord on dewoodstok.com and dewoodstok.de, plus official manual, catalog, and archive queries, found no live or archived first-party product page that proved the exact physical revision.",
+        "officialEvidenceGap": "Exact searches for deWoodstok Woodbord on dewoodstok.com and dewoodstok.de, plus official manual, catalog, and archive queries, found no live or archived first-party page proving the exact revision or whether its five mounting positions changed.",
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced bamboo/wood body composition with bounded fine grain texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -1504,32 +1487,32 @@
       "decision": "edit",
       "findings": {
         "productLikeness": {
-          "outcome": "nonconforming",
-          "explanation": "The topology matches, but the monochrome white treatment is not one of the cited current colors and fails to depict the sourced dual-texture surface."
+          "outcome": "conforms",
+          "explanation": "The cited current Beta silhouette and pinch/incut/flat/sloper zones are recognizable."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "nonconforming",
+          "explanation": "The white treatment contradicts current red, gray, or black molded production colors and suppresses dual texture."
         },
         "topology": {
-          "outcome": "nonconforming",
-          "explanation": "The topology matches, but the monochrome white treatment is not one of the cited current colors and fails to depict the sourced dual-texture surface."
+          "outcome": "conforms",
+          "explanation": "The exact review maps the same four training zones and three difficulty levels; no contact-layout change is required."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "explanation": "The front face is head-on and the training zones remain readable."
         },
         "smoothing": {
-          "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "outcome": "nonconforming",
+          "explanation": "The uniform white surface fails to distinguish the cited smooth and textured dual-texture regions."
         },
         "framing": {
           "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "explanation": "The complete molded board is centered and uncropped."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "Color, texture-frequency, and surface-separation treatment require a bounded material edit."
         }
       },
       "evidence": {
@@ -1622,7 +1605,8 @@
       "physicalRevision": "Current Unlimited Board Baltic-birch model",
       "manufacturer": "Escape Climbing",
       "materials": [
-        "wood"
+        "wood",
+        "metal"
       ],
       "formFactor": "fullWidthFixedBoard",
       "currentAsset": {
@@ -1630,35 +1614,35 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published continuous multi-depth front working face."
+          "explanation": "The general six-contact continuous-edge silhouette matches official and retailer imagery."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "Baltic birch is represented, but the cited metal mounting hardware is absent from the current presentation."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The current face omits four official-image mounting positions and their associated hardware/cues."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The front working face and continuous contacts are head-on and legible."
         },
         "smoothing": {
           "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "explanation": "The restrained Baltic-birch finish and rounded contacts are source-compatible."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The board body is centered, but the published installation components are not completely represented."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Missing mounting geometry and metal components require a bounded component edit."
         }
       },
       "evidence": {
@@ -1675,22 +1659,22 @@
         ],
         "independent": [
           {
-            "url": "https://www.conqueryourcrux.com/best-hangboards-for-climbing/",
-            "publisher": "Conquer Your Crux",
-            "sourceKind": "review",
+            "url": "https://greenland.desertcart.com/products/29981749-escape-climbing-unlimited-hangboard-premium-wood-training-tool-for-grip-strength-and-conditioning-rock-climbing-bouldering-fingerboard-pull-up-bar-workout-and-exercise",
+            "publisher": "Desertcart",
+            "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Escape Climbing Unlimited",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published continuous multi-depth front working face.",
-            "supportedClaim": "The independent review corroborates Baltic-birch construction and the continuous multi-depth working layout."
+            "revisionApplicability": "Escape Climbing Unlimited production listing; no separately named physical revision",
+            "imageRole": "Exact-product thumbnails corroborate the six-contact Baltic-birch body and predrilled mounting positions; customer reports specifically discuss supplied screws and their mounting alignment.",
+            "supportedClaim": "The 23.5 by 6 inch Baltic-birch body and mounting-hole/screw configuration are independently corroborated."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/escape-unlimited/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced Baltic-birch wood body and metal mounting composition with bounded fine wood texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -1701,12 +1685,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "5ed4d6436ead016d9fc343bb3272b8e56c42faf12655fc5f28d364d9511f4818",
-        "finalDimensions": {
-          "widthPixels": 1774,
-          "heightPixels": 887
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -1765,32 +1746,32 @@
       "decision": "edit",
       "findings": {
         "productLikeness": {
-          "outcome": "nonconforming",
-          "explanation": "The verified four-contact topology is suitable, but the current white treatment contradicts the sourced black resin production finish."
+          "outcome": "conforms",
+          "explanation": "Official and retailer sources establish the same long four-contact silhouette."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "nonconforming",
+          "explanation": "The current white treatment contradicts the sourced black resin finish."
         },
         "topology": {
-          "outcome": "nonconforming",
-          "explanation": "The verified four-contact topology is suitable, but the current white treatment contradicts the sourced black resin production finish."
+          "outcome": "conforms",
+          "explanation": "The rounded jug plus 20, 15, and 10 mm edges are all represented; no topology change is required."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "explanation": "The four working contacts are presented head-on and remain legible."
         },
         "smoothing": {
-          "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "outcome": "conforms",
+          "explanation": "The rounded contact transitions are compatible with the cited Kilter resin treatment."
         },
         "framing": {
           "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "explanation": "The complete Long board body is centered and uncropped."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "The black-resin color and surface-frequency treatment require a bounded material edit."
         }
       },
       "evidence": {
@@ -1807,13 +1788,13 @@
         ],
         "independent": [
           {
-            "url": "https://www.ebay.com/itm/326431990533",
-            "publisher": "eBay marketplace seller",
+            "url": "https://www.backcountry.com/evolv-basic-training-board",
+            "publisher": "Backcountry",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Evolv Kilter Basic Training Board Long",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published jug-and-three-edge front working face.",
-            "supportedClaim": "The independent marketplace listing and production photographs corroborate the long four-contact silhouette and black finish."
+            "revisionApplicability": "Evolv Basic Training Board including the 31 inch Long variant",
+            "imageRole": "The exact retailer page distinguishes 23 inch Short and 31 inch Long variants and corroborates resin construction, rounded jug, Kilter texture, and doorway mounting; it does not provide an owner-use claim.",
+            "supportedClaim": "The 31 inch Long variant is a resin board with the published rounded jug and basic edge system."
           }
         ],
         "officialEvidenceGap": null,
@@ -1897,31 +1878,31 @@
       "findings": {
         "productLikeness": {
           "outcome": "nonconforming",
-          "explanation": "The current image depicts only a floating wood board and omits the identity-bearing aluminum/steel door bracket and rubber contact pads."
+          "explanation": "The current image depicts only a floating Pro7 wood board rather than the cited integrated DoorMount Pro assembly."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "nonconforming",
+          "explanation": "The poplar board is present, but aluminum, steel, rubber pads, and other mount components are omitted."
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "The current image depicts only a floating wood board and omits the identity-bearing aluminum/steel door bracket and rubber contact pads."
+          "explanation": "The identity-bearing doorway clamp, central bracket, handle, and wall-contact system are absent."
         },
         "headOnPerspective": {
-          "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "outcome": "nonconforming",
+          "explanation": "A wood-board-only front view cannot establish the mounted Pro7 working configuration."
         },
         "smoothing": {
           "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "explanation": "A new render must reconcile wood, coated metal, and rubber transitions against both exact source sets."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "outcome": "nonconforming",
+          "explanation": "The defining door-mount assembly is outside the current frame because it is not depicted."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "The incomplete mixed-material assembly cannot enter the common studio cohort."
         }
       },
       "evidence": {
@@ -1951,11 +1932,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted full-width mixed wood/metal/rubber assembly baseline exists in Lane A; a wood-only board cannot govern this DoorMount system."
       },
       "generation": {
         "prompt": null,
@@ -2080,9 +2061,9 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/frictitious-megalith/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced poplar-wood composition with bounded fine face-grain texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -2158,32 +2139,32 @@
       "decision": "edit",
       "findings": {
         "productLikeness": {
-          "outcome": "nonconforming",
-          "explanation": "The cited working-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+          "outcome": "conforms",
+          "explanation": "The official face-specific gallery establishes the same compact NUG body and declared edge pair."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "nonconforming",
+          "explanation": "The sourced beech body is represented, but the supplied 6 mm rated rope-cord component is omitted."
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "The cited working-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+          "explanation": "The declared face contacts conform, but empty pass-through holes replace the sourced suspension cord."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "explanation": "The declared working face is head-on and its edge depths remain distinguishable."
         },
         "smoothing": {
-          "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "outcome": "conforms",
+          "explanation": "The rounded beech contact treatment is source-compatible."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while the supplied cord is absent."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "The missing rope component requires a bounded portable-product edit."
         }
       },
       "evidence": {
@@ -2200,24 +2181,24 @@
         ],
         "independent": [
           {
-            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
-            "publisher": "Shop marketplace",
-            "sourceKind": "retailer",
+            "url": "https://thehangboard.com/blogs/news/portable-hangboards",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious NUG listing",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published 20/25 mm working face.",
-            "supportedClaim": "The independent marketplace storefront corroborates the current NUG identity and production imagery."
+            "revisionApplicability": "Current Frictitious NUG exact-product section",
+            "imageRole": "The exact NUG section independently corroborates the ultra-compact five-edge-plus-pinch inventory and portable cord use; official face-specific gallery images remain the source for 20/25 versus 8/13 orientation.",
+            "supportedClaim": "The NUG product identity, compact wood construction, grip inventory, and portable suspension use are independently corroborated."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -2288,32 +2269,32 @@
       "decision": "edit",
       "findings": {
         "productLikeness": {
-          "outcome": "nonconforming",
-          "explanation": "The cited reverse-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+          "outcome": "conforms",
+          "explanation": "The official face-specific gallery establishes the same compact NUG body and declared edge pair."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+          "outcome": "nonconforming",
+          "explanation": "The sourced beech body is represented, but the supplied 6 mm rated rope-cord component is omitted."
         },
         "topology": {
           "outcome": "nonconforming",
-          "explanation": "The cited reverse-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+          "explanation": "The declared face contacts conform, but empty pass-through holes replace the sourced suspension cord."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+          "explanation": "The declared working face is head-on and its edge depths remain distinguishable."
         },
         "smoothing": {
-          "outcome": "uncertain",
-          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+          "outcome": "conforms",
+          "explanation": "The rounded beech contact treatment is source-compatible."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+          "outcome": "nonconforming",
+          "explanation": "The complete portable assembly cannot be considered framed while the supplied cord is absent."
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+          "explanation": "The missing rope component requires a bounded portable-product edit."
         }
       },
       "evidence": {
@@ -2330,24 +2311,24 @@
         ],
         "independent": [
           {
-            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
-            "publisher": "Shop marketplace",
-            "sourceKind": "retailer",
+            "url": "https://thehangboard.com/blogs/news/portable-hangboards",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious NUG listing",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published 8/13 mm working face.",
-            "supportedClaim": "The independent marketplace storefront corroborates the current NUG identity and production imagery."
+            "revisionApplicability": "Current Frictitious NUG exact-product section",
+            "imageRole": "The exact NUG section independently corroborates the ultra-compact five-edge-plus-pinch inventory and portable cord use; official face-specific gallery images remain the source for 20/25 versus 8/13 orientation.",
+            "supportedClaim": "The NUG product identity, compact wood construction, grip inventory, and portable suspension use are independently corroborated."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "reversiblePortable",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted reversible-portable wood-and-rope presentation remains in Lane A after component review."
       },
       "generation": {
         "prompt": null,
@@ -2415,35 +2396,35 @@
         "widthPixels": 1440,
         "heightPixels": 1440
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published front edge-and-pocket working face."
+          "explanation": "The official face-specific gallery establishes the same published working orientation and compact silhouette."
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "explanation": "The beech body and rated rope cord conform to the current official specification."
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "explanation": "The source-proven working contacts and cord routing are present; the repair preserves product geometry."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared face is readable at the source-published orientation."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "outcome": "nonconforming",
+          "explanation": "Manufacturer-photo texture and branded markings exceed the simplified unbranded catalog treatment."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The suspension cord is cropped at the top, so the complete portable assembly is not framed."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Branding, photographic texture frequency, cutout lighting, and cropped cord require a bounded studio-style edit."
         }
       },
       "evidence": {
@@ -2460,22 +2441,22 @@
         ],
         "independent": [
           {
-            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
-            "publisher": "Shop marketplace",
-            "sourceKind": "retailer",
+            "url": "https://thehangboard.com/blogs/news/portable-hangboards",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious Port-A-Board listing",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front edge-and-pocket working face.",
-            "supportedClaim": "The independent marketplace storefront corroborates the current multi-orientation Port-A-Board and production imagery."
+            "revisionApplicability": "Current Frictitious Port-A-Board exact-product section",
+            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation wood product, eight edges, pinch options, and rated cord; official gallery images remain the face-specific source.",
+            "supportedClaim": "The Port-A-Board identity, compact wood construction, eight-edge inventory, pinch use, and rated cord are independently corroborated."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/frictitious-port-a-board/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "multiOrientationDevice",
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced beech-wood and rope-cord composition with bounded fine wood/braid texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -2486,12 +2467,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "13bef16f346030dbe383d320beedc4034ae2da6c82b122ed8b349590132c0a17",
-        "finalDimensions": {
-          "widthPixels": 1440,
-          "heightPixels": 1440
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -2548,35 +2526,35 @@
         "widthPixels": 1440,
         "heightPixels": 1440
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published back edge-and-jug working face."
+          "explanation": "The official face-specific gallery establishes the same published working orientation and compact silhouette."
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "explanation": "The beech body and rated rope cord conform to the current official specification."
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "explanation": "The source-proven working contacts and cord routing are present; the repair preserves product geometry."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared face is readable at the source-published orientation."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "outcome": "nonconforming",
+          "explanation": "Manufacturer-photo texture and branded markings exceed the simplified unbranded catalog treatment."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The suspension cord is cropped at the top, so the complete portable assembly is not framed."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Branding, photographic texture frequency, cutout lighting, and cropped cord require a bounded studio-style edit."
         }
       },
       "evidence": {
@@ -2593,22 +2571,22 @@
         ],
         "independent": [
           {
-            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
-            "publisher": "Shop marketplace",
-            "sourceKind": "retailer",
+            "url": "https://thehangboard.com/blogs/news/portable-hangboards",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious Port-A-Board listing",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published back edge-and-jug working face.",
-            "supportedClaim": "The independent marketplace storefront corroborates the current multi-orientation Port-A-Board and production imagery."
+            "revisionApplicability": "Current Frictitious Port-A-Board exact-product section",
+            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation wood product, eight edges, pinch options, and rated cord; official gallery images remain the face-specific source.",
+            "supportedClaim": "The Port-A-Board identity, compact wood construction, eight-edge inventory, pinch use, and rated cord are independently corroborated."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/frictitious-port-a-board/assets/back.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "multiOrientationDevice",
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced beech-wood and rope-cord composition with bounded fine wood/braid texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -2619,12 +2597,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092",
-        "finalDimensions": {
-          "widthPixels": 1440,
-          "heightPixels": 1440
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -2681,35 +2656,35 @@
         "widthPixels": 1440,
         "heightPixels": 1440
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published narrow side pinch working surface."
+          "explanation": "The official face-specific gallery establishes the same published working orientation and compact silhouette."
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "explanation": "The beech body and rated rope cord conform to the current official specification."
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "explanation": "The source-proven working contacts and cord routing are present; the repair preserves product geometry."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The declared face is readable at the source-published orientation."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "outcome": "nonconforming",
+          "explanation": "Manufacturer-photo texture and branded markings exceed the simplified unbranded catalog treatment."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The suspension cord is cropped at the top, so the complete portable assembly is not framed."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Branding, photographic texture frequency, cutout lighting, and cropped cord require a bounded studio-style edit."
         }
       },
       "evidence": {
@@ -2726,22 +2701,22 @@
         ],
         "independent": [
           {
-            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
-            "publisher": "Shop marketplace",
-            "sourceKind": "retailer",
+            "url": "https://thehangboard.com/blogs/news/portable-hangboards",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Current Frictitious Port-A-Board listing",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published narrow side pinch working surface.",
-            "supportedClaim": "The independent marketplace storefront corroborates the current multi-orientation Port-A-Board and production imagery."
+            "revisionApplicability": "Current Frictitious Port-A-Board exact-product section",
+            "imageRole": "The exact Port-A-Board section independently corroborates the compact multi-orientation wood product, eight edges, pinch options, and rated cord; official gallery images remain the face-specific source.",
+            "supportedClaim": "The Port-A-Board identity, compact wood construction, eight-edge inventory, pinch use, and rated cord are independently corroborated."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/frictitious-port-a-board/assets/side.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "multiOrientationDevice",
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced beech-wood and rope-cord composition with bounded fine wood/braid texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -2752,12 +2727,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866",
-        "finalDimensions": {
-          "widthPixels": 1440,
-          "heightPixels": 1440
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -2871,9 +2843,9 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/lattice-triple-rung/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced tulipwood/wood composition with bounded fine face-grain texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -3005,8 +2977,8 @@
       },
       "comparator": {
         "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "multiOrientationDevice",
+        "materialMatch": "Sourced tulipwood and rope-cord composition with bounded fine wood/braid texture frequency; this unique cohort self-baseline supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -3118,7 +3090,7 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Mini Bar",
-            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published end face.",
+            "imageRole": "The exact product page enumerates four lengthwise grips\u201410 mm edge, 20 mm edge, ergonomic jug, and mini pinch\u2014selected by flipping the suspended bar; no end-grain working surface is published.",
             "supportedClaim": "Surface \"Published end face\" is unusable."
           }
         ],
@@ -3129,7 +3101,7 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Lattice Mini Bar",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published end face.",
+            "imageRole": "The exact product page enumerates four lengthwise grips\u201410 mm edge, 20 mm edge, ergonomic jug, and mini pinch\u2014selected by flipping the suspended bar; no end-grain working surface is published.",
             "supportedClaim": "Surface \"Published end face\" is unusable."
           }
         ],
@@ -3138,8 +3110,8 @@
       },
       "comparator": {
         "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "multiOrientationDevice",
+        "materialMatch": "Sourced tulipwood and rope-cord composition with bounded fine wood/braid texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -3209,35 +3181,35 @@
         "widthPixels": 1000,
         "heightPixels": 1000
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published MXLarge multi-edge lifting face."
+          "explanation": "Official and independent sources establish the same MXLarge curved silhouette, edge set, mono, and cord."
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "explanation": "The beech body and stabilizing rope cord conform to the current specification."
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "explanation": "The variant-specific edges, mono, and cord arrangement are represented; geometry is preserved."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The lifting face and labeled contact positions are legible."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "outcome": "nonconforming",
+          "explanation": "The source-photo texture and printed labels must be translated into the simplified unbranded illustration treatment."
         },
         "framing": {
           "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "explanation": "The complete lifting device and cord are centered and uncropped."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Manufacturer labels, photographic lighting, and high-frequency texture require a bounded style edit."
         }
       },
       "evidence": {
@@ -3267,11 +3239,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/lattice-mxedge-lift-large/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "liftingEdge",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted lifting-edge wood-and-rope presentation remains in Lane A after labeled-photo style review."
       },
       "generation": {
         "prompt": null,
@@ -3280,12 +3252,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "091078ab355d81fbc109fe04065b39b2ccc5f4eb79093c5de215347d2789b8a3",
-        "finalDimensions": {
-          "widthPixels": 1000,
-          "heightPixels": 1000
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -3342,35 +3311,35 @@
         "widthPixels": 1000,
         "heightPixels": 1000
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published MXSmall multi-edge lifting face."
+          "explanation": "Official and independent sources establish the same MXSmall curved silhouette, edge set, mono, and cord."
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "explanation": "The beech body and stabilizing rope cord conform to the current specification."
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "explanation": "The variant-specific edges, mono, and cord arrangement are represented; geometry is preserved."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The lifting face and labeled contact positions are legible."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "outcome": "nonconforming",
+          "explanation": "The source-photo texture and printed labels must be translated into the simplified unbranded illustration treatment."
         },
         "framing": {
           "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "explanation": "The complete lifting device and cord are centered and uncropped."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Manufacturer labels, photographic lighting, and high-frequency texture require a bounded style edit."
         }
       },
       "evidence": {
@@ -3400,11 +3369,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/lattice-mxedge-lift-small/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "liftingEdge",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No ready accepted lifting-edge wood-and-rope presentation remains in Lane A after labeled-photo style review."
       },
       "generation": {
         "prompt": null,
@@ -3413,12 +3382,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "6a0d7b0167a53d54b2849773000512d12c1343107fe01d16af4d81a7559cd822",
-        "finalDimensions": {
-          "widthPixels": 1000,
-          "heightPixels": 1000
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -3476,35 +3442,35 @@
         "widthPixels": 1980,
         "heightPixels": 495
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
-          "explanation": "The cited exact-product views establish the same silhouette for Published front multi-hold working face."
+          "explanation": "The asymmetric walnut board silhouette and extensive hold layout match the exact retailer imagery."
         },
         "material": {
-          "outcome": "conforms",
-          "explanation": "The cited specification and independent production view establish the declared component materials."
+          "outcome": "nonconforming",
+          "explanation": "Walnut is represented, but the sourced metal mounting plate and silicone phone-mount components are omitted."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+          "outcome": "nonconforming",
+          "explanation": "The hold body is source-faithful, but the manual-required mounting plate and published phone mount are absent."
         },
         "headOnPerspective": {
           "outcome": "conforms",
-          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+          "explanation": "The front hold layout is head-on and legible."
         },
         "smoothing": {
-          "outcome": "conforms",
-          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+          "outcome": "nonconforming",
+          "explanation": "The transparent photo-like cutout and high-frequency texture do not match the simplified studio treatment."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The board body is visible, but the complete installed component system is not represented."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+          "outcome": "nonconforming",
+          "explanation": "Transparent cutout styling and missing installation components require a bounded component-and-style edit."
         }
       },
       "evidence": {
@@ -3515,8 +3481,8 @@
             "sourceKind": "officialManual",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Model 2060-00020 Diamond Finger",
-            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front multi-hold working face.",
-            "supportedClaim": "The official manual establishes the Diamond Finger body, mounting plate, phone mount, installation configuration, and 100 kg limit."
+            "imageRole": "The two-page model-specific manual proves the board body, required mounting plate, silicone phone mount, installed configuration, and 100 kg limit; it does not prove straight-on material or hold-layout appearance.",
+            "supportedClaim": "Model 2060-00020 requires its mount plate and publishes a silicone phone mount attached to the board frame."
           }
         ],
         "independent": [
@@ -3526,7 +3492,7 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Mammut Diamond Finger model MAM01GV / 2060-00020",
-            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front multi-hold working face.",
+            "imageRole": "Exact retailer straight-on and oblique production views establish walnut appearance, the extensive hold inventory, rope attachment points, mounting system, and phone holder.",
             "supportedClaim": "The retailer's straight-on and oblique production views establish walnut construction, the exact extensive hold inventory, 33.5 inch width, mounting system, and phone holder."
           }
         ],
@@ -3534,9 +3500,9 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/mammut-diamond-finger/assets/primary.png",
-        "materialMatch": "Shared sourced material cohort with bounded production texture",
-        "formFactorMatch": "fullWidthFixedBoard",
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced walnut-wood body with metal and silicone/mixed installation components and bounded wood texture frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
       },
@@ -3547,12 +3513,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "1193935f01990ca6a3a5752befc61fe1da5bbaf016c55f6359fe773da4dadc47",
-        "finalDimensions": {
-          "widthPixels": 1980,
-          "heightPixels": 495
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",

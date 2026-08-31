@@ -35,17 +35,39 @@ Resolutions are added only when direct live sources establish the named revision
 - `dewoodstok-woodbord/primary` remains an evidence-blocked `keep`: a live
   independent retailer establishes the bamboo Woodbord and its hold inventory,
   but fresh manufacturer-domain, manual, catalog, and archive searches found no
-  live or archived first-party page for the exact physical revision.
-- The current `crimptonite.helium-mobile/primary` substitutes three broad slots
-  for the updated Helium Mobile's published front edge/jug inventory and is
-  classified `regenerate`; its `reverse` is `edit` because the published back
-  jug/sloper is not clearly resolved as a head-on working surface.
+  live or archived first-party page for the exact physical revision. The
+  retailer also shows five mounting positions and supplied screws that the
+  current image omits, so component topology remains explicitly uncertain.
+- Both `crimptonite.helium-mobile` presentations are `edit`. The official
+  gallery establishes that the primary's three recesses realize the current
+  edge inventory, while the reverse contains the published jug/sloper but does
+  not resolve it head-on. A verified owner measured the nominal 22 mm edge at
+  20 mm and the 14 mm edge near 13 mm, and reported rough side finishing with
+  smooth finger contacts; that specimen-level depth/finish conflict remains a
+  Phase 2 source constraint rather than a universal production claim.
+- DUAL primary/reverse, POCKET primary, UNLEVEL primary/reverse, and both NUG
+  faces are `edit` because their source-faithful wood contacts omit the supplied
+  suspension rope. Escape Unlimited is also `edit` because four published
+  mounting positions and associated hardware are omitted. DoorMount Pro 7
+  remains `regenerate` because the complete metal/rubber clamp assembly is
+  absent, while Mammut Diamond Finger is `edit` because its verified hold body
+  can be preserved while restoring the required mounting plate, published
+  phone mount, and studio treatment.
+- Beastmaker 1000, all three Port-A-Board faces, both MXEdge Lift variants, and
+  Mammut Diamond Finger are Phase 2 style repairs: their verified geometry is
+  preserved, but transparent/photo-like, labeled, branded, or cropped
+  treatments do not satisfy the simplified unbranded studio contract.
+- Exact independent product coverage for NUG and Port-A-Board now comes from
+  The Hangboard's direct portable-hangboard review instead of the generic
+  Shop.app seller storefront. Evolv Long uses an exact Backcountry variant
+  listing, and Escape Unlimited uses an exact retailer listing whose product
+  imagery and customer reports establish mounting positions and screws.
 - `lattice.mini-bar/end` is `removeUnsupportedPresentation`: Lattice and an
   independent retailer identify four lengthwise grips selected by flipping the
   bar, while the declared end cap is not a usable working surface. Removal is a
   Phase 2 action; this audit changes no package inventory.
-- Lane A classification: 19 `keep` records (2 evidence-blocked), 5 `edit`,
-  2 `regenerate`, and 1 `removeUnsupportedPresentation`.
+- Lane A classification: 6 `keep` records (2 evidence-blocked), 19 `edit`,
+  1 `regenerate`, and 1 `removeUnsupportedPresentation`.
 
 ## Final classification totals
 
