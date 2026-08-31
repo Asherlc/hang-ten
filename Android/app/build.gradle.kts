@@ -1,4 +1,5 @@
 import org.gradle.api.tasks.testing.Test
+import java.net.URI
 
 plugins {
     id("com.android.application")
@@ -17,6 +18,23 @@ val sentryDsn = providers.gradleProperty("SENTRY_DSN").orElse("").get().trim().a
         "SENTRY_DSN must be an HTTPS DSN when configured."
     }
 }
+val hangboardReportFormUrl = providers.gradleProperty("HANGBOARD_REPORT_FORM_URL")
+    .orElse("")
+    .get()
+    .trim()
+    .also { value ->
+        if (value.isNotEmpty()) {
+            val uri = runCatching { URI(value) }.getOrNull()
+            val host = uri?.host?.lowercase()
+            require(
+                uri?.scheme.equals("https", ignoreCase = true) &&
+                    uri?.rawUserInfo == null &&
+                    (host == "tally.so" || host?.endsWith(".tally.so") == true),
+            ) {
+                "HANGBOARD_REPORT_FORM_URL must be an HTTPS tally.so URL when configured."
+            }
+        }
+    }
 
 fun String.asBuildConfigString(): String {
     require(none { it == '\n' || it == '\r' }) { "Build configuration values may not contain newlines." }
@@ -37,6 +55,11 @@ android {
         buildConfigField("String", "GITHUB_OAUTH_CLIENT_ID", "\"$githubOauthClientId\"")
         buildConfigField("String", "AMPLITUDE_API_KEY", amplitudeApiKey.asBuildConfigString())
         buildConfigField("String", "SENTRY_DSN", sentryDsn.asBuildConfigString())
+        buildConfigField(
+            "String",
+            "HANGBOARD_REPORT_FORM_URL",
+            hangboardReportFormUrl.asBuildConfigString(),
+        )
     }
 
     buildFeatures {
@@ -97,6 +120,7 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    testImplementation("org.robolectric:robolectric:4.16.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.12.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
