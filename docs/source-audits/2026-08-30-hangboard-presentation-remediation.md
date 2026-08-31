@@ -99,18 +99,21 @@ Resolutions are added only when direct live sources establish the named revision
   Oak comparison rather than the generic Loox storefront. The evidence-complete
   KARMA8A collaboration remains the unique accepted mixed-material
   multi-orientation cohort and uses its own current presentation as the style
-  baseline. Stone Hanger Mini Beech primary and its 60 mm pinch side remain
-  evidence-blocked `keep` records: the exact canonical official page is live,
-  but fresh independent searches found only a generic Vantage Climb category
-  listing and a disallowed Shop.app manufacturer mirror, not an acceptable
-  exact direct retailer, review, or owner page.
+  baseline. Stone Hanger Mini Beech primary and its 60 mm pinch side are
+  accepted `keep` records: the exact canonical official page and the live exact
+  Varun retailer listing corroborate Beech, real granite, the rope-adjusted
+  portable assembly, both 15 mm lengthwise edges, and the 60 mm pinch end. Both
+  use accepted KARMA8A only as a same-material, same-form-factor style baseline.
 - All four Poker working faces were independently checked against the exact
   four-face grip inventory and pass the strict head-on topology test. The audit
-  maps face A to the published 25/40/30 mm outer-slot, mono/bi, and center
-  sequence; face B to 20/30/25 mm; face C to 15/25/20 mm; and face D to
-  10/20/15 mm, with each local center feature matched to the corresponding
-  published multi-face imagery. Each is `edit` only for the engraved Owl mark.
-  Owl Climb publishes the bare body as
+  retains the visibly supported flat-center, deep-sloper, shallow half-round,
+  and deep rounded-recess topologies. Local face IDs A–D are analyst mappings
+  to published gallery views, not manufacturer numeric face labels; the
+  published 25/20/15/10 mm outer-slot, 40/30/25/20 mm mono/bi, and 30/25/20/15
+  mm center-depth sequences remain board-level specifications and are not
+  assigned to those local face IDs. Each is `edit` only for the engraved Owl
+  mark. The current first-party route is visibly a 404, so the audit uses the
+  exact openable 2026-05-17 Owl Climb archive snapshot. Owl Climb publishes the bare body as
   660 × 100 × 100 mm, while Oliunìd publishes 68 × 14 × 12 cm for the supported
   assembly; that measurement-scope conflict remains explicit and does not
   alter face geometry.
@@ -132,8 +135,9 @@ Resolutions are added only when direct live sources establish the named revision
   urethane claim. No ready accepted urethane split-fixed-board comparator
   remains for either Phase 2 edit.
 - Lane B classification: 5 `keep`, 14 `edit`, and 5 `regenerate` records. The
-  validated lane report contains 19 packages and 24 presentations; Plateau
-  primary and both Stone Hanger Mini Beech presentations are evidence-blocked.
+  validated lane report contains 19 packages and 24 presentations; all five
+  keeps are accepted current assets, all nineteen repairs remain pending Phase
+  2, and Plateau primary is the lane's only evidence-blocked asset.
 
 ## Final classification totals
 

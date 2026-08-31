@@ -3868,7 +3868,7 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Foundry Training Board",
-            "imageRole": "Straight-on and oblique gallery views establish the arched silhouette, tapered pinches, irregular contacts, texture, and mounting points; this first-party page does not name the board chemistry. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
+            "imageRole": "The live product image, edge-depth image, and comparison image establish the arched silhouette, tapered pinches, irregular contacts, texture, mounting points, and published edge-depth context; this first-party page does not name the board chemistry. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
             "supportedClaim": "The current Foundry is a compact training board with tapered pinches and the shown asymmetric-depth grip family."
           }
         ],
@@ -5300,7 +5300,7 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Stone Hanger Mini x KARMA8A collaboration",
-            "imageRole": "Exact collaboration imagery establishes smoked oak, recycled granite, purple cord, two 15 mm edges, 60 mm pinch, knot, and adjustable orientation. This presentation-specific review addresses the published two-edge and 60 mm pinch portable working faces.",
+            "imageRole": "Exact collaboration imagery establishes smoked oak, real granite, purple cord, two 15 mm edges, 60 mm pinch, knot, and adjustable orientation. This presentation-specific review addresses the published two-edge and 60 mm pinch portable working faces.",
             "supportedClaim": "The KARMA8A edition is a smoked-oak, real-granite, purple-cord portable device with two 15 mm edges and a 60 mm pinch."
           }
         ],
@@ -5310,9 +5310,9 @@
             "publisher": "Verified Nature Climbing customers via Loox",
             "sourceKind": "ownerPhoto",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Stone Hanger Mini x KARMA8A owner examples",
-            "imageRole": "Exact collaboration owner photos corroborate the dark wood, natural stone variation, complete purple cord, and compact multi-orientation form. This presentation-specific review addresses the published two-edge and 60 mm pinch portable working faces.",
-            "supportedClaim": "Owner examples preserve the collaboration's mixed natural materials and complete suspension assembly."
+            "revisionApplicability": "Stone Hanger Mini x KARMA8A verified owner example",
+            "imageRole": "One verified purchased-item owner video, represented by ownerPhoto because the schema has no video source kind, corroborates the dark wood, natural stone variation, complete purple cord, and compact multi-orientation form. This presentation-specific review addresses the published two-edge and 60 mm pinch portable working faces.",
+            "supportedClaim": "The verified owner video preserves the collaboration's mixed natural materials and complete suspension assembly."
           }
         ],
         "officialEvidenceGap": null,
@@ -5403,7 +5403,7 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The exact official Beech page establishes the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
+          "explanation": "The exact official Beech page and exact Varun retailer listing establish the beech body, real granite, and complete suspension cord; the current asset preserves the identity-bearing material separation."
         },
         "topology": {
           "outcome": "conforms",
@@ -5422,8 +5422,8 @@
           "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
         },
         "crossCatalogConsistency": {
-          "outcome": "uncertain",
-          "explanation": "The current studio treatment is visually coherent, but no acceptable live independent direct page proves this exact Mini Beech production presentation, so it cannot be accepted in the catalog cohort."
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded natural-material texture, and restrained edge treatment match the accepted KARMA8A multi-orientation cohort."
         }
       },
       "evidence": {
@@ -5438,16 +5438,26 @@
             "supportedClaim": "Stone Hanger Mini Beech combines real granite, beech, and cord; its lengthwise faces and 60 mm pinch end are usable working surfaces."
           }
         ],
-        "independent": [],
+        "independent": [
+          {
+            "url": "https://varun.pl/pl/p/Chwytotablica-Nature-Climbing-Stone-Hanger-Mini-Beech-Bukowa-15mm-przenosna-do-cwiczen-sily-palcow-/145",
+            "publisher": "Varun",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Nature Climbing Stone Hanger Mini Beech 15 mm",
+            "imageRole": "The exact direct retailer title and multi-image gallery corroborate the Beech and real-granite construction, two 15 mm working edges, complete rope-adjusted portable assembly, and lengthwise-edge presentation.",
+            "supportedClaim": "The exact Beech product pairs a 15 mm granite edge with a 15 mm incut wood edge and uses a rope-adjusted portable form."
+          }
+        ],
         "officialEvidenceGap": null,
-        "independentEvidenceGap": "Fresh exact-model searches for Stone Hanger Mini Beech retailer, review, and owner evidence found no acceptable live independent direct page proving the Beech production presentation. Search results exposed only Nature Climbing pages, a generic Vantage Climb category listing without an exact direct product page, and a Shop.app manufacturer mirror that is not accepted as independent evidence."
+        "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": null,
-        "materialMatch": null,
-        "formFactorMatch": null,
-        "reason": null,
-        "baselineGap": "The exact Mini Beech presentation is evidence-blocked, and no other ready accepted record matches its Beech, real-granite, and complete-cord multi-orientation cohort."
+        "assetPath": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.png",
+        "materialMatch": "The accepted KARMA8A baseline uses the same wood, real-granite, and complete-cord material family; it supplies style only and no Mini Beech geometry evidence.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
       },
       "generation": {
         "prompt": null,
@@ -5456,9 +5466,12 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": null,
-        "finalDimensions": null,
-        "visualReviewerDecision": "blockedEvidence",
+        "acceptedAssetSHA256": "013dd268460505601788c6166cba407f02e51262aae0e93de41627ecd1e4f96e",
+        "finalDimensions": {
+          "widthPixels": 1254,
+          "heightPixels": 1254
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -5524,7 +5537,7 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "The exact official Beech page establishes the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
+          "explanation": "The exact official Beech page and exact Varun retailer listing establish the beech body, real granite, and complete suspension cord; the current asset preserves the identity-bearing material separation."
         },
         "topology": {
           "outcome": "conforms",
@@ -5543,8 +5556,8 @@
           "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
         },
         "crossCatalogConsistency": {
-          "outcome": "uncertain",
-          "explanation": "The current studio treatment is visually coherent, but no acceptable live independent direct page proves this exact Mini Beech 60 mm pinch presentation, so it cannot be accepted in the catalog cohort."
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded natural-material texture, and restrained edge treatment match the accepted KARMA8A multi-orientation cohort."
         }
       },
       "evidence": {
@@ -5559,16 +5572,26 @@
             "supportedClaim": "Stone Hanger Mini Beech combines real granite, beech, and cord; its lengthwise faces and 60 mm pinch end are usable working surfaces."
           }
         ],
-        "independent": [],
+        "independent": [
+          {
+            "url": "https://varun.pl/pl/p/Chwytotablica-Nature-Climbing-Stone-Hanger-Mini-Beech-Bukowa-15mm-przenosna-do-cwiczen-sily-palcow-/145",
+            "publisher": "Varun",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Nature Climbing Stone Hanger Mini Beech 15 mm",
+            "imageRole": "The exact direct retailer title and multi-image gallery corroborate the Beech and real-granite construction, complete rope-adjusted portable assembly, and published 60 mm pinch end.",
+            "supportedClaim": "The exact Beech product includes a published 60 mm pinch and uses a rope-adjusted portable form."
+          }
+        ],
         "officialEvidenceGap": null,
-        "independentEvidenceGap": "Fresh exact-model searches for Stone Hanger Mini Beech retailer, review, and owner evidence found no acceptable live independent direct page proving the Beech production presentation. Search results exposed only Nature Climbing pages, a generic Vantage Climb category listing without an exact direct product page, and a Shop.app manufacturer mirror that is not accepted as independent evidence."
+        "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": null,
-        "materialMatch": null,
-        "formFactorMatch": null,
-        "reason": null,
-        "baselineGap": "The exact Mini Beech presentation is evidence-blocked, and no other ready accepted record matches its Beech, real-granite, and complete-cord multi-orientation cohort."
+        "assetPath": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.png",
+        "materialMatch": "The accepted KARMA8A baseline uses the same wood, real-granite, and complete-cord material family; it supplies style only and no Mini Beech geometry evidence.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
       },
       "generation": {
         "prompt": null,
@@ -5577,9 +5600,12 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": null,
-        "finalDimensions": null,
-        "visualReviewerDecision": "blockedEvidence",
+        "acceptedAssetSHA256": "9883d48087783386f3791a3dd90d2c0e0f30ff9bea97b9f123d36391418cc40d",
+        "finalDimensions": {
+          "widthPixels": 1254,
+          "heightPixels": 1254
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -5623,8 +5649,8 @@
       "productName": "Poker",
       "presentationID": "face-a",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-a.png",
-      "workingSurface": "the independently selectable flat-center Poker face mapped to the published 25 mm outer-slot, 40 mm mono/bi, and 30 mm center-depth sequence",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face A maps to the first 25/40/30 mm sequence entries; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable flat-center Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5648,7 +5674,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "Face A's flat center and side contact family match the first published sequence entries: 25 mm outer slots, 40 mm mono/bi pockets, and a 30 mm center slot."
+          "explanation": "The archived first-party and live retailer multi-face galleries visibly support the local face-a flat-center and side-contact topology. Published depth sequences apply at board level and are not assigned to this analyst face ID."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -5670,13 +5696,13 @@
       "evidence": {
         "official": [
           {
-            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "url": "https://web.archive.org/web/20260517091954id_/https://owlclimb.com/index.php/en/prds-2/poker/",
             "publisher": "Owl Climb",
-            "sourceKind": "officialProductPage",
+            "sourceKind": "archivedFirstParty",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face imagery shows the flat-center side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face A explicitly maps to the first 25/40/30 mm entries.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face A is the pictured flat-center face mapped to outer 25 mm, mono/bi 40 mm, and center 30 mm."
+            "revisionApplicability": "Archived 2026-05-17 Owl Climb Poker four-face tulipwood model",
+            "imageRole": "The exact archived first-party multi-face gallery visibly supports the flat-center presentation. Archived specifications publish 25/20/15/10 mm outer-slot, 40/30/25/20 mm mono/bi, and 30/25/20/15 mm center-depth sequences at board level without mapping sequence positions to face labels.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; local face-a is an analyst mapping to the archived flat-center view, not a manufacturer numeric face label."
           }
         ],
         "independent": [
@@ -5686,8 +5712,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "The exact retailer gallery corroborates the flat-center production face, rotation in the supports, and the same ordered 25/20/15/10, 40/30/25/20, and 30/25/20/15 mm depth sequences. Audit face A maps to the first 25/40/30 mm entries.",
-            "supportedClaim": "The production Poker rotates among four faces; face A maps to 25/40/30 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "imageRole": "The exact live retailer gallery corroborates the flat-center production face and rotation in the supports. Its ordered depth sequences remain board-level specifications and do not label the local analyst face ID.",
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-a is an analyst mapping to the flat-center view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -5753,8 +5779,8 @@
       "productName": "Poker",
       "presentationID": "face-b",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-b.png",
-      "workingSurface": "the independently selectable deep-sloper Poker face mapped to the published 20 mm outer-slot, 30 mm mono/bi, and 25 mm center-depth sequence",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face B maps to the second 20/30/25 mm sequence entries; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable deep-sloper Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5778,7 +5804,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "Face B's paired deep slopers and side contact family match the second published sequence entries: 20 mm outer slots, 30 mm mono/bi pockets, and a 25 mm center slot."
+          "explanation": "The archived first-party and live retailer multi-face galleries visibly support the local face-b paired deep-sloper and side-contact topology. Published depth sequences apply at board level and are not assigned to this analyst face ID."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -5800,13 +5826,13 @@
       "evidence": {
         "official": [
           {
-            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "url": "https://web.archive.org/web/20260517091954id_/https://owlclimb.com/index.php/en/prds-2/poker/",
             "publisher": "Owl Climb",
-            "sourceKind": "officialProductPage",
+            "sourceKind": "archivedFirstParty",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face imagery shows the paired deep-sloper side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face B explicitly maps to the second 20/30/25 mm entries.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face B is the pictured deep-sloper face mapped to outer 20 mm, mono/bi 30 mm, and center 25 mm."
+            "revisionApplicability": "Archived 2026-05-17 Owl Climb Poker four-face tulipwood model",
+            "imageRole": "The exact archived first-party multi-face gallery visibly supports the paired deep-sloper presentation. Archived specifications publish 25/20/15/10 mm outer-slot, 40/30/25/20 mm mono/bi, and 30/25/20/15 mm center-depth sequences at board level without mapping sequence positions to face labels.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; local face-b is an analyst mapping to the archived deep-sloper view, not a manufacturer numeric face label."
           }
         ],
         "independent": [
@@ -5816,8 +5842,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "The exact retailer gallery corroborates the paired deep-sloper production face, rotation in the supports, and the ordered depth sequences. Audit face B maps to the second 20/30/25 mm entries.",
-            "supportedClaim": "The production Poker rotates among four faces; face B maps to 20/30/25 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "imageRole": "The exact live retailer gallery corroborates the paired deep-sloper production face and rotation in the supports. Its ordered depth sequences remain board-level specifications and do not label the local analyst face ID.",
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-b is an analyst mapping to the deep-sloper view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -5883,8 +5909,8 @@
       "productName": "Poker",
       "presentationID": "face-c",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-c.png",
-      "workingSurface": "the independently selectable shallow half-round Poker face mapped to the published 15 mm outer-slot, 25 mm mono/bi, and 20 mm center-depth sequence",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face C maps to the third 15/25/20 mm sequence entries; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable shallow half-round Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5908,7 +5934,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "Face C's paired shallow half-round contacts and side contact family match the third published sequence entries: 15 mm outer slots, 25 mm mono/bi pockets, and a 20 mm center slot."
+          "explanation": "The archived first-party and live retailer multi-face galleries visibly support the local face-c paired shallow half-round and side-contact topology. Published depth sequences apply at board level and are not assigned to this analyst face ID."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -5930,13 +5956,13 @@
       "evidence": {
         "official": [
           {
-            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "url": "https://web.archive.org/web/20260517091954id_/https://owlclimb.com/index.php/en/prds-2/poker/",
             "publisher": "Owl Climb",
-            "sourceKind": "officialProductPage",
+            "sourceKind": "archivedFirstParty",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face imagery shows the shallow half-round side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face C explicitly maps to the third 15/25/20 mm entries.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face C is the pictured shallow half-round face mapped to outer 15 mm, mono/bi 25 mm, and center 20 mm."
+            "revisionApplicability": "Archived 2026-05-17 Owl Climb Poker four-face tulipwood model",
+            "imageRole": "The exact archived first-party multi-face gallery visibly supports the shallow half-round presentation. Archived specifications publish 25/20/15/10 mm outer-slot, 40/30/25/20 mm mono/bi, and 30/25/20/15 mm center-depth sequences at board level without mapping sequence positions to face labels.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; local face-c is an analyst mapping to the archived shallow half-round view, not a manufacturer numeric face label."
           }
         ],
         "independent": [
@@ -5946,8 +5972,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "The exact retailer gallery corroborates the shallow half-round production face, rotation in the supports, and the ordered depth sequences. Audit face C maps to the third 15/25/20 mm entries.",
-            "supportedClaim": "The production Poker rotates among four faces; face C maps to 15/25/20 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "imageRole": "The exact live retailer gallery corroborates the shallow half-round production face and rotation in the supports. Its ordered depth sequences remain board-level specifications and do not label the local analyst face ID.",
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-c is an analyst mapping to the shallow half-round view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -6013,8 +6039,8 @@
       "productName": "Poker",
       "presentationID": "face-d",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-d.png",
-      "workingSurface": "the independently selectable deep rounded-recess Poker face mapped to the published 10 mm outer-slot, 20 mm mono/bi, and 15 mm center-depth sequence",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face D maps to the fourth 10/20/15 mm sequence entries; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable deep rounded-recess Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -6038,7 +6064,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "Face D's paired deep rounded recesses and side contact family match the fourth published sequence entries: 10 mm outer slots, 20 mm mono/bi pockets, and a 15 mm center slot."
+          "explanation": "The archived first-party and live retailer multi-face galleries visibly support the local face-d paired deep rounded-recess and side-contact topology. Published depth sequences apply at board level and are not assigned to this analyst face ID."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -6060,13 +6086,13 @@
       "evidence": {
         "official": [
           {
-            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "url": "https://web.archive.org/web/20260517091954id_/https://owlclimb.com/index.php/en/prds-2/poker/",
             "publisher": "Owl Climb",
-            "sourceKind": "officialProductPage",
+            "sourceKind": "archivedFirstParty",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face imagery shows the deep rounded-recess side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face D explicitly maps to the fourth 10/20/15 mm entries.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face D is the pictured deep rounded-recess face mapped to outer 10 mm, mono/bi 20 mm, and center 15 mm."
+            "revisionApplicability": "Archived 2026-05-17 Owl Climb Poker four-face tulipwood model",
+            "imageRole": "The exact archived first-party multi-face gallery visibly supports the deep rounded-recess presentation. Archived specifications publish 25/20/15/10 mm outer-slot, 40/30/25/20 mm mono/bi, and 30/25/20/15 mm center-depth sequences at board level without mapping sequence positions to face labels.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; local face-d is an analyst mapping to the archived deep rounded-recess view, not a manufacturer numeric face label."
           }
         ],
         "independent": [
@@ -6076,8 +6102,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "The exact retailer gallery corroborates the deep rounded-recess production face, rotation in the supports, and the ordered depth sequences. Audit face D maps to the fourth 10/20/15 mm entries.",
-            "supportedClaim": "The production Poker rotates among four faces; face D maps to 10/20/15 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "imageRole": "The exact live retailer gallery corroborates the deep rounded-recess production face and rotation in the supports. Its ordered depth sequences remain board-level specifications and do not label the local analyst face ID.",
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-d is an analyst mapping to the deep rounded-recess view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
