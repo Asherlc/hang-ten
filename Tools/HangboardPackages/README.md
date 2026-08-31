@@ -37,6 +37,8 @@ scripts/hangboard-packages.sh validate --root Hangboards
 scripts/hangboard-packages.sh status --root Hangboards
 scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json
 ```
 
 `validate` and `status` print the discovered complete packages and draft paths;
@@ -51,6 +53,14 @@ scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 source-audited ledger against its hold metadata, and prints a sorted coverage
 report. Like the other package commands, it is source-only and read-only: it
 does not alter packages or the ledger.
+
+`audit-presentations` requires a complete final inventory and cross-checks the
+closed remediation manifest against every declared presentation's package ID,
+asset path, PNG hash, and dimensions. It prints a sorted decision report. A
+repeatable `--package-id BOARD_ID` selects a validation lane for required
+presentation coverage and report counts; the manifest's root `packageIDs` must
+still cover the entire inventory, and every record it does contain is still
+fully validated against real package assets.
 
 Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
 must have one outcome for each supported metadata field. Boards in the

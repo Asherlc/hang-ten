@@ -6,7 +6,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-from conftest import write_board_package, write_primary_only_draft
+from conftest import (
+    write_board_package,
+    write_multi_presentation_board_package,
+    write_primary_only_draft,
+)
+from test_presentation_remediation_audit import _manifest, _record, _write_manifest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "hangboard-packages.sh"
@@ -105,7 +110,9 @@ def _write_audit_ledger(
     return ledger
 
 
-def test_package_cli_reports_directly_discovered_boards_and_drafts(tmp_path: Path) -> None:
+def test_package_cli_reports_directly_discovered_boards_and_drafts(
+    tmp_path: Path,
+) -> None:
     write_board_package(tmp_path / "package-board", board_id="fixture.board")
     write_primary_only_draft(tmp_path / "draft-board")
 
@@ -137,7 +144,9 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
     write_board_package(packages / "package-board", board_id="fixture.board")
     ledger = _write_audit_ledger(tmp_path)
 
-    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+    result = _run_cli(
+        "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
+    )
 
     assert result.returncode == 0, result.stderr
     assert _json_output(result.stdout) == {
@@ -197,7 +206,9 @@ def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
     write_board_package(packages / "package-board", board_id="fixture.board")
     ledger = _write_audit_ledger(tmp_path, kind_outcome="adapted")
 
-    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+    result = _run_cli(
+        "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
+    )
 
     assert result.returncode == 0, result.stderr
     report = _json_output(result.stdout)
@@ -220,10 +231,78 @@ def test_package_cli_audit_metadata_rejects_unknown_hold(tmp_path: Path) -> None
     write_board_package(packages / "package-board", board_id="fixture.board")
     ledger = _write_audit_ledger(tmp_path, hold_id="unknown-hold")
 
-    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+    result = _run_cli(
+        "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
+    )
 
     assert result.returncode == 1
     assert result.stderr == "error: unknown hold ID: unknown-hold\n"
+
+
+def test_package_cli_audit_presentations_reports_selected_lane(tmp_path: Path) -> None:
+    boards = tmp_path / "Hangboards"
+    write_multi_presentation_board_package(boards / "fixture-board")
+    manifest = _write_manifest(
+        tmp_path,
+        _manifest(
+            package_ids=["fixture.board"],
+            records=[
+                _record(
+                    boards,
+                    "fixture-board",
+                    "fixture.board",
+                    "front",
+                    "assets/primary.png",
+                ),
+                _record(
+                    boards, "fixture-board", "fixture.board", "back", "assets/back.png"
+                ),
+            ],
+        ),
+    )
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--package-id",
+        "fixture.board",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert _json_output(result.stdout) == {
+        "decisions": {"keep": 2},
+        "evidenceBlockedAssets": [],
+        "packageCount": 1,
+        "packageIDs": ["fixture.board"],
+        "presentationCount": 2,
+    }
+
+
+def test_package_cli_audit_presentations_prints_domain_error_first_line(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    write_board_package(boards / "fixture-board")
+    record = _record(
+        boards, "fixture-board", "fixture.board", "primary", "assets/primary.png"
+    )
+    record["decision"] = "not-a-decision"
+    manifest = _write_manifest(
+        tmp_path, _manifest(package_ids=["fixture.board"], records=[record])
+    )
+
+    result = _run_cli(
+        "audit-presentations", "--root", str(boards), "--manifest", str(manifest)
+    )
+
+    assert result.returncode == 1
+    assert (
+        result.stderr.splitlines()[0]
+        == "error: records[0].decision must be one of ['edit', 'keep', 'regenerate', 'removeUnsupportedPresentation', 'splitPhysicalRevision']"
+    )
 
 
 def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None:
@@ -268,7 +347,7 @@ def _write_wrapper_fixture(
     python.write_text(
         "#!/bin/sh\n"
         "if [ \"$1\" = '-m' ] && [ \"$2\" = 'pip' ]; then\n"
-        "  printf '%s\\n' \"$*\" >> \"$FAKE_PIP_LOG\"\n"
+        '  printf \'%s\\n\' "$*" >> "$FAKE_PIP_LOG"\n'
         "fi\n"
         "exit 0\n",
         encoding="utf-8",

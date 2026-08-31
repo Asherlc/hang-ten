@@ -10,6 +10,10 @@ from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
 from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
+from .presentation_remediation_audit import (
+    load_presentation_remediation_manifest,
+    validate_presentation_remediation_manifest,
+)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -18,12 +22,22 @@ def main(argv: Sequence[str] | None = None) -> int:
         inventory = discover_board_packages(
             arguments.root,
             require_complete_inventory=(
-                arguments.command == "audit-metadata" or arguments.final_inventory
+                arguments.command in {"audit-metadata", "audit-presentations"}
+                or arguments.final_inventory
             ),
         )
         if arguments.command == "audit-metadata":
             report = validate_metadata_ledger(
                 load_metadata_ledger(arguments.ledger), inventory
+            )
+            print(json.dumps(report.to_json(), indent=2, sort_keys=True))
+            return 0
+        if arguments.command == "audit-presentations":
+            report = validate_presentation_remediation_manifest(
+                load_presentation_remediation_manifest(arguments.manifest),
+                inventory,
+                hangboards_root=arguments.root,
+                selected_package_ids=frozenset(arguments.package_id),
             )
             print(json.dumps(report.to_json(), indent=2, sort_keys=True))
             return 0
@@ -56,6 +70,14 @@ def _parser() -> argparse.ArgumentParser:
     )
     audit_metadata.add_argument("--root", type=Path, required=True)
     audit_metadata.add_argument("--ledger", type=Path, required=True)
+    audit_presentations = subcommands.add_parser(
+        "audit-presentations", help="validate a presentation remediation manifest"
+    )
+    audit_presentations.add_argument("--root", type=Path, required=True)
+    audit_presentations.add_argument("--manifest", type=Path, required=True)
+    audit_presentations.add_argument(
+        "--package-id", action="append", default=[], help="validate one package lane"
+    )
     return parser
 
 
