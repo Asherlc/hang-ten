@@ -671,3 +671,64 @@ of the 16 presentation-scoped path checks was clicked individually and became
 the sole selected hit target. The inverted bounds were the expected 180-degree
 counterparts of their canonical paths. Final-inventory package validation and
 package status completed successfully with 61 packages and no drafts.
+
+## Escape Beta Board presentation repair (2026-08-31)
+
+Escape's current product page and gallery were freshly reopened on 2026-08-31,
+along with the independent StrengthClimbing owner review/front image and Power
+Company Climbing's original-owner review. The official page publishes the
+current 26 x 6 x 2 in molded-resin Beta Board in Gray 1810 and identifies its
+dual texture. The independent photos confirm the same 11-opening topology,
+ten recessed mounting bores, plastic/resin construction, and rough contact
+areas transitioning to smooth glossy margins.
+
+Fresh evidence:
+
+- Escape Climbing product page:
+  <https://escapeclimbing.com/products/ec72100>
+- Escape official straight-on red and gray publication images:
+  <https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_01-02.jpg?v=1700454580>
+  and
+  <https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_04-02.jpg?v=1700454580>
+- StrengthClimbing owner review and straight-on hold-layout photo:
+  <https://strengthclimbing.com/beta-board-from-escape-climbing-hangboard-review/>
+- Power Company Climbing owner review/photos:
+  <https://www.powercompanyclimbing.com/blog/2011/03/review-v512-hangboard-from-detroit-rock.html>
+
+The package declares exactly one presentation, `primary`, and the repaired
+asset remains an independently head-on 1503 x 394 view. Its silhouette,
+aspect, shadows, alpha-derived edge coverage, and all 11 physical hold
+openings are unchanged. Ten source-backed recessed mounting bores were drawn
+at manually reviewed top-origin pixel centers: upper `(327,82)`,
+`(751.5,86)`, `(1176,82)`; outer-side `(79,201)`, `(1424,201)`; and
+lower/center `(283,309)`, `(516,261)`, `(751.5,231)`, `(987,261)`,
+`(1220,309)`. The accepted bore outer/core radii are 8.8/3.3 px. The symmetric
+positions reflect the symmetric molded product; no image detection,
+registration, mask, contour, crop, resample, warp, or edge movement was used.
+
+The accepted gray-resin transform is the monotonic luminance mapping
+`0.12 + 0.58 * luminance^1.50`, tinted by `(0.98, 1.00, 0.99)` and composited
+through the source's unchanged alpha coverage onto `#F6F2EA`. It preserves
+the existing high-frequency gritty contact texture, recessed shadows, and
+specular rim highlights without blur, yielding the official rough-contact /
+glossy-margin dual finish. No branding was added: the current official gray
+photo resolves a subtle molded mark, but the independent straight-on image
+does not establish it clearly enough to justify inventing pixels.
+
+Candidate 1 (`ba1224d0b338fece178e6ccbb3f34bd8903e392e409c74274640ec0adcc39cdf`)
+was rejected as too pale to read as published gray resin. Candidate 2 was
+accepted. The asset changed from
+`f55fa7cf1e86cf050cd774d3068da37d02534da830eea6442c8e5038f22c3c90`
+to `2cbd1e4cb54d2447379ff2801fe0b918139b2681d6749624aa1448a8952b78d1`;
+both are 1503 x 394 PNGs. `board.json` remains byte-identical at
+`eb27ddc4b9f92332e1133db6ade1ce1a81de92edf7896a7790bbe3bfc1310873`.
+
+Workbench rendered the single presentation with all 22 canonical geometry
+pieces and hold-ID labels aligned to their unchanged physical openings; the
+same byte-identical paths remain the hit-testing source of truth. The repaired
+image therefore passes the one-presentation/all-positions requirement,
+head-on view, gray plastic/resin material, published 11-opening/10-bore
+topology, and catalog smoothing/background checks. Final-inventory validation
+and package status passed with 61 packages and no drafts. This deterministic
+recolor/manual-bore repair is the user-approved exception to image generation;
+the schema-2 machine manifest is intentionally unchanged in this bounded pass.
