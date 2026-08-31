@@ -75,12 +75,15 @@ Resolutions are added only when direct live sources establish the named revision
 - Climber's Edge, Contact, Foundry, Project, and Simulator 3-D are
   `regenerate`: current broad silhouettes may be recognizable in places, but
   the cited exact revisions establish different rail, pinch, pocket, sloper,
-  jug, mounting-hole, or material topology. Prime Rib and Wood Grips II Deluxe
+  jug, mounting-hole, or material topology. The exact Dick's Climbing Foundry
+  listing, rather than the earlier generic Backcountry material attribution,
+  supplies the explicit resin claim; Metolius supplies the exact geometry but
+  does not name the chemistry. Prime Rib and Wood Grips II Deluxe
   are accepted `keep` baselines. Compact II is an `edit` because its cited
   two-row grip layout remains usable while the production mounting points are
   absent.
-- Both Light Rail 2.0 sides are `edit`: each named working face is oblique and
-  its suspension cord is cropped. Metolius calls the current face 20 mm while
+- Both Light Rail 2.0 sides are `edit`: each displayed working surface is
+  orthographic and legible, but its suspension cord is cropped. Metolius calls the current face 20 mm while
   REI publishes a 19/26 mm depth list for the same current product; that exact
   source conflict remains a Phase 2 constraint, while both sources agree on a
   four-position reversible FSC-wood rail. Rock Rings 3D is also `edit` because
@@ -92,13 +95,22 @@ Resolutions are added only when direct live sources establish the named revision
   studio treatment.
 - Stoak Board III Oak is `edit` to restore sourced mounting and magnetic
   details while preserving FSC oak and visibly real recycled Norwegian
-  granite. The KARMA8A collaboration, Stone Hanger Mini Beech primary, and its
-  head-on 60 mm pinch side are accepted `keep` records; all three retain their
-  sourced wood, real-stone, and complete-cord separation rather than borrowing
-  a wood-only or synthetic texture.
+  granite; its independent evidence is the exact 2026 Grimpeez Stoak Board III
+  Oak comparison rather than the generic Loox storefront. The evidence-complete
+  KARMA8A collaboration remains the unique accepted mixed-material
+  multi-orientation cohort and uses its own current presentation as the style
+  baseline. Stone Hanger Mini Beech primary and its 60 mm pinch side remain
+  evidence-blocked `keep` records: the exact canonical official page is live,
+  but fresh independent searches found only a generic Vantage Climb category
+  listing and a disallowed Shop.app manufacturer mirror, not an acceptable
+  exact direct retailer, review, or owner page.
 - All four Poker working faces were independently checked against the exact
-  four-face grip inventory and pass the strict head-on topology test. Each is
-  `edit` only for the engraved Owl mark. Owl Climb publishes the bare body as
+  four-face grip inventory and pass the strict head-on topology test. The audit
+  maps face A to the published 25/40/30 mm outer-slot, mono/bi, and center
+  sequence; face B to 20/30/25 mm; face C to 15/25/20 mm; and face D to
+  10/20/15 mm, with each local center feature matched to the corresponding
+  published multi-face imagery. Each is `edit` only for the engraved Owl mark.
+  Owl Climb publishes the bare body as
   660 × 100 × 100 mm, while Oliunìd publishes 68 × 14 × 12 cm for the supported
   assembly; that measurement-scope conflict remains explicit and does not
   alter face geometry.
@@ -107,13 +119,21 @@ Resolutions are added only when direct live sources establish the named revision
   are omitted. Fresh exact-model searches found no independent direct review,
   retailer, or owner page proving this Oak configuration, so the independent
   evidence gap remains explicit.
-- Iron Palm 2.0 is `edit` for its transparent cutout. Split Palm and the So iLL
-  x Meagan Martin Training Tiles are accepted `keep` records after exact
-  official and independent sources confirmed their textured-urethane,
-  two-piece contact layouts.
-- Lane B classification: 7 `keep`, 12 `edit`, and 5 `regenerate` records. The
-  validated lane report contains 19 packages and 24 presentations; Plateau's
-  independent-source gap is the lane's only evidence-blocked asset.
+- Iron Palm 2.0 is `edit` for its transparent cutout. So iLL publishes
+  40/35/15 mm rails while Backcountry publishes 40/25/15 mm for the same exact
+  product; the depth conflict remains unresolved. Only Backcountry is used for
+  the urethane claim because the So iLL Canada page does not name the material.
+  Split Palm and the So iLL x Meagan Martin Training Tiles are `edit`, not
+  accepted keeps: both current renders omit production mounting points and
+  hardware context. Split Palm's urethane claim comes from the exact So iLL US
+  page's urethane-items disclaimer, while Klatredepot supports only its direct
+  topology and dimensions. Training Tiles' Canada page supports topology,
+  dimensions, and hardware, while OutdoorGearLab supplies the independent
+  urethane claim. No ready accepted urethane split-fixed-board comparator
+  remains for either Phase 2 edit.
+- Lane B classification: 5 `keep`, 14 `edit`, and 5 `regenerate` records. The
+  validated lane report contains 19 packages and 24 presentations; Plateau
+  primary and both Stone Hanger Mini Beech presentations are evidence-blocked.
 
 ## Final classification totals
 

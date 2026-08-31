@@ -3868,19 +3868,19 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Foundry Training Board",
-            "imageRole": "Straight-on and oblique gallery views establish the arched molded silhouette, tapered pinches, irregular contacts, texture, and mounting points. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
-            "supportedClaim": "The current Foundry is a compact molded training board with tapered pinches and the shown asymmetric-depth grip family."
+            "imageRole": "Straight-on and oblique gallery views establish the arched silhouette, tapered pinches, irregular contacts, texture, and mounting points; this first-party page does not name the board chemistry. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The current Foundry is a compact training board with tapered pinches and the shown asymmetric-depth grip family."
           }
         ],
         "independent": [
           {
-            "url": "https://www.backcountry.com/metolius-foundry-training-board",
-            "publisher": "Backcountry",
+            "url": "https://www.dicksclimbing.com/products/metolius-foundry-board",
+            "publisher": "Dick's Climbing",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Metolius Foundry Training Board",
-            "imageRole": "Exact retailer imagery corroborates the molded-resin body, complex contact layout, and dimensions. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
-            "supportedClaim": "The production Foundry uses a textured molded body and complex grip geometry rather than a smooth rectangular-cell layout."
+            "imageRole": "The exact retailer listing names the Foundry as a resin hangboard and corroborates its eleven-hold pinch, jug, sloper, pocket, and edge inventory. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The production Foundry is resin and uses a complex eleven-hold grip family rather than a smooth rectangular-cell layout."
           }
         ],
         "officialEvidenceGap": null,
@@ -3974,8 +3974,8 @@
           "explanation": "The reversible four-hold topology is recognizable, but Metolius's current 20 mm label conflicts with REI's 19/26 mm production depth list and must remain a Phase 2 constraint."
         },
         "headOnPerspective": {
-          "outcome": "nonconforming",
-          "explanation": "The named edge face is shown obliquely instead of under the strict head-on working-surface test."
+          "outcome": "conforms",
+          "explanation": "The displayed 20 mm working surface is orthographic, fully legible across the rail, and not materially foreshortened."
         },
         "smoothing": {
           "outcome": "conforms",
@@ -3987,7 +3987,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "Oblique presentation and cropped suspension components require a bounded Phase 2 correction."
+          "explanation": "Cropped suspension components and the unresolved 20 mm versus 19/26 mm depth-label conflict require a bounded Phase 2 correction."
         }
       },
       "evidence": {
@@ -4104,8 +4104,8 @@
           "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published 15 mm reversible edge face."
         },
         "headOnPerspective": {
-          "outcome": "nonconforming",
-          "explanation": "The named 15 mm face is shown obliquely rather than head-on."
+          "outcome": "conforms",
+          "explanation": "The displayed 15 mm working surface is orthographic, fully legible across the rail, and not materially foreshortened."
         },
         "smoothing": {
           "outcome": "conforms",
@@ -4117,7 +4117,7 @@
         },
         "crossCatalogConsistency": {
           "outcome": "nonconforming",
-          "explanation": "Oblique presentation and cropped suspension components require a bounded Phase 2 correction."
+          "explanation": "Cropped suspension components require a bounded Phase 2 correction while preserving the legible orthographic working surface."
         }
       },
       "evidence": {
@@ -5138,7 +5138,7 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "Official specifications and independent production imagery establish the FSC-oak body, real recycled Norwegian granite, and magnetic insert system; the current asset preserves the identity-bearing material separation."
+          "explanation": "The exact official Oak page establishes the FSC-oak body, real recycled Norwegian granite, and magnetic insert system; the independent exact-model comparison corroborates the Oak production identity, and the current asset preserves the material separation."
         },
         "topology": {
           "outcome": "nonconforming",
@@ -5175,13 +5175,13 @@
         ],
         "independent": [
           {
-            "url": "https://loox.io/s/IPvkXP8uhB",
-            "publisher": "Verified Nature Climbing customers via Loox",
-            "sourceKind": "ownerPhoto",
+            "url": "https://www.grimpeez.com/meilleur-poutre-escalade/",
+            "publisher": "Grimpeez",
+            "sourceKind": "review",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Stoak Board III Oak production examples",
-            "imageRole": "Exact-product owner photos corroborate real oak grain, dark natural granite variation, installed scale, and visible mounting details. This presentation-specific review addresses the published front oak-and-granite working face.",
-            "supportedClaim": "Owner production examples preserve distinct natural granite and wood surfaces rather than a single synthetic material treatment."
+            "revisionApplicability": "Nature Climbing Stoak Board III Oak",
+            "imageRole": "The independent 2026 comparison names the exact Stoak Board III Oak and corroborates its solid-wood construction, progressive edge layout, durable finish, and premium fixed-board presentation. This presentation-specific review addresses the published front oak-and-granite working face.",
+            "supportedClaim": "The exact Oak model is independently identified as a solid-wood fixed board with progressive edge depths and a carefully finished production presentation."
           }
         ],
         "officialEvidenceGap": null,
@@ -5319,8 +5319,8 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/nature-stone-hanger-mini/assets/primary.png",
-        "materialMatch": "Sourced wood, real granite, and complete cord multi-orientation construction; comparator supplies style only and no product geometry.",
+        "assetPath": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.png",
+        "materialMatch": "This exact evidence-complete KARMA8A presentation is the unique accepted wood, real-granite, and complete-cord multi-orientation cohort baseline; it supplies style only and no additional geometry evidence.",
         "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
         "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
         "baselineGap": null
@@ -5403,7 +5403,7 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "Official specifications and independent production imagery establish the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
+          "explanation": "The exact official Beech page establishes the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
         },
         "topology": {
           "outcome": "conforms",
@@ -5422,14 +5422,14 @@
           "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+          "outcome": "uncertain",
+          "explanation": "The current studio treatment is visually coherent, but no acceptable live independent direct page proves this exact Mini Beech production presentation, so it cannot be accepted in the catalog cohort."
         }
       },
       "evidence": {
         "official": [
           {
-            "url": "https://natureclimbing.com/collections/hangboards/products/stone-hanger-mini-beech",
+            "url": "https://natureclimbing.com/products/stone-hanger-mini-beech",
             "publisher": "Nature Climbing",
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
@@ -5438,26 +5438,16 @@
             "supportedClaim": "Stone Hanger Mini Beech combines real granite, beech, and cord; its lengthwise faces and 60 mm pinch end are usable working surfaces."
           }
         ],
-        "independent": [
-          {
-            "url": "https://loox.io/s/IPvkXP8uhB",
-            "publisher": "Verified Nature Climbing customers via Loox",
-            "sourceKind": "ownerPhoto",
-            "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Stone Hanger Mini Beech production examples",
-            "imageRole": "Exact-product owner photos corroborate natural wood and granite variation, the complete cord and knot, and multi-orientation use. This presentation-specific review addresses the published lengthwise twin 15 mm granite edge faces.",
-            "supportedClaim": "Owner examples preserve separate stone and wood textures and the complete portable assembly."
-          }
-        ],
+        "independent": [],
         "officialEvidenceGap": null,
-        "independentEvidenceGap": null
+        "independentEvidenceGap": "Fresh exact-model searches for Stone Hanger Mini Beech retailer, review, and owner evidence found no acceptable live independent direct page proving the Beech production presentation. Search results exposed only Nature Climbing pages, a generic Vantage Climb category listing without an exact direct product page, and a Shop.app manufacturer mirror that is not accepted as independent evidence."
       },
       "comparator": {
-        "assetPath": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.png",
-        "materialMatch": "Sourced wood, real granite, and complete cord multi-orientation construction; comparator supplies style only and no product geometry.",
-        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "The exact Mini Beech presentation is evidence-blocked, and no other ready accepted record matches its Beech, real-granite, and complete-cord multi-orientation cohort."
       },
       "generation": {
         "prompt": null,
@@ -5466,12 +5456,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "013dd268460505601788c6166cba407f02e51262aae0e93de41627ecd1e4f96e",
-        "finalDimensions": {
-          "widthPixels": 1254,
-          "heightPixels": 1254
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "blockedEvidence",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -5537,7 +5524,7 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "Official specifications and independent production imagery establish the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
+          "explanation": "The exact official Beech page establishes the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
         },
         "topology": {
           "outcome": "conforms",
@@ -5556,14 +5543,14 @@
           "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+          "outcome": "uncertain",
+          "explanation": "The current studio treatment is visually coherent, but no acceptable live independent direct page proves this exact Mini Beech 60 mm pinch presentation, so it cannot be accepted in the catalog cohort."
         }
       },
       "evidence": {
         "official": [
           {
-            "url": "https://natureclimbing.com/collections/hangboards/products/stone-hanger-mini-beech",
+            "url": "https://natureclimbing.com/products/stone-hanger-mini-beech",
             "publisher": "Nature Climbing",
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
@@ -5572,26 +5559,16 @@
             "supportedClaim": "Stone Hanger Mini Beech combines real granite, beech, and cord; its lengthwise faces and 60 mm pinch end are usable working surfaces."
           }
         ],
-        "independent": [
-          {
-            "url": "https://loox.io/s/IPvkXP8uhB",
-            "publisher": "Verified Nature Climbing customers via Loox",
-            "sourceKind": "ownerPhoto",
-            "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Stone Hanger Mini Beech production examples",
-            "imageRole": "Exact-product owner photos corroborate natural wood and granite variation, the complete cord and knot, and multi-orientation use. This presentation-specific review addresses the published head-on 60 mm pinch end face.",
-            "supportedClaim": "Owner examples preserve separate stone and wood textures and the complete portable assembly."
-          }
-        ],
+        "independent": [],
         "officialEvidenceGap": null,
-        "independentEvidenceGap": null
+        "independentEvidenceGap": "Fresh exact-model searches for Stone Hanger Mini Beech retailer, review, and owner evidence found no acceptable live independent direct page proving the Beech production presentation. Search results exposed only Nature Climbing pages, a generic Vantage Climb category listing without an exact direct product page, and a Shop.app manufacturer mirror that is not accepted as independent evidence."
       },
       "comparator": {
-        "assetPath": "Hangboards/nature-stone-hanger-mini/assets/primary.png",
-        "materialMatch": "Sourced beech, real granite, and complete cord from the same accepted physical revision; comparator supplies style only and no product geometry.",
-        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "The exact Mini Beech presentation is evidence-blocked, and no other ready accepted record matches its Beech, real-granite, and complete-cord multi-orientation cohort."
       },
       "generation": {
         "prompt": null,
@@ -5600,12 +5577,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "9883d48087783386f3791a3dd90d2c0e0f30ff9bea97b9f123d36391418cc40d",
-        "finalDimensions": {
-          "widthPixels": 1254,
-          "heightPixels": 1254
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "blockedEvidence",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -5649,8 +5623,8 @@
       "productName": "Poker",
       "presentationID": "face-a",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-a.png",
-      "workingSurface": "the independently selectable flat-center Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable flat-center Poker face mapped to the published 25 mm outer-slot, 40 mm mono/bi, and 30 mm center-depth sequence",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face A maps to the first 25/40/30 mm sequence entries; official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5674,7 +5648,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable flat-center Poker face."
+          "explanation": "Face A's flat center and side contact family match the first published sequence entries: 25 mm outer slots, 40 mm mono/bi pockets, and a 30 mm center slot."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -5701,8 +5675,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable flat-center Poker face.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+            "imageRole": "Exact multi-face imagery shows the flat-center side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face A explicitly maps to the first 25/40/30 mm entries.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face A is the pictured flat-center face mapped to outer 25 mm, mono/bi 40 mm, and center 30 mm."
           }
         ],
         "independent": [
@@ -5712,8 +5686,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable flat-center Poker face.",
-            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+            "imageRole": "The exact retailer gallery corroborates the flat-center production face, rotation in the supports, and the same ordered 25/20/15/10, 40/30/25/20, and 30/25/20/15 mm depth sequences. Audit face A maps to the first 25/40/30 mm entries.",
+            "supportedClaim": "The production Poker rotates among four faces; face A maps to 25/40/30 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -5779,8 +5753,8 @@
       "productName": "Poker",
       "presentationID": "face-b",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-b.png",
-      "workingSurface": "the independently selectable deep-sloper Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable deep-sloper Poker face mapped to the published 20 mm outer-slot, 30 mm mono/bi, and 25 mm center-depth sequence",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face B maps to the second 20/30/25 mm sequence entries; official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5804,7 +5778,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable deep-sloper Poker face."
+          "explanation": "Face B's paired deep slopers and side contact family match the second published sequence entries: 20 mm outer slots, 30 mm mono/bi pockets, and a 25 mm center slot."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -5831,8 +5805,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable deep-sloper Poker face.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+            "imageRole": "Exact multi-face imagery shows the paired deep-sloper side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face B explicitly maps to the second 20/30/25 mm entries.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face B is the pictured deep-sloper face mapped to outer 20 mm, mono/bi 30 mm, and center 25 mm."
           }
         ],
         "independent": [
@@ -5842,8 +5816,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable deep-sloper Poker face.",
-            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+            "imageRole": "The exact retailer gallery corroborates the paired deep-sloper production face, rotation in the supports, and the ordered depth sequences. Audit face B maps to the second 20/30/25 mm entries.",
+            "supportedClaim": "The production Poker rotates among four faces; face B maps to 20/30/25 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -5909,8 +5883,8 @@
       "productName": "Poker",
       "presentationID": "face-c",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-c.png",
-      "workingSurface": "the independently selectable shallow half-round Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable shallow half-round Poker face mapped to the published 15 mm outer-slot, 25 mm mono/bi, and 20 mm center-depth sequence",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face C maps to the third 15/25/20 mm sequence entries; official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5934,7 +5908,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable shallow half-round Poker face."
+          "explanation": "Face C's paired shallow half-round contacts and side contact family match the third published sequence entries: 15 mm outer slots, 25 mm mono/bi pockets, and a 20 mm center slot."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -5961,8 +5935,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable shallow half-round Poker face.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+            "imageRole": "Exact multi-face imagery shows the shallow half-round side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face C explicitly maps to the third 15/25/20 mm entries.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face C is the pictured shallow half-round face mapped to outer 15 mm, mono/bi 25 mm, and center 20 mm."
           }
         ],
         "independent": [
@@ -5972,8 +5946,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable shallow half-round Poker face.",
-            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+            "imageRole": "The exact retailer gallery corroborates the shallow half-round production face, rotation in the supports, and the ordered depth sequences. Audit face C maps to the third 15/25/20 mm entries.",
+            "supportedClaim": "The production Poker rotates among four faces; face C maps to 15/25/20 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -6039,8 +6013,8 @@
       "productName": "Poker",
       "presentationID": "face-d",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-d.png",
-      "workingSurface": "the independently selectable deep rounded-recess Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "workingSurface": "the independently selectable deep rounded-recess Poker face mapped to the published 10 mm outer-slot, 20 mm mono/bi, and 15 mm center-depth sequence",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; audit face D maps to the fourth 10/20/15 mm sequence entries; official bare-body and retailer assembly dimensions differ",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -6064,7 +6038,7 @@
         },
         "topology": {
           "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable deep rounded-recess Poker face."
+          "explanation": "Face D's paired deep rounded recesses and side contact family match the fourth published sequence entries: 10 mm outer slots, 20 mm mono/bi pockets, and a 15 mm center slot."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -6091,8 +6065,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
-            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable deep rounded-recess Poker face.",
-            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+            "imageRole": "Exact multi-face imagery shows the deep rounded-recess side, while the specifications publish aligned outer-slot 25/20/15/10 mm, mono/bi 40/30/25/20 mm, and center 30/25/20/15 mm sequences. Audit face D explicitly maps to the fourth 10/20/15 mm entries.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four selectable faces; audit face D is the pictured deep rounded-recess face mapped to outer 10 mm, mono/bi 20 mm, and center 15 mm."
           }
         ],
         "independent": [
@@ -6102,8 +6076,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Owl Climb Poker production assembly",
-            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable deep rounded-recess Poker face.",
-            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+            "imageRole": "The exact retailer gallery corroborates the deep rounded-recess production face, rotation in the supports, and the ordered depth sequences. Audit face D maps to the fourth 10/20/15 mm entries.",
+            "supportedClaim": "The production Poker rotates among four faces; face D maps to 10/20/15 mm, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
           }
         ],
         "officialEvidenceGap": null,
@@ -6292,7 +6266,7 @@
       "presentationID": "primary",
       "assetPath": "Hangboards/soill-iron-palm-2/assets/primary.png",
       "workingSurface": "the published front sloper, pinch, jug-rail, and crimp-rail working face",
-      "physicalRevision": "Current Iron Palm 2.0 by Jason Kehl",
+      "physicalRevision": "Current Iron Palm 2.0 by Jason Kehl; So iLL publishes 40/35/15 mm rails while Backcountry publishes 40/25/15 mm",
       "manufacturer": "So iLL",
       "materials": [
         "urethane"
@@ -6311,11 +6285,11 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "Official specifications and independent production imagery establish the textured urethane body; the current asset preserves the identity-bearing material separation."
+          "explanation": "Backcountry's exact listing identifies the production body as urethane; the current asset preserves that textured material identity."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published front sloper, pinch, jug-rail, and crimp-rail working face."
+          "outcome": "uncertain",
+          "explanation": "The slopers, pinches, jug rail, and three crimp rails are recognizable, but So iLL's 40/35/15 mm rail specification conflicts with Backcountry's 40/25/15 mm list and must remain unresolved in Phase 2."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -6342,8 +6316,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Iron Palm 2.0 by Jason Kehl",
-            "imageRole": "Exact product and use views plus specifications establish urethane construction, two large slopers, pinches, top jug rail, 40/35/15 mm rails, and dimensions. This presentation-specific review addresses the published front sloper, pinch, jug-rail, and crimp-rail working face.",
-            "supportedClaim": "Iron Palm 2.0 is a single urethane fixed board with the published slopers, pinches, jug rail, and three crimp rails."
+            "imageRole": "Exact product and use views establish two large slopers, pinches, a top jug rail, dimensions, mounting points, and So iLL's published 40/35/15 mm rail sequence; this page does not name the material. This presentation-specific review addresses the published front sloper, pinch, jug-rail, and crimp-rail working face.",
+            "supportedClaim": "Iron Palm 2.0 is a single fixed board with the published slopers, pinches, jug rail, three crimp rails, and an official 40/35/15 mm rail sequence."
           }
         ],
         "independent": [
@@ -6353,8 +6327,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "So iLL Iron Palm 2.0",
-            "imageRole": "Exact retailer production views corroborate the urethane material, full silhouette, named contact inventory, texture, and mounting hardware. This presentation-specific review addresses the published front sloper, pinch, jug-rail, and crimp-rail working face.",
-            "supportedClaim": "The production Iron Palm 2.0 uses textured urethane and the same single-board grip topology."
+            "imageRole": "The exact retailer page names urethane, corroborates the full silhouette, contact inventory, texture, and mounting hardware, and lists 40/25/15 mm rails rather than So iLL's 40/35/15 mm sequence. This presentation-specific review addresses the published front sloper, pinch, jug-rail, and crimp-rail working face.",
+            "supportedClaim": "The production Iron Palm 2.0 uses textured urethane; Backcountry's 40/25/15 mm rail sequence conflicts with So iLL's 40/35/15 mm sequence."
           }
         ],
         "officialEvidenceGap": null,
@@ -6432,7 +6406,7 @@
         "widthPixels": 1254,
         "heightPixels": 1254
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6440,11 +6414,11 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "Official specifications and independent production imagery establish the textured urethane pair; the current asset preserves the identity-bearing material separation."
+          "explanation": "The exact So iLL US page's urethane-items disclaimer establishes the textured urethane pair; the current asset preserves that material identity."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published mirrored two-piece jug, sloper, pinch, and crimp working faces."
+          "outcome": "nonconforming",
+          "explanation": "The mirrored contact families are recognizable, but the current render omits the production mounting bores and associated mounting-hardware presentation visible in the exact sources."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -6455,24 +6429,24 @@
           "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The centered pair is uncropped, but it is not a complete production presentation because the mounting points and hardware context are absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+          "outcome": "nonconforming",
+          "explanation": "Omitted mounting details make the otherwise coherent studio render incomplete and require a bounded Phase 2 edit."
         }
       },
       "evidence": {
         "official": [
           {
-            "url": "https://soill.ca/products/split-palm",
-            "publisher": "So iLL Canada",
+            "url": "https://soillholds.com/products/split-palm",
+            "publisher": "So iLL",
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Current Split Palm two-piece model",
-            "imageRole": "Exact product and installed views plus specifications establish the mirrored two-piece urethane layout, jugs, large and small slopers, and 38.1/25.4/12.7 mm rails. This presentation-specific review addresses the published mirrored two-piece jug, sloper, pinch, and crimp working faces.",
-            "supportedClaim": "Split Palm is a pair of mirror-positioned urethane pieces with the published sloper, jug, pinch, and crimp contacts."
+            "imageRole": "Exact product and installed views establish the mirrored pair, grip families, and visible production mounting bores; the page's urethane-items disclaimer identifies the material. This presentation-specific review addresses the published mirrored two-piece jug, sloper, pinch, and crimp working faces.",
+            "supportedClaim": "Split Palm is a mirror-positioned urethane pair whose production presentation includes the published contacts and visible mounting points."
           }
         ],
         "independent": [
@@ -6482,19 +6456,19 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "So iLL Split Palm production pair",
-            "imageRole": "Exact retailer imagery and specifications corroborate the mirrored two-piece geometry, contact depths, and per-piece dimensions. This presentation-specific review addresses the published mirrored two-piece jug, sloper, pinch, and crimp working faces.",
-            "supportedClaim": "The production Split Palm pair is mirrored and preserves the official contact inventory."
+            "imageRole": "Exact retailer imagery and specifications corroborate only the mirrored two-piece geometry, visible mounting points, contact depths, and per-piece dimensions; this source is not used for a urethane claim. This presentation-specific review addresses the published mirrored two-piece jug, sloper, pinch, and crimp working faces.",
+            "supportedClaim": "The production Split Palm pair is mirrored, preserves the published contact inventory and dimensions, and visibly includes mounting points."
           }
         ],
         "officialEvidenceGap": null,
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/soill-training-tiles/assets/primary.png",
-        "materialMatch": "Sourced textured urethane split-board pair; comparator supplies style only and no product geometry.",
-        "formFactorMatch": "Exact compatible form factor: splitFixedBoard.",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted urethane split-fixed-board presentation remains in the current Lane A or Lane B cohort."
       },
       "generation": {
         "prompt": null,
@@ -6503,12 +6477,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "6abf0bb34ab4c330905e8e100ba7a087b87d213b9a8c78714e9cf843bed89291",
-        "finalDimensions": {
-          "widthPixels": 1254,
-          "heightPixels": 1254
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
@@ -6564,7 +6535,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "keep",
+      "decision": "edit",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6572,11 +6543,11 @@
         },
         "material": {
           "outcome": "conforms",
-          "explanation": "Official specifications and independent production imagery establish the textured urethane pair; the current asset preserves the identity-bearing material separation."
+          "explanation": "OutdoorGearLab's exact hands-on comparison identifies the production pair as urethane; the current asset preserves that textured material identity."
         },
         "topology": {
-          "outcome": "conforms",
-          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published two-tile pocket, sloper, and progressive-edge working faces."
+          "outcome": "nonconforming",
+          "explanation": "The pocket, sloper, and edge progression is recognizable, but the current render omits the production mounting bores and associated mounting-hardware presentation visible in the exact sources."
         },
         "headOnPerspective": {
           "outcome": "conforms",
@@ -6587,12 +6558,12 @@
           "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
         },
         "framing": {
-          "outcome": "conforms",
-          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+          "outcome": "nonconforming",
+          "explanation": "The centered pair is uncropped, but it is not a complete production presentation because the mounting points and hardware context are absent."
         },
         "crossCatalogConsistency": {
-          "outcome": "conforms",
-          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+          "outcome": "nonconforming",
+          "explanation": "Omitted mounting details make the otherwise coherent studio render incomplete and require a bounded Phase 2 edit."
         }
       },
       "evidence": {
@@ -6603,8 +6574,8 @@
             "sourceKind": "officialProductPage",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "So iLL x Meagan Martin Training Tiles",
-            "imageRole": "Exact product and use views plus specifications establish two urethane tiles, 3-inch pockets, 25/12-degree slopers, five published edge depths, and hardware. This presentation-specific review addresses the published two-tile pocket, sloper, and progressive-edge working faces.",
-            "supportedClaim": "Training Tiles are a two-piece urethane collaboration with large pockets, two sloper angles, and 50/44/36/31/24 mm edge progression."
+            "imageRole": "Exact product and use views plus specifications establish two tiles, 3-inch pockets, 25/12-degree slopers, five published edge depths, mounting points, and hardware; this page is not used for a urethane claim. This presentation-specific review addresses the published two-tile pocket, sloper, and progressive-edge working faces.",
+            "supportedClaim": "Training Tiles are a two-piece collaboration with large pockets, two sloper angles, a 50/44/36/31/24 mm edge progression, and visible production mounting details."
           }
         ],
         "independent": [
@@ -6622,11 +6593,11 @@
         "independentEvidenceGap": null
       },
       "comparator": {
-        "assetPath": "Hangboards/soill-split-palm/assets/primary.png",
-        "materialMatch": "Sourced textured urethane split-board pair; comparator supplies style only and no product geometry.",
-        "formFactorMatch": "Exact compatible form factor: splitFixedBoard.",
-        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
-        "baselineGap": null
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted urethane split-fixed-board presentation remains in the current Lane A or Lane B cohort."
       },
       "generation": {
         "prompt": null,
@@ -6635,12 +6606,9 @@
         "candidates": []
       },
       "final": {
-        "acceptedAssetSHA256": "ec05d039fb6635cda85ed1dc317434306be796b42c35e75c633314a11d3f5cd6",
-        "finalDimensions": {
-          "widthPixels": 1536,
-          "heightPixels": 1024
-        },
-        "visualReviewerDecision": "acceptedCurrentAsset",
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
         "workbenchReview": {
           "normal": {
             "status": "pending",
