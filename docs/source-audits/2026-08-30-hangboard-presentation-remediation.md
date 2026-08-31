@@ -20,13 +20,32 @@ Search each exact manufacturer/product/revision independently. Open and cite dir
 
 | Lane | Packages | Assets | Status |
 | --- | ---: | ---: | --- |
-| A — Aelith through Mammut | 20 | 27 | Not started |
+| A — Aelith through Mammut | 20 | 27 | Complete — 20 packages / 27 assets |
 | B — Metolius through So iLL | 19 | 24 | Not started |
 | C — target10a through Zlagboard | 22 | 34 | Not started |
 
 ## Revision, source-conflict, and unsupported-surface resolutions
 
 Resolutions are added only when direct live sources establish the named revisions or surface use.
+
+- `aelith.cyclops-011/primary` remains an evidence-blocked `keep`: the exact
+  manufacturer product URL is stale and returns 404, and fresh exact-model
+  searches found no live independent review, retailer page, or owner view that
+  proves the #011 Blue x Black physical revision.
+- `dewoodstok-woodbord/primary` remains an evidence-blocked `keep`: a live
+  independent retailer establishes the bamboo Woodbord and its hold inventory,
+  but fresh manufacturer-domain, manual, catalog, and archive searches found no
+  live or archived first-party page for the exact physical revision.
+- The current `crimptonite.helium-mobile/primary` substitutes three broad slots
+  for the updated Helium Mobile's published front edge/jug inventory and is
+  classified `regenerate`; its `reverse` is `edit` because the published back
+  jug/sloper is not clearly resolved as a head-on working surface.
+- `lattice.mini-bar/end` is `removeUnsupportedPresentation`: Lattice and an
+  independent retailer identify four lengthwise grips selected by flipping the
+  bar, while the declared end cap is not a usable working surface. Removal is a
+  Phase 2 action; this audit changes no package inventory.
+- Lane A classification: 19 `keep` records (2 evidence-blocked), 5 `edit`,
+  2 `regenerate`, and 1 `removeUnsupportedPresentation`.
 
 ## Final classification totals
 

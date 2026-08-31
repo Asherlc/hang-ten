@@ -65,7 +65,3533 @@
     "zlagboard.evo",
     "zlagboard.pro"
   ],
-  "records": [],
+  "records": [
+    {
+      "packageID": "aelith.cyclops-011",
+      "productName": "Cyclops #011 Blue x Black",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/aelith-cyclops-011/assets/primary.png",
+      "workingSurface": "Published 20 mm mono-edge working face",
+      "physicalRevision": "Cyclops #011 Blue x Black; exact live-source revision remains unproved",
+      "manufacturer": "Aelith Equipment",
+      "materials": [
+        "metal",
+        "ropeCord"
+      ],
+      "formFactor": "liftingEdge",
+      "currentAsset": {
+        "sha256": "647ff01c231bd46e4cfd669a5cd01ce457df1ac685d1429b715dda422ba6c6dd",
+        "widthPixels": 1254,
+        "heightPixels": 1254
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "uncertain",
+          "explanation": "The current silhouette is plausible, but the evidence gaps prevent exact physical-revision acceptance."
+        },
+        "material": {
+          "outcome": "uncertain",
+          "explanation": "The visible material is plausible, but the missing exact first-party or independent production evidence prevents final confirmation."
+        },
+        "topology": {
+          "outcome": "uncertain",
+          "explanation": "The current contacts appear coherent, but exact revision topology is not fully proved by live direct evidence."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface remains legible and is not materially foreshortened."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "No complete exact-revision evidence set proves the production edge and finish treatment."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete current product is centered and uncropped."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "uncertain",
+          "explanation": "Catalog style cannot be finally accepted while exact product evidence remains incomplete."
+        }
+      },
+      "evidence": {
+        "official": [],
+        "independent": [],
+        "officialEvidenceGap": "Exact searches for Aelith Cyclops #011 Blue x Black, its official product page, manual, and catalog found only a stale aelithequipment.com product URL returning 404; no live first-party page proved the #011 physical revision.",
+        "independentEvidenceGap": "Exact searches for Aelith Cyclops #011 Blue x Black review, retailer, and owner photographs found no live independent page proving the #011 finish and production geometry."
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted metal lifting-edge presentation exists in the current Lane A cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "blockedEvidence",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "beastmaker-1000",
+      "productName": "Beastmaker 1000",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
+      "workingSurface": "Published front pocket-and-sloper working face",
+      "physicalRevision": "Current Beastmaker 1000 Series wood layout",
+      "manufacturer": "Beastmaker",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "8d89a500122aac4d5bb4bb03c47202f881fd8cf66f9a321b620507dccad36289",
+        "widthPixels": 1000,
+        "heightPixels": 259
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published front pocket-and-sloper working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.beastmaker.co.uk/products/beastmaker-1000-series",
+            "publisher": "Beastmaker",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current 1000 Series",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front pocket-and-sloper working face.",
+            "supportedClaim": "The current 1000 Series is a 580 mm wood board with the published jugs, slopers, pockets, and rounded edges."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://thehangboard.com/blogs/news/beastmaker-1000-review",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "1000 Series layout used since 2012",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front pocket-and-sloper working face.",
+            "supportedClaim": "The tested 1000 Series preserves the published layout across tulipwood and beech production examples."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "8d89a500122aac4d5bb4bb03c47202f881fd8cf66f9a321b620507dccad36289",
+        "finalDimensions": {
+          "widthPixels": 1000,
+          "heightPixels": 259
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "beastmaker-2000",
+      "productName": "Beastmaker 2000",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+      "workingSurface": "Published front sloper-and-pocket working face",
+      "physicalRevision": "Current Beastmaker 2000 Series wood layout",
+      "manufacturer": "Beastmaker",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "2a5dfd439bd67485a16d764b7c8aaf24cba22c42f4ee2b4657cb8842d743bb68",
+        "widthPixels": 2037,
+        "heightPixels": 564
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published front sloper-and-pocket working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
+            "publisher": "Beastmaker",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current 2000 Series",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front sloper-and-pocket working face.",
+            "supportedClaim": "The current 2000 Series is a 580 mm wood board with the published slopers, pockets, monos, and rounded contacts."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.outdoorgearlab.com/reviews/climbing/hangboard/beastmaker-2000",
+            "publisher": "OutdoorGearLab",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Beastmaker 2000 production board",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front sloper-and-pocket working face.",
+            "supportedClaim": "Hands-on testing and photographs corroborate the smooth wood construction and exact 2000 hold family."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "2a5dfd439bd67485a16d764b7c8aaf24cba22c42f4ee2b4657cb8842d743bb68",
+        "finalDimensions": {
+          "widthPixels": 2037,
+          "heightPixels": 564
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.dual",
+      "productName": "DUAL",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
+      "workingSurface": "Published straight 20 mm working face",
+      "physicalRevision": "Current DUAL reversible 20 mm model",
+      "manufacturer": "Captain Fingerfood",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "5e411d8ba5cdb88c53afbca4bd79382457b1ddbbd62f03f4d786bdb4ee1f017e",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published straight 20 mm working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+            "publisher": "Captain Fingerfood",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current DUAL",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published straight 20 mm working face.",
+            "supportedClaim": "The DUAL has one straight and one curved 20 mm working face, rounded edges, compact wood body, and suspension rope."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.oetzi-halle.de/ausruestung/klettern/klettertraining/dual-hangboard-captain-fingerfood.html",
+            "publisher": "\u00d6tzi Halle",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Captain Fingerfood DUAL",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published straight 20 mm working face.",
+            "supportedClaim": "The retailer listing corroborates the wood reversible DUAL product and its portable construction."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "5e411d8ba5cdb88c53afbca4bd79382457b1ddbbd62f03f4d786bdb4ee1f017e",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.dual",
+      "productName": "DUAL",
+      "presentationID": "reverse",
+      "assetPath": "Hangboards/captain-fingerfood-dual/assets/reverse.png",
+      "workingSurface": "Published curved 20 mm working face",
+      "physicalRevision": "Current DUAL reversible 20 mm model",
+      "manufacturer": "Captain Fingerfood",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "4006a43154becf5652a5f4f98d5a54f0bc43f538c3e8d552c41b240bbc05513d",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published curved 20 mm working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+            "publisher": "Captain Fingerfood",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current DUAL",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published curved 20 mm working face.",
+            "supportedClaim": "The DUAL has one straight and one curved 20 mm working face, rounded edges, compact wood body, and suspension rope."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.oetzi-halle.de/ausruestung/klettern/klettertraining/dual-hangboard-captain-fingerfood.html",
+            "publisher": "\u00d6tzi Halle",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Captain Fingerfood DUAL",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published curved 20 mm working face.",
+            "supportedClaim": "The retailer listing corroborates the wood reversible DUAL product and its portable construction."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-dual/assets/reverse.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "4006a43154becf5652a5f4f98d5a54f0bc43f538c3e8d552c41b240bbc05513d",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.pocket",
+      "productName": "POCKET Hangboard | Lines Edition",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/captain-fingerfood-pocket/assets/primary.png",
+      "workingSurface": "Published 15/20 mm face and outer working contacts",
+      "physicalRevision": "Current POCKET Lines Edition birch-plywood model",
+      "manufacturer": "Captain Fingerfood",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "321abde36f5648af6d8aa86feb797de5a1b25d0d571d4f5a5a08855e83058b4b",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published 15/20 mm face and outer working contacts."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://en.captainfingerfood.rocks/products/lines-hangboard",
+            "publisher": "Captain Fingerfood",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "POCKET Lines Edition",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published 15/20 mm face and outer working contacts.",
+            "supportedClaim": "The Lines Edition is a birch-plywood POCKET with 15 mm and 20 mm edges, reversible holes, outer contacts, and a one-meter rope."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.outdoor-magazin.com/klettern/portable-hangboards-test/",
+            "publisher": "Outdoor Magazin",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Captain Fingerfood POCKET base geometry",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published 15/20 mm face and outer working contacts.",
+            "supportedClaim": "The independent portable-hangboard test corroborates the POCKET birch multiplex body, 15/20 mm contacts, and reversible use."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-pocket/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "321abde36f5648af6d8aa86feb797de5a1b25d0d571d4f5a5a08855e83058b4b",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.unlevel",
+      "productName": "UNLEVEL",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/captain-fingerfood-unlevel/assets/primary.png",
+      "workingSurface": "Published curved 20 mm working face",
+      "physicalRevision": "Current UNLEVEL reversible 20/25 mm model",
+      "manufacturer": "Captain Fingerfood",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "e6f72523d77b20ffd7cd4d9029636d9085f8b76c9936781055adf2156632b17f",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published curved 20 mm working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+            "publisher": "Captain Fingerfood",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current UNLEVEL",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published curved 20 mm working face.",
+            "supportedClaim": "The UNLEVEL has a symmetric curved body, rounded 20 mm and 25 mm working faces, and suspension rope."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://chalkr.de/captain-fingerfood-unlevel-hangboard.html",
+            "publisher": "Chalkr",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Captain Fingerfood UNLEVEL",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published curved 20 mm working face.",
+            "supportedClaim": "The retailer listing corroborates birch multiplex construction, curved symmetry, 20/25 mm faces, and rope."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-unlevel/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "e6f72523d77b20ffd7cd4d9029636d9085f8b76c9936781055adf2156632b17f",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.unlevel",
+      "productName": "UNLEVEL",
+      "presentationID": "reverse",
+      "assetPath": "Hangboards/captain-fingerfood-unlevel/assets/reverse.png",
+      "workingSurface": "Published curved 25 mm working face",
+      "physicalRevision": "Current UNLEVEL reversible 20/25 mm model",
+      "manufacturer": "Captain Fingerfood",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "5a63511d31a4b991e8e309f2f35360781cbc61c0477d4714f9153af2e5d72cf3",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published curved 25 mm working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+            "publisher": "Captain Fingerfood",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current UNLEVEL",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published curved 25 mm working face.",
+            "supportedClaim": "The UNLEVEL has a symmetric curved body, rounded 20 mm and 25 mm working faces, and suspension rope."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://chalkr.de/captain-fingerfood-unlevel-hangboard.html",
+            "publisher": "Chalkr",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Captain Fingerfood UNLEVEL",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published curved 25 mm working face.",
+            "supportedClaim": "The retailer listing corroborates birch multiplex construction, curved symmetry, 20/25 mm faces, and rope."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-unlevel/assets/reverse.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "5a63511d31a4b991e8e309f2f35360781cbc61c0477d4714f9153af2e5d72cf3",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "crimptonite.helium-mobile",
+      "productName": "Helium Mobile",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/crimptonite-helium-mobile/assets/primary.png",
+      "workingSurface": "Published updated front edge-and-jug working face",
+      "physicalRevision": "Updated Helium Mobile revision succeeding the Mobile Nano",
+      "manufacturer": "Crimptonite",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "681012158ff5c5b7bc162533340acedcfdfe2ddb0c237d45fe56f0173c5245bd",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The current image substitutes three broad recessed slots for the cited 14/22/10/18 mm edge inventory and top jug."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current image substitutes three broad recessed slots for the cited 14/22/10/18 mm edge inventory and top jug."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://crimptonite.com/product/helium-mobile/",
+            "publisher": "Crimptonite",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Updated Helium Mobile",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published updated front edge-and-jug working face.",
+            "supportedClaim": "The updated Helium Mobile front has 14, 22, 10, and 18 mm edges plus a top jug; the back supplies a jug/sloper, with a 4 mm cord."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://9cbouldering.com/products/helium-mobile-hangboard",
+            "publisher": "9c Bouldering",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Updated Helium Mobile",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published updated front edge-and-jug working face.",
+            "supportedClaim": "The exact retailer page and owner review corroborate the Nano-successor hold inventory, natural wood body, cord, and usable back jug/sloper."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "crimptonite.helium-mobile",
+      "productName": "Helium Mobile",
+      "presentationID": "reverse",
+      "assetPath": "Hangboards/crimptonite-helium-mobile/assets/reverse.png",
+      "workingSurface": "Published back jug/sloper working face",
+      "physicalRevision": "Updated Helium Mobile revision succeeding the Mobile Nano",
+      "manufacturer": "Crimptonite",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "7891bca6703fbbeded4505bd29ee6bd69cd9ac95d6acb15c7e4fdbc62ecccd3a",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The current oblique plain-slab treatment does not clearly resolve the cited back jug/sloper contact or a head-on working-surface view."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current oblique plain-slab treatment does not clearly resolve the cited back jug/sloper contact or a head-on working-surface view."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://crimptonite.com/product/helium-mobile/",
+            "publisher": "Crimptonite",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Updated Helium Mobile",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published back jug/sloper working face.",
+            "supportedClaim": "The updated Helium Mobile front has 14, 22, 10, and 18 mm edges plus a top jug; the back supplies a jug/sloper, with a 4 mm cord."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://9cbouldering.com/products/helium-mobile-hangboard",
+            "publisher": "9c Bouldering",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Updated Helium Mobile",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published back jug/sloper working face.",
+            "supportedClaim": "The exact retailer page and owner review corroborate the Nano-successor hold inventory, natural wood body, cord, and usable back jug/sloper."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "dewoodstok-woodbord",
+      "productName": "Woodbord",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/dewoodstok-woodbord/assets/primary.png",
+      "workingSurface": "Published front pocket-and-edge working face",
+      "physicalRevision": "Woodbord bamboo production model; first-party revision remains unproved",
+      "manufacturer": "deWoodstok",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "869c247bf05289c24e7223204cf6e103cf06a34acc370291174ea67b4035f0aa",
+        "widthPixels": 1685,
+        "heightPixels": 465
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "uncertain",
+          "explanation": "The current silhouette is plausible, but the evidence gaps prevent exact physical-revision acceptance."
+        },
+        "material": {
+          "outcome": "uncertain",
+          "explanation": "The visible material is plausible, but the missing exact first-party or independent production evidence prevents final confirmation."
+        },
+        "topology": {
+          "outcome": "uncertain",
+          "explanation": "The current contacts appear coherent, but exact revision topology is not fully proved by live direct evidence."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface remains legible and is not materially foreshortened."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "No complete exact-revision evidence set proves the production edge and finish treatment."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete current product is centered and uncropped."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "uncertain",
+          "explanation": "Catalog style cannot be finally accepted while exact product evidence remains incomplete."
+        }
+      },
+      "evidence": {
+        "official": [],
+        "independent": [
+          {
+            "url": "https://www.alpinetrek.co.uk/dewoodstok-woodbord-training-board/",
+            "publisher": "Alpinetrek",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "deWOODSTOK Woodbord",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front pocket-and-edge working face.",
+            "supportedClaim": "The retailer gallery and specification establish a bamboo Woodbord measuring about 59 by 14.8 by 4 cm with the published edge and pocket inventory."
+          }
+        ],
+        "officialEvidenceGap": "Exact searches for deWOODSTOK Woodbord on dewoodstok.com and dewoodstok.de, plus official manual, catalog, and archive queries, found no live or archived first-party product page that proved the exact physical revision.",
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "blockedEvidence",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "escape-beta-22",
+      "productName": "Beta Board",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/escape-beta-22/assets/primary.png",
+      "workingSurface": "Published front dual-texture working face",
+      "physicalRevision": "Current Escape Beta Board dual-texture production model",
+      "manufacturer": "Escape Climbing",
+      "materials": [
+        "moldedPlastic"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "f55fa7cf1e86cf050cd774d3068da37d02534da830eea6442c8e5038f22c3c90",
+        "widthPixels": 1503,
+        "heightPixels": 394
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The topology matches, but the monochrome white treatment is not one of the cited current colors and fails to depict the sourced dual-texture surface."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The topology matches, but the monochrome white treatment is not one of the cited current colors and fails to depict the sourced dual-texture surface."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://escapeclimbing.com/products/ec72100",
+            "publisher": "Escape Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Beta Board",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front dual-texture working face.",
+            "supportedClaim": "The current Beta Board is a dual-texture molded board offered in red, gray, or black with the published Detroit Rock-derived zones."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://strengthclimbing.com/beta-board-from-escape-climbing-hangboard-review/",
+            "publisher": "StrengthClimbing",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Escape Beta Board after the 2017 acquisition",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front dual-texture working face.",
+            "supportedClaim": "The hands-on review maps the exact pinch, incut, flat, and sloper zones and corroborates molded plastic dual-texture construction."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No accepted molded-plastic full-width fixed-board presentation exists in the current Lane A cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "escape.unlimited",
+      "productName": "Unlimited Board",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/escape-unlimited/assets/primary.png",
+      "workingSurface": "Published continuous multi-depth front working face",
+      "physicalRevision": "Current Unlimited Board Baltic-birch model",
+      "manufacturer": "Escape Climbing",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "5ed4d6436ead016d9fc343bb3272b8e56c42faf12655fc5f28d364d9511f4818",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published continuous multi-depth front working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://escapeclimbing.com/products/ec72000",
+            "publisher": "Escape Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Unlimited Board",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published continuous multi-depth front working face.",
+            "supportedClaim": "The current Unlimited Board is a 23.5 by 6 inch Baltic-birch board with continuous two-pad, 1.5-pad, one-pad, and half-pad contacts."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.conqueryourcrux.com/best-hangboards-for-climbing/",
+            "publisher": "Conquer Your Crux",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Escape Climbing Unlimited",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published continuous multi-depth front working face.",
+            "supportedClaim": "The independent review corroborates Baltic-birch construction and the continuous multi-depth working layout."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/escape-unlimited/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "5ed4d6436ead016d9fc343bb3272b8e56c42faf12655fc5f28d364d9511f4818",
+        "finalDimensions": {
+          "widthPixels": 1774,
+          "heightPixels": 887
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "evolv-kilter-basic-long",
+      "productName": "Basic Training Board (Long)",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/evolv-kilter-basic-long/assets/primary.png",
+      "workingSurface": "Published jug-and-three-edge front working face",
+      "physicalRevision": "Current black-resin Basic Training Board (Long)",
+      "manufacturer": "Evolv",
+      "materials": [
+        "resin"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "b9c91bc7f4e31db5883a8025b407851c25fd3b6d16a9b9e0e9e41d2a64302bfc",
+        "widthPixels": 1537,
+        "heightPixels": 1023
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The verified four-contact topology is suitable, but the current white treatment contradicts the sourced black resin production finish."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The verified four-contact topology is suitable, but the current white treatment contradicts the sourced black resin production finish."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+            "publisher": "Evolv",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Basic Training Board (Long)",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published jug-and-three-edge front working face.",
+            "supportedClaim": "The Long board is black resin, 79 by 16 by 6 cm, with one jug and rounded 20, 15, and 10 mm edges."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.ebay.com/itm/326431990533",
+            "publisher": "eBay marketplace seller",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Evolv Kilter Basic Training Board Long",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published jug-and-three-edge front working face.",
+            "supportedClaim": "The independent marketplace listing and production photographs corroborate the long four-contact silhouette and black finish."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No accepted resin full-width fixed-board presentation exists in the current Lane A cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.doormount-pro-7",
+      "productName": "DoorMount Pro 7",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/frictitious-doormount-pro-7/assets/primary.png",
+      "workingSurface": "Published mounted Pro7 front working face",
+      "physicalRevision": "Current DoorMount Pro with Pro7 board",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood",
+        "metal",
+        "mixedOther"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "67eb776e2d888c8d2bbbed4b25a76117cb563c29ac8cc3baa6cea2e40cff8b5e",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The current image depicts only a floating wood board and omits the identity-bearing aluminum/steel door bracket and rubber contact pads."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current image depicts only a floating wood board and omits the identity-bearing aluminum/steel door bracket and rubber contact pads."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/products/doormount-pro",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current DoorMount Pro / Pro7",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published mounted Pro7 front working face.",
+            "supportedClaim": "The DoorMount Pro is an integrated aluminum-and-steel door bracket with rubber pads and a seven-edge poplar Pro7 board."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://thehangboard.com/blogs/news/frictitious-review",
+            "publisher": "The Hangboard",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "DoorMount Pro with Pro7",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published mounted Pro7 front working face.",
+            "supportedClaim": "Hands-on review photographs and measurements corroborate the aluminum/steel mount, poplar Pro7, and seven usable contacts."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/beastmaker-1000/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.megalith",
+      "productName": "The Megalith",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/frictitious-megalith/assets/primary.png",
+      "workingSurface": "Published front edge-pocket-and-jug working face",
+      "physicalRevision": "Current poplar Megalith",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "6b084b279b2600b15bafb7db6dddcc0ba9ecd2abe4ca480daf3dded7b9f4356f",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published front edge-pocket-and-jug working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/products/megalith",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Megalith",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front edge-pocket-and-jug working face.",
+            "supportedClaim": "The Megalith is a poplar full-width board with seven edge depths, pockets, a mono, and a central jug."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing",
+            "publisher": "Treeline Review",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Frictitious Megalith",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front edge-pocket-and-jug working face.",
+            "supportedClaim": "Independent testing and photographs corroborate the wood construction and Megalith contact inventory."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/frictitious-megalith/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "6b084b279b2600b15bafb7db6dddcc0ba9ecd2abe4ca480daf3dded7b9f4356f",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.nug",
+      "productName": "The NUG",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/frictitious-nug/assets/primary.png",
+      "workingSurface": "Published 20/25 mm working face",
+      "physicalRevision": "Current beech NUG with 6 mm cord",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "b4da2621c0772cea73be6acb12684956e80ab8627383f2caf2a8f3ec1a373fa9",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The cited working-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The cited working-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/en-ca/products/the-nug",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current NUG",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published 20/25 mm working face.",
+            "supportedClaim": "The current beech NUG has a 20/25 mm face, an 8/13 mm reverse face, and supplied 6 mm cord."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
+            "publisher": "Shop marketplace",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Frictitious NUG listing",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published 20/25 mm working face.",
+            "supportedClaim": "The independent marketplace storefront corroborates the current NUG identity and production imagery."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.nug",
+      "productName": "The NUG",
+      "presentationID": "reverse",
+      "assetPath": "Hangboards/frictitious-nug/assets/reverse.png",
+      "workingSurface": "Published 8/13 mm working face",
+      "physicalRevision": "Current beech NUG with 6 mm cord",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "4353f6f7a77ca6337b97acb13170d5c80a6d98924973b3faac51969ad780a572",
+        "widthPixels": 1842,
+        "heightPixels": 854
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The cited reverse-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The cited reverse-face geometry is present, but the current presentation omits the supplied identity-bearing 6 mm suspension cord."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The main contact region remains readable; any perspective correction is bounded by the stated repair."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/en-ca/products/the-nug",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current NUG",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published 8/13 mm working face.",
+            "supportedClaim": "The current beech NUG has a 20/25 mm face, an 8/13 mm reverse face, and supplied 6 mm cord."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
+            "publisher": "Shop marketplace",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Frictitious NUG listing",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published 8/13 mm working face.",
+            "supportedClaim": "The independent marketplace storefront corroborates the current NUG identity and production imagery."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/captain-fingerfood-dual/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "reversiblePortable",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.port-a-board",
+      "productName": "Port-A-Board",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/frictitious-port-a-board/assets/primary.png",
+      "workingSurface": "Published front edge-and-pocket working face",
+      "physicalRevision": "Current beech Port-A-Board",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "13bef16f346030dbe383d320beedc4034ae2da6c82b122ed8b349590132c0a17",
+        "widthPixels": 1440,
+        "heightPixels": 1440
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published front edge-and-pocket working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Port-A-Board",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front edge-and-pocket working face.",
+            "supportedClaim": "The current beech Port-A-Board publishes front, back, and side use with rated cord, eight edges, a pinch, jug, and pockets."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
+            "publisher": "Shop marketplace",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Frictitious Port-A-Board listing",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front edge-and-pocket working face.",
+            "supportedClaim": "The independent marketplace storefront corroborates the current multi-orientation Port-A-Board and production imagery."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/frictitious-port-a-board/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "multiOrientationDevice",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "13bef16f346030dbe383d320beedc4034ae2da6c82b122ed8b349590132c0a17",
+        "finalDimensions": {
+          "widthPixels": 1440,
+          "heightPixels": 1440
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.port-a-board",
+      "productName": "Port-A-Board",
+      "presentationID": "back",
+      "assetPath": "Hangboards/frictitious-port-a-board/assets/back.png",
+      "workingSurface": "Published back edge-and-jug working face",
+      "physicalRevision": "Current beech Port-A-Board",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092",
+        "widthPixels": 1440,
+        "heightPixels": 1440
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published back edge-and-jug working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Port-A-Board",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published back edge-and-jug working face.",
+            "supportedClaim": "The current beech Port-A-Board publishes front, back, and side use with rated cord, eight edges, a pinch, jug, and pockets."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
+            "publisher": "Shop marketplace",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Frictitious Port-A-Board listing",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published back edge-and-jug working face.",
+            "supportedClaim": "The independent marketplace storefront corroborates the current multi-orientation Port-A-Board and production imagery."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/frictitious-port-a-board/assets/back.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "multiOrientationDevice",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092",
+        "finalDimensions": {
+          "widthPixels": 1440,
+          "heightPixels": 1440
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "frictitious.port-a-board",
+      "productName": "Port-A-Board",
+      "presentationID": "side",
+      "assetPath": "Hangboards/frictitious-port-a-board/assets/side.png",
+      "workingSurface": "Published narrow side pinch working surface",
+      "physicalRevision": "Current beech Port-A-Board",
+      "manufacturer": "Frictitious Climbing",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866",
+        "widthPixels": 1440,
+        "heightPixels": 1440
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published narrow side pinch working surface."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+            "publisher": "Frictitious Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Port-A-Board",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published narrow side pinch working surface.",
+            "supportedClaim": "The current beech Port-A-Board publishes front, back, and side use with rated cord, eight edges, a pinch, jug, and pockets."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://shop.app/m/frictitiousclimbing?inStock=true",
+            "publisher": "Shop marketplace",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Frictitious Port-A-Board listing",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published narrow side pinch working surface.",
+            "supportedClaim": "The independent marketplace storefront corroborates the current multi-orientation Port-A-Board and production imagery."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/frictitious-port-a-board/assets/side.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "multiOrientationDevice",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866",
+        "finalDimensions": {
+          "widthPixels": 1440,
+          "heightPixels": 1440
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "lattice-triple-rung",
+      "productName": "Triple Rung",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/lattice-triple-rung/assets/primary.png",
+      "workingSurface": "Published continuous three-rung front working face",
+      "physicalRevision": "Current Triple Rung wood model",
+      "manufacturer": "Lattice Training",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "6bd8e1a78e415bb06d6aaba65ddd36af05583a87e466721d9a167f70f9872ed7",
+        "widthPixels": 1477,
+        "heightPixels": 396
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published continuous three-rung front working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+            "publisher": "Lattice Training",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Triple Rung",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published continuous three-rung front working face.",
+            "supportedClaim": "The current 55 cm wood Triple Rung has continuous rounded 45, 20, and 10 mm contacts."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://9cbouldering.com/products/triple-rung-hangboard",
+            "publisher": "9c Bouldering",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Lattice Triple Rung",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published continuous three-rung front working face.",
+            "supportedClaim": "The retailer listing and images corroborate the three continuous rounded wood contacts and their 45/20/10 mm order."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-triple-rung/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "6bd8e1a78e415bb06d6aaba65ddd36af05583a87e466721d9a167f70f9872ed7",
+        "finalDimensions": {
+          "widthPixels": 1477,
+          "heightPixels": 396
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "lattice.mini-bar",
+      "productName": "Mini Bar",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+      "workingSurface": "Published lengthwise edge working face",
+      "physicalRevision": "Current 15.5 cm tulipwood Mini Bar",
+      "manufacturer": "Lattice",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "db351c7c617420b84550e64d6685c8c98e60da9529feb3697bd7435af5f751fc",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published lengthwise edge working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://latticetraining.com/product/mini-bar-portable-hangboard/",
+            "publisher": "Lattice Training",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Mini Bar",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published lengthwise edge working face.",
+            "supportedClaim": "The 15.5 cm tulipwood Mini Bar has four lengthwise grips\u201410 mm, 20 mm, ergonomic jug, and mini pinch\u2014selected by flipping the suspended bar."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://bananafingers.co.uk/lattice-mini-bar-portable-fingerboard",
+            "publisher": "BananaFingers",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Lattice Mini Bar",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published lengthwise edge working face.",
+            "supportedClaim": "The retailer's production images and specifications corroborate the four lengthwise grips, tulipwood body, and supplied cord."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "multiOrientationDevice",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "db351c7c617420b84550e64d6685c8c98e60da9529feb3697bd7435af5f751fc",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "lattice.mini-bar",
+      "productName": "Mini Bar",
+      "presentationID": "end",
+      "assetPath": "Hangboards/lattice-mini-bar/assets/end.png",
+      "workingSurface": "Published end face",
+      "physicalRevision": "Current 15.5 cm tulipwood Mini Bar",
+      "manufacturer": "Lattice",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "e89852ee79199b957ba8f85d1555898f6fdb1f8cc56e9a0876f8f179159cc676",
+        "widthPixels": 1254,
+        "heightPixels": 1254
+      },
+      "decision": "removeUnsupportedPresentation",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "Surface \"Published end face\" is unusable."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The depicted base material is compatible with the cited component specification except where the stated issue requires correction."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "Surface \"Published end face\" is unusable."
+        },
+        "headOnPerspective": {
+          "outcome": "notApplicable",
+          "explanation": "An end cap that sources do not identify as a working surface needs no retained head-on presentation."
+        },
+        "smoothing": {
+          "outcome": "uncertain",
+          "explanation": "Phase 2 must reconcile contact transitions and finish against the cited oblique production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The current product remains centered and uncropped, subject to the stated component repair."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The stated material, topology, or perspective defect breaks the accepted cohort treatment and requires Phase 2."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://latticetraining.com/product/mini-bar-portable-hangboard/",
+            "publisher": "Lattice Training",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Mini Bar",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published end face.",
+            "supportedClaim": "Surface \"Published end face\" is unusable."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://bananafingers.co.uk/lattice-mini-bar-portable-fingerboard",
+            "publisher": "BananaFingers",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Lattice Mini Bar",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published end face.",
+            "supportedClaim": "Surface \"Published end face\" is unusable."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "multiOrientationDevice",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "lattice.mxedge-lift-large",
+      "productName": "MXEdge Lift Large",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/lattice-mxedge-lift-large/assets/primary.png",
+      "workingSurface": "Published MXLarge multi-edge lifting face",
+      "physicalRevision": "Current MXLarge MXEdge Lift",
+      "manufacturer": "Lattice",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "liftingEdge",
+      "currentAsset": {
+        "sha256": "091078ab355d81fbc109fe04065b39b2ccc5f4eb79093c5de215347d2789b8a3",
+        "widthPixels": 1000,
+        "heightPixels": 1000
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published MXLarge multi-edge lifting face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://latticetraining.com/product/mxedge-lift/",
+            "publisher": "Lattice Training",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current MXLarge MXEdge Lift",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published MXLarge multi-edge lifting face.",
+            "supportedClaim": "MXLarge is a beech lifting edge with MX22, MX16, MX12, and a 28 mm mono plus a stabilizing cord arrangement."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.boulderkeskus.com/en/training-and-rehab-gear/3140-mx-edge-lift-5060982700577.html",
+            "publisher": "Boulderkeskus",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current MXEdge Lift Large",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published MXLarge multi-edge lifting face.",
+            "supportedClaim": "The retailer listing corroborates the ergonomic curved wood form, large/small variants, and MXLarge contact labels."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mxedge-lift-large/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "liftingEdge",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "091078ab355d81fbc109fe04065b39b2ccc5f4eb79093c5de215347d2789b8a3",
+        "finalDimensions": {
+          "widthPixels": 1000,
+          "heightPixels": 1000
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "lattice.mxedge-lift-small",
+      "productName": "MXEdge Lift Small",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/lattice-mxedge-lift-small/assets/primary.png",
+      "workingSurface": "Published MXSmall multi-edge lifting face",
+      "physicalRevision": "Current MXSmall MXEdge Lift",
+      "manufacturer": "Lattice",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "liftingEdge",
+      "currentAsset": {
+        "sha256": "6a0d7b0167a53d54b2849773000512d12c1343107fe01d16af4d81a7559cd822",
+        "widthPixels": 1000,
+        "heightPixels": 1000
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published MXSmall multi-edge lifting face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://latticetraining.com/product/mxedge-lift/",
+            "publisher": "Lattice Training",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current MXSmall MXEdge Lift",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published MXSmall multi-edge lifting face.",
+            "supportedClaim": "MXSmall is a beech lifting edge with MX18, MX14, MX8, and a 25 mm mono plus a stabilizing cord arrangement."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.klimwinkel.nl/blogs/community-reviews/review-lattice-training-mx-edge-lift",
+            "publisher": "Klimwinkel",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current MXEdge Lift Small",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published MXSmall multi-edge lifting face.",
+            "supportedClaim": "The independent community review identifies and photographs the small MXEdge Lift production model."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mxedge-lift-small/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "liftingEdge",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "6a0d7b0167a53d54b2849773000512d12c1343107fe01d16af4d81a7559cd822",
+        "finalDimensions": {
+          "widthPixels": 1000,
+          "heightPixels": 1000
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "mammut.diamond-finger",
+      "productName": "Diamond Finger Hangboard",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/mammut-diamond-finger/assets/primary.png",
+      "workingSurface": "Published front multi-hold working face",
+      "physicalRevision": "Model 2060-00020 Diamond Finger Hangboard",
+      "manufacturer": "Mammut",
+      "materials": [
+        "wood",
+        "metal",
+        "mixedOther"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "1193935f01990ca6a3a5752befc61fe1da5bbaf016c55f6359fe773da4dadc47",
+        "widthPixels": 1980,
+        "heightPixels": 495
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-product views establish the same silhouette for Published front multi-hold working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "The cited specification and independent production view establish the declared component materials."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited contacts and identity-bearing components are represented for this presentation."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented without material foreshortening that obscures its contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions follow the restrained material treatment visible in the cited production views."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered and uncropped at a legible catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "Composition, neutral lighting, bounded texture frequency, and restrained edge treatment fit the accepted cohort style."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://static.mammut.com/file/2060-00020_man_en_070420_DiamondFingerHangboard_Manual.pdf",
+            "publisher": "Mammut",
+            "sourceKind": "officialManual",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Model 2060-00020 Diamond Finger",
+            "imageRole": "First-party straight-on and oblique product views establish the published silhouette, material, depth transitions, and named contacts. This presentation-specific review addresses Published front multi-hold working face.",
+            "supportedClaim": "The official manual establishes the Diamond Finger body, mounting plate, phone mount, installation configuration, and 100 kg limit."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.backcountry.com/mammut-diamond-finger-hangboard",
+            "publisher": "Backcountry",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Mammut Diamond Finger model MAM01GV / 2060-00020",
+            "imageRole": "Independent product and in-use views corroborate the production construction, component inventory, and finish. This presentation-specific review addresses Published front multi-hold working face.",
+            "supportedClaim": "The retailer's straight-on and oblique production views establish walnut construction, the exact extensive hold inventory, 33.5 inch width, mounting system, and phone holder."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/mammut-diamond-finger/assets/primary.png",
+        "materialMatch": "Shared sourced material cohort with bounded production texture",
+        "formFactorMatch": "fullWidthFixedBoard",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "1193935f01990ca6a3a5752befc61fe1da5bbaf016c55f6359fe773da4dadc47",
+        "finalDimensions": {
+          "widthPixels": 1980,
+          "heightPixels": 495
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    }
+  ],
   "phase1Checks": {
     "manifestValidation": {
       "status": "pending",
