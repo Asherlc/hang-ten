@@ -21,7 +21,7 @@ Search each exact manufacturer/product/revision independently. Open and cite dir
 | Lane | Packages | Assets | Status |
 | --- | ---: | ---: | --- |
 | A — Aelith through Mammut | 20 | 27 | Complete — 20 packages / 27 assets |
-| B — Metolius through So iLL | 19 | 24 | Not started |
+| B — Metolius through So iLL | 19 | 24 | Complete — 19 packages / 24 assets |
 | C — target10a through Zlagboard | 22 | 34 | Not started |
 
 ## Revision, source-conflict, and unsupported-surface resolutions
@@ -72,6 +72,48 @@ Resolutions are added only when direct live sources establish the named revision
   Phase 2 action; this audit changes no package inventory.
 - Lane A classification: 6 `keep` records (2 evidence-blocked), 19 `edit`,
   1 `regenerate`, and 1 `removeUnsupportedPresentation`.
+- Climber's Edge, Contact, Foundry, Project, and Simulator 3-D are
+  `regenerate`: current broad silhouettes may be recognizable in places, but
+  the cited exact revisions establish different rail, pinch, pocket, sloper,
+  jug, mounting-hole, or material topology. Prime Rib and Wood Grips II Deluxe
+  are accepted `keep` baselines. Compact II is an `edit` because its cited
+  two-row grip layout remains usable while the production mounting points are
+  absent.
+- Both Light Rail 2.0 sides are `edit`: each named working face is oblique and
+  its suspension cord is cropped. Metolius calls the current face 20 mm while
+  REI publishes a 19/26 mm depth list for the same current product; that exact
+  source conflict remains a Phase 2 constraint, while both sources agree on a
+  four-position reversible FSC-wood rail. Rock Rings 3D is also `edit` because
+  its body contact inventory remains recognizable but both complete cords and
+  knots are missing and its polyester-resin treatment is false.
+- Armstrong Beech SKU 60-112-BEC is `edit`: exact first-party and retailer
+  sources prove the current hardwood geometry, but the current asset is an
+  underscaled branded, depth-labeled photograph rather than the unbranded
+  studio treatment.
+- Stoak Board III Oak is `edit` to restore sourced mounting and magnetic
+  details while preserving FSC oak and visibly real recycled Norwegian
+  granite. The KARMA8A collaboration, Stone Hanger Mini Beech primary, and its
+  head-on 60 mm pinch side are accepted `keep` records; all three retain their
+  sourced wood, real-stone, and complete-cord separation rather than borrowing
+  a wood-only or synthetic texture.
+- All four Poker working faces were independently checked against the exact
+  four-face grip inventory and pass the strict head-on topology test. Each is
+  `edit` only for the engraved Owl mark. Owl Climb publishes the bare body as
+  660 × 100 × 100 mm, while Oliunìd publishes 68 × 14 × 12 cm for the supported
+  assembly; that measurement-scope conflict remains explicit and does not
+  alter face geometry.
+- Plateau Lifting Edge is `edit`: the aluminum body and oak insert are usable,
+  but the cited 3D-printed 15/10 mm blocker and complete 6 mm Edelrid PES cord
+  are omitted. Fresh exact-model searches found no independent direct review,
+  retailer, or owner page proving this Oak configuration, so the independent
+  evidence gap remains explicit.
+- Iron Palm 2.0 is `edit` for its transparent cutout. Split Palm and the So iLL
+  x Meagan Martin Training Tiles are accepted `keep` records after exact
+  official and independent sources confirmed their textured-urethane,
+  two-piece contact layouts.
+- Lane B classification: 7 `keep`, 12 `edit`, and 5 `regenerate` records. The
+  validated lane report contains 19 packages and 24 presentations; Plateau's
+  independent-source gap is the lane's only evidence-blocked asset.
 
 ## Final classification totals
 

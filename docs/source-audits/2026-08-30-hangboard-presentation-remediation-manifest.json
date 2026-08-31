@@ -3553,6 +3553,3131 @@
           }
         }
       }
+    },
+    {
+      "packageID": "metolius.climbers-edge",
+      "productName": "Climber's Edge",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/metolius-climbers-edge/assets/primary.png",
+      "workingSurface": "the published front three-rail edge, sloper, and jug working face",
+      "physicalRevision": "Current redesigned FSC-wood Climber's Edge",
+      "manufacturer": "Metolius",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "af41b6469fd4d2a4857ba5274b16dbc580f81faa93f195cca76ee894356e0486",
+        "widthPixels": 1717,
+        "heightPixels": 916
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The current pocket-cell board is not the cited redesigned three-rail Climber's Edge silhouette."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the current FSC-wood body; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current rows of rectangular cells do not represent the cited 7.5–20 mm rails, two slopers, jugs, labels, and mounting-hole layout."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "nonconforming",
+          "explanation": "Uniform cell rounding replaces the production rail, sloper, and jug transitions."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Although the studio field is acceptable, the wrong product geometry prevents cohort acceptance."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current redesigned Climber's Edge wood board",
+            "imageRole": "Straight-on and oblique product views establish the three-rail silhouette, labeled edge sequence, slopers, jugs, screw holes, and FSC wood. This presentation-specific review addresses the published front three-rail edge, sloper, and jug working face.",
+            "supportedClaim": "The current Climber's Edge is an FSC-wood board with 7.5–20 mm edges, round and 20-degree slopers, jugs, and the shown mounting-hole layout."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.bergzeit.co.uk/p/metolius-climbers-edge-board/5067575/",
+            "publisher": "Bergzeit",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Metolius Climber's Edge",
+            "imageRole": "Exact retailer product imagery corroborates the current rail layout, wood construction, and supplied mounting hardware. This presentation-specific review addresses the published front three-rail edge, sloper, and jug working face.",
+            "supportedClaim": "The production Climber's Edge is the current 60 × 16 cm wood model rather than a pocket-cell board."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/metolius-prime-rib/assets/primary.png",
+        "materialMatch": "Sourced FSC-wood full-width body; comparator supplies bounded wood style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.contact",
+      "productName": "Contact",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/metolius-contact/assets/primary.png",
+      "workingSurface": "the published front 11-pocket, four-edge, sloper, jug, and pinch working face",
+      "physicalRevision": "Current Contact Training Board",
+      "manufacturer": "Metolius",
+      "materials": [
+        "resin"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "dd8cd8652453a334c86d9542512f9ccbf2f326aaa5830392a2c7bfa2c165c1ff",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The current flat rectangular grid does not match the cited complex Contact silhouette."
+        },
+        "material": {
+          "outcome": "nonconforming",
+          "explanation": "The featureless white surface suppresses the production board's textured molded-resin and characteristic black/white treatment."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current grid omits or misstates the 11 pockets, four edges, top jugs, two sloper kinds, and tapered pinches."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "nonconforming",
+          "explanation": "Uniform rectangular rounding replaces the sourced irregular grip and pinch transitions."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The simplified geometry and false material treatment fail product-specific catalog consistency."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/contact-training-board",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Contact Training Board",
+            "imageRole": "Straight-on and oblique gallery views establish the black/white molded-resin silhouette, 11 pockets, four edges, jugs, slopers, and tapered pinches. This presentation-specific review addresses the published front 11-pocket, four-edge, sloper, jug, and pinch working face.",
+            "supportedClaim": "The current Contact has 11 pockets, four central edges, top jugs, rounded and flat slopers, and variable-width pinches in a textured molded body."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://blackisard.com/rocodromo/multipresas-rocodromo/7058-contacttrainingboardmetolius.html",
+            "publisher": "Blackisard",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Contact Training Board",
+            "imageRole": "Exact retailer views and specifications corroborate the production resin body and complete hold inventory. This presentation-specific review addresses the published front 11-pocket, four-edge, sloper, jug, and pinch working face.",
+            "supportedClaim": "The production Contact is a resin training board with the same complex pocket, edge, sloper, jug, and pinch topology."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted resin full-width fixed-board presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.foundry",
+      "productName": "Foundry Training Board",
+      "presentationID": "front",
+      "assetPath": "Hangboards/metolius-foundry/assets/primary.png",
+      "workingSurface": "the published front arched pinch, edge, pocket, jug, and sloper working face",
+      "physicalRevision": "Current Foundry Training Board",
+      "manufacturer": "Metolius",
+      "materials": [
+        "resin"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "a406d9a988a820d539bda7e0a29f882f33fa28fe3125d4aee9cc39f398943b81",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The smooth rectangular current silhouette does not match the cited arched Foundry body and tapered pinches."
+        },
+        "material": {
+          "outcome": "nonconforming",
+          "explanation": "The current uniform white treatment does not preserve the sourced textured molded-resin finish."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current simple holes and bars do not represent the Foundry's tapered pinches and irregular grip family."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "nonconforming",
+          "explanation": "Generic rounded cells replace the production contact transitions."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Wrong topology and material treatment prevent accepted studio-cohort presentation."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/foundry-training-board",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Foundry Training Board",
+            "imageRole": "Straight-on and oblique gallery views establish the arched molded silhouette, tapered pinches, irregular contacts, texture, and mounting points. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The current Foundry is a compact molded training board with tapered pinches and the shown asymmetric-depth grip family."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.backcountry.com/metolius-foundry-training-board",
+            "publisher": "Backcountry",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Foundry Training Board",
+            "imageRole": "Exact retailer imagery corroborates the molded-resin body, complex contact layout, and dimensions. This presentation-specific review addresses the published front arched pinch, edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The production Foundry uses a textured molded body and complex grip geometry rather than a smooth rectangular-cell layout."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted resin full-width fixed-board presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.light-rail-2",
+      "productName": "Light Rail 2.0",
+      "presentationID": "20mm-side",
+      "assetPath": "Hangboards/metolius-light-rail-2/assets/primary.png",
+      "workingSurface": "the manufacturer-published 20 mm reversible edge face",
+      "physicalRevision": "Current Light Rail 2.0; Metolius 20 mm naming conflicts with REI's 19/26 mm depth list",
+      "manufacturer": "Metolius",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "da320b5673289e1aa15e226d0fe55a13d2fde7625c10bd9f8c10442d04caa7f2",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Light Rail 2.0 silhouette for the manufacturer-published 20 mm reversible edge face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the FSC-wood rail and suspension cord; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "uncertain",
+          "explanation": "The reversible four-hold topology is recognizable, but Metolius's current 20 mm label conflicts with REI's 19/26 mm production depth list and must remain a Phase 2 constraint."
+        },
+        "headOnPerspective": {
+          "outcome": "nonconforming",
+          "explanation": "The named edge face is shown obliquely instead of under the strict head-on working-surface test."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "nonconforming",
+          "explanation": "Both suspension cords are cropped at the top rather than shown as complete cords and knots."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Oblique presentation and cropped suspension components require a bounded Phase 2 correction."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/light-rail",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Light Rail 2.0",
+            "imageRole": "First-party product and suspended-use views establish FSC wood, a complete knotted suspension cord, reversible faces, and published 15/20/40 mm labels. This presentation-specific review addresses the manufacturer-published 20 mm reversible edge face.",
+            "supportedClaim": "Light Rail 2.0 is a reversible four-hold FSC-wood portable board supplied and shown with a complete suspension cord."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.rei.com/product/255212/metolius-light-rail-20",
+            "publisher": "REI Co-op",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Metolius Light Rail 2.0",
+            "imageRole": "Exact retailer imagery corroborates the reversible wood rail and complete cord, while its depth list reads 40/26/19/15 mm. This presentation-specific review addresses the manufacturer-published 20 mm reversible edge face.",
+            "supportedClaim": "The production device is a four-position reversible wood rail; REI's 19/26 mm labels conflict with Metolius's current 20 mm naming and are retained as a source constraint."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted wood-and-cord reversible-portable presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.light-rail-2",
+      "productName": "Light Rail 2.0",
+      "presentationID": "15mm-side",
+      "assetPath": "Hangboards/metolius-light-rail-2/assets/15mm-surface.png",
+      "workingSurface": "the published 15 mm reversible edge face",
+      "physicalRevision": "Current Light Rail 2.0",
+      "manufacturer": "Metolius",
+      "materials": [
+        "wood",
+        "ropeCord"
+      ],
+      "formFactor": "reversiblePortable",
+      "currentAsset": {
+        "sha256": "7b365965bb7d3c7b6f1fcd8c2503c5a77ddba8cc75084294c5a7766a90ef3705",
+        "widthPixels": 1672,
+        "heightPixels": 941
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Light Rail 2.0 silhouette for the published 15 mm reversible edge face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the FSC-wood rail and suspension cord; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published 15 mm reversible edge face."
+        },
+        "headOnPerspective": {
+          "outcome": "nonconforming",
+          "explanation": "The named 15 mm face is shown obliquely rather than head-on."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "nonconforming",
+          "explanation": "The suspension cords are cropped before their complete loops and knots are visible."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Oblique presentation and cropped suspension components require a bounded Phase 2 correction."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/light-rail",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Light Rail 2.0",
+            "imageRole": "First-party product and suspended-use views establish FSC wood, a complete knotted suspension cord, reversible faces, and published 15/20/40 mm labels. This presentation-specific review addresses the published 15 mm reversible edge face.",
+            "supportedClaim": "Light Rail 2.0 is a reversible four-hold FSC-wood portable board supplied and shown with a complete suspension cord."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.rei.com/product/255212/metolius-light-rail-20",
+            "publisher": "REI Co-op",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Metolius Light Rail 2.0",
+            "imageRole": "Exact retailer imagery corroborates the reversible wood rail and complete cord, while its depth list reads 40/26/19/15 mm. This presentation-specific review addresses the published 15 mm reversible edge face.",
+            "supportedClaim": "The production device is a four-position reversible wood rail; REI's 19/26 mm labels conflict with Metolius's current 20 mm naming and are retained as a source constraint."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted wood-and-cord reversible-portable presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.prime-rib",
+      "productName": "Prime Rib",
+      "presentationID": "front",
+      "assetPath": "Hangboards/metolius-prime-rib/assets/primary.png",
+      "workingSurface": "the published front 38/23/15 mm three-edge working face",
+      "physicalRevision": "Current FSC-wood Prime Rib",
+      "manufacturer": "Metolius",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "fa4427b886b4bc3502468d84c716704b824bd3d9bdad5fb77aa9f0268f1cdbb7",
+        "widthPixels": 1704,
+        "heightPixels": 923
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Prime Rib silhouette for the published front 38/23/15 mm three-edge working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the FSC-wood body and visible face grain; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published front 38/23/15 mm three-edge working face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/prime-rib",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Prime Rib",
+            "imageRole": "Straight-on and oblique views establish the three wood rails, four mounting holes, rounded transitions, and 38/23/15 mm depths. This presentation-specific review addresses the published front 38/23/15 mm three-edge working face.",
+            "supportedClaim": "The current Prime Rib is an FSC-wood fixed board with three rounded rails at 38, 23, and 15 mm and four mounting points."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.outdoorgearlab.com/reviews/climbing/hangboard/metolius-prime-rib",
+            "publisher": "OutdoorGearLab",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Prime Rib production board",
+            "imageRole": "Hands-on product and installed views corroborate the three-edge topology, wood grain, rounding, and mounting layout. This presentation-specific review addresses the published front 38/23/15 mm three-edge working face.",
+            "supportedClaim": "The tested Prime Rib preserves the official three-edge progression and restrained wood contact finish."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+        "materialMatch": "Sourced FSC-wood full-width board with bounded face-grain frequency; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "fa4427b886b4bc3502468d84c716704b824bd3d9bdad5fb77aa9f0268f1cdbb7",
+        "finalDimensions": {
+          "widthPixels": 1704,
+          "heightPixels": 923
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.project",
+      "productName": "Project",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/metolius-project/assets/primary.png",
+      "workingSurface": "the published front compact edge, pocket, jug, and sloper working face",
+      "physicalRevision": "Current Project Training Board",
+      "manufacturer": "Metolius",
+      "materials": [
+        "resin"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "423cb4e0a04b2f7f736d5335c490414538fd57c63e332ee25af5d933aaf09c1a",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The current rectangular-cell board does not match the cited curved Project silhouette."
+        },
+        "material": {
+          "outcome": "nonconforming",
+          "explanation": "The current featureless white treatment suppresses the sourced textured polyester resin."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The current layout does not preserve the Project's distinct edges, pockets, jugs, sloping upper contacts, or mounting points."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "nonconforming",
+          "explanation": "Uniform rounded rectangles replace the production contact morphology."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Wrong geometry and material treatment fail product-specific catalog consistency."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/project-training-board",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Project Training Board",
+            "imageRole": "Straight-on and oblique views establish the arched molded body, variable grip families, top contours, and mounting points. This presentation-specific review addresses the published front compact edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The current Project is a compact textured molded board with the published edges, pockets, jugs, and sloping upper contacts."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.rei.com/product/799439/metolius-project-training-board",
+            "publisher": "REI Co-op",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Project Training Board",
+            "imageRole": "Exact retailer production and customer imagery corroborates polyester-resin construction, silhouette, contacts, and hardware. This presentation-specific review addresses the published front compact edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The production Project is a polyester-resin board with complex curved contacts and included mounting hardware."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted resin full-width fixed-board presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.rock-rings-3d",
+      "productName": "Rock Rings 3D",
+      "presentationID": "front-pair",
+      "assetPath": "Hangboards/metolius-rock-rings-3d/assets/primary.png",
+      "workingSurface": "the published front pair with jug, deep pocket, flat edge, and lower pocket",
+      "physicalRevision": "Current symmetric Rock Rings 3D pair",
+      "manufacturer": "Metolius",
+      "materials": [
+        "resin",
+        "ropeCord"
+      ],
+      "formFactor": "suspendedPortable",
+      "currentAsset": {
+        "sha256": "e1f08a4bc280433cee3044bb97ba6a8f038b87d0086f34b47ead8c5d59a2fd68",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Rock Rings 3D silhouette for the published front pair with jug, deep pocket, flat edge, and lower pocket."
+        },
+        "material": {
+          "outcome": "nonconforming",
+          "explanation": "The gray oversmoothed current bodies do not preserve the cited fine-textured polyester-resin treatment."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The four body grip zones are recognizable, but both required suspension ropes and knots are incomplete."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "nonconforming",
+          "explanation": "Both cords are cropped at the top rather than shown as complete suspension assemblies."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "False material treatment and cropped cords require a bounded Phase 2 repair."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/rock-rings-3d",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Rock Rings 3D pair",
+            "imageRole": "First-party pair and use views establish two independent textured units, their four grip zones, and complete knotted single-point suspension cords. This presentation-specific review addresses the published front pair with jug, deep pocket, flat edge, and lower pocket.",
+            "supportedClaim": "Rock Rings 3D are a pair of independently suspended molded units with a jug, deep pocket, flat edge, and lower three-finger pocket."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.rei.com/product/793157/metolius-rock-rings-3d-training-holds",
+            "publisher": "REI Co-op",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Rock Rings 3D",
+            "imageRole": "Exact retailer imagery and specifications corroborate polyester-resin construction, the two-unit contact inventory, and full suspension ropes. This presentation-specific review addresses the published front pair with jug, deep pocket, flat edge, and lower pocket.",
+            "supportedClaim": "The production pair is polyester resin and includes complete suspension ropes plus the four published grip zones per unit."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted resin-and-cord suspended-portable presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.simulator-3d",
+      "productName": "Simulator 3-D",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/metolius-simulator-3d/assets/primary.png",
+      "workingSurface": "the seventh-generation front pocket, edge, jug, and sloper working face",
+      "physicalRevision": "Current seventh-generation Simulator 3D/3-D",
+      "manufacturer": "Metolius",
+      "materials": [
+        "resin"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "fc569b432a03f1d64baea773400556269cbe0192a74ffa2026aa560ae5b16d8f",
+        "widthPixels": 1614,
+        "heightPixels": 975
+      },
+      "decision": "regenerate",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The broad arc is recognizable, but the current asset reduces the seventh-generation board to a uniform recess grid."
+        },
+        "material": {
+          "outcome": "nonconforming",
+          "explanation": "The featureless white surface suppresses the production polyester-resin texture and color treatment."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "Uniform rectangular recesses misstate distinct pockets, edges, jugs, slopers, and omit the mounting holes."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "nonconforming",
+          "explanation": "The current uniform cell rounding replaces the cited varied grip morphology."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Incorrect contact topology and material treatment require regeneration."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/simulator-training-board",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current seventh-generation Simulator 3D/3-D",
+            "imageRole": "Straight-on and oblique views establish the broad arched molded silhouette, varied pockets, edges, jugs, slopers, texture, and mounting holes. This presentation-specific review addresses the seventh-generation front pocket, edge, jug, and sloper working face.",
+            "supportedClaim": "The current Simulator 3D is the seventh-generation textured molded board with varied contact kinds and the shown mounting-hole layout."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.rei.com/product/799438/metolius-simulator-3d-training-board",
+            "publisher": "REI Co-op",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Seventh-generation Metolius Simulator 3D",
+            "imageRole": "Exact production and customer views corroborate polyester-resin construction, irregular contact morphology, dimensions, and mounting hardware. This presentation-specific review addresses the seventh-generation front pocket, edge, jug, and sloper working face.",
+            "supportedClaim": "The seventh-generation production board is polyester resin and does not reduce its hold families to uniform rectangular recesses."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted resin full-width fixed-board presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.wood-grips-compact-ii",
+      "productName": "Wood Grips Compact II",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/metolius-wood-grips-compact-ii/assets/primary.png",
+      "workingSurface": "the published front two-row Compact II working face",
+      "physicalRevision": "Current Wood Grips Compact II variant",
+      "manufacturer": "Metolius",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "87ba30f259840deeb0559dd1d7e4cb3f18be3ee16e85f81f5be985557791e13e",
+        "widthPixels": 1774,
+        "heightPixels": 457
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Wood Grips Compact II silhouette for the published front two-row Compact II working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the FSC-wood body and restrained face grain; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The two-row grip inventory is preserved, but the cited production mounting points are omitted."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The otherwise conforming wood studio render requires a bounded mounting-detail repair."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Wood Grips II Compact and Deluxe variants",
+            "imageRole": "Variant-specific straight-on and oblique views establish the FSC-wood bodies, published hold inventories, rounded contacts, and mounting holes. This presentation-specific review addresses the published front two-row Compact II working face.",
+            "supportedClaim": "Wood Grips II is sold in distinct Compact and Deluxe wood variants whose silhouettes, grip rows, and mounting layouts match the selected variant."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.dicksclimbing.com/products/metolius-wood-grips-compact-ii",
+            "publisher": "Dick's Climbing",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Wood Grips Compact II",
+            "imageRole": "Exact variant imagery and specifications corroborate 11 holds, the two-row layout, jugs, slopers, pockets, edges, and production mounting points. This presentation-specific review addresses the published front two-row Compact II working face.",
+            "supportedClaim": "Compact II has the published two-row wood topology and visible mounting points."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/metolius-prime-rib/assets/primary.png",
+        "materialMatch": "Sourced FSC-wood full-width board with bounded grain; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "metolius.wood-grips-deluxe-ii",
+      "productName": "Wood Grips II Deluxe",
+      "presentationID": "front",
+      "assetPath": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.png",
+      "workingSurface": "the published front three-row Deluxe II working face",
+      "physicalRevision": "Current Wood Grips Deluxe II variant",
+      "manufacturer": "Metolius",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "8a93da2cec007a429dffc5a4afb0ee14ab9952e328b5a2eb53529a61d797ffcb",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Wood Grips II Deluxe silhouette for the published front three-row Deluxe II working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the FSC-wood body and restrained face grain; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published front three-row Deluxe II working face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+            "publisher": "Metolius",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Wood Grips II Compact and Deluxe variants",
+            "imageRole": "Variant-specific straight-on and oblique views establish the FSC-wood bodies, published hold inventories, rounded contacts, and mounting holes. This presentation-specific review addresses the published front three-row Deluxe II working face.",
+            "supportedClaim": "Wood Grips II is sold in distinct Compact and Deluxe wood variants whose silhouettes, grip rows, and mounting layouts match the selected variant."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.outdoorgearlab.com/reviews/climbing/hangboard/metolius-wood-grips-deluxe-ii",
+            "publisher": "OutdoorGearLab",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Metolius Wood Grips Deluxe II",
+            "imageRole": "Hands-on straight-on and installed views corroborate the three grip rows, slopers, jugs, six mounting points, and restrained wood finish. This presentation-specific review addresses the published front three-row Deluxe II working face.",
+            "supportedClaim": "The tested Deluxe II preserves the official three-row topology, six-hole mounting layout, and rounded wood contacts."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/metolius-prime-rib/assets/primary.png",
+        "materialMatch": "Sourced FSC-wood full-width board with bounded grain; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "8a93da2cec007a429dffc5a4afb0ee14ab9952e328b5a2eb53529a61d797ffcb",
+        "finalDimensions": {
+          "widthPixels": 1774,
+          "heightPixels": 887
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "moon.armstrong",
+      "productName": "Armstrong Fingerboard Beech",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/moon-armstrong/assets/primary.png",
+      "workingSurface": "the published front Beech edge, pocket, jug, and sloper working face",
+      "physicalRevision": "Current hardwood Armstrong Beech, SKU 60-112-BEC",
+      "manufacturer": "Moon Climbing",
+      "materials": [
+        "wood"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "f81b2d306afe070177eeda2464a9b4019e505916641ebdb9399141e19e129fa3",
+        "widthPixels": 1697,
+        "heightPixels": 1200
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Armstrong Fingerboard Beech silhouette for the published front Beech edge, pocket, jug, and sloper working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the sustainably sourced beech body; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published front Beech edge, pocket, jug, and sloper working face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "nonconforming",
+          "explanation": "The product is underscaled within a bright photographic-white field with excessive empty margin."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Visible Moon branding, engraved depth labels, slogan text, and photographic treatment violate the simplified unbranded studio contract."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://moonclimbing.com/moon-armstrong-fingerboard-beech.html",
+            "publisher": "Moon Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Moon Armstrong Beech SKU 60-112-BEC",
+            "imageRole": "Exact Beech product imagery and specifications establish the hold layout, branded depth labels, pulley attachment holes, sustainable beech, and dimensions. This presentation-specific review addresses the published front Beech edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "SKU 60-112-BEC is the beech Armstrong with 25/20/15/10/8 mm slots, 22 mm pockets, central 22/18 mm edges, jugs, slopers, and pulley attachments."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://rockrun.com/products/moon-armstrong-fingerboard",
+            "publisher": "Rock+Run",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Moon Armstrong hardwood family including Beech",
+            "imageRole": "Exact retailer imagery and specification corroborate the same contact inventory, Beech option, pulley points, and 65 × 16.5 × 5.5 cm body. This presentation-specific review addresses the published front Beech edge, pocket, jug, and sloper working face.",
+            "supportedClaim": "The production Armstrong Beech shares the official current hardwood geometry and is sold as a beech material option."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.png",
+        "materialMatch": "Sourced beech full-width board; comparator supplies only bounded wood texture and studio treatment, not product geometry.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "nature.stoak-board-iii",
+      "productName": "Stoak Board III Oak",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/nature-stoak-board-iii/assets/primary.png",
+      "workingSurface": "the published front oak-and-granite working face",
+      "physicalRevision": "Stoak Board III Oak with recycled Norwegian granite and magnetic inserts",
+      "manufacturer": "Nature Climbing",
+      "materials": [
+        "wood",
+        "stoneMineralComposite",
+        "metal"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "b380b8f9d098b5b3aafd697e79d1d3f66ad5aa205cc021bfabf756b3164ff53c",
+        "widthPixels": 1774,
+        "heightPixels": 887
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Stoak Board III Oak silhouette for the published front oak-and-granite working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the FSC-oak body, real recycled Norwegian granite, and magnetic insert system; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The oak body and three granite contacts are recognizable, but the cited mounting points and magnetic reducer details are omitted."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "A bounded Phase 2 edit must restore sourced mounting and magnetic details while preserving visibly real granite rather than borrowing wood texture."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://natureclimbing.com/products/stoak-board-iii?variant=52029955768658",
+            "publisher": "Nature Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stoak Board III Oak variant",
+            "imageRole": "Exact Oak-variant gallery views establish the wood body, dark recycled Norwegian granite edges, top jug, 22 mm one-arm edge, magnetic inserts, and mounting points. This presentation-specific review addresses the published front oak-and-granite working face.",
+            "supportedClaim": "Stoak Board III Oak combines FSC oak, recycled Norwegian granite, and magnetic edge reducers in the shown fixed-board layout."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://loox.io/s/IPvkXP8uhB",
+            "publisher": "Verified Nature Climbing customers via Loox",
+            "sourceKind": "ownerPhoto",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stoak Board III Oak production examples",
+            "imageRole": "Exact-product owner photos corroborate real oak grain, dark natural granite variation, installed scale, and visible mounting details. This presentation-specific review addresses the published front oak-and-granite working face.",
+            "supportedClaim": "Owner production examples preserve distinct natural granite and wood surfaces rather than a single synthetic material treatment."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.png",
+        "materialMatch": "Sourced FSC-oak body plus real recycled granite and magnetic components; comparator supplies wood studio style only, while stone and metal identity remain source-governed.",
+        "formFactorMatch": "Exact compatible form factor: fullWidthFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "nature.stone-hanger-mini-karma8a",
+      "productName": "Stone Hanger Mini x KARMA8A",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.png",
+      "workingSurface": "the published two-edge and 60 mm pinch portable working faces",
+      "physicalRevision": "Stone Hanger Mini x KARMA8A smoked-oak collaboration",
+      "manufacturer": "Nature Climbing",
+      "materials": [
+        "wood",
+        "stoneMineralComposite",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "84942ffd74c854a665a01ca74ddef75a1ca9d453dac9d6416bd4120f6cba2868",
+        "widthPixels": 1254,
+        "heightPixels": 1254
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Stone Hanger Mini x KARMA8A silhouette for the published two-edge and 60 mm pinch portable working faces."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the smoked-oak body, real granite, and complete purple suspension cord; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published two-edge and 60 mm pinch portable working faces."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://natureclimbing.com/products/mini-hanger",
+            "publisher": "Nature Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stone Hanger Mini x KARMA8A collaboration",
+            "imageRole": "Exact collaboration imagery establishes smoked oak, recycled granite, purple cord, two 15 mm edges, 60 mm pinch, knot, and adjustable orientation. This presentation-specific review addresses the published two-edge and 60 mm pinch portable working faces.",
+            "supportedClaim": "The KARMA8A edition is a smoked-oak, real-granite, purple-cord portable device with two 15 mm edges and a 60 mm pinch."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://loox.io/s/IPvkXP8uhB",
+            "publisher": "Verified Nature Climbing customers via Loox",
+            "sourceKind": "ownerPhoto",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stone Hanger Mini x KARMA8A owner examples",
+            "imageRole": "Exact collaboration owner photos corroborate the dark wood, natural stone variation, complete purple cord, and compact multi-orientation form. This presentation-specific review addresses the published two-edge and 60 mm pinch portable working faces.",
+            "supportedClaim": "Owner examples preserve the collaboration's mixed natural materials and complete suspension assembly."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/nature-stone-hanger-mini/assets/primary.png",
+        "materialMatch": "Sourced wood, real granite, and complete cord multi-orientation construction; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "84942ffd74c854a665a01ca74ddef75a1ca9d453dac9d6416bd4120f6cba2868",
+        "finalDimensions": {
+          "widthPixels": 1254,
+          "heightPixels": 1254
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "nature.stone-hanger-mini",
+      "productName": "Stone Hanger Mini",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/nature-stone-hanger-mini/assets/primary.png",
+      "workingSurface": "the published lengthwise twin 15 mm granite edge faces",
+      "physicalRevision": "Current Stone Hanger Mini Beech variant",
+      "manufacturer": "Nature Climbing",
+      "materials": [
+        "wood",
+        "stoneMineralComposite",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "013dd268460505601788c6166cba407f02e51262aae0e93de41627ecd1e4f96e",
+        "widthPixels": 1254,
+        "heightPixels": 1254
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Stone Hanger Mini silhouette for the published lengthwise twin 15 mm granite edge faces."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published lengthwise twin 15 mm granite edge faces."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://natureclimbing.com/collections/hangboards/products/stone-hanger-mini-beech",
+            "publisher": "Nature Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stone Hanger Mini Beech variant",
+            "imageRole": "Exact Beech-variant gallery views establish the beech body, real granite inserts, complete cord, two 15 mm edges, and head-on 60 mm pinch end. This presentation-specific review addresses the published lengthwise twin 15 mm granite edge faces.",
+            "supportedClaim": "Stone Hanger Mini Beech combines real granite, beech, and cord; its lengthwise faces and 60 mm pinch end are usable working surfaces."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://loox.io/s/IPvkXP8uhB",
+            "publisher": "Verified Nature Climbing customers via Loox",
+            "sourceKind": "ownerPhoto",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stone Hanger Mini Beech production examples",
+            "imageRole": "Exact-product owner photos corroborate natural wood and granite variation, the complete cord and knot, and multi-orientation use. This presentation-specific review addresses the published lengthwise twin 15 mm granite edge faces.",
+            "supportedClaim": "Owner examples preserve separate stone and wood textures and the complete portable assembly."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/nature-stone-hanger-mini-karma8a/assets/primary.png",
+        "materialMatch": "Sourced wood, real granite, and complete cord multi-orientation construction; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "013dd268460505601788c6166cba407f02e51262aae0e93de41627ecd1e4f96e",
+        "finalDimensions": {
+          "widthPixels": 1254,
+          "heightPixels": 1254
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "nature.stone-hanger-mini",
+      "productName": "Stone Hanger Mini",
+      "presentationID": "side",
+      "assetPath": "Hangboards/nature-stone-hanger-mini/assets/side.png",
+      "workingSurface": "the published head-on 60 mm pinch end face",
+      "physicalRevision": "Current Stone Hanger Mini Beech variant",
+      "manufacturer": "Nature Climbing",
+      "materials": [
+        "wood",
+        "stoneMineralComposite",
+        "ropeCord"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "9883d48087783386f3791a3dd90d2c0e0f30ff9bea97b9f123d36391418cc40d",
+        "widthPixels": 1254,
+        "heightPixels": 1254
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Stone Hanger Mini silhouette for the published head-on 60 mm pinch end face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the beech body, real granite, and complete black/yellow suspension cord; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published head-on 60 mm pinch end face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://natureclimbing.com/collections/hangboards/products/stone-hanger-mini-beech",
+            "publisher": "Nature Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stone Hanger Mini Beech variant",
+            "imageRole": "Exact Beech-variant gallery views establish the beech body, real granite inserts, complete cord, two 15 mm edges, and head-on 60 mm pinch end. This presentation-specific review addresses the published head-on 60 mm pinch end face.",
+            "supportedClaim": "Stone Hanger Mini Beech combines real granite, beech, and cord; its lengthwise faces and 60 mm pinch end are usable working surfaces."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://loox.io/s/IPvkXP8uhB",
+            "publisher": "Verified Nature Climbing customers via Loox",
+            "sourceKind": "ownerPhoto",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Stone Hanger Mini Beech production examples",
+            "imageRole": "Exact-product owner photos corroborate natural wood and granite variation, the complete cord and knot, and multi-orientation use. This presentation-specific review addresses the published head-on 60 mm pinch end face.",
+            "supportedClaim": "Owner examples preserve separate stone and wood textures and the complete portable assembly."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/nature-stone-hanger-mini/assets/primary.png",
+        "materialMatch": "Sourced beech, real granite, and complete cord from the same accepted physical revision; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "9883d48087783386f3791a3dd90d2c0e0f30ff9bea97b9f123d36391418cc40d",
+        "finalDimensions": {
+          "widthPixels": 1254,
+          "heightPixels": 1254
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "owl-climb.poker",
+      "productName": "Poker",
+      "presentationID": "face-a",
+      "assetPath": "Hangboards/owl-climb-poker/assets/face-a.png",
+      "workingSurface": "the independently selectable flat-center Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "manufacturer": "Owl Climb",
+      "materials": [
+        "wood",
+        "mixedOther"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "ddadd81e2fff9b4ca467d0320d53a496035b2131e905f76e0231c7ea2dc45028",
+        "widthPixels": 1980,
+        "heightPixels": 300
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Poker silhouette for the independently selectable flat-center Poker face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the tulipwood bar and supplied mounting-support components; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable flat-center Poker face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The engraved Owl crown mark on face-a violates the simplified unbranded studio contract; topology remains source-governed for this face."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "publisher": "Owl Climb",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
+            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable flat-center Poker face.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.oliunid.com/owl-climb-poker-climbing-hangboard",
+            "publisher": "Oliunìd",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker production assembly",
+            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable flat-center Poker face.",
+            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced tulipwood multi-orientation bar with mounting supports; comparator supplies bounded wood style only and no Poker geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "owl-climb.poker",
+      "productName": "Poker",
+      "presentationID": "face-b",
+      "assetPath": "Hangboards/owl-climb-poker/assets/face-b.png",
+      "workingSurface": "the independently selectable deep-sloper Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "manufacturer": "Owl Climb",
+      "materials": [
+        "wood",
+        "mixedOther"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "5b33ce95315224a37fa13d83062cfbdab27d514d8922b65d06c0368bcd1523de",
+        "widthPixels": 1980,
+        "heightPixels": 300
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Poker silhouette for the independently selectable deep-sloper Poker face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the tulipwood bar and supplied mounting-support components; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable deep-sloper Poker face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The engraved Owl crown mark on face-b violates the simplified unbranded studio contract; topology remains source-governed for this face."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "publisher": "Owl Climb",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
+            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable deep-sloper Poker face.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.oliunid.com/owl-climb-poker-climbing-hangboard",
+            "publisher": "Oliunìd",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker production assembly",
+            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable deep-sloper Poker face.",
+            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced tulipwood multi-orientation bar with mounting supports; comparator supplies bounded wood style only and no Poker geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "owl-climb.poker",
+      "productName": "Poker",
+      "presentationID": "face-c",
+      "assetPath": "Hangboards/owl-climb-poker/assets/face-c.png",
+      "workingSurface": "the independently selectable shallow half-round Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "manufacturer": "Owl Climb",
+      "materials": [
+        "wood",
+        "mixedOther"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "e4f9990a71eced298dfb3f2c881ee7c3b29bfe76a191e751d632fb6f159e45dd",
+        "widthPixels": 1980,
+        "heightPixels": 300
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Poker silhouette for the independently selectable shallow half-round Poker face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the tulipwood bar and supplied mounting-support components; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable shallow half-round Poker face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The engraved Owl crown mark on face-c violates the simplified unbranded studio contract; topology remains source-governed for this face."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "publisher": "Owl Climb",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
+            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable shallow half-round Poker face.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.oliunid.com/owl-climb-poker-climbing-hangboard",
+            "publisher": "Oliunìd",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker production assembly",
+            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable shallow half-round Poker face.",
+            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced tulipwood multi-orientation bar with mounting supports; comparator supplies bounded wood style only and no Poker geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "owl-climb.poker",
+      "productName": "Poker",
+      "presentationID": "face-d",
+      "assetPath": "Hangboards/owl-climb-poker/assets/face-d.png",
+      "workingSurface": "the independently selectable deep rounded-recess Poker face",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; official bare-body and retailer assembly dimensions differ",
+      "manufacturer": "Owl Climb",
+      "materials": [
+        "wood",
+        "mixedOther"
+      ],
+      "formFactor": "multiOrientationDevice",
+      "currentAsset": {
+        "sha256": "ee9f4d928416a008b9a784631549d15ce675e32fb6771ad5bf67ad2627024e02",
+        "widthPixels": 1980,
+        "heightPixels": 300
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Poker silhouette for the independently selectable deep rounded-recess Poker face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the tulipwood bar and supplied mounting-support components; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the independently selectable deep rounded-recess Poker face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "The engraved Owl crown mark on face-d violates the simplified unbranded studio contract; topology remains source-governed for this face."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+            "publisher": "Owl Climb",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker four-face tulipwood model",
+            "imageRole": "Exact multi-face product imagery and specifications establish four selectable working faces, outer 25/20/15/10 mm slots, mono/dual pockets, four central depths, slopers, half-circles, and supports. This presentation-specific review addresses the independently selectable deep rounded-recess Poker face.",
+            "supportedClaim": "Poker is a 660 × 100 × 100 mm tulipwood bar with four independently selectable faces and supplied mounting supports."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.oliunid.com/owl-climb-poker-climbing-hangboard",
+            "publisher": "Oliunìd",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Owl Climb Poker production assembly",
+            "imageRole": "Exact multi-image retailer gallery corroborates all four face families, tulipwood, rotation in the supports, and packaged assembly dimensions. This presentation-specific review addresses the independently selectable deep rounded-recess Poker face.",
+            "supportedClaim": "The production Poker rotates among four faces; the retailer's 68 × 14 × 12 cm assembly dimensions exceed Owl Climb's bare-body dimensions and are retained as a documented scope conflict."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/lattice-mini-bar/assets/primary.png",
+        "materialMatch": "Sourced tulipwood multi-orientation bar with mounting supports; comparator supplies bounded wood style only and no Poker geometry.",
+        "formFactorMatch": "Exact compatible form factor: multiOrientationDevice.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "plateau.lifting-edge",
+      "productName": "Lifting Edge",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/plateau-lifting-edge/assets/primary.png",
+      "workingSurface": "the published Oak 18 mm edge with 15/10 mm blocker positions",
+      "physicalRevision": "Current Plateau Lifting Edge Oak configuration",
+      "manufacturer": "Plateau Climbing",
+      "materials": [
+        "metal",
+        "wood",
+        "ropeCord",
+        "mixedOther"
+      ],
+      "formFactor": "liftingEdge",
+      "currentAsset": {
+        "sha256": "1443f648e8f5ca4b9495639774dad8230b5d35c419bd9fb9d27c438a5bd910ab",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "nonconforming",
+          "explanation": "The aluminum body and oak insert are recognizable, but the current asset is not the complete delivered configuration."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the anodized aluminum body, oak insert, PES cord, and 3D-printed blocker; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "nonconforming",
+          "explanation": "The published 6 mm PES cord and 3D-printed 15/10 mm blocker are omitted from the current assembly."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "nonconforming",
+          "explanation": "The frame centers only the body and insert rather than the complete corded lifting device."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Incomplete component presentation requires a bounded Phase 2 repair."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+            "publisher": "Plateau Climbing",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Plateau Lifting Edge with Oak insert",
+            "imageRole": "Ten-image exact-product gallery and specifications establish the anodized aluminum body, oak 18 mm edge, 3D-printed 15/10 mm blocker, two screws, and 6 mm Edelrid PES cord. This presentation-specific review addresses the published Oak 18 mm edge with 15/10 mm blocker positions.",
+            "supportedClaim": "The current Oak configuration is a compact anodized-aluminum lifting edge delivered with an oak insert, blocker, screws, and complete PES cord."
+          }
+        ],
+        "independent": [],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": "Fresh exact-model searches for Plateau Lifting Edge review, retailer, and owner photographs found no live independent direct page that proves this Oak configuration's delivered cord, blocker, and production geometry."
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted mixed-material lifting-edge presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "soill.iron-palm-2",
+      "productName": "Iron Palm 2.0",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/soill-iron-palm-2/assets/primary.png",
+      "workingSurface": "the published front sloper, pinch, jug-rail, and crimp-rail working face",
+      "physicalRevision": "Current Iron Palm 2.0 by Jason Kehl",
+      "manufacturer": "So iLL",
+      "materials": [
+        "urethane"
+      ],
+      "formFactor": "fullWidthFixedBoard",
+      "currentAsset": {
+        "sha256": "a24fffbe51aa3b127c6b242afc217f20465697213d979e6d9d14b7e3e2c67d41",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "edit",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Iron Palm 2.0 silhouette for the published front sloper, pinch, jug-rail, and crimp-rail working face."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the textured urethane body; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published front sloper, pinch, jug-rail, and crimp-rail working face."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "nonconforming",
+          "explanation": "The product is isolated on transparency rather than a complete off-white studio field."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "nonconforming",
+          "explanation": "Transparent photographic cutout treatment fails the common background and lighting contract despite preserved geometry."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://soill.ca/products/iron-palm-2-0",
+            "publisher": "So iLL Canada",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Iron Palm 2.0 by Jason Kehl",
+            "imageRole": "Exact product and use views plus specifications establish urethane construction, two large slopers, pinches, top jug rail, 40/35/15 mm rails, and dimensions. This presentation-specific review addresses the published front sloper, pinch, jug-rail, and crimp-rail working face.",
+            "supportedClaim": "Iron Palm 2.0 is a single urethane fixed board with the published slopers, pinches, jug rail, and three crimp rails."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.backcountry.com/so-ill-iron-palm-2.0",
+            "publisher": "Backcountry",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "So iLL Iron Palm 2.0",
+            "imageRole": "Exact retailer production views corroborate the urethane material, full silhouette, named contact inventory, texture, and mounting hardware. This presentation-specific review addresses the published front sloper, pinch, jug-rail, and crimp-rail working face.",
+            "supportedClaim": "The production Iron Palm 2.0 uses textured urethane and the same single-board grip topology."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": null,
+        "materialMatch": null,
+        "formFactorMatch": null,
+        "reason": null,
+        "baselineGap": "No evidence-qualified accepted urethane full-width fixed-board presentation exists in the current Lane A or Lane B cohort."
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": null,
+        "finalDimensions": null,
+        "visualReviewerDecision": "pendingPhase2",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "soill.split-palm",
+      "productName": "Split Palm",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/soill-split-palm/assets/primary.png",
+      "workingSurface": "the published mirrored two-piece jug, sloper, pinch, and crimp working faces",
+      "physicalRevision": "Current Split Palm two-piece urethane model",
+      "manufacturer": "So iLL",
+      "materials": [
+        "urethane"
+      ],
+      "formFactor": "splitFixedBoard",
+      "currentAsset": {
+        "sha256": "6abf0bb34ab4c330905e8e100ba7a087b87d213b9a8c78714e9cf843bed89291",
+        "widthPixels": 1254,
+        "heightPixels": 1254
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Split Palm silhouette for the published mirrored two-piece jug, sloper, pinch, and crimp working faces."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the textured urethane pair; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published mirrored two-piece jug, sloper, pinch, and crimp working faces."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://soill.ca/products/split-palm",
+            "publisher": "So iLL Canada",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Current Split Palm two-piece model",
+            "imageRole": "Exact product and installed views plus specifications establish the mirrored two-piece urethane layout, jugs, large and small slopers, and 38.1/25.4/12.7 mm rails. This presentation-specific review addresses the published mirrored two-piece jug, sloper, pinch, and crimp working faces.",
+            "supportedClaim": "Split Palm is a pair of mirror-positioned urethane pieces with the published sloper, jug, pinch, and crimp contacts."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.klatredepot.no/products/so-ill-split-palm-hangboard",
+            "publisher": "Klatredepot",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "So iLL Split Palm production pair",
+            "imageRole": "Exact retailer imagery and specifications corroborate the mirrored two-piece geometry, contact depths, and per-piece dimensions. This presentation-specific review addresses the published mirrored two-piece jug, sloper, pinch, and crimp working faces.",
+            "supportedClaim": "The production Split Palm pair is mirrored and preserves the official contact inventory."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/soill-training-tiles/assets/primary.png",
+        "materialMatch": "Sourced textured urethane split-board pair; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: splitFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "6abf0bb34ab4c330905e8e100ba7a087b87d213b9a8c78714e9cf843bed89291",
+        "finalDimensions": {
+          "widthPixels": 1254,
+          "heightPixels": 1254
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
+    },
+    {
+      "packageID": "soill.training-tiles",
+      "productName": "Training Tiles • So iLL x Meagan Martin",
+      "presentationID": "primary",
+      "assetPath": "Hangboards/soill-training-tiles/assets/primary.png",
+      "workingSurface": "the published two-tile pocket, sloper, and progressive-edge working faces",
+      "physicalRevision": "Current So iLL x Meagan Martin Training Tiles",
+      "manufacturer": "So iLL",
+      "materials": [
+        "urethane"
+      ],
+      "formFactor": "splitFixedBoard",
+      "currentAsset": {
+        "sha256": "ec05d039fb6635cda85ed1dc317434306be796b42c35e75c633314a11d3f5cd6",
+        "widthPixels": 1536,
+        "heightPixels": 1024
+      },
+      "decision": "keep",
+      "findings": {
+        "productLikeness": {
+          "outcome": "conforms",
+          "explanation": "Direct exact-revision views establish the same overall Training Tiles • So iLL x Meagan Martin silhouette for the published two-tile pocket, sloper, and progressive-edge working faces."
+        },
+        "material": {
+          "outcome": "conforms",
+          "explanation": "Official specifications and independent production imagery establish the textured urethane pair; the current asset preserves the identity-bearing material separation."
+        },
+        "topology": {
+          "outcome": "conforms",
+          "explanation": "The cited exact-revision views establish the contacts and identity-bearing components represented on the published two-tile pocket, sloper, and progressive-edge working faces."
+        },
+        "headOnPerspective": {
+          "outcome": "conforms",
+          "explanation": "The declared working surface is presented head-on without material foreshortening of its usable contacts."
+        },
+        "smoothing": {
+          "outcome": "conforms",
+          "explanation": "Contact transitions and edge rounding remain restrained and consistent with the cited production material."
+        },
+        "framing": {
+          "outcome": "conforms",
+          "explanation": "The complete product is centered, uncropped, and legible at catalog scale."
+        },
+        "crossCatalogConsistency": {
+          "outcome": "conforms",
+          "explanation": "The off-white field, neutral lighting, bounded texture, and restrained edge treatment fit the accepted catalog cohort."
+        }
+      },
+      "evidence": {
+        "official": [
+          {
+            "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+            "publisher": "So iLL Canada",
+            "sourceKind": "officialProductPage",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "So iLL x Meagan Martin Training Tiles",
+            "imageRole": "Exact product and use views plus specifications establish two urethane tiles, 3-inch pockets, 25/12-degree slopers, five published edge depths, and hardware. This presentation-specific review addresses the published two-tile pocket, sloper, and progressive-edge working faces.",
+            "supportedClaim": "Training Tiles are a two-piece urethane collaboration with large pockets, two sloper angles, and 50/44/36/31/24 mm edge progression."
+          }
+        ],
+        "independent": [
+          {
+            "url": "https://www.outdoorgearlab.com/topics/climbing/best-hangboard",
+            "publisher": "OutdoorGearLab",
+            "sourceKind": "review",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "So iLL Meagan Martin Training Tiles production pair",
+            "imageRole": "Hands-on comparison and installed photos corroborate the two-piece urethane construction, nine hand-position pairs, contact depths, texture, and mounted use. This presentation-specific review addresses the published two-tile pocket, sloper, and progressive-edge working faces.",
+            "supportedClaim": "The tested Training Tiles preserve the official two-piece layout, urethane material, and entry-level contact progression."
+          }
+        ],
+        "officialEvidenceGap": null,
+        "independentEvidenceGap": null
+      },
+      "comparator": {
+        "assetPath": "Hangboards/soill-split-palm/assets/primary.png",
+        "materialMatch": "Sourced textured urethane split-board pair; comparator supplies style only and no product geometry.",
+        "formFactorMatch": "Exact compatible form factor: splitFixedBoard.",
+        "reason": "Accepted cohort baseline; style-only: framing, lighting, background, texture, smoothing, edge treatment.",
+        "baselineGap": null
+      },
+      "generation": {
+        "prompt": null,
+        "sourceImages": [],
+        "currentAssetRole": null,
+        "candidates": []
+      },
+      "final": {
+        "acceptedAssetSHA256": "ec05d039fb6635cda85ed1dc317434306be796b42c35e75c633314a11d3f5cd6",
+        "finalDimensions": {
+          "widthPixels": 1536,
+          "heightPixels": 1024
+        },
+        "visualReviewerDecision": "acceptedCurrentAsset",
+        "workbenchReview": {
+          "normal": {
+            "status": "pending",
+            "evidence": null
+          },
+          "allActive": {
+            "status": "pending",
+            "evidence": null
+          },
+          "individualHolds": {
+            "status": "pending",
+            "evidence": null
+          }
+        },
+        "validation": {
+          "packageValidation": {
+            "status": "pending",
+            "evidence": null
+          },
+          "focusedTests": {
+            "status": "pending",
+            "evidence": null
+          },
+          "fullPackageSuite": {
+            "status": "pending",
+            "evidence": null
+          },
+          "buildForTesting": {
+            "status": "pending",
+            "evidence": null
+          },
+          "simulatorReview": {
+            "status": "pending",
+            "evidence": null
+          }
+        }
+      }
     }
   ],
   "phase1Checks": {
