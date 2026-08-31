@@ -242,10 +242,12 @@ Resolutions are added only when direct live sources establish the named revision
   Shop.app seller storefront. Evolv Long uses an exact Backcountry variant
   listing, and Escape Unlimited uses an exact retailer listing whose product
   imagery and customer reports establish mounting positions and screws. The
-  independent NUG/Port review reports poplar while the current official pages
-  specify beech; the review is therefore used only for identity, grip inventory,
-  and cord corroboration, while the current official species claim governs
-  Phase 2 and the unresolved species conflict remains recorded.
+  independent NUG/Port review reports poplar. The current official regional
+  pages conflict: the US storefront specifies beech, while the Canadian
+  storefront specifies durable poplar. The review is therefore used only for
+  identity, grip inventory, and cord corroboration; this package follows the US
+  beech listing and exact US official assets for the represented variant, while
+  the live regional species conflict remains unresolved and recorded.
 - `lattice.mini-bar/end` is `removeUnsupportedPresentation`: Lattice and an
   independent retailer identify four lengthwise grips selected by flipping the
   bar, while the declared end cap is not a usable working surface. Removal is a
@@ -902,10 +904,14 @@ schema-2 machine manifest is intentionally unchanged in this bounded pass.
 ## Frictitious Port-A-Board corrective five-position audit (2026-08-31)
 
 This entry supersedes the generated-image and completeness claims in the
-earlier Port-A-Board repair. Fresh review of Frictitious's current US
+earlier Port-A-Board repair. Fresh review of Frictitious's current regional
+product metadata found an unresolved material conflict. The current US
 [product page](https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard)
-and current [Canadian storefront](https://frictitiousclimbing.com/en-ca/products/the-port-a-board-portable-and-mountable-portable-hangboard)
-identifies the photographed eight-edge product as **beech**, not poplar. Its
+specifies **beech** and 5 x 5.5 x 1.8 inches (128 x 140 x 48 mm), while the live
+[Canadian storefront](https://frictitiousclimbing.com/en-ca/products/the-port-a-board-portable-and-mountable-portable-hangboard)
+specifies **durable poplar wood** and 5.5 x 5 x 1.6 inches. The canonical
+rasters are exact current US official shots, and this package therefore follows
+the US beech listing and assets for the represented variant. The US page's
 published [front](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840),
 [back](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840),
 and [side](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840)
@@ -916,17 +922,19 @@ grommets, grain, and framing. The current canonical hashes remain
 `5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092`,
 and `ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866`.
 
-The material evidence is revision-sensitive. The archived first-party image
+The material evidence is revision- and region-sensitive. The live Canadian
+poplar specification is current regional metadata and is not characterized as
+an older revision. The archived first-party image
 `PAB-1_2aea9215-8656-4c3a-b51a-e37fdc246a09.jpg`, the independent
 [Hooper's Beta comparison](https://www.hoopersbeta.com/edge-chart), and the
 [portable-board review](https://thehangboard.com/blogs/news/portable-hangboards)
-describe Port-A-Boards as poplar. Frictitious's older [manufacturer manual
-mirror](https://manuals.plus/m/5cffc637e35befbac3738553e529f0eb508e575af7073cf198b9592e35a4a5c0)
-also documents a different seven-edge product (6, 8, 10, 12, 15, 20, and 25
-mm, plus a bonus 35 mm contact). Those sources establish an older/other
-revision and a historical material conflict; they do not override the live
-manufacturer's beech specification for the exact current official photos in
-this package. The independent [Frictitious owner-review
+also describe Port-A-Boards as poplar, so the US-versus-Canada species conflict
+cannot be resolved from publication date alone. Frictitious's older
+[manufacturer manual mirror](https://manuals.plus/m/5cffc637e35befbac3738553e529f0eb508e575af7073cf198b9592e35a4a5c0)
+documents a different seven-edge product (6, 8, 10, 12, 15, 20, and 25 mm,
+plus a bonus 35 mm contact). That manual establishes an older/other physical
+revision, but it does not resolve the two live storefronts' material conflict
+for the photographed eight-edge product. The independent [Frictitious owner-review
 feed](https://loox.io/s/E1bdwTzdzp) contains both seven-contact owner reports
 and current product photos, further supporting the need not to merge revision
 claims.
