@@ -1299,3 +1299,12 @@ reviewed against its visible contact surface; no image-derived geometry was
 used. Final-inventory package validation and package status passed, and the
 focused Workbench package suite passed 173 tests. The schema-2 machine
 manifest is intentionally unchanged in this bounded repair.
+
+A 2026-08-31 regression review against the freshly reopened official product
+page confirmed that the paired 12 mm and 8 mm contacts are reciprocal sides of
+the same symmetric double-edge layout. Their right-side frames were corrected
+from `x = 0.629` to the exact horizontal mirrors of the left-side frames,
+`x = 0.633`; hold identity, dimensions, local path commands, and all other
+geometry remain unchanged. The package contract tests now freeze the decoded
+1774 x 887 canvases, 2.0 presentation ratios, current centered 30/25 mm frames,
+and exact paired-path symmetry rather than the superseded pre-repair values.
