@@ -698,9 +698,12 @@ Fresh evidence:
 The package declares exactly one presentation, `primary`, and the repaired
 asset remains an independently head-on 1503 x 394 view. Its silhouette,
 aspect, shadows, and alpha-derived edge coverage are unchanged. Review of the
-first accepted gray candidate found that two symmetric lower-outer
-through-openings had incorrectly remained opaque gray; only nine of the
-source-backed 11 openings exposed the shared background. Ten source-backed
+first accepted gray candidate found that three lower through-openings had
+incorrectly remained opaque gray: the symmetric lower-outer pair and the
+lower center-right opening. Only eight of the source-backed 11 openings
+exposed the shared background. The first correction reopened the lower-outer
+pair, producing a 10-opening intermediate that still left the lower
+center-right rounded region opaque. Ten source-backed
 recessed mounting bores were drawn
 at manually reviewed top-origin pixel centers: upper `(327,82)`,
 `(751.5,86)`, `(1176,82)`; outer-side `(79,201)`, `(1424,201)`; and
@@ -720,16 +723,18 @@ does not establish it clearly enough to justify inventing pixels.
 
 Candidate 1 (`ba1224d0b338fece178e6ccbb3f34bd8903e392e409c74274640ec0adcc39cdf`)
 was rejected as too pale to read as published gray resin. Candidate 2 was
-accepted for color and finish, then corrected for the two-opening omission.
-The asset changed from
+accepted for color and finish, then corrected in two bounded passes for the
+three-opening omission. The asset changed from
 `f55fa7cf1e86cf050cd774d3068da37d02534da830eea6442c8e5038f22c3c90`
 through intermediate
 `2cbd1e4cb54d2447379ff2801fe0b918139b2681d6749624aa1448a8952b78d1`
-to `c02f7f3d23aaa158b359fdd41f47315a4077bbde1b7a2879927f1902133c6f59`;
-all three are 1503 x 394 PNGs. `board.json` remains byte-identical at
+and first-correction
+`c02f7f3d23aaa158b359fdd41f47315a4077bbde1b7a2879927f1902133c6f59`
+to `f7d79b4777b99c81688a64e8e83b6d4c52fd082e893e10cd44cc4e9a9af9a342`;
+all four are 1503 x 394 PNGs. `board.json` remains byte-identical at
 `eb27ddc4b9f92332e1133db6ade1ce1a81de92edf7896a7790bbe3bfc1310873`.
 
-The correction directly authors the two rounded-pill interiors within
+The first correction directly authored the two rounded-pill interiors within
 top-origin review bounds approximately `x=171...345, y=203...276` and
 `x=1146...1320, y=203...276`. Their centers expose opaque `#F6F2EA`, with a
 narrow manually shaded inner edge matching the other through-openings; the
@@ -739,6 +744,19 @@ the two declared review boxes, zero changes elsewhere, and 5,550 exact
 background pixels across the two openings. This was a direct symmetric raster
 drawing: no detection, segmentation, generated mask, vectorization, crop,
 resize, registration, warp, or image generation was used.
+
+The final rereview correction directly authored the remaining center-right
+rounded-pill opening inside the single declared top-origin review box
+`x=774...947, y=204...276`, using the neighboring center-left opening as the
+manual symmetry reference. Its center exposes opaque `#F6F2EA`; two restrained
+interior edge strokes preserve the recessed shading while leaving the molded
+gray perimeter intact. Exact decoded-pixel comparison against the
+first-correction image found 7,632 changed pixels bounded by
+`x=783...944, y=211...272`, with zero changes outside the declared box. The
+result was inspected at original detail and contains all 11 background-visible
+through-openings plus all 10 mounting bores. This was direct deliberate path
+drawing, with no detection, segmentation, generated mask, vectorization,
+crop, resize, registration, warp, or image generation.
 
 Workbench rendered the single presentation with all 22 canonical geometry
 pieces and hold-ID labels aligned to their physical openings; the
