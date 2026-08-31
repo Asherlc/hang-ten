@@ -180,11 +180,16 @@ struct TrainView: View {
 }
 
 struct BoardDetailView: View {
+    @Environment(\.openURL) private var openURL
+
     let board: TrainingBoard
+    @State private var selectedPresentationID: String
     @State private var selectedHoldID: String?
+    @State private var isReportOpenFailurePresented = false
 
     init(board: TrainingBoard) {
         self.board = board
+        _selectedPresentationID = State(initialValue: board.defaultPresentation.id)
         _selectedHoldID = State(initialValue: board.holds.first(where: {
             $0.presentationID == board.defaultPresentation.id
         })?.id)
@@ -212,18 +217,64 @@ struct BoardDetailView: View {
 
                 BoardDetailMapView(
                     board: board,
+                    selectedPresentationID: $selectedPresentationID,
                     selectedHoldID: $selectedHoldID,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )
                 .hangCard(padding: 14)
+
+                if reportURL != nil {
+                    Button(action: openReport) {
+                        Label("Report an issue", systemImage: "exclamationmark.bubble")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .tint(Color.hangGreenDark)
+                    .accessibilityHint("Opens a prefilled hangboard report in your browser")
+                    .accessibilityIdentifier("boardDetail.reportIssue")
+                }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 18)
+            .padding(.top, 18)
+            .padding(.bottom, 88)
         }
         .background(Color.hangBackground)
         .navigationTitle("Hold specs")
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("boardDetail.screen")
+        .alert("Couldn’t open the report form", isPresented: $isReportOpenFailurePresented) {
+            Button("Retry", action: openReport)
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Check your connection and try again.")
+        }
+    }
+
+    private var reportURL: URL? {
+        guard let formURL = HangboardIssueReportConfiguration.formURL() else {
+            return nil
+        }
+        let bundle = Bundle.main
+        return BoardDetailIssueReportDestination.make(
+            formURL: formURL,
+            board: board,
+            selectedPresentationID: selectedPresentationID,
+            appVersion: bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+                ?? "unknown",
+            build: bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+                ?? "unknown"
+        )
+    }
+
+    private func openReport() {
+        guard let reportURL else { return }
+        openURL(reportURL) { accepted in
+            if !accepted {
+                isReportOpenFailurePresented = true
+            }
+        }
     }
 
     private func selectedHoldCard(_ hold: BoardHold) -> some View {
@@ -248,6 +299,29 @@ struct BoardDetailView: View {
         .hangCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("boardDetail.selectedHold.\(hold.id)")
+    }
+}
+
+enum BoardDetailIssueReportDestination {
+    static func make(
+        formURL: URL,
+        board: TrainingBoard,
+        selectedPresentationID: String,
+        appVersion: String,
+        build: String
+    ) -> URL? {
+        guard let presentation = board.presentation(id: selectedPresentationID) else {
+            return nil
+        }
+        return HangboardIssueReportURL.make(
+            formURL: formURL,
+            context: HangboardIssueReportContext(
+                board: board,
+                presentation: presentation,
+                appVersion: appVersion,
+                build: build
+            )
+        )
     }
 }
 

@@ -17,6 +17,7 @@ HangTen/Models/CustomRoutineStore.swift
 HangTen/Models/EntralpiProtocol.swift
 HangTen/Models/ForceSensorModels.swift
 HangTen/Models/GitHubBoardSyncService.swift
+HangTen/Models/HangboardIssueReport.swift
 HangTen/Models/HealthKitService.swift
 HangTen/Models/HoldPathEngine.swift
 HangTen/Models/LocalWorkoutHistoryStore.swift

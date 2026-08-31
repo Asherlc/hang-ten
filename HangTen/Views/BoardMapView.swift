@@ -217,32 +217,26 @@ struct BoardMapPresentationSelection: Equatable {
 
 struct BoardDetailMapView: View {
     let board: TrainingBoard
+    @Binding var selectedPresentationID: String
     @Binding var selectedHoldID: String?
     private let selectedHoldContent: AnyView?
 
-    @State private var presentationSelection: BoardMapPresentationSelection
-
     init(
         board: TrainingBoard,
+        selectedPresentationID: Binding<String>,
         selectedHoldID: Binding<String?>,
         selectedHoldContent: AnyView? = nil
     ) {
         self.board = board
+        _selectedPresentationID = selectedPresentationID
         _selectedHoldID = selectedHoldID
         self.selectedHoldContent = selectedHoldContent
-        let initialPresentation = BoardMapPresentationSelection(
-            board: board,
-            requestedPresentationID: nil,
-            activeHoldID: selectedHoldID.wrappedValue,
-            highlightedHoldIDs: []
-        )
-        _presentationSelection = State(initialValue: initialPresentation)
     }
 
     var body: some View {
         let map = BoardDetailHoldMap(
             board: board,
-            presentationID: presentationSelection.presentationID
+            presentationID: selectedPresentationID
         )
         let contentOrder = BoardDetailContentOrder.sections(
             hasSelectedHold: selectedHoldContent != nil
@@ -260,6 +254,7 @@ struct BoardDetailMapView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: selectedHoldID)
+        .animation(.easeInOut(duration: 0.18), value: selectedPresentationID)
     }
 
     @ViewBuilder
@@ -360,7 +355,8 @@ struct BoardDetailMapView: View {
     }
 
     private func selectPresentation(_ id: String) {
-        presentationSelection.selectPresentation(id: id, on: board)
+        guard board.presentation(id: id) != nil else { return }
+        selectedPresentationID = id
         selectedHoldID = BoardDetailHoldMap(board: board, presentationID: id).entries.first?.hold.id
     }
 
