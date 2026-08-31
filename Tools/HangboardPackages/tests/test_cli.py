@@ -305,6 +305,33 @@ def test_package_cli_audit_presentations_prints_domain_error_first_line(
     )
 
 
+def test_package_cli_final_presentation_audit_requires_completed_phase1_checks(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    write_board_package(boards / "fixture-board")
+    record = _record(
+        boards, "fixture-board", "fixture.board", "primary", "assets/primary.png"
+    )
+    manifest = _write_manifest(
+        tmp_path, _manifest(package_ids=["fixture.board"], records=[record])
+    )
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--final-validation",
+    )
+
+    assert result.returncode == 1
+    assert result.stderr == (
+        "error: final Phase 1 validation requires all phase1Checks passed\n"
+    )
+
+
 def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None:
     package_root = tmp_path / "packages"
     write_board_package(package_root / "package-board", board_id="fixture.board")

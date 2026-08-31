@@ -5650,7 +5650,7 @@
       "presentationID": "face-a",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-a.png",
       "workingSurface": "the independently selectable flat-center Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; Owl and Oliunìd publish different raw dimensions, and any bar-only versus installed/supported-assembly explanation is analyst inference",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5711,9 +5711,9 @@
             "publisher": "Oliunìd",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker production assembly",
+            "revisionApplicability": "Owl Climb Poker retail listing with supplied mounting brackets",
             "imageRole": "The exact live retailer gallery corroborates the flat-center production face and rotation in the supports. Oliunìd, rather than Owl, publishes the ordered 30/25/20/15 mm central-depth sequence; all sequences remain board-level specifications and do not label the local analyst face ID.",
-            "supportedClaim": "The production Poker rotates among four visible faces; local face-a is an analyst mapping to the flat-center view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-a is an analyst mapping to the flat-center view. Owl publishes 660 × 100 × 100 mm and Oliunìd publishes 68 × 14 × 12 cm; neither source labels measurement scope. Analyst inference: bar-only versus installed/supported-assembly scope may explain the differing values."
           }
         ],
         "officialEvidenceGap": null,
@@ -5780,7 +5780,7 @@
       "presentationID": "face-b",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-b.png",
       "workingSurface": "the independently selectable deep-sloper Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; Owl and Oliunìd publish different raw dimensions, and any bar-only versus installed/supported-assembly explanation is analyst inference",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5841,9 +5841,9 @@
             "publisher": "Oliunìd",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker production assembly",
+            "revisionApplicability": "Owl Climb Poker retail listing with supplied mounting brackets",
             "imageRole": "The exact live retailer gallery corroborates the paired deep-sloper production face and rotation in the supports. Oliunìd, rather than Owl, publishes the ordered 30/25/20/15 mm central-depth sequence; all sequences remain board-level specifications and do not label the local analyst face ID.",
-            "supportedClaim": "The production Poker rotates among four visible faces; local face-b is an analyst mapping to the deep-sloper view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-b is an analyst mapping to the deep-sloper view. Owl publishes 660 × 100 × 100 mm and Oliunìd publishes 68 × 14 × 12 cm; neither source labels measurement scope. Analyst inference: bar-only versus installed/supported-assembly scope may explain the differing values."
           }
         ],
         "officialEvidenceGap": null,
@@ -5910,7 +5910,7 @@
       "presentationID": "face-c",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-c.png",
       "workingSurface": "the independently selectable shallow half-round Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; Owl and Oliunìd publish different raw dimensions, and any bar-only versus installed/supported-assembly explanation is analyst inference",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -5971,9 +5971,9 @@
             "publisher": "Oliunìd",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker production assembly",
+            "revisionApplicability": "Owl Climb Poker retail listing with supplied mounting brackets",
             "imageRole": "The exact live retailer gallery corroborates the shallow half-round production face and rotation in the supports. Oliunìd, rather than Owl, publishes the ordered 30/25/20/15 mm central-depth sequence; all sequences remain board-level specifications and do not label the local analyst face ID.",
-            "supportedClaim": "The production Poker rotates among four visible faces; local face-c is an analyst mapping to the shallow half-round view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-c is an analyst mapping to the shallow half-round view. Owl publishes 660 × 100 × 100 mm and Oliunìd publishes 68 × 14 × 12 cm; neither source labels measurement scope. Analyst inference: bar-only versus installed/supported-assembly scope may explain the differing values."
           }
         ],
         "officialEvidenceGap": null,
@@ -6040,7 +6040,7 @@
       "presentationID": "face-d",
       "assetPath": "Hangboards/owl-climb-poker/assets/face-d.png",
       "workingSurface": "the independently selectable deep rounded-recess Poker face",
-      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; archived official bare-body and retailer assembly dimensions differ",
+      "physicalRevision": "Owl Climb Poker four-face tulipwood bar; local face IDs are analyst mappings to published views, not manufacturer numeric labels; Owl and Oliunìd publish different raw dimensions, and any bar-only versus installed/supported-assembly explanation is analyst inference",
       "manufacturer": "Owl Climb",
       "materials": [
         "wood",
@@ -6101,9 +6101,9 @@
             "publisher": "Oliunìd",
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
-            "revisionApplicability": "Owl Climb Poker production assembly",
+            "revisionApplicability": "Owl Climb Poker retail listing with supplied mounting brackets",
             "imageRole": "The exact live retailer gallery corroborates the deep rounded-recess production face and rotation in the supports. Oliunìd, rather than Owl, publishes the ordered 30/25/20/15 mm central-depth sequence; all sequences remain board-level specifications and do not label the local analyst face ID.",
-            "supportedClaim": "The production Poker rotates among four visible faces; local face-d is an analyst mapping to the deep rounded-recess view, while the retailer's 68 × 14 × 12 cm supported-assembly dimensions conflict in scope with Owl Climb's bare-body dimensions."
+            "supportedClaim": "The production Poker rotates among four visible faces; local face-d is an analyst mapping to the deep rounded-recess view. Owl publishes 660 × 100 × 100 mm and Oliunìd publishes 68 × 14 × 12 cm; neither source labels measurement scope. Analyst inference: bar-only versus installed/supported-assembly scope may explain the differing values."
           }
         ],
         "officialEvidenceGap": null,
@@ -11220,7 +11220,7 @@
   "phase1Checks": {
     "manifestValidation": {
       "status": "passed",
-      "command": "rtk scripts/hangboard-packages.sh audit-presentations \\\n  --root Hangboards \\\n  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json"
+      "command": "rtk scripts/hangboard-packages.sh audit-presentations \\\n  --root Hangboards \\\n  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \\\n  --final-validation"
     },
     "packageValidation": {
       "status": "passed",

@@ -85,6 +85,19 @@ _VALIDATION_CHECKS = frozenset(
         "simulatorReview",
     }
 )
+_PRESENTATION_CHECK_STATUSES = frozenset({"pending", "passed", "failed"})
+_PHASE1_CHECK_STATUSES = frozenset({"pending", "passed"})
+_BOUNDED_EDIT_FINDINGS = frozenset(
+    {
+        "material",
+        "headOnPerspective",
+        "smoothing",
+        "framing",
+        "crossCatalogConsistency",
+    }
+)
+_FAILURE_OUTCOMES = frozenset({"nonconforming", "uncertain"})
+_PLANNED_AUDIT_DATE = date(2026, 8, 30)
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _SEARCH_HOSTS = frozenset(
     {
@@ -309,23 +322,40 @@ def _string_array(value: Any, source: str) -> tuple[str, ...]:
 def _load_check(value: Any, source: str) -> PresentationCheck:
     payload = _mapping(value, source)
     _closed(payload, {"status", "evidence"}, source)
-    return PresentationCheck(
-        _string(payload["status"], f"{source}.status"),
-        _optional_string(payload["evidence"], f"{source}.evidence"),
-    )
+    status = _string(payload["status"], f"{source}.status")
+    if status not in _PRESENTATION_CHECK_STATUSES:
+        raise PresentationRemediationAuditError(
+            f"{source}.status must be one of {sorted(_PRESENTATION_CHECK_STATUSES)}"
+        )
+    evidence = _optional_string(payload["evidence"], f"{source}.evidence")
+    if (status == "pending") != (evidence is None):
+        raise PresentationRemediationAuditError(
+            f"{source} status and evidence must be pending/null or passed-or-failed/non-empty"
+        )
+    return PresentationCheck(status, evidence)
 
 
 def _load_phase1_check(value: Any, source: str) -> Phase1Check:
     payload = _mapping(value, source)
     _closed(payload, {"status", "command"}, source)
-    return Phase1Check(
-        _string(payload["status"], f"{source}.status"),
-        _optional_string(payload["command"], f"{source}.command"),
-    )
+    status = _string(payload["status"], f"{source}.status")
+    if status not in _PHASE1_CHECK_STATUSES:
+        raise PresentationRemediationAuditError(
+            f"{source}.status must be one of {sorted(_PHASE1_CHECK_STATUSES)}"
+        )
+    command = _optional_string(payload["command"], f"{source}.command")
+    if (status == "pending") != (command is None):
+        raise PresentationRemediationAuditError(
+            f"{source} status and command must be pending/null or passed/non-empty"
+        )
+    return Phase1Check(status, command)
 
 
 def _load_source(
-    value: Any, source: str, valid_kinds: frozenset[str]
+    value: Any,
+    source: str,
+    valid_kinds: frozenset[str],
+    review_date: date,
 ) -> PresentationRemediationSource:
     payload = _mapping(value, source)
     _closed(
@@ -346,18 +376,25 @@ def _load_source(
         raise PresentationRemediationAuditError(
             f"{source}.sourceKind must be one of {sorted(valid_kinds)}"
         )
+    reviewed_at = _date(payload["reviewedAt"], f"{source}.reviewedAt")
+    if reviewed_at != review_date:
+        raise PresentationRemediationAuditError(
+            f"{source}.reviewedAt must equal manifest reviewDate {review_date.isoformat()}"
+        )
     return PresentationRemediationSource(
         _url(payload["url"], f"{source}.url"),
         _string(payload["publisher"], f"{source}.publisher"),
         kind,
-        _date(payload["reviewedAt"], f"{source}.reviewedAt"),
+        reviewed_at,
         _string(payload["revisionApplicability"], f"{source}.revisionApplicability"),
         _string(payload["imageRole"], f"{source}.imageRole"),
         _string(payload["supportedClaim"], f"{source}.supportedClaim"),
     )
 
 
-def _load_evidence(value: Any, source: str) -> PresentationEvidence:
+def _load_evidence(
+    value: Any, source: str, review_date: date
+) -> PresentationEvidence:
     payload = _mapping(value, source)
     _closed(
         payload,
@@ -374,7 +411,9 @@ def _load_evidence(value: Any, source: str) -> PresentationEvidence:
             raise PresentationRemediationAuditError(f"{source}.{key} must be an array")
         loaded.append(
             tuple(
-                _load_source(entry, f"{source}.{key}[{index}]", kinds)
+                _load_source(
+                    entry, f"{source}.{key}[{index}]", kinds, review_date
+                )
                 for index, entry in enumerate(entries)
             )
         )
@@ -395,7 +434,9 @@ def _load_evidence(value: Any, source: str) -> PresentationEvidence:
     return PresentationEvidence(loaded[0], loaded[1], official_gap, independent_gap)
 
 
-def _load_record(value: Any, source: str) -> PresentationRemediationRecord:
+def _load_record(
+    value: Any, source: str, review_date: date
+) -> PresentationRemediationRecord:
     payload = _mapping(value, source)
     _closed(
         payload,
@@ -584,7 +625,7 @@ def _load_record(value: Any, source: str) -> PresentationRemediationRecord:
         ),
         decision,
         findings,
-        _load_evidence(payload["evidence"], f"{source}.evidence"),
+        _load_evidence(payload["evidence"], f"{source}.evidence", review_date),
         comparator,
         generation,
         final,
@@ -633,6 +674,14 @@ def load_presentation_remediation_manifest(
         raise PresentationRemediationAuditError(
             "presentation remediation manifest.phase must be sourceReclassification"
         )
+    review_date = _date(
+        payload["reviewDate"], "presentation remediation manifest.reviewDate"
+    )
+    if review_date != _PLANNED_AUDIT_DATE:
+        raise PresentationRemediationAuditError(
+            "presentation remediation manifest.reviewDate must equal planned audit date "
+            f"{_PLANNED_AUDIT_DATE.isoformat()}"
+        )
     package_ids = _string_array(
         payload["packageIDs"], "presentation remediation manifest.packageIDs"
     )
@@ -653,15 +702,16 @@ def load_presentation_remediation_manifest(
     _closed(
         phase1_payload, _PHASE1_CHECKS, "presentation remediation manifest.phase1Checks"
     )
+    records = tuple(
+        _load_record(record, f"records[{index}]", review_date)
+        for index, record in enumerate(records_value)
+    )
     return PresentationRemediationManifest(
         1,
         "sourceReclassification",
-        _date(payload["reviewDate"], "presentation remediation manifest.reviewDate"),
+        review_date,
         package_ids,
-        tuple(
-            _load_record(record, f"records[{index}]")
-            for index, record in enumerate(records_value)
-        ),
+        records,
         {
             key: _load_phase1_check(
                 phase1_payload[key],
@@ -774,6 +824,35 @@ def _validate_physical_revision_split(record: PresentationRemediationRecord) -> 
             )
 
 
+def _all_findings_conform(record: PresentationRemediationRecord) -> bool:
+    return all(
+        record.findings[key].outcome == "conforms" for key in _FINDING_KEYS
+    )
+
+
+def _checks_are_pending(record: PresentationRemediationRecord) -> bool:
+    return all(
+        check.status == "pending" and check.evidence is None
+        for check in (
+            *record.final.workbench_review.values(),
+            *record.final.validation.values(),
+        )
+    )
+
+
+def _is_ready_accepted_keep(record: PresentationRemediationRecord) -> bool:
+    return (
+        record.decision == "keep"
+        and not _is_evidence_blocked(record)
+        and _all_findings_conform(record)
+        and record.final.accepted_asset_sha256 == record.current_asset.sha256
+        and record.final.final_dimensions
+        == (record.current_asset.width_pixels, record.current_asset.height_pixels)
+        and record.final.visual_reviewer_decision == "acceptedCurrentAsset"
+        and _checks_are_pending(record)
+    )
+
+
 def _validate_phase_truth(record: PresentationRemediationRecord) -> None:
     repair = record.decision != "keep"
     if repair:
@@ -785,21 +864,37 @@ def _validate_phase_truth(record: PresentationRemediationRecord) -> None:
             or record.final.accepted_asset_sha256 is not None
             or record.final.final_dimensions is not None
             or record.final.visual_reviewer_decision != "pendingPhase2"
-            or any(
-                check.status != "pending" or check.evidence is not None
-                for check in (
-                    *record.final.workbench_review.values(),
-                    *record.final.validation.values(),
-                )
-            )
+            or not _checks_are_pending(record)
         ):
             raise PresentationRemediationAuditError(
                 f"{record.decision} must not claim accepted output or final validation in Phase 1"
             )
         if record.decision == "removeUnsupportedPresentation":
             _validate_unsupported_surface_removal(record)
-        if record.decision == "splitPhysicalRevision":
+        elif record.decision == "splitPhysicalRevision":
             _validate_physical_revision_split(record)
+        elif record.decision == "edit":
+            if any(
+                record.findings[key].outcome != "conforms"
+                for key in ("productLikeness", "topology")
+            ):
+                raise PresentationRemediationAuditError(
+                    "edit requires conforming productLikeness and topology findings"
+                )
+            if not any(
+                record.findings[key].outcome in _FAILURE_OUTCOMES
+                for key in _BOUNDED_EDIT_FINDINGS
+            ):
+                raise PresentationRemediationAuditError(
+                    "edit requires a bounded presentation failure or uncertainty"
+                )
+        elif record.decision == "regenerate" and not any(
+            record.findings[key].outcome in _FAILURE_OUTCOMES
+            for key in ("productLikeness", "topology")
+        ):
+            raise PresentationRemediationAuditError(
+                "regenerate requires a productLikeness or topology failure or uncertainty"
+            )
         return
     if (
         record.generation.prompt is not None
@@ -809,6 +904,10 @@ def _validate_phase_truth(record: PresentationRemediationRecord) -> None:
     ):
         raise PresentationRemediationAuditError(
             "keep must not claim Phase 2 generation"
+        )
+    if not _checks_are_pending(record):
+        raise PresentationRemediationAuditError(
+            "sourceReclassification presentation checks must remain pending with null evidence"
         )
     if _is_evidence_blocked(record):
         if (
@@ -822,15 +921,20 @@ def _validate_phase_truth(record: PresentationRemediationRecord) -> None:
             raise PresentationRemediationAuditError(
                 "evidence-blocked keep must remain blockedEvidence without accepted output"
             )
-    elif (
-        record.final.accepted_asset_sha256 != record.current_asset.sha256
-        or record.final.final_dimensions
-        != (record.current_asset.width_pixels, record.current_asset.height_pixels)
-        or record.final.visual_reviewer_decision != "acceptedCurrentAsset"
-    ):
-        raise PresentationRemediationAuditError(
-            "keep accepted hash must match current asset and dimensions"
-        )
+    else:
+        if not _all_findings_conform(record):
+            raise PresentationRemediationAuditError(
+                "source-supported accepted keep requires all seven findings to conform"
+            )
+        if (
+            record.final.accepted_asset_sha256 != record.current_asset.sha256
+            or record.final.final_dimensions
+            != (record.current_asset.width_pixels, record.current_asset.height_pixels)
+            or record.final.visual_reviewer_decision != "acceptedCurrentAsset"
+        ):
+            raise PresentationRemediationAuditError(
+                "keep accepted hash must match current asset and dimensions"
+            )
 
 
 def validate_presentation_remediation_manifest(
@@ -839,8 +943,20 @@ def validate_presentation_remediation_manifest(
     *,
     hangboards_root: Path,
     selected_package_ids: frozenset[str] = frozenset(),
+    final_validation: bool = False,
 ) -> PresentationRemediationReport:
     """Cross-check a manifest against real inventory and on-disk PNG facts."""
+    if final_validation and selected_package_ids:
+        raise PresentationRemediationAuditError(
+            "final Phase 1 validation requires full-catalog coverage"
+        )
+    if final_validation and any(
+        check.status != "passed" or check.command is None
+        for check in manifest.phase1_checks.values()
+    ):
+        raise PresentationRemediationAuditError(
+            "final Phase 1 validation requires all phase1Checks passed"
+        )
     expected = {
         (package.board.id, presentation.id): (
             package,
@@ -952,7 +1068,7 @@ def validate_presentation_remediation_manifest(
             ),
             None,
         )
-        if target is None or target.decision != "keep" or _is_evidence_blocked(target):
+        if target is None or not _is_ready_accepted_keep(target):
             raise PresentationRemediationAuditError(
                 "comparator must identify a ready accepted keep record"
             )

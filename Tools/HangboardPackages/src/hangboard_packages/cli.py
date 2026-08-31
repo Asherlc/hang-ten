@@ -38,6 +38,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 inventory,
                 hangboards_root=arguments.root,
                 selected_package_ids=frozenset(arguments.package_id),
+                final_validation=arguments.final_validation,
             )
             print(json.dumps(report.to_json(), indent=2, sort_keys=True))
             return 0
@@ -77,6 +78,11 @@ def _parser() -> argparse.ArgumentParser:
     audit_presentations.add_argument("--manifest", type=Path, required=True)
     audit_presentations.add_argument(
         "--package-id", action="append", default=[], help="validate one package lane"
+    )
+    audit_presentations.add_argument(
+        "--final-validation",
+        action="store_true",
+        help="require full-catalog coverage and all Phase 1 root checks passed",
     )
     return parser
 

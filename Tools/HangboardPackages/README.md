@@ -38,7 +38,8 @@ scripts/hangboard-packages.sh status --root Hangboards
 scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
 scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --final-validation
 ```
 
 `validate` and `status` print the discovered complete packages and draft paths;
@@ -62,6 +63,11 @@ presentation coverage and report counts; the manifest's root `packageIDs` must
 still cover the entire inventory, and every record it does contain is still
 fully validated against real package assets.
 
+Use `--final-validation` only for the completed Phase 1 ledger. It rejects lane
+selection and requires all four root `phase1Checks` entries to be
+`passed` with their exact non-empty commands; omit it for skeleton and
+intermediate-lane validation while those checks are still pending.
+
 Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
 must have one outcome for each supported metadata field. Boards in the
 disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`
@@ -69,5 +75,5 @@ outcome for every hold and may not have records for unrelated fields. This
 supplemental scope records a complete sloper audit without claiming that the
 board's other metadata fields have been source-audited.
 
-The current repository inventory contains 60 complete packages and zero
+The current repository inventory contains 61 complete packages and zero
 drafts.

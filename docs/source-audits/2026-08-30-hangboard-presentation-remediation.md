@@ -115,12 +115,14 @@ Resolutions are added only when direct live sources establish the named revision
   exact 30/25/20/15 mm center-depth sequence. All remain board-level
   specifications and are not
   assigned to those local face IDs. Each is `edit` only for the engraved Owl
-  mark. The current first-party route timed out during Task 6 re-opening, so
-  the audit retains the cited 2026-05-17 Owl Climb archive snapshot. Owl Climb
-  publishes the bare body as
-  660 × 100 × 100 mm, while Oliunìd publishes 68 × 14 × 12 cm for the supported
-  assembly; that measurement-scope conflict remains explicit and does not
-  alter face geometry.
+  mark. The direct first-party route again timed out during final-review
+  re-opening, while the live indexed Owl page and cited 2026-05-17 Owl Climb
+  archive snapshot both publish 660 × 100 × 100 mm and separately say supports
+  or brackets are supplied. Oliunìd labels 68 × 14 × 12 cm as hangboard
+  dimensions. Neither source states whether its dimensions cover only the bar
+  or the installed/supported assembly. Bar-only versus installed/supported-
+  assembly scope may explain the difference; this is an analyst inference and
+  does not alter face geometry.
 - Plateau Lifting Edge is `regenerate`: the aluminum body and oak insert are
   recognizable, but the cited 3D-printed 15/10 mm blocker and complete 6 mm
   Edelrid PES cord are omitted from the source-confirmed product topology.
@@ -262,12 +264,13 @@ rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh audit-presentations \
   --root Hangboards \
-  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --final-validation
 rtk git diff --name-only 2e74fc8..HEAD -- Hangboards
 rtk git diff --name-only -- Hangboards
 ```
 
-The full package-tool suite passed (323 tests). Final inventory validation
+The full package-tool suite passed (383 tests). Final inventory validation
 returned successfully with 61 valid packages and no draft inventory. Manifest
 validation returned 61 packages and 85 presentations with 19 `keep`, 17
 `edit`, 48 `regenerate`, and 1 `removeUnsupportedPresentation` decisions.

@@ -167,12 +167,18 @@ def _validate_document(
     boards: Path,
     inventory: BoardInventory,
     records: list[dict[str, object]],
+    *,
+    final_validation: bool = False,
 ) -> PresentationRemediationReport:
     path = _write_manifest(
         tmp_path, _manifest(package_ids=["fixture.board"], records=records)
     )
+    options = {"final_validation": True} if final_validation else {}
     return validate_presentation_remediation_manifest(
-        load_presentation_remediation_manifest(path), inventory, hangboards_root=boards
+        load_presentation_remediation_manifest(path),
+        inventory,
+        hangboards_root=boards,
+        **options,
     )
 
 
@@ -188,6 +194,14 @@ def _mark_phase_2_repair(record: dict[str, object], decision: str) -> None:
         "reason": None,
         "baselineGap": "No current accepted comparator is available for this Phase 2 repair.",
     }
+
+
+def _mark_phase1_checks_passed(document: dict[str, object]) -> None:
+    for name in document["phase1Checks"]:
+        document["phase1Checks"][name] = {
+            "status": "passed",
+            "command": f"rtk verify {name}",
+        }
 
 
 def _surface_unusable_statement(record: dict[str, object]) -> str:
@@ -501,6 +515,7 @@ def test_comparator_cannot_target_a_non_kept_record(tmp_path: Path) -> None:
     )
     repair = _record(boards, "repair", "repair.board", "primary", "assets/primary.png")
     _mark_phase_2_repair(repair, "regenerate")
+    repair["findings"]["productLikeness"]["outcome"] = "nonconforming"
     accepted["comparator"].update(assetPath=repair["assetPath"])
     manifest = _write_manifest(
         tmp_path,
@@ -578,6 +593,319 @@ def test_keep_accepted_hash_must_match_current_asset(tmp_path: Path) -> None:
     record["final"]["acceptedAssetSHA256"] = "0" * 64
     with pytest.raises(
         PresentationRemediationAuditError, match="keep accepted hash must match"
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize(
+    "finding_key",
+    [
+        "productLikeness",
+        "material",
+        "topology",
+        "headOnPerspective",
+        "smoothing",
+        "framing",
+        "crossCatalogConsistency",
+    ],
+)
+@pytest.mark.parametrize("outcome", ["nonconforming", "uncertain", "notApplicable"])
+def test_source_supported_accepted_keep_requires_all_seven_findings_to_conform(
+    tmp_path: Path, finding_key: str, outcome: str
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["findings"][finding_key]["outcome"] = outcome
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="source-supported accepted keep requires all seven findings to conform",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_evidence_blocked_keep_cannot_claim_acceptance(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"] = []
+    record["evidence"]["officialEvidenceGap"] = (
+        "Exact manufacturer and archive searches did not establish the revision."
+    )
+    record["findings"]["productLikeness"]["outcome"] = "uncertain"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="evidence-blocked keep must remain blockedEvidence without accepted output",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize("finding_key", ["productLikeness", "topology"])
+@pytest.mark.parametrize("outcome", ["nonconforming", "uncertain"])
+def test_edit_requires_confirmed_product_likeness_and_topology(
+    tmp_path: Path, finding_key: str, outcome: str
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "edit")
+    record["findings"][finding_key]["outcome"] = outcome
+    record["findings"]["crossCatalogConsistency"]["outcome"] = "nonconforming"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="edit requires conforming productLikeness and topology findings",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_edit_requires_a_bounded_failure_or_uncertainty(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "edit")
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="edit requires a bounded presentation failure or uncertainty",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize(
+    "finding_key",
+    [
+        "material",
+        "headOnPerspective",
+        "smoothing",
+        "framing",
+        "crossCatalogConsistency",
+    ],
+)
+@pytest.mark.parametrize("outcome", ["nonconforming", "uncertain"])
+def test_edit_accepts_each_bounded_presentation_defect(
+    tmp_path: Path, finding_key: str, outcome: str
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "edit")
+    record["findings"][finding_key]["outcome"] = outcome
+
+    report = _validate_document(tmp_path, boards, inventory, [record])
+
+    assert report.to_json()["decisions"] == {"edit": 1}
+
+
+@pytest.mark.parametrize("finding_key", ["material", "headOnPerspective", None])
+def test_regenerate_requires_a_likeness_or_topology_failure(
+    tmp_path: Path, finding_key: str | None
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "regenerate")
+    if finding_key is not None:
+        record["findings"][finding_key]["outcome"] = "nonconforming"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="regenerate requires a productLikeness or topology failure or uncertainty",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize("finding_key", ["productLikeness", "topology"])
+@pytest.mark.parametrize("outcome", ["nonconforming", "uncertain"])
+def test_regenerate_accepts_likeness_or_topology_failure_or_uncertainty(
+    tmp_path: Path, finding_key: str, outcome: str
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "regenerate")
+    record["findings"][finding_key]["outcome"] = outcome
+
+    report = _validate_document(tmp_path, boards, inventory, [record])
+
+    assert report.to_json()["decisions"] == {"regenerate": 1}
+
+
+def test_comparator_cannot_target_a_keep_with_nonconforming_findings(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    write_board_package(boards / "consumer", board_id="consumer.board")
+    write_board_package(boards / "baseline", board_id="baseline.board")
+    inventory = discover_board_packages(boards, require_complete_inventory=True)
+    consumer = _record(
+        boards, "consumer", "consumer.board", "primary", "assets/primary.png"
+    )
+    baseline = _record(
+        boards, "baseline", "baseline.board", "primary", "assets/primary.png"
+    )
+    consumer["comparator"]["assetPath"] = baseline["assetPath"]
+    baseline["findings"]["material"]["outcome"] = "nonconforming"
+    manifest = _write_manifest(
+        tmp_path,
+        _manifest(
+            package_ids=["consumer.board", "baseline.board"],
+            records=[consumer, baseline],
+        ),
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="source-supported accepted keep requires all seven findings to conform",
+    ):
+        validate_presentation_remediation_manifest(
+            load_presentation_remediation_manifest(manifest),
+            inventory,
+            hangboards_root=boards,
+        )
+
+
+@pytest.mark.parametrize(
+    ("section", "check_name"),
+    [("workbenchReview", "normal"), ("validation", "packageValidation")],
+)
+def test_source_reclassification_keep_cannot_claim_phase_2_checks(
+    tmp_path: Path, section: str, check_name: str
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["final"][section][check_name] = {
+        "status": "passed",
+        "evidence": "fabricated Phase 2 result",
+    }
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="sourceReclassification presentation checks must remain pending with null evidence",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_presentation_check_rejects_unknown_status(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["final"]["workbenchReview"]["normal"]["status"] = "invented"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="status must be one of",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize(
+    ("status", "evidence"),
+    [("pending", "premature evidence"), ("passed", None), ("failed", None)],
+)
+def test_presentation_check_rejects_invalid_status_evidence_pair(
+    tmp_path: Path, status: str, evidence: str | None
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["final"]["validation"]["focusedTests"] = {
+        "status": status,
+        "evidence": evidence,
+    }
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="status and evidence must be pending/null or passed-or-failed/non-empty",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize(
+    ("status", "command"),
+    [
+        ("invented", None),
+        ("pending", "rtk verify too-early"),
+        ("passed", None),
+    ],
+)
+def test_phase1_check_rejects_invalid_status_command_pair(
+    tmp_path: Path, status: str, command: str | None
+) -> None:
+    document = _manifest(package_ids=[], records=[])
+    document["phase1Checks"]["manifestValidation"] = {
+        "status": status,
+        "command": command,
+    }
+
+    with pytest.raises(PresentationRemediationAuditError, match="phase1Checks"):
+        load_presentation_remediation_manifest(_write_manifest(tmp_path, document))
+
+
+def test_final_validation_requires_all_four_phase1_checks_passed(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    document = _manifest(package_ids=["fixture.board"], records=[record])
+    _mark_phase1_checks_passed(document)
+    document["phase1Checks"]["hangboardsDiff"] = {
+        "status": "pending",
+        "command": None,
+    }
+    manifest = load_presentation_remediation_manifest(
+        _write_manifest(tmp_path, document)
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="final Phase 1 validation requires all phase1Checks passed",
+    ):
+        validate_presentation_remediation_manifest(
+            manifest,
+            inventory,
+            hangboards_root=boards,
+            final_validation=True,
+        )
+
+
+def test_final_validation_accepts_all_four_passed_phase1_checks(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    document = _manifest(package_ids=["fixture.board"], records=[record])
+    _mark_phase1_checks_passed(document)
+
+    report = validate_presentation_remediation_manifest(
+        load_presentation_remediation_manifest(_write_manifest(tmp_path, document)),
+        inventory,
+        hangboards_root=boards,
+        final_validation=True,
+    )
+
+    assert report.to_json()["presentationCount"] == 1
+
+
+def test_final_validation_rejects_lane_filter(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    document = _manifest(package_ids=["fixture.board"], records=[record])
+    _mark_phase1_checks_passed(document)
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="final Phase 1 validation requires full-catalog coverage",
+    ):
+        validate_presentation_remediation_manifest(
+            load_presentation_remediation_manifest(
+                _write_manifest(tmp_path, document)
+            ),
+            inventory,
+            hangboards_root=boards,
+            selected_package_ids=frozenset({"fixture.board"}),
+            final_validation=True,
+        )
+
+
+def test_manifest_review_date_must_equal_planned_audit_date(tmp_path: Path) -> None:
+    document = _manifest(package_ids=[], records=[])
+    document["reviewDate"] = "2026-08-29"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="reviewDate must equal planned audit date 2026-08-30",
+    ):
+        load_presentation_remediation_manifest(_write_manifest(tmp_path, document))
+
+
+def test_evidence_reviewed_at_must_equal_manifest_review_date(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["reviewedAt"] = "2026-08-29"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="reviewedAt must equal manifest reviewDate 2026-08-30",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
