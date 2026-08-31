@@ -54,7 +54,7 @@ corresponding contact bands. Both `scripts/hangboard-packages.sh validate
 machine remediation manifest is intentionally unchanged for the later
 consolidated lifecycle pass.
 
-## 2026-08-31 Tension Grindstone Pro deterministic presentation repair
+## 2026-08-31 Tension Grindstone Pro deterministic presentation repair — evidence blocked
 
 This repair covers every declared presentation of `tension.grindstone-pro`:
 `board.json` declares exactly one presentation, `primary` (`Primary`, default),
@@ -72,18 +72,41 @@ available. The contemporaneous [Power Company interview with Tension founders
 Will Anglin and Ben Spannuth](https://www.powercompanyclimbing.com/blog/2017/7/5/episode-49-a-better-strip-of-wood-with-tension-climbing)
 identifies the 2017 Grindstone Pro's 35/20/15/10 mm progression, 30 and 22 mm
 center edges, mono and two-finger pockets, 7 mm incut, phone slot, and
-deliberately asymmetric spacing. The independent 2017
-[Climbing product photo](https://www.climbing.com/gear/sponsor-content-climbing-holiday-gift-guide-tension-climbing-grindstone-pro-hangboard/)
-publishes the complete three-tier wooden front face, including the two top
-openings, center pocket family, lower five edges, Tension mark, and engraved
-depth labels. The catalog asset is the established simplified, unbranded
-render of that exact topology: wood material, silhouette, opening count,
-relative placement, and the asymmetric front working face conform. It is
-genuinely head-on to that working face, with parallel horizontal tiers and no
-visible side plane. Its existing uniform soft, pale-wood smoothing treatment
-also conforms; no smoothing or product-pixel filter was applied.
+deliberately asymmetric spacing. It is a third-party editorial host for
+first-party founder testimony, not independent photographic evidence.
 
-The original asset was 1654 × 951 pixels with SHA-256
+The 2017 [Climbing product
+page](https://www.climbing.com/gear/sponsor-content-climbing-holiday-gift-guide-tension-climbing-grindstone-pro-hangboard/)
+does publish the exact Pro's complete wooden front face and 4/7/5 contact-row
+topology. However, the page is explicitly titled `Sponsored`, is bylined
+`Tension Climbing`, and appears in Climbing's holiday guide as `Sponsored:
+Tension Climbing Grindstone Pro Hangboard`; its photo is therefore classified
+as manufacturer/sponsored evidence, not independent or unofficial evidence.
+The independent [Gear Institute launch
+coverage](https://gearinstitute.com/sneak-peek-the-climbing-gear-that-won-t-be-at-outdoor-retailer/)
+and [Gripped Magazine comparison](https://gripped.com/indoor-climbing/three-of-the-best-hangboards-for-at-home-training/)
+corroborate the exact historical Pro in editorial text, but the former does not
+publish a visible exact-board photo and the latter embeds Tension Climbing's
+own Instagram post. Climbing's independent [Team USA training-lab
+feature](https://www.climbing.com/competition/olympics/inside-training-lab-team-usa/)
+states that a Grindstone Pro is installed and credits its photographs to Jess
+Talley/Louder Than 11, but inspection of the three published article photos
+found that none shows the hangboard. Bounded exact-name searches of reviews,
+owner discussions, used listings, gym installations, and image results found
+no accessible, genuinely independent published photo in which this exact
+4/7/5 Pro revision is visible.
+
+Against the available manufacturer/sponsored photograph, the catalog asset's
+wood material, silhouette, opening count, relative placement, and asymmetric
+front working face conform. It is genuinely head-on to that working face,
+with parallel horizontal tiers and no visible side plane, and its uniform
+soft, pale-wood smoothing treatment conforms; no smoothing or product-pixel
+filter was applied. The independent/unofficial published-picture requirement
+is nevertheless unsatisfied, so full acceptance is **BLOCKED** pending a
+genuine independent photograph of this exact 2017 Pro revision.
+
+The parent-commit asset was independently re-extracted and verified as 1654 ×
+951 pixels with SHA-256
 `9c252286a19c379236574e703b61ec8b92b5443b54f9c9bce5dcb774a901e1de`.
 The accepted asset remains 1654 × 951 pixels and has SHA-256
 `6682e9a2f019ac6ca345cfa7aca376a988b15bb408664e15dbd0ee181c3e23d1`.
@@ -105,6 +128,9 @@ claimed. Because the canvas dimensions, presentation aspect ratio, and
 `board.json` geometry bytes are unchanged, this alpha-only composition cannot
 move a canonical path relative to any product pixel. The machine remediation
 manifest is intentionally unchanged for the later consolidated lifecycle pass.
+The deterministic PNG may remain in place, but this section does not claim
+that the Tension presentation has passed the full official-plus-unofficial
+evidence requirement; its acceptance state is **BLOCKED**.
 
 ## 2026-08-31 Beastmaker 1000 deterministic presentation repair
 
