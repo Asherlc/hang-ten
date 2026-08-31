@@ -41,12 +41,16 @@ ALLOWED_MEDIA_ROLES = frozenset(
         "installed-use product image",
         "manufacturer catalog",
         "mounting guide",
+        "numbered hold diagram",
         "numbered depth diagram",
         "oblique product image",
         "orientation guide",
+        "pocket detail image",
+        "product identity image",
         "product specification",
         "product spread image",
         "product-use guide",
+        "rail detail image",
         "reverse product image",
         "safety guide",
         "side product image",
@@ -56,6 +60,12 @@ ALLOWED_MEDIA_ROLES = frozenset(
 SHARED_CDN_PREFIXES_BY_PRODUCT_HOST = {
     "beastmaker.co.uk": (
         "https://cdn.shopify.com/s/files/1/0107/6442/",
+    ),
+    "en.captainfingerfood.rocks": (
+        "https://cdn.shopify.com/s/files/1/0602/4547/5542/",
+    ),
+    "escapeclimbing.com": (
+        "https://cdn.shopify.com/s/files/1/0051/0374/7160/",
     ),
     "frictitiousclimbing.com": (
         "https://cdn.shopify.com/s/files/1/0093/8783/5451/",
@@ -70,6 +80,15 @@ SHARED_CDN_PREFIXES_BY_PRODUCT_HOST = {
         "https://cdn.shopify.com/s/files/1/0282/7557/2841/",
     ),
 }
+EXPLICIT_MEDIA_HOSTS_BY_PRODUCT_HOST = {
+    "mammut.com": frozenset({"static.mammut.com"}),
+}
+ALLOWED_ATTEMPTED_SOURCE_CLASSES = frozenset(
+    {"catalogs", "direct images", "guides", "manuals", "model-specific diagrams"}
+)
+MISSING_MEDIA_LIMITATION_PATTERN = re.compile(
+    r"product=([^<]+)<br>attempted=([^<]+)<br>unavailable=(.+)"
+)
 PLACEHOLDER_LIMITATIONS = frozenset(
     {
         "",
@@ -82,6 +101,14 @@ PLACEHOLDER_LIMITATIONS = frozenset(
         "not applicable",
         "not applicable.",
     }
+)
+GENERIC_UNAVAILABLE_REASON_PATTERNS = (
+    re.compile(
+        r"^no (?:separately addressable )?(?:first-party )?media(?: url)? "
+        r"(?:was |were )?(?:found|recorded)",
+        re.IGNORECASE,
+    ),
+    re.compile(r"^no (?:direct|stable|usable) media\b", re.IGNORECASE),
 )
 
 
@@ -151,8 +178,8 @@ def _has_first_party_relationship(
         primary_host = _normalized_host(primary_url)
         if (
             media_host == primary_host
-            or media_host.endswith(f".{primary_host}")
-            or primary_host.endswith(f".{media_host}")
+            or media_host
+            in EXPLICIT_MEDIA_HOSTS_BY_PRODUCT_HOST.get(primary_host, frozenset())
             or any(
                 media_url.startswith(prefix)
                 for prefix in SHARED_CDN_PREFIXES_BY_PRODUCT_HOST.get(
@@ -208,11 +235,33 @@ def _validate_record(
     assert record.primary_urls, f"{record.package}: no first-party source URL"
     assert all(url.startswith("https://") for url in record.primary_urls)
     if not record.media_evidence:
-        normalized_limitation = record.limitation.strip().lower()
-        assert (
-            normalized_limitation not in PLACEHOLDER_LIMITATIONS
-            and len(record.limitation.strip()) >= 20
-        ), f"{package}: missing media requires a meaningful source limitation"
+        limitation_match = MISSING_MEDIA_LIMITATION_PATTERN.fullmatch(
+            record.limitation
+        )
+        assert limitation_match, (
+            f"{package}: missing media requires a structured missing-media limitation"
+        )
+        product, attempted, unavailable = limitation_match.groups()
+        attempted_classes = {
+            source_class.strip() for source_class in attempted.split(",")
+        }
+        assert product == record.physical_revision, (
+            f"{package}: limitation product must match the physical revision"
+        )
+        assert attempted_classes and attempted_classes <= (
+            ALLOWED_ATTEMPTED_SOURCE_CLASSES
+        ), f"{package}: limitation must name allowed attempted source classes"
+        assert unavailable.startswith(f"{record.physical_revision}: "), (
+            f"{package}: unavailable reason must name the physical revision"
+        )
+        reason = unavailable.removeprefix(f"{record.physical_revision}: ").strip()
+        assert reason.lower() not in PLACEHOLDER_LIMITATIONS and len(reason) >= 40, (
+            f"{package}: unavailable reason must be product-specific"
+        )
+        assert not any(
+            pattern.search(reason)
+            for pattern in GENERIC_UNAVAILABLE_REASON_PATTERNS
+        ), f"{package}: unavailable reason must be product-specific"
     assert len({item.url for item in record.media_evidence}) == len(
         record.media_evidence
     ), f"{package}: duplicate reviewed-media URL"
@@ -308,7 +357,59 @@ def test_orientation_audit_rejects_unrelated_shared_cdn_account() -> None:
 def test_orientation_audit_rejects_placeholder_missing_media_limitation() -> None:
     record = _record(media=(), limitation="None.")
 
-    with pytest.raises(AssertionError, match="meaningful source limitation"):
+    with pytest.raises(AssertionError, match="structured missing-media limitation"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_generic_missing_media_limitation() -> None:
+    record = _record(
+        media=(),
+        limitation=(
+            "No separately addressable first-party media URL was recorded; "
+            "the presentation conclusion is limited to the product page."
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="structured missing-media limitation"):
+        _validate_record(record, {"primary"})
+
+
+def test_orientation_audit_rejects_structured_but_generic_media_limitation() -> None:
+    record = _record(
+        media=(),
+        limitation=(
+            "product=Example revision<br>attempted=direct images, manuals<br>"
+            "unavailable=Example revision: no separately addressable first-party "
+            "media URL was recorded after reviewing the product page"
+        ),
+    )
+
+    with pytest.raises(AssertionError, match="product-specific"):
+        _validate_record(record, {"primary"})
+
+
+@pytest.mark.parametrize(
+    ("primary_url", "media_url"),
+    (
+        (
+            "https://stpetesites.com/products/example",
+            "https://other-tenant.stpetesites.com/media/front.jpg",
+        ),
+        (
+            "https://thehangboard.stpetesites.com/products/example",
+            "https://stpetesites.com/media/front.jpg",
+        ),
+    ),
+)
+def test_orientation_audit_rejects_shared_parent_host_provenance(
+    primary_url: str, media_url: str
+) -> None:
+    record = _record(
+        primary_urls=(primary_url,),
+        media=(MediaEvidence(role="front product image", url=media_url),),
+    )
+
+    with pytest.raises(AssertionError, match="first-party relationship"):
         _validate_record(record, {"primary"})
 
 
