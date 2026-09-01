@@ -414,7 +414,8 @@
           }
         }
       ],
-      "sizeMillimeters": 40
+      "sizeMillimeters": 40,
+      "fingerCapacity": 4
     }
   ]
 }
