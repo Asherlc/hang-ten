@@ -1488,62 +1488,6 @@
       ]
     },
     {
-      "id": "pocket-30-four-right",
-      "name": "Right 30 mm 4-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 30,
-      "fingerCapacity": 4,
-      "gripType": "fourFingerPocket",
-      "presentationID": "primary",
-      "equipmentObjectID": "primary",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.82,
-            "y": 0.2,
-            "width": 0.117,
-            "height": 0.29
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  1.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.22,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
       "id": "sloper-45-right",
       "name": "Right 45 mm flat sloper",
       "kind": "sloper",
