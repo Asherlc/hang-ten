@@ -15,7 +15,7 @@ struct BoardEditorListView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 14) {
+            LazyVStack(alignment: .leading, spacing: 14) {
                 githubCard
                 ForEach(boards, id: \.id) { board in
                     row(board)
@@ -42,7 +42,7 @@ struct BoardEditorListView: View {
             #endif
         }
         .navigationDestination(item: $openSlug) { route in
-            BoardEditorScreen(slug: route.slug, store: editorStore)
+            BoardEditorLoadingView(slug: route.slug, store: editorStore)
         }
         .confirmationDialog(
             "Reset local edits for \(resetTarget?.name ?? "this board")?",
@@ -82,7 +82,9 @@ struct BoardEditorListView: View {
             openSlug = SlugRoute(slug: board.id)
         } label: {
             HStack(spacing: 14) {
-                thumbnail(for: board)
+                BoardEditorThumbnailView(
+                    imageURL: BoardCatalog.packageStore.presentationImageURL(for: board)
+                )
                 VStack(alignment: .leading, spacing: 4) {
                     Text(board.name)
                         .font(.system(size: 15, weight: .bold, design: .rounded))
@@ -126,22 +128,6 @@ struct BoardEditorListView: View {
                     Label("Discard local edits", systemImage: "trash")
                 }
             }
-        }
-    }
-
-    @ViewBuilder
-    private func thumbnail(for board: TrainingBoard) -> some View {
-        if let url = BoardCatalog.packageStore.presentationImageURL(for: board),
-           let image = UIImage(contentsOfFile: url.path) {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 74, height: 52)
-        } else {
-            Rectangle()
-                .fill(Color.hangWoodLight.opacity(0.5))
-                .frame(width: 74, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
     }
 
@@ -203,6 +189,34 @@ struct BoardEditorListView: View {
             } catch {
                 syncSession.lastError = error.localizedDescription
             }
+        }
+    }
+}
+
+private struct BoardEditorThumbnailView: View {
+    let imageURL: URL?
+    @State private var image: UIImage?
+
+    var body: some View {
+        Group {
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 74, height: 52)
+            } else {
+                Rectangle()
+                    .fill(Color.hangWoodLight.opacity(0.5))
+                    .frame(width: 74, height: 52)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            }
+        }
+        .task(id: imageURL) {
+            image = nil
+            guard let imageURL else { return }
+            image = await Task.detached(priority: .userInitiated) {
+                UIImage(contentsOfFile: imageURL.path)
+            }.value
         }
     }
 }
