@@ -129,6 +129,7 @@
 		AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C2 /* BoardPackageWriterTests.swift */; };
 		AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C3 /* BoardEditorStoreTests.swift */; };
 		AA00000000000000000000C6 /* BoardEditorLoadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */; };
+		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
 /* End PBXBuildFile section */
@@ -258,6 +259,7 @@
 		BB00000000000000000000C2 /* BoardPackageWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriterTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C3 /* BoardEditorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStoreTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorLoadingTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -462,6 +464,7 @@
 				BB00000000000000000000C2 /* BoardPackageWriterTests.swift */,
 				BB00000000000000000000C3 /* BoardEditorStoreTests.swift */,
 				BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */,
+				BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */,
 				BB0000000000000000000100 /* BoardEditorSessionTests.swift */,
 				BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */,
 				BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */,
@@ -793,6 +796,7 @@
 				AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */,
 				AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */,
 				AA00000000000000000000C6 /* BoardEditorLoadingTests.swift in Sources */,
+				AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */,
 				AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */,
 				AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */,
 				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,

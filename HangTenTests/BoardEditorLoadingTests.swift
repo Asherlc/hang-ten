@@ -50,6 +50,52 @@ final class BoardEditorLoadingTests: XCTestCase {
         }
     }
 
+    func testStartReturnsBeforeControlledWorkCompletesAndPublishesPreparedImage() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL
+        )
+        let scheduler = ControlledBoardEditorLoadingScheduler()
+        let preparedImage = try XCTUnwrap(UIImage(data: try pngBytes()))
+        let loader = BoardEditorLoader(
+            slug: "fixture-board",
+            store: store,
+            scheduler: scheduler,
+            imagePreparer: FixedBoardEditorImagePreparer(image: preparedImage)
+        )
+
+        loader.start()
+
+        assertLoading(loader.state)
+        XCTAssertTrue(scheduler.hasPendingWork)
+
+        await scheduler.runPendingWork()
+        try await waitForTerminalState(of: loader)
+
+        guard case let .loaded(_, image) = loader.state else {
+            return XCTFail("Expected controlled work to publish a loaded result, got \(loader.state)")
+        }
+        XCTAssertTrue(image === preparedImage)
+    }
+
+    func testCancelSuppressesControlledWorkCompletion() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL
+        )
+        let scheduler = ControlledBoardEditorLoadingScheduler()
+        let loader = BoardEditorLoader(slug: "fixture-board", store: store, scheduler: scheduler)
+
+        loader.start()
+        loader.cancel()
+        await scheduler.runPendingWork()
+
+        assertLoading(loader.state)
+        XCTAssertNoThrow(try store.loadDocument(slug: "fixture-board"))
+    }
+
     private func assertLoading(_ state: BoardEditorLoadingState) {
         guard case .loading = state else {
             XCTFail("Expected loader to begin in loading state, got \(state)")
@@ -68,75 +114,43 @@ final class BoardEditorLoadingTests: XCTestCase {
     }
 
     private func makeSourceLibrary() throws -> URL {
-        let libraryURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("BoardEditorLoadingSource-\(UUID().uuidString)", isDirectory: true)
-        let packageURL = libraryURL.appendingPathComponent("fixture-board", isDirectory: true)
-        try FileManager.default.createDirectory(
-            at: packageURL.appendingPathComponent("assets", isDirectory: true),
-            withIntermediateDirectories: true
-        )
-        try BoardPackageWriter.data(for: sampleDocument())
-            .write(to: packageURL.appendingPathComponent("board.json"))
-        try pngBytes().write(to: packageURL.appendingPathComponent("assets/primary.png"))
+        let libraryURL = try BoardEditorTestFixtures.makeSourceLibrary()
         addTeardownBlock { try? FileManager.default.removeItem(at: libraryURL) }
         return libraryURL
     }
 
     private func pngBytes() throws -> Data {
-        let fixturesURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures/BoardPackageValidationFixtures.json")
-        let fixtures = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: Data(contentsOf: fixturesURL)) as? [String: Any]
-        )
-        let png = try XCTUnwrap(fixtures["png"] as? [String: Any])
-        let base64 = try XCTUnwrap(png["validTwoByOneBase64"] as? String)
-        return try XCTUnwrap(Data(base64Encoded: base64))
+        try BoardEditorTestFixtures.pngBytes()
+    }
+}
+
+private final class ControlledBoardEditorLoadingScheduler: BoardEditorLoadingScheduling {
+    private var work: (() async -> Void)?
+
+    var hasPendingWork: Bool { work != nil }
+
+    func schedule(_ work: @escaping @Sendable () async -> Void) -> BoardEditorLoadingCancellation {
+        self.work = work
+        return ControlledBoardEditorLoadingCancellation()
     }
 
-    private func sampleDocument() -> BoardEditableDocument {
-        let piece = BoardEditablePiece(
-            frame: BoardPackageFrameDocument(x: 0.1, y: 0.2, width: 0.3, height: 0.4),
-            shape: BoardGeometryShapeDocument(
-                type: "path",
-                commands: [
-                    BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "line", to: [1, 0], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "line", to: [1, 1], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "line", to: [0, 1], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
-                ],
-                cornerRadiusFraction: nil
-            ),
-            shapeConstraint: nil,
-            treatment: nil
-        )
-        return BoardEditableDocument(
-            id: "fixture.board",
-            manufacturer: "Fixture",
-            name: "Fixture board",
-            subtitle: "Editing fixture",
-            productURL: URL(string: "https://example.com/fixture")!,
-            dimensions: "50 × 25 cm",
-            aspectRatio: 2,
-            holds: [
-                BoardEditableHold(
-                    id: "hold-one",
-                    name: "Hold one",
-                    kind: .jug,
-                    presentationID: "front",
-                    geometry: [piece]
-                ),
-            ],
-            presentations: [
-                BoardEditablePresentation(
-                    id: "front",
-                    name: "Front",
-                    assetPath: "assets/primary.png",
-                    aspectRatio: 2,
-                    isDefault: true
-                ),
-            ]
-        )
+    func runPendingWork() async {
+        await work?()
+    }
+}
+
+private final class ControlledBoardEditorLoadingCancellation: BoardEditorLoadingCancellation {
+    func cancel() {}
+}
+
+private struct FixedBoardEditorImagePreparer: BoardEditorImagePreparing {
+    let image: UIImage
+
+    func prepareDisplayImage(at url: URL) async -> UIImage? {
+        image
+    }
+
+    func prepareThumbnailImage(at url: URL, size: CGSize) async -> UIImage? {
+        image
     }
 }

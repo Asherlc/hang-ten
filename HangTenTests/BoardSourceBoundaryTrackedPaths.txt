@@ -69,6 +69,7 @@ HangTen/Resources/HangTen.storekit
 HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
 HangTen/Views/BoardEditor/BoardEditorListView.swift
+HangTen/Views/BoardEditor/BoardEditorLoadingView.swift
 HangTen/Views/BoardEditor/BoardEditorScreen.swift
 HangTen/Views/BoardEditor/BoardEditorSession.swift
 HangTen/Views/BoardEditor/GitHubEditorSyncViews.swift

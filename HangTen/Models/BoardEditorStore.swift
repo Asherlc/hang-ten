@@ -41,6 +41,7 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
 
 struct BoardEditorStore {
     static let defaultDirectoryName = "BoardEditorPackages"
+    private static let editingLock = NSLock()
 
     private let baseDirectory: URL
     private let sourceLibraryURL: URL?
@@ -60,9 +61,15 @@ struct BoardEditorStore {
     /// Copies the bundled package verbatim into the editable store when absent.
     @discardableResult
     func startEditing(slug: String) throws -> URL {
+        Self.editingLock.lock()
+        defer { Self.editingLock.unlock() }
+
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
-        if FileManager.default.fileExists(atPath: packageURL.appendingPathComponent("board.json").path) {
+        if Self.hasCompletePackage(at: packageURL) {
             return packageURL
+        }
+        if FileManager.default.fileExists(atPath: packageURL.path) {
+            try FileManager.default.removeItem(at: packageURL)
         }
         guard let sourceLibraryURL,
               FileManager.default.fileExists(
@@ -77,9 +84,14 @@ struct BoardEditorStore {
               FileManager.default.fileExists(atPath: sourceAssetsURL.path) else {
             throw BoardEditorStoreError.missingSourcePackage(slug: slug)
         }
-        try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
-        try FileManager.default.copyItem(at: sourceBoardURL, to: packageURL.appendingPathComponent("board.json"))
-        try FileManager.default.copyItem(at: sourceAssetsURL, to: packageURL.appendingPathComponent("assets"))
+
+        let stagingURL = baseDirectory.appendingPathComponent(
+            ".\(slug)-staging-\(UUID().uuidString)",
+            isDirectory: true
+        )
+        defer { try? FileManager.default.removeItem(at: stagingURL) }
+        try FileManager.default.copyItem(at: sourcePackageURL, to: stagingURL)
+        try FileManager.default.moveItem(at: stagingURL, to: packageURL)
         return packageURL
     }
 
@@ -171,6 +183,9 @@ struct BoardEditorStore {
     }
 
     func reset(slug: String) throws {
+        Self.editingLock.lock()
+        defer { Self.editingLock.unlock() }
+
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
         guard FileManager.default.fileExists(atPath: packageURL.path) else { return }
         try FileManager.default.removeItem(at: packageURL)
@@ -256,6 +271,11 @@ struct BoardEditorStore {
 
     private static func isLowercaseASCIIOrDigit(_ scalar: Unicode.Scalar) -> Bool {
         (97...122).contains(scalar.value) || (48...57).contains(scalar.value)
+    }
+
+    private static func hasCompletePackage(at packageURL: URL) -> Bool {
+        FileManager.default.fileExists(atPath: packageURL.appendingPathComponent("board.json").path)
+            && FileManager.default.fileExists(atPath: packageURL.appendingPathComponent("assets").path)
     }
 
     private func ensureBaseDirectory() throws {

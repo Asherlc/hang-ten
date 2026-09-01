@@ -194,8 +194,11 @@ struct BoardEditorListView: View {
 }
 
 private struct BoardEditorThumbnailView: View {
+    private static let displaySize = CGSize(width: 74, height: 52)
+
     let imageURL: URL?
     @State private var image: UIImage?
+    private let imagePreparer = BoardEditorUIKitImagePreparer()
 
     var body: some View {
         Group {
@@ -214,9 +217,14 @@ private struct BoardEditorThumbnailView: View {
         .task(id: imageURL) {
             image = nil
             guard let imageURL else { return }
-            image = await Task.detached(priority: .userInitiated) {
-                UIImage(contentsOfFile: imageURL.path)
+            let preparedImage = await Task.detached(priority: .userInitiated) { [imagePreparer] in
+                await imagePreparer.prepareThumbnailImage(
+                    at: imageURL,
+                    size: Self.displaySize
+                )
             }.value
+            guard !Task.isCancelled else { return }
+            image = preparedImage
         }
     }
 }
