@@ -533,10 +533,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.222,
-            "y": 0.506,
-            "width": 0.556,
-            "height": 0.102
+            "x": 0.231,
+            "y": 0.719,
+            "width": 0.538,
+            "height": 0.132
           },
           "shape": {
             "type": "path",

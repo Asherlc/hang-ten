@@ -1103,7 +1103,18 @@ Reverse prompt (verbatim):
 Accepted assets: `primary.png` is 1536 × 1024 (ratio 1.5, SHA-256
 `18047e867d71a5113f9e828b60959e66b58723906f0b489f7ae1864484fa020a`);
 `reverse.png` is 1774 × 887 (ratio 2.0, SHA-256
-`bed470db4496b8cc8c2b1f69e918382850097dd7c6c6b68bae21ef952383e690`).
+`e735522420f6f1c6f22b39e7031204ac6da6bf6e76f5f61d31f0ad1c2dbd414a`).
+
+On 2026-08-31, the reverse presentation was repaired after blue-field review
+showed that an alpha-only backdrop mutation had hidden the source-proved side
+loops and suspension cord behind both routing holes. The built-in image edit
+used the existing reverse presentation as the geometry/composition target and
+YY Vertical's official current-product gallery views 3 and 4 as the physical
+evidence inputs. The accepted untouched output restores a complete, uncropped
+adjustable cord assembly, both side loops, and cord behind both routing holes
+on the original 1774 × 887 opaque canvas. The saved reverse hold path remains
+unchanged; its enclosing frame was deliberately remapped to the visible recess
+after the repaired composition moved the product lower in the fixed canvas.
 
 ### Direct geometry mapping
 
@@ -1113,7 +1124,7 @@ Accepted assets: `primary.png` is 1536 × 1024 (ratio 1.5, SHA-256
 | 25 mm edge | `front-25-15`: `x .076, y .390, w .848, h .095` | Long upper routed contact only. |
 | 15 mm edge | `front-25-15`: `x .190, y .573, w .600, h .075` | Shorter centered lower routed contact only. |
 | Mono openings | Left `x .083, y .568, w .064, h .094`; exact right mirror | Two physical through openings, each independently selectable. |
-| 10 mm edge | `reverse-10`: `x .222, y .506, w .556, h .102` | The only distinct reverse-face grip supported by the official inventory. |
+| 10 mm edge | `reverse-10`: `x .231, y .719, w .538, h .132` | The only distinct reverse-face grip supported by the official inventory; deliberately remapped to its visible recess after the complete cord repair moved the product lower within the unchanged canvas. |
 
 Every path was deliberately authored. Regular openings use operator-selected
 oval or rounded-rectangle constraints; the broad tray uses an
