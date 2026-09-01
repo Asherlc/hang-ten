@@ -440,6 +440,12 @@ jobs:
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: scripts/validate-app-store-metadata.sh
 
+      - name: Validate App Store release versioning
+        if: >-
+          github.event_name != 'pull_request' ||
+          needs.changes.outputs.workflow == 'true'
+        run: scripts/tests/release-workflow-version-test.zsh
+
       - name: Run XCTest suite
         id: xctest
         env:
