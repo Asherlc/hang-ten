@@ -577,7 +577,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "sizeMillimeters": 25
     }
   ]
 }
