@@ -4,7 +4,7 @@
   "name": "MXEdge Lift Large",
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
-  "dimensions": "20 × 11 × 5 cm",
+  "dimensions": "20 \u00d7 11 \u00d7 5 cm",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -46,10 +46,10 @@
       "geometry": [
         {
           "frame": {
-          "x": 0.35,
-          "y": 0.329,
-          "width": 0.405,
-          "height": 0.11
+            "x": 0.35,
+            "y": 0.329,
+            "width": 0.405,
+            "height": 0.11
           },
           "shape": {
             "type": "path",
@@ -161,10 +161,10 @@
       "geometry": [
         {
           "frame": {
-          "x": 0.29,
-          "y": 0.552,
-          "width": 0.46,
-          "height": 0.066
+            "x": 0.29,
+            "y": 0.552,
+            "width": 0.46,
+            "height": 0.066
           },
           "shape": {
             "type": "path",
@@ -276,8 +276,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.29,
-            "y": 0.588,
+            "x": 0.271569967,
+            "y": 0.400286699,
             "width": 0.397,
             "height": 0.041
           },
@@ -375,7 +375,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -391,10 +391,10 @@
       "geometry": [
         {
           "frame": {
-          "x": 0.58,
-          "y": 0.252,
-          "width": 0.09,
-          "height": 0.09
+            "x": 0.58,
+            "y": 0.252,
+            "width": 0.09,
+            "height": 0.09
           },
           "shape": {
             "type": "path",
