@@ -10,7 +10,11 @@ from pathlib import Path
 
 import pytest
 from conftest import write_board_package, write_multi_presentation_board_package
-from hangboard_packages.board_catalog import BoardInventory, discover_board_packages
+from hangboard_packages.board_catalog import (
+    BoardInventory,
+    BoardPresentation,
+    discover_board_packages,
+)
 import hangboard_packages.presentation_remediation_audit as presentation_audit
 from hangboard_packages.presentation_remediation_audit import (
     PresentationRemediationAuditError,
@@ -1259,13 +1263,18 @@ def _validate_historical_phase2_document(
     tmp_path: Path,
     document: dict[str, object],
 ) -> PresentationRemediationReport:
+    historical_root = tmp_path / "Hangboards"
     live_inventory = discover_board_packages(
         REPO_ROOT / "Hangboards",
         require_complete_inventory=True,
     )
-    historical_presentation_keys = {
-        (record["packageID"], record["presentationID"])
-        for record in document["records"]
+    historical_records_by_package = {
+        package_id: [
+            record
+            for record in document["records"]
+            if record["packageID"] == package_id
+        ]
+        for package_id in document["packageIDs"]
     }
     inventory = replace(
         live_inventory,
@@ -1275,18 +1284,38 @@ def _validate_historical_phase2_document(
                 board=replace(
                     package.board,
                     presentations=tuple(
-                        presentation
-                        for presentation in package.board.presentations
-                        if (package.board.id, presentation.id)
-                        in historical_presentation_keys
+                        BoardPresentation(
+                            id=record["presentationID"],
+                            name=record["workingSurface"],
+                            asset_path=Path(record["assetPath"])
+                            .relative_to(Path("Hangboards") / package.root.name)
+                            .as_posix(),
+                            aspect_ratio=(
+                                record["currentAsset"]["widthPixels"]
+                                / record["currentAsset"]["heightPixels"]
+                            ),
+                            is_default=index == 0,
+                        )
+                        for index, record in enumerate(
+                            historical_records_by_package[package.board.id]
+                        )
                     ),
                 ),
             )
             for package in live_inventory.packages
         ),
     )
+    for record in document["records"]:
+        asset_path = historical_root / Path(record["assetPath"]).relative_to(
+            "Hangboards"
+        )
+        asset_path.parent.mkdir(parents=True, exist_ok=True)
+        asset_path.touch()
     historical_facts = {
-        (REPO_ROOT / record["assetPath"]).resolve(): (
+        (
+            historical_root
+            / Path(record["assetPath"]).relative_to("Hangboards")
+        ).resolve(): (
             record["currentAsset"]["sha256"],
             record["currentAsset"]["widthPixels"],
             record["currentAsset"]["heightPixels"],
@@ -1301,8 +1330,8 @@ def _validate_historical_phase2_document(
 
     # The schema-2 document is an intentionally immutable initial-state ledger.
     # Later bounded repairs deliberately leave it unchanged, so contract tests
-    # replay its recorded PNG facts while production validation remains strict
-    # against the live package bytes.
+    # reconstruct its presentation paths and replay its recorded PNG facts while
+    # production validation remains strict against the live package bytes.
     with pytest.MonkeyPatch.context() as monkeypatch:
         monkeypatch.setattr(
             presentation_audit,
@@ -1314,7 +1343,7 @@ def _validate_historical_phase2_document(
                 _write_manifest(tmp_path, document)
             ),
             inventory,
-            hangboards_root=REPO_ROOT / "Hangboards",
+            hangboards_root=historical_root,
             validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
         )
 
@@ -1328,6 +1357,9 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
 
     assert document["schemaVersion"] == 2
     assert document["phase"] == "assetRemediation"
+    assert report.presentation_count == 85
+    assert report.original_presentation_count == 85
+    assert report.inventory_presentation_count == 85
     assert report.canvas_class_count == 20
     assert report.canvas_covered_repair_count == 65
     assert report.capability_probe_artifact_count == 0
@@ -1353,6 +1385,16 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
         == "lattice.mini-bar/primary"
     )
     assert mini_primary["comparator"]["assetPath"] == mini_primary["assetPath"]
+    live_mini_bar = next(
+        package
+        for package in discover_board_packages(
+            REPO_ROOT / "Hangboards", require_complete_inventory=True
+        ).packages
+        if package.board.id == "lattice.mini-bar"
+    )
+    assert tuple(
+        presentation.id for presentation in live_mini_bar.board.presentations
+    ) == ("edge-10", "edge-20", "ergonomic-jug", "mini-pinch")
 
 
 def test_production_action_requires_passed_canvas_preflight(tmp_path: Path) -> None:
