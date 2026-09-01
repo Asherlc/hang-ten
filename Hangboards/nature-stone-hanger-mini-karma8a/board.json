@@ -144,7 +144,7 @@
       "id": "granite-edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm granite edge",
-      "kind": "edge",
+      "kind": "pinch",
       "handCapacity": 1,
       "presentationID": "primary",
       "geometry": [
