@@ -53,9 +53,11 @@ The implementation has five bounded stages:
 2. **Ledger expansion.** Select all records belonging to Crimptonite, Flash,
    Port-A-Board, MXEdge Lift Large, and MXEdge Lift Small. Expand the selection
    to every ledger-declared alias and every rotated or inverted presentation.
-3. **Per-asset edit.** For each unique supported asset, perform exactly one
-   source-grounded edit with the built-in image-editing capability. The edit
-   replaces or corrects only the cord pixels needed for that presentation.
+3. **Per-asset edit.** Across all cohorts, deduplicate by ledger-declared asset
+   identity. Every unique supported asset receives exactly one source-grounded
+   attempt with the built-in image-editing capability; unsupported assets
+   receive zero attempts. The edit replaces or corrects only the cord pixels
+   needed for that presentation.
 4. **Per-record review.** Validate every unique presentation and every alias
    in both Workbench and the isolated iOS app, even when two records share one
    accepted asset.
@@ -63,11 +65,12 @@ The implementation has five bounded stages:
    work, retain explicit blocker records for unresolved routing, and send the
    accepted commit hash and blocker list to Workspace 4 through Paseo.
 
-The ledger record is the unit of evidence and review. The unique asset path is
-the unit of image editing and byte-preservation validation. The cohort is the
-unit of commit acceptance. These boundaries prevent an alias from escaping
-review, prevent one file from being edited more than once, and prevent a
-partially supported cohort from being presented as complete.
+The ledger record is the unit of evidence and review. The unique ledger-
+declared asset identity is the unit of image editing and byte-preservation
+validation. The cohort is the unit of commit acceptance. These boundaries
+prevent an alias from escaping review, prevent one shared asset from receiving
+more than one attempt anywhere in these cohorts, and prevent a partially
+supported cohort from being presented as complete.
 
 ## Data flow
 
@@ -83,9 +86,10 @@ For each cohort, data moves through this sequence:
 3. A supported record yields an edit brief containing only facts traceable to
    the ledger's primary evidence: visible cords, routing, load-bearing
    direction, orientation, and canvas-down gravity.
-4. Each unique asset receives one built-in image edit. The existing local PNG
-   is the edit target, and the ledger-cited source material is the physical
-   authority. No generated output is itself evidence.
+4. Every unique supported ledger-declared asset receives one built-in image
+   edit attempt. The existing local asset is the edit target, and the ledger-
+   cited source material is the physical authority. Unsupported records and
+   assets receive no image edit. No generated output is itself evidence.
 5. The foundation validator compares the candidate with the original asset and
    enforces the cord-only mutation boundary and all preservation invariants.
 6. A human compares the candidate with the primary evidence and reviews each
@@ -100,8 +104,11 @@ For each cohort, data moves through this sequence:
 An alias may share an asset only when the accepted ledger establishes that it
 is the same physical presentation, orientation, gravity, and routing. If an
 alias changes any of those properties, it requires its own presentation-
-specific asset and its own single edit. Asset sharing is never a reason to
-copy, rotate, or reuse physically incorrect cord pixels.
+specific asset and its own single attempt. When multiple records resolve to
+one asset, the first supported record schedules the sole attempt and all other
+records consume that candidate; the shared path is never edited again in
+another cohort. Asset sharing is never a reason to copy, rotate, or reuse
+physically incorrect cord pixels.
 
 ## Cohort and gate rules
 
@@ -174,7 +181,8 @@ grommets, terminals, or other hardware to explain the route. This applies
 independently to both MXEdge Lift variants and to each of their ledger-declared
 presentations.
 
-Port-A-Board cord option 4 remains explicitly blocked unless exact,
+Port-A-Board cord option 4 remains explicitly blocked and receives zero image
+edit attempts unless exact,
 current-revision primary evidence establishes its routing. Evidence from an
 older Port-A-Board revision, a generic option diagram, a sibling product, or a
 different orientation does not clear the blocker. A shared asset path or
@@ -188,17 +196,21 @@ a physically coherent final presentation without invention, block the record.
 
 ## Single-edit image contract
 
-Each unique asset receives one source-grounded built-in image edit. The edit is
-classified as a precise object edit: change only the source-proved cords and
-keep every invariant unchanged. It uses the current asset as the edit target
-and the minimum ledger-cited primary source set needed to establish that
-presentation's cords, orientation, and route.
+Across the complete multi-cohort run, every unique supported ledger-declared
+asset receives exactly one source-grounded built-in image edit attempt. Shared
+paths are globally deduplicated before any invocation, so aliases, products,
+or cohort boundaries cannot trigger another attempt against the same asset.
+Unsupported records and assets receive zero attempts. The edit is classified
+as a precise object edit: change only the source-proved cords and keep every
+invariant unchanged. It uses the current asset as the edit target and the
+minimum ledger-cited primary source set needed to establish that presentation's
+cords, orientation, and route.
 
-There is no second edit attempt for a failed asset within this cohort. If the
-single candidate violates evidence, physics, topology, preservation, or
-validation, reject it and mark the affected record or records blocked with the
-specific failure. This ensures “one edit per asset” cannot quietly become an
-iterative product-specific pipeline.
+There is no second edit attempt for a failed asset anywhere in these cohorts.
+If the single candidate violates evidence, physics, topology, preservation,
+or validation, reject it and mark the affected record or records blocked with
+the specific failure. This ensures “one edit per asset” cannot quietly become
+an iterative product-specific pipeline.
 
 The workflow must not use resizing, pixel postprocessing, masks, manual
 coordinates, segmentation, detection, source registration or alignment,
@@ -244,22 +256,30 @@ copy.
 
 Saved canonical paths in `board.json` remain the sole source for normal
 rendering, active highlighting, and hit testing. Image generation neither
-proposes nor validates geometry. Geometry may be changed only if primary
-evidence and direct operator review establish that a previously accepted path
-is wrong, and such a change must follow the repository's direct-authoring
-contract. It must never be derived from pixels, masks, contours,
-registration, vectorization, or automatic simplification. The default for
-this cord-only cohort is to preserve previously accepted paths byte-for-byte.
+proposes nor validates geometry. This cord-only cohort must preserve every
+`board.json` file, including all canonical paths and geometry metadata, byte-
+for-byte without exception. A discovered geometry or overlay defect blocks
+the affected surface here and becomes a separately scoped future task; it is
+never corrected in this cohort.
 
-Previously accepted repairs outside the enumerated cord records are immutable
-regression baselines. No cohort change may overwrite, restyle, or indirectly
-undo them.
+Do not use image-driven hold detection, segmentation, generated masks or
+contours, source registration or alignment, vectorization, automatic path
+simplification, automatic cropping, or proposal/refine/promote geometry
+workflows. Do not create proposed geometry for later cleanup or infer a shape
+constraint from pixels.
+
+Every previously accepted repair is an immutable regression baseline,
+including repairs within the enumerated cord records. No cohort change may
+overwrite, restyle, or indirectly undo any accepted repair.
 
 ## Validation
 
 Validation is presentation-complete, not asset-sampled. Every unique
 presentation and every alias must receive a recorded Workbench review and an
-isolated-iOS review, including records that share a PNG.
+isolated-iOS review disposition, including records that share one ledger-
+declared asset. A blocker never excuses a missing visual-review record. If a
+surface cannot be rendered or reviewed, record that inability as the blocker
+for that surface in each review system that could not produce a disposition.
 
 ### Automated gates
 
@@ -269,8 +289,11 @@ tests for the changed packages and ledger behavior, and the full relevant
 package test suite. These checks must establish at least:
 
 - complete ledger enumeration with no skipped alias or orientation;
-- exactly one built-in edit record per changed unique asset;
+- exactly one built-in edit-attempt record per supported unique ledger-declared
+  asset across all cohorts, zero for every unsupported asset, and no duplicate
+  attempt for a shared path;
 - dimensions, alpha, canvas, and all non-cord preservation invariants;
+- byte-for-byte preservation of every `board.json` file;
 - valid package declarations and asset inventory;
 - terminal disposition for every cohort row; and
 - no promotion of a blocked or rejected candidate.
@@ -296,7 +319,10 @@ human confirmation of:
 - hit-testing alignment.
 
 Aliases are opened and reviewed as aliases; reviewing only the shared source
-presentation is insufficient.
+presentation is insufficient. Every row records either a completed Workbench
+review result or the exact reason Workbench could not render or review that
+surface. The latter is the row's Workbench blocker, not permission to omit the
+row.
 
 ### Isolated iOS review
 
@@ -310,7 +336,10 @@ For every unique presentation and alias, inspect the normal board, all-active
 state, representative individual holds, and hit testing. Confirm the app does
 not crop cords or board silhouettes, that the selected presentation has the
 same correct routing and gravity as Workbench, and that overlay alignment did
-not drift. A successful build is not visual acceptance.
+not drift. Every row records either a completed isolated-iOS review result or
+the exact reason the app could not render or review that surface. The latter is
+the row's isolated-iOS blocker, not permission to omit the row. A successful
+build is not visual acceptance.
 
 ## Regression boundary
 
@@ -339,13 +368,17 @@ cohort scope:
 - **Missing or conflicting primary evidence:** mark the record blocked with
   the exact missing route, orientation, revision, or attachment fact.
 - **Port-A-Board option 4 unresolved:** keep it blocked; do not reuse its
-  current shared asset as proof.
+  current shared asset as proof, and do not invoke an image edit for it.
 - **Single edit violates an invariant:** reject the candidate and block the
   affected asset records. Do not resize, mask, retouch, crop, or retry.
 - **Cord topology or physics is uncertain:** block rather than invent hidden
   continuity, hardware, or force direction.
 - **Workbench or iOS review fails:** do not promote or commit the affected
-  asset. Record the failed presentation and alias explicitly.
+  asset. Record the failed presentation and alias explicitly. If a surface
+  cannot be rendered or reviewed, record that inability as its blocker and
+  still record a disposition for both Workbench and isolated iOS.
+- **Geometry or overlay defect discovered:** block the surface and open a
+  separately scoped future task; preserve every `board.json` byte here.
 - **Package or test failure:** the cohort is not commit-ready even if its image
   review passed.
 - **Cleanup failure:** retain ownership records for safe retry and do not
@@ -363,10 +396,13 @@ Derived Data, and other generated artifacts belong under a workspace-owned
 `${PASEO_WORKTREE_PATH:-$PWD}` and include that owner in every external
 resource name. Record ownership immediately.
 
-Because the built-in image tool initially saves outside the repository, move
-the exact output immediately into the owned `.context` area before further
-use; do not leave a project-referenced asset only in the tool's default
-location. Promote only an accepted output to the declared package path.
+Before invoking the built-in image generation or editing capability, install
+the cleanup traps and write a pending ownership record for that invocation.
+No image call may begin first. Because the built-in image tool initially saves
+outside the repository, move the exact output immediately into the owned
+`.context` area, update the ownership record, and verify that the exact copy at
+the tool's default location no longer exists before any review or promotion.
+Promote only an accepted output to the declared package path.
 
 Before creating a simulator or any other external resource, install exit,
 interrupt, and termination traps that shut down and delete only the exact
@@ -425,18 +461,23 @@ The cohort is accepted only when:
    physically incorrect orientation.
 5. MXEdge uses only source-supported perimeter/groove routing and no invented
    side holes.
-6. Port-A-Board option 4 remains explicitly blocked unless exact
-   current-revision primary evidence resolved its route.
+6. Port-A-Board option 4 remains explicitly blocked with zero image edit
+   attempts unless exact current-revision primary evidence resolved its route
+   before editing.
 7. No hidden continuity, knot, terminal, grommet, doubled cord, hole, or
    attachment hardware was invented.
-8. Every changed unique asset received exactly one source-grounded built-in
-   edit and no prohibited postprocessing or product-specific pipeline.
+8. Every supported unique ledger-declared asset received exactly one source-
+   grounded built-in edit attempt globally across these cohorts, every
+   unsupported asset received zero attempts, and no shared path received a
+   duplicate attempt or prohibited postprocessing/product-specific handling.
 9. Every preservation invariant passes exactly.
-10. Every unique presentation and alias passes Workbench and isolated-iOS
-    review for topology, route, gravity, silhouettes, image preservation, and
-    overlay/hit-test alignment, or has an explicit terminal blocker.
-11. Previously accepted repairs remain intact, and the `0ae9fc84` failure is
-    not reintroduced.
+10. Every unique presentation and alias has recorded Workbench and isolated-
+    iOS dispositions. Accepted rows pass topology, route, gravity, silhouettes,
+    image preservation, and overlay/hit-test alignment; blocked rows retain
+    both review dispositions, and any inability to render or review is the
+    explicit blocker for that surface rather than an omitted review.
+11. Every `board.json` file and every previously accepted repair remain byte-
+    for-byte intact, and the `0ae9fc84` failure is not reintroduced.
 12. All owned resources and temporary artifacts were cleaned up and deletion
     was verified.
 13. Only complete, source-supported cohort work was committed and pushed.
