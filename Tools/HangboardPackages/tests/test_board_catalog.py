@@ -37,6 +37,49 @@ def _png_without_idat() -> bytes:
     return _PNG_SIGNATURE + _png_chunk(b"IHDR", ihdr) + _png_chunk(b"IEND")
 
 
+def _png_with_pixels(*, width: int, color_type: int, row: bytes) -> bytes:
+    ihdr = struct.pack(">IIBBBBB", width, 1, 8, color_type, 0, 0, 0)
+    return (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", ihdr)
+        + _png_chunk(b"IDAT", zlib.compress(b"\0" + row))
+        + _png_chunk(b"IEND")
+    )
+
+
+def test_stdlib_png_decoder_exposes_exact_rgb_and_rgba_pixels(tmp_path: Path) -> None:
+    """Keeps exact-canvas gates independent from production imaging libraries."""
+    module = load_board_catalog_module()
+    rgba_path = tmp_path / "rgba.png"
+    rgba_path.write_bytes(
+        _png_with_pixels(
+            width=2,
+            color_type=6,
+            row=bytes((1, 2, 3, 4, 250, 249, 248, 247)),
+        )
+    )
+    rgb_path = tmp_path / "rgb.png"
+    rgb_path.write_bytes(
+        _png_with_pixels(width=1, color_type=2, row=bytes((11, 12, 13)))
+    )
+
+    rgba = module.decode_png_rgba(rgba_path, "rgba.png")
+    rgb = module.decode_png_rgba(rgb_path, "rgb.png")
+
+    assert (rgba.source_mode, rgba.width, rgba.height, rgba.pixels) == (
+        "RGBA",
+        2,
+        1,
+        ((1, 2, 3, 4), (250, 249, 248, 247)),
+    )
+    assert (rgb.source_mode, rgb.width, rgb.height, rgb.pixels) == (
+        "RGB",
+        1,
+        1,
+        ((11, 12, 13, 255),),
+    )
+
+
 def test_discovery_reads_direct_child_packages_without_a_catalog_and_sorts_them(
     tmp_path: Path,
 ) -> None:

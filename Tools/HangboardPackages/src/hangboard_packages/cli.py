@@ -9,6 +9,10 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .cord_image_validation import (
+    load_cord_candidate_runs,
+    validate_cord_method_cohort,
+)
 from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
 from .presentation_remediation_audit import (
     PresentationValidationMode,
@@ -31,6 +35,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "audit-metadata",
                     "audit-presentations",
                     "audit-tensioned-cords",
+                    "gate-tensioned-cord-method",
                 }
                 or arguments.final_inventory
             ),
@@ -78,6 +83,26 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             print(json.dumps(report.to_json(), indent=2, sort_keys=True))
             return 0
+        if arguments.command == "gate-tensioned-cord-method":
+            ledger = load_tensioned_cord_ledger(arguments.ledger)
+            validate_tensioned_cord_ledger(
+                ledger,
+                inventory,
+                hangboards_root=arguments.root,
+            )
+            records = {
+                f"{record.package_id}::{record.presentation_id}": record
+                for record in ledger.records
+            }
+            report = validate_cord_method_cohort(
+                load_cord_candidate_runs(
+                    arguments.cohort,
+                    records_by_capture_id=records,
+                ),
+                required_capture_ids=arguments.required_capture_id,
+            )
+            print(json.dumps(report.to_json(), indent=2, sort_keys=True))
+            return 0 if report.passed else 1
         print(_status_payload(inventory))
         return 0
     except SystemExit as error:
@@ -113,6 +138,19 @@ def _parser() -> argparse.ArgumentParser:
     )
     audit_tensioned_cords.add_argument("--root", type=Path, required=True)
     audit_tensioned_cords.add_argument("--ledger", type=Path, required=True)
+    gate_tensioned_cords = subcommands.add_parser(
+        "gate-tensioned-cord-method",
+        help="validate one exact-canvas method/configuration across a closed cohort",
+    )
+    gate_tensioned_cords.add_argument("--root", type=Path, required=True)
+    gate_tensioned_cords.add_argument("--ledger", type=Path, required=True)
+    gate_tensioned_cords.add_argument("--cohort", type=Path, required=True)
+    gate_tensioned_cords.add_argument(
+        "--required-capture-id",
+        action="append",
+        required=True,
+        help="required packageID::presentationID identity (repeat for the cohort)",
+    )
     audit_presentations = subcommands.add_parser(
         "audit-presentations", help="validate a presentation remediation manifest"
     )

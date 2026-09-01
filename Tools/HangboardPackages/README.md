@@ -42,6 +42,12 @@ scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --phase2-preflight
 scripts/hangboard-packages.sh audit-tensioned-cords --root Hangboards \
   --ledger docs/source-audits/2026-09-01-tensioned-cord-presentations.json
+scripts/hangboard-packages.sh gate-tensioned-cord-method --root Hangboards \
+  --ledger docs/source-audits/2026-09-01-tensioned-cord-presentations.json \
+  --cohort .context/tensioned-cords-foundation-feasibility/cohort.json \
+  --required-capture-id aelith.cyclops-011::primary \
+  --required-capture-id captain-fingerfood.dual::primary \
+  --required-capture-id lattice.mxedge-lift-large::primary
 ```
 
 `validate` and `status` print the discovered complete packages and draft paths;
@@ -70,6 +76,35 @@ package/presentation identity, alias relationship, asset path and SHA-256,
 canvas-down gravity contract, and explicit accepted-or-blocked disposition.
 It is generic: source URLs, physical topology, routing, and all product facts
 live only in the ledger.
+
+`gate-tensioned-cord-method` first validates that same closed ledger, then
+requires an exact named cohort to use one method ID and one canonical JSON
+configuration fingerprint. Each cohort run names a baseline and candidate PNG
+stored beside the cohort JSON and embeds presentation-specific method evidence:
+the stable `packageID::presentationID` identity, orientation, canvas-down
+gravity, source-presentation identity, source-backed visible topology, exact
+changed-pixel accounting, preservation assertions, load direction, and one or
+more canvas-coordinate cord paths. Physics proof repeats the current capture
+identity, orientation, and gravity so an inverted or rotated alias cannot reuse
+its source presentation's mechanics. Every method declares either
+`negativeControl` or `promotion` intent, and its configuration is normalized as
+canonical JSON before cohort comparison. The generic validator contains no
+product IDs, masks, templates, registration, cropping, or per-board thresholds.
+
+The gate rejects canvas-size drift, alpha-mode or alpha-value changes,
+unaccounted or non-cord pixels, missing background/framing, board transform,
+board appearance, or overlay-alignment proof, unsupported topology, slack
+paths, non-canvas-down load, off-canvas or non-downward load paths,
+source-orientation reuse, and any source-blocked record. A negative control is
+rejected if even one pixel changes. The three feasibility identities above are
+supplied at the CLI boundary so validation remains data-driven. `passed`
+reports whether every declared proof was accepted; `promoted` is true only for
+a passing cohort whose common intent is `promotion`. A byte-preserving
+negative-control replay can therefore prove exact-canvas and fail-closed
+plumbing without promoting an editing method or altering a catalog asset. When
+current-presentation cord-path evidence is unresolved, leave `cordPaths` empty
+and retain the per-asset `cordTautness` blocker rather than inventing
+coordinates.
 
 `audit-presentations` requires a complete final inventory and cross-checks the
 closed remediation manifest against every declared presentation's package ID,

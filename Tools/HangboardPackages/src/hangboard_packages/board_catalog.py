@@ -470,6 +470,16 @@ class BoardInventory:
     drafts: tuple[Path, ...]
 
 
+@dataclass(frozen=True)
+class DecodedPNG:
+    """Exact RGBA samples decoded without an image-authoring dependency."""
+
+    source_mode: str
+    width: int
+    height: int
+    pixels: tuple[tuple[int, int, int, int], ...]
+
+
 def _load_geometry(value: Any, source: str) -> tuple[BoardGeometryPiece, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError(f"{source} must be a non-empty array")
@@ -778,6 +788,100 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
 
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def decode_png_rgba(path: Path, asset_path: str) -> DecodedPNG:
+    """Decode a non-interlaced 8-bit RGB/RGBA PNG using only the stdlib.
+
+    Exact-canvas validators need pixel samples but must remain usable by the
+    dependency-free Xcode staging interpreter. Unsupported formats fail closed
+    instead of introducing image-driven authoring libraries into production.
+    """
+    image_path = Path(path)
+    if image_path.is_symlink() or not image_path.is_file():
+        raise ValueError(f"{asset_path} must be a regular non-symlink file")
+    _validate_png_structure(image_path, asset_path)
+    try:
+        data = image_path.read_bytes()
+    except OSError as error:
+        raise ValueError(f"{asset_path} must be a readable file") from error
+
+    offset = 8
+    width = height = bit_depth = color_type = interlace_method = None
+    idat_parts: list[bytes] = []
+    while offset < len(data):
+        length, chunk_type = struct.unpack_from(">I4s", data, offset)
+        body_start = offset + 8
+        body_end = body_start + length
+        body = data[body_start:body_end]
+        if chunk_type == b"IHDR":
+            (
+                width,
+                height,
+                bit_depth,
+                color_type,
+                _compression_method,
+                _filter_method,
+                interlace_method,
+            ) = struct.unpack(">IIBBBBB", body)
+        elif chunk_type == b"IDAT":
+            idat_parts.append(body)
+        elif chunk_type == b"IEND":
+            break
+        offset = body_end + 4
+
+    channels_by_color_type = {2: 3, 6: 4}
+    channels = channels_by_color_type.get(color_type)
+    if channels is None or bit_depth != 8:
+        raise ValueError(
+            f"{asset_path} must use an 8-bit RGB or RGBA PNG color format"
+        )
+    if interlace_method != 0:
+        raise ValueError(f"{asset_path} must be non-interlaced for PNG decoding")
+    assert width is not None and height is not None
+    stride = width * channels
+    expected_size = height * (stride + 1)
+    decompressor = zlib.decompressobj()
+    try:
+        decoded = decompressor.decompress(b"".join(idat_parts)) + decompressor.flush()
+    except zlib.error as error:
+        raise ValueError(f"{asset_path} must contain decodable image data") from error
+    if (
+        not decompressor.eof
+        or decompressor.unused_data
+        or len(decoded) != expected_size
+    ):
+        raise ValueError(f"{asset_path} has malformed image data")
+
+    previous = bytes(stride)
+    pixels: list[tuple[int, int, int, int]] = []
+    for row_index in range(height):
+        offset = row_index * (stride + 1)
+        filter_type = decoded[offset]
+        row = _unfilter_png_row(
+            decoded[offset + 1 : offset + stride + 1],
+            previous,
+            filter_type,
+            channels,
+            asset_path,
+        )
+        previous = row
+        if channels == 4:
+            pixels.extend(
+                tuple(row[index : index + 4])
+                for index in range(0, len(row), 4)
+            )
+        else:
+            pixels.extend(
+                (*row[index : index + 3], 255)
+                for index in range(0, len(row), 3)
+            )
+    return DecodedPNG(
+        source_mode="RGBA" if channels == 4 else "RGB",
+        width=width,
+        height=height,
+        pixels=tuple(pixels),
+    )
 
 
 def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:

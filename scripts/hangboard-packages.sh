@@ -16,6 +16,7 @@ Commands:
   audit-metadata  Validate a source-audited metadata ledger
   audit-presentations  Validate a presentation remediation manifest
   audit-tensioned-cords  Validate the closed tensioned-cord ledger
+  gate-tensioned-cord-method  Gate one method/configuration across required assets
 EOF
 }
 
@@ -28,7 +29,7 @@ command_name="$1"
 shift
 
 case "$command_name" in
-    validate|status|audit-metadata|audit-presentations|audit-tensioned-cords)
+    validate|status|audit-metadata|audit-presentations|audit-tensioned-cords|gate-tensioned-cord-method)
         ;;
     -h|--help|help)
         usage
