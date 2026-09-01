@@ -792,7 +792,8 @@
       ],
       "presentationID": "large-medium-edge-position",
       "fingerCapacity": 1,
-      "sizeMillimeters": 25
+      "sizeMillimeters": 25,
+      "handCapacity": 1
     }
   ]
 }
