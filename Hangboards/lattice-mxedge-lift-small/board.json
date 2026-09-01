@@ -4,7 +4,7 @@
   "name": "MXEdge Lift Small",
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
-  "dimensions": "20 × 11 × 5 cm",
+  "dimensions": "20 \u00d7 11 \u00d7 5 cm",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -46,10 +46,10 @@
       "geometry": [
         {
           "frame": {
-          "x": 0.365,
-          "y": 0.385,
-          "width": 0.39,
-          "height": 0.11
+            "x": 0.365,
+            "y": 0.385,
+            "width": 0.39,
+            "height": 0.11
           },
           "shape": {
             "type": "path",
@@ -161,10 +161,10 @@
       "geometry": [
         {
           "frame": {
-          "x": 0.29,
-          "y": 0.585,
-          "width": 0.45,
-          "height": 0.06
+            "x": 0.29,
+            "y": 0.585,
+            "width": 0.45,
+            "height": 0.06
           },
           "shape": {
             "type": "path",
@@ -277,9 +277,9 @@
         {
           "frame": {
             "x": 0.29,
-            "y": 0.588,
+            "y": 0.553059258,
             "width": 0.397,
-            "height": 0.041
+            "height": 0.075940742
           },
           "shape": {
             "type": "path",
@@ -287,26 +287,26 @@
               {
                 "command": "move",
                 "to": [
-                  0.1,
+                  0.095643251889,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.9,
+                  0.904356748111,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.96,
+                  0.957179057935,
                   0.0
                 ],
                 "control2": [
                   1.0,
-                  0.22
+                  0.223857623092
                 ],
                 "to": [
                   1.0,
@@ -317,33 +317,33 @@
                 "command": "curve",
                 "control1": [
                   1.0,
-                  0.78
+                  0.776142376908
                 ],
                 "control2": [
-                  0.96,
+                  0.957179057935,
                   1.0
                 ],
                 "to": [
-                  0.9,
+                  0.904356748111,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.1,
+                  0.095643251889,
                   1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.04,
+                  0.042820942065,
                   1.0
                 ],
                 "control2": [
                   0.0,
-                  0.78
+                  0.776142376908
                 ],
                 "to": [
                   0.0,
@@ -354,14 +354,14 @@
                 "command": "curve",
                 "control1": [
                   0.0,
-                  0.22
+                  0.223857623092
                 ],
                 "control2": [
-                  0.04,
+                  0.042820942065,
                   0.0
                 ],
                 "to": [
-                  0.1,
+                  0.095643251889,
                   0.0
                 ]
               },
@@ -375,7 +375,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -391,10 +391,10 @@
       "geometry": [
         {
           "frame": {
-          "x": 0.55,
-          "y": 0.28,
-          "width": 0.10,
-          "height": 0.10
+            "x": 0.55,
+            "y": 0.28,
+            "width": 0.1,
+            "height": 0.1
           },
           "shape": {
             "type": "path",
