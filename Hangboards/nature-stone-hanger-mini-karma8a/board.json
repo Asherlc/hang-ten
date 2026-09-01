@@ -32,27 +32,120 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.242,
-            "y": 0.558,
+            "x": 0.237904437002,
+            "y": 0.458703075758,
             "width": 0.509,
-            "height": 0.083
+            "height": 0.137201366826
           },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.0, 0.08] },
-              { "command": "curve", "control1": [0.12, 0.03], "control2": [0.25, 0.05], "to": [0.38, 0.04] },
-              { "command": "curve", "control1": [0.44, 0.02], "control2": [0.48, 0.0], "to": [0.5, 0.0] },
-              { "command": "curve", "control1": [0.52, 0.0], "control2": [0.63, 0.03], "to": [0.75, 0.04] },
-              { "command": "curve", "control1": [0.87, 0.02], "control2": [0.95, 0.03], "to": [1.0, 0.08] },
-              { "command": "line", "to": [1.0, 1.0] },
-              { "command": "line", "to": [0.0, 1.0] },
-              { "command": "line", "to": [0.0, 0.08] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.053910164096,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.946089835904,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.975863597196,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.089543051292
+                ],
+                "to": [
+                  1.0,
+                  0.200000001162
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.799999998838
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.910456948708
+                ],
+                "control2": [
+                  0.975863597196,
+                  1.0
+                ],
+                "to": [
+                  0.946089835904,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.053910164096,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.024136402804,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.910456948708
+                ],
+                "to": [
+                  0.0,
+                  0.799999998838
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.200000001162
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.089543051292
+                ],
+                "control2": [
+                  0.024136402804,
+                  0.0
+                ],
+                "to": [
+                  0.053910164096,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           },
           "treatment": {
             "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -68,22 +161,82 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.242,
-            "y": 0.64,
+            "x": 0.246095562998,
+            "y": 0.6413651874,
             "width": 0.509,
             "height": 0.066
           },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.65] },
-              { "command": "curve", "control1": [1.0, 0.87], "control2": [0.98, 1.0], "to": [0.95, 1.0] },
-              { "command": "line", "to": [0.05, 1.0] },
-              { "command": "curve", "control1": [0.02, 1.0], "control2": [0.0, 0.87], "to": [0.0, 0.65] },
-              { "command": "line", "to": [0.0, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.65
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.87
+                ],
+                "control2": [
+                  0.98,
+                  1.0
+                ],
+                "to": [
+                  0.95,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.05,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.02,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.87
+                ],
+                "to": [
+                  0.0,
+                  0.65
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           },
           "treatment": {
@@ -111,20 +264,132 @@
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.05, 0.0] },
-              { "command": "line", "to": [0.95, 0.0] },
-              { "command": "curve", "control1": [0.98, 0.0], "control2": [1.0, 0.16], "to": [1.0, 0.3] },
-              { "command": "line", "to": [1.0, 1.0] },
-              { "command": "line", "to": [0.885, 1.0] },
-              { "command": "line", "to": [0.885, 0.78] },
-              { "command": "curve", "control1": [0.885, 0.58], "control2": [0.84, 0.42], "to": [0.79, 0.42] },
-              { "command": "line", "to": [0.21, 0.42] },
-              { "command": "curve", "control1": [0.16, 0.42], "control2": [0.115, 0.58], "to": [0.115, 0.78] },
-              { "command": "line", "to": [0.115, 1.0] },
-              { "command": "line", "to": [0.0, 1.0] },
-              { "command": "line", "to": [0.0, 0.3] },
-              { "command": "curve", "control1": [0.0, 0.14], "control2": [0.02, 0.0], "to": [0.05, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.05,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.95,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.16
+                ],
+                "to": [
+                  1.0,
+                  0.3
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.885,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.885,
+                  0.78
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.885,
+                  0.58
+                ],
+                "control2": [
+                  0.84,
+                  0.42
+                ],
+                "to": [
+                  0.79,
+                  0.42
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.21,
+                  0.42
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.16,
+                  0.42
+                ],
+                "control2": [
+                  0.115,
+                  0.58
+                ],
+                "to": [
+                  0.115,
+                  0.78
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.115,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.3
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.14
+                ],
+                "control2": [
+                  0.02,
+                  0.0
+                ],
+                "to": [
+                  0.05,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           },
           "treatment": {
@@ -141,12 +406,44 @@
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.0] },
-              { "command": "line", "to": [1.0, 1.0] },
-              { "command": "line", "to": [0.0, 1.0] },
-              { "command": "line", "to": [0.0, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           },
           "treatment": {
@@ -163,12 +460,44 @@
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.0] },
-              { "command": "line", "to": [1.0, 1.0] },
-              { "command": "line", "to": [0.0, 1.0] },
-              { "command": "line", "to": [0.0, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           },
           "treatment": {
@@ -185,14 +514,74 @@
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.32] },
-              { "command": "curve", "control1": [1.0, 0.75], "control2": [0.97, 1.0], "to": [0.93, 1.0] },
-              { "command": "line", "to": [0.07, 1.0] },
-              { "command": "curve", "control1": [0.03, 1.0], "control2": [0.0, 0.75], "to": [0.0, 0.32] },
-              { "command": "line", "to": [0.0, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.32
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.75
+                ],
+                "control2": [
+                  0.97,
+                  1.0
+                ],
+                "to": [
+                  0.93,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.07,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.03,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.75
+                ],
+                "to": [
+                  0.0,
+                  0.32
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           },
           "treatment": {
