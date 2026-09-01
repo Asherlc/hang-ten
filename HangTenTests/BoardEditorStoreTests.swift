@@ -20,73 +20,15 @@ final class BoardEditorStoreTests: XCTestCase {
     }
 
     private func pngBytes() throws -> Data {
-        let fixturesURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures/BoardPackageValidationFixtures.json")
-        let fixtures = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: Data(contentsOf: fixturesURL)) as? [String: Any]
-        )
-        let png = try XCTUnwrap(fixtures["png"] as? [String: Any])
-        let base64 = try XCTUnwrap(png["validTwoByOneBase64"] as? String)
-        return try XCTUnwrap(Data(base64Encoded: base64))
+        try BoardEditorTestFixtures.pngBytes()
     }
 
     private func sampleDocument() -> BoardEditableDocument {
-        let piece = BoardEditablePiece(
-            frame: BoardPackageFrameDocument(x: 0.1, y: 0.2, width: 0.3, height: 0.4),
-            shape: BoardGeometryShapeDocument(
-                type: "path",
-                commands: [
-                    BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "line", to: [1, 0], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "line", to: [1, 1], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "line", to: [0, 1], control: nil, control1: nil, control2: nil),
-                    BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
-                ],
-                cornerRadiusFraction: nil
-            ),
-            shapeConstraint: nil,
-            treatment: nil
-        )
-        let hold = BoardEditableHold(
-            id: "hold-one",
-            name: "Hold one",
-            kind: .jug,
-            presentationID: "front",
-            geometry: [piece]
-        )
-        return BoardEditableDocument(
-            id: "fixture.board",
-            manufacturer: "Fixture",
-            name: "Fixture board",
-            subtitle: "Editing fixture",
-            productURL: URL(string: "https://example.com/fixture")!,
-            dimensions: "50 \u{00d7} 25 cm",
-            aspectRatio: 2.0,
-            holds: [hold],
-            presentations: [
-                BoardEditablePresentation(
-                    id: "front",
-                    name: "Front",
-                    assetPath: "assets/primary.png",
-                    aspectRatio: 2.0,
-                    isDefault: true
-                )
-            ]
-        )
+        BoardEditorTestFixtures.sampleDocument()
     }
 
     private func makeSourceLibrary(slug: String = "fixture-board") throws -> URL {
-        let libraryURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("BoardEditorStoreSource-\(UUID().uuidString)", isDirectory: true)
-        let packageURL = libraryURL.appendingPathComponent(slug, isDirectory: true)
-        try FileManager.default.createDirectory(
-            at: packageURL.appendingPathComponent("assets", isDirectory: true),
-            withIntermediateDirectories: true
-        )
-        try BoardPackageWriter.data(for: sampleDocument())
-            .write(to: packageURL.appendingPathComponent("board.json"))
-        try pngBytes().write(to: packageURL.appendingPathComponent("assets/primary.png"))
+        let libraryURL = try BoardEditorTestFixtures.makeSourceLibrary(slug: slug)
         addTeardownBlock { try? FileManager.default.removeItem(at: libraryURL) }
         return libraryURL
     }
@@ -158,6 +100,130 @@ final class BoardEditorStoreTests: XCTestCase {
         XCTAssertEqual(loaded.pixelWidth, 2)
         XCTAssertEqual(loaded.pixelHeight, 1)
         XCTAssertEqual(loaded.imageURL.lastPathComponent, "primary.png")
+    }
+
+    func testPrepareEditablePackageLoadsAnExistingPackageOnce() throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let setupStore = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try setupStore.startEditing(slug: "fixture-board")
+        let documentLoads = DocumentLoadCounter()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL,
+            documentWillLoad: {
+                documentLoads.increment()
+            }
+        )
+
+        let package = try store.prepareEditablePackage(slug: "fixture-board")
+
+        XCTAssertEqual(package.slug, "fixture-board")
+        XCTAssertEqual(documentLoads.value, 1)
+    }
+
+    func testPrepareEditablePackageKeepsResetQueuedUntilDocumentLoads() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let preparationHasStarted = expectation(description: "preparation starts loading")
+        let allowDocumentLoad = DispatchSemaphore(value: 0)
+        let resetAttempt = ResetAttempt()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL,
+            preparationWillLoadDocument: {
+                preparationHasStarted.fulfill()
+                allowDocumentLoad.wait()
+            }
+        )
+
+        let preparation = Task.detached { () throws -> BoardEditedPackage in
+            try store.prepareEditablePackage(slug: "fixture-board")
+        }
+        await fulfillment(of: [preparationHasStarted], timeout: 10)
+
+        let reset = Task.detached { () throws -> Void in
+            await resetAttempt.begin()
+            try store.reset(slug: "fixture-board")
+        }
+        await resetAttempt.waitUntilStarted()
+        try await Task.sleep(for: .milliseconds(20))
+
+        XCTAssertTrue(store.hasEdits(slug: "fixture-board"))
+        allowDocumentLoad.signal()
+
+        let package = try await preparation.value
+        try await reset.value
+        XCTAssertEqual(package.slug, "fixture-board")
+        XCTAssertEqual(package.pixelWidth, 2)
+        XCTAssertEqual(package.pixelHeight, 1)
+        XCTAssertFalse(store.hasEdits(slug: "fixture-board"))
+    }
+
+    func testPreparationForAnotherStoreIsNotBlockedByAnUnrelatedStore() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let preparationHasStarted = expectation(description: "first preparation starts loading")
+        let allowPreparation = DispatchSemaphore(value: 0)
+        let firstStore = BoardEditorStore(
+            baseDirectory: storeDirectory.appendingPathComponent("first", isDirectory: true),
+            sourceLibraryURL: sourceLibraryURL,
+            preparationWillLoadDocument: {
+                preparationHasStarted.fulfill()
+                allowPreparation.wait()
+            }
+        )
+        let secondStore = BoardEditorStore(
+            baseDirectory: storeDirectory.appendingPathComponent("second", isDirectory: true),
+            sourceLibraryURL: sourceLibraryURL
+        )
+
+        let firstPreparation = Task.detached { () throws -> BoardEditedPackage in
+            try firstStore.prepareEditablePackage(slug: "fixture-board")
+        }
+        await fulfillment(of: [preparationHasStarted], timeout: 10)
+
+        let secondPreparationFinished = expectation(description: "second preparation finishes")
+        let secondPreparation = Task.detached { () throws -> BoardEditedPackage in
+            defer { secondPreparationFinished.fulfill() }
+            return try secondStore.prepareEditablePackage(slug: "fixture-board")
+        }
+        await fulfillment(of: [secondPreparationFinished], timeout: 10)
+
+        allowPreparation.signal()
+        _ = try await firstPreparation.value
+        let secondPackage = try await secondPreparation.value
+
+        XCTAssertEqual(secondPackage.slug, "fixture-board")
+    }
+
+    func testStartEditingPreservesEditedDocumentWhenDeclaredPresentationAssetIsMissing() throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try store.startEditing(slug: "fixture-board")
+        let packageURL = try store.exportedFileURL(slug: "fixture-board")
+        var editedDocument = try store.loadDocument(slug: "fixture-board").document
+        editedDocument.name = "Edited fixture board"
+        try store.save(document: editedDocument, slug: "fixture-board")
+        let editedBoardData = try Data(contentsOf: packageURL.appendingPathComponent("board.json"))
+        try FileManager.default.removeItem(at: packageURL.appendingPathComponent("assets"))
+
+        XCTAssertThrowsError(try store.startEditing(slug: "fixture-board")) { error in
+            XCTAssertEqual(error as? BoardEditorStoreError, .unreadablePresentationImage(slug: "fixture-board"))
+        }
+        XCTAssertEqual(
+            try Data(contentsOf: packageURL.appendingPathComponent("board.json")),
+            editedBoardData
+        )
+    }
+
+    func testStartEditingRejectsEmptyAssetsDirectoryForDeclaredPresentation() throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try store.startEditing(slug: "fixture-board")
+        let packageURL = try store.exportedFileURL(slug: "fixture-board")
+        try FileManager.default.removeItem(at: packageURL.appendingPathComponent("assets/primary.png"))
+
+        XCTAssertThrowsError(try store.startEditing(slug: "fixture-board")) { error in
+            XCTAssertEqual(error as? BoardEditorStoreError, .unreadablePresentationImage(slug: "fixture-board"))
+        }
     }
 
     @MainActor
@@ -261,5 +327,38 @@ final class BoardEditorStoreTests: XCTestCase {
             XCTAssertEqual(error as? BoardEditorStoreError, .missingSourcePackage(slug: "missing-board"))
         }
         XCTAssertFalse(store.hasEdits(slug: "UPPER-CASE"))
+    }
+}
+
+private final class DocumentLoadCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    func increment() {
+        lock.lock()
+        defer { lock.unlock() }
+        count += 1
+    }
+
+    var value: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
+    }
+}
+
+private actor ResetAttempt {
+    private var started = false
+    private var continuation: CheckedContinuation<Void, Never>?
+
+    func begin() {
+        started = true
+        continuation?.resume()
+        continuation = nil
+    }
+
+    func waitUntilStarted() async {
+        guard !started else { return }
+        await withCheckedContinuation { continuation = $0 }
     }
 }

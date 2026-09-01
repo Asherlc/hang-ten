@@ -1,8 +1,42 @@
 import SwiftUI
 
+@MainActor
+final class BoardEditorResetCoordinator: ObservableObject {
+    @Published private(set) var resettingSlugs: Set<String> = []
+
+    func isResetting(_ slug: String) -> Bool {
+        resettingSlugs.contains(slug)
+    }
+
+    func allowsPackageActions(for slug: String) -> Bool {
+        !isResetting(slug)
+    }
+
+    @discardableResult
+    func beginReset(
+        slug: String,
+        store: BoardEditorStore,
+        refreshEdited: @MainActor @escaping () -> Void
+    ) -> Bool {
+        guard resettingSlugs.insert(slug).inserted else { return false }
+
+        Task { @MainActor [weak self, store, slug] in
+            let resetTask = Task.detached(priority: .userInitiated) {
+                try store.reset(slug: slug)
+            }
+            _ = try? await resetTask.value
+            guard let self else { return }
+            refreshEdited()
+            self.resettingSlugs.remove(slug)
+        }
+        return true
+    }
+}
+
 struct BoardEditorListView: View {
     @ObservedObject private var syncSession = GitHubSyncSession.shared
     @State private var editorStore = BoardEditorStore()
+    @StateObject private var resetCoordinator = BoardEditorResetCoordinator()
     @State private var editedSlugs: Set<String> = []
     @State private var openSlug: SlugRoute?
     @State private var resetTarget: TrainingBoard?
@@ -15,7 +49,7 @@ struct BoardEditorListView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 14) {
+            LazyVStack(alignment: .leading, spacing: 14) {
                 githubCard
                 ForEach(boards, id: \.id) { board in
                     row(board)
@@ -42,7 +76,7 @@ struct BoardEditorListView: View {
             #endif
         }
         .navigationDestination(item: $openSlug) { route in
-            BoardEditorScreen(slug: route.slug, store: editorStore)
+            BoardEditorLoadingView(slug: route.slug, store: editorStore)
         }
         .confirmationDialog(
             "Reset local edits for \(resetTarget?.name ?? "this board")?",
@@ -54,8 +88,9 @@ struct BoardEditorListView: View {
         ) {
             Button("Discard local edits", role: .destructive) {
                 if let target = resetTarget {
-                    try? editorStore.reset(slug: target.id)
-                    refreshEdited()
+                    resetCoordinator.beginReset(slug: target.id, store: editorStore) {
+                        refreshEdited()
+                    }
                 }
                 resetTarget = nil
             }
@@ -78,11 +113,15 @@ struct BoardEditorListView: View {
     }
 
     private func row(_ board: TrainingBoard) -> some View {
-        Button {
+        let allowsPackageActions = resetCoordinator.allowsPackageActions(for: board.id)
+        return Button {
+            guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
             openSlug = SlugRoute(slug: board.id)
         } label: {
             HStack(spacing: 14) {
-                thumbnail(for: board)
+                BoardEditorThumbnailView(
+                    imageURL: BoardCatalog.packageStore.presentationImageURL(for: board)
+                )
                 VStack(alignment: .leading, spacing: 4) {
                     Text(board.name)
                         .font(.system(size: 15, weight: .bold, design: .rounded))
@@ -108,40 +147,30 @@ struct BoardEditorListView: View {
             }
         }
         .buttonStyle(.plain)
+        .disabled(!allowsPackageActions)
         .contextMenu {
             Button {
+                guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
                 pushTarget = board
             } label: {
                 Label("Push to GitHub…", systemImage: "arrow.up.circle")
             }
+            .disabled(!allowsPackageActions)
             Button {
                 pullFromGitHub(board)
             } label: {
                 Label("Pull latest from GitHub", systemImage: "arrow.down.circle")
             }
+            .disabled(!allowsPackageActions)
             if editedSlugs.contains(board.id) {
                 Button(role: .destructive) {
+                    guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
                     resetTarget = board
                 } label: {
                     Label("Discard local edits", systemImage: "trash")
                 }
+                .disabled(!allowsPackageActions)
             }
-        }
-    }
-
-    @ViewBuilder
-    private func thumbnail(for board: TrainingBoard) -> some View {
-        if let url = BoardCatalog.packageStore.presentationImageURL(for: board),
-           let image = UIImage(contentsOfFile: url.path) {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 74, height: 52)
-        } else {
-            Rectangle()
-                .fill(Color.hangWoodLight.opacity(0.5))
-                .frame(width: 74, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
     }
 
@@ -184,6 +213,7 @@ struct BoardEditorListView: View {
     }
 
     private func pullFromGitHub(_ board: TrainingBoard) {
+        guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
         guard let token = syncSession.token else {
             showsGitHubSheet = true
             return
@@ -203,6 +233,43 @@ struct BoardEditorListView: View {
             } catch {
                 syncSession.lastError = error.localizedDescription
             }
+        }
+    }
+}
+
+private struct BoardEditorThumbnailView: View {
+    private static let displaySize = CGSize(width: 74, height: 52)
+
+    let imageURL: URL?
+    @State private var image: UIImage?
+    private let imagePreparer = BoardEditorUIKitImagePreparer()
+
+    var body: some View {
+        Group {
+            if let image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 74, height: 52)
+            } else {
+                Rectangle()
+                    .fill(Color.hangWoodLight.opacity(0.5))
+                    .frame(width: 74, height: 52)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            }
+        }
+        .task(id: imageURL) {
+            image = nil
+            guard let imageURL else { return }
+            let worker = Task.detached(priority: .userInitiated) { [imagePreparer] in
+                await imagePreparer.prepareThumbnailImage(at: imageURL, size: Self.displaySize)
+            }
+            let preparedImage = await withTaskCancellationHandler(
+                operation: { await worker.value },
+                onCancel: { worker.cancel() }
+            )
+            guard !Task.isCancelled else { return }
+            image = preparedImage
         }
     }
 }

@@ -39,30 +39,69 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
     }
 }
 
-struct BoardEditorStore {
+struct BoardEditorStore: Sendable {
     static let defaultDirectoryName = "BoardEditorPackages"
 
     private let baseDirectory: URL
     private let sourceLibraryURL: URL?
+    private let preparationWillLoadDocument: @Sendable () -> Void
+    private let documentWillLoad: @Sendable () -> Void
+    private let synchronization = BoardEditorStoreSynchronization()
 
     init(
         baseDirectory: URL? = nil,
         sourceLibraryURL: URL? = nil,
-        bundle: Bundle = .main
+        bundle: Bundle = .main,
+        preparationWillLoadDocument: @escaping @Sendable () -> Void = {},
+        documentWillLoad: @escaping @Sendable () -> Void = {}
     ) {
         self.baseDirectory = baseDirectory
             ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent(Self.defaultDirectoryName, isDirectory: true)
         self.sourceLibraryURL = sourceLibraryURL
             ?? bundle.resourceURL?.appendingPathComponent("Hangboards", isDirectory: true)
+        self.preparationWillLoadDocument = preparationWillLoadDocument
+        self.documentWillLoad = documentWillLoad
     }
 
     /// Copies the bundled package verbatim into the editable store when absent.
     @discardableResult
     func startEditing(slug: String) throws -> URL {
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
+
+        return try startEditingLocked(slug: slug).packageURL
+    }
+
+    /// Copies or reuses an editable package and loads its document while reset
+    /// operations remain excluded by the package lock.
+    func prepareEditablePackage(slug: String) throws -> BoardEditedPackage {
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
+
+        let editablePackage = try startEditingLocked(
+            slug: slug,
+            beforeExistingDocumentLoad: preparationWillLoadDocument
+        )
+        if let loadedPackage = editablePackage.loadedPackage {
+            return loadedPackage
+        }
+        preparationWillLoadDocument()
+        return try loadDocumentLocked(slug: slug)
+    }
+
+    private func startEditingLocked(
+        slug: String,
+        beforeExistingDocumentLoad: (@Sendable () -> Void)? = nil
+    ) throws -> (packageURL: URL, loadedPackage: BoardEditedPackage?) {
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
-        if FileManager.default.fileExists(atPath: packageURL.appendingPathComponent("board.json").path) {
-            return packageURL
+        let boardURL = packageURL.appendingPathComponent("board.json")
+        if FileManager.default.fileExists(atPath: boardURL.path) {
+            beforeExistingDocumentLoad?()
+            return (packageURL, try loadDocumentLocked(slug: slug))
+        }
+        if FileManager.default.fileExists(atPath: packageURL.path) {
+            try FileManager.default.removeItem(at: packageURL)
         }
         guard let sourceLibraryURL,
               FileManager.default.fileExists(
@@ -77,13 +116,26 @@ struct BoardEditorStore {
               FileManager.default.fileExists(atPath: sourceAssetsURL.path) else {
             throw BoardEditorStoreError.missingSourcePackage(slug: slug)
         }
-        try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
-        try FileManager.default.copyItem(at: sourceBoardURL, to: packageURL.appendingPathComponent("board.json"))
-        try FileManager.default.copyItem(at: sourceAssetsURL, to: packageURL.appendingPathComponent("assets"))
-        return packageURL
+
+        let stagingURL = baseDirectory.appendingPathComponent(
+            ".\(slug)-staging-\(UUID().uuidString)",
+            isDirectory: true
+        )
+        defer { try? FileManager.default.removeItem(at: stagingURL) }
+        try FileManager.default.copyItem(at: sourcePackageURL, to: stagingURL)
+        try FileManager.default.moveItem(at: stagingURL, to: packageURL)
+        return (packageURL, nil)
     }
 
     func loadDocument(slug: String) throws -> BoardEditedPackage {
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
+
+        return try loadDocumentLocked(slug: slug)
+    }
+
+    private func loadDocumentLocked(slug: String) throws -> BoardEditedPackage {
+        documentWillLoad()
         let packageURL = try validatedPackageURL(slug, requireExisting: true)
         let boardURL = packageURL.appendingPathComponent("board.json")
         guard FileManager.default.fileExists(atPath: boardURL.path) else {
@@ -171,6 +223,9 @@ struct BoardEditorStore {
     }
 
     func reset(slug: String) throws {
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
+
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
         guard FileManager.default.fileExists(atPath: packageURL.path) else { return }
         try FileManager.default.removeItem(at: packageURL)
@@ -288,4 +343,8 @@ struct BoardEditorStore {
         }
         return (width.intValue, height.intValue)
     }
+}
+
+private final class BoardEditorStoreSynchronization: @unchecked Sendable {
+    let editingLock = NSLock()
 }

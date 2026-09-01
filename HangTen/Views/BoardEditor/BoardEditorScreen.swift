@@ -37,45 +37,12 @@ struct BoardEditorScreen: View {
     @State private var canvasReference = HoldEditorCanvasReference()
     @State private var canvasBackground = EditorCanvasBackground.hangBackground
     private let store: BoardEditorStore
-    private let imageURL: URL?
-    private let loadFailed: Bool
+    private let image: UIImage
 
-    init(slug: String, store: BoardEditorStore) {
+    init(package: BoardEditedPackage, image: UIImage, store: BoardEditorStore) {
         self.store = store
-        _ = try? store.startEditing(slug: slug)
-        if let package = try? store.loadDocument(slug: slug) {
-            self.imageURL = package.imageURL
-            self.loadFailed = false
-            _session = StateObject(wrappedValue: BoardEditorSession(package: package, store: store))
-        } else {
-            self.imageURL = nil
-            self.loadFailed = true
-            _session = StateObject(wrappedValue: BoardEditorSession(
-                package: Self.placeholderPackage(slug: slug),
-                store: store
-            ))
-        }
-    }
-
-    static func placeholderPackage(slug: String) -> BoardEditedPackage {
-        BoardEditedPackage(
-            slug: slug,
-            packageURL: URL(fileURLWithPath: "/dev/null"),
-            document: BoardEditableDocument(
-                id: slug,
-                manufacturer: "",
-                name: slug,
-                subtitle: "",
-                productURL: URL(string: "https://example.invalid")!,
-                dimensions: nil,
-                aspectRatio: 2,
-                holds: [],
-                presentations: []
-            ),
-            imageURL: URL(fileURLWithPath: "/dev/null"),
-            pixelWidth: 1,
-            pixelHeight: 1
-        )
+        self.image = image
+        _session = StateObject(wrappedValue: BoardEditorSession(package: package, store: store))
     }
 
     private var exportedURL: URL? {
@@ -85,15 +52,7 @@ struct BoardEditorScreen: View {
     }
 
     var body: some View {
-        Group {
-            if loadFailed {
-                Text("This board package could not be opened for editing.")
-                    .foregroundStyle(Color.hangMuted)
-                    .padding()
-            } else {
-                editorCanvas
-            }
-        }
+        editorCanvas
         .background(Color.hangBackground)
         .navigationTitle(session.document.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -101,7 +60,7 @@ struct BoardEditorScreen: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    if session.isSaved || loadFailed {
+                    if session.isSaved {
                         dismiss()
                     } else {
                         showsUnsavedConfirmation = true
@@ -130,9 +89,7 @@ struct BoardEditorScreen: View {
             Button("Keep editing", role: .cancel) {}
         }
         .safeAreaInset(edge: .bottom) {
-            if !loadFailed {
-                editorToolbar
-            }
+            editorToolbar
         }
         .sheet(isPresented: $showsInspector) {
             NavigationStack {
@@ -147,7 +104,7 @@ struct BoardEditorScreen: View {
         ZStack {
             HoldEditorCanvasView(
                 session: session,
-                image: imageURL.flatMap { UIImage(contentsOfFile: $0.path) },
+                image: image,
                 editorBackgroundColor: UIColor(canvasBackground.color),
                 reference: canvasReference
             )
