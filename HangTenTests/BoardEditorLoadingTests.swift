@@ -147,6 +147,80 @@ final class BoardEditorLoadingTests: XCTestCase {
     }
 
     @MainActor
+    func testResetDefersLaterLoaderImagePreparationUntilRefreshCompletes() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let preparationStarted = DispatchSemaphore(value: 0)
+        let allowPreparation = DispatchSemaphore(value: 0)
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL,
+            preparationWillLoadDocument: {
+                preparationStarted.signal()
+                allowPreparation.wait()
+            }
+        )
+        let preparation = Task.detached { () throws -> BoardEditedPackage in
+            try store.prepareEditablePackage(slug: "fixture-board")
+        }
+        XCTAssertEqual(preparationStarted.wait(timeout: .now() + 1), .success)
+
+        let coordinator = BoardEditorResetCoordinator()
+        var refreshedWhileBusy = false
+        XCTAssertTrue(coordinator.beginReset(slug: "fixture-board", store: store) {
+            refreshedWhileBusy = coordinator.isResetting("fixture-board")
+            XCTAssertFalse(coordinator.allowsPackageActions(for: "fixture-board"))
+        })
+
+        let scheduler = ControlledBoardEditorLoadingScheduler()
+        let laterLoader = BoardEditorLoader(
+            slug: "fixture-board",
+            store: store,
+            scheduler: scheduler
+        )
+        if coordinator.allowsPackageActions(for: "fixture-board") {
+            laterLoader.start()
+        }
+        XCTAssertFalse(scheduler.hasPendingWork)
+
+        allowPreparation.signal()
+        _ = try await preparation.value
+        try await waitUntilResetCompletes(coordinator, slug: "fixture-board")
+
+        XCTAssertTrue(refreshedWhileBusy)
+        XCTAssertFalse(store.hasEdits(slug: "fixture-board"))
+        XCTAssertTrue(coordinator.allowsPackageActions(for: "fixture-board"))
+
+        allowPreparation.signal()
+        laterLoader.start()
+        XCTAssertTrue(scheduler.hasPendingWork)
+        await scheduler.runPendingWork()
+        try await waitForTerminalState(of: laterLoader)
+
+        guard case let .loaded(package, image) = laterLoader.state else {
+            return XCTFail("Expected loader to prepare the image after reset, got \(laterLoader.state)")
+        }
+        XCTAssertEqual(package.slug, "fixture-board")
+        XCTAssertEqual(image.size, CGSize(width: 2, height: 1))
+    }
+
+    @MainActor
+    func testResetClearsBusyStateAfterFailure() async throws {
+        let coordinator = BoardEditorResetCoordinator()
+        let store = BoardEditorStore(baseDirectory: storeDirectory)
+        var refreshedWhileBusy = false
+
+        XCTAssertTrue(coordinator.beginReset(slug: "INVALID", store: store) {
+            refreshedWhileBusy = coordinator.isResetting("INVALID")
+        })
+        XCTAssertTrue(coordinator.isResetting("INVALID"))
+
+        try await waitUntilResetCompletes(coordinator, slug: "INVALID")
+
+        XCTAssertTrue(refreshedWhileBusy)
+        XCTAssertTrue(coordinator.allowsPackageActions(for: "INVALID"))
+    }
+
+    @MainActor
     private func assertLoading(_ state: BoardEditorLoadingState) {
         guard case .loading = state else {
             XCTFail("Expected loader to begin in loading state, got \(state)")
@@ -160,6 +234,20 @@ final class BoardEditorLoadingTests: XCTestCase {
         while case .loading = loader.state {
             guard Date() < deadline else {
                 return XCTFail("Timed out waiting for board loading to finish")
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+    }
+
+    @MainActor
+    private func waitUntilResetCompletes(
+        _ coordinator: BoardEditorResetCoordinator,
+        slug: String
+    ) async throws {
+        let deadline = Date().addingTimeInterval(3)
+        while coordinator.isResetting(slug) {
+            guard Date() < deadline else {
+                return XCTFail("Timed out waiting for board reset to finish")
             }
             try await Task.sleep(nanoseconds: 10_000_000)
         }

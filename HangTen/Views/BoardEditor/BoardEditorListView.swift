@@ -1,8 +1,42 @@
 import SwiftUI
 
+@MainActor
+final class BoardEditorResetCoordinator: ObservableObject {
+    @Published private(set) var resettingSlugs: Set<String> = []
+
+    func isResetting(_ slug: String) -> Bool {
+        resettingSlugs.contains(slug)
+    }
+
+    func allowsPackageActions(for slug: String) -> Bool {
+        !isResetting(slug)
+    }
+
+    @discardableResult
+    func beginReset(
+        slug: String,
+        store: BoardEditorStore,
+        refreshEdited: @MainActor @escaping () -> Void
+    ) -> Bool {
+        guard resettingSlugs.insert(slug).inserted else { return false }
+
+        Task { @MainActor [weak self, store, slug] in
+            let resetTask = Task.detached(priority: .userInitiated) {
+                try store.reset(slug: slug)
+            }
+            _ = try? await resetTask.value
+            guard let self else { return }
+            refreshEdited()
+            self.resettingSlugs.remove(slug)
+        }
+        return true
+    }
+}
+
 struct BoardEditorListView: View {
     @ObservedObject private var syncSession = GitHubSyncSession.shared
     @State private var editorStore = BoardEditorStore()
+    @StateObject private var resetCoordinator = BoardEditorResetCoordinator()
     @State private var editedSlugs: Set<String> = []
     @State private var openSlug: SlugRoute?
     @State private var resetTarget: TrainingBoard?
@@ -54,13 +88,8 @@ struct BoardEditorListView: View {
         ) {
             Button("Discard local edits", role: .destructive) {
                 if let target = resetTarget {
-                    let store = editorStore
-                    let slug = target.id
-                    Task.detached(priority: .userInitiated) {
-                        try? store.reset(slug: slug)
-                        await MainActor.run {
-                            refreshEdited()
-                        }
+                    resetCoordinator.beginReset(slug: target.id, store: editorStore) {
+                        refreshEdited()
                     }
                 }
                 resetTarget = nil
@@ -84,7 +113,9 @@ struct BoardEditorListView: View {
     }
 
     private func row(_ board: TrainingBoard) -> some View {
-        Button {
+        let allowsPackageActions = resetCoordinator.allowsPackageActions(for: board.id)
+        return Button {
+            guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
             openSlug = SlugRoute(slug: board.id)
         } label: {
             HStack(spacing: 14) {
@@ -116,23 +147,29 @@ struct BoardEditorListView: View {
             }
         }
         .buttonStyle(.plain)
+        .disabled(!allowsPackageActions)
         .contextMenu {
             Button {
+                guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
                 pushTarget = board
             } label: {
                 Label("Push to GitHub…", systemImage: "arrow.up.circle")
             }
+            .disabled(!allowsPackageActions)
             Button {
                 pullFromGitHub(board)
             } label: {
                 Label("Pull latest from GitHub", systemImage: "arrow.down.circle")
             }
+            .disabled(!allowsPackageActions)
             if editedSlugs.contains(board.id) {
                 Button(role: .destructive) {
+                    guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
                     resetTarget = board
                 } label: {
                     Label("Discard local edits", systemImage: "trash")
                 }
+                .disabled(!allowsPackageActions)
             }
         }
     }
@@ -176,6 +213,7 @@ struct BoardEditorListView: View {
     }
 
     private func pullFromGitHub(_ board: TrainingBoard) {
+        guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
         guard let token = syncSession.token else {
             showsGitHubSheet = true
             return
