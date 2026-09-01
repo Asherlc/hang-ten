@@ -218,7 +218,8 @@
           }
         }
       ],
-      "sizeMillimeters": 15
+      "sizeMillimeters": 15,
+      "fingerCapacity": 4
     },
     {
       "id": "pinch-60",
