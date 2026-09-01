@@ -62,6 +62,34 @@ def _write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
 
+def test_catalog_validator_rejects_hold_with_unknown_equipment_object_id() -> None:
+    document = board_document("fixture.board")
+    document["equipmentObjects"] = [{"id": "primary"}]
+    document["holds"][0]["equipmentObjectID"] = "missing"
+
+    with pytest.raises(BoardPackageError, match="unknown equipment object"):
+        board_package.validate_catalog_board(document)
+
+
+def test_catalog_validator_accepts_missing_hand_capacity_policy() -> None:
+    document = board_document("fixture.board")
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
+    ]
+
+    board_package.validate_catalog_board(document)
+
+
+def test_catalog_validator_rejects_unknown_missing_hand_capacity_policy() -> None:
+    document = board_document("fixture.board")
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "invented"}
+    ]
+
+    with pytest.raises(BoardPackageError, match="missingHandCapacityPolicy"):
+        board_package.validate_catalog_board(document)
+
+
 def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
     return (
         struct.pack(">I", len(payload))
@@ -584,23 +612,59 @@ def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
     assert board_package._png_dimensions_from_bytes(image) == (1774, 457)
 
 
-def test_completed_packages_match_their_primary_image_aspect_ratio() -> None:
-    """Every published board declares the aspect ratio of its manufacturer image."""
+def _presentation_aspect_ratio_mismatches(library: Path) -> list[str]:
     mismatches: list[str] = []
-    for package in sorted((REPOSITORY_ROOT / "Hangboards").iterdir()):
+    for package in sorted(library.iterdir()):
         board_path = package / "board.json"
         if not board_path.is_file():
             continue
         board = json.loads(board_path.read_text(encoding="utf-8"))
-        width, height = board_package._png_dimensions(package / "assets" / "primary.png")
+        for presentation in board["presentations"]:
+            width, height = board_package._png_dimensions(
+                package / presentation["assetPath"]
+            )
+            image_aspect_ratio = width / height
+            declared_aspect_ratio = presentation["aspectRatio"]
+            if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
+                mismatches.append(
+                    f"{package.name}/{presentation['id']}: declared "
+                    f"{declared_aspect_ratio}, image {width}/{height}"
+                )
+        default_presentation = next(
+            presentation
+            for presentation in board["presentations"]
+            if presentation["default"]
+        )
+        width, height = board_package._png_dimensions(
+            package / default_presentation["assetPath"]
+        )
         image_aspect_ratio = width / height
         declared_aspect_ratio = board["aspectRatio"]
         if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
             mismatches.append(
-                f"{package.name}: declared {declared_aspect_ratio}, image {width}/{height}"
+                f"{package.name}: board declared {declared_aspect_ratio}, default "
+                f"{default_presentation['id']} image {width}/{height}"
             )
+    return mismatches
+
+
+def test_completed_packages_match_their_presentation_image_aspect_ratios() -> None:
+    """Every published presentation declares the aspect ratio of its asset."""
+    mismatches = _presentation_aspect_ratio_mismatches(REPOSITORY_ROOT / "Hangboards")
 
     assert not mismatches, "\n".join(mismatches)
+
+
+def test_completed_package_board_aspect_ratio_matches_its_default_presentation_image(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package, lambda board: board.update(aspectRatio=2))
+
+    mismatches = _presentation_aspect_ratio_mismatches(library)
+
+    assert mismatches == ["fixture-board: board declared 2, default primary image 1774/457"]
 
 
 def test_loads_completed_flash_board_without_unpublished_dimensions() -> None:
@@ -635,6 +699,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 dict[str, int | float] | None,
                 int | None,
                 str | None,
+                str,
             ]
         ],
     ] = {}
@@ -652,6 +717,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         depth_range,
         hand_capacity,
         paired_hold_id,
+        equipment_object_id,
     ) in parsed.values():
         pieces_by_hold.setdefault(hold_id, []).append(
             (
@@ -667,6 +733,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 depth_range,
                 hand_capacity,
                 paired_hold_id,
+                equipment_object_id,
             )
         )
     for pieces in pieces_by_hold.values():
@@ -686,6 +753,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
             first_piece[9],
             first_piece[10],
             first_piece[11],
+            first_piece[12],
         )
     original = copy.deepcopy(package.board)
 
@@ -1401,6 +1469,10 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
     document = board_package.editor_document(package)
 
     assert document["canvas"] == {"width": 1774, "height": 457}
+    assert document["equipmentObjects"] == ["primary"]
+    assert {region["equipmentObjectID"] for region in document["regions"]} == {
+        "primary"
+    }
     assert [region["key"] for region in document["regions"]] == [
         "hold-left-piece-0",
         "hold-left-piece-1",
@@ -1409,6 +1481,47 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         {"holdID": "hold-left", "pieceIndex": 0, "presentationID": "primary"},
         {"holdID": "hold-left", "pieceIndex": 1, "presentationID": "primary"},
     ]
+
+
+def test_editor_can_reassign_new_or_existing_holds_between_equipment_objects(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+
+    def make_multi_object(board: dict[str, object]) -> None:
+        board["equipmentObjects"] = [{"id": "left"}, {"id": "right"}]
+        source = board["holds"][0]
+        source["id"] = "left-a"
+        source["name"] = "Left A"
+        source["equipmentObjectID"] = "left"
+        left_b = copy.deepcopy(source)
+        left_b.update(id="left-b", name="Left B")
+        right_a = copy.deepcopy(source)
+        right_a.update(id="right-a", name="Right A", equipmentObjectID="right")
+        board["holds"] = [source, left_b, right_a]
+
+    _mutate_board(package_root, make_multi_object)
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+
+    assert document["equipmentObjects"] == ["left", "right"]
+    assert {
+        region["metadata"]["holdID"]: region["equipmentObjectID"]
+        for region in document["regions"]
+    }.items() >= {"left-a": "left", "left-b": "left", "right-a": "right"}.items()
+
+    for region in document["regions"]:
+        if region["metadata"]["holdID"] == "left-b":
+            region["equipmentObjectID"] = "right"
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    ownership = {
+        hold["id"]: hold["equipmentObjectID"] for hold in saved.board["holds"]
+    }
+    assert ownership == {"left-a": "left", "left-b": "right", "right-a": "right"}
 
 
 def test_shape_constraint_round_trips_and_preserves_unrelated_geometry(

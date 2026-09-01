@@ -18,40 +18,11 @@ Hangboards/<package>/
 
 `board.json` contains the board identity, sourced physical facts, and exact
 normalized hold geometry. The validator rejects unknown package entries,
-symlinks, malformed JSON or PNG data, opaque primary images, duplicate
-identifiers, unsupported hold metadata, and invalid frames or shapes. A
-primary PNG must contain at least one pixel whose alpha value is exactly zero;
-the validator checks decoded PNG samples with the Python standard library so
-the bare build-time interpreter does not need Pillow.
-
-## Removing white source backdrops
-
-The maintained migration tool uses the pinned `rembg` U-2-Net model to segment
-every primary PNG, including primaries that already have alpha. It writes only
-the model's mask into the alpha channel while retaining every decoded source
-RGB sample and the original pixel dimensions. The first run downloads the
-checksum-verified model into `.context/hangboard-rembg-models`; later runs
-reuse it and create one model session for the complete sorted inventory.
-
-Install the backdrop-removal dependency, then run the tool from the repository
-root:
-
-```sh
-.context/hangboard-packages-venv/bin/python -m pip install \
-  -e 'Tools/HangboardPackages[backdrop]'
-.context/hangboard-packages-venv/bin/python \
-  Tools/HangboardPackages/scripts/remove_primary_backdrops.py --root Hangboards
-```
-
-The script fails rather than writing an all-opaque or all-transparent result.
-Generated output files are temporary and atomically replaced.
-
-For the few reviewed source photos where U-2-Net retains white background in an
-enclosed through-hole, the script has a tightly bounded seed map. It clears
-only four-connected pixels within 12 RGB levels of the reviewed source sample,
-with a 100,000-pixel ceiling; it does not run a broad white-pixel cleanup. ONNX
-Runtime telemetry is disabled before the model loads, so its session sidecar is
-not created in the repository root.
+symlinks, malformed JSON or PNG data, duplicate identifiers, unsupported hold
+metadata, and invalid frames or shapes. Primary PNGs may use either transparent
+or fully opaque backgrounds; the validator checks decoded primary image data
+with the Python standard library so the bare build-time interpreter does not
+need Pillow.
 
 Direct discovery sorts complete packages by manufacturer, board name, board
 ID, and package path. Exact primary-only directories are reported separately
@@ -66,6 +37,9 @@ scripts/hangboard-packages.sh validate --root Hangboards
 scripts/hangboard-packages.sh status --root Hangboards
 scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight
 ```
 
 `validate` and `status` print the discovered complete packages and draft paths;
@@ -88,5 +62,40 @@ outcome for every hold and may not have records for unrelated fields. This
 supplemental scope records a complete sloper audit without claiming that the
 board's other metadata fields have been source-audited.
 
-The current repository inventory contains 44 complete packages and zero
+`audit-presentations` requires a complete final inventory and cross-checks the
+closed remediation manifest against every declared presentation's package ID,
+asset path, PNG hash, and dimensions. It prints a sorted decision report. A
+repeatable `--package-id BOARD_ID` selects a validation lane for required
+presentation coverage and report counts; the manifest's root `packageIDs` must
+still cover the entire inventory, and every record it does contain is still
+fully validated against real package assets.
+
+Use `--final-validation` only for the completed Phase 1 ledger. It rejects lane
+selection and requires all four root `phase1Checks` entries to be
+`passed` with their exact non-empty commands; omit it for skeleton and
+intermediate-lane validation while those checks are still pending.
+
+Schema 2 uses three mutually exclusive lifecycle modes:
+
+```sh
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-partial --batch-id nonwood-fixed
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-final
+```
+
+Preflight validates the 20 exact canvas classes, 22 disposable behavior probes,
+and capability-artifact deletion/production-disjointness. Partial mode validates
+truthful intermediate package bytes and may select one declared `--batch-id`.
+Final mode accepts no batch or transient files and requires the complete terminal
+catalog. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH`
+pairs are accepted only in preflight or partial mode and only for declarations
+owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
+
+The current repository inventory contains 61 complete packages and zero
 drafts.

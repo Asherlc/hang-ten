@@ -934,6 +934,13 @@ def _save_loaded_editor_document(
     if presentation.source_presentation_id is not None:
         raise board_package.BoardPackageError("alias presentations cannot be edited")
     width, height = presentation.image_width, presentation.image_height
+    expected_equipment_objects = [
+        item["id"] for item in live.board.get("equipmentObjects", [{"id": "primary"}])
+    ]
+    if document.get("equipmentObjects", ["primary"]) != expected_equipment_objects:
+        raise board_package.BoardPackageError(
+            "editor document equipment objects do not match the board package"
+        )
     parsed_regions = board_package._validate_editor_document(
         document,
         width,
@@ -959,6 +966,7 @@ def _save_loaded_editor_document(
         depth_range,
         hand_capacity,
         paired_hold_id,
+        equipment_object_id,
     ) in parsed_regions.values():
         pieces_by_hold.setdefault(hold_id, []).append(
             (
@@ -974,6 +982,7 @@ def _save_loaded_editor_document(
                 depth_range,
                 hand_capacity,
                 paired_hold_id,
+                equipment_object_id,
             )
         )
     for pieces in pieces_by_hold.values():

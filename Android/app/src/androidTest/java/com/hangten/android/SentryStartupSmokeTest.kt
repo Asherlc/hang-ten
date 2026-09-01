@@ -16,7 +16,7 @@ class SentryStartupSmokeTest {
         val providers = context.packageManager
             .getPackageInfo(
                 context.packageName,
-                PackageManager.PackageInfoFlags.of(PackageManager.GET_PROVIDERS.toLong()),
+                PackageManager.GET_PROVIDERS,
             )
             .providers
             .orEmpty()

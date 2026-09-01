@@ -8,7 +8,6 @@ import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.geometry.Offset
 import com.hangten.android.content.Board
 import com.hangten.android.content.BoardHold
 import com.hangten.android.content.BoardPresentation
@@ -113,8 +112,8 @@ class BoardCanvasTest {
         }
 
         composeRule.onNodeWithContentDescription("Board Fixture Board").performTouchInput {
-            click(Offset(x = 300f, y = 180f))
-            click(Offset(x = 1000f, y = 500f))
+            click(percentOffset(x = 0.375f, y = 0.375f))
+            click(percentOffset(x = 0.9f, y = 0.9f))
         }
 
         composeRule.runOnIdle {

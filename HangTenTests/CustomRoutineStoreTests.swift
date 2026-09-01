@@ -297,6 +297,41 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
     }
 
+    func testDoubleHandCustomStepRejectsSingleHandPortABoardContact() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "frictitious.port-a-board" }
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.port-a-board-double",
+            title: "Portable double",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: board.id),
+            steps: [
+                WorkoutStepDefinition(
+                    id: "step-1",
+                    title: "Two-hand pull",
+                    instruction: "",
+                    accessory: "",
+                    duration: 10,
+                    phase: .pull,
+                    targets: [.holdIDs(["edge-20"])],
+                    handUse: .double,
+                    side: .both
+                )
+            ]
+        )
+
+        let issues = CustomRoutineValidator.issues(
+            for: definition,
+            availableBoards: [board]
+        )
+
+        XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
+    }
+
     func testSaveAndResolveAllowsEmptyOptionalSubtitle() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -898,6 +933,39 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         XCTAssertTrue(PlanLibraryValidator.issues(for: library(metadata: custom), availableBoards: BoardCatalog.all).isEmpty)
         XCTAssertFalse(PlanLibraryValidator.issues(for: library(metadata: adapted), availableBoards: BoardCatalog.all).isEmpty)
+    }
+
+    func testValidationRejectsInvalidUnilateralStepSemantics() {
+        let definition = CustomRoutineDefinition(
+            id: "custom.invalid-unilateral",
+            title: "Invalid unilateral",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "invalid",
+                title: "Invalid",
+                instruction: "",
+                accessory: "",
+                duration: 10,
+                phase: .pull,
+                targets: [.kind(.jug)],
+                handUse: .single,
+                side: .both,
+                action: .loadedLift,
+                repetitions: 0
+            )]
+        )
+
+        let issues = CustomRoutineValidator.issues(
+            for: definition,
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(issues.contains(.invalidHandUseSide(stepIndex: 0)))
+        XCTAssertTrue(issues.contains(.invalidActionRepetitions(stepIndex: 0)))
     }
 
     private func genericDefinition(

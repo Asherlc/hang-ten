@@ -51,6 +51,7 @@ interface ClientPoint {
 export function cloneEditorDocument(document: EditorDocument): EditorDocument {
   return {
     ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+    ...(document.equipmentObjects ? { equipmentObjects: [...document.equipmentObjects] } : {}),
     canvas: { ...document.canvas },
     regions: document.regions.map((region) => ({
       ...region,

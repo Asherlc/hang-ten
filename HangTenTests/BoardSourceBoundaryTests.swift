@@ -9,15 +9,25 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testCatalogContainsExactlyRegisteredPackageBoards() {
         let expectedIDs = [
+            "aelith.cyclops-011",
             "beastmaker-1000",
             "beastmaker-2000",
+            "captain-fingerfood.dual",
+            "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel",
+            "crimptonite.helium-mobile",
             "dewoodstok-woodbord",
             "escape-beta-22",
             "escape.unlimited",
             "evolv-kilter-basic-long",
             "frictitious.doormount-pro-7",
             "frictitious.megalith",
+            "frictitious.nug",
+            "frictitious.port-a-board",
             "lattice-triple-rung",
+            "lattice.mini-bar",
+            "lattice.mxedge-lift-large",
+            "lattice.mxedge-lift-small",
             "mammut.diamond-finger",
             "metolius.climbers-edge",
             "metolius.contact",
@@ -31,6 +41,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "metolius.wood-grips-deluxe-ii",
             "moon.armstrong",
             "nature.stoak-board-iii",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "owl-climb.poker",
+            "plateau.lifting-edge",
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
@@ -64,25 +78,37 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testEveryCatalogBoardUsesItsPackagePrimaryPNG() throws {
+    func testEveryCatalogBoardUsesItsDefaultPackagePresentationPNG() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
 
         for board in BoardCatalog.all {
             let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let documentURL = repositoryRoot
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+                .appendingPathComponent("board.json")
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: documentURL)) as? [String: Any]
+            )
+            let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
+            let defaultPresentation = try XCTUnwrap(
+                presentations.first { ($0["default"] as? Bool) == true }
+            )
+            let defaultAssetPath = try XCTUnwrap(defaultPresentation["assetPath"] as? String)
             let imageURL = try XCTUnwrap(
                 BoardCatalog.packageStore.presentationImageURL(for: board)
             )
-            let expectedAssetsURL = Bundle.main.resourceURL!
+            let expectedImageURL = Bundle.main.resourceURL!
                 .appendingPathComponent("Hangboards", isDirectory: true)
                 .appendingPathComponent(packagePath, isDirectory: true)
-                .appendingPathComponent("assets", isDirectory: true)
+                .appendingPathComponent(defaultAssetPath)
                 .standardizedFileURL
 
-            XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
-            XCTAssertTrue(
-                imageURL.standardizedFileURL.path.hasPrefix(expectedAssetsURL.path + "/"),
-                "Expected \(board.id) presentation image below \(expectedAssetsURL.path), got \(imageURL.path)."
+            XCTAssertEqual(
+                imageURL.standardizedFileURL,
+                expectedImageURL,
+                "Expected \(board.id) to use its declared default presentation asset."
             )
         }
     }
@@ -510,7 +536,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 let assetURL = URL(fileURLWithPath: assetPath)
                 identifiers.insert(assetPath)
                 identifiers.insert(assetURL.lastPathComponent)
-                identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
+                let stem = assetURL.deletingPathExtension().lastPathComponent
+                // Very short presentation stems such as `top` and `end` are
+                // ordinary source vocabulary and create path-name collisions
+                // (for example, WorkoutStopwatch.swift). The full package
+                // asset path and filename remain protected by the audit.
+                if stem.count >= 5 {
+                    identifiers.insert(stem)
+                }
             }
 
         }

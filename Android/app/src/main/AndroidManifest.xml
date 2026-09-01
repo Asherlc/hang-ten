@@ -22,6 +22,10 @@
         <provider
             android:name="io.sentry.android.core.SentryPerformanceProvider"
             tools:node="remove" />
+        <!-- TelemetryComposition initializes Sentry only after validating BuildConfig.SENTRY_DSN. -->
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
         <activity
             android:name="com.hangten.android.MainActivity"
             android:exported="true">

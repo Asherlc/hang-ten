@@ -6,9 +6,13 @@
   "productURL": "https://trango.com/products/rock-prodigy-training-center",
   "dimensions": "9.1 \u00d7 12.1 in",
   "aspectRatio": 2.8344827586206898,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left jug",
       "kind": "jug",
       "geometry": [
@@ -132,6 +136,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right jug",
       "kind": "jug",
       "geometry": [
@@ -255,6 +260,7 @@
     },
     {
       "id": "edge-large-vder-left",
+      "equipmentObjectID": "primary",
       "name": "Left large variable-depth edge rail",
       "kind": "edge",
       "geometry": [
@@ -364,6 +370,7 @@
     },
     {
       "id": "edge-shallow-vder-left",
+      "equipmentObjectID": "primary",
       "name": "Left shallow variable-depth edge rail",
       "kind": "edge",
       "geometry": [
@@ -473,6 +480,7 @@
     },
     {
       "id": "edge-thin-crimp-left",
+      "equipmentObjectID": "primary",
       "name": "Left thin crimp",
       "kind": "edge",
       "geometry": [
@@ -576,6 +584,7 @@
     },
     {
       "id": "edge-thin-crimp-right",
+      "equipmentObjectID": "primary",
       "name": "Right thin crimp",
       "kind": "edge",
       "geometry": [
@@ -679,6 +688,7 @@
     },
     {
       "id": "pocket-three-finger-slot-left",
+      "equipmentObjectID": "primary",
       "name": "Left shallow three-finger slot",
       "kind": "pocket",
       "geometry": [
@@ -800,6 +810,7 @@
     },
     {
       "id": "pocket-three-finger-slot-right",
+      "equipmentObjectID": "primary",
       "name": "Right shallow three-finger slot",
       "kind": "pocket",
       "geometry": [
@@ -921,6 +932,7 @@
     },
     {
       "id": "pocket-index-middle-deep-left",
+      "equipmentObjectID": "primary",
       "name": "Left index-middle deep pocket",
       "kind": "pocket",
       "geometry": [
@@ -941,6 +953,7 @@
     },
     {
       "id": "pocket-index-middle-deep-right",
+      "equipmentObjectID": "primary",
       "name": "Right index-middle deep pocket",
       "kind": "pocket",
       "geometry": [
@@ -961,6 +974,7 @@
     },
     {
       "id": "pocket-middle-ring-deep-left",
+      "equipmentObjectID": "primary",
       "name": "Left middle-ring deep pocket",
       "kind": "pocket",
       "geometry": [
@@ -981,6 +995,7 @@
     },
     {
       "id": "pocket-middle-ring-deep-right",
+      "equipmentObjectID": "primary",
       "name": "Right middle-ring deep pocket",
       "kind": "pocket",
       "geometry": [
@@ -1001,6 +1016,7 @@
     },
     {
       "id": "pocket-index-middle-medium-shallow-left",
+      "equipmentObjectID": "primary",
       "name": "Left index-middle medium/shallow pocket",
       "kind": "pocket",
       "geometry": [
@@ -1021,6 +1037,7 @@
     },
     {
       "id": "pocket-index-middle-medium-shallow-right",
+      "equipmentObjectID": "primary",
       "name": "Right index-middle medium/shallow pocket",
       "kind": "pocket",
       "geometry": [
@@ -1041,6 +1058,7 @@
     },
     {
       "id": "pocket-middle-ring-shallow-left",
+      "equipmentObjectID": "primary",
       "name": "Left middle-ring shallow pocket",
       "kind": "pocket",
       "geometry": [
@@ -1061,6 +1079,7 @@
     },
     {
       "id": "pocket-middle-ring-shallow-right",
+      "equipmentObjectID": "primary",
       "name": "Right middle-ring shallow pocket",
       "kind": "pocket",
       "geometry": [
@@ -1081,6 +1100,7 @@
     },
     {
       "id": "pinch-medium-left",
+      "equipmentObjectID": "primary",
       "name": "Left medium pinch",
       "kind": "pinch",
       "geometry": [
@@ -1191,6 +1211,7 @@
     },
     {
       "id": "pinch-wide-left",
+      "equipmentObjectID": "primary",
       "name": "Left wide pinch",
       "kind": "pinch",
       "geometry": [
@@ -1379,6 +1400,7 @@
     },
     {
       "id": "edge-large-vder-right",
+      "equipmentObjectID": "primary",
       "name": "Right large variable-depth edge rail",
       "kind": "edge",
       "geometry": [
@@ -1488,6 +1510,7 @@
     },
     {
       "id": "edge-shallow-vder-right",
+      "equipmentObjectID": "primary",
       "name": "Right shallow variable-depth edge rail",
       "kind": "edge",
       "geometry": [
@@ -1597,6 +1620,7 @@
     },
     {
       "id": "pinch-medium-right",
+      "equipmentObjectID": "primary",
       "name": "Right medium pinch",
       "kind": "pinch",
       "geometry": [
@@ -1707,6 +1731,7 @@
     },
     {
       "id": "pinch-wide-right",
+      "equipmentObjectID": "primary",
       "name": "Right wide pinch",
       "kind": "pinch",
       "geometry": [
@@ -1895,6 +1920,7 @@
     },
     {
       "id": "sloper-left",
+      "equipmentObjectID": "primary",
       "name": "Left sloper",
       "kind": "sloper",
       "geometry": [
@@ -1952,6 +1978,7 @@
     },
     {
       "id": "sloper-right",
+      "equipmentObjectID": "primary",
       "name": "Right sloper",
       "kind": "sloper",
       "geometry": [

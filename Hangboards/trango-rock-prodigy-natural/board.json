@@ -6,9 +6,13 @@
   "productURL": "https://trango.com/products/rock-prodigy-natural",
   "dimensions": "7.5 \u00d7 6 \u00d7 1.5 in (each board)",
   "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "top-jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left 40 mm top jug",
       "kind": "jug",
       "sizeMillimeters": 40,
@@ -104,6 +108,7 @@
     },
     {
       "id": "top-jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right 40 mm top jug",
       "kind": "jug",
       "sizeMillimeters": 40,
@@ -199,6 +204,7 @@
     },
     {
       "id": "top-variable-rail-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20\u201333 mm top variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -309,6 +315,7 @@
     },
     {
       "id": "top-variable-rail-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20\u201333 mm top variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -419,6 +426,7 @@
     },
     {
       "id": "bottom-variable-rail-left",
+      "equipmentObjectID": "primary",
       "name": "Left 10\u201324 mm bottom variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -529,6 +537,7 @@
     },
     {
       "id": "bottom-variable-rail-right",
+      "equipmentObjectID": "primary",
       "name": "Right 10\u201324 mm bottom variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -639,6 +648,7 @@
     },
     {
       "id": "closed-crimp-left",
+      "equipmentObjectID": "primary",
       "name": "Left closed crimp",
       "kind": "edge",
       "geometry": [
@@ -736,6 +746,7 @@
     },
     {
       "id": "closed-crimp-right",
+      "equipmentObjectID": "primary",
       "name": "Right closed crimp",
       "kind": "edge",
       "geometry": [
@@ -833,6 +844,7 @@
     },
     {
       "id": "upper-pocket-left",
+      "equipmentObjectID": "primary",
       "name": "Left 38 mm upper pocket",
       "kind": "pocket",
       "sizeMillimeters": 38,
@@ -931,6 +943,7 @@
     },
     {
       "id": "upper-pocket-right",
+      "equipmentObjectID": "primary",
       "name": "Right 38 mm upper pocket",
       "kind": "pocket",
       "sizeMillimeters": 38,
@@ -1029,6 +1042,7 @@
     },
     {
       "id": "center-lower-pocket-left",
+      "equipmentObjectID": "primary",
       "name": "Left center lower pocket",
       "kind": "pocket",
       "geometry": [
@@ -1126,6 +1140,7 @@
     },
     {
       "id": "center-lower-pocket-right",
+      "equipmentObjectID": "primary",
       "name": "Right center lower pocket",
       "kind": "pocket",
       "geometry": [
@@ -1223,6 +1238,7 @@
     },
     {
       "id": "outer-supported-pocket-left",
+      "equipmentObjectID": "primary",
       "name": "Left outer supported pocket",
       "kind": "pocket",
       "geometry": [
@@ -1399,6 +1415,7 @@
     },
     {
       "id": "outer-supported-pocket-right",
+      "equipmentObjectID": "primary",
       "name": "Right outer supported pocket",
       "kind": "pocket",
       "geometry": [
