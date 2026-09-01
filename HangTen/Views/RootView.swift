@@ -153,12 +153,58 @@ enum RootTab: Hashable, CaseIterable {
     }
 }
 
+enum RootReviewBoardPresentationError: Equatable {
+    case missingBoardID
+    case missingPresentationID
+    case boardNotFound(String)
+    case presentationNotFound(boardID: String, presentationID: String)
+
+    var message: String {
+        switch self {
+        case .missingBoardID:
+            return "HANGTEN_REVIEW_BOARD_ID is required."
+        case .missingPresentationID:
+            return "HANGTEN_REVIEW_PRESENTATION_ID is required."
+        case .boardNotFound(let boardID):
+            return "Board package \(boardID) was not found."
+        case let .presentationNotFound(boardID, presentationID):
+            return "Presentation \(presentationID) was not found on board \(boardID)."
+        }
+    }
+}
+
 enum RootReviewDestination: Equatable {
     case workout
     case boardEditor
+    case boardPresentation(board: TrainingBoard, presentationID: String)
+    case boardPresentationError(RootReviewBoardPresentationError)
 
-    static func initial(environment: [String: String]) -> Self? {
+    static func initial(
+        environment: [String: String],
+        boards: [TrainingBoard] = BoardCatalog.all
+    ) -> Self? {
         #if DEBUG
+        if environment["HANGTEN_REVIEW_BOARD_PRESENTATION"] == "1" {
+            guard let boardID = environment["HANGTEN_REVIEW_BOARD_ID"], !boardID.isEmpty else {
+                return .boardPresentationError(.missingBoardID)
+            }
+            guard let presentationID = environment["HANGTEN_REVIEW_PRESENTATION_ID"],
+                  !presentationID.isEmpty else {
+                return .boardPresentationError(.missingPresentationID)
+            }
+            guard let board = boards.first(where: { $0.id == boardID }) else {
+                return .boardPresentationError(.boardNotFound(boardID))
+            }
+            guard board.presentation(id: presentationID) != nil else {
+                return .boardPresentationError(
+                    .presentationNotFound(
+                        boardID: boardID,
+                        presentationID: presentationID
+                    )
+                )
+            }
+            return .boardPresentation(board: board, presentationID: presentationID)
+        }
         if environment["HANGTEN_REVIEW_WORKOUT"] == "1" {
             return .workout
         }
@@ -224,6 +270,22 @@ struct RootView: View {
 			} else if reviewDestination == .boardEditor {
 				NavigationStack {
 					BoardEditorListView()
+				}
+			} else if case let .some(.boardPresentation(board, presentationID)) = reviewDestination {
+				NavigationStack {
+					BoardDetailView(
+						board: board,
+						selectedPresentationID: presentationID
+					)
+				}
+			} else if case let .some(.boardPresentationError(error)) = reviewDestination {
+				NavigationStack {
+					ContentUnavailableView(
+						"Board presentation unavailable",
+						systemImage: "exclamationmark.triangle",
+						description: Text(error.message)
+					)
+					.accessibilityIdentifier("boardPresentationReview.error")
 				}
 			} else {
 				TabView(selection: $selectedTab) {

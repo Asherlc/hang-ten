@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import secrets
+import signal
 import socket
 import struct
 import subprocess
@@ -35,17 +36,46 @@ CONTACT_SHEET_COLUMNS = 3
 class CaptureError(RuntimeError):
     """A structured failure from a named catalog capture stage."""
 
-    def __init__(self, stage: str, message: str, *, board_id: str | None = None) -> None:
+    def __init__(
+        self,
+        stage: str,
+        message: str,
+        *,
+        board_id: str | None = None,
+        presentation_id: str | None = None,
+    ) -> None:
         self.stage = stage
         self.board_id = board_id
+        self.presentation_id = presentation_id
         subject = f" {board_id}" if board_id else ""
+        if presentation_id:
+            subject += f"/{presentation_id}"
         super().__init__(f"{stage}{subject}: {message}")
+
+
+class CaptureInterrupted(KeyboardInterrupt):
+    """A termination signal converted into normal context-manager unwinding."""
+
+    def __init__(self, signum: int) -> None:
+        self.signum = signum
+        super().__init__(f"catalog capture interrupted by signal {signum}")
 
 
 @dataclass(frozen=True)
 class CatalogBoard:
     board_id: str
     display_name: str
+
+
+@dataclass(frozen=True)
+class PresentationCaptureTarget:
+    board_id: str
+    display_name: str
+    presentation_id: str
+    presentation_name: str
+    image_url: str
+    region_keys: tuple[str, ...]
+    is_default: bool
 
 
 @dataclass(frozen=True)
@@ -71,8 +101,15 @@ class HoldIDLabel:
 class CaptureEntry:
     board_id: str
     display_name: str
+    presentation_id: str
+    presentation_name: str
     region_count: int
     filename: str
+    variant: str = "normal"
+
+    @property
+    def capture_id(self) -> str:
+        return capture_identity(self.board_id, self.presentation_id)
 
 
 @dataclass(frozen=True)
@@ -82,24 +119,52 @@ class CaptureManifest:
     def write(self, output_root: Path) -> Path:
         path = output_root / "manifest.json"
         path.write_text(
-            json.dumps({"boards": [asdict(entry) for entry in self.entries]}, indent=2)
+            json.dumps(
+                {
+                    "boards": [
+                        {"capture_id": entry.capture_id, **asdict(entry)}
+                        for entry in self.entries
+                    ]
+                },
+                indent=2,
+            )
             + "\n",
             encoding="utf-8",
         )
         return path
 
 
-def capture_filename(board_id: str) -> str:
-    """Return a traversal-safe PNG name derived only from a board ID."""
+def _safe_stem(identifier: str, *, subject: str, board_id: str) -> str:
     normalized = "".join(
         character.lower() if character.isalnum() or character in ".-" else "-"
-        for character in board_id.strip()
+        for character in identifier.strip()
     ).strip(".-")
     normalized = "-".join(piece for piece in normalized.split("-") if piece)
     if not normalized:
-        raise CaptureError("catalog", "board ID cannot produce a safe filename", board_id=board_id)
-    digest = hashlib.sha256(board_id.encode("utf-8")).hexdigest()[:12]
-    return f"{normalized}--{digest}.png"
+        raise CaptureError("catalog", f"{subject} cannot produce a safe filename", board_id=board_id)
+    return normalized
+
+
+def capture_filename(board_id: str, presentation_id: str | None = None) -> str:
+    """Return a traversal-safe PNG name for a board or board/presentation pair."""
+    board_stem = _safe_stem(board_id, subject="board ID", board_id=board_id)
+    identity = board_id
+    stem = board_stem
+    if presentation_id is not None:
+        presentation_stem = _safe_stem(
+            presentation_id,
+            subject="presentation ID",
+            board_id=board_id,
+        )
+        identity = f"{board_id}\0{presentation_id}"
+        stem = f"{board_stem}--{presentation_stem}"
+    digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12]
+    return f"{stem}--{digest}.png"
+
+
+def capture_identity(board_id: str, presentation_id: str) -> str:
+    """Return the stable package/presentation identity used by review evidence."""
+    return f"{board_id}::{presentation_id}"
 
 
 def _request_json(url: str) -> dict[str, Any]:
@@ -145,28 +210,140 @@ def _absolute_url(base_url: str, url: str) -> str:
     )
 
 
-def _board_capture_target(base_url: str, board_id: str) -> tuple[str, int]:
+def _board_payload(
+    base_url: str,
+    board_id: str,
+    presentation_id: str | None = None,
+) -> dict[str, Any]:
     encoded_id = urllib.parse.quote(board_id, safe="")
-    payload = _request_json(f"{base_url}/api/boards/{encoded_id}")
+    query = (
+        f"?{urllib.parse.urlencode({'presentationID': presentation_id})}"
+        if presentation_id is not None
+        else ""
+    )
+    payload = _request_json(f"{base_url}/api/boards/{encoded_id}{query}")
     board = payload.get("board")
     if payload.get("ok") is not True or not isinstance(board, dict):
         raise CaptureError("board", "Workbench returned an invalid board document", board_id=board_id)
+    return board
+
+
+def _capture_target_from_payload(
+    base_url: str,
+    catalog_board: CatalogBoard,
+    presentation: dict[str, Any],
+    board: dict[str, Any],
+) -> PresentationCaptureTarget:
+    presentation_id = presentation.get("presentationID")
+    presentation_name = presentation.get("displayName")
+    is_default = presentation.get("default")
+    selected_presentation_id = board.get("selectedPresentationID")
     document = board.get("document")
     image_url = board.get("imageUrl")
-    if not isinstance(document, dict) or not isinstance(image_url, str) or not image_url:
-        raise CaptureError("board", "board document is missing its primary image", board_id=board_id)
+    if (
+        not isinstance(presentation_id, str)
+        or not presentation_id
+        or not isinstance(presentation_name, str)
+        or not presentation_name
+        or not isinstance(is_default, bool)
+    ):
+        raise CaptureError("board", "Workbench returned an invalid presentation", board_id=catalog_board.board_id)
+    if selected_presentation_id != presentation_id or not isinstance(document, dict):
+        raise CaptureError(
+            "board",
+            "Workbench returned a mismatched presentation document",
+            board_id=catalog_board.board_id,
+            presentation_id=presentation_id,
+        )
+    if document.get("presentationID") != presentation_id:
+        raise CaptureError(
+            "board",
+            "editor geometry does not match the selected presentation",
+            board_id=catalog_board.board_id,
+            presentation_id=presentation_id,
+        )
+    if not isinstance(image_url, str) or not image_url:
+        raise CaptureError(
+            "board",
+            "board document is missing its selected presentation image",
+            board_id=catalog_board.board_id,
+            presentation_id=presentation_id,
+        )
     regions = document.get("regions")
     if not isinstance(regions, list):
-        raise CaptureError("board", "board document is missing regions", board_id=board_id)
-    return _absolute_url(base_url, image_url), len(regions)
+        raise CaptureError(
+            "board",
+            "board document is missing regions",
+            board_id=catalog_board.board_id,
+            presentation_id=presentation_id,
+        )
+    region_keys = tuple(
+        region.get("key") if isinstance(region, dict) else None
+        for region in regions
+    )
+    if not all(isinstance(key, str) and key for key in region_keys) or len(set(region_keys)) != len(region_keys):
+        raise CaptureError(
+            "board",
+            "board document has invalid region keys",
+            board_id=catalog_board.board_id,
+            presentation_id=presentation_id,
+        )
+    return PresentationCaptureTarget(
+        board_id=catalog_board.board_id,
+        display_name=catalog_board.display_name,
+        presentation_id=presentation_id,
+        presentation_name=presentation_name,
+        image_url=_absolute_url(base_url, image_url),
+        region_keys=region_keys,
+        is_default=is_default,
+    )
 
 
-def _board_document(base_url: str, board_id: str) -> dict[str, Any]:
-    encoded_id = urllib.parse.quote(board_id, safe="")
-    payload = _request_json(f"{base_url}/api/boards/{encoded_id}")
-    board = payload.get("board")
-    document = board.get("document") if isinstance(board, dict) else None
-    if payload.get("ok") is not True or not isinstance(document, dict):
+def fetch_capture_targets(
+    base_url: str,
+    board: CatalogBoard,
+) -> tuple[PresentationCaptureTarget, ...]:
+    """Enumerate every API-declared presentation with its scoped capture truth."""
+    initial = _board_payload(base_url, board.board_id)
+    presentations = initial.get("presentations")
+    if not isinstance(presentations, list) or not presentations:
+        raise CaptureError("board", "board document is missing presentations", board_id=board.board_id)
+    selected_id = initial.get("selectedPresentationID")
+    targets: list[PresentationCaptureTarget] = []
+    for presentation in presentations:
+        if not isinstance(presentation, dict):
+            raise CaptureError("board", "Workbench returned an invalid presentation", board_id=board.board_id)
+        presentation_id = presentation.get("presentationID")
+        selected = (
+            initial
+            if presentation_id == selected_id
+            else _board_payload(base_url, board.board_id, presentation_id)
+            if isinstance(presentation_id, str)
+            else initial
+        )
+        targets.append(_capture_target_from_payload(base_url, board, presentation, selected))
+    if sum(target.is_default for target in targets) != 1:
+        raise CaptureError("board", "board must have exactly one default presentation", board_id=board.board_id)
+    if len({target.presentation_id for target in targets}) != len(targets):
+        raise CaptureError("board", "board has duplicate presentation IDs", board_id=board.board_id)
+    return tuple(targets)
+
+
+def capture_targets_for_run(
+    targets: tuple[PresentationCaptureTarget, ...],
+    *,
+    all_presentations: bool,
+) -> tuple[PresentationCaptureTarget, ...]:
+    """Retain legacy default-only capture unless complete enumeration is requested."""
+    if all_presentations:
+        return targets
+    return tuple(target for target in targets if target.is_default)
+
+
+def _board_document(base_url: str, board_id: str, presentation_id: str) -> dict[str, Any]:
+    board = _board_payload(base_url, board_id, presentation_id)
+    document = board.get("document")
+    if not isinstance(document, dict) or document.get("presentationID") != presentation_id:
         raise CaptureError("board", "Workbench returned an invalid board document", board_id=board_id)
     return document
 
@@ -196,14 +373,19 @@ def hold_id_label_positions(regions: tuple[RegionBounds, ...]) -> tuple[HoldIDLa
 
 
 def capture_is_ready(
-    value: object, *, expected_image_url: str, expected_region_count: int
+    value: object,
+    *,
+    expected_image_url: str,
+    expected_presentation_id: str,
+    expected_region_keys: tuple[str, ...],
 ) -> bool:
-    """Validate the editor's image and complete region inventory readiness signal."""
+    """Validate the exact selected asset and presentation-scoped geometry signal."""
     return (
         isinstance(value, dict)
         and value.get("primaryImageLoaded") is True
         and value.get("imageURL") == expected_image_url
-        and value.get("regionCount") == expected_region_count
+        and value.get("presentationID") == expected_presentation_id
+        and value.get("regionKeys") == list(expected_region_keys)
     )
 
 
@@ -211,21 +393,37 @@ def catalog_controls_are_ready(value: object, *, expected_count: int) -> bool:
     return isinstance(value, dict) and value.get("boardButtonCount") == expected_count
 
 
-def _readiness_expression() -> str:
-    return """
-      (async () => {
+def _readiness_expression(expected_image_url: str) -> str:
+    return f"""
+      (async () => {{
+        const expectedImageURL = {json.dumps(expected_image_url)};
         const image = document.getElementById('board-image');
         const href = image?.href?.baseVal || image?.getAttribute('href');
+        const absoluteURL = href ? new URL(href, document.baseURI).href : null;
         let primaryImageLoaded = false;
-        if (href && image?.getBoundingClientRect().width > 0) {
-          try { primaryImageLoaded = (await fetch(href, { cache: 'no-store' })).ok; } catch (_) {}
-        }
-        return {
+        if (absoluteURL === expectedImageURL && image?.getBoundingClientRect().width > 0) {{
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 2000);
+          try {{
+            primaryImageLoaded = (await fetch(absoluteURL, {{
+              cache: 'no-store',
+              signal: controller.signal,
+            }})).ok;
+          }} catch (_) {{
+          }} finally {{
+            clearTimeout(timeout);
+          }}
+        }}
+        return {{
           primaryImageLoaded,
-          imageURL: href ? new URL(href, document.baseURI).href : null,
-          regionCount: document.querySelectorAll('#hold-overlay path.region-shape').length,
-        };
-      })()
+          imageURL: absoluteURL,
+          presentationID: absoluteURL
+            ? new URL(absoluteURL).searchParams.get('presentationID')
+            : null,
+          regionKeys: [...document.querySelectorAll('#hold-overlay path.region-shape')]
+            .map((path) => path.dataset.holdKey),
+        }};
+      }})()
     """
 
 
@@ -237,6 +435,7 @@ def _managed_process(command: list[str], *, stage: str) -> Iterator[subprocess.P
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             text=True,
+            start_new_session=True,
         )
     except OSError as error:
         raise CaptureError(stage, f"could not start {command[0]}") from error
@@ -244,12 +443,30 @@ def _managed_process(command: list[str], *, stage: str) -> Iterator[subprocess.P
         yield process
     finally:
         if process.poll() is None:
-            process.terminate()
+            os.killpg(process.pid, signal.SIGTERM)
             try:
                 process.wait(timeout=5)
             except subprocess.TimeoutExpired:
-                process.kill()
+                os.killpg(process.pid, signal.SIGKILL)
                 process.wait(timeout=5)
+
+
+@contextmanager
+def _capture_signal_handlers() -> Iterator[None]:
+    """Turn termination signals into exceptions so owned resources unwind."""
+    watched = (signal.SIGINT, signal.SIGTERM)
+    previous = {signum: signal.getsignal(signum) for signum in watched}
+
+    def interrupt(signum: int, _frame: object) -> None:
+        raise CaptureInterrupted(signum)
+
+    for signum in watched:
+        signal.signal(signum, interrupt)
+    try:
+        yield
+    finally:
+        for signum, handler in previous.items():
+            signal.signal(signum, handler)
 
 
 def _wait_for_server(base_url: str, process: subprocess.Popen[str]) -> None:
@@ -438,20 +655,76 @@ def _evaluate(connection: _DevToolsConnection, expression: str) -> Any:
 def _wait_for_capture_ready(
     connection: _DevToolsConnection,
     *,
-    expected_image_url: str,
-    expected_region_count: int,
-    board_id: str,
+    target: PresentationCaptureTarget,
 ) -> None:
     deadline = time.monotonic() + READINESS_TIMEOUT_SECONDS
     while time.monotonic() < deadline:
         if capture_is_ready(
-            _evaluate(connection, _readiness_expression()),
-            expected_image_url=expected_image_url,
-            expected_region_count=expected_region_count,
+            _evaluate(connection, _readiness_expression(target.image_url)),
+            expected_image_url=target.image_url,
+            expected_presentation_id=target.presentation_id,
+            expected_region_keys=target.region_keys,
         ):
             return
         time.sleep(0.1)
-    raise CaptureError("readiness", "timed out waiting for primary image and SVG regions", board_id=board_id)
+    raise CaptureError(
+        "readiness",
+        "timed out waiting for selected presentation image and SVG regions",
+        board_id=target.board_id,
+        presentation_id=target.presentation_id,
+    )
+
+
+def _select_board(
+    connection: _DevToolsConnection,
+    *,
+    index: int,
+    board_id: str,
+) -> None:
+    deadline = time.monotonic() + READINESS_TIMEOUT_SECONDS
+    while time.monotonic() < deadline:
+        selected = _evaluate(
+            connection,
+            f"""(() => {{
+              const button = document.querySelectorAll('#board-list button')[{index}];
+              if (!(button instanceof HTMLButtonElement) || button.disabled) return false;
+              button.click();
+              return true;
+            }})()""",
+        )
+        if selected is True:
+            return
+        time.sleep(0.1)
+    raise CaptureError(
+        "selection",
+        "timed out waiting for the catalog control to become enabled",
+        board_id=board_id,
+    )
+
+
+def _select_presentation(
+    connection: _DevToolsConnection,
+    *,
+    board_id: str,
+    presentation_id: str,
+) -> None:
+    selected = _evaluate(
+        connection,
+        f"""(() => {{
+          const select = document.getElementById('presentation-select');
+          if (!(select instanceof HTMLSelectElement)) return false;
+          select.value = {json.dumps(presentation_id)};
+          select.dispatchEvent(new Event('change', {{ bubbles: true }}));
+          return true;
+        }})()""",
+    )
+    if selected is not True:
+        raise CaptureError(
+            "capture",
+            "presentation selector is unavailable",
+            board_id=board_id,
+            presentation_id=presentation_id,
+        )
 
 
 def _wait_for_catalog_controls(connection: _DevToolsConnection, *, expected_count: int) -> None:
@@ -612,29 +885,47 @@ def create_contact_sheet(output_root: Path, manifest: CaptureManifest) -> Path:
     for index, entry in enumerate(manifest.entries):
         x = (index % CONTACT_SHEET_COLUMNS) * tile_width + 10
         y = (index // CONTACT_SHEET_COLUMNS) * tile_height + 9
-        draw.text((x, y), entry.board_id, fill="#f3f0e8", font=font)
+        draw.text(
+            (x, y),
+            f"{entry.board_id} / {entry.presentation_id}",
+            fill="#f3f0e8",
+            font=font,
+        )
     output = output_root / "contact-sheet.png"
     metadata = PngImagePlugin.PngInfo()
-    metadata.add_text("hang-ten-catalog-board-ids", json.dumps([entry.board_id for entry in manifest.entries]))
+    metadata.add_text(
+        "hang-ten-catalog-presentations",
+        json.dumps(
+            [
+                {"boardID": entry.board_id, "presentationID": entry.presentation_id}
+                for entry in manifest.entries
+            ]
+        ),
+    )
     sheet.save(output, pnginfo=metadata)
     return output
 
 
-def contact_sheet_entries(path: Path) -> tuple[str, ...]:
+def contact_sheet_entries(path: Path) -> tuple[tuple[str, str], ...]:
     """Read the inventory recorded in a generated contact sheet (test/audit helper)."""
     try:
         from PIL import Image
     except ImportError as error:
         raise CaptureError("output", "Pillow is required to inspect the contact sheet") from error
     with Image.open(path) as image:
-        value = image.info.get("hang-ten-catalog-board-ids")
+        value = image.info.get("hang-ten-catalog-presentations")
     try:
         entries = json.loads(value)
     except (TypeError, json.JSONDecodeError) as error:
         raise CaptureError("output", "contact sheet has no catalog inventory") from error
-    if not isinstance(entries, list) or not all(isinstance(entry, str) for entry in entries):
+    if not isinstance(entries, list) or not all(
+        isinstance(entry, dict)
+        and isinstance(entry.get("boardID"), str)
+        and isinstance(entry.get("presentationID"), str)
+        for entry in entries
+    ):
         raise CaptureError("output", "contact sheet has an invalid catalog inventory")
-    return tuple(entries)
+    return tuple((entry["boardID"], entry["presentationID"]) for entry in entries)
 
 
 def _capture_server_command(repository_root: Path, port: int) -> list[str]:
@@ -656,6 +947,7 @@ def capture_catalog(
     port: int,
     *,
     hold_id_labels: bool = False,
+    all_presentations: bool = False,
 ) -> CaptureManifest:
     """Capture all completed boards in API order through one Chrome DevTools page."""
     repository_root = Path(repository_root).resolve()
@@ -668,9 +960,14 @@ def capture_catalog(
     if not 1 <= port <= 65535:
         raise CaptureError("setup", "port must be between 1 and 65535")
     output_root.mkdir(parents=True, exist_ok=True)
+    context_root = repository_root / ".context"
+    context_root.mkdir(parents=True, exist_ok=True)
     base_url = f"http://127.0.0.1:{port}"
     debug_port = _available_port()
-    with tempfile.TemporaryDirectory(prefix="hang-ten-capture-") as profile:
+    with tempfile.TemporaryDirectory(
+        prefix=f"{repository_root.name}-chrome-",
+        dir=context_root,
+    ) as profile:
         with _managed_process(
             _capture_server_command(repository_root, port),
             stage="server",
@@ -705,43 +1002,73 @@ def capture_catalog(
                     _wait_for_catalog_controls(connection, expected_count=len(catalog))
                     entries: list[CaptureEntry] = []
                     for index, board in enumerate(catalog):
-                        image_url, regions = _board_capture_target(base_url, board.board_id)
-                        _evaluate(
-                            connection,
-                            f"(() => {{ document.querySelectorAll('#board-list button')[{index}].click(); return true; }})()",
+                        targets = capture_targets_for_run(
+                            fetch_capture_targets(base_url, board),
+                            all_presentations=all_presentations,
                         )
+                        default_target = next(target for target in targets if target.is_default)
+                        _select_board(connection, index=index, board_id=board.board_id)
                         _wait_for_capture_ready(
                             connection,
-                            expected_image_url=image_url,
-                            expected_region_count=regions,
-                            board_id=board.board_id,
+                            target=default_target,
                         )
-                        labels_injected = False
-                        if hold_id_labels:
-                            labels = hold_id_label_positions(
-                                _rendered_region_bounds(
+                        selected_presentation_id = default_target.presentation_id
+                        for target in targets:
+                            if target.presentation_id != selected_presentation_id:
+                                _select_presentation(
                                     connection,
-                                    _board_document(base_url, board.board_id),
                                     board_id=board.board_id,
+                                    presentation_id=target.presentation_id,
+                                )
+                                _wait_for_capture_ready(connection, target=target)
+                                selected_presentation_id = target.presentation_id
+                            labels_injected = False
+                            if hold_id_labels:
+                                labels = hold_id_label_positions(
+                                    _rendered_region_bounds(
+                                        connection,
+                                        _board_document(
+                                            base_url,
+                                            board.board_id,
+                                            target.presentation_id,
+                                        ),
+                                        board_id=board.board_id,
+                                    )
+                                )
+                                _inject_hold_id_labels(connection, labels)
+                                labels_injected = True
+                            try:
+                                screenshot = connection.call(
+                                    "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)
+                                ).get("data")
+                            finally:
+                                if labels_injected:
+                                    _remove_hold_id_labels(connection)
+                            if not isinstance(screenshot, str):
+                                raise CaptureError(
+                                    "capture",
+                                    "Chrome returned no PNG data",
+                                    board_id=board.board_id,
+                                    presentation_id=target.presentation_id,
+                                )
+                            filename = capture_filename(board.board_id, target.presentation_id)
+                            _write_labeled_capture(
+                                base64.b64decode(screenshot),
+                                output_root / filename,
+                                f"{board.board_id} / {target.presentation_id} — "
+                                f"{board.display_name} / {target.presentation_name}",
+                            )
+                            entries.append(
+                                CaptureEntry(
+                                    board.board_id,
+                                    board.display_name,
+                                    target.presentation_id,
+                                    target.presentation_name,
+                                    len(target.region_keys),
+                                    filename,
+                                    "hold-ids" if hold_id_labels else "normal",
                                 )
                             )
-                            _inject_hold_id_labels(connection, labels)
-                            labels_injected = True
-                        try:
-                            screenshot = connection.call(
-                                "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)
-                            ).get("data")
-                        finally:
-                            if labels_injected:
-                                _remove_hold_id_labels(connection)
-                        if not isinstance(screenshot, str):
-                            raise CaptureError("capture", "Chrome returned no PNG data", board_id=board.board_id)
-                        filename = capture_filename(board.board_id)
-                        _write_labeled_capture(
-                            base64.b64decode(screenshot), output_root / filename,
-                            f"{board.board_id} — {board.display_name}",
-                        )
-                        entries.append(CaptureEntry(board.board_id, board.display_name, regions, filename))
                     manifest = CaptureManifest(tuple(entries))
                     manifest.write(output_root)
                     create_contact_sheet(output_root, manifest)
@@ -759,6 +1086,11 @@ def argument_parser() -> ArgumentParser:
     parser.add_argument("--chrome-path", type=Path, required=True, help="Google Chrome executable")
     parser.add_argument("--port", type=int, default=4173, help="Loopback Workbench server port (default: 4173)")
     parser.add_argument(
+        "--all-presentations",
+        action="store_true",
+        help="Capture every API-declared presentation instead of only each default",
+    )
+    parser.add_argument(
         "--hold-id-labels",
         action="store_true",
         help="Overlay one review-only stable hold ID label per logical hold",
@@ -768,30 +1100,46 @@ def argument_parser() -> ArgumentParser:
 
 def main() -> None:
     arguments = argument_parser().parse_args()
-    manifest = capture_catalog(
-        arguments.repository_root,
-        arguments.output_root,
-        arguments.chrome_path,
-        arguments.port,
-        hold_id_labels=arguments.hold_id_labels,
+    with _capture_signal_handlers():
+        manifest = capture_catalog(
+            arguments.repository_root,
+            arguments.output_root,
+            arguments.chrome_path,
+            arguments.port,
+            hold_id_labels=arguments.hold_id_labels,
+            all_presentations=arguments.all_presentations,
+        )
+    print(
+        json.dumps(
+            {
+                "boards": len({entry.board_id for entry in manifest.entries}),
+                "presentations": len(manifest.entries),
+                "output": str(arguments.output_root),
+            },
+            sort_keys=True,
+        )
     )
-    print(json.dumps({"boards": len(manifest.entries), "output": str(arguments.output_root)}, sort_keys=True))
 
 
 __all__ = [
     "CaptureEntry",
     "CaptureError",
+    "CaptureInterrupted",
     "CaptureManifest",
     "CatalogBoard",
     "HoldIDLabel",
     "RegionBounds",
+    "PresentationCaptureTarget",
     "capture_catalog",
     "capture_filename",
+    "capture_identity",
     "capture_is_ready",
     "catalog_controls_are_ready",
     "contact_sheet_entries",
     "create_contact_sheet",
     "fetch_catalog",
+    "fetch_capture_targets",
+    "capture_targets_for_run",
     "hold_id_label_positions",
     "argument_parser",
     "page_websocket_url",

@@ -225,6 +225,7 @@ struct BoardDetailMapView: View {
     init(
         board: TrainingBoard,
         selectedHoldID: Binding<String?>,
+        selectedPresentationID: String? = nil,
         selectedHoldContent: AnyView? = nil
     ) {
         self.board = board
@@ -232,7 +233,7 @@ struct BoardDetailMapView: View {
         self.selectedHoldContent = selectedHoldContent
         let initialPresentation = BoardMapPresentationSelection(
             board: board,
-            requestedPresentationID: nil,
+            requestedPresentationID: selectedPresentationID,
             activeHoldID: selectedHoldID.wrappedValue,
             highlightedHoldIDs: []
         )

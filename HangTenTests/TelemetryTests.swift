@@ -22,6 +22,93 @@ final class TelemetryTests: XCTestCase {
         )
     }
 
+    func testBoardPresentationReviewRouteResolvesExactCatalogPairThroughNormalMapContent() throws {
+        let destination = RootReviewDestination.initial(
+            environment: [
+                "HANGTEN_REVIEW_BOARD_PRESENTATION": "1",
+                "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
+                "HANGTEN_REVIEW_PRESENTATION_ID": "face-b"
+            ],
+            boards: BoardCatalog.all
+        )
+
+        guard case let .boardPresentation(board, presentationID) = destination else {
+            return XCTFail("Expected the exact board presentation review destination.")
+        }
+        XCTAssertEqual(board.id, "owl-climb.poker")
+        XCTAssertEqual(presentationID, "face-b")
+
+        let map = BoardDetailHoldMap(board: board, presentationID: presentationID)
+        XCTAssertEqual(map.presentation.id, "face-b")
+        XCTAssertFalse(map.entries.isEmpty)
+        XCTAssertTrue(map.entries.allSatisfy { $0.hold.presentationID == "face-b" })
+    }
+
+    func testBoardPresentationReviewRouteFailsForUnknownBoard() {
+        XCTAssertEqual(
+            RootReviewDestination.initial(
+                environment: [
+                    "HANGTEN_REVIEW_BOARD_PRESENTATION": "1",
+                    "HANGTEN_REVIEW_BOARD_ID": "missing.board",
+                    "HANGTEN_REVIEW_PRESENTATION_ID": "primary"
+                ],
+                boards: BoardCatalog.all
+            ),
+            .boardPresentationError(.boardNotFound("missing.board"))
+        )
+    }
+
+    func testBoardPresentationReviewRouteFailsForUnknownPresentation() {
+        XCTAssertEqual(
+            RootReviewDestination.initial(
+                environment: [
+                    "HANGTEN_REVIEW_BOARD_PRESENTATION": "1",
+                    "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
+                    "HANGTEN_REVIEW_PRESENTATION_ID": "missing-presentation"
+                ],
+                boards: BoardCatalog.all
+            ),
+            .boardPresentationError(
+                .presentationNotFound(
+                    boardID: "owl-climb.poker",
+                    presentationID: "missing-presentation"
+                )
+            )
+        )
+    }
+
+    func testBoardPresentationReviewRouteFailsForMissingIdentifiers() {
+        XCTAssertEqual(
+            RootReviewDestination.initial(
+                environment: ["HANGTEN_REVIEW_BOARD_PRESENTATION": "1"],
+                boards: BoardCatalog.all
+            ),
+            .boardPresentationError(.missingBoardID)
+        )
+        XCTAssertEqual(
+            RootReviewDestination.initial(
+                environment: [
+                    "HANGTEN_REVIEW_BOARD_PRESENTATION": "1",
+                    "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker"
+                ],
+                boards: BoardCatalog.all
+            ),
+            .boardPresentationError(.missingPresentationID)
+        )
+    }
+
+    func testBoardPresentationReviewRouteIsAbsentWithoutOptIn() {
+        XCTAssertNil(
+            RootReviewDestination.initial(
+                environment: [
+                    "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
+                    "HANGTEN_REVIEW_PRESENTATION_ID": "face-b"
+                ],
+                boards: BoardCatalog.all
+            )
+        )
+    }
+
     func testConfigurationWithAnUnexpandedAPIKeyBuildsNoOpDependencies() {
         let configuration = AnalyticsConfiguration(
             apiKey: "$(ANALYTICS_API_KEY)"

@@ -102,8 +102,11 @@ representation.
 ## Capture a visual catalog
 
 The catalog capture command starts an isolated loopback Workbench server and a
-headless Chrome DevTools session. It opens each completed board through the
-editor, waits for its primary image and SVG regions, then captures the unchanged
+headless Chrome DevTools session. Add `--all-presentations` to select every
+API-declared presentation through the existing editor surface; without it, the
+legacy one-default-presentation-per-board behavior remains. Before each capture
+it waits for that exact presentation asset and the complete,
+presentation-scoped SVG region-key inventory, then captures the unchanged
 `#editor-svg` surface at a fixed viewport.
 
 ```sh
@@ -111,13 +114,18 @@ rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
   --repository-root /absolute/path/to/hang-ten \
   --output-root /absolute/path/to/catalog-captures \
   --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-  --port 4173
+  --port 4173 \
+  --all-presentations
 ```
 
-The output includes one labeled PNG per board, an API-order `manifest.json`,
-and a labeled `contact-sheet.png`. It uses a dedicated capture-only loopback
-launcher rather than the browser-hosted server, then terminates its Chrome and
-server children before returning.
+The output includes one pair-safe labeled PNG and manifest entry per
+`(boardID, presentationID)`, including aliases, rotated views, and inverted
+views. `manifest.json`, PNG filenames, capture labels, and the labeled
+`contact-sheet.png` metadata all retain both identifiers. A board with one
+presentation therefore still produces one capture, while a multi-presentation
+board produces one capture for every surface. The command uses a dedicated
+capture-only loopback launcher rather than the browser-hosted server, then
+terminates its Chrome and server children before returning.
 
 For metadata mapping review, add `--hold-id-labels`. This overlays one
 high-contrast, non-interactive SVG label for each logical `metadata.holdID` at

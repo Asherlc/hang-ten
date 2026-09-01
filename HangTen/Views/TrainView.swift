@@ -181,12 +181,18 @@ struct TrainView: View {
 
 struct BoardDetailView: View {
     let board: TrainingBoard
+    let selectedPresentationID: String?
     @State private var selectedHoldID: String?
 
-    init(board: TrainingBoard) {
+    init(board: TrainingBoard, selectedPresentationID: String? = nil) {
         self.board = board
+        self.selectedPresentationID = selectedPresentationID
+        let presentation = board.presentation(id: selectedPresentationID)
+            ?? board.defaultPresentation
+        let sourcePresentationID = presentation.sourcePresentationID
+            ?? presentation.id
         _selectedHoldID = State(initialValue: board.holds.first(where: {
-            $0.presentationID == board.defaultPresentation.id
+            $0.presentationID == sourcePresentationID
         })?.id)
     }
 
@@ -213,6 +219,7 @@ struct BoardDetailView: View {
                 BoardDetailMapView(
                     board: board,
                     selectedHoldID: $selectedHoldID,
+                    selectedPresentationID: selectedPresentationID,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )
                 .hangCard(padding: 14)

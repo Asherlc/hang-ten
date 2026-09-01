@@ -263,6 +263,9 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 | `HANGTEN_REVIEW_PLANS=1` | Select the full Plans tab. |
 | `HANGTEN_REVIEW_HISTORY=1` | Select the History tab. |
 | `HANGTEN_REVIEW_BOARD_PICKER=1` | Open the full-page board picker from Train. |
+| `HANGTEN_REVIEW_BOARD_PRESENTATION=1` | Open the normal board detail renderer for the exact package and presentation named below. |
+| `HANGTEN_REVIEW_BOARD_ID=<TrainingBoard.id>` | Select the exact board package for board-presentation review. Required with `HANGTEN_REVIEW_BOARD_PRESENTATION=1`. |
+| `HANGTEN_REVIEW_PRESENTATION_ID=<BoardPresentation.id>` | Select the exact presentation for board-presentation review. Required with `HANGTEN_REVIEW_BOARD_PRESENTATION=1`. |
 | `HANGTEN_REVIEW_SETTINGS=1` | Open Settings from Train. |
 | `HANGTEN_REVIEW_PLAN_ID=<TrainingPlan.id>` | Make a specific plan the featured plan. |
 | `HANGTEN_REVIEW_WORKOUT=1` | Open the featured workout. |
@@ -283,6 +286,8 @@ xcrun simctl launch <uuid> com.hangten.training
 ```
 
 These hooks are compiled only in DEBUG and do not affect production launches.
+The board-presentation route shows a visible error for missing or unknown IDs;
+it never falls back to a different package or presentation.
 
 For primary-navigation review, the Train gear is `train.settings`, its board
 link is `train.changeBoard`, and the compact Plans board link is
