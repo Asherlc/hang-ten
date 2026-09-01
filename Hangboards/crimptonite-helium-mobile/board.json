@@ -4,7 +4,7 @@
   "name": "Helium Mobile",
   "subtitle": "Ultra-light mobile board with four edges and jug/sloper surfaces.",
   "productURL": "https://crimptonite.com/product/helium-mobile/",
-  "dimensions": "400 × 58 × 24 mm",
+  "dimensions": "400 \u00d7 58 \u00d7 24 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -15,14 +15,14 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Front — 14/10 mm side right-side up",
+      "name": "Front \u2014 14/10 mm side right-side up",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
       "default": true
     },
     {
       "id": "front-inverted",
-      "name": "Front — 22/18 mm side right-side up",
+      "name": "Front \u2014 22/18 mm side right-side up",
       "assetPath": "assets/front-inverted.png",
       "aspectRatio": 1.5,
       "default": false,
@@ -31,14 +31,14 @@
     },
     {
       "id": "reverse",
-      "name": "Back — sloper side right-side up",
+      "name": "Back \u2014 sloper side right-side up",
       "assetPath": "assets/reverse.png",
       "aspectRatio": 1.5,
       "default": false
     },
     {
       "id": "reverse-inverted",
-      "name": "Back — jug side right-side up",
+      "name": "Back \u2014 jug side right-side up",
       "assetPath": "assets/reverse-inverted.png",
       "aspectRatio": 1.5,
       "default": false,
@@ -59,7 +59,7 @@
         {
           "frame": {
             "x": 0.132,
-            "y": 0.543,
+            "y": 0.743764821289,
             "width": 0.234,
             "height": 0.057
           },
