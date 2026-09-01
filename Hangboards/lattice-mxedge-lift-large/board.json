@@ -145,11 +145,12 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
-      "sizeMillimeters": 22
+      "sizeMillimeters": 22,
+      "fingerCapacity": 4
     },
     {
       "id": "edge-16",
@@ -260,11 +261,12 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
-      "sizeMillimeters": 16
+      "sizeMillimeters": 16,
+      "fingerCapacity": 4
     },
     {
       "id": "edge-12",
