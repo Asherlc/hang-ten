@@ -109,6 +109,10 @@ it waits for that exact presentation asset and the complete,
 presentation-scoped SVG region-key inventory, then captures the unchanged
 `#editor-svg` surface at a fixed viewport.
 
+The command fails before starting any child process when the ignored generated
+`app.js` bundle is absent. Run `npm ci && npm run check:bundle` in
+`Tools/HangboardWorkbench` first, as required by every local server operation.
+
 ```sh
 rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
   --repository-root /absolute/path/to/hang-ten \
@@ -125,7 +129,10 @@ views. `manifest.json`, PNG filenames, capture labels, and the labeled
 presentation therefore still produces one capture, while a multi-presentation
 board produces one capture for every surface. The command uses a dedicated
 capture-only loopback launcher rather than the browser-hosted server, then
-terminates its Chrome and server children before returning.
+terminates the exact owned Chrome and server process groups before returning,
+including on capture failure or `SIGINT`/`SIGTERM`. Each manifest entry exposes
+the stable identity `packageID::presentationID` as `capture_id` and records a
+`normal` or `hold-ids` variant.
 
 For metadata mapping review, add `--hold-id-labels`. This overlays one
 high-contrast, non-interactive SVG label for each logical `metadata.holdID` at

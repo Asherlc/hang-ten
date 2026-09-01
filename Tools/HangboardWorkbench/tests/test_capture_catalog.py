@@ -186,6 +186,34 @@ def test_capture_readiness_image_probe_cannot_outlive_the_outer_deadline() -> No
     assert "clearTimeout" in expression
 
 
+def test_capture_readiness_timeout_reports_the_last_observed_ui_state(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Catches discarding the evidence needed to distinguish stale asset and geometry state."""
+    observed = {
+        "primaryImageLoaded": False,
+        "imageURL": "http://capture.test/image?presentationID=front",
+        "presentationID": "front",
+        "regionKeys": ["front-left"],
+    }
+    times = iter((0.0, 0.1, 30.0))
+    monkeypatch.setattr(capture_catalog.time, "monotonic", lambda: next(times))
+    monkeypatch.setattr(capture_catalog.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(capture_catalog, "_evaluate", lambda *_args: observed)
+    target = capture_catalog.PresentationCaptureTarget(
+        "fixture.board",
+        "Fixture",
+        "back",
+        "Back",
+        "http://capture.test/image?presentationID=back",
+        ("back-left",),
+        False,
+    )
+
+    with pytest.raises(capture_catalog.CaptureError, match='"presentationID": "front"'):
+        capture_catalog._wait_for_capture_ready(object(), target=target)
+
+
 def test_capture_readiness_does_not_probe_a_stale_presentation_asset() -> None:
     expression = capture_catalog._readiness_expression("http://capture.test/expected.png")
 
@@ -445,6 +473,37 @@ def test_owned_process_group_is_stopped_exactly_on_success_and_capture_failure(
     assert process.poll() == -signal.SIGTERM
 
 
+def test_owned_process_group_records_creation_and_verified_cleanup_immediately(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    process = _OwnedProcess(9153)
+    events: list[dict[str, object]] = []
+    monkeypatch.setattr(capture_catalog.subprocess, "Popen", lambda *_args, **_kwargs: process)
+    monkeypatch.setattr(capture_catalog.os, "killpg", lambda _pid, _sig: None)
+
+    with capture_catalog._managed_process(
+        ["owned-child"],
+        stage="server",
+        owner="tensioned-cords-foundation",
+        resource_recorder=events.append,
+    ):
+        assert events == [
+            {
+                "owner": "tensioned-cords-foundation",
+                "resource": "server-process-group",
+                "pid": 9153,
+                "state": "created",
+            }
+        ]
+
+    assert events[-1] == {
+        "owner": "tensioned-cords-foundation",
+        "resource": "server-process-group",
+        "pid": 9153,
+        "state": "verified-terminated",
+    }
+
+
 def test_signal_handler_unwinds_and_stops_the_exact_owned_process_group(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -483,3 +542,32 @@ def test_capture_uses_its_dedicated_local_only_server_launcher() -> None:
         "--port",
         "4183",
     ]
+
+
+def test_capture_rejects_a_missing_ui_bundle_before_starting_owned_children(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Catches hiding the required Workbench bundle behind a generic server-exit failure."""
+    repository = tmp_path / "checkout"
+    (repository / "Hangboards").mkdir(parents=True)
+    (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
+    chrome = tmp_path / "chrome"
+    chrome.write_text("fixture", encoding="utf-8")
+    started: list[list[str]] = []
+    monkeypatch.setattr(
+        capture_catalog.subprocess,
+        "Popen",
+        lambda command, **_kwargs: started.append(command),
+    )
+
+    with pytest.raises(capture_catalog.CaptureError, match="npm ci.*check:bundle"):
+        capture_catalog.capture_catalog(
+            repository,
+            tmp_path / "captures",
+            chrome,
+            45173,
+            all_presentations=True,
+        )
+
+    assert started == []

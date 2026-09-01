@@ -12,6 +12,7 @@ import signal
 import socket
 import struct
 import subprocess
+import sys
 import tempfile
 import time
 import urllib.error
@@ -21,7 +22,7 @@ from argparse import ArgumentParser
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Callable, Iterator
 
 
 STARTUP_TIMEOUT_SECONDS = 15
@@ -428,7 +429,13 @@ def _readiness_expression(expected_image_url: str) -> str:
 
 
 @contextmanager
-def _managed_process(command: list[str], *, stage: str) -> Iterator[subprocess.Popen[str]]:
+def _managed_process(
+    command: list[str],
+    *,
+    stage: str,
+    owner: str | None = None,
+    resource_recorder: Callable[[dict[str, object]], None] | None = None,
+) -> Iterator[subprocess.Popen[str]]:
     try:
         process = subprocess.Popen(
             command,
@@ -439,6 +446,15 @@ def _managed_process(command: list[str], *, stage: str) -> Iterator[subprocess.P
         )
     except OSError as error:
         raise CaptureError(stage, f"could not start {command[0]}") from error
+    if owner is not None and resource_recorder is not None:
+        resource_recorder(
+            {
+                "owner": owner,
+                "resource": f"{stage}-process-group",
+                "pid": process.pid,
+                "state": "created",
+            }
+        )
     try:
         yield process
     finally:
@@ -449,6 +465,15 @@ def _managed_process(command: list[str], *, stage: str) -> Iterator[subprocess.P
             except subprocess.TimeoutExpired:
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait(timeout=5)
+        if owner is not None and resource_recorder is not None:
+            resource_recorder(
+                {
+                    "owner": owner,
+                    "resource": f"{stage}-process-group",
+                    "pid": process.pid,
+                    "state": "verified-terminated",
+                }
+            )
 
 
 @contextmanager
@@ -658,9 +683,11 @@ def _wait_for_capture_ready(
     target: PresentationCaptureTarget,
 ) -> None:
     deadline = time.monotonic() + READINESS_TIMEOUT_SECONDS
+    last_observed: object = None
     while time.monotonic() < deadline:
+        last_observed = _evaluate(connection, _readiness_expression(target.image_url))
         if capture_is_ready(
-            _evaluate(connection, _readiness_expression(target.image_url)),
+            last_observed,
             expected_image_url=target.image_url,
             expected_presentation_id=target.presentation_id,
             expected_region_keys=target.region_keys,
@@ -669,7 +696,8 @@ def _wait_for_capture_ready(
         time.sleep(0.1)
     raise CaptureError(
         "readiness",
-        "timed out waiting for selected presentation image and SVG regions",
+        "timed out waiting for selected presentation image and SVG regions; "
+        f"last observed {json.dumps(last_observed, sort_keys=True)}",
         board_id=target.board_id,
         presentation_id=target.presentation_id,
     )
@@ -955,6 +983,12 @@ def capture_catalog(
     chrome_path = Path(chrome_path).resolve()
     if not repository_root.is_dir() or not (repository_root / "Hangboards").is_dir():
         raise CaptureError("setup", "repository root must contain Hangboards/")
+    if not (repository_root / "Tools" / "HangboardWorkbench" / "app.js").is_file():
+        raise CaptureError(
+            "setup",
+            "Workbench UI bundle is missing; run npm ci and npm run check:bundle "
+            "in Tools/HangboardWorkbench",
+        )
     if not chrome_path.is_file():
         raise CaptureError("setup", "Chrome executable is unavailable")
     if not 1 <= port <= 65535:
@@ -964,6 +998,14 @@ def capture_catalog(
     context_root.mkdir(parents=True, exist_ok=True)
     base_url = f"http://127.0.0.1:{port}"
     debug_port = _available_port()
+
+    def record_resource(event: dict[str, object]) -> None:
+        print(
+            json.dumps({"captureResource": event}, sort_keys=True),
+            file=sys.stderr,
+            flush=True,
+        )
+
     with tempfile.TemporaryDirectory(
         prefix=f"{repository_root.name}-chrome-",
         dir=context_root,
@@ -971,6 +1013,8 @@ def capture_catalog(
         with _managed_process(
             _capture_server_command(repository_root, port),
             stage="server",
+            owner=repository_root.name,
+            resource_recorder=record_resource,
         ) as server_process:
             _wait_for_server(base_url, server_process)
             with _managed_process(
@@ -985,6 +1029,8 @@ def capture_catalog(
                     "about:blank",
                 ],
                 stage="chrome",
+                owner=repository_root.name,
+                resource_recorder=record_resource,
             ) as chrome_process:
                 connection = _devtools_page(debug_port)
                 try:
