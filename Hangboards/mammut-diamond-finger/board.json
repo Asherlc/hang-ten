@@ -1393,6 +1393,86 @@
           }
         }
       ]
+    },
+    {
+      "id": "hold-21",
+      "name": "Hold 21",
+      "kind": "pocket",
+      "fingerCapacity": 4,
+      "sizeMillimeters": 20,
+      "equipmentObjectID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.72004550404,
+            "y": 0.59669700404,
+            "width": 0.179884623737,
+            "height": 0.076897993939
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.031561291468
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.086986098595,
+                  0.922876815402
+                ],
+                "control2": [
+                  0.086986098595,
+                  0.922876815402
+                ],
+                "to": [
+                  0.149985012138,
+                  0.936877417065
+                ],
+                "bendable": true
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.859660721643,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.960102035661,
+                  0.991259626717
+                ],
+                "control2": [
+                  0.990458996648,
+                  0.707207977237
+                ],
+                "to": [
+                  1.0,
+                  0.031561291468
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ]
 }
