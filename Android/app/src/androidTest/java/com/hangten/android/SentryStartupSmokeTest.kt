@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SentryStartupSmokeTest {
     @Test
-    fun `empty Sentry configuration launches without automatic Sentry providers`() {
+    fun emptySentryConfigurationLaunchesWithoutAutomaticSentryProviders() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val providers = context.packageManager
             .getPackageInfo(
