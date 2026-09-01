@@ -54,7 +54,7 @@
       "kind": "edge",
       "handCapacity": 1,
       "presentationID": "primary",
-      "sizeMillimeters": 18,
+      "sizeMillimeters": 10,
       "geometry": [
         {
           "frame": {
