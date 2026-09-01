@@ -77,6 +77,15 @@ _SHAPE_CONSTRAINTS = frozenset(
 )
 _ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
 _FRAME_EDGE_TOLERANCE = 0.0000005
+# Alias images may compute their ratio independently before serializing it.
+# One part per billion accepts harmless decimal/binary rounding without
+# admitting a materially different canvas shape.
+_ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE = 1e-9
+_ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE = 1e-12
+# A projected boundary such as 2 * 0.15 - (0.1 + 0.2) can be a few ulps below
+# zero even though it is mathematically exact. Keep this far below meaningful
+# normalized geometry overflow.
+_PROJECTED_FRAME_EDGE_TOLERANCE = 1e-12
 
 
 def _closed(
@@ -643,7 +652,12 @@ def _validate_alias_presentations(
             raise ValueError(
                 f"presentation {presentation.id} must reference a canonical presentation"
             )
-        if presentation.aspect_ratio != source.aspect_ratio:
+        if not math.isclose(
+            presentation.aspect_ratio,
+            source.aspect_ratio,
+            rel_tol=_ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE,
+            abs_tol=_ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE,
+        ):
             raise ValueError(
                 f"presentation {presentation.id}.aspectRatio must match source presentation aspectRatio"
             )
@@ -665,10 +679,10 @@ def _validate_alias_presentations(
                     anchor,
                 )
                 if (
-                    projected_min_x < 0
-                    or projected_min_y < 0
-                    or projected_max_x > 1
-                    or projected_max_y > 1
+                    projected_min_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_min_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_max_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_max_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
                 ):
                     raise ValueError(
                         f"presentation {presentation.id} projects source hold geometry outside the normalized canvas"

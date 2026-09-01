@@ -690,6 +690,127 @@ def test_unversioned_board_preserves_a_valid_non_center_alias_rotation_anchor(
     )
 
 
+def _source_hold_with_frames(
+    hold_id: str, frames: list[dict[str, float]]
+) -> dict[str, object]:
+    return {
+        "id": hold_id,
+        "name": hold_id,
+        "kind": "jug",
+        "presentationID": "front",
+        "geometry": [
+            {
+                "frame": frame,
+                "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+            }
+            for frame in frames
+        ],
+    }
+
+
+def test_unversioned_board_accepts_alias_aspect_ratio_serialization_rounding(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        aspectRatio=2.0000000005,
+    )
+    document["holds"] = document["holds"][:1]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].aspect_ratio == 2.0000000005
+
+
+def test_unversioned_board_accepts_a_projected_frame_on_the_exact_boundary(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.15, "y": 0.15},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "boundary-source",
+            [{"x": 0.1, "y": 0.1, "width": 0.2, "height": 0.2}],
+        )
+    ]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].geometry_rotation_anchor == module.NormalizedPoint(
+        0.15, 0.15
+    )
+
+
+@pytest.mark.parametrize(
+    ("anchor", "frame"),
+    [
+        ({"x": 0.1, "y": 0.5}, {"x": 0.2, "y": 0.4, "width": 0.2, "height": 0.1}),
+        ({"x": 0.9, "y": 0.5}, {"x": 0.7, "y": 0.4, "width": 0.1, "height": 0.1}),
+        ({"x": 0.5, "y": 0.1}, {"x": 0.4, "y": 0.2, "width": 0.1, "height": 0.2}),
+        ({"x": 0.5, "y": 0.9}, {"x": 0.4, "y": 0.7, "width": 0.1, "height": 0.1}),
+    ],
+    ids=["left", "right", "top", "bottom"],
+)
+def test_unversioned_board_rejects_each_projected_frame_boundary(
+    tmp_path: Path, anchor: dict[str, float], frame: dict[str, float]
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor=anchor,
+    )
+    document["holds"] = [_source_hold_with_frames("boundary-source", [frame])]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside the normalized canvas"):
+        module.load_board_package(package_root)
+
+
+def test_unversioned_board_rejects_an_off_canvas_later_piece_of_a_later_source_hold(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.1, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "first-source",
+            [{"x": 0.1, "y": 0.4, "width": 0.1, "height": 0.1}],
+        ),
+        _source_hold_with_frames(
+            "second-source",
+            [
+                {"x": 0.1, "y": 0.4, "width": 0.1, "height": 0.1},
+                {"x": 0.2, "y": 0.4, "width": 0.2, "height": 0.1},
+            ],
+        ),
+    ]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside the normalized canvas"):
+        module.load_board_package(package_root)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
@@ -711,7 +832,7 @@ def test_unversioned_board_preserves_a_valid_non_center_alias_rotation_anchor(
             lambda document: document["presentations"][1].update(
                 sourcePresentationID="front",
                 isInverted=True,
-                aspectRatio=1,
+                aspectRatio=2.0001,
             ),
             "must match source presentation aspectRatio",
         ),
