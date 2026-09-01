@@ -145,7 +145,8 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 2
     },
     {
       "id": "edge-23",
@@ -271,7 +272,8 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 2
     },
     {
       "id": "edge-15",
@@ -397,7 +399,8 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 2
     }
   ]
 }
