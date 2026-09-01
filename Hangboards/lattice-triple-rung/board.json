@@ -138,7 +138,8 @@
       ],
       "sizeMillimeters": 45,
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 2
     },
     {
       "id": "edge-10",
@@ -266,7 +267,8 @@
       ],
       "sizeMillimeters": 10,
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 2
     },
     {
       "id": "edge-20",
@@ -394,7 +396,8 @@
       ],
       "sizeMillimeters": 20,
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 2
     }
   ],
   "presentations": [
