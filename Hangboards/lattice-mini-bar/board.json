@@ -38,7 +38,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.081, "y": 0.4, "width": 0.844, "height": 0.095 },
+          "frame": { "x": 0.111, "y": 0.211, "width": 0.784, "height": 0.098 },
           "shape": {
             "type": "path",
             "commands": [
@@ -55,7 +55,7 @@
           "treatment": { "type": "surface" }
         },
         {
-          "frame": { "x": 0.081, "y": 0.476, "width": 0.111, "height": 0.16 },
+          "frame": { "x": 0.111, "y": 0.29, "width": 0.103, "height": 0.165 },
           "shape": {
             "type": "path",
             "commands": [
@@ -70,7 +70,7 @@
           "treatment": { "type": "surface" }
         },
         {
-          "frame": { "x": 0.873, "y": 0.476, "width": 0.052, "height": 0.16 },
+          "frame": { "x": 0.847, "y": 0.29, "width": 0.048, "height": 0.165 },
           "shape": {
             "type": "path",
             "commands": [
@@ -85,7 +85,7 @@
           "treatment": { "type": "surface" }
         },
         {
-          "frame": { "x": 0.235, "y": 0.621, "width": 0.532, "height": 0.077 },
+          "frame": { "x": 0.254, "y": 0.44, "width": 0.494, "height": 0.08 },
           "shape": {
             "type": "path",
             "commands": [
@@ -109,7 +109,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.19, "y": 0.577, "width": 0.685, "height": 0.043 },
+          "frame": { "x": 0.212, "y": 0.394, "width": 0.636, "height": 0.044 },
           "shape": {
             "type": "path",
             "commands": [
@@ -135,7 +135,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.19, "y": 0.478, "width": 0.685, "height": 0.099 },
+          "frame": { "x": 0.212, "y": 0.292, "width": 0.636, "height": 0.102 },
           "shape": {
             "type": "path",
             "commands": [
@@ -163,7 +163,7 @@
       "presentationID": "end",
       "geometry": [
         {
-          "frame": { "x": 0.216, "y": 0.193, "width": 0.57, "height": 0.617 },
+          "frame": { "x": 0.3, "y": 0.05, "width": 0.4, "height": 0.42 },
           "shape": {
             "type": "path",
             "commands": [

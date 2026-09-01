@@ -49,6 +49,12 @@ class CatalogBoard:
 
 
 @dataclass(frozen=True)
+class CatalogPresentation:
+    presentation_id: str
+    display_name: str
+
+
+@dataclass(frozen=True)
 class RegionBounds:
     """One rendered editor-region bounding box paired with its API hold identity."""
 
@@ -145,9 +151,18 @@ def _absolute_url(base_url: str, url: str) -> str:
     )
 
 
-def _board_capture_target(base_url: str, board_id: str) -> tuple[str, int]:
+def _board_api_url(base_url: str, board_id: str, presentation_id: str | None = None) -> str:
     encoded_id = urllib.parse.quote(board_id, safe="")
-    payload = _request_json(f"{base_url}/api/boards/{encoded_id}")
+    url = f"{base_url}/api/boards/{encoded_id}"
+    if presentation_id is not None:
+        url += "?" + urllib.parse.urlencode({"presentationID": presentation_id})
+    return url
+
+
+def _board_capture_target(
+    base_url: str, board_id: str, presentation_id: str | None = None
+) -> tuple[str, int]:
+    payload = _request_json(_board_api_url(base_url, board_id, presentation_id))
     board = payload.get("board")
     if payload.get("ok") is not True or not isinstance(board, dict):
         raise CaptureError("board", "Workbench returned an invalid board document", board_id=board_id)
@@ -161,14 +176,36 @@ def _board_capture_target(base_url: str, board_id: str) -> tuple[str, int]:
     return _absolute_url(base_url, image_url), len(regions)
 
 
-def _board_document(base_url: str, board_id: str) -> dict[str, Any]:
-    encoded_id = urllib.parse.quote(board_id, safe="")
-    payload = _request_json(f"{base_url}/api/boards/{encoded_id}")
+def _board_document(
+    base_url: str, board_id: str, presentation_id: str | None = None
+) -> dict[str, Any]:
+    payload = _request_json(_board_api_url(base_url, board_id, presentation_id))
     board = payload.get("board")
     document = board.get("document") if isinstance(board, dict) else None
     if payload.get("ok") is not True or not isinstance(document, dict):
         raise CaptureError("board", "Workbench returned an invalid board document", board_id=board_id)
     return document
+
+
+def _board_presentations(base_url: str, board_id: str) -> tuple[CatalogPresentation, ...]:
+    payload = _request_json(_board_api_url(base_url, board_id))
+    board = payload.get("board")
+    presentations = board.get("presentations") if isinstance(board, dict) else None
+    if payload.get("ok") is not True or not isinstance(presentations, list) or not presentations:
+        raise CaptureError("board", "board document is missing presentations", board_id=board_id)
+    result: list[CatalogPresentation] = []
+    for presentation in presentations:
+        presentation_id = presentation.get("presentationID") if isinstance(presentation, dict) else None
+        display_name = presentation.get("displayName") if isinstance(presentation, dict) else None
+        if not isinstance(presentation_id, str) or not presentation_id or not isinstance(display_name, str):
+            raise CaptureError("board", "board document has an invalid presentation", board_id=board_id)
+        result.append(CatalogPresentation(presentation_id, display_name))
+    return tuple(result)
+
+
+def presentation_capture_identity(board_id: str, presentation_id: str) -> str:
+    """Return a stable manifest identity for one board presentation."""
+    return f"{board_id}::{presentation_id}"
 
 
 def hold_id_label_positions(regions: tuple[RegionBounds, ...]) -> tuple[HoldIDLabel, ...]:
@@ -464,6 +501,28 @@ def _wait_for_catalog_controls(connection: _DevToolsConnection, *, expected_coun
     raise CaptureError("readiness", "timed out waiting for Workbench catalog controls")
 
 
+def _select_presentation(
+    connection: _DevToolsConnection, presentation_id: str, *, board_id: str
+) -> None:
+    selected = _evaluate(
+        connection,
+        f"""(() => {{
+          const select = document.getElementById('presentation-select');
+          if (!(select instanceof HTMLSelectElement)) return false;
+          const option = [...select.options].find((candidate) => candidate.value === {json.dumps(presentation_id)});
+          if (!option) return false;
+          const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
+          setter?.call(select, option.value);
+          select.dispatchEvent(new Event('change', {{ bubbles: true }}));
+          return true;
+        }})()""",
+    )
+    if selected is not True:
+        raise CaptureError(
+            "capture", f"presentation selector is missing {presentation_id}", board_id=board_id
+        )
+
+
 def _canvas_clip(connection: _DevToolsConnection) -> dict[str, float]:
     value = _evaluate(
         connection,
@@ -656,6 +715,7 @@ def capture_catalog(
     port: int,
     *,
     hold_id_labels: bool = False,
+    all_presentations: bool = False,
 ) -> CaptureManifest:
     """Capture all completed boards in API order through one Chrome DevTools page."""
     repository_root = Path(repository_root).resolve()
@@ -705,43 +765,79 @@ def capture_catalog(
                     _wait_for_catalog_controls(connection, expected_count=len(catalog))
                     entries: list[CaptureEntry] = []
                     for index, board in enumerate(catalog):
-                        image_url, regions = _board_capture_target(base_url, board.board_id)
                         _evaluate(
                             connection,
                             f"(() => {{ document.querySelectorAll('#board-list button')[{index}].click(); return true; }})()",
                         )
+                        initial_image_url, initial_regions = _board_capture_target(
+                            base_url, board.board_id
+                        )
                         _wait_for_capture_ready(
                             connection,
-                            expected_image_url=image_url,
-                            expected_region_count=regions,
+                            expected_image_url=initial_image_url,
+                            expected_region_count=initial_regions,
                             board_id=board.board_id,
                         )
-                        labels_injected = False
-                        if hold_id_labels:
-                            labels = hold_id_label_positions(
-                                _rendered_region_bounds(
+                        presentations = _board_presentations(base_url, board.board_id)
+                        capture_presentations = presentations if all_presentations else presentations[:1]
+                        for presentation in capture_presentations:
+                            if len(presentations) > 1:
+                                _select_presentation(
                                     connection,
-                                    _board_document(base_url, board.board_id),
+                                    presentation.presentation_id,
                                     board_id=board.board_id,
                                 )
+                            image_url, regions = _board_capture_target(
+                                base_url, board.board_id, presentation.presentation_id
                             )
-                            _inject_hold_id_labels(connection, labels)
-                            labels_injected = True
-                        try:
-                            screenshot = connection.call(
-                                "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)
-                            ).get("data")
-                        finally:
-                            if labels_injected:
-                                _remove_hold_id_labels(connection)
-                        if not isinstance(screenshot, str):
-                            raise CaptureError("capture", "Chrome returned no PNG data", board_id=board.board_id)
-                        filename = capture_filename(board.board_id)
-                        _write_labeled_capture(
-                            base64.b64decode(screenshot), output_root / filename,
-                            f"{board.board_id} — {board.display_name}",
-                        )
-                        entries.append(CaptureEntry(board.board_id, board.display_name, regions, filename))
+                            _wait_for_capture_ready(
+                                connection,
+                                expected_image_url=image_url,
+                                expected_region_count=regions,
+                                board_id=board.board_id,
+                            )
+                            labels_injected = False
+                            if hold_id_labels:
+                                labels = hold_id_label_positions(
+                                    _rendered_region_bounds(
+                                        connection,
+                                        _board_document(
+                                            base_url, board.board_id, presentation.presentation_id
+                                        ),
+                                        board_id=board.board_id,
+                                    )
+                                )
+                                _inject_hold_id_labels(connection, labels)
+                                labels_injected = True
+                            try:
+                                screenshot = connection.call(
+                                    "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)
+                                ).get("data")
+                            finally:
+                                if labels_injected:
+                                    _remove_hold_id_labels(connection)
+                            if not isinstance(screenshot, str):
+                                raise CaptureError(
+                                    "capture", "Chrome returned no PNG data", board_id=board.board_id
+                                )
+                            identity = (
+                                presentation_capture_identity(
+                                    board.board_id, presentation.presentation_id
+                                )
+                                if all_presentations
+                                else board.board_id
+                            )
+                            display_name = (
+                                f"{board.display_name} — {presentation.display_name}"
+                                if all_presentations
+                                else board.display_name
+                            )
+                            filename = capture_filename(identity)
+                            _write_labeled_capture(
+                                base64.b64decode(screenshot), output_root / filename,
+                                f"{identity} — {display_name}",
+                            )
+                            entries.append(CaptureEntry(identity, display_name, regions, filename))
                     manifest = CaptureManifest(tuple(entries))
                     manifest.write(output_root)
                     create_contact_sheet(output_root, manifest)
@@ -763,6 +859,11 @@ def argument_parser() -> ArgumentParser:
         action="store_true",
         help="Overlay one review-only stable hold ID label per logical hold",
     )
+    parser.add_argument(
+        "--all-presentations",
+        action="store_true",
+        help="Capture every presentation instead of only each board's default surface",
+    )
     return parser
 
 
@@ -774,6 +875,7 @@ def main() -> None:
         arguments.chrome_path,
         arguments.port,
         hold_id_labels=arguments.hold_id_labels,
+        all_presentations=arguments.all_presentations,
     )
     print(json.dumps({"boards": len(manifest.entries), "output": str(arguments.output_root)}, sort_keys=True))
 
@@ -783,6 +885,7 @@ __all__ = [
     "CaptureError",
     "CaptureManifest",
     "CatalogBoard",
+    "CatalogPresentation",
     "HoldIDLabel",
     "RegionBounds",
     "capture_catalog",
@@ -795,6 +898,7 @@ __all__ = [
     "hold_id_label_positions",
     "argument_parser",
     "page_websocket_url",
+    "presentation_capture_identity",
 ]
 
 

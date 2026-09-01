@@ -196,6 +196,31 @@ def test_capture_command_accepts_hold_id_labels() -> None:
     assert arguments.hold_id_labels is True
 
 
+def test_capture_command_accepts_every_presentation() -> None:
+    arguments = capture_catalog.argument_parser().parse_args(
+        [
+            "--repository-root",
+            "/checkout",
+            "--output-root",
+            "/captures",
+            "--chrome-path",
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "--all-presentations",
+        ]
+    )
+
+    assert arguments.all_presentations is True
+
+
+def test_presentation_capture_identity_is_stable_and_distinct() -> None:
+    upright = capture_catalog.presentation_capture_identity("fixture.board", "upright")
+    inverted = capture_catalog.presentation_capture_identity("fixture.board", "inverted")
+
+    assert upright == "fixture.board::upright"
+    assert inverted == "fixture.board::inverted"
+    assert capture_catalog.capture_filename(upright) != capture_catalog.capture_filename(inverted)
+
+
 def test_capture_uses_its_dedicated_local_only_server_launcher() -> None:
     repository_root = Path("/checkout")
 
