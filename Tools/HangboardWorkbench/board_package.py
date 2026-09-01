@@ -100,7 +100,11 @@ _SHAPE_CONSTRAINTS = frozenset(
 )
 _FRAME_EDGE_TOLERANCE = 0.0000005
 _RECOVERY_DIRECTORY_NAME = ".workbench-recovery"
-_STAGING_DIRECTORY_PREFIXES = (".workbench-edit-", ".workbench-save-")
+_STAGING_DIRECTORY_PREFIXES = (
+    ".workbench-delete-",
+    ".workbench-edit-",
+    ".workbench-save-",
+)
 
 
 class BoardPackageError(ValueError):

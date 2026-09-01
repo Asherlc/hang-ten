@@ -923,6 +923,7 @@ def test_discovery_open_and_noop_save_ignore_abandoned_staging_directories(
     staging_directories = [
         library / ".workbench-edit-abandoned",
         library / ".workbench-save-abandoned",
+        library / ".workbench-delete-abandoned",
     ]
     for staging in staging_directories:
         (staging / "partial-package").mkdir(parents=True)
