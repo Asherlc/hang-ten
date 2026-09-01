@@ -704,8 +704,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.44,
-            "y": 0.44,
+            "x": 0.280344173,
+            "y": 0.350133846,
             "width": 0.12,
             "height": 0.12
           },
@@ -790,7 +790,8 @@
           }
         }
       ],
-      "presentationID": "large-medium-edge-position"
+      "presentationID": "large-medium-edge-position",
+      "fingerCapacity": 1
     }
   ]
 }
