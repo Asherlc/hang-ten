@@ -597,7 +597,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "fingerCapacity": 4
     }
   ]
 }
