@@ -2006,6 +2006,132 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-23",
+      "name": "Hold 23",
+      "kind": "pocket",
+      "fingerCapacity": 4,
+      "sizeMillimeters": 30,
+      "equipmentObjectID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.875616243434,
+            "y": 0.32036150303,
+            "width": 0.082013258586,
+            "height": 0.184452018182
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.887547438437,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.112452561563,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.050346725165,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.089543048227
+                ],
+                "to": [
+                  0.0,
+                  0.20000000219
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.79999999781
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.910456951773
+                ],
+                "control2": [
+                  0.050346725165,
+                  1.0
+                ],
+                "to": [
+                  0.112452561563,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.887547438437,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.949653274835,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.910456951773
+                ],
+                "to": [
+                  1.0,
+                  0.79999999781
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.20000000219
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.089543048227
+                ],
+                "control2": [
+                  0.949653274835,
+                  0.0
+                ],
+                "to": [
+                  0.887547438437,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ]
 }
