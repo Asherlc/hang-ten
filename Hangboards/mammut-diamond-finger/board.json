@@ -2098,6 +2098,65 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-22",
+      "name": "Hold 22",
+      "kind": "pocket",
+      "fingerCapacity": 4,
+      "sizeMillimeters": 20,
+      "equipmentObjectID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.3212135,
+            "y": 0.594612529293,
+            "width": 0.105,
+            "height": 0.098293509091
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ]
 }
