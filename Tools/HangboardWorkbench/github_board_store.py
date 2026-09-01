@@ -10,7 +10,7 @@ from collections.abc import Callable, Hashable, Iterator, Mapping
 from concurrent.futures import Executor, Future, ThreadPoolExecutor
 from contextlib import contextmanager
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Literal, ParamSpec, Protocol, TypeVar, overload
 
 import board_package
@@ -48,6 +48,15 @@ class _GitHubSnapshotClient(Protocol):
 
 
 class _GitHubMutationClient(_GitHubSnapshotClient, Protocol):
+    def commit_files(
+        self,
+        token: str,
+        branch: str,
+        expected_head_sha: str,
+        changes: Mapping[str, bytes | None],
+        message: str,
+    ) -> str: ...
+
     def put_file(
         self,
         token: str,
@@ -57,7 +66,6 @@ class _GitHubMutationClient(_GitHubSnapshotClient, Protocol):
         message: str,
         sha: str | None,
     ) -> str: ...
-
 
 class _GitHubBoardClient(_GitHubMutationClient, Protocol):
     def get_branch_head_sha(self, token: str, branch: str) -> str: ...
@@ -291,6 +299,41 @@ class GitHubBoardStore:
             )
             self._cache_opened_package(token, branch, saved[0])
             return saved
+
+    def delete_board_presentation(
+        self,
+        token: str,
+        branch: str,
+        board_id: str,
+        presentation_id: str,
+    ) -> tuple[GitHubBoardPackage, str]:
+        """Remove a canonical surface through the authenticated GitHub store."""
+        with self._operation():
+            board_id = board_package._identifier(board_id, "board ID")
+            snapshot = self._snapshot(token, branch, cache_blobs=True)
+            selected = _selected_package(
+                self._catalog(snapshot, token, branch), board_id
+            )
+            live = _load_selected_package(
+                snapshot,
+                token,
+                branch,
+                selected.slug,
+                board_id,
+                prevalidated_board=selected.board,
+            )
+            entries = _package_groups(snapshot.get_tree(token, branch))[live.slug]
+            deleted = _delete_loaded_presentation(
+                _StoreMutationClient(self, token, branch),
+                token,
+                branch,
+                live,
+                presentation_id,
+                entries,
+                expected_head_sha=snapshot.commit_sha,
+            )
+            self._cache_opened_package(token, branch, deleted[0])
+            return deleted
 
     def close(self) -> None:
         with self._operations:
@@ -610,6 +653,24 @@ class _StoreMutationClient:
             sha,
         )
 
+    def commit_files(
+        self,
+        token: str,
+        branch: str,
+        expected_head_sha: str,
+        changes: Mapping[str, bytes | None],
+        message: str,
+    ) -> str:
+        if token != self._token or branch != self._branch:
+            raise RuntimeError("GitHub mutation credentials or branch do not match")
+        return self._store._call_control(
+            self._store._client.commit_files,
+            token,
+            branch,
+            expected_head_sha,
+            changes,
+            message,
+        )
 
 class _CachedSnapshotClient:
     """Presents one authenticated immutable tree to existing load helpers."""
@@ -907,6 +968,70 @@ def save_editor_document(
         live,
         document,
         expected_board_id=expected_board_id,
+    )
+
+
+def _delete_loaded_presentation(
+    client: _GitHubMutationClient,
+    token: str,
+    branch: str,
+    live: GitHubBoardPackage,
+    presentation_id: str,
+    entries: Mapping[str, TreeEntry],
+    *,
+    expected_head_sha: str,
+) -> tuple[GitHubBoardPackage, str]:
+    board, removed_assets = board_package._delete_presentation_from_board(
+        live.board, presentation_id
+    )
+    presentation_values = board_package._parse_board_presentations(board)
+    remaining_presentations = tuple(
+        replace(
+            presentation,
+            is_default=next(
+                item[4] for item in presentation_values if item[0] == presentation.id
+            ),
+        )
+        for presentation in live.presentations
+        if any(item[0] == presentation.id for item in presentation_values)
+    )
+    default = next(item for item in remaining_presentations if item.is_default)
+    board_package._validate_board(
+        board,
+        default.image_width,
+        default.image_height,
+        presentations=remaining_presentations,
+        allow_missing_kind=True,
+    )
+    content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
+    changes: dict[str, bytes | None] = {
+        f"{_BOARD_LIBRARY_PATH}/{live.slug}/board.json": content,
+    }
+    for asset_path in removed_assets:
+        entry = entries.get(asset_path)
+        if entry is None or entry.type != "blob":
+            raise board_package.BoardPackageError("package presentation image is missing")
+        changes[f"{_BOARD_LIBRARY_PATH}/{live.slug}/{asset_path}"] = None
+    try:
+        commit_sha = client.commit_files(
+            token,
+            branch,
+            expected_head_sha,
+            changes,
+            f"Delete presentation {presentation_id} from {live.board_id}",
+        )
+    except GitHubConflictError as error:
+        raise board_package.BoardSaveConflictError(str(error)) from error
+    return (
+        GitHubBoardPackage(
+            live.slug,
+            board,
+            default.image_width,
+            default.image_height,
+            _git_blob_sha(content),
+            remaining_presentations,
+        ),
+        commit_sha,
     )
 
 

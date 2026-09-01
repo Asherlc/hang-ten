@@ -53,6 +53,7 @@ button:disabled { cursor: default; opacity: .4; }
 .canvas-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #171916; }
 .canvas-controls { display: flex; align-items: center; gap: 7px; }
 .canvas-controls .tool-button { min-width: 34px; padding: 0 9px; }
+.surface-controls { display: flex; align-items: center; gap: 5px; }
 .canvas-background-selector { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 10px; font-weight: 700; }
 .canvas-background-selector select { height: 30px; padding: 0 7px; border: 1px solid var(--line); border-radius: 6px; background: #131512; color: var(--text); font: inherit; }
 #canvas-zoom-level { min-width: 40px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: center; }

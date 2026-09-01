@@ -716,6 +716,121 @@ def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
             assert response.headers["Content-Type"] == "image/png"
 
 
+def test_board_payload_marks_alias_presentations_with_their_canonical_source(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package = library / "fixture-v2"
+    board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["presentations"].append(
+        {
+            "id": "front-inverted",
+            "name": "Front Inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "front",
+            "isInverted": True,
+        }
+    )
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, opened = request_json(base, "GET", "/api/boards/fixture.multi")
+
+    assert status == 200
+    alias = next(
+        presentation
+        for presentation in opened["board"]["presentations"]
+        if presentation["presentationID"] == "front-inverted"
+    )
+    assert alias["sourcePresentationID"] == "front"
+
+
+def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(
+    tmp_path: Path,
+) -> None:
+    """Deleting the default must leave a valid, focused canonical surface."""
+    library = _write_multi_presentation_library(tmp_path)
+    package = library / "fixture-v2"
+
+    with running_server(library) as base:
+        status, deleted = request_json(
+            base,
+            "DELETE",
+            "/api/boards/fixture.multi/presentations/front",
+        )
+
+    assert status == 200
+    board = deleted["board"]
+    assert board["selectedPresentationID"] == "back"
+    assert board["document"]["presentationID"] == "back"
+    assert board["presentations"] == [
+        {
+            "presentationID": "back",
+            "displayName": "Back",
+            "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
+            "default": True,
+        }
+    ]
+    stored = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    assert [hold["id"] for hold in stored["holds"]] == ["hold-back"]
+    assert not (package / "assets" / "primary.png").exists()
+    assert board_package.load_board_package(package).presentation().id == "back"
+
+
+def test_delete_only_surface_is_rejected_without_mutating_the_package(
+    tmp_path: Path,
+) -> None:
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    before = (package / "board.json").read_bytes()
+
+    with running_server(library) as base:
+        status, result = request_json(
+            base,
+            "DELETE",
+            "/api/boards/fixture.board/presentations/primary",
+        )
+
+    assert status == 400
+    assert result == {"ok": False, "error": "cannot delete the only canonical presentation"}
+    assert (package / "board.json").read_bytes() == before
+
+
+def test_delete_nondefault_surface_keeps_the_existing_default(tmp_path: Path) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package = library / "fixture-v2"
+    board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["presentations"] = [
+        {**board["presentations"][0], "default": False},
+        {**board["presentations"][1], "default": True},
+        {
+            "id": "alternate",
+            "name": "Alternate",
+            "assetPath": "assets/back.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+        },
+    ]
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, deleted = request_json(
+            base,
+            "DELETE",
+            "/api/boards/fixture.multi/presentations/alternate",
+        )
+
+    assert status == 200
+    assert deleted["board"]["selectedPresentationID"] == "back"
+    assert [
+        presentation["presentationID"]
+        for presentation in deleted["board"]["presentations"]
+        if presentation["default"]
+    ] == ["back"]
+
+
 def test_save_keeps_geometry_inside_board_json_and_creates_no_registry_or_sidecar(
     tmp_path: Path,
 ) -> None:

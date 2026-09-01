@@ -154,6 +154,39 @@ test("the browser client requests and validates a selected presentation", async 
   assert.deepEqual(calls, ["/api/boards/compact?presentationID=back"]);
 });
 
+test("the browser client deletes a selected presentation and returns the next focused board", async () => {
+  const calls: Array<{ request: string; options: RequestInit | undefined }> = [];
+  const { runtime } = runtimeFixture(async (input, options) => {
+    calls.push({ request: String(input), options });
+    return response({
+      ok: true,
+      board: boardFixture({
+        selectedPresentationID: "back",
+        presentations: [{
+          presentationID: "back",
+          displayName: "Back",
+          imageUrl: "/api/boards/compact/image?presentationID=back",
+          default: true,
+        }],
+        document: {
+          presentationID: "back",
+          canvas: { width: 100, height: 50 },
+          regions: [],
+        },
+      }),
+    });
+  });
+  const client = createWorkbenchClient(runtime) as unknown as {
+    deletePresentation(boardID: string, presentationID: string): Promise<Board>;
+  };
+
+  const board = await client.deletePresentation("compact", "front");
+
+  assert.equal(board.selectedPresentationID, "back");
+  assert.equal(calls[0]?.request, "/api/boards/compact/presentations/front");
+  assert.equal(calls[0]?.options?.method, "DELETE");
+});
+
 test("backend requests carry a fifteen-second timeout signal", async (context) => {
   const timeoutSignal = new AbortController().signal;
   const timeout = context.mock.method(AbortSignal, "timeout", () => timeoutSignal);
