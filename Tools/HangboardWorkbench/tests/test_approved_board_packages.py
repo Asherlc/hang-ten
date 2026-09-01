@@ -48,6 +48,33 @@ def test_lattice_mini_bar_matches_audited_inventory() -> None:
         {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"},
     )
 
+    package_root = REPOSITORY_ROOT / "Hangboards" / "lattice-mini-bar"
+    package = board_package.load_board_package(package_root)
+    presentations = package.board["presentations"]
+    assert [
+        (item["id"], item["name"], item["assetPath"]) for item in presentations
+    ] == [
+        ("edge-10", "10 mm edge", "assets/edge-10.png"),
+        ("edge-20", "20 mm edge", "assets/edge-20.png"),
+        ("ergonomic-jug", "Ergonomic jug", "assets/ergonomic-jug.png"),
+        ("mini-pinch", "Mini pinch", "assets/mini-pinch.png"),
+    ]
+    assert [item["id"] for item in presentations if item["default"]] == ["edge-20"]
+    assert {path.name for path in (package_root / "assets").iterdir()} == {
+        "edge-10.png",
+        "edge-20.png",
+        "ergonomic-jug.png",
+        "mini-pinch.png",
+    }
+
+    for presentation in presentations:
+        presentation_id = presentation["id"]
+        document = board_package.editor_document(package, presentation_id)
+        assert {
+            region["metadata"]["holdID"] for region in document["regions"]
+        } == {presentation_id}
+        assert (package_root / presentation["assetPath"]).is_file()
+
 
 def test_lattice_mxedge_lift_small_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
