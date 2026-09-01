@@ -30,7 +30,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.3, "y": 0.295, "width": 0.398, "height": 0.118 },
+          "frame": { "x": 0.257, "y": 0.295, "width": 0.482, "height": 0.118 },
           "shape": {
             "type": "path",
             "commands": [
@@ -61,7 +61,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.302, "y": 0.412, "width": 0.394, "height": 0.024 },
+          "frame": { "x": 0.26, "y": 0.412, "width": 0.477, "height": 0.024 },
           "shape": {
             "type": "path",
             "commands": [
@@ -90,7 +90,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.303, "y": 0.542, "width": 0.392, "height": 0.052 },
+          "frame": { "x": 0.261, "y": 0.7, "width": 0.475, "height": 0.027 },
           "shape": {
             "type": "path",
             "commands": [

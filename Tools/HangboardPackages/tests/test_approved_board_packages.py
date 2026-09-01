@@ -1141,16 +1141,16 @@ def test_yy_baguette_evo_central_30_25_paths_match_the_centered_recess() -> None
     holds = {hold["id"]: hold for hold in board["holds"]}
 
     assert holds["edge-central-30"]["geometry"][0]["frame"] == {
-        "x": 0.44,
-        "y": 0.659,
-        "width": 0.12,
-        "height": 0.03,
+        "x": 0.423,
+        "y": 0.455,
+        "width": 0.154,
+        "height": 0.033,
     }
     assert holds["edge-central-25"]["geometry"][0]["frame"] == {
-        "x": 0.44,
-        "y": 0.738,
-        "width": 0.12,
-        "height": 0.027,
+        "x": 0.423,
+        "y": 0.543,
+        "width": 0.154,
+        "height": 0.030,
     }
 
 

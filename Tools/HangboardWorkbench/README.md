@@ -124,11 +124,6 @@ high-contrast, non-interactive SVG label for each logical `metadata.holdID` at
 the union center of that hold's rendered pieces. The labels exist only while a
 screenshot is taken; they do not edit board data or geometry.
 
-For presentation-complete review, add `--all-presentations`. The capture then
-selects every declared surface through the Workbench presentation control and
-records each manifest identity as `board-id::presentation-id`; generated file
-names remain stable and distinct across surfaces and transformed aliases.
-
 ## Outline shape constraints
 
 The **Outline shape** picker reflects the selected geometry piece and offers

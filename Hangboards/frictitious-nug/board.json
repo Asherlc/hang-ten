@@ -38,7 +38,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.203, "y": 0.241, "width": 0.591, "height": 0.101 },
+          "frame": { "x": 0.203, "y": 0.358, "width": 0.591, "height": 0.122 },
           "shape": {
             "type": "path",
             "commands": [
@@ -66,7 +66,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.204, "y": 0.341, "width": 0.59, "height": 0.146 },
+          "frame": { "x": 0.204, "y": 0.478, "width": 0.59, "height": 0.176 },
           "shape": {
             "type": "path",
             "commands": [
@@ -93,7 +93,7 @@
       "presentationID": "reverse",
       "geometry": [
         {
-          "frame": { "x": 0.159, "y": 0.154, "width": 0.724, "height": 0.149 },
+          "frame": { "x": 0.157, "y": 0.273, "width": 0.701, "height": 0.188 },
           "shape": {
             "type": "path",
             "commands": [
@@ -121,7 +121,7 @@
       "presentationID": "reverse",
       "geometry": [
         {
-          "frame": { "x": 0.16, "y": 0.297, "width": 0.723, "height": 0.203 },
+          "frame": { "x": 0.158, "y": 0.455, "width": 0.7, "height": 0.257 },
           "shape": {
             "type": "path",
             "commands": [
@@ -148,7 +148,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.055, "y": 0.14, "width": 0.89, "height": 0.119 },
+          "frame": { "x": 0.055, "y": 0.236, "width": 0.89, "height": 0.143 },
           "shape": {
             "type": "path",
             "commands": [
@@ -176,7 +176,7 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": { "x": 0.055, "y": 0.472, "width": 0.89, "height": 0.127 },
+          "frame": { "x": 0.055, "y": 0.636, "width": 0.89, "height": 0.153 },
           "shape": {
             "type": "path",
             "commands": [
