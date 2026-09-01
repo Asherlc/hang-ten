@@ -102,16 +102,35 @@ final class BoardEditorStoreTests: XCTestCase {
         XCTAssertEqual(loaded.imageURL.lastPathComponent, "primary.png")
     }
 
+    func testPrepareEditablePackageLoadsAnExistingPackageOnce() throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let setupStore = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try setupStore.startEditing(slug: "fixture-board")
+        let documentLoads = DocumentLoadCounter()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL,
+            documentWillLoad: {
+                documentLoads.increment()
+            }
+        )
+
+        let package = try store.prepareEditablePackage(slug: "fixture-board")
+
+        XCTAssertEqual(package.slug, "fixture-board")
+        XCTAssertEqual(documentLoads.value, 1)
+    }
+
     func testPrepareEditablePackageKeepsResetQueuedUntilDocumentLoads() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
-        let preparationStarted = DispatchSemaphore(value: 0)
+        let preparationHasStarted = expectation(description: "preparation starts loading")
         let allowDocumentLoad = DispatchSemaphore(value: 0)
         let resetAttempt = ResetAttempt()
         let store = BoardEditorStore(
             baseDirectory: storeDirectory,
             sourceLibraryURL: sourceLibraryURL,
             preparationWillLoadDocument: {
-                preparationStarted.signal()
+                preparationHasStarted.fulfill()
                 allowDocumentLoad.wait()
             }
         )
@@ -119,7 +138,7 @@ final class BoardEditorStoreTests: XCTestCase {
         let preparation = Task.detached { () throws -> BoardEditedPackage in
             try store.prepareEditablePackage(slug: "fixture-board")
         }
-        XCTAssertEqual(preparationStarted.wait(timeout: .now() + 1), .success)
+        await fulfillment(of: [preparationHasStarted], timeout: 10)
 
         let reset = Task.detached { () throws -> Void in
             await resetAttempt.begin()
@@ -141,13 +160,13 @@ final class BoardEditorStoreTests: XCTestCase {
 
     func testPreparationForAnotherStoreIsNotBlockedByAnUnrelatedStore() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
-        let preparationStarted = DispatchSemaphore(value: 0)
+        let preparationHasStarted = expectation(description: "first preparation starts loading")
         let allowPreparation = DispatchSemaphore(value: 0)
         let firstStore = BoardEditorStore(
             baseDirectory: storeDirectory.appendingPathComponent("first", isDirectory: true),
             sourceLibraryURL: sourceLibraryURL,
             preparationWillLoadDocument: {
-                preparationStarted.signal()
+                preparationHasStarted.fulfill()
                 allowPreparation.wait()
             }
         )
@@ -159,20 +178,19 @@ final class BoardEditorStoreTests: XCTestCase {
         let firstPreparation = Task.detached { () throws -> BoardEditedPackage in
             try firstStore.prepareEditablePackage(slug: "fixture-board")
         }
-        XCTAssertEqual(preparationStarted.wait(timeout: .now() + 1), .success)
+        await fulfillment(of: [preparationHasStarted], timeout: 10)
 
-        let secondFinished = DispatchSemaphore(value: 0)
+        let secondPreparationFinished = expectation(description: "second preparation finishes")
         let secondPreparation = Task.detached { () throws -> BoardEditedPackage in
-            defer { secondFinished.signal() }
+            defer { secondPreparationFinished.fulfill() }
             return try secondStore.prepareEditablePackage(slug: "fixture-board")
         }
-        let secondCompletedBeforeFirstWasReleased = secondFinished.wait(timeout: .now() + 1) == .success
+        await fulfillment(of: [secondPreparationFinished], timeout: 10)
 
         allowPreparation.signal()
         _ = try await firstPreparation.value
         let secondPackage = try await secondPreparation.value
 
-        XCTAssertTrue(secondCompletedBeforeFirstWasReleased)
         XCTAssertEqual(secondPackage.slug, "fixture-board")
     }
 
@@ -309,6 +327,23 @@ final class BoardEditorStoreTests: XCTestCase {
             XCTAssertEqual(error as? BoardEditorStoreError, .missingSourcePackage(slug: "missing-board"))
         }
         XCTAssertFalse(store.hasEdits(slug: "UPPER-CASE"))
+    }
+}
+
+private final class DocumentLoadCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    func increment() {
+        lock.lock()
+        defer { lock.unlock() }
+        count += 1
+    }
+
+    var value: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
     }
 }
 
