@@ -1,6 +1,7 @@
 package com.hangten.android
 
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -13,13 +14,16 @@ class SentryStartupSmokeTest {
     @Test
     fun emptySentryConfigurationLaunchesWithoutAutomaticSentryProviders() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val providers = context.packageManager
-            .getPackageInfo(
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(
                 context.packageName,
-                PackageManager.GET_PROVIDERS,
+                PackageManager.PackageInfoFlags.of(PackageManager.GET_PROVIDERS.toLong()),
             )
-            .providers
-            .orEmpty()
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_PROVIDERS)
+        }
+        val providers = packageInfo.providers.orEmpty()
 
         assertTrue(
             "Sentry must only initialize through the explicit configured diagnostics adapter.",
