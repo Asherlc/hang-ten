@@ -31,6 +31,10 @@ _TOPOLOGIES = frozenset(
 _ROUTING = frozenset({"unknown", "visibleOnly", "endOpenings", "perimeterGroove", "bodyChannel"})
 _COMPONENTS = frozenset({"unknown", "none", "visibleOnly"})
 _STATUSES = frozenset({"accepted", "blocked"})
+_SEARCH_HOSTS = frozenset({"google.com", "bing.com", "duckduckgo.com", "yahoo.com"})
+_EVIDENCE_FACTS = frozenset(
+    {"presentation", "orientation", "visibleTopology", "tensionDirection", "routing"}
+)
 
 
 class TensionedCordAuditError(ValueError):
@@ -42,6 +46,8 @@ class TensionedCordEvidence:
     url: str
     label: str
     reviewed_at: date
+    audit_path: str
+    facts: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -66,9 +72,15 @@ class TensionedCordRecord:
 
 
 @dataclass(frozen=True)
+class TensionedCordScopePackage:
+    package_id: str
+    presentation_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class TensionedCordLedger:
     schema_version: int
-    package_ids: tuple[str, ...]
+    scope: tuple[TensionedCordScopePackage, ...]
     records: tuple[TensionedCordRecord, ...]
 
 
@@ -76,6 +88,7 @@ class TensionedCordLedger:
 class TensionedCordAuditReport:
     package_count: int
     presentation_count: int
+    package_ids: tuple[str, ...]
     accepted_count: int
     blocked_count: int
     blockers: tuple[tuple[str, str, str], ...]
@@ -84,6 +97,7 @@ class TensionedCordAuditReport:
         return {
             "packageCount": self.package_count,
             "presentationCount": self.presentation_count,
+            "packageIDs": list(self.package_ids),
             "acceptedCount": self.accepted_count,
             "blockedCount": self.blocked_count,
             "blockers": [
@@ -172,15 +186,30 @@ def _sha256(value: Any, source: str) -> str:
 
 def _load_evidence(value: Any, source: str) -> TensionedCordEvidence:
     payload = _mapping(value, source)
-    _closed(payload, {"url", "label", "reviewedAt"}, source)
+    _closed(payload, {"url", "label", "reviewedAt", "auditPath", "facts"}, source)
     url = _nonempty_string(payload["url"], f"{source}.url")
     parsed = urlsplit(url)
     if parsed.scheme != "https" or not parsed.hostname:
         raise TensionedCordAuditError(f"{source}.url must be an HTTPS URL")
+    hostname = parsed.hostname.casefold()
+    if hostname.removeprefix("www.") in _SEARCH_HOSTS or parsed.path.rstrip("/") == "/search":
+        raise TensionedCordAuditError(f"{source}.url must be direct HTTPS evidence")
+    audit_path = _nonempty_string(payload["auditPath"], f"{source}.auditPath")
+    audit = Path(audit_path)
+    if audit.is_absolute() or ".." in audit.parts or audit.suffix != ".md":
+        raise TensionedCordAuditError(f"{source}.auditPath must name a relative Markdown audit")
+    facts_value = payload["facts"]
+    if not isinstance(facts_value, list) or not facts_value:
+        raise TensionedCordAuditError(f"{source}.facts must be a non-empty array")
+    facts = tuple(_enum(item, _EVIDENCE_FACTS, f"{source}.facts[{index}]") for index, item in enumerate(facts_value))
+    if len(facts) != len(set(facts)):
+        raise TensionedCordAuditError(f"{source}.facts must be unique")
     return TensionedCordEvidence(
         url=url,
         label=_nonempty_string(payload["label"], f"{source}.label"),
         reviewed_at=_date(payload["reviewedAt"], f"{source}.reviewedAt"),
+        audit_path=audit_path,
+        facts=facts,
     )
 
 
@@ -205,6 +234,10 @@ def _load_record(value: Any, source: str) -> TensionedCordRecord:
         raise TensionedCordAuditError(f"{source}.blocker is required for blocked records")
     if status == "accepted" and blocker is not None:
         raise TensionedCordAuditError(f"{source}.blocker is only allowed for blocked records")
+    if status == "accepted" and payload["tensionDirection"] != "towardCanvasBottom":
+        raise TensionedCordAuditError(
+            f"{source}.tensionDirection must be towardCanvasBottom for accepted records"
+        )
     gravity = _nonempty_string(payload["gravity"], f"{source}.gravity")
     if gravity != _GRAVITY:
         raise TensionedCordAuditError(f"{source}.gravity must be {_GRAVITY}")
@@ -235,6 +268,35 @@ def _load_record(value: Any, source: str) -> TensionedCordRecord:
     )
 
 
+def _load_scope(value: Any, source: str) -> tuple[TensionedCordScopePackage, ...]:
+    if not isinstance(value, list):
+        raise TensionedCordAuditError(f"{source} must be an array")
+    scope: list[TensionedCordScopePackage] = []
+    for index, item in enumerate(value):
+        item_source = f"{source}[{index}]"
+        payload = _mapping(item, item_source)
+        _closed(payload, {"packageID", "presentationIDs"}, item_source)
+        presentation_values = payload["presentationIDs"]
+        if not isinstance(presentation_values, list) or not presentation_values:
+            raise TensionedCordAuditError(f"{item_source}.presentationIDs must be a non-empty array")
+        presentation_ids = tuple(
+            _identifier(value, f"{item_source}.presentationIDs[{presentation_index}]")
+            for presentation_index, value in enumerate(presentation_values)
+        )
+        if len(presentation_ids) != len(set(presentation_ids)):
+            raise TensionedCordAuditError(f"{item_source}.presentationIDs must be unique")
+        scope.append(
+            TensionedCordScopePackage(
+                package_id=_identifier(payload["packageID"], f"{item_source}.packageID"),
+                presentation_ids=presentation_ids,
+            )
+        )
+    package_ids = [item.package_id for item in scope]
+    if len(package_ids) != len(set(package_ids)):
+        raise TensionedCordAuditError(f"{source} package IDs must be unique")
+    return tuple(scope)
+
+
 def load_tensioned_cord_ledger(path: Path) -> TensionedCordLedger:
     """Load a strict ledger without inspecting the live Hangboards directory."""
     ledger_path = Path(path)
@@ -244,25 +306,26 @@ def load_tensioned_cord_ledger(path: Path) -> TensionedCordLedger:
         payload = _mapping(json.loads(ledger_path.read_text(encoding="utf-8")), "tensioned cord ledger")
     except json.JSONDecodeError as error:
         raise TensionedCordAuditError(f"tensioned cord ledger is invalid JSON: {ledger_path}") from error
-    _closed(payload, {"schemaVersion", "packageIDs", "records"}, "tensioned cord ledger")
+    _closed(payload, {"schemaVersion", "scope", "records"}, "tensioned cord ledger")
     if isinstance(payload["schemaVersion"], bool) or payload["schemaVersion"] != 1:
         raise TensionedCordAuditError("tensioned cord ledger.schemaVersion must be 1")
-    package_values = payload["packageIDs"]
-    if not isinstance(package_values, list):
-        raise TensionedCordAuditError("tensioned cord ledger.packageIDs must be an array")
-    package_ids = tuple(
-        _identifier(value, f"tensioned cord ledger.packageIDs[{index}]")
-        for index, value in enumerate(package_values)
-    )
-    if len(package_ids) != len(set(package_ids)):
-        raise TensionedCordAuditError("tensioned cord ledger.packageIDs must be unique")
+    scope = _load_scope(payload["scope"], "tensioned cord ledger.scope")
     records_value = payload["records"]
     if not isinstance(records_value, list):
         raise TensionedCordAuditError("tensioned cord ledger.records must be an array")
     records = tuple(_load_record(value, f"tensioned cord ledger.records[{index}]") for index, value in enumerate(records_value))
-    if {record.package_id for record in records} - set(package_ids):
-        raise TensionedCordAuditError("tensioned cord ledger has records outside packageIDs")
-    return TensionedCordLedger(schema_version=1, package_ids=package_ids, records=records)
+    scope_keys = {
+        (item.package_id, presentation_id)
+        for item in scope
+        for presentation_id in item.presentation_ids
+    }
+    if {record.package_id for record in records} - {item.package_id for item in scope}:
+        raise TensionedCordAuditError("tensioned cord ledger has records outside sealed scope")
+    if len(scope_keys) != _PRESENTATION_COUNT:
+        raise TensionedCordAuditError(
+            f"tensioned cord ledger sealed scope must cover exactly {_PRESENTATION_COUNT} presentations"
+        )
+    return TensionedCordLedger(schema_version=1, scope=scope, records=records)
 
 
 def validate_tensioned_cord_ledger(
@@ -272,7 +335,8 @@ def validate_tensioned_cord_ledger(
     hangboards_root: Path,
 ) -> TensionedCordAuditReport:
     """Cross-check the closed 20-package/47-presentation ledger against assets."""
-    if len(ledger.package_ids) != _PACKAGE_COUNT:
+    package_ids = tuple(item.package_id for item in ledger.scope)
+    if len(package_ids) != _PACKAGE_COUNT:
         raise TensionedCordAuditError(f"tensioned cord ledger must cover exactly {_PACKAGE_COUNT} packages")
     if len(ledger.records) != _PRESENTATION_COUNT:
         raise TensionedCordAuditError(f"tensioned cord ledger must cover exactly {_PRESENTATION_COUNT} presentations")
@@ -280,15 +344,13 @@ def validate_tensioned_cord_ledger(
     if root.is_symlink() or not root.is_dir():
         raise TensionedCordAuditError(f"Hangboards root must be a regular directory: {root}")
     packages = {package.board.id: package for package in inventory.packages}
-    unknown_packages = sorted(set(ledger.package_ids) - set(packages))
+    unknown_packages = sorted(set(package_ids) - set(packages))
     if unknown_packages:
         raise TensionedCordAuditError(f"unknown ledger package IDs: {unknown_packages}")
-    package_ids = set(ledger.package_ids)
     expected_keys = {
-        (package.board.id, presentation.id)
-        for package in inventory.packages
-        if package.board.id in package_ids
-        for presentation in package.board.presentations
+        (item.package_id, presentation_id)
+        for item in ledger.scope
+        for presentation_id in item.presentation_ids
     }
     records_by_key: dict[tuple[str, str], TensionedCordRecord] = {}
     for record in ledger.records:
@@ -296,7 +358,7 @@ def validate_tensioned_cord_ledger(
         if key in records_by_key:
             raise TensionedCordAuditError(f"duplicate record for {'/'.join(key)}")
         if key not in expected_keys:
-            raise TensionedCordAuditError(f"unknown presentation for {'/'.join(key)}")
+            raise TensionedCordAuditError(f"record is outside sealed scope for {'/'.join(key)}")
         records_by_key[key] = record
     missing = sorted(expected_keys - set(records_by_key))
     if missing:
@@ -307,12 +369,18 @@ def validate_tensioned_cord_ledger(
     for package_id, presentation_id in sorted(expected_keys):
         record = records_by_key[(package_id, presentation_id)]
         package = packages[package_id]
-        presentation = next(item for item in package.board.presentations if item.id == presentation_id)
+        presentations = {item.id: item for item in package.board.presentations}
+        if presentation_id not in presentations:
+            raise TensionedCordAuditError(
+                f"sealed scope presentation is not declared for {package_id}/{presentation_id}"
+            )
+        presentation = presentations[presentation_id]
         if record.asset_path != presentation.asset_path:
             raise TensionedCordAuditError(f"asset path does not match for {package_id}/{presentation_id}")
         if record.source_presentation_id != presentation.source_presentation_id:
             raise TensionedCordAuditError(f"source presentation does not match for {package_id}/{presentation_id}")
-        if presentation.is_inverted != (record.orientation == "inverted"):
+        expected_orientation = "inverted" if presentation.is_inverted else "upright"
+        if record.orientation != expected_orientation:
             raise TensionedCordAuditError(f"orientation does not match for {package_id}/{presentation_id}")
         asset = package.root / presentation.asset_path
         try:
@@ -330,8 +398,9 @@ def validate_tensioned_cord_ledger(
         else:
             accepted_count += 1
     return TensionedCordAuditReport(
-        package_count=len(ledger.package_ids),
+        package_count=len(package_ids),
         presentation_count=len(ledger.records),
+        package_ids=package_ids,
         accepted_count=accepted_count,
         blocked_count=len(blockers),
         blockers=tuple(blockers),

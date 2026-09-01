@@ -1,27 +1,5 @@
 {
   "schemaVersion": 1,
-  "packageIDs": [
-    "aelith.cyclops-011",
-    "captain-fingerfood.dual",
-    "captain-fingerfood.pocket",
-    "captain-fingerfood.unlevel",
-    "crimptonite.helium-mobile",
-    "frictitious.port-a-board",
-    "frictitious.nug",
-    "lattice.mini-bar",
-    "lattice.mxedge-lift-large",
-    "lattice.mxedge-lift-small",
-    "metolius.light-rail-2",
-    "metolius.rock-rings-3d",
-    "nature.stone-hanger-mini",
-    "nature.stone-hanger-mini-karma8a",
-    "plateau.lifting-edge",
-    "tension.flash-board",
-    "yy.baguette-evo",
-    "yy.baguette",
-    "yy.penta-evo",
-    "yy.travelboard"
-  ],
   "records": [
     {
       "packageID": "aelith.cyclops-011",
@@ -32,11 +10,19 @@
       "evidence": {
         "url": "https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-generated-portable-presentation-assets-misc.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -55,11 +41,19 @@
       "evidence": {
         "url": "https://en.captainfingerfood.rocks/products/dual-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-captain-fingerfood-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -78,11 +72,19 @@
       "evidence": {
         "url": "https://en.captainfingerfood.rocks/products/dual-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-captain-fingerfood-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -101,11 +103,19 @@
       "evidence": {
         "url": "https://en.captainfingerfood.rocks/products/lines-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-captain-fingerfood-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -124,11 +134,19 @@
       "evidence": {
         "url": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-captain-fingerfood-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -147,11 +165,19 @@
       "evidence": {
         "url": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-captain-fingerfood-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -170,11 +196,19 @@
       "evidence": {
         "url": "https://crimptonite.com/product/helium-mobile/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-crimptonite-helium-mobile-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -193,11 +227,19 @@
       "evidence": {
         "url": "https://crimptonite.com/product/helium-mobile/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-crimptonite-helium-mobile-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -216,11 +258,19 @@
       "evidence": {
         "url": "https://crimptonite.com/product/helium-mobile/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-crimptonite-helium-mobile-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -239,11 +289,19 @@
       "evidence": {
         "url": "https://crimptonite.com/product/helium-mobile/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-crimptonite-helium-mobile-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -262,11 +320,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -285,11 +351,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -308,7 +382,15 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
@@ -331,11 +413,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -354,11 +444,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -377,11 +475,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -400,11 +506,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/en-ca/products/the-nug",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-generated-portable-presentation-assets-misc.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -423,11 +537,19 @@
       "evidence": {
         "url": "https://frictitiousclimbing.com/en-ca/products/the-nug",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-generated-portable-presentation-assets-misc.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -446,11 +568,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mini-bar-portable-hangboard/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-lattice-mini-bar-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -469,11 +599,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mini-bar-portable-hangboard/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-lattice-mini-bar-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -492,11 +630,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mxedge-lift/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -515,11 +661,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mxedge-lift/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -538,11 +692,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mxedge-lift/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -561,11 +723,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mxedge-lift/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -584,11 +754,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mxedge-lift/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -607,11 +785,19 @@
       "evidence": {
         "url": "https://latticetraining.com/product/mxedge-lift/",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-official-portable-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -630,11 +816,19 @@
       "evidence": {
         "url": "https://www.metoliusclimbing.com/products/light-rail",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -653,11 +847,19 @@
       "evidence": {
         "url": "https://www.metoliusclimbing.com/products/light-rail",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -676,11 +878,19 @@
       "evidence": {
         "url": "https://www.metoliusclimbing.com/products/rock-rings-3d",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -699,11 +909,19 @@
       "evidence": {
         "url": "https://natureclimbing.com/products/stone-hanger-mini-beech",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-nature-mini-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -722,11 +940,19 @@
       "evidence": {
         "url": "https://natureclimbing.com/products/stone-hanger-mini-beech",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-nature-mini-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -745,11 +971,19 @@
       "evidence": {
         "url": "https://natureclimbing.com/products/mini-hanger",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-nature-mini-presentation-assets.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -768,11 +1002,19 @@
       "evidence": {
         "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-29-generated-portable-presentation-assets-misc.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -791,11 +1033,19 @@
       "evidence": {
         "url": "https://tensionclimbing.com/products/flash-board-2",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -814,11 +1064,19 @@
       "evidence": {
         "url": "https://tensionclimbing.com/products/flash-board-2",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -837,11 +1095,19 @@
       "evidence": {
         "url": "https://tensionclimbing.com/products/flash-board-2",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -860,11 +1126,19 @@
       "evidence": {
         "url": "https://tensionclimbing.com/products/flash-board-2",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "inverted",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -883,7 +1157,15 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/baguette-evo",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
@@ -906,7 +1188,15 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/baguette-evo",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
@@ -929,7 +1219,15 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/baguette-evo",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
@@ -952,7 +1250,15 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/baguette-evo",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
@@ -975,7 +1281,15 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/baguette-evo",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
@@ -998,11 +1312,19 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -1021,11 +1343,19 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -1044,11 +1374,19 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en-eu/products/penta-evo",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -1067,11 +1405,19 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -1090,11 +1436,19 @@
       "evidence": {
         "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
         "label": "Manufacturer product page",
-        "reviewedAt": "2026-09-01"
+        "reviewedAt": "2026-09-01",
+        "auditPath": "docs/source-audits/2026-08-20-complete-hangboard-catalog.md",
+        "facts": [
+          "presentation",
+          "orientation",
+          "visibleTopology",
+          "tensionDirection",
+          "routing"
+        ]
       },
       "orientation": "upright",
       "gravity": "canvasDown",
-      "tensionDirection": "unknown",
+      "tensionDirection": "towardCanvasBottom",
       "visibleTopology": "visibleSegmentsOnly",
       "routing": "unknown",
       "terminals": "unknown",
@@ -1103,6 +1457,155 @@
       "status": "accepted",
       "output": "accepted",
       "blocker": null
+    }
+  ],
+  "scope": [
+    {
+      "packageID": "aelith.cyclops-011",
+      "presentationIDs": [
+        "primary"
+      ]
+    },
+    {
+      "packageID": "captain-fingerfood.dual",
+      "presentationIDs": [
+        "primary",
+        "reverse"
+      ]
+    },
+    {
+      "packageID": "captain-fingerfood.pocket",
+      "presentationIDs": [
+        "primary"
+      ]
+    },
+    {
+      "packageID": "captain-fingerfood.unlevel",
+      "presentationIDs": [
+        "primary",
+        "reverse"
+      ]
+    },
+    {
+      "packageID": "crimptonite.helium-mobile",
+      "presentationIDs": [
+        "primary",
+        "front-inverted",
+        "reverse",
+        "reverse-inverted"
+      ]
+    },
+    {
+      "packageID": "frictitious.port-a-board",
+      "presentationIDs": [
+        "primary",
+        "front-inverted",
+        "cord-option-4-20mm-incut",
+        "back",
+        "back-inverted",
+        "side"
+      ]
+    },
+    {
+      "packageID": "frictitious.nug",
+      "presentationIDs": [
+        "primary",
+        "reverse"
+      ]
+    },
+    {
+      "packageID": "lattice.mini-bar",
+      "presentationIDs": [
+        "primary",
+        "end"
+      ]
+    },
+    {
+      "packageID": "lattice.mxedge-lift-large",
+      "presentationIDs": [
+        "primary",
+        "large-medium-edge-position",
+        "mono-position"
+      ]
+    },
+    {
+      "packageID": "lattice.mxedge-lift-small",
+      "presentationIDs": [
+        "primary",
+        "large-medium-edge-position",
+        "mono-position"
+      ]
+    },
+    {
+      "packageID": "metolius.light-rail-2",
+      "presentationIDs": [
+        "20mm-side",
+        "15mm-side"
+      ]
+    },
+    {
+      "packageID": "metolius.rock-rings-3d",
+      "presentationIDs": [
+        "front-pair"
+      ]
+    },
+    {
+      "packageID": "nature.stone-hanger-mini",
+      "presentationIDs": [
+        "primary",
+        "side"
+      ]
+    },
+    {
+      "packageID": "nature.stone-hanger-mini-karma8a",
+      "presentationIDs": [
+        "primary"
+      ]
+    },
+    {
+      "packageID": "plateau.lifting-edge",
+      "presentationIDs": [
+        "primary"
+      ]
+    },
+    {
+      "packageID": "tension.flash-board",
+      "presentationIDs": [
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted"
+      ]
+    },
+    {
+      "packageID": "yy.baguette-evo",
+      "presentationIDs": [
+        "paired-25-20-15-10",
+        "paired-12-8-6",
+        "central-30-25",
+        "central-20-6",
+        "rounded-tray"
+      ]
+    },
+    {
+      "packageID": "yy.baguette",
+      "presentationIDs": [
+        "stepped-face",
+        "reverse-face"
+      ]
+    },
+    {
+      "packageID": "yy.penta-evo",
+      "presentationIDs": [
+        "front-pair"
+      ]
+    },
+    {
+      "packageID": "yy.travelboard",
+      "presentationIDs": [
+        "front-25-15",
+        "reverse-10"
+      ]
     }
   ]
 }

@@ -86,6 +86,8 @@ def _record(package: BoardPackage, presentation: BoardPresentation) -> dict[str,
             "url": "https://manufacturer.example/products/fixture",
             "label": "Fixture manufacturer product page",
             "reviewedAt": "2026-09-01",
+            "auditPath": "docs/source-audits/fixture.md",
+            "facts": ["presentation", "orientation", "tensionDirection"],
         },
         "orientation": "inverted" if presentation.is_inverted else "upright",
         "gravity": "canvasDown",
@@ -108,7 +110,15 @@ def _record(package: BoardPackage, presentation: BoardPresentation) -> dict[str,
 def _ledger(inventory: BoardInventory) -> dict[str, object]:
     return {
         "schemaVersion": 1,
-        "packageIDs": [package.board.id for package in inventory.packages],
+        "scope": [
+            {
+                "packageID": package.board.id,
+                "presentationIDs": [
+                    presentation.id for presentation in package.board.presentations
+                ],
+            }
+            for package in inventory.packages
+        ],
         "records": [
             _record(package, presentation)
             for package in inventory.packages
@@ -127,23 +137,32 @@ def _require_audit_api() -> None:
     assert validate_tensioned_cord_ledger is not None, "the tensioned cord validator is missing"
 
 
-def test_load_rejects_missing_required_cord_fact_and_non_https_evidence_url(
+def test_load_rejects_missing_required_cord_fact(
     tmp_path: Path,
 ) -> None:
-    """Catches a parser mutation that permits incomplete facts or indirect evidence."""
+    """Catches a parser mutation that permits a record without tension direction."""
     _require_audit_api()
     inventory = _inventory(tmp_path / "packages")
     ledger = _ledger(inventory)
     record = ledger["records"][0]
     assert isinstance(record, dict)
     del record["tensionDirection"]
-    record["evidence"] = {
-        "url": "http://manufacturer.example/products/fixture",
-        "label": "Fixture manufacturer product page",
-        "reviewedAt": "2026-09-01",
-    }
-
     with pytest.raises(TensionedCordAuditError, match="tensionDirection"):
+        load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", ledger))
+
+
+def test_load_rejects_search_result_https_evidence_url(tmp_path: Path) -> None:
+    """Catches a parser mutation that accepts a search result as direct evidence."""
+    _require_audit_api()
+    inventory = _inventory(tmp_path / "packages")
+    ledger = _ledger(inventory)
+    record = ledger["records"][0]
+    assert isinstance(record, dict)
+    evidence = record["evidence"]
+    assert isinstance(evidence, dict)
+    evidence["url"] = "https://www.google.com/search?q=fixture"
+
+    with pytest.raises(TensionedCordAuditError, match="direct HTTPS evidence"):
         load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", ledger))
 
 
@@ -162,6 +181,7 @@ def test_validator_reports_the_closed_20_package_47_presentation_inventory(
         "presentationCount": 47,
         "acceptedCount": 46,
         "blockedCount": 1,
+        "packageIDs": [package.board.id for package in inventory.packages],
         "blockers": [
             {
                 "packageID": "fixture.package-05",
@@ -192,7 +212,7 @@ def test_validator_rejects_duplicate_missing_or_extra_presentation_record(
         records[-1] = extra
 
     ledger = load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", document))
-    expected = "tensioned cord ledger must cover exactly 47 presentations" if mutation == "missing" else "(duplicate|unknown presentation)"
+    expected = "tensioned cord ledger must cover exactly 47 presentations" if mutation == "missing" else "(duplicate|sealed scope)"
     with pytest.raises(TensionedCordAuditError, match=expected):
         validate_tensioned_cord_ledger(ledger, inventory, hangboards_root=tmp_path / "packages")
 
@@ -214,6 +234,33 @@ def test_validator_rejects_stale_asset_identity(
         validate_tensioned_cord_ledger(ledger, inventory, hangboards_root=tmp_path / "packages")
 
 
+def test_validator_rejects_stale_package_identity(tmp_path: Path) -> None:
+    """Catches a validator mutation that accepts a record under another package ID."""
+    _require_audit_api()
+    inventory = _inventory(tmp_path / "packages")
+    document = _ledger(inventory)
+    records = document["records"]
+    assert isinstance(records, list)
+    records[0]["packageID"] = "fixture.stale-package"
+    with pytest.raises(TensionedCordAuditError, match="sealed scope"):
+        load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", document))
+
+
+def test_validator_rejects_stale_asset_path(tmp_path: Path) -> None:
+    """Catches a validator mutation that accepts another declared presentation asset."""
+    _require_audit_api()
+    inventory = _inventory(tmp_path / "packages")
+    document = _ledger(inventory)
+    records = document["records"]
+    assert isinstance(records, list)
+    primary = next(record for record in records if record["presentationID"] == "presentation-0")
+    primary["assetPath"] = "assets/presentation-1.png"
+    ledger = load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", document))
+
+    with pytest.raises(TensionedCordAuditError, match="asset path"):
+        validate_tensioned_cord_ledger(ledger, inventory, hangboards_root=tmp_path / "packages")
+
+
 def test_validator_rejects_stale_alias_source_relationship(tmp_path: Path) -> None:
     """Catches a validator mutation that permits an alias to cite the wrong source presentation."""
     _require_audit_api()
@@ -227,6 +274,66 @@ def test_validator_rejects_stale_alias_source_relationship(tmp_path: Path) -> No
 
     with pytest.raises(TensionedCordAuditError, match="source presentation"):
         validate_tensioned_cord_ledger(ledger, inventory, hangboards_root=tmp_path / "packages")
+
+
+def test_validator_rejects_non_inverted_rotated_orientation(tmp_path: Path) -> None:
+    """Catches a validator mutation that accepts an unsupported rotated presentation."""
+    _require_audit_api()
+    inventory = _inventory(tmp_path / "packages")
+    document = _ledger(inventory)
+    records = document["records"]
+    assert isinstance(records, list)
+    upright = next(record for record in records if record["presentationID"] == "presentation-0")
+    upright["orientation"] = "rotated"
+    ledger = load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", document))
+
+    with pytest.raises(TensionedCordAuditError, match="orientation"):
+        validate_tensioned_cord_ledger(ledger, inventory, hangboards_root=tmp_path / "packages")
+
+
+def test_load_rejects_accepted_record_without_canvas_down_tension(tmp_path: Path) -> None:
+    """Catches a parser mutation that permits accepted records with unknown tension."""
+    _require_audit_api()
+    inventory = _inventory(tmp_path / "packages")
+    document = _ledger(inventory)
+    records = document["records"]
+    assert isinstance(records, list)
+    accepted = next(record for record in records if record["status"] == "accepted")
+    accepted["tensionDirection"] = "unknown"
+
+    with pytest.raises(TensionedCordAuditError, match="tensionDirection"):
+        load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", document))
+
+
+def test_validator_rejects_live_noncord_package_substitution_outside_sealed_scope(
+    tmp_path: Path,
+) -> None:
+    """Catches a validator mutation that lets a live non-cord package replace scope."""
+    _require_audit_api()
+    inventory = _inventory(tmp_path / "packages")
+    document = _ledger(inventory)
+    records = document["records"]
+    assert isinstance(records, list)
+    replacement = dict(records[0])
+    replacement["packageID"] = "fixture.noncord"
+    records[0] = replacement
+    noncord_root = tmp_path / "packages" / "fixture.noncord"
+    (noncord_root / "assets").mkdir(parents=True)
+    (noncord_root / "assets" / "primary.png").write_bytes(b"noncord")
+    noncord = BoardPackage(
+        root=noncord_root,
+        board=BoardDocument(
+            id="fixture.noncord",
+            facts={"manufacturer": "Fixture", "name": "Non-cord"},
+            equipment_objects=(),
+            holds=(),
+            presentations=(
+                BoardPresentation("presentation-0", "Primary", "assets/primary.png", 1.0, True),
+            ),
+        ),
+    )
+    with pytest.raises(TensionedCordAuditError, match="sealed scope"):
+        load_tensioned_cord_ledger(_write_ledger(tmp_path / "ledger.json", document))
 
 
 def test_validator_requires_presentation_specific_physics_and_blocker_contract(
@@ -305,4 +412,12 @@ def test_cli_audits_the_checked_in_closed_ledger() -> None:
         ],
         "packageCount": 20,
         "presentationCount": 47,
+        "packageIDs": [
+            "aelith.cyclops-011", "captain-fingerfood.dual", "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel", "crimptonite.helium-mobile", "frictitious.port-a-board",
+            "frictitious.nug", "lattice.mini-bar", "lattice.mxedge-lift-large",
+            "lattice.mxedge-lift-small", "metolius.light-rail-2", "metolius.rock-rings-3d",
+            "nature.stone-hanger-mini", "nature.stone-hanger-mini-karma8a", "plateau.lifting-edge",
+            "tension.flash-board", "yy.baguette-evo", "yy.baguette", "yy.penta-evo", "yy.travelboard",
+        ],
     }
