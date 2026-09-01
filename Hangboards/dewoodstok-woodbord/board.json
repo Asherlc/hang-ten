@@ -7,7 +7,9 @@
   "dimensions": "590 \u00d7 148 \u00d7 40 mm",
   "aspectRatio": 3.6236559139784945,
   "equipmentObjects": [
-    {"id": "primary"}
+    {
+      "id": "primary"
+    }
   ],
   "holds": [
     {
@@ -80,7 +82,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-upper-1",
