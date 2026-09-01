@@ -194,7 +194,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-upper-2",
@@ -414,7 +415,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-upper-4",
@@ -524,7 +526,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-upper-5",
@@ -854,7 +857,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-middle-2",
@@ -964,7 +968,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-middle-3",
@@ -1074,7 +1079,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-middle-4",
@@ -1294,7 +1300,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-lower-2",
@@ -1514,7 +1521,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-lower-4",
@@ -1624,7 +1632,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "front-lower-5",
