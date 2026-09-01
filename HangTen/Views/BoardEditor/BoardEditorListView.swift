@@ -54,8 +54,14 @@ struct BoardEditorListView: View {
         ) {
             Button("Discard local edits", role: .destructive) {
                 if let target = resetTarget {
-                    try? editorStore.reset(slug: target.id)
-                    refreshEdited()
+                    let store = editorStore
+                    let slug = target.id
+                    Task.detached(priority: .userInitiated) {
+                        try? store.reset(slug: slug)
+                        await MainActor.run {
+                            refreshEdited()
+                        }
+                    }
                 }
                 resetTarget = nil
             }

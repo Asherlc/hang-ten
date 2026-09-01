@@ -1,18 +1,21 @@
 import SwiftUI
 
+@MainActor
 protocol BoardEditorLoadingCancellation {
     func cancel()
 }
 
+@MainActor
 protocol BoardEditorLoadingScheduling {
     func schedule(_ work: @escaping @Sendable () async -> Void) -> BoardEditorLoadingCancellation
 }
 
-protocol BoardEditorImagePreparing {
+protocol BoardEditorImagePreparing: Sendable {
     func prepareDisplayImage(at url: URL) async -> UIImage?
     func prepareThumbnailImage(at url: URL, size: CGSize) async -> UIImage?
 }
 
+@MainActor
 struct BoardEditorBackgroundLoadingScheduler: BoardEditorLoadingScheduling {
     func schedule(_ work: @escaping @Sendable () async -> Void) -> BoardEditorLoadingCancellation {
         BoardEditorLoadingTask(task: Task.detached(priority: .userInitiated) {
@@ -22,20 +25,33 @@ struct BoardEditorBackgroundLoadingScheduler: BoardEditorLoadingScheduling {
 }
 
 struct BoardEditorUIKitImagePreparer: BoardEditorImagePreparing {
+    private let displayPreparer: @Sendable (UIImage) async -> UIImage?
+    private let thumbnailPreparer: @Sendable (UIImage, CGSize) async -> UIImage?
+
+    init(
+        displayPreparer: @escaping @Sendable (UIImage) async -> UIImage? = {
+            await $0.byPreparingForDisplay()
+        },
+        thumbnailPreparer: @escaping @Sendable (UIImage, CGSize) async -> UIImage? = {
+            await $0.byPreparingThumbnail(ofSize: $1)
+        }
+    ) {
+        self.displayPreparer = displayPreparer
+        self.thumbnailPreparer = thumbnailPreparer
+    }
+
     func prepareDisplayImage(at url: URL) async -> UIImage? {
         guard let image = UIImage(contentsOfFile: url.path) else { return nil }
-        return await image.byPreparingForDisplay() ?? image
+        return await displayPreparer(image)
     }
 
     func prepareThumbnailImage(at url: URL, size: CGSize) async -> UIImage? {
         guard let image = UIImage(contentsOfFile: url.path) else { return nil }
-        if let thumbnail = await image.byPreparingThumbnail(ofSize: size) {
-            return thumbnail
-        }
-        return await image.byPreparingForDisplay() ?? image
+        return await thumbnailPreparer(image, size)
     }
 }
 
+@MainActor
 private final class BoardEditorLoadingTask: BoardEditorLoadingCancellation {
     private let task: Task<Void, Never>
 
@@ -68,12 +84,12 @@ final class BoardEditorLoader: ObservableObject {
     init(
         slug: String,
         store: BoardEditorStore,
-        scheduler: BoardEditorLoadingScheduling = BoardEditorBackgroundLoadingScheduler(),
+        scheduler: BoardEditorLoadingScheduling? = nil,
         imagePreparer: BoardEditorImagePreparing = BoardEditorUIKitImagePreparer()
     ) {
         self.slug = slug
         self.store = store
-        self.scheduler = scheduler
+        self.scheduler = scheduler ?? BoardEditorBackgroundLoadingScheduler()
         self.imagePreparer = imagePreparer
     }
 
@@ -82,24 +98,36 @@ final class BoardEditorLoader: ObservableObject {
         let loadingID = UUID()
         activeLoadingID = loadingID
 
-        let cancellation = scheduler.schedule { [slug, store, imagePreparer] in
-            let state: BoardEditorLoadingState
+        let cancellation = scheduler.schedule { [weak self, slug, store, imagePreparer] in
+            guard !Task.isCancelled,
+                  await self?.isLoadingActive(loadingID) == true else {
+                return
+            }
             do {
                 try store.startEditing(slug: slug)
+                guard !Task.isCancelled,
+                      await self?.isLoadingActive(loadingID) == true else {
+                    return
+                }
                 let package = try store.loadDocument(slug: slug)
+                guard !Task.isCancelled,
+                      await self?.isLoadingActive(loadingID) == true else {
+                    return
+                }
                 guard let image = await imagePreparer.prepareDisplayImage(at: package.imageURL) else {
                     throw BoardEditorStoreError.unreadablePresentationImage(slug: slug)
                 }
-                state = .loaded(package, image)
+                guard !Task.isCancelled,
+                      await self?.isLoadingActive(loadingID) == true else {
+                    return
+                }
+                await self?.publish(.loaded(package, image), for: loadingID)
             } catch {
-                state = .failed
-            }
-
-            await MainActor.run { [weak self] in
-                guard let self, self.activeLoadingID == loadingID else { return }
-                self.activeLoadingID = nil
-                self.activeCancellation = nil
-                self.state = state
+                guard !Task.isCancelled,
+                      await self?.isLoadingActive(loadingID) == true else {
+                    return
+                }
+                await self?.publish(.failed, for: loadingID)
             }
         }
         if activeLoadingID == loadingID {
@@ -113,6 +141,17 @@ final class BoardEditorLoader: ObservableObject {
         activeLoadingID = nil
         activeCancellation?.cancel()
         activeCancellation = nil
+    }
+
+    private func isLoadingActive(_ loadingID: UUID) -> Bool {
+        activeLoadingID == loadingID
+    }
+
+    private func publish(_ state: BoardEditorLoadingState, for loadingID: UUID) {
+        guard activeLoadingID == loadingID else { return }
+        activeLoadingID = nil
+        activeCancellation = nil
+        self.state = state
     }
 }
 

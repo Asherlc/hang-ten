@@ -39,7 +39,7 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
     }
 }
 
-struct BoardEditorStore {
+struct BoardEditorStore: Sendable {
     static let defaultDirectoryName = "BoardEditorPackages"
     private static let editingLock = NSLock()
 

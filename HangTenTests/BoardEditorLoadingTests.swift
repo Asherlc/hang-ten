@@ -50,19 +50,17 @@ final class BoardEditorLoadingTests: XCTestCase {
         }
     }
 
-    func testStartReturnsBeforeControlledWorkCompletesAndPublishesPreparedImage() async throws {
+    func testStartReturnsBeforeControlledWorkCompletes() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let store = BoardEditorStore(
             baseDirectory: storeDirectory,
             sourceLibraryURL: sourceLibraryURL
         )
         let scheduler = ControlledBoardEditorLoadingScheduler()
-        let preparedImage = try XCTUnwrap(UIImage(data: try pngBytes()))
         let loader = BoardEditorLoader(
             slug: "fixture-board",
             store: store,
-            scheduler: scheduler,
-            imagePreparer: FixedBoardEditorImagePreparer(image: preparedImage)
+            scheduler: scheduler
         )
 
         loader.start()
@@ -76,10 +74,10 @@ final class BoardEditorLoadingTests: XCTestCase {
         guard case let .loaded(_, image) = loader.state else {
             return XCTFail("Expected controlled work to publish a loaded result, got \(loader.state)")
         }
-        XCTAssertTrue(image === preparedImage)
+        XCTAssertEqual(image.size, CGSize(width: 2, height: 1))
     }
 
-    func testCancelSuppressesControlledWorkCompletion() async throws {
+    func testCancelBeforeControlledWorkPreventsPackageCreation() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let store = BoardEditorStore(
             baseDirectory: storeDirectory,
@@ -93,7 +91,55 @@ final class BoardEditorLoadingTests: XCTestCase {
         await scheduler.runPendingWork()
 
         assertLoading(loader.state)
-        XCTAssertNoThrow(try store.loadDocument(slug: "fixture-board"))
+        XCTAssertFalse(store.hasEdits(slug: "fixture-board"))
+        XCTAssertFalse(scheduler.hasPendingWork)
+    }
+
+    func testCancelDuringImagePreparationSuppressesTerminalState() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL
+        )
+        let scheduler = ControlledBoardEditorLoadingScheduler()
+        let imagePreparer = BlockingBoardEditorImagePreparer()
+        let loader = BoardEditorLoader(
+            slug: "fixture-board",
+            store: store,
+            scheduler: scheduler,
+            imagePreparer: imagePreparer
+        )
+
+        loader.start()
+        let work = Task { @MainActor in
+            await scheduler.runPendingWork()
+        }
+        await imagePreparer.waitUntilDisplayPreparationStarts()
+
+        loader.cancel()
+        await imagePreparer.finishDisplayPreparation()
+        await work.value
+
+        assertLoading(loader.state)
+        XCTAssertTrue(store.hasEdits(slug: "fixture-board"))
+    }
+
+    func testProductionImagePreparerReturnsNilWhenDisplayPreparationFails() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let imageURL = sourceLibraryURL.appendingPathComponent("fixture-board/assets/primary.png")
+        let preparer = BoardEditorUIKitImagePreparer(
+            displayPreparer: { _ in nil },
+            thumbnailPreparer: { _, _ in nil }
+        )
+
+        let displayImage = await preparer.prepareDisplayImage(at: imageURL)
+        let thumbnailImage = await preparer.prepareThumbnailImage(
+            at: imageURL,
+            size: CGSize(width: 74, height: 52)
+        )
+
+        XCTAssertNil(displayImage)
+        XCTAssertNil(thumbnailImage)
     }
 
     private func assertLoading(_ state: BoardEditorLoadingState) {
@@ -124,6 +170,7 @@ final class BoardEditorLoadingTests: XCTestCase {
     }
 }
 
+@MainActor
 private final class ControlledBoardEditorLoadingScheduler: BoardEditorLoadingScheduling {
     private var work: (() async -> Void)?
 
@@ -131,7 +178,7 @@ private final class ControlledBoardEditorLoadingScheduler: BoardEditorLoadingSch
 
     func schedule(_ work: @escaping @Sendable () async -> Void) -> BoardEditorLoadingCancellation {
         self.work = work
-        return ControlledBoardEditorLoadingCancellation()
+        return ControlledBoardEditorLoadingCancellation(scheduler: self)
     }
 
     func runPendingWork() async {
@@ -139,18 +186,47 @@ private final class ControlledBoardEditorLoadingScheduler: BoardEditorLoadingSch
     }
 }
 
+@MainActor
 private final class ControlledBoardEditorLoadingCancellation: BoardEditorLoadingCancellation {
-    func cancel() {}
+    private weak var scheduler: ControlledBoardEditorLoadingScheduler?
+
+    init(scheduler: ControlledBoardEditorLoadingScheduler) {
+        self.scheduler = scheduler
+    }
+
+    func cancel() {
+        scheduler?.cancelPendingWork()
+    }
 }
 
-private struct FixedBoardEditorImagePreparer: BoardEditorImagePreparing {
-    let image: UIImage
+private extension ControlledBoardEditorLoadingScheduler {
+    func cancelPendingWork() {
+        work = nil
+    }
+}
+
+private actor BlockingBoardEditorImagePreparer: BoardEditorImagePreparing {
+    private var displayPreparationStarted = false
+    private var startContinuation: CheckedContinuation<Void, Never>?
+    private var finishContinuation: CheckedContinuation<UIImage?, Never>?
 
     func prepareDisplayImage(at url: URL) async -> UIImage? {
-        image
+        displayPreparationStarted = true
+        startContinuation?.resume()
+        return await withCheckedContinuation { finishContinuation = $0 }
     }
 
     func prepareThumbnailImage(at url: URL, size: CGSize) async -> UIImage? {
-        image
+        nil
+    }
+
+    func waitUntilDisplayPreparationStarts() async {
+        guard !displayPreparationStarted else { return }
+        await withCheckedContinuation { startContinuation = $0 }
+    }
+
+    func finishDisplayPreparation() {
+        finishContinuation?.resume(returning: nil)
+        finishContinuation = nil
     }
 }
