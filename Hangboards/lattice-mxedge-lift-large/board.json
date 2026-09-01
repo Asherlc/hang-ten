@@ -483,7 +483,8 @@
           }
         }
       ],
-      "sizeMillimeters": 28
+      "sizeMillimeters": 28,
+      "fingerCapacity": 1
     },
     {
       "id": "hold-5",
