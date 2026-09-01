@@ -379,6 +379,18 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
     );
   }
 
+  async function deletePresentation(boardId: string, presentationID: string): Promise<Board> {
+    if (!presentationID) throw new Error("A board surface is required");
+    return request(
+      `/api/boards/${encodeURIComponent(boardId)}/presentations/${encodeURIComponent(presentationID)}`,
+      parseBoard("Workbench returned an invalid deleted board"),
+      {
+        redirectOnUnauthorized: false,
+        method: "DELETE",
+      },
+    );
+  }
+
   async function getGitStatus(): Promise<GitStatus> {
     return request("/api/git/status", parseGitStatus);
   }
@@ -457,6 +469,7 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
     getBoard,
     listBoards,
     saveBoard,
+    deletePresentation,
     getGitStatus,
     listBranches,
     switchBranch,

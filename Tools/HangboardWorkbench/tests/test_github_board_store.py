@@ -1576,6 +1576,32 @@ def test_hosted_save_preserves_unselected_holds_and_presentation_assets() -> Non
     } == assets_before
 
 
+def test_hosted_delete_presentation_removes_holds_and_only_its_unshared_asset() -> None:
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+
+    deleted, _commit_sha = store.delete_board_presentation(
+        TOKEN, BRANCH, "fixture.multi", "front"
+    )
+
+    assert [presentation.id for presentation in deleted.presentations] == ["back"]
+    assert deleted.presentation().id == "back"
+    assert [hold["id"] for hold in deleted.board["holds"]] == ["hold-back"]
+    assert client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/back.png")
+    with pytest.raises(KeyError):
+        client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/primary.png")
+    board_package._validate_board(
+        deleted.board,
+        deleted.image_width,
+        deleted.image_height,
+        presentations=deleted.presentations,
+        allow_missing_kind=True,
+    )
+
+
 def test_changed_hosted_save_persists_optional_hold_metadata() -> None:
     client = _client(("fixture-board", board_document("fixture.board")))
     document = board_package.editor_document(

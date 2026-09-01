@@ -178,6 +178,7 @@ export interface WorkbenchClient {
   listBoards(): Promise<BoardSummary[]>;
   getBoard(boardId: string, presentationID?: string): Promise<Board>;
   saveBoard(boardId: string, document: EditorDocument): Promise<Board>;
+  deletePresentation(boardId: string, presentationID: string): Promise<Board>;
   getGitStatus(): Promise<GitStatus>;
   getAuthStatus(): Promise<AuthStatus>;
   listBranches(): Promise<GitStatus>;
@@ -362,6 +363,7 @@ export interface WorkbenchActions {
   openPullRequest(): Promise<void>;
   selectHold(key: string | null, toggle?: boolean): void;
   selectPresentation(presentationID: string): Promise<void>;
+  deletePresentation(): Promise<void>;
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;

@@ -36,6 +36,7 @@ from board_package import (
     BoardSaveConflictError,
     discover_packages,
     editor_document,
+    delete_presentation,
     open_package,
     presentation_image_path,
     save_editor_document,
@@ -419,6 +420,37 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 getattr(self, handler_name)(body)
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+
+    def do_DELETE(self) -> None:  # noqa: N802
+        if not self._allow_request(mutation=True):
+            return
+        request = urlsplit(self.path)
+        match = re.fullmatch(
+            r"/api/boards/([^/]+)/presentations/([^/]+)", request.path
+        )
+        if match is None:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+            return
+        board_id, presentation_id = (unquote(value) for value in match.groups())
+        with self._mutation_error_response():
+            if self.server.allow_remote:
+                session = self._github_session()
+                saved, commit_sha = self._github_board_store().delete_board_presentation(
+                    session.token, session.branch, board_id, presentation_id
+                )
+                payload: dict[str, object] = {"ok": True, "commit": commit_sha}
+            else:
+                package = open_package(self.server.library_root, board_id)
+                saved = delete_presentation(
+                    self.server.library_root, package.root.name, presentation_id
+                )
+                payload = {"ok": True}
+            payload["board"] = _board_payload(
+                saved,
+                include_document=True,
+                presentation_id=saved.presentation().id,
+            )
+            self._send_json(HTTPStatus.OK, payload)
 
     def do_PATCH(self) -> None:  # noqa: N802
         if not self._allow_request(mutation=True):

@@ -352,6 +352,49 @@ test("switching presentations changes the focused canvas and scopes new holds", 
   }, dependenciesFixture(focusedBoard("front"), { client }));
 });
 
+test("deleting the selected surface confirms and focuses the server-selected replacement", async () => {
+  const presentations = [
+    { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
+    { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
+  ];
+  const front: Board = {
+    ...boardFixture({ presentationID: "front", canvas: { width: 100, height: 50 }, regions: [] }),
+    selectedPresentationID: "front",
+    presentations,
+    imageUrl: presentations[0]!.imageUrl,
+  };
+  const back: Board = {
+    ...boardFixture({ presentationID: "back", canvas: { width: 80, height: 120 }, regions: [] }),
+    selectedPresentationID: "back",
+    presentations: [{ ...presentations[1]!, default: true }],
+    imageUrl: presentations[1]!.imageUrl,
+  };
+  let confirmation = "";
+  const client = {
+    ...clientFixture([front]),
+    async deletePresentation(boardID: string, presentationID: string): Promise<Board> {
+      assert.equal(boardID, "board-a");
+      assert.equal(presentationID, "front");
+      return back;
+    },
+  } as unknown as WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click("#delete-presentation-button");
+
+    assert.match(confirmation, /Front/u);
+    assert.equal(app.document.querySelector("#presentation-select"), null);
+    assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), back.imageUrl);
+    assert.equal(app.text("#board-status"), "Board surface deleted.");
+  }, dependenciesFixture(front, {
+    client,
+    confirm(message) {
+      confirmation = message;
+      return true;
+    },
+  }));
+});
+
 test("rotation handles stay separated and inside both top-edge and narrow canvases", () => {
   const pivot = { x: 50 / 3, y: 10 / 3 };
   for (const canvas of [{ width: 20, height: 100 }, { width: 100, height: 20 }]) {

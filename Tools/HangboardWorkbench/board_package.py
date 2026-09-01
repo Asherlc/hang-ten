@@ -565,6 +565,103 @@ def save_editor_document(
             shutil.rmtree(candidate_parent, ignore_errors=True)
 
 
+def delete_presentation(
+    library_root: Path, slug: str, presentation_id: str
+) -> BoardPackage:
+    """Atomically remove one canonical presentation and the holds it owns."""
+    root = _library_root(library_root)
+    slug = _slug(slug)
+    with _library_lock(root):
+        inventory = _discover_packages_unlocked(root)
+        live = next(
+            (package for package in inventory if package.root.name == slug), None
+        )
+        if live is None:
+            raise BoardPackageError("board package is not available")
+        live = load_board_package(live.root)
+        board, removed_assets = _delete_presentation_from_board(
+            live.board, presentation_id
+        )
+        candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-delete-", dir=root))
+        candidate = candidate_parent / slug
+        try:
+            shutil.copytree(live.root, candidate)
+            _write_json(candidate / "board.json", board)
+            for asset_path in removed_assets:
+                (candidate / asset_path).unlink()
+            return _replace_package_locked(root, slug, candidate, inventory=inventory)
+        finally:
+            shutil.rmtree(candidate_parent, ignore_errors=True)
+
+
+def _delete_presentation_from_board(
+    board: Mapping[str, Any], presentation_id: str
+) -> tuple[dict[str, Any], tuple[str, ...]]:
+    """Build a valid board after removing one canonical presentation.
+
+    Alias presentations are projections of their source canonical presentation,
+    so aliases of the deleted source must disappear with it as well.
+    """
+    presentation_id = _identifier(presentation_id, "presentation ID")
+    copied = json.loads(json.dumps(board))
+    presentations = copied["presentations"]
+    assert isinstance(presentations, list)
+    selected = next(
+        (item for item in presentations if item.get("id") == presentation_id),
+        None,
+    )
+    if selected is None:
+        raise BoardPackageError("presentation is not available")
+    if "sourcePresentationID" in selected:
+        raise BoardPackageError("only canonical presentations can be deleted")
+    canonical = [item for item in presentations if "sourcePresentationID" not in item]
+    if len(canonical) == 1:
+        raise BoardPackageError("cannot delete the only canonical presentation")
+
+    removed_ids = {
+        item["id"]
+        for item in presentations
+        if item["id"] == presentation_id
+        or item.get("sourcePresentationID") == presentation_id
+    }
+    remaining = [item for item in presentations if item["id"] not in removed_ids]
+    next_default = (
+        next(
+            item["id"] for item in remaining if "sourcePresentationID" not in item
+        )
+        if selected["default"]
+        else next(item["id"] for item in remaining if item["default"])
+    )
+    for item in remaining:
+        item["default"] = item["id"] == next_default
+    copied["presentations"] = remaining
+
+    removed_assets = {
+        item["assetPath"]
+        for item in presentations
+        if item["id"] in removed_ids
+        and item["assetPath"] not in {remaining_item["assetPath"] for remaining_item in remaining}
+    }
+    copied["holds"] = [
+        hold for hold in copied["holds"] if hold["presentationID"] not in removed_ids
+    ]
+    if not copied["holds"]:
+        raise BoardPackageError("cannot delete a surface because the board needs at least one hold")
+    remaining_hold_ids = {hold["id"] for hold in copied["holds"]}
+    for hold in copied["holds"]:
+        if hold.get("pairedHoldID") not in remaining_hold_ids:
+            hold.pop("pairedHoldID", None)
+    if "equipmentObjects" in copied:
+        used_equipment_objects = {
+            hold.get("equipmentObjectID", "primary") for hold in copied["holds"]
+        }
+        copied["equipmentObjects"] = [
+            item for item in copied["equipmentObjects"]
+            if item["id"] in used_equipment_objects
+        ]
+    return copied, tuple(sorted(removed_assets))
+
+
 def _apply_editor_document(
     board: dict[str, Any],
     pieces_by_hold: Mapping[

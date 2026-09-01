@@ -226,23 +226,32 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 </select>
               </label>
               {(state.board?.presentations?.length ?? 0) > 1 && (
-                <label className="surface-selector" htmlFor="presentation-select">
-                  <span>Surface</span>
-                  <select
-                    id="presentation-select"
-                    aria-label="Board surface"
-                    value={state.board?.selectedPresentationID ?? ""}
+                <div className="surface-controls">
+                  <label className="surface-selector" htmlFor="presentation-select">
+                    <span>Surface</span>
+                    <select
+                      id="presentation-select"
+                      aria-label="Board surface"
+                      value={state.board?.selectedPresentationID ?? ""}
+                      disabled={editorBusy}
+                      onChange={(event) => void actions.selectPresentation(event.target.value)}
+                    >
+                      {state.board?.presentations?.map((presentation) => (
+                        <option
+                          key={presentation.presentationID}
+                          value={presentation.presentationID}
+                        >{presentation.displayName}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <button
+                    className="tool-button danger"
+                    id="delete-presentation-button"
+                    type="button"
                     disabled={editorBusy}
-                    onChange={(event) => void actions.selectPresentation(event.target.value)}
-                  >
-                    {state.board?.presentations?.map((presentation) => (
-                      <option
-                        key={presentation.presentationID}
-                        value={presentation.presentationID}
-                      >{presentation.displayName}</option>
-                    ))}
-                  </select>
-                </label>
+                    onClick={() => void actions.deletePresentation()}
+                  >Delete surface</button>
+                </div>
               )}
               <button
                 className="tool-button"

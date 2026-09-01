@@ -150,6 +150,22 @@ class GitHubClient:
         )
         return _required_string(_required_object(response, "commit"), "sha")
 
+    def delete_file(
+        self,
+        token: str,
+        path: str,
+        branch: str,
+        message: str,
+        sha: str,
+    ) -> str:
+        response = self._call(
+            token,
+            "DELETE",
+            f"{self._repository_path()}/contents/{quote(path, safe='/')}",
+            {"message": message, "branch": branch, "sha": sha},
+        )
+        return _required_string(_required_object(response, "commit"), "sha")
+
     def create_pull_request(
         self, token: str, title: str, head: str, base: str, body: str
     ) -> str:

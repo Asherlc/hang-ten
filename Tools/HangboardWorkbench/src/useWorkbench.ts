@@ -429,6 +429,55 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     });
   }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
 
+  const deletePresentation = useCallback(async (): Promise<void> => {
+    const current = stateRef.current;
+    const board = current.board;
+    const presentationID = board?.selectedPresentationID;
+    const presentation = board?.presentations?.find((item) => item.presentationID === presentationID);
+    if (!board || !presentationID || !presentation || isBusy()) return;
+    if (current.dirty) {
+      updateState((value) => ({
+        ...value,
+        validation: "Save or undo the current surface changes before deleting this surface.",
+        status: "Surface not deleted. Unsaved edits were kept.",
+      }));
+      return;
+    }
+    if (!dialogs.confirm(`Delete the ${presentation.displayName} surface and all of its holds? This cannot be undone.`)) {
+      updateState((value) => ({ ...value, status: "Surface deletion cancelled." }));
+      return;
+    }
+    updateState((value) => ({ ...value, validation: "", saveLoginUrl: null }));
+    await boardOperations.perform(async ({ isCurrent }) => {
+      try {
+        const deleted = await client.deletePresentation(board.boardId, presentationID);
+        await loadImage(deleted.imageUrl);
+        if (!isCurrent() || stateRef.current.board?.boardId !== board.boardId) return;
+        resetHistory(historyRef.current);
+        updateState((value) => ({
+          ...value,
+          board: deleted,
+          document: cloneEditorDocument(deleted.document),
+          selectedKey: null,
+          selectedKeys: [],
+          dirty: false,
+          boards: value.boards.map((item) => item.boardId === deleted.boardId
+            ? { ...item, holdCount: deleted.holdCount, imageUrl: deleted.imageUrl }
+            : item),
+          ...clearApiErrorFor(value, "delete-presentation"),
+          status: "Board surface deleted.",
+        }));
+      } catch (error: unknown) {
+        if (!isCurrent()) return;
+        updateState((value) => ({
+          ...value,
+          validation: errorMessage(error, "Could not delete board surface."),
+          status: "Could not delete board surface. The current editor was kept.",
+        }));
+      }
+    });
+  }, [boardOperations, client, dialogs, isBusy, loadImage, updateState]);
+
   const saveBoard = useCallback(async (automatic = false): Promise<void> => {
     if (isBusy() || stateRef.current.savingBoard) return;
     const current = stateRef.current;
@@ -897,6 +946,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     pushBranch,
     openPullRequest,
     selectPresentation,
+    deletePresentation,
     selectHold(key, toggle = false) {
       updateState((current) => {
         if (!key || !current.document?.regions.some((region) => region.key === key)) {
@@ -934,6 +984,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     editDocument,
     redoDocument,
     saveBoard,
+    deletePresentation,
     selectPresentation,
     selectBoard,
     setAutosaveEnabled,

@@ -125,6 +125,24 @@ class FakeGitHubClient:
         self._heads[branch] = commit_sha
         return commit_sha
 
+    def delete_file(
+        self,
+        token: str,
+        path: str,
+        branch: str,
+        message: str,
+        sha: str,
+    ) -> str:
+        self.calls.append(Call("delete_file", (token, path, branch, message, sha)))
+        files = self._files(branch)
+        current = files.get(path)
+        if current is None or sha != current[1]:
+            raise GitHubConflictError("file changed")
+        content, _blob_sha = files.pop(path)
+        commit_sha = self._commit_sha(branch, path, content, message)
+        self._heads[branch] = commit_sha
+        return commit_sha
+
     def create_pull_request(
         self, token: str, title: str, head: str, base: str, body: str
     ) -> str:
