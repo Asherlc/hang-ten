@@ -699,7 +699,7 @@
     {
       "id": "hold-7",
       "name": "Hold 7",
-      "kind": "edge",
+      "kind": "pocket",
       "equipmentObjectID": "primary",
       "geometry": [
         {
