@@ -306,7 +306,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 2
     },
     {
       "id": "front-upper-3",
@@ -640,7 +641,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 2
     },
     {
       "id": "front-upper-6",
@@ -1418,7 +1420,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 2
     },
     {
       "id": "front-lower-3",
@@ -1752,7 +1755,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 2
     },
     {
       "id": "front-lower-6",
