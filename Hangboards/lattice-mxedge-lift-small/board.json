@@ -579,7 +579,8 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 1,
-      "sizeMillimeters": 25
+      "sizeMillimeters": 25,
+      "handCapacity": 1
     }
   ]
 }
