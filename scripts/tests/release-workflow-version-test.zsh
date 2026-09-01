@@ -46,6 +46,11 @@ require_contract(
   'marketing version passed to xcodebuild',
   /xcodebuild\s+\\(?:[^\n]*\n)*?\s*MARKETING_VERSION="\$MARKETING_VERSION"\s+\\/m
 )
+require_contract(
+  archive_run,
+  'build number passed to the archive xcodebuild invocation',
+  /xcodebuild\s+\\(?:[^\n]*\n)*?\s*CURRENT_PROJECT_VERSION="\$BUILD_NUMBER"\s+\\/m
+)
 
 # The archive verification must read CFBundleShortVersionString and fail the
 # step when it differs from the train selected above, rather than merely
