@@ -791,7 +791,8 @@
         }
       ],
       "presentationID": "large-medium-edge-position",
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "sizeMillimeters": 25
     }
   ]
 }
