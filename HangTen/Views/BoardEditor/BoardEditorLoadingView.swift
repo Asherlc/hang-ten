@@ -46,8 +46,12 @@ struct BoardEditorUIKitImagePreparer: BoardEditorImagePreparing {
     }
 
     func prepareThumbnailImage(at url: URL, size: CGSize) async -> UIImage? {
+        guard !Task.isCancelled else { return nil }
         guard let image = UIImage(contentsOfFile: url.path) else { return nil }
-        return await thumbnailPreparer(image, size)
+        guard !Task.isCancelled else { return nil }
+        let preparedImage = await thumbnailPreparer(image, size)
+        guard !Task.isCancelled else { return nil }
+        return preparedImage
     }
 }
 

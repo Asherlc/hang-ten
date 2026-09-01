@@ -146,6 +146,26 @@ final class BoardEditorLoadingTests: XCTestCase {
         XCTAssertNil(thumbnailImage)
     }
 
+    func testProductionImagePreparerReturnsNilWhenThumbnailTaskIsCancelled() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let imageURL = sourceLibraryURL.appendingPathComponent("fixture-board/assets/primary.png")
+        let preparer = BoardEditorUIKitImagePreparer(
+            displayPreparer: { $0 },
+            thumbnailPreparer: { image, _ in
+                try? await Task.sleep(for: .milliseconds(100))
+                return image
+            }
+        )
+
+        let thumbnailTask = Task.detached {
+            await preparer.prepareThumbnailImage(at: imageURL, size: CGSize(width: 74, height: 52))
+        }
+        thumbnailTask.cancel()
+
+        let preparedThumbnail = await thumbnailTask.value
+        XCTAssertNil(preparedThumbnail)
+    }
+
     @MainActor
     func testResetDefersLaterLoaderImagePreparationUntilRefreshCompletes() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
@@ -235,7 +255,7 @@ final class BoardEditorLoadingTests: XCTestCase {
             guard Date() < deadline else {
                 return XCTFail("Timed out waiting for board loading to finish")
             }
-            try await Task.sleep(nanoseconds: 10_000_000)
+            try await Task.sleep(for: .milliseconds(10))
         }
     }
 
@@ -249,7 +269,7 @@ final class BoardEditorLoadingTests: XCTestCase {
             guard Date() < deadline else {
                 return XCTFail("Timed out waiting for board reset to finish")
             }
-            try await Task.sleep(nanoseconds: 10_000_000)
+            try await Task.sleep(for: .milliseconds(10))
         }
     }
 

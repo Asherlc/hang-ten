@@ -126,7 +126,7 @@ final class BoardEditorStoreTests: XCTestCase {
             try store.reset(slug: "fixture-board")
         }
         await resetAttempt.waitUntilStarted()
-        try await Task.sleep(nanoseconds: 20_000_000)
+        try await Task.sleep(for: .milliseconds(20))
 
         XCTAssertTrue(store.hasEdits(slug: "fixture-board"))
         allowDocumentLoad.signal()
@@ -137,6 +137,75 @@ final class BoardEditorStoreTests: XCTestCase {
         XCTAssertEqual(package.pixelWidth, 2)
         XCTAssertEqual(package.pixelHeight, 1)
         XCTAssertFalse(store.hasEdits(slug: "fixture-board"))
+    }
+
+    func testPreparationForAnotherStoreIsNotBlockedByAnUnrelatedStore() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let preparationStarted = DispatchSemaphore(value: 0)
+        let allowPreparation = DispatchSemaphore(value: 0)
+        let firstStore = BoardEditorStore(
+            baseDirectory: storeDirectory.appendingPathComponent("first", isDirectory: true),
+            sourceLibraryURL: sourceLibraryURL,
+            preparationWillLoadDocument: {
+                preparationStarted.signal()
+                allowPreparation.wait()
+            }
+        )
+        let secondStore = BoardEditorStore(
+            baseDirectory: storeDirectory.appendingPathComponent("second", isDirectory: true),
+            sourceLibraryURL: sourceLibraryURL
+        )
+
+        let firstPreparation = Task.detached { () throws -> BoardEditedPackage in
+            try firstStore.prepareEditablePackage(slug: "fixture-board")
+        }
+        XCTAssertEqual(preparationStarted.wait(timeout: .now() + 1), .success)
+
+        let secondFinished = DispatchSemaphore(value: 0)
+        let secondPreparation = Task.detached { () throws -> BoardEditedPackage in
+            defer { secondFinished.signal() }
+            return try secondStore.prepareEditablePackage(slug: "fixture-board")
+        }
+        let secondCompletedBeforeFirstWasReleased = secondFinished.wait(timeout: .now() + 1) == .success
+
+        allowPreparation.signal()
+        _ = try await firstPreparation.value
+        let secondPackage = try await secondPreparation.value
+
+        XCTAssertTrue(secondCompletedBeforeFirstWasReleased)
+        XCTAssertEqual(secondPackage.slug, "fixture-board")
+    }
+
+    func testStartEditingPreservesEditedDocumentWhenDeclaredPresentationAssetIsMissing() throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try store.startEditing(slug: "fixture-board")
+        let packageURL = try store.exportedFileURL(slug: "fixture-board")
+        var editedDocument = try store.loadDocument(slug: "fixture-board").document
+        editedDocument.name = "Edited fixture board"
+        try store.save(document: editedDocument, slug: "fixture-board")
+        let editedBoardData = try Data(contentsOf: packageURL.appendingPathComponent("board.json"))
+        try FileManager.default.removeItem(at: packageURL.appendingPathComponent("assets"))
+
+        XCTAssertThrowsError(try store.startEditing(slug: "fixture-board")) { error in
+            XCTAssertEqual(error as? BoardEditorStoreError, .unreadablePresentationImage(slug: "fixture-board"))
+        }
+        XCTAssertEqual(
+            try Data(contentsOf: packageURL.appendingPathComponent("board.json")),
+            editedBoardData
+        )
+    }
+
+    func testStartEditingRejectsEmptyAssetsDirectoryForDeclaredPresentation() throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let store = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try store.startEditing(slug: "fixture-board")
+        let packageURL = try store.exportedFileURL(slug: "fixture-board")
+        try FileManager.default.removeItem(at: packageURL.appendingPathComponent("assets/primary.png"))
+
+        XCTAssertThrowsError(try store.startEditing(slug: "fixture-board")) { error in
+            XCTAssertEqual(error as? BoardEditorStoreError, .unreadablePresentationImage(slug: "fixture-board"))
+        }
     }
 
     @MainActor

@@ -261,12 +261,13 @@ private struct BoardEditorThumbnailView: View {
         .task(id: imageURL) {
             image = nil
             guard let imageURL else { return }
-            let preparedImage = await Task.detached(priority: .userInitiated) { [imagePreparer] in
-                await imagePreparer.prepareThumbnailImage(
-                    at: imageURL,
-                    size: Self.displaySize
-                )
-            }.value
+            let worker = Task.detached(priority: .userInitiated) { [imagePreparer] in
+                await imagePreparer.prepareThumbnailImage(at: imageURL, size: Self.displaySize)
+            }
+            let preparedImage = await withTaskCancellationHandler(
+                operation: { await worker.value },
+                onCancel: { worker.cancel() }
+            )
             guard !Task.isCancelled else { return }
             image = preparedImage
         }

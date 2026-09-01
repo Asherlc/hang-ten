@@ -41,11 +41,11 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
 
 struct BoardEditorStore: Sendable {
     static let defaultDirectoryName = "BoardEditorPackages"
-    private static let editingLock = NSLock()
 
     private let baseDirectory: URL
     private let sourceLibraryURL: URL?
     private let preparationWillLoadDocument: @Sendable () -> Void
+    private let synchronization = BoardEditorStoreSynchronization()
 
     init(
         baseDirectory: URL? = nil,
@@ -64,8 +64,8 @@ struct BoardEditorStore: Sendable {
     /// Copies the bundled package verbatim into the editable store when absent.
     @discardableResult
     func startEditing(slug: String) throws -> URL {
-        Self.editingLock.lock()
-        defer { Self.editingLock.unlock() }
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
 
         return try startEditingLocked(slug: slug)
     }
@@ -73,8 +73,8 @@ struct BoardEditorStore: Sendable {
     /// Copies or reuses an editable package and loads its document while reset
     /// operations remain excluded by the package lock.
     func prepareEditablePackage(slug: String) throws -> BoardEditedPackage {
-        Self.editingLock.lock()
-        defer { Self.editingLock.unlock() }
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
 
         _ = try startEditingLocked(slug: slug)
         preparationWillLoadDocument()
@@ -83,7 +83,9 @@ struct BoardEditorStore: Sendable {
 
     private func startEditingLocked(slug: String) throws -> URL {
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
-        if Self.hasCompletePackage(at: packageURL) {
+        let boardURL = packageURL.appendingPathComponent("board.json")
+        if FileManager.default.fileExists(atPath: boardURL.path) {
+            _ = try loadDocumentLocked(slug: slug)
             return packageURL
         }
         if FileManager.default.fileExists(atPath: packageURL.path) {
@@ -114,8 +116,8 @@ struct BoardEditorStore: Sendable {
     }
 
     func loadDocument(slug: String) throws -> BoardEditedPackage {
-        Self.editingLock.lock()
-        defer { Self.editingLock.unlock() }
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
 
         return try loadDocumentLocked(slug: slug)
     }
@@ -208,8 +210,8 @@ struct BoardEditorStore: Sendable {
     }
 
     func reset(slug: String) throws {
-        Self.editingLock.lock()
-        defer { Self.editingLock.unlock() }
+        synchronization.editingLock.lock()
+        defer { synchronization.editingLock.unlock() }
 
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
         guard FileManager.default.fileExists(atPath: packageURL.path) else { return }
@@ -298,11 +300,6 @@ struct BoardEditorStore: Sendable {
         (97...122).contains(scalar.value) || (48...57).contains(scalar.value)
     }
 
-    private static func hasCompletePackage(at packageURL: URL) -> Bool {
-        FileManager.default.fileExists(atPath: packageURL.appendingPathComponent("board.json").path)
-            && FileManager.default.fileExists(atPath: packageURL.appendingPathComponent("assets").path)
-    }
-
     private func ensureBaseDirectory() throws {
         try FileManager.default.createDirectory(at: baseDirectory, withIntermediateDirectories: true)
     }
@@ -333,4 +330,8 @@ struct BoardEditorStore: Sendable {
         }
         return (width.intValue, height.intValue)
     }
+}
+
+private final class BoardEditorStoreSynchronization: @unchecked Sendable {
+    let editingLock = NSLock()
 }
