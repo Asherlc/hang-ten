@@ -33,7 +33,7 @@
       "id": "pull-up-jug",
       "equipmentObjectID": "primary",
       "name": "Smooth pull-up jug",
-      "kind": "jug",
+      "kind": "edge",
       "handCapacity": 1,
       "presentationID": "primary",
       "geometry": [
