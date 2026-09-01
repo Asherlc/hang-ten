@@ -665,10 +665,10 @@ those cord-free canonical sources.
 
 | Presentation | Asset | Canonical hold inventory | Old SHA-256 | New SHA-256 | Dimensions | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `primary` — front, 14/10 mm upright (default) | `assets/primary.png` | `edge-14` (2 pieces), `center-edge-18` (1), `edge-22` (2), `center-edge-10` (1), `top-jug` (1) | `7283a9e58ca9e1176fb5517061fb9a78e611e7af9fcd6943a021edcb70c56b7c` | `aaca10de93a6899a6ba3520ea722524d97d08aae45488beb280191a7f14092fc` | 1536 x 1024 | accepted board-only head-on canonical front |
-| `front-inverted` — front, 22/18 mm upright | `assets/front-inverted.png` | alias of all 7 `primary` pieces | absent | `7b04a27032e2f4f140b2b38ebe7fb936d6cc622620c07112c761db2cd43cc057` | 1536 x 1024 | exact 180-degree primary rotation; `sourcePresentationID: primary`, `isInverted: true` |
-| `reverse` — back, sloper upright | `assets/reverse.png` | `back-jug-sloper` (1 piece) | `74804c611a453220579c5728ac7964d3ab6956ebfbd197871b3bf881a0612429` | `a42c5a9c9252d7cadc336b2baa1ef1da75ee434342b4bf6b9a094b6f36b292ee` | 1536 x 1024 | accepted board-only head-on canonical back |
-| `reverse-inverted` — back, jug upright | `assets/reverse-inverted.png` | alias of the 1 `reverse` piece | absent | `40813b47d90a4bc2e6782eb7c82e40d302cdafa730b134e866724cbc6a05f341` | 1536 x 1024 | exact 180-degree reverse rotation; `sourcePresentationID: reverse`, `isInverted: true` |
+| `primary` — front, 14/10 mm upright (default) | `assets/primary.png` | `edge-14` (2 pieces), `center-edge-18` (1), `edge-22` (2), `center-edge-10` (1), `top-jug` (1) | `7283a9e58ca9e1176fb5517061fb9a78e611e7af9fcd6943a021edcb70c56b7c` | `93c82d06f97dfb3f2529e531846295c1bc354060fdc56fad93ecab2bca139aaa` | 1536 x 1024 | accepted board-only head-on canonical front |
+| `front-inverted` — front, 22/18 mm upright | `assets/front-inverted.png` | alias of all 7 `primary` pieces | absent | `3f405261e6353bb8c392ee0589e822096e17245476ec0f5bf5dafced79eeff94` | 1536 x 1024 | exact 180-degree primary rotation; `sourcePresentationID: primary`, `isInverted: true` |
+| `reverse` — back, sloper upright | `assets/reverse.png` | `back-jug-sloper` (1 piece) | `74804c611a453220579c5728ac7964d3ab6956ebfbd197871b3bf881a0612429` | `27d5648bb6f4d25e6ad34859feb18aa26cadf0dbabbf0dff9f00fdb5e84fbe72` | 1536 x 1024 | accepted board-only head-on canonical back |
+| `reverse-inverted` — back, jug upright | `assets/reverse-inverted.png` | alias of the 1 `reverse` piece | absent | `9e943f0cacfd7d58a27a9462328d315ab40807dc13331b803cb98df98cd49386` | 1536 x 1024 | exact 180-degree reverse rotation; `sourcePresentationID: reverse`, `isInverted: true` |
 
 The checked-in orientation-alias schema and Tension Flash package precedent
 allow each inverted presentation to reuse one canonical surface and its stable
@@ -1059,9 +1059,9 @@ not invented.
 
 | Package | Presentation | Scoped holds | Asset SHA-256 / dimensions |
 | --- | --- | --- | --- |
-| `lattice.mxedge-lift-large` | `primary` — Small Edge Position, 0 degrees | `edge-12` | `e3e4fe908dc4d28d0dc8298c5a33bcf44680c45d0ff8b04002fd84db6894b59c` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-large` | `large-medium-edge-position` — 180 degrees | `edge-22`, `edge-16` | `878b6636850c632d41a5c0d67cd669da33f01c4a7c89357fa2cd1cab7fcf683f` / 1000 x 1000 RGB |
-| `lattice.mxedge-lift-large` | `mono-position` — 90 degrees counterclockwise | `mono-28` | `de6818e6d28b50b67ce56f3709ab96b8ca43cbf2a26ecbea4ddaebaa999650d0` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `primary` — Small Edge Position, 0 degrees | `edge-12` | `43572c3fac949c123a25e6a1ac0f22a3e1cc1198332d589a0eedcc8b74519ce4` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `large-medium-edge-position` — 180 degrees | `edge-22`, `edge-16` | `00b90805ab3aee3d64853b641bfc3fa047d9b1a5e0cd7bd7d0fffd2abbce1fc8` / 1000 x 1000 RGB |
+| `lattice.mxedge-lift-large` | `mono-position` — 90 degrees counterclockwise | `mono-28` | `0d28287501d6a30d0a6d196df351b5b0e3845e87a0b37aa37f1fd014dad59d6c` / 1000 x 1000 RGB |
 | `lattice.mxedge-lift-small` | `primary` — Small Edge Position, 0 degrees | `edge-8` | `e18410cf14375e9dcfb2a2aec22aa01c29f98a1d8f41fd5f94dcd6a39bbf1f16` / 1000 x 1000 RGB |
 | `lattice.mxedge-lift-small` | `large-medium-edge-position` — 180 degrees | `edge-18`, `edge-14` | `2ab477d5152b7b4bc7e88e14e0f6896cfedf308a30345f8d69f56aa85183c18e` / 1000 x 1000 RGB |
 | `lattice.mxedge-lift-small` | `mono-position` — 90 degrees counterclockwise | `mono-25` | `c962b21d82b0b4cb19d112822f75fb1a3cfa3a2d6436378e6ab0f2a445831c62` / 1000 x 1000 RGB |

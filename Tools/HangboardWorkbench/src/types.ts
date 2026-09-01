@@ -116,6 +116,7 @@ export interface BoardPresentation {
   displayName: string;
   imageUrl: string;
   default: boolean;
+  sourcePresentationID?: string;
 }
 
 export interface BoardSummary {
@@ -131,6 +132,7 @@ export interface Board {
   boardId: string;
   displayName: string;
   holdCount: number;
+  needsAttention?: boolean;
   href?: string;
   imageUrl: string;
   holdIDs?: string[];
@@ -178,6 +180,7 @@ export interface WorkbenchClient {
   listBoards(): Promise<BoardSummary[]>;
   getBoard(boardId: string, presentationID?: string): Promise<Board>;
   saveBoard(boardId: string, document: EditorDocument): Promise<Board>;
+  deletePresentation(boardId: string, presentationID: string): Promise<Board>;
   getGitStatus(): Promise<GitStatus>;
   getAuthStatus(): Promise<AuthStatus>;
   listBranches(): Promise<GitStatus>;
@@ -362,6 +365,7 @@ export interface WorkbenchActions {
   openPullRequest(): Promise<void>;
   selectHold(key: string | null, toggle?: boolean): void;
   selectPresentation(presentationID: string): Promise<void>;
+  deletePresentation(): Promise<void>;
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;

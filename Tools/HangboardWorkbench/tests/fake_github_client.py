@@ -125,6 +125,39 @@ class FakeGitHubClient:
         self._heads[branch] = commit_sha
         return commit_sha
 
+    def commit_files(
+        self,
+        token: str,
+        branch: str,
+        expected_head_sha: str,
+        changes: Mapping[str, bytes | None],
+        message: str,
+    ) -> str:
+        self.calls.append(
+            Call("commit_files", (token, branch, expected_head_sha, changes, message))
+        )
+        files = self._files(branch)
+        if self._heads[branch] != expected_head_sha:
+            raise GitHubConflictError("branch changed")
+        for path, content in changes.items():
+            if content is None:
+                if path not in files:
+                    raise GitHubNotFoundError("file is not available")
+                files.pop(path)
+                continue
+            blob_sha = self._sha(content)
+            files[path] = (content, blob_sha)
+            self._objects[blob_sha] = content
+        digest = hashlib.sha256()
+        digest.update(expected_head_sha.encode())
+        digest.update(message.encode())
+        for path, content in sorted(changes.items()):
+            digest.update(path.encode())
+            digest.update(b"\0" if content is None else content)
+        commit_sha = digest.hexdigest()
+        self._heads[branch] = commit_sha
+        return commit_sha
+
     def create_pull_request(
         self, token: str, title: str, head: str, base: str, body: str
     ) -> str:

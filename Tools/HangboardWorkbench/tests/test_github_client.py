@@ -150,12 +150,98 @@ def test_client_emits_github_requests_and_decodes_all_endpoint_contracts(
     assert all(timeout == 30 for timeout in timeouts)
 
 
+def test_client_commits_board_and_asset_deletion_in_one_atomic_git_commit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    requests = []
+
+    def fake_urlopen(request, *, timeout: float):
+        requests.append(request)
+        path = request.full_url.removeprefix("https://example.test")
+        responses = {
+            "/repos/acme/boards/git/ref/heads/feature": {"object": {"sha": "head"}},
+            "/repos/acme/boards/git/commits/head": {"tree": {"sha": "base-tree"}},
+            "/repos/acme/boards/git/blobs": {"sha": "board-blob"},
+            "/repos/acme/boards/git/trees": {"sha": "new-tree"},
+            "/repos/acme/boards/git/commits": {"sha": "new-commit"},
+            "/repos/acme/boards/git/refs/heads/feature": {"object": {"sha": "new-commit"}},
+        }
+        return _Response(responses[path])
+
+    monkeypatch.setattr(github_client.urllib.request, "urlopen", fake_urlopen)
+
+    commit_sha = github_client.GitHubClient(
+        "acme", "boards", base_url="https://example.test"
+    ).commit_files(
+        "token",
+        "feature",
+        "head",
+        {"Hangboards/example/board.json": b"{}\n", "Hangboards/example/assets/front.png": None},
+        "Delete presentation front from example.board",
+    )
+
+    assert commit_sha == "new-commit"
+    emitted = [
+        (
+            request.get_method(),
+            request.full_url.removeprefix("https://example.test"),
+            json.loads(request.data) if request.data is not None else None,
+        )
+        for request in requests
+    ]
+    assert emitted == [
+        ("GET", "/repos/acme/boards/git/ref/heads/feature", None),
+        ("GET", "/repos/acme/boards/git/commits/head", None),
+        (
+            "POST",
+            "/repos/acme/boards/git/blobs",
+            {"content": "e30K", "encoding": "base64"},
+        ),
+        (
+            "POST",
+            "/repos/acme/boards/git/trees",
+            {
+                "base_tree": "base-tree",
+                "tree": [
+                    {
+                        "path": "Hangboards/example/board.json",
+                        "mode": "100644",
+                        "type": "blob",
+                        "sha": "board-blob",
+                    },
+                    {
+                        "path": "Hangboards/example/assets/front.png",
+                        "mode": "100644",
+                        "type": "blob",
+                        "sha": None,
+                    },
+                ],
+            },
+        ),
+        (
+            "POST",
+            "/repos/acme/boards/git/commits",
+            {
+                "message": "Delete presentation front from example.board",
+                "tree": "new-tree",
+                "parents": ["head"],
+            },
+        ),
+        (
+            "PATCH",
+            "/repos/acme/boards/git/refs/heads/feature",
+            {"sha": "new-commit", "force": False},
+        ),
+    ]
+
+
 @pytest.mark.parametrize(
     ("status", "headers", "expected_error"),
     [
         (404, {}, github_client.GitHubNotFoundError),
         (409, {}, github_client.GitHubConflictError),
         (412, {}, github_client.GitHubConflictError),
+        (422, {}, github_client.GitHubTransportError),
         (401, {}, github_client.GitHubAuthError),
         (403, {}, github_client.GitHubForbiddenError),
         (403, {"X-RateLimit-Remaining": "0"}, github_client.GitHubRateLimitError),
@@ -174,6 +260,63 @@ def test_client_maps_http_errors_to_typed_errors(
 
     with pytest.raises(expected_error, match="denied"):
         github_client.GitHubClient("acme", "boards", base_url="https://example.test").get_default_branch("secret")
+
+
+@pytest.mark.parametrize("request_kind", ["tree", "commit", "pull-request"])
+def test_client_keeps_github_validation_errors_as_transport_errors_except_for_ref_updates(
+    monkeypatch: pytest.MonkeyPatch,
+    request_kind: str,
+) -> None:
+    def fake_urlopen(request, *, timeout: float):
+        path = request.full_url.removeprefix("https://example.test")
+        if request_kind == "tree" and path.endswith("/git/trees"):
+            raise HTTPError(request.full_url, 422, "failure", {}, io.BytesIO(b'{"message":"invalid tree"}'))
+        if request_kind == "commit" and path.endswith("/git/commits"):
+            raise HTTPError(request.full_url, 422, "failure", {}, io.BytesIO(b'{"message":"invalid commit"}'))
+        if request_kind == "pull-request" and path.endswith("/pulls"):
+            raise HTTPError(request.full_url, 422, "failure", {}, io.BytesIO(b'{"message":"invalid pull request"}'))
+        responses = {
+            "/repos/acme/boards/git/ref/heads/feature": {"object": {"sha": "head"}},
+            "/repos/acme/boards/git/commits/head": {"tree": {"sha": "base-tree"}},
+            "/repos/acme/boards/git/blobs": {"sha": "board-blob"},
+            "/repos/acme/boards/git/trees": {"sha": "new-tree"},
+        }
+        return _Response(responses[path])
+
+    monkeypatch.setattr(github_client.urllib.request, "urlopen", fake_urlopen)
+    client = github_client.GitHubClient("acme", "boards", base_url="https://example.test")
+
+    with pytest.raises(github_client.GitHubTransportError, match="invalid"):
+        if request_kind == "pull-request":
+            client.create_pull_request("token", "Title", "feature", "main", "Body")
+        else:
+            client.commit_files(
+                "token", "feature", "head", {"Hangboards/example/board.json": b"{}"}, "Save board"
+            )
+
+
+def test_client_maps_a_ref_update_validation_error_to_a_conflict(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_urlopen(request, *, timeout: float):
+        path = request.full_url.removeprefix("https://example.test")
+        if request.get_method() == "PATCH" and path.endswith("/git/refs/heads/feature"):
+            raise HTTPError(request.full_url, 422, "failure", {}, io.BytesIO(b'{"message":"reference changed"}'))
+        responses = {
+            "/repos/acme/boards/git/ref/heads/feature": {"object": {"sha": "head"}},
+            "/repos/acme/boards/git/commits/head": {"tree": {"sha": "base-tree"}},
+            "/repos/acme/boards/git/blobs": {"sha": "board-blob"},
+            "/repos/acme/boards/git/trees": {"sha": "new-tree"},
+            "/repos/acme/boards/git/commits": {"sha": "new-commit"},
+        }
+        return _Response(responses[path])
+
+    monkeypatch.setattr(github_client.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(github_client.GitHubConflictError, match="reference changed"):
+        github_client.GitHubClient("acme", "boards", base_url="https://example.test").commit_files(
+            "token", "feature", "head", {"Hangboards/example/board.json": b"{}"}, "Save board"
+        )
 
 
 def test_client_rejects_truncated_tree_and_malformed_json_as_transport_errors(

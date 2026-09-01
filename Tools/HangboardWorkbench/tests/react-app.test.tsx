@@ -146,6 +146,7 @@ function clientFixture(overrides: Partial<WorkbenchClient> = {}): WorkbenchClien
     },
     async getBoard(): Promise<Board> { return board; },
     async saveBoard(_boardId, document): Promise<Board> { return { ...board, document }; },
+    async deletePresentation(): Promise<Board> { return board; },
     async getGitStatus(): Promise<GitStatus> { return gitStatus(); },
     async getAuthStatus(): Promise<AuthStatus> {
       return { ok: true, authenticated: false };

@@ -63,6 +63,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   ), [changeCanvasZoomBy]);
   const busy = state.busyBoard || state.busyGit;
   const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
+  const selectedPresentation = state.board?.presentations?.find(
+    (presentation) => presentation.presentationID === state.board?.selectedPresentationID,
+  );
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
@@ -226,23 +229,40 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 </select>
               </label>
               {(state.board?.presentations?.length ?? 0) > 1 && (
-                <label className="surface-selector" htmlFor="presentation-select">
-                  <span>Surface</span>
-                  <select
-                    id="presentation-select"
-                    aria-label="Board surface"
-                    value={state.board?.selectedPresentationID ?? ""}
-                    disabled={editorBusy}
-                    onChange={(event) => void actions.selectPresentation(event.target.value)}
-                  >
-                    {state.board?.presentations?.map((presentation) => (
-                      <option
-                        key={presentation.presentationID}
-                        value={presentation.presentationID}
-                      >{presentation.displayName}</option>
-                    ))}
-                  </select>
-                </label>
+                <div className="surface-controls">
+                  <label className="surface-selector" htmlFor="presentation-select">
+                    <span>Surface</span>
+                    <select
+                      id="presentation-select"
+                      aria-label="Board surface"
+                      value={state.board?.selectedPresentationID ?? ""}
+                      disabled={busy}
+                      onChange={(event) => void actions.selectPresentation(event.target.value)}
+                    >
+                      {state.board?.presentations?.map((presentation) => (
+                        <option
+                          key={presentation.presentationID}
+                          value={presentation.presentationID}
+                        >{presentation.displayName}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <button
+                    className="tool-button danger"
+                    id="delete-presentation-button"
+                    type="button"
+                    disabled={busy || Boolean(selectedPresentation?.sourcePresentationID)}
+                    aria-describedby={selectedPresentation?.sourcePresentationID
+                      ? "delete-presentation-alias-hint"
+                      : undefined}
+                    onClick={() => void actions.deletePresentation()}
+                  >Delete surface</button>
+                  {selectedPresentation?.sourcePresentationID && (
+                    <small id="delete-presentation-alias-hint" className="region-type">
+                      Alias surfaces are deleted with their canonical source.
+                    </small>
+                  )}
+                </div>
               )}
               <button
                 className="tool-button"
