@@ -201,6 +201,11 @@ def _board_payload(
                     "displayName": item.name,
                     "imageUrl": _presentation_image_url(board_id, item.id),
                     "default": item.is_default,
+                    **(
+                        {"sourcePresentationID": item.source_presentation_id}
+                        if item.source_presentation_id is not None
+                        else {}
+                    ),
                 }
                 for item in package.presentations
             ],

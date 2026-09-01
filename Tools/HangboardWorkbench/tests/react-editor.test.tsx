@@ -397,6 +397,125 @@ test("deleting the selected surface confirms and focuses the server-selected rep
   }));
 });
 
+test("an alias surface explains that it is removed with its canonical source", async () => {
+  const presentations = [
+    { presentationID: "front-inverted", displayName: "Front Inverted", imageUrl: "/api/boards/board-a/image?presentationID=front-inverted", default: false, sourcePresentationID: "front" },
+    { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
+  ];
+  const board: Board = {
+    ...boardFixture({ presentationID: "front-inverted", canvas: { width: 100, height: 50 }, regions: [] }),
+    selectedPresentationID: "front-inverted",
+    presentations,
+    imageUrl: presentations[0]!.imageUrl,
+  };
+  let deleteRequests = 0;
+  const client = {
+    ...clientFixture([board]),
+    async deletePresentation(): Promise<Board> {
+      deleteRequests += 1;
+      return board;
+    },
+  } as WorkbenchClient;
+
+  await withEditor(async (app) => {
+    assert.equal(app.disabled("#delete-presentation-button"), true);
+    assert.match(app.text("#delete-presentation-alias-hint"), /canonical source/u);
+    await app.click("#delete-presentation-button");
+    assert.equal(deleteRequests, 0);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("surface controls are disabled while a board save is in flight", async () => {
+  const presentations = [
+    { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
+    { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
+  ];
+  const board: Board = {
+    ...boardFixture({ presentationID: "front", canvas: { width: 100, height: 50 }, regions: [] }),
+    selectedPresentationID: "front",
+    presentations,
+    imageUrl: presentations[0]!.imageUrl,
+  };
+  let resolveSave!: (saved: Board) => void;
+  const saved = new Promise<Board>((resolve) => { resolveSave = resolve; });
+  const client = {
+    ...clientFixture([board]),
+    saveBoard(): Promise<Board> { return saved; },
+  } as WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click("#add-hold-button");
+    await app.click("#save-button");
+
+    assert.equal(app.disabled("#presentation-select"), true);
+    assert.equal(app.disabled("#delete-presentation-button"), true);
+
+    await app.flush(() => resolveSave(board));
+  }, dependenciesFixture(board, { client }));
+});
+
+test("deleting a surface refreshes its library attention summary", async () => {
+  const presentations = [
+    { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
+    { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
+  ];
+  const front = {
+    ...boardFixture({ presentationID: "front", canvas: { width: 100, height: 50 }, regions: [] }),
+    selectedPresentationID: "front",
+    presentations,
+    imageUrl: presentations[0]!.imageUrl,
+    needsAttention: true,
+  } as Board & { needsAttention: boolean };
+  const back = {
+    ...front,
+    selectedPresentationID: "back",
+    presentations: [{ ...presentations[1]!, default: true }],
+    imageUrl: presentations[1]!.imageUrl,
+    needsAttention: false,
+  } as Board & { needsAttention: boolean };
+  const client = {
+    ...clientFixture([front]),
+    async listBoards(): Promise<BoardSummary[]> {
+      return [{ boardId: "board-a", displayName: "Board A", holdCount: 0, imageUrl: front.imageUrl, needsAttention: true }];
+    },
+    async deletePresentation(): Promise<Board> { return back; },
+  } as WorkbenchClient;
+
+  await withEditor(async (app) => {
+    assert.match(app.text("#board-list"), /Needs attention/u);
+    await app.click("#delete-presentation-button");
+    await app.flush();
+
+    assert.doesNotMatch(app.text("#board-list"), /Needs attention/u);
+  }, dependenciesFixture(front, { client }));
+});
+
+test("a delete authentication failure keeps the reauthentication link", async () => {
+  const presentations = [
+    { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
+    { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
+  ];
+  const board: Board = {
+    ...boardFixture({ presentationID: "front", canvas: { width: 100, height: 50 }, regions: [] }),
+    selectedPresentationID: "front",
+    presentations,
+    imageUrl: presentations[0]!.imageUrl,
+  };
+  const client = {
+    ...clientFixture([board]),
+    async deletePresentation(): Promise<Board> {
+      throw Object.assign(new Error("GitHub authentication expired"), { loginUrl: "/auth/login" });
+    },
+  } as WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click("#delete-presentation-button");
+    await app.flush();
+
+    assert.equal(app.document.querySelector("#editor-status a")?.getAttribute("href"), "/auth/login");
+  }, dependenciesFixture(board, { client }));
+});
+
 test("deleting a surface keeps the server-selected replacement when its image cannot load", async () => {
   const presentations = [
     { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },

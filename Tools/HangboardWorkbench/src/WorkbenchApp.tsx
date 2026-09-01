@@ -63,6 +63,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   ), [changeCanvasZoomBy]);
   const busy = state.busyBoard || state.busyGit;
   const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
+  const selectedPresentation = state.board?.presentations?.find(
+    (presentation) => presentation.presentationID === state.board?.selectedPresentationID,
+  );
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
@@ -233,7 +236,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                       id="presentation-select"
                       aria-label="Board surface"
                       value={state.board?.selectedPresentationID ?? ""}
-                      disabled={editorBusy}
+                      disabled={busy}
                       onChange={(event) => void actions.selectPresentation(event.target.value)}
                     >
                       {state.board?.presentations?.map((presentation) => (
@@ -248,9 +251,17 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                     className="tool-button danger"
                     id="delete-presentation-button"
                     type="button"
-                    disabled={editorBusy}
+                    disabled={busy || Boolean(selectedPresentation?.sourcePresentationID)}
+                    aria-describedby={selectedPresentation?.sourcePresentationID
+                      ? "delete-presentation-alias-hint"
+                      : undefined}
                     onClick={() => void actions.deletePresentation()}
                   >Delete surface</button>
+                  {selectedPresentation?.sourcePresentationID && (
+                    <small id="delete-presentation-alias-hint" className="region-type">
+                      Alias surfaces are deleted with their canonical source.
+                    </small>
+                  )}
                 </div>
               )}
               <button

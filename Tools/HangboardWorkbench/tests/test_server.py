@@ -716,6 +716,37 @@ def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
             assert response.headers["Content-Type"] == "image/png"
 
 
+def test_board_payload_marks_alias_presentations_with_their_canonical_source(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package = library / "fixture-v2"
+    board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["presentations"].append(
+        {
+            "id": "front-inverted",
+            "name": "Front Inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "front",
+            "isInverted": True,
+        }
+    )
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, opened = request_json(base, "GET", "/api/boards/fixture.multi")
+
+    assert status == 200
+    alias = next(
+        presentation
+        for presentation in opened["board"]["presentations"]
+        if presentation["presentationID"] == "front-inverted"
+    )
+    assert alias["sourcePresentationID"] == "front"
+
+
 def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(
     tmp_path: Path,
 ) -> None:

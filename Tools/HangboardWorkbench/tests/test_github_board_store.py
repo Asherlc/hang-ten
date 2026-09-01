@@ -1595,7 +1595,6 @@ def test_hosted_delete_presentation_removes_holds_and_only_its_unshared_asset() 
     with pytest.raises(KeyError):
         client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/primary.png")
     assert client.calls_named("put_file") == ()
-    assert client.calls_named("delete_file") == ()
     assert [call.method for call in client.calls[mutations_before_delete:]][-1:] == [
         "commit_files"
     ]

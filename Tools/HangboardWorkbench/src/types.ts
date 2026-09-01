@@ -116,6 +116,7 @@ export interface BoardPresentation {
   displayName: string;
   imageUrl: string;
   default: boolean;
+  sourcePresentationID?: string;
 }
 
 export interface BoardSummary {
@@ -131,6 +132,7 @@ export interface Board {
   boardId: string;
   displayName: string;
   holdCount: number;
+  needsAttention?: boolean;
   href?: string;
   imageUrl: string;
   holdIDs?: string[];

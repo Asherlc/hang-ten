@@ -435,6 +435,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     const presentationID = board?.selectedPresentationID;
     const presentation = board?.presentations?.find((item) => item.presentationID === presentationID);
     if (!board || !presentationID || !presentation || isBusy()) return;
+    if (presentation.sourcePresentationID) {
+      updateState((value) => ({
+        ...value,
+        validation: "Alias surfaces are removed with their canonical source.",
+        status: "Surface not deleted. Select a canonical surface.",
+      }));
+      return;
+    }
     if (current.dirty) {
       updateState((value) => ({
         ...value,
@@ -457,6 +465,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((value) => ({
           ...value,
           validation: errorMessage(error, "Could not delete board surface."),
+          saveLoginUrl: saveLoginUrl(error),
           status: "Could not delete board surface. The current editor was kept.",
         }));
         return;
@@ -471,7 +480,12 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         selectedKeys: [],
         dirty: false,
         boards: value.boards.map((item) => item.boardId === deleted.boardId
-          ? { ...item, holdCount: deleted.holdCount, imageUrl: deleted.imageUrl }
+          ? {
+            ...item,
+            holdCount: deleted.holdCount,
+            imageUrl: deleted.imageUrl,
+            needsAttention: deleted.needsAttention ?? item.needsAttention,
+          }
           : item),
         ...clearApiErrorFor(value, "delete-presentation"),
         status: "Board surface deleted.",

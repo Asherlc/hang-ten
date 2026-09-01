@@ -67,16 +67,6 @@ class _GitHubMutationClient(_GitHubSnapshotClient, Protocol):
         sha: str | None,
     ) -> str: ...
 
-    def delete_file(
-        self,
-        token: str,
-        path: str,
-        branch: str,
-        message: str,
-        sha: str,
-    ) -> str: ...
-
-
 class _GitHubBoardClient(_GitHubMutationClient, Protocol):
     def get_branch_head_sha(self, token: str, branch: str) -> str: ...
 
@@ -681,26 +671,6 @@ class _StoreMutationClient:
             changes,
             message,
         )
-
-    def delete_file(
-        self,
-        token: str,
-        path: str,
-        branch: str,
-        message: str,
-        sha: str,
-    ) -> str:
-        if token != self._token or branch != self._branch:
-            raise RuntimeError("GitHub mutation credentials or branch do not match")
-        return self._store._call_control(
-            self._store._client.delete_file,
-            token,
-            path,
-            branch,
-            message,
-            sha,
-        )
-
 
 class _CachedSnapshotClient:
     """Presents one authenticated immutable tree to existing load helpers."""

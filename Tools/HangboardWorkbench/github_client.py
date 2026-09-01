@@ -150,22 +150,6 @@ class GitHubClient:
         )
         return _required_string(_required_object(response, "commit"), "sha")
 
-    def delete_file(
-        self,
-        token: str,
-        path: str,
-        branch: str,
-        message: str,
-        sha: str,
-    ) -> str:
-        response = self._call(
-            token,
-            "DELETE",
-            f"{self._repository_path()}/contents/{quote(path, safe='/')}",
-            {"message": message, "branch": branch, "sha": sha},
-        )
-        return _required_string(_required_object(response, "commit"), "sha")
-
     def commit_files(
         self,
         token: str,
@@ -226,6 +210,7 @@ class GitHubClient:
             "PATCH",
             f"{self._repository_path()}/git/refs/heads/{quote(branch, safe='')}",
             {"sha": commit_sha, "force": False},
+            conflict_on_422=True,
         )
         return commit_sha
 
@@ -252,6 +237,8 @@ class GitHubClient:
         method: str,
         path: str,
         payload: Mapping[str, object] | None = None,
+        *,
+        conflict_on_422: bool = False,
     ) -> Mapping[str, Any] | list[Any]:
         data = (
             json.dumps(payload, separators=(",", ":")).encode("utf-8")
@@ -273,7 +260,7 @@ class GitHubClient:
             with urllib.request.urlopen(request, timeout=30) as response:
                 raw = response.read()
         except urllib.error.HTTPError as error:
-            raise _github_http_error(error, token) from error
+            raise _github_http_error(error, token, conflict_on_422=conflict_on_422) from error
         except (urllib.error.URLError, TimeoutError, socket.timeout, OSError) as error:
             raise GitHubTransportError("Unable to reach GitHub") from error
         try:
@@ -300,11 +287,16 @@ def _required_string(value: object, field: str) -> str:
     return value[field]
 
 
-def _github_http_error(error: urllib.error.HTTPError, token: str) -> GitHubError:
+def _github_http_error(
+    error: urllib.error.HTTPError,
+    token: str,
+    *,
+    conflict_on_422: bool = False,
+) -> GitHubError:
     message = _github_error_message(error, token)
     if error.code == 404:
         return GitHubNotFoundError(message)
-    if error.code in {409, 412, 422}:
+    if error.code in {409, 412} or (error.code == 422 and conflict_on_422):
         return GitHubConflictError(message)
     if error.code == 401:
         return GitHubAuthError(message)

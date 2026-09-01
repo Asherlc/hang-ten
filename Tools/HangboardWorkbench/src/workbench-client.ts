@@ -104,7 +104,8 @@ function isBoardPresentation(value: unknown): boolean {
     && typeof value.displayName === "string"
     && typeof value.imageUrl === "string"
     && (value.holdIDs === undefined || isStringArray(value.holdIDs))
-    && typeof value.default === "boolean";
+    && typeof value.default === "boolean"
+    && isOptionalString(value.sourcePresentationID);
 }
 
 function isBoardSummary(value: unknown): value is BoardSummary {
