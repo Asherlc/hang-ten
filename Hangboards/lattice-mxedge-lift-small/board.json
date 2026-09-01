@@ -485,7 +485,7 @@
     {
       "id": "hold-5",
       "name": "Hold 5",
-      "kind": "edge",
+      "kind": "pocket",
       "equipmentObjectID": "primary",
       "geometry": [
         {
