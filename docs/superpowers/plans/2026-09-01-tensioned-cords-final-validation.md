@@ -213,7 +213,7 @@ does not require exclusivity from other refs.
 Run:
 
 ```bash
-rtk zsh -lc 'rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] for e in c["acceptedImplementationCommits"]]'\'' | while IFS= read -r accepted_sha; do rtk git show --no-ext-diff --stat --summary "$accepted_sha"; rtk git diff --check "$accepted_sha^" "$accepted_sha"; done'
+rtk zsh -lc 'set -euo pipefail; rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] for e in c["acceptedImplementationCommits"]]'\'' | while IFS= read -r accepted_sha; do rtk git show --no-ext-diff --stat --summary "$accepted_sha"; rtk git diff --check "$accepted_sha^" "$accepted_sha"; done'
 ```
 
 Expected: each diff is clean and every changed path is inside its recorded
@@ -270,7 +270,7 @@ the already recorded integration base.
 Run:
 
 ```bash
-rtk zsh -lc 'foundation_base="$(rtk git rev-parse HEAD)"; rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="foundation" for e in c["acceptedImplementationCommits"]]'\'' | rtk xargs rtk git cherry-pick; rtk git diff --check "$foundation_base" HEAD; rtk git diff --name-status "$foundation_base" HEAD; rtk git show --stat --summary "$foundation_base"..HEAD'
+rtk zsh -lc 'set -euo pipefail; foundation_base="$(rtk git rev-parse HEAD)"; if ! rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="foundation" for e in c["acceptedImplementationCommits"]]'\'' | rtk xargs rtk git cherry-pick; then print -u2 "foundation cherry-pick pipeline failed"; exit 1; fi; rtk python3 .context/tensioned-cords-final-validation/validate-dependency-acceptance.py; rtk git diff --check "$foundation_base" HEAD; rtk git diff --name-status "$foundation_base" HEAD; rtk git show --stat --summary "$foundation_base"..HEAD'
 ```
 
 Expected: the cherry-pick applies exactly the accepted sequence; no unrelated
@@ -285,7 +285,7 @@ presentation audit preflight:
 rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardWorkbench/tests/test_capture_catalog.py::test_capture_command_accepts_every_presentation Tools/HangboardWorkbench/tests/test_capture_catalog.py::test_presentation_capture_identity_is_stable_and_distinct
 rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardWorkbench/tests/test_capture_catalog.py
 rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json --phase2-preflight
-rtk zsh -lc 'rtk python3 Tools/HangboardWorkbench/capture_catalog.py --help | rtk rg --fixed-strings -- "--all-presentations"'
+rtk zsh -lc 'set -euo pipefail; rtk python3 Tools/HangboardWorkbench/capture_catalog.py --help | rtk rg --fixed-strings -- "--all-presentations"'
 rtk rg -n --fixed-strings -- '--all-presentations' Tools/HangboardWorkbench/README.md
 rtk rg -n --fixed-strings 'packageID::presentationID' Tools/HangboardWorkbench/README.md
 ```
@@ -325,7 +325,7 @@ start Task 3.
 Run:
 
 ```bash
-rtk zsh -lc 'rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="compactDual" for e in c["acceptedImplementationCommits"]]'\'' | while IFS= read -r accepted_sha; do rtk git diff --check "$accepted_sha^" "$accepted_sha"; rtk git diff --name-status "$accepted_sha^" "$accepted_sha"; rtk git show --format=fuller --no-patch "$accepted_sha"; done'
+rtk zsh -lc 'set -euo pipefail; rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="compactDual" for e in c["acceptedImplementationCommits"]]'\'' | while IFS= read -r accepted_sha; do rtk git diff --check "$accepted_sha^" "$accepted_sha"; rtk git diff --name-status "$accepted_sha^" "$accepted_sha"; rtk git show --format=fuller --no-patch "$accepted_sha"; done'
 ```
 
 Expected: the immutable accepted patch and provenance still match Task 1.
@@ -335,7 +335,7 @@ Expected: the immutable accepted patch and provenance still match Task 1.
 Run:
 
 ```bash
-rtk zsh -lc 'compact_base="$(rtk git rev-parse HEAD)"; rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="compactDual" for e in c["acceptedImplementationCommits"]]'\'' | rtk xargs rtk git cherry-pick; rtk git diff --check "$compact_base" HEAD; rtk git diff --name-status "$compact_base" HEAD; rtk git show --stat --summary "$compact_base"..HEAD'
+rtk zsh -lc 'set -euo pipefail; compact_base="$(rtk git rev-parse HEAD)"; if ! rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="compactDual" for e in c["acceptedImplementationCommits"]]'\'' | rtk xargs rtk git cherry-pick; then print -u2 "compact/dual cherry-pick pipeline failed"; exit 1; fi; rtk python3 .context/tensioned-cords-final-validation/validate-dependency-acceptance.py; rtk git diff --check "$compact_base" HEAD; rtk git diff --name-status "$compact_base" HEAD; rtk git show --stat --summary "$compact_base"..HEAD'
 ```
 
 - [ ] **Step 3: Validate the compact/dual packages and focused contracts.**
@@ -378,7 +378,7 @@ pixel, alpha, dimension, scale, position, framing, or overlay change.
 Run:
 
 ```bash
-rtk zsh -lc 'rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="invertedRouted" for e in c["acceptedImplementationCommits"]]'\'' | while IFS= read -r accepted_sha; do rtk git diff --check "$accepted_sha^" "$accepted_sha"; rtk git diff --name-status "$accepted_sha^" "$accepted_sha"; rtk git show --format=fuller --no-patch "$accepted_sha"; done'
+rtk zsh -lc 'set -euo pipefail; rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="invertedRouted" for e in c["acceptedImplementationCommits"]]'\'' | while IFS= read -r accepted_sha; do rtk git diff --check "$accepted_sha^" "$accepted_sha"; rtk git diff --name-status "$accepted_sha^" "$accepted_sha"; rtk git show --format=fuller --no-patch "$accepted_sha"; done'
 ```
 
 - [ ] **Step 2: Delegate the inverted/routed cherry-pick to a fresh implementation subagent.**
@@ -386,7 +386,7 @@ rtk zsh -lc 'rtk python3 -c '\''import json; d=json.load(open(".context/tensione
 Run:
 
 ```bash
-rtk zsh -lc 'inverted_base="$(rtk git rev-parse HEAD)"; rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="invertedRouted" for e in c["acceptedImplementationCommits"]]'\'' | rtk xargs rtk git cherry-pick; rtk git diff --check "$inverted_base" HEAD; rtk git diff --name-status "$inverted_base" HEAD; rtk git show --stat --summary "$inverted_base"..HEAD'
+rtk zsh -lc 'set -euo pipefail; inverted_base="$(rtk git rev-parse HEAD)"; if ! rtk python3 -c '\''import json; d=json.load(open(".context/tensioned-cords-final-validation/dependency-acceptance.json")); [print(e["sha"]) for c in d["cohorts"] if c["id"]=="invertedRouted" for e in c["acceptedImplementationCommits"]]'\'' | rtk xargs rtk git cherry-pick; then print -u2 "inverted/routed cherry-pick pipeline failed"; exit 1; fi; rtk python3 .context/tensioned-cords-final-validation/validate-dependency-acceptance.py; rtk git diff --check "$inverted_base" HEAD; rtk git diff --name-status "$inverted_base" HEAD; rtk git show --stat --summary "$inverted_base"..HEAD'
 ```
 
 - [ ] **Step 3: Validate package and orientation-specific contracts.**
@@ -532,7 +532,7 @@ rtk python3 -c 'import json; d=json.load(open("docs/source-audits/2026-09-01-ten
 Before launch, require both exact ports to be free:
 
 ```bash
-rtk zsh -lc 'for port in 4187 4188; do if rtk lsof -nP -iTCP:"$port" -sTCP:LISTEN; then print -u2 "owned capture port $port is already occupied"; exit 1; fi; done'
+rtk zsh -lc 'set -euo pipefail; for port in 4187 4188; do if rtk lsof -nP -iTCP:"$port" -sTCP:LISTEN; then print -u2 "owned capture port $port is already occupied"; exit 1; fi; done'
 ```
 
 The accepted foundation capture implementation must install its failure,
@@ -544,7 +544,7 @@ then run:
 
 ```bash
 rtk python3 Tools/HangboardWorkbench/capture_catalog.py --repository-root "$PWD" --output-root "$PWD/.context/tensioned-cords-final-validation/workbench-all-presentations" --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --port 4187 --all-presentations
-rtk zsh -lc 'if rtk lsof -nP -iTCP:4187 -sTCP:LISTEN; then print -u2 "capture leaked port 4187"; exit 1; fi'
+rtk zsh -lc 'set -euo pipefail; if rtk lsof -nP -iTCP:4187 -sTCP:LISTEN; then print -u2 "capture leaked port 4187"; exit 1; fi'
 ```
 
 Expected: the capture tool terminates its exact Chrome/server children and
@@ -556,7 +556,7 @@ Run:
 
 ```bash
 rtk python3 Tools/HangboardWorkbench/capture_catalog.py --repository-root "$PWD" --output-root "$PWD/.context/tensioned-cords-final-validation/workbench-all-presentations-hold-ids" --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --port 4188 --all-presentations --hold-id-labels
-rtk zsh -lc 'if rtk lsof -nP -iTCP:4188 -sTCP:LISTEN; then print -u2 "capture leaked port 4188"; exit 1; fi'
+rtk zsh -lc 'set -euo pipefail; if rtk lsof -nP -iTCP:4188 -sTCP:LISTEN; then print -u2 "capture leaked port 4188"; exit 1; fi'
 ```
 
 Expected: normal completion or any failure leaves neither owned child alive and
@@ -836,7 +836,7 @@ Delete the exact retained package-tool artifact only after all package tests and
 both reviews have passed:
 
 ```bash
-rtk zsh -lc 'tool_artifact="$PWD/.context/hangboard-packages-venv"; if [[ "$tool_artifact" != "$PWD/.context/hangboard-packages-venv" ]]; then exit 1; fi; rtk rm -rf -- "$tool_artifact"; rtk test ! -e "$tool_artifact"'
+rtk zsh -lc 'set -euo pipefail; tool_artifact="$PWD/.context/hangboard-packages-venv"; if [[ "$tool_artifact" != "$PWD/.context/hangboard-packages-venv" ]]; then exit 1; fi; rtk rm -rf -- "$tool_artifact"; rtk test ! -e "$tool_artifact"'
 ```
 
 Then run:
@@ -846,7 +846,7 @@ rtk git diff --check origin/main...HEAD
 rtk git status --short --branch
 rtk gh pr view 388 --json state,headRefName,headRefOid,baseRefName,url
 rtk env PASEO_WORKTREE_PATH="$PWD" scripts/paseo-resource-cleanup.sh archive
-rtk zsh -lc 'for port in 4187 4188; do if rtk lsof -nP -iTCP:"$port" -sTCP:LISTEN; then exit 1; fi; done'
+rtk zsh -lc 'set -euo pipefail; for port in 4187 4188; do if rtk lsof -nP -iTCP:"$port" -sTCP:LISTEN; then exit 1; fi; done'
 ```
 
 Expected: 47 unique terminal records; exactly five Baguette Evo `BLOCKED`

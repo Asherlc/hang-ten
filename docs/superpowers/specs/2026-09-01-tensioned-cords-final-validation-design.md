@@ -44,6 +44,14 @@ recorded integration base, global SHA uniqueness, and a contiguous ordered
 parent chain. Reachability from other refs is neither prohibited nor treated as
 an acceptance signal.
 
+Every compound integration or cleanup shell runs with
+`set -euo pipefail`. Each cohort's JSON-producer/cherry-pick pipeline is a
+separately checked operation. After a successful cherry-pick, the dependency
+acceptance validator reruns immediately, before any diff or show. A failed JSON
+producer, cherry-pick, loop iteration, validator, diff, capture check, or cleanup
+therefore terminates the gate with a nonzero status and cannot be masked by a
+later successful command.
+
 The foundation/evidence cohort is ineligible unless its accepted implementation
 sequence itself provides and tests Workbench `--all-presentations`, stable
 `packageID::presentationID` manifest identities, normal and hold-ID capture
