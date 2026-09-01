@@ -593,62 +593,6 @@
       ]
     },
     {
-      "id": "pocket-20-four-left",
-      "name": "Left 20 mm 4-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 20,
-      "fingerCapacity": 4,
-      "gripType": "fourFingerPocket",
-      "presentationID": "primary",
-      "equipmentObjectID": "primary",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.32,
-            "y": 0.58,
-            "width": 0.105,
-            "height": 0.22
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.12
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.8,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.2,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
       "id": "pocket-10-four-left",
       "name": "Left 10 mm 4-finger pocket",
       "kind": "pocket",
