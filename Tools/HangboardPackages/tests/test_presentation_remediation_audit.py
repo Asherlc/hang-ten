@@ -1264,6 +1264,9 @@ def _validate_historical_phase2_document(
     document: dict[str, object],
 ) -> PresentationRemediationReport:
     historical_root = tmp_path / "Hangboards"
+    pristine_document = json.loads(
+        REAL_PHASE2_MANIFEST.read_text(encoding="utf-8")
+    )
     live_inventory = discover_board_packages(
         REPO_ROOT / "Hangboards",
         require_complete_inventory=True,
@@ -1271,10 +1274,10 @@ def _validate_historical_phase2_document(
     historical_records_by_package = {
         package_id: [
             record
-            for record in document["records"]
+            for record in pristine_document["records"]
             if record["packageID"] == package_id
         ]
-        for package_id in document["packageIDs"]
+        for package_id in pristine_document["packageIDs"]
     }
     inventory = replace(
         live_inventory,
@@ -1303,9 +1306,10 @@ def _validate_historical_phase2_document(
                 ),
             )
             for package in live_inventory.packages
+            if package.board.id in historical_records_by_package
         ),
     )
-    for record in document["records"]:
+    for record in pristine_document["records"]:
         asset_path = historical_root / Path(record["assetPath"]).relative_to(
             "Hangboards"
         )
@@ -1320,7 +1324,7 @@ def _validate_historical_phase2_document(
             record["currentAsset"]["widthPixels"],
             record["currentAsset"]["heightPixels"],
         )
-        for record in document["records"]
+        for record in pristine_document["records"]
     }
     read_live_png_facts = presentation_audit._current_png_facts
 
@@ -1395,6 +1399,25 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
     assert tuple(
         presentation.id for presentation in live_mini_bar.board.presentations
     ) == ("edge-10", "edge-20", "ergonomic-jug", "mini-pinch")
+
+
+def test_historical_phase2_replay_rejects_manifest_asset_path_drift(
+    tmp_path: Path,
+) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    record = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "aelith.cyclops-011/primary"
+    )
+    record["assetPath"] = "Hangboards/aelith-cyclops-011/assets/drifted.png"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match=r"assetPath does not match for aelith\.cyclops-011/primary",
+    ):
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 def test_production_action_requires_passed_canvas_preflight(tmp_path: Path) -> None:

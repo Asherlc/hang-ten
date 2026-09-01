@@ -60,10 +60,10 @@ or pixel postprocessing.
 
 | Presentation | Accepted built-in output | Tracked asset | Pixels / ratio | SHA-256 |
 | --- | --- | --- | --- | --- |
-| `edge-10` | `/Users/asherlc/.codex/generated_images/01a05b12-8465-70d2-b265-a5d29b2ddedb/exec-9dbb30b1-d4bb-436f-aae5-3970a67283fc.png` | `assets/edge-10.png` | 1536 × 1024 / `1.5` | `ca255016d3565f14c550f6d14e1b9e8f8f233f3627db1c5c4fef5fca8ea2727d` |
-| `edge-20` | `/Users/asherlc/.codex/generated_images/01a05b12-8465-70d2-b265-a5d29b2ddedb/exec-a1eaa538-c0a5-4423-9fce-38a8b5808dab.png` | `assets/edge-20.png` | 1536 × 1024 / `1.5` | `5352c53a330133f856264e2ca824c64ffcd36d4b17126b96170d21f6c28ba431` |
-| `ergonomic-jug` | `/Users/asherlc/.codex/generated_images/01a05ad6-c3b6-79c0-86be-3c70c5ca35c2/exec-ce45a8b1-f09b-426f-8cae-aacef36e3ce8.png` | `assets/ergonomic-jug.png` | 1536 × 1024 / `1.5` | `45cd3830f4deeeaf4b602df1f79e762c4c18845aed167af6215578568483d152` |
-| `mini-pinch` | `/Users/asherlc/.codex/generated_images/01a05ad6-c3b6-79c0-86be-3c70c5ca35c2/exec-b9f1e9a5-e643-48c4-a2c1-90ea3fe652c3.png` | `assets/mini-pinch.png` | 1254 × 1254 / `1.0` | `2ef36a6fa5e6470ce75f708f4d221b9d5a31b95232a9555bd20cff311a788b42` |
+| `edge-10` | `run 01a05b12-8465-70d2-b265-a5d29b2ddedb / output exec-9dbb30b1-d4bb-436f-aae5-3970a67283fc.png` | `assets/edge-10.png` | 1536 × 1024 / `1.5` | `ca255016d3565f14c550f6d14e1b9e8f8f233f3627db1c5c4fef5fca8ea2727d` |
+| `edge-20` | `run 01a05b12-8465-70d2-b265-a5d29b2ddedb / output exec-a1eaa538-c0a5-4423-9fce-38a8b5808dab.png` | `assets/edge-20.png` | 1536 × 1024 / `1.5` | `5352c53a330133f856264e2ca824c64ffcd36d4b17126b96170d21f6c28ba431` |
+| `ergonomic-jug` | `run 01a05ad6-c3b6-79c0-86be-3c70c5ca35c2 / output exec-ce45a8b1-f09b-426f-8cae-aacef36e3ce8.png` | `assets/ergonomic-jug.png` | 1536 × 1024 / `1.5` | `45cd3830f4deeeaf4b602df1f79e762c4c18845aed167af6215578568483d152` |
+| `mini-pinch` | `run 01a05ad6-c3b6-79c0-86be-3c70c5ca35c2 / output exec-b9f1e9a5-e643-48c4-a2c1-90ea3fe652c3.png` | `assets/mini-pinch.png` | 1254 × 1254 / `1.0` | `2ef36a6fa5e6470ce75f708f4d221b9d5a31b95232a9555bd20cff311a788b42` |
 
 ## Exact edge-10 built-in lineage
 
