@@ -4,7 +4,7 @@
   "name": "Triple Rung",
   "subtitle": "Three continuous rounded wooden edges.",
   "productURL": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
-  "dimensions": "55 \u00d7 13 \u00d7 5 cm",
+  "dimensions": "55 × 13 × 5 cm",
   "aspectRatio": 3.7297979797979797,
   "equipmentObjects": [
     {
@@ -137,9 +137,7 @@
         }
       ],
       "sizeMillimeters": 45,
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "edge-10",
@@ -266,9 +264,7 @@
         }
       ],
       "sizeMillimeters": 10,
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "edge-20",
@@ -395,9 +391,7 @@
         }
       ],
       "sizeMillimeters": 20,
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      "presentationID": "primary"
     }
   ],
   "presentations": [

@@ -2,9 +2,9 @@
   "id": "captain-fingerfood.pocket",
   "manufacturer": "Captain Fingerfood",
   "name": "POCKET Hangboard | Lines Edition",
-  "subtitle": "Current Lines colorway of the 110 \u00d7 66 \u00d7 29 mm two-depth POCKET revision.",
+  "subtitle": "Current Lines colorway of the 110 × 66 × 29 mm two-depth POCKET revision.",
   "productURL": "https://en.captainfingerfood.rocks/products/lines-hangboard",
-  "dimensions": "110 \u00d7 66 \u00d7 29 mm",
+  "dimensions": "110 × 66 × 29 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -22,6 +22,131 @@
     }
   ],
   "holds": [
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.209,
+            "y": 0.398,
+            "width": 0.582,
+            "height": 0.055
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.32
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  0.08
+                ],
+                "control2": [
+                  0.1,
+                  0.0
+                ],
+                "to": [
+                  0.16,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.84,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.9,
+                  0.0
+                ],
+                "control2": [
+                  0.94,
+                  0.08
+                ],
+                "to": [
+                  1.0,
+                  0.32
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.84
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.91,
+                  0.96
+                ],
+                "control2": [
+                  0.87,
+                  1.0
+                ],
+                "to": [
+                  0.82,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.18,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.13,
+                  1.0
+                ],
+                "control2": [
+                  0.09,
+                  0.96
+                ],
+                "to": [
+                  0.0,
+                  0.84
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.32
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 15
+    },
     {
       "id": "edge-20",
       "equipmentObjectID": "primary",
@@ -149,8 +274,7 @@
           }
         }
       ],
-      "sizeMillimeters": 20,
-      "fingerCapacity": 4
+      "sizeMillimeters": 20
     },
     {
       "id": "jug-outer-rim",
@@ -278,8 +402,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "fingerCapacity": 4
+      ]
     }
   ]
 }

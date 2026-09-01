@@ -4,7 +4,7 @@
   "name": "Prime Rib",
   "subtitle": "Compact training board with three full-width edges.",
   "productURL": "https://www.metoliusclimbing.com/products/prime-rib",
-  "dimensions": "20 \u00d7 4.2 \u00d7 1.5 in",
+  "dimensions": "20 × 4.2 × 1.5 in",
   "aspectRatio": 1.8461538461538463,
   "equipmentObjects": [
     {
@@ -144,9 +144,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      ]
     },
     {
       "id": "edge-23",
@@ -271,9 +269,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      ]
     },
     {
       "id": "edge-15",
@@ -398,9 +394,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      ]
     }
   ]
 }

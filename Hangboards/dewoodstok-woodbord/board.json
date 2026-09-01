@@ -4,7 +4,7 @@
   "name": "Woodbord",
   "subtitle": "Solid certified bamboo hangboard.",
   "productURL": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
-  "dimensions": "590 \u00d7 148 \u00d7 40 mm",
+  "dimensions": "590 × 148 × 40 mm",
   "aspectRatio": 3.6236559139784945,
   "equipmentObjects": [
     {
@@ -82,9 +82,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-1",
@@ -194,9 +192,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-2",
@@ -306,9 +302,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 2,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-3",
@@ -418,9 +412,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-4",
@@ -530,9 +522,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-5",
@@ -642,9 +632,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 2,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-6",
@@ -864,9 +852,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-2",
@@ -976,9 +962,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-3",
@@ -1088,9 +1072,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-4",
@@ -1310,9 +1292,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-2",
@@ -1422,9 +1402,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 2,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-3",
@@ -1534,9 +1512,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-4",
@@ -1646,9 +1622,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-5",
@@ -1758,9 +1732,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 2,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-6",

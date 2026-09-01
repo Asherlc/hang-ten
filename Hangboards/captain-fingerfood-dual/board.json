@@ -4,7 +4,7 @@
   "name": "DUAL",
   "subtitle": "Compact board with straight and curved 20 mm edges plus an outer jug.",
   "productURL": "https://en.captainfingerfood.rocks/products/dual-hangboard",
-  "dimensions": "12 \u00d7 7 \u00d7 3 cm",
+  "dimensions": "12 × 7 × 3 cm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -168,8 +168,7 @@
           }
         }
       ],
-      "sizeMillimeters": 20,
-      "fingerCapacity": 4
+      "sizeMillimeters": 20
     },
     {
       "id": "outer-jug",
@@ -293,8 +292,7 @@
             "type": "surface"
           }
         }
-      ],
-      "fingerCapacity": 4
+      ]
     },
     {
       "id": "curved-edge-20",

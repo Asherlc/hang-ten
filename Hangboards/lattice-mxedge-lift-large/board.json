@@ -4,7 +4,7 @@
   "name": "MXEdge Lift Large",
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
-  "dimensions": "20 \u00d7 11 \u00d7 5 cm",
+  "dimensions": "20 × 11 × 5 cm",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -149,8 +149,7 @@
           }
         }
       ],
-      "sizeMillimeters": 22,
-      "fingerCapacity": 4
+      "sizeMillimeters": 22
     },
     {
       "id": "edge-16",
@@ -265,8 +264,7 @@
           }
         }
       ],
-      "sizeMillimeters": 16,
-      "fingerCapacity": 4
+      "sizeMillimeters": 16
     },
     {
       "id": "edge-12",
@@ -381,8 +379,7 @@
           }
         }
       ],
-      "sizeMillimeters": 12,
-      "fingerCapacity": 4
+      "sizeMillimeters": 12
     },
     {
       "id": "mono-28",
@@ -483,121 +480,7 @@
           }
         }
       ],
-      "sizeMillimeters": 28,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "hold-5",
-      "name": "Hold 5",
-      "kind": "edge",
-      "fingerCapacity": 4,
-      "sizeMillimeters": 22,
-      "handCapacity": 1,
-      "equipmentObjectID": "primary",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.250511985,
-            "y": 0.576395905,
-            "width": 0.500341271,
-            "height": 0.110976077
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.88909961617,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.110900381832,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.049651792566,
-                  0.0
-                ],
-                "control2": [
-                  0.0,
-                  0.223857624738
-                ],
-                "to": [
-                  0.0,
-                  0.500000004505
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.776142375262
-                ],
-                "control2": [
-                  0.049651792566,
-                  1.0
-                ],
-                "to": [
-                  0.110900381832,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.88909961617,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.950348207434,
-                  1.0
-                ],
-                "control2": [
-                  1.0,
-                  0.776142375262
-                ],
-                "to": [
-                  1.0,
-                  0.500000004505
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.223857624738
-                ],
-                "control2": [
-                  0.950348207434,
-                  0.0
-                ],
-                "to": [
-                  0.88909961617,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0.0
-          }
-        }
-      ],
-      "presentationID": "primary"
+      "sizeMillimeters": 28
     }
   ]
 }

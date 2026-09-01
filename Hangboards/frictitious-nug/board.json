@@ -4,7 +4,7 @@
   "name": "The NUG",
   "subtitle": "Portable block with four edges, jug, and pinch.",
   "productURL": "https://frictitiousclimbing.com/products/the-nug",
-  "dimensions": "130 \u00d7 60 \u00d7 40 mm",
+  "dimensions": "130 × 60 × 40 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -29,6 +29,101 @@
     }
   ],
   "holds": [
+    {
+      "id": "edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.203,
+            "y": 0.358,
+            "width": 0.591,
+            "height": 0.122
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.07,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.93,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.97,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.2
+                ],
+                "to": [
+                  1.0,
+                  0.48
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.97
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.48
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.2
+                ],
+                "control2": [
+                  0.03,
+                  0.0
+                ],
+                "to": [
+                  0.07,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 20
+    },
     {
       "id": "edge-25",
       "equipmentObjectID": "primary",
@@ -156,8 +251,7 @@
           }
         }
       ],
-      "sizeMillimeters": 25,
-      "fingerCapacity": 4
+      "sizeMillimeters": 25
     },
     {
       "id": "edge-8",
@@ -414,8 +508,95 @@
           }
         }
       ],
-      "sizeMillimeters": 40,
-      "fingerCapacity": 4
+      "sizeMillimeters": 40
+    },
+    {
+      "id": "pinch-60",
+      "equipmentObjectID": "primary",
+      "name": "60 mm pinch",
+      "kind": "pinch",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.055,
+            "y": 0.636,
+            "width": 0.89,
+            "height": 0.153
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.48
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.48
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 60
     }
   ]
 }

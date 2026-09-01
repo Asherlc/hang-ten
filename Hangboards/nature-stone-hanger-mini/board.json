@@ -4,7 +4,7 @@
   "name": "Stone Hanger Mini",
   "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
   "productURL": "https://natureclimbing.com/products/stone-hanger-mini-beech",
-  "dimensions": "10 \u00d7 6 \u00d7 2.5 cm",
+  "dimensions": "10 × 6 × 2.5 cm",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -33,7 +33,7 @@
       "id": "pull-up-jug",
       "equipmentObjectID": "primary",
       "name": "Smooth pull-up jug",
-      "kind": "edge",
+      "kind": "jug",
       "handCapacity": 1,
       "presentationID": "primary",
       "geometry": [
@@ -121,15 +121,131 @@
             "type": "surface"
           }
         }
+      ]
+    },
+    {
+      "id": "wood-edge-15-incut",
+      "equipmentObjectID": "primary",
+      "name": "15 mm incut wood edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.25,
+            "y": 0.627,
+            "width": 0.501,
+            "height": 0.046
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.12
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.12,
+                  0.04
+                ],
+                "control2": [
+                  0.24,
+                  0.06
+                ],
+                "to": [
+                  0.36,
+                  0.05
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.43,
+                  0.03
+                ],
+                "control2": [
+                  0.47,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.53,
+                  0.0
+                ],
+                "control2": [
+                  0.6,
+                  0.03
+                ],
+                "to": [
+                  0.72,
+                  0.06
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.84,
+                  0.04
+                ],
+                "control2": [
+                  0.93,
+                  0.05
+                ],
+                "to": [
+                  1.0,
+                  0.12
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.12
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
       ],
-      "fingerCapacity": 4,
-      "sizeMillimeters": 16
+      "sizeMillimeters": 15
     },
     {
       "id": "granite-edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm granite edge",
-      "kind": "pinch",
+      "kind": "edge",
       "handCapacity": 1,
       "presentationID": "primary",
       "geometry": [
@@ -218,8 +334,7 @@
           }
         }
       ],
-      "sizeMillimeters": 60,
-      "fingerCapacity": 4
+      "sizeMillimeters": 15
     },
     {
       "id": "pinch-60",
