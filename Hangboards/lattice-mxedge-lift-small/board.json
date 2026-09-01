@@ -479,11 +479,12 @@
           },
           "shapeConstraint": {
             "shape": "circle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
-      "sizeMillimeters": 25
+      "sizeMillimeters": 25,
+      "fingerCapacity": 1
     },
     {
       "id": "hold-5",
