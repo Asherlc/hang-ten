@@ -587,7 +587,7 @@
       "name": "Hold 6",
       "kind": "edge",
       "fingerCapacity": 4,
-      "sizeMillimeters": 18,
+      "sizeMillimeters": 14,
       "handCapacity": 1,
       "equipmentObjectID": "primary",
       "geometry": [
