@@ -1103,7 +1103,34 @@ Reverse prompt (verbatim):
 Accepted assets: `primary.png` is 1536 × 1024 (ratio 1.5, SHA-256
 `18047e867d71a5113f9e828b60959e66b58723906f0b489f7ae1864484fa020a`);
 `reverse.png` is 1774 × 887 (ratio 2.0, SHA-256
-`bed470db4496b8cc8c2b1f69e918382850097dd7c6c6b68bae21ef952383e690`).
+`e85f6a0e62a647cf6eb534c715079a030bee8b5972f22ba2827a898bd12fe606`).
+
+On 2026-08-31, the reverse presentation was repaired after blue-field review
+showed that an alpha-only backdrop mutation had hidden the source-proved side
+loops and suspension cord behind both routing holes. The built-in image edit
+used the existing reverse presentation as the geometry/composition target and
+YY Vertical's official current-product gallery views 3 and 4 as the physical
+evidence inputs. The accepted fix-round-2 untouched output restores every
+source-proved cord segment—both short side loops and cord behind both routing
+holes—on the original 1774 × 887 opaque canvas.
+
+The 2026-08-31 fix-round-2 review rejected the first repair candidate because
+its central knot, upper hanging loop, and long diagonal cord were not present
+in the official evidence. A second one-attempt built-in edit retained the two
+source-proved short side loops and the cord visible behind both routing holes,
+with the loops following a symmetric, physically plausible tensioned route
+behind the upright face. It removed the unsupported upper topology. The saved
+reverse hold path was retained and its enclosing frame was directly refined to
+remain wholly inside the newly centered visible 10 mm recess.
+
+The 2026-08-31 fix-round-3 review found that the short loops in the second
+candidate projected laterally as taut ovals without an external load. The
+official views establish the loop presence and routing, but not their catalog
+resting direction. **User-directed physical adaptation:** for this upright
+face-on presentation, the final untouched edit makes both loose exterior loops
+leave their side routing paths and sag downward under gravity. The board,
+contact layout, material, scale, placement, and saved `edge-10` geometry did
+not move and remain unchanged from the reviewed fix-round-2 composition.
 
 ### Direct geometry mapping
 
@@ -1113,7 +1140,7 @@ Accepted assets: `primary.png` is 1536 × 1024 (ratio 1.5, SHA-256
 | 25 mm edge | `front-25-15`: `x .076, y .390, w .848, h .095` | Long upper routed contact only. |
 | 15 mm edge | `front-25-15`: `x .190, y .573, w .600, h .075` | Shorter centered lower routed contact only. |
 | Mono openings | Left `x .083, y .568, w .064, h .094`; exact right mirror | Two physical through openings, each independently selectable. |
-| 10 mm edge | `reverse-10`: `x .222, y .506, w .556, h .102` | The only distinct reverse-face grip supported by the official inventory. |
+| 10 mm edge | `reverse-10`: `x .231, y .654, w .538, h .095` | The only distinct reverse-face grip supported by the official inventory; deliberately refined to remain inside the visible recess after the source-correct cord edit re-centered the board. |
 
 Every path was deliberately authored. Regular openings use operator-selected
 oval or rounded-rectangle constraints; the broad tray uses an
