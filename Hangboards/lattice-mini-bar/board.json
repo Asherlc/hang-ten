@@ -14,16 +14,30 @@
   ],
   "presentations": [
     {
-      "id": "primary",
-      "name": "Lengthwise",
-      "assetPath": "assets/primary.png",
+      "id": "edge-10",
+      "name": "10 mm edge",
+      "assetPath": "assets/edge-10.png",
+      "aspectRatio": 1.5,
+      "default": false
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm edge",
+      "assetPath": "assets/edge-20.png",
       "aspectRatio": 1.5,
       "default": true
     },
     {
-      "id": "end",
-      "name": "End",
-      "assetPath": "assets/end.png",
+      "id": "ergonomic-jug",
+      "name": "Ergonomic jug",
+      "assetPath": "assets/ergonomic-jug.png",
+      "aspectRatio": 1.5,
+      "default": false
+    },
+    {
+      "id": "mini-pinch",
+      "name": "Mini pinch",
+      "assetPath": "assets/mini-pinch.png",
       "aspectRatio": 1.0,
       "default": false
     }
@@ -35,64 +49,20 @@
       "name": "Ergonomic jug",
       "kind": "jug",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "ergonomic-jug",
       "geometry": [
         {
-          "frame": { "x": 0.081, "y": 0.4, "width": 0.844, "height": 0.095 },
+          "frame": { "x": 0.312, "y": 0.754, "width": 0.375, "height": 0.132 },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.07, 0.05] },
-              { "command": "curve", "control1": [0.03, 0.04], "control2": [0.0, 0.25], "to": [0.0, 0.55] },
-              { "command": "line", "to": [0.055, 1.0] },
-              { "command": "line", "to": [0.94, 1.0] },
-              { "command": "curve", "control1": [0.98, 0.85], "control2": [1.0, 0.58], "to": [1.0, 0.3] },
-              { "command": "curve", "control1": [1.0, 0.1], "control2": [0.98, 0.0], "to": [0.94, 0.0] },
-              { "command": "line", "to": [0.07, 0.05] },
-              { "command": "close" }
-            ]
-          },
-          "treatment": { "type": "surface" }
-        },
-        {
-          "frame": { "x": 0.081, "y": 0.476, "width": 0.111, "height": 0.16 },
-          "shape": {
-            "type": "path",
-            "commands": [
-              { "command": "move", "to": [1.0, 0.0] },
-              { "command": "line", "to": [1.0, 1.0] },
-              { "command": "line", "to": [0.4, 1.0] },
-              { "command": "curve", "control1": [0.12, 0.96], "control2": [0.0, 0.72], "to": [0.0, 0.46] },
-              { "command": "curve", "control1": [0.0, 0.2], "control2": [0.18, 0.02], "to": [0.42, 0.0] },
-              { "command": "close" }
-            ]
-          },
-          "treatment": { "type": "surface" }
-        },
-        {
-          "frame": { "x": 0.873, "y": 0.476, "width": 0.052, "height": 0.16 },
-          "shape": {
-            "type": "path",
-            "commands": [
-              { "command": "move", "to": [0.0, 0.0] },
-              { "command": "line", "to": [0.58, 0.0] },
-              { "command": "curve", "control1": [0.82, 0.02], "control2": [1.0, 0.2], "to": [1.0, 0.46] },
-              { "command": "curve", "control1": [1.0, 0.72], "control2": [0.88, 0.96], "to": [0.6, 1.0] },
-              { "command": "line", "to": [0.0, 1.0] },
-              { "command": "close" }
-            ]
-          },
-          "treatment": { "type": "surface" }
-        },
-        {
-          "frame": { "x": 0.235, "y": 0.621, "width": 0.532, "height": 0.077 },
-          "shape": {
-            "type": "path",
-            "commands": [
-              { "command": "move", "to": [0.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.0] },
-              { "command": "line", "to": [1.0, 0.78] },
-              { "command": "curve", "control1": [0.72, 0.9], "control2": [0.28, 1.0], "to": [0.0, 1.0] },
+              { "command": "move", "to": [0.0, 0.12] },
+              { "command": "curve", "control1": [0.16, 0.03], "control2": [0.34, 0.0], "to": [0.5, 0.0] },
+              { "command": "curve", "control1": [0.66, 0.0], "control2": [0.84, 0.03], "to": [1.0, 0.12] },
+              { "command": "line", "to": [1.0, 0.84] },
+              { "command": "curve", "control1": [0.82, 0.95], "control2": [0.66, 1.0], "to": [0.5, 1.0] },
+              { "command": "curve", "control1": [0.34, 1.0], "control2": [0.18, 0.95], "to": [0.0, 0.84] },
+              { "command": "line", "to": [0.0, 0.12] },
               { "command": "close" }
             ]
           },
@@ -106,18 +76,18 @@
       "name": "10 mm edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "edge-10",
       "geometry": [
         {
-          "frame": { "x": 0.19, "y": 0.577, "width": 0.685, "height": 0.043 },
+          "frame": { "x": 0.312, "y": 0.868, "width": 0.375, "height": 0.016 },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.0, 0.15] },
-              { "command": "curve", "control1": [0.2, 0.1], "control2": [0.75, 0.02], "to": [0.96, 0.0] },
-              { "command": "curve", "control1": [0.99, 0.05], "control2": [1.0, 0.25], "to": [1.0, 0.45] },
-              { "command": "curve", "control1": [0.76, 0.7], "control2": [0.25, 1.0], "to": [0.04, 1.0] },
-              { "command": "curve", "control1": [0.01, 0.8], "control2": [0.0, 0.4], "to": [0.0, 0.15] },
+              { "command": "move", "to": [0.0, 0.18] },
+              { "command": "curve", "control1": [0.25, 0.08], "control2": [0.75, 0.0], "to": [1.0, 0.0] },
+              { "command": "line", "to": [1.0, 0.82] },
+              { "command": "curve", "control1": [0.75, 0.92], "control2": [0.25, 1.0], "to": [0.0, 1.0] },
+              { "command": "line", "to": [0.0, 0.18] },
               { "command": "close" }
             ]
           },
@@ -132,20 +102,18 @@
       "name": "20 mm edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "edge-20",
       "geometry": [
         {
-          "frame": { "x": 0.19, "y": 0.478, "width": 0.685, "height": 0.099 },
+          "frame": { "x": 0.312, "y": 0.856, "width": 0.375, "height": 0.026 },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.055, 0.0] },
-              { "command": "line", "to": [0.945, 0.0] },
-              { "command": "curve", "control1": [0.98, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.5] },
-              { "command": "line", "to": [0.98, 1.0] },
-              { "command": "line", "to": [0.04, 1.0] },
-              { "command": "line", "to": [0.0, 0.65] },
-              { "command": "curve", "control1": [0.0, 0.25], "control2": [0.02, 0.0], "to": [0.055, 0.0] },
+              { "command": "move", "to": [0.0, 0.16] },
+              { "command": "curve", "control1": [0.24, 0.07], "control2": [0.76, 0.0], "to": [1.0, 0.0] },
+              { "command": "line", "to": [1.0, 0.84] },
+              { "command": "curve", "control1": [0.76, 0.93], "control2": [0.24, 1.0], "to": [0.0, 1.0] },
+              { "command": "line", "to": [0.0, 0.16] },
               { "command": "close" }
             ]
           },
@@ -160,21 +128,21 @@
       "name": "Mini pinch",
       "kind": "pinch",
       "handCapacity": 1,
-      "presentationID": "end",
+      "presentationID": "mini-pinch",
       "geometry": [
         {
-          "frame": { "x": 0.216, "y": 0.193, "width": 0.57, "height": 0.617 },
+          "frame": { "x": 0.262, "y": 0.248, "width": 0.5, "height": 0.56 },
           "shape": {
             "type": "path",
             "commands": [
               { "command": "move", "to": [0.5, 0.0] },
-              { "command": "curve", "control1": [0.77, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.8, 0.96], "to": [0.61, 1.0] },
-              { "command": "curve", "control1": [0.56, 1.0], "control2": [0.545, 0.91], "to": [0.52, 0.84] },
-              { "command": "curve", "control1": [0.51, 0.81], "control2": [0.49, 0.81], "to": [0.475, 0.84] },
-              { "command": "curve", "control1": [0.45, 0.92], "control2": [0.43, 1.0], "to": [0.38, 1.0] },
-              { "command": "curve", "control1": [0.18, 0.96], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.23, 0.0], "to": [0.5, 0.0] },
+              { "command": "curve", "control1": [0.78, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.73], "control2": [0.84, 0.93], "to": [0.56, 1.0] },
+              { "command": "curve", "control1": [0.46, 1.0], "control2": [0.38, 0.96], "to": [0.33, 0.91] },
+              { "command": "curve", "control1": [0.27, 0.85], "control2": [0.28, 0.77], "to": [0.22, 0.73] },
+              { "command": "curve", "control1": [0.18, 0.7], "control2": [0.12, 0.75], "to": [0.08, 0.73] },
+              { "command": "curve", "control1": [0.03, 0.68], "control2": [0.0, 0.59], "to": [0.0, 0.48] },
+              { "command": "curve", "control1": [0.0, 0.2], "control2": [0.22, 0.0], "to": [0.5, 0.0] },
               { "command": "close" }
             ]
           },
