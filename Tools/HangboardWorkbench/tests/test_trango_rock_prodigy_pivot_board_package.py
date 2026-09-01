@@ -145,7 +145,7 @@ OPTIONAL_HOLD_METADATA_FIELDS = (
 ALLOWED_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 EXPECTED_KIND_COUNTS = Counter({"edge": 10, "pocket": 4, "pinch": 2, "sloper": 2})
 EXPECTED_PIECE_COUNT = 22
-EXPECTED_PIXEL_SIZE = (1774, 887)
+EXPECTED_PIXEL_SIZE = (1946, 973)
 EXPECTED_PRESENTATIONS = (
     ("orientation-1", "Orientation 1", "assets/primary.png", True),
     ("orientation-2", "Orientation 2", "assets/orientation-2.png", False),

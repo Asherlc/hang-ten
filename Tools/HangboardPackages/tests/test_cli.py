@@ -6,7 +6,17 @@ import subprocess
 import sys
 from pathlib import Path
 
-from conftest import write_board_package, write_primary_only_draft
+from conftest import (
+    write_board_package,
+    write_multi_presentation_board_package,
+    write_primary_only_draft,
+)
+from presentation_remediation_helpers import (
+    empty_phase2_document as _empty_phase2_document,
+    manifest as _manifest,
+    record as _record,
+    write_manifest as _write_manifest,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "hangboard-packages.sh"
@@ -105,7 +115,9 @@ def _write_audit_ledger(
     return ledger
 
 
-def test_package_cli_reports_directly_discovered_boards_and_drafts(tmp_path: Path) -> None:
+def test_package_cli_reports_directly_discovered_boards_and_drafts(
+    tmp_path: Path,
+) -> None:
     write_board_package(tmp_path / "package-board", board_id="fixture.board")
     write_primary_only_draft(tmp_path / "draft-board")
 
@@ -137,7 +149,9 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
     write_board_package(packages / "package-board", board_id="fixture.board")
     ledger = _write_audit_ledger(tmp_path)
 
-    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+    result = _run_cli(
+        "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
+    )
 
     assert result.returncode == 0, result.stderr
     assert _json_output(result.stdout) == {
@@ -197,7 +211,9 @@ def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
     write_board_package(packages / "package-board", board_id="fixture.board")
     ledger = _write_audit_ledger(tmp_path, kind_outcome="adapted")
 
-    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+    result = _run_cli(
+        "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
+    )
 
     assert result.returncode == 0, result.stderr
     report = _json_output(result.stdout)
@@ -220,10 +236,248 @@ def test_package_cli_audit_metadata_rejects_unknown_hold(tmp_path: Path) -> None
     write_board_package(packages / "package-board", board_id="fixture.board")
     ledger = _write_audit_ledger(tmp_path, hold_id="unknown-hold")
 
-    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+    result = _run_cli(
+        "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
+    )
 
     assert result.returncode == 1
     assert result.stderr == "error: unknown hold ID: unknown-hold\n"
+
+
+def test_package_cli_audit_presentations_reports_selected_lane(tmp_path: Path) -> None:
+    boards = tmp_path / "Hangboards"
+    write_multi_presentation_board_package(boards / "fixture-board")
+    manifest = _write_manifest(
+        tmp_path,
+        _manifest(
+            package_ids=["fixture.board"],
+            records=[
+                _record(
+                    boards,
+                    "fixture-board",
+                    "fixture.board",
+                    "front",
+                    "assets/primary.png",
+                ),
+                _record(
+                    boards, "fixture-board", "fixture.board", "back", "assets/back.png"
+                ),
+            ],
+        ),
+    )
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--package-id",
+        "fixture.board",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert _json_output(result.stdout) == {
+        "decisions": {"keep": 2},
+        "evidenceBlockedAssets": [],
+        "packageCount": 1,
+        "packageIDs": ["fixture.board"],
+        "presentationCount": 2,
+    }
+
+
+def test_package_cli_audit_presentations_prints_domain_error_first_line(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    write_board_package(boards / "fixture-board")
+    record = _record(
+        boards, "fixture-board", "fixture.board", "primary", "assets/primary.png"
+    )
+    record["decision"] = "not-a-decision"
+    manifest = _write_manifest(
+        tmp_path, _manifest(package_ids=["fixture.board"], records=[record])
+    )
+
+    result = _run_cli(
+        "audit-presentations", "--root", str(boards), "--manifest", str(manifest)
+    )
+
+    assert result.returncode == 1
+    assert (
+        result.stderr.splitlines()[0]
+        == "error: records[0].decision must be one of ['edit', 'keep', 'regenerate', 'removeUnsupportedPresentation', 'splitPhysicalRevision']"
+    )
+
+
+def test_package_cli_final_presentation_audit_requires_completed_phase1_checks(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    write_board_package(boards / "fixture-board")
+    record = _record(
+        boards, "fixture-board", "fixture.board", "primary", "assets/primary.png"
+    )
+    manifest = _write_manifest(
+        tmp_path, _manifest(package_ids=["fixture.board"], records=[record])
+    )
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--final-validation",
+    )
+
+    assert result.returncode == 1
+    assert result.stderr == (
+        "error: final Phase 1 validation requires all phase1Checks passed\n"
+    )
+
+
+def test_package_cli_phase2_preflight_prints_extended_report(tmp_path: Path) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    manifest = _write_manifest(tmp_path, _empty_phase2_document())
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+    )
+
+    assert result.returncode == 0, result.stderr
+    report = _json_output(result.stdout)
+    assert report["phase"] == "assetRemediation"
+    assert report["canvasClassCount"] == 0
+    assert report["canvasCoveredRepairCount"] == 0
+    assert report["capabilityProbeArtifactCount"] == 0
+
+
+def test_package_cli_phase2_final_rejects_transient_file_arguments(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    manifest = _write_manifest(tmp_path, _empty_phase2_document())
+    path = tmp_path / "candidate.png"
+    path.write_bytes(b"fixture")
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-final",
+        "--candidate-file",
+        "0" * 64,
+        str(path),
+    )
+
+    assert result.returncode == 1
+    assert "final Phase 2 validation rejects transient files" in result.stderr
+
+
+def test_package_cli_phase2_rejects_duplicate_transient_sha_and_nonpartial_batch(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    manifest = _write_manifest(tmp_path, _empty_phase2_document())
+    path = tmp_path / "candidate.png"
+    path.write_bytes(b"fixture")
+
+    duplicate = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+        "--candidate-file",
+        "0" * 64,
+        str(path),
+        "--candidate-file",
+        "0" * 64,
+        str(path),
+    )
+    assert duplicate.returncode == 1
+    assert "duplicate --candidate-file SHA-256 key" in duplicate.stderr
+
+    batch = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+        "--batch-id",
+        "portable",
+    )
+    assert batch.returncode == 1
+    assert "--batch-id is legal only with --phase2-partial" in batch.stderr
+
+
+def test_package_cli_reports_truncated_candidate_png_as_a_domain_error(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    candidate = tmp_path / "truncated.png"
+    candidate.write_bytes(b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR")
+    digest = "0" * 64
+    document = _empty_phase2_document()
+    document["phase2"]["capabilityProbeCheck"]["artifacts"] = [
+        {
+            "id": "probe-attempt-1",
+            "behaviorProbeID": "probe",
+            "attempt": 1,
+            "returnedOutputPath": str(tmp_path / "returned.png"),
+            "transientOutputPath": str(candidate),
+            "sha256": digest,
+            "widthPixels": 1,
+            "heightPixels": 1,
+            "canvasResult": "exactCanvas",
+            "disposition": "capabilityProbeRejected",
+            "productionUse": "forbidden",
+            "reason": "Fixture probe output.",
+            "provenance": {
+                "tool": "builtInImageGen",
+                "untouchedModelOutput": True,
+                "postProcessing": "none",
+            },
+            "byteVerification": {
+                "status": "pending",
+                "checkedAt": None,
+                "command": None,
+                "observedSHA256": None,
+            },
+            "recordedAt": "2026-08-31T00:00:00+00:00",
+            "deletionVerifiedAt": None,
+        }
+    ]
+    manifest = _write_manifest(tmp_path, document)
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+        "--candidate-file",
+        digest,
+        str(candidate),
+    )
+
+    assert result.returncode == 1
+    assert result.stderr == f"error: asset is not a PNG: {candidate}\n"
 
 
 def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None:
@@ -268,7 +522,7 @@ def _write_wrapper_fixture(
     python.write_text(
         "#!/bin/sh\n"
         "if [ \"$1\" = '-m' ] && [ \"$2\" = 'pip' ]; then\n"
-        "  printf '%s\\n' \"$*\" >> \"$FAKE_PIP_LOG\"\n"
+        '  printf \'%s\\n\' "$*" >> "$FAKE_PIP_LOG"\n'
         "fi\n"
         "exit 0\n",
         encoding="utf-8",
