@@ -116,14 +116,113 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.285,
-            "y": 0.09,
-            "width": 0.14,
+            "x": 0.333105784848,
+            "y": 0.054505121212,
+            "width": 0.120563156061,
             "height": 0.185
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.18
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.076723273529,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.923276726471,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.965649819589,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.089543052143
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.910456947857
+                ],
+                "control2": [
+                  0.965649819589,
+                  1.0
+                ],
+                "to": [
+                  0.923276726471,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.076723273529,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.034350180411,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.910456947857
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.089543052143
+                ],
+                "control2": [
+                  0.034350180411,
+                  0.0
+                ],
+                "to": [
+                  0.076723273529,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
