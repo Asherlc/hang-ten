@@ -378,7 +378,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "sizeMillimeters": 14
     },
     {
       "id": "back-jug-sloper",
