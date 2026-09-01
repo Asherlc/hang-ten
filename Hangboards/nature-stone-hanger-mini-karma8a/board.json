@@ -245,7 +245,8 @@
           }
         }
       ],
-      "sizeMillimeters": 60
+      "sizeMillimeters": 60,
+      "fingerCapacity": 4
     }
   ]
 }
