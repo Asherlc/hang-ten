@@ -46,8 +46,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.365,
-            "y": 0.385,
+            "x": 0.278957937,
+            "y": 0.358231358,
             "width": 0.39,
             "height": 0.11
           },
@@ -145,7 +145,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -260,7 +260,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
