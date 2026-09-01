@@ -308,7 +308,10 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
         val callback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult) {
                 val name = result.device.name ?: result.scanRecord?.deviceName
-                val services = result.scanRecord?.serviceUuids.orEmpty().mapTo(linkedSetOf()) { it.uuid.toString().uppercase() }
+                val services = linkedSetOf<String>()
+                result.scanRecord?.serviceUuids?.forEach { parcelUuid ->
+                    services += parcelUuid.uuid.toString().uppercase()
+                }
                 val advertisement = ForceSensorAdvertisement(name, services)
                 found[result.device.address] = advertisement
                 scannedDevices[advertisement] = result.device
