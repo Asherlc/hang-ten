@@ -307,7 +307,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "handCapacity": 1
     },
     {
       "id": "front-upper-3",
@@ -642,7 +643,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "handCapacity": 1
     },
     {
       "id": "front-upper-6",
@@ -1425,7 +1427,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "handCapacity": 1
     },
     {
       "id": "front-lower-3",
@@ -1760,7 +1763,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "handCapacity": 1
     },
     {
       "id": "front-lower-6",
