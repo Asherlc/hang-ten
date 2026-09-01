@@ -379,7 +379,8 @@
           }
         }
       ],
-      "sizeMillimeters": 14
+      "sizeMillimeters": 14,
+      "fingerCapacity": 4
     },
     {
       "id": "back-jug-sloper",
