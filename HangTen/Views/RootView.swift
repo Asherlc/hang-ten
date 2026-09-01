@@ -154,6 +154,7 @@ enum RootTab: Hashable, CaseIterable {
 }
 
 enum RootReviewBoardPresentationError: Equatable {
+    case invalidEnableValue(String)
     case missingBoardID
     case missingPresentationID
     case boardNotFound(String)
@@ -161,6 +162,8 @@ enum RootReviewBoardPresentationError: Equatable {
 
     var message: String {
         switch self {
+        case .invalidEnableValue(let value):
+            return "HANGTEN_REVIEW_BOARD_PRESENTATION must be exactly 1; received \(value)."
         case .missingBoardID:
             return "HANGTEN_REVIEW_BOARD_ID is required."
         case .missingPresentationID:
@@ -184,7 +187,10 @@ enum RootReviewDestination: Equatable {
         boards: [TrainingBoard] = BoardCatalog.all
     ) -> Self? {
         #if DEBUG
-        if environment["HANGTEN_REVIEW_BOARD_PRESENTATION"] == "1" {
+        if let enableValue = environment["HANGTEN_REVIEW_BOARD_PRESENTATION"] {
+            guard enableValue == "1" else {
+                return .boardPresentationError(.invalidEnableValue(enableValue))
+            }
             guard let boardID = environment["HANGTEN_REVIEW_BOARD_ID"], !boardID.isEmpty else {
                 return .boardPresentationError(.missingBoardID)
             }

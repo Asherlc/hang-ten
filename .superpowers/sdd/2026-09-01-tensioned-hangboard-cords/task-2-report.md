@@ -63,3 +63,21 @@ An unrelated `Tools/HangboardPackages/uv.lock` appeared during concurrent worksp
 ## Concerns
 
 None in Task 2 scope. The full catalog is larger than the 20-package/47-presentation tensioned-cord audit scope by design; the smoke validates the complete live Workbench catalog independently.
+
+## Fix round 1
+
+Review found that a present but non-opt-in `HANGTEN_REVIEW_BOARD_PRESENTATION` value silently fell through, and that the route wiring was covered only by a separately constructed hold map rather than through `RootView` and the rendered UI.
+
+### RED
+
+- Parser command: `rtk zsh .context/tensioned-cords-foundation-fix1-ios-session.zsh unit-red`
+- Result: exit `65`; compile failed with `Type 'RootReviewBoardPresentationError' has no member 'invalidEnableValue'` and `** TEST FAILED **`.
+- UI mutation command: `rtk zsh .context/tensioned-cords-foundation-fix1-ios-session.zsh ui-red`
+- Result: exit `65`; `2 tests`, `5 failures`, `0 unexpected`, `** TEST FAILED **`. The invalid value did not produce `boardPresentationReview.error`, and Face B was not selected after intentionally dropping `selectedPresentationID` at the `RootView`/`BoardDetailView` boundary.
+
+### GREEN
+
+- Parser command: `rtk zsh .context/tensioned-cords-foundation-fix1-ios-session.zsh unit-green`
+- Result: exit `0`; `15 tests`, `0 failures`, `** TEST SUCCEEDED **`. The new table-driven test covers `""`, `"true"`, `"yes"`, and `"typo"` as present invalid activation values.
+- UI command: `rtk zsh .context/tensioned-cords-foundation-fix1-ios-session.zsh ui-green`
+- Result: exit `0`; `2 tests`, `0 failures`, `0 unexpected`, `** TEST SUCCEEDED **`. XCUITest verified the visible typed error and Face B selection through the real DEBUG launch route and normal renderer.

@@ -263,7 +263,7 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 | `HANGTEN_REVIEW_PLANS=1` | Select the full Plans tab. |
 | `HANGTEN_REVIEW_HISTORY=1` | Select the History tab. |
 | `HANGTEN_REVIEW_BOARD_PICKER=1` | Open the full-page board picker from Train. |
-| `HANGTEN_REVIEW_BOARD_PRESENTATION=1` | Open the normal board detail renderer for the exact package and presentation named below. |
+| `HANGTEN_REVIEW_BOARD_PRESENTATION=1` | Open the normal board detail renderer for the exact package and presentation named below. The value must be exactly `1`; any other present value shows a visible route error. |
 | `HANGTEN_REVIEW_BOARD_ID=<TrainingBoard.id>` | Select the exact board package for board-presentation review. Required with `HANGTEN_REVIEW_BOARD_PRESENTATION=1`. |
 | `HANGTEN_REVIEW_PRESENTATION_ID=<BoardPresentation.id>` | Select the exact presentation for board-presentation review. Required with `HANGTEN_REVIEW_BOARD_PRESENTATION=1`. |
 | `HANGTEN_REVIEW_SETTINGS=1` | Open Settings from Train. |

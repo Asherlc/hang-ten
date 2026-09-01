@@ -109,6 +109,18 @@ final class TelemetryTests: XCTestCase {
         )
     }
 
+    func testBoardPresentationReviewRouteRejectsEveryPresentNonOptInValue() {
+        for value in ["", "true", "yes", "typo"] {
+            XCTAssertEqual(
+                RootReviewDestination.initial(
+                    environment: ["HANGTEN_REVIEW_BOARD_PRESENTATION": value],
+                    boards: BoardCatalog.all
+                ),
+                .boardPresentationError(.invalidEnableValue(value))
+            )
+        }
+    }
+
     func testConfigurationWithAnUnexpandedAPIKeyBuildsNoOpDependencies() {
         let configuration = AnalyticsConfiguration(
             apiKey: "$(ANALYTICS_API_KEY)"
