@@ -265,7 +265,8 @@
           }
         }
       ],
-      "sizeMillimeters": 8
+      "sizeMillimeters": 8,
+      "fingerCapacity": 4
     },
     {
       "id": "edge-8",
