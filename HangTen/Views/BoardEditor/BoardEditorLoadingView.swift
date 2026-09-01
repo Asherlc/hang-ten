@@ -104,12 +104,7 @@ final class BoardEditorLoader: ObservableObject {
                 return
             }
             do {
-                try store.startEditing(slug: slug)
-                guard !Task.isCancelled,
-                      await self?.isLoadingActive(loadingID) == true else {
-                    return
-                }
-                let package = try store.loadDocument(slug: slug)
+                let package = try store.prepareEditablePackage(slug: slug)
                 guard !Task.isCancelled,
                       await self?.isLoadingActive(loadingID) == true else {
                     return

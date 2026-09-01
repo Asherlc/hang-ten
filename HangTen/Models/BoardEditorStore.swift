@@ -45,17 +45,20 @@ struct BoardEditorStore: Sendable {
 
     private let baseDirectory: URL
     private let sourceLibraryURL: URL?
+    private let preparationWillLoadDocument: @Sendable () -> Void
 
     init(
         baseDirectory: URL? = nil,
         sourceLibraryURL: URL? = nil,
-        bundle: Bundle = .main
+        bundle: Bundle = .main,
+        preparationWillLoadDocument: @escaping @Sendable () -> Void = {}
     ) {
         self.baseDirectory = baseDirectory
             ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent(Self.defaultDirectoryName, isDirectory: true)
         self.sourceLibraryURL = sourceLibraryURL
             ?? bundle.resourceURL?.appendingPathComponent("Hangboards", isDirectory: true)
+        self.preparationWillLoadDocument = preparationWillLoadDocument
     }
 
     /// Copies the bundled package verbatim into the editable store when absent.
@@ -64,6 +67,21 @@ struct BoardEditorStore: Sendable {
         Self.editingLock.lock()
         defer { Self.editingLock.unlock() }
 
+        return try startEditingLocked(slug: slug)
+    }
+
+    /// Copies or reuses an editable package and loads its document while reset
+    /// operations remain excluded by the package lock.
+    func prepareEditablePackage(slug: String) throws -> BoardEditedPackage {
+        Self.editingLock.lock()
+        defer { Self.editingLock.unlock() }
+
+        _ = try startEditingLocked(slug: slug)
+        preparationWillLoadDocument()
+        return try loadDocumentLocked(slug: slug)
+    }
+
+    private func startEditingLocked(slug: String) throws -> URL {
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
         if Self.hasCompletePackage(at: packageURL) {
             return packageURL
@@ -96,6 +114,13 @@ struct BoardEditorStore: Sendable {
     }
 
     func loadDocument(slug: String) throws -> BoardEditedPackage {
+        Self.editingLock.lock()
+        defer { Self.editingLock.unlock() }
+
+        return try loadDocumentLocked(slug: slug)
+    }
+
+    private func loadDocumentLocked(slug: String) throws -> BoardEditedPackage {
         let packageURL = try validatedPackageURL(slug, requireExisting: true)
         let boardURL = packageURL.appendingPathComponent("board.json")
         guard FileManager.default.fileExists(atPath: boardURL.path) else {

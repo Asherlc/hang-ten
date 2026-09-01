@@ -1,7 +1,6 @@
 import XCTest
 @testable import HangTen
 
-@MainActor
 final class BoardEditorLoadingTests: XCTestCase {
     private var storeDirectory: URL!
 
@@ -19,6 +18,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    @MainActor
     func testLoaderPublishesLoadedPackageAndFailureStates() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let store = BoardEditorStore(
@@ -50,6 +50,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testStartReturnsBeforeControlledWorkCompletes() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let store = BoardEditorStore(
@@ -77,6 +78,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         XCTAssertEqual(image.size, CGSize(width: 2, height: 1))
     }
 
+    @MainActor
     func testCancelBeforeControlledWorkPreventsPackageCreation() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let store = BoardEditorStore(
@@ -95,6 +97,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         XCTAssertFalse(scheduler.hasPendingWork)
     }
 
+    @MainActor
     func testCancelDuringImagePreparationSuppressesTerminalState() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let store = BoardEditorStore(
@@ -124,6 +127,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         XCTAssertTrue(store.hasEdits(slug: "fixture-board"))
     }
 
+    @MainActor
     func testProductionImagePreparerReturnsNilWhenDisplayPreparationFails() async throws {
         let sourceLibraryURL = try makeSourceLibrary()
         let imageURL = sourceLibraryURL.appendingPathComponent("fixture-board/assets/primary.png")
@@ -142,6 +146,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         XCTAssertNil(thumbnailImage)
     }
 
+    @MainActor
     private func assertLoading(_ state: BoardEditorLoadingState) {
         guard case .loading = state else {
             XCTFail("Expected loader to begin in loading state, got \(state)")
@@ -149,6 +154,7 @@ final class BoardEditorLoadingTests: XCTestCase {
         }
     }
 
+    @MainActor
     private func waitForTerminalState(of loader: BoardEditorLoader) async throws {
         let deadline = Date().addingTimeInterval(3)
         while case .loading = loader.state {

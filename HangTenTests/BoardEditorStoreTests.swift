@@ -102,6 +102,43 @@ final class BoardEditorStoreTests: XCTestCase {
         XCTAssertEqual(loaded.imageURL.lastPathComponent, "primary.png")
     }
 
+    func testPrepareEditablePackageKeepsResetQueuedUntilDocumentLoads() async throws {
+        let sourceLibraryURL = try makeSourceLibrary()
+        let preparationStarted = DispatchSemaphore(value: 0)
+        let allowDocumentLoad = DispatchSemaphore(value: 0)
+        let resetAttempt = ResetAttempt()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: sourceLibraryURL,
+            preparationWillLoadDocument: {
+                preparationStarted.signal()
+                allowDocumentLoad.wait()
+            }
+        )
+
+        let preparation = Task.detached { () throws -> BoardEditedPackage in
+            try store.prepareEditablePackage(slug: "fixture-board")
+        }
+        XCTAssertEqual(preparationStarted.wait(timeout: .now() + 1), .success)
+
+        let reset = Task.detached { () throws -> Void in
+            await resetAttempt.begin()
+            try store.reset(slug: "fixture-board")
+        }
+        await resetAttempt.waitUntilStarted()
+        try await Task.sleep(nanoseconds: 20_000_000)
+
+        XCTAssertTrue(store.hasEdits(slug: "fixture-board"))
+        allowDocumentLoad.signal()
+
+        let package = try await preparation.value
+        try await reset.value
+        XCTAssertEqual(package.slug, "fixture-board")
+        XCTAssertEqual(package.pixelWidth, 2)
+        XCTAssertEqual(package.pixelHeight, 1)
+        XCTAssertFalse(store.hasEdits(slug: "fixture-board"))
+    }
+
     @MainActor
     func testMissingHoldKindLoadsWithWarningAndRoundTripsWithoutInventingKind() throws {
         let sourceLibraryURL = try makeSourceLibraryWithMissingHoldKind()
@@ -203,5 +240,21 @@ final class BoardEditorStoreTests: XCTestCase {
             XCTAssertEqual(error as? BoardEditorStoreError, .missingSourcePackage(slug: "missing-board"))
         }
         XCTAssertFalse(store.hasEdits(slug: "UPPER-CASE"))
+    }
+}
+
+private actor ResetAttempt {
+    private var started = false
+    private var continuation: CheckedContinuation<Void, Never>?
+
+    func begin() {
+        started = true
+        continuation?.resume()
+        continuation = nil
+    }
+
+    func waitUntilStarted() async {
+        guard !started else { return }
+        await withCheckedContinuation { continuation = $0 }
     }
 }
