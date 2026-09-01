@@ -645,6 +645,101 @@ def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
         module.load_board_package(package_root)
 
 
+def test_unversioned_board_keeps_omitted_alias_rotation_anchor_as_center_compatibility(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].geometry_rotation_anchor is None
+
+
+def test_unversioned_board_preserves_a_valid_non_center_alias_rotation_anchor(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.6, "y": 0.5},
+    )
+    document["holds"] = document["holds"][:1]
+    document["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.2,
+        "y": 0.1,
+        "width": 0.1,
+        "height": 0.4,
+    }
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].geometry_rotation_anchor == module.NormalizedPoint(
+        0.6, 0.5
+    )
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda document: document["presentations"][0].__setitem__(
+                "geometryRotationAnchor", {"x": 0.5, "y": 0.5}
+            ),
+            "requires sourcePresentationID",
+        ),
+        (
+            lambda document: document["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=False,
+                geometryRotationAnchor={"x": 0.5, "y": 0.5},
+            ),
+            "requires isInverted true",
+        ),
+        (
+            lambda document: document["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=True,
+                aspectRatio=1,
+            ),
+            "must match source presentation aspectRatio",
+        ),
+        (
+            lambda document: document["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=True,
+                geometryRotationAnchor={"x": 0.04, "y": 0.5},
+            ),
+            "projects source hold geometry outside the normalized canvas",
+        ),
+    ],
+    ids=["canonical", "non-inverted", "aspect-ratio", "off-canvas-projection"],
+)
+def test_unversioned_board_rejects_invalid_alias_rotation_anchor_contract(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    mutation(document)
+    document["holds"] = document["holds"][:1]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        module.load_board_package(package_root)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

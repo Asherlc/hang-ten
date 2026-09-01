@@ -14,7 +14,11 @@ from typing import Any, Mapping
 import zlib
 
 try:  # Standard package import, plus direct-file loading used by staging tests.
-    from .board_geometry_schema import BoardShapeDocument, NormalizedFrame
+    from .board_geometry_schema import (
+        BoardShapeDocument,
+        NormalizedFrame,
+        NormalizedPoint,
+    )
 except ImportError:  # pragma: no cover - exercised by direct module consumers
     _schema_path = Path(__file__).with_name("board_geometry_schema.py")
     _spec = importlib.util.spec_from_file_location(
@@ -28,6 +32,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     _spec.loader.exec_module(_module)
     BoardShapeDocument = _module.BoardShapeDocument
     NormalizedFrame = _module.NormalizedFrame
+    NormalizedPoint = _module.NormalizedPoint
 
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
@@ -376,6 +381,7 @@ class BoardPresentation:
     is_default: bool
     source_presentation_id: str | None = None
     is_inverted: bool = False
+    geometry_rotation_anchor: NormalizedPoint | None = None
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
@@ -384,7 +390,7 @@ class BoardPresentation:
             payload,
             {"id", "name", "assetPath", "aspectRatio", "default"},
             source,
-            optional={"sourcePresentationID", "isInverted"},
+            optional={"sourcePresentationID", "isInverted", "geometryRotationAnchor"},
         )
         aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
         if aspect_ratio <= 0:
@@ -403,6 +409,12 @@ class BoardPresentation:
             _boolean(payload["isInverted"], f"{source}.isInverted")
             if "isInverted" in payload
             else False,
+            NormalizedPoint.from_json(
+                payload["geometryRotationAnchor"],
+                f"{source}.geometryRotationAnchor",
+            )
+            if "geometryRotationAnchor" in payload
+            else None,
         )
 
 
@@ -596,26 +608,71 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
         raise ValueError("duplicate presentation id")
     if sum(presentation.is_default for presentation in presentations) != 1:
         raise ValueError("board.json.presentations must have exactly one default presentation")
-    presentation_ids = {presentation.id for presentation in presentations}
-    for presentation in presentations:
-        if presentation.source_presentation_id is not None:
-            source = next(
-                (
-                    candidate
-                    for candidate in presentations
-                    if candidate.id == presentation.source_presentation_id
-                ),
-                None,
-            )
-            if source is None or source.source_presentation_id is not None:
-                raise ValueError(
-                    f"presentation {presentation.id} must reference a canonical presentation"
-                )
-            if presentation.source_presentation_id == presentation.id:
-                raise ValueError(
-                    f"presentation {presentation.id} must reference a canonical presentation"
-                )
     return presentations
+
+
+def project_normalized_point(
+    point: NormalizedPoint, anchor: NormalizedPoint
+) -> tuple[float, float]:
+    return (2 * anchor.x - point.x, 2 * anchor.y - point.y)
+
+
+def _validate_alias_presentations(
+    presentations: tuple[BoardPresentation, ...], holds: tuple[BoardHold, ...]
+) -> None:
+    presentations_by_id = {presentation.id: presentation for presentation in presentations}
+    for presentation in presentations:
+        if presentation.geometry_rotation_anchor is not None:
+            if presentation.source_presentation_id is None:
+                raise ValueError(
+                    f"presentation {presentation.id}.geometryRotationAnchor requires sourcePresentationID"
+                )
+            if not presentation.is_inverted:
+                raise ValueError(
+                    f"presentation {presentation.id}.geometryRotationAnchor requires isInverted true"
+                )
+        if presentation.source_presentation_id is None:
+            continue
+
+        source = presentations_by_id.get(presentation.source_presentation_id)
+        if (
+            source is None
+            or source.source_presentation_id is not None
+            or source.id == presentation.id
+        ):
+            raise ValueError(
+                f"presentation {presentation.id} must reference a canonical presentation"
+            )
+        if presentation.aspect_ratio != source.aspect_ratio:
+            raise ValueError(
+                f"presentation {presentation.id}.aspectRatio must match source presentation aspectRatio"
+            )
+        if not presentation.is_inverted:
+            continue
+
+        anchor = presentation.geometry_rotation_anchor or NormalizedPoint(0.5, 0.5)
+        for hold in holds:
+            if hold.presentation_id != source.id:
+                continue
+            for piece in hold.geometry:
+                frame = piece.frame
+                projected_min_x, projected_min_y = project_normalized_point(
+                    NormalizedPoint(frame.x + frame.width, frame.y + frame.height),
+                    anchor,
+                )
+                projected_max_x, projected_max_y = project_normalized_point(
+                    NormalizedPoint(frame.x, frame.y),
+                    anchor,
+                )
+                if (
+                    projected_min_x < 0
+                    or projected_min_y < 0
+                    or projected_max_x > 1
+                    or projected_max_y > 1
+                ):
+                    raise ValueError(
+                        f"presentation {presentation.id} projects source hold geometry outside the normalized canvas"
+                    )
 
 
 def _load_board(value: Mapping[str, Any]) -> BoardDocument:
@@ -701,6 +758,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
+    _validate_alias_presentations(presentations, holds_tuple)
     equipment_object_ids = set(equipment_objects)
     for hold in holds_tuple:
         if hold.equipment_object_id not in equipment_object_ids:
