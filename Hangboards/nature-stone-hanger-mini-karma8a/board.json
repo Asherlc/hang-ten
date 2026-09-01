@@ -149,7 +149,8 @@
           }
         }
       ],
-      "sizeMillimeters": 15
+      "sizeMillimeters": 15,
+      "fingerCapacity": 4
     },
     {
       "id": "granite-edge-15",
