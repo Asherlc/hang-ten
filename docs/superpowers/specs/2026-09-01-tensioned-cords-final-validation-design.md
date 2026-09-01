@@ -33,6 +33,25 @@ provenance, unsupported visual claim, or rejected candidate stops integration
 and returns the work to its owning dependency workspace. It is not silently
 repaired in the controller session.
 
+The workspace-owned machine acceptance manifest is
+`.context/tensioned-cords-final-validation/dependency-acceptance.json`. For
+each cohort it records the named dependency ref, cohort base, non-empty ordered
+`acceptedImplementationCommits` sequence, each commit's recorded parent,
+accepted and rejected paths/candidates, source provenance, reviewer decision,
+and required delivered capabilities. Before any cherry-pick, machine checks
+prove parent equality, reachability from the named ref, absence from the
+recorded integration base, global SHA uniqueness, and a contiguous ordered
+parent chain. Reachability from other refs is neither prohibited nor treated as
+an acceptance signal.
+
+The foundation/evidence cohort is ineligible unless its accepted implementation
+sequence itself provides and tests Workbench `--all-presentations`, stable
+`packageID::presentationID` manifest identities, normal and hold-ID capture
+variants, and failure-safe cleanup of its exact capture-server and Chrome child
+processes. Its `requiredCapabilities` includes
+`failureSafeOwnedChildCleanup`. Final validation consumes that capability; it
+does not implement it.
+
 ## Source and physics contract
 
 Every cord-bearing presentation must show the cords proved for that exact
@@ -75,6 +94,27 @@ The already accepted classic YY Vertical La Baguette `stepped-face` and
 `reverse-face` presentations are preservation baselines. Both remain present,
 and neither may be replaced, reframed, rescaled, recolored, recropped, or have
 unrelated pixels altered.
+
+Final-workspace repair authorization is limited to exactly five records:
+
+1. Nature Climbing Stone Hanger Mini `primary`;
+2. Nature Climbing Stone Hanger Mini `side`;
+3. Nature Climbing Stone Hanger Mini x KARMA8A `primary`;
+4. YY Vertical La Baguette `reverse-face`; and
+5. YY Vertical TravelBoard `reverse-10`.
+
+Before any repair, each record must have an accepted baseline, exact-revision
+source URLs and claims, a permitted cord-pixel region, and an expected terminal
+result recorded in the dependency acceptance manifest. A changed and accepted
+record ends `FIXED`; an already-correct unchanged baseline ends `PASS`.
+Unresolved evidence is returned to its dependency owner. Every other candidate
+is rejected or returned to its dependency owner unless the user explicitly
+expands this five-record boundary.
+
+La Baguette `stepped-face` and TravelBoard `front-25-15` are preservation/no-op
+cross-checks, not additional repair authorization. TravelBoard `front-25-15`
+must still remain source-correct and byte-preserved outside any separately
+accepted dependency scope.
 
 ## Baguette Evo evidence boundary
 
@@ -163,6 +203,21 @@ Workbench capture evidence includes all declared catalog presentations, not
 only default surfaces, and the ledger maps each of the 47 identities to its
 normal and hold-ID-overlay captures. iOS evidence is captured from an isolated,
 explicitly owned simulator UUID and includes normal and active/detail states.
+
+The Workbench capture capability owns loopback ports `4187` and `4188` only for
+the duration of capture. It records the exact server and Chrome child PIDs,
+installs failure/signal cleanup before launch, terminates and waits for those
+exact children on success, failure, interruption, and timeout, and never kills
+an unknown process occupying either port. Capture starts only when both ports
+are free and ends only after both are verified free.
+
+`.context/hangboard-packages-venv` is an exact workspace-local tool artifact
+when the package wrapper creates it. It is recorded as owned, retained through
+the last package test, and deleted by the final resource-cleanup gate. Durable
+independent-review decisions are written to
+`.context/tensioned-cords-final-validation/final-code-review.json` and
+`.context/tensioned-cords-final-validation/final-visual-review.json`; final
+publication verifies that both approve the exact final HEAD and ledger hash.
 
 ## Pull-request publication
 
