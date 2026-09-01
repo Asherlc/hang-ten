@@ -15,6 +15,10 @@ from .presentation_remediation_audit import (
     load_presentation_remediation_manifest,
     validate_presentation_remediation_manifest,
 )
+from .tensioned_cord_audit import (
+    load_tensioned_cord_ledger,
+    validate_tensioned_cord_ledger,
+)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -23,7 +27,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         inventory = discover_board_packages(
             arguments.root,
             require_complete_inventory=(
-                arguments.command in {"audit-metadata", "audit-presentations"}
+                arguments.command in {
+                    "audit-metadata",
+                    "audit-presentations",
+                    "audit-tensioned-cords",
+                }
                 or arguments.final_inventory
             ),
         )
@@ -62,6 +70,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             print(json.dumps(report.to_json(), indent=2, sort_keys=True))
             return 0
+        if arguments.command == "audit-tensioned-cords":
+            report = validate_tensioned_cord_ledger(
+                load_tensioned_cord_ledger(arguments.ledger),
+                inventory,
+                hangboards_root=arguments.root,
+            )
+            print(json.dumps(report.to_json(), indent=2, sort_keys=True))
+            return 0
         print(_status_payload(inventory))
         return 0
     except SystemExit as error:
@@ -91,6 +107,12 @@ def _parser() -> argparse.ArgumentParser:
     )
     audit_metadata.add_argument("--root", type=Path, required=True)
     audit_metadata.add_argument("--ledger", type=Path, required=True)
+    audit_tensioned_cords = subcommands.add_parser(
+        "audit-tensioned-cords",
+        help="validate the closed source-audited tensioned-cord ledger",
+    )
+    audit_tensioned_cords.add_argument("--root", type=Path, required=True)
+    audit_tensioned_cords.add_argument("--ledger", type=Path, required=True)
     audit_presentations = subcommands.add_parser(
         "audit-presentations", help="validate a presentation remediation manifest"
     )

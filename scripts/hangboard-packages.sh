@@ -15,6 +15,7 @@ Commands:
   status      Print directly discovered package metadata
   audit-metadata  Validate a source-audited metadata ledger
   audit-presentations  Validate a presentation remediation manifest
+  audit-tensioned-cords  Validate the closed tensioned-cord ledger
 EOF
 }
 
@@ -27,7 +28,7 @@ command_name="$1"
 shift
 
 case "$command_name" in
-    validate|status|audit-metadata|audit-presentations)
+    validate|status|audit-metadata|audit-presentations|audit-tensioned-cords)
         ;;
     -h|--help|help)
         usage

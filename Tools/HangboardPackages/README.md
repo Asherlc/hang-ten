@@ -40,6 +40,8 @@ scripts/hangboard-packages.sh audit-metadata --root Hangboards \
 scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
   --phase2-preflight
+scripts/hangboard-packages.sh audit-tensioned-cords --root Hangboards \
+  --ledger docs/source-audits/2026-09-01-tensioned-cord-presentations.json
 ```
 
 `validate` and `status` print the discovered complete packages and draft paths;
@@ -61,6 +63,13 @@ disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`
 outcome for every hold and may not have records for unrelated fields. This
 supplemental scope records a complete sloper audit without claiming that the
 board's other metadata fields have been source-audited.
+
+`audit-tensioned-cords` requires the complete final inventory and validates the
+closed 20-package, 47-presentation cord ledger. It checks every declared
+package/presentation identity, alias relationship, asset path and SHA-256,
+canvas-down gravity contract, and explicit accepted-or-blocked disposition.
+It is generic: source URLs, physical topology, routing, and all product facts
+live only in the ledger.
 
 `audit-presentations` requires a complete final inventory and cross-checks the
 closed remediation manifest against every declared presentation's package ID,
