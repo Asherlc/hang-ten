@@ -482,6 +482,119 @@
         }
       ],
       "sizeMillimeters": 28
+    },
+    {
+      "id": "hold-5",
+      "name": "Hold 5",
+      "kind": "edge",
+      "fingerCapacity": 4,
+      "sizeMillimeters": 12,
+      "handCapacity": 1,
+      "equipmentObjectID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.24778161,
+            "y": 0.400286699,
+            "width": 0.500341271,
+            "height": 0.110976077
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.88909961617,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.110900381832,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.049651792566,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.223857624738
+                ],
+                "to": [
+                  0.0,
+                  0.500000004505
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.776142375262
+                ],
+                "control2": [
+                  0.049651792566,
+                  1.0
+                ],
+                "to": [
+                  0.110900381832,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88909961617,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.950348207434,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.776142375262
+                ],
+                "to": [
+                  1.0,
+                  0.500000004505
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.223857624738
+                ],
+                "control2": [
+                  0.950348207434,
+                  0.0
+                ],
+                "to": [
+                  0.88909961617,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ]
 }
