@@ -54,10 +54,13 @@ The implementation has five bounded stages:
    Port-A-Board, MXEdge Lift Large, and MXEdge Lift Small. Expand the selection
    to every ledger-declared alias and every rotated or inverted presentation.
 3. **Per-asset edit.** Across all cohorts, deduplicate by ledger-declared asset
-   identity. Every unique supported asset receives exactly one source-grounded
-   attempt with the built-in image-editing capability; unsupported assets
-   receive zero attempts. The edit replaces or corrects only the cord pixels
-   needed for that presentation.
+   path. A path is eligible only when every record, alias, and presentation
+   referencing it has evidence for the same resulting cord pixels,
+   orientation, gravity, and routing. Every eligible path receives exactly one
+   source-grounded attempt with the built-in image-editing capability. If any
+   referencing row is unsupported, blocked, conflicting, or needs different
+   cord pixels, the entire path receives zero attempts and every referencing
+   row is explicitly blocked.
 4. **Per-record review.** Validate every unique presentation and every alias
    in both Workbench and the isolated iOS app, even when two records share one
    accepted asset.
@@ -66,7 +69,7 @@ The implementation has five bounded stages:
    accepted commit hash and blocker list to Workspace 4 through Paseo.
 
 The ledger record is the unit of evidence and review. The unique ledger-
-declared asset identity is the unit of image editing and byte-preservation
+declared asset path is the unit of image editing and byte-preservation
 validation. The cohort is the unit of commit acceptance. These boundaries
 prevent an alias from escaping review, prevent one shared asset from receiving
 more than one attempt anywhere in these cohorts, and prevent a partially
@@ -83,13 +86,14 @@ For each cohort, data moves through this sequence:
 2. Ledger relationships are expanded into a review matrix containing every
    unique presentation and alias. Records that share bytes remain separate
    review rows.
-3. A supported record yields an edit brief containing only facts traceable to
-   the ledger's primary evidence: visible cords, routing, load-bearing
-   direction, orientation, and canvas-down gravity.
-4. Every unique supported ledger-declared asset receives one built-in image
-   edit attempt. The existing local asset is the edit target, and the ledger-
-   cited source material is the physical authority. Unsupported records and
-   assets receive no image edit. No generated output is itself evidence.
+3. Records are grouped by ledger-declared asset path. A group passes the edit-
+   eligibility gate only when every referencing row is supported and all rows
+   require identical resulting cord pixels, orientation, gravity, and routing.
+   A single unsupported, blocked, conflicting, or physically divergent row
+   blocks the complete group with zero image edit attempts.
+4. Every eligible unique asset path receives one built-in image edit attempt.
+   The existing local asset is the edit target, and the ledger-cited source
+   material is the physical authority. No generated output is itself evidence.
 5. The foundation validator compares the candidate with the original asset and
    enforces the cord-only mutation boundary and all preservation invariants.
 6. A human compares the candidate with the primary evidence and reviews each
@@ -101,14 +105,16 @@ For each cohort, data moves through this sequence:
 8. Once every record in a cohort is terminal, the supported package changes
    and explicit blocker records are committed, pushed, and communicated.
 
-An alias may share an asset only when the accepted ledger establishes that it
-is the same physical presentation, orientation, gravity, and routing. If an
-alias changes any of those properties, it requires its own presentation-
-specific asset and its own single attempt. When multiple records resolve to
-one asset, the first supported record schedules the sole attempt and all other
-records consume that candidate; the shared path is never edited again in
-another cohort. Asset sharing is never a reason to copy, rotate, or reuse
-physically incorrect cord pixels.
+A ledger-declared asset path may receive its sole edit attempt only when the
+accepted ledger establishes unanimous support across every record, alias, and
+presentation that references it. All referencing rows must support the same
+resulting cord pixels, orientation, gravity, and routing. If any row is
+unsupported, blocked, conflicting, or would require different cord pixels,
+the entire shared path receives zero edits and every affected row is
+explicitly blocked. Do not separate the asset, add a presentation-specific
+asset, or change `board.json` to escape this rule in the cord-only cohort.
+Asset sharing is never a reason to copy, rotate, or reuse physically incorrect
+cord pixels.
 
 ## Cohort and gate rules
 
@@ -163,9 +169,10 @@ render the source-supported taut direction and canvas-down gravity directly.
 
 Every alias is checked under the same rule. A visual alias that resolves to a
 shared file is acceptable only when its final on-screen orientation preserves
-the same correct cord physics. Otherwise it is not a valid alias relationship
-for cord pixels and remains blocked until the ledger and package representation
-can express a source-supported presentation-specific asset.
+the same correct cord pixels and physics as every other referencing row.
+Otherwise the shared path receives zero edits and all its rows are blocked.
+Separating that asset or changing the package representation belongs to a
+separately scoped future task.
 
 ## Routing and evidence constraints
 
@@ -182,11 +189,13 @@ independently to both MXEdge Lift variants and to each of their ledger-declared
 presentations.
 
 Port-A-Board cord option 4 remains explicitly blocked and receives zero image
-edit attempts unless exact,
-current-revision primary evidence establishes its routing. Evidence from an
-older Port-A-Board revision, a generic option diagram, a sibling product, or a
+edit attempts unless exact current-revision primary evidence establishes its
+routing. Evidence from an older Port-A-Board revision, a generic option
+diagram, a sibling product, or a
 different orientation does not clear the blocker. A shared asset path or
-existing package declaration also does not clear it.
+existing package declaration also does not clear it. While option 4 remains an
+unsupported reference to a shared path, that complete path receives zero edits
+and every record referencing it is explicitly blocked.
 
 Across all cohorts, do not invent hidden continuity, knots, terminals,
 grommets, doubled cords, attachment hardware, concealed holes, or off-canvas
@@ -196,21 +205,23 @@ a physically coherent final presentation without invention, block the record.
 
 ## Single-edit image contract
 
-Across the complete multi-cohort run, every unique supported ledger-declared
-asset receives exactly one source-grounded built-in image edit attempt. Shared
-paths are globally deduplicated before any invocation, so aliases, products,
-or cohort boundaries cannot trigger another attempt against the same asset.
-Unsupported records and assets receive zero attempts. The edit is classified
-as a precise object edit: change only the source-proved cords and keep every
-invariant unchanged. It uses the current asset as the edit target and the
-minimum ledger-cited primary source set needed to establish that presentation's
-cords, orientation, and route.
+Across the complete multi-cohort run, every ledger-declared asset path is
+globally deduplicated and evaluated before any invocation. It receives exactly
+one source-grounded built-in image edit attempt only if every referencing
+record, alias, and presentation has evidence supporting the same resulting
+cord pixels, orientation, gravity, and routing. If even one referencing row is
+unsupported, blocked, conflicting, or would require different cord pixels,
+the complete path receives zero attempts and every affected row is explicitly
+blocked. The edit is classified as a precise object edit: change only the
+source-proved cords and keep every invariant unchanged. It uses the current
+asset as the edit target and the minimum ledger-cited primary source set needed
+to establish the unanimous result.
 
 There is no second edit attempt for a failed asset anywhere in these cohorts.
 If the single candidate violates evidence, physics, topology, preservation,
-or validation, reject it and mark the affected record or records blocked with
-the specific failure. This ensures “one edit per asset” cannot quietly become
-an iterative product-specific pipeline.
+or validation, reject it and explicitly block every row referencing that asset
+path with the specific failure. This ensures “one edit per asset” cannot
+quietly become an iterative product-specific pipeline.
 
 The workflow must not use resizing, pixel postprocessing, masks, manual
 coordinates, segmentation, detection, source registration or alignment,
@@ -289,9 +300,11 @@ tests for the changed packages and ledger behavior, and the full relevant
 package test suite. These checks must establish at least:
 
 - complete ledger enumeration with no skipped alias or orientation;
-- exactly one built-in edit-attempt record per supported unique ledger-declared
-  asset across all cohorts, zero for every unsupported asset, and no duplicate
-  attempt for a shared path;
+- one edit-eligibility decision per unique ledger-declared asset path across
+  all cohorts, considering every referencing record, alias, and presentation;
+- exactly one built-in edit-attempt record for each unanimously supported path,
+  zero attempts for every path with an unsupported, blocked, conflicting, or
+  physically divergent row, and no duplicate attempt for a shared path;
 - dimensions, alpha, canvas, and all non-cord preservation invariants;
 - byte-for-byte preservation of every `board.json` file;
 - valid package declarations and asset inventory;
@@ -366,11 +379,15 @@ cohort scope:
 - **Feasibility gate rejected:** stop cohort editing. Preserve the gate output
   and report the dependency failure; do not attempt a manual workaround.
 - **Missing or conflicting primary evidence:** mark the record blocked with
-  the exact missing route, orientation, revision, or attachment fact.
+  the exact missing route, orientation, revision, or attachment fact. If it
+  references a shared asset path, give that path zero edits and explicitly
+  block every row referencing it.
 - **Port-A-Board option 4 unresolved:** keep it blocked; do not reuse its
-  current shared asset as proof, and do not invoke an image edit for it.
+  current shared asset as proof. Give the complete shared path zero image edit
+  attempts and explicitly block every row referencing it.
 - **Single edit violates an invariant:** reject the candidate and block the
-  affected asset records. Do not resize, mask, retouch, crop, or retry.
+  complete asset path and every row referencing it. Do not resize, mask,
+  retouch, crop, or retry.
 - **Cord topology or physics is uncertain:** block rather than invent hidden
   continuity, hardware, or force direction.
 - **Workbench or iOS review fails:** do not promote or commit the affected
@@ -466,9 +483,12 @@ The cohort is accepted only when:
    before editing.
 7. No hidden continuity, knot, terminal, grommet, doubled cord, hole, or
    attachment hardware was invented.
-8. Every supported unique ledger-declared asset received exactly one source-
-   grounded built-in edit attempt globally across these cohorts, every
-   unsupported asset received zero attempts, and no shared path received a
+8. Every unique ledger-declared asset path received one global eligibility
+   decision considering all referencing rows. A path received exactly one
+   source-grounded built-in edit attempt only when every row supported the same
+   resulting cord pixels, orientation, gravity, and routing; otherwise it
+   received zero attempts and every affected row was explicitly blocked. No
+   asset was separated, no `board.json` changed, and no shared path received a
    duplicate attempt or prohibited postprocessing/product-specific handling.
 9. Every preservation invariant passes exactly.
 10. Every unique presentation and alias has recorded Workbench and isolated-
