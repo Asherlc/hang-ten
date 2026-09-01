@@ -515,7 +515,7 @@
       "equipmentObjectID": "primary",
       "name": "Top jug",
       "kind": "jug",
-      "handCapacity": 1,
+      "handCapacity": 2,
       "presentationID": "primary",
       "geometry": [
         {
