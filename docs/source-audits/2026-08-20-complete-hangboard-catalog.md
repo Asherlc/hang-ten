@@ -1103,7 +1103,7 @@ Reverse prompt (verbatim):
 Accepted assets: `primary.png` is 1536 × 1024 (ratio 1.5, SHA-256
 `18047e867d71a5113f9e828b60959e66b58723906f0b489f7ae1864484fa020a`);
 `reverse.png` is 1774 × 887 (ratio 2.0, SHA-256
-`177b1b4d6c81ea67627ec4f9bf8726991a4b97bd2f6390703afcc83eb912813e`).
+`e85f6a0e62a647cf6eb534c715079a030bee8b5972f22ba2827a898bd12fe606`).
 
 On 2026-08-31, the reverse presentation was repaired after blue-field review
 showed that an alpha-only backdrop mutation had hidden the source-proved side
@@ -1122,6 +1122,15 @@ with the loops following a symmetric, physically plausible tensioned route
 behind the upright face. It removed the unsupported upper topology. The saved
 reverse hold path was retained and its enclosing frame was directly refined to
 remain wholly inside the newly centered visible 10 mm recess.
+
+The 2026-08-31 fix-round-3 review found that the short loops in the second
+candidate projected laterally as taut ovals without an external load. The
+official views establish the loop presence and routing, but not their catalog
+resting direction. **User-directed physical adaptation:** for this upright
+face-on presentation, the final untouched edit makes both loose exterior loops
+leave their side routing paths and sag downward under gravity. The board,
+contact layout, material, scale, placement, and saved `edge-10` geometry did
+not move and remain unchanged from the reviewed fix-round-2 composition.
 
 ### Direct geometry mapping
 
