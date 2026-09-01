@@ -258,6 +258,57 @@ def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> Non
     ]
 
 
+def test_deleting_a_canonical_surface_with_the_default_alias_promotes_a_remaining_canonical() -> None:
+    board = multi_presentation_board_document("fixture.multi")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations[0]["default"] = False
+    presentations[0]["aspectRatio"] = 3.0
+    presentations[1]["aspectRatio"] = 2.0
+    presentations.append(
+        {
+            "id": "front-inverted",
+            "name": "Front inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 3.0,
+            "default": True,
+            "sourcePresentationID": "front",
+            "isInverted": True,
+        }
+    )
+
+    deleted, _removed_assets = board_package._delete_presentation_from_board(board, "front")
+
+    assert deleted["aspectRatio"] == 2.0
+    assert deleted["presentations"] == [
+        {
+            "id": "back",
+            "name": "Back",
+            "assetPath": "assets/back.png",
+            "aspectRatio": 2.0,
+            "default": True,
+        }
+    ]
+
+
+def test_deleting_a_surface_removes_the_remaining_half_of_a_gaston_pair() -> None:
+    board = multi_presentation_board_document("fixture.multi")
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    front, back = holds
+    assert isinstance(front, dict) and isinstance(back, dict)
+    front.update(id="front-gaston", name="Front gaston", kind="gaston", pairedHoldID="back-gaston")
+    back.update(id="back-gaston", name="Back gaston", kind="gaston", pairedHoldID="front-gaston")
+    back_jug = json.loads(json.dumps(back))
+    back_jug.update(id="back-jug", name="Back jug", kind="jug")
+    back_jug.pop("pairedHoldID")
+    holds.append(back_jug)
+
+    deleted, _removed_assets = board_package._delete_presentation_from_board(board, "front")
+
+    assert [hold["id"] for hold in deleted["holds"]] == ["back-jug"]
+
+
 def test_reciprocal_gaston_pairs_round_trip_through_workbench_save(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")

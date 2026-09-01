@@ -1582,6 +1582,7 @@ def test_hosted_delete_presentation_removes_holds_and_only_its_unshared_asset() 
     files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(client)
+    mutations_before_delete = len(client.calls)
 
     deleted, _commit_sha = store.delete_board_presentation(
         TOKEN, BRANCH, "fixture.multi", "front"
@@ -1593,6 +1594,11 @@ def test_hosted_delete_presentation_removes_holds_and_only_its_unshared_asset() 
     assert client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/back.png")
     with pytest.raises(KeyError):
         client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/primary.png")
+    assert client.calls_named("put_file") == ()
+    assert client.calls_named("delete_file") == ()
+    assert [call.method for call in client.calls[mutations_before_delete:]][-1:] == [
+        "commit_files"
+    ]
     board_package._validate_board(
         deleted.board,
         deleted.image_width,

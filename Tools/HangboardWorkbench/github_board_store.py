@@ -48,6 +48,15 @@ class _GitHubSnapshotClient(Protocol):
 
 
 class _GitHubMutationClient(_GitHubSnapshotClient, Protocol):
+    def commit_files(
+        self,
+        token: str,
+        branch: str,
+        expected_head_sha: str,
+        changes: Mapping[str, bytes | None],
+        message: str,
+    ) -> str: ...
+
     def put_file(
         self,
         token: str,
@@ -331,6 +340,7 @@ class GitHubBoardStore:
                 live,
                 presentation_id,
                 entries,
+                expected_head_sha=snapshot.commit_sha,
             )
             self._cache_opened_package(token, branch, deleted[0])
             return deleted
@@ -651,6 +661,25 @@ class _StoreMutationClient:
             content,
             message,
             sha,
+        )
+
+    def commit_files(
+        self,
+        token: str,
+        branch: str,
+        expected_head_sha: str,
+        changes: Mapping[str, bytes | None],
+        message: str,
+    ) -> str:
+        if token != self._token or branch != self._branch:
+            raise RuntimeError("GitHub mutation credentials or branch do not match")
+        return self._store._call_control(
+            self._store._client.commit_files,
+            token,
+            branch,
+            expected_head_sha,
+            changes,
+            message,
         )
 
     def delete_file(
@@ -979,6 +1008,8 @@ def _delete_loaded_presentation(
     live: GitHubBoardPackage,
     presentation_id: str,
     entries: Mapping[str, TreeEntry],
+    *,
+    expected_head_sha: str,
 ) -> tuple[GitHubBoardPackage, str]:
     board, removed_assets = board_package._delete_presentation_from_board(
         live.board, presentation_id
@@ -1003,26 +1034,22 @@ def _delete_loaded_presentation(
         allow_missing_kind=True,
     )
     content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
+    changes: dict[str, bytes | None] = {
+        f"{_BOARD_LIBRARY_PATH}/{live.slug}/board.json": content,
+    }
+    for asset_path in removed_assets:
+        entry = entries.get(asset_path)
+        if entry is None or entry.type != "blob":
+            raise board_package.BoardPackageError("package presentation image is missing")
+        changes[f"{_BOARD_LIBRARY_PATH}/{live.slug}/{asset_path}"] = None
     try:
-        commit_sha = client.put_file(
+        commit_sha = client.commit_files(
             token,
-            f"{_BOARD_LIBRARY_PATH}/{live.slug}/board.json",
             branch,
-            content,
-            message=f"Delete presentation {presentation_id} from {live.board_id}",
-            sha=live.board_json_sha,
+            expected_head_sha,
+            changes,
+            f"Delete presentation {presentation_id} from {live.board_id}",
         )
-        for asset_path in removed_assets:
-            entry = entries.get(asset_path)
-            if entry is None or entry.type != "blob":
-                raise board_package.BoardPackageError("package presentation image is missing")
-            commit_sha = client.delete_file(
-                token,
-                f"{_BOARD_LIBRARY_PATH}/{live.slug}/{asset_path}",
-                branch,
-                message=f"Remove unused presentation asset from {live.board_id}",
-                sha=entry.sha,
-            )
     except GitHubConflictError as error:
         raise board_package.BoardSaveConflictError(str(error)) from error
     return (

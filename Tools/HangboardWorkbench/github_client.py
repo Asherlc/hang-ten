@@ -166,6 +166,69 @@ class GitHubClient:
         )
         return _required_string(_required_object(response, "commit"), "sha")
 
+    def commit_files(
+        self,
+        token: str,
+        branch: str,
+        expected_head_sha: str,
+        changes: Mapping[str, bytes | None],
+        message: str,
+    ) -> str:
+        """Atomically apply file writes and removals in one Git commit."""
+        if self.get_branch_head_sha(token, branch) != expected_head_sha:
+            raise GitHubConflictError("branch changed; reload and try again")
+        commit = self._call(
+            token,
+            "GET",
+            f"{self._repository_path()}/git/commits/{quote(expected_head_sha, safe='')}",
+        )
+        base_tree_sha = _required_string(_required_object(commit, "tree"), "sha")
+        tree: list[dict[str, object]] = []
+        for path, content in changes.items():
+            entry: dict[str, object] = {
+                "path": path,
+                "mode": "100644",
+                "type": "blob",
+            }
+            if content is None:
+                entry["sha"] = None
+            else:
+                blob = self._call(
+                    token,
+                    "POST",
+                    f"{self._repository_path()}/git/blobs",
+                    {
+                        "content": base64.b64encode(content).decode("ascii"),
+                        "encoding": "base64",
+                    },
+                )
+                entry["sha"] = _required_string(blob, "sha")
+            tree.append(entry)
+        created_tree = self._call(
+            token,
+            "POST",
+            f"{self._repository_path()}/git/trees",
+            {"base_tree": base_tree_sha, "tree": tree},
+        )
+        created_commit = self._call(
+            token,
+            "POST",
+            f"{self._repository_path()}/git/commits",
+            {
+                "message": message,
+                "tree": _required_string(created_tree, "sha"),
+                "parents": [expected_head_sha],
+            },
+        )
+        commit_sha = _required_string(created_commit, "sha")
+        self._call(
+            token,
+            "PATCH",
+            f"{self._repository_path()}/git/refs/heads/{quote(branch, safe='')}",
+            {"sha": commit_sha, "force": False},
+        )
+        return commit_sha
+
     def create_pull_request(
         self, token: str, title: str, head: str, base: str, body: str
     ) -> str:
@@ -241,7 +304,7 @@ def _github_http_error(error: urllib.error.HTTPError, token: str) -> GitHubError
     message = _github_error_message(error, token)
     if error.code == 404:
         return GitHubNotFoundError(message)
-    if error.code in {409, 412}:
+    if error.code in {409, 412, 422}:
         return GitHubConflictError(message)
     if error.code == 401:
         return GitHubAuthError(message)

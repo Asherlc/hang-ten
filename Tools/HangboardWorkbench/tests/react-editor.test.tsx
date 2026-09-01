@@ -85,6 +85,7 @@ function clientFixture(boards: readonly Board[]): WorkbenchClient & {
       const board = boards.find((candidate) => candidate.boardId === boardId) ?? firstBoard;
       return { ...board, document };
     },
+    async deletePresentation(): Promise<Board> { return firstBoard; },
     async getGitStatus(): Promise<GitStatus> { return gitStatus(); },
     async getAuthStatus(): Promise<AuthStatus> { return { ok: true, authenticated: false }; },
     async listBranches(): Promise<GitStatus> { return gitStatus(); },
@@ -105,6 +106,7 @@ function dependenciesFixture(board = boardFixture(), options: {
   confirm?(message: string): boolean;
   boards?: readonly Board[];
   client?: WorkbenchClient;
+  runtime?: BrowserRuntime;
 } = {}): WorkbenchDependencies {
   const dialogs: Dialogs = {
     confirm: options.confirm ?? (() => true),
@@ -124,7 +126,7 @@ function dependenciesFixture(board = boardFixture(), options: {
     client: options.client ?? clientFixture(options.boards ?? [board]),
     controller: options.validate ? { ...controller, validateEditorDocument: options.validate } : controller,
     pathEditor,
-    runtime,
+    runtime: options.runtime ?? runtime,
     dialogs,
   };
 }
@@ -381,11 +383,11 @@ test("deleting the selected surface confirms and focuses the server-selected rep
 
   await withEditor(async (app) => {
     await app.click("#delete-presentation-button");
+    await app.flush();
 
     assert.match(confirmation, /Front/u);
     assert.equal(app.document.querySelector("#presentation-select"), null);
     assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), back.imageUrl);
-    assert.equal(app.text("#board-status"), "Board surface deleted.");
   }, dependenciesFixture(front, {
     client,
     confirm(message) {
@@ -393,6 +395,59 @@ test("deleting the selected surface confirms and focuses the server-selected rep
       return true;
     },
   }));
+});
+
+test("deleting a surface keeps the server-selected replacement when its image cannot load", async () => {
+  const presentations = [
+    { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
+    { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
+  ];
+  const front: Board = {
+    ...boardFixture({ presentationID: "front", canvas: { width: 100, height: 50 }, regions: [] }),
+    selectedPresentationID: "front",
+    presentations,
+    imageUrl: presentations[0]!.imageUrl,
+  };
+  const back: Board = {
+    ...boardFixture({ presentationID: "back", canvas: { width: 80, height: 120 }, regions: [] }),
+    selectedPresentationID: "back",
+    presentations: [{ ...presentations[1]!, default: true }],
+    imageUrl: presentations[1]!.imageUrl,
+  };
+  const pending: HTMLImageElement[] = [];
+  const runtime: BrowserRuntime = {
+    async fetch() { throw new Error("fetch is not used"); },
+    location: { assign() {} },
+    confirm() { return true; },
+    prompt() { return null; },
+    createImage() {
+      const image = document.createElement("img");
+      Object.defineProperty(image, "src", {
+        configurable: true,
+        set() { pending.push(image); },
+      });
+      return image;
+    },
+  };
+  const client = {
+    ...clientFixture([front]),
+    async deletePresentation(): Promise<Board> { return back; },
+  } as WorkbenchClient;
+
+  const app = await renderReact(<WorkbenchApp dependencies={dependenciesFixture(front, { client, runtime })} />);
+  try {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => pending.shift()?.onload?.(new Event("load")));
+    await app.click("#delete-presentation-button");
+    await app.flush(() => pending.shift()?.onerror?.(new Event("error")));
+
+    assert.equal(app.document.querySelector("#presentation-select"), null);
+    assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), back.imageUrl);
+    assert.match(app.text("#validation-panel"), /Board image is unavailable/u);
+  } finally {
+    await app.cleanup();
+  }
 });
 
 test("rotation handles stay separated and inside both top-edge and narrow canvases", () => {

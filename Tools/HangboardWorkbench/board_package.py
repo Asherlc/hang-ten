@@ -625,16 +625,19 @@ def _delete_presentation_from_board(
         or item.get("sourcePresentationID") == presentation_id
     }
     remaining = [item for item in presentations if item["id"] not in removed_ids]
+    removed_default = any(item["default"] for item in presentations if item["id"] in removed_ids)
     next_default = (
-        next(
-            item["id"] for item in remaining if "sourcePresentationID" not in item
-        )
-        if selected["default"]
+        next(item["id"] for item in remaining if "sourcePresentationID" not in item)
+        if removed_default
         else next(item["id"] for item in remaining if item["default"])
     )
     for item in remaining:
         item["default"] = item["id"] == next_default
     copied["presentations"] = remaining
+    if removed_default:
+        copied["aspectRatio"] = next(
+            item["aspectRatio"] for item in remaining if item["id"] == next_default
+        )
 
     removed_assets = {
         item["assetPath"]
@@ -648,9 +651,14 @@ def _delete_presentation_from_board(
     if not copied["holds"]:
         raise BoardPackageError("cannot delete a surface because the board needs at least one hold")
     remaining_hold_ids = {hold["id"] for hold in copied["holds"]}
-    for hold in copied["holds"]:
-        if hold.get("pairedHoldID") not in remaining_hold_ids:
-            hold.pop("pairedHoldID", None)
+    copied["holds"] = [
+        hold
+        for hold in copied["holds"]
+        if hold.get("kind") != "gaston"
+        or hold.get("pairedHoldID") in remaining_hold_ids
+    ]
+    if not copied["holds"]:
+        raise BoardPackageError("cannot delete a surface because the board needs at least one hold")
     if "equipmentObjects" in copied:
         used_equipment_objects = {
             hold.get("equipmentObjectID", "primary") for hold in copied["holds"]

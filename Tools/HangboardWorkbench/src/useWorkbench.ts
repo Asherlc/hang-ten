@@ -449,30 +449,41 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     updateState((value) => ({ ...value, validation: "", saveLoginUrl: null }));
     await boardOperations.perform(async ({ isCurrent }) => {
+      let deleted;
       try {
-        const deleted = await client.deletePresentation(board.boardId, presentationID);
-        await loadImage(deleted.imageUrl);
-        if (!isCurrent() || stateRef.current.board?.boardId !== board.boardId) return;
-        resetHistory(historyRef.current);
-        updateState((value) => ({
-          ...value,
-          board: deleted,
-          document: cloneEditorDocument(deleted.document),
-          selectedKey: null,
-          selectedKeys: [],
-          dirty: false,
-          boards: value.boards.map((item) => item.boardId === deleted.boardId
-            ? { ...item, holdCount: deleted.holdCount, imageUrl: deleted.imageUrl }
-            : item),
-          ...clearApiErrorFor(value, "delete-presentation"),
-          status: "Board surface deleted.",
-        }));
+        deleted = await client.deletePresentation(board.boardId, presentationID);
       } catch (error: unknown) {
         if (!isCurrent()) return;
         updateState((value) => ({
           ...value,
           validation: errorMessage(error, "Could not delete board surface."),
           status: "Could not delete board surface. The current editor was kept.",
+        }));
+        return;
+      }
+      if (!isCurrent() || stateRef.current.board?.boardId !== board.boardId) return;
+      resetHistory(historyRef.current);
+      updateState((value) => ({
+        ...value,
+        board: deleted,
+        document: cloneEditorDocument(deleted.document),
+        selectedKey: null,
+        selectedKeys: [],
+        dirty: false,
+        boards: value.boards.map((item) => item.boardId === deleted.boardId
+          ? { ...item, holdCount: deleted.holdCount, imageUrl: deleted.imageUrl }
+          : item),
+        ...clearApiErrorFor(value, "delete-presentation"),
+        status: "Board surface deleted.",
+      }));
+      try {
+        await loadImage(deleted.imageUrl);
+      } catch (error: unknown) {
+        if (!isCurrent() || stateRef.current.board?.boardId !== deleted.boardId) return;
+        updateState((value) => ({
+          ...value,
+          validation: errorMessage(error, "Board replacement image is unavailable."),
+          status: "Board surface deleted, but its replacement image could not load.",
         }));
       }
     });
