@@ -5,7 +5,7 @@
   "subtitle": "Portable reversible training rail with four holds.",
   "productURL": "https://www.metoliusclimbing.com/products/light-rail",
   "dimensions": "18 \u00d7 3 \u00d7 1.5 in",
-  "aspectRatio": 1.5,
+  "aspectRatio": 1.0,
   "equipmentObjects": [
     {"id": "primary"}
   ],
@@ -14,14 +14,14 @@
       "id": "20mm-side",
       "name": "40 mm jug and 20 mm edge",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.5,
+      "aspectRatio": 1.0,
       "default": true
     },
     {
       "id": "15mm-side",
       "name": "40 mm jug and 15 mm edge",
       "assetPath": "assets/15mm-surface.png",
-      "aspectRatio": 1.7768331562167907,
+      "aspectRatio": 1.0,
       "default": false
     }
   ],
@@ -36,10 +36,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.025,
-            "y": 0.436,
-            "width": 0.95,
-            "height": 0.056753628906
+            "x": 0.041,
+            "y": 0.4206507177033493,
+            "width": 0.916,
+            "height": 0.041
           },
           "shape": {
             "type": "path",
@@ -164,10 +164,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.088336780599,
-            "y": 0.526915120117,
-            "width": 0.828157365234,
-            "height": 0.084084879883
+            "x": 0.079,
+            "y": 0.4706507177033493,
+            "width": 0.842,
+            "height": 0.07
           },
           "shape": {
             "type": "path",
@@ -289,10 +289,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.034,
-            "y": 0.406,
-            "width": 0.932,
-            "height": 0.103
+            "x": 0.041,
+            "y": 0.4230430622009569,
+            "width": 0.916,
+            "height": 0.041
           },
           "shape": {
             "type": "path",
@@ -417,10 +417,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.083,
-            "y": 0.551,
-            "width": 0.834,
-            "height": 0.047
+            "x": 0.079,
+            "y": 0.4730430622009569,
+            "width": 0.842,
+            "height": 0.067
           },
           "shape": {
             "type": "path",

@@ -588,14 +588,14 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
             "id": "20mm-side",
             "name": "40 mm jug and 20 mm edge",
             "assetPath": "assets/primary.png",
-            "aspectRatio": 1.5,
+            "aspectRatio": 1.0,
             "default": True,
         },
         {
             "id": "15mm-side",
             "name": "40 mm jug and 15 mm edge",
             "assetPath": "assets/15mm-surface.png",
-            "aspectRatio": 1672 / 941,
+            "aspectRatio": 1.0,
             "default": False,
         },
     ]
@@ -637,8 +637,8 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
     )
 
     for asset_path, expected_size in {
-        "assets/primary.png": (1536, 1024),
-        "assets/15mm-surface.png": (1672, 941),
+        "assets/primary.png": (1254, 1254),
+        "assets/15mm-surface.png": (1254, 1254),
     }.items():
         with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
             assert image.format == "PNG"
@@ -1076,7 +1076,7 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
             "id": "central-30-25",
             "name": "30 / 25 mm central edges",
             "assetPath": "assets/central-30-25.png",
-            "aspectRatio": 1.5,
+            "aspectRatio": 2.0,
             "default": False,
         },
         {
@@ -1090,7 +1090,7 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
             "id": "rounded-tray",
             "name": "Rounded tray",
             "assetPath": "assets/tray.png",
-            "aspectRatio": 1.5,
+            "aspectRatio": 2.0,
             "default": False,
         },
     ]
@@ -1141,16 +1141,16 @@ def test_yy_baguette_evo_central_30_25_paths_match_the_centered_recess() -> None
     holds = {hold["id"]: hold for hold in board["holds"]}
 
     assert holds["edge-central-30"]["geometry"][0]["frame"] == {
-        "x": 0.420,
-        "y": 0.531,
-        "width": 0.160,
-        "height": 0.030,
+        "x": 0.423,
+        "y": 0.455,
+        "width": 0.154,
+        "height": 0.033,
     }
     assert holds["edge-central-25"]["geometry"][0]["frame"] == {
-        "x": 0.420,
-        "y": 0.597,
-        "width": 0.160,
-        "height": 0.032,
+        "x": 0.423,
+        "y": 0.543,
+        "width": 0.154,
+        "height": 0.030,
     }
 
 

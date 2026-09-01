@@ -14,6 +14,7 @@ Commands:
   validate    Validate directly discovered hangboard packages
   status      Print directly discovered package metadata
   audit-metadata  Validate a source-audited metadata ledger
+  audit-presentations  Validate a presentation remediation manifest
 EOF
 }
 
@@ -26,7 +27,7 @@ command_name="$1"
 shift
 
 case "$command_name" in
-    validate|status|audit-metadata)
+    validate|status|audit-metadata|audit-presentations)
         ;;
     -h|--help|help)
         usage

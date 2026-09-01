@@ -15,10 +15,24 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Primary",
+      "name": "Small Edge Position",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.0,
       "default": true
+    },
+    {
+      "id": "large-medium-edge-position",
+      "name": "Large / Medium Edge Position",
+      "assetPath": "assets/large-medium.png",
+      "aspectRatio": 1.0,
+      "default": false
+    },
+    {
+      "id": "mono-position",
+      "name": "Mono Position",
+      "assetPath": "assets/mono.png",
+      "aspectRatio": 1.0,
+      "default": false
     }
   ],
   "holds": [
@@ -28,14 +42,14 @@
       "name": "MX18 edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "large-medium-edge-position",
       "geometry": [
         {
           "frame": {
-            "x": 0.29,
-            "y": 0.748,
-            "width": 0.316,
-            "height": 0.089
+          "x": 0.365,
+          "y": 0.385,
+          "width": 0.39,
+          "height": 0.11
           },
           "shape": {
             "type": "path",
@@ -143,14 +157,14 @@
       "name": "MX14 edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "large-medium-edge-position",
       "geometry": [
         {
           "frame": {
-            "x": 0.29,
-            "y": 0.635,
-            "width": 0.397,
-            "height": 0.044
+          "x": 0.29,
+          "y": 0.585,
+          "width": 0.45,
+          "height": 0.06
           },
           "shape": {
             "type": "path",
@@ -373,14 +387,14 @@
       "name": "25 mm mono",
       "kind": "pocket",
       "handCapacity": 1,
-      "presentationID": "primary",
+      "presentationID": "mono-position",
       "geometry": [
         {
           "frame": {
-            "x": 0.615,
-            "y": 0.766,
-            "width": 0.071,
-            "height": 0.071
+          "x": 0.55,
+          "y": 0.28,
+          "width": 0.10,
+          "height": 0.10
           },
           "shape": {
             "type": "path",
