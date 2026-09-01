@@ -195,7 +195,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-upper-2",
@@ -416,7 +417,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-upper-4",
@@ -527,7 +529,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-upper-5",
@@ -748,7 +751,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-middle-1",
@@ -859,7 +863,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-middle-2",
@@ -970,7 +975,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-middle-3",
@@ -1081,7 +1087,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-middle-4",
@@ -1192,7 +1199,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-lower-1",
@@ -1303,7 +1311,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-lower-2",
@@ -1524,7 +1533,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-lower-4",
@@ -1635,7 +1645,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "front-lower-5",
@@ -1856,7 +1867,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     }
   ],
   "presentations": [
