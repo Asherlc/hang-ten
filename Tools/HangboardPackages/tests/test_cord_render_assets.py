@@ -6,6 +6,9 @@ import json
 import math
 import os
 import shutil
+import subprocess
+import sys
+import threading
 import time
 from dataclasses import replace
 from datetime import date, datetime
@@ -395,18 +398,23 @@ def test_freeze_manifest_rejects_replacement_after_parse_without_stale_publicati
         "_snapshot_image",
         replacing_manifest_before_source_snapshot,
     )
-    failure: ValueError | None = None
+    failure: Exception | None = None
     try:
         cord_render_assets.freeze_source_manifest(manifest, report_path=report)
-    except ValueError as error:
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
         failure = error
 
     assert hook_ran is True
     assert failure is not None, (
         "a replaced parsed manifest must not publish successfully"
     )
-    assert isinstance(failure, ValueError)
-    assert "manifest" in str(failure).lower() or "changed" in str(failure).lower()
+    assert isinstance(failure, RuntimeError)
+    assert "rollback" in str(failure).lower()
+    assert "unproven" in str(failure).lower()
+    assert any(
+        "manifest" in message.lower() or "changed" in message.lower()
+        for message in _exception_chain_messages(failure)
+    )
     assert manifest.read_bytes() == manifest_b
     assert report.read_bytes() == prior_report
     assert not stale_cache.exists()
@@ -926,6 +934,94 @@ def test_atlas_rebuild_removes_only_stale_canonical_pages(tmp_path: Path) -> Non
     assert not (output / "page-02.png").exists()
 
 
+def test_same_owner_atlas_writers_serialize_planning_before_stale_page_selection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    initial = _context_source(tmp_path, "serialized-atlas-initial")
+    output = _context(tmp_path, "serialized-atlas-output") / "pages"
+    build_lossless_atlases([initial], output)
+    two_page_sources = [
+        _context_source(
+            tmp_path,
+            f"serialized-atlas-two-page-{number}",
+            (2000, 1100),
+            (20 + number, 40, 60),
+        )
+        for number in range(2)
+    ]
+    one_page_source = _context_source(tmp_path, "serialized-atlas-one-page")
+    original_prepare = cord_render_assets._prepare_atlas
+    first_prepared = threading.Event()
+    second_prepared = threading.Event()
+    release_first = threading.Event()
+    release_second = threading.Event()
+    results: dict[str, cord_render_assets.AtlasIndex] = {}
+    failures: dict[str, Exception] = {}
+
+    def pause_after_planning(
+        sources: list[cord_render_assets.LockedSource]
+        | tuple[cord_render_assets.LockedSource, ...],
+        output_dir: Path,
+        max_pages: int,
+    ) -> tuple[
+        cord_render_assets.AtlasIndex,
+        list[tuple[Path, bytes]],
+        tuple[Path, ...],
+    ]:
+        prepared = original_prepare(sources, output_dir, max_pages)
+        if threading.current_thread().name == "two-page-atlas-writer":
+            first_prepared.set()
+            if not release_first.wait(timeout=5):
+                raise TimeoutError("timed out releasing two-page atlas writer")
+        else:
+            second_prepared.set()
+            if not release_second.wait(timeout=5):
+                raise TimeoutError("timed out releasing one-page atlas writer")
+        return prepared
+
+    monkeypatch.setattr(cord_render_assets, "_prepare_atlas", pause_after_planning)
+
+    def build(writer: str) -> None:
+        sources = two_page_sources if writer == "two-page" else [one_page_source]
+        try:
+            results[writer] = build_lossless_atlases(sources, output)
+        except Exception as error:  # noqa: BLE001 - assert thread failures below
+            failures[writer] = error
+
+    first_thread = threading.Thread(
+        target=build,
+        args=("two-page",),
+        name="two-page-atlas-writer",
+    )
+    second_thread = threading.Thread(
+        target=build,
+        args=("one-page",),
+        name="one-page-atlas-writer",
+    )
+    first_thread.start()
+    assert first_prepared.wait(timeout=5)
+    second_thread.start()
+    second_planned_while_first_paused = second_prepared.wait(timeout=0.25)
+    release_first.set()
+    first_thread.join(timeout=5)
+    assert first_thread.is_alive() is False
+    assert second_prepared.wait(timeout=5)
+    release_second.set()
+    second_thread.join(timeout=5)
+
+    assert second_planned_while_first_paused is False
+    assert second_thread.is_alive() is False
+    assert failures == {}
+    assert set(results) == {"two-page", "one-page"}
+    assert len(results["two-page"].pages) == 2
+    assert len(results["one-page"].pages) == 1
+    assert sorted(path.name for path in output.iterdir()) == [
+        "index.json",
+        "page-01.png",
+    ]
+    assert verify_atlas_round_trip(results["one-page"]).valid is True
+
+
 def test_atlas_rebuild_rejects_unknown_files_without_deleting_them(
     tmp_path: Path,
 ) -> None:
@@ -984,15 +1080,17 @@ def test_atlas_publication_failure_rolls_back_prior_page_set(
     assert not (output / "page-02.png").exists()
 
 
-def test_atlas_backup_cleanup_failure_restores_every_prior_artifact(
+def test_atlas_backup_cleanup_failure_keeps_every_committed_artifact(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     original = _context_source(tmp_path, "cleanup-original", color=(1, 2, 3))
     output = _context(tmp_path, "cleanup-pages") / "pages"
     build_lossless_atlases([original], output)
-    original_page = (output / "page-01.png").read_bytes()
-    original_index = (output / "index.json").read_bytes()
     replacement = _context_source(tmp_path, "cleanup-replacement", color=(4, 5, 6))
+    build_lossless_atlases([replacement], output)
+    expected_page = (output / "page-01.png").read_bytes()
+    expected_index = (output / "index.json").read_bytes()
+    build_lossless_atlases([original], output)
     original_unlink = cord_render_assets.os.unlink
     backup_unlinks = 0
     hook_ran = False
@@ -1012,28 +1110,32 @@ def test_atlas_backup_cleanup_failure_restores_every_prior_artifact(
 
     monkeypatch.setattr(cord_render_assets.os, "unlink", failing_unlink)
 
-    with pytest.raises(OSError, match="injected backup cleanup"):
+    with pytest.raises(RuntimeError) as captured:
         build_lossless_atlases([replacement], output)
 
     assert hook_ran is True
-    assert (output / "page-01.png").read_bytes() == original_page
-    assert (output / "index.json").read_bytes() == original_index
-    assert sorted(path.name for path in output.iterdir()) == [
-        "index.json",
-        "page-01.png",
-    ]
+    assert (output / "page-01.png").read_bytes() == expected_page
+    assert (output / "index.json").read_bytes() == expected_index
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert any(
+        "injected backup cleanup failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
 
 
-def test_atlas_backup_cleanup_tamper_cannot_succeed_and_restores_prior_tree(
+def test_atlas_backup_cleanup_tamper_is_preserved_after_commit_and_disclosed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     original = _context_source(tmp_path, "cleanup-tamper-original", color=(1, 2, 3))
     output = _context(tmp_path, "cleanup-tamper-pages") / "pages"
     build_lossless_atlases([original], output)
-    prior_tree = _file_bytes(output)
     replacement = _context_source(
         tmp_path, "cleanup-tamper-replacement", color=(4, 5, 6)
     )
+    build_lossless_atlases([replacement], output)
+    expected_index = (output / "index.json").read_bytes()
+    build_lossless_atlases([original], output)
     original_unlink = cord_render_assets.os.unlink
     hook_ran = False
 
@@ -1049,19 +1151,24 @@ def test_atlas_backup_cleanup_tamper_cannot_succeed_and_restores_prior_tree(
         original_unlink(path, dir_fd=dir_fd)
 
     monkeypatch.setattr(cord_render_assets.os, "unlink", tampering_first_backup_cleanup)
-    failure: OSError | ValueError | None = None
+    failure: Exception | None = None
     try:
         build_lossless_atlases([replacement], output)
-    except (OSError, ValueError) as error:
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
         failure = error
 
     assert hook_ran is True
     assert failure is not None, "backup cleanup must not open a success window"
-    assert isinstance(failure, (OSError, ValueError))
-    assert _file_bytes(output) == prior_tree
+    assert isinstance(failure, RuntimeError)
+    assert "publication committed" in str(failure).lower()
+    assert "cleanup state is unproven" in str(failure).lower()
+    assert (output / "page-01.png").read_bytes() == (
+        b"tampered after final verification"
+    )
+    assert (output / "index.json").read_bytes() == expected_index
 
 
-def test_delete_cleanup_concurrent_create_survives_with_unproven_rollback(
+def test_delete_cleanup_concurrent_create_survives_with_unproven_committed_cleanup(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     context = _context(tmp_path, "delete-cleanup-concurrent-create")
@@ -1097,8 +1204,8 @@ def test_delete_cleanup_concurrent_create_survives_with_unproven_rollback(
     assert target.read_bytes() == concurrent_payload
     assert concurrent_payload in _file_bytes(context).values()
     assert isinstance(captured.value, RuntimeError)
-    assert "rollback" in str(captured.value).lower()
-    assert "unproven" in str(captured.value).lower()
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
     assert captured.value.__cause__ is not None
     assert any(
         "deleted artifact remains visible" in message
@@ -1634,7 +1741,7 @@ def test_final_rollback_verifier_rejects_same_payload_foreign_inode(
     target.write_bytes(prior_payload)
     prior_identity = _path_identity(target)
     callback_failure = ValueError("injected final-verifier callback failure")
-    original_cleanup = cord_render_assets._cleanup_removable_scratch
+    original_verifier = cord_render_assets._rollback_visible_matches
     rollback_active = False
     replacement_count = 0
     foreign_identity: tuple[int, int] | None = None
@@ -1644,11 +1751,10 @@ def test_final_rollback_verifier_rejects_same_payload_foreign_inode(
         rollback_active = True
         raise callback_failure
 
-    def replace_before_final_rollback_verification(
+    def replace_during_sole_final_rollback_verification(
         item: cord_render_assets._StagedPublication,
-    ) -> None:
+    ) -> bool:
         nonlocal replacement_count, foreign_identity
-        original_cleanup(item)
         if rollback_active and replacement_count == 0:
             replacement_count += 1
             foreign_name = ".final-same-payload-foreign"
@@ -1669,11 +1775,12 @@ def test_final_rollback_verifier_rejects_same_payload_foreign_inode(
                 dst_dir_fd=item.anchor.parent_fd,
             )
             foreign_identity = _path_identity(target)
+        return original_verifier(item)
 
     monkeypatch.setattr(
         cord_render_assets,
-        "_cleanup_removable_scratch",
-        replace_before_final_rollback_verification,
+        "_rollback_visible_matches",
+        replace_during_sole_final_rollback_verification,
     )
 
     with pytest.raises(Exception) as captured:
@@ -1705,7 +1812,7 @@ def test_final_rollback_verifier_rejects_same_payload_foreign_inode(
     assert captured.value.__cause__ is callback_failure
 
 
-def test_transient_scratch_directory_cleanup_failure_restores_without_debris(
+def test_transient_scratch_directory_cleanup_failure_keeps_committed_output(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     context = _context(tmp_path, "scratch-directory-cleanup")
@@ -1733,7 +1840,7 @@ def test_transient_scratch_directory_cleanup_failure_restores_without_debris(
         fail_first_scratch_directory_cleanup,
     )
 
-    with pytest.raises(OSError, match="injected scratch directory cleanup failure"):
+    with pytest.raises(RuntimeError) as captured:
         cord_render_assets._publish_artifacts(
             [
                 cord_render_assets._Publication(
@@ -1745,8 +1852,1390 @@ def test_transient_scratch_directory_cleanup_failure_restores_without_debris(
         )
 
     assert hook_ran is True
-    assert target.read_bytes() == prior_payload
-    assert sorted(path.name for path in context.iterdir()) == [target.name]
+    assert target.read_bytes() == b"replacement-report"
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert any(
+        "injected scratch directory cleanup failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_scratch_directory_quarantine_post_rename_failure_reconciles_both_names(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "scratch-directory-post-rename")
+    target = context / "report.json"
+    prior_payload = b"prior-report"
+    publication_payload = b"committed-report"
+    target.write_bytes(prior_payload)
+    original_rename = cord_render_assets.os.rename
+    hook_count = 0
+    attempted_names: tuple[str, str] | None = None
+
+    def rename_scratch_directory_then_raise(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal attempted_names, hook_count
+        source_name = Path(os.fsdecode(source)).name
+        destination_name = Path(os.fsdecode(destination)).name
+        if (
+            hook_count == 0
+            and source_name.startswith(f".{target.name}.txn-")
+            and ".cleanup-" in destination_name
+        ):
+            assert src_dir_fd is not None
+            assert src_dir_fd == dst_dir_fd
+            original_rename(
+                source,
+                destination,
+                src_dir_fd=src_dir_fd,
+                dst_dir_fd=dst_dir_fd,
+            )
+            hook_count += 1
+            attempted_names = source_name, destination_name
+            raise OSError("injected after real scratch-directory quarantine rename")
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "rename",
+        rename_scratch_directory_then_raise,
+    )
+
+    failure: Exception | None = None
+    try:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    publication_payload,
+                    "post-commit cleanup report",
+                )
+            ]
+        )
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
+        failure = error
+
+    assert hook_count == 1
+    assert attempted_names is not None
+    assert failure is not None
+    assert target.read_bytes() == publication_payload
+    source_name, quarantine_name = attempted_names
+    surviving_attempted_names = [
+        name for name in attempted_names if (context / name).exists()
+    ]
+    hidden_transaction_names = sorted(
+        path.name
+        for path in context.iterdir()
+        if path.name.startswith(f".{target.name}.txn-")
+    )
+    assert hidden_transaction_names == sorted(surviving_attempted_names)
+    assert isinstance(failure, RuntimeError)
+    assert "publication committed" in str(failure).lower()
+    assert "cleanup state is unproven" in str(failure).lower()
+    for surviving_name in surviving_attempted_names:
+        assert surviving_name in str(failure)
+    assert not (context / source_name).exists() or source_name in str(failure)
+    assert not (context / quarantine_name).exists() or quarantine_name in str(failure)
+    assert any(
+        "injected after real scratch-directory quarantine rename" in message
+        for message in _exception_chain_messages(failure)
+    )
+
+
+def test_in_place_mutation_after_scratch_leaf_cleanup_is_preserved_as_external(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "in-place-after-scratch-leaf-cleanup")
+    target = context / "report.json"
+    prior_payload = b"prior-report-bytes"
+    transaction_payload = b"transaction-publication"
+    concurrent_payload = b"concurrent-in-place-update"
+    target.write_bytes(prior_payload)
+    prior_identity = _path_identity(target)
+    original_verifier = cord_render_assets._verify_published_artifacts
+    verifier_calls = 0
+    mutation_count = 0
+    transaction_identity: tuple[int, int] | None = None
+
+    def mutate_before_post_cleanup_verification(
+        staged: list[cord_render_assets._StagedPublication]
+        | tuple[cord_render_assets._StagedPublication, ...],
+    ) -> None:
+        nonlocal mutation_count, transaction_identity, verifier_calls
+        verifier_calls += 1
+        if verifier_calls == 2:
+            mutation_count += 1
+            transaction_identity = _path_identity(target)
+            target.write_bytes(concurrent_payload)
+            assert _path_identity(target) == transaction_identity
+        original_verifier(staged)
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_verify_published_artifacts",
+        mutate_before_post_cleanup_verification,
+    )
+
+    failure: Exception | None = None
+    try:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    transaction_payload,
+                    "in-place mutation report",
+                )
+            ]
+        )
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
+        failure = error
+
+    assert verifier_calls == 2
+    assert mutation_count == 1
+    assert transaction_identity is not None
+    assert failure is not None
+    assert _path_identity(target) == transaction_identity
+    assert target.read_bytes() == concurrent_payload
+    assert _retained_paths_with_identity(
+        context,
+        identity=prior_identity,
+        payload=prior_payload,
+        excluding=target,
+    ), "the original-prior inode must remain as recovery evidence"
+    assert isinstance(failure, RuntimeError)
+    assert "rollback" in str(failure).lower()
+    assert "unproven" in str(failure).lower()
+    assert failure.__cause__ is not None
+    assert any(
+        "published artifact verification failed" in message
+        for message in _exception_chain_messages(failure)
+    )
+
+
+def test_two_item_later_scratch_removal_failure_never_leaves_partial_new_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "two-item-later-scratch-removal")
+    first = context / "first.json"
+    second = context / "second.json"
+    first_prior = b"first-prior"
+    second_prior = b"second-prior"
+    first_new = b"first-new"
+    second_new = b"second-new"
+    first.write_bytes(first_prior)
+    second.write_bytes(second_prior)
+    original_rmdir = cord_render_assets.os.rmdir
+    scratch_rmdir_names: list[str] = []
+    injected_count = 0
+    failed_scratch_name = ""
+
+    def fail_second_real_scratch_rmdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal failed_scratch_name, injected_count
+        name = Path(os.fsdecode(path)).name
+        if ".txn-" in name and ".cleanup-" in name:
+            scratch_rmdir_names.append(name)
+            if len(scratch_rmdir_names) == 2 and injected_count == 0:
+                injected_count += 1
+                failed_scratch_name = name
+                raise OSError("injected later scratch-directory removal failure")
+        original_rmdir(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "rmdir",
+        fail_second_real_scratch_rmdir,
+    )
+
+    failure: Exception | None = None
+    try:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(first, first_new, "first report"),
+                cord_render_assets._Publication(second, second_new, "second report"),
+            ]
+        )
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
+        failure = error
+
+    assert injected_count == 1
+    assert len(scratch_rmdir_names) >= 2
+    assert scratch_rmdir_names[0] != scratch_rmdir_names[1]
+    assert failed_scratch_name == scratch_rmdir_names[1]
+    assert failure is not None
+    assert first.read_bytes() == first_new
+    assert second.read_bytes() == second_new
+    assert isinstance(failure, RuntimeError)
+    assert "publication committed" in str(failure).lower()
+    assert "cleanup state is unproven" in str(failure).lower()
+    assert failed_scratch_name in str(failure)
+    assert any(
+        "injected later scratch-directory removal failure" in message
+        for message in _exception_chain_messages(failure)
+    )
+
+
+@pytest.mark.parametrize(
+    "verification_boundary",
+    ["fstat", "visible-stat"],
+    ids=["fstat", "visible-stat"],
+)
+def test_created_parent_post_open_verification_error_closes_new_descriptor(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    verification_boundary: str,
+) -> None:
+    context = _context(tmp_path, f"parent-post-open-{verification_boundary}")
+    created_parent = context / "created-parent"
+    target = created_parent / "report.json"
+    original_close = cord_render_assets.os.close
+    original_fstat = cord_render_assets.os.fstat
+    original_open = cord_render_assets.os.open
+    original_stat = cord_render_assets.os.stat
+    opened_parent_fds: list[int] = []
+    hook_count = 0
+
+    def track_created_parent_open(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        flags: int,
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> int:
+        descriptor = original_open(path, flags, mode, dir_fd=dir_fd)
+        if (
+            dir_fd is not None
+            and Path(os.fsdecode(path)).name == created_parent.name
+            and not opened_parent_fds
+        ):
+            opened_parent_fds.append(descriptor)
+        return descriptor
+
+    def fstat_then_raise(descriptor: int) -> os.stat_result:
+        nonlocal hook_count
+        metadata = original_fstat(descriptor)
+        if (
+            verification_boundary == "fstat"
+            and descriptor in opened_parent_fds
+            and hook_count == 0
+        ):
+            hook_count += 1
+            raise OSError("injected after real created-parent fstat")
+        return metadata
+
+    def visible_stat_then_raise(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+        follow_symlinks: bool = True,
+    ) -> os.stat_result:
+        nonlocal hook_count
+        metadata = original_stat(
+            path,
+            dir_fd=dir_fd,
+            follow_symlinks=follow_symlinks,
+        )
+        if (
+            verification_boundary == "visible-stat"
+            and opened_parent_fds
+            and Path(os.fsdecode(path)).name == created_parent.name
+            and dir_fd is not None
+            and hook_count == 0
+        ):
+            hook_count += 1
+            raise OSError("injected after real created-parent visible stat")
+        return metadata
+
+    monkeypatch.setattr(cord_render_assets.os, "open", track_created_parent_open)
+    monkeypatch.setattr(cord_render_assets.os, "fstat", fstat_then_raise)
+    monkeypatch.setattr(cord_render_assets.os, "stat", visible_stat_then_raise)
+
+    failure: Exception | None = None
+    try:
+        cord_render_assets.write_owner_json(target, {"new": True})
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
+        failure = error
+
+    still_open: list[int] = []
+    for descriptor in opened_parent_fds:
+        try:
+            original_fstat(descriptor)
+        except OSError:
+            continue
+        still_open.append(descriptor)
+    for descriptor in still_open:
+        original_close(descriptor)
+
+    assert opened_parent_fds
+    assert hook_count == 1
+    assert failure is not None
+    assert not still_open, f"created-parent descriptors leaked: {still_open}"
+    expected_message = (
+        "injected after real created-parent fstat"
+        if verification_boundary == "fstat"
+        else "injected after real created-parent visible stat"
+    )
+    assert any(
+        expected_message in message for message in _exception_chain_messages(failure)
+    )
+
+
+def test_revalidate_anchor_post_open_fstat_error_closes_new_descriptor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "revalidate-post-open-fstat")
+    target = context / "report.json"
+    target.write_bytes(b"report")
+    anchor = cord_render_assets._open_parent(target)
+    original_close = cord_render_assets.os.close
+    original_fstat = cord_render_assets.os.fstat
+    original_open = cord_render_assets.os.open
+    opened_context_fds: list[int] = []
+    hook_count = 0
+
+    def track_context_open(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        flags: int,
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> int:
+        descriptor = original_open(path, flags, mode, dir_fd=dir_fd)
+        if (
+            dir_fd is not None
+            and Path(os.fsdecode(path)).name == context.name
+            and not opened_context_fds
+        ):
+            opened_context_fds.append(descriptor)
+        return descriptor
+
+    def fstat_then_raise(descriptor: int) -> os.stat_result:
+        nonlocal hook_count
+        metadata = original_fstat(descriptor)
+        if descriptor in opened_context_fds and hook_count == 0:
+            hook_count += 1
+            raise OSError("injected after real revalidation fstat")
+        return metadata
+
+    monkeypatch.setattr(cord_render_assets.os, "open", track_context_open)
+    monkeypatch.setattr(cord_render_assets.os, "fstat", fstat_then_raise)
+
+    try:
+        with pytest.raises(OSError, match="injected after real revalidation fstat"):
+            cord_render_assets._revalidate_anchor(anchor)
+    finally:
+        anchor.close()
+
+    still_open: list[int] = []
+    for descriptor in opened_context_fds:
+        try:
+            original_fstat(descriptor)
+        except OSError:
+            continue
+        still_open.append(descriptor)
+    for descriptor in still_open:
+        original_close(descriptor)
+
+    assert opened_context_fds
+    assert hook_count == 1
+    assert not still_open, f"revalidation descriptors leaked: {still_open}"
+
+
+def test_open_parent_post_real_component_close_failure_is_not_retried(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "open-parent-post-real-close")
+    target = context / "report.json"
+    original_close = cord_render_assets.os.close
+    hook_count = 0
+
+    def close_first_component_then_raise(descriptor: int) -> None:
+        nonlocal hook_count
+        original_close(descriptor)
+        if hook_count == 0:
+            hook_count += 1
+            raise OSError("injected after real open-parent component close")
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "close",
+        close_first_component_then_raise,
+    )
+
+    with pytest.raises(
+        OSError,
+        match="injected after real open-parent component close",
+    ):
+        cord_render_assets._open_parent(target)
+
+    assert hook_count == 1
+
+
+def test_revalidate_anchor_post_real_component_close_failure_is_not_retried(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "revalidate-post-real-close")
+    target = context / "report.json"
+    target.write_bytes(b"report")
+    anchor = cord_render_assets._open_parent(target)
+    original_close = cord_render_assets.os.close
+    hook_count = 0
+
+    def close_first_component_then_raise(descriptor: int) -> None:
+        nonlocal hook_count
+        original_close(descriptor)
+        if hook_count == 0:
+            hook_count += 1
+            raise OSError("injected after real revalidation component close")
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "close",
+        close_first_component_then_raise,
+    )
+
+    try:
+        with pytest.raises(
+            OSError,
+            match="injected after real revalidation component close",
+        ):
+            cord_render_assets._revalidate_anchor(anchor)
+    finally:
+        anchor.close()
+
+    assert hook_count == 1
+
+
+def _assert_same_owner_writers_serialize_at_boundary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    boundary: str,
+) -> None:
+    context = _context(tmp_path, f"serialized-writers-{boundary}")
+    target = context / "report.json"
+    original_mkdir = cord_render_assets.os.mkdir
+    original_rmdir = cord_render_assets.os.rmdir
+    original_unlink = cord_render_assets.os.unlink
+    first_reached_boundary = threading.Event()
+    release_first = threading.Event()
+    second_started = threading.Event()
+    second_finished = threading.Event()
+    completion_order: list[str] = []
+    failures: dict[str, Exception] = {}
+    hook_count = 0
+    first_thread: threading.Thread | None = None
+
+    def pause_first_writer() -> None:
+        nonlocal hook_count
+        if threading.current_thread() is not first_thread or hook_count != 0:
+            return
+        hook_count += 1
+        first_reached_boundary.set()
+        if not release_first.wait(timeout=5):
+            raise TimeoutError(f"timed out releasing first writer at {boundary}")
+
+    def pause_after_real_scratch_mkdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        original_mkdir(path, mode, dir_fd=dir_fd)
+        name = Path(os.fsdecode(path)).name
+        if boundary == "post-scratch-mkdir" and ".txn-" in name:
+            pause_first_writer()
+
+    def pause_before_real_scratch_leaf_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        name = Path(os.fsdecode(path)).name
+        if boundary == "pre-scratch-leaf-unlink" and all(
+            marker in name for marker in (".tmp-", ".cleanup-")
+        ):
+            pause_first_writer()
+        original_unlink(path, dir_fd=dir_fd)
+
+    def pause_before_real_scratch_directory_rmdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        name = Path(os.fsdecode(path)).name
+        if boundary == "pre-scratch-directory-rmdir" and all(
+            marker in name for marker in (".txn-", ".cleanup-")
+        ):
+            pause_first_writer()
+        original_rmdir(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "mkdir",
+        pause_after_real_scratch_mkdir,
+    )
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "unlink",
+        pause_before_real_scratch_leaf_unlink,
+    )
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "rmdir",
+        pause_before_real_scratch_directory_rmdir,
+    )
+
+    def write_payload(writer: str) -> None:
+        if writer == "second":
+            second_started.set()
+        try:
+            cord_render_assets.write_owner_json(target, {"writer": writer})
+        except Exception as error:  # noqa: BLE001 - assert thread failures below
+            failures[writer] = error
+        else:
+            completion_order.append(writer)
+        finally:
+            if writer == "second":
+                second_finished.set()
+
+    first_thread = threading.Thread(
+        target=write_payload,
+        args=("first",),
+        name=f"first-{boundary}",
+    )
+    second_thread = threading.Thread(
+        target=write_payload,
+        args=("second",),
+        name=f"second-{boundary}",
+    )
+    first_thread.start()
+    reached_boundary = first_reached_boundary.wait(timeout=5)
+    if reached_boundary:
+        second_thread.start()
+        observed_second_start = second_started.wait(timeout=5)
+        second_finished_while_first_paused = second_finished.wait(timeout=0.25)
+    else:
+        observed_second_start = False
+        second_finished_while_first_paused = False
+    release_first.set()
+    first_thread.join(timeout=5)
+    if second_thread.ident is not None:
+        second_thread.join(timeout=5)
+
+    assert reached_boundary is True
+    assert observed_second_start is True
+    assert hook_count == 1
+    assert second_finished_while_first_paused is False
+    assert first_thread.is_alive() is False
+    assert second_thread.is_alive() is False
+    assert failures == {}
+    assert completion_order == ["first", "second"]
+    assert json.loads(target.read_text(encoding="utf-8")) == {"writer": "second"}
+
+
+def test_same_owner_writers_serialize_after_real_scratch_mkdir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _assert_same_owner_writers_serialize_at_boundary(
+        tmp_path,
+        monkeypatch,
+        "post-scratch-mkdir",
+    )
+
+
+def test_same_owner_writers_serialize_before_scratch_leaf_unlink(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _assert_same_owner_writers_serialize_at_boundary(
+        tmp_path,
+        monkeypatch,
+        "pre-scratch-leaf-unlink",
+    )
+
+
+def test_same_owner_writers_serialize_before_scratch_directory_rmdir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _assert_same_owner_writers_serialize_at_boundary(
+        tmp_path,
+        monkeypatch,
+        "pre-scratch-directory-rmdir",
+    )
+
+
+def test_publication_transaction_lock_serializes_same_owner_across_processes(
+    tmp_path: Path,
+) -> None:
+    context = _context(tmp_path, "cross-process-publication-lock")
+    held_target = context / "held.json"
+    child_target = context / "child.json"
+    child_started = context / "child-started"
+    source_root = Path(cord_render_assets.__file__).resolve().parents[1]
+    child_environment = os.environ.copy()
+    child_environment["PYTHONPATH"] = os.pathsep.join(
+        filter(
+            None,
+            (str(source_root), child_environment.get("PYTHONPATH", "")),
+        )
+    )
+    child_script = """
+import sys
+from pathlib import Path
+
+from hangboard_packages.cord_render_assets import write_owner_json
+
+target = Path(sys.argv[1])
+Path(sys.argv[2]).write_text("started", encoding="utf-8")
+write_owner_json(target, {"writer": "child"})
+"""
+    child: subprocess.Popen[str] | None = None
+    child_stdout = ""
+    child_stderr = ""
+    try:
+        with cord_render_assets._publication_transaction_lock((held_target,)):
+            child = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-c",
+                    child_script,
+                    os.fspath(child_target),
+                    os.fspath(child_started),
+                ],
+                env=child_environment,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            deadline = time.monotonic() + 5
+            while (
+                not child_started.exists()
+                and child.poll() is None
+                and time.monotonic() < deadline
+            ):
+                time.sleep(0.01)
+
+            assert child_started.read_text(encoding="utf-8") == "started"
+            with pytest.raises(subprocess.TimeoutExpired):
+                child.wait(timeout=0.25)
+            assert not child_target.exists()
+
+        child_stdout, child_stderr = child.communicate(timeout=5)
+    finally:
+        if child is not None and child.poll() is None:
+            child.kill()
+            child_stdout, child_stderr = child.communicate(timeout=5)
+
+    assert child.returncode == 0, (
+        f"child stdout: {child_stdout!r}; child stderr: {child_stderr!r}"
+    )
+    assert json.loads(child_target.read_text(encoding="utf-8")) == {"writer": "child"}
+
+
+def test_nested_same_owner_writer_reuses_outer_lock_without_premature_unlock(
+    tmp_path: Path,
+) -> None:
+    context = _context(tmp_path, "nested-cross-process-publication-lock")
+    held_target = context / "held.json"
+    nested_target = context / "nested.json"
+    child_target = context / "child.json"
+    child_started = context / "child-started"
+    source_root = Path(cord_render_assets.__file__).resolve().parents[1]
+    child_environment = os.environ.copy()
+    child_environment["PYTHONPATH"] = os.pathsep.join(
+        filter(
+            None,
+            (str(source_root), child_environment.get("PYTHONPATH", "")),
+        )
+    )
+    child_script = """
+import sys
+from pathlib import Path
+
+from hangboard_packages.cord_render_assets import write_owner_json
+
+target = Path(sys.argv[1])
+Path(sys.argv[2]).write_text("started", encoding="utf-8")
+write_owner_json(target, {"writer": "child"})
+"""
+    child: subprocess.Popen[str] | None = None
+    child_stdout = ""
+    child_stderr = ""
+    try:
+        with cord_render_assets._publication_transaction_lock((held_target,)):
+            cord_render_assets.write_owner_json(nested_target, {"writer": "nested"})
+            child = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-c",
+                    child_script,
+                    os.fspath(child_target),
+                    os.fspath(child_started),
+                ],
+                env=child_environment,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            deadline = time.monotonic() + 5
+            while (
+                not child_started.exists()
+                and child.poll() is None
+                and time.monotonic() < deadline
+            ):
+                time.sleep(0.01)
+
+            assert json.loads(nested_target.read_text(encoding="utf-8")) == {
+                "writer": "nested"
+            }
+            assert child_started.read_text(encoding="utf-8") == "started"
+            with pytest.raises(subprocess.TimeoutExpired):
+                child.wait(timeout=0.25)
+            assert not child_target.exists()
+
+        child_stdout, child_stderr = child.communicate(timeout=5)
+    finally:
+        if child is not None and child.poll() is None:
+            child.kill()
+            child_stdout, child_stderr = child.communicate(timeout=5)
+
+    assert child.returncode == 0, (
+        f"child stdout: {child_stdout!r}; child stderr: {child_stderr!r}"
+    )
+    assert json.loads(child_target.read_text(encoding="utf-8")) == {"writer": "child"}
+
+
+def test_lock_release_failure_after_commit_preserves_committed_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "postcommit-lock-release")
+    target = context / "report.json"
+    original_flock = cord_render_assets.fcntl.flock
+    unlock_count = 0
+
+    def unlock_then_raise(descriptor: int, operation: int) -> None:
+        nonlocal unlock_count
+        original_flock(descriptor, operation)
+        if operation & cord_render_assets.fcntl.LOCK_UN:
+            unlock_count += 1
+            raise OSError("injected after real publication unlock")
+
+    monkeypatch.setattr(cord_render_assets.fcntl, "flock", unlock_then_raise)
+
+    with pytest.raises(RuntimeError) as captured:
+        cord_render_assets.write_owner_json(target, {"committed": True})
+
+    assert unlock_count == 1
+    assert json.loads(target.read_text(encoding="utf-8")) == {"committed": True}
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert any(
+        "injected after real publication unlock" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_partial_multi_owner_flock_failure_releases_and_closes_every_descriptor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first = _context(tmp_path, "partial-flock-first") / "first.json"
+    second = _context(tmp_path, "partial-flock-second") / "second.json"
+    original_flock = cord_render_assets.fcntl.flock
+    exclusive_fds: list[int] = []
+    unlocked_fds: list[int] = []
+
+    def fail_second_exclusive_flock(descriptor: int, operation: int) -> None:
+        if operation & cord_render_assets.fcntl.LOCK_EX:
+            exclusive_fds.append(descriptor)
+            if len(exclusive_fds) == 2:
+                raise OSError("injected second owner flock failure")
+        if operation & cord_render_assets.fcntl.LOCK_UN:
+            unlocked_fds.append(descriptor)
+        original_flock(descriptor, operation)
+
+    monkeypatch.setattr(
+        cord_render_assets.fcntl,
+        "flock",
+        fail_second_exclusive_flock,
+    )
+
+    with pytest.raises(OSError, match="injected second owner flock failure"):
+        with cord_render_assets._publication_transaction_lock((first, second)):
+            raise AssertionError("lock acquisition must fail before yielding")
+
+    assert len(exclusive_fds) == 2
+    assert unlocked_fds == [exclusive_fds[0]]
+    for descriptor in exclusive_fds:
+        with pytest.raises(OSError):
+            os.fstat(descriptor)
+    assert not first.exists()
+    assert not second.exists()
+
+
+def test_postcommit_first_item_cleanup_failure_still_cleans_later_item(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "continued-postcommit-cleanup")
+    first = context / "first.json"
+    second = context / "second.json"
+    first.write_bytes(b"first-prior")
+    second.write_bytes(b"second-prior")
+    original_unlink = cord_render_assets.os.unlink
+    hook_count = 0
+
+    def fail_first_backup_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal hook_count
+        name = Path(os.fsdecode(path)).name
+        if hook_count == 0 and ".backup-" in name:
+            hook_count += 1
+            raise OSError("injected first-item backup cleanup failure")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "unlink", fail_first_backup_unlink)
+
+    with pytest.raises(RuntimeError) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(first, b"first-new", "first report"),
+                cord_render_assets._Publication(
+                    second,
+                    b"second-new",
+                    "second report",
+                ),
+            ]
+        )
+
+    assert hook_count == 1
+    assert first.read_bytes() == b"first-new"
+    assert second.read_bytes() == b"second-new"
+    assert any(
+        path.name.startswith(f".{first.name}.txn-") for path in context.iterdir()
+    )
+    assert not any(
+        path.name.startswith(f".{second.name}.txn-") for path in context.iterdir()
+    )
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert any(
+        "injected first-item backup cleanup failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_committed_close_failure_still_closes_later_items_and_preserves_primary_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "continued-resource-close")
+    first = context / "first.json"
+    second = context / "second.json"
+    first.write_bytes(b"first-prior")
+    second.write_bytes(b"second-prior")
+    original_cleanup = cord_render_assets._cleanup_committed_artifacts
+    original_close = cord_render_assets.os.close
+    original_fstat = cord_render_assets.os.fstat
+    original_rmdir = cord_render_assets.os.rmdir
+    tracked_scratch_fd: int | None = None
+    tracked_anchor_fds: list[int] = []
+    close_calls: list[int] = []
+    rmdir_hook_count = 0
+    close_hook_count = 0
+
+    def fail_first_scratch_rmdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal rmdir_hook_count
+        name = Path(os.fsdecode(path)).name
+        if rmdir_hook_count == 0 and ".txn-" in name and ".cleanup-" in name:
+            rmdir_hook_count += 1
+            raise OSError("injected primary scratch-directory cleanup failure")
+        original_rmdir(path, dir_fd=dir_fd)
+
+    def record_staged_descriptors(
+        staged: list[cord_render_assets._StagedPublication]
+        | tuple[cord_render_assets._StagedPublication, ...],
+    ) -> tuple[list[str], BaseException | None]:
+        nonlocal tracked_scratch_fd
+        tracked_scratch_fd = staged[0].scratch_fd
+        tracked_anchor_fds.extend(item.anchor.parent_fd for item in staged)
+        return original_cleanup(staged)
+
+    def close_first_scratch_then_raise(descriptor: int) -> None:
+        nonlocal close_hook_count
+        close_calls.append(descriptor)
+        original_close(descriptor)
+        if descriptor == tracked_scratch_fd and close_hook_count == 0:
+            close_hook_count += 1
+            raise OSError("injected after real first scratch descriptor close")
+
+    monkeypatch.setattr(cord_render_assets.os, "rmdir", fail_first_scratch_rmdir)
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_cleanup_committed_artifacts",
+        record_staged_descriptors,
+    )
+    monkeypatch.setattr(cord_render_assets.os, "close", close_first_scratch_then_raise)
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(first, b"first-new", "first report"),
+                cord_render_assets._Publication(
+                    second,
+                    b"second-new",
+                    "second report",
+                ),
+            ]
+        )
+
+    still_open: list[int] = []
+    for descriptor in tracked_anchor_fds:
+        try:
+            original_fstat(descriptor)
+        except OSError:
+            continue
+        still_open.append(descriptor)
+    for descriptor in still_open:
+        original_close(descriptor)
+
+    assert rmdir_hook_count == 1
+    assert close_hook_count == 1
+    assert tracked_scratch_fd is not None
+    assert tracked_scratch_fd in close_calls
+    assert set(tracked_anchor_fds) <= set(close_calls)
+    assert not still_open, f"later publication descriptors leaked: {still_open}"
+    assert first.read_bytes() == b"first-new"
+    assert second.read_bytes() == b"second-new"
+    assert isinstance(captured.value, RuntimeError)
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert "descriptor" in str(captured.value).lower()
+    chain = _exception_chain_messages(captured.value)
+    assert any(
+        "injected primary scratch-directory cleanup failure" in message
+        for message in chain
+    )
+    assert "injected after real first scratch descriptor close" in str(captured.value)
+
+
+def test_unexpected_postcommit_cleanup_exception_is_phase_wrapped_without_rollback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "unexpected-postcommit-cleanup")
+    target = context / "report.json"
+    prior_payload = b"prior-report"
+    committed_payload = b"committed-report"
+    target.write_bytes(prior_payload)
+    cleanup_failure = OSError("injected top-level postcommit cleanup crash")
+
+    def fail_cleanup_executor(
+        staged: list[cord_render_assets._StagedPublication]
+        | tuple[cord_render_assets._StagedPublication, ...],
+    ) -> tuple[list[str], BaseException | None]:
+        assert len(staged) == 1
+        raise cleanup_failure
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_cleanup_committed_artifacts",
+        fail_cleanup_executor,
+    )
+
+    with pytest.raises(RuntimeError) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    committed_payload,
+                    "unexpected cleanup report",
+                )
+            ]
+        )
+
+    assert target.read_bytes() == committed_payload
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is cleanup_failure
+    assert any(
+        path.name.startswith(f".{target.name}.txn-") for path in context.iterdir()
+    ), "unreleased prior recovery state must remain disclosed on cleanup crash"
+
+
+def test_post_real_scratch_descriptor_close_failure_is_never_reclosed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "post-real-scratch-close")
+    target = context / "report.json"
+    target.write_bytes(b"prior-report")
+    original_close = cord_render_assets.os.close
+    original_remove = cord_render_assets._remove_scratch_directory
+    scratch_fd: int | None = None
+    scratch_fd_after_remove: int | None = None
+    hook_count = 0
+
+    def record_scratch_descriptor(
+        item: cord_render_assets._StagedPublication,
+    ) -> None:
+        nonlocal scratch_fd, scratch_fd_after_remove
+        scratch_fd = item.scratch_fd
+        try:
+            original_remove(item)
+        finally:
+            scratch_fd_after_remove = item.scratch_fd
+
+    def close_scratch_then_raise(descriptor: int) -> None:
+        nonlocal hook_count
+        original_close(descriptor)
+        if descriptor == scratch_fd and hook_count == 0:
+            hook_count += 1
+            raise OSError("injected after real scratch descriptor close")
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_remove_scratch_directory",
+        record_scratch_descriptor,
+    )
+    monkeypatch.setattr(cord_render_assets.os, "close", close_scratch_then_raise)
+
+    with pytest.raises(RuntimeError) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"committed-report",
+                    "post-real close report",
+                )
+            ]
+        )
+
+    assert scratch_fd is not None
+    assert hook_count == 1
+    assert scratch_fd_after_remove == -1
+    assert target.read_bytes() == b"committed-report"
+    assert not any(
+        path.name.startswith(f".{target.name}.txn-") for path in context.iterdir()
+    )
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert any(
+        "injected after real scratch descriptor close" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_unexpected_rollback_executor_exception_is_wrapped_with_both_failures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "unexpected-rollback-executor")
+    target = context / "report.json"
+    target.write_bytes(b"prior-report")
+    callback_failure = ValueError("injected precommit validation failure")
+    rollback_failure = OSError("injected rollback executor crash")
+
+    def fail_validation() -> None:
+        raise callback_failure
+
+    def fail_rollback_executor(
+        staged: list[cord_render_assets._StagedPublication]
+        | tuple[cord_render_assets._StagedPublication, ...],
+        created_directories: list[cord_render_assets._CreatedDirectory]
+        | tuple[cord_render_assets._CreatedDirectory, ...],
+    ) -> list[str]:
+        assert len(staged) == 1
+        assert created_directories == []
+        raise rollback_failure
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_rollback_artifacts",
+        fail_rollback_executor,
+    )
+
+    with pytest.raises(RuntimeError) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"new-report",
+                    "unexpected rollback report",
+                )
+            ],
+            validate_before_commit=fail_validation,
+        )
+
+    assert "rollback state is unproven" in str(captured.value).lower()
+    assert "injected rollback executor crash" in str(captured.value)
+    assert "injected precommit validation failure" in str(captured.value)
+    assert captured.value.__cause__ is rollback_failure
+
+
+def test_scratch_leaf_quarantine_post_rename_failure_reconciles_both_names(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "scratch-leaf-post-rename")
+    target = context / "report.json"
+    target.write_bytes(b"prior-report")
+    original_rename = cord_render_assets.os.rename
+    attempted_names: tuple[str, str] | None = None
+
+    def rename_backup_then_raise(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal attempted_names
+        source_name = Path(os.fsdecode(source)).name
+        destination_name = Path(os.fsdecode(destination)).name
+        if (
+            attempted_names is None
+            and ".backup-" in source_name
+            and ".cleanup-" in destination_name
+        ):
+            assert src_dir_fd is not None
+            assert src_dir_fd == dst_dir_fd
+            original_rename(
+                source,
+                destination,
+                src_dir_fd=src_dir_fd,
+                dst_dir_fd=dst_dir_fd,
+            )
+            attempted_names = source_name, destination_name
+            raise OSError("injected after real scratch-leaf quarantine rename")
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    monkeypatch.setattr(cord_render_assets.os, "rename", rename_backup_then_raise)
+
+    with pytest.raises(RuntimeError) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"committed-report",
+                    "scratch leaf report",
+                )
+            ]
+        )
+
+    assert attempted_names is not None
+    source_name, quarantine_name = attempted_names
+    retained_names = {path.name for path in context.rglob("*")}
+    assert source_name not in retained_names
+    assert quarantine_name in retained_names
+    assert target.read_bytes() == b"committed-report"
+    assert quarantine_name in str(captured.value)
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    assert any(
+        "injected after real scratch-leaf quarantine rename" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_precommit_nested_parent_failure_retains_monotonic_directories(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "monotonic-created-parents")
+    created_a = context / "created-a"
+    created_b = created_a / "created-b"
+    target = created_b / "report.json"
+    original_mkdir = cord_render_assets.os.mkdir
+    original_rmdir = cord_render_assets.os.rmdir
+    created_parent_mkdir_names: list[str] = []
+    created_parent_rmdir_names: list[str] = []
+
+    def track_created_parent_mkdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        name = Path(os.fsdecode(path)).name
+        if name in {created_a.name, created_b.name}:
+            created_parent_mkdir_names.append(name)
+        original_mkdir(path, mode, dir_fd=dir_fd)
+
+    def reject_created_parent_rmdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        name = Path(os.fsdecode(path)).name
+        if name in {created_a.name, created_b.name}:
+            created_parent_rmdir_names.append(name)
+        original_rmdir(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "mkdir",
+        track_created_parent_mkdir,
+    )
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "rmdir",
+        reject_created_parent_rmdir,
+    )
+    unexpected_prior = b"unexpected-prior"
+    expectation = cord_render_assets._LeafExpectation(
+        (0, 0),
+        unexpected_prior,
+        hashlib.sha256(unexpected_prior).hexdigest(),
+    )
+
+    failure: Exception | None = None
+    try:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"new-publication",
+                    "monotonic parent report",
+                    expectation,
+                )
+            ]
+        )
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
+        failure = error
+
+    assert created_parent_mkdir_names == [created_a.name, created_b.name]
+    assert created_parent_rmdir_names == []
+    assert created_a.is_dir()
+    assert created_b.is_dir()
+    assert target.exists() is False
+    assert _file_bytes(context) == {}
+    assert failure is not None
+    assert isinstance(failure, RuntimeError)
+    assert "rollback" in str(failure).lower()
+    assert "unproven" in str(failure).lower()
+    assert str(created_a) in str(failure)
+    assert str(created_b) in str(failure)
+    assert failure.__cause__ is not None
+    assert any(
+        "changed during operation" in message
+        for message in _exception_chain_messages(failure)
+    )
+
+
+def test_final_precommit_verifier_preserves_same_byte_foreign_and_prior_recovery(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "final-precommit-verifier")
+    target = context / "report.json"
+    prior_payload = b"original-prior-payload"
+    transaction_payload = b"transaction-publication"
+    target.write_bytes(prior_payload)
+    prior_identity = _path_identity(target)
+    original_verifier = cord_render_assets._verify_published_artifacts
+    validation_returned = False
+    verifier_calls = 0
+    post_validation_verifier_calls = 0
+    replacement_count = 0
+    foreign_identity: tuple[int, int] | None = None
+
+    def complete_validation() -> None:
+        nonlocal validation_returned
+        validation_returned = True
+
+    def replace_before_sole_final_precommit_verifier(
+        staged: list[cord_render_assets._StagedPublication]
+        | tuple[cord_render_assets._StagedPublication, ...],
+    ) -> None:
+        nonlocal foreign_identity, post_validation_verifier_calls
+        nonlocal replacement_count, verifier_calls
+        verifier_calls += 1
+        if validation_returned:
+            post_validation_verifier_calls += 1
+            if post_validation_verifier_calls == 1:
+                replacement_count += 1
+                item = staged[0]
+                foreign_name = ".final-precommit-same-byte-foreign"
+                descriptor = cord_render_assets.os.open(
+                    foreign_name,
+                    cord_render_assets._CREATE_FLAGS,
+                    0o600,
+                    dir_fd=item.anchor.parent_fd,
+                )
+                try:
+                    cord_render_assets._write_all(descriptor, transaction_payload)
+                finally:
+                    cord_render_assets.os.close(descriptor)
+                cord_render_assets.os.replace(
+                    foreign_name,
+                    item.anchor.leaf,
+                    src_dir_fd=item.anchor.parent_fd,
+                    dst_dir_fd=item.anchor.parent_fd,
+                )
+                foreign_identity = _path_identity(target)
+        original_verifier(staged)
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_verify_published_artifacts",
+        replace_before_sole_final_precommit_verifier,
+    )
+
+    failure: Exception | None = None
+    try:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    transaction_payload,
+                    "final precommit report",
+                )
+            ],
+            validate_before_commit=complete_validation,
+        )
+    except Exception as error:  # noqa: BLE001 - inspect the complete failure chain
+        failure = error
+
+    assert validation_returned is True
+    assert verifier_calls == 2
+    assert post_validation_verifier_calls == 1
+    assert replacement_count == 1
+    assert foreign_identity is not None
+    assert foreign_identity != prior_identity
+    assert _path_identity(target) == foreign_identity
+    assert target.read_bytes() == transaction_payload
+    assert _retained_paths_with_identity(
+        context,
+        identity=prior_identity,
+        payload=prior_payload,
+        excluding=target,
+    ), "precommit failure must retain the exact prior recovery inode"
+    assert failure is not None
+    assert isinstance(failure, RuntimeError)
+    assert "rollback" in str(failure).lower()
+    assert "unproven" in str(failure).lower()
+    assert failure.__cause__ is not None
+    assert any(
+        "published artifact verification failed" in message
+        for message in _exception_chain_messages(failure)
+    )
 
 
 def test_atlas_rollback_uses_payload_fallback_after_transient_backup_restore_error(
@@ -2382,16 +3871,15 @@ def test_partial_nested_parent_failure_cleans_or_discloses_and_closes_descriptor
     assert not unclosed_created_parent_fds
     assert not target.exists()
     assert _file_bytes(context) == {}
+    assert created_a.is_dir()
     assert any(
         "injected nested parent creation failure" in message for message in chain
     )
-    if created_a.exists():
-        assert isinstance(captured.value, RuntimeError)
-        assert "rollback" in str(captured.value).lower()
-        assert "unproven" in str(captured.value).lower()
-        assert captured.value.__cause__ is not None
-    else:
-        assert not any(context.iterdir())
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert str(created_a) in str(captured.value)
+    assert captured.value.__cause__ is not None
 
 
 def test_atlas_final_verifier_failure_restores_prior_pages_index_report_and_stale_page(
@@ -2468,15 +3956,25 @@ def test_atlas_final_verifier_failure_removes_initial_publication(
         cord_render_assets, "verify_atlas_round_trip", failing_final_verifier
     )
 
-    with pytest.raises(ValueError, match="injected first-build verification failure"):
+    with pytest.raises(RuntimeError) as captured:
         build_lossless_atlases_with_report(
             [source], output, report_path=external_report
         )
 
     assert hook_ran is True
-    assert not output.exists()
+    assert output.is_dir()
     assert not external_report.exists()
-    assert not external_report.parent.exists()
+    assert external_report.parent.is_dir()
+    assert _file_bytes(output) == {}
+    assert _file_bytes(external_report.parent) == {}
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert str(output) in str(captured.value)
+    assert str(external_report.parent) in str(captured.value)
+    assert any(
+        "injected first-build verification failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
 
 
 def test_atlas_verifier_rejects_tampered_index_constants(tmp_path: Path) -> None:

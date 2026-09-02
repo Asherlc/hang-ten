@@ -6,6 +6,7 @@ narrow boundary-edge decontamination is the only output transform here.
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import io
 import json
@@ -14,8 +15,11 @@ import os
 import re
 import secrets
 import stat
+import sys
+import threading
 from collections import deque
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Iterator, Sequence
+from contextlib import contextmanager
 from dataclasses import dataclass, field, replace
 from datetime import date
 from enum import Enum
@@ -70,6 +74,28 @@ if hasattr(os, "O_CLOEXEC"):
     _CREATE_FLAGS |= os.O_CLOEXEC
 
 
+@dataclass
+class _HeldOwnerLock:
+    root: Path
+    anchor: _HeldParent
+    identity: tuple[int, int]
+    locked: bool = False
+
+    def close(self) -> None:
+        self.anchor.close()
+
+
+class _PublicationLockStateError(RuntimeError):
+    pass
+
+
+_PUBLICATION_PROCESS_LOCK = threading.RLock()
+_PUBLICATION_LOCK_PID = os.getpid()
+_PUBLICATION_LOCK_DEPTH = 0
+_PUBLICATION_LOCK_ROOTS: frozenset[Path] = frozenset()
+_PUBLICATION_OWNER_LOCKS: list[_HeldOwnerLock] = []
+
+
 def _absolute(path: Path) -> Path:
     return Path(os.path.abspath(os.fspath(path)))
 
@@ -88,8 +114,35 @@ class _HeldParent:
 
     def close(self) -> None:
         if self.parent_fd >= 0:
-            os.close(self.parent_fd)
+            descriptor = self.parent_fd
             self.parent_fd = -1
+            os.close(descriptor)
+
+
+def _close_descriptor_and_anchor(
+    descriptor: int,
+    anchor: _HeldParent,
+    *,
+    label: str,
+) -> None:
+    failures: list[str] = []
+    first_error: BaseException | None = None
+    if descriptor >= 0:
+        try:
+            os.close(descriptor)
+        except BaseException as error:
+            first_error = error
+            failures.append(f"leaf descriptor {descriptor}: {error}")
+    try:
+        anchor.close()
+    except BaseException as error:
+        if first_error is None:
+            first_error = error
+        failures.append(f"parent descriptor: {error}")
+    if failures:
+        raise RuntimeError(
+            f"{label} resource cleanup is unproven: " + "; ".join(failures)
+        ) from first_error
 
 
 class _CreationLifecycle(Enum):
@@ -110,8 +163,9 @@ class _CreatedDirectory:
 
     def close(self) -> None:
         if self.parent_fd >= 0:
-            os.close(self.parent_fd)
+            descriptor = self.parent_fd
             self.parent_fd = -1
+            os.close(descriptor)
 
 
 def _path_parts(path: Path) -> tuple[Path, tuple[str, ...]]:
@@ -146,53 +200,62 @@ def _open_parent(
             current /= component
             creation: _CreatedDirectory | None = None
             mkdir_returned = False
+            next_descriptor = -1
             try:
-                next_descriptor = os.open(
-                    component, _DIRECTORY_FLAGS, dir_fd=descriptor
-                )
-            except FileNotFoundError:
-                if not create:
-                    raise
-                creation = _CreatedDirectory(
-                    current,
-                    os.dup(descriptor),
-                    component,
-                )
-                ledger.append(creation)
                 try:
-                    os.mkdir(component, 0o700, dir_fd=descriptor)
-                except FileExistsError:
-                    pass
-                else:
-                    mkdir_returned = True
-                next_descriptor = os.open(
-                    component, _DIRECTORY_FLAGS, dir_fd=descriptor
-                )
-            except OSError as error:
-                raise ValueError(
-                    f"symlink or non-directory path component is rejected: {current}"
-                ) from error
-            metadata = os.fstat(next_descriptor)
-            if not stat.S_ISDIR(metadata.st_mode):
-                os.close(next_descriptor)
-                raise ValueError(f"path component is not a directory: {current}")
-            if creation is not None and mkdir_returned:
-                visible = os.stat(
-                    component,
-                    dir_fd=descriptor,
-                    follow_symlinks=False,
-                )
-                if not stat.S_ISDIR(visible.st_mode) or _identity(visible) != _identity(
-                    metadata
-                ):
+                    next_descriptor = os.open(
+                        component, _DIRECTORY_FLAGS, dir_fd=descriptor
+                    )
+                except FileNotFoundError:
+                    if not create:
+                        raise
+                    creation = _CreatedDirectory(
+                        current,
+                        os.dup(descriptor),
+                        component,
+                    )
+                    ledger.append(creation)
+                    try:
+                        os.mkdir(component, 0o700, dir_fd=descriptor)
+                    except FileExistsError:
+                        pass
+                    else:
+                        mkdir_returned = True
+                    next_descriptor = os.open(
+                        component, _DIRECTORY_FLAGS, dir_fd=descriptor
+                    )
+                except OSError as error:
+                    raise ValueError(
+                        "symlink or non-directory path component is rejected: "
+                        f"{current}"
+                    ) from error
+                metadata = os.fstat(next_descriptor)
+                if not stat.S_ISDIR(metadata.st_mode):
+                    raise ValueError(f"path component is not a directory: {current}")
+                if creation is not None and mkdir_returned:
+                    visible = os.stat(
+                        component,
+                        dir_fd=descriptor,
+                        follow_symlinks=False,
+                    )
+                    if not stat.S_ISDIR(visible.st_mode) or _identity(
+                        visible
+                    ) != _identity(metadata):
+                        raise ValueError(
+                            f"created directory identity changed: {current}"
+                        )
+                    creation.identity = _identity(metadata)
+                    creation.lifecycle = _CreationLifecycle.OWNED
+                    created_paths.append(current)
+                chain.append((component, metadata.st_dev, metadata.st_ino))
+                previous_descriptor = descriptor
+                descriptor = -1
+                os.close(previous_descriptor)
+                descriptor = next_descriptor
+                next_descriptor = -1
+            finally:
+                if next_descriptor >= 0:
                     os.close(next_descriptor)
-                    raise ValueError(f"created directory identity changed: {current}")
-                creation.identity = _identity(metadata)
-                creation.lifecycle = _CreationLifecycle.OWNED
-                created_paths.append(current)
-            chain.append((component, metadata.st_dev, metadata.st_ino))
-            os.close(descriptor)
-            descriptor = next_descriptor
         anchor = _HeldParent(
             absolute,
             descriptor,
@@ -204,8 +267,9 @@ def _open_parent(
         return anchor
     except BaseException as error:
         if descriptor >= 0:
-            os.close(descriptor)
+            closing_descriptor = descriptor
             descriptor = -1
+            os.close(closing_descriptor)
         if owns_ledger:
             failures = _rollback_created_directories(ledger)
             if failures:
@@ -215,7 +279,9 @@ def _open_parent(
         raise
     finally:
         if descriptor >= 0:
-            os.close(descriptor)
+            closing_descriptor = descriptor
+            descriptor = -1
+            os.close(closing_descriptor)
         if owns_ledger:
             for creation in ledger:
                 creation.close()
@@ -233,19 +299,27 @@ def _revalidate_anchor(
         if _identity(root) != (expected_root[1], expected_root[2]):
             raise ValueError(f"path changed during operation: {anchor.path}")
         for component, expected_device, expected_inode in anchor.chain[1:]:
+            next_descriptor = -1
             try:
-                next_descriptor = os.open(
-                    component, _DIRECTORY_FLAGS, dir_fd=descriptor
-                )
-            except OSError as error:
-                raise ValueError(
-                    f"path changed during operation: {anchor.path}"
-                ) from error
-            metadata = os.fstat(next_descriptor)
-            os.close(descriptor)
-            descriptor = next_descriptor
-            if _identity(metadata) != (expected_device, expected_inode):
-                raise ValueError(f"path changed during operation: {anchor.path}")
+                try:
+                    next_descriptor = os.open(
+                        component, _DIRECTORY_FLAGS, dir_fd=descriptor
+                    )
+                except OSError as error:
+                    raise ValueError(
+                        f"path changed during operation: {anchor.path}"
+                    ) from error
+                metadata = os.fstat(next_descriptor)
+                if _identity(metadata) != (expected_device, expected_inode):
+                    raise ValueError(f"path changed during operation: {anchor.path}")
+                previous_descriptor = descriptor
+                descriptor = -1
+                os.close(previous_descriptor)
+                descriptor = next_descriptor
+                next_descriptor = -1
+            finally:
+                if next_descriptor >= 0:
+                    os.close(next_descriptor)
         if _identity(os.fstat(descriptor)) != _identity(os.fstat(anchor.parent_fd)):
             raise ValueError(f"path changed during operation: {anchor.path}")
         if leaf_identity is not None:
@@ -260,7 +334,10 @@ def _revalidate_anchor(
             if stat.S_ISLNK(metadata.st_mode) or _identity(metadata) != leaf_identity:
                 raise ValueError(f"path changed during operation: {anchor.path}")
     finally:
-        os.close(descriptor)
+        if descriptor >= 0:
+            closing_descriptor = descriptor
+            descriptor = -1
+            os.close(closing_descriptor)
 
 
 def _reject_symlink_components(path: Path) -> None:
@@ -319,6 +396,217 @@ def _maybe_owner_context(path: Path) -> Path | None:
         return None
 
 
+def _reset_publication_lock_state_after_fork() -> None:
+    """Forget inherited locks without unlocking the parent's file descriptions."""
+
+    global _PUBLICATION_LOCK_DEPTH
+    global _PUBLICATION_LOCK_PID
+    global _PUBLICATION_LOCK_ROOTS
+    global _PUBLICATION_OWNER_LOCKS
+    global _PUBLICATION_PROCESS_LOCK
+
+    inherited = _PUBLICATION_OWNER_LOCKS
+    _PUBLICATION_PROCESS_LOCK = threading.RLock()
+    _PUBLICATION_LOCK_PID = os.getpid()
+    _PUBLICATION_LOCK_DEPTH = 0
+    _PUBLICATION_LOCK_ROOTS = frozenset()
+    _PUBLICATION_OWNER_LOCKS = []
+    for owner_lock in inherited:
+        try:
+            owner_lock.close()
+        except OSError:
+            pass
+
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(after_in_child=_reset_publication_lock_state_after_fork)
+
+
+def _ensure_publication_lock_process() -> None:
+    if _PUBLICATION_LOCK_PID != os.getpid():
+        _reset_publication_lock_state_after_fork()
+
+
+def _open_owner_lock(root: Path) -> _HeldOwnerLock:
+    creation_ledger: list[_CreatedDirectory] = []
+    anchor: _HeldParent | None = None
+    try:
+        anchor = _open_parent(
+            root / ".publication-lock-anchor",
+            create=True,
+            creation_ledger=creation_ledger,
+        )
+        metadata = os.fstat(anchor.parent_fd)
+    except BaseException as error:
+        cleanup_failures: list[str] = []
+        if anchor is not None:
+            try:
+                anchor.close()
+            except BaseException as cleanup_error:
+                cleanup_failures.append(f"owner anchor close: {cleanup_error}")
+        for creation in creation_ledger:
+            try:
+                creation.close()
+            except BaseException as cleanup_error:
+                cleanup_failures.append(
+                    f"creation ledger close {creation.path}: {cleanup_error}"
+                )
+        if cleanup_failures:
+            raise _PublicationLockStateError(
+                "publication lock acquisition cleanup is unproven: "
+                + "; ".join(cleanup_failures)
+            ) from error
+        raise
+    cleanup_failures = []
+    for creation in creation_ledger:
+        try:
+            creation.close()
+        except BaseException as error:
+            cleanup_failures.append(f"creation ledger close {creation.path}: {error}")
+    if cleanup_failures:
+        try:
+            anchor.close()
+        except BaseException as error:
+            cleanup_failures.append(f"owner anchor close: {error}")
+        raise _PublicationLockStateError(
+            "publication lock acquisition cleanup is unproven: "
+            + "; ".join(cleanup_failures)
+        )
+    return _HeldOwnerLock(root, anchor, _identity(metadata))
+
+
+def _revalidate_owner_lock(owner_lock: _HeldOwnerLock) -> None:
+    _revalidate_anchor(owner_lock.anchor)
+    if _identity(os.fstat(owner_lock.anchor.parent_fd)) != owner_lock.identity:
+        raise ValueError(f"owner context changed during operation: {owner_lock.root}")
+
+
+def _release_owner_locks(owner_locks: Sequence[_HeldOwnerLock]) -> list[str]:
+    failures: list[str] = []
+    for owner_lock in reversed(owner_locks):
+        if owner_lock.locked:
+            try:
+                fcntl.flock(owner_lock.anchor.parent_fd, fcntl.LOCK_UN)
+            except BaseException as error:
+                failures.append(f"unlock {owner_lock.root}: {error}")
+            owner_lock.locked = False
+    for owner_lock in reversed(owner_locks):
+        try:
+            owner_lock.close()
+        except BaseException as error:
+            failures.append(f"close lock descriptor {owner_lock.root}: {error}")
+    return failures
+
+
+@contextmanager
+def _publication_transaction_lock(paths: Sequence[Path]) -> Iterator[None]:
+    """Serialize supported writers without creating a persistent lock file."""
+
+    global _PUBLICATION_LOCK_DEPTH
+    global _PUBLICATION_LOCK_ROOTS
+    global _PUBLICATION_OWNER_LOCKS
+
+    _ensure_publication_lock_process()
+    _PUBLICATION_PROCESS_LOCK.acquire()
+    body_error: BaseException | None = None
+    outermost = False
+    try:
+        _ensure_publication_lock_process()
+        roots = frozenset(_owner_context(path) for path in paths)
+        if _PUBLICATION_LOCK_DEPTH:
+            if not roots <= _PUBLICATION_LOCK_ROOTS:
+                added = sorted(roots - _PUBLICATION_LOCK_ROOTS, key=os.fspath)
+                raise RuntimeError(
+                    "nested publication lock cannot broaden owner contexts: "
+                    + ", ".join(os.fspath(path) for path in added)
+                )
+            _PUBLICATION_LOCK_DEPTH += 1
+        else:
+            outermost = True
+            opened: list[_HeldOwnerLock] = []
+            try:
+                for root in sorted(roots, key=os.fspath):
+                    opened.append(_open_owner_lock(root))
+
+                unique: list[_HeldOwnerLock] = []
+                seen_identities: set[tuple[int, int]] = set()
+                for owner_lock in sorted(
+                    opened,
+                    key=lambda value: (
+                        value.identity[0],
+                        value.identity[1],
+                        os.fspath(value.root),
+                    ),
+                ):
+                    if owner_lock.identity in seen_identities:
+                        raise ValueError(
+                            "owner contexts alias the same directory identity: "
+                            f"{owner_lock.root}"
+                        )
+                    seen_identities.add(owner_lock.identity)
+                    unique.append(owner_lock)
+                opened = unique
+
+                for owner_lock in opened:
+                    fcntl.flock(owner_lock.anchor.parent_fd, fcntl.LOCK_EX)
+                    owner_lock.locked = True
+                    _revalidate_owner_lock(owner_lock)
+            except BaseException as error:
+                release_failures = _release_owner_locks(opened)
+                if release_failures:
+                    raise _PublicationLockStateError(
+                        "publication lock acquisition cleanup is unproven: "
+                        + "; ".join(release_failures)
+                    ) from error
+                raise
+            _PUBLICATION_OWNER_LOCKS = opened
+            _PUBLICATION_LOCK_ROOTS = roots
+            _PUBLICATION_LOCK_DEPTH = 1
+
+        try:
+            yield
+        except BaseException as error:
+            body_error = error
+            raise
+        finally:
+            _PUBLICATION_LOCK_DEPTH -= 1
+            if outermost:
+                owner_locks = _PUBLICATION_OWNER_LOCKS
+                _PUBLICATION_OWNER_LOCKS = []
+                _PUBLICATION_LOCK_ROOTS = frozenset()
+                release_failures = _release_owner_locks(owner_locks)
+                if release_failures:
+                    detail = "; ".join(release_failures)
+                    raise _PublicationLockStateError(
+                        f"publication lock release is unproven: {detail}"
+                    ) from body_error
+    finally:
+        _PUBLICATION_PROCESS_LOCK.release()
+
+
+def _assert_path_uses_locked_owner(path: Path, anchor: _HeldParent) -> None:
+    root = _owner_context(path)
+    for owner_lock in _PUBLICATION_OWNER_LOCKS:
+        if owner_lock.root == root:
+            _revalidate_owner_lock(owner_lock)
+            try:
+                _absolute(path).relative_to(root)
+            except ValueError as error:
+                raise RuntimeError(
+                    f"publication path escaped its locked owner context: {path}"
+                ) from error
+            root_chain_index = len(root.parts) - 1
+            if root_chain_index >= len(anchor.chain):
+                raise RuntimeError(
+                    f"publication path does not traverse its locked owner: {path}"
+                )
+            chain_component = anchor.chain[root_chain_index]
+            if (chain_component[1], chain_component[2]) != owner_lock.identity:
+                raise RuntimeError(f"publication path owner identity changed: {path}")
+            return
+    raise RuntimeError(f"publication owner context is not locked: {root}")
+
+
 def _workspace_root() -> Path:
     configured = os.environ.get("PASEO_WORKTREE_PATH")
     if configured:
@@ -362,9 +650,13 @@ def _read_regular_bytes(path: Path, label: str) -> tuple[Path, bytes, os.stat_re
         _revalidate_anchor(anchor, leaf_identity=_identity(before))
         return absolute, data, before
     finally:
-        if descriptor >= 0:
-            os.close(descriptor)
-        anchor.close()
+        closing_descriptor = descriptor
+        descriptor = -1
+        _close_descriptor_and_anchor(
+            closing_descriptor,
+            anchor,
+            label=label,
+        )
 
 
 def _existing_leaf_metadata(path: Path) -> os.stat_result | None:
@@ -454,6 +746,11 @@ class _PublicationPhase(Enum):
     EXTERNAL_CAPTURED = "external-captured"
 
 
+class _PublicationTransactionPhase(Enum):
+    PRECOMMIT = "precommit"
+    COMMITTED = "committed"
+
+
 class _ScratchLifecycle(Enum):
     UNPLANNED = "unplanned"
     CREATE_ATTEMPTED = "create-attempted"
@@ -465,6 +762,7 @@ class _ScratchLifecycle(Enum):
 class _ScratchLeaf:
     name: str
     purpose: str
+    attempted_names: list[str] = field(default_factory=list)
     present: bool = False
     identity: tuple[int, int] | None = None
     payload: bytes | None = None
@@ -485,16 +783,34 @@ class _StagedPublication:
     temporary: _ScratchLeaf | None = None
     prior: _ScratchLeaf | None = None
     scratch_name: str | None = None
+    scratch_names: list[str] = field(default_factory=list)
     scratch_fd: int = -1
     scratch_identity: tuple[int, int] | None = None
     scratch_lifecycle: _ScratchLifecycle = _ScratchLifecycle.UNPLANNED
     scratch_leaves: list[_ScratchLeaf] = field(default_factory=list)
 
     def close(self) -> None:
+        failures: list[str] = []
+        first_error: BaseException | None = None
         if self.scratch_fd >= 0:
-            os.close(self.scratch_fd)
+            descriptor = self.scratch_fd
             self.scratch_fd = -1
-        self.anchor.close()
+            try:
+                os.close(descriptor)
+            except BaseException as error:
+                first_error = error
+                failures.append(f"scratch descriptor {descriptor}: {error}")
+        try:
+            self.anchor.close()
+        except BaseException as error:
+            if first_error is None:
+                first_error = error
+            failures.append(f"output anchor descriptor: {error}")
+        if failures:
+            raise RuntimeError(
+                "staged publication descriptor cleanup is unproven: "
+                + "; ".join(failures)
+            ) from first_error
 
 
 def _write_all(descriptor: int, payload: bytes) -> None:
@@ -554,56 +870,32 @@ def _rollback_created_directories(
     ledger: Sequence[_CreatedDirectory],
 ) -> list[str]:
     failures: list[str] = []
-    for creation in sorted(
-        ledger,
-        key=lambda value: len(value.path.parts),
-        reverse=True,
-    ):
-        if creation.lifecycle is _CreationLifecycle.REMOVED:
-            continue
-        try:
-            try:
-                metadata = os.stat(
-                    creation.name,
-                    dir_fd=creation.parent_fd,
-                    follow_symlinks=False,
-                )
-            except FileNotFoundError:
-                creation.lifecycle = _CreationLifecycle.REMOVED
-                continue
-            if creation.lifecycle is _CreationLifecycle.CREATE_ATTEMPTED:
-                failures.append(
-                    "created directory ownership is unproven; retaining uncertain "
-                    f"component: {creation.path}"
-                )
-                continue
-            if (
-                creation.identity is None
-                or _identity(metadata) != creation.identity
-                or not stat.S_ISDIR(metadata.st_mode)
-            ):
-                raise RuntimeError("created directory identity changed")
-            os.rmdir(creation.name, dir_fd=creation.parent_fd)
-            creation.lifecycle = _CreationLifecycle.REMOVED
-        except BaseException as error:
-            failures.append(f"created directory cleanup {creation.path}: {error}")
     for creation in ledger:
         if creation.lifecycle is _CreationLifecycle.REMOVED:
             continue
         try:
-            os.stat(
+            metadata = os.stat(
                 creation.name,
                 dir_fd=creation.parent_fd,
                 follow_symlinks=False,
             )
         except FileNotFoundError:
             creation.lifecycle = _CreationLifecycle.REMOVED
-            continue
         except BaseException as error:
-            failures.append(f"created directory verification {creation.path}: {error}")
-        else:
             failures.append(
-                f"created directory remains after rollback: {creation.path}"
+                f"created directory verification is unproven for "
+                f"{creation.path}: {error}"
+            )
+        else:
+            identity_detail = ""
+            if creation.identity is not None and (
+                not stat.S_ISDIR(metadata.st_mode)
+                or _identity(metadata) != creation.identity
+            ):
+                identity_detail = "; visible identity changed"
+            failures.append(
+                "created output-parent directory is monotonic and remains after "
+                f"rollback: {creation.path}{identity_detail}"
             )
     return failures
 
@@ -677,6 +969,7 @@ def _ensure_scratch(item: _StagedPublication) -> None:
     _revalidate_anchor(item.anchor)
     scratch_name = f".{item.anchor.leaf}.txn-{secrets.token_hex(8)}"
     item.scratch_name = scratch_name
+    item.scratch_names.append(scratch_name)
     item.scratch_lifecycle = _ScratchLifecycle.CREATE_ATTEMPTED
     descriptor = -1
     try:
@@ -717,6 +1010,7 @@ def _register_scratch_leaf(
         f".{item.anchor.leaf}.{prefix}-{secrets.token_hex(8)}",
         purpose,
     )
+    entry.attempted_names.append(entry.name)
     item.scratch_leaves.append(entry)
     return entry
 
@@ -963,20 +1257,82 @@ def _verify_published_artifacts(staged: Sequence[_StagedPublication]) -> None:
 
 def _verify_transaction_debris_absent(staged: Sequence[_StagedPublication]) -> None:
     for item in staged:
-        if item.scratch_name is None:
-            continue
+        debris: list[str] = []
+        for name in dict.fromkeys(item.scratch_names):
+            try:
+                os.stat(
+                    name,
+                    dir_fd=item.anchor.parent_fd,
+                    follow_symlinks=False,
+                )
+            except FileNotFoundError:
+                continue
+            except BaseException as error:
+                debris.append(f"{name} (verification error: {error})")
+            else:
+                debris.append(name)
+        if item.scratch_fd >= 0:
+            directory_name = item.scratch_name or "<uncertain-scratch>"
+            for entry in item.scratch_leaves:
+                for name in dict.fromkeys(entry.attempted_names):
+                    try:
+                        os.stat(
+                            name,
+                            dir_fd=item.scratch_fd,
+                            follow_symlinks=False,
+                        )
+                    except FileNotFoundError:
+                        continue
+                    except BaseException as error:
+                        debris.append(
+                            f"{directory_name}/{name} (verification error: {error})"
+                        )
+                    else:
+                        debris.append(f"{directory_name}/{name}")
+        if debris:
+            raise ValueError(
+                f"transaction debris remains for {item.publication.role}: "
+                + ", ".join(dict.fromkeys(debris))
+            )
+
+
+def _reconcile_scratch_leaf_attempts(
+    item: _StagedPublication,
+    entry: _ScratchLeaf,
+) -> list[str]:
+    if item.scratch_fd < 0:
+        return list(dict.fromkeys(entry.attempted_names))
+    exact: list[str] = []
+    uncertain: list[str] = []
+    for name in dict.fromkeys(entry.attempted_names):
         try:
-            os.stat(
-                item.scratch_name,
-                dir_fd=item.anchor.parent_fd,
-                follow_symlinks=False,
+            payload, metadata = _read_from_fd(
+                item.scratch_fd,
+                name,
+                label=entry.purpose,
             )
         except FileNotFoundError:
             continue
-        raise ValueError(
-            f"transaction debris remains for {item.publication.role}: "
-            f"{item.scratch_name}"
-        )
+        except BaseException:
+            uncertain.append(name)
+            continue
+        if (
+            entry.identity is not None
+            and _identity(metadata) == entry.identity
+            and (entry.payload is None or payload == entry.payload)
+        ):
+            exact.append(name)
+        else:
+            uncertain.append(name)
+    if exact:
+        entry.name = exact[0]
+        entry.present = True
+    elif not uncertain:
+        entry.present = False
+    else:
+        entry.present = False
+        entry.removable = False
+    return [*exact, *uncertain]
 
 
 def _quarantine_and_remove_scratch_leaf(
@@ -990,6 +1346,7 @@ def _quarantine_and_remove_scratch_leaf(
     expected_identity = entry.identity
     expected_payload = entry.payload
     quarantine = f"{entry.name}.cleanup-{secrets.token_hex(8)}"
+    entry.attempted_names.append(quarantine)
     try:
         os.rename(
             entry.name,
@@ -997,9 +1354,12 @@ def _quarantine_and_remove_scratch_leaf(
             src_dir_fd=item.scratch_fd,
             dst_dir_fd=item.scratch_fd,
         )
-    except FileNotFoundError:
-        entry.present = False
-        return
+    except BaseException as error:
+        surviving = _reconcile_scratch_leaf_attempts(item, entry)
+        detail = ", ".join(surviving or entry.attempted_names)
+        raise RuntimeError(
+            f"scratch leaf quarantine is unproven; attempted names: {detail}"
+        ) from error
     entry.name = quarantine
     payload, metadata = _read_from_fd(
         item.scratch_fd,
@@ -1012,8 +1372,51 @@ def _quarantine_and_remove_scratch_leaf(
         entry.removable = False
         entry.purpose = f"external replacement of {entry.purpose}"
         raise RuntimeError(f"scratch entry identity changed: {entry.name}")
-    os.unlink(entry.name, dir_fd=item.scratch_fd)
+    try:
+        os.unlink(entry.name, dir_fd=item.scratch_fd)
+    except BaseException as error:
+        surviving = _reconcile_scratch_leaf_attempts(item, entry)
+        detail = ", ".join(surviving or entry.attempted_names)
+        raise RuntimeError(
+            f"scratch leaf removal is unproven; attempted names: {detail}"
+        ) from error
     entry.present = False
+
+
+def _reconcile_scratch_directory_attempts(item: _StagedPublication) -> list[str]:
+    exact: list[str] = []
+    uncertain: list[str] = []
+    for name in dict.fromkeys(item.scratch_names):
+        try:
+            metadata = os.stat(
+                name,
+                dir_fd=item.anchor.parent_fd,
+                follow_symlinks=False,
+            )
+        except FileNotFoundError:
+            continue
+        except BaseException:
+            uncertain.append(name)
+            continue
+        if (
+            item.scratch_identity is not None
+            and stat.S_ISDIR(metadata.st_mode)
+            and _identity(metadata) == item.scratch_identity
+        ):
+            exact.append(name)
+        else:
+            uncertain.append(name)
+    if exact:
+        item.scratch_name = exact[0]
+        item.scratch_lifecycle = _ScratchLifecycle.OWNED
+    elif not uncertain:
+        item.scratch_lifecycle = _ScratchLifecycle.REMOVED
+        item.scratch_identity = None
+        if item.scratch_fd >= 0:
+            descriptor = item.scratch_fd
+            item.scratch_fd = -1
+            os.close(descriptor)
+    return [*exact, *uncertain]
 
 
 def _remove_scratch_directory(item: _StagedPublication) -> None:
@@ -1025,41 +1428,33 @@ def _remove_scratch_directory(item: _StagedPublication) -> None:
     if item.scratch_name is None:
         raise RuntimeError("transaction scratch name is unproven")
     if item.scratch_lifecycle is _ScratchLifecycle.CREATE_ATTEMPTED:
-        try:
-            os.stat(
-                item.scratch_name,
-                dir_fd=item.anchor.parent_fd,
-                follow_symlinks=False,
-            )
-        except FileNotFoundError:
-            item.scratch_lifecycle = _ScratchLifecycle.REMOVED
+        surviving = _reconcile_scratch_directory_attempts(item)
+        if not surviving:
             return
-        except BaseException as error:
-            raise RuntimeError(
-                "transaction scratch creation is unproven; retaining possible "
-                f"debris {item.scratch_name}: {error}"
-            ) from error
         raise RuntimeError(
             "transaction scratch creation is unproven; retaining debris "
-            f"{item.scratch_name}"
+            + ", ".join(surviving)
         )
     if any(entry.present for entry in item.scratch_leaves):
         raise RuntimeError("transaction scratch retains recoverable entries")
     if item.scratch_fd < 0 or item.scratch_identity is None:
         raise RuntimeError("transaction scratch ownership is unproven")
     quarantine = f"{item.scratch_name}.cleanup-{secrets.token_hex(8)}"
+    source_name = item.scratch_name
+    item.scratch_names.append(quarantine)
     try:
         os.rename(
-            item.scratch_name,
+            source_name,
             quarantine,
             src_dir_fd=item.anchor.parent_fd,
             dst_dir_fd=item.anchor.parent_fd,
         )
-    except FileNotFoundError:
-        item.scratch_lifecycle = _ScratchLifecycle.REMOVED
-        os.close(item.scratch_fd)
-        item.scratch_fd = -1
-        return
+    except BaseException as error:
+        surviving = _reconcile_scratch_directory_attempts(item)
+        detail = ", ".join(surviving or item.scratch_names)
+        raise RuntimeError(
+            f"scratch directory quarantine is unproven; attempted names: {detail}"
+        ) from error
     item.scratch_name = quarantine
     metadata = os.stat(
         quarantine,
@@ -1068,11 +1463,19 @@ def _remove_scratch_directory(item: _StagedPublication) -> None:
     )
     if _identity(metadata) != item.scratch_identity:
         raise RuntimeError("transaction scratch identity changed")
-    os.close(item.scratch_fd)
+    try:
+        os.rmdir(quarantine, dir_fd=item.anchor.parent_fd)
+    except BaseException as error:
+        surviving = _reconcile_scratch_directory_attempts(item)
+        detail = ", ".join(surviving or item.scratch_names)
+        raise RuntimeError(
+            f"scratch directory removal is unproven; attempted names: {detail}"
+        ) from error
+    descriptor = item.scratch_fd
     item.scratch_fd = -1
-    os.rmdir(quarantine, dir_fd=item.anchor.parent_fd)
     item.scratch_lifecycle = _ScratchLifecycle.REMOVED
     item.scratch_identity = None
+    os.close(descriptor)
 
 
 def _cleanup_scratch(item: _StagedPublication) -> None:
@@ -1092,6 +1495,14 @@ def _cleanup_removable_scratch(item: _StagedPublication) -> None:
             _quarantine_and_remove_scratch_leaf(item, entry)
     if not any(entry.present for entry in item.scratch_leaves):
         _remove_scratch_directory(item)
+
+
+def _cleanup_precommit_scratch(item: _StagedPublication) -> None:
+    if item.temporary is not None:
+        item.temporary.removable = True
+    for entry in item.scratch_leaves:
+        if entry.present and entry.removable:
+            _quarantine_and_remove_scratch_leaf(item, entry)
 
 
 def _restore_prior_with_no_clobber_link(item: _StagedPublication) -> None:
@@ -1241,6 +1652,8 @@ def _rollback_item(item: _StagedPublication) -> None:
             original_phase is _PublicationPhase.NEW_VISIBLE
             and item.temporary is not None
             and captured_identity == item.temporary.identity
+            and captured_payload == item.temporary.payload
+            and captured_payload == item.publication.payload
         )
         prior_already_visible = (
             item.prior_observed
@@ -1306,16 +1719,14 @@ def _rollback_artifacts(
             restored_items.add(id(item))
 
         try:
-            _cleanup_removable_scratch(item)
-        except BaseException as error:
-            failures.append(f"{item.publication.role} scratch cleanup: {error}")
-            restored_items.discard(id(item))
-        try:
             _fsync_directory(item.anchor.parent_fd)
         except BaseException as error:
             failures.append(f"{item.publication.role} directory sync: {error}")
             restored_items.discard(id(item))
 
+    all_outputs_restored = len(restored_items) == len(staged)
+    # This is the sole all-output rollback verifier. Original-prior recovery
+    # evidence remains non-removable until every restored item passes it.
     for item in staged:
         try:
             if not _rollback_visible_matches(item):
@@ -1325,9 +1736,10 @@ def _rollback_artifacts(
         except BaseException as error:
             failures.append(f"{item.publication.role} rollback verification: {error}")
             restored_items.discard(id(item))
+            all_outputs_restored = False
 
     for item in staged:
-        if id(item) in restored_items:
+        if all_outputs_restored:
             for entry in item.scratch_leaves:
                 entry.removable = True
         try:
@@ -1337,25 +1749,98 @@ def _rollback_artifacts(
 
     for item in staged:
         try:
-            if not _rollback_visible_matches(item):
-                raise RuntimeError(
-                    "rollback leaf identity, bytes, or observed absence do not match"
-                )
             _verify_transaction_debris_absent([item])
         except BaseException as error:
-            failures.append(
-                f"{item.publication.role} final rollback verification: {error}"
-            )
+            failures.append(f"{item.publication.role} retained recovery state: {error}")
 
     failures.extend(_rollback_created_directories(created_directories))
     return failures
 
 
-def _publish_artifacts(
+def _cleanup_committed_artifacts(
+    staged: Sequence[_StagedPublication],
+) -> tuple[list[str], BaseException | None]:
+    failures: list[str] = []
+    first_error: BaseException | None = None
+
+    def record(label: str, error: BaseException) -> None:
+        nonlocal first_error
+        if first_error is None:
+            first_error = error
+        failures.append(f"{label}: {error}")
+
+    for item in staged:
+        for entry in item.scratch_leaves:
+            entry.removable = True
+
+    for item in staged:
+        for entry in item.scratch_leaves:
+            if not entry.present:
+                continue
+            try:
+                _quarantine_and_remove_scratch_leaf(item, entry)
+            except BaseException as error:
+                record(
+                    f"{item.publication.role} scratch leaf cleanup",
+                    error,
+                )
+        if not any(entry.present for entry in item.scratch_leaves):
+            try:
+                _remove_scratch_directory(item)
+            except BaseException as error:
+                record(
+                    f"{item.publication.role} scratch directory cleanup",
+                    error,
+                )
+        try:
+            _fsync_directory(item.anchor.parent_fd)
+        except BaseException as error:
+            record(f"{item.publication.role} directory sync", error)
+
+    try:
+        _verify_published_artifacts(staged)
+    except BaseException as error:
+        record("committed output verification", error)
+    for item in staged:
+        try:
+            _verify_transaction_debris_absent([item])
+        except BaseException as error:
+            record(f"{item.publication.role} cleanup verification", error)
+    return failures, first_error
+
+
+def _close_publication_resources(
+    staged: Sequence[_StagedPublication],
+    created_directories: Sequence[_CreatedDirectory],
+) -> tuple[list[str], BaseException | None]:
+    failures: list[str] = []
+    first_error: BaseException | None = None
+
+    def record(label: str, error: BaseException) -> None:
+        nonlocal first_error
+        if first_error is None:
+            first_error = error
+        failures.append(f"{label}: {error}")
+
+    for item in staged:
+        try:
+            item.close()
+        except BaseException as error:
+            record(f"{item.publication.role} descriptors", error)
+    for creation in created_directories:
+        try:
+            creation.close()
+        except BaseException as error:
+            record(f"created directory ledger {creation.path}", error)
+    return failures, first_error
+
+
+def _publish_artifacts_locked(
     publications: Sequence[_Publication],
-    *,
-    validate_before_commit: Callable[[], None] | None = None,
+    validate_before_commit: Callable[[], None] | None,
+    transaction_phase: list[_PublicationTransactionPhase | None],
 ) -> tuple[Path, ...]:
+    transaction_phase[0] = _PublicationTransactionPhase.PRECOMMIT
     output_roles = [
         PathRole(publication.role, publication.path, "output")
         for publication in publications
@@ -1370,6 +1855,7 @@ def _publish_artifacts(
                 create=True,
                 creation_ledger=created_directories,
             )
+            _assert_path_uses_locked_owner(publication.path, anchor)
             item = _StagedPublication(publication, anchor)
             staged.append(item)
             _ensure_scratch(item)
@@ -1409,30 +1895,86 @@ def _publish_artifacts(
         _verify_published_artifacts(staged)
         if validate_before_commit is not None:
             validate_before_commit()
-            _verify_published_artifacts(staged)
 
         for item in staged:
-            for entry in item.scratch_leaves:
-                entry.removable = True
-            _cleanup_scratch_leaves(item)
+            _cleanup_precommit_scratch(item)
+
+        # This is the sole all-output final precommit verification. Original
+        # prior recovery evidence remains in each scratch directory until it
+        # succeeds for every item.
         _verify_published_artifacts(staged)
-        for item in staged:
-            _remove_scratch_directory(item)
-            _fsync_directory(item.anchor.parent_fd)
-        _verify_published_artifacts(staged)
-        _verify_transaction_debris_absent(staged)
+        transaction_phase[0] = _PublicationTransactionPhase.COMMITTED
+
+        cleanup_failures, cleanup_error = _cleanup_committed_artifacts(staged)
+        if cleanup_failures:
+            raise RuntimeError(
+                "publication committed; cleanup state is unproven: "
+                + "; ".join(cleanup_failures)
+            ) from cleanup_error
         return tuple(_absolute(item.publication.path) for item in staged)
     except BaseException as error:
-        rollback_failures = _rollback_artifacts(staged, created_directories)
+        if transaction_phase[0] is _PublicationTransactionPhase.COMMITTED:
+            if isinstance(error, RuntimeError) and str(error).lower().startswith(
+                "publication committed; cleanup state is unproven"
+            ):
+                raise
+            raise RuntimeError(
+                "publication committed; cleanup state is unproven: "
+                f"postcommit cleanup failed: {error}"
+            ) from error
+        try:
+            rollback_failures = _rollback_artifacts(staged, created_directories)
+        except BaseException as rollback_error:
+            raise RuntimeError(
+                "rollback state is unproven: rollback executor failed: "
+                f"{rollback_error}; original precommit failure: {error}"
+            ) from rollback_error
         if rollback_failures:
             detail = "; ".join(rollback_failures)
             raise RuntimeError(f"rollback state is unproven: {detail}") from error
         raise
     finally:
-        for item in staged:
-            item.close()
-        for creation in created_directories:
-            creation.close()
+        active_error = sys.exception()
+        close_failures, close_error = _close_publication_resources(
+            staged,
+            created_directories,
+        )
+        if close_failures:
+            detail = "; ".join(close_failures)
+            cause = active_error if active_error is not None else close_error
+            if transaction_phase[0] is _PublicationTransactionPhase.COMMITTED:
+                raise RuntimeError(
+                    "publication committed; cleanup state is unproven: "
+                    f"descriptor cleanup: {detail}"
+                ) from cause
+            raise RuntimeError(
+                f"rollback state is unproven: descriptor cleanup: {detail}"
+            ) from cause
+
+
+def _publish_artifacts(
+    publications: Sequence[_Publication],
+    *,
+    validate_before_commit: Callable[[], None] | None = None,
+) -> tuple[Path, ...]:
+    transaction_phase: list[_PublicationTransactionPhase | None] = [None]
+    try:
+        with _publication_transaction_lock(
+            tuple(publication.path for publication in publications)
+        ):
+            return _publish_artifacts_locked(
+                publications,
+                validate_before_commit,
+                transaction_phase,
+            )
+    except _PublicationLockStateError as error:
+        if transaction_phase[0] is _PublicationTransactionPhase.COMMITTED:
+            raise RuntimeError(
+                f"publication committed; cleanup state is unproven: {error}"
+            ) from error
+        if transaction_phase[0] is _PublicationTransactionPhase.PRECOMMIT:
+            raise RuntimeError(f"rollback state is unproven: {error}") from error
+        raise
 
 
 def _atomic_write_bytes(path: Path, payload: bytes) -> Path:
@@ -2675,9 +3217,13 @@ def _directory_entries(path: Path) -> tuple[str, ...] | None:
         _revalidate_anchor(anchor, leaf_identity=_identity(metadata))
         return tuple(sorted(os.listdir(descriptor)))
     finally:
-        if descriptor >= 0:
-            os.close(descriptor)
-        anchor.close()
+        closing_descriptor = descriptor
+        descriptor = -1
+        _close_descriptor_and_anchor(
+            closing_descriptor,
+            anchor,
+            label="atlas directory read",
+        )
 
 
 def _existing_atlas_pages(output_root: Path) -> tuple[Path, ...]:
@@ -2877,7 +3423,7 @@ def preflight_atlas_command_paths(
     preflight_path_roles(roles)
 
 
-def _build_and_publish_atlases(
+def _build_and_publish_atlases_locked(
     sources: Sequence[LockedSource],
     output_dir: Path,
     *,
@@ -2939,6 +3485,27 @@ def _build_and_publish_atlases(
         validate_before_commit=validate_publication,
     )
     return index
+
+
+def _build_and_publish_atlases(
+    sources: Sequence[LockedSource],
+    output_dir: Path,
+    *,
+    max_pages: int,
+    report_path: Path | None,
+) -> AtlasIndex:
+    output_root = _absolute(output_dir)
+    report = _validated_atlas_report_path(output_root, report_path)
+    lock_paths = [output_root]
+    if report is not None:
+        lock_paths.append(report)
+    with _publication_transaction_lock(tuple(lock_paths)):
+        return _build_and_publish_atlases_locked(
+            sources,
+            output_root,
+            max_pages=max_pages,
+            report_path=report,
+        )
 
 
 def build_lossless_atlases(
