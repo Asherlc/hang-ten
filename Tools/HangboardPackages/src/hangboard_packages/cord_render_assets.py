@@ -15,25 +15,32 @@ import re
 import secrets
 import stat
 from collections import deque
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, replace
 from datetime import date
 from pathlib import Path
-from typing import Sequence
 
 import PIL
 from PIL import Image, UnidentifiedImageError
 
 
-_TOOL_VERSION = "cord-render-assets/2"
+_TOOL_VERSION = "cord-render-assets/3"
 _SCHEMA_VERSION = 2
 _DIGEST_VERSION = 1
 _OWNER_PREFIX = "joyful-donkey-"
 _ATLAS_BASE_DIMENSION = 2048
 _ATLAS_PADDING = 8
 _ATLAS_NEUTRAL_RGBA = (128, 128, 128, 255)
-_ATLAS_PACKING_ALGORITHM = "maxrects-bottom-left-exact/1"
+_ATLAS_PACKING_ALGORITHM = "maxrects-bottom-left-exact-mode-aware/2"
 _ATLAS_SEARCH_NODE_LIMIT = 250_000
-_ATLAS_MODES = frozenset({"1", "L", "LA", "P", "RGB", "RGBA"})
+_ATLAS_MODES = frozenset({"RGB", "RGBA"})
+_NEAR_OPAQUE_ALPHA = 250
+_OPAQUE_FLOOD_MIN_PIXELS = 16
+_OPAQUE_FLOOD_MIN_AREA_FRACTION = 0.05
+_OPAQUE_FLOOD_MIN_BOUNDARY_FRACTION = 0.10
+_INSET_MATTE_ENVELOPE_FRACTION = 0.02
+_INSET_MATTE_MIN_AREA_FRACTION = 0.25
+_INSET_MATTE_MIN_BBOX_FILL = 0.85
 _SOURCE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _ATLAS_PAGE_NAME = re.compile(r"page-([0-9]{2})\.png\Z")
@@ -307,13 +314,13 @@ def _existing_leaf_metadata(path: Path) -> os.stat_result | None:
 
 
 @dataclass(frozen=True)
-class _PathRole:
+class PathRole:
     name: str
     path: Path
     kind: str  # input, output, or directory
 
 
-def preflight_path_roles(roles: Sequence[_PathRole]) -> None:
+def preflight_path_roles(roles: Sequence[PathRole]) -> None:
     lexical: dict[Path, str] = {}
     identities: dict[tuple[int, int], str] = {}
     for role in roles:
@@ -444,9 +451,40 @@ def _remove_created_directories(paths: Sequence[Path]) -> None:
             anchor.close()
 
 
-def _publish_artifacts(publications: Sequence[_Publication]) -> tuple[Path, ...]:
+def _verify_published_artifacts(staged: Sequence[_StagedPublication]) -> None:
+    for item in staged:
+        _revalidate_anchor(item.anchor)
+        if item.publication.payload is None:
+            try:
+                os.stat(
+                    item.anchor.leaf,
+                    dir_fd=item.anchor.parent_fd,
+                    follow_symlinks=False,
+                )
+            except FileNotFoundError:
+                continue
+            raise ValueError(
+                f"deleted artifact remains visible: {item.publication.role}"
+            )
+        published_bytes, published_metadata = _read_relative(
+            item.anchor, item.anchor.leaf
+        )
+        if (
+            published_bytes != item.publication.payload
+            or _identity(published_metadata) != item.temporary_identity
+        ):
+            raise ValueError(
+                f"published artifact verification failed: {item.publication.role}"
+            )
+
+
+def _publish_artifacts(
+    publications: Sequence[_Publication],
+    *,
+    validate_before_commit: Callable[[], None] | None = None,
+) -> tuple[Path, ...]:
     output_roles = [
-        _PathRole(publication.role, publication.path, "output")
+        PathRole(publication.role, publication.path, "output")
         for publication in publications
     ]
     preflight_path_roles(output_roles)
@@ -576,6 +614,11 @@ def _publish_artifacts(publications: Sequence[_Publication]) -> tuple[Path, ...]
             _fsync_directory(item.anchor.parent_fd)
             _revalidate_anchor(item.anchor)
 
+        _verify_published_artifacts(staged)
+        if validate_before_commit is not None:
+            validate_before_commit()
+            _verify_published_artifacts(staged)
+
         for item in staged:
             if item.backup is not None:
                 os.unlink(item.backup, dir_fd=item.anchor.parent_fd)
@@ -660,6 +703,14 @@ class _ImageSnapshot:
     decoded_pixel_sha256: str
 
 
+@dataclass(frozen=True)
+class ImageMetadata:
+    format: str | None
+    mode: str
+    width: int
+    height: int
+
+
 def _decoded_hash_image(image: Image.Image) -> str:
     digest = hashlib.sha256()
     digest.update(image.mode.encode("ascii"))
@@ -722,12 +773,14 @@ def _snapshot_image_bytes(path: Path, data: bytes) -> _ImageSnapshot:
     )
 
 
-def _image(path: Path) -> Image.Image:
-    return _snapshot_image(path).image
-
-
-def _sha256(path: Path) -> str:
-    return _snapshot_image(path).byte_sha256
+def read_image_metadata(path: Path) -> ImageMetadata:
+    snapshot = _snapshot_image(path)
+    return ImageMetadata(
+        snapshot.format,
+        snapshot.image.mode,
+        snapshot.image.width,
+        snapshot.image.height,
+    )
 
 
 def decoded_pixel_sha256(path: Path) -> str:
@@ -926,8 +979,8 @@ def _lock_snapshot(
     )
     preflight_path_roles(
         [
-            _PathRole("source", snapshot.path, "input"),
-            _PathRole("cache", locked.cache_path, "output"),
+            PathRole("source", snapshot.path, "input"),
+            PathRole("cache", locked.cache_path, "output"),
         ]
     )
     _publish_artifacts([_Publication(locked.cache_path, snapshot.data, "cache")])
@@ -976,7 +1029,7 @@ def lock_source(
     )
 
 
-def _load_json(path: Path, label: str) -> object:
+def load_json_file(path: Path, label: str) -> object:
     try:
         _, data, _ = _read_regular_bytes(path, label)
         text = data.decode("utf-8")
@@ -1048,7 +1101,9 @@ def freeze_source_manifest(
 
     owner = _owner_context(manifest)
     payload = _exact_object(
-        _load_json(manifest, "manifest"), label="manifest", required={"sources"}
+        load_json_file(manifest, "manifest"),
+        label="manifest",
+        required={"sources"},
     )
     records = payload["sources"]
     if not isinstance(records, list) or not records:
@@ -1073,11 +1128,11 @@ def freeze_source_manifest(
                 _parse_reviewed_at(record["reviewedAt"], f"{label}.reviewedAt"),
             )
         )
-    initial_roles = [_PathRole("manifest", manifest, "input")]
+    initial_roles = [PathRole("manifest", manifest, "input")]
     if report_path is not None:
-        initial_roles.append(_PathRole("report", report_path, "output"))
+        initial_roles.append(PathRole("report", report_path, "output"))
     initial_roles.extend(
-        _PathRole(f"source[{index}]", record[0], "input")
+        PathRole(f"source[{index}]", record[0], "input")
         for index, record in enumerate(parsed)
     )
     preflight_path_roles(initial_roles)
@@ -1103,7 +1158,7 @@ def freeze_source_manifest(
     artifact = source_lock_artifact(ordered)
     complete_roles = list(initial_roles)
     complete_roles.extend(
-        _PathRole(f"cache[{index}]", source.cache_path, "output")
+        PathRole(f"cache[{index}]", source.cache_path, "output")
         for index, source in enumerate(ordered)
     )
     preflight_path_roles(complete_roles)
@@ -1193,7 +1248,7 @@ def _locked_source_from_json(
 def load_locked_sources(manifest: Path) -> list[LockedSource]:
     owner = _owner_context(manifest)
     payload = _exact_object(
-        _load_json(manifest, "locked source manifest"),
+        load_json_file(manifest, "locked source manifest"),
         label="locked source manifest",
         required={
             "schemaVersion",
@@ -1502,6 +1557,9 @@ def _split_free_rectangles(
 def _plans_from_packed(pages: Sequence[Sequence[_PackedRectangle]]) -> list[_PagePlan]:
     plans: list[_PagePlan] = []
     for page_number, placements in enumerate(pages, start=1):
+        modes = {placement.source.mode for placement in placements}
+        if len(modes) != 1:
+            raise ValueError("atlas page cannot mix source modes")
         panels = [
             AtlasPanel(
                 placement.source.source_id,
@@ -1526,11 +1584,14 @@ def _maxrects_plan(
     capacity = max_dimension - _ATLAS_PADDING
     free_pages: list[list[_FreeRectangle]] = []
     packed_pages: list[list[_PackedRectangle]] = []
+    page_modes: list[str] = []
     for source in ordered:
         width = source.width + _ATLAS_PADDING
         height = source.height + _ATLAS_PADDING
         candidate: tuple[tuple[int, ...], int, int] | None = None
         for page_index, free_rectangles in enumerate(free_pages):
+            if page_modes[page_index] != source.mode:
+                continue
             for free_index, free in enumerate(free_rectangles):
                 if width > free.width or height > free.height:
                     continue
@@ -1547,6 +1608,7 @@ def _maxrects_plan(
         if candidate is None:
             free_pages.append([_FreeRectangle(0, 0, capacity, capacity)])
             packed_pages.append([])
+            page_modes.append(source.mode)
             page_index = len(free_pages) - 1
             free_index = 0
         else:
@@ -1569,6 +1631,7 @@ def _layout_signature(plans: Sequence[_PagePlan]) -> tuple[object, ...]:
             panel.source_id,
             panel.width,
             panel.height,
+            panel.mode,
         )
         for plan in plans
         for panel in plan.panels
@@ -1617,16 +1680,19 @@ def _exact_pack(
             index,
             tuple(
                 sorted(
-                    tuple(
-                        sorted(
-                            (
-                                placement.source.width,
-                                placement.source.height,
-                                placement.x,
-                                placement.y,
+                    (
+                        page[0].source.mode,
+                        tuple(
+                            sorted(
+                                (
+                                    placement.source.width,
+                                    placement.source.height,
+                                    placement.x,
+                                    placement.y,
+                                )
+                                for placement in page
                             )
-                            for placement in page
-                        )
+                        ),
                     )
                     for page in pages
                 )
@@ -1639,17 +1705,27 @@ def _exact_pack(
         width = source.width + _ATLAS_PADDING
         height = source.height + _ATLAS_PADDING
         page_limit = min(len(pages) + 1, max_pages)
-        seen_page_shapes: set[tuple[tuple[int, int, int, int], ...]] = set()
+        seen_page_shapes: set[tuple[str, tuple[tuple[int, int, int, int], ...]]] = set()
         for page_index in range(page_limit):
             is_new = page_index == len(pages)
             if is_new:
                 pages.append([])
             page = pages[page_index]
-            page_shape = tuple(
-                sorted(
-                    (placement.x, placement.y, placement.width, placement.height)
-                    for placement in page
-                )
+            if page and page[0].source.mode != source.mode:
+                continue
+            page_shape = (
+                source.mode,
+                tuple(
+                    sorted(
+                        (
+                            placement.x,
+                            placement.y,
+                            placement.width,
+                            placement.height,
+                        )
+                        for placement in page
+                    )
+                ),
             )
             if page_shape in seen_page_shapes:
                 if is_new:
@@ -1730,7 +1806,8 @@ def _plan_atlases(
     exact = _exact_pack(sources, max_dimension, max_pages)
     if exact is None:
         raise ValueError(
-            f"source set requires {max_pages + 1} atlas pages; limit is {max_pages}"
+            f"source set requires more than {max_pages} atlas pages; "
+            f"limit is {max_pages}"
         )
     return exact
 
@@ -1769,6 +1846,7 @@ def _layout_payload(
                 "number": number,
                 "width": _page_dimensions(plan)[0],
                 "height": _page_dimensions(plan)[1],
+                "mode": plan.panels[0].mode,
             }
             for number, plan in enumerate(plans, start=1)
         ],
@@ -1797,11 +1875,17 @@ def _atlas_index_digest(index: AtlasIndex) -> str:
 
 def _render_page(plan: _PagePlan, snapshots: dict[str, _ImageSnapshot]) -> Image.Image:
     width, height = _page_dimensions(plan)
-    canvas = Image.new("RGBA", (width, height), _ATLAS_NEUTRAL_RGBA)
+    modes = {panel.mode for panel in plan.panels}
+    if modes not in ({"RGB"}, {"RGBA"}):
+        raise ValueError("atlas page must contain one supported native mode")
+    mode = next(iter(modes))
+    neutral = _ATLAS_NEUTRAL_RGBA if mode == "RGBA" else _ATLAS_NEUTRAL_RGBA[:3]
+    canvas = Image.new(mode, (width, height), neutral)
     for panel in plan.panels:
-        canvas.paste(
-            snapshots[panel.source_id].image.convert("RGBA"), (panel.x, panel.y)
-        )
+        source = snapshots[panel.source_id].image
+        if source.mode != mode:
+            raise ValueError(f"atlas panel mode mismatch: {panel.source_id}")
+        canvas.paste(source, (panel.x, panel.y))
     return canvas
 
 
@@ -1842,7 +1926,7 @@ def _existing_atlas_pages(output_root: Path) -> tuple[Path, ...]:
     if "index.json" not in entries:
         raise ValueError("unknown atlas output state: pages have no canonical index")
     try:
-        payload = _load_json(output_root / "index.json", "existing atlas index")
+        payload = load_json_file(output_root / "index.json", "existing atlas index")
         if not isinstance(payload, dict) or not isinstance(payload.get("index"), dict):
             raise ValueError("existing atlas index is invalid")
         index_payload = payload["index"]
@@ -1886,9 +1970,14 @@ def _existing_atlas_pages(output_root: Path) -> tuple[Path, ...]:
                 raise ValueError("existing atlas page path mismatch")
             recorded_names.append(page_path.name)
             snapshot = _snapshot_image(page_path)
-            if snapshot.byte_sha256 != record.get(
-                "byteSHA256"
-            ) or snapshot.decoded_pixel_sha256 != record.get("decodedPixelSHA256"):
+            if (
+                snapshot.format != "PNG"
+                or snapshot.image.mode != record.get("mode")
+                or snapshot.image.width != record.get("width")
+                or snapshot.image.height != record.get("height")
+                or snapshot.byte_sha256 != record.get("byteSHA256")
+                or snapshot.decoded_pixel_sha256 != record.get("decodedPixelSHA256")
+            ):
                 raise ValueError("existing atlas page hash mismatch")
         if tuple(sorted(recorded_names)) != page_names:
             raise ValueError("existing atlas page set mismatch")
@@ -1921,7 +2010,8 @@ def _prepare_atlas(
         _, cache = _validate_locked_source(source)
         if source.mode not in _ATLAS_MODES:
             raise ValueError(
-                f"source mode cannot round-trip through an RGBA atlas: {source.source_id} ({source.mode})"
+                "unsupported atlas source mode for exact native round-trip: "
+                f"{source.source_id} ({source.mode}); supported modes are RGB and RGBA"
             )
         snapshots[source.source_id] = cache
     max_dimension = _atlas_dimension(ordered)
@@ -1978,6 +2068,42 @@ def _atlas_report_payload(index: AtlasIndex) -> dict[str, object]:
     }
 
 
+def _validated_atlas_report_path(
+    output_root: Path, report_path: Path | None
+) -> Path | None:
+    if report_path is None:
+        return None
+    root = _absolute(output_root)
+    report = _absolute(report_path)
+    canonical = root / "index.json"
+    if report == canonical:
+        return report
+    if report == root or root in report.parents or report in root.parents:
+        raise ValueError(
+            "custom atlas report must be outside the atlas output root; "
+            "use the canonical output-root/index.json instead"
+        )
+    return report
+
+
+def preflight_atlas_command_paths(
+    manifest_path: Path,
+    output_dir: Path,
+    report_path: Path | None,
+) -> None:
+    """Validate all caller-provided atlas command paths before source loading."""
+
+    output_root = _absolute(output_dir)
+    report = _validated_atlas_report_path(output_root, report_path)
+    roles = [
+        PathRole("manifest", manifest_path, "input"),
+        PathRole("output root", output_root, "directory"),
+    ]
+    if report is not None:
+        roles.append(PathRole("report", report, "output"))
+    preflight_path_roles(roles)
+
+
 def _build_and_publish_atlases(
     sources: Sequence[LockedSource],
     output_dir: Path,
@@ -1986,16 +2112,18 @@ def _build_and_publish_atlases(
     report_path: Path | None,
 ) -> AtlasIndex:
     output_root = _absolute(output_dir)
-    roles = [_PathRole("output root", output_root, "directory")]
+    report = _validated_atlas_report_path(output_root, report_path)
+    canonical_report = output_root / "index.json"
+    roles = [PathRole("output root", output_root, "directory")]
     for index, source in enumerate(sources):
         roles.extend(
             [
-                _PathRole(f"original[{index}]", source.original_path, "input"),
-                _PathRole(f"cache[{index}]", source.cache_path, "input"),
+                PathRole(f"original[{index}]", source.original_path, "input"),
+                PathRole(f"cache[{index}]", source.cache_path, "input"),
             ]
         )
-    if report_path is not None:
-        roles.append(_PathRole("report", report_path, "output"))
+    if report is not None and report != canonical_report:
+        roles.append(PathRole("report", report, "output"))
     preflight_path_roles(roles)
     index, page_outputs, stale_pages = _prepare_atlas(sources, output_root, max_pages)
     payload = (
@@ -2007,17 +2135,16 @@ def _build_and_publish_atlases(
         )
         + "\n"
     ).encode("utf-8")
-    canonical_report = output_root / "index.json"
     complete_roles = list(roles)
     complete_roles.extend(
-        _PathRole(f"page[{number}]", path, "output")
+        PathRole(f"page[{number}]", path, "output")
         for number, (path, _) in enumerate(page_outputs, start=1)
     )
     complete_roles.extend(
-        _PathRole(f"stale page[{number}]", path, "output")
+        PathRole(f"stale page[{number}]", path, "output")
         for number, path in enumerate(stale_pages, start=1)
     )
-    complete_roles.append(_PathRole("canonical index", canonical_report, "output"))
+    complete_roles.append(PathRole("canonical index", canonical_report, "output"))
     preflight_path_roles(complete_roles)
     publications = [
         _Publication(path, page_bytes, f"page[{number}]")
@@ -2027,11 +2154,17 @@ def _build_and_publish_atlases(
         _Publication(path, None, f"stale page[{number}]")
         for number, path in enumerate(stale_pages, start=1)
     )
-    if report_path is not None and _absolute(report_path) != canonical_report:
-        publications.append(_Publication(report_path, payload, "report"))
+    if report is not None and report != canonical_report:
+        publications.append(_Publication(report, payload, "report"))
     publications.append(_Publication(canonical_report, payload, "canonical index"))
-    _publish_artifacts(publications)
-    verify_atlas_round_trip(index)
+
+    def validate_publication() -> None:
+        verify_atlas_round_trip(index)
+
+    _publish_artifacts(
+        publications,
+        validate_before_commit=validate_publication,
+    )
     return index
 
 
@@ -2085,7 +2218,12 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
     source_snapshots: dict[str, _ImageSnapshot] = {}
     for source in index.sources:
         _, cache = _validate_locked_source(source)
-        source_images[source.source_id] = cache.image.convert("RGBA")
+        if source.mode not in _ATLAS_MODES:
+            raise ValueError(
+                "unsupported atlas source mode for exact native round-trip: "
+                f"{source.source_id} ({source.mode}); supported modes are RGB and RGBA"
+            )
+        source_images[source.source_id] = cache.image
         source_snapshots[source.source_id] = cache
     if index.source_lock_sha256 != _source_lock_digest(index.sources):
         raise ValueError("atlas source lock digest mismatch")
@@ -2119,6 +2257,8 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
             source.decoded_pixel_sha256,
         ):
             raise ValueError(f"tampered atlas panel record: {panel.source_id}")
+        if pages[panel.page_number].mode != panel.mode:
+            raise ValueError(f"atlas page/panel mode mismatch: {panel.source_id}")
         if min(panel.x, panel.y, panel.width, panel.height) < 0:
             raise ValueError(f"invalid atlas panel rectangle: {panel.source_id}")
         page_panels[panel.page_number].append(panel)
@@ -2136,7 +2276,11 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
         if _absolute(page.path) != output_root / f"page-{page.number:02d}.png":
             raise ValueError(f"atlas page path mismatch: {page.number}")
         snapshot = _snapshot_image(page.path)
-        if snapshot.format != "PNG" or snapshot.image.mode != "RGBA":
+        if (
+            snapshot.format != "PNG"
+            or page.mode not in _ATLAS_MODES
+            or snapshot.image.mode != page.mode
+        ):
             raise ValueError(f"atlas page format or mode mismatch: {page.number}")
         if (snapshot.image.width, snapshot.image.height) != (page.width, page.height):
             raise ValueError(f"atlas page dimensions mismatch: {page.number}")
@@ -2144,8 +2288,6 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
             raise ValueError(f"atlas page hash mismatch: {page.path}")
         if snapshot.decoded_pixel_sha256 != page.decoded_pixel_sha256:
             raise ValueError(f"atlas page pixel hash mismatch: {page.path}")
-        if page.mode != "RGBA":
-            raise ValueError(f"atlas page mode record mismatch: {page.number}")
         page_snapshots[page.number] = snapshot
     expected_plans = _plan_atlases(index.sources, index.max_dimension, len(index.pages))
     expected_panels = tuple(panel for plan in expected_plans for panel in plan.panels)
@@ -2180,7 +2322,13 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
         cropped = page_image.crop(
             (panel.x, panel.y, panel.x + panel.width, panel.y + panel.height)
         )
-        if cropped.tobytes() != source_images[panel.source_id].tobytes():
+        source_image = source_images[panel.source_id]
+        if (
+            cropped.mode != source_image.mode
+            or cropped.size != source_image.size
+            or cropped.tobytes() != source_image.tobytes()
+            or _decoded_hash_image(cropped) != panel.decoded_pixel_sha256
+        ):
             raise ValueError(f"atlas round-trip pixels mismatch: {panel.source_id}")
     return AtlasVerification(True, len(index.panels))
 
@@ -2229,7 +2377,7 @@ _CHROMA_CONFIG_FIELDS = {
 
 def load_chroma_config(path: Path) -> ChromaConfig:
     payload = _exact_object(
-        _load_json(path, "chroma config"),
+        load_json_file(path, "chroma config"),
         label="chroma config",
         required=_CHROMA_CONFIG_FIELDS,
     )
@@ -2337,42 +2485,94 @@ def _boundary_connected(
 
 
 def _boundary_opaque_flood_count(image: Image.Image) -> int:
+    """Count matte-like near-opaque components without penalizing cords.
+
+    The legacy predicate catches a substantial component with broad contact in
+    the two-pixel boundary band. The inset predicate is scale-aware: a dense,
+    substantial component whose bounding box reaches a 2%-of-short-edge
+    envelope on all four sides is background geometry even when a transparent
+    rim separates it from the literal canvas boundary. Small cord contacts,
+    wide/thin boards, and sparse board-plus-cord silhouettes fail those matte
+    predicates and remain legal.
+    """
+
     width, height = image.size
-    minimum_size = max(16, math.ceil(width * height * 0.05))
-    boundary = frozenset(_boundary_points(width, height))
-    minimum_boundary_contact = max(4, math.ceil(len(boundary) * 0.10))
-    boundary_band = frozenset(
-        (x, y)
-        for x in range(width)
-        for y in range(height)
-        if x < 2 or y < 2 or x >= width - 2 or y >= height - 2
+    canvas_area = width * height
+    minimum_size = max(
+        _OPAQUE_FLOOD_MIN_PIXELS,
+        math.ceil(canvas_area * _OPAQUE_FLOOD_MIN_AREA_FRACTION),
     )
+    boundary = frozenset(_boundary_points(width, height))
+    minimum_boundary_contact = max(
+        4, math.ceil(len(boundary) * _OPAQUE_FLOOD_MIN_BOUNDARY_FRACTION)
+    )
+    inset_minimum_size = max(
+        _OPAQUE_FLOOD_MIN_PIXELS,
+        math.ceil(canvas_area * _INSET_MATTE_MIN_AREA_FRACTION),
+    )
+    envelope = max(4, math.ceil(min(width, height) * _INSET_MATTE_ENVELOPE_FRACTION))
+    envelope = min(envelope, max(0, (min(width, height) - 1) // 2))
+
+    seeds: list[tuple[int, int]] = []
+    for y in range(envelope + 1):
+        seeds.extend((x, y) for x in range(width))
+        opposite_y = height - 1 - y
+        if opposite_y != y:
+            seeds.extend((x, opposite_y) for x in range(width))
+    for y in range(envelope + 1, height - envelope - 1):
+        for x in range(envelope + 1):
+            seeds.append((x, y))
+            opposite_x = width - 1 - x
+            if opposite_x != x:
+                seeds.append((opposite_x, y))
+
     visited: set[tuple[int, int]] = set()
     flood_count = 0
-    for seed in boundary_band:
+    for seed in seeds:
         if seed in visited:
             continue
         seed_pixel = image.getpixel(seed)
-        if seed_pixel[3] < 250:
+        if seed_pixel[3] < _NEAR_OPAQUE_ALPHA:
             continue
         queue: deque[tuple[int, int]] = deque([seed])
-        component: set[tuple[int, int]] = {seed}
         visited.add(seed)
+        component_size = 0
+        boundary_band_contact = 0
+        min_x = max_x = seed[0]
+        min_y = max_y = seed[1]
         while queue:
-            point = queue.popleft()
-            for neighbor in _neighbors(*point, width, height):
+            x, y = queue.popleft()
+            component_size += 1
+            min_x = min(min_x, x)
+            max_x = max(max_x, x)
+            min_y = min(min_y, y)
+            max_y = max(max_y, y)
+            if x < 2 or y < 2 or x >= width - 2 or y >= height - 2:
+                boundary_band_contact += 1
+            for neighbor in _neighbors(x, y, width, height):
                 if neighbor in visited:
                     continue
                 pixel = image.getpixel(neighbor)
-                if pixel[3] >= 250:
-                    component.add(neighbor)
+                if pixel[3] >= _NEAR_OPAQUE_ALPHA:
                     visited.add(neighbor)
                     queue.append(neighbor)
-        if (
-            len(component) >= minimum_size
-            and len(component.intersection(boundary_band)) >= minimum_boundary_contact
-        ):
-            flood_count += len(component)
+        boundary_flood = (
+            component_size >= minimum_size
+            and boundary_band_contact >= minimum_boundary_contact
+        )
+        box_width = max_x - min_x + 1
+        box_height = max_y - min_y + 1
+        box_area = box_width * box_height
+        inset_matte = (
+            component_size >= inset_minimum_size
+            and min_x <= envelope
+            and min_y <= envelope
+            and width - 1 - max_x <= envelope
+            and height - 1 - max_y <= envelope
+            and component_size / box_area >= _INSET_MATTE_MIN_BBOX_FILL
+        )
+        if boundary_flood or inset_matte:
+            flood_count += component_size
     return flood_count
 
 
@@ -2488,8 +2688,8 @@ def remove_chroma(
         raise ValueError("refusing to key in place")
     preflight_path_roles(
         [
-            _PathRole("input", input_path, "input"),
-            _PathRole("output", output_path, "output"),
+            PathRole("input", input_path, "input"),
+            PathRole("output", output_path, "output"),
         ]
     )
     output_bytes, report = _prepare_chroma(input_path, output_path, config)
@@ -2506,12 +2706,12 @@ def remove_chroma_with_report(
     config_path: Path | None = None,
 ) -> TransparencyReport:
     roles = [
-        _PathRole("input", input_path, "input"),
-        _PathRole("output", output_path, "output"),
-        _PathRole("report", report_path, "output"),
+        PathRole("input", input_path, "input"),
+        PathRole("output", output_path, "output"),
+        PathRole("report", report_path, "output"),
     ]
     if config_path is not None:
-        roles.append(_PathRole("config", config_path, "input"))
+        roles.append(PathRole("config", config_path, "input"))
     preflight_path_roles(roles)
     output_bytes, report = _prepare_chroma(input_path, output_path, config)
     report_bytes = (
@@ -2587,11 +2787,11 @@ def inspect_transparency_with_report(
     config_path: Path | None = None,
 ) -> TransparencyReport:
     roles = [
-        _PathRole("image", path, "input"),
-        _PathRole("report", report_path, "output"),
+        PathRole("image", path, "input"),
+        PathRole("report", report_path, "output"),
     ]
     if config_path is not None:
-        roles.append(_PathRole("config", config_path, "input"))
+        roles.append(PathRole("config", config_path, "input"))
     preflight_path_roles(roles)
     report = _inspect_with_config(path, expected_width, expected_height, config)
     report_bytes = (

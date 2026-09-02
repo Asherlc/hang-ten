@@ -18,6 +18,7 @@ from hangboard_packages.cord_render_assets import (
     ChromaConfig,
     LockedSource,
     build_lossless_atlases,
+    build_lossless_atlases_with_report,
     decoded_pixel_sha256,
     inspect_transparency,
     lock_source,
@@ -96,6 +97,14 @@ def _refreshed_source_digest(source: LockedSource) -> str:
             ensure_ascii=False,
         ).encode("utf-8")
     ).hexdigest()
+
+
+def _file_bytes(root: Path) -> dict[str, bytes]:
+    return {
+        str(path.relative_to(root)): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
 
 
 def test_decoded_pixel_hash_ignores_png_container_metadata(tmp_path: Path) -> None:
@@ -458,6 +467,75 @@ def test_atlas_size_aware_packing_accepts_mixed_tall_and_short_set_in_four_pages
     assert verify_atlas_round_trip(index).verified_panels == 24
 
 
+def test_atlas_preserves_native_rgb_jpeg_and_rgba_panels_on_compatible_pages(
+    tmp_path: Path,
+) -> None:
+    source_root = _context(tmp_path, "native-mode-sources")
+    rgb_path = source_root / "manufacturer.jpg"
+    rgb = Image.new("RGB", (9, 7), (21, 42, 63))
+    rgb.putpixel((4, 3), (190, 120, 40))
+    rgb.save(rgb_path, format="JPEG", quality=95, subsampling=0)
+    rgba_path = source_root / "transparent-reference.png"
+    rgba = Image.new("RGBA", (8, 6), (11, 22, 33, 0))
+    rgba.putpixel((3, 2), (90, 80, 70, 255))
+    rgba.putpixel((4, 2), (1, 2, 3, 127))
+    rgba.save(rgba_path, format="PNG")
+    sources = [_locked(rgb_path, "rgb-jpeg"), _locked(rgba_path, "rgba-png")]
+
+    index = build_lossless_atlases(
+        sources, _context(tmp_path, "native-mode-atlas") / "pages"
+    )
+
+    assert len(index.pages) == 2
+    assert {page.mode for page in index.pages} == {"RGB", "RGBA"}
+    page_by_number = {page.number: page for page in index.pages}
+    source_by_id = {source.source_id: source for source in index.sources}
+    for panel in index.panels:
+        page_record = page_by_number[panel.page_number]
+        source = source_by_id[panel.source_id]
+        assert page_record.mode == panel.mode == source.mode
+        with Image.open(page_record.path) as opened_page:
+            opened_page.load()
+            crop = opened_page.crop(
+                (panel.x, panel.y, panel.x + panel.width, panel.y + panel.height)
+            )
+        with Image.open(source.cache_path) as opened_source:
+            opened_source.load()
+            native_source = opened_source.copy()
+        assert crop.mode == native_source.mode == source.mode
+        assert crop.size == native_source.size
+        assert crop.tobytes() == native_source.tobytes()
+        assert decoded_pixel_sha256(source.cache_path) == source.decoded_pixel_sha256
+    assert verify_atlas_round_trip(index).verified_panels == 2
+
+
+def test_atlas_enforces_one_global_five_page_budget_across_rgb_and_rgba(
+    tmp_path: Path,
+) -> None:
+    sources = []
+    for number, mode in enumerate(("RGB", "RGBA", "RGB", "RGBA", "RGB")):
+        root = _context(tmp_path, f"global-mode-{number}")
+        path = root / f"source-{number}.png"
+        color = (
+            (20 + number, 40, 60)
+            if mode == "RGB"
+            else (20 + number, 40, 60, 100 + number)
+        )
+        Image.new(mode, (1025, 1025), color).save(path, format="PNG")
+        sources.append(_locked(path, f"global-mode-{number}"))
+
+    index = build_lossless_atlases(
+        sources,
+        _context(tmp_path, "global-mode-budget") / "pages",
+        max_pages=5,
+    )
+
+    assert len(index.pages) == 5
+    assert [page.mode for page in index.pages].count("RGB") == 3
+    assert [page.mode for page in index.pages].count("RGBA") == 2
+    assert verify_atlas_round_trip(index).verified_panels == 5
+
+
 def test_atlas_records_source_derived_bound_and_accepts_source_over_2048(
     tmp_path: Path,
 ) -> None:
@@ -490,13 +568,62 @@ def test_atlas_refuses_a_genuine_sixth_page_and_reports_the_limit(
         for number in range(6)
     ]
 
-    with pytest.raises(ValueError, match=r"requires 6.*limit.*5"):
+    with pytest.raises(ValueError, match=r"requires more than 5.*limit.*5"):
         build_lossless_atlases(
             sources, _context(tmp_path, "sixth-page") / "pages", max_pages=5
         )
     assert not {"crop", "resize", "rotate"}.intersection(
         inspect.signature(build_lossless_atlases).parameters
     )
+
+
+@pytest.mark.parametrize(("source_count", "max_pages"), [(4, 2), (7, 5)])
+def test_atlas_overflow_reports_only_the_proven_nonfit_lower_bound(
+    tmp_path: Path, source_count: int, max_pages: int
+) -> None:
+    sources = [
+        _context_source(
+            tmp_path,
+            f"lower-bound-{source_count}-{number}",
+            (1025, 1025),
+            (number + 1, 100, 200),
+        )
+        for number in range(source_count)
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match=rf"requires more than {max_pages} atlas pages; limit is {max_pages}",
+    ):
+        build_lossless_atlases(
+            sources,
+            _context(tmp_path, f"lower-bound-{source_count}") / "pages",
+            max_pages=max_pages,
+        )
+
+
+def test_atlas_search_exhaustion_remains_indeterminate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sources = [
+        _context_source(
+            tmp_path,
+            f"search-limit-{number}",
+            (1025, 1025),
+            (number + 1, 100, 200),
+        )
+        for number in range(2)
+    ]
+    output = _context(tmp_path, "search-limit") / "pages"
+    monkeypatch.setattr(cord_render_assets, "_ATLAS_SEARCH_NODE_LIMIT", 0)
+
+    with pytest.raises(
+        ValueError,
+        match="packing feasibility search limit reached; page overflow not proven",
+    ):
+        build_lossless_atlases(sources, output, max_pages=1)
+
+    assert not output.exists()
 
 
 def test_atlas_rejects_preexisting_page_symlink(tmp_path: Path) -> None:
@@ -614,8 +741,10 @@ def test_atlas_verifier_rejects_tampered_page_pixels_and_path(tmp_path: Path) ->
     index = _small_index(tmp_path, "page-bytes")
     page = index.pages[0]
     with Image.open(page.path) as opened:
-        image = opened.convert("RGBA")
-    image.putpixel((0, 0), (1, 2, 3, 4))
+        opened.load()
+        image = opened.copy()
+    changed_pixel = (1, 2, 3, 4) if image.mode == "RGBA" else (1, 2, 3)
+    image.putpixel((0, 0), changed_pixel)
     image.save(page.path, format="PNG")
 
     with pytest.raises(ValueError, match="atlas page hash"):
@@ -651,8 +780,10 @@ def test_atlas_verifier_reconstructs_padding_instead_of_trusting_page_hashes(
     index = _small_index(tmp_path, "canonical-padding")
     page = index.pages[0]
     with Image.open(page.path) as opened:
-        image = opened.convert("RGBA")
-    image.putpixel((0, 0), (255, 0, 0, 255))
+        opened.load()
+        image = opened.copy()
+    changed_pixel = (255, 0, 0, 255) if image.mode == "RGBA" else (255, 0, 0)
+    image.putpixel((0, 0), changed_pixel)
     image.save(page.path, format="PNG", optimize=False, compress_level=9)
     changed_bytes = page.path.read_bytes()
     tampered_page = replace(
@@ -789,6 +920,91 @@ def test_atlas_backup_cleanup_failure_restores_every_prior_artifact(
     ]
 
 
+def test_atlas_final_verifier_failure_restores_prior_pages_index_report_and_stale_page(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original_sources = [
+        _context_source(
+            tmp_path,
+            f"postverify-original-{number}",
+            (2000, 1100),
+            (10 + number, 20, 30),
+        )
+        for number in range(2)
+    ]
+    context = _context(tmp_path, "postverify-rollback")
+    output = context / "pages"
+    external_report = context / "reports" / "atlas-report.json"
+    initial = build_lossless_atlases_with_report(
+        original_sources, output, report_path=external_report
+    )
+    assert len(initial.pages) == 2
+    prior_output = _file_bytes(output)
+    prior_report_tree = _file_bytes(external_report.parent)
+    replacement = _context_source(
+        tmp_path, "postverify-replacement", (12, 8), (200, 100, 50)
+    )
+    actual_verifier = cord_render_assets.verify_atlas_round_trip
+    hook_ran = False
+
+    def failing_final_verifier(
+        index: cord_render_assets.AtlasIndex,
+    ) -> cord_render_assets.AtlasVerification:
+        nonlocal hook_ran
+        hook_ran = True
+        verification = actual_verifier(index)
+        assert verification.valid is True
+        raise ValueError("injected final verification failure")
+
+    monkeypatch.setattr(
+        cord_render_assets, "verify_atlas_round_trip", failing_final_verifier
+    )
+
+    with pytest.raises(ValueError, match="injected final verification failure"):
+        build_lossless_atlases_with_report(
+            [replacement], output, report_path=external_report
+        )
+
+    assert hook_ran is True
+    assert _file_bytes(output) == prior_output
+    assert _file_bytes(external_report.parent) == prior_report_tree
+    assert "page-02.png" in prior_output
+
+
+def test_atlas_final_verifier_failure_removes_initial_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = _context_source(tmp_path, "postverify-new")
+    context = _context(tmp_path, "postverify-new-output")
+    output = context / "pages"
+    external_report = context / "reports" / "report.json"
+    actual_verifier = cord_render_assets.verify_atlas_round_trip
+    hook_ran = False
+
+    def failing_final_verifier(
+        index: cord_render_assets.AtlasIndex,
+    ) -> cord_render_assets.AtlasVerification:
+        nonlocal hook_ran
+        hook_ran = True
+        verification = actual_verifier(index)
+        assert verification.valid is True
+        raise ValueError("injected first-build verification failure")
+
+    monkeypatch.setattr(
+        cord_render_assets, "verify_atlas_round_trip", failing_final_verifier
+    )
+
+    with pytest.raises(ValueError, match="injected first-build verification failure"):
+        build_lossless_atlases_with_report(
+            [source], output, report_path=external_report
+        )
+
+    assert hook_ran is True
+    assert not output.exists()
+    assert not external_report.exists()
+    assert not external_report.parent.exists()
+
+
 def test_atlas_verifier_rejects_tampered_index_constants(tmp_path: Path) -> None:
     index = _small_index(tmp_path, "index-record")
 
@@ -823,29 +1039,47 @@ def test_atlas_verifier_requires_every_page_to_be_used(tmp_path: Path) -> None:
         verify_atlas_round_trip(tampered)
 
 
-def test_palette_source_round_trips_visibly_and_high_bit_atlas_is_rejected(
-    tmp_path: Path,
+@pytest.mark.parametrize("mode", ["1", "L", "LA", "P"])
+def test_atlas_rejects_unsupported_native_modes_before_publication(
+    tmp_path: Path, mode: str
 ) -> None:
-    root = _context(tmp_path, "palette-atlas-source")
-    palette = Image.new("P", (5, 4), 0)
-    palette.putpalette([255, 0, 0] + [0, 0, 0] * 255)
-    palette_path = root / "palette.png"
-    palette.save(palette_path, format="PNG")
-    palette_source = _locked(palette_path, "palette-atlas")
-    index = build_lossless_atlases(
-        [palette_source], _context(tmp_path, "palette-atlas-output") / "pages"
-    )
-    assert verify_atlas_round_trip(index).valid is True
+    root = _context(tmp_path, f"unsupported-{mode}")
+    if mode == "1":
+        image = Image.new(mode, (5, 4), 1)
+    elif mode == "L":
+        image = Image.new(mode, (5, 4), 120)
+    elif mode == "LA":
+        image = Image.new(mode, (5, 4), (120, 200))
+    else:
+        image = Image.new("P", (5, 4), 0)
+        image.putpalette([255, 0, 0] + [0, 0, 0] * 255)
+    source_path = root / "source.png"
+    image.save(source_path, format="PNG")
+    source = _locked(source_path, f"unsupported-{mode}")
+    output = _context(tmp_path, f"unsupported-{mode}-output") / "pages"
 
+    with pytest.raises(ValueError) as error:
+        build_lossless_atlases([source], output)
+
+    assert "unsupported atlas source mode" in str(error.value)
+    assert mode in str(error.value)
+    assert "RGB and RGBA" in str(error.value)
+    assert not output.exists()
+
+
+def test_atlas_rejects_high_bit_mode_before_publication(tmp_path: Path) -> None:
+    root = _context(tmp_path, "high-bit-atlas-source")
     high_bit = Image.new("I;16", (5, 4))
     high_bit.putdata(range(20))
     high_bit_path = root / "high-bit.png"
     high_bit.save(high_bit_path, format="PNG")
     high_bit_source = _locked(high_bit_path, "high-bit-atlas")
-    with pytest.raises(ValueError, match="cannot round-trip"):
-        build_lossless_atlases(
-            [high_bit_source], _context(tmp_path, "high-bit-atlas-output") / "pages"
-        )
+    output = _context(tmp_path, "high-bit-atlas-output") / "pages"
+
+    with pytest.raises(ValueError, match="unsupported atlas source mode"):
+        build_lossless_atlases([high_bit_source], output)
+
+    assert not output.exists()
 
 
 def test_chroma_boundary_walk_is_linear_for_representative_matte(
@@ -1019,6 +1253,85 @@ def test_transparency_inspection_rejects_one_pixel_inset_near_opaque_matte(
 
     with pytest.raises(ValueError, match="boundary .*flood"):
         inspect_transparency(path, 24, 24, (0, 255, 0))
+
+
+@pytest.mark.parametrize("inset", [2, 3, 4])
+@pytest.mark.parametrize("textured", [False, True])
+def test_transparency_inspection_rejects_scale_enveloped_inset_alpha_254_matte(
+    tmp_path: Path, inset: int, textured: bool
+) -> None:
+    image = Image.new("RGBA", (40, 40), (0, 0, 0, 0))
+    for x in range(inset, 40 - inset):
+        for y in range(inset, 40 - inset):
+            color = (25, 35, 95) if not textured or (x + y) % 2 else (85, 25, 35)
+            image.putpixel((x, y), (*color, 254))
+    for x in range(16, 24):
+        for y in range(16, 24):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    path = tmp_path / f"inset-{inset}-{'textured' if textured else 'flat'}.png"
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, 40, 40, (0, 255, 0))
+
+
+def test_transparency_inspection_rejects_proportional_production_size_inset_matte(
+    tmp_path: Path,
+) -> None:
+    width, height = 1536, 1024
+    inset = 21
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    matte = Image.new(
+        "RGBA",
+        (width - inset * 2, height - inset * 2),
+        (30, 40, 100, 254),
+    )
+    image.paste(matte, (inset, inset))
+    for x in range(inset, width - inset, 32):
+        for y in range(inset, height - inset):
+            image.putpixel((x, y), (90, 30, 20, 254))
+    path = tmp_path / "production-inset-alpha-254.png"
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, width, height, (0, 255, 0))
+
+
+def test_transparency_inspection_allows_substantial_isolated_central_product(
+    tmp_path: Path,
+) -> None:
+    image = Image.new("RGBA", (40, 40), (0, 0, 0, 0))
+    for x in range(8, 32):
+        for y in range(10, 30):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    path = tmp_path / "central-product.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, 40, 40, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+def test_transparency_inspection_allows_wide_board_with_tensioned_cord_contacts(
+    tmp_path: Path,
+) -> None:
+    width, height = 160, 100
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    for x in range(10, 150):
+        for y in range(55, 85):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    for x in range(29, 32):
+        for y in range(56):
+            image.putpixel((x, y), (25, 25, 25, 254))
+    for x in range(128, 131):
+        for y in range(56):
+            image.putpixel((x, y), (25, 25, 25, 254))
+    path = tmp_path / "wide-board-and-cords.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, width, height, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
 
 
 def test_transparency_inspection_allows_small_documented_boundary_contact(

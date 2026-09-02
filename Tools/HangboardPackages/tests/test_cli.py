@@ -486,6 +486,126 @@ def test_cord_assets_atlas_rejects_invalid_report_before_pages_change(
     assert not output.exists()
 
 
+@pytest.mark.parametrize(
+    "relative_report",
+    ["report.json", "page-99.png", "nested/report.json"],
+)
+def test_cord_assets_atlas_rejects_custom_report_below_output_before_mutation(
+    tmp_path: Path, relative_report: str
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-report-inside"
+    context.mkdir(parents=True)
+    source = tmp_path / "atlas-report-inside-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "report-inside")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    before = {
+        str(path.relative_to(context)): path.read_bytes()
+        for path in sorted(context.rglob("*"))
+        if path.is_file()
+    }
+    output = context / "atlases"
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(output / relative_report),
+    )
+
+    assert result.returncode == 1
+    assert "custom atlas report must be outside the atlas output root" in result.stderr
+    assert not output.exists()
+    assert {
+        str(path.relative_to(context)): path.read_bytes()
+        for path in sorted(context.rglob("*"))
+        if path.is_file()
+    } == before
+
+
+def test_cord_assets_atlas_rejects_report_ancestor_of_output_before_mutation(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-report-ancestor"
+    context.mkdir(parents=True)
+    source = tmp_path / "atlas-report-ancestor-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "report-ancestor")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    report = context / "atlas-report"
+    output = report / "pages"
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(report),
+    )
+
+    assert result.returncode == 1
+    assert "custom atlas report must be outside the atlas output root" in result.stderr
+    assert not report.exists()
+
+
+@pytest.mark.parametrize("report_kind", ["canonical", "external"])
+def test_cord_assets_atlas_allows_identical_rebuild_with_coherent_report_location(
+    tmp_path: Path, report_kind: str
+) -> None:
+    context = tmp_path / ".context" / f"joyful-donkey-cli-atlas-{report_kind}"
+    context.mkdir(parents=True)
+    source = tmp_path / f"atlas-{report_kind}-source.png"
+    Image.new("RGB", (7, 5), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, report_kind)])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    output = context / "atlases"
+    report = (
+        output / "index.json"
+        if report_kind == "canonical"
+        else context / "reports" / "atlas.json"
+    )
+
+    first = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(report),
+    )
+    assert first.returncode == 0, first.stderr
+    first_index = (output / "index.json").read_bytes()
+    first_page = (output / "page-01.png").read_bytes()
+
+    rebuilt = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(report),
+    )
+
+    assert rebuilt.returncode == 0, rebuilt.stderr
+    assert (output / "index.json").read_bytes() == first_index
+    assert (output / "page-01.png").read_bytes() == first_page
+    assert report.is_file()
+
+
 def test_cord_assets_atlas_rebuild_removes_stale_page_and_rejects_unknown_files(
     tmp_path: Path,
 ) -> None:
@@ -868,7 +988,7 @@ def test_cord_assets_cli_refuses_a_real_sixth_atlas_page(tmp_path: Path) -> None
     )
 
     assert result.returncode == 1
-    assert "requires 6 atlas pages; limit is 5" in result.stderr
+    assert "requires more than 5 atlas pages; limit is 5" in result.stderr
 
 
 def _write_audit_ledger(
