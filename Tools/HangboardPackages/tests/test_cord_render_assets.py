@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import math
 import os
 import shutil
 import time
@@ -11,7 +12,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 import pytest
-from PIL import Image, PngImagePlugin
+from PIL import Image, ImageDraw, PngImagePlugin
 
 import hangboard_packages.cord_render_assets as cord_render_assets
 from hangboard_packages.cord_render_assets import (
@@ -308,6 +309,75 @@ def test_owner_write_parent_swap_cannot_redirect_outside_owner(
     assert hook_ran is True
     assert not (outside / "report.json").exists()
     assert not any(outside.iterdir())
+
+
+def test_freeze_manifest_rejects_replacement_after_parse_without_stale_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "manifest-lifetime-race")
+    source_a = _png(tmp_path / "manifest-a.png", (4, 3), {}, background=(10, 20, 30))
+    source_b = _png(tmp_path / "manifest-b.png", (4, 3), {}, background=(40, 50, 60))
+
+    def record(path: Path, source_id: str) -> dict[str, object]:
+        return {
+            "path": str(path),
+            "sourceID": source_id,
+            "url": f"https://manufacturer.example/{source_id}",
+            "publisher": "Fixture Manufacturer",
+            "role": "product",
+            "revision": "fixture-revision",
+            "reviewedAt": "2026-09-02",
+        }
+
+    manifest = context / "sources" / "index.json"
+    manifest.parent.mkdir(parents=True)
+    manifest_a = json.dumps({"sources": [record(source_a, "manifest-a")]}).encode()
+    manifest_b = json.dumps({"sources": [record(source_b, "manifest-b")]}).encode()
+    manifest.write_bytes(manifest_a)
+    replacement = manifest.with_name("replacement.json")
+    replacement.write_bytes(manifest_b)
+    report = context / "reports" / "source-lock.json"
+    report.parent.mkdir(parents=True)
+    prior_report = b"prior source-lock report\n"
+    report.write_bytes(prior_report)
+    stale_cache = (
+        context
+        / "sources"
+        / "locked"
+        / f"manifest-a-{hashlib.sha256(source_a.read_bytes()).hexdigest()}.png"
+    )
+    actual_snapshot = cord_render_assets._snapshot_image
+    hook_ran = False
+
+    def replacing_manifest_before_source_snapshot(
+        path: Path,
+    ) -> cord_render_assets._ImageSnapshot:
+        nonlocal hook_ran
+        if not hook_ran:
+            hook_ran = True
+            os.replace(replacement, manifest)
+        return actual_snapshot(path)
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_snapshot_image",
+        replacing_manifest_before_source_snapshot,
+    )
+    failure: ValueError | None = None
+    try:
+        cord_render_assets.freeze_source_manifest(manifest, report_path=report)
+    except ValueError as error:
+        failure = error
+
+    assert hook_ran is True
+    assert failure is not None, (
+        "a replaced parsed manifest must not publish successfully"
+    )
+    assert isinstance(failure, ValueError)
+    assert "manifest" in str(failure).lower() or "changed" in str(failure).lower()
+    assert manifest.read_bytes() == manifest_b
+    assert report.read_bytes() == prior_report
+    assert not stale_cache.exists()
 
 
 def test_lock_source_rejects_datetime_instead_of_emitting_invalid_lock(
@@ -849,28 +919,30 @@ def test_atlas_publication_failure_rolls_back_prior_page_set(
     original_page = (output / "page-01.png").read_bytes()
     first = _context_source(tmp_path, "rollback-first", (2000, 1100), (4, 5, 6))
     second = _context_source(tmp_path, "rollback-second", (2000, 1100), (7, 8, 9))
-    original_replace = cord_render_assets.os.replace
+    original_link = cord_render_assets.os.link
     hook_ran = False
 
-    def failing_replace(
+    def failing_link(
         source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
         target: str | bytes | os.PathLike[str] | os.PathLike[bytes],
         *,
         src_dir_fd: int | None = None,
         dst_dir_fd: int | None = None,
+        follow_symlinks: bool = True,
     ) -> None:
         nonlocal hook_ran
         if not hook_ran and Path(os.fsdecode(target)).name == "page-02.png":
             hook_ran = True
             raise OSError("injected second-page publication failure")
-        original_replace(
+        original_link(
             source,
             target,
             src_dir_fd=src_dir_fd,
             dst_dir_fd=dst_dir_fd,
+            follow_symlinks=follow_symlinks,
         )
 
-    monkeypatch.setattr(cord_render_assets.os, "replace", failing_replace)
+    monkeypatch.setattr(cord_render_assets.os, "link", failing_link)
 
     with pytest.raises(OSError, match="injected second-page"):
         build_lossless_atlases([first, second], output)
@@ -918,6 +990,194 @@ def test_atlas_backup_cleanup_failure_restores_every_prior_artifact(
         "index.json",
         "page-01.png",
     ]
+
+
+def test_atlas_backup_cleanup_tamper_cannot_succeed_and_restores_prior_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = _context_source(tmp_path, "cleanup-tamper-original", color=(1, 2, 3))
+    output = _context(tmp_path, "cleanup-tamper-pages") / "pages"
+    build_lossless_atlases([original], output)
+    prior_tree = _file_bytes(output)
+    replacement = _context_source(
+        tmp_path, "cleanup-tamper-replacement", color=(4, 5, 6)
+    )
+    original_unlink = cord_render_assets.os.unlink
+    hook_ran = False
+
+    def tampering_first_backup_cleanup(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal hook_ran
+        if not hook_ran and ".backup-" in Path(os.fsdecode(path)).name:
+            hook_ran = True
+            (output / "page-01.png").write_bytes(b"tampered after final verification")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "unlink", tampering_first_backup_cleanup)
+    failure: OSError | ValueError | None = None
+    try:
+        build_lossless_atlases([replacement], output)
+    except (OSError, ValueError) as error:
+        failure = error
+
+    assert hook_ran is True
+    assert failure is not None, "backup cleanup must not open a success window"
+    assert isinstance(failure, (OSError, ValueError))
+    assert _file_bytes(output) == prior_tree
+
+
+def test_atlas_rollback_uses_payload_fallback_after_transient_backup_restore_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = _context_source(tmp_path, "rollback-fallback-original", color=(1, 2, 3))
+    output = _context(tmp_path, "rollback-fallback-pages") / "pages"
+    build_lossless_atlases([original], output)
+    prior_tree = _file_bytes(output)
+    replacement = _context_source(
+        tmp_path, "rollback-fallback-replacement", color=(4, 5, 6)
+    )
+    actual_verifier = cord_render_assets.verify_atlas_round_trip
+    original_replace = cord_render_assets.os.replace
+    original_unlink = cord_render_assets.os.unlink
+    callback_ran = False
+    rollback_active = False
+    restore_hook_ran = False
+    visible_unlink_attempted = False
+
+    def failing_validation_callback(
+        index: cord_render_assets.AtlasIndex,
+    ) -> cord_render_assets.AtlasVerification:
+        nonlocal callback_ran, rollback_active
+        callback_ran = True
+        verification = actual_verifier(index)
+        assert verification.valid is True
+        rollback_active = True
+        raise ValueError("injected validation callback failure")
+
+    def failing_first_backup_restore(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        target: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal restore_hook_ran
+        source_name = Path(os.fsdecode(source)).name
+        if rollback_active and not restore_hook_ran and ".backup-" in source_name:
+            restore_hook_ran = True
+            raise OSError("injected transient backup restore failure")
+        original_replace(
+            source,
+            target,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    def rejecting_visible_preunlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal visible_unlink_attempted
+        if rollback_active and Path(os.fsdecode(path)).name in {
+            "page-01.png",
+            "index.json",
+        }:
+            visible_unlink_attempted = True
+            raise AssertionError("rollback must not pre-unlink a visible artifact")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets, "verify_atlas_round_trip", failing_validation_callback
+    )
+    monkeypatch.setattr(cord_render_assets.os, "replace", failing_first_backup_restore)
+    monkeypatch.setattr(cord_render_assets.os, "unlink", rejecting_visible_preunlink)
+
+    with pytest.raises(ValueError, match="injected validation callback failure"):
+        build_lossless_atlases([replacement], output)
+
+    assert callback_ran is True
+    assert restore_hook_ran is True
+    assert visible_unlink_attempted is False
+    assert _file_bytes(output) == prior_tree
+    assert not any(path.name.startswith(".") for path in output.iterdir())
+
+
+def test_atlas_rollback_surfaces_unproven_state_when_all_restore_paths_fail(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = _context_source(tmp_path, "rollback-unproven-original", color=(1, 2, 3))
+    output = _context(tmp_path, "rollback-unproven-pages") / "pages"
+    build_lossless_atlases([original], output)
+    prior_page = (output / "page-01.png").read_bytes()
+    replacement = _context_source(
+        tmp_path, "rollback-unproven-replacement", color=(4, 5, 6)
+    )
+    actual_verifier = cord_render_assets.verify_atlas_round_trip
+    original_replace = cord_render_assets.os.replace
+    callback_ran = False
+    rollback_active = False
+    backup_restore_hook_ran = False
+    fallback_restore_hook_ran = False
+
+    def failing_validation_callback(
+        index: cord_render_assets.AtlasIndex,
+    ) -> cord_render_assets.AtlasVerification:
+        nonlocal callback_ran, rollback_active
+        callback_ran = True
+        verification = actual_verifier(index)
+        assert verification.valid is True
+        rollback_active = True
+        raise ValueError("injected persistent validation callback failure")
+
+    def failing_all_restore_replacements(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        target: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal backup_restore_hook_ran, fallback_restore_hook_ran
+        source_name = Path(os.fsdecode(source)).name
+        if rollback_active and source_name.startswith(".index.json.backup-"):
+            backup_restore_hook_ran = True
+            raise OSError("injected persistent backup restore failure")
+        if rollback_active and source_name.startswith(".index.json.restore-"):
+            fallback_restore_hook_ran = True
+            raise OSError("injected persistent payload restore failure")
+        original_replace(
+            source,
+            target,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    monkeypatch.setattr(
+        cord_render_assets, "verify_atlas_round_trip", failing_validation_callback
+    )
+    monkeypatch.setattr(
+        cord_render_assets.os, "replace", failing_all_restore_replacements
+    )
+
+    with pytest.raises(Exception) as captured:
+        build_lossless_atlases([replacement], output)
+
+    assert callback_ran is True
+    assert backup_restore_hook_ran is True
+    assert fallback_restore_hook_ran is True
+    message = str(captured.value).lower()
+    assert "rollback" in message
+    assert "unproven" in message or "not be proven" in message
+    causes: list[str] = []
+    cause: BaseException | None = captured.value
+    while cause is not None:
+        causes.append(str(cause))
+        cause = cause.__cause__
+    assert any("persistent validation callback failure" in text for text in causes)
+    assert (output / "page-01.png").read_bytes() == prior_page
 
 
 def test_atlas_final_verifier_failure_restores_prior_pages_index_report_and_stale_page(
@@ -1297,6 +1557,76 @@ def test_transparency_inspection_rejects_proportional_production_size_inset_matt
         inspect_transparency(path, width, height, (0, 255, 0))
 
 
+@pytest.mark.parametrize(
+    ("size", "inset", "alpha", "textured"),
+    [
+        ((100, 100), 5, 254, True),
+        ((1536, 1024), 22, 254, True),
+        ((100, 100), 0, 249, False),
+    ],
+    ids=["small-envelope-plus-one", "production-envelope-plus-one", "alpha-249"],
+)
+def test_transparency_inspection_rejects_near_full_mattes_beyond_seed_cutoffs(
+    tmp_path: Path,
+    size: tuple[int, int],
+    inset: int,
+    alpha: int,
+    textured: bool,
+) -> None:
+    width, height = size
+    image = Image.new("RGBA", size, (0, 0, 0, 0))
+    matte = Image.new(
+        "RGBA",
+        (width - inset * 2, height - inset * 2),
+        (30, 40, 100, alpha),
+    )
+    image.paste(matte, (inset, inset))
+    if textured:
+        for x in range(inset, width - inset, 16):
+            for y in range(inset, height - inset):
+                image.putpixel((x, y), (90, 30, 20, alpha))
+    for point in ((0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1)):
+        image.putpixel(point, (0, 0, 0, 0))
+    path = tmp_path / f"near-full-{width}x{height}-inset-{inset}-alpha-{alpha}.png"
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, width, height, (0, 255, 0))
+
+
+@pytest.mark.parametrize("alpha", range(249, 256))
+@pytest.mark.parametrize("textured", [False, True])
+@pytest.mark.parametrize("rim_fraction", [0.02, 0.05, 0.08])
+def test_transparency_inspection_rejects_alpha_family_with_normalized_shallow_rims(
+    tmp_path: Path,
+    alpha: int,
+    textured: bool,
+    rim_fraction: float,
+) -> None:
+    width, height = 160, 100
+    inset = max(1, round(min(width, height) * rim_fraction))
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(
+        (inset, inset, width - inset - 1, height - inset - 1),
+        fill=(30, 40, 100, alpha),
+    )
+    if textured:
+        for x in range(inset, width - inset, 13):
+            draw.line(
+                (x, inset, x, height - inset - 1),
+                fill=(90, 30, 20, alpha),
+            )
+    path = tmp_path / (
+        f"normalized-rim-{rim_fraction}-{alpha}-"
+        f"{'textured' if textured else 'flat'}.png"
+    )
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, width, height, (0, 255, 0))
+
+
 def test_transparency_inspection_allows_substantial_isolated_central_product(
     tmp_path: Path,
 ) -> None:
@@ -1308,6 +1638,96 @@ def test_transparency_inspection_allows_substantial_isolated_central_product(
     image.save(path, format="PNG")
 
     report = inspect_transparency(path, 40, 40, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+def test_transparency_inspection_allows_disconnected_units_spanning_canvas(
+    tmp_path: Path,
+) -> None:
+    width, height = 200, 120
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    for box in (
+        (5, 30, 45, 70),
+        (155, 30, 195, 70),
+        (65, 5, 95, 25),
+        (105, 95, 135, 115),
+    ):
+        draw.rounded_rectangle(box, radius=6, fill=(90, 80, 70, 255))
+    path = tmp_path / "disconnected-units-spanning-canvas.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, width, height, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+def test_transparency_inspection_allows_tall_thin_product(tmp_path: Path) -> None:
+    width, height = 120, 200
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    ImageDraw.Draw(image).rounded_rectangle(
+        (50, 8, 69, 191),
+        radius=8,
+        fill=(90, 80, 70, 255),
+    )
+    path = tmp_path / "tall-thin-product.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, width, height, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+@pytest.mark.parametrize("halo_width", [1, 2, 3])
+def test_transparency_inspection_allows_narrow_antialias_halo(
+    tmp_path: Path, halo_width: int
+) -> None:
+    width = height = 100
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle(
+        (19, 19, 80, 80),
+        radius=12,
+        fill=(90, 80, 70, 72),
+    )
+    draw.rounded_rectangle(
+        (
+            19 + halo_width,
+            19 + halo_width,
+            80 - halo_width,
+            80 - halo_width,
+        ),
+        radius=max(1, 12 - halo_width),
+        fill=(90, 80, 70, 255),
+    )
+    path = tmp_path / f"antialias-halo-{halo_width}.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, width, height, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+@pytest.mark.parametrize("coverage", [0.50, 0.65])
+@pytest.mark.parametrize("rounded", [False, True])
+def test_transparency_inspection_allows_large_central_product_shapes(
+    tmp_path: Path, coverage: float, rounded: bool
+) -> None:
+    width = height = 200
+    side = round(math.sqrt(coverage) * width)
+    inset = (width - side) // 2
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    box = (inset, inset, inset + side - 1, inset + side - 1)
+    if rounded:
+        draw.rounded_rectangle(box, radius=side // 6, fill=(90, 80, 70, 255))
+    else:
+        draw.rectangle(box, fill=(90, 80, 70, 255))
+    path = tmp_path / f"central-{coverage}-{'rounded' if rounded else 'square'}.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, width, height, (0, 255, 0))
 
     assert report.boundary_connected_opaque_flood_count == 0
 
