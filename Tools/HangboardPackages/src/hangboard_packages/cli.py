@@ -10,12 +10,17 @@ from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
 from .cord_render_assets import (
-    ChromaConfig,
+    _owner_context,
+    _reject_symlink_components,
     build_lossless_atlases,
-    inspect_transparency,
+    freeze_source_manifest,
+    inspect_transparency_with_config,
+    load_chroma_config,
     load_locked_sources,
     remove_chroma,
+    source_lock_artifact,
     verify_atlas_round_trip,
+    write_owner_json,
 )
 from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
 from .presentation_remediation_audit import (
@@ -149,7 +154,7 @@ def _parser() -> argparse.ArgumentParser:
     cord_commands = cord_assets.add_subparsers(dest="cord_command", required=True)
     lock = cord_commands.add_parser("lock", help="freeze immutable source metadata")
     lock.add_argument("--manifest", type=Path, required=True)
-    lock.add_argument("--report", type=Path, required=True)
+    lock.add_argument("--report", type=Path)
     atlas = cord_commands.add_parser("atlas", help="build and verify lossless source atlases")
     atlas.add_argument("--manifest", type=Path, required=True)
     atlas.add_argument("--output-root", type=Path, required=True)
@@ -158,57 +163,115 @@ def _parser() -> argparse.ArgumentParser:
     key = cord_commands.add_parser("key", help="remove the recorded chroma key to alpha")
     key.add_argument("--input", type=Path, required=True)
     key.add_argument("--output", type=Path, required=True)
-    key.add_argument("--config", type=Path)
+    key.add_argument("--config", type=Path, required=True)
     key.add_argument("--report", type=Path, required=True)
     inspect = cord_commands.add_parser("inspect", help="enforce the focused RGBA transparency contract")
     inspect.add_argument("--image", type=Path, required=True)
-    inspect.add_argument("--expected-width", type=int, required=True)
-    inspect.add_argument("--expected-height", type=int, required=True)
-    inspect.add_argument("--key-rgb", default="0,255,0")
+    inspect.add_argument("--expected-from", required=True)
+    inspect.add_argument("--config", type=Path, required=True)
     inspect.add_argument("--report", type=Path, required=True)
     return parser
 
 
 def _cord_assets(arguments: argparse.Namespace) -> int:
     if arguments.cord_command == "lock":
-        sources = load_locked_sources(arguments.manifest)
-        payload = {"sources": [source.to_json() for source in sources]}
-        _write_owner_json(arguments.report, payload)
+        if arguments.report is not None:
+            _owner_context(arguments.report)
+        sources = freeze_source_manifest(arguments.manifest)
+        payload = source_lock_artifact(sources)
+        if (
+            arguments.report is not None
+            and arguments.report.resolve(strict=False)
+            != arguments.manifest.resolve(strict=False)
+        ):
+            write_owner_json(arguments.report, payload)
     elif arguments.cord_command == "atlas":
+        _owner_context(arguments.output_root)
+        if arguments.report is not None:
+            _owner_context(arguments.report)
         sources = load_locked_sources(arguments.manifest)
         index = build_lossless_atlases(sources, arguments.output_root, max_pages=arguments.max_pages)
-        payload = {"index": index.to_json(), "verification": vars(verify_atlas_round_trip(index))}
-        _write_owner_json(arguments.report or arguments.output_root / "index.json", payload)
+        verification = verify_atlas_round_trip(index)
+        payload = {
+            "index": index.to_json(),
+            "verification": {
+                "valid": verification.valid,
+                "verified_panels": verification.verified_panels,
+            },
+        }
+        write_owner_json(arguments.report or arguments.output_root / "index.json", payload)
     elif arguments.cord_command == "key":
-        config = _load_chroma_config(arguments.config)
+        _owner_context(arguments.output)
+        _owner_context(arguments.report)
+        config = load_chroma_config(arguments.config)
         report = remove_chroma(arguments.input, arguments.output, config)
-        _write_owner_json(arguments.report, report.to_json())
+        payload = report.to_json()
+        write_owner_json(arguments.report, payload)
     else:
-        report = inspect_transparency(arguments.image, arguments.expected_width, arguments.expected_height, _parse_key(arguments.key_rgb))
-        _write_owner_json(arguments.report, report.to_json())
-    print(json.dumps(payload if arguments.cord_command in {"lock", "atlas"} else report.to_json(), indent=2, sort_keys=True))
+        _owner_context(arguments.report)
+        expected_width, expected_height = _presentation_dimensions(arguments.expected_from)
+        config = load_chroma_config(arguments.config)
+        report = inspect_transparency_with_config(
+            arguments.image, expected_width, expected_height, config
+        )
+        payload = report.to_json()
+        write_owner_json(arguments.report, payload)
+    print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
 
-def _write_owner_json(path: Path, payload: object) -> None:
-    from .cord_render_assets import _owner_context
-    _owner_context(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+def _presentation_dimensions(reference: str) -> tuple[int, int]:
+    if not isinstance(reference, str) or ":" not in reference:
+        raise ValueError("--expected-from requires board.json:presentationID")
+    board_text, presentation_id = reference.rsplit(":", 1)
+    if not board_text or not presentation_id:
+        raise ValueError("--expected-from requires board.json:presentationID")
+    board_path = Path(board_text)
+    _reject_symlink_components(board_path)
+    try:
+        payload = json.loads(board_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        raise ValueError("--expected-from board.json is not valid JSON") from error
+    if not isinstance(payload, dict) or not isinstance(payload.get("presentations"), list):
+        raise ValueError("--expected-from board.json requires a presentations array")
+    matches = []
+    for index, record in enumerate(payload["presentations"]):
+        if not isinstance(record, dict):
+            raise ValueError(f"board.json.presentations[{index}] must be an object")
+        if record.get("id") == presentation_id:
+            matches.append((index, record))
+    if len(matches) != 1:
+        raise ValueError(
+            f"--expected-from must identify exactly one presentation: {presentation_id}"
+        )
+    index, presentation = matches[0]
+    asset_path = presentation.get("assetPath")
+    if not isinstance(asset_path, str) or not asset_path:
+        raise ValueError(
+            f"board.json.presentations[{index}].assetPath must be a non-empty string"
+        )
+    relative = Path(asset_path)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(
+            f"board.json.presentations[{index}].assetPath escapes its package"
+        )
+    package_root = board_path.resolve(strict=False).parent
+    asset = (package_root / relative).resolve(strict=False)
+    if package_root not in asset.parents:
+        raise ValueError(
+            f"board.json.presentations[{index}].assetPath escapes its package"
+        )
+    _reject_symlink_components(asset)
+    try:
+        from PIL import Image, UnidentifiedImageError
 
-
-def _parse_key(value: str) -> tuple[int, int, int]:
-    pieces = value.split(",")
-    if len(pieces) != 3:
-        raise ValueError("--key-rgb requires r,g,b")
-    return tuple(int(piece) for piece in pieces)  # type: ignore[return-value]
-
-
-def _load_chroma_config(path: Path | None) -> ChromaConfig:
-    if path is None:
-        return ChromaConfig()
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return ChromaConfig(tuple(payload.get("keyRGB", [0, 255, 0])), payload.get("distanceThreshold", 36), payload.get("edgeDistanceThreshold", 72))
+        with Image.open(asset) as image:
+            if image.format != "PNG":
+                raise ValueError(f"presentation asset is not a PNG: {asset}")
+            image.load()
+            return image.width, image.height
+    except (UnidentifiedImageError, OSError) as error:
+        raise ValueError(f"presentation asset is not readable: {asset}") from error
 
 
 def _transient_file_mapping(
