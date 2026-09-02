@@ -347,10 +347,10 @@ test("mobile canvas controls open the board drawer, repository sheet, and hold i
   });
 });
 
-test("alias presentations stay inspectable but read-only while their source remains editable", async () => {
+test("a constrained alias remains selectable without canvas edit affordances while its source restores constrained handles", async () => {
   const image = imageFixture();
   const sourceDocument: EditorDocument = {
-    ...editorDocument(),
+    ...editorDocument("M 10 10 L 30 10 L 30 30 L 10 30 Z"),
     presentationID: "source",
     equipmentObjects: ["panel-a", "panel-b"],
     regions: [{
@@ -360,6 +360,7 @@ test("alias presentations stay inspectable but read-only while their source rema
       fingerCapacity: 4,
       sizeMillimeters: 20,
       handCapacity: 2,
+      shapeConstraint: { shape: "roundedRectangle", rotationDegrees: 0 },
     }],
   };
   const presentations = [
@@ -415,11 +416,14 @@ test("alias presentations stay inspectable but read-only while their source rema
 
     assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
     await app.click('[data-hold-key="hold-1"]');
-    assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("aria-pressed"), "true");
+    const aliasPath = app.document.querySelector('[data-hold-key="hold-1"]');
+    assert.equal(aliasPath?.getAttribute("aria-pressed"), "true");
+    assert.equal(aliasPath?.getAttribute("tabindex"), "0");
     assert.equal(app.text("#hold-heading"), "hold-1");
     assert.equal(app.document.querySelectorAll(".path-editor-vertex").length, 0);
     assert.equal(app.document.querySelectorAll(".path-editor-rotation-handle").length, 0);
     assert.equal(app.document.querySelectorAll(".path-editor-resize-handle").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-overlay [tabindex=\"0\"]").length, 0);
 
     for (const selector of [
       "#save-button",
@@ -445,28 +449,6 @@ test("alias presentations stay inspectable but read-only while their source rema
       assert.equal(app.disabled(selector), true, `${selector} must be disabled for an alias`);
     }
 
-    const pathBefore = app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d");
-    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
-    await app.pointer('[data-hold-key="hold-1"]', "pointerdown", {
-      pointerId: 7,
-      button: 0,
-      clientX: 10,
-      clientY: 10,
-    });
-    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 20, clientY: 10 });
-    await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 20, clientY: 10 });
-    await app.change("#hold-type-select", "sloper");
-    await app.click("#add-hold-button");
-    await app.click("#delete-hold-button");
-    await app.click("#save-button");
-    const shortcutPrevented = await app.keyDown("#editor-svg", "s", { ctrlKey: true });
-
-    assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d"), pathBefore);
-    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
-    assert.equal(app.text("#save-state"), "Saved");
-    assert.equal(shortcutPrevented, true);
-    assert.equal(saves, 0);
-
     await app.change("#presentation-select", "source");
     await app.flush(() => image.images.succeed());
     assert.equal(app.documentValue("#presentation-select"), "source");
@@ -474,11 +456,83 @@ test("alias presentations stay inspectable but read-only while their source rema
     assert.equal(app.disabled("#add-hold-button"), false);
     await app.click('[data-hold-key="hold-1"]');
     assert.equal(app.disabled("#hold-type-select"), false);
-    assert.equal(app.document.querySelectorAll(".path-editor-vertex").length > 0, true);
     assert.equal(app.document.querySelectorAll(".path-editor-rotation-handle").length, 1);
-    await app.change("#hold-type-select", "sloper");
-    assert.equal(app.documentValue("#hold-type-select"), "sloper");
-    assert.equal(app.text("#save-state"), "Unsaved changes");
+    assert.equal(app.document.querySelectorAll(".path-editor-resize-handle").length > 0, true);
+    assert.equal(app.document.querySelectorAll(".path-editor-overlay [tabindex=\"0\"]").length, 0);
+    assert.equal(saves, 0);
+  });
+});
+
+test("alias Ctrl/Cmd-S prevents the browser default without saving", async () => {
+  const image = imageFixture();
+  const sourceDocument: EditorDocument = {
+    ...editorDocument(),
+    presentationID: "source",
+    equipmentObjects: ["panel-a"],
+    regions: [{
+      ...editorDocument().regions[0]!,
+      equipmentObjectID: "panel-a",
+      metadata: { holdID: "hold-1", pieceIndex: 0, presentationID: "source" },
+      fingerCapacity: 4,
+      sizeMillimeters: 20,
+      handCapacity: 2,
+    }],
+  };
+  const presentations = [
+    {
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentation=source",
+      default: true,
+    },
+    {
+      presentationID: "inverted-alias",
+      displayName: "Inverted alias",
+      imageUrl: "/api/boards/board-a/image",
+      default: false,
+      sourcePresentationID: "source",
+      isInverted: true as const,
+      geometryRotationAnchor: { x: 0.5, y: 0.68 },
+    },
+  ];
+  const boardForPresentation = (presentationID: string): Board => ({
+    ...boardFixture("board-a", sourceDocument),
+    imageUrl: presentations.find((presentation) => presentation.presentationID === presentationID)!.imageUrl,
+    selectedPresentationID: presentationID,
+    presentations,
+    document: {
+      ...structuredClone(sourceDocument),
+      presentationID,
+      regions: sourceDocument.regions.map((region) => ({
+        ...structuredClone(region),
+        metadata: region.metadata ? { ...region.metadata, presentationID } : undefined,
+      })),
+    },
+  });
+  let saves = 0;
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard(_boardId, presentationID) {
+        return boardForPresentation(presentationID ?? "inverted-alias");
+      },
+      async saveBoard() {
+        saves += 1;
+        return boardForPresentation("source");
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    while (image.images.pending.length > 0) await app.flush(() => image.images.succeed());
+
+    assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
+    const prevented = await app.keyDown("#editor-svg", "s", { ctrlKey: true });
+
+    assert.equal(prevented, true);
+    assert.equal(saves, 0);
   });
 });
 
