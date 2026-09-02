@@ -2648,6 +2648,86 @@ def test_lock_release_failure_after_commit_preserves_committed_output(
     )
 
 
+def test_atlas_outer_lock_release_failure_after_commit_is_phase_classified(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = _context_source(
+        tmp_path,
+        "atlas-outer-unlock-original",
+        color=(10, 20, 30),
+    )
+    replacement = _context_source(
+        tmp_path,
+        "atlas-outer-unlock-replacement",
+        color=(90, 100, 110),
+    )
+    context = _context(tmp_path, "atlas-outer-unlock")
+    output = context / "pages"
+    external_report = context / "reports" / "atlas-report.json"
+    build_lossless_atlases([original], output)
+    prior_page = (output / "page-01.png").read_bytes()
+    prior_index = (output / "index.json").read_bytes()
+    expected_index, expected_pages, expected_stale = cord_render_assets._prepare_atlas(
+        [replacement],
+        output,
+        5,
+    )
+    assert len(expected_pages) == 1
+    assert expected_stale == ()
+    assert external_report.exists() is False
+
+    original_flock = cord_render_assets.fcntl.flock
+    original_fstat = cord_render_assets.os.fstat
+    unlock_descriptors: list[int] = []
+    injected_message = "injected after real atlas outer unlock"
+
+    def unlock_then_raise(descriptor: int, operation: int) -> None:
+        original_flock(descriptor, operation)
+        if operation & cord_render_assets.fcntl.LOCK_UN:
+            unlock_descriptors.append(descriptor)
+            raise OSError(injected_message)
+
+    monkeypatch.setattr(cord_render_assets.fcntl, "flock", unlock_then_raise)
+
+    with pytest.raises(RuntimeError) as captured:
+        build_lossless_atlases_with_report(
+            [replacement],
+            output,
+            report_path=external_report,
+        )
+
+    expected_payload = cord_render_assets._atlas_report_payload(expected_index)
+    canonical_payload = json.loads((output / "index.json").read_text("utf-8"))
+    external_payload = json.loads(external_report.read_text("utf-8"))
+    assert canonical_payload == expected_payload
+    assert external_payload == expected_payload
+    assert (output / "page-01.png").read_bytes() == expected_pages[0][1]
+    assert (output / "page-01.png").read_bytes() != prior_page
+    assert (output / "index.json").read_bytes() != prior_index
+    assert verify_atlas_round_trip(expected_index).valid is True
+    assert len(unlock_descriptors) == 1
+    with pytest.raises(OSError):
+        original_fstat(unlock_descriptors[0])
+    assert sorted(
+        str(path.relative_to(context)) for path in context.rglob("*") if path.is_file()
+    ) == [
+        "pages/index.json",
+        "pages/page-01.png",
+        "reports/atlas-report.json",
+    ]
+    assert not any(path.name.startswith(".") for path in context.rglob("*"))
+
+    assert type(captured.value) is RuntimeError
+    assert "publication committed" in str(captured.value).lower()
+    assert "cleanup state is unproven" in str(captured.value).lower()
+    private_cause = captured.value.__cause__
+    assert type(private_cause) is cord_render_assets._PublicationLockStateError
+    assert str(private_cause) == (
+        "publication lock release is unproven: "
+        f"unlock {context.resolve()}: {injected_message}"
+    )
+
+
 def test_partial_multi_owner_flock_failure_releases_and_closes_every_descriptor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

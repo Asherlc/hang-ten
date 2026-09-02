@@ -3499,13 +3499,23 @@ def _build_and_publish_atlases(
     lock_paths = [output_root]
     if report is not None:
         lock_paths.append(report)
-    with _publication_transaction_lock(tuple(lock_paths)):
-        return _build_and_publish_atlases_locked(
-            sources,
-            output_root,
-            max_pages=max_pages,
-            report_path=report,
-        )
+    publication_committed = False
+    try:
+        with _publication_transaction_lock(tuple(lock_paths)):
+            index = _build_and_publish_atlases_locked(
+                sources,
+                output_root,
+                max_pages=max_pages,
+                report_path=report,
+            )
+            publication_committed = True
+            return index
+    except _PublicationLockStateError as error:
+        if publication_committed:
+            raise RuntimeError(
+                f"publication committed; cleanup state is unproven: {error}"
+            ) from error
+        raise
 
 
 def build_lossless_atlases(
