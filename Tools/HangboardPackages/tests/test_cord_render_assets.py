@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import hashlib
 import inspect
+import json
 import os
+import shutil
 import time
 from dataclasses import replace
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import pytest
@@ -14,6 +16,7 @@ from PIL import Image, PngImagePlugin
 import hangboard_packages.cord_render_assets as cord_render_assets
 from hangboard_packages.cord_render_assets import (
     ChromaConfig,
+    LockedSource,
     build_lossless_atlases,
     decoded_pixel_sha256,
     inspect_transparency,
@@ -65,7 +68,9 @@ def _context_source(
     color: tuple[int, int, int] = (40, 50, 60),
 ) -> object:
     root = _context(tmp_path, f"source-{source_id}")
-    return _locked(_png(root / f"{source_id}.png", size, {}, background=color), source_id)
+    return _locked(
+        _png(root / f"{source_id}.png", size, {}, background=color), source_id
+    )
 
 
 def _small_index(tmp_path: Path, prefix: str = "tamper") -> object:
@@ -76,6 +81,23 @@ def _small_index(tmp_path: Path, prefix: str = "tamper") -> object:
     )
 
 
+def _refreshed_source_digest(source: LockedSource) -> str:
+    payload = source.to_json()
+    payload.pop("canonicalDigest")
+    return hashlib.sha256(
+        json.dumps(
+            {
+                "digestVersion": 1,
+                "kind": "cordLockedSource",
+                "source": payload,
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+    ).hexdigest()
+
+
 def test_decoded_pixel_hash_ignores_png_container_metadata(tmp_path: Path) -> None:
     first = _png(tmp_path / "first.png", (3, 2), {(1, 1): (12, 34, 56)})
     second = tmp_path / "second.png"
@@ -84,9 +106,10 @@ def test_decoded_pixel_hash_ignores_png_container_metadata(tmp_path: Path) -> No
         metadata.add_text("Comment", "different container metadata")
         image.save(second, format="PNG", pnginfo=metadata)
 
-    assert hashlib.sha256(first.read_bytes()).hexdigest() != hashlib.sha256(
-        second.read_bytes()
-    ).hexdigest()
+    assert (
+        hashlib.sha256(first.read_bytes()).hexdigest()
+        != hashlib.sha256(second.read_bytes()).hexdigest()
+    )
     assert decoded_pixel_sha256(first) == decoded_pixel_sha256(second)
 
 
@@ -145,26 +168,20 @@ def test_lock_source_uses_one_consistent_snapshot(
     workspace.mkdir()
     monkeypatch.setenv("PASEO_WORKTREE_PATH", str(workspace))
     source = _png(tmp_path / "snapshot.png", (4, 3), {}, background=(1, 2, 3))
-    replacement = _png(
-        tmp_path / "replacement.png", (4, 3), {}, background=(200, 201, 202)
-    ).read_bytes()
-    original_read_bytes = Path.read_bytes
-    source_resolved = source.resolve()
+    original_read = cord_render_assets.os.read
     reads = 0
 
-    def alternating_read_bytes(path: Path) -> bytes:
+    def observed_read(descriptor: int, count: int) -> bytes:
         nonlocal reads
-        if path.resolve() == source_resolved:
-            reads += 1
-            if reads % 2 == 0:
-                return replacement
-        return original_read_bytes(path)
+        reads += 1
+        return original_read(descriptor, count)
 
-    monkeypatch.setattr(Path, "read_bytes", alternating_read_bytes)
+    monkeypatch.setattr(cord_render_assets.os, "read", observed_read)
 
     locked = _locked(source, "single-snapshot")
-    cache_bytes = original_read_bytes(locked.cache_path)
+    cache_bytes = locked.cache_path.read_bytes()
 
+    assert reads > 0
     assert hashlib.sha256(cache_bytes).hexdigest() == locked.byte_sha256
     assert decoded_pixel_sha256(locked.cache_path) == locked.decoded_pixel_sha256
     assert (locked.width, locked.height, locked.mode) == (4, 3, "RGB")
@@ -176,7 +193,9 @@ def test_lock_source_fails_if_path_is_replaced_while_snapshot_is_open(
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     monkeypatch.setenv("PASEO_WORKTREE_PATH", str(workspace))
-    source = _png(tmp_path / "replace-during-read.png", (4, 3), {}, background=(1, 2, 3))
+    source = _png(
+        tmp_path / "replace-during-read.png", (4, 3), {}, background=(1, 2, 3)
+    )
     replacement = _png(
         tmp_path / "replacement-during-read.png",
         (4, 3),
@@ -198,6 +217,110 @@ def test_lock_source_fails_if_path_is_replaced_while_snapshot_is_open(
 
     with pytest.raises(ValueError, match="changed while it was being locked"):
         _locked(source, "replaced-snapshot")
+
+
+def test_lock_source_parent_swap_cannot_substitute_attacker_pixels(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    monkeypatch.setenv("PASEO_WORKTREE_PATH", str(workspace))
+    trusted_parent = tmp_path / "trusted-parent"
+    attacker_parent = tmp_path / "attacker-parent"
+    trusted_parent.mkdir()
+    attacker_parent.mkdir()
+    source = _png(trusted_parent / "source.png", (4, 3), {}, background=(1, 2, 3))
+    attacker = _png(
+        attacker_parent / "source.png", (4, 3), {}, background=(200, 201, 202)
+    )
+    displaced = tmp_path / "trusted-parent-displaced"
+    original_open = cord_render_assets.os.open
+    hook_ran = False
+
+    def racing_open(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        flags: int,
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> int:
+        nonlocal hook_ran
+        if not hook_ran and Path(os.fsdecode(path)).name == "source.png":
+            hook_ran = True
+            trusted_parent.rename(displaced)
+            trusted_parent.symlink_to(attacker_parent, target_is_directory=True)
+        return original_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "open", racing_open)
+
+    with pytest.raises(ValueError, match="changed|symlink"):
+        _locked(source, "parent-race")
+
+    assert hook_ran is True
+    assert attacker.read_bytes() == (attacker_parent / "source.png").read_bytes()
+    assert not (
+        workspace / ".context" / "joyful-donkey-cord-assets" / "sources" / "locked"
+    ).exists()
+
+
+def test_owner_write_parent_swap_cannot_redirect_outside_owner(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "output-parent-race")
+    approved_parent = context / "reports"
+    approved_parent.mkdir()
+    displaced = context / "reports-displaced"
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    target = approved_parent / "report.json"
+    original_open = cord_render_assets.os.open
+    hook_ran = False
+
+    def racing_open(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        flags: int,
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> int:
+        nonlocal hook_ran
+        name = Path(os.fsdecode(path)).name
+        if not hook_ran and flags & os.O_CREAT and ".report.json.tmp-" in name:
+            hook_ran = True
+            approved_parent.rename(displaced)
+            approved_parent.symlink_to(outside, target_is_directory=True)
+        return original_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "open", racing_open)
+
+    with pytest.raises(ValueError, match="changed|symlink"):
+        cord_render_assets.write_owner_json(target, {"safe": True})
+
+    assert hook_ran is True
+    assert not (outside / "report.json").exists()
+    assert not any(outside.iterdir())
+
+
+def test_lock_source_rejects_datetime_instead_of_emitting_invalid_lock(
+    tmp_path: Path,
+) -> None:
+    source = _png(
+        _context(tmp_path, "datetime") / "source.png",
+        (3, 3),
+        {},
+        background=(1, 2, 3),
+    )
+
+    with pytest.raises(ValueError, match="immutable date"):
+        lock_source(
+            source,
+            source_id="datetime",
+            url="https://manufacturer.example/datetime",
+            publisher="Fixture Manufacturer",
+            role="product",
+            revision="fixture-revision",
+            reviewed_at=datetime(2026, 9, 2, 3, 4, 5),
+        )
 
 
 @pytest.mark.parametrize(
@@ -275,6 +398,85 @@ def test_atlas_uses_deterministic_two_dimensional_packing(tmp_path: Path) -> Non
     assert verify_atlas_round_trip(first).verified_panels == 6
 
 
+def test_atlas_accepts_five_lossless_pair_pages_that_source_order_defeats(
+    tmp_path: Path,
+) -> None:
+    sources = []
+    for pair in range(5):
+        sources.append(
+            _context_source(
+                tmp_path,
+                f"{pair * 2:02d}-shorter",
+                (1000, 1015),
+                (10 + pair, 60, 90),
+            )
+        )
+        sources.append(
+            _context_source(
+                tmp_path,
+                f"{pair * 2 + 1:02d}-taller",
+                (1020, 1017),
+                (20 + pair, 80, 110),
+            )
+        )
+
+    index = build_lossless_atlases(
+        sources, _context(tmp_path, "five-pair-pages") / "pages", max_pages=5
+    )
+
+    assert len(index.pages) <= 5
+    assert verify_atlas_round_trip(index).verified_panels == 10
+
+
+def test_atlas_size_aware_packing_accepts_mixed_tall_and_short_set_in_four_pages(
+    tmp_path: Path,
+) -> None:
+    sources = []
+    for number in range(12):
+        sources.append(
+            _context_source(
+                tmp_path,
+                f"{number:02d}-tall",
+                (1000, 1000),
+                (20 + number, 40, 80),
+            )
+        )
+        sources.append(
+            _context_source(
+                tmp_path,
+                f"{number:02d}-short",
+                (1000, 100),
+                (80, 20 + number, 40),
+            )
+        )
+
+    index = build_lossless_atlases(
+        sources, _context(tmp_path, "four-mixed-pages") / "pages", max_pages=5
+    )
+
+    assert len(index.pages) <= 4
+    assert verify_atlas_round_trip(index).verified_panels == 24
+
+
+def test_atlas_records_source_derived_bound_and_accepts_source_over_2048(
+    tmp_path: Path,
+) -> None:
+    sources = [
+        _context_source(tmp_path, "large", (2100, 10), (1, 2, 3)),
+        *[
+            _context_source(tmp_path, f"small-{number}", (10, 10), (number, 4, 5))
+            for number in range(5)
+        ],
+    ]
+
+    index = build_lossless_atlases(
+        sources, _context(tmp_path, "source-derived-bound") / "pages"
+    )
+
+    assert index.max_dimension >= 2116
+    assert verify_atlas_round_trip(index).verified_panels == 6
+
+
 def test_atlas_refuses_a_genuine_sixth_page_and_reports_the_limit(
     tmp_path: Path,
 ) -> None:
@@ -344,6 +546,61 @@ def test_atlas_verifier_rejects_tampered_source_record(tmp_path: Path) -> None:
         verify_atlas_round_trip(replace(index, sources=missing_metadata))
 
 
+def test_atlas_verifier_rejects_valid_value_source_provenance_tampering(
+    tmp_path: Path,
+) -> None:
+    index = _small_index(tmp_path, "source-provenance")
+    source = index.sources[0]
+    changed_url = replace(source, url="https://different.example/valid-revision")
+
+    with pytest.raises(ValueError, match="canonical|digest|provenance"):
+        verify_atlas_round_trip(
+            replace(index, sources=(changed_url, *index.sources[1:]))
+        )
+    refreshed_url = replace(
+        changed_url, canonical_digest=_refreshed_source_digest(changed_url)
+    )
+    with pytest.raises(ValueError, match="source lock digest"):
+        verify_atlas_round_trip(
+            replace(index, sources=(refreshed_url, *index.sources[1:]))
+        )
+
+    changed_id = "renamed-source"
+    renamed = replace(source, source_id=changed_id)
+    panels = tuple(
+        replace(panel, source_id=changed_id)
+        if panel.source_id == source.source_id
+        else panel
+        for panel in index.panels
+    )
+    with pytest.raises(ValueError, match="canonical|digest|provenance"):
+        verify_atlas_round_trip(
+            replace(index, sources=(renamed, *index.sources[1:]), panels=panels)
+        )
+
+
+def test_atlas_verifier_rejects_noncanonical_cache_name_with_identical_bytes(
+    tmp_path: Path,
+) -> None:
+    index = _small_index(tmp_path, "cache-name")
+    source = index.sources[0]
+    renamed_cache = source.cache_path.with_name("valid-looking-renamed-cache.png")
+    shutil.copyfile(source.cache_path, renamed_cache)
+    changed = replace(source, cache_path=renamed_cache.resolve())
+    changed = replace(changed, canonical_digest=_refreshed_source_digest(changed))
+
+    with pytest.raises(ValueError, match="cache path|canonical|digest"):
+        verify_atlas_round_trip(
+            replace(
+                index,
+                sources=(
+                    changed,
+                    *index.sources[1:],
+                ),
+            )
+        )
+
+
 def test_atlas_verifier_rejects_tampered_page_record(tmp_path: Path) -> None:
     index = _small_index(tmp_path, "page-record")
     page = index.pages[0]
@@ -367,11 +624,169 @@ def test_atlas_verifier_rejects_tampered_page_pixels_and_path(tmp_path: Path) ->
     fresh = _small_index(tmp_path, "page-path")
     outside = tmp_path / "outside-page.png"
     outside.write_bytes(fresh.pages[0].path.read_bytes())
-    escaped = replace(
-        fresh, pages=(replace(fresh.pages[0], path=outside.resolve()),)
-    )
+    escaped = replace(fresh, pages=(replace(fresh.pages[0], path=outside.resolve()),))
     with pytest.raises(ValueError, match="owner-named .context"):
         verify_atlas_round_trip(escaped)
+
+
+def test_atlas_verifier_binds_exact_output_root_and_canonical_page_path(
+    tmp_path: Path,
+) -> None:
+    index = _small_index(tmp_path, "bound-page-path")
+    page = index.pages[0]
+    relocated_root = _context(tmp_path, "relocated-page") / "pages"
+    relocated_root.mkdir(parents=True)
+    relocated = relocated_root / page.path.name
+    shutil.copyfile(page.path, relocated)
+
+    with pytest.raises(ValueError, match="output root|page path"):
+        verify_atlas_round_trip(
+            replace(index, pages=(replace(page, path=relocated.resolve()),))
+        )
+
+
+def test_atlas_verifier_reconstructs_padding_instead_of_trusting_page_hashes(
+    tmp_path: Path,
+) -> None:
+    index = _small_index(tmp_path, "canonical-padding")
+    page = index.pages[0]
+    with Image.open(page.path) as opened:
+        image = opened.convert("RGBA")
+    image.putpixel((0, 0), (255, 0, 0, 255))
+    image.save(page.path, format="PNG", optimize=False, compress_level=9)
+    changed_bytes = page.path.read_bytes()
+    tampered_page = replace(
+        page,
+        byte_sha256=hashlib.sha256(changed_bytes).hexdigest(),
+        decoded_pixel_sha256=decoded_pixel_sha256(page.path),
+    )
+    tampered_index = replace(index, pages=(tampered_page,))
+    canonical = tampered_index.to_json()
+    canonical.pop("atlasIndexSHA256")
+    refreshed_index_digest = hashlib.sha256(
+        json.dumps(
+            canonical,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    tampered_index = replace(tampered_index, atlas_index_sha256=refreshed_index_digest)
+
+    with pytest.raises(ValueError, match="canonical page (pixels|bytes)"):
+        verify_atlas_round_trip(tampered_index)
+
+
+def test_atlas_rebuild_removes_only_stale_canonical_pages(tmp_path: Path) -> None:
+    first = _context_source(tmp_path, "rebuild-first", (2000, 1100), (1, 2, 3))
+    second = _context_source(tmp_path, "rebuild-second", (2000, 1100), (4, 5, 6))
+    output = _context(tmp_path, "rebuild-pages") / "pages"
+
+    initial = build_lossless_atlases([first, second], output)
+    assert len(initial.pages) == 2
+    assert (output / "page-02.png").is_file()
+
+    rebuilt = build_lossless_atlases([first], output)
+
+    assert len(rebuilt.pages) == 1
+    assert (output / "page-01.png").is_file()
+    assert not (output / "page-02.png").exists()
+
+
+def test_atlas_rebuild_rejects_unknown_files_without_deleting_them(
+    tmp_path: Path,
+) -> None:
+    source = _context_source(tmp_path, "unknown-output-file")
+    output = _context(tmp_path, "unknown-output") / "pages"
+    output.mkdir(parents=True)
+    unknown = output / "notes.txt"
+    unknown.write_text("not an atlas artifact", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unknown atlas output"):
+        build_lossless_atlases([source], output)
+
+    assert unknown.read_text(encoding="utf-8") == "not an atlas artifact"
+    assert not (output / "page-01.png").exists()
+
+
+def test_atlas_publication_failure_rolls_back_prior_page_set(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = _context_source(tmp_path, "rollback-original", color=(1, 2, 3))
+    output = _context(tmp_path, "rollback-pages") / "pages"
+    build_lossless_atlases([original], output)
+    original_page = (output / "page-01.png").read_bytes()
+    first = _context_source(tmp_path, "rollback-first", (2000, 1100), (4, 5, 6))
+    second = _context_source(tmp_path, "rollback-second", (2000, 1100), (7, 8, 9))
+    original_replace = cord_render_assets.os.replace
+    hook_ran = False
+
+    def failing_replace(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        target: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal hook_ran
+        if not hook_ran and Path(os.fsdecode(target)).name == "page-02.png":
+            hook_ran = True
+            raise OSError("injected second-page publication failure")
+        original_replace(
+            source,
+            target,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    monkeypatch.setattr(cord_render_assets.os, "replace", failing_replace)
+
+    with pytest.raises(OSError, match="injected second-page"):
+        build_lossless_atlases([first, second], output)
+
+    assert hook_ran is True
+    assert (output / "page-01.png").read_bytes() == original_page
+    assert not (output / "page-02.png").exists()
+
+
+def test_atlas_backup_cleanup_failure_restores_every_prior_artifact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = _context_source(tmp_path, "cleanup-original", color=(1, 2, 3))
+    output = _context(tmp_path, "cleanup-pages") / "pages"
+    build_lossless_atlases([original], output)
+    original_page = (output / "page-01.png").read_bytes()
+    original_index = (output / "index.json").read_bytes()
+    replacement = _context_source(tmp_path, "cleanup-replacement", color=(4, 5, 6))
+    original_unlink = cord_render_assets.os.unlink
+    backup_unlinks = 0
+    hook_ran = False
+
+    def failing_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal backup_unlinks, hook_ran
+        if ".backup-" in Path(os.fsdecode(path)).name:
+            backup_unlinks += 1
+            if backup_unlinks == 2 and not hook_ran:
+                hook_ran = True
+                raise OSError("injected backup cleanup failure")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "unlink", failing_unlink)
+
+    with pytest.raises(OSError, match="injected backup cleanup"):
+        build_lossless_atlases([replacement], output)
+
+    assert hook_ran is True
+    assert (output / "page-01.png").read_bytes() == original_page
+    assert (output / "index.json").read_bytes() == original_index
+    assert sorted(path.name for path in output.iterdir()) == [
+        "index.json",
+        "page-01.png",
+    ]
 
 
 def test_atlas_verifier_rejects_tampered_index_constants(tmp_path: Path) -> None:
@@ -567,6 +982,45 @@ def test_transparency_inspection_rejects_textured_boundary_matte(
         inspect_transparency(path, 20, 20, (0, 255, 0))
 
 
+@pytest.mark.parametrize("textured", [False, True])
+def test_transparency_inspection_rejects_substantial_alpha_254_matte(
+    tmp_path: Path, textured: bool
+) -> None:
+    image = Image.new("RGBA", (20, 20), (20, 30, 100, 254))
+    for x in range(20):
+        for y in range(20):
+            if textured and (x + y) % 2:
+                image.putpixel((x, y), (80, 30, 20, 254))
+    for point in ((0, 0), (19, 0), (0, 19), (19, 19)):
+        image.putpixel(point, (0, 0, 0, 0))
+    for x in range(8, 12):
+        for y in range(8, 12):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    path = tmp_path / f"alpha-254-{'textured' if textured else 'flat'}.png"
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, 20, 20, (0, 255, 0))
+
+
+def test_transparency_inspection_rejects_one_pixel_inset_near_opaque_matte(
+    tmp_path: Path,
+) -> None:
+    image = Image.new("RGBA", (24, 24), (0, 0, 0, 0))
+    for x in range(1, 23):
+        for y in range(1, 23):
+            color = (20, 30, 100) if (x + y) % 2 else (70, 20, 30)
+            image.putpixel((x, y), (*color, 254))
+    for x in range(9, 15):
+        for y in range(9, 15):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    path = tmp_path / "inset-alpha-254-matte.png"
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, 24, 24, (0, 255, 0))
+
+
 def test_transparency_inspection_allows_small_documented_boundary_contact(
     tmp_path: Path,
 ) -> None:
@@ -577,6 +1031,23 @@ def test_transparency_inspection_allows_small_documented_boundary_contact(
         for y in range(8, 13):
             image.putpixel((x, y), (90, 80, 70, 255))
     path = tmp_path / "small-contact.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, 20, 20, (0, 255, 0))
+
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+def test_transparency_inspection_allows_small_near_opaque_cord_contact_and_antialias(
+    tmp_path: Path,
+) -> None:
+    image = Image.new("RGBA", (20, 20), (0, 0, 0, 0))
+    for y, alpha in enumerate((254, 254, 220, 180)):
+        image.putpixel((10, y), (30, 30, 30, alpha))
+    for x in range(8, 13):
+        for y in range(8, 13):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    path = tmp_path / "small-near-opaque-contact.png"
     image.save(path, format="PNG")
 
     report = inspect_transparency(path, 20, 20, (0, 255, 0))
@@ -646,7 +1117,10 @@ def test_remove_chroma_requires_explicit_config_and_confined_distinct_output(
 ) -> None:
     raw = _png(tmp_path / "raw.png", (3, 3), {})
 
-    assert inspect.signature(remove_chroma).parameters["config"].default is inspect.Signature.empty
+    assert (
+        inspect.signature(remove_chroma).parameters["config"].default
+        is inspect.Signature.empty
+    )
     with pytest.raises(ValueError, match="in place"):
         remove_chroma(raw, raw, ChromaConfig())
     with pytest.raises(ValueError, match="owner-named .context"):

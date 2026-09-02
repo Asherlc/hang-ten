@@ -12,10 +12,10 @@ import json
 import math
 import os
 import re
+import secrets
 import stat
-import tempfile
 from collections import deque
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from pathlib import Path
 from typing import Sequence
@@ -24,51 +24,204 @@ import PIL
 from PIL import Image, UnidentifiedImageError
 
 
-_TOOL_VERSION = "cord-render-assets/1"
-_SCHEMA_VERSION = 1
+_TOOL_VERSION = "cord-render-assets/2"
+_SCHEMA_VERSION = 2
+_DIGEST_VERSION = 1
 _OWNER_PREFIX = "joyful-donkey-"
-_ATLAS_MAX_DIMENSION = 2048
+_ATLAS_BASE_DIMENSION = 2048
 _ATLAS_PADDING = 8
+_ATLAS_NEUTRAL_RGBA = (128, 128, 128, 255)
+_ATLAS_PACKING_ALGORITHM = "maxrects-bottom-left-exact/1"
+_ATLAS_SEARCH_NODE_LIMIT = 250_000
 _ATLAS_MODES = frozenset({"1", "L", "LA", "P", "RGB", "RGBA"})
 _SOURCE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
+_ATLAS_PAGE_NAME = re.compile(r"page-([0-9]{2})\.png\Z")
+
+_DIRECTORY_FLAGS = os.O_RDONLY
+if hasattr(os, "O_DIRECTORY"):
+    _DIRECTORY_FLAGS |= os.O_DIRECTORY
+if hasattr(os, "O_NOFOLLOW"):
+    _DIRECTORY_FLAGS |= os.O_NOFOLLOW
+if hasattr(os, "O_CLOEXEC"):
+    _DIRECTORY_FLAGS |= os.O_CLOEXEC
+
+_READ_FLAGS = os.O_RDONLY
+if hasattr(os, "O_NOFOLLOW"):
+    _READ_FLAGS |= os.O_NOFOLLOW
+if hasattr(os, "O_CLOEXEC"):
+    _READ_FLAGS |= os.O_CLOEXEC
+
+_CREATE_FLAGS = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+if hasattr(os, "O_NOFOLLOW"):
+    _CREATE_FLAGS |= os.O_NOFOLLOW
+if hasattr(os, "O_CLOEXEC"):
+    _CREATE_FLAGS |= os.O_CLOEXEC
 
 
 def _absolute(path: Path) -> Path:
     return Path(os.path.abspath(os.fspath(path)))
 
 
+def _identity(metadata: os.stat_result) -> tuple[int, int]:
+    return metadata.st_dev, metadata.st_ino
+
+
+@dataclass
+class _HeldParent:
+    path: Path
+    parent_fd: int
+    leaf: str
+    chain: tuple[tuple[str, int, int], ...]
+    created_directories: tuple[Path, ...] = ()
+
+    def close(self) -> None:
+        if self.parent_fd >= 0:
+            os.close(self.parent_fd)
+            self.parent_fd = -1
+
+
+def _path_parts(path: Path) -> tuple[Path, tuple[str, ...]]:
+    absolute = _absolute(path)
+    if not absolute.is_absolute() or absolute == Path(absolute.anchor):
+        raise ValueError(f"path must identify a leaf: {absolute}")
+    parts = absolute.parts[1:]
+    if not parts or any(part in {"", ".", ".."} or "/" in part for part in parts):
+        raise ValueError(f"path contains an unsafe component: {absolute}")
+    return absolute, parts
+
+
+def _open_parent(path: Path, *, create: bool = False) -> _HeldParent:
+    absolute, parts = _path_parts(path)
+    descriptor = os.open(absolute.anchor, _DIRECTORY_FLAGS)
+    root_metadata = os.fstat(descriptor)
+    chain: list[tuple[str, int, int]] = [
+        (absolute.anchor, root_metadata.st_dev, root_metadata.st_ino)
+    ]
+    created: list[Path] = []
+    current = Path(absolute.anchor)
+    try:
+        for component in parts[:-1]:
+            current /= component
+            try:
+                next_descriptor = os.open(
+                    component, _DIRECTORY_FLAGS, dir_fd=descriptor
+                )
+            except FileNotFoundError:
+                if not create:
+                    raise
+                os.mkdir(component, 0o700, dir_fd=descriptor)
+                created.append(current)
+                next_descriptor = os.open(
+                    component, _DIRECTORY_FLAGS, dir_fd=descriptor
+                )
+            except OSError as error:
+                raise ValueError(
+                    f"symlink or non-directory path component is rejected: {current}"
+                ) from error
+            metadata = os.fstat(next_descriptor)
+            if not stat.S_ISDIR(metadata.st_mode):
+                os.close(next_descriptor)
+                raise ValueError(f"path component is not a directory: {current}")
+            chain.append((component, metadata.st_dev, metadata.st_ino))
+            os.close(descriptor)
+            descriptor = next_descriptor
+        return _HeldParent(
+            absolute,
+            descriptor,
+            parts[-1],
+            tuple(chain),
+            tuple(created),
+        )
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _revalidate_anchor(
+    anchor: _HeldParent,
+    *,
+    leaf_identity: tuple[int, int] | None = None,
+) -> None:
+    descriptor = os.open(anchor.path.anchor, _DIRECTORY_FLAGS)
+    try:
+        root = os.fstat(descriptor)
+        expected_root = anchor.chain[0]
+        if _identity(root) != (expected_root[1], expected_root[2]):
+            raise ValueError(f"path changed during operation: {anchor.path}")
+        for component, expected_device, expected_inode in anchor.chain[1:]:
+            try:
+                next_descriptor = os.open(
+                    component, _DIRECTORY_FLAGS, dir_fd=descriptor
+                )
+            except OSError as error:
+                raise ValueError(
+                    f"path changed during operation: {anchor.path}"
+                ) from error
+            metadata = os.fstat(next_descriptor)
+            os.close(descriptor)
+            descriptor = next_descriptor
+            if _identity(metadata) != (expected_device, expected_inode):
+                raise ValueError(f"path changed during operation: {anchor.path}")
+        if _identity(os.fstat(descriptor)) != _identity(os.fstat(anchor.parent_fd)):
+            raise ValueError(f"path changed during operation: {anchor.path}")
+        if leaf_identity is not None:
+            try:
+                metadata = os.stat(
+                    anchor.leaf, dir_fd=descriptor, follow_symlinks=False
+                )
+            except OSError as error:
+                raise ValueError(
+                    f"path changed during operation: {anchor.path}"
+                ) from error
+            if stat.S_ISLNK(metadata.st_mode) or _identity(metadata) != leaf_identity:
+                raise ValueError(f"path changed during operation: {anchor.path}")
+    finally:
+        os.close(descriptor)
+
+
 def _reject_symlink_components(path: Path) -> None:
     absolute = _absolute(path)
-    current = Path(absolute.anchor)
-    for part in absolute.parts[1:]:
-        current /= part
+    try:
+        anchor = _open_parent(absolute)
+    except FileNotFoundError:
+        return
+    try:
         try:
-            metadata = current.lstat()
+            metadata = os.stat(
+                anchor.leaf, dir_fd=anchor.parent_fd, follow_symlinks=False
+            )
         except FileNotFoundError:
-            continue
+            return
         if stat.S_ISLNK(metadata.st_mode):
-            raise ValueError(f"symlink path components are rejected: {current}")
+            raise ValueError(f"symlink path components are rejected: {absolute}")
+        _revalidate_anchor(anchor)
+    finally:
+        anchor.close()
 
 
 def _owner_context(path: Path) -> Path:
-    """Return the strict owner root containing *path* without following links."""
-
     absolute = _absolute(path)
     parts = absolute.parts
-    for index, part in enumerate(parts[:-1]):
+    for index, part in enumerate(parts):
         if (
             part == ".context"
             and index + 1 < len(parts)
             and parts[index + 1].startswith(_OWNER_PREFIX)
             and len(parts[index + 1]) > len(_OWNER_PREFIX)
         ):
-            _reject_symlink_components(absolute)
             root = Path(*parts[: index + 2])
-            resolved = absolute.resolve(strict=False)
-            resolved_root = root.resolve(strict=False)
-            if resolved == resolved_root or resolved_root in resolved.parents:
-                return resolved_root
+            if absolute == root:
+                raise ValueError("output path must be below its owner context")
+            try:
+                anchor = _open_parent(root / ".owner-root-check")
+            except FileNotFoundError:
+                return root
+            try:
+                _revalidate_anchor(anchor)
+            finally:
+                anchor.close()
+            return root
     raise ValueError(
         "path must be inside an owner-named .context/joyful-donkey-* directory"
     )
@@ -88,42 +241,406 @@ def _workspace_root() -> Path:
     if configured:
         root = _absolute(Path(configured))
         _reject_symlink_components(root)
-        return root.resolve(strict=False)
+        return root
     return Path(__file__).resolve().parents[4]
 
 
-def _prepare_owner_path(path: Path) -> tuple[Path, Path]:
-    owner = _owner_context(path)
-    target = _absolute(path).resolve(strict=False)
-    if target == owner or owner not in target.parents:
-        raise ValueError("output path escapes its owner context")
-    _reject_symlink_components(target)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    _reject_symlink_components(target)
-    resolved_parent = target.parent.resolve(strict=True)
-    if resolved_parent != owner and owner not in resolved_parent.parents:
-        raise ValueError("output path escapes its owner context")
-    return owner, target
+def _read_regular_bytes(path: Path, label: str) -> tuple[Path, bytes, os.stat_result]:
+    absolute = _absolute(path)
+    try:
+        anchor = _open_parent(absolute)
+    except (FileNotFoundError, OSError) as error:
+        raise ValueError(f"unable to read {label}: {absolute}") from error
+    descriptor = -1
+    try:
+        try:
+            descriptor = os.open(anchor.leaf, _READ_FLAGS, dir_fd=anchor.parent_fd)
+        except OSError as error:
+            raise ValueError(f"unable to read {label}: {absolute}") from error
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode):
+            raise ValueError(f"expected a readable regular file: {absolute}")
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        after = os.fstat(descriptor)
+        if (
+            _identity(before) != _identity(after)
+            or before.st_size != after.st_size
+            or before.st_mtime_ns != after.st_mtime_ns
+        ):
+            raise ValueError(f"source changed while it was being read: {absolute}")
+        data = b"".join(chunks)
+        if len(data) != before.st_size:
+            raise ValueError(f"source changed while it was being read: {absolute}")
+        _revalidate_anchor(anchor, leaf_identity=_identity(before))
+        return absolute, data, before
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        anchor.close()
+
+
+def _existing_leaf_metadata(path: Path) -> os.stat_result | None:
+    absolute = _absolute(path)
+    try:
+        anchor = _open_parent(absolute)
+    except FileNotFoundError:
+        return None
+    try:
+        try:
+            metadata = os.stat(
+                anchor.leaf, dir_fd=anchor.parent_fd, follow_symlinks=False
+            )
+        except FileNotFoundError:
+            _revalidate_anchor(anchor)
+            return None
+        if stat.S_ISLNK(metadata.st_mode):
+            raise ValueError(f"symlink path components are rejected: {absolute}")
+        _revalidate_anchor(anchor, leaf_identity=_identity(metadata))
+        return metadata
+    finally:
+        anchor.close()
+
+
+@dataclass(frozen=True)
+class _PathRole:
+    name: str
+    path: Path
+    kind: str  # input, output, or directory
+
+
+def preflight_path_roles(roles: Sequence[_PathRole]) -> None:
+    lexical: dict[Path, str] = {}
+    identities: dict[tuple[int, int], str] = {}
+    for role in roles:
+        absolute = _absolute(role.path)
+        if absolute in lexical:
+            raise ValueError(f"path roles alias: {lexical[absolute]} and {role.name}")
+        lexical[absolute] = role.name
+        if role.kind in {"output", "directory"}:
+            _owner_context(absolute)
+        metadata = _existing_leaf_metadata(absolute)
+        if role.kind == "input":
+            if metadata is None or not stat.S_ISREG(metadata.st_mode):
+                raise ValueError(f"input must be a regular file: {role.name}")
+        elif role.kind == "output":
+            if metadata is not None and not stat.S_ISREG(metadata.st_mode):
+                raise ValueError(
+                    f"output target must be absent or a regular file: {absolute.name}"
+                )
+        elif role.kind == "directory":
+            if metadata is not None and not stat.S_ISDIR(metadata.st_mode):
+                raise ValueError(
+                    f"output directory target is not a directory: {absolute.name}"
+                )
+        else:
+            raise ValueError(f"unknown path role kind: {role.kind}")
+        if metadata is not None:
+            identity = _identity(metadata)
+            if identity in identities:
+                raise ValueError(
+                    f"path roles alias: {identities[identity]} and {role.name}"
+                )
+            identities[identity] = role.name
+
+
+@dataclass(frozen=True)
+class _Publication:
+    path: Path
+    payload: bytes | None
+    role: str
+
+
+@dataclass
+class _StagedPublication:
+    publication: _Publication
+    anchor: _HeldParent
+    temporary: str | None
+    temporary_identity: tuple[int, int] | None
+    prior_payload: bytes | None
+    prior_identity: tuple[int, int] | None
+    backup: str | None = None
+    published: bool = False
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("short write while staging artifact")
+        offset += written
+    os.fsync(descriptor)
+
+
+def _read_relative(anchor: _HeldParent, name: str) -> tuple[bytes, os.stat_result]:
+    descriptor = os.open(name, _READ_FLAGS, dir_fd=anchor.parent_fd)
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"staged artifact is not regular: {name}")
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        return b"".join(chunks), metadata
+    finally:
+        os.close(descriptor)
+
+
+def _replace_relative_bytes(anchor: _HeldParent, name: str, payload: bytes) -> None:
+    temporary = f".{name}.restore-{secrets.token_hex(8)}"
+    try:
+        descriptor = os.open(temporary, _CREATE_FLAGS, 0o600, dir_fd=anchor.parent_fd)
+        try:
+            _write_all(descriptor, payload)
+            temporary_identity = _identity(os.fstat(descriptor))
+        finally:
+            os.close(descriptor)
+        staged_bytes, staged_metadata = _read_relative(anchor, temporary)
+        if staged_bytes != payload or _identity(staged_metadata) != temporary_identity:
+            raise ValueError(f"rollback artifact verification failed: {name}")
+        os.replace(
+            temporary,
+            name,
+            src_dir_fd=anchor.parent_fd,
+            dst_dir_fd=anchor.parent_fd,
+        )
+        temporary = ""
+    finally:
+        if temporary:
+            try:
+                os.unlink(temporary, dir_fd=anchor.parent_fd)
+            except FileNotFoundError:
+                pass
+
+
+def _fsync_directory(descriptor: int) -> None:
+    try:
+        os.fsync(descriptor)
+    except OSError as error:
+        if error.errno not in {22, 45, 95}:
+            raise
+
+
+def _remove_created_directories(paths: Sequence[Path]) -> None:
+    for path in sorted(set(paths), key=lambda value: len(value.parts), reverse=True):
+        try:
+            anchor = _open_parent(path)
+        except (FileNotFoundError, ValueError):
+            continue
+        try:
+            try:
+                os.rmdir(anchor.leaf, dir_fd=anchor.parent_fd)
+            except OSError:
+                pass
+        finally:
+            anchor.close()
+
+
+def _publish_artifacts(publications: Sequence[_Publication]) -> tuple[Path, ...]:
+    output_roles = [
+        _PathRole(publication.role, publication.path, "output")
+        for publication in publications
+    ]
+    preflight_path_roles(output_roles)
+    staged: list[_StagedPublication] = []
+    created_directories: list[Path] = []
+    try:
+        for publication in publications:
+            anchor = _open_parent(publication.path, create=True)
+            created_directories.extend(anchor.created_directories)
+            temporary: str | None = None
+            temporary_identity: tuple[int, int] | None = None
+            prior_payload: bytes | None = None
+            prior_identity: tuple[int, int] | None = None
+            try:
+                existing = None
+                try:
+                    existing = os.stat(
+                        anchor.leaf,
+                        dir_fd=anchor.parent_fd,
+                        follow_symlinks=False,
+                    )
+                except FileNotFoundError:
+                    pass
+                if existing is not None and (
+                    stat.S_ISLNK(existing.st_mode) or not stat.S_ISREG(existing.st_mode)
+                ):
+                    raise ValueError(
+                        f"output target must be absent or a regular file: {anchor.leaf}"
+                    )
+                if existing is not None:
+                    prior_payload, prior_metadata = _read_relative(anchor, anchor.leaf)
+                    prior_identity = _identity(prior_metadata)
+                    if prior_identity != _identity(existing):
+                        raise ValueError(
+                            f"output changed during operation: {anchor.leaf}"
+                        )
+                if publication.payload is not None:
+                    temporary = f".{anchor.leaf}.tmp-{secrets.token_hex(8)}"
+                    descriptor = os.open(
+                        temporary,
+                        _CREATE_FLAGS,
+                        0o600,
+                        dir_fd=anchor.parent_fd,
+                    )
+                    try:
+                        _write_all(descriptor, publication.payload)
+                        temporary_identity = _identity(os.fstat(descriptor))
+                    finally:
+                        os.close(descriptor)
+                    staged_bytes, staged_metadata = _read_relative(anchor, temporary)
+                    if (
+                        staged_bytes != publication.payload
+                        or _identity(staged_metadata) != temporary_identity
+                    ):
+                        raise ValueError(
+                            f"staged artifact verification failed: {publication.role}"
+                        )
+                _revalidate_anchor(anchor)
+                staged.append(
+                    _StagedPublication(
+                        publication,
+                        anchor,
+                        temporary,
+                        temporary_identity,
+                        prior_payload,
+                        prior_identity,
+                    )
+                )
+            except BaseException:
+                if temporary is not None:
+                    try:
+                        os.unlink(temporary, dir_fd=anchor.parent_fd)
+                    except FileNotFoundError:
+                        pass
+                anchor.close()
+                raise
+
+        for item in staged:
+            try:
+                existing = os.stat(
+                    item.anchor.leaf,
+                    dir_fd=item.anchor.parent_fd,
+                    follow_symlinks=False,
+                )
+            except FileNotFoundError:
+                existing = None
+            if item.prior_identity is None:
+                if existing is not None:
+                    raise ValueError(
+                        f"output changed during operation: {item.anchor.leaf}"
+                    )
+            elif existing is None or _identity(existing) != item.prior_identity:
+                raise ValueError(f"output changed during operation: {item.anchor.leaf}")
+            if item.prior_identity is not None:
+                if not stat.S_ISREG(existing.st_mode):
+                    raise ValueError(
+                        "output target must be absent or a regular file: "
+                        f"{item.anchor.leaf}"
+                    )
+                item.backup = f".{item.anchor.leaf}.backup-{secrets.token_hex(8)}"
+                os.link(
+                    item.anchor.leaf,
+                    item.backup,
+                    src_dir_fd=item.anchor.parent_fd,
+                    dst_dir_fd=item.anchor.parent_fd,
+                    follow_symlinks=False,
+                )
+
+        for item in staged:
+            _revalidate_anchor(item.anchor)
+            if item.publication.payload is None:
+                try:
+                    os.unlink(item.anchor.leaf, dir_fd=item.anchor.parent_fd)
+                except FileNotFoundError:
+                    pass
+            else:
+                if item.temporary is None:
+                    raise RuntimeError("missing staged artifact")
+                os.replace(
+                    item.temporary,
+                    item.anchor.leaf,
+                    src_dir_fd=item.anchor.parent_fd,
+                    dst_dir_fd=item.anchor.parent_fd,
+                )
+                item.temporary = None
+            item.published = True
+            _fsync_directory(item.anchor.parent_fd)
+            _revalidate_anchor(item.anchor)
+
+        for item in staged:
+            if item.backup is not None:
+                os.unlink(item.backup, dir_fd=item.anchor.parent_fd)
+                item.backup = None
+                _fsync_directory(item.anchor.parent_fd)
+        return tuple(_absolute(item.publication.path) for item in staged)
+    except BaseException:
+        for item in reversed(staged):
+            try:
+                if item.published:
+                    if item.backup is not None:
+                        try:
+                            os.unlink(item.anchor.leaf, dir_fd=item.anchor.parent_fd)
+                        except FileNotFoundError:
+                            pass
+                        os.replace(
+                            item.backup,
+                            item.anchor.leaf,
+                            src_dir_fd=item.anchor.parent_fd,
+                            dst_dir_fd=item.anchor.parent_fd,
+                        )
+                        item.backup = None
+                    elif item.prior_payload is not None:
+                        _replace_relative_bytes(
+                            item.anchor,
+                            item.anchor.leaf,
+                            item.prior_payload,
+                        )
+                    elif item.publication.payload is not None:
+                        try:
+                            metadata = os.stat(
+                                item.anchor.leaf,
+                                dir_fd=item.anchor.parent_fd,
+                                follow_symlinks=False,
+                            )
+                            if _identity(metadata) == item.temporary_identity:
+                                os.unlink(
+                                    item.anchor.leaf, dir_fd=item.anchor.parent_fd
+                                )
+                        except FileNotFoundError:
+                            pass
+                if item.temporary is not None:
+                    try:
+                        os.unlink(item.temporary, dir_fd=item.anchor.parent_fd)
+                    except FileNotFoundError:
+                        pass
+                    item.temporary = None
+                if item.backup is not None:
+                    try:
+                        os.unlink(item.backup, dir_fd=item.anchor.parent_fd)
+                    except FileNotFoundError:
+                        pass
+                    item.backup = None
+                _fsync_directory(item.anchor.parent_fd)
+            except OSError:
+                pass
+        _remove_created_directories(created_directories)
+        raise
+    finally:
+        for item in staged:
+            item.anchor.close()
 
 
 def _atomic_write_bytes(path: Path, payload: bytes) -> Path:
-    _, target = _prepare_owner_path(path)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{target.name}.tmp-", dir=target.parent
-    )
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as stream:
-            stream.write(payload)
-            stream.flush()
-            os.fsync(stream.fileno())
-        if target.exists() and target.is_symlink():
-            raise ValueError(f"symlink outputs are rejected: {target}")
-        os.replace(temporary, target)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
-    return target.resolve(strict=True)
+    return _publish_artifacts([_Publication(path, payload, "output")])[0]
 
 
 def write_owner_json(path: Path, payload: object) -> Path:
@@ -169,57 +686,31 @@ def _decode_image(data: bytes, source: Path) -> tuple[Image.Image, str | None]:
 
 
 def _snapshot_image(path: Path) -> _ImageSnapshot:
+    try:
+        source, data, _ = _read_regular_bytes(path, "image")
+    except ValueError as error:
+        if "changed" in str(error):
+            raise ValueError(
+                f"source changed while it was being locked: {_absolute(path)}"
+            ) from error
+        if "symlink" in str(error):
+            raise
+        raise ValueError(
+            f"expected a readable regular image: {_absolute(path)}"
+        ) from error
+    image, image_format = _decode_image(data, source)
+    return _ImageSnapshot(
+        source,
+        data,
+        hashlib.sha256(data).hexdigest(),
+        image,
+        image_format,
+        _decoded_hash_image(image),
+    )
+
+
+def _snapshot_image_bytes(path: Path, data: bytes) -> _ImageSnapshot:
     source = _absolute(path)
-    _reject_symlink_components(source)
-    flags = os.O_RDONLY
-    if hasattr(os, "O_CLOEXEC"):
-        flags |= os.O_CLOEXEC
-    if hasattr(os, "O_NOFOLLOW"):
-        flags |= os.O_NOFOLLOW
-    try:
-        descriptor = os.open(source, flags)
-    except (FileNotFoundError, OSError) as error:
-        raise ValueError(f"expected a readable regular image: {source}") from error
-    try:
-        before = os.fstat(descriptor)
-        if not stat.S_ISREG(before.st_mode):
-            raise ValueError(f"expected a readable regular image: {source}")
-        chunks: list[bytes] = []
-        while True:
-            chunk = os.read(descriptor, 1024 * 1024)
-            if not chunk:
-                break
-            chunks.append(chunk)
-        after = os.fstat(descriptor)
-    finally:
-        os.close(descriptor)
-    identity_before = (
-        before.st_dev,
-        before.st_ino,
-        before.st_size,
-        before.st_mtime_ns,
-    )
-    identity_after = (
-        after.st_dev,
-        after.st_ino,
-        after.st_size,
-        after.st_mtime_ns,
-    )
-    data = b"".join(chunks)
-    if identity_before != identity_after or len(data) != before.st_size:
-        raise ValueError(f"source changed while it was being locked: {source}")
-    try:
-        current = source.lstat()
-    except OSError as error:
-        raise ValueError(f"source changed while it was being locked: {source}") from error
-    path_identity = (
-        current.st_dev,
-        current.st_ino,
-        current.st_size,
-        current.st_mtime_ns,
-    )
-    if stat.S_ISLNK(current.st_mode) or path_identity != identity_before:
-        raise ValueError(f"source changed while it was being locked: {source}")
     image, image_format = _decode_image(data, source)
     return _ImageSnapshot(
         source,
@@ -269,6 +760,19 @@ def _required_sha256(value: object, label: str) -> str:
     return value
 
 
+def _canonical_json_bytes(payload: object) -> bytes:
+    return json.dumps(
+        payload,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+
+
+def _canonical_sha256(payload: object) -> str:
+    return hashlib.sha256(_canonical_json_bytes(payload)).hexdigest()
+
+
 @dataclass(frozen=True)
 class LockedSource:
     source_id: str
@@ -284,6 +788,7 @@ class LockedSource:
     height: int
     original_path: Path
     cache_path: Path
+    canonical_digest: str
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -300,7 +805,73 @@ class LockedSource:
             "height": self.height,
             "originalPath": str(self.original_path),
             "cachePath": str(self.cache_path),
+            "canonicalDigest": self.canonical_digest,
         }
+
+
+def _source_canonical_fields(source: LockedSource) -> dict[str, object]:
+    payload = source.to_json()
+    payload.pop("canonicalDigest")
+    return payload
+
+
+def _source_canonical_digest(source: LockedSource) -> str:
+    return _canonical_sha256(
+        {
+            "digestVersion": _DIGEST_VERSION,
+            "kind": "cordLockedSource",
+            "source": _source_canonical_fields(source),
+        }
+    )
+
+
+def _cache_suffix(original_path: Path) -> str:
+    suffix = original_path.suffix.lower()
+    return suffix if re.fullmatch(r"\.[a-z0-9]{1,8}", suffix) else ".image"
+
+
+def _canonical_cache_path(
+    owner: Path, source_id: str, byte_sha256: str, original_path: Path
+) -> Path:
+    return _absolute(
+        owner
+        / "sources"
+        / "locked"
+        / f"{source_id}-{byte_sha256}{_cache_suffix(original_path)}"
+    )
+
+
+def _locked_source_from_snapshot(
+    snapshot: _ImageSnapshot,
+    owner: Path,
+    *,
+    source_id: str,
+    url: str,
+    publisher: str,
+    role: str,
+    revision: str,
+    reviewed_at: date,
+) -> LockedSource:
+    cache_path = _canonical_cache_path(
+        owner, source_id, snapshot.byte_sha256, snapshot.path
+    )
+    provisional = LockedSource(
+        source_id,
+        url,
+        publisher,
+        role,
+        revision,
+        reviewed_at.isoformat(),
+        snapshot.byte_sha256,
+        snapshot.decoded_pixel_sha256,
+        snapshot.image.mode,
+        snapshot.image.width,
+        snapshot.image.height,
+        snapshot.path,
+        cache_path,
+        "0" * 64,
+    )
+    return replace(provisional, canonical_digest=_source_canonical_digest(provisional))
 
 
 def _validate_lock_metadata(
@@ -320,7 +891,7 @@ def _validate_lock_metadata(
         ("revision", revision),
     ):
         _required_string(value, label)
-    if not isinstance(reviewed_at, date):
+    if type(reviewed_at) is not date:
         raise ValueError("reviewed_at must be an immutable date")
 
 
@@ -343,28 +914,24 @@ def _lock_snapshot(
         revision=revision,
         reviewed_at=reviewed_at,
     )
-    suffix = snapshot.path.suffix.lower()
-    if not re.fullmatch(r"\.[a-z0-9]{1,8}", suffix):
-        suffix = ".image"
-    cache_path = owner / "sources" / "locked" / (
-        f"{source_id}-{snapshot.byte_sha256}{suffix}"
+    locked = _locked_source_from_snapshot(
+        snapshot,
+        owner,
+        source_id=source_id,
+        url=url,
+        publisher=publisher,
+        role=role,
+        revision=revision,
+        reviewed_at=reviewed_at,
     )
-    resolved_cache = _atomic_write_bytes(cache_path, snapshot.data)
-    return LockedSource(
-        source_id,
-        url,
-        publisher,
-        role,
-        revision,
-        reviewed_at.isoformat(),
-        snapshot.byte_sha256,
-        snapshot.decoded_pixel_sha256,
-        snapshot.image.mode,
-        snapshot.image.width,
-        snapshot.image.height,
-        snapshot.path,
-        resolved_cache,
+    preflight_path_roles(
+        [
+            _PathRole("source", snapshot.path, "input"),
+            _PathRole("cache", locked.cache_path, "output"),
+        ]
     )
+    _publish_artifacts([_Publication(locked.cache_path, snapshot.data, "cache")])
+    return locked
 
 
 def lock_source(
@@ -410,12 +977,11 @@ def lock_source(
 
 
 def _load_json(path: Path, label: str) -> object:
-    absolute = _absolute(path)
-    _reject_symlink_components(absolute)
     try:
-        text = absolute.read_text(encoding="utf-8")
-    except OSError as error:
-        raise ValueError(f"unable to read {label}: {absolute}") from error
+        _, data, _ = _read_regular_bytes(path, label)
+        text = data.decode("utf-8")
+    except (OSError, UnicodeDecodeError) as error:
+        raise ValueError(f"unable to read {label}: {_absolute(path)}") from error
     try:
         return json.loads(text)
     except json.JSONDecodeError as error:
@@ -460,6 +1026,7 @@ _LOCKED_SOURCE_FIELDS = {
     "height",
     "originalPath",
     "cachePath",
+    "canonicalDigest",
 }
 
 
@@ -474,8 +1041,10 @@ def _parse_reviewed_at(value: object, label: str) -> date:
     return parsed
 
 
-def freeze_source_manifest(manifest: Path) -> tuple[LockedSource, ...]:
-    """Atomically replace a source manifest with its frozen lock artifact."""
+def freeze_source_manifest(
+    manifest: Path, *, report_path: Path | None = None
+) -> tuple[LockedSource, ...]:
+    """Freeze a complete manifest as one handled-return transaction."""
 
     owner = _owner_context(manifest)
     payload = _exact_object(
@@ -504,11 +1073,22 @@ def freeze_source_manifest(manifest: Path) -> tuple[LockedSource, ...]:
                 _parse_reviewed_at(record["reviewedAt"], f"{label}.reviewedAt"),
             )
         )
+    initial_roles = [_PathRole("manifest", manifest, "input")]
+    if report_path is not None:
+        initial_roles.append(_PathRole("report", report_path, "output"))
+    initial_roles.extend(
+        _PathRole(f"source[{index}]", record[0], "input")
+        for index, record in enumerate(parsed)
+    )
+    preflight_path_roles(initial_roles)
+
     locked: list[LockedSource] = []
+    snapshots: list[_ImageSnapshot] = []
     for source_path, source_id, url, publisher, role, revision, reviewed_at in parsed:
         snapshot = _snapshot_image(source_path)
+        snapshots.append(snapshot)
         locked.append(
-            _lock_snapshot(
+            _locked_source_from_snapshot(
                 snapshot,
                 owner,
                 source_id=source_id,
@@ -520,22 +1100,57 @@ def freeze_source_manifest(manifest: Path) -> tuple[LockedSource, ...]:
             )
         )
     ordered = tuple(sorted(locked, key=lambda source: source.source_id))
-    artifact = {
-        "schemaVersion": _SCHEMA_VERSION,
-        "toolVersion": _TOOL_VERSION,
-        "kind": "cordSourceLock",
-        "sources": [source.to_json() for source in ordered],
-    }
-    write_owner_json(manifest, artifact)
+    artifact = source_lock_artifact(ordered)
+    complete_roles = list(initial_roles)
+    complete_roles.extend(
+        _PathRole(f"cache[{index}]", source.cache_path, "output")
+        for index, source in enumerate(ordered)
+    )
+    preflight_path_roles(complete_roles)
+    snapshot_by_path = {snapshot.path: snapshot for snapshot in snapshots}
+    publications = [
+        _Publication(
+            source.cache_path,
+            snapshot_by_path[source.original_path].data,
+            f"cache[{index}]",
+        )
+        for index, source in enumerate(ordered)
+    ]
+    encoded = (
+        json.dumps(artifact, indent=2, sort_keys=True, separators=(",", ": ")) + "\n"
+    ).encode("utf-8")
+    if report_path is not None:
+        publications.append(_Publication(report_path, encoded, "report"))
+    publications.append(_Publication(manifest, encoded, "manifest"))
+    _publish_artifacts(publications)
     return ordered
 
 
+def _source_lock_digest_records(records: Sequence[object]) -> str:
+    return _canonical_sha256(
+        {
+            "digestVersion": _DIGEST_VERSION,
+            "kind": "cordSourceLock",
+            "schemaVersion": _SCHEMA_VERSION,
+            "toolVersion": _TOOL_VERSION,
+            "sources": list(records),
+        }
+    )
+
+
+def _source_lock_digest(sources: Sequence[LockedSource]) -> str:
+    return _source_lock_digest_records([source.to_json() for source in sources])
+
+
 def source_lock_artifact(sources: Sequence[LockedSource]) -> dict[str, object]:
+    ordered = tuple(sorted(sources, key=lambda source: source.source_id))
     return {
         "schemaVersion": _SCHEMA_VERSION,
         "toolVersion": _TOOL_VERSION,
         "kind": "cordSourceLock",
-        "sources": [source.to_json() for source in sources],
+        "digestVersion": _DIGEST_VERSION,
+        "sourceLockSHA256": _source_lock_digest(ordered),
+        "sources": [source.to_json() for source in ordered],
     }
 
 
@@ -551,9 +1166,9 @@ def _locked_source_from_json(
     cache_path = Path(cache_text)
     if not original_path.is_absolute() or not cache_path.is_absolute():
         raise ValueError(f"{label} paths must be absolute")
-    cache_resolved = _absolute(cache_path).resolve(strict=False)
-    expected_cache_root = (manifest_owner / "sources" / "locked").resolve(strict=False)
-    if expected_cache_root not in cache_resolved.parents:
+    cache_resolved = _absolute(cache_path)
+    expected_cache_root = _absolute(manifest_owner / "sources" / "locked")
+    if cache_resolved.parent != expected_cache_root:
         raise ValueError(f"{label}.cachePath escapes the manifest owner cache")
     source = LockedSource(
         source_id,
@@ -563,14 +1178,13 @@ def _locked_source_from_json(
         _required_string(record["revision"], f"{label}.revision"),
         reviewed.isoformat(),
         _required_sha256(record["byteSHA256"], f"{label}.byteSHA256"),
-        _required_sha256(
-            record["decodedPixelSHA256"], f"{label}.decodedPixelSHA256"
-        ),
+        _required_sha256(record["decodedPixelSHA256"], f"{label}.decodedPixelSHA256"),
         _required_string(record["mode"], f"{label}.mode"),
         _required_integer(record["width"], f"{label}.width", positive=True),
         _required_integer(record["height"], f"{label}.height", positive=True),
-        _absolute(original_path).resolve(strict=False),
+        _absolute(original_path),
         cache_resolved,
+        _required_sha256(record["canonicalDigest"], f"{label}.canonicalDigest"),
     )
     _validate_locked_source(source)
     return source
@@ -581,7 +1195,14 @@ def load_locked_sources(manifest: Path) -> list[LockedSource]:
     payload = _exact_object(
         _load_json(manifest, "locked source manifest"),
         label="locked source manifest",
-        required={"schemaVersion", "toolVersion", "kind", "sources"},
+        required={
+            "schemaVersion",
+            "toolVersion",
+            "kind",
+            "digestVersion",
+            "sourceLockSHA256",
+            "sources",
+        },
     )
     schema_version = _required_integer(
         payload["schemaVersion"], "locked source manifest.schemaVersion"
@@ -592,19 +1213,37 @@ def load_locked_sources(manifest: Path) -> list[LockedSource]:
         raise ValueError("locked source manifest has unsupported toolVersion")
     if payload["kind"] != "cordSourceLock":
         raise ValueError("locked source manifest has wrong kind")
+    digest_version = _required_integer(
+        payload["digestVersion"], "locked source manifest.digestVersion"
+    )
+    if digest_version != _DIGEST_VERSION:
+        raise ValueError("locked source manifest has unsupported digestVersion")
     records = payload["sources"]
     if not isinstance(records, list) or not records:
         raise ValueError("locked source manifest.sources must be a non-empty array")
+    supplied_digest = _required_sha256(
+        payload["sourceLockSHA256"], "locked source manifest.sourceLockSHA256"
+    )
+    if supplied_digest != _source_lock_digest_records(records):
+        raise ValueError("source lock digest mismatch")
     sources = [
-        _locked_source_from_json(record, label=f"sources[{index}]", manifest_owner=owner)
+        _locked_source_from_json(
+            record, label=f"sources[{index}]", manifest_owner=owner
+        )
         for index, record in enumerate(records)
     ]
     identifiers = [source.source_id for source in sources]
     if len(set(identifiers)) != len(identifiers):
-        duplicate = next(identifier for identifier in identifiers if identifiers.count(identifier) > 1)
+        duplicate = next(
+            identifier
+            for identifier in identifiers
+            if identifiers.count(identifier) > 1
+        )
         raise ValueError(f"duplicate source ID: {duplicate}")
     if identifiers != sorted(identifiers):
         raise ValueError("locked source manifest sources must be sorted by sourceID")
+    if supplied_digest != _source_lock_digest(sources):
+        raise ValueError("source lock digest mismatch")
     return sources
 
 
@@ -623,7 +1262,9 @@ def _validate_snapshot_against_source(
         raise ValueError(f"{kind} source metadata mismatch: {source.source_id}")
 
 
-def _validate_locked_source(source: LockedSource) -> tuple[_ImageSnapshot, _ImageSnapshot]:
+def _validate_locked_source(
+    source: LockedSource,
+) -> tuple[_ImageSnapshot, _ImageSnapshot]:
     _validate_source_id(source.source_id)
     for label, value in (
         ("url", source.url),
@@ -636,21 +1277,35 @@ def _validate_locked_source(source: LockedSource) -> tuple[_ImageSnapshot, _Imag
     _parse_reviewed_at(source.reviewed_at, "reviewed_at")
     _required_sha256(source.byte_sha256, "byte_sha256")
     _required_sha256(source.decoded_pixel_sha256, "decoded_pixel_sha256")
+    _required_sha256(source.canonical_digest, "canonical_digest")
     _required_integer(source.width, "width", positive=True)
     _required_integer(source.height, "height", positive=True)
-    if not isinstance(source.original_path, Path) or not isinstance(source.cache_path, Path):
+    if not isinstance(source.original_path, Path) or not isinstance(
+        source.cache_path, Path
+    ):
         raise ValueError("locked source paths must be Path values")
     original = _snapshot_image(source.original_path)
     _validate_snapshot_against_source(original, source, "original")
+    expected_digest = _source_canonical_digest(source)
+    if source.canonical_digest != expected_digest:
+        raise ValueError(f"locked source canonical digest mismatch: {source.source_id}")
     cache_owner = _owner_context(source.cache_path)
-    expected_cache_root = (cache_owner / "sources" / "locked").resolve(strict=False)
-    cache_resolved = _absolute(source.cache_path).resolve(strict=False)
-    if expected_cache_root not in cache_resolved.parents:
+    expected_cache_root = _absolute(cache_owner / "sources" / "locked")
+    cache_resolved = _absolute(source.cache_path)
+    expected_cache = _canonical_cache_path(
+        cache_owner,
+        source.source_id,
+        source.byte_sha256,
+        source.original_path,
+    )
+    if cache_resolved.parent != expected_cache_root or cache_resolved != expected_cache:
         raise ValueError(f"locked source cache path mismatch: {source.source_id}")
     cache = _snapshot_image(source.cache_path)
     _validate_snapshot_against_source(cache, source, "locked")
     if original.data != cache.data:
-        raise ValueError(f"locked source bytes differ from original: {source.source_id}")
+        raise ValueError(
+            f"locked source bytes differ from original: {source.source_id}"
+        )
     return original, cache
 
 
@@ -682,16 +1337,34 @@ class AtlasIndex:
     sources: tuple[LockedSource, ...]
     pages: tuple[AtlasPage, ...]
     panels: tuple[AtlasPanel, ...]
-    max_dimension: int = _ATLAS_MAX_DIMENSION
+    output_root: Path
+    source_lock_sha256: str
+    max_dimension: int
+    layout_sha256: str
+    atlas_index_sha256: str
+    digest_version: int = _DIGEST_VERSION
+    base_max_dimension: int = _ATLAS_BASE_DIMENSION
     padding: int = _ATLAS_PADDING
+    neutral_rgba: tuple[int, int, int, int] = _ATLAS_NEUTRAL_RGBA
+    packing_algorithm: str = _ATLAS_PACKING_ALGORITHM
+    search_node_limit: int = _ATLAS_SEARCH_NODE_LIMIT
 
     def to_json(self) -> dict[str, object]:
         return {
             "schemaVersion": _SCHEMA_VERSION,
             "toolVersion": _TOOL_VERSION,
             "pillowVersion": PIL.__version__,
+            "digestVersion": self.digest_version,
+            "sourceLockSHA256": self.source_lock_sha256,
+            "outputRoot": str(self.output_root),
+            "packingAlgorithm": self.packing_algorithm,
+            "searchNodeLimit": self.search_node_limit,
+            "baseMaxDimension": self.base_max_dimension,
             "maxDimension": self.max_dimension,
             "padding": self.padding,
+            "neutralRGBA": list(self.neutral_rgba),
+            "layoutSHA256": self.layout_sha256,
+            "atlasIndexSHA256": self.atlas_index_sha256,
             "sources": [source.to_json() for source in self.sources],
             "pages": [
                 {
@@ -728,80 +1401,338 @@ class AtlasVerification:
 
 
 @dataclass
-class _Shelf:
-    y: int
-    height: int
-    next_x: int
-
-
-@dataclass
 class _PagePlan:
-    shelves: list[_Shelf]
     panels: list[AtlasPanel]
 
 
-def _plan_atlases(sources: Sequence[LockedSource]) -> list[_PagePlan]:
-    pages: list[_PagePlan] = []
-    for source in sources:
-        if (
-            source.width + _ATLAS_PADDING * 2 > _ATLAS_MAX_DIMENSION
-            or source.height + _ATLAS_PADDING * 2 > _ATLAS_MAX_DIMENSION
-        ):
-            raise ValueError(f"source cannot fit a lossless atlas page: {source.source_id}")
-        placement: tuple[_PagePlan, int, int] | None = None
-        for page in pages:
-            for shelf in page.shelves:
-                if (
-                    source.height <= shelf.height
-                    and shelf.next_x + source.width + _ATLAS_PADDING
-                    <= _ATLAS_MAX_DIMENSION
-                ):
-                    placement = (page, shelf.next_x, shelf.y)
-                    shelf.next_x += source.width + _ATLAS_PADDING
-                    break
-            if placement is not None:
-                break
-            new_y = (
-                _ATLAS_PADDING
-                if not page.shelves
-                else page.shelves[-1].y + page.shelves[-1].height + _ATLAS_PADDING
-            )
-            if new_y + source.height + _ATLAS_PADDING <= _ATLAS_MAX_DIMENSION:
-                shelf = _Shelf(
-                    new_y,
-                    source.height,
-                    _ATLAS_PADDING + source.width + _ATLAS_PADDING,
+@dataclass(frozen=True)
+class _FreeRectangle:
+    x: int
+    y: int
+    width: int
+    height: int
+
+
+@dataclass(frozen=True)
+class _PackedRectangle:
+    source: LockedSource
+    x: int
+    y: int
+    width: int
+    height: int
+
+
+def _atlas_dimension(sources: Sequence[LockedSource]) -> int:
+    return max(
+        _ATLAS_BASE_DIMENSION,
+        max(
+            max(source.width, source.height) + _ATLAS_PADDING * 2 for source in sources
+        ),
+    )
+
+
+def _free_intersects(left: _FreeRectangle, right: _FreeRectangle) -> bool:
+    return not (
+        left.x + left.width <= right.x
+        or right.x + right.width <= left.x
+        or left.y + left.height <= right.y
+        or right.y + right.height <= left.y
+    )
+
+
+def _contains(outer: _FreeRectangle, inner: _FreeRectangle) -> bool:
+    return (
+        outer.x <= inner.x
+        and outer.y <= inner.y
+        and outer.x + outer.width >= inner.x + inner.width
+        and outer.y + outer.height >= inner.y + inner.height
+    )
+
+
+def _split_free_rectangles(
+    rectangles: list[_FreeRectangle], used: _FreeRectangle
+) -> list[_FreeRectangle]:
+    split: list[_FreeRectangle] = []
+    for free in rectangles:
+        if not _free_intersects(free, used):
+            split.append(free)
+            continue
+        if used.x > free.x:
+            split.append(_FreeRectangle(free.x, free.y, used.x - free.x, free.height))
+        if used.x + used.width < free.x + free.width:
+            split.append(
+                _FreeRectangle(
+                    used.x + used.width,
+                    free.y,
+                    free.x + free.width - used.x - used.width,
+                    free.height,
                 )
-                page.shelves.append(shelf)
-                placement = (page, _ATLAS_PADDING, new_y)
-                break
-        if placement is None:
-            page = _PagePlan(
-                [
-                    _Shelf(
-                        _ATLAS_PADDING,
-                        source.height,
-                        _ATLAS_PADDING + source.width + _ATLAS_PADDING,
-                    )
-                ],
-                [],
             )
-            pages.append(page)
-            placement = (page, _ATLAS_PADDING, _ATLAS_PADDING)
-        page, x, y = placement
-        page.panels.append(
+        if used.y > free.y:
+            split.append(_FreeRectangle(free.x, free.y, free.width, used.y - free.y))
+        if used.y + used.height < free.y + free.height:
+            split.append(
+                _FreeRectangle(
+                    free.x,
+                    used.y + used.height,
+                    free.width,
+                    free.y + free.height - used.y - used.height,
+                )
+            )
+    split = [rectangle for rectangle in split if rectangle.width and rectangle.height]
+    pruned: list[_FreeRectangle] = []
+    for index, rectangle in enumerate(split):
+        if any(
+            index != other_index and _contains(other, rectangle)
+            for other_index, other in enumerate(split)
+        ):
+            continue
+        pruned.append(rectangle)
+    return sorted(
+        set(pruned),
+        key=lambda rectangle: (
+            rectangle.y,
+            rectangle.x,
+            rectangle.height,
+            rectangle.width,
+        ),
+    )
+
+
+def _plans_from_packed(pages: Sequence[Sequence[_PackedRectangle]]) -> list[_PagePlan]:
+    plans: list[_PagePlan] = []
+    for page_number, placements in enumerate(pages, start=1):
+        panels = [
             AtlasPanel(
-                source.source_id,
-                pages.index(page) + 1,
-                x,
-                y,
-                source.width,
-                source.height,
-                source.mode,
-                source.decoded_pixel_sha256,
+                placement.source.source_id,
+                page_number,
+                placement.x + _ATLAS_PADDING,
+                placement.y + _ATLAS_PADDING,
+                placement.source.width,
+                placement.source.height,
+                placement.source.mode,
+                placement.source.decoded_pixel_sha256,
             )
+            for placement in placements
+        ]
+        panels.sort(key=lambda panel: (panel.y, panel.x, panel.source_id))
+        plans.append(_PagePlan(panels))
+    return plans
+
+
+def _maxrects_plan(
+    ordered: Sequence[LockedSource], max_dimension: int
+) -> list[_PagePlan]:
+    capacity = max_dimension - _ATLAS_PADDING
+    free_pages: list[list[_FreeRectangle]] = []
+    packed_pages: list[list[_PackedRectangle]] = []
+    for source in ordered:
+        width = source.width + _ATLAS_PADDING
+        height = source.height + _ATLAS_PADDING
+        candidate: tuple[tuple[int, ...], int, int] | None = None
+        for page_index, free_rectangles in enumerate(free_pages):
+            for free_index, free in enumerate(free_rectangles):
+                if width > free.width or height > free.height:
+                    continue
+                score = (
+                    min(free.width - width, free.height - height),
+                    max(free.width - width, free.height - height),
+                    free.width * free.height - width * height,
+                    page_index,
+                    free.y,
+                    free.x,
+                )
+                if candidate is None or score < candidate[0]:
+                    candidate = (score, page_index, free_index)
+        if candidate is None:
+            free_pages.append([_FreeRectangle(0, 0, capacity, capacity)])
+            packed_pages.append([])
+            page_index = len(free_pages) - 1
+            free_index = 0
+        else:
+            _, page_index, free_index = candidate
+        free = free_pages[page_index][free_index]
+        used = _FreeRectangle(free.x, free.y, width, height)
+        packed_pages[page_index].append(
+            _PackedRectangle(source, used.x, used.y, used.width, used.height)
         )
-    return pages
+        free_pages[page_index] = _split_free_rectangles(free_pages[page_index], used)
+    return _plans_from_packed(packed_pages)
+
+
+def _layout_signature(plans: Sequence[_PagePlan]) -> tuple[object, ...]:
+    return tuple(
+        (
+            panel.page_number,
+            panel.y,
+            panel.x,
+            panel.source_id,
+            panel.width,
+            panel.height,
+        )
+        for plan in plans
+        for panel in plan.panels
+    )
+
+
+def _layout_cost(plans: Sequence[_PagePlan]) -> tuple[object, ...]:
+    dimensions = [_page_dimensions(plan) for plan in plans]
+    areas = [width * height for width, height in dimensions]
+    return (
+        len(plans),
+        sum(areas),
+        max(areas, default=0),
+        _layout_signature(plans),
+    )
+
+
+def _exact_pack(
+    sources: Sequence[LockedSource], max_dimension: int, max_pages: int
+) -> list[_PagePlan] | None:
+    capacity = max_dimension - _ATLAS_PADDING
+    ordered = sorted(
+        sources,
+        key=lambda source: (
+            -(source.width + _ATLAS_PADDING) * (source.height + _ATLAS_PADDING),
+            -max(source.width, source.height),
+            -source.height,
+            -source.width,
+            source.source_id,
+        ),
+    )
+    pages: list[list[_PackedRectangle]] = []
+    visited: set[tuple[object, ...]] = set()
+    nodes = 0
+
+    def search(index: int) -> list[list[_PackedRectangle]] | None:
+        nonlocal nodes
+        nodes += 1
+        if nodes > _ATLAS_SEARCH_NODE_LIMIT:
+            raise ValueError(
+                "packing feasibility search limit reached; page overflow not proven"
+            )
+        if index == len(ordered):
+            return [list(page) for page in pages]
+        state = (
+            index,
+            tuple(
+                sorted(
+                    tuple(
+                        sorted(
+                            (
+                                placement.source.width,
+                                placement.source.height,
+                                placement.x,
+                                placement.y,
+                            )
+                            for placement in page
+                        )
+                    )
+                    for page in pages
+                )
+            ),
+        )
+        if state in visited:
+            return None
+        visited.add(state)
+        source = ordered[index]
+        width = source.width + _ATLAS_PADDING
+        height = source.height + _ATLAS_PADDING
+        page_limit = min(len(pages) + 1, max_pages)
+        seen_page_shapes: set[tuple[tuple[int, int, int, int], ...]] = set()
+        for page_index in range(page_limit):
+            is_new = page_index == len(pages)
+            if is_new:
+                pages.append([])
+            page = pages[page_index]
+            page_shape = tuple(
+                sorted(
+                    (placement.x, placement.y, placement.width, placement.height)
+                    for placement in page
+                )
+            )
+            if page_shape in seen_page_shapes:
+                if is_new:
+                    pages.pop()
+                continue
+            seen_page_shapes.add(page_shape)
+            x_positions = {0, *(placement.x + placement.width for placement in page)}
+            y_positions = {0, *(placement.y + placement.height for placement in page)}
+            for y in sorted(y_positions):
+                for x in sorted(x_positions):
+                    if x + width > capacity or y + height > capacity:
+                        continue
+                    candidate = _FreeRectangle(x, y, width, height)
+                    if any(
+                        _free_intersects(
+                            candidate,
+                            _FreeRectangle(
+                                placement.x,
+                                placement.y,
+                                placement.width,
+                                placement.height,
+                            ),
+                        )
+                        for placement in page
+                    ):
+                        continue
+                    page.append(_PackedRectangle(source, x, y, width, height))
+                    result = search(index + 1)
+                    if result is not None:
+                        return result
+                    page.pop()
+            if is_new:
+                pages.pop()
+        return None
+
+    packed = search(0)
+    return None if packed is None else _plans_from_packed(packed)
+
+
+def _plan_atlases(
+    sources: Sequence[LockedSource], max_dimension: int, max_pages: int = 5
+) -> list[_PagePlan]:
+    orderings = [
+        sorted(
+            sources,
+            key=lambda source: (
+                -source.height,
+                -source.width,
+                -(source.width * source.height),
+                source.source_id,
+            ),
+        ),
+        sorted(
+            sources,
+            key=lambda source: (
+                -max(source.width, source.height),
+                -(source.width * source.height),
+                -source.height,
+                -source.width,
+                source.source_id,
+            ),
+        ),
+        sorted(
+            sources,
+            key=lambda source: (
+                -(source.width * source.height),
+                -source.height,
+                -source.width,
+                source.source_id,
+            ),
+        ),
+        sorted(sources, key=lambda source: source.source_id),
+    ]
+    candidates = [_maxrects_plan(ordering, max_dimension) for ordering in orderings]
+    best = min(candidates, key=_layout_cost)
+    if len(best) <= max_pages:
+        return best
+    exact = _exact_pack(sources, max_dimension, max_pages)
+    if exact is None:
+        raise ValueError(
+            f"source set requires {max_pages + 1} atlas pages; limit is {max_pages}"
+        )
+    return exact
 
 
 def _page_dimensions(plan: _PagePlan) -> tuple[int, int]:
@@ -817,14 +1748,170 @@ def _png_bytes(image: Image.Image) -> bytes:
     return buffer.getvalue()
 
 
-def build_lossless_atlases(
-    sources: Sequence[LockedSource], output_dir: Path, *, max_pages: int = 5
-) -> AtlasIndex:
-    if isinstance(max_pages, bool) or not isinstance(max_pages, int) or not 1 <= max_pages <= 5:
+def _layout_payload(
+    sources: Sequence[LockedSource],
+    plans: Sequence[_PagePlan],
+    output_root: Path,
+    max_dimension: int,
+) -> dict[str, object]:
+    return {
+        "digestVersion": _DIGEST_VERSION,
+        "sourceLockSHA256": _source_lock_digest(sources),
+        "outputRoot": str(output_root),
+        "packingAlgorithm": _ATLAS_PACKING_ALGORITHM,
+        "searchNodeLimit": _ATLAS_SEARCH_NODE_LIMIT,
+        "baseMaxDimension": _ATLAS_BASE_DIMENSION,
+        "maxDimension": max_dimension,
+        "padding": _ATLAS_PADDING,
+        "neutralRGBA": list(_ATLAS_NEUTRAL_RGBA),
+        "pages": [
+            {
+                "number": number,
+                "width": _page_dimensions(plan)[0],
+                "height": _page_dimensions(plan)[1],
+            }
+            for number, plan in enumerate(plans, start=1)
+        ],
+        "panels": [
+            {
+                "sourceID": panel.source_id,
+                "pageNumber": panel.page_number,
+                "x": panel.x,
+                "y": panel.y,
+                "width": panel.width,
+                "height": panel.height,
+                "mode": panel.mode,
+                "decodedPixelSHA256": panel.decoded_pixel_sha256,
+            }
+            for plan in plans
+            for panel in plan.panels
+        ],
+    }
+
+
+def _atlas_index_digest(index: AtlasIndex) -> str:
+    payload = index.to_json()
+    payload.pop("atlasIndexSHA256")
+    return _canonical_sha256(payload)
+
+
+def _render_page(plan: _PagePlan, snapshots: dict[str, _ImageSnapshot]) -> Image.Image:
+    width, height = _page_dimensions(plan)
+    canvas = Image.new("RGBA", (width, height), _ATLAS_NEUTRAL_RGBA)
+    for panel in plan.panels:
+        canvas.paste(
+            snapshots[panel.source_id].image.convert("RGBA"), (panel.x, panel.y)
+        )
+    return canvas
+
+
+def _directory_entries(path: Path) -> tuple[str, ...] | None:
+    metadata = _existing_leaf_metadata(path)
+    if metadata is None:
+        return None
+    if not stat.S_ISDIR(metadata.st_mode):
+        raise ValueError(f"atlas output root is not a directory: {_absolute(path)}")
+    anchor = _open_parent(path)
+    descriptor = -1
+    try:
+        descriptor = os.open(anchor.leaf, _DIRECTORY_FLAGS, dir_fd=anchor.parent_fd)
+        _revalidate_anchor(anchor, leaf_identity=_identity(metadata))
+        return tuple(sorted(os.listdir(descriptor)))
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        anchor.close()
+
+
+def _existing_atlas_pages(output_root: Path) -> tuple[Path, ...]:
+    entries = _directory_entries(output_root)
+    if entries is None:
+        return ()
+    unknown = [
+        entry
+        for entry in entries
+        if entry != "index.json" and _ATLAS_PAGE_NAME.fullmatch(entry) is None
+    ]
+    if unknown:
+        raise ValueError(f"unknown atlas output file: {unknown[0]}")
+    page_names = tuple(entry for entry in entries if _ATLAS_PAGE_NAME.fullmatch(entry))
+    for page_name in page_names:
+        _existing_leaf_metadata(output_root / page_name)
+    if not page_names and "index.json" not in entries:
+        return ()
+    if "index.json" not in entries:
+        raise ValueError("unknown atlas output state: pages have no canonical index")
+    try:
+        payload = _load_json(output_root / "index.json", "existing atlas index")
+        if not isinstance(payload, dict) or not isinstance(payload.get("index"), dict):
+            raise ValueError("existing atlas index is invalid")
+        index_payload = payload["index"]
+        if (
+            index_payload.get("schemaVersion") != _SCHEMA_VERSION
+            or index_payload.get("toolVersion") != _TOOL_VERSION
+            or index_payload.get("digestVersion") != _DIGEST_VERSION
+            or index_payload.get("packingAlgorithm") != _ATLAS_PACKING_ALGORITHM
+            or index_payload.get("baseMaxDimension") != _ATLAS_BASE_DIMENSION
+            or index_payload.get("padding") != _ATLAS_PADDING
+            or index_payload.get("neutralRGBA") != list(_ATLAS_NEUTRAL_RGBA)
+        ):
+            raise ValueError("existing atlas index version or packing mismatch")
+        if index_payload.get("outputRoot") != str(_absolute(output_root)):
+            raise ValueError("existing atlas index output root mismatch")
+        supplied_index_digest = index_payload.get("atlasIndexSHA256")
+        if not isinstance(supplied_index_digest, str) or not _SHA256.fullmatch(
+            supplied_index_digest
+        ):
+            raise ValueError("existing atlas index digest is invalid")
+        unsigned_index = dict(index_payload)
+        unsigned_index.pop("atlasIndexSHA256", None)
+        if _canonical_sha256(unsigned_index) != supplied_index_digest:
+            raise ValueError("existing atlas index digest mismatch")
+        source_records = index_payload.get("sources")
+        if not isinstance(source_records, list) or not source_records:
+            raise ValueError("existing atlas source records are invalid")
+        if index_payload.get("sourceLockSHA256") != _source_lock_digest_records(
+            source_records
+        ):
+            raise ValueError("existing atlas source lock digest mismatch")
+        page_records = index_payload.get("pages")
+        if not isinstance(page_records, list):
+            raise ValueError("existing atlas index pages are invalid")
+        recorded_names: list[str] = []
+        for record in page_records:
+            if not isinstance(record, dict):
+                raise ValueError("existing atlas page record is invalid")
+            page_path = Path(str(record.get("path", "")))
+            if page_path.parent != _absolute(output_root):
+                raise ValueError("existing atlas page path mismatch")
+            recorded_names.append(page_path.name)
+            snapshot = _snapshot_image(page_path)
+            if snapshot.byte_sha256 != record.get(
+                "byteSHA256"
+            ) or snapshot.decoded_pixel_sha256 != record.get("decodedPixelSHA256"):
+                raise ValueError("existing atlas page hash mismatch")
+        if tuple(sorted(recorded_names)) != page_names:
+            raise ValueError("existing atlas page set mismatch")
+    except (KeyError, TypeError, ValueError) as error:
+        if isinstance(error, ValueError) and str(error).startswith("existing atlas"):
+            raise
+        raise ValueError("existing atlas index is invalid") from error
+    return tuple(_absolute(output_root / name) for name in page_names)
+
+
+def _prepare_atlas(
+    sources: Sequence[LockedSource], output_dir: Path, max_pages: int
+) -> tuple[AtlasIndex, list[tuple[Path, bytes]], tuple[Path, ...]]:
+    if (
+        isinstance(max_pages, bool)
+        or not isinstance(max_pages, int)
+        or not 1 <= max_pages <= 5
+    ):
         raise ValueError("max_pages must be an integer from 1 through 5")
     if not sources:
         raise ValueError("at least one locked source is required")
-    _owner_context(output_dir)
+    output_root = _absolute(output_dir)
+    _owner_context(output_root)
     ordered = tuple(sorted(sources, key=lambda source: source.source_id))
     identifiers = [source.source_id for source in ordered]
     if len(set(identifiers)) != len(identifiers):
@@ -837,36 +1924,135 @@ def build_lossless_atlases(
                 f"source mode cannot round-trip through an RGBA atlas: {source.source_id} ({source.mode})"
             )
         snapshots[source.source_id] = cache
-    plans = _plan_atlases(ordered)
-    if len(plans) > max_pages:
-        raise ValueError(
-            f"source set requires {len(plans)} atlas pages; limit is {max_pages}"
-        )
+    max_dimension = _atlas_dimension(ordered)
+    plans = _plan_atlases(ordered, max_dimension, max_pages)
     pages: list[AtlasPage] = []
     panels: list[AtlasPanel] = []
+    page_outputs: list[tuple[Path, bytes]] = []
     for page_number, plan in enumerate(plans, start=1):
         width, height = _page_dimensions(plan)
-        canvas = Image.new("RGBA", (width, height), (128, 128, 128, 255))
-        for panel in plan.panels:
-            source_image = snapshots[panel.source_id].image
-            canvas.paste(source_image.convert("RGBA"), (panel.x, panel.y))
-            panels.append(panel)
-        page_path = _atomic_write_bytes(
-            output_dir / f"page-{page_number:02d}.png", _png_bytes(canvas)
-        )
-        page_snapshot = _snapshot_image(page_path)
+        canvas = _render_page(plan, snapshots)
+        page_bytes = _png_bytes(canvas)
+        page_path = output_root / f"page-{page_number:02d}.png"
+        page_outputs.append((page_path, page_bytes))
+        panels.extend(plan.panels)
         pages.append(
             AtlasPage(
                 page_number,
                 page_path,
-                page_snapshot.byte_sha256,
-                page_snapshot.decoded_pixel_sha256,
-                page_snapshot.image.mode,
+                hashlib.sha256(page_bytes).hexdigest(),
+                _decoded_hash_image(canvas),
+                canvas.mode,
                 width,
                 height,
             )
         )
-    return AtlasIndex(ordered, tuple(pages), tuple(panels))
+    source_lock_digest = _source_lock_digest(ordered)
+    layout_digest = _canonical_sha256(
+        _layout_payload(ordered, plans, output_root, max_dimension)
+    )
+    provisional = AtlasIndex(
+        ordered,
+        tuple(pages),
+        tuple(panels),
+        output_root,
+        source_lock_digest,
+        max_dimension,
+        layout_digest,
+        "0" * 64,
+    )
+    index = replace(provisional, atlas_index_sha256=_atlas_index_digest(provisional))
+    existing_pages = _existing_atlas_pages(output_root)
+    stale_pages = tuple(
+        page
+        for page in existing_pages
+        if page not in {path for path, _ in page_outputs}
+    )
+    return index, page_outputs, stale_pages
+
+
+def _atlas_report_payload(index: AtlasIndex) -> dict[str, object]:
+    return {
+        "index": index.to_json(),
+        "verification": {"valid": True, "verified_panels": len(index.panels)},
+    }
+
+
+def _build_and_publish_atlases(
+    sources: Sequence[LockedSource],
+    output_dir: Path,
+    *,
+    max_pages: int,
+    report_path: Path | None,
+) -> AtlasIndex:
+    output_root = _absolute(output_dir)
+    roles = [_PathRole("output root", output_root, "directory")]
+    for index, source in enumerate(sources):
+        roles.extend(
+            [
+                _PathRole(f"original[{index}]", source.original_path, "input"),
+                _PathRole(f"cache[{index}]", source.cache_path, "input"),
+            ]
+        )
+    if report_path is not None:
+        roles.append(_PathRole("report", report_path, "output"))
+    preflight_path_roles(roles)
+    index, page_outputs, stale_pages = _prepare_atlas(sources, output_root, max_pages)
+    payload = (
+        json.dumps(
+            _atlas_report_payload(index),
+            indent=2,
+            sort_keys=True,
+            separators=(",", ": "),
+        )
+        + "\n"
+    ).encode("utf-8")
+    canonical_report = output_root / "index.json"
+    complete_roles = list(roles)
+    complete_roles.extend(
+        _PathRole(f"page[{number}]", path, "output")
+        for number, (path, _) in enumerate(page_outputs, start=1)
+    )
+    complete_roles.extend(
+        _PathRole(f"stale page[{number}]", path, "output")
+        for number, path in enumerate(stale_pages, start=1)
+    )
+    complete_roles.append(_PathRole("canonical index", canonical_report, "output"))
+    preflight_path_roles(complete_roles)
+    publications = [
+        _Publication(path, page_bytes, f"page[{number}]")
+        for number, (path, page_bytes) in enumerate(page_outputs, start=1)
+    ]
+    publications.extend(
+        _Publication(path, None, f"stale page[{number}]")
+        for number, path in enumerate(stale_pages, start=1)
+    )
+    if report_path is not None and _absolute(report_path) != canonical_report:
+        publications.append(_Publication(report_path, payload, "report"))
+    publications.append(_Publication(canonical_report, payload, "canonical index"))
+    _publish_artifacts(publications)
+    verify_atlas_round_trip(index)
+    return index
+
+
+def build_lossless_atlases(
+    sources: Sequence[LockedSource], output_dir: Path, *, max_pages: int = 5
+) -> AtlasIndex:
+    return _build_and_publish_atlases(
+        sources, output_dir, max_pages=max_pages, report_path=None
+    )
+
+
+def build_lossless_atlases_with_report(
+    sources: Sequence[LockedSource],
+    output_dir: Path,
+    *,
+    max_pages: int = 5,
+    report_path: Path | None = None,
+) -> AtlasIndex:
+    return _build_and_publish_atlases(
+        sources, output_dir, max_pages=max_pages, report_path=report_path
+    )
 
 
 def _rectangles_overlap(left: AtlasPanel, right: AtlasPanel) -> bool:
@@ -879,7 +2065,15 @@ def _rectangles_overlap(left: AtlasPanel, right: AtlasPanel) -> bool:
 
 
 def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
-    if index.max_dimension != _ATLAS_MAX_DIMENSION or index.padding != _ATLAS_PADDING:
+    if (
+        index.digest_version != _DIGEST_VERSION
+        or index.base_max_dimension != _ATLAS_BASE_DIMENSION
+        or index.padding != _ATLAS_PADDING
+        or index.neutral_rgba != _ATLAS_NEUTRAL_RGBA
+        or index.packing_algorithm != _ATLAS_PACKING_ALGORITHM
+        or index.search_node_limit != _ATLAS_SEARCH_NODE_LIMIT
+        or index.max_dimension != _atlas_dimension(index.sources)
+    ):
         raise ValueError("atlas index packing constants were tampered")
     if not 1 <= len(index.pages) <= 5:
         raise ValueError("atlas index must contain one through five pages")
@@ -888,9 +2082,13 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
         raise ValueError("atlas sources must be unique and sorted")
     sources = {source.source_id: source for source in index.sources}
     source_images: dict[str, Image.Image] = {}
+    source_snapshots: dict[str, _ImageSnapshot] = {}
     for source in index.sources:
         _, cache = _validate_locked_source(source)
         source_images[source.source_id] = cache.image.convert("RGBA")
+        source_snapshots[source.source_id] = cache
+    if index.source_lock_sha256 != _source_lock_digest(index.sources):
+        raise ValueError("atlas source lock digest mismatch")
     page_numbers = [page.number for page in index.pages]
     if page_numbers != list(range(1, len(index.pages) + 1)):
         raise ValueError("atlas page numbers must be consecutive")
@@ -931,16 +2129,12 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
             if any(_rectangles_overlap(panel, other) for other in panels[offset + 1 :]):
                 raise ValueError(f"atlas panel overlap on page {number}")
     page_snapshots: dict[int, _ImageSnapshot] = {}
-    common_parent: Path | None = None
+    output_root = _absolute(index.output_root)
+    _owner_context(output_root)
     for page in index.pages:
         _owner_context(page.path)
-        if page.path.name != f"page-{page.number:02d}.png":
+        if _absolute(page.path) != output_root / f"page-{page.number:02d}.png":
             raise ValueError(f"atlas page path mismatch: {page.number}")
-        parent = page.path.parent.resolve(strict=False)
-        if common_parent is None:
-            common_parent = parent
-        elif parent != common_parent:
-            raise ValueError("atlas pages must share one output directory")
         snapshot = _snapshot_image(page.path)
         if snapshot.format != "PNG" or snapshot.image.mode != "RGBA":
             raise ValueError(f"atlas page format or mode mismatch: {page.number}")
@@ -953,10 +2147,8 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
         if page.mode != "RGBA":
             raise ValueError(f"atlas page mode record mismatch: {page.number}")
         page_snapshots[page.number] = snapshot
-    expected_plans = _plan_atlases(index.sources)
-    expected_panels = tuple(
-        panel for plan in expected_plans for panel in plan.panels
-    )
+    expected_plans = _plan_atlases(index.sources, index.max_dimension, len(index.pages))
+    expected_panels = tuple(panel for plan in expected_plans for panel in plan.panels)
     if len(expected_plans) != len(index.pages):
         raise ValueError("atlas page count does not match deterministic layout")
     if expected_panels != index.panels:
@@ -964,6 +2156,20 @@ def verify_atlas_round_trip(index: AtlasIndex) -> AtlasVerification:
     for page, plan in zip(index.pages, expected_plans):
         if (page.width, page.height) != _page_dimensions(plan):
             raise ValueError(f"atlas page dimensions mismatch: {page.number}")
+    expected_layout = _canonical_sha256(
+        _layout_payload(index.sources, expected_plans, output_root, index.max_dimension)
+    )
+    if index.layout_sha256 != expected_layout:
+        raise ValueError("atlas canonical layout digest mismatch")
+    if index.atlas_index_sha256 != _atlas_index_digest(index):
+        raise ValueError("atlas index canonical digest mismatch")
+    for page, plan in zip(index.pages, expected_plans):
+        expected_image = _render_page(plan, source_snapshots)
+        actual = page_snapshots[page.number]
+        if actual.image.tobytes() != expected_image.tobytes():
+            raise ValueError(f"atlas canonical page pixels mismatch: {page.number}")
+        if actual.data != _png_bytes(expected_image):
+            raise ValueError(f"atlas canonical page bytes mismatch: {page.number}")
     for panel in index.panels:
         page_image = page_snapshots[panel.page_number].image
         if (
@@ -1002,10 +2208,7 @@ class ChromaConfig:
             or isinstance(self.edge_distance_threshold, bool)
             or not isinstance(self.distance_threshold, int)
             or not isinstance(self.edge_distance_threshold, int)
-            or not 0
-            <= self.distance_threshold
-            < self.edge_distance_threshold
-            <= 255
+            or not 0 <= self.distance_threshold < self.edge_distance_threshold <= 255
         ):
             raise ValueError("chroma thresholds must be increasing integer bytes")
 
@@ -1138,13 +2341,19 @@ def _boundary_opaque_flood_count(image: Image.Image) -> int:
     minimum_size = max(16, math.ceil(width * height * 0.05))
     boundary = frozenset(_boundary_points(width, height))
     minimum_boundary_contact = max(4, math.ceil(len(boundary) * 0.10))
+    boundary_band = frozenset(
+        (x, y)
+        for x in range(width)
+        for y in range(height)
+        if x < 2 or y < 2 or x >= width - 2 or y >= height - 2
+    )
     visited: set[tuple[int, int]] = set()
     flood_count = 0
-    for seed in boundary:
+    for seed in boundary_band:
         if seed in visited:
             continue
         seed_pixel = image.getpixel(seed)
-        if seed_pixel[3] != 255:
+        if seed_pixel[3] < 250:
             continue
         queue: deque[tuple[int, int]] = deque([seed])
         component: set[tuple[int, int]] = {seed}
@@ -1155,13 +2364,13 @@ def _boundary_opaque_flood_count(image: Image.Image) -> int:
                 if neighbor in visited:
                     continue
                 pixel = image.getpixel(neighbor)
-                if pixel[3] == 255:
+                if pixel[3] >= 250:
                     component.add(neighbor)
                     visited.add(neighbor)
                     queue.append(neighbor)
         if (
             len(component) >= minimum_size
-            and len(component.intersection(boundary)) >= minimum_boundary_contact
+            and len(component.intersection(boundary_band)) >= minimum_boundary_contact
         ):
             flood_count += len(component)
     return flood_count
@@ -1230,20 +2439,17 @@ def _decontaminate_pixel(
     return recovered[0], recovered[1], recovered[2], min(alpha, round(alpha * coverage))
 
 
-def remove_chroma(
+def _prepare_chroma(
     input_path: Path, output_path: Path, config: ChromaConfig
-) -> TransparencyReport:
+) -> tuple[bytes, TransparencyReport]:
     input_absolute = _absolute(input_path)
     output_absolute = _absolute(output_path)
-    if input_absolute.resolve(strict=False) == output_absolute.resolve(strict=False):
+    if input_absolute == output_absolute:
         raise ValueError("refusing to key in place")
-    _owner_context(output_path)
     snapshot = _snapshot_image(input_path)
     image = snapshot.image.convert("RGBA")
     original = image.copy()
-    connected = _boundary_connected(
-        original, config.key_rgb, config.distance_threshold
-    )
+    connected = _boundary_connected(original, config.key_rgb, config.distance_threshold)
     frontier: set[tuple[int, int]] = set()
     edge_queue: deque[tuple[int, int]] = deque(connected)
     examined = set(connected)
@@ -1256,9 +2462,7 @@ def remove_chroma(
             pixel = original.getpixel(neighbor)
             distance = _distance(pixel[:3], config.key_rgb)
             if (
-                config.distance_threshold
-                < distance
-                < config.edge_distance_threshold
+                config.distance_threshold < distance < config.edge_distance_threshold
                 and pixel[3] > 0
             ):
                 frontier.add(neighbor)
@@ -1269,11 +2473,58 @@ def remove_chroma(
         output_pixels[x, y] = (red, green, blue, 0)
     for x, y in frontier:
         output_pixels[x, y] = _decontaminate_pixel(original.getpixel((x, y)), config)
-    output = _atomic_write_bytes(output_path, _png_bytes(image))
-    output_snapshot = _snapshot_image(output)
-    return _transparency_report(
+    output_bytes = _png_bytes(image)
+    output_snapshot = _snapshot_image_bytes(output_absolute, output_bytes)
+    report = _transparency_report(
         output_snapshot, config, input_hash=snapshot.byte_sha256
     )
+    return output_bytes, report
+
+
+def remove_chroma(
+    input_path: Path, output_path: Path, config: ChromaConfig
+) -> TransparencyReport:
+    if _absolute(input_path) == _absolute(output_path):
+        raise ValueError("refusing to key in place")
+    preflight_path_roles(
+        [
+            _PathRole("input", input_path, "input"),
+            _PathRole("output", output_path, "output"),
+        ]
+    )
+    output_bytes, report = _prepare_chroma(input_path, output_path, config)
+    _publish_artifacts([_Publication(output_path, output_bytes, "output")])
+    return report
+
+
+def remove_chroma_with_report(
+    input_path: Path,
+    output_path: Path,
+    config: ChromaConfig,
+    report_path: Path,
+    *,
+    config_path: Path | None = None,
+) -> TransparencyReport:
+    roles = [
+        _PathRole("input", input_path, "input"),
+        _PathRole("output", output_path, "output"),
+        _PathRole("report", report_path, "output"),
+    ]
+    if config_path is not None:
+        roles.append(_PathRole("config", config_path, "input"))
+    preflight_path_roles(roles)
+    output_bytes, report = _prepare_chroma(input_path, output_path, config)
+    report_bytes = (
+        json.dumps(report.to_json(), indent=2, sort_keys=True, separators=(",", ": "))
+        + "\n"
+    ).encode("utf-8")
+    _publish_artifacts(
+        [
+            _Publication(output_path, output_bytes, "output"),
+            _Publication(report_path, report_bytes, "report"),
+        ]
+    )
+    return report
 
 
 def _inspect_with_config(
@@ -1289,9 +2540,7 @@ def _inspect_with_config(
     ):
         raise ValueError("expected transparency dimensions must be positive integers")
     snapshot = _snapshot_image(path)
-    report = _transparency_report(
-        snapshot, config, input_hash=snapshot.byte_sha256
-    )
+    report = _transparency_report(snapshot, config, input_hash=snapshot.byte_sha256)
     if (report.width, report.height) != (expected_width, expected_height):
         raise ValueError("unexpected transparency dimensions")
     if report.minimum_alpha != 0 or report.maximum_alpha == 0:
@@ -1326,3 +2575,28 @@ def inspect_transparency_with_config(
     config: ChromaConfig,
 ) -> TransparencyReport:
     return _inspect_with_config(path, expected_width, expected_height, config)
+
+
+def inspect_transparency_with_report(
+    path: Path,
+    expected_width: int,
+    expected_height: int,
+    config: ChromaConfig,
+    report_path: Path,
+    *,
+    config_path: Path | None = None,
+) -> TransparencyReport:
+    roles = [
+        _PathRole("image", path, "input"),
+        _PathRole("report", report_path, "output"),
+    ]
+    if config_path is not None:
+        roles.append(_PathRole("config", config_path, "input"))
+    preflight_path_roles(roles)
+    report = _inspect_with_config(path, expected_width, expected_height, config)
+    report_bytes = (
+        json.dumps(report.to_json(), indent=2, sort_keys=True, separators=(",", ": "))
+        + "\n"
+    ).encode("utf-8")
+    _publish_artifacts([_Publication(report_path, report_bytes, "report")])
+    return report
