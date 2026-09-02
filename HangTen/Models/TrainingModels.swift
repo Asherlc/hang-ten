@@ -37,11 +37,65 @@ struct BoardHoldPiece: Identifiable, Hashable {
 /// The one path source used for normal contact, highlighting, and hit testing.
 struct BoardHoldPathShape: Shape {
     let pieces: [BoardHoldPiece]
+    let projection: BoardPresentationGeometryProjection
 
     func path(in rect: CGRect) -> Path {
-        pieces.reduce(into: Path()) { path, piece in
-            path.addPath(piece.path(in: rect))
+        var canonicalPath = Path()
+        for piece in pieces {
+            canonicalPath.addPath(piece.path(in: rect))
         }
+        return projection.project(canonicalPath, in: rect)
+    }
+}
+
+struct BoardPresentationGeometryProjection: Hashable {
+    private let isInverted: Bool
+    private let rotationAnchor: BoardGeometryRotationAnchor
+
+    init(presentation: BoardPresentation) {
+        self.init(
+            isInverted: presentation.isInverted,
+            rotationAnchor: presentation.geometryRotationAnchor
+        )
+    }
+
+    init(
+        isInverted: Bool,
+        rotationAnchor: BoardGeometryRotationAnchor? = nil
+    ) {
+        self.isInverted = isInverted
+        self.rotationAnchor = rotationAnchor ?? .center
+    }
+
+    func project(_ point: CGPoint, in rect: CGRect) -> CGPoint {
+        guard isInverted else { return point }
+        let anchor = resolvedAnchor(in: rect)
+        return CGPoint(
+            x: 2 * anchor.x - point.x,
+            y: 2 * anchor.y - point.y
+        )
+    }
+
+    func project(_ path: Path, in rect: CGRect) -> Path {
+        guard isInverted else { return path }
+        let anchor = resolvedAnchor(in: rect)
+        return path.applying(
+            CGAffineTransform(
+                a: -1,
+                b: 0,
+                c: 0,
+                d: -1,
+                tx: 2 * anchor.x,
+                ty: 2 * anchor.y
+            )
+        )
+    }
+
+    private func resolvedAnchor(in rect: CGRect) -> CGPoint {
+        CGPoint(
+            x: rect.minX + rect.width * CGFloat(rotationAnchor.x),
+            y: rect.minY + rect.height * CGFloat(rotationAnchor.y)
+        )
     }
 }
 

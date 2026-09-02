@@ -282,6 +282,10 @@ struct BoardDetailMapView: View {
 
         GeometryReader { proxy in
             let boardBounds = proxy.size
+            let boardRect = CGRect(origin: .zero, size: boardBounds)
+            let projection = BoardPresentationGeometryProjection(
+                presentation: map.presentation
+            )
             ZStack {
                 BoardPresentationImage(board: board, presentationID: map.presentation.id)
 
@@ -290,7 +294,7 @@ struct BoardDetailMapView: View {
                         hold: entry.hold,
                         isHighlighted: selectedHoldID == entry.hold.id,
                         highlightMode: .active,
-                        isInverted: map.presentation.isInverted,
+                        projection: projection,
                         onTap: { select($0.id) }
                     )
                     .frame(width: boardBounds.width, height: boardBounds.height)
@@ -301,7 +305,13 @@ struct BoardDetailMapView: View {
                     ) {
                         select(entry.hold.id)
                     }
-                    .position(markerPosition(for: entry.hold, in: boardBounds, isInverted: map.presentation.isInverted))
+                    .position(
+                        markerPosition(
+                            for: entry.hold,
+                            in: boardRect,
+                            projection: projection
+                        )
+                    )
                 }
             }
         }
@@ -370,15 +380,14 @@ struct BoardDetailMapView: View {
 
     private func markerPosition(
         for hold: BoardHold,
-        in bounds: CGSize,
-        isInverted: Bool
+        in bounds: CGRect,
+        projection: BoardPresentationGeometryProjection
     ) -> CGPoint {
         let center = CGPoint(
-            x: hold.frame.x * bounds.width + hold.frame.width * bounds.width / 2,
-            y: hold.frame.y * bounds.height + hold.frame.height * bounds.height / 2
+            x: bounds.minX + hold.frame.x * bounds.width + hold.frame.width * bounds.width / 2,
+            y: bounds.minY + hold.frame.y * bounds.height + hold.frame.height * bounds.height / 2
         )
-        guard isInverted else { return center }
-        return CGPoint(x: bounds.width - center.x, y: bounds.height - center.y)
+        return projection.project(center, in: bounds)
     }
 }
 
@@ -465,6 +474,9 @@ struct BoardMapView: View {
 
             GeometryReader { proxy in
                 let boardBounds = proxy.size
+                let projection = BoardPresentationGeometryProjection(
+                    presentation: content.presentation
+                )
                 ZStack {
                     BoardPresentationImage(
                         board: board,
@@ -476,7 +488,7 @@ struct BoardMapView: View {
                             hold: hold,
                             isHighlighted: highlightedHoldIDs.contains(hold.id),
                             highlightMode: highlightMode,
-                            isInverted: content.presentation.isInverted,
+                            projection: projection,
                             onTap: onHoldTap
                         )
                         .frame(width: boardBounds.width, height: boardBounds.height)
@@ -545,12 +557,15 @@ private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
-    let isInverted: Bool
+    let projection: BoardPresentationGeometryProjection
     let onTap: ((BoardHold) -> Void)?
 
     @ViewBuilder
     var body: some View {
-        let shape = BoardHoldPathShape(pieces: hold.geometry)
+        let shape = BoardHoldPathShape(
+            pieces: hold.geometry,
+            projection: projection
+        )
         let visual = ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
@@ -563,7 +578,6 @@ private struct PhysicalHoldVisual: View {
         }
         if let onTap {
             visual
-                .rotationEffect(isInverted ? .degrees(180) : .zero)
                 .contentShape(.interaction, shape)
                 .contentShape(.accessibility, shape)
                 .onTapGesture {
@@ -574,7 +588,6 @@ private struct PhysicalHoldVisual: View {
                 .accessibilityAddTraits(.isButton)
         } else {
             visual
-                .rotationEffect(isInverted ? .degrees(180) : .zero)
         }
     }
 

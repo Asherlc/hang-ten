@@ -1,4 +1,5 @@
 import XCTest
+import SwiftUI
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
@@ -1246,6 +1247,107 @@ final class BoardPackageStoreTests: XCTestCase {
             on: board
         )
         XCTAssertEqual(selection.presentationID, "front-inverted")
+    }
+
+    func testPresentationGeometryProjectionLeavesNonInvertedPointUnchanged() {
+        let presentation = BoardPresentation(
+            id: "front",
+            name: "Front",
+            aspectRatio: 2,
+            isDefault: true
+        )
+        let projection = BoardPresentationGeometryProjection(presentation: presentation)
+        let boardRect = CGRect(x: 10, y: 20, width: 100, height: 60)
+
+        XCTAssertEqual(
+            projection.project(CGPoint(x: 20, y: 30), in: boardRect),
+            CGPoint(x: 20, y: 30)
+        )
+    }
+
+    func testPresentationGeometryProjectionInvertsAroundBoardRectCenter() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 10, y: 20, width: 100, height: 60)
+
+        XCTAssertEqual(
+            projection.project(CGPoint(x: 20, y: 30), in: boardRect),
+            CGPoint(x: 100, y: 70)
+        )
+    }
+
+    func testPresentationGeometryProjectionUsesNonCenterNormalizedAnchor() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .init(x: 0.5, y: 0.68)
+        )
+
+        XCTAssertEqual(
+            projection.project(
+                CGPoint(x: 20, y: 30),
+                in: CGRect(x: 0, y: 0, width: 100, height: 100)
+            ),
+            CGPoint(x: 80, y: 106)
+        )
+    }
+
+    func testPresentationGeometryProjectionTransformsEveryPathSubpath() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        var sourcePath = Path()
+        sourcePath.addRect(CGRect(x: 10, y: 20, width: 10, height: 10))
+        sourcePath.addRect(CGRect(x: 70, y: 50, width: 20, height: 10))
+
+        let projectedPath = projection.project(sourcePath, in: boardRect)
+
+        XCTAssertEqual(projectedPath.boundingRect, CGRect(x: 10, y: 40, width: 80, height: 40))
+        XCTAssertTrue(projectedPath.contains(CGPoint(x: 85, y: 75)))
+        XCTAssertTrue(projectedPath.contains(CGPoint(x: 20, y: 45)))
+        XCTAssertFalse(projectedPath.contains(CGPoint(x: 15, y: 25)))
+    }
+
+    func testPresentationGeometryProjectionProjectsHoldMarkerCenter() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 10, y: 20, width: 200, height: 100)
+        let holdFrame = CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.1)
+        let canonicalMarkerCenter = CGPoint(
+            x: boardRect.minX + holdFrame.midX * boardRect.width,
+            y: boardRect.minY + holdFrame.midY * boardRect.height
+        )
+
+        XCTAssertEqual(
+            projection.project(canonicalMarkerCenter, in: boardRect),
+            CGPoint(x: 170, y: 95)
+        )
+    }
+
+    func testProjectedRectangularHoldContainsTheProjectedMarkerCenter() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        let piece = BoardHoldPiece(
+            id: "fixture-piece",
+            holdID: "fixture-hold",
+            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0),
+            treatment: .surface
+        )
+        let shape = BoardHoldPathShape(pieces: [piece], projection: projection)
+        let canonicalCenter = CGPoint(x: 20, y: 25)
+        let markerPoint = projection.project(canonicalCenter, in: boardRect)
+
+        XCTAssertEqual(markerPoint, CGPoint(x: 80, y: 75))
+        XCTAssertTrue(shape.path(in: boardRect).contains(markerPoint))
     }
 
     func testBoardMapSelectionAppliesCallerPresentationChangeDespiteStaleActiveHold() throws {
