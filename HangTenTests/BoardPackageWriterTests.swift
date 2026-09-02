@@ -83,6 +83,38 @@ final class BoardPackageWriterTests: XCTestCase {
         )
     }
 
+    private func makeAliasDocument(
+        anchor: BoardGeometryRotationAnchor? = .init(x: 0.5, y: 0.68),
+        aliasAspectRatio: Double = 2.0,
+        isInverted: Bool = true
+    ) -> BoardEditableDocument {
+        var document = makeDocument(
+            holds: [
+                makeHold(geometry: [
+                    makePiece(
+                        frame: .init(x: 0.05, y: 0.4, width: 0.1, height: 0.2)
+                    ),
+                    makePiece(
+                        frame: .init(x: 0.35, y: 0.5, width: 0.1, height: 0.1)
+                    ),
+                ])
+            ]
+        )
+        document.presentations.append(
+            BoardEditablePresentation(
+                id: "front-inverted",
+                name: "Front upside down",
+                assetPath: "assets/front-inverted.png",
+                aspectRatio: aliasAspectRatio,
+                isDefault: false,
+                sourcePresentationID: "front",
+                isInverted: isInverted,
+                geometryRotationAnchor: anchor
+            )
+        )
+        return document
+    }
+
     private func shapeDroppingLastCommand(
         _ shape: BoardGeometryShapeDocument
     ) -> BoardGeometryShapeDocument {
@@ -464,6 +496,161 @@ final class BoardPackageWriterTests: XCTestCase {
                 .invalid(
                     "board test.board: hold hold-one must be owned by a canonical presentation"
                 )
+            )
+        }
+    }
+
+    func testWriterRoundTripsAliasRotationAnchorInCanonicalOrder() throws {
+        let input = try BoardPackageWriter.data(for: makeAliasDocument())
+        let document = try BoardEditableDocument(data: input)
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded, document)
+        XCTAssertEqual(try BoardPackageWriter.data(for: redecoded), encoded)
+        XCTAssertEqual(
+            redecoded.presentations[1].geometryRotationAnchor,
+            BoardGeometryRotationAnchor(x: 0.5, y: 0.68)
+        )
+        XCTAssertTrue(
+            String(decoding: encoded, as: UTF8.self).contains(
+                "      \"isInverted\": true,\n"
+                    + "      \"geometryRotationAnchor\": {\n"
+                    + "        \"x\": 0.5,\n"
+                    + "        \"y\": 0.68\n"
+                    + "      }\n"
+            )
+        )
+    }
+
+    func testWriterOmitsAbsentAliasRotationAnchor() throws {
+        let document = makeAliasDocument(anchor: nil)
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertNil(redecoded.presentations[1].geometryRotationAnchor)
+        XCTAssertFalse(String(decoding: encoded, as: UTF8.self).contains("geometryRotationAnchor"))
+    }
+
+    func testWriterRejectsRotationAnchorOnCanonicalPresentation() throws {
+        var document = makeDocument()
+        document.presentations[0].geometryRotationAnchor = .center
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front.geometryRotationAnchor requires sourcePresentationID"
+        )
+    }
+
+    func testWriterRejectsRotationAnchorOnNonInvertedAlias() throws {
+        assertWriterInvalid(
+            makeAliasDocument(isInverted: false),
+            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true"
+        )
+    }
+
+    func testWriterRejectsNonFiniteRotationAnchor() throws {
+        assertWriterInvalid(
+            makeAliasDocument(anchor: .init(x: .infinity, y: 0.68)),
+            reason: "presentation front-inverted.geometryRotationAnchor must contain finite normalized coordinates"
+        )
+    }
+
+    func testWriterRejectsRotationAnchorCoordinatesOutsideTheNormalizedRange() throws {
+        for anchor in [
+            BoardGeometryRotationAnchor(x: 1.01, y: 0.68),
+            BoardGeometryRotationAnchor(x: 0.5, y: -0.01),
+        ] {
+            assertWriterInvalid(
+                makeAliasDocument(anchor: anchor),
+                reason: "presentation front-inverted.geometryRotationAnchor must contain finite normalized coordinates"
+            )
+        }
+    }
+
+    func testWriterRejectsAliasAspectMismatch() throws {
+        assertWriterInvalid(
+            makeAliasDocument(aliasAspectRatio: 2.0001),
+            reason: "presentation front-inverted.aspectRatio must match source presentation aspectRatio"
+        )
+    }
+
+    func testWriterAcceptsTaskOneAliasAspectRoundingTolerance() throws {
+        XCTAssertNoThrow(
+            try BoardPackageWriter.data(
+                for: makeAliasDocument(aliasAspectRatio: 2.000000001)
+            )
+        )
+    }
+
+    func testWriterAcceptsProjectedFrameOnArithmeticNoiseBoundary() throws {
+        var document = makeAliasDocument(anchor: .init(x: 0.15, y: 0.15))
+        document.holds[0].geometry[0] = makePiece(
+            frame: .init(x: 0.1, y: 0.1, width: 0.2, height: 0.2)
+        )
+        document.holds[0].geometry[1] = makePiece(
+            frame: .init(x: 0.12, y: 0.12, width: 0.1, height: 0.1)
+        )
+
+        XCTAssertNoThrow(try BoardPackageWriter.data(for: document))
+    }
+
+    func testWriterRejectsAnOffCanvasLaterPieceOfALaterSourceHold() throws {
+        var document = makeAliasDocument()
+        document.holds.append(
+            makeHold(
+                id: "hold-front-later",
+                name: "Later front hold",
+                geometry: [
+                    makePiece(frame: .init(x: 0.05, y: 0.4, width: 0.1, height: 0.2)),
+                    makePiece(frame: .init(x: 0.95, y: 0.5, width: 0.1, height: 0.1)),
+                ]
+            )
+        )
+        assertWriterInvalid(
+            document,
+            reason: "presentation front-inverted projects source hold geometry outside the normalized canvas"
+        )
+    }
+
+    func testEditorStrictlyDecodesRotationAnchorObjectAndNumericCoordinates() throws {
+        let encoded = try BoardPackageWriter.data(for: makeAliasDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+        let invalidSources = [
+            source.replacingOccurrences(of: "        \"x\": 0.5,\n", with: ""),
+            source.replacingOccurrences(of: "        \"y\": 0.68", with: "        \"y\": 0.68,\n        \"unexpected\": 1"),
+            source.replacingOccurrences(of: "        \"x\": 0.5", with: "        \"x\": true"),
+            source.replacingOccurrences(of: "        \"x\": 0.5", with: "        \"x\": 1e999"),
+            source.replacingOccurrences(
+                of: "{\n        \"x\": 0.5,\n        \"y\": 0.68\n      }",
+                with: "null"
+            ),
+            source.replacingOccurrences(
+                of: "{\n        \"x\": 0.5,\n        \"y\": 0.68\n      }",
+                with: "\"center\""
+            ),
+        ]
+
+        for invalidSource in invalidSources {
+            XCTAssertNotEqual(invalidSource, source)
+            XCTAssertThrowsError(try editorDocument(invalidSource))
+        }
+    }
+
+    private func assertWriterInvalid(
+        _ document: BoardEditableDocument,
+        reason: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document), file: file, line: line) {
+            XCTAssertEqual(
+                $0 as? BoardPackageWriterError,
+                .invalid("board \(document.id): \(reason)"),
+                file: file,
+                line: line
             )
         }
     }

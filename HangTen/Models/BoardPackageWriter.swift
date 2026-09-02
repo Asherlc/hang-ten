@@ -116,6 +116,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
     /// upside-down mounting. Holds remain owned by the canonical source.
     var sourcePresentationID: String?
     var isInverted: Bool
+    var geometryRotationAnchor: BoardGeometryRotationAnchor?
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -125,6 +126,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         case isDefault = "default"
         case sourcePresentationID
         case isInverted
+        case geometryRotationAnchor
     }
 
     init(
@@ -134,7 +136,8 @@ struct BoardEditablePresentation: Equatable, Decodable {
         aspectRatio: Double,
         isDefault: Bool,
         sourcePresentationID: String? = nil,
-        isInverted: Bool = false
+        isInverted: Bool = false,
+        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil
     ) {
         self.id = id
         self.name = name
@@ -143,12 +146,13 @@ struct BoardEditablePresentation: Equatable, Decodable {
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
+        self.geometryRotationAnchor = geometryRotationAnchor
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted"
+            "sourcePresentationID", "isInverted", "geometryRotationAnchor"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -161,6 +165,33 @@ struct BoardEditablePresentation: Equatable, Decodable {
             forKey: .sourcePresentationID
         )
         isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
+        geometryRotationAnchor = container.contains(.geometryRotationAnchor)
+            ? try container.decode(
+                BoardEditableGeometryRotationAnchorDocument.self,
+                forKey: .geometryRotationAnchor
+            ).rotationAnchor
+            : nil
+    }
+}
+
+private struct BoardEditableGeometryRotationAnchorDocument: Decodable {
+    let x: Double
+    let y: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["x", "y"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+    }
+
+    var rotationAnchor: BoardGeometryRotationAnchor {
+        BoardGeometryRotationAnchor(x: x, y: y)
     }
 }
 
@@ -452,6 +483,26 @@ enum BoardPackageWriter {
             guard presentation.aspectRatio.isFinite, presentation.aspectRatio > 0 else {
                 throw invalid("presentation \(presentation.id) aspect ratio must be positive", document)
             }
+            if let anchor = presentation.geometryRotationAnchor {
+                guard anchor.hasFiniteNormalizedCoordinates else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryRotationAnchor must contain finite normalized coordinates",
+                        document
+                    )
+                }
+                guard presentation.sourcePresentationID != nil else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryRotationAnchor requires sourcePresentationID",
+                        document
+                    )
+                }
+                guard presentation.isInverted else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryRotationAnchor requires isInverted true",
+                        document
+                    )
+                }
+            }
             if presentation.isDefault {
                 defaultPresentationCount += 1
             }
@@ -470,6 +521,15 @@ enum BoardPackageWriter {
                       sourcePresentation.sourcePresentationID == nil else {
                     throw invalid(
                         "presentation \(presentation.id) must reference a canonical presentation",
+                        document
+                    )
+                }
+                guard BoardAliasGeometryValidation.aspectRatiosMatch(
+                    presentation.aspectRatio,
+                    sourcePresentation.aspectRatio
+                ) else {
+                    throw invalid(
+                        "presentation \(presentation.id).aspectRatio must match source presentation aspectRatio",
                         document
                     )
                 }
@@ -566,6 +626,33 @@ enum BoardPackageWriter {
             guard pairedHold.kind == .gaston,
                   pairedHold.pairedHoldID == hold.id else {
                 throw invalid("gaston hold \(hold.id) must have a reciprocal gaston pair", document)
+            }
+        }
+        try validateAliasProjections(in: document)
+    }
+
+    private static func validateAliasProjections(in document: BoardEditableDocument) throws {
+        for presentation in document.presentations where presentation.isInverted {
+            guard let sourcePresentationID = presentation.sourcePresentationID else {
+                continue
+            }
+            let anchor = presentation.geometryRotationAnchor ?? .center
+            for hold in document.holds where hold.presentationID == sourcePresentationID {
+                for piece in hold.geometry {
+                    let frame = piece.frame
+                    guard BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
+                        x: frame.x,
+                        y: frame.y,
+                        width: frame.width,
+                        height: frame.height,
+                        anchor: anchor
+                    ) else {
+                        throw invalid(
+                            "presentation \(presentation.id) projects source hold geometry outside the normalized canvas",
+                            document
+                        )
+                    }
+                }
             }
         }
     }
@@ -774,6 +861,12 @@ enum BoardPackageWriter {
         }
         if presentation.isInverted {
             entries.append(("isInverted", .bool(true)))
+        }
+        if let anchor = presentation.geometryRotationAnchor {
+            entries.append(("geometryRotationAnchor", .object([
+                ("x", .double(anchor.x)),
+                ("y", .double(anchor.y)),
+            ])))
         }
         return .object(entries)
     }

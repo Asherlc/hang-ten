@@ -664,6 +664,47 @@ struct BoardHold: Identifiable, Hashable {
     }
 }
 
+struct BoardGeometryRotationAnchor: Hashable {
+    let x: Double
+    let y: Double
+
+    static let center = BoardGeometryRotationAnchor(x: 0.5, y: 0.5)
+
+    var hasFiniteNormalizedCoordinates: Bool {
+        x.isFinite && y.isFinite && (0...1).contains(x) && (0...1).contains(y)
+    }
+}
+
+enum BoardAliasGeometryValidation {
+    private static let aspectRatioRelativeTolerance = 1e-9
+    private static let aspectRatioAbsoluteTolerance = 1e-12
+    private static let projectedFrameEdgeTolerance = 1e-12
+
+    static func aspectRatiosMatch(_ lhs: Double, _ rhs: Double) -> Bool {
+        abs(lhs - rhs) <= max(
+            aspectRatioRelativeTolerance * max(abs(lhs), abs(rhs)),
+            aspectRatioAbsoluteTolerance
+        )
+    }
+
+    static func projectedFrameIsInsideCanvas(
+        x: Double,
+        y: Double,
+        width: Double,
+        height: Double,
+        anchor: BoardGeometryRotationAnchor
+    ) -> Bool {
+        let projectedMinX = 2 * anchor.x - (x + width)
+        let projectedMinY = 2 * anchor.y - (y + height)
+        let projectedMaxX = 2 * anchor.x - x
+        let projectedMaxY = 2 * anchor.y - y
+        return projectedMinX >= -projectedFrameEdgeTolerance &&
+            projectedMinY >= -projectedFrameEdgeTolerance &&
+            projectedMaxX <= 1 + projectedFrameEdgeTolerance &&
+            projectedMaxY <= 1 + projectedFrameEdgeTolerance
+    }
+}
+
 struct BoardPresentation: Identifiable, Hashable {
     static let primaryID = "primary"
 
@@ -675,6 +716,7 @@ struct BoardPresentation: Identifiable, Hashable {
     /// mounting orientation, without duplicating the board's hold inventory.
     let sourcePresentationID: String?
     let isInverted: Bool
+    let geometryRotationAnchor: BoardGeometryRotationAnchor?
 
     init(
         id: String,
@@ -682,7 +724,8 @@ struct BoardPresentation: Identifiable, Hashable {
         aspectRatio: CGFloat,
         isDefault: Bool,
         sourcePresentationID: String? = nil,
-        isInverted: Bool = false
+        isInverted: Bool = false,
+        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil
     ) {
         self.id = id
         self.name = name
@@ -690,6 +733,7 @@ struct BoardPresentation: Identifiable, Hashable {
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
+        self.geometryRotationAnchor = geometryRotationAnchor
     }
 }
 

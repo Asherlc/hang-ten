@@ -179,6 +179,10 @@ struct BoardPackageStore {
                 in: boardDocument,
                 presentations: presentations
             )
+            try Self.validateAliasProjections(
+                in: boardDocument,
+                presentations: presentations
+            )
             try Self.validateEquipmentObjectOwnership(in: boardDocument)
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
@@ -578,6 +582,26 @@ struct BoardPackageStore {
             uniqueKeysWithValues: presentations.map { ($0.id, $0) }
         )
         for presentation in presentations {
+            if let anchor = presentation.geometryRotationAnchor {
+                guard anchor.hasFiniteNormalizedCoordinates else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).geometryRotationAnchor must contain finite normalized coordinates"
+                    )
+                }
+                guard presentation.sourcePresentationID != nil else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).geometryRotationAnchor requires sourcePresentationID"
+                    )
+                }
+                guard presentation.isInverted else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).geometryRotationAnchor requires isInverted true"
+                    )
+                }
+            }
             if let sourcePresentationID = presentation.sourcePresentationID {
                 guard sourcePresentationID != presentation.id,
                       let sourcePresentation = presentationsByID[sourcePresentationID],
@@ -585,6 +609,15 @@ struct BoardPackageStore {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
                         reason: "presentation \(presentation.id) must reference a canonical presentation"
+                    )
+                }
+                guard BoardAliasGeometryValidation.aspectRatiosMatch(
+                    presentation.aspectRatio,
+                    sourcePresentation.aspectRatio
+                ) else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).aspectRatio must match source presentation aspectRatio"
                     )
                 }
             }
@@ -840,6 +873,35 @@ struct BoardPackageStore {
         return holds
     }
 
+    private static func validateAliasProjections(
+        in document: BoardPackageBoardDocument,
+        presentations: [BoardPackagePresentationDocument]
+    ) throws {
+        for presentation in presentations where presentation.isInverted {
+            guard let sourcePresentationID = presentation.sourcePresentationID else {
+                continue
+            }
+            let anchor = presentation.geometryRotationAnchor ?? .center
+            for hold in document.holds where hold.presentationID == sourcePresentationID {
+                for piece in hold.geometry {
+                    let frame = piece.frame
+                    guard BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
+                        x: frame.x,
+                        y: frame.y,
+                        width: frame.width,
+                        height: frame.height,
+                        anchor: anchor
+                    ) else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "presentation \(presentation.id) projects source hold geometry outside the normalized canvas"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 private struct BoardPackageBoardDocument: Decodable {
@@ -964,6 +1026,7 @@ private struct BoardPackagePresentationDocument: Decodable {
     let isDefault: Bool
     let sourcePresentationID: String?
     let isInverted: Bool
+    let geometryRotationAnchor: BoardGeometryRotationAnchor?
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -973,12 +1036,13 @@ private struct BoardPackagePresentationDocument: Decodable {
         case isDefault = "default"
         case sourcePresentationID
         case isInverted
+        case geometryRotationAnchor
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted"
+            "sourcePresentationID", "isInverted", "geometryRotationAnchor"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -991,6 +1055,12 @@ private struct BoardPackagePresentationDocument: Decodable {
             forKey: .sourcePresentationID
         )
         isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
+        geometryRotationAnchor = container.contains(.geometryRotationAnchor)
+            ? try container.decode(
+                BoardPackageGeometryRotationAnchorDocument.self,
+                forKey: .geometryRotationAnchor
+            ).rotationAnchor
+            : nil
     }
 
     var trainingPresentation: BoardPresentation {
@@ -1000,8 +1070,30 @@ private struct BoardPackagePresentationDocument: Decodable {
             aspectRatio: CGFloat(aspectRatio),
             isDefault: isDefault,
             sourcePresentationID: sourcePresentationID,
-            isInverted: isInverted
+            isInverted: isInverted,
+            geometryRotationAnchor: geometryRotationAnchor
         )
+    }
+}
+
+private struct BoardPackageGeometryRotationAnchorDocument: Decodable {
+    let x: Double
+    let y: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["x", "y"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+    }
+
+    var rotationAnchor: BoardGeometryRotationAnchor {
+        BoardGeometryRotationAnchor(x: x, y: y)
     }
 }
 
