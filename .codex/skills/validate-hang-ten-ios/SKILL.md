@@ -30,8 +30,11 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    $CONDUCTOR_WORKSPACE_NAME `; if lookup or ownership verification fails, do not
    delete and return failure. Use that UUID for every simulator operation; never
    target `booted`.
-2. Wait for launch services, then build with the local workspace-specific
-   `.context/DerivedData` path and explicit destination.
+2. Wait for launch services, then build or test with the local
+   workspace-specific `.context/DerivedData` path and explicit destination.
+   Every `xcodebuild test` or `test-without-building` command targeting the
+   single owned simulator must pass `-parallel-testing-enabled NO` so XCTest
+   does not create parallel simulator clones outside the workspace manifest.
 3. Keep signing enabled for HealthKit validation. Install the exact built app
    and confirm its app container when parallel builds share the bundle ID.
 4. Use `SIMCTL_CHILD_HANGTEN_REVIEW_*` routes to reach the plan, workout step,
@@ -46,12 +49,12 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    simulators.
 
 Every validation exit trap must also remove the exact workspace-local artifacts
-created by its recipe (`.context/DerivedData`, `.context/workout-raw.png`, and
-`.context/workout-landscape.png`). The trap removes those exact workspace
-artifacts regardless of simulator cleanup status. If archive cleanup fails,
-retain both pending and owned simulator manifests for a retry; preserve the
-original command status and propagate cleanup failure only when the command
-itself succeeded.
+created by its recipe (`.context/DerivedData`, `.context/HangTenTests.xcresult`,
+`.context/workout-raw.png`, and `.context/workout-landscape.png`). The trap
+removes those exact workspace artifacts regardless of simulator cleanup status.
+If archive cleanup fails, retain both pending and owned simulator manifests for
+a retry; preserve the original command status and propagate cleanup failure
+only when the command itself succeeded.
 
 When practical, validate the pending-append failure path by forcing that append
 to fail and verifying immediate status-1 exit without an owned-manifest write;

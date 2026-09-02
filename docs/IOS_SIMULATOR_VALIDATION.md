@@ -127,6 +127,7 @@ cleanup_on_exit() {
   fi
   artifact_cleanup_status=0
   rm -rf "$workspace_path/.context/DerivedData" \
+    "$workspace_path/.context/HangTenTests.xcresult" \
     "$workspace_path/.context/workout-raw.png" \
     "$workspace_path/.context/workout-landscape.png" || artifact_cleanup_status=$?
   if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
@@ -174,11 +175,11 @@ names carry this workspace's exact marker. It keeps pending simulator records
 until archive cleanup succeeds.
 
 The trap removes only the exact workspace-local artifacts created by this guide:
-`.context/DerivedData`, `.context/workout-raw.png`, and
-`.context/workout-landscape.png`. The trap removes those exact artifacts
-regardless of simulator cleanup status. If simulator archive cleanup fails,
-both simulator manifests remain in place for a retry, and the original command
-status is preserved.
+`.context/DerivedData`, `.context/HangTenTests.xcresult`,
+`.context/workout-raw.png`, and `.context/workout-landscape.png`. The trap
+removes those exact artifacts regardless of simulator cleanup status. If
+simulator archive cleanup fails, both simulator manifests remain in place for a
+retry, and the original command status is preserved.
 
 ## Boot and wait for real readiness
 
@@ -220,6 +221,29 @@ xcodebuild \
   -derivedDataPath .context/DerivedData \
   build
 ```
+
+For XCTest on this single owned destination, disable parallel testing
+explicitly. Xcode can otherwise create simulator clones whose storage is not
+represented by the workspace's owned-device manifests:
+
+```sh
+xcodebuild \
+  -project HangTen.xcodeproj \
+  -scheme HangTen \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,id=<uuid>' \
+  -parallel-testing-enabled NO \
+  -derivedDataPath .context/DerivedData \
+  -resultBundlePath .context/HangTenTests.xcresult \
+  test
+```
+
+Apply `-parallel-testing-enabled NO` to `test-without-building` as well. Keep
+the creation trap installed until the command exits so it deletes the owned
+destination and removes the exact workspace-local Derived Data and result
+bundle. Do not search for and delete generic XCTest clones during cleanup:
+without an exact recorded UUID and workspace-name marker, they may belong to
+another concurrent test run.
 
 `CODE_SIGNING_ALLOWED=NO` is acceptable for a compile-only check. Do not use it
 for HealthKit permission validation: the installed app needs its simulator
