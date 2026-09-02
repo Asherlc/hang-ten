@@ -14,6 +14,7 @@ import { postNativeDiagnostic } from "../src/native-bridge.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import type {
   Board,
+  BoardPresentation,
   BrowserRuntime,
   Dialogs,
   EditorDocument,
@@ -152,6 +153,173 @@ test("the browser client requests and validates a selected presentation", async 
   assert.equal(board.document.presentationID, "back");
   assert.equal(board.document.regions[0]?.metadata?.presentationID, "back");
   assert.deepEqual(calls, ["/api/boards/compact?presentationID=back"]);
+});
+
+test("the browser client preserves valid inverted alias anchor metadata", async () => {
+  const alias: BoardPresentation = {
+    presentationID: "front-inverted",
+    displayName: "Front inverted",
+    imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+    default: false,
+    sourcePresentationID: "front",
+    isInverted: true,
+    geometryRotationAnchor: { x: 0.5, y: 0.68 },
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [
+        {
+          presentationID: "front",
+          displayName: "Front",
+          imageUrl: "/api/boards/compact/image?presentationID=front",
+          default: true,
+        },
+        alias,
+      ],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[1], alias);
+});
+
+test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {
+  const invalidPresentations: Array<{ name: string; presentation: unknown }> = [
+    {
+      name: "null anchor",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: null,
+      },
+    },
+    {
+      name: "missing anchor coordinate",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5 },
+      },
+    },
+    {
+      name: "unknown anchor key",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5, y: 0.68, z: 0 },
+      },
+    },
+    {
+      name: "coordinate outside the normalized canvas",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5, y: 1.01 },
+      },
+    },
+    {
+      name: "anchor on a source presentation",
+      presentation: {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5, y: 0.68 },
+      },
+    },
+    {
+      name: "anchor on a non-inverted alias",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        geometryRotationAnchor: { x: 0.5, y: 0.68 },
+      },
+    },
+    {
+      name: "explicit false inversion flag",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: false,
+      },
+    },
+    {
+      name: "unknown presentation key",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        unexpected: true,
+      },
+    },
+  ];
+
+  for (const fixture of invalidPresentations) {
+    await context.test(fixture.name, async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({ presentations: [fixture.presentation] as never[] }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
+});
+
+test("the browser client rejects a non-finite alias anchor coordinate", async () => {
+  const payload = JSON.stringify({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: "__nonfinite__", y: 0.68 },
+      }] as never[],
+    }),
+  }).replace('"__nonfinite__"', "1e999");
+  const { runtime } = runtimeFixture(async () => new Response(payload, {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  }));
+
+  await assert.rejects(
+    createWorkbenchClient(runtime).getBoard("compact"),
+    /invalid board/,
+  );
 });
 
 test("the browser client deletes a selected presentation and returns the next focused board", async () => {

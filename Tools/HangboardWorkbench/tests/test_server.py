@@ -716,12 +716,24 @@ def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
             assert response.headers["Content-Type"] == "image/png"
 
 
-def test_board_payload_marks_alias_presentations_with_their_canonical_source(
+def test_board_payload_exposes_only_declared_inverted_alias_anchor_metadata(
     tmp_path: Path,
 ) -> None:
     library = _write_multi_presentation_library(tmp_path)
     package = library / "fixture-v2"
     board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.1,
+        "y": 0.4,
+        "width": 0.2,
+        "height": 0.2,
+    }
+    board["holds"][0]["geometry"][1]["frame"] = {
+        "x": 0.4,
+        "y": 0.5,
+        "width": 0.1,
+        "height": 0.1,
+    }
     board["presentations"].append(
         {
             "id": "front-inverted",
@@ -731,6 +743,7 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
             "default": False,
             "sourcePresentationID": "front",
             "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
         }
     )
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
@@ -744,7 +757,23 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
         for presentation in opened["board"]["presentations"]
         if presentation["presentationID"] == "front-inverted"
     )
-    assert alias["sourcePresentationID"] == "front"
+    assert alias == {
+        "presentationID": "front-inverted",
+        "displayName": "Front Inverted",
+        "imageUrl": "/api/boards/fixture.multi/image?presentationID=front-inverted",
+        "default": False,
+        "sourcePresentationID": "front",
+        "isInverted": True,
+        "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+    }
+    source = next(
+        presentation
+        for presentation in opened["board"]["presentations"]
+        if presentation["presentationID"] == "front"
+    )
+    assert "sourcePresentationID" not in source
+    assert "isInverted" not in source
+    assert "geometryRotationAnchor" not in source
 
 
 def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(

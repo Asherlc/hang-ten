@@ -35,6 +35,21 @@ function isPositiveFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
 }
 
+function isGeometryRotationAnchor(value: unknown): value is { x: number; y: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 2
+    && Object.hasOwn(value, "x")
+    && Object.hasOwn(value, "y")
+    && typeof value.x === "number"
+    && typeof value.y === "number"
+    && Number.isFinite(value.x)
+    && Number.isFinite(value.y)
+    && value.x >= 0
+    && value.x <= 1
+    && value.y >= 0
+    && value.y <= 1;
+}
+
 function isSloperMetadata(value: unknown): boolean {
   if (!isRecord(value) || (value.type !== "flat" && value.type !== "round")) return false;
   const allowedKeys = value.type === "flat" ? ["type", "angleDegrees"] : ["type"];
@@ -99,13 +114,29 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
 }
 
 function isBoardPresentation(value: unknown): boolean {
-  return isRecord(value)
+  if (!isRecord(value)) return false;
+  const allowedKeys = new Set([
+    "presentationID",
+    "displayName",
+    "imageUrl",
+    "holdIDs",
+    "default",
+    "sourcePresentationID",
+    "isInverted",
+    "geometryRotationAnchor",
+  ]);
+  return Object.keys(value).every((key) => allowedKeys.has(key))
     && typeof value.presentationID === "string"
     && typeof value.displayName === "string"
     && typeof value.imageUrl === "string"
     && (value.holdIDs === undefined || isStringArray(value.holdIDs))
     && typeof value.default === "boolean"
-    && isOptionalString(value.sourcePresentationID);
+    && isOptionalString(value.sourcePresentationID)
+    && (value.isInverted === undefined || value.isInverted === true)
+    && (value.geometryRotationAnchor === undefined
+      || (typeof value.sourcePresentationID === "string"
+        && value.isInverted === true
+        && isGeometryRotationAnchor(value.geometryRotationAnchor)));
 }
 
 function isBoardSummary(value: unknown): value is BoardSummary {

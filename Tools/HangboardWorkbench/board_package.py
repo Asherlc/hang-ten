@@ -33,6 +33,9 @@ from board_geometry import (
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
+_ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE = 1e-9
+_ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE = 1e-12
+_PROJECTED_FRAME_EDGE_TOLERANCE = 1e-12
 _BOARD_REQUIRED_FIELDS = frozenset(
     {
         "id",
@@ -130,6 +133,7 @@ class BoardPresentation:
     image_height: int
     source_presentation_id: str | None = None
     is_inverted: bool = False
+    geometry_rotation_anchor: tuple[float, float] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -201,6 +205,16 @@ _EditorPiece = tuple[
     int | None,
     str | None,
     str,
+]
+
+_ParsedBoardPresentation = tuple[
+    str,
+    str,
+    str,
+    float,
+    bool,
+    str | None,
+    bool,
 ]
 
 
@@ -309,6 +323,7 @@ def _load_board_package(
             *dimensions[asset_path],
             source_presentation_id,
             is_inverted,
+            _raw_presentation_geometry_rotation_anchor(board, presentation_id),
         )
         for (
             presentation_id,
@@ -390,7 +405,16 @@ def editor_document(
                     label=f"hold {key}",
                 )
                 if presentation.is_inverted:
-                    path = _inverted_display_path(path, width, height, label=f"hold {key}")
+                    path = _inverted_display_path(
+                        path,
+                        width,
+                        height,
+                        presentation_geometry_rotation_anchor(
+                            package.board, presentation
+                        )
+                        or (0.5, 0.5),
+                        label=f"hold {key}",
+                    )
             except (GeometryError, KeyError, TypeError) as error:
                 raise BoardPackageError(f"hold {key} has invalid geometry") from error
             region: dict[str, object] = {
@@ -441,22 +465,61 @@ def editor_document(
 
 
 def _inverted_display_path(
-    path: ClosedPath, width: int, height: int, *, label: str
+    path: ClosedPath,
+    width: int,
+    height: int,
+    anchor: tuple[float, float],
+    *,
+    label: str,
 ) -> ClosedPath:
     """Rotate a source-owned display path 180 degrees for an inverted alias."""
+    anchor_x, anchor_y = anchor
     commands: list[str] = []
     for command, values in path.commands:
         if command == "Z":
             commands.append(command)
             continue
         inverted_values = tuple(
-            (width - value) if index % 2 == 0 else (height - value)
+            (2 * anchor_x * width - value)
+            if index % 2 == 0
+            else (2 * anchor_y * height - value)
             for index, value in enumerate(values)
         )
         commands.append(
             " ".join((command, *(format(value, ".12g") for value in inverted_values)))
         )
     return parse_closed_path(" ".join(commands), width, height, label=label)
+
+
+def presentation_geometry_rotation_anchor(
+    board: Mapping[str, Any], presentation: BoardPresentation
+) -> tuple[float, float] | None:
+    """Return one validated alias anchor across local and hosted package models."""
+    return presentation.geometry_rotation_anchor or _raw_presentation_geometry_rotation_anchor(
+        board, presentation.id
+    )
+
+
+def _raw_presentation_geometry_rotation_anchor(
+    board: Mapping[str, Any], presentation_id: str
+) -> tuple[float, float] | None:
+    raw_presentations = board.get("presentations")
+    if not isinstance(raw_presentations, list):
+        return None
+    raw_presentation = next(
+        (
+            value
+            for value in raw_presentations
+            if isinstance(value, Mapping) and value.get("id") == presentation_id
+        ),
+        None,
+    )
+    if raw_presentation is None or "geometryRotationAnchor" not in raw_presentation:
+        return None
+    return _normalized_point(
+        raw_presentation["geometryRotationAnchor"],
+        f"presentation {presentation_id}.geometryRotationAnchor",
+    )
 
 
 def save_editor_document(
@@ -1085,7 +1148,7 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
 
 def _parse_board_presentations(
     board: Mapping[str, Any],
-) -> tuple[tuple[str, str, str, float, bool, str | None, bool], ...]:
+) -> tuple[_ParsedBoardPresentation, ...]:
     _required_and_allowed_keys(
         board,
         _BOARD_REQUIRED_FIELDS,
@@ -1095,7 +1158,8 @@ def _parse_board_presentations(
     raw_presentations = board.get("presentations")
     if not isinstance(raw_presentations, list) or not raw_presentations:
         raise BoardPackageError("board.json.presentations must be a non-empty array")
-    presentations: list[tuple[str, str, str, float, bool, str | None, bool]] = []
+    presentations: list[_ParsedBoardPresentation] = []
+    geometry_rotation_anchors: dict[str, tuple[float, float] | None] = {}
     identifiers: set[str] = set()
     defaults = 0
     for index, value in enumerate(raw_presentations):
@@ -1109,7 +1173,7 @@ def _parse_board_presentations(
             },
             {
                 "id", "name", "assetPath", "aspectRatio", "default",
-                "sourcePresentationID", "isInverted",
+                "sourcePresentationID", "isInverted", "geometryRotationAnchor",
             },
             label,
         )
@@ -1132,6 +1196,15 @@ def _parse_board_presentations(
         is_inverted = value.get("isInverted", False)
         if not isinstance(is_inverted, bool):
             raise BoardPackageError(f"{label}.isInverted must be a boolean")
+        geometry_rotation_anchor = (
+            _normalized_point(
+                value["geometryRotationAnchor"],
+                f"{label}.geometryRotationAnchor",
+            )
+            if "geometryRotationAnchor" in value
+            else None
+        )
+        geometry_rotation_anchors[presentation_id] = geometry_rotation_anchor
         presentations.append(
             (
                 presentation_id,
@@ -1146,7 +1219,25 @@ def _parse_board_presentations(
     if defaults != 1:
         raise BoardPackageError("board.json.presentations must have exactly one default")
     presentations_by_id = {item[0]: item for item in presentations}
-    for presentation_id, _, _, _, _, source_presentation_id, _ in presentations:
+    for (
+        presentation_id,
+        _,
+        _,
+        aspect_ratio,
+        _,
+        source_presentation_id,
+        is_inverted,
+    ) in presentations:
+        geometry_rotation_anchor = geometry_rotation_anchors[presentation_id]
+        if geometry_rotation_anchor is not None:
+            if source_presentation_id is None:
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.geometryRotationAnchor requires sourcePresentationID"
+                )
+            if not is_inverted:
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.geometryRotationAnchor requires isInverted true"
+                )
         if source_presentation_id is not None and (
             source_presentation_id == presentation_id
             or source_presentation_id not in presentations_by_id
@@ -1154,6 +1245,15 @@ def _parse_board_presentations(
         ):
             raise BoardPackageError(
                 f"presentation {presentation_id} must reference another declared presentation and a canonical presentation"
+            )
+        if source_presentation_id is not None and not math.isclose(
+            aspect_ratio,
+            presentations_by_id[source_presentation_id][3],
+            rel_tol=_ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE,
+            abs_tol=_ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE,
+        ):
+            raise BoardPackageError(
+                f"presentation {presentation_id}.aspectRatio must match source presentation aspectRatio"
             )
     return tuple(presentations)
 
@@ -1240,6 +1340,7 @@ def _validate_board(
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
     _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
+    _validate_inverted_alias_projection(board, parsed_presentations, holds)
     _validate_gaston_pairs(holds)
 
 
@@ -1299,7 +1400,53 @@ def validate_catalog_board(
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
     _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
+    _validate_inverted_alias_projection(board, parsed_presentations, holds)
     _validate_gaston_pairs(holds)
+
+
+def _validate_inverted_alias_projection(
+    board: Mapping[str, Any],
+    presentations: tuple[_ParsedBoardPresentation, ...],
+    holds: list[Any],
+) -> None:
+    for presentation in presentations:
+        presentation_id = presentation[0]
+        source_presentation_id = presentation[5]
+        if source_presentation_id is None or not presentation[6]:
+            continue
+        anchor_x, anchor_y = (
+            _raw_presentation_geometry_rotation_anchor(board, presentation_id)
+            or (0.5, 0.5)
+        )
+        for hold in holds:
+            if not isinstance(hold, Mapping) or hold.get("presentationID") != source_presentation_id:
+                continue
+            geometry = hold.get("geometry")
+            if not isinstance(geometry, list):
+                continue
+            for piece in geometry:
+                if not isinstance(piece, Mapping) or not isinstance(piece.get("frame"), Mapping):
+                    continue
+                try:
+                    frame = NormalizedFrame.from_json(
+                        piece["frame"],
+                        f"hold {hold.get('id', 'unknown')}.geometry",
+                    )
+                except GeometryError as error:
+                    raise BoardPackageError(str(error)) from error
+                projected_min_x = 2 * anchor_x - (frame.x + frame.width)
+                projected_min_y = 2 * anchor_y - (frame.y + frame.height)
+                projected_max_x = 2 * anchor_x - frame.x
+                projected_max_y = 2 * anchor_y - frame.y
+                if (
+                    projected_min_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_min_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_max_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_max_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                ):
+                    raise BoardPackageError(
+                        f"presentation {presentation_id} projects source hold geometry outside the normalized canvas"
+                    )
 
 
 def _validate_equipment_objects(board: Mapping[str, Any]) -> set[str]:
@@ -2100,6 +2247,27 @@ def _positive_number(value: object, label: str) -> float:
         or value <= 0
     ):
         raise BoardPackageError(f"{label} must be a positive finite number")
+    return float(value)
+
+
+def _normalized_point(value: object, label: str) -> tuple[float, float]:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(value, {"x", "y"}, label)
+    return (
+        _normalized_coordinate(value["x"], f"{label}.x"),
+        _normalized_coordinate(value["y"], f"{label}.y"),
+    )
+
+
+def _normalized_coordinate(value: object, label: str) -> float:
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(value)
+        or not 0 <= value <= 1
+    ):
+        raise BoardPackageError(f"{label} must be a finite number in 0...1")
     return float(value)
 
 

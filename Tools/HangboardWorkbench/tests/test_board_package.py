@@ -11,6 +11,7 @@ import shutil
 import struct
 import sys
 import zlib
+from dataclasses import replace
 from pathlib import Path
 from types import ModuleType
 
@@ -235,6 +236,45 @@ def _write_multi_presentation_package(library: Path) -> Path:
     return package
 
 
+def _add_non_center_inverted_alias(package: Path) -> None:
+    shutil.copyfile(PRIMARY_IMAGE, package / "assets" / "front-inverted.png")
+
+    def mutate(board: dict[str, object]) -> None:
+        presentations = board["presentations"]
+        holds = board["holds"]
+        assert isinstance(presentations, list)
+        assert isinstance(holds, list) and isinstance(holds[0], dict)
+        geometry = holds[0]["geometry"]
+        assert isinstance(geometry, list) and len(geometry) == 2
+        assert isinstance(geometry[0], dict) and isinstance(geometry[1], dict)
+        geometry[0]["frame"] = {
+            "x": 0.1,
+            "y": 0.4,
+            "width": 0.2,
+            "height": 0.2,
+        }
+        geometry[1]["frame"] = {
+            "x": 0.4,
+            "y": 0.5,
+            "width": 0.1,
+            "height": 0.1,
+        }
+        presentations.append(
+            {
+                "id": "front-inverted",
+                "name": "Front upside down",
+                "assetPath": "assets/front-inverted.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front",
+                "isInverted": True,
+                "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+            }
+        )
+
+    _mutate_board(package, mutate)
+
+
 def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_multi_presentation_package(library)
@@ -403,6 +443,121 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
     assert inverted.is_inverted is True
 
 
+def test_non_center_alias_rotation_anchor_is_strictly_parsed_and_preserved(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    _add_non_center_inverted_alias(package_root)
+
+    inverted = board_package.load_board_package(package_root).presentation(
+        "front-inverted"
+    )
+
+    assert inverted.geometry_rotation_anchor == (0.5, 0.68)
+
+
+@pytest.mark.parametrize(
+    ("anchor", "message"),
+    [
+        (None, "geometryRotationAnchor must be an object"),
+        ({"x": 0.5}, "geometryRotationAnchor has missing keys"),
+        (
+            {"x": 0.5, "y": 0.68, "unexpected": 1},
+            "geometryRotationAnchor has unknown keys",
+        ),
+        ({"x": True, "y": 0.68}, "geometryRotationAnchor.x"),
+        ({"x": 0.5, "y": "0.68"}, "geometryRotationAnchor.y"),
+        ({"x": float("inf"), "y": 0.68}, "geometryRotationAnchor.x"),
+        ({"x": 0.5, "y": float("nan")}, "geometryRotationAnchor.y"),
+        ({"x": -0.01, "y": 0.68}, "geometryRotationAnchor.x"),
+        ({"x": 0.5, "y": 1.01}, "geometryRotationAnchor.y"),
+    ],
+    ids=[
+        "null",
+        "missing-coordinate",
+        "unknown-key",
+        "boolean-coordinate",
+        "string-coordinate",
+        "infinite-coordinate",
+        "nan-coordinate",
+        "below-zero",
+        "above-one",
+    ],
+)
+def test_rejects_malformed_alias_rotation_anchor(
+    tmp_path: Path, anchor: object, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor=anchor,
+    )
+    board["holds"] = holds[:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda board: board["presentations"][0].__setitem__(
+                "geometryRotationAnchor", {"x": 0.5, "y": 0.5}
+            ),
+            "requires sourcePresentationID",
+        ),
+        (
+            lambda board: board["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=False,
+                geometryRotationAnchor={"x": 0.5, "y": 0.5},
+            ),
+            "requires isInverted true",
+        ),
+        (
+            lambda board: board["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=True,
+                aspectRatio=(1774 / 457) + 0.0001,
+            ),
+            "must match source presentation aspectRatio",
+        ),
+        (
+            lambda board: board["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=True,
+                geometryRotationAnchor={"x": 0.01, "y": 0.5},
+            ),
+            "projects source hold geometry outside the normalized canvas",
+        ),
+    ],
+    ids=["canonical", "non-inverted", "aspect-ratio", "off-canvas"],
+)
+def test_rejects_invalid_alias_rotation_anchor_contract(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    mutation(board)
+    board["holds"] = holds[:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
 def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
     tmp_path: Path,
 ) -> None:
@@ -454,24 +609,65 @@ def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
     )
 
 
-def test_save_rejects_edits_to_an_alias_presentation(tmp_path: Path) -> None:
+def test_non_center_inverted_alias_projects_every_piece_without_mutating_source(
+    tmp_path: Path,
+) -> None:
     library = _library(tmp_path)
     package_root = _write_multi_presentation_package(library)
-    shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
-    _mutate_board(
-        package_root,
-        lambda board: board["presentations"].append(
-            {
-                "id": "front-inverted",
-                "name": "Front upside down",
-                "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 457,
-                "default": False,
-                "sourcePresentationID": "front",
-                "isInverted": True,
-            }
+    _add_non_center_inverted_alias(package_root)
+    package = board_package.load_board_package(package_root)
+    canonical_geometry = copy.deepcopy(package.board["holds"][0]["geometry"])
+    source_before = board_package.editor_document(package, "front")
+
+    inverted = board_package.editor_document(package, "front-inverted")
+    source_after = board_package.editor_document(package, "front")
+
+    first = board_package.parse_closed_path(
+        inverted["regions"][0]["displayPath"], 1774, 457
+    )
+    second = board_package.parse_closed_path(
+        inverted["regions"][1]["displayPath"], 1774, 457
+    )
+    first_xs, first_ys = zip(*first.contour)
+    second_xs, second_ys = zip(*second.contour)
+    assert (min(first_xs), max(first_xs)) == pytest.approx((1241.8, 1596.6))
+    assert (min(first_ys), max(first_ys)) == pytest.approx((347.32, 438.72))
+    assert (min(second_xs), max(second_xs)) == pytest.approx((887.0, 1064.4))
+    assert (min(second_ys), max(second_ys)) == pytest.approx((347.32, 393.02))
+    assert source_after == source_before
+    assert package.board["holds"][0]["geometry"] == canonical_geometry
+
+
+def test_non_center_alias_anchor_projects_from_validated_raw_package_metadata(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    _add_non_center_inverted_alias(package_root)
+    package = board_package.load_board_package(package_root)
+    package_without_model_anchor = replace(
+        package,
+        presentations=tuple(
+            replace(presentation, geometry_rotation_anchor=None)
+            for presentation in package.presentations
         ),
     )
+
+    inverted = board_package.editor_document(
+        package_without_model_anchor, "front-inverted"
+    )
+
+    first = board_package.parse_closed_path(
+        inverted["regions"][0]["displayPath"], 1774, 457
+    )
+    first_ys = [point[1] for point in first.contour]
+    assert (min(first_ys), max(first_ys)) == pytest.approx((347.32, 438.72))
+
+
+def test_save_rejects_edits_to_an_inverted_alias_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    _add_non_center_inverted_alias(package_root)
     document = board_package.editor_document(
         board_package.load_board_package(package_root), "front-inverted"
     )

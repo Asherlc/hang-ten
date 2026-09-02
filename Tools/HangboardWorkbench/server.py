@@ -33,11 +33,13 @@ from board_package import (
     BoardNotAvailableError,
     BoardPackage,
     BoardPackageError,
+    BoardPresentation,
     BoardSaveConflictError,
     discover_packages,
     editor_document,
     delete_presentation,
     open_package,
+    presentation_geometry_rotation_anchor,
     presentation_image_path,
     save_editor_document,
 )
@@ -163,6 +165,29 @@ def _presentation_image_url(board_id: str, presentation_id: str) -> str:
     return f"/api/boards/{board_id}/image?presentationID={presentation_id}"
 
 
+def _presentation_payload(
+    package: BoardPackage, presentation: BoardPresentation
+) -> dict[str, object]:
+    anchor = presentation_geometry_rotation_anchor(package.board, presentation)
+    return {
+        "presentationID": presentation.id,
+        "displayName": presentation.name,
+        "imageUrl": _presentation_image_url(package.board_id, presentation.id),
+        "default": presentation.is_default,
+        **(
+            {"sourcePresentationID": presentation.source_presentation_id}
+            if presentation.source_presentation_id is not None
+            else {}
+        ),
+        **({"isInverted": True} if presentation.is_inverted else {}),
+        **(
+            {"geometryRotationAnchor": {"x": anchor[0], "y": anchor[1]}}
+            if anchor is not None
+            else {}
+        ),
+    }
+
+
 def _hold_needs_attention(hold: dict[str, object]) -> bool:
     return (
         hold["kind"] in {"edge", "pocket"}
@@ -196,18 +221,7 @@ def _board_payload(
             saveUrl=f"/api/boards/{board_id}",
             selectedPresentationID=presentation.id,
             presentations=[
-                {
-                    "presentationID": item.id,
-                    "displayName": item.name,
-                    "imageUrl": _presentation_image_url(board_id, item.id),
-                    "default": item.is_default,
-                    **(
-                        {"sourcePresentationID": item.source_presentation_id}
-                        if item.source_presentation_id is not None
-                        else {}
-                    ),
-                }
-                for item in package.presentations
+                _presentation_payload(package, item) for item in package.presentations
             ],
             document=editor_document(package, presentation.id),
         )

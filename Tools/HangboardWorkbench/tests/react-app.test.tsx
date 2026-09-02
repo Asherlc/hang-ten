@@ -347,6 +347,136 @@ test("mobile canvas controls open the board drawer, repository sheet, and hold i
   });
 });
 
+test("alias presentations stay inspectable but read-only while their source remains editable", async () => {
+  const image = imageFixture();
+  const sourceDocument: EditorDocument = {
+    ...editorDocument(),
+    presentationID: "source",
+    equipmentObjects: ["panel-a", "panel-b"],
+    regions: [{
+      ...editorDocument().regions[0]!,
+      equipmentObjectID: "panel-a",
+      metadata: { holdID: "hold-1", pieceIndex: 0, presentationID: "source" },
+      fingerCapacity: 4,
+      sizeMillimeters: 20,
+      handCapacity: 2,
+    }],
+  };
+  const presentations = [
+    {
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentation=source",
+      default: true,
+    },
+    {
+      presentationID: "inverted-alias",
+      displayName: "Inverted alias",
+      imageUrl: "/api/boards/board-a/image",
+      default: false,
+      sourcePresentationID: "source",
+      isInverted: true as const,
+      geometryRotationAnchor: { x: 0.5, y: 0.68 },
+    },
+  ];
+  const boardForPresentation = (presentationID: string): Board => ({
+    ...boardFixture("board-a", sourceDocument),
+    imageUrl: presentations.find((presentation) => (
+      presentation.presentationID === presentationID
+    ))!.imageUrl,
+    selectedPresentationID: presentationID,
+    presentations,
+    document: {
+      ...structuredClone(sourceDocument),
+      presentationID,
+      regions: sourceDocument.regions.map((region) => ({
+        ...structuredClone(region),
+        metadata: region.metadata ? { ...region.metadata, presentationID } : undefined,
+      })),
+    },
+  });
+  let saves = 0;
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard(_boardId, presentationID) {
+        return boardForPresentation(presentationID ?? "inverted-alias");
+      },
+      async saveBoard(_boardId, document) {
+        saves += 1;
+        return { ...boardForPresentation("source"), document };
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
+    await app.click('[data-hold-key="hold-1"]');
+    assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.text("#hold-heading"), "hold-1");
+
+    for (const selector of [
+      "#save-button",
+      "#mobile-save-button",
+      "#add-hold-button",
+      "#mobile-add-hold-button",
+      "#delete-presentation-button",
+      "#hold-type-select",
+      "#equipment-object-select",
+      "#finger-capacity-select",
+      "#depth-measurement-select",
+      "#hold-depth-input",
+      "#hand-capacity-select",
+      "#outline-shape-select",
+      "#rotate-ccw-button",
+      "#rotate-cw-button",
+      "#rotate-by-input",
+      "#rotate-by-apply-button",
+      "#add-hold-segment-button",
+      "#duplicate-mirror-hold-button",
+      "#delete-hold-button",
+    ]) {
+      assert.equal(app.disabled(selector), true, `${selector} must be disabled for an alias`);
+    }
+
+    const pathBefore = app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d");
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.pointer('[data-hold-key="hold-1"]', "pointerdown", {
+      pointerId: 7,
+      button: 0,
+      clientX: 10,
+      clientY: 10,
+    });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 20, clientY: 10 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 20, clientY: 10 });
+    await app.change("#hold-type-select", "sloper");
+    await app.click("#add-hold-button");
+    await app.click("#delete-hold-button");
+    await app.click("#save-button");
+    const shortcutPrevented = await app.keyDown("#editor-svg", "s", { ctrlKey: true });
+
+    assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d"), pathBefore);
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(shortcutPrevented, false);
+    assert.equal(saves, 0);
+
+    await app.change("#presentation-select", "source");
+    await app.flush(() => image.images.succeed());
+    assert.equal(app.documentValue("#presentation-select"), "source");
+    assert.equal(app.disabled("#save-button"), false);
+    assert.equal(app.disabled("#add-hold-button"), false);
+    await app.click('[data-hold-key="hold-1"]');
+    assert.equal(app.disabled("#hold-type-select"), false);
+    await app.change("#hold-type-select", "sloper");
+    assert.equal(app.documentValue("#hold-type-select"), "sloper");
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+  });
+});
+
 test("canvas background selectors share the viewport background", async () => {
   await withApp(dependenciesFixture(), async (app) => {
     const desktopSelector = app.document.querySelector<HTMLSelectElement>("#canvas-background-select");

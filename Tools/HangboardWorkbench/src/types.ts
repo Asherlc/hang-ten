@@ -117,6 +117,8 @@ export interface BoardPresentation {
   imageUrl: string;
   default: boolean;
   sourcePresentationID?: string;
+  isInverted?: true;
+  geometryRotationAnchor?: Point;
 }
 
 export interface BoardSummary {
