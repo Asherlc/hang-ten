@@ -107,6 +107,28 @@ def _file_bytes(root: Path) -> dict[str, bytes]:
     }
 
 
+def _path_identity(path: Path) -> tuple[int, int]:
+    metadata = path.stat(follow_symlinks=False)
+    return metadata.st_dev, metadata.st_ino
+
+
+def _retained_paths_with_identity(
+    root: Path,
+    *,
+    identity: tuple[int, int],
+    payload: bytes,
+    excluding: Path,
+) -> list[Path]:
+    return [
+        candidate
+        for candidate in root.rglob("*")
+        if candidate != excluding
+        and candidate.is_file()
+        and _path_identity(candidate) == identity
+        and candidate.read_bytes() == payload
+    ]
+
+
 def _exception_chain_messages(error: BaseException) -> list[str]:
     messages: list[str] = []
     seen: set[int] = set()
@@ -1082,6 +1104,605 @@ def test_delete_cleanup_concurrent_create_survives_with_unproven_rollback(
         "deleted artifact remains visible" in message
         for message in _exception_chain_messages(captured.value)
     )
+
+
+def test_scratch_mkdir_post_create_failure_retains_first_name_without_retry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "scratch-mkdir-post-create-failure")
+    target = context / "report.json"
+    original_mkdir = cord_render_assets.os.mkdir
+    scratch_mkdir_names: list[str] = []
+
+    def failing_after_first_scratch_mkdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        name = Path(os.fsdecode(path)).name
+        if name.startswith(f".{target.name}.txn-"):
+            scratch_mkdir_names.append(name)
+            if len(scratch_mkdir_names) == 1:
+                original_mkdir(path, mode, dir_fd=dir_fd)
+                raise OSError("injected after real scratch mkdir")
+        original_mkdir(path, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets.os, "mkdir", failing_after_first_scratch_mkdir
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets.write_owner_json(target, {"new": True})
+
+    assert len(scratch_mkdir_names) == 1
+    retained_scratch_name = scratch_mkdir_names[0]
+    retained_scratch_names = sorted(
+        path.name
+        for path in context.iterdir()
+        if path.name.startswith(f".{target.name}.txn-")
+    )
+    assert retained_scratch_names == [retained_scratch_name]
+    assert not target.exists()
+    assert isinstance(captured.value, RuntimeError)
+    error_message = str(captured.value)
+    assert "rollback" in error_message.lower()
+    assert "unproven" in error_message.lower()
+    assert "debris" in error_message.lower()
+    assert retained_scratch_name in error_message
+    assert captured.value.__cause__ is not None
+    assert any(
+        "injected after real scratch mkdir" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+@pytest.mark.parametrize(
+    ("failing_component", "expected_retained_directories"),
+    [
+        ("created-a", ("created-a",)),
+        ("created-b", ("created-a", "created-a/created-b")),
+    ],
+    ids=("first-missing-parent", "later-missing-parent"),
+)
+def test_nested_parent_mkdir_post_create_failure_retains_and_discloses_uncertainty(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failing_component: str,
+    expected_retained_directories: tuple[str, ...],
+) -> None:
+    context = _context(tmp_path, f"parent-mkdir-post-create-{failing_component}")
+    target = context / "created-a" / "created-b" / "report.json"
+    uncertain_path = (
+        context / "created-a"
+        if failing_component == "created-a"
+        else context / "created-a" / "created-b"
+    )
+    original_dup = cord_render_assets.os.dup
+    original_close = cord_render_assets.os.close
+    original_mkdir = cord_render_assets.os.mkdir
+    creation_ledger_fds: list[int] = []
+    closed_fds: list[int] = []
+    parent_mkdir_names: list[str] = []
+    uncertain_identity: tuple[int, int] | None = None
+
+    def tracking_dup(descriptor: int) -> int:
+        duplicate = original_dup(descriptor)
+        creation_ledger_fds.append(duplicate)
+        return duplicate
+
+    def tracking_close(descriptor: int) -> None:
+        closed_fds.append(descriptor)
+        original_close(descriptor)
+
+    def failing_after_real_parent_mkdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal uncertain_identity
+        name = Path(os.fsdecode(path)).name
+        if name in {"created-a", "created-b"}:
+            parent_mkdir_names.append(name)
+        if name == failing_component:
+            assert parent_mkdir_names.count(name) == 1
+            assert dir_fd is not None
+            original_mkdir(path, mode, dir_fd=dir_fd)
+            metadata = os.stat(path, dir_fd=dir_fd, follow_symlinks=False)
+            uncertain_identity = (metadata.st_dev, metadata.st_ino)
+            raise OSError(f"injected after real parent mkdir: {name}")
+        original_mkdir(path, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "dup", tracking_dup)
+    monkeypatch.setattr(cord_render_assets.os, "close", tracking_close)
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "mkdir",
+        failing_after_real_parent_mkdir,
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets.write_owner_json(target, {"new": True})
+
+    expected_mkdir_names = (
+        ["created-a"]
+        if failing_component == "created-a"
+        else ["created-a", "created-b"]
+    )
+    retained_directories = sorted(
+        path.relative_to(context).as_posix()
+        for path in context.rglob("*")
+        if path.is_dir()
+    )
+    assert parent_mkdir_names == expected_mkdir_names
+    assert uncertain_identity is not None
+    uncertain_metadata = uncertain_path.stat()
+    assert (uncertain_metadata.st_dev, uncertain_metadata.st_ino) == uncertain_identity
+    assert retained_directories == list(expected_retained_directories)
+    assert _file_bytes(context) == {}
+    assert not target.exists()
+    assert creation_ledger_fds
+    assert set(creation_ledger_fds) <= set(closed_fds)
+    for descriptor in creation_ledger_fds:
+        with pytest.raises(OSError):
+            os.fstat(descriptor)
+    assert isinstance(captured.value, RuntimeError)
+    error_message = str(captured.value)
+    assert "rollback" in error_message.lower()
+    assert "unproven" in error_message.lower()
+    assert str(uncertain_path) in error_message
+    assert captured.value.__cause__ is not None
+    assert any(
+        f"injected after real parent mkdir: {failing_component}" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_same_payload_foreign_inode_at_rollback_capture_is_preserved_as_unproven(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "same-payload-foreign-inode")
+    target = context / "report.json"
+    prior_payload = b"identical-prior-payload"
+    transaction_payload = b"transaction-publication"
+    target.write_bytes(prior_payload)
+    prior_identity = _path_identity(target)
+    callback_failure = ValueError("injected same-payload callback failure")
+    original_rename = cord_render_assets.os.rename
+    original_replace = cord_render_assets.os.replace
+    rollback_active = False
+    capture_hook_count = 0
+    transaction_identity: tuple[int, int] | None = None
+    foreign_identity: tuple[int, int] | None = None
+    payload_seen_at_capture: bytes | None = None
+
+    def fail_validation() -> None:
+        nonlocal rollback_active
+        rollback_active = True
+        raise callback_failure
+
+    def replace_at_real_rollback_capture(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal capture_hook_count, foreign_identity
+        nonlocal payload_seen_at_capture, transaction_identity
+        source_name = Path(os.fsdecode(source)).name
+        destination_name = Path(os.fsdecode(destination)).name
+        if (
+            rollback_active
+            and source_name == target.name
+            and destination_name.startswith(f".{target.name}.rollback-")
+        ):
+            assert src_dir_fd is not None
+            capture_hook_count += 1
+            payload_seen_at_capture = target.read_bytes()
+            transaction_metadata = cord_render_assets.os.stat(
+                source_name,
+                dir_fd=src_dir_fd,
+                follow_symlinks=False,
+            )
+            transaction_identity = (
+                transaction_metadata.st_dev,
+                transaction_metadata.st_ino,
+            )
+            foreign_name = ".same-payload-foreign-inode"
+            descriptor = cord_render_assets.os.open(
+                foreign_name,
+                cord_render_assets._CREATE_FLAGS,
+                0o600,
+                dir_fd=src_dir_fd,
+            )
+            try:
+                cord_render_assets._write_all(descriptor, prior_payload)
+            finally:
+                cord_render_assets.os.close(descriptor)
+            original_replace(
+                foreign_name,
+                source_name,
+                src_dir_fd=src_dir_fd,
+                dst_dir_fd=src_dir_fd,
+            )
+            foreign_metadata = cord_render_assets.os.stat(
+                source_name,
+                dir_fd=src_dir_fd,
+                follow_symlinks=False,
+            )
+            foreign_identity = foreign_metadata.st_dev, foreign_metadata.st_ino
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "rename",
+        replace_at_real_rollback_capture,
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    transaction_payload,
+                    "same-payload foreign report",
+                )
+            ],
+            validate_before_commit=fail_validation,
+        )
+
+    assert capture_hook_count == 1
+    assert payload_seen_at_capture == transaction_payload
+    assert transaction_identity is not None
+    assert foreign_identity is not None
+    assert foreign_identity not in {prior_identity, transaction_identity}
+    assert target.read_bytes() == prior_payload
+    assert _path_identity(target) == foreign_identity
+    assert _retained_paths_with_identity(
+        context,
+        identity=prior_identity,
+        payload=prior_payload,
+        excluding=target,
+    ), "the original-prior inode must remain as recovery evidence"
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is callback_failure
+
+
+@pytest.mark.parametrize("prior_present", [True, False], ids=["prior", "absent"])
+def test_callback_deletion_of_new_visible_preserves_absence_as_unproven(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    prior_present: bool,
+) -> None:
+    context = _context(
+        tmp_path,
+        f"callback-delete-{'prior' if prior_present else 'absent'}",
+    )
+    target = context / "report.json"
+    prior_payload = b"stale-prior-payload"
+    prior_identity: tuple[int, int] | None = None
+    if prior_present:
+        target.write_bytes(prior_payload)
+        prior_identity = _path_identity(target)
+    transaction_payload = b"transaction-publication"
+    callback_failure = ValueError("injected callback deletion failure")
+    original_unlink = cord_render_assets.os.unlink
+    validation_active = False
+    unlink_hook_count = 0
+    payload_seen_at_unlink: bytes | None = None
+    transaction_identity: tuple[int, int] | None = None
+
+    def track_real_visible_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal payload_seen_at_unlink, transaction_identity, unlink_hook_count
+        name = Path(os.fsdecode(path)).name
+        if validation_active and name == target.name:
+            unlink_hook_count += 1
+            payload_seen_at_unlink = target.read_bytes()
+            transaction_identity = _path_identity(target)
+        original_unlink(path, dir_fd=dir_fd)
+
+    def delete_new_visible_then_fail() -> None:
+        nonlocal validation_active
+        validation_active = True
+        try:
+            target.unlink()
+        finally:
+            validation_active = False
+        raise callback_failure
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "unlink",
+        track_real_visible_unlink,
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    transaction_payload,
+                    "callback-deleted report",
+                )
+            ],
+            validate_before_commit=delete_new_visible_then_fail,
+        )
+
+    assert unlink_hook_count == 1
+    assert payload_seen_at_unlink == transaction_payload
+    assert transaction_identity is not None
+    assert not target.exists(), "callback-observed absence must remain visible"
+    if prior_identity is not None:
+        assert _retained_paths_with_identity(
+            context,
+            identity=prior_identity,
+            payload=prior_payload,
+            excluding=target,
+        ), "the stale original prior must be retained only as recovery evidence"
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is callback_failure
+
+
+def test_untouched_rollback_never_captures_or_mutates_observed_leaf(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "untouched-leaf")
+    target = context / "report.json"
+    prior_payload = b"observed-prior"
+    target.write_bytes(prior_payload)
+    prior_identity = _path_identity(target)
+    original_rename = cord_render_assets.os.rename
+    visible_capture_attempts = 0
+
+    def reject_visible_capture(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal visible_capture_attempts
+        if Path(os.fsdecode(source)).name == target.name:
+            visible_capture_attempts += 1
+            raise AssertionError("UNTOUCHED rollback must not capture the leaf")
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    monkeypatch.setattr(cord_render_assets.os, "rename", reject_visible_capture)
+    incorrect_payload = b"incorrect expected prior"
+    expectation = cord_render_assets._LeafExpectation(
+        prior_identity,
+        incorrect_payload,
+        hashlib.sha256(incorrect_payload).hexdigest(),
+    )
+
+    with pytest.raises(ValueError, match="changed during operation"):
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"new publication",
+                    "untouched report",
+                    expectation,
+                )
+            ]
+        )
+
+    assert visible_capture_attempts == 0
+    assert _path_identity(target) == prior_identity
+    assert target.read_bytes() == prior_payload
+    assert sorted(path.name for path in context.iterdir()) == [target.name]
+
+
+@pytest.mark.parametrize(
+    "post_link_change",
+    ["delete", "same-payload-foreign"],
+    ids=["deleted", "same-payload-foreign"],
+)
+def test_successful_backup_link_then_external_change_never_uses_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    post_link_change: str,
+) -> None:
+    context = _context(tmp_path, f"post-link-{post_link_change}")
+    target = context / "report.json"
+    prior_payload = b"original-prior"
+    target.write_bytes(prior_payload)
+    prior_identity = _path_identity(target)
+    callback_failure = ValueError("injected post-link callback failure")
+    original_link = cord_render_assets.os.link
+    original_replace = cord_render_assets.os.replace
+    original_unlink = cord_render_assets.os.unlink
+    rollback_active = False
+    backup_link_count = 0
+    fallback_link_count = 0
+    foreign_identity: tuple[int, int] | None = None
+
+    def fail_validation() -> None:
+        nonlocal rollback_active
+        rollback_active = True
+        raise callback_failure
+
+    def change_visible_after_successful_backup_link(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+        follow_symlinks: bool = True,
+    ) -> None:
+        nonlocal backup_link_count, fallback_link_count, foreign_identity
+        source_name = Path(os.fsdecode(source)).name
+        if rollback_active and ".restore-" in source_name:
+            fallback_link_count += 1
+        original_link(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+            follow_symlinks=follow_symlinks,
+        )
+        if rollback_active and ".backup-" in source_name:
+            assert dst_dir_fd is not None
+            backup_link_count += 1
+            if post_link_change == "delete":
+                original_unlink(destination, dir_fd=dst_dir_fd)
+            else:
+                foreign_name = ".post-link-same-payload-foreign"
+                descriptor = cord_render_assets.os.open(
+                    foreign_name,
+                    cord_render_assets._CREATE_FLAGS,
+                    0o600,
+                    dir_fd=dst_dir_fd,
+                )
+                try:
+                    cord_render_assets._write_all(descriptor, prior_payload)
+                finally:
+                    cord_render_assets.os.close(descriptor)
+                original_replace(
+                    foreign_name,
+                    destination,
+                    src_dir_fd=dst_dir_fd,
+                    dst_dir_fd=dst_dir_fd,
+                )
+                foreign_identity = _path_identity(target)
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "link",
+        change_visible_after_successful_backup_link,
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"transaction-publication",
+                    "post-link report",
+                )
+            ],
+            validate_before_commit=fail_validation,
+        )
+
+    assert backup_link_count == 1
+    assert fallback_link_count == 0
+    if post_link_change == "delete":
+        assert not target.exists()
+    else:
+        assert foreign_identity is not None
+        assert foreign_identity != prior_identity
+        assert _path_identity(target) == foreign_identity
+        assert target.read_bytes() == prior_payload
+    assert _retained_paths_with_identity(
+        context,
+        identity=prior_identity,
+        payload=prior_payload,
+        excluding=target,
+    ), "the exact original-prior inode must remain as recovery evidence"
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is callback_failure
+
+
+def test_final_rollback_verifier_rejects_same_payload_foreign_inode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "final-same-payload-foreign")
+    target = context / "report.json"
+    prior_payload = b"final-original-prior"
+    target.write_bytes(prior_payload)
+    prior_identity = _path_identity(target)
+    callback_failure = ValueError("injected final-verifier callback failure")
+    original_cleanup = cord_render_assets._cleanup_removable_scratch
+    rollback_active = False
+    replacement_count = 0
+    foreign_identity: tuple[int, int] | None = None
+
+    def fail_validation() -> None:
+        nonlocal rollback_active
+        rollback_active = True
+        raise callback_failure
+
+    def replace_before_final_rollback_verification(
+        item: cord_render_assets._StagedPublication,
+    ) -> None:
+        nonlocal replacement_count, foreign_identity
+        original_cleanup(item)
+        if rollback_active and replacement_count == 0:
+            replacement_count += 1
+            foreign_name = ".final-same-payload-foreign"
+            descriptor = cord_render_assets.os.open(
+                foreign_name,
+                cord_render_assets._CREATE_FLAGS,
+                0o600,
+                dir_fd=item.anchor.parent_fd,
+            )
+            try:
+                cord_render_assets._write_all(descriptor, prior_payload)
+            finally:
+                cord_render_assets.os.close(descriptor)
+            cord_render_assets.os.replace(
+                foreign_name,
+                item.anchor.leaf,
+                src_dir_fd=item.anchor.parent_fd,
+                dst_dir_fd=item.anchor.parent_fd,
+            )
+            foreign_identity = _path_identity(target)
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_cleanup_removable_scratch",
+        replace_before_final_rollback_verification,
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"transaction-publication",
+                    "final-verifier report",
+                )
+            ],
+            validate_before_commit=fail_validation,
+        )
+
+    assert replacement_count == 1
+    assert foreign_identity is not None
+    assert foreign_identity != prior_identity
+    assert _path_identity(target) == foreign_identity
+    assert target.read_bytes() == prior_payload
+    assert _retained_paths_with_identity(
+        context,
+        identity=prior_identity,
+        payload=prior_payload,
+        excluding=target,
+    ), "final verification must retain the original-prior inode"
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is callback_failure
 
 
 def test_transient_scratch_directory_cleanup_failure_restores_without_debris(

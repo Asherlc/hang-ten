@@ -92,12 +92,20 @@ class _HeldParent:
             self.parent_fd = -1
 
 
+class _CreationLifecycle(Enum):
+    CREATE_ATTEMPTED = "create-attempted"
+    OWNED = "owned"
+    REMOVED = "removed"
+
+
 @dataclass
 class _CreatedDirectory:
     path: Path
     parent_fd: int
     name: str
-    created: bool = False
+    lifecycle: _CreationLifecycle = field(
+        default_factory=lambda: _CreationLifecycle.CREATE_ATTEMPTED
+    )
     identity: tuple[int, int] | None = None
 
     def close(self) -> None:
@@ -136,6 +144,8 @@ def _open_parent(
         ]
         for component in parts[:-1]:
             current /= component
+            creation: _CreatedDirectory | None = None
+            mkdir_returned = False
             try:
                 next_descriptor = os.open(
                     component, _DIRECTORY_FLAGS, dir_fd=descriptor
@@ -152,11 +162,9 @@ def _open_parent(
                 try:
                     os.mkdir(component, 0o700, dir_fd=descriptor)
                 except FileExistsError:
-                    ledger.remove(creation)
-                    creation.close()
+                    pass
                 else:
-                    creation.created = True
-                    created_paths.append(current)
+                    mkdir_returned = True
                 next_descriptor = os.open(
                     component, _DIRECTORY_FLAGS, dir_fd=descriptor
                 )
@@ -168,10 +176,20 @@ def _open_parent(
             if not stat.S_ISDIR(metadata.st_mode):
                 os.close(next_descriptor)
                 raise ValueError(f"path component is not a directory: {current}")
-            if create and ledger:
-                latest = ledger[-1]
-                if latest.path == current and latest.created:
-                    latest.identity = _identity(metadata)
+            if creation is not None and mkdir_returned:
+                visible = os.stat(
+                    component,
+                    dir_fd=descriptor,
+                    follow_symlinks=False,
+                )
+                if not stat.S_ISDIR(visible.st_mode) or _identity(visible) != _identity(
+                    metadata
+                ):
+                    os.close(next_descriptor)
+                    raise ValueError(f"created directory identity changed: {current}")
+                creation.identity = _identity(metadata)
+                creation.lifecycle = _CreationLifecycle.OWNED
+                created_paths.append(current)
             chain.append((component, metadata.st_dev, metadata.st_ino))
             os.close(descriptor)
             descriptor = next_descriptor
@@ -436,6 +454,13 @@ class _PublicationPhase(Enum):
     EXTERNAL_CAPTURED = "external-captured"
 
 
+class _ScratchLifecycle(Enum):
+    UNPLANNED = "unplanned"
+    CREATE_ATTEMPTED = "create-attempted"
+    OWNED = "owned"
+    REMOVED = "removed"
+
+
 @dataclass
 class _ScratchLeaf:
     name: str
@@ -451,14 +476,18 @@ class _StagedPublication:
     publication: _Publication
     anchor: _HeldParent
     phase: _PublicationPhase = _PublicationPhase.UNTOUCHED
+    prior_observed: bool = False
     prior_payload: bytes | None = None
     prior_identity: tuple[int, int] | None = None
+    rollback_visible_observed: bool = False
+    rollback_visible_payload: bytes | None = None
+    rollback_visible_identity: tuple[int, int] | None = None
     temporary: _ScratchLeaf | None = None
     prior: _ScratchLeaf | None = None
     scratch_name: str | None = None
     scratch_fd: int = -1
     scratch_identity: tuple[int, int] | None = None
-    scratch_created: bool = False
+    scratch_lifecycle: _ScratchLifecycle = _ScratchLifecycle.UNPLANNED
     scratch_leaves: list[_ScratchLeaf] = field(default_factory=list)
 
     def close(self) -> None:
@@ -530,7 +559,7 @@ def _rollback_created_directories(
         key=lambda value: len(value.path.parts),
         reverse=True,
     ):
-        if not creation.created:
+        if creation.lifecycle is _CreationLifecycle.REMOVED:
             continue
         try:
             try:
@@ -540,6 +569,13 @@ def _rollback_created_directories(
                     follow_symlinks=False,
                 )
             except FileNotFoundError:
+                creation.lifecycle = _CreationLifecycle.REMOVED
+                continue
+            if creation.lifecycle is _CreationLifecycle.CREATE_ATTEMPTED:
+                failures.append(
+                    "created directory ownership is unproven; retaining uncertain "
+                    f"component: {creation.path}"
+                )
                 continue
             if (
                 creation.identity is None
@@ -548,10 +584,11 @@ def _rollback_created_directories(
             ):
                 raise RuntimeError("created directory identity changed")
             os.rmdir(creation.name, dir_fd=creation.parent_fd)
+            creation.lifecycle = _CreationLifecycle.REMOVED
         except BaseException as error:
             failures.append(f"created directory cleanup {creation.path}: {error}")
     for creation in ledger:
-        if not creation.created:
+        if creation.lifecycle is _CreationLifecycle.REMOVED:
             continue
         try:
             os.stat(
@@ -560,6 +597,7 @@ def _rollback_created_directories(
                 follow_symlinks=False,
             )
         except FileNotFoundError:
+            creation.lifecycle = _CreationLifecycle.REMOVED
             continue
         except BaseException as error:
             failures.append(f"created directory verification {creation.path}: {error}")
@@ -604,7 +642,7 @@ def _validate_expected_prior(
 def _ensure_scratch(item: _StagedPublication) -> None:
     if item.scratch_fd >= 0:
         return
-    if item.scratch_created:
+    if item.scratch_lifecycle is _ScratchLifecycle.OWNED:
         if item.scratch_name is None or item.scratch_identity is None:
             raise RuntimeError("transaction scratch ownership is unproven")
         descriptor = os.open(
@@ -630,32 +668,43 @@ def _ensure_scratch(item: _StagedPublication) -> None:
             raise
         item.scratch_fd = descriptor
         return
+    if item.scratch_lifecycle is _ScratchLifecycle.CREATE_ATTEMPTED:
+        raise RuntimeError(
+            f"transaction scratch creation remains unproven: {item.scratch_name}"
+        )
+    if item.scratch_lifecycle is _ScratchLifecycle.REMOVED:
+        raise RuntimeError("transaction scratch was already removed")
     _revalidate_anchor(item.anchor)
     scratch_name = f".{item.anchor.leaf}.txn-{secrets.token_hex(8)}"
     item.scratch_name = scratch_name
+    item.scratch_lifecycle = _ScratchLifecycle.CREATE_ATTEMPTED
+    descriptor = -1
     try:
         os.mkdir(scratch_name, 0o700, dir_fd=item.anchor.parent_fd)
+        descriptor = os.open(
+            scratch_name,
+            _DIRECTORY_FLAGS,
+            dir_fd=item.anchor.parent_fd,
+        )
+        metadata = os.fstat(descriptor)
+        visible = os.stat(
+            scratch_name,
+            dir_fd=item.anchor.parent_fd,
+            follow_symlinks=False,
+        )
+        if (
+            not stat.S_ISDIR(metadata.st_mode)
+            or not stat.S_ISDIR(visible.st_mode)
+            or _identity(visible) != _identity(metadata)
+        ):
+            raise ValueError(f"transaction scratch changed: {scratch_name}")
     except BaseException:
-        # A hook may create the name and then fail. Rollback verifies that an
-        # unowned name is not silently removed.
+        if descriptor >= 0:
+            os.close(descriptor)
         raise
-    item.scratch_created = True
-    item.scratch_fd = os.open(
-        scratch_name,
-        _DIRECTORY_FLAGS,
-        dir_fd=item.anchor.parent_fd,
-    )
-    metadata = os.fstat(item.scratch_fd)
-    if not stat.S_ISDIR(metadata.st_mode):
-        raise ValueError(f"transaction scratch is not a directory: {scratch_name}")
     item.scratch_identity = _identity(metadata)
-    visible = os.stat(
-        scratch_name,
-        dir_fd=item.anchor.parent_fd,
-        follow_symlinks=False,
-    )
-    if _identity(visible) != item.scratch_identity:
-        raise ValueError(f"transaction scratch changed: {scratch_name}")
+    item.scratch_fd = descriptor
+    item.scratch_lifecycle = _ScratchLifecycle.OWNED
 
 
 def _register_scratch_leaf(
@@ -683,8 +732,15 @@ def _refresh_scratch_leaf(
         entry.name,
         label=entry.purpose,
     )
-    entry.identity = _identity(metadata)
-    entry.payload = payload
+    actual_identity = _identity(metadata)
+    if entry.identity is None:
+        entry.identity = actual_identity
+    elif entry.identity != actual_identity:
+        raise ValueError(f"{entry.purpose} identity changed: {entry.name}")
+    if entry.payload is None:
+        entry.payload = payload
+    elif entry.payload != payload:
+        raise ValueError(f"{entry.purpose} payload changed: {entry.name}")
     return payload, metadata
 
 
@@ -790,15 +846,52 @@ def _visible_leaf(
 
 def _visible_matches(
     item: _StagedPublication,
+    identity: tuple[int, int] | None,
     payload: bytes | None,
 ) -> bool:
     current = _visible_leaf(item)
-    if payload is None:
+    if identity is None:
         return current is None
-    return current is not None and current[0] == payload
+    return (
+        current is not None
+        and _identity(current[1]) == identity
+        and current[0] == payload
+    )
+
+
+def _record_rollback_visible(
+    item: _StagedPublication,
+    identity: tuple[int, int] | None,
+    payload: bytes | None,
+) -> None:
+    item.rollback_visible_observed = True
+    item.rollback_visible_identity = identity
+    item.rollback_visible_payload = payload
+
+
+def _record_current_rollback_visible(item: _StagedPublication) -> None:
+    current = _visible_leaf(item)
+    if current is None:
+        _record_rollback_visible(item, None, None)
+    else:
+        _record_rollback_visible(item, _identity(current[1]), current[0])
+
+
+def _rollback_visible_matches(item: _StagedPublication) -> bool:
+    if item.rollback_visible_observed:
+        return _visible_matches(
+            item,
+            item.rollback_visible_identity,
+            item.rollback_visible_payload,
+        )
+    if not item.prior_observed:
+        return True
+    return _visible_matches(item, item.prior_identity, item.prior_payload)
 
 
 def _capture_initial_leaf(item: _StagedPublication) -> None:
+    if not item.prior_observed:
+        raise RuntimeError("prior leaf state was not observed")
     expected_payload = item.prior_payload
     expected_identity = item.prior_identity
     captured = _capture_visible_to_scratch(item, "backup", "captured prior leaf")
@@ -807,8 +900,7 @@ def _capture_initial_leaf(item: _StagedPublication) -> None:
             item.phase = _PublicationPhase.EXPECTED_ABSENT
             return
         # Preserve a concurrent deletion instead of recreating stale data.
-        item.prior_payload = None
-        item.prior_identity = None
+        _record_rollback_visible(item, None, None)
         item.phase = _PublicationPhase.EXTERNAL_CAPTURED
         raise ValueError(f"output changed during operation: {item.anchor.leaf}")
 
@@ -821,13 +913,22 @@ def _capture_initial_leaf(item: _StagedPublication) -> None:
             pass
         raise
     captured_identity = _identity(captured_metadata)
-    item.prior = captured
     if captured_identity != expected_identity or captured_payload != expected_payload:
-        # The capture is the linearization point: retain and later restore the
-        # concurrent value that was actually moved, never the stale snapshot.
-        item.prior_payload = captured_payload
-        item.prior_identity = captured_identity
+        item.phase = _PublicationPhase.EXTERNAL_CAPTURED
+        try:
+            _link_scratch_leaf_visible(item, captured)
+        except BaseException:
+            _record_current_rollback_visible(item)
+            raise
+        if not _visible_matches(item, captured_identity, captured_payload):
+            _record_current_rollback_visible(item)
+            raise RuntimeError(
+                f"concurrent output could not be proven restored: {item.anchor.leaf}"
+            )
+        _record_rollback_visible(item, captured_identity, captured_payload)
+        captured.removable = True
         raise ValueError(f"output changed during operation: {item.anchor.leaf}")
+    item.prior = captured
     _validate_expected_prior(item.publication, captured_payload, captured_identity)
     item.phase = _PublicationPhase.PRIOR_CAPTURED
 
@@ -916,8 +1017,32 @@ def _quarantine_and_remove_scratch_leaf(
 
 
 def _remove_scratch_directory(item: _StagedPublication) -> None:
-    if not item.scratch_created or item.scratch_name is None:
+    if item.scratch_lifecycle in {
+        _ScratchLifecycle.UNPLANNED,
+        _ScratchLifecycle.REMOVED,
+    }:
         return
+    if item.scratch_name is None:
+        raise RuntimeError("transaction scratch name is unproven")
+    if item.scratch_lifecycle is _ScratchLifecycle.CREATE_ATTEMPTED:
+        try:
+            os.stat(
+                item.scratch_name,
+                dir_fd=item.anchor.parent_fd,
+                follow_symlinks=False,
+            )
+        except FileNotFoundError:
+            item.scratch_lifecycle = _ScratchLifecycle.REMOVED
+            return
+        except BaseException as error:
+            raise RuntimeError(
+                "transaction scratch creation is unproven; retaining possible "
+                f"debris {item.scratch_name}: {error}"
+            ) from error
+        raise RuntimeError(
+            "transaction scratch creation is unproven; retaining debris "
+            f"{item.scratch_name}"
+        )
     if any(entry.present for entry in item.scratch_leaves):
         raise RuntimeError("transaction scratch retains recoverable entries")
     if item.scratch_fd < 0 or item.scratch_identity is None:
@@ -931,8 +1056,7 @@ def _remove_scratch_directory(item: _StagedPublication) -> None:
             dst_dir_fd=item.anchor.parent_fd,
         )
     except FileNotFoundError:
-        item.scratch_created = False
-        item.scratch_name = None
+        item.scratch_lifecycle = _ScratchLifecycle.REMOVED
         os.close(item.scratch_fd)
         item.scratch_fd = -1
         return
@@ -947,81 +1071,158 @@ def _remove_scratch_directory(item: _StagedPublication) -> None:
     os.close(item.scratch_fd)
     item.scratch_fd = -1
     os.rmdir(quarantine, dir_fd=item.anchor.parent_fd)
-    item.scratch_created = False
-    item.scratch_name = None
+    item.scratch_lifecycle = _ScratchLifecycle.REMOVED
     item.scratch_identity = None
 
 
 def _cleanup_scratch(item: _StagedPublication) -> None:
-    for entry in item.scratch_leaves:
-        if entry.present:
-            _quarantine_and_remove_scratch_leaf(item, entry)
+    _cleanup_scratch_leaves(item)
     _remove_scratch_directory(item)
 
 
+def _cleanup_scratch_leaves(item: _StagedPublication) -> None:
+    for entry in item.scratch_leaves:
+        if entry.present:
+            _quarantine_and_remove_scratch_leaf(item, entry)
+
+
+def _cleanup_removable_scratch(item: _StagedPublication) -> None:
+    for entry in item.scratch_leaves:
+        if entry.present and entry.removable:
+            _quarantine_and_remove_scratch_leaf(item, entry)
+    if not any(entry.present for entry in item.scratch_leaves):
+        _remove_scratch_directory(item)
+
+
 def _restore_prior_with_no_clobber_link(item: _StagedPublication) -> None:
-    if item.prior_payload is None:
-        if _visible_leaf(item) is not None:
-            raise RuntimeError(
-                f"rollback would overwrite a concurrent artifact: {item.anchor.leaf}"
-            )
+    if not item.prior_observed:
+        raise RuntimeError("prior leaf state was not observed")
+    if _visible_matches(item, item.prior_identity, item.prior_payload):
         return
-    if _visible_matches(item, item.prior_payload):
-        return
-    if _visible_leaf(item) is not None:
+    current = _visible_leaf(item)
+    if current is not None:
+        _record_rollback_visible(item, _identity(current[1]), current[0])
         raise RuntimeError(
             f"rollback would overwrite a concurrent artifact: {item.anchor.leaf}"
         )
+    if item.prior_identity is None:
+        return
+    if item.prior_payload is None:
+        raise RuntimeError("prior leaf payload is missing")
 
-    backup_error: BaseException | None = None
-    if item.prior is not None and _scratch_leaf_matches(
+    if item.prior is None:
+        raise RuntimeError(f"prior recovery evidence changed: {item.publication.role}")
+    if item.prior.present and not _scratch_leaf_matches(
         item,
         item.prior,
         item.prior_identity,
         item.prior_payload,
     ):
-        try:
-            _link_scratch_leaf_visible(item, item.prior)
-        except BaseException as error:
-            backup_error = error
-        else:
-            if _visible_matches(item, item.prior_payload):
-                item.prior.removable = True
-                return
-
-    if _visible_leaf(item) is not None:
+        raise RuntimeError(f"prior recovery evidence changed: {item.publication.role}")
+    if not item.prior.present and not item.prior.removable:
         raise RuntimeError(
-            f"rollback would overwrite a concurrent artifact: {item.anchor.leaf}"
-        ) from backup_error
+            f"prior recovery evidence disappeared: {item.publication.role}"
+        )
+    backup_error: BaseException | None = None
+    try:
+        _link_scratch_leaf_visible(item, item.prior)
+    except BaseException as error:
+        backup_error = error
+        current = _visible_leaf(item)
+        if current is not None:
+            if (
+                _identity(current[1]) == item.prior_identity
+                and current[0] == item.prior_payload
+            ):
+                return
+            _record_rollback_visible(item, _identity(current[1]), current[0])
+            raise RuntimeError(
+                f"rollback preserved a concurrent artifact: {item.anchor.leaf}"
+            ) from backup_error
+    else:
+        if _visible_matches(item, item.prior_identity, item.prior_payload):
+            return
+        _record_current_rollback_visible(item)
+        raise RuntimeError(
+            f"rollback restore was concurrently removed or replaced: {item.anchor.leaf}"
+        )
+
+    # The backup link raised and a fresh observation still proves absence. Only
+    # this path may synthesize a replacement recovery inode from retained bytes.
+    if backup_error is None:
+        raise RuntimeError("backup restore failure was not recorded")
     retained = _create_scratch_payload(
         item,
         "restore",
         "retained rollback payload",
         item.prior_payload,
     )
-    retained.removable = True
+    if retained.identity is None or not _scratch_leaf_matches(
+        item,
+        retained,
+        retained.identity,
+        item.prior_payload,
+    ):
+        raise RuntimeError(
+            f"retained rollback payload is unproven: {item.publication.role}"
+        )
     try:
         _link_scratch_leaf_visible(item, retained)
     except BaseException as fallback_error:
-        detail = f"retained-byte restore failed ({fallback_error})"
-        if backup_error is not None:
-            detail = f"backup restore failed ({backup_error}); {detail}"
+        current = _visible_leaf(item)
+        if current is not None:
+            _record_rollback_visible(item, _identity(current[1]), current[0])
+        detail = (
+            f"backup restore failed ({backup_error}); retained-byte restore "
+            f"failed ({fallback_error})"
+        )
         raise RuntimeError(
             f"rollback could not restore {item.publication.role}: {detail}"
         ) from fallback_error
-    if not _visible_matches(item, item.prior_payload):
-        raise RuntimeError(f"rollback verification failed: {item.publication.role}")
+    if not _visible_matches(item, retained.identity, item.prior_payload):
+        _record_current_rollback_visible(item)
+        raise RuntimeError(
+            f"retained-byte restore was concurrently removed or replaced: "
+            f"{item.publication.role}"
+        )
+    item.prior = retained
+    item.prior_identity = retained.identity
 
 
 def _rollback_item(item: _StagedPublication) -> None:
     original_phase = item.phase
+    if original_phase is _PublicationPhase.UNTOUCHED:
+        for entry in item.scratch_leaves:
+            entry.removable = True
+        return
+    if (
+        original_phase is _PublicationPhase.EXTERNAL_CAPTURED
+        and item.rollback_visible_observed
+    ):
+        if not _visible_matches(
+            item,
+            item.rollback_visible_identity,
+            item.rollback_visible_payload,
+        ):
+            _record_current_rollback_visible(item)
+        raise RuntimeError(
+            f"rollback preserved an externally changed artifact for "
+            f"{item.publication.role}"
+        )
     captured = _capture_visible_to_scratch(
         item,
         "rollback",
         "rollback visible capture",
     )
-    concurrent_capture = False
-    if captured is not None:
+    if captured is None:
+        if original_phase is _PublicationPhase.NEW_VISIBLE:
+            _record_rollback_visible(item, None, None)
+            if item.temporary is not None:
+                item.temporary.removable = True
+            raise RuntimeError(
+                f"rollback observed external deletion of {item.publication.role}"
+            )
+    else:
         try:
             captured_payload, captured_metadata = _refresh_scratch_leaf(item, captured)
         except BaseException as error:
@@ -1042,36 +1243,52 @@ def _rollback_item(item: _StagedPublication) -> None:
             and captured_identity == item.temporary.identity
         )
         prior_already_visible = (
-            item.prior_payload is not None and captured_payload == item.prior_payload
+            item.prior_observed
+            and item.prior_identity is not None
+            and captured_identity == item.prior_identity
+            and captured_payload == item.prior_payload
         )
         if transaction_owned:
             captured.removable = True
         elif prior_already_visible:
             _link_scratch_leaf_visible(item, captured)
+            if not _visible_matches(
+                item,
+                captured_identity,
+                captured_payload,
+            ):
+                _record_current_rollback_visible(item)
+                raise RuntimeError(
+                    f"rollback prior was concurrently removed or replaced: "
+                    f"{item.publication.role}"
+                )
             captured.removable = True
         else:
-            concurrent_capture = original_phase in {
-                _PublicationPhase.EXPECTED_ABSENT,
-                _PublicationPhase.PRIOR_CAPTURED,
-                _PublicationPhase.NEW_VISIBLE,
-            }
             item.phase = _PublicationPhase.EXTERNAL_CAPTURED
-            item.prior_payload = captured_payload
-            item.prior_identity = captured_identity
-            item.prior = captured
             _link_scratch_leaf_visible(item, captured)
+            if not _visible_matches(
+                item,
+                captured_identity,
+                captured_payload,
+            ):
+                _record_current_rollback_visible(item)
+                raise RuntimeError(
+                    f"rollback concurrent artifact was removed or replaced: "
+                    f"{item.publication.role}"
+                )
+            _record_rollback_visible(item, captured_identity, captured_payload)
+            captured.removable = True
+            if item.temporary is not None:
+                item.temporary.removable = True
+            raise RuntimeError(
+                f"rollback preserved a concurrent artifact for {item.publication.role}"
+            )
 
     _restore_prior_with_no_clobber_link(item)
-    if not _visible_matches(item, item.prior_payload):
+    if not _visible_matches(item, item.prior_identity, item.prior_payload):
         raise RuntimeError(f"rollback verification failed: {item.publication.role}")
-    if item.prior is not None and not concurrent_capture:
-        item.prior.removable = True
     if item.temporary is not None:
         item.temporary.removable = True
-    if concurrent_capture:
-        raise RuntimeError(
-            f"rollback preserved a concurrent artifact for {item.publication.role}"
-        )
 
 
 def _rollback_artifacts(
@@ -1079,28 +1296,56 @@ def _rollback_artifacts(
     created_directories: Sequence[_CreatedDirectory],
 ) -> list[str]:
     failures: list[str] = []
+    restored_items: set[int] = set()
     for item in reversed(staged):
         try:
             _rollback_item(item)
         except BaseException as error:
             failures.append(f"{item.publication.role} restore: {error}")
+        else:
+            restored_items.add(id(item))
 
         try:
-            _cleanup_scratch(item)
+            _cleanup_removable_scratch(item)
         except BaseException as error:
             failures.append(f"{item.publication.role} scratch cleanup: {error}")
+            restored_items.discard(id(item))
         try:
             _fsync_directory(item.anchor.parent_fd)
         except BaseException as error:
             failures.append(f"{item.publication.role} directory sync: {error}")
+            restored_items.discard(id(item))
 
     for item in staged:
         try:
-            if not _visible_matches(item, item.prior_payload):
-                raise RuntimeError("prior leaf bytes or absence do not match")
-            _verify_transaction_debris_absent([item])
+            if not _rollback_visible_matches(item):
+                raise RuntimeError(
+                    "rollback leaf identity, bytes, or observed absence do not match"
+                )
         except BaseException as error:
             failures.append(f"{item.publication.role} rollback verification: {error}")
+            restored_items.discard(id(item))
+
+    for item in staged:
+        if id(item) in restored_items:
+            for entry in item.scratch_leaves:
+                entry.removable = True
+        try:
+            _cleanup_removable_scratch(item)
+        except BaseException as error:
+            failures.append(f"{item.publication.role} final scratch cleanup: {error}")
+
+    for item in staged:
+        try:
+            if not _rollback_visible_matches(item):
+                raise RuntimeError(
+                    "rollback leaf identity, bytes, or observed absence do not match"
+                )
+            _verify_transaction_debris_absent([item])
+        except BaseException as error:
+            failures.append(
+                f"{item.publication.role} final rollback verification: {error}"
+            )
 
     failures.extend(_rollback_created_directories(created_directories))
     return failures
@@ -1135,6 +1380,7 @@ def _publish_artifacts(
                 item.prior_identity = _identity(prior_metadata)
                 if item.prior_identity != _identity(existing):
                     raise ValueError(f"output changed during operation: {anchor.leaf}")
+            item.prior_observed = True
             _validate_expected_prior(
                 publication,
                 item.prior_payload,
@@ -1168,7 +1414,10 @@ def _publish_artifacts(
         for item in staged:
             for entry in item.scratch_leaves:
                 entry.removable = True
-            _cleanup_scratch(item)
+            _cleanup_scratch_leaves(item)
+        _verify_published_artifacts(staged)
+        for item in staged:
+            _remove_scratch_directory(item)
             _fsync_directory(item.anchor.parent_fd)
         _verify_published_artifacts(staged)
         _verify_transaction_debris_absent(staged)
