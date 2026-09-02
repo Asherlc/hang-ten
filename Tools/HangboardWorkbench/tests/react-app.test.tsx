@@ -417,6 +417,9 @@ test("alias presentations stay inspectable but read-only while their source rema
     await app.click('[data-hold-key="hold-1"]');
     assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("aria-pressed"), "true");
     assert.equal(app.text("#hold-heading"), "hold-1");
+    assert.equal(app.document.querySelectorAll(".path-editor-vertex").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-rotation-handle").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-resize-handle").length, 0);
 
     for (const selector of [
       "#save-button",
@@ -461,7 +464,7 @@ test("alias presentations stay inspectable but read-only while their source rema
     assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d"), pathBefore);
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
     assert.equal(app.text("#save-state"), "Saved");
-    assert.equal(shortcutPrevented, false);
+    assert.equal(shortcutPrevented, true);
     assert.equal(saves, 0);
 
     await app.change("#presentation-select", "source");
@@ -471,6 +474,8 @@ test("alias presentations stay inspectable but read-only while their source rema
     assert.equal(app.disabled("#add-hold-button"), false);
     await app.click('[data-hold-key="hold-1"]');
     assert.equal(app.disabled("#hold-type-select"), false);
+    assert.equal(app.document.querySelectorAll(".path-editor-vertex").length > 0, true);
+    assert.equal(app.document.querySelectorAll(".path-editor-rotation-handle").length, 1);
     await app.change("#hold-type-select", "sloper");
     assert.equal(app.documentValue("#hold-type-select"), "sloper");
     assert.equal(app.text("#save-state"), "Unsaved changes");

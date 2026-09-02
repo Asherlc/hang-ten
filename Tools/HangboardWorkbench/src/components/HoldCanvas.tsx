@@ -53,6 +53,7 @@ export interface HoldCanvasProps {
   selectedKey: string | null;
   selectedKeys: readonly string[];
   busy: boolean;
+  editingDisabled?: boolean;
   onSelectHold(key: string, toggle: boolean): void;
   pathEditor: PathEditor;
   editor: HoldEditorActions;
@@ -72,6 +73,7 @@ export function HoldCanvas({
   selectedKey,
   selectedKeys,
   busy,
+  editingDisabled = false,
   onSelectHold,
   pathEditor,
   editor,
@@ -426,7 +428,7 @@ export function HoldCanvas({
               />
             })}
           </g>
-          {selectedCommands && pivot && rotationHandle && (
+          {selectedCommands && pivot && rotationHandle && !editingDisabled && (
             <g className={`path-editor-overlay${busy ? " busy" : ""}`}>
               <line
                 className="path-editor-rotation-connector"

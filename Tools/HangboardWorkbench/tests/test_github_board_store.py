@@ -407,6 +407,85 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
     assert opened.presentation("primary-inverted").asset_path == "assets/primary.png"
 
 
+def test_hosted_package_loads_declared_alias_anchor_into_public_model() -> None:
+    """Fails if the full hosted package loader drops a declared alias anchor."""
+    board = board_document("fixture.board")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations.append(
+        {
+            "id": "primary-inverted",
+            "name": "Primary inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+        }
+    )
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    for hold in holds:
+        assert isinstance(hold, dict)
+        geometry = hold["geometry"]
+        assert isinstance(geometry, list)
+        for piece in geometry:
+            assert isinstance(piece, dict)
+            frame = piece["frame"]
+            assert isinstance(frame, dict)
+            frame["y"] = 0.5
+
+    opened = github_board_store.open_package(
+        _client(("fixture-board", board)), TOKEN, BRANCH, "fixture.board"
+    )
+
+    assert opened.presentation("primary-inverted").geometry_rotation_anchor == (
+        0.5,
+        0.68,
+    )
+
+
+def test_hosted_selected_presentation_loads_declared_alias_anchor_into_public_model() -> None:
+    """Fails if the selected-presentation hosted loader drops the public anchor."""
+    board = board_document("fixture.board")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations.append(
+        {
+            "id": "primary-inverted",
+            "name": "Primary inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+        }
+    )
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    for hold in holds:
+        assert isinstance(hold, dict)
+        geometry = hold["geometry"]
+        assert isinstance(geometry, list)
+        for piece in geometry:
+            assert isinstance(piece, dict)
+            frame = piece["frame"]
+            assert isinstance(frame, dict)
+            frame["y"] = 0.5
+    store = github_board_store.GitHubBoardStore(_client(("fixture-board", board)))
+
+    opened = store.open_presentation(
+        TOKEN, BRANCH, "fixture.board", "primary-inverted"
+    )
+
+    assert opened.presentation("primary-inverted").geometry_rotation_anchor == (
+        0.5,
+        0.68,
+    )
+
+
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     """Fails if opening a listed board re-downloads its immutable board.json."""
     client = _client(("fixture-board", board_document("fixture.board")))

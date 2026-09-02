@@ -136,8 +136,8 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         return;
       }
       if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
-      if (busy || aliasReadOnly || !state.board) return;
       event.preventDefault();
+      if (busy || aliasReadOnly || !state.board) return;
       saveFromShortcut();
     };
     window.document.addEventListener("keydown", onKeyDown);
@@ -294,6 +294,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             selectedKey={state.selectedKey}
             selectedKeys={state.selectedKeys}
             busy={editorBusy}
+            editingDisabled={aliasReadOnly}
             onSelectHold={(key, toggle) => {
               actions.selectHold(key, toggle);
             }}

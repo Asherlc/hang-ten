@@ -1327,6 +1327,9 @@ def _load_selected_presentation(
             image_height=height,
             source_presentation_id=item[5],
             is_inverted=item[6],
+            geometry_rotation_anchor=board_package._raw_presentation_geometry_rotation_anchor(
+                board, item[0]
+            ),
         )
         for item in presentation_values
     )
@@ -1584,6 +1587,9 @@ def _load_package_from_entries(
             image_height=dimensions[asset_path][1],
             source_presentation_id=source_presentation_id,
             is_inverted=is_inverted,
+            geometry_rotation_anchor=board_package._raw_presentation_geometry_rotation_anchor(
+                board, presentation_id
+            ),
         )
         for (
             presentation_id,

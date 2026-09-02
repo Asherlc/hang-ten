@@ -494,10 +494,8 @@ def _inverted_display_path(
 def presentation_geometry_rotation_anchor(
     board: Mapping[str, Any], presentation: BoardPresentation
 ) -> tuple[float, float] | None:
-    """Return one validated alias anchor across local and hosted package models."""
-    return presentation.geometry_rotation_anchor or _raw_presentation_geometry_rotation_anchor(
-        board, presentation.id
-    )
+    """Return the validated alias anchor declared by the package model."""
+    return presentation.geometry_rotation_anchor
 
 
 def _raw_presentation_geometry_rotation_anchor(

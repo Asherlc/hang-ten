@@ -11,7 +11,6 @@ import shutil
 import struct
 import sys
 import zlib
-from dataclasses import replace
 from pathlib import Path
 from types import ModuleType
 
@@ -638,24 +637,14 @@ def test_non_center_inverted_alias_projects_every_piece_without_mutating_source(
     assert package.board["holds"][0]["geometry"] == canonical_geometry
 
 
-def test_non_center_alias_anchor_projects_from_validated_raw_package_metadata(
+def test_non_center_alias_anchor_projects_from_validated_public_package_model(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
     package_root = _write_multi_presentation_package(library)
     _add_non_center_inverted_alias(package_root)
     package = board_package.load_board_package(package_root)
-    package_without_model_anchor = replace(
-        package,
-        presentations=tuple(
-            replace(presentation, geometry_rotation_anchor=None)
-            for presentation in package.presentations
-        ),
-    )
-
-    inverted = board_package.editor_document(
-        package_without_model_anchor, "front-inverted"
-    )
+    inverted = board_package.editor_document(package, "front-inverted")
 
     first = board_package.parse_closed_path(
         inverted["regions"][0]["displayPath"], 1774, 457
