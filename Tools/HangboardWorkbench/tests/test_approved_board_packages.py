@@ -206,7 +206,7 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
     )
     assert option_4["sourcePresentationID"] == "primary"
     assert option_4["isInverted"] is True
-    assert option_4["assetPath"] == "assets/front-inverted.png"
+    assert option_4["assetPath"] == "assets/cord-option-4-20mm-incut.png"
     option_4_document = board_package.editor_document(
         package, "cord-option-4-20mm-incut"
     )
@@ -214,4 +214,5 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
         region["key"] for region in option_4_document["regions"]
     }
     assert (package_root / "assets" / "primary.png").is_file()
+    assert (package_root / "assets" / "cord-option-4-20mm-incut.png").is_file()
     assert (package_root / "assets" / "side.png").is_file()
