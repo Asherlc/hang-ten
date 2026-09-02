@@ -9,6 +9,14 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .cord_render_assets import (
+    ChromaConfig,
+    build_lossless_atlases,
+    inspect_transparency,
+    load_locked_sources,
+    remove_chroma,
+    verify_atlas_round_trip,
+)
 from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
 from .presentation_remediation_audit import (
     PresentationValidationMode,
@@ -20,6 +28,8 @@ from .presentation_remediation_audit import (
 def main(argv: Sequence[str] | None = None) -> int:
     try:
         arguments = _parser().parse_args(argv)
+        if arguments.command == "cord-assets":
+            return _cord_assets(arguments)
         inventory = discover_board_packages(
             arguments.root,
             require_complete_inventory=(
@@ -135,7 +145,70 @@ def _parser() -> argparse.ArgumentParser:
         metavar=("SHA256", "PATH"),
         default=[],
     )
+    cord_assets = subcommands.add_parser("cord-assets", help="lock evidence and gate cord-render transparency")
+    cord_commands = cord_assets.add_subparsers(dest="cord_command", required=True)
+    lock = cord_commands.add_parser("lock", help="freeze immutable source metadata")
+    lock.add_argument("--manifest", type=Path, required=True)
+    lock.add_argument("--report", type=Path, required=True)
+    atlas = cord_commands.add_parser("atlas", help="build and verify lossless source atlases")
+    atlas.add_argument("--manifest", type=Path, required=True)
+    atlas.add_argument("--output-root", type=Path, required=True)
+    atlas.add_argument("--report", type=Path)
+    atlas.add_argument("--max-pages", type=int, default=5)
+    key = cord_commands.add_parser("key", help="remove the recorded chroma key to alpha")
+    key.add_argument("--input", type=Path, required=True)
+    key.add_argument("--output", type=Path, required=True)
+    key.add_argument("--config", type=Path)
+    key.add_argument("--report", type=Path, required=True)
+    inspect = cord_commands.add_parser("inspect", help="enforce the focused RGBA transparency contract")
+    inspect.add_argument("--image", type=Path, required=True)
+    inspect.add_argument("--expected-width", type=int, required=True)
+    inspect.add_argument("--expected-height", type=int, required=True)
+    inspect.add_argument("--key-rgb", default="0,255,0")
+    inspect.add_argument("--report", type=Path, required=True)
     return parser
+
+
+def _cord_assets(arguments: argparse.Namespace) -> int:
+    if arguments.cord_command == "lock":
+        sources = load_locked_sources(arguments.manifest)
+        payload = {"sources": [source.to_json() for source in sources]}
+        _write_owner_json(arguments.report, payload)
+    elif arguments.cord_command == "atlas":
+        sources = load_locked_sources(arguments.manifest)
+        index = build_lossless_atlases(sources, arguments.output_root, max_pages=arguments.max_pages)
+        payload = {"index": index.to_json(), "verification": vars(verify_atlas_round_trip(index))}
+        _write_owner_json(arguments.report or arguments.output_root / "index.json", payload)
+    elif arguments.cord_command == "key":
+        config = _load_chroma_config(arguments.config)
+        report = remove_chroma(arguments.input, arguments.output, config)
+        _write_owner_json(arguments.report, report.to_json())
+    else:
+        report = inspect_transparency(arguments.image, arguments.expected_width, arguments.expected_height, _parse_key(arguments.key_rgb))
+        _write_owner_json(arguments.report, report.to_json())
+    print(json.dumps(payload if arguments.cord_command in {"lock", "atlas"} else report.to_json(), indent=2, sort_keys=True))
+    return 0
+
+
+def _write_owner_json(path: Path, payload: object) -> None:
+    from .cord_render_assets import _owner_context
+    _owner_context(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+
+
+def _parse_key(value: str) -> tuple[int, int, int]:
+    pieces = value.split(",")
+    if len(pieces) != 3:
+        raise ValueError("--key-rgb requires r,g,b")
+    return tuple(int(piece) for piece in pieces)  # type: ignore[return-value]
+
+
+def _load_chroma_config(path: Path | None) -> ChromaConfig:
+    if path is None:
+        return ChromaConfig()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return ChromaConfig(tuple(payload.get("keyRGB", [0, 255, 0])), payload.get("distanceThreshold", 36), payload.get("edgeDistanceThreshold", 72))
 
 
 def _transient_file_mapping(

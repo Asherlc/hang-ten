@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from PIL import Image
+
 from conftest import (
     write_board_package,
     write_multi_presentation_board_package,
@@ -40,6 +42,69 @@ def _run_cli(
 
 def _json_output(output: str) -> dict[str, object]:
     return json.loads(output[output.find("{") :])
+
+
+def test_cord_assets_cli_rejects_paths_outside_owner_context(tmp_path: Path) -> None:
+    raw = tmp_path / "raw.png"
+    Image.new("RGB", (3, 3), (0, 255, 0)).save(raw, format="PNG")
+
+    result = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        "/tmp/outside.png",
+        "--report",
+        str(tmp_path / ".context" / "joyful-donkey-cli-assets" / "report.json"),
+    )
+
+    assert result.returncode == 1
+    assert "owner-named .context" in result.stderr
+
+
+def test_cord_assets_cli_lock_writes_report_in_owner_context(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-assets"
+    context.mkdir(parents=True)
+    source = context / "source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = context / "sources.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "path": str(source), "sourceID": "fixture", "url": "https://example.com/fixture",
+                        "publisher": "Fixture", "role": "product", "revision": "fixture", "reviewedAt": "2026-09-02"
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    report = context / "lock-report.json"
+
+    result = _run_cli("cord-assets", "lock", "--manifest", str(manifest), "--report", str(report))
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(report.read_text(encoding="utf-8"))["sources"][0]["sourceID"] == "fixture"
+
+
+def test_cord_assets_cli_refuses_a_real_sixth_atlas_page(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-overflow"
+    context.mkdir(parents=True)
+    records = []
+    for number in range(6):
+        image = context / f"source-{number}.png"
+        Image.new("RGB", (2000, 1100), (number, 255 - number, 0)).save(image, format="PNG")
+        records.append({"path": str(image), "sourceID": f"source-{number}", "url": f"https://example.com/{number}", "publisher": "Fixture", "role": "product", "revision": "fixture", "reviewedAt": "2026-09-02"})
+    manifest = context / "sources.json"
+    manifest.write_text(json.dumps({"sources": records}), encoding="utf-8")
+
+    result = _run_cli("cord-assets", "atlas", "--manifest", str(manifest), "--output-root", str(context / "atlases"), "--max-pages", "5")
+
+    assert result.returncode == 1
+    assert "five atlas pages" in result.stderr
 
 
 def _write_audit_ledger(
