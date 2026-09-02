@@ -351,6 +351,21 @@ an independently accepted asset, update `board.json`, update the new audit,
 and run repository gates. Source/alias pairs are promoted atomically so an
 upright image cannot ship without its reviewed inverted companion.
 
+All supported `cord_render_assets` writers for one owner context are
+serialized by a process-local reentrant lock and a cross-process `flock`, both
+held through publication commit and cleanup. Ordinary external changes at
+observable transaction boundaries are still detected and preserved. Arbitrary
+same-UID direct mutation during an exact name-based `unlink` or `rmdir` is
+outside the supported concurrency contract because macOS/POSIX provides no
+inode-conditional delete primitive. Created output-parent directories are
+monotonic and are never destructively rolled back. Publication performs one
+all-output final precommit verification before entering an explicit
+`COMMITTED` state: a precommit error rolls back, while a postcommit cleanup
+error never rolls back, leaves every output consistently committed, and raises
+with `publication committed; cleanup state is unproven`. Every generated old-
+or new-output quarantine name is registered before its syscall and is later
+reconciled or disclosed.
+
 Every external or generated resource uses the owner name `joyful-donkey`.
 Before creating a simulator, image-generation job with a deletable handle, or
 other external resource, the owning worker records its exact identifier and
@@ -493,4 +508,3 @@ The change is complete only when all of the following are true:
   new narrative states what it supersedes, package directories contain only
   `board.json` plus declared assets, and all temporary or external resources
   owned by `joyful-donkey` have been verified deleted.
-

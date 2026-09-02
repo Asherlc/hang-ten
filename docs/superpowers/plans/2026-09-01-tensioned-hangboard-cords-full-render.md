@@ -413,6 +413,20 @@ rtk git push origin feature/hangboard-cord-tension
 - `inspect_transparency(path: Path, expected_width: int, expected_height: int, key_rgb: tuple[int, int, int]) -> TransparencyReport`.
 - CLI: `hangboard-packages cord-assets lock|atlas|key|inspect` writes reports only to caller-provided `.context/joyful-donkey-*` paths.
 
+**Publication transaction contract:** All supported `cord_render_assets`
+writers for one owner context serialize with a process-local reentrant lock and
+a cross-process `flock`, held through commit and cleanup. Normal external
+changes at observable boundaries remain detected and preserved. Arbitrary
+same-UID direct mutation during an exact name-based `unlink` or `rmdir` is
+outside the supported concurrency contract because macOS/POSIX has no
+inode-conditional delete operation. Created output-parent directories are
+monotonic and never destructively rolled back. One all-output final precommit
+verification precedes an explicit `COMMITTED` state. Precommit errors roll
+back; postcommit cleanup errors never roll back, leave every output
+consistently committed, and raise with `publication committed; cleanup state is
+unproven`. Register every generated old- or new-output quarantine name before
+its syscall, then reconcile it or disclose it.
+
 - [ ] **Step 1: Write failing source-lock and decoded-pixel tests.** Use two images with identical decoded pixels but different container metadata to assert equal pixel hashes and unequal byte hashes. Reject symlinks, mutable/missing source metadata, duplicate source IDs, non-image files, and output paths outside an owner-named context directory.
 
 - [ ] **Step 2: Write failing atlas tests.** Build an atlas from six differently sized lossless fixtures. Assert one to five pages, deterministic byte hashes across runs, unchanged sources, non-overlapping panel rectangles, exact panel mode/dimensions/pixels, and failure when a supplied index is tampered. Assert no resize/crop/rotate parameters exist in the interface.
