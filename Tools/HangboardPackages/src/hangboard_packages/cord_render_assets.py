@@ -18,13 +18,13 @@ from collections import deque
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field, replace
 from datetime import date
+from enum import Enum
 from pathlib import Path
 
 import PIL
 from PIL import Image, UnidentifiedImageError
 
-
-_TOOL_VERSION = "cord-render-assets/4"
+_TOOL_VERSION = "cord-render-assets/5"
 _SCHEMA_VERSION = 2
 _DIGEST_VERSION = 1
 _OWNER_PREFIX = "joyful-donkey-"
@@ -38,11 +38,13 @@ _OPAQUE_FLOOD_MIN_PIXELS = 16
 _OPAQUE_FLOOD_MIN_AREA_FRACTION = 0.05
 _OPAQUE_FLOOD_MIN_BOUNDARY_FRACTION = 0.10
 _MATTE_MIN_MEAN_OPACITY = 0.95
-_INSET_MATTE_MIN_CANVAS_FRACTION = 0.70
-_INSET_TRANSLUCENT_MATTE_MIN_CANVAS_FRACTION = 0.60
-_INSET_MATTE_MIN_BBOX_FILL = 0.85
+_INSET_MATTE_MIN_EFFECTIVE_AREA = 0.70
+_INSET_MATTE_MIN_ALPHA_FILL = 0.85
 _INSET_MATTE_MIN_DENSE_AXIS_FRACTION = 0.80
 _INSET_MATTE_DENSE_LINE_FRACTION = 0.90
+_INSET_MATTE_CORE_PERIMETER = 3
+_INSET_MATTE_DEFICIT_WEIGHT = 18.0
+_INSET_MATTE_MAX_DEFICIT_BOOST = 0.10
 _SOURCE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _ATLAS_PAGE_NAME = re.compile(r"page-([0-9]{2})\.png\Z")
@@ -90,6 +92,20 @@ class _HeldParent:
             self.parent_fd = -1
 
 
+@dataclass
+class _CreatedDirectory:
+    path: Path
+    parent_fd: int
+    name: str
+    created: bool = False
+    identity: tuple[int, int] | None = None
+
+    def close(self) -> None:
+        if self.parent_fd >= 0:
+            os.close(self.parent_fd)
+            self.parent_fd = -1
+
+
 def _path_parts(path: Path) -> tuple[Path, tuple[str, ...]]:
     absolute = _absolute(path)
     if not absolute.is_absolute() or absolute == Path(absolute.anchor):
@@ -100,16 +116,24 @@ def _path_parts(path: Path) -> tuple[Path, tuple[str, ...]]:
     return absolute, parts
 
 
-def _open_parent(path: Path, *, create: bool = False) -> _HeldParent:
+def _open_parent(
+    path: Path,
+    *,
+    create: bool = False,
+    creation_ledger: list[_CreatedDirectory] | None = None,
+) -> _HeldParent:
     absolute, parts = _path_parts(path)
-    descriptor = os.open(absolute.anchor, _DIRECTORY_FLAGS)
-    root_metadata = os.fstat(descriptor)
-    chain: list[tuple[str, int, int]] = [
-        (absolute.anchor, root_metadata.st_dev, root_metadata.st_ino)
-    ]
-    created: list[Path] = []
+    descriptor = -1
+    owns_ledger = creation_ledger is None
+    ledger = creation_ledger if creation_ledger is not None else []
+    created_paths: list[Path] = []
     current = Path(absolute.anchor)
     try:
+        descriptor = os.open(absolute.anchor, _DIRECTORY_FLAGS)
+        root_metadata = os.fstat(descriptor)
+        chain: list[tuple[str, int, int]] = [
+            (absolute.anchor, root_metadata.st_dev, root_metadata.st_ino)
+        ]
         for component in parts[:-1]:
             current /= component
             try:
@@ -119,8 +143,20 @@ def _open_parent(path: Path, *, create: bool = False) -> _HeldParent:
             except FileNotFoundError:
                 if not create:
                     raise
-                os.mkdir(component, 0o700, dir_fd=descriptor)
-                created.append(current)
+                creation = _CreatedDirectory(
+                    current,
+                    os.dup(descriptor),
+                    component,
+                )
+                ledger.append(creation)
+                try:
+                    os.mkdir(component, 0o700, dir_fd=descriptor)
+                except FileExistsError:
+                    ledger.remove(creation)
+                    creation.close()
+                else:
+                    creation.created = True
+                    created_paths.append(current)
                 next_descriptor = os.open(
                     component, _DIRECTORY_FLAGS, dir_fd=descriptor
                 )
@@ -132,19 +168,39 @@ def _open_parent(path: Path, *, create: bool = False) -> _HeldParent:
             if not stat.S_ISDIR(metadata.st_mode):
                 os.close(next_descriptor)
                 raise ValueError(f"path component is not a directory: {current}")
+            if create and ledger:
+                latest = ledger[-1]
+                if latest.path == current and latest.created:
+                    latest.identity = _identity(metadata)
             chain.append((component, metadata.st_dev, metadata.st_ino))
             os.close(descriptor)
             descriptor = next_descriptor
-        return _HeldParent(
+        anchor = _HeldParent(
             absolute,
             descriptor,
             parts[-1],
             tuple(chain),
-            tuple(created),
+            tuple(created_paths),
         )
-    except BaseException:
-        os.close(descriptor)
+        descriptor = -1
+        return anchor
+    except BaseException as error:
+        if descriptor >= 0:
+            os.close(descriptor)
+            descriptor = -1
+        if owns_ledger:
+            failures = _rollback_created_directories(ledger)
+            if failures:
+                raise RuntimeError(
+                    "rollback state is unproven: " + "; ".join(failures)
+                ) from error
         raise
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        if owns_ledger:
+            for creation in ledger:
+                creation.close()
 
 
 def _revalidate_anchor(
@@ -372,17 +428,44 @@ class _Publication:
     expected_prior: _LeafExpectation | None = None
 
 
+class _PublicationPhase(Enum):
+    UNTOUCHED = "untouched"
+    EXPECTED_ABSENT = "expected-absent"
+    PRIOR_CAPTURED = "prior-captured"
+    NEW_VISIBLE = "new-visible"
+    EXTERNAL_CAPTURED = "external-captured"
+
+
+@dataclass
+class _ScratchLeaf:
+    name: str
+    purpose: str
+    present: bool = False
+    identity: tuple[int, int] | None = None
+    payload: bytes | None = None
+    removable: bool = False
+
+
 @dataclass
 class _StagedPublication:
     publication: _Publication
     anchor: _HeldParent
-    temporary: str | None
-    temporary_identity: tuple[int, int] | None
-    prior_payload: bytes | None
-    prior_identity: tuple[int, int] | None
-    backup: str | None = None
-    published: bool = False
-    transaction_names: set[str] = field(default_factory=set)
+    phase: _PublicationPhase = _PublicationPhase.UNTOUCHED
+    prior_payload: bytes | None = None
+    prior_identity: tuple[int, int] | None = None
+    temporary: _ScratchLeaf | None = None
+    prior: _ScratchLeaf | None = None
+    scratch_name: str | None = None
+    scratch_fd: int = -1
+    scratch_identity: tuple[int, int] | None = None
+    scratch_created: bool = False
+    scratch_leaves: list[_ScratchLeaf] = field(default_factory=list)
+
+    def close(self) -> None:
+        if self.scratch_fd >= 0:
+            os.close(self.scratch_fd)
+            self.scratch_fd = -1
+        self.anchor.close()
 
 
 def _write_all(descriptor: int, payload: bytes) -> None:
@@ -395,12 +478,17 @@ def _write_all(descriptor: int, payload: bytes) -> None:
     os.fsync(descriptor)
 
 
-def _read_relative(anchor: _HeldParent, name: str) -> tuple[bytes, os.stat_result]:
-    descriptor = os.open(name, _READ_FLAGS, dir_fd=anchor.parent_fd)
+def _read_from_fd(
+    parent_fd: int,
+    name: str,
+    *,
+    label: str = "artifact",
+) -> tuple[bytes, os.stat_result]:
+    descriptor = os.open(name, _READ_FLAGS, dir_fd=parent_fd)
     try:
         before = os.fstat(descriptor)
         if not stat.S_ISREG(before.st_mode):
-            raise ValueError(f"staged artifact is not regular: {name}")
+            raise ValueError(f"{label} is not regular: {name}")
         chunks: list[bytes] = []
         while True:
             chunk = os.read(descriptor, 1024 * 1024)
@@ -415,37 +503,14 @@ def _read_relative(anchor: _HeldParent, name: str) -> tuple[bytes, os.stat_resul
             or before.st_mtime_ns != after.st_mtime_ns
             or len(payload) != before.st_size
         ):
-            raise ValueError(f"artifact changed while it was being read: {name}")
+            raise ValueError(f"{label} changed while it was being read: {name}")
         return payload, before
     finally:
         os.close(descriptor)
 
 
-def _replace_relative_bytes(anchor: _HeldParent, name: str, payload: bytes) -> None:
-    temporary = f".{name}.restore-{secrets.token_hex(8)}"
-    try:
-        descriptor = os.open(temporary, _CREATE_FLAGS, 0o600, dir_fd=anchor.parent_fd)
-        try:
-            _write_all(descriptor, payload)
-            temporary_identity = _identity(os.fstat(descriptor))
-        finally:
-            os.close(descriptor)
-        staged_bytes, staged_metadata = _read_relative(anchor, temporary)
-        if staged_bytes != payload or _identity(staged_metadata) != temporary_identity:
-            raise ValueError(f"rollback artifact verification failed: {name}")
-        os.replace(
-            temporary,
-            name,
-            src_dir_fd=anchor.parent_fd,
-            dst_dir_fd=anchor.parent_fd,
-        )
-        temporary = ""
-    finally:
-        if temporary:
-            try:
-                os.unlink(temporary, dir_fd=anchor.parent_fd)
-            except FileNotFoundError:
-                pass
+def _read_relative(anchor: _HeldParent, name: str) -> tuple[bytes, os.stat_result]:
+    return _read_from_fd(anchor.parent_fd, name)
 
 
 def _fsync_directory(descriptor: int) -> None:
@@ -456,19 +521,53 @@ def _fsync_directory(descriptor: int) -> None:
             raise
 
 
-def _remove_created_directories(paths: Sequence[Path]) -> None:
-    for path in sorted(set(paths), key=lambda value: len(value.parts), reverse=True):
-        try:
-            anchor = _open_parent(path)
-        except (FileNotFoundError, ValueError):
+def _rollback_created_directories(
+    ledger: Sequence[_CreatedDirectory],
+) -> list[str]:
+    failures: list[str] = []
+    for creation in sorted(
+        ledger,
+        key=lambda value: len(value.path.parts),
+        reverse=True,
+    ):
+        if not creation.created:
             continue
         try:
             try:
-                os.rmdir(anchor.leaf, dir_fd=anchor.parent_fd)
-            except OSError:
-                pass
-        finally:
-            anchor.close()
+                metadata = os.stat(
+                    creation.name,
+                    dir_fd=creation.parent_fd,
+                    follow_symlinks=False,
+                )
+            except FileNotFoundError:
+                continue
+            if (
+                creation.identity is None
+                or _identity(metadata) != creation.identity
+                or not stat.S_ISDIR(metadata.st_mode)
+            ):
+                raise RuntimeError("created directory identity changed")
+            os.rmdir(creation.name, dir_fd=creation.parent_fd)
+        except BaseException as error:
+            failures.append(f"created directory cleanup {creation.path}: {error}")
+    for creation in ledger:
+        if not creation.created:
+            continue
+        try:
+            os.stat(
+                creation.name,
+                dir_fd=creation.parent_fd,
+                follow_symlinks=False,
+            )
+        except FileNotFoundError:
+            continue
+        except BaseException as error:
+            failures.append(f"created directory verification {creation.path}: {error}")
+        else:
+            failures.append(
+                f"created directory remains after rollback: {creation.path}"
+            )
+    return failures
 
 
 def _leaf_metadata(anchor: _HeldParent) -> os.stat_result | None:
@@ -502,6 +601,237 @@ def _validate_expected_prior(
         raise ValueError(f"{publication.role} changed during operation")
 
 
+def _ensure_scratch(item: _StagedPublication) -> None:
+    if item.scratch_fd >= 0:
+        return
+    if item.scratch_created:
+        if item.scratch_name is None or item.scratch_identity is None:
+            raise RuntimeError("transaction scratch ownership is unproven")
+        descriptor = os.open(
+            item.scratch_name,
+            _DIRECTORY_FLAGS,
+            dir_fd=item.anchor.parent_fd,
+        )
+        try:
+            metadata = os.fstat(descriptor)
+            visible = os.stat(
+                item.scratch_name,
+                dir_fd=item.anchor.parent_fd,
+                follow_symlinks=False,
+            )
+            if (
+                not stat.S_ISDIR(metadata.st_mode)
+                or _identity(metadata) != item.scratch_identity
+                or _identity(visible) != item.scratch_identity
+            ):
+                raise RuntimeError("transaction scratch identity changed")
+        except BaseException:
+            os.close(descriptor)
+            raise
+        item.scratch_fd = descriptor
+        return
+    _revalidate_anchor(item.anchor)
+    scratch_name = f".{item.anchor.leaf}.txn-{secrets.token_hex(8)}"
+    item.scratch_name = scratch_name
+    try:
+        os.mkdir(scratch_name, 0o700, dir_fd=item.anchor.parent_fd)
+    except BaseException:
+        # A hook may create the name and then fail. Rollback verifies that an
+        # unowned name is not silently removed.
+        raise
+    item.scratch_created = True
+    item.scratch_fd = os.open(
+        scratch_name,
+        _DIRECTORY_FLAGS,
+        dir_fd=item.anchor.parent_fd,
+    )
+    metadata = os.fstat(item.scratch_fd)
+    if not stat.S_ISDIR(metadata.st_mode):
+        raise ValueError(f"transaction scratch is not a directory: {scratch_name}")
+    item.scratch_identity = _identity(metadata)
+    visible = os.stat(
+        scratch_name,
+        dir_fd=item.anchor.parent_fd,
+        follow_symlinks=False,
+    )
+    if _identity(visible) != item.scratch_identity:
+        raise ValueError(f"transaction scratch changed: {scratch_name}")
+
+
+def _register_scratch_leaf(
+    item: _StagedPublication,
+    prefix: str,
+    purpose: str,
+) -> _ScratchLeaf:
+    _ensure_scratch(item)
+    entry = _ScratchLeaf(
+        f".{item.anchor.leaf}.{prefix}-{secrets.token_hex(8)}",
+        purpose,
+    )
+    item.scratch_leaves.append(entry)
+    return entry
+
+
+def _refresh_scratch_leaf(
+    item: _StagedPublication,
+    entry: _ScratchLeaf,
+) -> tuple[bytes, os.stat_result]:
+    if item.scratch_fd < 0 or not entry.present:
+        raise FileNotFoundError(entry.name)
+    payload, metadata = _read_from_fd(
+        item.scratch_fd,
+        entry.name,
+        label=entry.purpose,
+    )
+    entry.identity = _identity(metadata)
+    entry.payload = payload
+    return payload, metadata
+
+
+def _create_scratch_payload(
+    item: _StagedPublication,
+    prefix: str,
+    purpose: str,
+    payload: bytes,
+    *,
+    register_as_temporary: bool = False,
+) -> _ScratchLeaf:
+    entry = _register_scratch_leaf(item, prefix, purpose)
+    if register_as_temporary:
+        item.temporary = entry
+    descriptor = -1
+    try:
+        descriptor = os.open(
+            entry.name,
+            _CREATE_FLAGS,
+            0o600,
+            dir_fd=item.scratch_fd,
+        )
+        entry.present = True
+        entry.identity = _identity(os.fstat(descriptor))
+        _write_all(descriptor, payload)
+        if _identity(os.fstat(descriptor)) != entry.identity:
+            raise ValueError(f"{purpose} changed while it was staged")
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+    staged_bytes, staged_metadata = _refresh_scratch_leaf(item, entry)
+    if staged_bytes != payload or _identity(staged_metadata) != entry.identity:
+        raise ValueError(f"{purpose} verification failed")
+    return entry
+
+
+def _capture_visible_to_scratch(
+    item: _StagedPublication,
+    prefix: str,
+    purpose: str,
+) -> _ScratchLeaf | None:
+    """Atomically quarantine whichever inode is visible, then inspect it."""
+
+    entry = _register_scratch_leaf(item, prefix, purpose)
+    try:
+        os.rename(
+            item.anchor.leaf,
+            entry.name,
+            src_dir_fd=item.anchor.parent_fd,
+            dst_dir_fd=item.scratch_fd,
+        )
+    except FileNotFoundError:
+        return None
+    entry.present = True
+    item.phase = _PublicationPhase.EXTERNAL_CAPTURED
+    metadata = os.stat(
+        entry.name,
+        dir_fd=item.scratch_fd,
+        follow_symlinks=False,
+    )
+    entry.identity = _identity(metadata)
+    return entry
+
+
+def _scratch_leaf_matches(
+    item: _StagedPublication,
+    entry: _ScratchLeaf,
+    identity: tuple[int, int] | None,
+    payload: bytes | None,
+) -> bool:
+    if identity is None or not entry.present:
+        return False
+    try:
+        actual_payload, metadata = _refresh_scratch_leaf(item, entry)
+    except (FileNotFoundError, OSError, ValueError):
+        return False
+    return _identity(metadata) == identity and actual_payload == payload
+
+
+def _link_scratch_leaf_visible(
+    item: _StagedPublication,
+    entry: _ScratchLeaf,
+) -> None:
+    if item.scratch_fd < 0 or not entry.present:
+        raise FileNotFoundError(entry.name)
+    os.link(
+        entry.name,
+        item.anchor.leaf,
+        src_dir_fd=item.scratch_fd,
+        dst_dir_fd=item.anchor.parent_fd,
+        follow_symlinks=False,
+    )
+
+
+def _visible_leaf(
+    item: _StagedPublication,
+) -> tuple[bytes, os.stat_result] | None:
+    try:
+        return _read_relative(item.anchor, item.anchor.leaf)
+    except FileNotFoundError:
+        return None
+
+
+def _visible_matches(
+    item: _StagedPublication,
+    payload: bytes | None,
+) -> bool:
+    current = _visible_leaf(item)
+    if payload is None:
+        return current is None
+    return current is not None and current[0] == payload
+
+
+def _capture_initial_leaf(item: _StagedPublication) -> None:
+    expected_payload = item.prior_payload
+    expected_identity = item.prior_identity
+    captured = _capture_visible_to_scratch(item, "backup", "captured prior leaf")
+    if captured is None:
+        if expected_identity is None:
+            item.phase = _PublicationPhase.EXPECTED_ABSENT
+            return
+        # Preserve a concurrent deletion instead of recreating stale data.
+        item.prior_payload = None
+        item.prior_identity = None
+        item.phase = _PublicationPhase.EXTERNAL_CAPTURED
+        raise ValueError(f"output changed during operation: {item.anchor.leaf}")
+
+    try:
+        captured_payload, captured_metadata = _refresh_scratch_leaf(item, captured)
+    except BaseException:
+        try:
+            _link_scratch_leaf_visible(item, captured)
+        except BaseException:
+            pass
+        raise
+    captured_identity = _identity(captured_metadata)
+    item.prior = captured
+    if captured_identity != expected_identity or captured_payload != expected_payload:
+        # The capture is the linearization point: retain and later restore the
+        # concurrent value that was actually moved, never the stale snapshot.
+        item.prior_payload = captured_payload
+        item.prior_identity = captured_identity
+        raise ValueError(f"output changed during operation: {item.anchor.leaf}")
+    _validate_expected_prior(item.publication, captured_payload, captured_identity)
+    item.phase = _PublicationPhase.PRIOR_CAPTURED
+
+
 def _verify_published_artifacts(staged: Sequence[_StagedPublication]) -> None:
     for item in staged:
         _revalidate_anchor(item.anchor)
@@ -522,180 +852,243 @@ def _verify_published_artifacts(staged: Sequence[_StagedPublication]) -> None:
         )
         if (
             published_bytes != item.publication.payload
-            or _identity(published_metadata) != item.temporary_identity
+            or item.temporary is None
+            or _identity(published_metadata) != item.temporary.identity
         ):
             raise ValueError(
                 f"published artifact verification failed: {item.publication.role}"
             )
 
 
-def _verify_transaction_debris_absent(
-    staged: Sequence[_StagedPublication],
-) -> None:
+def _verify_transaction_debris_absent(staged: Sequence[_StagedPublication]) -> None:
     for item in staged:
-        for name in item.transaction_names:
-            try:
-                os.stat(name, dir_fd=item.anchor.parent_fd, follow_symlinks=False)
-            except FileNotFoundError:
-                continue
-            raise ValueError(
-                f"transaction debris remains for {item.publication.role}: {name}"
+        if item.scratch_name is None:
+            continue
+        try:
+            os.stat(
+                item.scratch_name,
+                dir_fd=item.anchor.parent_fd,
+                follow_symlinks=False,
             )
+        except FileNotFoundError:
+            continue
+        raise ValueError(
+            f"transaction debris remains for {item.publication.role}: "
+            f"{item.scratch_name}"
+        )
 
 
-def _capture_prior_leaf(item: _StagedPublication) -> None:
-    """Atomically remove and retain the leaf before a no-clobber install."""
-
-    _revalidate_anchor(item.anchor)
-    current = _leaf_metadata(item.anchor)
-    if item.prior_identity is None:
-        if current is not None:
-            raise ValueError(f"output changed during operation: {item.anchor.leaf}")
+def _quarantine_and_remove_scratch_leaf(
+    item: _StagedPublication,
+    entry: _ScratchLeaf,
+) -> None:
+    if not entry.present:
         return
-    if current is None or _identity(current) != item.prior_identity:
-        raise ValueError(f"output changed during operation: {item.anchor.leaf}")
-
-    backup = f".{item.anchor.leaf}.backup-{secrets.token_hex(8)}"
-    item.transaction_names.add(backup)
-    os.replace(
-        item.anchor.leaf,
-        backup,
-        src_dir_fd=item.anchor.parent_fd,
-        dst_dir_fd=item.anchor.parent_fd,
-    )
-    item.backup = backup
-    captured_payload, captured_metadata = _read_relative(item.anchor, backup)
-    captured_identity = _identity(captured_metadata)
-    expected_payload = item.prior_payload
-    expected_identity = item.prior_identity
-    if captured_identity != expected_identity or captured_payload != expected_payload:
-        # Preserve the atomically captured concurrent value during rollback.
-        item.prior_payload = captured_payload
-        item.prior_identity = captured_identity
-        raise ValueError(f"output changed during operation: {item.anchor.leaf}")
-    _validate_expected_prior(
-        item.publication,
-        captured_payload,
-        captured_identity,
-    )
-
-
-def _leaf_matches_prior(item: _StagedPublication) -> bool:
-    if item.prior_payload is None:
-        return _leaf_metadata(item.anchor) is None
+    if not entry.removable or entry.identity is None:
+        raise RuntimeError(f"recoverable {entry.purpose} remains: {entry.name}")
+    expected_identity = entry.identity
+    expected_payload = entry.payload
+    quarantine = f"{entry.name}.cleanup-{secrets.token_hex(8)}"
     try:
-        payload, _ = _read_relative(item.anchor, item.anchor.leaf)
+        os.rename(
+            entry.name,
+            quarantine,
+            src_dir_fd=item.scratch_fd,
+            dst_dir_fd=item.scratch_fd,
+        )
     except FileNotFoundError:
-        return False
-    return payload == item.prior_payload
-
-
-def _current_leaf_is_transaction_owned(item: _StagedPublication) -> bool:
-    metadata = _leaf_metadata(item.anchor)
-    if metadata is None:
-        return True
-    return (
-        item.published
-        and item.temporary_identity is not None
-        and _identity(metadata) == item.temporary_identity
+        entry.present = False
+        return
+    entry.name = quarantine
+    payload, metadata = _read_from_fd(
+        item.scratch_fd,
+        entry.name,
+        label=entry.purpose,
     )
+    if _identity(metadata) != expected_identity or (
+        expected_payload is not None and payload != expected_payload
+    ):
+        entry.removable = False
+        entry.purpose = f"external replacement of {entry.purpose}"
+        raise RuntimeError(f"scratch entry identity changed: {entry.name}")
+    os.unlink(entry.name, dir_fd=item.scratch_fd)
+    entry.present = False
 
 
-def _cleanup_transaction_name(item: _StagedPublication, name: str) -> None:
+def _remove_scratch_directory(item: _StagedPublication) -> None:
+    if not item.scratch_created or item.scratch_name is None:
+        return
+    if any(entry.present for entry in item.scratch_leaves):
+        raise RuntimeError("transaction scratch retains recoverable entries")
+    if item.scratch_fd < 0 or item.scratch_identity is None:
+        raise RuntimeError("transaction scratch ownership is unproven")
+    quarantine = f"{item.scratch_name}.cleanup-{secrets.token_hex(8)}"
     try:
-        os.unlink(name, dir_fd=item.anchor.parent_fd)
+        os.rename(
+            item.scratch_name,
+            quarantine,
+            src_dir_fd=item.anchor.parent_fd,
+            dst_dir_fd=item.anchor.parent_fd,
+        )
     except FileNotFoundError:
+        item.scratch_created = False
+        item.scratch_name = None
+        os.close(item.scratch_fd)
+        item.scratch_fd = -1
         return
+    item.scratch_name = quarantine
+    metadata = os.stat(
+        quarantine,
+        dir_fd=item.anchor.parent_fd,
+        follow_symlinks=False,
+    )
+    if _identity(metadata) != item.scratch_identity:
+        raise RuntimeError("transaction scratch identity changed")
+    os.close(item.scratch_fd)
+    item.scratch_fd = -1
+    os.rmdir(quarantine, dir_fd=item.anchor.parent_fd)
+    item.scratch_created = False
+    item.scratch_name = None
+    item.scratch_identity = None
 
 
-def _restore_prior_leaf(item: _StagedPublication) -> None:
-    """Restore one prior leaf without first unlinking its visible successor."""
+def _cleanup_scratch(item: _StagedPublication) -> None:
+    for entry in item.scratch_leaves:
+        if entry.present:
+            _quarantine_and_remove_scratch_leaf(item, entry)
+    _remove_scratch_directory(item)
 
-    if _leaf_matches_prior(item):
-        if item.backup is not None:
-            _cleanup_transaction_name(item, item.backup)
-            item.backup = None
-        return
 
+def _restore_prior_with_no_clobber_link(item: _StagedPublication) -> None:
     if item.prior_payload is None:
-        metadata = _leaf_metadata(item.anchor)
-        if metadata is None:
-            return
-        if not _current_leaf_is_transaction_owned(item):
+        if _visible_leaf(item) is not None:
             raise RuntimeError(
                 f"rollback would overwrite a concurrent artifact: {item.anchor.leaf}"
             )
-        os.unlink(item.anchor.leaf, dir_fd=item.anchor.parent_fd)
         return
-
-    if not _current_leaf_is_transaction_owned(item):
+    if _visible_matches(item, item.prior_payload):
+        return
+    if _visible_leaf(item) is not None:
         raise RuntimeError(
             f"rollback would overwrite a concurrent artifact: {item.anchor.leaf}"
         )
 
     backup_error: BaseException | None = None
-    if item.backup is not None:
+    if item.prior is not None and _scratch_leaf_matches(
+        item,
+        item.prior,
+        item.prior_identity,
+        item.prior_payload,
+    ):
         try:
-            os.replace(
-                item.backup,
-                item.anchor.leaf,
-                src_dir_fd=item.anchor.parent_fd,
-                dst_dir_fd=item.anchor.parent_fd,
-            )
-            item.backup = None
+            _link_scratch_leaf_visible(item, item.prior)
         except BaseException as error:
             backup_error = error
+        else:
+            if _visible_matches(item, item.prior_payload):
+                item.prior.removable = True
+                return
 
-    if not _leaf_matches_prior(item):
-        try:
-            _replace_relative_bytes(
-                item.anchor,
-                item.anchor.leaf,
-                item.prior_payload,
-            )
-        except BaseException as fallback_error:
-            detail = "retained-byte restore failed"
-            if backup_error is not None:
-                detail = (
-                    f"backup restore failed ({backup_error}); "
-                    f"{detail} ({fallback_error})"
-                )
-            raise RuntimeError(
-                f"rollback could not restore {item.publication.role}: {detail}"
-            ) from fallback_error
-
-    if not _leaf_matches_prior(item):
+    if _visible_leaf(item) is not None:
+        raise RuntimeError(
+            f"rollback would overwrite a concurrent artifact: {item.anchor.leaf}"
+        ) from backup_error
+    retained = _create_scratch_payload(
+        item,
+        "restore",
+        "retained rollback payload",
+        item.prior_payload,
+    )
+    retained.removable = True
+    try:
+        _link_scratch_leaf_visible(item, retained)
+    except BaseException as fallback_error:
+        detail = f"retained-byte restore failed ({fallback_error})"
+        if backup_error is not None:
+            detail = f"backup restore failed ({backup_error}); {detail}"
+        raise RuntimeError(
+            f"rollback could not restore {item.publication.role}: {detail}"
+        ) from fallback_error
+    if not _visible_matches(item, item.prior_payload):
         raise RuntimeError(f"rollback verification failed: {item.publication.role}")
-    if item.backup is not None:
-        _cleanup_transaction_name(item, item.backup)
-        item.backup = None
+
+
+def _rollback_item(item: _StagedPublication) -> None:
+    original_phase = item.phase
+    captured = _capture_visible_to_scratch(
+        item,
+        "rollback",
+        "rollback visible capture",
+    )
+    concurrent_capture = False
+    if captured is not None:
+        try:
+            captured_payload, captured_metadata = _refresh_scratch_leaf(item, captured)
+        except BaseException as error:
+            try:
+                _link_scratch_leaf_visible(item, captured)
+            except BaseException as restore_error:
+                raise RuntimeError(
+                    "rollback captured an unreadable visible artifact and could not "
+                    "restore it"
+                ) from restore_error
+            raise RuntimeError(
+                "rollback captured an unreadable visible artifact"
+            ) from error
+        captured_identity = _identity(captured_metadata)
+        transaction_owned = (
+            original_phase is _PublicationPhase.NEW_VISIBLE
+            and item.temporary is not None
+            and captured_identity == item.temporary.identity
+        )
+        prior_already_visible = (
+            item.prior_payload is not None and captured_payload == item.prior_payload
+        )
+        if transaction_owned:
+            captured.removable = True
+        elif prior_already_visible:
+            _link_scratch_leaf_visible(item, captured)
+            captured.removable = True
+        else:
+            concurrent_capture = original_phase in {
+                _PublicationPhase.EXPECTED_ABSENT,
+                _PublicationPhase.PRIOR_CAPTURED,
+                _PublicationPhase.NEW_VISIBLE,
+            }
+            item.phase = _PublicationPhase.EXTERNAL_CAPTURED
+            item.prior_payload = captured_payload
+            item.prior_identity = captured_identity
+            item.prior = captured
+            _link_scratch_leaf_visible(item, captured)
+
+    _restore_prior_with_no_clobber_link(item)
+    if not _visible_matches(item, item.prior_payload):
+        raise RuntimeError(f"rollback verification failed: {item.publication.role}")
+    if item.prior is not None and not concurrent_capture:
+        item.prior.removable = True
+    if item.temporary is not None:
+        item.temporary.removable = True
+    if concurrent_capture:
+        raise RuntimeError(
+            f"rollback preserved a concurrent artifact for {item.publication.role}"
+        )
 
 
 def _rollback_artifacts(
     staged: Sequence[_StagedPublication],
-    created_directories: Sequence[Path],
+    created_directories: Sequence[_CreatedDirectory],
 ) -> list[str]:
     failures: list[str] = []
     for item in reversed(staged):
-        restored = False
         try:
-            _restore_prior_leaf(item)
-            restored = True
+            _rollback_item(item)
         except BaseException as error:
             failures.append(f"{item.publication.role} restore: {error}")
 
-        if item.temporary is not None:
-            try:
-                _cleanup_transaction_name(item, item.temporary)
-                item.temporary = None
-            except BaseException as error:
-                failures.append(f"{item.publication.role} temporary cleanup: {error}")
-        if restored and item.backup is not None:
-            try:
-                _cleanup_transaction_name(item, item.backup)
-                item.backup = None
-            except BaseException as error:
-                failures.append(f"{item.publication.role} backup cleanup: {error}")
+        try:
+            _cleanup_scratch(item)
+        except BaseException as error:
+            failures.append(f"{item.publication.role} scratch cleanup: {error}")
         try:
             _fsync_directory(item.anchor.parent_fd)
         except BaseException as error:
@@ -703,38 +1096,13 @@ def _rollback_artifacts(
 
     for item in staged:
         try:
-            if not _leaf_matches_prior(item):
+            if not _visible_matches(item, item.prior_payload):
                 raise RuntimeError("prior leaf bytes or absence do not match")
-            for name in item.transaction_names:
-                try:
-                    os.stat(name, dir_fd=item.anchor.parent_fd, follow_symlinks=False)
-                except FileNotFoundError:
-                    continue
-                raise RuntimeError(f"transaction debris remains: {name}")
+            _verify_transaction_debris_absent([item])
         except BaseException as error:
             failures.append(f"{item.publication.role} rollback verification: {error}")
 
-    _remove_created_directories(created_directories)
-    for path in sorted(set(created_directories), key=lambda value: len(value.parts)):
-        try:
-            anchor = _open_parent(path)
-        except FileNotFoundError:
-            continue
-        except BaseException as error:
-            failures.append(f"created-directory verification {path}: {error}")
-            continue
-        try:
-            try:
-                os.stat(
-                    anchor.leaf,
-                    dir_fd=anchor.parent_fd,
-                    follow_symlinks=False,
-                )
-            except FileNotFoundError:
-                continue
-            failures.append(f"created directory remains after rollback: {path}")
-        finally:
-            anchor.close()
+    failures.extend(_rollback_created_directories(created_directories))
     return failures
 
 
@@ -749,102 +1117,46 @@ def _publish_artifacts(
     ]
     preflight_path_roles(output_roles)
     staged: list[_StagedPublication] = []
-    created_directories: list[Path] = []
+    created_directories: list[_CreatedDirectory] = []
     try:
         for publication in publications:
-            anchor = _open_parent(publication.path, create=True)
-            created_directories.extend(anchor.created_directories)
-            temporary: str | None = None
-            temporary_identity: tuple[int, int] | None = None
-            prior_payload: bytes | None = None
-            prior_identity: tuple[int, int] | None = None
-            try:
-                existing = None
-                try:
-                    existing = os.stat(
-                        anchor.leaf,
-                        dir_fd=anchor.parent_fd,
-                        follow_symlinks=False,
-                    )
-                except FileNotFoundError:
-                    pass
-                if existing is not None and (
-                    stat.S_ISLNK(existing.st_mode) or not stat.S_ISREG(existing.st_mode)
-                ):
-                    raise ValueError(
-                        f"output target must be absent or a regular file: {anchor.leaf}"
-                    )
-                if existing is not None:
-                    prior_payload, prior_metadata = _read_relative(anchor, anchor.leaf)
-                    prior_identity = _identity(prior_metadata)
-                    if prior_identity != _identity(existing):
-                        raise ValueError(
-                            f"output changed during operation: {anchor.leaf}"
-                        )
-                _validate_expected_prior(
-                    publication,
-                    prior_payload,
-                    prior_identity,
+            anchor = _open_parent(
+                publication.path,
+                create=True,
+                creation_ledger=created_directories,
+            )
+            item = _StagedPublication(publication, anchor)
+            staged.append(item)
+            _ensure_scratch(item)
+            existing = _leaf_metadata(anchor)
+            if existing is not None:
+                prior_payload, prior_metadata = _read_relative(anchor, anchor.leaf)
+                item.prior_payload = prior_payload
+                item.prior_identity = _identity(prior_metadata)
+                if item.prior_identity != _identity(existing):
+                    raise ValueError(f"output changed during operation: {anchor.leaf}")
+            _validate_expected_prior(
+                publication,
+                item.prior_payload,
+                item.prior_identity,
+            )
+            if publication.payload is not None:
+                item.temporary = _create_scratch_payload(
+                    item,
+                    "tmp",
+                    f"staged artifact for {publication.role}",
+                    publication.payload,
+                    register_as_temporary=True,
                 )
-                if publication.payload is not None:
-                    temporary = f".{anchor.leaf}.tmp-{secrets.token_hex(8)}"
-                    descriptor = os.open(
-                        temporary,
-                        _CREATE_FLAGS,
-                        0o600,
-                        dir_fd=anchor.parent_fd,
-                    )
-                    try:
-                        _write_all(descriptor, publication.payload)
-                        temporary_identity = _identity(os.fstat(descriptor))
-                    finally:
-                        os.close(descriptor)
-                    staged_bytes, staged_metadata = _read_relative(anchor, temporary)
-                    if (
-                        staged_bytes != publication.payload
-                        or _identity(staged_metadata) != temporary_identity
-                    ):
-                        raise ValueError(
-                            f"staged artifact verification failed: {publication.role}"
-                        )
-                _revalidate_anchor(anchor)
-                item = _StagedPublication(
-                    publication,
-                    anchor,
-                    temporary,
-                    temporary_identity,
-                    prior_payload,
-                    prior_identity,
-                )
-                if temporary is not None:
-                    item.transaction_names.add(temporary)
-                staged.append(item)
-            except BaseException:
-                if temporary is not None:
-                    try:
-                        os.unlink(temporary, dir_fd=anchor.parent_fd)
-                    except FileNotFoundError:
-                        pass
-                anchor.close()
-                raise
+            _revalidate_anchor(anchor)
 
         for item in staged:
-            _capture_prior_leaf(item)
-            if item.publication.payload is None:
-                item.published = True
-            else:
+            _capture_initial_leaf(item)
+            if item.publication.payload is not None:
                 if item.temporary is None:
                     raise RuntimeError("missing staged artifact")
-                os.link(
-                    item.temporary,
-                    item.anchor.leaf,
-                    src_dir_fd=item.anchor.parent_fd,
-                    dst_dir_fd=item.anchor.parent_fd,
-                    follow_symlinks=False,
-                )
-                item.published = True
-                _cleanup_transaction_name(item, item.temporary)
-                item.temporary = None
+                _link_scratch_leaf_visible(item, item.temporary)
+                item.phase = _PublicationPhase.NEW_VISIBLE
             _fsync_directory(item.anchor.parent_fd)
             _revalidate_anchor(item.anchor)
 
@@ -854,10 +1166,10 @@ def _publish_artifacts(
             _verify_published_artifacts(staged)
 
         for item in staged:
-            if item.backup is not None:
-                os.unlink(item.backup, dir_fd=item.anchor.parent_fd)
-                item.backup = None
-                _fsync_directory(item.anchor.parent_fd)
+            for entry in item.scratch_leaves:
+                entry.removable = True
+            _cleanup_scratch(item)
+            _fsync_directory(item.anchor.parent_fd)
         _verify_published_artifacts(staged)
         _verify_transaction_debris_absent(staged)
         return tuple(_absolute(item.publication.path) for item in staged)
@@ -869,7 +1181,9 @@ def _publish_artifacts(
         raise
     finally:
         for item in staged:
-            item.anchor.close()
+            item.close()
+        for creation in created_directories:
+            creation.close()
 
 
 def _atomic_write_bytes(path: Path, payload: bytes) -> Path:
@@ -2695,19 +3009,22 @@ def _boundary_connected(
 
 
 def _boundary_opaque_flood_count(image: Image.Image) -> int:
-    """Count matte-like near-opaque components without penalizing cords.
+    """Count broad boundary floods and alpha-weighted inset mattes.
 
-    Every nontransparent alpha component is considered, so no fixed edge seed
-    or alpha cliff can hide a shallow inset matte. The broad-boundary predicate
-    retains the original behavior. The inset predicate requires a highly
-    opaque component with a near-canvas rectangular box, dense row and column
-    coverage, and a dense rectangular core. Those image-only signals cannot
-    distinguish a giant pixel-identical rectangular product from a matte; the
-    deliberately conservative near-canvas threshold leaves 50--65% product
-    silhouettes to human review while rejecting shallow-rim backgrounds.
+    Broad boundary contact remains a per-component decision. Inset matte
+    classification instead uses the union of every nonzero-alpha pixel, so a
+    one-pixel transparent seam cannot partition a baked background into safe
+    sub-threshold components. The union records bbox area (B), alpha fill (F),
+    dense-row/column fractions (R/C), and the mean opacity deficit (D) in the
+    bbox core after excluding a three-pixel perimeter. Its continuous effective
+    area is ``B + min(.10, 18 * D)``.
 
-    The scan is O(width * height). A bytearray tracks visited pixels and the
-    queue stores flat integer offsets rather than coordinate tuples.
+    Alpha-only inspection still cannot distinguish every giant rectangular
+    product from a pixel-identical matte. The conservative 70% effective-area
+    threshold deliberately leaves 50--65% product silhouettes to mandatory
+    human review. The scan is O(width * height); union statistics add only
+    O(width + height) counters, while the component traversal uses flat integer
+    offsets rather than coordinate tuples.
     """
 
     width, height = image.size
@@ -2722,8 +3039,14 @@ def _boundary_opaque_flood_count(image: Image.Image) -> int:
     )
     alpha = image.getchannel("A").tobytes()
     visited = bytearray(canvas_area)
-    row_counts = [0] * height
-    column_counts = [0] * width
+    row_alpha_mass = [0] * height
+    column_alpha_mass = [0] * width
+    total_nonzero = 0
+    total_alpha_mass = 0
+    union_min_x = width
+    union_max_x = -1
+    union_min_y = height
+    union_max_y = -1
     flood_count = 0
     for seed in range(canvas_area):
         if visited[seed] or alpha[seed] == 0:
@@ -2734,27 +3057,20 @@ def _boundary_opaque_flood_count(image: Image.Image) -> int:
         alpha_sum = 0
         boundary_alpha_sum = 0
         boundary_band_contact = 0
-        seed_y, seed_x = divmod(seed, width)
-        min_x = max_x = seed_x
-        min_y = max_y = seed_y
-        touched_rows: list[int] = []
-        touched_columns: list[int] = []
         while queue:
             offset = queue.popleft()
             y, x = divmod(offset, width)
             opacity = alpha[offset]
             component_size += 1
             alpha_sum += opacity
-            min_x = min(min_x, x)
-            max_x = max(max_x, x)
-            min_y = min(min_y, y)
-            max_y = max(max_y, y)
-            if row_counts[y] == 0:
-                touched_rows.append(y)
-            if column_counts[x] == 0:
-                touched_columns.append(x)
-            row_counts[y] += 1
-            column_counts[x] += 1
+            total_nonzero += 1
+            total_alpha_mass += opacity
+            union_min_x = min(union_min_x, x)
+            union_max_x = max(union_max_x, x)
+            union_min_y = min(union_min_y, y)
+            union_max_y = max(union_max_y, y)
+            row_alpha_mass[y] += opacity
+            column_alpha_mass[x] += opacity
             if x < 2 or y < 2 or x >= width - 2 or y >= height - 2:
                 boundary_band_contact += 1
                 boundary_alpha_sum += opacity
@@ -2787,37 +3103,51 @@ def _boundary_opaque_flood_count(image: Image.Image) -> int:
             and boundary_alpha_sum / 255 >= minimum_boundary_contact
             and boundary_band_contact >= minimum_boundary_contact
         )
-        box_width = max_x - min_x + 1
-        box_height = max_y - min_y + 1
+        if boundary_flood:
+            flood_count += component_size
+
+    if total_nonzero:
+        box_width = union_max_x - union_min_x + 1
+        box_height = union_max_y - union_min_y + 1
         box_area = box_width * box_height
+        canvas_fraction = box_area / canvas_area
+        alpha_fill = total_alpha_mass / (255 * box_area)
         dense_rows = sum(
-            row_counts[y] / box_width >= _INSET_MATTE_DENSE_LINE_FRACTION
-            for y in touched_rows
+            row_alpha_mass[y] / (255 * box_width) >= _INSET_MATTE_DENSE_LINE_FRACTION
+            for y in range(union_min_y, union_max_y + 1)
         )
         dense_columns = sum(
-            column_counts[x] / box_height >= _INSET_MATTE_DENSE_LINE_FRACTION
-            for x in touched_columns
+            column_alpha_mass[x] / (255 * box_height)
+            >= _INSET_MATTE_DENSE_LINE_FRACTION
+            for x in range(union_min_x, union_max_x + 1)
+        )
+        core_deficit_sum = 0.0
+        core_nonzero = 0
+        core_left = union_min_x + _INSET_MATTE_CORE_PERIMETER
+        core_right = union_max_x - _INSET_MATTE_CORE_PERIMETER
+        core_top = union_min_y + _INSET_MATTE_CORE_PERIMETER
+        core_bottom = union_max_y - _INSET_MATTE_CORE_PERIMETER
+        if core_left <= core_right and core_top <= core_bottom:
+            for y in range(core_top, core_bottom + 1):
+                row_offset = y * width
+                for x in range(core_left, core_right + 1):
+                    opacity = alpha[row_offset + x]
+                    if opacity:
+                        core_nonzero += 1
+                        core_deficit_sum += (255 - opacity) / 255
+        mean_core_deficit = core_deficit_sum / core_nonzero if core_nonzero else 0.0
+        effective_area = canvas_fraction + min(
+            _INSET_MATTE_MAX_DEFICIT_BOOST,
+            _INSET_MATTE_DEFICIT_WEIGHT * mean_core_deficit,
         )
         inset_matte = (
-            mean_opacity >= _MATTE_MIN_MEAN_OPACITY
-            and (
-                box_area / canvas_area >= _INSET_MATTE_MIN_CANVAS_FRACTION
-                or (
-                    mean_opacity < 1.0
-                    and box_area / canvas_area
-                    >= _INSET_TRANSLUCENT_MATTE_MIN_CANVAS_FRACTION
-                )
-            )
-            and component_size / box_area >= _INSET_MATTE_MIN_BBOX_FILL
+            effective_area >= _INSET_MATTE_MIN_EFFECTIVE_AREA
+            and alpha_fill >= _INSET_MATTE_MIN_ALPHA_FILL
             and dense_rows / box_height >= _INSET_MATTE_MIN_DENSE_AXIS_FRACTION
             and dense_columns / box_width >= _INSET_MATTE_MIN_DENSE_AXIS_FRACTION
         )
-        if boundary_flood or inset_matte:
-            flood_count += component_size
-        for y in touched_rows:
-            row_counts[y] = 0
-        for x in touched_columns:
-            column_counts[x] = 0
+        if inset_matte:
+            flood_count += total_nonzero
     return flood_count
 
 

@@ -11,10 +11,8 @@ from dataclasses import replace
 from datetime import date, datetime
 from pathlib import Path
 
-import pytest
-from PIL import Image, ImageDraw, PngImagePlugin
-
 import hangboard_packages.cord_render_assets as cord_render_assets
+import pytest
 from hangboard_packages.cord_render_assets import (
     ChromaConfig,
     LockedSource,
@@ -26,6 +24,7 @@ from hangboard_packages.cord_render_assets import (
     remove_chroma,
     verify_atlas_round_trip,
 )
+from PIL import Image, ImageDraw, PngImagePlugin
 
 
 def _context(tmp_path: Path, name: str = "cord-assets") -> Path:
@@ -106,6 +105,17 @@ def _file_bytes(root: Path) -> dict[str, bytes]:
         for path in sorted(root.rglob("*"))
         if path.is_file()
     }
+
+
+def _exception_chain_messages(error: BaseException) -> list[str]:
+    messages: list[str] = []
+    seen: set[int] = set()
+    current: BaseException | None = error
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        messages.append(str(current))
+        current = current.__cause__
+    return messages
 
 
 def test_decoded_pixel_hash_ignores_png_container_metadata(tmp_path: Path) -> None:
@@ -1029,6 +1039,95 @@ def test_atlas_backup_cleanup_tamper_cannot_succeed_and_restores_prior_tree(
     assert _file_bytes(output) == prior_tree
 
 
+def test_delete_cleanup_concurrent_create_survives_with_unproven_rollback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "delete-cleanup-concurrent-create")
+    target = context / "stale-report.json"
+    target.write_bytes(b"prior-stale-report")
+    concurrent_payload = b"concurrent-operator-create-after-delete"
+    original_unlink = cord_render_assets.os.unlink
+    hook_ran = False
+
+    def create_visible_during_prior_cleanup(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal hook_ran
+        if not hook_ran and ".backup-" in Path(os.fsdecode(path)).name:
+            hook_ran = True
+            target.write_bytes(concurrent_payload)
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "unlink",
+        create_visible_during_prior_cleanup,
+    )
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [cord_render_assets._Publication(target, None, "stale report")]
+        )
+
+    assert hook_ran is True
+    assert target.read_bytes() == concurrent_payload
+    assert concurrent_payload in _file_bytes(context).values()
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is not None
+    assert any(
+        "deleted artifact remains visible" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_transient_scratch_directory_cleanup_failure_restores_without_debris(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "scratch-directory-cleanup")
+    target = context / "report.json"
+    prior_payload = b"prior-report"
+    target.write_bytes(prior_payload)
+    original_rmdir = cord_render_assets.os.rmdir
+    hook_ran = False
+
+    def fail_first_scratch_directory_cleanup(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal hook_ran
+        name = Path(os.fsdecode(path)).name
+        if not hook_ran and ".txn-" in name and ".cleanup-" in name:
+            hook_ran = True
+            raise OSError("injected scratch directory cleanup failure")
+        original_rmdir(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets.os,
+        "rmdir",
+        fail_first_scratch_directory_cleanup,
+    )
+
+    with pytest.raises(OSError, match="injected scratch directory cleanup failure"):
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    b"replacement-report",
+                    "scratch cleanup report",
+                )
+            ]
+        )
+
+    assert hook_ran is True
+    assert target.read_bytes() == prior_payload
+    assert sorted(path.name for path in context.iterdir()) == [target.name]
+
+
 def test_atlas_rollback_uses_payload_fallback_after_transient_backup_restore_error(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1040,7 +1139,7 @@ def test_atlas_rollback_uses_payload_fallback_after_transient_backup_restore_err
         tmp_path, "rollback-fallback-replacement", color=(4, 5, 6)
     )
     actual_verifier = cord_render_assets.verify_atlas_round_trip
-    original_replace = cord_render_assets.os.replace
+    original_link = cord_render_assets.os.link
     original_unlink = cord_render_assets.os.unlink
     callback_ran = False
     rollback_active = False
@@ -1063,17 +1162,19 @@ def test_atlas_rollback_uses_payload_fallback_after_transient_backup_restore_err
         *,
         src_dir_fd: int | None = None,
         dst_dir_fd: int | None = None,
+        follow_symlinks: bool = True,
     ) -> None:
         nonlocal restore_hook_ran
         source_name = Path(os.fsdecode(source)).name
         if rollback_active and not restore_hook_ran and ".backup-" in source_name:
             restore_hook_ran = True
             raise OSError("injected transient backup restore failure")
-        original_replace(
+        original_link(
             source,
             target,
             src_dir_fd=src_dir_fd,
             dst_dir_fd=dst_dir_fd,
+            follow_symlinks=follow_symlinks,
         )
 
     def rejecting_visible_preunlink(
@@ -1093,7 +1194,7 @@ def test_atlas_rollback_uses_payload_fallback_after_transient_backup_restore_err
     monkeypatch.setattr(
         cord_render_assets, "verify_atlas_round_trip", failing_validation_callback
     )
-    monkeypatch.setattr(cord_render_assets.os, "replace", failing_first_backup_restore)
+    monkeypatch.setattr(cord_render_assets.os, "link", failing_first_backup_restore)
     monkeypatch.setattr(cord_render_assets.os, "unlink", rejecting_visible_preunlink)
 
     with pytest.raises(ValueError, match="injected validation callback failure"):
@@ -1117,7 +1218,7 @@ def test_atlas_rollback_surfaces_unproven_state_when_all_restore_paths_fail(
         tmp_path, "rollback-unproven-replacement", color=(4, 5, 6)
     )
     actual_verifier = cord_render_assets.verify_atlas_round_trip
-    original_replace = cord_render_assets.os.replace
+    original_link = cord_render_assets.os.link
     callback_ran = False
     rollback_active = False
     backup_restore_hook_ran = False
@@ -1133,12 +1234,13 @@ def test_atlas_rollback_surfaces_unproven_state_when_all_restore_paths_fail(
         rollback_active = True
         raise ValueError("injected persistent validation callback failure")
 
-    def failing_all_restore_replacements(
+    def failing_all_restore_links(
         source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
         target: str | bytes | os.PathLike[str] | os.PathLike[bytes],
         *,
         src_dir_fd: int | None = None,
         dst_dir_fd: int | None = None,
+        follow_symlinks: bool = True,
     ) -> None:
         nonlocal backup_restore_hook_ran, fallback_restore_hook_ran
         source_name = Path(os.fsdecode(source)).name
@@ -1148,19 +1250,18 @@ def test_atlas_rollback_surfaces_unproven_state_when_all_restore_paths_fail(
         if rollback_active and source_name.startswith(".index.json.restore-"):
             fallback_restore_hook_ran = True
             raise OSError("injected persistent payload restore failure")
-        original_replace(
+        original_link(
             source,
             target,
             src_dir_fd=src_dir_fd,
             dst_dir_fd=dst_dir_fd,
+            follow_symlinks=follow_symlinks,
         )
 
     monkeypatch.setattr(
         cord_render_assets, "verify_atlas_round_trip", failing_validation_callback
     )
-    monkeypatch.setattr(
-        cord_render_assets.os, "replace", failing_all_restore_replacements
-    )
+    monkeypatch.setattr(cord_render_assets.os, "link", failing_all_restore_links)
 
     with pytest.raises(Exception) as captured:
         build_lossless_atlases([replacement], output)
@@ -1178,6 +1279,498 @@ def test_atlas_rollback_surfaces_unproven_state_when_all_restore_paths_fail(
         cause = cause.__cause__
     assert any("persistent validation callback failure" in text for text in causes)
     assert (output / "page-01.png").read_bytes() == prior_page
+
+
+def test_absent_prior_rollback_preserves_concurrent_create_at_atomic_capture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "rollback-absent-prior-concurrent-create")
+    target = context / "new-report.json"
+    transaction_payload = b"transaction-publication"
+    concurrent_payload = b"concurrent-operator-create"
+    original_rename = cord_render_assets.os.rename
+    original_replace = cord_render_assets.os.replace
+    original_unlink = cord_render_assets.os.unlink
+    rollback_active = False
+    capture_hook_count = 0
+    payload_seen_at_capture: bytes | None = None
+    unsafe_visible_mutations: list[str] = []
+
+    def fail_validation() -> None:
+        nonlocal rollback_active
+        rollback_active = True
+        raise ValueError("injected absent-prior validation failure")
+
+    def racing_visible_capture(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal capture_hook_count, payload_seen_at_capture
+        source_name = Path(os.fsdecode(source)).name
+        destination_name = Path(os.fsdecode(destination)).name
+        if (
+            rollback_active
+            and source_name == target.name
+            and ".rollback-" in destination_name
+            and capture_hook_count == 0
+        ):
+            assert src_dir_fd is not None
+            payload_seen_at_capture = target.read_bytes()
+            capture_hook_count += 1
+            concurrent_name = ".concurrent-operator-create"
+            descriptor = cord_render_assets.os.open(
+                concurrent_name,
+                cord_render_assets._CREATE_FLAGS,
+                0o600,
+                dir_fd=src_dir_fd,
+            )
+            try:
+                cord_render_assets._write_all(descriptor, concurrent_payload)
+            finally:
+                cord_render_assets.os.close(descriptor)
+            original_replace(
+                concurrent_name,
+                source_name,
+                src_dir_fd=src_dir_fd,
+                dst_dir_fd=src_dir_fd,
+            )
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    def reject_visible_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        if rollback_active and Path(os.fsdecode(path)).name == target.name:
+            unsafe_visible_mutations.append("unlink")
+            raise AssertionError("rollback must not unlink a visible leaf")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "rename", racing_visible_capture)
+    monkeypatch.setattr(cord_render_assets.os, "unlink", reject_visible_unlink)
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    transaction_payload,
+                    "concurrent-create report",
+                )
+            ],
+            validate_before_commit=fail_validation,
+        )
+
+    assert capture_hook_count == 1
+    assert payload_seen_at_capture == transaction_payload
+    assert target.read_bytes() == concurrent_payload
+    assert concurrent_payload in _file_bytes(context).values()
+    assert unsafe_visible_mutations == []
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is not None
+    assert any(
+        "injected absent-prior validation failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_retained_byte_rollback_preserves_concurrent_update_at_atomic_capture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "rollback-retained-concurrent-update")
+    target = context / "report.json"
+    prior_payload = b"prior-operator-payload"
+    transaction_payload = b"transaction-publication"
+    concurrent_payload = b"concurrent-operator-update"
+    target.write_bytes(prior_payload)
+    original_rename = cord_render_assets.os.rename
+    original_replace = cord_render_assets.os.replace
+    original_unlink = cord_render_assets.os.unlink
+    rollback_active = False
+    capture_hook_count = 0
+    payload_seen_at_capture: bytes | None = None
+    unsafe_visible_mutations: list[str] = []
+
+    def fail_validation() -> None:
+        nonlocal rollback_active
+        rollback_active = True
+        raise ValueError("injected retained-byte validation failure")
+
+    def racing_visible_capture(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal capture_hook_count, payload_seen_at_capture
+        source_name = Path(os.fsdecode(source)).name
+        destination_name = Path(os.fsdecode(destination)).name
+        if (
+            rollback_active
+            and source_name == target.name
+            and ".rollback-" in destination_name
+            and capture_hook_count == 0
+        ):
+            assert src_dir_fd is not None
+            payload_seen_at_capture = target.read_bytes()
+            capture_hook_count += 1
+            concurrent_name = ".concurrent-operator-update"
+            descriptor = cord_render_assets.os.open(
+                concurrent_name,
+                cord_render_assets._CREATE_FLAGS,
+                0o600,
+                dir_fd=src_dir_fd,
+            )
+            try:
+                cord_render_assets._write_all(descriptor, concurrent_payload)
+            finally:
+                cord_render_assets.os.close(descriptor)
+            original_replace(
+                concurrent_name,
+                source_name,
+                src_dir_fd=src_dir_fd,
+                dst_dir_fd=src_dir_fd,
+            )
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    def reject_visible_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        if rollback_active and Path(os.fsdecode(path)).name == target.name:
+            unsafe_visible_mutations.append("unlink")
+            raise AssertionError("rollback must not unlink a visible leaf")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "rename", racing_visible_capture)
+    monkeypatch.setattr(cord_render_assets.os, "unlink", reject_visible_unlink)
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets._publish_artifacts(
+            [
+                cord_render_assets._Publication(
+                    target,
+                    transaction_payload,
+                    "concurrent-update report",
+                )
+            ],
+            validate_before_commit=fail_validation,
+        )
+
+    assert capture_hook_count == 1
+    assert payload_seen_at_capture == transaction_payload
+    assert target.read_bytes() == concurrent_payload
+    assert prior_payload in _file_bytes(context).values()
+    assert unsafe_visible_mutations == []
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is not None
+    assert any(
+        "injected retained-byte validation failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_staging_verification_and_cleanup_failure_discloses_debris_and_closes_anchor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "staging-double-failure")
+    target = context / "report.json"
+    original_open_parent = cord_render_assets._open_parent
+    original_read_from_fd = cord_render_assets._read_from_fd
+    original_unlink = cord_render_assets.os.unlink
+    staged_anchors: list[cord_render_assets._HeldParent] = []
+    staged_parent_fds: list[int] = []
+    verification_hook_count = 0
+    cleanup_hook_count = 0
+    cleanup_dir_fds: list[int | None] = []
+
+    def tracking_open_parent(
+        path: Path,
+        *,
+        create: bool = False,
+        creation_ledger: list[cord_render_assets._CreatedDirectory] | None = None,
+    ) -> cord_render_assets._HeldParent:
+        anchor = original_open_parent(
+            path,
+            create=create,
+            creation_ledger=creation_ledger,
+        )
+        if create and anchor.path == target.absolute():
+            staged_anchors.append(anchor)
+            staged_parent_fds.append(anchor.parent_fd)
+        return anchor
+
+    def failing_staged_verification(
+        parent_fd: int,
+        name: str,
+        *,
+        label: str = "artifact",
+    ) -> tuple[bytes, os.stat_result]:
+        nonlocal verification_hook_count
+        if (
+            name.startswith(f".{target.name}.tmp-")
+            and label.startswith("staged artifact")
+            and verification_hook_count == 0
+        ):
+            verification_hook_count += 1
+            raise OSError("injected staged verification failure")
+        return original_read_from_fd(parent_fd, name, label=label)
+
+    def failing_staged_cleanup(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal cleanup_hook_count
+        name = Path(os.fsdecode(path)).name
+        if name.startswith(f".{target.name}.tmp-"):
+            cleanup_hook_count += 1
+            cleanup_dir_fds.append(dir_fd)
+            raise OSError("injected staging cleanup failure")
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets, "_open_parent", tracking_open_parent)
+    monkeypatch.setattr(
+        cord_render_assets, "_read_from_fd", failing_staged_verification
+    )
+    monkeypatch.setattr(cord_render_assets.os, "unlink", failing_staged_cleanup)
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets.write_owner_json(target, {"new": True})
+
+    hidden_temporaries = sorted(
+        path.name
+        for path in context.rglob("*")
+        if path.name.startswith(f".{target.name}.tmp-")
+    )
+    anchors_were_closed = all(anchor.parent_fd == -1 for anchor in staged_anchors)
+    for anchor in staged_anchors:
+        if anchor.parent_fd >= 0:
+            anchor.close()
+    assert verification_hook_count == 1
+    assert cleanup_hook_count >= 1
+    assert staged_anchors
+    assert all(directory_fd is not None for directory_fd in cleanup_dir_fds)
+    assert anchors_were_closed
+    assert not target.exists()
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert captured.value.__cause__ is not None
+    assert any(
+        "injected staged verification failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+    if hidden_temporaries:
+        assert any(
+            term in str(captured.value).lower() for term in ("temporary", "debris")
+        )
+
+
+def test_staging_cleanup_quarantines_but_never_deletes_replaced_foreign_temp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "staging-foreign-temp")
+    target = context / "report.json"
+    foreign_payload = b"concurrent-foreign-scratch-payload"
+    original_read_from_fd = cord_render_assets._read_from_fd
+    original_rename = cord_render_assets.os.rename
+    original_replace = cord_render_assets.os.replace
+    original_unlink = cord_render_assets.os.unlink
+    verification_hook_count = 0
+    replacement_hook_count = 0
+    temp_unlink_count = 0
+
+    def failing_staged_verification(
+        parent_fd: int,
+        name: str,
+        *,
+        label: str = "artifact",
+    ) -> tuple[bytes, os.stat_result]:
+        nonlocal verification_hook_count
+        if (
+            name.startswith(f".{target.name}.tmp-")
+            and label.startswith("staged artifact")
+            and verification_hook_count == 0
+        ):
+            verification_hook_count += 1
+            raise OSError("injected staged verification failure")
+        return original_read_from_fd(parent_fd, name, label=label)
+
+    def replacing_temp_at_cleanup_capture(
+        source: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        destination: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        src_dir_fd: int | None = None,
+        dst_dir_fd: int | None = None,
+    ) -> None:
+        nonlocal replacement_hook_count
+        source_name = Path(os.fsdecode(source)).name
+        destination_name = Path(os.fsdecode(destination)).name
+        if (
+            source_name.startswith(f".{target.name}.tmp-")
+            and ".cleanup-" in destination_name
+            and replacement_hook_count == 0
+        ):
+            assert src_dir_fd is not None
+            replacement_hook_count += 1
+            foreign_name = ".concurrent-foreign-temp"
+            descriptor = cord_render_assets.os.open(
+                foreign_name,
+                cord_render_assets._CREATE_FLAGS,
+                0o600,
+                dir_fd=src_dir_fd,
+            )
+            try:
+                cord_render_assets._write_all(descriptor, foreign_payload)
+            finally:
+                cord_render_assets.os.close(descriptor)
+            original_replace(
+                foreign_name,
+                source_name,
+                src_dir_fd=src_dir_fd,
+                dst_dir_fd=src_dir_fd,
+            )
+        original_rename(
+            source,
+            destination,
+            src_dir_fd=src_dir_fd,
+            dst_dir_fd=dst_dir_fd,
+        )
+
+    def tracking_unlink(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal temp_unlink_count
+        if Path(os.fsdecode(path)).name.startswith(f".{target.name}.tmp-"):
+            temp_unlink_count += 1
+        original_unlink(path, dir_fd=dir_fd)
+
+    monkeypatch.setattr(
+        cord_render_assets,
+        "_read_from_fd",
+        failing_staged_verification,
+    )
+    monkeypatch.setattr(
+        cord_render_assets.os, "rename", replacing_temp_at_cleanup_capture
+    )
+    monkeypatch.setattr(cord_render_assets.os, "unlink", tracking_unlink)
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets.write_owner_json(target, {"new": True})
+
+    assert verification_hook_count == 1
+    assert replacement_hook_count == 1
+    assert temp_unlink_count == 0
+    assert not target.exists()
+    assert foreign_payload in _file_bytes(context).values()
+    assert isinstance(captured.value, RuntimeError)
+    assert "rollback" in str(captured.value).lower()
+    assert "unproven" in str(captured.value).lower()
+    assert any(
+        "injected staged verification failure" in message
+        for message in _exception_chain_messages(captured.value)
+    )
+
+
+def test_partial_nested_parent_failure_cleans_or_discloses_and_closes_descriptors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    context = _context(tmp_path, "partial-nested-parent")
+    created_a = context / "created-a"
+    target = created_a / "created-b" / "report.json"
+    original_open = cord_render_assets.os.open
+    original_close = cord_render_assets.os.close
+    original_mkdir = cord_render_assets.os.mkdir
+    opened_created_parent_fds: list[int] = []
+    closed_fds: list[int] = []
+    failing_mkdir_dir_fd: int | None = None
+    mkdir_hook_count = 0
+    created_parent_seen_at_failure = False
+
+    def tracking_open(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        flags: int,
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> int:
+        descriptor = original_open(path, flags, mode, dir_fd=dir_fd)
+        if Path(os.fsdecode(path)).name == created_a.name and dir_fd is not None:
+            opened_created_parent_fds.append(descriptor)
+        return descriptor
+
+    def tracking_close(descriptor: int) -> None:
+        closed_fds.append(descriptor)
+        original_close(descriptor)
+
+    def failing_second_parent_mkdir(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        mode: int = 0o777,
+        *,
+        dir_fd: int | None = None,
+    ) -> None:
+        nonlocal failing_mkdir_dir_fd, mkdir_hook_count
+        nonlocal created_parent_seen_at_failure
+        if Path(os.fsdecode(path)).name == "created-b" and mkdir_hook_count == 0:
+            mkdir_hook_count += 1
+            failing_mkdir_dir_fd = dir_fd
+            created_parent_seen_at_failure = created_a.is_dir()
+            raise OSError("injected nested parent creation failure")
+        original_mkdir(path, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cord_render_assets.os, "open", tracking_open)
+    monkeypatch.setattr(cord_render_assets.os, "close", tracking_close)
+    monkeypatch.setattr(cord_render_assets.os, "mkdir", failing_second_parent_mkdir)
+
+    with pytest.raises(Exception) as captured:
+        cord_render_assets.write_owner_json(target, {"new": True})
+
+    chain = _exception_chain_messages(captured.value)
+    unclosed_created_parent_fds = set(opened_created_parent_fds) - set(closed_fds)
+    for descriptor in unclosed_created_parent_fds:
+        try:
+            original_close(descriptor)
+        except OSError:
+            pass
+    assert mkdir_hook_count == 1
+    assert created_parent_seen_at_failure is True
+    assert opened_created_parent_fds
+    assert failing_mkdir_dir_fd in opened_created_parent_fds
+    assert not unclosed_created_parent_fds
+    assert not target.exists()
+    assert _file_bytes(context) == {}
+    assert any(
+        "injected nested parent creation failure" in message for message in chain
+    )
+    if created_a.exists():
+        assert isinstance(captured.value, RuntimeError)
+        assert "rollback" in str(captured.value).lower()
+        assert "unproven" in str(captured.value).lower()
+        assert captured.value.__cause__ is not None
+    else:
+        assert not any(context.iterdir())
 
 
 def test_atlas_final_verifier_failure_restores_prior_pages_index_report_and_stale_page(
@@ -1627,6 +2220,79 @@ def test_transparency_inspection_rejects_alpha_family_with_normalized_shallow_ri
         inspect_transparency(path, width, height, (0, 255, 0))
 
 
+@pytest.mark.parametrize("alpha", range(249, 256))
+@pytest.mark.parametrize("textured", [False, True], ids=["flat", "textured"])
+@pytest.mark.parametrize("seam", ["horizontal", "cross"])
+def test_transparency_inspection_rejects_fragmented_near_full_matte_alpha_family(
+    tmp_path: Path,
+    alpha: int,
+    textured: bool,
+    seam: str,
+) -> None:
+    width, height = 160, 100
+    inset = 5
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(
+        (inset, inset, width - inset - 1, height - inset - 1),
+        fill=(30, 40, 100, alpha),
+    )
+    if textured:
+        for x in range(inset, width - inset, 13):
+            draw.line(
+                (x, inset, x, height - inset - 1),
+                fill=(90, 30, 20, alpha),
+            )
+    draw.line(
+        (inset, height // 2, width - inset - 1, height // 2),
+        fill=(0, 0, 0, 0),
+    )
+    if seam == "cross":
+        draw.line(
+            (width // 2, inset, width // 2, height - inset - 1),
+            fill=(0, 0, 0, 0),
+        )
+    path = (
+        tmp_path / f"fragmented-{seam}-{alpha}-{'textured' if textured else 'flat'}.png"
+    )
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, width, height, (0, 255, 0))
+
+
+def test_transparency_inspection_rejects_production_scale_fragmented_matte(
+    tmp_path: Path,
+) -> None:
+    width, height = 1536, 1024
+    inset = 22
+    alpha = 249
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(
+        (inset, inset, width - inset - 1, height - inset - 1),
+        fill=(30, 40, 100, alpha),
+    )
+    for x in range(inset, width - inset, 37):
+        draw.line(
+            (x, inset, x, height - inset - 1),
+            fill=(90, 30, 20, alpha),
+        )
+    draw.line(
+        (inset, height // 2, width - inset - 1, height // 2),
+        fill=(0, 0, 0, 0),
+    )
+    draw.line(
+        (width // 2, inset, width // 2, height - inset - 1),
+        fill=(0, 0, 0, 0),
+    )
+    path = tmp_path / "production-fragmented-cross-alpha-249-textured.png"
+    image.save(path, format="PNG")
+
+    with pytest.raises(ValueError, match="boundary .*flood"):
+        inspect_transparency(path, width, height, (0, 255, 0))
+
+
 def test_transparency_inspection_allows_substantial_isolated_central_product(
     tmp_path: Path,
 ) -> None:
@@ -1729,6 +2395,29 @@ def test_transparency_inspection_allows_large_central_product_shapes(
 
     report = inspect_transparency(path, width, height, (0, 255, 0))
 
+    assert report.boundary_connected_opaque_flood_count == 0
+
+
+def test_transparency_inspection_allows_large_central_product_with_antialias_perimeter(
+    tmp_path: Path,
+) -> None:
+    width = height = 200
+    side = round(math.sqrt(0.65) * width)
+    inset = (width - side) // 2
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    box = (inset, inset, inset + side - 1, inset + side - 1)
+    draw.rectangle(box, fill=(90, 80, 70, 96))
+    draw.rectangle(
+        (inset + 1, inset + 1, inset + side - 2, inset + side - 2),
+        fill=(90, 80, 70, 255),
+    )
+    path = tmp_path / "central-65-percent-one-pixel-antialias.png"
+    image.save(path, format="PNG")
+
+    report = inspect_transparency(path, width, height, (0, 255, 0))
+
+    assert side * side == 25_921
     assert report.boundary_connected_opaque_flood_count == 0
 
 
