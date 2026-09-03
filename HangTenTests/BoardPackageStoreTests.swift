@@ -1993,6 +1993,157 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreDecodesPositionsAndDirectedTransitions() throws {
+        let positionFixtures = try XCTUnwrap(
+            try validationFixtures()["boardPositions"] as? [String: Any]
+        )
+        let positions = try XCTUnwrap(positionFixtures["positions"] as? [[String: Any]])
+        let positionTransitions = try XCTUnwrap(
+            positionFixtures["positionTransitions"] as? [[String: Any]]
+        )
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            try self.presentationBytes().write(
+                to: packageURL.appendingPathComponent("assets/front-inverted.png")
+            )
+            try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                board["presentations"] = [
+                    [
+                        "id": "primary", "name": "Primary", "assetPath": "assets/primary.png",
+                        "aspectRatio": 2, "default": true,
+                    ],
+                    [
+                        "id": "front-inverted", "name": "Front inverted",
+                        "assetPath": "assets/front-inverted.png", "aspectRatio": 2,
+                        "default": false, "sourcePresentationID": "primary", "isInverted": true,
+                    ],
+                ]
+                board["positions"] = positions
+                board["positionTransitions"] = positionTransitions
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.positions.map(\.id), ["front", "flipped"])
+        XCTAssertEqual(board.holdIDs(inPosition: "front"), board.holdIDs(inPosition: "flipped"))
+        XCTAssertEqual(board.transitionKind(from: "front", to: "front"), .same)
+        XCTAssertEqual(board.transitionKind(from: "front", to: "flipped"), .seamless)
+        XCTAssertEqual(board.transitionKind(from: "flipped", to: "front"), .setupRequired)
+    }
+
+    func testStoreRejectsInvalidPositionsAndTransitions() throws {
+        let mutations: [(String, (inout [String: Any]) -> Void)] = [
+            ("duplicate position ID", { board in
+                var positions = board["positions"] as! [[String: Any]]
+                positions.append(["id": "front", "presentationID": "primary"])
+                board["positions"] = positions
+            }),
+            ("unknown position presentation", { board in
+                var positions = board["positions"] as! [[String: Any]]
+                positions[0]["presentationID"] = "missing"
+                board["positions"] = positions
+            }),
+            ("duplicate transition", { board in
+                var transitions = board["positionTransitions"] as! [[String: Any]]
+                transitions.append(transitions[0])
+                board["positionTransitions"] = transitions
+            }),
+            ("unknown transition source", { board in
+                var transitions = board["positionTransitions"] as! [[String: Any]]
+                transitions[0]["fromPositionID"] = "missing"
+                board["positionTransitions"] = transitions
+            }),
+            ("unknown transition destination", { board in
+                var transitions = board["positionTransitions"] as! [[String: Any]]
+                transitions[0]["toPositionID"] = "missing"
+                board["positionTransitions"] = transitions
+            }),
+            ("self transition", { board in
+                var transitions = board["positionTransitions"] as! [[String: Any]]
+                transitions[0]["toPositionID"] = "front"
+                board["positionTransitions"] = transitions
+            }),
+            ("unsupported transition kind", { board in
+                var transitions = board["positionTransitions"] as! [[String: Any]]
+                transitions[0]["kind"] = "invented"
+                board["positionTransitions"] = transitions
+            }),
+            ("unknown position key", { board in
+                var positions = board["positions"] as! [[String: Any]]
+                positions[0]["unexpected"] = true
+                board["positions"] = positions
+            }),
+            ("unknown transition key", { board in
+                var transitions = board["positionTransitions"] as! [[String: Any]]
+                transitions[0]["unexpected"] = true
+                board["positionTransitions"] = transitions
+            }),
+        ]
+
+        for (name, mutation) in mutations {
+            let fixture = try positionFixtureBundle(boardMutation: mutation)
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
+        }
+
+        for field in ["positions", "positionTransitions"] {
+            let fixture = try positionFixtureBundle { board in board[field] = NSNull() }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), field)
+        }
+
+        let fixture = try positionFixtureBundle { board in
+            board["presentations"] = [
+                [
+                    "id": "primary", "name": "Primary", "assetPath": "assets/primary.png",
+                    "aspectRatio": 2, "default": true,
+                ],
+                [
+                    "id": "unused", "name": "Unused", "assetPath": "assets/unused.png",
+                    "aspectRatio": 2, "default": false,
+                ],
+            ]
+            board["positions"] = [["id": "unused", "presentationID": "unused"]]
+            board.removeValue(forKey: "positionTransitions")
+        }
+        defer { fixture.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    private func positionFixtureBundle(
+        boardMutation: @escaping (inout [String: Any]) -> Void
+    ) throws -> FixtureBundle {
+        try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try self.presentationBytes().write(to: assetsURL.appendingPathComponent("front-inverted.png"))
+            try self.presentationBytes().write(to: assetsURL.appendingPathComponent("unused.png"))
+            try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                board["presentations"] = [
+                    [
+                        "id": "primary", "name": "Primary", "assetPath": "assets/primary.png",
+                        "aspectRatio": 2, "default": true,
+                    ],
+                    [
+                        "id": "front-inverted", "name": "Front inverted",
+                        "assetPath": "assets/front-inverted.png", "aspectRatio": 2,
+                        "default": false, "sourcePresentationID": "primary", "isInverted": true,
+                    ],
+                ]
+                board["positions"] = [
+                    ["id": "front", "presentationID": "primary"],
+                    ["id": "flipped", "presentationID": "front-inverted"],
+                ]
+                board["positionTransitions"] = [
+                    ["fromPositionID": "front", "toPositionID": "flipped", "kind": "seamless"],
+                ]
+                boardMutation(&board)
+            }
+        }
+    }
+
     private func validationFixtures() throws -> [String: Any] {
         let fixtureURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()

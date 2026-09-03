@@ -215,6 +215,59 @@ final class BoardPackageWriterTests: XCTestCase {
         ])
     }
 
+    func testWriterRoundTripsExplicitPositionsAndTransitions() throws {
+        var document = makeDocument()
+        document.positions = [
+            BoardPosition(id: "front", presentationID: "front"),
+            BoardPosition(id: "flipped", presentationID: "front-inverted"),
+        ]
+        document.positionTransitions = [
+            BoardPositionTransition(
+                fromPositionID: "front",
+                toPositionID: "flipped",
+                kind: .seamless
+            ),
+        ]
+        document.presentations.append(
+            BoardEditablePresentation(
+                id: "front-inverted",
+                name: "Front inverted",
+                assetPath: "assets/front-inverted.png",
+                aspectRatio: 2,
+                isDefault: false,
+                sourcePresentationID: "front",
+                isInverted: true
+            )
+        )
+
+        let redecoded = try BoardEditableDocument(data: BoardPackageWriter.data(for: document))
+
+        XCTAssertEqual(redecoded.positions, document.positions)
+        XCTAssertEqual(redecoded.positionTransitions, document.positionTransitions)
+    }
+
+    func testWriterLeavesLegacyTwoPresentationDocumentsWithoutExplicitPositions() throws {
+        var document = makeDocument()
+        document.presentations.append(
+            BoardEditablePresentation(
+                id: "back",
+                name: "Back",
+                assetPath: "assets/back.png",
+                aspectRatio: 2,
+                isDefault: false
+            )
+        )
+
+        let data = try BoardPackageWriter.data(for: document)
+        let decoded = try BoardEditableDocument(data: data)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        XCTAssertNil(decoded.positions)
+        XCTAssertNil(decoded.positionTransitions)
+        XCTAssertNil(object["positions"])
+        XCTAssertNil(object["positionTransitions"])
+    }
+
     func testWriterRejectsHoldWithUnknownEquipmentObject() throws {
         var document = makeDocument()
         document.equipmentObjects = [EquipmentObject(id: "primary")]

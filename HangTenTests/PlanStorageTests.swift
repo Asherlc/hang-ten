@@ -121,6 +121,83 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(decoded.category, "test")
     }
 
+    func testSemanticHoldMappingsDecodeAndValidatePositionIDs() throws {
+        let mapped = try JSONDecoder().decode(
+            SemanticHoldMappingDefinition.self,
+            from: Data(#"{"holdIDs":["fixture.edge"],"positionIDs":["front"]}"#.utf8)
+        )
+        let legacy = try JSONDecoder().decode(
+            SemanticHoldMappingDefinition.self,
+            from: Data(#"{"holdIDs":["fixture.edge"]}"#.utf8)
+        )
+        let board = TrainingBoard(
+            id: "fixture.board",
+            manufacturer: "Fixture Maker",
+            name: "Fixture Board",
+            subtitle: "Fixture",
+            dimensions: nil,
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.edge",
+                    name: "Edge",
+                    shortLabel: "E",
+                    detail: "Fixture edge.",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+                ),
+            ],
+            productURL: URL(string: "https://example.com/fixture")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
+            ],
+            positions: [BoardPosition(id: "front", presentationID: "front")]
+        )
+        let library = makeLibrary(
+            steps: [makeStep(id: "positioned", duration: 10, targets: [.semantic("edge")], segments: [])],
+            boardID: board.id,
+            boardMappings: [
+                BoardMappingDefinition(
+                    boardID: board.id,
+                    semanticHolds: [
+                        "edge": mapped,
+                        "duplicate": SemanticHoldMappingDefinition(
+                            holdIDs: ["fixture.edge"],
+                            positionIDs: ["front", "front"]
+                        ),
+                        "unknown": SemanticHoldMappingDefinition(
+                            holdIDs: ["fixture.edge"],
+                            positionIDs: ["missing"]
+                        ),
+                    ]
+                ),
+            ]
+        )
+        let decodedLibrary = try JSONDecoder().decode(
+            PlanLibraryDefinition.self,
+            from: JSONEncoder().encode(library)
+        )
+
+        XCTAssertEqual(mapped.positionIDs, ["front"])
+        XCTAssertEqual(legacy.positionIDs, [])
+        XCTAssertEqual(
+            decodedLibrary.boardMappings[0].semanticHolds["edge"]?.positionIDs,
+            ["front"]
+        )
+        XCTAssertTrue(decodedLibrary.validationIssues(availableBoards: [board]).contains {
+            $0.message == "Position IDs must be unique."
+        })
+        XCTAssertTrue(decodedLibrary.validationIssues(availableBoards: [board]).contains {
+            $0.message == "Unknown position ID \"missing\" for board \"fixture.board\"."
+        })
+        let encodedLegacy = try JSONEncoder().encode(legacy)
+        let encodedLegacyObject = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encodedLegacy) as? [String: Any]
+        )
+        XCTAssertNil(encodedLegacyObject["positionIDs"])
+    }
+
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
         let step = WorkoutStep(
             id: "stopwatch-step",

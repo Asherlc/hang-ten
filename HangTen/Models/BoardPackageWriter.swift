@@ -11,6 +11,8 @@ struct BoardEditableDocument: Equatable, Decodable {
     var equipmentObjects: [EquipmentObject]
     var holds: [BoardEditableHold]
     var presentations: [BoardEditablePresentation]
+    var positions: [BoardPosition]?
+    var positionTransitions: [BoardPositionTransition]?
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -23,6 +25,8 @@ struct BoardEditableDocument: Equatable, Decodable {
         case equipmentObjects
         case holds
         case presentations
+        case positions
+        case positionTransitions
     }
 
     init(
@@ -37,7 +41,9 @@ struct BoardEditableDocument: Equatable, Decodable {
             .init(id: "primary", missingHandCapacityPolicy: .unavailable)
         ],
         holds: [BoardEditableHold],
-        presentations: [BoardEditablePresentation]
+        presentations: [BoardEditablePresentation],
+        positions: [BoardPosition]? = nil,
+        positionTransitions: [BoardPositionTransition]? = nil
     ) {
         self.id = id
         self.manufacturer = manufacturer
@@ -49,12 +55,15 @@ struct BoardEditableDocument: Equatable, Decodable {
         self.equipmentObjects = equipmentObjects
         self.holds = holds
         self.presentations = presentations
+        self.positions = positions
+        self.positionTransitions = positionTransitions
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "equipmentObjects", "holds", "presentations"
+            "dimensions", "aspectRatio", "equipmentObjects", "holds", "presentations",
+            "positions", "positionTransitions"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -72,6 +81,12 @@ struct BoardEditableDocument: Equatable, Decodable {
             : [.init(id: "primary")]
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
+        positions = container.contains(.positions)
+            ? try container.decode([BoardPosition].self, forKey: .positions)
+            : nil
+        positionTransitions = container.contains(.positionTransitions)
+            ? try container.decode([BoardPositionTransition].self, forKey: .positionTransitions)
+            : nil
     }
 
     init(data: Data) throws {
@@ -479,6 +494,46 @@ enum BoardPackageWriter {
         guard !document.holds.isEmpty else {
             throw invalid("holds must not be empty", document)
         }
+        let positions = document.positions ?? document.presentations.map {
+            BoardPosition(id: $0.id, presentationID: $0.id)
+        }
+        if document.positions != nil, positions.isEmpty {
+            throw invalid("positions must not be empty", document)
+        }
+        var positionIDs = Set<String>()
+        for position in positions {
+            guard position.id.isEditorBoardIdentifier else {
+                throw invalid("position ID must be identifier-shaped", document)
+            }
+            guard positionIDs.insert(position.id).inserted else {
+                throw invalid("duplicate position id", document)
+            }
+            guard let presentation = presentationsByID[position.presentationID] else {
+                throw invalid("position \(position.id) references unknown presentationID", document)
+            }
+            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+            guard document.holds.contains(where: { $0.presentationID == canonicalPresentationID }) else {
+                throw invalid("position \(position.id) must own at least one hold", document)
+            }
+        }
+        if let transitions = document.positionTransitions {
+            var transitionPairs = Set<[String]>()
+            for transition in transitions {
+                guard positionIDs.contains(transition.fromPositionID) else {
+                    throw invalid("position transition references unknown fromPositionID", document)
+                }
+                guard positionIDs.contains(transition.toPositionID) else {
+                    throw invalid("position transition references unknown toPositionID", document)
+                }
+                guard transition.fromPositionID != transition.toPositionID else {
+                    throw invalid("position transition must not be self-edge", document)
+                }
+                let pair = [transition.fromPositionID, transition.toPositionID]
+                guard transitionPairs.insert(pair).inserted else {
+                    throw invalid("duplicate position transition", document)
+                }
+            }
+        }
         var holdIDs = Set<String>()
         for hold in document.holds {
             guard hold.id.isEditorBoardIdentifier, !hold.name.isEmpty else {
@@ -706,6 +761,15 @@ enum BoardPackageWriter {
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
         ]
+        if let positions = document.positions {
+            entries.append(("positions", .array(positions.map(canonicalPositionValue))))
+        }
+        if let positionTransitions = document.positionTransitions {
+            entries.append((
+                "positionTransitions",
+                .array(positionTransitions.map(canonicalPositionTransitionValue))
+            ))
+        }
         if let dimensions = document.dimensions {
             entries.insert(("dimensions", .string(dimensions)), at: 5)
         }
@@ -776,6 +840,23 @@ enum BoardPackageWriter {
             entries.append(("isInverted", .bool(true)))
         }
         return .object(entries)
+    }
+
+    private static func canonicalPositionValue(_ position: BoardPosition) -> CanonicalJSONValue {
+        .object([
+            ("id", .string(position.id)),
+            ("presentationID", .string(position.presentationID)),
+        ])
+    }
+
+    private static func canonicalPositionTransitionValue(
+        _ transition: BoardPositionTransition
+    ) -> CanonicalJSONValue {
+        .object([
+            ("fromPositionID", .string(transition.fromPositionID)),
+            ("toPositionID", .string(transition.toPositionID)),
+            ("kind", .string(transition.kind.rawValue)),
+        ])
     }
 
     private static func canonicalPieceValue(_ piece: BoardEditablePiece) -> CanonicalJSONValue {
