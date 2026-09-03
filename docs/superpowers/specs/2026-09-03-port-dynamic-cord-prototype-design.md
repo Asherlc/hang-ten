@@ -1,136 +1,179 @@
-# Port-A-Board Dynamic Cord Prototype Design
+# Port-A-Board Dynamic Cord Vertical-Slice Design
 
-## Status and intent
+## Status
 
-This design is approved for a phase-one prototype on the Frictitious
-Port-A-Board. It replaces baked-in cord pixels with a deterministic,
-presentation-driven cord layer while preserving the board image and canonical
-hold geometry. The renderer and package model are generic from the first
-implementation; only the Port-A-Board opts in during phase one.
+This revision supersedes the original all-surfaces, all-tooling prototype
+design. A disposable browser spike proved the important visual behavior and
+the user approved it as good enough to implement:
 
-If the Port prototype passes visual review, phase two is explicitly intended to
-convert the rest of the corded-board catalog. That conversion is not part of
-this prototype, and no other package changes merely because the renderer
-exists.
+- the board rotates in the image plane like a clock face;
+- the support stays world-up while both strands remain taut;
+- projected attachment points are paired by screen position so the strands do
+  not cross after inversion;
+- the cord is a dark, path-driven braid rather than baked raster pixels;
+- a direction-aware foreground eyelet crescent makes each strand read as
+  entering the hole continuously; and
+- raising the pull point to exactly 1.5 times its former vertical distance
+  gives the suspension enough height.
 
-## Goal and success criteria
+The first production slice is intentionally only the Port-A-Board `back` and
+`back-inverted` presentations. It proves the app renderer and package seam
+before Workbench support, exhaustive schema matrices, asset cleanup, the other
+Port faces, or any catalog-wide migration are built.
 
-Each Port presentation shows a complete, taut suspension above the loaded
-board without baking cord pixels into the product image. The rendered scene has
-three independently testable inputs:
+## Goal
 
-1. one transparent, cord-free raster for each physical face;
-2. canonical hold paths and a canonical pair of normalized cord attachment
-   points; and
-3. the selected presentation's existing alias/orientation metadata.
+Render the Port back face from one exact transparent, cord-free source image
+in upright and 180-degree clock-face orientations. The board, holds, markers,
+hit shapes, eyelets, and eyelet foreground pieces share one 2D affine
+transform. The support bight, knot, and pull point stay fixed above the board
+in screen coordinates.
 
-The feature succeeds when:
+The slice succeeds when two isolated transparent board-canvas renders match
+the approved spike at `0°` and `180°`, the hold geometry stays aligned, and
+every presentation without a resolved rig follows the current image path
+unchanged.
 
-- the same cord-free face bytes are used for a canonical presentation and all
-  of its inverted aliases;
-- the board image, hold paths, hit targets, markers, and attachment points use
-  the same 180-degree projection around `geometryRotationAnchor`;
-- the support assembly stays at the top of the screen when the board is
-  inverted;
-- both strands are straight and taut, and the complete support loop and knot
-  remain visible inside the canvas at every supported map size;
-- highlights and taps remain aligned with the visible holds;
-- the cord is decorative and cannot intercept input or add accessibility
-  elements; and
-- a board with no opted-in cord rig executes the existing image and hold-map
-  path unchanged, with identical rendered output and interaction behavior.
+## Validated reference
 
-## Current system constraints
+The approved spike is recorded under
+`.context/joyful-donkey-port-dynamic-cord-spike-20260903/`. It is evidence for
+the geometry and visual treatment, not production code.
 
-`BoardPackageStore` currently requires every presentation to declare an
-`assetPath`, requires that path to name a decodable PNG under `assets/`, checks
-the image aspect ratio, and requires the package's actual asset files to equal
-the set of declared paths. Repeated paths are already representable because
-finished-package validation operates on a set.
+The manufacturer's product photography supports the near-black braided cord,
+dark eyelet entry, and wood face appearance:
 
-`sourcePresentationID` identifies the canonical face whose holds an alias uses.
-`isInverted` tells `BoardPresentationGeometryProjection` to rotate canonical
-hold points and paths by 180 degrees. `geometryRotationAnchor` supplies the
-normalized pivot and defaults to the canvas center when absent. The store
-already rejects alias chains, mismatched aspect ratios, invalid normalized
-anchors, and projected hold frames outside the canvas.
+- product: <https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard>
+- front: <https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840>
+- back: <https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840>
+- side: <https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840>
 
-The image is different: `BoardPresentationImage` currently loads the selected
-presentation's declared file without applying the geometry projection. The
-Port package therefore contains separately rendered upright and inverted
-rasters with cords included. This is the seam the prototype changes. The
-existing projection remains the coordinate authority and is extended so its
-single affine transform can also position the opted-in face image and cord
-anchors.
+The photographs crop the upper suspension connection. The compact top bight
+and interwoven knot are therefore a generic, physically plausible
+illustration. They must not be documented or presented as the manufacturer's
+exact supplied knot.
 
-Both `BoardMapView` and `BoardDetailMapView` place the image below hold visuals
-in a `ZStack`. The detail map also places numbered markers above the image.
-The prototype must preserve that shared-bounds invariant and must not create a
-second, approximately equivalent transform.
+## Approved coordinate contract
 
-## Scope
+All authored values use a canonical coordinate system and scale
+proportionally into the actual SwiftUI canvas. No value is inferred from hold
+paths or detected from image pixels.
 
-Phase one includes:
+### Scene and face frames
 
-- a strict, reusable `cordRig` package schema;
-- a generic runtime model and deterministic renderer;
-- schema parity in the iOS loader/writer, Python package validator, and
-  Hangboard Workbench;
-- three transparent, cord-free Port face assets (`primary`, `back`, and
-  `side`), shared by aliases rather than duplicated;
-- Port configuration for all six existing presentations: Front Upright, Front
-  Inverted, Cord Option 4 — 20 mm In-cut, Back Upright, Back Inverted, and
-  Pinch Side; and
-- focused unit, package, rendering, interaction, accessibility, and visual
-  acceptance tests.
+The transparent scene is exactly `1200 × 1464`, with width-to-height aspect
+ratio `50 / 61`. Raising the pull point did not scale the board. Instead, the
+previous `1200 × 1250` composition was translated down by `214` units and
+transparent headroom was added.
 
-Phase one does not include rope physics, sag, slack, collision detection,
-board/cord intersection solving, animation, dragging, interactive rotation,
-spring behavior, or a catalog-wide package conversion. It also does not
-change any hold path, hold metadata, training content, or Port presentation
-name.
+| Name | Coordinate space | Value | Purpose |
+| --- | --- | --- | --- |
+| `sceneSize` | canonical scene | `(1200, 1464)` | complete transparent output |
+| `sourceFrame` | scene | `(x: 0, y: 214, width: 1200, height: 1250)` | embeds the previous composition at unchanged scale |
+| `innerFaceFrame` | relative to `sourceFrame` | `(x: -100, y: -10, width: 1400, height: 1400)` | draws the exact square source raster and maps canonical holds |
 
-## Approaches considered
+The resulting face-image frame in scene coordinates is
+`(x: -100, y: 204, width: 1400, height: 1400)`. The source raster's nonzero
+alpha bounds are `[216, 316]–[1185, 1157]`, so the visible face bounds become
+`[116, 520]–[1085, 1361]` in the scene and remain fully inside it. Transparent
+pixels may extend outside the horizontal scene edges; visible pixels may not.
 
-### 1. Deterministic presentation renderer — recommended
+`sourceFrame` and `innerFaceFrame` are canonical layout data, not crop
+instructions. The source PNG is decoded unchanged, drawn once into the inner
+frame, and clipped only by the outer scene.
 
-Store a small direct-rig description with a canonical presentation. Render a
-fixed loop-and-knot template plus two straight tensioned strands. For an
-inverted alias, rotate only the shared face image, canonical holds, and the two
-attachment points around `geometryRotationAnchor`; leave the support assembly
-in world-up canvas coordinates.
+### Face, pivot, anchors, and pull point
 
-This approach makes orientation correct by construction, preserves exact face
-pixels, is cheap to render, is straightforward to snapshot, and provides one
-reusable code path for later package adoption. Its limitation is intentional:
-the first schema represents one direct two-anchor topology, not every possible
-corded product.
+The following values are relative to `sourceFrame` unless noted otherwise:
 
-### 2. Full rope simulation — rejected
+| Item | Source-frame value | Scene value |
+| --- | --- | --- |
+| face rotation center | `(600, 690)` | `(600, 904)` |
+| left eyelet center | `(203, 712)` | `(203, 926)` |
+| right eyelet center | `(997, 712)` | `(997, 926)` |
+| pull point / strand-exit midpoint | `(600, 71.5)` | `(600, 285.5)` |
+| left strand exit | `(578, 71.5)` | `(578, 285.5)` |
+| right strand exit | `(622, 71.5)` | `(622, 285.5)` |
 
-A particle, spline, or constraint simulation could model gravity, sag,
-collisions, and interactive motion. It would also introduce time-dependent
-output, tuning state, device-dependent settling, clipping edge cases, and
-accessibility/interaction risk for a scene that is meant to be a static product
-diagram. It would make screenshot tests nondeterministic and would still need
-package-specific topology. None of those costs advances the prototype's
-purpose.
+The two source-image eyelet centers are `(303, 722)` and `(1097, 722)`;
+placing that image in `innerFaceFrame` yields the source-frame centers above.
+The inverted alias declares a normalized scene rotation anchor of
+`(0.5, 113 / 183)`, which resolves to the scene point `(600, 904)`.
 
-### 3. Pre-rendered cord overlay images — rejected
+The approved pull-point distance is an exact relationship, not an
+approximation:
 
-Transparent overlay PNGs would preserve the board raster but would retain one
-cord asset per orientation and canvas composition. Each alias would need a
-separately reviewed overlay, support direction could drift, scaling could
-soften the cord independently of the board, and phase-two migration would
-multiply assets. Overlays also move alignment and cropping errors into manual
-raster production. Deterministic vector geometry gives stronger invariants
-with less package data.
+```text
+old vertical distance = 712 - 285   = 427
+new vertical distance = 712 - 71.5  = 640.5
+640.5 = 1.5 × 427
+```
 
-## Package and runtime model
+The upper assembly was translated upward by `213.5` source units; its scale
+and shape did not change. The complete stroked result must remain inside the
+`1200 × 1464` scene.
 
-Add an optional `cordRig` to a canonical presentation. The runtime model is an
-enum so later deterministic topologies can be added without Port-specific
-conditionals:
+## Clock-face projection
+
+The projection is a two-dimensional rotation in the image plane. It must not
+use `rotation3DEffect`, perspective, skew, or an x/y-axis flip. For scene point
+`p = (x, y)`, scene pivot `c = (c_x, c_y)`, and clockwise screen angle `θ`:
+
+```text
+x' = c_x + cos(θ)(x - c_x) - sin(θ)(y - c_y)
+y' = c_y + sin(θ)(x - c_x) + cos(θ)(y - c_y)
+```
+
+Production currently requests only `θ = 0°` for `back` and `θ = 180°` for
+`back-inverted`; the browser spike's `90°` view was only an axis proof. One
+affine transform rotates all face-owned layers:
+
+- the cord-free face image;
+- canonical hold paths;
+- highlight and hit-test paths;
+- number-marker positions;
+- the two eyelet attachment points; and
+- the source image used by the small foreground eyelet crescents.
+
+The pull point, strand exits, bight, and knot never receive that transform.
+At `180°`, the projected physical endpoints are `(997, 882)` and `(203, 882)`.
+They are sorted by screen `x` (then `y` only as a deterministic tie-break) and
+paired to the left and right exits in that order. This intentional visual
+pairing supersedes the earlier declared-order rule and prevents a crossed
+render after inversion.
+
+At an exactly side-on `90°`/`270°` angle the flat model can place both eyelets
+on one screen x-coordinate. That is a known ambiguity of a 2D illustration,
+not a rope-physics problem, and no such presentation ships in this slice.
+
+## Package model
+
+Add an optional, closed `cordRig` object to a canonical presentation. The
+first tagged topology is `directTwoAnchor`; using an enum in Swift preserves a
+clean extension point without claiming it fits every board.
+
+```json
+"cordRig": {
+  "type": "directTwoAnchor",
+  "sceneSize": {"width": 1200, "height": 1464},
+  "sourceFrame": {"x": 0, "y": 214, "width": 1200, "height": 1250},
+  "innerFaceFrame": {"x": -100, "y": -10, "width": 1400, "height": 1400},
+  "attachmentPoints": [
+    {"x": 203, "y": 712},
+    {"x": 997, "y": 712}
+  ],
+  "pullPoint": {"x": 600, "y": 71.5},
+  "eyeletRadius": 34
+}
+```
+
+All points other than the normalized presentation rotation anchor use the
+canonical source units above. The renderer derives strand exits as
+`pullPoint.x ± 22` at `pullPoint.y` for this topology. Cord color, stroke
+layers, braid, and the generic upper template are renderer-owned visual
+constants rather than manufacturer claims or per-package tuning fields.
+
+The runtime shape is:
 
 ```swift
 enum BoardCordRig: Hashable {
@@ -138,335 +181,199 @@ enum BoardCordRig: Hashable {
 }
 
 struct BoardDirectTwoAnchorCordRig: Hashable {
-    let attachmentPoints: [BoardNormalizedPoint] // validated count: exactly 2
-    let supportPoint: BoardNormalizedPoint
-    let cordColor: BoardRGBColor
-    let cordWidth: Double
-    let loopRadius: Double
+    let sceneSize: CGSize
+    let sourceFrame: CGRect
+    let innerFaceFrame: CGRect
+    let attachmentPoints: [CGPoint]
+    let pullPoint: CGPoint
+    let eyeletRadius: CGFloat
 }
 ```
 
-`cordWidth` and `loopRadius` are fractions of the shorter presentation-canvas
-dimension. `supportPoint` is the center reference for the renderer's fixed
-world-up loop-and-knot template. Attachment points are in the canonical face's
-normalized coordinates, in declared order. They identify physical cord exits,
-such as the centers of the Port eyelets; they are not hold geometry and are
-authored deliberately from manufacturer evidence rather than detected from
-pixels.
+The decoder and writer enforce the closed keys, the exact two-point count,
+finite numbers, positive sizes/radius, a positive scene, and a
+`sceneSize`/presentation aspect-ratio match. A rig may be owned only by a
+canonical presentation. An alias inherits its canonical rig and never
+overrides it. Rigged-alias hold-bounds validation maps canonical hold corners
+through the inner face and source frames before applying the scene affine;
+non-rig aliases retain the current normalized validation path.
 
-The JSON is a closed tagged object. This example is a synthetic parser fixture,
-not Port authoring data:
+For a resolved rig, the presentation aspect ratio describes `sceneSize`, while
+the PNG aspect ratio describes `innerFaceFrame`. This deliberate distinction
+allows the exact square source PNG to sit inside the taller transparent scene.
+The transitional alias asset is also checked against the square inner-face
+ratio even though artwork resolves the canonical source bytes. Non-rig image
+aspect checks remain unchanged.
 
-```json
-"cordRig": {
-  "type": "directTwoAnchor",
-  "attachmentPoints": [
-    {"x": 0.30, "y": 0.64},
-    {"x": 0.70, "y": 0.64}
-  ],
-  "supportPoint": {"x": 0.50, "y": 0.10},
-  "cordColor": "#171719",
-  "cordWidth": 0.012,
-  "loopRadius": 0.045
-}
-```
+During this vertical slice, a rigged alias may keep its existing legacy
+`assetPath` so no tracked asset is deleted before visual approval. Rendering a
+resolved rig deliberately loads the canonical source presentation's asset;
+ordinary package validation still requires the alias's legacy declared file
+to exist. After approval, a cleanup phase may point the alias at the canonical
+path and delete the redundant file atomically.
 
-There are no optional topology fields in phase one. In particular there are
-no control points, per-strand curves, loose ends, wrapping rules, collision
-surfaces, simulation constants, or animation settings.
+## Deterministic cord artwork
 
-The rig belongs only to a canonical presentation
-(`sourcePresentationID == nil`, `isInverted == false`). An alias inherits the
-rig of its `sourcePresentationID`; it cannot declare or override one. This
-keeps physical attachment ownership beside canonical hold ownership. The
-selected presentation still drives the result: it selects the canonical face,
-orientation, rotation anchor, asset, name, and picker state.
+The cord is stateless path artwork. It has no physics solver, sag, spring,
+collision detection, animation, gesture, or random input.
 
-## Strict validation contract
-
-All schema consumers reject unknown keys and implement the same rules:
-
-- `type` must be exactly `directTwoAnchor`.
-- `attachmentPoints` must contain exactly two distinct points. Every coordinate
-  must be a finite JSON number in `[0, 1]`.
-- `supportPoint` must contain exactly finite normalized `x` and `y` values.
-- `cordColor` must be an opaque six-digit `#RRGGBB` sRGB value.
-- `cordWidth` and `loopRadius` must be finite and positive, and the loop radius
-  must be large enough for the standard knot template at the declared width.
-- The stroke-expanded bounds of the computed loop, knot, and strands must be
-  entirely inside the normalized canvas.
-- The support assembly must be above both attachment points in canvas
-  coordinates. The same rule is checked again after projecting attachment
-  points for every inverted alias of that canonical face.
-- `cordRig` is invalid on an alias. An inverted alias of a rigged source must
-  declare an explicit finite normalized `geometryRotationAnchor`, even when
-  the intended value is `{ "x": 0.5, "y": 0.5 }`.
-- A rigged alias's required `assetPath` must equal its canonical source's
-  required `assetPath`. Its aspect ratio must continue to match the source.
-- A rigged canonical asset must be a readable RGBA PNG with meaningful
-  transparency, transparent corners, nonempty visible content, and no cord
-  pixels. Its alpha-content bounds, transformed around each alias's rotation
-  anchor, must remain inside the target canvas. The final no-cord assertion is
-  a documented human review because cord recognition must not be implemented
-  as image segmentation.
-
-The existing `assetPath` field is not made optional. Package validation still
-compares the actual file set with the unique set of declared paths. Shared
-canonical/alias paths therefore reduce physical files without weakening the
-package boundary.
-
-Syntactically malformed rig data produces the same malformed-document failure
-as other decoding errors. Semantically invalid coordinates, relationships,
-appearance values, or computed bounds produce an `invalidPackage` error naming
-the presentation and failed rule. Invalid rigs never silently fall back to a
-partial or legacy cord rendering.
-
-These stricter alpha, shared-path, and rig rules run only for opted-in rigs.
-They do not retroactively reject or reinterpret existing packages.
-
-## Coordinate and rendering contract
-
-`BoardPresentationGeometryProjection` exposes one affine transform for a
-canvas rectangle. For a normalized anchor `(a_x, a_y)`, inverted points retain
-the existing formula:
+At canonical scale the approved paths are the spike's exact geometry. The
+following commands are relative to `pullPoint = (600, 71.5)`:
 
 ```text
-x' = 2a_x - x
-y' = 2a_y - y
+bight:
+M(-12,-61)
+C(-26,-82) (-30,-115) (-21,-142)
+C(-14,-163) (-5,-174) (1,-177)
+C(9,-171) (18,-157) (24,-136)
+C(31,-109) (26,-81) (12,-61)
+
+left knot/exit:
+M(-12,-63)
+C(1,-52) (18,-51) (21,-39)
+C(24,-28) (16,-19) (5,-18)
+C(-8,-17) (-17,-9) (-22,0)
+
+right knot/exit:
+M(12,-63)
+C(-1,-52) (-18,-51) (-21,-39)
+C(-24,-28) (-16,-19) (-5,-18)
+C(8,-17) (17,-9) (22,0)
+
+knot overpass:
+M(-18,-35) C(-10,-24) (9,-22) (18,-35)
 ```
 
-One projection instance is created for the selected presentation and passed to
-all presentation layers.
+Each strand is one straight segment from an exit to its screen-paired
+projected eyelet. The approved dark braid is rendered proportionally in these
+passes:
 
-- A canonical presentation loads its own cord-free image without a transform.
-- A rigged alias loads the exact same `assetPath` bytes as its canonical
-  source and applies the projection's 180-degree affine transform to the image.
-- Canonical hold paths, marker centers, interaction shapes, and accessibility
-  shapes continue to use that projection.
-- The canonical rig's two attachment points use that projection.
-- `supportPoint`, the loop, and the knot are canvas/world coordinates. They are
-  never projected, so the support remains above the board in both
-  orientations.
+1. soft contact shadow: width `35`, offset `(4, 5)`, blur `2.3`, black at
+   `0.34` opacity;
+2. outline: width `31`, `#050607`;
+3. body: width `25`, `#151718`;
+4. clipped `12 × 12` alternating diagonal braid over a width-`23` stroke;
+5. broken fiber ridge: width `2.4`, dash `1.5 / 5.5`, light gray at `0.18`
+   opacity, offset `(-2, -1)`; and
+6. a dark separation stroke under the redrawn knot overpass.
 
-`BoardCordRigGeometry` is a pure function of the validated rig, presentation,
-and canvas rectangle. It creates a fixed closed support loop, a compact
-symmetric binding-knot path immediately below it, and two straight paths from
-the knot exits to the projected attachment points. Width, loop scale, line caps,
-joins, and all Bezier coefficients are constants or declared rig values; there
-is no clock, random input, previous frame, solver, or device motion. The pure
-result exposes its stroke-expanded bounding box so package tests and runtime
-assertions can prove that the complete loop and knot are not cropped.
+Line caps and joins are round. The canvas background remains transparent.
+These constants reproduce the approved visual; they are not physical cord
+measurements.
 
-`directTwoAnchor` permanently identifies one normalized path template. Its
-loop, knot, exit-point, cap, join, and strand-order formulas are frozen in a
-shared fixture contract with expected normalized path elements and bounds.
-Swift and Workbench implement that contract independently and run the same
-fixtures. Changing the shipped template's topology requires a new `type`, not
-silent retuning that changes existing packages.
+## Eyelet continuity
 
-The renderer is a normal stateless SwiftUI view backed by those paths. It adds
-no gesture and opts out of implicit animation. Selecting a presentation may
-replace one deterministic geometry with another, but the cord does not swing,
-settle, interpolate, or respond to a drag.
+The cord is above the main face image, but a small piece of the same transformed
+face image is redrawn above each cord endpoint. A full annulus is forbidden
+because it visibly cuts the strand. The foreground piece is a
+direction-aware crescent opposite the outgoing strand.
 
-## Shared presentation artwork layer
+For eyelet center `center`, assigned strand exit `toward`, radius `r = 34`, and
+chord offset `d = 7` in canonical units:
 
-Add one shared artwork component used by `BoardMapView` and
-`BoardDetailMapView`. It owns only the image and optional cord, while the
-screens retain their existing hold and marker construction. This keeps the
-prototype narrow and ensures the two cord render sites cannot drift. Within
-the exact explicit `boardBounds`, the z-order is:
+```text
+u = normalize(toward - center)
+n = (-u.y, u.x)
+s = sqrt(r² - d²)
+start = center + d·u + s·n
+end   = center + d·u - s·n
+```
 
-1. the transparent cord-free board image, transformed only for an opted-in
-   alias;
-2. the dynamic cord layer, including both taut strands and the entire support
-   loop/knot;
-3. hold highlight visuals and their existing interaction/accessibility shapes;
-   and
-4. numbered detail-map markers.
+The major circular arc from `start` to `end` closes the crescent. Clip a
+second draw of the already transformed canonical face image to that path.
+This hides the strand's terminal cap beneath the near eyelet lip while leaving
+the strand visually continuous into the black center at every orientation.
 
-The cord starts at the declared eyelet centers and is allowed to occlude the
-underlying board only along its visible drawn path. The tracked source PNG is
-never painted, masked, inpainted, composited, cropped, or regenerated by this
-feature; normal display scaling remains the existing SwiftUI behavior.
-Highlight geometry remains above the cord so an active hold is legible even
-where a strand crosses the face.
+## Shared artwork and legacy branch
 
-The shared artwork layer must preserve the current aspect-fit container and give
-the image, cord geometry, holds, markers, and interaction shapes the identical
-canvas rectangle. An alias is rejected rather than corrected with a separate
-image offset, per-layer anchor, or hand-tuned hold translation.
+Both board-map sites use one `BoardPresentationArtwork` resolver. For a
+resolved rig, its z-order is:
 
-## Port-A-Board phase-one package
+1. canonical cord-free face in `innerFaceFrame`, with the selected
+   presentation's clock-face transform;
+2. cord shadow, braid, bight, knot, and two taut strands;
+3. the two transformed-image foreground eyelet crescents;
+4. existing hold highlights and hit shapes; and
+5. existing detail-map number markers.
 
-Phase one restores the repository's last cord-free, transparent 1400 × 1400
-RGBA canonical face assets from commit `e12e7f66` and preserves their bytes:
+The cord and crescents are decorative:
+`.allowsHitTesting(false)` and `.accessibilityHidden(true)`.
 
-| Physical face | Asset | SHA-256 |
+For a presentation with no resolved rig, the resolver must call the existing
+`BoardPresentationImage(board:presentationID:)` with the selected
+presentation's own ID, use the full current map rectangle for holds, add no
+cord/crescent layer, and apply no image transform. This explicit legacy branch
+keeps all non-rig boards and the four non-opted-in Port presentations
+unchanged.
+
+## Port asset and rollout contract
+
+Commit `e12e7f66` is the only approved source for the three transparent,
+cord-free Port physical faces:
+
+| Physical face | Historical path | SHA-256 |
 | --- | --- | --- |
 | front | `assets/primary.png` | `6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0` |
 | back | `assets/back.png` | `39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e` |
 | pinch side | `assets/side.png` | `cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad` |
 
-The implementation re-verifies those hashes, dimensions, alpha, transparency,
-and visual contents before promotion. If a historical blob fails a stated
-gate, implementation stops for user review; it does not repair or regenerate
-the board. This is how the prototype preserves exact board, labels, hold
-relief, grommets, and transparent-background pixels.
+All three are `1400 × 1400` RGBA images with transparent backgrounds. The
+vertical slice verifies all three historical blobs but promotes only the exact
+`back.png` bytes. `primary.png` and `side.png` remain at their current tracked
+versions until their own presentations enter the reviewed migration.
 
-Every existing Port presentation remains in the picker, but the six records
-declare only three unique paths:
+Only these presentation changes ship initially:
 
-| Presentation | Role | Required `assetPath` | Cord behavior |
-| --- | --- | --- | --- |
-| `primary` | canonical front upright | `assets/primary.png` | owns front direct rig |
-| `front-inverted` | inverted alias of `primary` | `assets/primary.png` | rotates front image and attachments around its explicit anchor |
-| `cord-option-4-20mm-incut` | inverted alias of `primary` | `assets/primary.png` | uses the same exact face/orientation and direct rig; no unique routing is invented |
-| `back` | canonical back upright | `assets/back.png` | owns back direct rig |
-| `back-inverted` | inverted alias of `back` | `assets/back.png` | rotates back image and attachments around its explicit anchor |
-| `side` | canonical pinch side | `assets/side.png` | owns side direct rig |
+| Presentation | Change in this slice |
+| --- | --- |
+| `back` | restore exact cord-free `back.png`; own the approved rig; set aspect ratio to `50 / 61` |
+| `back-inverted` | inherit `back` rig; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)`; retain legacy asset path/file temporarily |
 
-An operator supplies the final normalized attachment, support, width, loop,
-color, and alias-anchor values by deliberate review of the manufacturer
-evidence and the restored face art. They must pass the closed validation and
-visual gates above. No value is inferred by hold detection, segmentation,
-registration, vectorization, or automatic pixel analysis. The `holds` array
-and every saved hold path remain unchanged.
+`primary`, `front-inverted`, `cord-option-4-20mm-incut`, and `side` remain
+byte-for-byte and field-for-field unchanged. No hold record, hold path, hold
+metadata, presentation name, training content, or product URL changes.
 
-The now-redundant `front-inverted.png`, `back-inverted.png`, and
-`cord-option-4-20mm-incut.png` files are removed only when their presentation
-records share the canonical paths and full package validation passes. This
-leaves exactly one cord-free image per physical Port face.
+No asset is deleted in this slice.
 
-## Fallback and non-opted-in behavior
+## Proportional verification
 
-The optional model value defaults to `nil` for hand-built fixtures and package
-presentations without `cordRig`. When the resolved canonical presentation has
-no rig, both map screens execute the current `BoardPresentationImage` path:
-they load the selected presentation's own `assetPath`, do not source-remap or
-transform the image, add no cord view, and retain current hold projection and
-interaction behavior. This conditional legacy branch is an explicit
-compatibility requirement, not merely an expectation that an empty cord layer
-will look equivalent.
+The user explicitly chose visual proof before a broad test/setup investment.
+Implementation therefore stops at these gates:
 
-For an opted-in rig, failure to load the already validated face image suppresses
-the entire image-plus-cord layer and raises a debug assertion rather than
-showing a floating cord. Normal package loading should make that state
-unreachable. It does not fall back to a separately baked alias image.
+- one geometry test covering canonical frames, the 1.5× pull distance,
+  `90°` clock-face axis proof, `180°` projection, screen-x pairing, uncropped
+  upper geometry, and the eyelet-crescent formula;
+- one iOS loader/alias test covering canonical ownership, inheritance,
+  canonical-image resolution for the inverted alias, and the unchanged
+  non-rig branch;
+- one iOS writer round-trip test for the exact closed JSON object;
+- one Python parser-compatibility test for the same object and Port alias;
+- one focused iOS Simulator build; and
+- two isolated transparent `1200 × 1464` board-canvas outputs, shown one at a
+  time (`back`, then `back-inverted`) with the manufacturer link.
 
-## Accessibility and interaction
+There is no full unit/UI suite, app-review screenshot set, multi-size matrix,
+Workbench gallery, interaction matrix, or accessibility matrix before this
+visual gate. The implementation still sets the decorative interaction and
+accessibility modifiers; broader regression proof follows only if the slice is
+accepted.
 
-The cord view uses `.allowsHitTesting(false)` and
-`.accessibilityHidden(true)`. It has no `contentShape`, labels, actions, focus,
-or hover state. The existing single projected hold path remains the source for
-fill, stroke, tap hit testing, VoiceOver target, and marker placement. Existing
-surface-picker labels and hold announcements do not change.
+## Explicit deferrals
 
-Tests must prove that taps on a strand but outside a hold do nothing, taps on a
-hold under a strand still select the hold, and VoiceOver exposes no additional
-cord or support element.
+Until the production `back` and `back-inverted` outputs receive visual
+approval, defer all of the following:
 
-## Extension point and phase-two intent
+- Workbench parsing, authoring, preview, and round-trip support;
+- exhaustive malformed/semantic fixture matrices;
+- full package, unit, UI, interaction, and accessibility suites;
+- changing the other four Port presentations;
+- deleting or deduplicating any Port asset;
+- additional rig topology cases; and
+- catalog-wide migration.
 
-Application code switches on the `BoardCordRig` enum and contains no check for
-the Port board ID, manufacturer, asset filename, or presentation name. Package
-data is the only opt-in mechanism.
-
-After Port visual approval, phase two is intended to convert every corded board
-to cord-free face assets and deterministic rigs. The catalog must be audited
-presentation by presentation; this prototype does not claim that every product
-has the Port topology. Boards that use more than two direct attachments or
-simple evidence-backed guide points will require separately approved additive
-enum cases, such as `directMultiAnchor` or `waypointBranches`. Those cases can
-reuse normalized points, appearance, projection, bounds validation, layer
-stack, and fallback behavior without changing existing `directTwoAnchor`
-documents.
-
-That extension seam is deliberate, but the extra cases are not accepted by the
-phase-one parser and are not implemented speculatively. Complex body wraps,
-crossings whose order conveys product identity, pulleys, collisions, slack,
-sag, and simulated rope behavior remain outside this prototype. A later board
-blocks on a faithful topology design rather than being forced into two straight
-strands.
-
-## Implementation surfaces
-
-The implementation plan should cover these coherent surfaces:
-
-- `TrainingModels.swift`: normalized point/color types, the tagged cord-rig
-  model, optional canonical presentation ownership, and a reusable affine
-  projection accessor;
-- `BoardPackageStore.swift`: strict decoding, semantic relationship checks,
-  rig-only PNG/alpha/content-bounds validation, and runtime model adaptation;
-- `BoardPackageWriter.swift`: exact schema round-trip and matching validation;
-- `BoardMapView.swift` plus a focused cord-geometry/view file: the shared artwork
-  stack, exact image projection, pure deterministic path construction, and
-  decorative behavior;
-- `Tools/HangboardPackages` and `Tools/HangboardWorkbench`: schema parity,
-  validation, API/types, read-only alias projection, authoring/round-trip, and
-  preview of the same resolved rig geometry;
-- `Hangboards/frictitious-port-a-board`: only presentation/rig fields and the
-  three exact restored assets; and
-- authoring documentation and the Port source audit: explain `cordRig`, shared
-  alias assets, manual anchor authorship, transparency, and visual evidence.
-
-No runtime or tool component may contain Port-specific geometry constants.
-
-## Test and visual acceptance plan
-
-### Model and schema tests
-
-- Decode and round-trip a valid direct rig through the iOS loader/writer,
-  Python catalog model, and Workbench.
-- Reject every unknown key, unknown type, missing required value, wrong JSON
-  type, nonfinite/out-of-range point, duplicate attachment point, invalid
-  color, nonpositive width/radius, cropped computed path, downward support,
-  alias-owned rig, rigged alias with a different asset, missing explicit alias
-  anchor, and projected content outside the canvas.
-- Preserve existing error categories and verify an omitted rig decodes as
-  `nil`.
-- Keep current source/alias aspect-ratio, alias-chain, projected-hold-frame,
-  package-root, declared-asset-set, and PNG checks passing.
-
-### Pure geometry and rendering tests
-
-- Assert exact projected attachment coordinates for upright, centered-inverse,
-  and noncenter-anchor inverse fixtures.
-- Assert the face image, a hold point, its marker, and each attachment all use
-  the same affine transform.
-- Assert the support point and loop/knot path are unchanged between source and
-  inverted alias while the face and attachments rotate 180 degrees.
-- Freeze the deterministic path commands and stroke-expanded bounds at least
-  two canvas sizes; prove the loop is closed, both strands are straight, and
-  no geometry is outside the canvas.
-- Snapshot both map screens so their layer ordering and geometry are identical
-  apart from detail markers.
-- Capture a before/after pixel snapshot of representative non-rig canonical
-  and alias presentations and require identical hashes. Exercise their existing
-  taps and VoiceOver output as a behavioral regression gate.
-
-### Port package and visual acceptance
-
-- Assert the three canonical face hashes listed above, 1400 × 1400 RGBA format,
-  meaningful transparency, transparent corners, and exactly three unique
-  declared/actual asset paths.
-- Assert the six presentation-to-source/path relationships in the phase-one
-  table and unchanged canonical hold JSON.
-- In the app and Workbench, capture all six presentations at compact and large
-  map sizes with one real hold selected on each physical face.
-- At original-resolution inspection, verify unchanged face pixels beneath the
-  vector layer, exact hold/highlight alignment, cord endpoints centered on the
-  reviewed attachments, straight upward strands, a complete uncropped loop
-  and knot, transparent surroundings, no lower support, and no generated or
-  erased board detail.
-- For each inverted alias, compare against its source and verify that board
-  pixels, holds, markers, hit targets, and attachments are the same 180-degree
-  transform around the declared `geometryRotationAnchor`, while the support
-  remains world-up.
-- Perform tap and VoiceOver checks with the cord visible and confirm no cord
-  interaction or accessibility element exists.
-
-Phase one is complete only after automated gates pass and the user approves
-the six-view Port visual gallery. That approval is the gate to plan the
-phase-two catalog conversion; it does not silently start or authorize the
-conversion.
+A catalog audit found 19 remaining cord-attached packages and multiple routing
+topology families. “Apply this to all” is therefore a staged program, not a
+single `directTwoAnchor` data migration. After this vertical slice is approved,
+first migrate the remaining Port faces one by one. Then classify each of the
+19 packages from manufacturer evidence and design only the topology families
+they actually require. No board is forced into the Port two-anchor model.
