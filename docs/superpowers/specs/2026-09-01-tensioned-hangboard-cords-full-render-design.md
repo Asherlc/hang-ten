@@ -11,12 +11,14 @@ transparency and no wall, floor, studio sweep, or baked background.
 
 This is a product-physics correction, not a generic cord overlay. Each render
 must show the exact product revision and the real routing for the depicted
-usable surface. The loaded cord path must be taut in the direction appropriate
-to that product: toward an overhead support for a suspended board, toward a
-load below for a lifting edge, or through another manufacturer-documented load
-path. Rotating a board to another usable surface rotates the physical board,
-not gravity. Recesses remain recesses after rotation; a concave edge or pocket
-must never become a convex bump.
+usable surface. Every depicted board is below its suspension or support while
+the climber loads it downward from below. Every force-bearing cord or strap
+branch therefore leaves the board taut toward an overhead support, with no
+load-bearing cord, tail, knot, or hardware below the board. Product-specific
+hole, sling, knot, and branch routing remains evidence-backed within that
+straps-up orientation. Rotating a board to another usable surface rotates the
+physical board, not gravity. Recesses remain recesses after rotation; a concave
+edge or pocket must never become a convex bump.
 
 ## Scope and inventory
 
@@ -43,16 +45,16 @@ all 20 packages, all 49 presentations, and all 48 unique PNGs.
 | `captain-fingerfood-pocket` | `captain-fingerfood.pocket` | 1 | 1 | overhead suspension |
 | `captain-fingerfood-unlevel` | `captain-fingerfood.unlevel` | 2 | 2 | overhead suspension |
 | `crimptonite-helium-mobile` | `crimptonite.helium-mobile` | 4 | 4 | overhead suspension |
-| `frictitious-nug` | `frictitious.nug` | 2 | 2 | evidence-selected lifting or suspension mode |
+| `frictitious-nug` | `frictitious.nug` | 2 | 2 | evidence-selected overhead attachment routing |
 | `frictitious-port-a-board` | `frictitious.port-a-board` | 6 | 5 | optional portable cord mode |
 | `lattice-mini-bar` | `lattice.mini-bar` | 4 | 4 | documented exterior body sling |
-| `lattice-mxedge-lift-large` | `lattice.mxedge-lift-large` | 3 | 3 | lifting/no-hang, load below |
-| `lattice-mxedge-lift-small` | `lattice.mxedge-lift-small` | 3 | 3 | lifting/no-hang, load below |
+| `lattice-mxedge-lift-large` | `lattice.mxedge-lift-large` | 3 | 3 | lifting/no-hang tool, straps up to overhead support |
+| `lattice-mxedge-lift-small` | `lattice.mxedge-lift-small` | 3 | 3 | lifting/no-hang tool, straps up to overhead support |
 | `metolius-light-rail-2` | `metolius.light-rail-2` | 2 | 2 | overhead suspension |
 | `metolius-rock-rings-3d` | `metolius.rock-rings-3d` | 1 | 1 | independently suspended units |
 | `nature-stone-hanger-mini` | `nature.stone-hanger-mini` | 2 | 2 | overhead suspension |
 | `nature-stone-hanger-mini-karma8a` | `nature.stone-hanger-mini-karma8a` | 1 | 1 | overhead suspension |
-| `plateau-lifting-edge` | `plateau.lifting-edge` | 1 | 1 | lifting/no-hang, load below |
+| `plateau-lifting-edge` | `plateau.lifting-edge` | 1 | 1 | lifting/no-hang tool, straps up to overhead support |
 | `tension-flash-board` | `tension.flash-board` | 4 | 4 | overhead suspension |
 | `yy-baguette` | `yy.baguette` | 2 | 2 | overhead suspension |
 | `yy-baguette-evo` | `yy.baguette-evo` | 5 | 5 | overhead suspension |
@@ -93,22 +95,26 @@ bights, or independent strands are supported by evidence.
 A loaded segment is visually taut. Straight runs may bend at a documented
 hole, knot, pulley-like contact, or body sling, but may not sag, float, coil,
 or terminate without a supported reason. A short free tail may appear only
-when first-party evidence establishes it and it cannot be mistaken for the
-loaded path. The scene never changes gravity to make a composition convenient.
+when first-party evidence establishes it, it remains above the board as part
+of the upward attachment assembly, and it cannot be mistaken for the loaded
+path. The scene never changes gravity to make a composition convenient.
 
-- For overhead-suspended boards, the board hangs below its support and the
-  loaded branches leave the board toward the top of the canvas. The attachment
-  may use holes, stopper knots, loops, or a bridle only as shown by the exact
-  product evidence.
-- For the Lattice MXEdge Lift sizes and Plateau Lifting Edge, the loaded strand
-  or attached weight direction is below the tool, so the force-bearing cord
-  points canvas down. Frictitious NUG may be used in more than one mode; each
-  presentation uses only the mode established by its evidence rather than a
-  catalog-wide default.
-- The Lattice Mini Bar is a documented exterior-sling exception. Its cord can
-  form real U-shaped bights around the lower or outer body. Those bights must
-  be retained and must not be rejected merely for passing below the product.
-  This exception does not authorize bottom wrapping on any other board.
+- For every board, including lifting/no-hang tools, the board hangs below its
+  support while the climber applies the downward load from below. Loaded
+  branches leave the board toward the top of the canvas. The attachment may
+  use holes, stopper knots, loops, or a bridle only as shown by exact product
+  evidence, but no load-bearing cord, tail, knot, or hardware appears below
+  the board.
+- The Lattice MXEdge Lift sizes and Plateau Lifting Edge retain their exact
+  product identity and named usable positions while being presented straps-up:
+  every force-bearing strap runs taut upward toward overhead support.
+  Frictitious NUG retains the attachment topology established independently
+  for each presentation, but its visible loaded branches also resolve upward.
+- The Lattice Mini Bar retains its documented exterior-body sling routing.
+  Evidence-backed U-shaped bights may wrap the lower or outer body as the
+  attachment interface, but their force-bearing return branches must leave the
+  board upward and no cord, tail, knot, or hardware may hang below the board.
+  This exception does not authorize generic bottom wrapping on any other board.
 - Metolius Rock Rings 3D and YY Penta Evo consist of independent units. Each
   unit keeps its own documented suspension and load path; generation must not
   merge them into one unsupported bridge or make one unit hang from the other.
@@ -437,8 +443,9 @@ distinct capture per record even when two records currently share a PNG.
 Roll out in mechanically coherent, reviewable batches rather than one catalog
 replacement. Land the backward-compatible alias-anchor model and tests first.
 Then complete evidence and render packets by family: ordinary overhead
-suspension; lifting/no-hang tools; exterior sling; and independent-unit
-suspension. Within a batch, promote only independently reviewed packages and
+suspension; straps-up lifting/no-hang tools; exterior sling; and
+independent-unit suspension. Every family keeps the board below overhead
+support. Within a batch, promote only independently reviewed packages and
 rerun the complete package inventory so an undeclared or half-written package
 cannot enter the app.
 
@@ -486,8 +493,9 @@ The change is complete only when all of the following are true:
   generation whose call actually received the complete verified official
   manufacturer photo set for the exact revision.
 - Every visible loaded cord follows the presentation's evidence-backed
-  topology and canvas-down gravity contract, including the lifting-tool,
-  Mini-Bar sling, and independent-unit exceptions.
+  topology and canvas-down gravity contract: the board remains below support,
+  the climber loads downward from below, and every force-bearing branch leaves
+  upward, including lifting-tool, Mini-Bar sling, and independent-unit routing.
 - All promoted assets are genuine RGBA transparency with clear corners and no
   chroma or off-white fringe, and no output transform other than documented
   chroma removal occurred.

@@ -21,7 +21,7 @@
 - Every accepted PNG is generated as one complete new scene: board body, cords, knots, hardware, relief, and material together. Do not edit the existing raster, overlay cords, composite candidates, crop, resize, rotate, register, align, warp, paint, sharpen, blur, color-grade, relight, or patch an output. Deterministic chroma removal and its bounded edge decontamination are the only output processing.
 - Every official manufacturer photograph found for the exact revision is actual referenced-image input to every generation call. URLs or prompt descriptions do not count. When more than five photographs exist, use at most five verified lossless atlas pages; no panel may be cropped, resampled, warped, rotated, recolored, retouched, or recompressed.
 - Generate exactly two initial candidates for each unique PNG. Permit one targeted third only after both initial candidates have concrete recorded rejection reasons. If the third fails, block the asset; never continue aesthetic retries.
-- Gravity is normalized canvas down, `(0, +1)`. Loaded segments are taut along the manufacturer-supported load path. Ordinary suspended boards pull toward an overhead support; lifting/no-hang tools pull toward a load below; the Mini Bar retains its documented exterior sling; Rock Rings and Penta retain independent suspensions. Do not transfer routing between products.
+- Gravity is normalized canvas down, `(0, +1)`. Every depicted board remains below its suspension/support while the climber loads it downward from below. Every force-bearing cord or strap branch leaves the board taut upward toward overhead support, and no load-bearing cord, tail, knot, or hardware appears below the board. The Mini Bar retains its documented exterior-body sling attachment routing without a below-board load path; Rock Rings and Penta retain independent overhead suspensions. Do not transfer routing between products.
 - Rotate the physical board, not gravity. Concave recesses remain concave. Source/alias bodies retain identical scale, normalized position, aspect ratio, silhouette, and relief. Reject generator drift instead of compensating with per-hold offsets.
 - Hold geometry is authored and reviewed manually. Do not use detection, segmentation, masks, contours, image registration/alignment, vectorization, automatic path simplification, automatic cropping, or proposal/refine/promote geometry workflows. The saved canonical path remains the only rendering, highlighting, and hit-testing source.
 - Do not modify or rebaseline `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json` or its narrative. Their starting hashes are respectively `72d1d68bdb1e802a9c83b3312c18d5ee88878b94d0ddbef59085dbcaa4d839ff` and `3dc4fb20b089b2f900477c0d42dcb3edb71df124f9ccaca9f2e326e7a5be685a`.
@@ -87,11 +87,11 @@ The presentation IDs and paths below are the checked-in starting inventory. A pr
 | O4 | overhead | `yy-baguette-evo` | `paired-25-20-15-10`, `paired-12-8-6`, `central-30-25`, `central-20-6`, `rounded-tray` | 5 | 5 | Five named contact configurations without blending surfaces |
 | O4 | overhead | `yy-travelboard` | `front-25-15`, `reverse-10` | 2 | 2 | Replace current partial/slack loops with evidence-backed taut routing |
 | O4 | overhead aliases | `tension-flash-board` | `three-edge-upright`, `three-edge-inverted`, `two-edge-upright`, `two-edge-inverted` | 4 | 4 | Preserve concavity, complete both source/alias pairs, prove pilot provenance |
-| N | evidence-selected | `frictitious-nug` | `primary`, `reverse` | 2 | 2 | Establish lifting versus overhead mode independently for each presentation before prompting |
-| L | load below | `lattice-mxedge-lift-large` | `primary`, `large-medium-edge-position`, `mono-position` | 3 | 3 | Loaded cord points canvas down; exact large-size revision and positions |
-| L | load below | `lattice-mxedge-lift-small` | `primary`, `large-medium-edge-position`, `mono-position` | 3 | 3 | Loaded cord points canvas down; exact small-size revision and positions |
-| L | load below | `plateau-lifting-edge` | `primary` | 1 | 1 | Loaded strand/weight direction below; no overhead default |
-| S | exterior sling | `lattice-mini-bar` | `edge-10`, `edge-20`, `ergonomic-jug`, `mini-pinch` | 4 | 4 | Preserve manufacturer-documented lower/outer U-bights on all positions |
+| N | evidence-selected overhead routing | `frictitious-nug` | `primary`, `reverse` | 2 | 2 | Establish exact attachment topology independently for each presentation; loaded branches resolve upward |
+| L | straps-up lifting edge | `lattice-mxedge-lift-large` | `primary`, `large-medium-edge-position`, `mono-position` | 3 | 3 | Every force-bearing strap points canvas up; exact large-size revision and positions |
+| L | straps-up lifting edge | `lattice-mxedge-lift-small` | `primary`, `large-medium-edge-position`, `mono-position` | 3 | 3 | Every force-bearing strap points canvas up; exact small-size revision and positions |
+| L | straps-up lifting edge | `plateau-lifting-edge` | `primary` | 1 | 1 | Board below support; every force-bearing strap points canvas up |
+| S | exterior sling | `lattice-mini-bar` | `edge-10`, `edge-20`, `ergonomic-jug`, `mini-pinch` | 4 | 4 | Preserve manufacturer-documented lower/outer body sling contact while every loaded return branch runs upward |
 | I | independent units | `metolius-rock-rings-3d` | `front-pair` | 1 | 1 | Each ring has its own suspension; no unsupported bridge |
 | I | independent units | `yy-penta-evo` | `front-pair` | 1 | 1 | Each unit has its own suspension and identical exact-revision pair identity |
 | P | optional portable | `frictitious-port-a-board` | `primary`, `front-inverted`, `cord-option-4-20mm-incut`, `back`, `back-inverted`, `side` | 6 | 5 | Portable cord mode only; option 4 starts evidence-blocked and shares `assets/front-inverted.png` |
@@ -124,7 +124,7 @@ Every product worker produces this exact untracked shape and never writes a trac
 
 `OWNERSHIP.json` records `owner: "joyful-donkey"`, package slug, absolute directory, creator task, created time, exact external handles, cleanup command, and cleanup verification. `packet.json` is closed-schema and records the package ID, all presentation IDs, all unique asset paths, SHA-256 for every file, ordered reference list for every call, candidate dispositions, and the independent reviewer decision.
 
-Each `contracts/{presentation-id}.json` is manually authored after reviewing all evidence and contains: exact revision; usable surface; material; gravity `[0, 1]`; mechanical family; loaded object; support/load direction; each visible attachment point; ordered hole/body traversal; supported knots, bights, crossings, independent strands, and short tails; taut segments; forbidden topology; silhouette/contact inventory; and relief constraints. An unknown fact is a named evidence blocker, not an inferred value.
+Each `contracts/{presentation-id}.json` is manually authored after reviewing all evidence and contains: exact revision; usable surface; material; gravity `[0, 1]`; mechanical family; loaded object; downward climber-load direction; overhead support direction; each visible attachment point; ordered hole/body traversal; supported knots, bights, crossings, independent strands, and short tails; taut segments; forbidden topology; silhouette/contact inventory; and relief constraints. Every contract keeps the board below support, every force-bearing branch upward, and every cord, tail, knot, and hardware component out of the area below the board. An unknown fact is a named evidence blocker, not an inferred value.
 
 ## Task 0: Establish the Owned Baseline and Known-Red Historical Preflight
 
@@ -643,9 +643,9 @@ rtk scripts/hangboard-packages.sh cord-assets lock --manifest .context/joyful-do
 rtk scripts/hangboard-packages.sh cord-assets atlas --manifest .context/joyful-donkey-cords-aelith-cyclops-011-run-1/sources/index.json --output-root .context/joyful-donkey-cords-aelith-cyclops-011-run-1/atlases
 ```
 
-- [ ] **P4 — Manually author every presentation contract.** Write the fields in Ownership and Product Packet Contract from primary evidence. Trace every attachment, loaded segment, knot/bight/crossing, surface, and concavity claim to an exact source ID. Never derive topology from the current asset, presentation name, another product, or model intuition. A contract with an unresolved force path blocks generation for that presentation.
+- [ ] **P4 — Manually author every presentation contract.** Write the fields in Ownership and Product Packet Contract from primary evidence. Trace every attachment, loaded segment, knot/bight/crossing, surface, and concavity claim to an exact source ID. Apply the presentation invariant explicitly: gravity canvas-down, board below overhead support, climber loading downward from below, all force-bearing branches taut upward, and no cord, tail, knot, or hardware below the board. Never derive topology from the current asset, presentation name, another product, or model intuition. A contract with unresolved attachment routing blocks generation for that presentation.
 
-- [ ] **P5 — Generate exactly two whole-image candidates per unique PNG.** Use the built-in image generation tool in new-image mode. Every call's `referenced_image_paths` is the exact complete ordered official input set from P3. The prompt names the exact revision, usable surface, manually authored load path, canvas-down gravity, required aspect/composition, identity/relief constraints, flat chroma key, and forbidden topology/background. It explicitly requests a new complete board-and-cord render and forbids cord overlay or source-image editing. Save raw outputs and record full prompt, exposed model/tool version, time, ordered reference hashes, output hash, and dimensions.
+- [ ] **P5 — Generate exactly two whole-image candidates per unique PNG.** Use the built-in image generation tool in new-image mode. Every call's `referenced_image_paths` is the exact complete ordered official input set from P3. The prompt names the exact revision, usable surface, manually authored attachment routing, canvas-down gravity, board below overhead support, downward climber load from below, every force-bearing branch taut upward, no cord/tail/knot/hardware below the board, required aspect/composition, identity/relief constraints, flat chroma key, and forbidden topology/background. It explicitly requests a new complete board-and-cord render and forbids cord overlay or source-image editing. Save raw outputs and record full prompt, exposed model/tool version, time, ordered reference hashes, output hash, and dimensions.
 
 - [ ] **P6 — Apply only deterministic chroma removal.** Run `cord-assets key` to a new RGBA path and `cord-assets inspect` on it. Do not change dimensions or any other pixels. If the product contains the default green, choose and record a flat alternative key before generation; never key away product material.
 
@@ -772,13 +772,13 @@ Expected: these four records are accepted with four screenshots; every other rec
 
 **Interfaces:** Two presentations/assets; four mandatory initial candidates, at most two targeted thirds. Mechanical family is selected from evidence per presentation, never defaulted catalog-wide.
 
-- [ ] **Step 1: Dispatch one fresh evidence/product worker.** Before a generation call, establish whether each exact presentation is lifting/load-below, suspended/overhead, or another manufacturer-documented mode. If first-party evidence cannot establish the force path, mark that presentation `blockedEvidence` and issue no call.
+- [ ] **Step 1: Dispatch one fresh evidence/product worker.** Before a generation call, establish each exact presentation's manufacturer-supported attachment topology while applying the shared straps-up composition: board below overhead support, downward climber load from below, and all force-bearing branches upward. If first-party evidence cannot establish the attachment routing, mark that presentation `blockedEvidence` and issue no call.
 - [ ] **Step 2: For evidence-complete presentations, execute P1–P9 and obtain a fresh P10 review.** The reviewer checks force direction independently for `primary` and `reverse`.
 - [ ] **Step 3: Dispatch one serial integration agent for P11–P14.** Do not promote one face as a substitute for an unresolved other face.
 - [ ] **Step 4: Run partial audit for `frictitious.nug`.** Expected: two accepted records or an explicit evidence block that prevents final completion; no inferred routing.
 - [ ] **Step 5: Commit accepted/audited work, push, and clean via P15.** Use commit message `Render evidence-selected NUG cord modes` only when both records are accepted; otherwise use `Record NUG cord evidence blocker` and report the blocker to the user before final acceptance.
 
-## Task 14: Generate and Integrate Load-Below Wave L
+## Task 14: Generate and Integrate Straps-Up Lifting-Edge Wave L
 
 **Files:**
 - Replace: `Hangboards/lattice-mxedge-lift-large/assets/primary.png`, `assets/large-medium.png`, `assets/mono.png`
@@ -788,13 +788,13 @@ Expected: these four records are accepted with four screenshots; every other rec
 - Modify: cord audit JSON/narrative
 - Create: seven corresponding highlighted screenshots
 
-**Interfaces:** Seven presentations/assets; 14 mandatory initial candidates, at most seven targeted thirds. All force-bearing cord directions point toward a load below.
+**Interfaces:** Seven presentations/assets; 14 mandatory initial candidates, at most seven targeted thirds. Every board is below overhead support while the climber loads downward from below; all force-bearing cord/strap branches point canvas up.
 
 - [ ] **Step 1: Dispatch exactly three fresh product workers.** Assign MXEdge Large, MXEdge Small, and Plateau. Execute P1–P9. Large and small revisions remain separate evidence sets.
-- [ ] **Step 2: Dispatch fresh reviewers.** Execute P10. Reject any overhead bridle introduced from the suspended-board family or any missing load-side strand.
+- [ ] **Step 2: Dispatch fresh reviewers.** Execute P10. Reject any force-bearing branch that points downward, any cord/tail/knot/hardware below the board, any unsupported generic bridle, or any missing evidence-backed attachment branch.
 - [ ] **Step 3: Dispatch one serial integration/geometry agent for P11–P14.** Manually review the geometry of every named edge/mono position.
-- [ ] **Step 4: Run partial audit for the three load-below package IDs.** Expected: seven accepted records/screenshots.
-- [ ] **Step 5: Commit, push, and clean via P15.** Use commit message `Render load-below hangboard cords`.
+- [ ] **Step 4: Run partial audit for the three straps-up lifting-edge package IDs.** Expected: seven accepted records/screenshots.
+- [ ] **Step 5: Commit, push, and clean via P15.** Use commit message `Render straps-up lifting-edge cords`.
 
 ## Task 15: Generate and Integrate Exterior-Sling Wave S
 
@@ -804,11 +804,11 @@ Expected: these four records are accepted with four screenshots; every other rec
 - Modify: cord audit JSON/narrative
 - Create: four corresponding highlighted screenshots
 
-**Interfaces:** Four presentations/assets; eight mandatory initial candidates, at most four targeted thirds. Documented lower/outer U-bights are required product mechanics, not a failure.
+**Interfaces:** Four presentations/assets; eight mandatory initial candidates, at most four targeted thirds. Documented exterior-body sling contact is required product mechanics, but every force-bearing return branch leaves upward and nothing hangs below the board.
 
 - [ ] **Step 1: Dispatch one fresh Mini Bar worker for P1–P9.** Author a separate load/relief contract for `edge-10`, `edge-20`, `ergonomic-jug`, and `mini-pinch` from exact official evidence.
 - [ ] **Step 2: Dispatch a fresh specialist reviewer.** Execute P10 and explicitly retain evidence-backed exterior body slings while rejecting unsupported knot/hole changes.
-- [ ] **Step 3: Dispatch one serial integration/geometry agent for P11–P14.** Do not apply the ordinary “no cord below body” heuristic to this package.
+- [ ] **Step 3: Dispatch one serial integration/geometry agent for P11–P14.** Preserve the evidence-backed exterior-body sling contact while enforcing the same no-cord/tail/knot/hardware-below-board invariant as every other package.
 - [ ] **Step 4: Run partial audit for `lattice.mini-bar`.** Expected: four accepted records/screenshots.
 - [ ] **Step 5: Commit, push, and clean via P15.** Use commit message `Render Mini Bar exterior cord slings`.
 
