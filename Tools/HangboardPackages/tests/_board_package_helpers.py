@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from hangboard_packages.board_catalog import NormalizedFrame
 
 
@@ -38,3 +40,30 @@ def serialize_command(command: object) -> dict[str, object]:
         if value is not None:
             serialized[key] = tuple(value)
     return serialized
+
+
+def board_positions_document(document: dict[str, Any]) -> dict[str, Any]:
+    """Add front and inverted-front positions to a single-presentation fixture."""
+    document["presentations"].append(
+        {
+            "id": "front-inverted",
+            "name": "Front inverted",
+            "assetPath": "assets/front-inverted.png",
+            "aspectRatio": 2,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+        }
+    )
+    document["positions"] = [
+        {"id": "front", "presentationID": "primary"},
+        {"id": "flipped", "presentationID": "front-inverted"},
+    ]
+    document["positionTransitions"] = [
+        {
+            "fromPositionID": "front",
+            "toPositionID": "flipped",
+            "kind": "seamless",
+        }
+    ]
+    return document

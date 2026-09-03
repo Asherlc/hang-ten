@@ -15,10 +15,12 @@ from conftest import (
     TRANSPARENT_PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
+    multi_presentation_board_document,
     write_board_package,
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
+from _board_package_helpers import board_positions_document
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
@@ -35,6 +37,131 @@ def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:
 def _png_without_idat() -> bytes:
     ihdr = struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0)
     return _PNG_SIGNATURE + _png_chunk(b"IHDR", ihdr) + _png_chunk(b"IEND")
+
+
+def test_board_schema_loads_positions_and_directed_transitions() -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+
+    board = module._load_board(document)
+
+    assert board.positions == (
+        module.BoardPosition("front", "primary"),
+        module.BoardPosition("flipped", "front-inverted"),
+    )
+    assert board.position_transitions == (
+        module.BoardPositionTransition(
+            "front", "flipped", module.BoardPositionTransitionKind.SEAMLESS
+        ),
+    )
+    assert [position.id for position in board.positions] == ["front", "flipped"]
+    assert board.hold_ids_for_position("flipped") == board.hold_ids_for_position("front")
+    assert board.transition_kind("front", "front") == "same"
+    assert board.transition_kind("front", "flipped") == "seamless"
+    assert board.transition_kind("flipped", "front") == "setupRequired"
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda document: document["positions"].append(
+                {"id": "front", "presentationID": "primary"}
+            ),
+            "duplicate position id",
+        ),
+        (
+            lambda document: document["positions"][0].__setitem__(
+                "presentationID", "missing"
+            ),
+            "unknown presentationID",
+        ),
+        (
+            lambda document: document["positionTransitions"].append(
+                {
+                    "fromPositionID": "front",
+                    "toPositionID": "flipped",
+                    "kind": "seamless",
+                }
+            ),
+            "duplicate position transition",
+        ),
+        (
+            lambda document: document["positionTransitions"][0].__setitem__(
+                "fromPositionID", "missing"
+            ),
+            "unknown fromPositionID",
+        ),
+        (
+            lambda document: document["positionTransitions"][0].__setitem__(
+                "toPositionID", "missing"
+            ),
+            "unknown toPositionID",
+        ),
+        (
+            lambda document: document["positionTransitions"][0].__setitem__(
+                "toPositionID", "front"
+            ),
+            "must not be self-edge",
+        ),
+        (
+            lambda document: document["positionTransitions"][0].__setitem__(
+                "kind", "invented"
+            ),
+            "kind is unsupported",
+        ),
+        (
+            lambda document: document["positions"][0].__setitem__(
+                "unexpected", True
+            ),
+            r"board\.json\.positions\[0\] has unknown keys",
+        ),
+        (
+            lambda document: document["positionTransitions"][0].__setitem__(
+                "unexpected", True
+            ),
+            r"board\.json\.positionTransitions\[0\] has unknown keys",
+        ),
+    ],
+)
+def test_board_schema_rejects_invalid_positions_and_transitions(mutation, message: str) -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    mutation(document)
+
+    with pytest.raises(ValueError, match=message):
+        module._load_board(document)
+
+
+def test_board_schema_rejects_position_without_canonical_presentation_holds() -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    document["presentations"].append(
+        {
+            "id": "unused",
+            "name": "Unused",
+            "assetPath": "assets/unused.png",
+            "aspectRatio": 2,
+            "default": False,
+        }
+    )
+    document["positions"].append({"id": "unused", "presentationID": "unused"})
+
+    with pytest.raises(ValueError, match="must own at least one hold"):
+        module._load_board(document)
+
+
+def test_board_schema_synthesizes_legacy_positions_in_presentation_order() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+
+    board = module._load_board(document)
+
+    assert [(position.id, position.presentation_id) for position in board.positions] == [
+        ("front", "front"),
+        ("back", "back"),
+    ]
+    assert board.position_transitions == ()
 
 
 def test_discovery_reads_direct_child_packages_without_a_catalog_and_sorts_them(
