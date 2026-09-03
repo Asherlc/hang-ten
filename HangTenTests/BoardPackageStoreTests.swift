@@ -803,6 +803,17 @@ final class BoardPackageStoreTests: XCTestCase {
             store.presentationArtworkImageURL(for: board, presentationID: primary.id)?.lastPathComponent,
             "primary.png"
         )
+
+        try presentationBytes().write(
+            to: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/back.png"
+            )
+        )
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation back.cordRig.innerFaceFrame aspect ratio must match "
+                + "presentation image width/height within 0.1%"
+        )
     }
 
     func testStorePreservesAnInvertedAliasRotationAnchor() throws {

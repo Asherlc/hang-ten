@@ -160,6 +160,7 @@ struct BoardPackageStore {
                     )
                 }
                 let declaredImageRatio: Double
+                let aspectMismatchReason: String?
                 if case .directTwoAnchor(let rig) = Self.resolvedCordRig(
                     for: presentation,
                     in: presentations
@@ -167,14 +168,18 @@ struct BoardPackageStore {
                     declaredImageRatio = Double(
                         rig.innerFaceFrame.width / rig.innerFaceFrame.height
                     )
+                    aspectMismatchReason = "presentation \(presentation.id).cordRig.innerFaceFrame "
+                        + "aspect ratio must match presentation image width/height within 0.1%"
                 } else {
                     declaredImageRatio = presentation.aspectRatio
+                    aspectMismatchReason = nil
                 }
                 try Self.validatePresentationAspectRatio(
                     declaredImageRatio,
                     imageWidth: imageSize.width,
                     imageHeight: imageSize.height,
-                    boardID: boardDocument.id
+                    boardID: boardDocument.id,
+                    mismatchReason: aspectMismatchReason
                 )
             }
             if let defaultPresentation = presentations.first(where: \.isDefault),
@@ -468,7 +473,8 @@ struct BoardPackageStore {
         _ declaredRatio: Double,
         imageWidth: Int,
         imageHeight: Int,
-        boardID: String
+        boardID: String,
+        mismatchReason: String? = nil
     ) throws {
         guard declaredRatio.isFinite, declaredRatio > 0 else {
             throw BoardPackageStoreError.invalidPackage(
@@ -480,7 +486,8 @@ struct BoardPackageStore {
         guard presentationAspectRatiosMatch(declaredRatio, imageRatio) else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
-                reason: "aspect ratio must match presentation image width/height within 0.1%"
+                reason: mismatchReason
+                    ?? "aspect ratio must match presentation image width/height within 0.1%"
             )
         }
     }

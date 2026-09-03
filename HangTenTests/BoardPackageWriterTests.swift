@@ -831,6 +831,21 @@ final class BoardPackageWriterTests: XCTestCase {
         let decoded = try BoardEditableDocument(
             data: JSONSerialization.data(withJSONObject: payload)
         )
+        let expectedRig = BoardCordRig.directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: 71.5),
+                eyeletRadius: 34
+            )
+        )
+        XCTAssertEqual(decoded.presentations.first?.cordRig, expectedRig)
+
         let encoded = try BoardPackageWriter.data(for: decoded)
         let redecoded = try BoardEditableDocument(data: encoded)
 

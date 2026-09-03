@@ -719,9 +719,60 @@ def test_direct_two_anchor_cord_rig_matches_ios_vertical_slice(tmp_path: Path) -
     )
     assert primary.cord_rig is None
 
+    wide_png = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 2, 1, 8, 2, 0, 0, 0))
+        + _png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00\x00\x00"))
+        + _png_chunk(b"IEND")
+    )
+    (package_root / "assets" / "back.png").write_bytes(wide_png)
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "board.json.presentations[back].cordRig.innerFaceFrame aspect ratio "
+            "must match its image width/height within 0.1%"
+        ),
+    ):
+        module.load_board_package(package_root)
+    (package_root / "assets" / "back.png").write_bytes(square_png)
+
     document["presentations"][1]["cordRig"]["unexpected"] = True
     board_path.write_text(json.dumps(document), encoding="utf-8")
     with pytest.raises(ValueError, match=r"cordRig has unknown keys: \['unexpected'\]"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("scene_width", "scene_height"),
+    [(1e308, 1e-308), (1e-308, 1e308)],
+    ids=("overflow", "underflow"),
+)
+def test_direct_two_anchor_cord_rig_rejects_unrepresentable_scene_ratio(
+    tmp_path: Path,
+    scene_width: float,
+    scene_height: float,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["presentations"][1]["cordRig"] = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": scene_width, "height": scene_height},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1, "height": 1},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1, "height": 1},
+        "attachmentPoints": [{"x": 0, "y": 1}, {"x": 1, "y": 1}],
+        "pullPoint": {"x": 0.5, "y": 0},
+        "eyeletRadius": 0.1,
+    }
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "presentation back.aspectRatio must match cordRig.sceneSize within 0.1%"
+        ),
+    ):
         module.load_board_package(package_root)
 
 

@@ -783,15 +783,18 @@ def _validate_alias_presentations(
                 presentation.cord_rig.scene_size.width
                 / presentation.cord_rig.scene_size.height
             )
+            scene_aspect_error = (
+                f"presentation {presentation.id}.aspectRatio must match "
+                "cordRig.sceneSize within 0.1%"
+            )
+            if not math.isfinite(scene_aspect_ratio) or scene_aspect_ratio <= 0:
+                raise ValueError(scene_aspect_error)
             relative_error = (
                 abs(presentation.aspect_ratio - scene_aspect_ratio)
                 / scene_aspect_ratio
             )
             if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
-                raise ValueError(
-                    f"presentation {presentation.id}.aspectRatio must match "
-                    "cordRig.sceneSize within 0.1%"
-                )
+                raise ValueError(scene_aspect_error)
         if presentation.geometry_rotation_anchor is not None:
             if presentation.source_presentation_id is None:
                 raise ValueError(
@@ -1019,18 +1022,22 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
             else presentation
         )
         expected_image_aspect_ratio = presentation.aspect_ratio
+        aspect_source = f"board.json.presentations[{presentation.id}].aspectRatio"
         if canonical.cord_rig is not None:
             expected_image_aspect_ratio = (
                 canonical.cord_rig.inner_face_frame.width
                 / canonical.cord_rig.inner_face_frame.height
+            )
+            aspect_source = (
+                f"board.json.presentations[{canonical.id}].cordRig.innerFaceFrame "
+                "aspect ratio"
             )
         relative_error = (
             abs(expected_image_aspect_ratio - image_aspect_ratio) / image_aspect_ratio
         )
         if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
             raise ValueError(
-                f"board.json.presentations[{presentation.id}].aspectRatio must match "
-                "its image width/height within 0.1%"
+                f"{aspect_source} must match its image width/height within 0.1%"
             )
 
 
