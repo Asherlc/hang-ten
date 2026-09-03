@@ -6,6 +6,7 @@ HangTen/HangTenApp.swift
 HangTen/Info.plist
 HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/AppStore.swift
+HangTen/Models/BoardCordRigGeometry.swift
 HangTen/Models/BoardEditorStore.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardPackageWriter.swift

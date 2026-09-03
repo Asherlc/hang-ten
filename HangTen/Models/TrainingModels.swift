@@ -1,6 +1,44 @@
 import Foundation
 import SwiftUI
 
+struct BoardCordPoint: Hashable {
+    let x: CGFloat
+    let y: CGFloat
+
+    var cgPoint: CGPoint { CGPoint(x: x, y: y) }
+}
+
+struct BoardCordSize: Hashable {
+    let width: CGFloat
+    let height: CGFloat
+
+    var cgSize: CGSize { CGSize(width: width, height: height) }
+}
+
+struct BoardCordRect: Hashable {
+    let x: CGFloat
+    let y: CGFloat
+    let width: CGFloat
+    let height: CGFloat
+
+    var cgRect: CGRect {
+        CGRect(x: x, y: y, width: width, height: height)
+    }
+}
+
+enum BoardCordRig: Hashable {
+    case directTwoAnchor(BoardDirectTwoAnchorCordRig)
+}
+
+struct BoardDirectTwoAnchorCordRig: Hashable {
+    let sceneSize: BoardCordSize
+    let sourceFrame: BoardCordRect
+    let innerFaceFrame: BoardCordRect
+    let attachmentPoints: [BoardCordPoint]
+    let pullPoint: BoardCordPoint
+    let eyeletRadius: CGFloat
+}
+
 struct HoldFrame: Hashable {
     let x: CGFloat
     let y: CGFloat
@@ -38,23 +76,34 @@ struct BoardHoldPiece: Identifiable, Hashable {
 struct BoardHoldPathShape: Shape {
     let pieces: [BoardHoldPiece]
     let projection: BoardPresentationGeometryProjection
+    let canonicalRect: CGRect?
+
+    init(
+        pieces: [BoardHoldPiece],
+        projection: BoardPresentationGeometryProjection,
+        canonicalRect: CGRect? = nil
+    ) {
+        self.pieces = pieces
+        self.projection = projection
+        self.canonicalRect = canonicalRect
+    }
 
     func path(in rect: CGRect) -> Path {
         var canonicalPath = Path()
         for piece in pieces {
-            canonicalPath.addPath(piece.path(in: rect))
+            canonicalPath.addPath(piece.path(in: canonicalRect ?? rect))
         }
         return projection.project(canonicalPath, in: rect)
     }
 }
 
 struct BoardPresentationGeometryProjection: Hashable {
-    private let isInverted: Bool
+    private let rotationDegrees: CGFloat
     private let rotationAnchor: BoardGeometryRotationAnchor
 
     init(presentation: BoardPresentation) {
         self.init(
-            isInverted: presentation.isInverted,
+            rotationDegrees: presentation.isInverted ? 180 : 0,
             rotationAnchor: presentation.geometryRotationAnchor
         )
     }
@@ -63,32 +112,34 @@ struct BoardPresentationGeometryProjection: Hashable {
         isInverted: Bool,
         rotationAnchor: BoardGeometryRotationAnchor? = nil
     ) {
-        self.isInverted = isInverted
+        self.init(
+            rotationDegrees: isInverted ? 180 : 0,
+            rotationAnchor: rotationAnchor
+        )
+    }
+
+    init(
+        rotationDegrees: CGFloat,
+        rotationAnchor: BoardGeometryRotationAnchor? = nil
+    ) {
+        self.rotationDegrees = rotationDegrees
         self.rotationAnchor = rotationAnchor ?? .center
     }
 
     func project(_ point: CGPoint, in rect: CGRect) -> CGPoint {
-        guard isInverted else { return point }
-        let anchor = resolvedAnchor(in: rect)
-        return CGPoint(
-            x: 2 * anchor.x - point.x,
-            y: 2 * anchor.y - point.y
-        )
+        point.applying(affineTransform(in: rect))
     }
 
     func project(_ path: Path, in rect: CGRect) -> Path {
-        guard isInverted else { return path }
+        path.applying(affineTransform(in: rect))
+    }
+
+    func affineTransform(in rect: CGRect) -> CGAffineTransform {
         let anchor = resolvedAnchor(in: rect)
-        return path.applying(
-            CGAffineTransform(
-                a: -1,
-                b: 0,
-                c: 0,
-                d: -1,
-                tx: 2 * anchor.x,
-                ty: 2 * anchor.y
-            )
-        )
+        let radians = rotationDegrees * .pi / 180
+        return CGAffineTransform(translationX: anchor.x, y: anchor.y)
+            .rotated(by: radians)
+            .translatedBy(x: -anchor.x, y: -anchor.y)
     }
 
     private func resolvedAnchor(in rect: CGRect) -> CGPoint {
@@ -771,6 +822,7 @@ struct BoardPresentation: Identifiable, Hashable {
     let sourcePresentationID: String?
     let isInverted: Bool
     let geometryRotationAnchor: BoardGeometryRotationAnchor?
+    let cordRig: BoardCordRig?
 
     init(
         id: String,
@@ -779,7 +831,8 @@ struct BoardPresentation: Identifiable, Hashable {
         isDefault: Bool,
         sourcePresentationID: String? = nil,
         isInverted: Bool = false,
-        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil
+        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
+        cordRig: BoardCordRig? = nil
     ) {
         self.id = id
         self.name = name
@@ -788,6 +841,7 @@ struct BoardPresentation: Identifiable, Hashable {
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
         self.geometryRotationAnchor = geometryRotationAnchor
+        self.cordRig = cordRig
     }
 }
 
@@ -853,6 +907,14 @@ struct TrainingBoard: Identifiable, Hashable {
     func presentation(id: String?) -> BoardPresentation? {
         guard let id else { return nil }
         return presentations.first { $0.id == id }
+    }
+
+    func canonicalPresentation(for presentation: BoardPresentation) -> BoardPresentation? {
+        self.presentation(id: presentation.sourcePresentationID ?? presentation.id)
+    }
+
+    func resolvedCordRig(for presentation: BoardPresentation) -> BoardCordRig? {
+        canonicalPresentation(for: presentation)?.cordRig
     }
 
     func object(id: String) -> EquipmentObject? {

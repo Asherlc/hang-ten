@@ -132,6 +132,8 @@
 		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
+		D10000000000000000000001 /* BoardCordRigGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* BoardCordRigGeometry.swift */; };
+		D10000000000000000000002 /* BoardCordRigGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* BoardCordRigGeometryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -262,6 +264,8 @@
 		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
+		D20000000000000000000001 /* BoardCordRigGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCordRigGeometry.swift; sourceTree = "<group>"; };
+		D20000000000000000000002 /* BoardCordRigGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCordRigGeometryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -332,6 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0000000000000000000002 /* AppStore.swift */,
+				D20000000000000000000001 /* BoardCordRigGeometry.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
@@ -424,6 +429,7 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
+				D20000000000000000000002 /* BoardCordRigGeometryTests.swift */,
 				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
@@ -692,6 +698,7 @@
 			files = (
 				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
+				D10000000000000000000001 /* BoardCordRigGeometry.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
@@ -757,6 +764,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D10000000000000000000002 /* BoardCordRigGeometryTests.swift in Sources */,
 				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
