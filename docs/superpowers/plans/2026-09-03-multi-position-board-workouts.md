@@ -22,7 +22,7 @@
 - iOS and Android must resolve identical position sequences from equivalent inputs.
 - Add focused files for resolution and playback coordination instead of expanding `RootView.swift` or `WorkoutScreen.kt` with policy logic.
 - New iOS files must be added to `HangTen.xcodeproj/project.pbxproj` in the application and test targets as appropriate.
-- Generated build output must stay under this workspace's `.context` directory. Follow the workspace resource lifecycle and simulator cleanup requirements.
+- Generated build output must remain workspace-owned. iOS Derived Data stays under `.context/DerivedData`. Every Android Gradle command sets `GRADLE_USER_HOME` to `$PWD/.context/gradle-home`; `Android/app/build` is an approved workspace-owned output path. When the workflow ends, cleanup removes exactly `.context/gradle-home` and `Android/app/build`, in addition to the required isolated-Simulator resources.
 
 ---
 
@@ -237,7 +237,7 @@ Repeat the canonical invalid cases and assert semantic `positionIDs` validation.
 - [ ] **Step 2: Run the focused Android test and verify failure**
 
 ```bash
-rtk ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.content.BoardRepositoryTest
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.content.BoardRepositoryTest
 ```
 
 Expected: FAIL because Android does not decode presentation aliases, positions, transitions, or semantic position constraints.
@@ -330,7 +330,7 @@ enum WorkoutPositionResolver {
 }
 ```
 
-For each target-bearing normalized step, resolve every target against holds visible in each candidate position; accept a candidate only when every top-level and segment target resolves there. Intersect semantic `positionIDs` constraints. Use dynamic programming with score tuple `(setupRequiredCount, seamlessCount, defaultPositionPenalty, declarationOrderPath)` and retain predecessors to reconstruct the globally optimal path. Never mutate `TrainingPlan`.
+For each target-bearing normalized step, resolve every target against holds visible in each candidate position; accept a candidate only when every top-level and segment target resolves there. Intersect semantic `positionIDs` constraints. Derive the default position as the first declared position whose `presentationID` is the board's default presentation; declaration order selects it when multiple positions map to that presentation. Use dynamic programming with score tuple `(setupRequiredCount, seamlessCount, defaultPositionPenalty, declarationOrderPath)` and retain predecessors to reconstruct the globally optimal path. There is no assumed prior physical position: initialize every candidate for the first target-bearing step with zero transition costs. Accumulate `defaultPositionPenalty` per target-bearing selected position, adding `0` for the derived default and `1` otherwise; rest-only steps add no penalty. Keep the declaration-order path as the final tie-break. Never mutate `TrainingPlan`.
 
 - [ ] **Step 4: Wire launch-time resolution without changing playback yet**
 
@@ -374,7 +374,7 @@ assertEquals(setOf("edge-20"), resolved.steps.first().holdIds)
 - [ ] **Step 2: Run both parity suites and verify Android failure**
 
 ```bash
-rtk ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.workout.WorkoutPositionResolverTest
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.workout.WorkoutPositionResolverTest
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData -only-testing:HangTenTests/WorkoutPositionResolutionTests
 ```
 
@@ -534,7 +534,7 @@ Port every Task 6 state case using millisecond timestamps. Assert that a setup g
 - [ ] **Step 2: Run unit tests and verify failure**
 
 ```bash
-rtk ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.workout.WorkoutPositionCoordinatorTest --tests com.hangten.android.workout.WorkoutSessionTest
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.workout.WorkoutPositionCoordinatorTest --tests com.hangten.android.workout.WorkoutSessionTest
 ```
 
 Expected: FAIL on missing coordinator and boundary-hold behavior.
@@ -552,8 +552,8 @@ Add Compose assertions for `Set board position`, the presentation name, `Ready`,
 - [ ] **Step 5: Run Android unit and instrumented tests**
 
 ```bash
-rtk ./Android/gradlew -p Android :app:testDebugUnitTest
-rtk ./Android/gradlew -p Android :app:connectedDebugAndroidTest
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:testDebugUnitTest
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:connectedDebugAndroidTest
 ```
 
 Expected: PASS. If no Android emulator is available locally, run the unit suite, record the exact instrumented command as pending CI verification, and do not claim instrumented success.
@@ -597,7 +597,7 @@ On Android, retain 3-, 5-, and 6-field history fixtures and add the 9-field vers
 
 ```bash
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData -only-testing:HangTenTests/MotherboardModelsTests -only-testing:HangTenTests/WorkoutSessionStoreTests
-rtk ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.workout.SessionHistoryRepositoryTest
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:testDebugUnitTest --tests com.hangten.android.workout.SessionHistoryRepositoryTest
 ```
 
 Expected: FAIL on missing record fields.
@@ -677,7 +677,7 @@ Expected: PASS with unchanged canonical hold inventory and geometry.
 
 ```bash
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData
-rtk ./Android/gradlew -p Android :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+rtk env GRADLE_USER_HOME="$PWD/.context/gradle-home" ./Android/gradlew -p Android :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
 ```
 
 Expected: PASS.
@@ -689,6 +689,7 @@ Use the `validate-hang-ten-ios` skill with an isolated simulator. Validate portr
 After simulator teardown and resource-deletion verification:
 
 ```bash
+rtk rm -rf .context/gradle-home Android/app/build
 git add Hangboards/frictitious-port-a-board/board.json docs/source-audits/2026-09-03-port-a-board-position-transitions.md Tools/HangboardPackages/tests/test_port_a_board_positions.py
 git commit -m "Add audited Port-A-Board positions"
 ```

@@ -248,6 +248,9 @@ final class BoardPackageWriterTests: XCTestCase {
 
     func testWriterLeavesLegacyTwoPresentationDocumentsWithoutExplicitPositions() throws {
         var document = makeDocument()
+        var backHold = makeHold(id: "back-hold", name: "Back hold")
+        backHold.presentationID = "back"
+        document.holds.append(backHold)
         document.presentations.append(
             BoardEditablePresentation(
                 id: "back",

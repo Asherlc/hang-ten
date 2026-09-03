@@ -155,16 +155,23 @@ steps. Rest-only steps do not require a position.
 
 Preparation resolves targets to candidate placements for every target-bearing
 step, then selects positions across the whole routine. Unsupported edges are
-forbidden. Valid sequences are ranked lexicographically by:
+forbidden. The board's default position is the first declared position whose
+`presentationID` is the board's default presentation; if more than one
+position maps to that presentation, declaration order selects the default.
+Valid sequences are ranked lexicographically by:
 
 1. fewest `setupRequired` transitions;
 2. fewest `seamless` transitions, thereby preferring to remain in position;
-3. preference for the board's default position; and
+3. the accumulated default-position penalty for target-bearing steps: `0` for
+   the derived default position and `1` for every other selected position; and
 4. package declaration order for a deterministic final tie-break.
 
 This ranking prefers any number of seamless changes over one setup gate. The
-resolver must use a deterministic whole-sequence algorithm rather than making
-greedy choices one step at a time.
+resolver has no assumed prior physical position, so every candidate for the
+first target-bearing step starts with zero transition costs. Rest-only steps
+add no default-position penalty. The resolver must use a deterministic
+whole-sequence algorithm rather than making greedy choices one step at a time;
+the declaration-order path remains the final tie-break.
 
 The chosen placement and `positionID` are stored in a runtime resolved-workout
 representation. The sequence is frozen before playback so target resolution
