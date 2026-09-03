@@ -507,18 +507,17 @@ final class BoardPackageWriterTests: XCTestCase {
             of: "    }\n  ]\n}\n",
             with: aliasPresentation + "\n  ]\n}\n"
         )
-        let aliasOwnedHold = try editorDocument(
-            withAlias.replacingOccurrences(
-                of: "\"presentationID\": \"front\"",
-                with: "\"presentationID\": \"front-inverted\""
-            )
-        )
+        var aliasOwnedHold = try editorDocument(withAlias)
+        var copiedHold = try XCTUnwrap(aliasOwnedHold.holds.first)
+        copiedHold.id = "alias-owned-hold"
+        copiedHold.presentationID = "front-inverted"
+        aliasOwnedHold.holds.append(copiedHold)
 
         XCTAssertThrowsError(try BoardPackageWriter.data(for: aliasOwnedHold)) { error in
             XCTAssertEqual(
                 error as? BoardPackageWriterError,
                 .invalid(
-                    "board test.board: hold hold-one must be owned by a canonical presentation"
+                    "board test.board: hold alias-owned-hold must be owned by a canonical presentation"
                 )
             )
         }
