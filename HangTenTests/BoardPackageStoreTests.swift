@@ -706,6 +706,105 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testDirectTwoAnchorRigLoadsAndAliasUsesCanonicalArtworkWithoutChangingLegacySelection() throws {
+        let expectedRig = BoardCordRig.directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: 71.5),
+                eyeletRadius: 34
+            )
+        )
+        let fixture = try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[0]["id"] = "primary"
+                presentations[0]["name"] = "Primary"
+                presentations[1]["aspectRatio"] = 50.0 / 61.0
+                presentations[1]["cordRig"] = [
+                    "type": "directTwoAnchor",
+                    "sceneSize": ["width": 1200, "height": 1464],
+                    "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+                    "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+                    "attachmentPoints": [
+                        ["x": 203, "y": 712],
+                        ["x": 997, "y": 712],
+                    ],
+                    "pullPoint": ["x": 600, "y": 71.5],
+                    "eyeletRadius": 34,
+                ]
+                presentations.append([
+                    "id": "back-inverted",
+                    "name": "Back inverted",
+                    "assetPath": "assets/back-inverted.png",
+                    "aspectRatio": 50.0 / 61.0,
+                    "default": false,
+                    "sourcePresentationID": "back",
+                    "isInverted": true,
+                    "geometryRotationAnchor": [
+                        "x": 0.5,
+                        "y": 0.6174863387978142,
+                    ],
+                ])
+                board["presentations"] = presentations
+
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["presentationID"] = "primary"
+                var backGeometry = try XCTUnwrap(holds[1]["geometry"] as? [[String: Any]])
+                backGeometry[0]["frame"] = [
+                    "x": 0.2, "y": 0.2, "width": 0.1, "height": 0.2,
+                ]
+                backGeometry[1]["frame"] = [
+                    "x": 0.4, "y": 0.2, "width": 0.1, "height": 0.1,
+                ]
+                holds[1]["geometry"] = backGeometry
+                board["holds"] = holds
+            },
+            mutateAssets: { assetsURL in
+                try self.squarePresentationBytes().write(
+                    to: assetsURL.appendingPathComponent("back-inverted.png")
+                )
+            }
+        )
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+        let primary = try XCTUnwrap(board.presentation(id: "primary"))
+        let back = try XCTUnwrap(board.presentation(id: "back"))
+        let backInverted = try XCTUnwrap(board.presentation(id: "back-inverted"))
+
+        XCTAssertEqual(back.cordRig, expectedRig)
+        XCTAssertNil(backInverted.cordRig)
+        XCTAssertEqual(board.resolvedCordRig(for: backInverted), expectedRig)
+        XCTAssertNil(primary.cordRig)
+        XCTAssertEqual(
+            store.presentationImageURL(for: board, presentationID: backInverted.id)?.lastPathComponent,
+            "back-inverted.png"
+        )
+        XCTAssertEqual(
+            store.presentationArtworkImageURL(for: board, presentationID: back.id)?.lastPathComponent,
+            "back.png"
+        )
+        XCTAssertEqual(
+            store.presentationArtworkImageURL(for: board, presentationID: backInverted.id)?.lastPathComponent,
+            "back.png"
+        )
+        XCTAssertEqual(
+            store.presentationImageURL(for: board, presentationID: primary.id)?.lastPathComponent,
+            "primary.png"
+        )
+        XCTAssertEqual(
+            store.presentationArtworkImageURL(for: board, presentationID: primary.id)?.lastPathComponent,
+            "primary.png"
+        )
+    }
+
     func testStorePreservesAnInvertedAliasRotationAnchor() throws {
         let fixture = try makeAnchoredAliasFixtureBundle()
         defer { fixture.remove() }

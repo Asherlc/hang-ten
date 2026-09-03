@@ -382,6 +382,108 @@ class BoardGeometryPiece:
 
 
 @dataclass(frozen=True)
+class CordPoint:
+    x: float
+    y: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "CordPoint":
+        payload = _mapping(value, source)
+        _closed(payload, {"x", "y"}, source)
+        return cls(
+            _number(payload["x"], f"{source}.x"),
+            _number(payload["y"], f"{source}.y"),
+        )
+
+
+@dataclass(frozen=True)
+class CordSize:
+    width: float
+    height: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "CordSize":
+        payload = _mapping(value, source)
+        _closed(payload, {"width", "height"}, source)
+        return cls(
+            _positive_number(payload["width"], f"{source}.width"),
+            _positive_number(payload["height"], f"{source}.height"),
+        )
+
+
+@dataclass(frozen=True)
+class CordRect:
+    x: float
+    y: float
+    width: float
+    height: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "CordRect":
+        payload = _mapping(value, source)
+        _closed(payload, {"x", "y", "width", "height"}, source)
+        return cls(
+            _number(payload["x"], f"{source}.x"),
+            _number(payload["y"], f"{source}.y"),
+            _positive_number(payload["width"], f"{source}.width"),
+            _positive_number(payload["height"], f"{source}.height"),
+        )
+
+
+@dataclass(frozen=True)
+class DirectTwoAnchorCordRig:
+    scene_size: CordSize
+    source_frame: CordRect
+    inner_face_frame: CordRect
+    attachment_points: tuple[CordPoint, CordPoint]
+    pull_point: CordPoint
+    eyelet_radius: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "DirectTwoAnchorCordRig":
+        payload = _mapping(value, source)
+        _closed(
+            payload,
+            {
+                "type",
+                "sceneSize",
+                "sourceFrame",
+                "innerFaceFrame",
+                "attachmentPoints",
+                "pullPoint",
+                "eyeletRadius",
+            },
+            source,
+        )
+        rig_type = _string(payload["type"], f"{source}.type")
+        if rig_type != "directTwoAnchor":
+            raise ValueError(f"{source}.type is unsupported")
+        raw_attachment_points = payload["attachmentPoints"]
+        if not isinstance(raw_attachment_points, list) or len(raw_attachment_points) != 2:
+            raise ValueError(f"{source}.attachmentPoints must contain exactly two points")
+        attachment_points = tuple(
+            CordPoint.from_json(point, f"{source}.attachmentPoints[{index}]")
+            for index, point in enumerate(raw_attachment_points)
+        )
+        if attachment_points[0] == attachment_points[1]:
+            raise ValueError(f"{source}.attachmentPoints must be distinct")
+        return cls(
+            scene_size=CordSize.from_json(payload["sceneSize"], f"{source}.sceneSize"),
+            source_frame=CordRect.from_json(
+                payload["sourceFrame"], f"{source}.sourceFrame"
+            ),
+            inner_face_frame=CordRect.from_json(
+                payload["innerFaceFrame"], f"{source}.innerFaceFrame"
+            ),
+            attachment_points=attachment_points,
+            pull_point=CordPoint.from_json(payload["pullPoint"], f"{source}.pullPoint"),
+            eyelet_radius=_positive_number(
+                payload["eyeletRadius"], f"{source}.eyeletRadius"
+            ),
+        )
+
+
+@dataclass(frozen=True)
 class BoardPresentation:
     id: str
     name: str
@@ -391,6 +493,7 @@ class BoardPresentation:
     source_presentation_id: str | None = None
     is_inverted: bool = False
     geometry_rotation_anchor: NormalizedPoint | None = None
+    cord_rig: DirectTwoAnchorCordRig | None = None
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
@@ -399,7 +502,12 @@ class BoardPresentation:
             payload,
             {"id", "name", "assetPath", "aspectRatio", "default"},
             source,
-            optional={"sourcePresentationID", "isInverted", "geometryRotationAnchor"},
+            optional={
+                "sourcePresentationID",
+                "isInverted",
+                "geometryRotationAnchor",
+                "cordRig",
+            },
         )
         aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
         if aspect_ratio <= 0:
@@ -423,6 +531,9 @@ class BoardPresentation:
                 f"{source}.geometryRotationAnchor",
             )
             if "geometryRotationAnchor" in payload
+            else None,
+            DirectTwoAnchorCordRig.from_json(payload["cordRig"], f"{source}.cordRig")
+            if "cordRig" in payload
             else None,
         )
 
@@ -626,11 +737,61 @@ def project_normalized_point(
     return (2 * anchor.x - point.x, 2 * anchor.y - point.y)
 
 
+def _rigged_alias_frame_is_inside_canvas(
+    frame: NormalizedFrame,
+    rig: DirectTwoAnchorCordRig,
+    anchor: NormalizedPoint,
+) -> bool:
+    face_min_x = rig.source_frame.x + rig.inner_face_frame.x
+    face_min_y = rig.source_frame.y + rig.inner_face_frame.y
+    pivot_x = anchor.x * rig.scene_size.width
+    pivot_y = anchor.y * rig.scene_size.height
+    corners = (
+        (frame.x, frame.y),
+        (frame.x + frame.width, frame.y),
+        (frame.x, frame.y + frame.height),
+        (frame.x + frame.width, frame.y + frame.height),
+    )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-12
+    for normalized_x, normalized_y in corners:
+        face_x = face_min_x + normalized_x * rig.inner_face_frame.width
+        face_y = face_min_y + normalized_y * rig.inner_face_frame.height
+        projected_x = 2 * pivot_x - face_x
+        projected_y = 2 * pivot_y - face_y
+        if (
+            projected_x < -tolerance
+            or projected_y < -tolerance
+            or projected_x > rig.scene_size.width + tolerance
+            or projected_y > rig.scene_size.height + tolerance
+        ):
+            return False
+    return True
+
+
 def _validate_alias_presentations(
     presentations: tuple[BoardPresentation, ...], holds: tuple[BoardHold, ...]
 ) -> None:
     presentations_by_id = {presentation.id: presentation for presentation in presentations}
     for presentation in presentations:
+        if presentation.cord_rig is not None:
+            if presentation.source_presentation_id is not None or presentation.is_inverted:
+                raise ValueError(
+                    f"presentation {presentation.id}.cordRig must be owned by a "
+                    "canonical non-inverted presentation"
+                )
+            scene_aspect_ratio = (
+                presentation.cord_rig.scene_size.width
+                / presentation.cord_rig.scene_size.height
+            )
+            relative_error = (
+                abs(presentation.aspect_ratio - scene_aspect_ratio)
+                / scene_aspect_ratio
+            )
+            if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+                raise ValueError(
+                    f"presentation {presentation.id}.aspectRatio must match "
+                    "cordRig.sceneSize within 0.1%"
+                )
         if presentation.geometry_rotation_anchor is not None:
             if presentation.source_presentation_id is None:
                 raise ValueError(
@@ -665,11 +826,21 @@ def _validate_alias_presentations(
             continue
 
         anchor = presentation.geometry_rotation_anchor or NormalizedPoint(0.5, 0.5)
+        resolved_cord_rig = source.cord_rig
         for hold in holds:
             if hold.presentation_id != source.id:
                 continue
             for piece in hold.geometry:
                 frame = piece.frame
+                if resolved_cord_rig is not None:
+                    if not _rigged_alias_frame_is_inside_canvas(
+                        frame, resolved_cord_rig, anchor
+                    ):
+                        raise ValueError(
+                            f"presentation {presentation.id} projects source hold "
+                            "geometry outside the normalized canvas"
+                        )
+                    continue
                 projected_min_x, projected_min_y = project_normalized_point(
                     NormalizedPoint(frame.x + frame.width, frame.y + frame.height),
                     anchor,
@@ -836,11 +1007,25 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
         if asset.is_symlink() or not asset.is_file():
             raise ValueError(f"{asset_path} must be a regular non-symlink file")
         image_dimensions[asset_path] = _validate_png_structure(asset, asset_path)
+    presentations_by_id = {
+        presentation.id: presentation for presentation in board.presentations
+    }
     for presentation in board.presentations:
         width, height = image_dimensions[presentation.asset_path]
         image_aspect_ratio = width / height
+        canonical = (
+            presentations_by_id[presentation.source_presentation_id]
+            if presentation.source_presentation_id is not None
+            else presentation
+        )
+        expected_image_aspect_ratio = presentation.aspect_ratio
+        if canonical.cord_rig is not None:
+            expected_image_aspect_ratio = (
+                canonical.cord_rig.inner_face_frame.width
+                / canonical.cord_rig.inner_face_frame.height
+            )
         relative_error = (
-            abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+            abs(expected_image_aspect_ratio - image_aspect_ratio) / image_aspect_ratio
         )
         if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
             raise ValueError(

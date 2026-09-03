@@ -645,6 +645,86 @@ def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
         module.load_board_package(package_root)
 
 
+def test_direct_two_anchor_cord_rig_matches_ios_vertical_slice(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    rig = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1200, "height": 1464},
+        "sourceFrame": {"x": 0, "y": 214, "width": 1200, "height": 1250},
+        "innerFaceFrame": {"x": -100, "y": -10, "width": 1400, "height": 1400},
+        "attachmentPoints": [
+            {"x": 203, "y": 712},
+            {"x": 997, "y": 712},
+        ],
+        "pullPoint": {"x": 600, "y": 71.5},
+        "eyeletRadius": 34,
+    }
+    document["presentations"][0].update(id="primary", name="Primary")
+    document["presentations"][1].update(
+        aspectRatio=50 / 61,
+        cordRig=rig,
+    )
+    document["presentations"].append(
+        {
+            "id": "back-inverted",
+            "name": "Back inverted",
+            "assetPath": "assets/back-inverted.png",
+            "aspectRatio": 50 / 61,
+            "default": False,
+            "sourcePresentationID": "back",
+            "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142},
+        }
+    )
+    document["holds"][0]["presentationID"] = "primary"
+    document["holds"][1]["geometry"][0]["frame"] = {
+        "x": 0.2,
+        "y": 0.2,
+        "width": 0.1,
+        "height": 0.2,
+    }
+    square_png = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0))
+        + _png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00"))
+        + _png_chunk(b"IEND")
+    )
+    (package_root / "assets" / "back.png").write_bytes(square_png)
+    (package_root / "assets" / "back-inverted.png").write_bytes(square_png)
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+    presentations = {item.id: item for item in package.board.presentations}
+    back = presentations["back"]
+    back_inverted = presentations["back-inverted"]
+    primary = presentations["primary"]
+
+    assert back.cord_rig == module.DirectTwoAnchorCordRig(
+        scene_size=module.CordSize(1200, 1464),
+        source_frame=module.CordRect(0, 214, 1200, 1250),
+        inner_face_frame=module.CordRect(-100, -10, 1400, 1400),
+        attachment_points=(module.CordPoint(203, 712), module.CordPoint(997, 712)),
+        pull_point=module.CordPoint(600, 71.5),
+        eyelet_radius=34,
+    )
+    assert back.source_presentation_id is None
+    assert back_inverted.cord_rig is None
+    assert back_inverted.source_presentation_id == "back"
+    assert back_inverted.aspect_ratio == 50 / 61
+    assert back_inverted.geometry_rotation_anchor == module.NormalizedPoint(
+        0.5, 0.6174863387978142
+    )
+    assert primary.cord_rig is None
+
+    document["presentations"][1]["cordRig"]["unexpected"] = True
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"cordRig has unknown keys: \['unexpected'\]"):
+        module.load_board_package(package_root)
+
+
 def test_unversioned_board_keeps_omitted_alias_rotation_anchor_as_center_compatibility(
     tmp_path: Path,
 ) -> None:

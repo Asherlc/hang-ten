@@ -806,6 +806,54 @@ final class BoardPackageWriterTests: XCTestCase {
         assertSemanticallyEqual(document, redecoded)
     }
 
+    func testDirectTwoAnchorCordRigRoundTripsInCanonicalOrder() throws {
+        let initialBytes = try BoardPackageWriter.data(
+            for: makeDocument(aspectRatio: 50.0 / 61.0)
+        )
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: initialBytes) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        presentations[0]["cordRig"] = [
+            "type": "directTwoAnchor",
+            "sceneSize": ["width": 1200, "height": 1464],
+            "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+            "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+            "attachmentPoints": [
+                ["x": 203, "y": 712],
+                ["x": 997, "y": 712],
+            ],
+            "pullPoint": ["x": 600, "y": 71.5],
+            "eyeletRadius": 34,
+        ]
+        payload["presentations"] = presentations
+
+        let decoded = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        let encoded = try BoardPackageWriter.data(for: decoded)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded, decoded)
+        XCTAssertEqual(try BoardPackageWriter.data(for: redecoded), encoded)
+
+        let topLevelRigKeys = String(decoding: encoded, as: UTF8.self)
+            .split(separator: "\n", omittingEmptySubsequences: false)
+            .compactMap { line -> String? in
+                guard line.hasPrefix("        \"") && !line.hasPrefix("          \"") else {
+                    return nil
+                }
+                return line.dropFirst(9).split(separator: "\"", maxSplits: 1).first.map(String.init)
+            }
+        XCTAssertEqual(
+            topLevelRigKeys,
+            [
+                "type", "sceneSize", "sourceFrame", "innerFaceFrame",
+                "attachmentPoints", "pullPoint", "eyeletRadius",
+            ]
+        )
+    }
+
     func testReencodedRealPackageKeepsTopLevelOrderEscapesAndTrailingNewline() throws {
         let slug = "zlagboard-pro"
         let originalData = try Data(

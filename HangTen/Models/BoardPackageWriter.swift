@@ -117,6 +117,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
     var sourcePresentationID: String?
     var isInverted: Bool
     var geometryRotationAnchor: BoardGeometryRotationAnchor?
+    var cordRig: BoardCordRig?
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -127,6 +128,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         case sourcePresentationID
         case isInverted
         case geometryRotationAnchor
+        case cordRig
     }
 
     init(
@@ -137,7 +139,8 @@ struct BoardEditablePresentation: Equatable, Decodable {
         isDefault: Bool,
         sourcePresentationID: String? = nil,
         isInverted: Bool = false,
-        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil
+        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
+        cordRig: BoardCordRig? = nil
     ) {
         self.id = id
         self.name = name
@@ -147,12 +150,13 @@ struct BoardEditablePresentation: Equatable, Decodable {
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
         self.geometryRotationAnchor = geometryRotationAnchor
+        self.cordRig = cordRig
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted", "geometryRotationAnchor"
+            "sourcePresentationID", "isInverted", "geometryRotationAnchor", "cordRig"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -171,6 +175,155 @@ struct BoardEditablePresentation: Equatable, Decodable {
                 forKey: .geometryRotationAnchor
             ).rotationAnchor
             : nil
+        cordRig = container.contains(.cordRig)
+            ? try container.decode(
+                BoardEditableCordRigDocument.self,
+                forKey: .cordRig
+            ).cordRig
+            : nil
+    }
+}
+
+private struct BoardEditableCordPointDocument: Decodable {
+    let x: Double
+    let y: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["x", "y"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+    }
+
+    var cordPoint: BoardCordPoint {
+        BoardCordPoint(x: CGFloat(x), y: CGFloat(y))
+    }
+}
+
+private struct BoardEditableCordSizeDocument: Decodable {
+    let width: Double
+    let height: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case width
+        case height
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["width", "height"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        width = try container.decode(Double.self, forKey: .width)
+        height = try container.decode(Double.self, forKey: .height)
+    }
+
+    var cordSize: BoardCordSize {
+        BoardCordSize(width: CGFloat(width), height: CGFloat(height))
+    }
+}
+
+private struct BoardEditableCordRectDocument: Decodable {
+    let x: Double
+    let y: Double
+    let width: Double
+    let height: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+        case width
+        case height
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["x", "y", "width", "height"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+        width = try container.decode(Double.self, forKey: .width)
+        height = try container.decode(Double.self, forKey: .height)
+    }
+
+    var cordRect: BoardCordRect {
+        BoardCordRect(
+            x: CGFloat(x),
+            y: CGFloat(y),
+            width: CGFloat(width),
+            height: CGFloat(height)
+        )
+    }
+}
+
+private struct BoardEditableCordRigDocument: Decodable {
+    let sceneSize: BoardEditableCordSizeDocument
+    let sourceFrame: BoardEditableCordRectDocument
+    let innerFaceFrame: BoardEditableCordRectDocument
+    let attachmentPoints: [BoardEditableCordPointDocument]
+    let pullPoint: BoardEditableCordPointDocument
+    let eyeletRadius: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case sceneSize
+        case sourceFrame
+        case innerFaceFrame
+        case attachmentPoints
+        case pullPoint
+        case eyeletRadius
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys([
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame",
+            "attachmentPoints", "pullPoint", "eyeletRadius",
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        guard type == "directTwoAnchor" else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+        sceneSize = try container.decode(
+            BoardEditableCordSizeDocument.self,
+            forKey: .sceneSize
+        )
+        sourceFrame = try container.decode(
+            BoardEditableCordRectDocument.self,
+            forKey: .sourceFrame
+        )
+        innerFaceFrame = try container.decode(
+            BoardEditableCordRectDocument.self,
+            forKey: .innerFaceFrame
+        )
+        attachmentPoints = try container.decode(
+            [BoardEditableCordPointDocument].self,
+            forKey: .attachmentPoints
+        )
+        pullPoint = try container.decode(
+            BoardEditableCordPointDocument.self,
+            forKey: .pullPoint
+        )
+        eyeletRadius = try container.decode(Double.self, forKey: .eyeletRadius)
+    }
+
+    var cordRig: BoardCordRig {
+        .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: sceneSize.cordSize,
+                sourceFrame: sourceFrame.cordRect,
+                innerFaceFrame: innerFaceFrame.cordRect,
+                attachmentPoints: attachmentPoints.map(\.cordPoint),
+                pullPoint: pullPoint.cordPoint,
+                eyeletRadius: CGFloat(eyeletRadius)
+            )
+        )
     }
 }
 
@@ -436,6 +589,8 @@ enum BoardPackageWriterError: Error, Equatable, LocalizedError {
 }
 
 enum BoardPackageWriter {
+    private static let presentationAspectRatioRelativeTolerance = 0.001
+
     static func data(for document: BoardEditableDocument) throws -> Data {
         try validate(document)
         return CanonicalJSONSerializer.data(canonicalValue(document))
@@ -482,6 +637,21 @@ enum BoardPackageWriter {
             }
             guard presentation.aspectRatio.isFinite, presentation.aspectRatio > 0 else {
                 throw invalid("presentation \(presentation.id) aspect ratio must be positive", document)
+            }
+            if let cordRig = presentation.cordRig {
+                guard presentation.sourcePresentationID == nil,
+                      !presentation.isInverted else {
+                    throw invalid(
+                        "presentation \(presentation.id).cordRig must be owned "
+                            + "by a canonical non-inverted presentation",
+                        document
+                    )
+                }
+                try validateCordRig(
+                    cordRig,
+                    presentation: presentation,
+                    in: document
+                )
             }
             if let anchor = presentation.geometryRotationAnchor {
                 guard anchor.hasFiniteNormalizedCoordinates else {
@@ -631,29 +801,144 @@ enum BoardPackageWriter {
         try validateAliasProjections(in: document)
     }
 
+    private static func validateCordRig(
+        _ cordRig: BoardCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let rig: BoardDirectTwoAnchorCordRig
+        switch cordRig {
+        case .directTwoAnchor(let value):
+            rig = value
+        }
+
+        let sceneSizeIsValid = rig.sceneSize.width.isFinite
+            && rig.sceneSize.height.isFinite
+            && rig.sceneSize.width > 0
+            && rig.sceneSize.height > 0
+        let sourceFrameIsValid = rig.sourceFrame.x.isFinite
+            && rig.sourceFrame.y.isFinite
+            && rig.sourceFrame.width.isFinite
+            && rig.sourceFrame.height.isFinite
+            && rig.sourceFrame.width > 0
+            && rig.sourceFrame.height > 0
+        let innerFaceFrameIsValid = rig.innerFaceFrame.x.isFinite
+            && rig.innerFaceFrame.y.isFinite
+            && rig.innerFaceFrame.width.isFinite
+            && rig.innerFaceFrame.height.isFinite
+            && rig.innerFaceFrame.width > 0
+            && rig.innerFaceFrame.height > 0
+        guard sceneSizeIsValid, sourceFrameIsValid, innerFaceFrameIsValid else {
+            throw invalid(
+                "presentation \(presentation.id).cordRig must contain finite positive sizes",
+                document
+            )
+        }
+        guard rig.attachmentPoints.count == 2,
+              rig.attachmentPoints.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+              rig.attachmentPoints[0] != rig.attachmentPoints[1] else {
+            throw invalid(
+                "presentation \(presentation.id).cordRig must contain two distinct finite attachment points",
+                document
+            )
+        }
+        guard rig.pullPoint.x.isFinite,
+              rig.pullPoint.y.isFinite,
+              rig.eyeletRadius.isFinite,
+              rig.eyeletRadius > 0 else {
+            throw invalid(
+                "presentation \(presentation.id).cordRig pull point must be finite "
+                    + "and eyelet radius must be finite and positive",
+                document
+            )
+        }
+        let sceneAspectRatio = Double(rig.sceneSize.width / rig.sceneSize.height)
+        let relativeError = abs(presentation.aspectRatio - sceneAspectRatio) / sceneAspectRatio
+        guard relativeError <= presentationAspectRatioRelativeTolerance else {
+            throw invalid(
+                "presentation \(presentation.id).aspectRatio must match cordRig.sceneSize within 0.1%",
+                document
+            )
+        }
+    }
+
     private static func validateAliasProjections(in document: BoardEditableDocument) throws {
+        let presentationsByID = Dictionary(
+            uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
+        )
         for presentation in document.presentations where presentation.isInverted {
             guard let sourcePresentationID = presentation.sourcePresentationID else {
                 continue
             }
             let anchor = presentation.geometryRotationAnchor ?? .center
+            let resolvedCordRig = presentationsByID[sourcePresentationID]?.cordRig
             for hold in document.holds where hold.presentationID == sourcePresentationID {
                 for piece in hold.geometry {
                     let frame = piece.frame
-                    guard BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
-                        x: frame.x,
-                        y: frame.y,
-                        width: frame.width,
-                        height: frame.height,
-                        anchor: anchor
-                    ) else {
+                    let isInsideCanvas: Bool
+                    if case .directTwoAnchor(let rig) = resolvedCordRig {
+                        isInsideCanvas = riggedAliasFrameIsInsideCanvas(
+                            frame,
+                            rig: rig,
+                            anchor: anchor
+                        )
+                    } else {
+                        isInsideCanvas = BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
+                            x: frame.x,
+                            y: frame.y,
+                            width: frame.width,
+                            height: frame.height,
+                            anchor: anchor
+                        )
+                    }
+                    guard isInsideCanvas else {
                         throw invalid(
-                            "presentation \(presentation.id) projects source hold geometry outside the normalized canvas",
+                            "presentation \(presentation.id) projects source hold "
+                                + "geometry outside the normalized canvas",
                             document
                         )
                     }
                 }
             }
+        }
+    }
+
+    private static func riggedAliasFrameIsInsideCanvas(
+        _ frame: BoardPackageFrameDocument,
+        rig: BoardDirectTwoAnchorCordRig,
+        anchor: BoardGeometryRotationAnchor
+    ) -> Bool {
+        let sceneRect = CGRect(origin: .zero, size: rig.sceneSize.cgSize)
+        let faceRect = CGRect(
+            x: rig.sourceFrame.x + rig.innerFaceFrame.x,
+            y: rig.sourceFrame.y + rig.innerFaceFrame.y,
+            width: rig.innerFaceFrame.width,
+            height: rig.innerFaceFrame.height
+        )
+        let transform = BoardPresentationGeometryProjection(
+            rotationDegrees: 180,
+            rotationAnchor: anchor
+        ).affineTransform(in: sceneRect)
+        let corners = [
+            CGPoint(x: CGFloat(frame.x), y: CGFloat(frame.y)),
+            CGPoint(x: CGFloat(frame.x + frame.width), y: CGFloat(frame.y)),
+            CGPoint(x: CGFloat(frame.x), y: CGFloat(frame.y + frame.height)),
+            CGPoint(
+                x: CGFloat(frame.x + frame.width),
+                y: CGFloat(frame.y + frame.height)
+            ),
+        ].map { normalizedPoint in
+            CGPoint(
+                x: faceRect.minX + faceRect.width * normalizedPoint.x,
+                y: faceRect.minY + faceRect.height * normalizedPoint.y
+            ).applying(transform)
+        }
+        let tolerance = max(sceneRect.width, sceneRect.height) * 1e-12
+        return corners.allSatisfy { point in
+            point.x >= sceneRect.minX - tolerance
+                && point.y >= sceneRect.minY - tolerance
+                && point.x <= sceneRect.maxX + tolerance
+                && point.y <= sceneRect.maxY + tolerance
         }
     }
 
@@ -868,7 +1153,50 @@ enum BoardPackageWriter {
                 ("y", .double(anchor.y)),
             ])))
         }
+        if let cordRig = presentation.cordRig {
+            entries.append(("cordRig", canonicalCordRigValue(cordRig)))
+        }
         return .object(entries)
+    }
+
+    private static func canonicalCordRigValue(
+        _ cordRig: BoardCordRig
+    ) -> CanonicalJSONValue {
+        let rig: BoardDirectTwoAnchorCordRig
+        switch cordRig {
+        case .directTwoAnchor(let value):
+            rig = value
+        }
+        return .object([
+            ("type", .string("directTwoAnchor")),
+            ("sceneSize", .object([
+                ("width", .double(Double(rig.sceneSize.width))),
+                ("height", .double(Double(rig.sceneSize.height))),
+            ])),
+            ("sourceFrame", .object([
+                ("x", .double(Double(rig.sourceFrame.x))),
+                ("y", .double(Double(rig.sourceFrame.y))),
+                ("width", .double(Double(rig.sourceFrame.width))),
+                ("height", .double(Double(rig.sourceFrame.height))),
+            ])),
+            ("innerFaceFrame", .object([
+                ("x", .double(Double(rig.innerFaceFrame.x))),
+                ("y", .double(Double(rig.innerFaceFrame.y))),
+                ("width", .double(Double(rig.innerFaceFrame.width))),
+                ("height", .double(Double(rig.innerFaceFrame.height))),
+            ])),
+            ("attachmentPoints", .array(rig.attachmentPoints.map { point in
+                .object([
+                    ("x", .double(Double(point.x))),
+                    ("y", .double(Double(point.y))),
+                ])
+            })),
+            ("pullPoint", .object([
+                ("x", .double(Double(rig.pullPoint.x))),
+                ("y", .double(Double(rig.pullPoint.y))),
+            ])),
+            ("eyeletRadius", .double(Double(rig.eyeletRadius))),
+        ])
     }
 
     private static func canonicalPieceValue(_ piece: BoardEditablePiece) -> CanonicalJSONValue {
