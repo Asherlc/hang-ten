@@ -61,6 +61,57 @@ def test_board_schema_loads_positions_and_directed_transitions() -> None:
     assert board.transition_kind("flipped", "front") == "setupRequired"
 
 
+@pytest.mark.parametrize("field", ["positions", "positionTransitions"])
+def test_board_schema_rejects_explicit_null_position_fields(field: str) -> None:
+    module = load_board_catalog_module()
+    document = (
+        board_document()
+        if field == "positions"
+        else board_positions_document(board_document())
+    )
+    document[field] = None
+
+    with pytest.raises(ValueError, match=rf"board\.json\.{field} must be"):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize(
+    ("from_id", "to_id"),
+    [
+        ("missing", "front"),
+        ("front", "missing"),
+        ("missing", "missing"),
+    ],
+)
+def test_board_transition_kind_rejects_unknown_position_endpoints(
+    from_id: str, to_id: str
+) -> None:
+    module = load_board_catalog_module()
+    board = module._load_board(board_positions_document(board_document()))
+
+    with pytest.raises(ValueError, match="unknown position id: missing"):
+        board.transition_kind(from_id, to_id)
+
+
+@pytest.mark.parametrize(
+    ("kind", "expected"),
+    [
+        ("setupRequired", "setupRequired"),
+        ("unsupported", "unsupported"),
+    ],
+)
+def test_board_schema_loads_all_explicit_transition_kinds(
+    kind: str, expected: str
+) -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    document["positionTransitions"][0]["kind"] = kind
+
+    board = module._load_board(document)
+
+    assert board.transition_kind("front", "flipped") == expected
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

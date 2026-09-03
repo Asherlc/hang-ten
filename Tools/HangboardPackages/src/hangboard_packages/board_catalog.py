@@ -525,6 +525,11 @@ class BoardDocument:
         )
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
+        position_ids = {position.id for position in self.positions}
+        if from_id not in position_ids:
+            raise ValueError(f"unknown position id: {from_id}")
+        if to_id not in position_ids:
+            raise ValueError(f"unknown position id: {to_id}")
         if from_id == to_id:
             return "same"
         transition = next(
@@ -707,8 +712,6 @@ def _load_positions(
     *,
     presentations: tuple[BoardPresentation, ...],
 ) -> tuple[BoardPosition, ...]:
-    if value is None:
-        return tuple(BoardPosition(presentation.id, presentation.id) for presentation in presentations)
     if not isinstance(value, list) or not value:
         raise ValueError(f"{source} must be a non-empty array")
     positions = tuple(
@@ -732,8 +735,6 @@ def _load_position_transitions(
     *,
     positions: tuple[BoardPosition, ...],
 ) -> tuple[BoardPositionTransition, ...]:
-    if value is None:
-        return ()
     if not isinstance(value, list):
         raise ValueError(f"{source} must be an array")
     transitions = tuple(
@@ -814,15 +815,26 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")
-    positions = _load_positions(
-        value.get("positions"),
-        "board.json.positions",
-        presentations=presentations,
+    positions = (
+        _load_positions(
+            value["positions"],
+            "board.json.positions",
+            presentations=presentations,
+        )
+        if "positions" in value
+        else tuple(
+            BoardPosition(presentation.id, presentation.id)
+            for presentation in presentations
+        )
     )
-    position_transitions = _load_position_transitions(
-        value.get("positionTransitions"),
-        "board.json.positionTransitions",
-        positions=positions,
+    position_transitions = (
+        _load_position_transitions(
+            value["positionTransitions"],
+            "board.json.positionTransitions",
+            positions=positions,
+        )
+        if "positionTransitions" in value
+        else ()
     )
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
