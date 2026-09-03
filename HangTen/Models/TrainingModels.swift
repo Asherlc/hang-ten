@@ -136,10 +136,34 @@ struct BoardPresentationGeometryProjection: Hashable {
 
     func affineTransform(in rect: CGRect) -> CGAffineTransform {
         let anchor = resolvedAnchor(in: rect)
-        let radians = rotationDegrees * .pi / 180
-        return CGAffineTransform(translationX: anchor.x, y: anchor.y)
-            .rotated(by: radians)
-            .translatedBy(x: -anchor.x, y: -anchor.y)
+        let remainder = rotationDegrees.truncatingRemainder(dividingBy: 360)
+        let normalizedDegrees = remainder < 0 ? remainder + 360 : remainder
+        let coefficients: (a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat)
+
+        switch normalizedDegrees {
+        case 0:
+            coefficients = (1, 0, 0, 1)
+        case 90:
+            coefficients = (0, 1, -1, 0)
+        case 180:
+            coefficients = (-1, 0, 0, -1)
+        case 270:
+            coefficients = (0, -1, 1, 0)
+        default:
+            let radians = normalizedDegrees * .pi / 180
+            let cosine = cos(radians)
+            let sine = sin(radians)
+            coefficients = (cosine, sine, -sine, cosine)
+        }
+
+        return CGAffineTransform(
+            a: coefficients.a,
+            b: coefficients.b,
+            c: coefficients.c,
+            d: coefficients.d,
+            tx: anchor.x - coefficients.a * anchor.x - coefficients.c * anchor.y,
+            ty: anchor.y - coefficients.b * anchor.x - coefficients.d * anchor.y
+        )
     }
 
     private func resolvedAnchor(in rect: CGRect) -> CGPoint {

@@ -32,6 +32,13 @@ final class BoardCordRigGeometryTests: XCTestCase {
             ),
             in: canvas
         )
+        XCTAssertEqual(uprightGeometry.sceneRect, canvas)
+        XCTAssertEqual(
+            uprightGeometry.sourceRect,
+            CGRect(x: 0, y: 214, width: 1200, height: 1250)
+        )
+        XCTAssertEqual(uprightGeometry.faceTransform, .identity)
+
         let ninetyGeometry = BoardCordRigGeometry.make(
             rig: portBackRig,
             projection: BoardPresentationGeometryProjection(
@@ -39,6 +46,10 @@ final class BoardCordRigGeometryTests: XCTestCase {
                 rotationAnchor: anchor
             ),
             in: canvas
+        )
+        XCTAssertEqual(
+            ninetyGeometry.faceTransform,
+            CGAffineTransform(a: 0, b: 1, c: -1, d: 0, tx: 1504, ty: 304)
         )
         assertEqual(ninetyGeometry.projectedAttachments[0], CGPoint(x: 578, y: 507))
         assertEqual(ninetyGeometry.projectedAttachments[1], CGPoint(x: 578, y: 1301))
@@ -50,6 +61,10 @@ final class BoardCordRigGeometryTests: XCTestCase {
                 rotationAnchor: anchor
             ),
             in: canvas
+        )
+        XCTAssertEqual(
+            invertedGeometry.faceTransform,
+            CGAffineTransform(a: -1, b: 0, c: 0, d: -1, tx: 1200, ty: 1808)
         )
         assertEqual(
             invertedGeometry.faceRect,
@@ -90,6 +105,19 @@ final class BoardCordRigGeometryTests: XCTestCase {
             invertedGeometry.supportPaths.map(pathElements)
         )
         XCTAssertNotEqual(uprightGeometry.faceTransform, invertedGeometry.faceTransform)
+
+        let twoSeventyGeometry = BoardCordRigGeometry.make(
+            rig: portBackRig,
+            projection: BoardPresentationGeometryProjection(
+                rotationDegrees: 270,
+                rotationAnchor: anchor
+            ),
+            in: canvas
+        )
+        XCTAssertEqual(
+            twoSeventyGeometry.faceTransform,
+            CGAffineTransform(a: 0, b: -1, c: 1, d: 0, tx: -304, ty: 1504)
+        )
     }
 
     private func assertEqual(
