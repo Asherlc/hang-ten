@@ -330,7 +330,7 @@ enum WorkoutPositionResolver {
 }
 ```
 
-For each target-bearing normalized step, resolve every target against holds visible in each candidate position; accept a candidate only when every top-level and segment target resolves there. Intersect semantic `positionIDs` constraints. Derive the default position as the first declared position whose `presentationID` is the board's default presentation; declaration order selects it when multiple positions map to that presentation. Use dynamic programming with score tuple `(setupRequiredCount, seamlessCount, defaultPositionPenalty, declarationOrderPath)` and retain predecessors to reconstruct the globally optimal path. There is no assumed prior physical position: initialize every candidate for the first target-bearing step with zero transition costs. Accumulate `defaultPositionPenalty` per target-bearing selected position, adding `0` for the derived default and `1` otherwise; rest-only steps add no penalty. Keep the declaration-order path as the final tie-break. Never mutate `TrainingPlan`.
+For each target-bearing normalized step, resolve every target against holds visible in each candidate position; accept a candidate only when every top-level and segment target resolves there. Intersect semantic `positionIDs` constraints. Derive the default position as the first declared position whose `presentationID` is the board's default presentation; declaration order selects it when multiple positions map to that presentation. If no authored position maps to the default presentation, use the first declared position. Use dynamic programming with score tuple `(setupRequiredCount, seamlessCount, defaultPositionPenalty, declarationOrderPath)` and retain predecessors to reconstruct the globally optimal path. There is no assumed prior physical position: initialize every candidate for the first target-bearing step with zero transition costs. Accumulate `defaultPositionPenalty` per target-bearing selected position, adding `0` for the derived default and `1` otherwise; rest-only steps add no penalty. Keep the declaration-order path as the final tie-break. Never mutate `TrainingPlan`.
 
 - [ ] **Step 4: Wire launch-time resolution without changing playback yet**
 
@@ -488,7 +488,7 @@ At initial appearance, show the initial gate before sensor preparation and count
 
 - [ ] **Step 5: Integrate rest and navigation transitions**
 
-Use the resolved step's hold IDs and position ID for board cues. Pass `selectedPresentationID` and `allowsPresentationSelection: false` to workout maps. At a setup-required rest, show the nonblocking cue and Ready control; clamp elapsed time to the next work step's exact start offset and pause if rest expires unconfirmed. Route skip/jump through the coordinator before seeking. Disable unsupported rows in `WorkoutStepPickerView` with the text `This board position cannot be reached during the workout.` Rewind must use the reverse directed edge.
+Use the resolved step's hold IDs and position ID for board cues. Pass `selectedPresentationID` and `allowsPresentationSelection: false` to workout maps. At a setup-required rest, show the nonblocking cue and Ready control; clamp elapsed time to the next work step's exact start offset and pause if rest expires unconfirmed. Route skip/jump through the coordinator before seeking. Navigating to a rest-only step with resolved `positionID == nil` retains the current confirmed position and performs no transition lookup or gate; a later target-bearing navigation evaluates its transition from that retained confirmed position. Disable unsupported rows in `WorkoutStepPickerView` with the text `This board position cannot be reached during the workout.` Rewind must use the reverse directed edge.
 
 - [ ] **Step 6: Add position audio and run focused tests**
 
@@ -545,7 +545,7 @@ Use sealed equivalents of Task 6's gate/events. Add `WorkoutViewModel.confirmPos
 
 - [ ] **Step 4: Implement Compose setup UI and locked presentation**
 
-Resolve once at screen entry. Show resolution failure instead of starting a session. Render initial and blocking setup as a full setup card; render setup-required rest as a nonblocking cue with `Ready`. Pass resolved `positionId` to `BoardCanvas`, select its presentation, and remove workout-time presentation switching. Call `audioCoach.speakInstruction("Move board to ${position.name}")` once per transition.
+Resolve once at screen entry. Show resolution failure instead of starting a session. Render initial and blocking setup as a full setup card; render setup-required rest as a nonblocking cue with `Ready`. Navigating to a rest-only step with resolved `positionId == null` retains the current confirmed position and performs no transition lookup or gate; a later target-bearing navigation evaluates its transition from that retained confirmed position. Pass resolved `positionId` to `BoardCanvas`, select its presentation, and remove workout-time presentation switching. Call `audioCoach.speakInstruction("Move board to ${position.name}")` once per transition.
 
 Add Compose assertions for `Set board position`, the presentation name, `Ready`, rest continuing before expiry, and pause at expiry.
 

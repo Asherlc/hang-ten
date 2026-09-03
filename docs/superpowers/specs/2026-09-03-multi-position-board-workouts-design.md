@@ -101,7 +101,7 @@ subset of positions when the meaning depends on orientation:
 ```json
 {
   "holdIDs": ["edge-20"],
-  "positionIDs": ["front-inverted"]
+  "positionIDs": ["side"]
 }
 ```
 
@@ -157,7 +157,9 @@ Preparation resolves targets to candidate placements for every target-bearing
 step, then selects positions across the whole routine. Unsupported edges are
 forbidden. The board's default position is the first declared position whose
 `presentationID` is the board's default presentation; if more than one
-position maps to that presentation, declaration order selects the default.
+position maps to that presentation, declaration order selects the default. If
+no authored position maps to the default presentation, the first declared
+position is the default.
 Valid sequences are ranked lexicographically by:
 
 1. fewest `setupRequired` transitions;
@@ -220,6 +222,11 @@ step's already-resolved position:
 - same-position and seamless jumps proceed with the appropriate cue;
 - setup-required jumps enter the untimed readiness gate; and
 - unsupported jumps are disabled with an explanation.
+
+Navigating to a rest-only step, whose resolved position is `nil`, retains the
+current confirmed position and performs no transition lookup or readiness gate.
+When the athlete later navigates to a target-bearing step, its transition is
+evaluated from that retained confirmed position.
 
 Rewinding uses the same directed lookup and can therefore behave differently
 from the original forward transition. Pausing and resuming do not clear the

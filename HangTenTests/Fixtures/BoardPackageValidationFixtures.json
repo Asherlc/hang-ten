@@ -121,20 +121,6 @@
     ],
     "positionTransitions": [
       {"fromPositionID": "front", "toPositionID": "flipped", "kind": "seamless"}
-    ],
-    "invalidCases": [
-      "explicit-null-positions",
-      "explicit-null-position-transitions",
-      "duplicate-position-id",
-      "unknown-position-presentation",
-      "duplicate-position-transition",
-      "unknown-transition-source",
-      "unknown-transition-destination",
-      "self-transition",
-      "unsupported-transition-kind",
-      "unknown-position-key",
-      "unknown-transition-key",
-      "position-without-canonical-holds"
     ]
   }
 }

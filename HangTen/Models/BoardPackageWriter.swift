@@ -82,15 +82,72 @@ struct BoardEditableDocument: Equatable, Decodable {
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
         positions = container.contains(.positions)
-            ? try container.decode([BoardPosition].self, forKey: .positions)
+            ? try container.decode(
+                [BoardEditablePositionDocument].self,
+                forKey: .positions
+            ).map(\.position)
             : nil
         positionTransitions = container.contains(.positionTransitions)
-            ? try container.decode([BoardPositionTransition].self, forKey: .positionTransitions)
+            ? try container.decode(
+                [BoardEditablePositionTransitionDocument].self,
+                forKey: .positionTransitions
+            ).map(\.transition)
             : nil
     }
 
     init(data: Data) throws {
         self = try JSONDecoder().decode(BoardEditableDocument.self, from: data)
+    }
+}
+
+private struct BoardEditablePositionDocument: Decodable {
+    let id: String
+    let presentationID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case presentationID
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["id", "presentationID"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        presentationID = try container.decode(String.self, forKey: .presentationID)
+    }
+
+    var position: BoardPosition {
+        BoardPosition(id: id, presentationID: presentationID)
+    }
+}
+
+private struct BoardEditablePositionTransitionDocument: Decodable {
+    let fromPositionID: String
+    let toPositionID: String
+    let kind: BoardPositionTransitionKind
+
+    private enum CodingKeys: String, CodingKey {
+        case fromPositionID
+        case toPositionID
+        case kind
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys([
+            "fromPositionID", "toPositionID", "kind"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        fromPositionID = try container.decode(String.self, forKey: .fromPositionID)
+        toPositionID = try container.decode(String.self, forKey: .toPositionID)
+        kind = try container.decode(BoardPositionTransitionKind.self, forKey: .kind)
+    }
+
+    var transition: BoardPositionTransition {
+        BoardPositionTransition(
+            fromPositionID: fromPositionID,
+            toPositionID: toPositionID,
+            kind: kind
+        )
     }
 }
 

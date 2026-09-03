@@ -2027,7 +2027,8 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
 
         XCTAssertEqual(board.positions.map(\.id), ["front", "flipped"])
-        XCTAssertEqual(board.holdIDs(inPosition: "front"), board.holdIDs(inPosition: "flipped"))
+        XCTAssertEqual(board.holdIDs(inPosition: "front"), ["hold-left"])
+        XCTAssertEqual(board.holdIDs(inPosition: "flipped"), ["hold-left"])
         XCTAssertEqual(board.transitionKind(from: "front", to: "front"), .same)
         XCTAssertEqual(board.transitionKind(from: "front", to: "flipped"), .seamless)
         XCTAssertEqual(board.transitionKind(from: "flipped", to: "front"), .setupRequired)

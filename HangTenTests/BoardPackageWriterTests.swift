@@ -875,6 +875,39 @@ final class BoardPackageWriterTests: XCTestCase {
         )
     }
 
+    func testEditorDecoderRejectsUnknownKeysInPositions() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        var document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        document["positions"] = [[
+            "id": "front",
+            "presentationID": "front",
+            "unexpected": true,
+        ]]
+
+        XCTAssertThrowsError(
+            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
+        )
+    }
+
+    func testEditorDecoderRejectsUnknownKeysInPositionTransitions() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        var document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        document["positionTransitions"] = [[
+            "fromPositionID": "front",
+            "toPositionID": "flipped",
+            "kind": "seamless",
+            "unexpected": true,
+        ]]
+
+        XCTAssertThrowsError(
+            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
+        )
+    }
+
     func testEditorDecoderPreservesOmittedKindButRejectsNullKind() throws {
         let encoded = try BoardPackageWriter.data(for: makeDocument())
         let source = String(decoding: encoded, as: UTF8.self)
