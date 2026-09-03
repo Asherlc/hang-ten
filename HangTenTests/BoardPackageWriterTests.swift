@@ -215,6 +215,62 @@ final class BoardPackageWriterTests: XCTestCase {
         ])
     }
 
+    func testWriterRoundTripsExplicitPositionsAndTransitions() throws {
+        var document = makeDocument()
+        document.positions = [
+            BoardPosition(id: "front", presentationID: "front"),
+            BoardPosition(id: "flipped", presentationID: "front-inverted"),
+        ]
+        document.positionTransitions = [
+            BoardPositionTransition(
+                fromPositionID: "front",
+                toPositionID: "flipped",
+                kind: .seamless
+            ),
+        ]
+        document.presentations.append(
+            BoardEditablePresentation(
+                id: "front-inverted",
+                name: "Front inverted",
+                assetPath: "assets/front-inverted.png",
+                aspectRatio: 2,
+                isDefault: false,
+                sourcePresentationID: "front",
+                isInverted: true
+            )
+        )
+
+        let redecoded = try BoardEditableDocument(data: BoardPackageWriter.data(for: document))
+
+        XCTAssertEqual(redecoded.positions, document.positions)
+        XCTAssertEqual(redecoded.positionTransitions, document.positionTransitions)
+    }
+
+    func testWriterLeavesLegacyTwoPresentationDocumentsWithoutExplicitPositions() throws {
+        var document = makeDocument()
+        var backHold = makeHold(id: "back-hold", name: "Back hold")
+        backHold.presentationID = "back"
+        document.holds.append(backHold)
+        document.presentations.append(
+            BoardEditablePresentation(
+                id: "back",
+                name: "Back",
+                assetPath: "assets/back.png",
+                aspectRatio: 2,
+                isDefault: false
+            )
+        )
+
+        let data = try BoardPackageWriter.data(for: document)
+        let decoded = try BoardEditableDocument(data: data)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        XCTAssertNil(decoded.positions)
+        XCTAssertNil(decoded.positionTransitions)
+        XCTAssertNil(object["positions"])
+        XCTAssertNil(object["positionTransitions"])
+    }
+
     func testWriterRejectsHoldWithUnknownEquipmentObject() throws {
         var document = makeDocument()
         document.equipmentObjects = [EquipmentObject(id: "primary")]
@@ -451,18 +507,17 @@ final class BoardPackageWriterTests: XCTestCase {
             of: "    }\n  ]\n}\n",
             with: aliasPresentation + "\n  ]\n}\n"
         )
-        let aliasOwnedHold = try editorDocument(
-            withAlias.replacingOccurrences(
-                of: "\"presentationID\": \"front\"",
-                with: "\"presentationID\": \"front-inverted\""
-            )
-        )
+        var aliasOwnedHold = try editorDocument(withAlias)
+        var copiedHold = try XCTUnwrap(aliasOwnedHold.holds.first)
+        copiedHold.id = "alias-owned-hold"
+        copiedHold.presentationID = "front-inverted"
+        aliasOwnedHold.holds.append(copiedHold)
 
         XCTAssertThrowsError(try BoardPackageWriter.data(for: aliasOwnedHold)) { error in
             XCTAssertEqual(
                 error as? BoardPackageWriterError,
                 .invalid(
-                    "board test.board: hold hold-one must be owned by a canonical presentation"
+                    "board test.board: hold alias-owned-hold must be owned by a canonical presentation"
                 )
             )
         }
@@ -813,6 +868,39 @@ final class BoardPackageWriterTests: XCTestCase {
             JSONSerialization.jsonObject(with: encoded) as? [String: Any]
         )
         document["equipmentObjects"] = [["id": "primary", "unexpected": true]]
+
+        XCTAssertThrowsError(
+            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
+        )
+    }
+
+    func testEditorDecoderRejectsUnknownKeysInPositions() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        var document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        document["positions"] = [[
+            "id": "front",
+            "presentationID": "front",
+            "unexpected": true,
+        ]]
+
+        XCTAssertThrowsError(
+            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
+        )
+    }
+
+    func testEditorDecoderRejectsUnknownKeysInPositionTransitions() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        var document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        document["positionTransitions"] = [[
+            "fromPositionID": "front",
+            "toPositionID": "flipped",
+            "kind": "seamless",
+            "unexpected": true,
+        ]]
 
         XCTAssertThrowsError(
             try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))

@@ -113,5 +113,14 @@
         {"command": "close"}
       ]
     }
-  ]
+  ],
+  "boardPositions": {
+    "positions": [
+      {"id": "front", "presentationID": "primary"},
+      {"id": "flipped", "presentationID": "front-inverted"}
+    ],
+    "positionTransitions": [
+      {"fromPositionID": "front", "toPositionID": "flipped", "kind": "seamless"}
+    ]
+  }
 }

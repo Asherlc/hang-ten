@@ -165,21 +165,34 @@ struct PlanMetadata: Codable, Hashable {
 struct SemanticHoldMappingDefinition: Codable, Hashable {
     let holdIDs: [String]
     let kind: HoldKind?
+    let positionIDs: [String]
 
     private enum CodingKeys: String, CodingKey {
         case holdIDs
         case kind
+        case positionIDs
     }
 
-    init(holdIDs: [String] = [], kind: HoldKind? = nil) {
+    init(holdIDs: [String] = [], kind: HoldKind? = nil, positionIDs: [String] = []) {
         self.holdIDs = holdIDs
         self.kind = kind
+        self.positionIDs = positionIDs
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         holdIDs = try container.decodeIfPresent([String].self, forKey: .holdIDs) ?? []
         kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
+        positionIDs = try container.decodeIfPresent([String].self, forKey: .positionIDs) ?? []
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(holdIDs, forKey: .holdIDs)
+        try container.encodeIfPresent(kind, forKey: .kind)
+        if !positionIDs.isEmpty {
+            try container.encode(positionIDs, forKey: .positionIDs)
+        }
     }
 
     var isResolvable: Bool {
@@ -767,6 +780,7 @@ enum PlanLibraryValidator {
 
             guard let board = boardByID[mapping.boardID]?.first else { continue }
             let knownHoldIDs = Set(board.holds.map(\.id))
+            let knownPositionIDs = Set(board.positions.map(\.id))
             for (semanticID, target) in mapping.semanticHolds {
                 let semanticPath = "\(path).semanticHolds.\(semanticID)"
                 if semanticID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -781,8 +795,14 @@ enum PlanLibraryValidator {
                 if Set(target.holdIDs).count != target.holdIDs.count {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Hold IDs must be unique."))
                 }
+                if Set(target.positionIDs).count != target.positionIDs.count {
+                    issues.append(PlanValidationIssue(path: semanticPath, message: "Position IDs must be unique."))
+                }
                 for holdID in target.holdIDs where !knownHoldIDs.contains(holdID) {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(mapping.boardID)\"."))
+                }
+                for positionID in target.positionIDs where !knownPositionIDs.contains(positionID) {
+                    issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown position ID \"\(positionID)\" for board \"\(mapping.boardID)\"."))
                 }
                 if let kind = target.kind,
                    !board.holds.contains(where: { $0.kind == kind }) {
