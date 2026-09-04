@@ -19,19 +19,22 @@ the user approved it as good enough to implement:
 The first production slice established the Port-A-Board `primary` front face
 and its `front-inverted` presentation. After that source and runtime treatment
 were reviewed, the same proven seam was extended to the separately reviewed
-`back` face and its metadata-only `back-inverted` position. Workbench support,
-the pinch side, and catalog-wide migration remain separate work.
+`back` physical face at its approved upright position. `back` is a face
+identity, not an orientation label, and no rotated-back presentation ships.
+Workbench support, the pinch side, and catalog-wide migration remain separate
+work.
 
 ## Goal
 
 Render each opted-in Port physical face from one exact transparent, cord-free
-source image in upright and 180-degree clock-face orientations. The board, holds, markers,
+source image at its explicitly declared clock-face position. The front ships
+upright and at 180 degrees; the distinct back face ships upright only. The board, holds, markers,
 hit shapes, eyelets, and eyelet foreground pieces share one 2D affine
 transform. The support bight, knot, and pull point stay fixed above the board
 in screen coordinates.
 
 The slice succeeds when isolated transparent board-canvas renders match the
-approved treatment at `0°` and `180°`, the hold geometry stays aligned, and
+approved treatment at every declared position, the hold geometry stays aligned, and
 every presentation without a resolved rig follows the current image path
 unchanged.
 
@@ -331,12 +334,13 @@ Only these presentation changes ship initially:
 | `primary` | restore exact cord-free `primary.png`; own the approved rig; set aspect ratio to `50 / 61` |
 | `front-inverted` | inherit the `primary` rig; share `assets/primary.png`; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)` |
 | `back` | restore exact cord-free `back.png`; own the approved rig with attachment points `(203, 712)` and `(997, 712)`; set aspect ratio to `50 / 61` |
-| `back-inverted` | inherit the `back` rig; share `assets/back.png`; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)` |
 
 The user approved one stored raster per physical face and the removal of
 duplicate presentation metadata. `cord-option-4-20mm-incut` resolved to the
 same front face and exact 180-degree rotation as `front-inverted`, so that
-duplicate record and both redundant front alias PNGs are removed. No hold
+duplicate record and the redundant front alias PNG are removed. A proposed
+rotated presentation of the separate back physical face was rejected and is
+not part of the package. No hold
 record, hold path, hold metadata, remaining presentation name, training
 content, or product URL changes.
 
@@ -352,11 +356,12 @@ Implementation therefore stops at these gates:
   canonical-image resolution for the inverted alias, and the unchanged
   non-rig branch;
 - one iOS writer round-trip test for the exact closed JSON object;
-- one Python parser-compatibility test for the same object and Port alias;
+- one Python parser-compatibility test for the same object and a synthetic
+  rotation alias;
 - one focused iOS Simulator build; and
-- two isolated transparent `1200 × 1464` board-canvas outputs, shown one at a
-  time with the manufacturer link; back outputs are freshly rendered from the
-  production path rather than accepted from any rejected disposable preview.
+- isolated transparent `1200 × 1464` board-canvas outputs, shown one at a
+  time with the manufacturer link; the back output is freshly rendered from
+  the production path rather than accepted from a disposable preview.
 
 There is no full unit/UI suite, app-review screenshot set, multi-size matrix,
 Workbench gallery, interaction matrix, or accessibility matrix before this

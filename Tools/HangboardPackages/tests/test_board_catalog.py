@@ -24,7 +24,7 @@ from conftest import (
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
-def test_port_back_uses_one_approved_source_raster_without_changing_holds() -> None:
+def test_port_back_is_one_distinct_approved_physical_face_without_changing_holds() -> None:
     module = load_board_catalog_module()
     repository_root = Path(__file__).resolve().parents[3]
     package_root = repository_root / "Hangboards" / "frictitious-port-a-board"
@@ -32,7 +32,7 @@ def test_port_back_uses_one_approved_source_raster_without_changing_holds() -> N
     presentations = {item["id"]: item for item in document["presentations"]}
 
     assert presentations["back"]["assetPath"] == "assets/back.png"
-    assert presentations["back-inverted"]["assetPath"] == "assets/back.png"
+    assert "back-inverted" not in presentations
     assert not (package_root / "assets" / "back-inverted.png").exists()
     assert hashlib.sha256((package_root / "assets" / "back.png").read_bytes()).hexdigest() == (
         "39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e"
@@ -49,7 +49,8 @@ def test_port_back_uses_one_approved_source_raster_without_changing_holds() -> N
 
     package = module.load_board_package(package_root)
     parsed_presentations = {item.id: item for item in package.board.presentations}
-    assert parsed_presentations["back-inverted"].source_presentation_id == "back"
+    assert parsed_presentations["back"].source_presentation_id is None
+    assert "back-inverted" not in parsed_presentations
 
 
 def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:
@@ -674,7 +675,7 @@ def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
         module.load_board_package(package_root)
 
 
-def test_direct_two_anchor_cord_rig_matches_ios_vertical_slice(tmp_path: Path) -> None:
+def test_direct_two_anchor_cord_rig_matches_ios_schema(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
@@ -698,9 +699,9 @@ def test_direct_two_anchor_cord_rig_matches_ios_vertical_slice(tmp_path: Path) -
     )
     document["presentations"].append(
         {
-            "id": "back-inverted",
-            "name": "Back inverted",
-            "assetPath": "assets/back-inverted.png",
+            "id": "rig-rotated",
+            "name": "Rig rotated",
+            "assetPath": "assets/rig-rotated.png",
             "aspectRatio": 50 / 61,
             "default": False,
             "sourcePresentationID": "back",
@@ -722,13 +723,13 @@ def test_direct_two_anchor_cord_rig_matches_ios_vertical_slice(tmp_path: Path) -
         + _png_chunk(b"IEND")
     )
     (package_root / "assets" / "back.png").write_bytes(square_png)
-    (package_root / "assets" / "back-inverted.png").write_bytes(square_png)
+    (package_root / "assets" / "rig-rotated.png").write_bytes(square_png)
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     package = module.load_board_package(package_root)
     presentations = {item.id: item for item in package.board.presentations}
     back = presentations["back"]
-    back_inverted = presentations["back-inverted"]
+    rig_rotated = presentations["rig-rotated"]
     primary = presentations["primary"]
 
     assert back.cord_rig == module.DirectTwoAnchorCordRig(
@@ -740,10 +741,10 @@ def test_direct_two_anchor_cord_rig_matches_ios_vertical_slice(tmp_path: Path) -
         eyelet_radius=34,
     )
     assert back.source_presentation_id is None
-    assert back_inverted.cord_rig is None
-    assert back_inverted.source_presentation_id == "back"
-    assert back_inverted.aspect_ratio == 50 / 61
-    assert back_inverted.geometry_rotation_anchor == module.NormalizedPoint(
+    assert rig_rotated.cord_rig is None
+    assert rig_rotated.source_presentation_id == "back"
+    assert rig_rotated.aspect_ratio == 50 / 61
+    assert rig_rotated.geometry_rotation_anchor == module.NormalizedPoint(
         0.5, 0.6174863387978142
     )
     assert primary.cord_rig is None

@@ -58,16 +58,6 @@
         "eyeletRadius": 34
       }
     },
-    {
-      "id": "back-inverted",
-      "name": "Back Inverted",
-      "assetPath": "assets/back.png",
-      "aspectRatio": 0.819672131147541,
-      "default": false,
-      "sourcePresentationID": "back",
-      "isInverted": true,
-      "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142}
-    },
     {"id": "side", "name": "Pinch Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}
   ],
   "holds": [

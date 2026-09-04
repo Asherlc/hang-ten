@@ -324,12 +324,12 @@ Add
 to `BoardPackageStoreTests.swift`. Its temporary package has:
 
 - canonical `back` with the exact rig JSON from the spec and `assets/back.png`;
-- `back-inverted` sourcing `back`, with `isInverted: true`, normalized anchor
-  `{ "x": 0.5, "y": 0.6174863387978142 }`, and a distinct existing
-  `assets/back-inverted.png`; and
+- a synthetic `rig-rotated` alias sourcing `back`, with `isInverted: true`,
+  normalized anchor `{ "x": 0.5, "y": 0.6174863387978142 }`, and a distinct
+  existing `assets/rig-rotated.png`; and
 - one non-rig `primary` presentation with `assets/primary.png`.
 
-Assert that only `back` owns the rig, `back-inverted` resolves the same value,
+Assert that only `back` owns the rig, `rig-rotated` resolves the same value,
 `presentationArtworkImageURL` returns `back.png` for both back presentations,
 and both `presentationImageURL` and `presentationArtworkImageURL` still return
 `primary.png` for the non-rig presentation.
@@ -348,7 +348,7 @@ attachmentPoints, pullPoint, eyeletRadius
 
 - [ ] **Step 3: Add one failing Python compatibility test.**
 
-Add `test_direct_two_anchor_cord_rig_matches_ios_vertical_slice` to
+Add `test_direct_two_anchor_cord_rig_matches_ios_schema` to
 `test_board_catalog.py`. Load the same three-presentation fixture and assert
 the seven closed keys and exact numeric values, canonical ownership, alias
 source/aspect/anchor, and no rig on `primary`.
@@ -357,7 +357,7 @@ source/aspect/anchor, and no rig on `primary`.
 
 ```bash
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardPackageStoreTests/testDirectTwoAnchorRigLoadsAndAliasUsesCanonicalArtworkWithoutChangingLegacySelection -only-testing:HangTenTests/BoardPackageWriterTests/testDirectTwoAnchorCordRigRoundTripsInCanonicalOrder
-rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_vertical_slice
+rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_schema
 ```
 
 Expected: both commands fail because `cordRig` is not recognized.
@@ -571,7 +571,7 @@ Run only the already-defined focused tests and focused build:
 
 ```bash
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardCordRigGeometryTests/testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport -only-testing:HangTenTests/BoardPackageStoreTests/testDirectTwoAnchorRigLoadsAndAliasUsesCanonicalArtworkWithoutChangingLegacySelection -only-testing:HangTenTests/BoardPackageWriterTests/testDirectTwoAnchorCordRigRoundTripsInCanonicalOrder
-rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_vertical_slice
+rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_schema
 rtk xcodebuild build -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'
 ```
 
@@ -629,15 +629,15 @@ After explicit review of the exact historical back source, restore
 `e12e7f66:Hangboards/frictitious-port-a-board/assets/back.png` byte-for-byte.
 Make canonical `back` own the same scene/frame/pull/radius contract, with its
 deliberately authored attachment points `(203, 712)` and `(997, 712)`.
-Keep `back-inverted` as the existing semantic presentation, but make it a
-metadata-only 180-degree position about `(0.5, 113 / 183)` sharing
-`assets/back.png`; then delete only redundant `assets/back-inverted.png`.
+Treat `back` as the distinct 8/10/12/15 physical face at its approved upright
+position. Remove the rejected rotated-back presentation; do not infer another
+position from the physical-face name.
 
-Extend the one focused production-render test to write fresh `back.png` and
-`back-inverted.png` review canvases at `1200 × 1464`, assert transparent
-corners and canonical artwork resolution, and directly lock the approved back
-SHA-256 plus unchanged canonical holds hash. Run only that test, the existing
-focused package parser/validator gates, and package validation. Inspect the two
-new production renders at original size, commit and push the package/test/audit
+Extend the one focused production-render test to write a fresh `back.png`
+review canvas at `1200 × 1464`, assert transparent corners and canonical
+artwork resolution, and directly lock the approved back SHA-256 plus unchanged
+canonical holds hash. Run only that test, the existing
+focused package parser/validator gates, and package validation. Inspect the
+new production render at original size, commit and push the package/test/audit
 changes, then stop for one-by-one review with the manufacturer product link.
 Do not modify the side presentation, Workbench, or any other package.
