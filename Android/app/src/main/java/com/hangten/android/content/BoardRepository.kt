@@ -8,7 +8,10 @@ interface ContentAssets {
     fun list(path: String): List<String>?
     fun read(path: String): String?
     fun exists(path: String): Boolean
+    fun imageDimensions(path: String): ContentImageDimensions?
 }
+
+data class ContentImageDimensions(val width: Int, val height: Int)
 
 interface BoardRepository {
     fun loadBoards(): Result<List<Board>>
@@ -100,6 +103,7 @@ class AssetBoardRepository(
                 )
             }
         }
+        validateCordRigImageAspects(boardId, packageName, presentations, presentationsById)
 
         val holds = objectValue.required("holds", path)
             .asArray("$path.holds")
@@ -146,6 +150,43 @@ class AssetBoardRepository(
             holds = holds,
             packageName = packageName,
         )
+    }
+
+    private fun validateCordRigImageAspects(
+        boardId: String,
+        packageName: String,
+        presentations: List<BoardPresentation>,
+        presentationsById: Map<String, BoardPresentation>,
+    ) {
+        val dimensionsByAssetPath = mutableMapOf<String, ContentImageDimensions>()
+        presentations.forEach { presentation ->
+            val canonical = presentation.sourcePresentationId
+                ?.let(presentationsById::get)
+                ?: presentation
+            val rig = canonical.cordRig ?: return@forEach
+            val assetPath = "$BOARDS_ROOT/$packageName/${presentation.assetPath}"
+            val dimensions = dimensionsByAssetPath[assetPath] ?: assets.imageDimensions(assetPath)
+            if (dimensions == null || dimensions.width <= 0 || dimensions.height <= 0) {
+                fail(
+                    "Board $boardId presentation ${presentation.id} asset ${presentation.assetPath} " +
+                        "must be a decodable PNG.",
+                )
+            }
+            dimensionsByAssetPath[assetPath] = dimensions
+            val expectedAspectRatio = rig.innerFaceFrame.width / rig.innerFaceFrame.height
+            val imageAspectRatio = dimensions.width.toFloat() / dimensions.height.toFloat()
+            if (!aspectRatiosMatch(
+                    expectedAspectRatio,
+                    imageAspectRatio,
+                    PRESENTATION_ASPECT_RATIO_TOLERANCE,
+                )
+            ) {
+                fail(
+                    "Board $boardId presentation ${canonical.id}.cordRig.innerFaceFrame aspect ratio " +
+                        "must match presentation image width/height within 0.1%.",
+                )
+            }
+        }
     }
 
     private fun validateAliasProjections(

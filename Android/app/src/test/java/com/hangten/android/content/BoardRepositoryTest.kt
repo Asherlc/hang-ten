@@ -114,6 +114,9 @@ class BoardRepositoryTest {
                     "Hangboards/demo/board.json" to riggedBoardJson(),
                     "Hangboards/demo/assets/primary.png" to "png",
                 ),
+                imageDimensions = mapOf(
+                    "Hangboards/demo/assets/primary.png" to ContentImageDimensions(width = 1400, height = 1400),
+                ),
             ),
         ).loadBoards().getOrThrow().single()
 
@@ -135,6 +138,20 @@ class BoardRepositoryTest {
         assertEquals("primary", board.holdPresentationId(inverted))
         assertEquals(BoardGeometryRotationAnchor(0.5f, 113f / 183f), inverted.geometryRotationAnchor)
         assertEquals(180f, inverted.resolvedRotationDegrees)
+    }
+
+    @Test
+    fun rejectsDirectCordRigImageWhoseAspectDoesNotMatchInnerFaceFrame() {
+        val result = loadRiggedBoard(
+            source = riggedBoardJson(),
+            imageDimensions = ContentImageDimensions(width = 1400, height = 700),
+        )
+
+        assertTrueFailureContaining(
+            result,
+            "presentation primary.cordRig.innerFaceFrame aspect ratio must match " +
+                "presentation image width/height within 0.1%",
+        )
     }
 
     @Test
@@ -368,13 +385,17 @@ class BoardRepositoryTest {
         }
     }
 
-    private fun loadRiggedBoard(source: String): Result<List<Board>> =
+    private fun loadRiggedBoard(
+        source: String,
+        imageDimensions: ContentImageDimensions = ContentImageDimensions(width = 1400, height = 1400),
+    ): Result<List<Board>> =
         AssetBoardRepository(
             FixtureAssets(
                 mapOf(
                     "Hangboards/demo/board.json" to source,
                     "Hangboards/demo/assets/primary.png" to "png",
                 ),
+                imageDimensions = mapOf("Hangboards/demo/assets/primary.png" to imageDimensions),
             ),
         ).loadBoards()
 
@@ -529,6 +550,7 @@ class BoardRepositoryTest {
 
 class FixtureAssets(
     private val files: Map<String, String>,
+    private val imageDimensions: Map<String, ContentImageDimensions> = emptyMap(),
 ) : ContentAssets {
     override fun list(path: String): List<String>? {
         val prefix = path.trimEnd('/') + "/"
@@ -542,6 +564,8 @@ class FixtureAssets(
     override fun read(path: String): String? = files[path]
 
     override fun exists(path: String): Boolean = path in files
+
+    override fun imageDimensions(path: String): ContentImageDimensions? = imageDimensions[path]
 }
 
 private fun assertTrueFailureContaining(result: Result<*>, expected: String) {

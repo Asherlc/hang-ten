@@ -1,6 +1,7 @@
 package com.hangten.android.content
 
 import java.io.File
+import javax.imageio.ImageIO
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -176,4 +177,21 @@ private class StagedContentAssets(
     override fun read(path: String): String? = File(root, path).takeIf(File::isFile)?.readText()
 
     override fun exists(path: String): Boolean = File(root, path).isFile
+
+    override fun imageDimensions(path: String): ContentImageDimensions? {
+        val file = File(root, path).takeIf(File::isFile) ?: return null
+        return runCatching {
+            ImageIO.createImageInputStream(file)?.use { input ->
+                val readers = ImageIO.getImageReaders(input)
+                if (!readers.hasNext()) return@use null
+                val reader = readers.next()
+                try {
+                    reader.input = input
+                    ContentImageDimensions(width = reader.getWidth(0), height = reader.getHeight(0))
+                } finally {
+                    reader.dispose()
+                }
+            }
+        }.getOrNull()
+    }
 }

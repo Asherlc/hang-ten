@@ -16,6 +16,8 @@ import com.hangten.android.billing.PurchaseManager
 import com.hangten.android.content.AssetBoardRepository
 import com.hangten.android.content.AssetPlanRepository
 import com.hangten.android.content.ContentAssets
+import com.hangten.android.content.ContentImageDimensions
+import com.hangten.android.content.decodePngImageDimensions
 import com.hangten.android.ui.HangTenApp
 import com.hangten.android.ui.SharedPreferencesWorkoutAccessPreferences
 import com.hangten.android.ui.WorkoutAccessStore
@@ -118,4 +120,8 @@ private class AndroidContentAssets(
         assetManager.open(path).use { }
         true
     }.getOrDefault(false)
+
+    override fun imageDimensions(path: String): ContentImageDimensions? = runCatching {
+        assetManager.open(path).use { input -> decodePngImageDimensions(input) }
+    }.getOrNull()
 }

@@ -1,5 +1,6 @@
 package com.hangten.android.editor
 
+import com.hangten.android.content.ContentImageDimensions
 import java.io.File
 import kotlin.io.path.createTempDirectory
 import org.junit.Assert.assertEquals
@@ -44,7 +45,7 @@ class BoardEditorStoreTest {
             writeSourcePackage(source)
             val boardFile = File(source, "demo/board.json")
             boardFile.writeText(
-                boardFile.readText().replace(
+                boardFile.readText().replaceFixture(
                     "\"default\":true",
                     "\"default\":true,\"availableHoldIDs\":[\"edge\"]",
                 ),
@@ -75,15 +76,12 @@ class BoardEditorStoreTest {
             val source = File(root, "source").also { it.mkdirs() }
             writeSourcePackage(source)
             val boardFile = File(source, "demo/board.json")
-            boardFile.writeText(
-                boardFile.readText()
-                    .replace("\"aspectRatio\":2.0", "\"aspectRatio\":1.0")
-                    .replace(
-                        "\"default\":true}",
-                        "\"default\":true,\"cordRig\":${routedCordRigJson()}}",
-                    ),
+            boardFile.writeText(routedBoardJson())
+            val store = BoardEditorStore(
+                File(root, "edited"),
+                FileBoardPackageSource(source),
+                imageDimensionsDecoder = { ContentImageDimensions(width = 1000, height = 1000) },
             )
-            val store = BoardEditorStore(File(root, "edited"), FileBoardPackageSource(source))
 
             store.startEditing("demo")
             val originalRig = store.loadBoard("demo").presentations.single().cordRig
@@ -100,6 +98,46 @@ class BoardEditorStoreTest {
             assertEquals(originalRig, store.loadBoard("demo").presentations.single().cordRig)
             assertTrue(edited.contains("\"paths\":[]"))
             assertTrue(edited.contains("\"occlusions\":[]"))
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun pulledRoutedImageAspectMismatchLeavesBoardAndImageUntouched() {
+        val root = createTempDirectory("board-editor-pull-image-aspect").toFile()
+        try {
+            val source = File(root, "source").also { it.mkdirs() }
+            writeSourcePackage(source)
+            val dimensionsByFixture = mapOf(
+                "fixture-image" to ContentImageDimensions(width = 1000, height = 1000),
+                "remote-image" to ContentImageDimensions(width = 2000, height = 1000),
+            )
+            val store = BoardEditorStore(
+                File(root, "edited"),
+                FileBoardPackageSource(source),
+                imageDimensionsDecoder = { data -> dimensionsByFixture[data.decodeToString()] },
+            )
+            store.startEditing("demo")
+            val originalBoard = store.readBoardJson("demo")
+            val originalImage = store.readPackageFile("demo", "assets/primary.png")
+
+            val failure = runCatching {
+                store.applyPulledPackage(
+                    "demo",
+                    PulledBoardPackage(
+                        head = "head",
+                        boardJson = routedBoardJson().encodeToByteArray(),
+                        imagePath = "assets/primary.png",
+                        image = "remote-image".encodeToByteArray(),
+                    ),
+                )
+            }.exceptionOrNull()
+
+            assertTrue(failure is BoardEditorException.InvalidBoard)
+            assertTrue(failure?.message?.contains("innerFaceFrame aspect ratio") == true)
+            assertEquals(originalBoard, store.readBoardJson("demo"))
+            assertEquals(originalImage.toList(), store.readPackageFile("demo", "assets/primary.png").toList())
         } finally {
             root.deleteRecursively()
         }
@@ -177,7 +215,8 @@ class BoardEditorStoreTest {
                     "demo",
                     PulledBoardPackage(
                         head = "head",
-                        boardJson = boardJson().replace("\"id\":\"demo\"", "\"id\":\"other\"").encodeToByteArray(),
+                        boardJson = boardJson().replaceFixture("\"id\":\"demo\"", "\"id\":\"other\"")
+                            .encodeToByteArray(),
                         imagePath = "assets/primary.png",
                         image = "remote-image".encodeToByteArray(),
                     ),
@@ -210,6 +249,13 @@ class BoardEditorStoreTest {
         }
     """.trimIndent()
 
+    private fun routedBoardJson(): String = boardJson()
+        .replaceFixture("\"aspectRatio\":2.0", "\"aspectRatio\":1.0", expectedOccurrences = 2)
+        .replaceFixture(
+            "\"default\":true}",
+            "\"default\":true,\"cordRig\":${routedCordRigJson()}}",
+        )
+
     private fun routedCordRigJson(): String = """
         {
           "type":"routed",
@@ -228,4 +274,16 @@ class BoardEditorStoreTest {
           "occlusions":[]
         }
     """.trimIndent()
+
+    private fun String.replaceFixture(
+        old: String,
+        new: String,
+        expectedOccurrences: Int = 1,
+    ): String {
+        val actualOccurrences = windowedSequence(old.length).count { it == old }
+        check(actualOccurrences == expectedOccurrences) {
+            "Expected fixture fragment $old exactly $expectedOccurrences time(s), found $actualOccurrences."
+        }
+        return replace(old, new)
+    }
 }

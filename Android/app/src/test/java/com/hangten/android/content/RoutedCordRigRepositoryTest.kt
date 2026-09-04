@@ -82,15 +82,90 @@ class RoutedCordRigRepositoryTest {
     @Test
     fun acceptsRequiredEmptyPathAndOcclusionArrays() {
         val source = boardJson(
-            routedRigJson()
-                .replace(pathJson(), "\"paths\": []")
-                .replace(occlusionJson(), "\"occlusions\": []"),
+            routedRigJson(
+                paths = "\"paths\": []",
+                occlusions = "\"occlusions\": []",
+            ),
         )
 
         val rig = loadBoard(source).getOrThrow().single().presentation("primary")!!.cordRig as BoardCordRig.Routed
 
         assertEquals(emptyList<BoardRoutedCordPath>(), rig.paths)
         assertEquals(emptyList<BoardRoutedCordOcclusion>(), rig.occlusions)
+    }
+
+    @Test
+    fun acceptsCanonicalRoutedImageMatchingInnerFaceFrameAspect() {
+        val source = boardJson(
+            routedRigJson().replaceFixture(
+                "\"innerFaceFrame\": { \"x\": 0, \"y\": 0, \"width\": 1000, \"height\": 1000 }",
+                "\"innerFaceFrame\": { \"x\": 100, \"y\": 300, \"width\": 800, \"height\": 400 }",
+            ),
+        )
+
+        val board = loadBoard(source, ContentImageDimensions(width = 1600, height = 800))
+            .getOrThrow()
+            .single()
+
+        assertEquals("demo.board", board.id)
+    }
+
+    @Test
+    fun rotatedAliasUsesCanonicalRigImageAspectInsteadOfSceneAspect() {
+        val source = boardJson(
+            routedRigJson().replaceFixture(
+                "\"innerFaceFrame\": { \"x\": 0, \"y\": 0, \"width\": 1000, \"height\": 1000 }",
+                "\"innerFaceFrame\": { \"x\": 100, \"y\": 300, \"width\": 800, \"height\": 400 }",
+            ),
+        )
+
+        val board = loadBoard(source, ContentImageDimensions(width = 1600, height = 800))
+            .getOrThrow()
+            .single()
+        val alias = board.presentation("primary-inverted")!!
+
+        assertEquals("primary", board.artworkPresentation(alias).id)
+        assertTrue(board.resolvedCordRig(alias) is BoardCordRig.Routed)
+    }
+
+    @Test
+    fun rejectsRoutedImageWhoseAspectDoesNotMatchInnerFaceFrame() {
+        val source = boardJson(
+            routedRigJson().replaceFixture(
+                "\"innerFaceFrame\": { \"x\": 0, \"y\": 0, \"width\": 1000, \"height\": 1000 }",
+                "\"innerFaceFrame\": { \"x\": 100, \"y\": 300, \"width\": 800, \"height\": 400 }",
+            ),
+        )
+
+        assertFailureContains(
+            loadBoard(source, ContentImageDimensions(width = 1000, height = 1000)),
+            "presentation primary.cordRig.innerFaceFrame aspect ratio must match " +
+                "presentation image width/height within 0.1%",
+        )
+    }
+
+    @Test
+    fun rejectsDistinctLegacyAliasImageWhoseAspectDoesNotMatchCanonicalRig() {
+        val source = boardJson(
+            rigJson = routedRigJson().replaceFixture(
+                "\"innerFaceFrame\": { \"x\": 0, \"y\": 0, \"width\": 1000, \"height\": 1000 }",
+                "\"innerFaceFrame\": { \"x\": 100, \"y\": 300, \"width\": 800, \"height\": 400 }",
+            ),
+            aliasAssetPath = "assets/inverted.png",
+        ).replaceFixture("\"rotationDegrees\": 180", "\"isInverted\": true")
+
+        assertFailureContains(
+            loadBoard(
+                source = source,
+                imageDimensions = ContentImageDimensions(width = 1600, height = 800),
+                additionalImageDimensions = mapOf(
+                    "Hangboards/demo/assets/inverted.png" to
+                        ContentImageDimensions(width = 1000, height = 1000),
+                ),
+            ),
+            "presentation primary.cordRig.innerFaceFrame aspect ratio must match " +
+                "presentation image width/height within 0.1%",
+        )
     }
 
     @Test
@@ -109,7 +184,11 @@ class RoutedCordRigRepositoryTest {
                 "ports must have unique IDs",
             ),
             Mutation("\"id\": \"body-left\"", "\"id\": \"Body Left\"", "identifier-shaped"),
-            Mutation("\"space\": \"body\"", "\"space\": \"board\"", "space is unsupported"),
+            Mutation(
+                "\"id\": \"body-left\", \"space\": \"body\"",
+                "\"id\": \"body-left\", \"space\": \"board\"",
+                "space is unsupported",
+            ),
             Mutation(
                 "\"worldPortIDs\": [\"world-left\", \"world-right\"]",
                 "\"worldPortIDs\": [\"world-left\"]",
@@ -169,14 +248,14 @@ class RoutedCordRigRepositoryTest {
                 "unknown key future",
             ),
             Mutation(
-                "\"type\": \"facePatch\",\n          \"commands\"",
-                "\"type\": \"facePatch\",\n          \"space\": \"world\",\n          \"commands\"",
+                "\"type\": \"facePatch\"",
+                "\"type\": \"facePatch\", \"space\": \"world\"",
                 "unknown key space",
             ),
         )
 
         mutations.forEach { mutation ->
-            val source = boardJson(routedRigJson().replace(mutation.old, mutation.new))
+            val source = boardJson(routedRigJson().replaceFixture(mutation.old, mutation.new))
             assertFailureContains(loadBoard(source), mutation.expectedMessage)
         }
     }
@@ -184,11 +263,11 @@ class RoutedCordRigRepositoryTest {
     @Test
     fun rejectsMissingRequiredRoutedArraysAndEmptyRequiredTopology() {
         listOf(
-            routedRigJson().replace(portJson(), "\"ports\": []") to "ports must be a non-empty array",
-            routedRigJson().replace(tensionGroupJson(), "\"tensionGroups\": []") to
+            routedRigJson(ports = "\"ports\": []") to "ports must be a non-empty array",
+            routedRigJson(tensionGroups = "\"tensionGroups\": []") to
                 "tensionGroups must be a non-empty array",
-            routedRigJson(includePaths = false) to "paths is required",
-            routedRigJson(includeOcclusions = false) to "occlusions is required",
+            routedRigJson(paths = null) to "paths is required",
+            routedRigJson(occlusions = null) to "occlusions is required",
         ).forEach { (rigJson, expectedMessage) ->
             assertFailureContains(loadBoard(boardJson(rigJson)), expectedMessage)
         }
@@ -218,31 +297,33 @@ class RoutedCordRigRepositoryTest {
           ]
         }""",
         )
-        val noDrawingSegment = pathJson().replace(
-            """            { "command": "move", "to": [200, 650] },
-            { "command": "line", "to": [300, 700] },
-            { "command": "quad", "control": [500, 800], "to": [700, 700] },
-            { "command": "curve", "control1": [750, 680], "control2": [780, 660], "to": [800, 650] },
-            { "command": "close" }""",
-            """            { "command": "move", "to": [200, 650] },
-            { "command": "close" }""",
-        )
-        val nonterminalClose = pathJson().replace(
+        val noDrawingSegment = pathJson()
+            .replaceFixture("            { \"command\": \"line\", \"to\": [300, 700] },\n", "")
+            .replaceFixture(
+                "            { \"command\": \"quad\", \"control\": [500, 800], \"to\": [700, 700] },\n",
+                "",
+            )
+            .replaceFixture(
+                "            { \"command\": \"curve\", \"control1\": [750, 680], " +
+                    "\"control2\": [780, 660], \"to\": [800, 650] },\n",
+                "",
+            )
+        val nonterminalClose = pathJson().replaceFixture(
             "{ \"command\": \"line\", \"to\": [300, 700] },",
             "{ \"command\": \"close\" },\n            { \"command\": \"line\", \"to\": [300, 700] },",
         )
-        val secondMove = pathJson().replace(
+        val secondMove = pathJson().replaceFixture(
             "{ \"command\": \"line\", \"to\": [300, 700] },",
             "{ \"command\": \"move\", \"to\": [300, 700] },",
         )
 
         listOf(
-            routedRigJson().replace(tensionGroupJson(), duplicateGroup) to
+            routedRigJson(tensionGroups = duplicateGroup) to
                 "tensionGroups must have unique IDs",
-            routedRigJson().replace(pathJson(), duplicatePath) to "paths must have unique IDs",
-            routedRigJson().replace(pathJson(), noDrawingSegment) to "at least one line, quad, or curve",
-            routedRigJson().replace(pathJson(), nonterminalClose) to "close command must appear only at the end",
-            routedRigJson().replace(pathJson(), secondMove) to "begin with exactly one move",
+            routedRigJson(paths = duplicatePath) to "paths must have unique IDs",
+            routedRigJson(paths = noDrawingSegment) to "at least one line, quad, or curve",
+            routedRigJson(paths = nonterminalClose) to "close command must appear only at the end",
+            routedRigJson(paths = secondMove) to "begin with exactly one move",
         ).forEach { (rigJson, expectedMessage) ->
             assertFailureContains(loadBoard(boardJson(rigJson)), expectedMessage)
         }
@@ -250,17 +331,15 @@ class RoutedCordRigRepositoryTest {
 
     @Test
     fun radialLipRequiresExactlyOneIncidentTensionSpan() {
-        val noIncident = routedRigJson().replace(
+        val noIncident = routedRigJson().replaceFixture(
             "\"bodyPortID\": \"body-left\"",
             "\"bodyPortID\": \"body-unused\"",
-        ).replace(
+        ).replaceFixture(
             "{ \"id\": \"body-right\", \"space\": \"body\", \"point\": { \"x\": 800, \"y\": 650 } },",
             "{ \"id\": \"body-right\", \"space\": \"body\", \"point\": { \"x\": 800, \"y\": 650 } },\n"
                 + "        { \"id\": \"body-unused\", \"space\": \"body\", \"point\": { \"x\": 500, \"y\": 650 } },",
         )
-        val twiceIncident = routedRigJson().replace(
-            tensionGroupJson(),
-            """"tensionGroups": [
+        val twiceIncidentGroups = """"tensionGroups": [
         {
           "id": "main",
           "bodyPortIDs": ["body-left", "body-right"],
@@ -275,16 +354,18 @@ class RoutedCordRigRepositoryTest {
           "pairing": "declared",
           "layer": "overpass"
         }
-      ]""",
-        )
+      ]"""
 
         assertFailureContains(loadBoard(boardJson(noIncident)), "exactly one incident")
-        assertFailureContains(loadBoard(boardJson(twiceIncident)), "exactly one incident")
+        assertFailureContains(
+            loadBoard(boardJson(routedRigJson(tensionGroups = twiceIncidentGroups))),
+            "exactly one incident",
+        )
     }
 
     @Test
     fun rejectsRoutedRigWhoseSceneAspectDoesNotMatchItsPresentation() {
-        val source = boardJson().replace(
+        val source = boardJson().replaceFixture(
             "\"sceneSize\": { \"width\": 1000, \"height\": 1000 }",
             "\"sceneSize\": { \"width\": 1200, \"height\": 1000 }",
         )
@@ -294,24 +375,36 @@ class RoutedCordRigRepositoryTest {
 
     @Test
     fun rejectsRoutedRigOwnedByAnAlias() {
-        val aliasOwned = boardJson().replace(
+        val aliasOwned = boardJson().replaceFixture(
             "\"rotationDegrees\": 180",
             "\"rotationDegrees\": 180,\n          \"cordRig\": ${routedRigJson()}",
         )
         assertFailureContains(loadBoard(aliasOwned), "cordRig must be owned by a canonical")
     }
 
-    private fun loadBoard(source: String): Result<List<Board>> =
-        AssetBoardRepository(
+    private fun loadBoard(
+        source: String,
+        imageDimensions: ContentImageDimensions = ContentImageDimensions(width = 1000, height = 1000),
+        additionalImageDimensions: Map<String, ContentImageDimensions> = emptyMap(),
+    ): Result<List<Board>> {
+        val primaryPath = "Hangboards/demo/assets/primary.png"
+        val allImageDimensions = mapOf(primaryPath to imageDimensions) + additionalImageDimensions
+        val files = buildMap {
+            put("Hangboards/demo/board.json", source)
+            allImageDimensions.keys.forEach { path -> put(path, "png") }
+        }
+        return AssetBoardRepository(
             FixtureAssets(
-                mapOf(
-                    "Hangboards/demo/board.json" to source,
-                    "Hangboards/demo/assets/primary.png" to "png",
-                ),
+                files,
+                imageDimensions = allImageDimensions,
             ),
         ).loadBoards()
+    }
 
-    private fun boardJson(rigJson: String = routedRigJson()): String =
+    private fun boardJson(
+        rigJson: String = routedRigJson(),
+        aliasAssetPath: String = "assets/primary.png",
+    ): String =
         """
         {
           "id": "demo.board",
@@ -332,7 +425,7 @@ class RoutedCordRigRepositoryTest {
             {
               "id": "primary-inverted",
               "name": "Primary inverted",
-              "assetPath": "assets/primary.png",
+              "assetPath": "$aliasAssetPath",
               "aspectRatio": 1,
               "default": false,
               "sourcePresentationID": "primary",
@@ -357,14 +450,16 @@ class RoutedCordRigRepositoryTest {
         """.trimIndent()
 
     private fun routedRigJson(
-        includePaths: Boolean = true,
-        includeOcclusions: Boolean = true,
+        ports: String = portJson(),
+        tensionGroups: String = tensionGroupJson(),
+        paths: String? = pathJson(),
+        occlusions: String? = occlusionJson(),
     ): String {
         val topology = buildList {
-            add(portJson())
-            add(tensionGroupJson())
-            if (includePaths) add(pathJson())
-            if (includeOcclusions) add(occlusionJson())
+            add(ports)
+            add(tensionGroups)
+            if (paths != null) add(paths)
+            if (occlusions != null) add(occlusions)
         }.joinToString(",\n          ")
         return """
         {
@@ -439,6 +534,15 @@ class RoutedCordRigRepositoryTest {
 
     private fun appendArrayEntry(json: String, entry: String): String =
         json.dropLast(1) + ",\n$entry\n      ]"
+
+    private fun String.replaceFixture(old: String, new: String): String {
+        val first = indexOf(old)
+        check(first >= 0) { "Fixture does not contain the requested source fragment: $old" }
+        check(indexOf(old, first + old.length) < 0) {
+            "Fixture source fragment is ambiguous and must be made more specific: $old"
+        }
+        return replaceRange(first, first + old.length, new)
+    }
 
     private data class Mutation(
         val old: String,
