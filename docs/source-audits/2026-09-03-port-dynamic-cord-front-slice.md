@@ -120,8 +120,8 @@ foreground crescent makes each cord enter its eyelet continuously.
 
 | Presentation | Stored artwork | Runtime treatment | Decision |
 | --- | --- | --- | --- |
-| `primary` | `assets/primary.png` | canonical face at `0°`; dynamic cord rig | Included; isolated runtime output awaits final one-by-one review |
-| `front-inverted` | shares `assets/primary.png` | same face at `180°`; same world-up support | Approved geometry/reference proof; isolated runtime output awaits final one-by-one review |
+| `primary` | `assets/primary.png` | canonical face at `0°`; dynamic cord rig | Included; isolated runtime output approved in one-by-one review |
+| `front-inverted` | shares `assets/primary.png` | same face at `180°`; same world-up support | Included; isolated runtime output approved in one-by-one review |
 | `back` | `assets/back.png` | separate physical 8/10/12/15 face at `0°`; dynamic cord rig with attachment points `(203, 712)` and `(997, 712)` | Approved source and production output |
 
 The user approved one stored PNG per accepted physical face. The redundant
@@ -134,28 +134,28 @@ PNG were removed together. The later explicit rejection deleted the invalid
 
 ## Review evidence
 
-The exact user-approved inverted proof is tracked at
-`docs/source-audits/review-assets/2026-09-03-port-dynamic-cord-front-inverted-approved.png`.
-It is `1200 × 1464` RGBA with transparent corners and SHA-256
-`7b8c3b78dddf4a8ab4648fd0aaa42cbcf969b1c82a95de1dc9d015694c7f2576`.
-It records the accepted geometry and cord treatment; production uses the
-deterministic SwiftUI renderer rather than this flattened review raster.
+The three exact user-approved isolated renders are tracked as stable,
+flattened review evidence:
 
-The isolated production renders are workspace-owned, untracked review
-artifacts:
-
-| Presentation | Path | SHA-256 | Format check |
+| Presentation | Stable path | SHA-256 | Format check |
 | --- | --- | --- | --- |
-| `primary` | `.context/joyful-donkey-port-dynamic-cord-front-review/primary.png` | `125350a675166e4dd4f6ba2b914151893fe5176833a15b24e1bd308726545504` | `1200 × 1464` RGBA; four transparent corners |
-| `front-inverted` | `.context/joyful-donkey-port-dynamic-cord-front-review/front-inverted.png` | `b039bf5181d6cf041ed74442e27a7e8f99664163967915396b9c83e966fd6a15` | `1200 × 1464` RGBA; four transparent corners |
-| `back` | `.context/joyful-donkey-port-dynamic-cord-back-production-review-20260903/back.png` | `88e447dfae0844a343d16f3f1b5b2700e058153bc0b85130675a7d007b1e9994` | `1200 × 1464` RGBA; four transparent corners |
+| `primary` | `docs/source-audits/review-assets/2026-09-03-port-dynamic-cord-front-upright-approved.png` | `c6a62b18751973225a97e5d446ad0602a0b067ec4c928ac19c8b43dfca825e00` | `1200 × 1464` RGBA; transparent background |
+| `front-inverted` | `docs/source-audits/review-assets/2026-09-03-port-dynamic-cord-front-inverted-approved.png` | `7b8c3b78dddf4a8ab4648fd0aaa42cbcf969b1c82a95de1dc9d015694c7f2576` | `1200 × 1464` RGBA; transparent background |
+| `back` | `docs/source-audits/review-assets/2026-09-03-port-dynamic-cord-back-upright-approved.png` | `88e447dfae0844a343d16f3f1b5b2700e058153bc0b85130675a7d007b1e9994` | `1200 × 1464` RGBA; transparent background |
 
-Both front renders were visually inspected for complete uncropped cords, head-on face
-geometry, continuous eyelet entry, world-up support, tension, and transparent
-background. The fresh `back` production render was also inspected at original
-size for complete cords, tension, eyelet continuity, head-on geometry, and
-transparency, then approved in one-by-one review. The rejected rotated-back
-output is intentionally excluded from the package and acceptance evidence.
+These flattened PNGs record the accepted geometry and cord treatment for PR
+review; they are not production artwork. Production stores one cord-free PNG
+per physical face (`assets/primary.png` for both front positions and
+`assets/back.png` for the back), rotates that face according to presentation
+metadata, and draws the dynamic, world-up cord overlay at runtime.
+
+Both front renders were visually inspected for complete uncropped cords,
+head-on face geometry, continuous eyelet entry, world-up support, tension, and
+transparent background. The `back` production render was also inspected at
+original size for complete cords, tension, eyelet continuity, head-on
+geometry, and transparency, then approved in one-by-one review. The rejected
+rotated-back output is intentionally excluded from the package and acceptance
+evidence.
 
 ## Verification
 
