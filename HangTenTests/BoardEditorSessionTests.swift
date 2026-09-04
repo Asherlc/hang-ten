@@ -260,6 +260,64 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertEqual(canvas.backgroundColor, .black)
     }
 
+    func testRiggedEditorArtworkRendersTheDefaultPresentationOnItsSceneCanvas() throws {
+        _ = try store.startEditing(slug: "frictitious-port-a-board")
+        let package = try store.loadDocument(slug: "frictitious-port-a-board")
+        let sourceImage = try XCTUnwrap(UIImage(contentsOfFile: package.imageURL.path))
+
+        let artwork = BoardEditorCanvasArtwork.make(
+            package: package,
+            sourceImage: sourceImage
+        )
+
+        XCTAssertNotNil(artwork.directTwoAnchorRig)
+        XCTAssertEqual(artwork.image.size, CGSize(width: 1200, height: 1464))
+        XCTAssertFalse(artwork.image === sourceImage)
+    }
+
+    func testCanvasMapsEditableHoldsThroughRiggedArtworkFaceRect() throws {
+        let sourceLibrary = try BoardEditorTestFixtures.makeSourceLibrary()
+        addTeardownBlock { try? FileManager.default.removeItem(at: sourceLibrary) }
+        let fixtureStore = BoardEditorStore(
+            baseDirectory: temporaryDirectory.appendingPathComponent("face-rect", isDirectory: true),
+            sourceLibraryURL: sourceLibrary
+        )
+        _ = try fixtureStore.startEditing(slug: "fixture-board")
+        let package = try fixtureStore.loadDocument(slug: "fixture-board")
+        let session = BoardEditorSession(package: package, store: fixtureStore)
+        let rig = BoardDirectTwoAnchorCordRig(
+            sceneSize: BoardCordSize(width: 200, height: 100),
+            sourceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
+            innerFaceFrame: BoardCordRect(x: 20, y: 10, width: 160, height: 80),
+            attachmentPoints: [
+                BoardCordPoint(x: 40, y: 60),
+                BoardCordPoint(x: 160, y: 60),
+            ],
+            pullPoint: BoardCordPoint(x: 100, y: 10),
+            eyeletRadius: 4
+        )
+        let canvas = HoldEditorCanvasUIView(
+            frame: CGRect(x: 0, y: 0, width: 320, height: 160)
+        )
+        canvas.session = session
+        canvas.boardArtwork = BoardEditorCanvasArtwork(
+            image: UIImage(),
+            presentationAspectRatio: 2,
+            directTwoAnchorRig: rig,
+            projection: BoardPresentationGeometryProjection(isInverted: false)
+        )
+        canvas.updateMetadataWarningAccessibility()
+
+        let warning = try XCTUnwrap(
+            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
+        )
+        let frame = warning.accessibilityFrameInContainerSpace
+        XCTAssertEqual(frame.minX, 63.744, accuracy: 0.001)
+        XCTAssertEqual(frame.minY, 43.904, accuracy: 0.001)
+        XCTAssertEqual(frame.width, 72.192, accuracy: 0.001)
+        XCTAssertEqual(frame.height, 48.128, accuracy: 0.001)
+    }
+
     func testViewportOperationsRefreshIncompleteHoldAccessibilityFrame() throws {
         _ = try store.startEditing(slug: "zlagboard-pro")
         let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")

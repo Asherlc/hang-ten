@@ -28,6 +28,29 @@ final class BoardCordRigGeometryTests: XCTestCase {
     )
 
     @MainActor
+    func testZeroSizedRiggedArtworkCanvasTerminatesWithoutDrawingBraid() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.packageStore.board(id: "frictitious.port-a-board")
+        )
+        let presentation = try XCTUnwrap(board.presentation(id: "primary"))
+        let renderer = ImageRenderer(
+            content: BoardPresentationArtwork(
+                board: board,
+                presentation: presentation,
+                projection: BoardPresentationGeometryProjection(
+                    presentation: presentation
+                ),
+                canvasSize: .zero
+            )
+            .frame(width: 1, height: 1)
+        )
+        renderer.scale = 1
+        renderer.isOpaque = false
+
+        XCTAssertNotNil(renderer.uiImage)
+    }
+
+    @MainActor
     func testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport() throws {
         XCTAssertEqual(
             portFrontRig.attachmentPoints.map(\.y).reduce(0, +) / 2 - portFrontRig.pullPoint.y,

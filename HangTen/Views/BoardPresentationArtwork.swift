@@ -62,28 +62,25 @@ struct BoardPresentationArtwork: View {
     @ViewBuilder
     var body: some View {
         if let geometry, let rig = directTwoAnchorRig, let faceImage {
-            Canvas(opaque: false, rendersAsynchronously: false) { context, _ in
-                Self.drawRiggedArtwork(
-                    image: Image(uiImage: faceImage),
-                    rig: rig,
-                    geometry: geometry,
-                    in: &context
-                )
-            }
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
+            BoardRiggedPresentationArtwork(
+                faceImage: faceImage,
+                rig: rig,
+                geometry: geometry
+            )
         } else if board.resolvedCordRig(for: presentation) == nil {
             BoardPresentationImage(board: board, presentationID: presentation.id)
         }
     }
 
-    private static func drawRiggedArtwork(
+    fileprivate static func drawRiggedArtwork(
         image: Image,
         rig: BoardDirectTwoAnchorCordRig,
         geometry: BoardCordRigGeometry,
         in context: inout GraphicsContext
     ) {
         let scale = geometry.sceneRect.width / rig.sceneSize.width
+        guard scale.isFinite, scale > 0 else { return }
+
         let resolvedImage = context.resolve(image)
 
         var faceContext = context
@@ -189,6 +186,8 @@ struct BoardPresentationArtwork: View {
         scale: CGFloat,
         in context: inout GraphicsContext
     ) {
+        guard scale.isFinite, scale > 0 else { return }
+
         let strokeStyle = StrokeStyle(
             lineWidth: 23 * scale,
             lineCap: .round,
@@ -278,5 +277,26 @@ struct BoardPresentationArtwork: View {
             )
             offset += spacing
         }
+    }
+}
+
+/// The shared primitive used by package presentation views and editor previews.
+/// Its caller owns image resolution and the geometry-to-canvas mapping.
+struct BoardRiggedPresentationArtwork: View {
+    let faceImage: UIImage
+    let rig: BoardDirectTwoAnchorCordRig
+    let geometry: BoardCordRigGeometry
+
+    var body: some View {
+        Canvas(opaque: false, rendersAsynchronously: false) { context, _ in
+            BoardPresentationArtwork.drawRiggedArtwork(
+                image: Image(uiImage: faceImage),
+                rig: rig,
+                geometry: geometry,
+                in: &context
+            )
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
