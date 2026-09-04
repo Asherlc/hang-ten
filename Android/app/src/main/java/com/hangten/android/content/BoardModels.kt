@@ -5,6 +5,38 @@ data class Point(
     val y: Float,
 )
 
+data class BoardCordSize(
+    val width: Float,
+    val height: Float,
+)
+
+data class BoardCordRect(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+)
+
+sealed interface BoardCordRig {
+    data class DirectTwoAnchor(
+        val sceneSize: BoardCordSize,
+        val sourceFrame: BoardCordRect,
+        val innerFaceFrame: BoardCordRect,
+        val attachmentPoints: List<Point>,
+        val pullPoint: Point,
+        val eyeletRadius: Float,
+    ) : BoardCordRig
+}
+
+data class BoardGeometryRotationAnchor(
+    val x: Float,
+    val y: Float,
+) {
+    companion object {
+        val Center = BoardGeometryRotationAnchor(0.5f, 0.5f)
+    }
+}
+
 data class NormalizedFrame(
     val x: Float,
     val y: Float,
@@ -51,6 +83,10 @@ data class BoardPresentation(
     val assetPath: String,
     val aspectRatio: Float,
     val isDefault: Boolean,
+    val sourcePresentationId: String? = null,
+    val isInverted: Boolean = false,
+    val geometryRotationAnchor: BoardGeometryRotationAnchor? = null,
+    val cordRig: BoardCordRig? = null,
 )
 
 data class Board(
@@ -63,7 +99,23 @@ data class Board(
     val presentations: List<BoardPresentation>,
     val holds: List<BoardHold>,
     val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
-)
+    val packageName: String = id,
+) {
+    fun presentation(id: String?): BoardPresentation? =
+        presentations.firstOrNull { it.id == id }
+
+    fun canonicalPresentation(presentation: BoardPresentation): BoardPresentation? =
+        presentation(presentation.sourcePresentationId ?: presentation.id)
+
+    fun resolvedCordRig(presentation: BoardPresentation): BoardCordRig? =
+        canonicalPresentation(presentation)?.cordRig
+
+    fun artworkPresentation(presentation: BoardPresentation): BoardPresentation? =
+        if (resolvedCordRig(presentation) == null) presentation else canonicalPresentation(presentation)
+
+    fun holdPresentationId(presentation: BoardPresentation): String =
+        presentation.sourcePresentationId ?: presentation.id
+}
 
 internal class ContentDecodingException(message: String) : IllegalArgumentException(message)
 

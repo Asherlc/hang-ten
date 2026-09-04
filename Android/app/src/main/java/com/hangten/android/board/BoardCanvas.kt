@@ -1,8 +1,11 @@
 package com.hangten.android.board
 
 import android.graphics.BitmapFactory
+import android.graphics.DashPathEffect
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.PathDashPathEffect
 import android.graphics.RectF
 import android.graphics.Region
 import androidx.compose.foundation.Canvas
@@ -29,14 +32,17 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.IntSize
 import com.hangten.android.content.Board
+import com.hangten.android.content.BoardCordRig
 import com.hangten.android.content.BoardGeometry
 import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.HoldShape
 import com.hangten.android.content.PathCommand
 import com.hangten.android.content.Point
+import kotlin.math.atan2
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
+import kotlin.math.sqrt
 
 internal data class BoardBounds(
     val left: Float,
@@ -132,6 +138,53 @@ internal fun BoardGeometry.toBoardPath(bounds: BoardBounds): BoardPath {
     }
 }
 
+internal fun BoardPath.transformed(transform: BoardInPlaneTransform): BoardPath {
+    fun mapped(x: Float, y: Float): Point = transform.map(Point(x, y))
+
+    val transformedRoundedRectangle = roundedRectangle?.let { rounded ->
+        val first = mapped(rounded.left, rounded.top)
+        val second = mapped(rounded.right, rounded.bottom)
+        BoardPath.RoundedRectangle(
+            left = minOf(first.x, second.x),
+            top = minOf(first.y, second.y),
+            right = maxOf(first.x, second.x),
+            bottom = maxOf(first.y, second.y),
+            radiusX = rounded.radiusX,
+            radiusY = rounded.radiusY,
+        )
+    }
+    val transformedCommands = commands.map { command ->
+        when (command) {
+            is BoardPathCommand.MoveTo -> mapped(command.x, command.y).let {
+                BoardPathCommand.MoveTo(it.x, it.y)
+            }
+            is BoardPathCommand.LineTo -> mapped(command.x, command.y).let {
+                BoardPathCommand.LineTo(it.x, it.y)
+            }
+            is BoardPathCommand.QuadTo -> {
+                val control = mapped(command.controlX, command.controlY)
+                val destination = mapped(command.x, command.y)
+                BoardPathCommand.QuadTo(control.x, control.y, destination.x, destination.y)
+            }
+            is BoardPathCommand.CubicTo -> {
+                val control1 = mapped(command.control1X, command.control1Y)
+                val control2 = mapped(command.control2X, command.control2Y)
+                val destination = mapped(command.x, command.y)
+                BoardPathCommand.CubicTo(
+                    control1.x,
+                    control1.y,
+                    control2.x,
+                    control2.y,
+                    destination.x,
+                    destination.y,
+                )
+            }
+            BoardPathCommand.Close -> BoardPathCommand.Close
+        }
+    }
+    return BoardPath(commands = transformedCommands, roundedRectangle = transformedRoundedRectangle)
+}
+
 private fun BoardPath.toAndroidPath(): Path = Path().apply {
     roundedRectangle?.let { rounded ->
         addRoundRect(
@@ -181,23 +234,32 @@ fun BoardCanvas(
     onHoldTap: (String) -> Unit,
     modifier: Modifier = Modifier,
     imageOverride: ImageBitmap? = null,
+    presentationId: String? = null,
 ) {
-    val presentation = board.presentations.firstOrNull { it.isDefault }
+    val presentation = board.presentation(presentationId)
+        ?: board.presentations.firstOrNull { it.isDefault }
+        ?: board.presentations.firstOrNull()
+    val artworkPresentation = presentation?.let(board::artworkPresentation)
     val context = LocalContext.current
-    val bundledImage = remember(board.id, presentation?.assetPath) {
-        presentation?.let { loadBoardImage(context, board.id, it) }
+    val bundledImage = remember(board.packageName, artworkPresentation?.assetPath) {
+        artworkPresentation?.let { loadBoardImage(context, board.packageName, it) }
     }
     val boardImage = imageOverride ?: bundledImage
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
     val activeDescription = activeHoldIDs.joinToString(separator = ", ")
         .ifEmpty { "No active holds" }
-    val inputModifier = Modifier.pointerInput(board, canvasSize) {
+    val inputModifier = Modifier.pointerInput(board, presentation, canvasSize) {
         detectTapGestures { tap ->
-            if (canvasSize == IntSize.Zero) return@detectTapGestures
-            val bounds = boardBounds(canvasSize, board.aspectRatio)
+            val selectedPresentation = presentation ?: return@detectTapGestures
+            val canvasGeometry = boardCanvasGeometry(board, selectedPresentation, canvasSize)
+                ?: return@detectTapGestures
+            val clipBounds = BoardBounds(0f, 0f, canvasSize.width.toFloat(), canvasSize.height.toFloat())
+            val holdPresentationId = board.holdPresentationId(selectedPresentation)
             board.holds.asReversed().firstOrNull { hold ->
-                hold.presentationId == presentation?.id && hold.geometry.any { geometry ->
-                    geometry.toBoardPath(bounds).contains(tap.x, tap.y, bounds)
+                hold.presentationId == holdPresentationId && hold.geometry.any { geometry ->
+                    geometry.toBoardPath(canvasGeometry.holdBounds)
+                        .transformed(canvasGeometry.faceTransform)
+                        .contains(tap.x, tap.y, clipBounds)
                 }
             }?.let { onHoldTap(it.id) }
         }
@@ -206,7 +268,7 @@ fun BoardCanvas(
     Canvas(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(board.aspectRatio)
+            .aspectRatio(presentation?.aspectRatio ?: board.aspectRatio)
             .clipToBounds()
             .onSizeChanged { canvasSize = it }
             .semantics {
@@ -215,22 +277,44 @@ fun BoardCanvas(
             }
             .then(inputModifier),
     ) {
-        val bounds = boardBounds(size.width, size.height, board.aspectRatio)
+        val selectedPresentation = presentation ?: return@Canvas
+        val canvasGeometry = boardCanvasGeometry(
+            board,
+            selectedPresentation,
+            size.width,
+            size.height,
+        ) ?: return@Canvas
         boardImage?.let { image ->
             drawIntoCanvas { canvas ->
-                canvas.nativeCanvas.drawBitmap(
-                    image.asAndroidBitmap(),
-                    null,
-                    RectF(bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height),
-                    null,
-                )
+                val nativeCanvas = canvas.nativeCanvas
+                val rig = canvasGeometry.cordGeometry
+                if (rig == null) {
+                    drawFaceBitmap(
+                        nativeCanvas,
+                        image,
+                        canvasGeometry.holdBounds,
+                        BoardInPlaneTransform.Identity,
+                    )
+                } else {
+                    drawRiggedBoardArtwork(
+                        nativeCanvas,
+                        image,
+                        canvasGeometry.directTwoAnchorRig!!,
+                        rig,
+                    )
+                }
             }
         }
+        val holdPresentationId = board.holdPresentationId(selectedPresentation)
         board.holds
-            .filter { it.presentationId == presentation?.id }
+            .filter { it.presentationId == holdPresentationId }
             .forEach { hold ->
                 val path = hold.geometry.fold(Path()) { combined, geometry ->
-                    combined.addPath(geometry.toBoardPath(bounds).toAndroidPath())
+                    combined.addPath(
+                        geometry.toBoardPath(canvasGeometry.holdBounds)
+                            .transformed(canvasGeometry.faceTransform)
+                            .toAndroidPath(),
+                    )
                     combined
                 }
                 val isActive = hold.id in activeHoldIDs
@@ -245,6 +329,338 @@ fun BoardCanvas(
                     )
                 }
             }
+    }
+}
+
+private data class BoardCanvasGeometry(
+    val holdBounds: BoardBounds,
+    val faceTransform: BoardInPlaneTransform,
+    val directTwoAnchorRig: BoardCordRig.DirectTwoAnchor? = null,
+    val cordGeometry: DirectTwoAnchorCordGeometry? = null,
+)
+
+private fun boardCanvasGeometry(
+    board: Board,
+    presentation: BoardPresentation,
+    size: IntSize,
+): BoardCanvasGeometry? = boardCanvasGeometry(
+    board = board,
+    presentation = presentation,
+    width = size.width.toFloat(),
+    height = size.height.toFloat(),
+)
+
+private fun boardCanvasGeometry(
+    board: Board,
+    presentation: BoardPresentation,
+    width: Float,
+    height: Float,
+): BoardCanvasGeometry? {
+    if (!width.isFinite() || !height.isFinite() || width <= 0f || height <= 0f) return null
+    val rig = board.resolvedCordRig(presentation) as? BoardCordRig.DirectTwoAnchor
+    if (rig != null) {
+        val geometry = resolveDirectTwoAnchorCordGeometry(rig, presentation, width, height)
+            ?: return null
+        return BoardCanvasGeometry(
+            holdBounds = geometry.faceBounds,
+            faceTransform = geometry.faceTransform,
+            directTwoAnchorRig = rig,
+            cordGeometry = geometry,
+        )
+    }
+    return BoardCanvasGeometry(
+        holdBounds = boardBounds(width, height, presentation.aspectRatio),
+        faceTransform = BoardInPlaneTransform.Identity,
+    )
+}
+
+private fun drawRiggedBoardArtwork(
+    canvas: android.graphics.Canvas,
+    image: ImageBitmap,
+    rig: BoardCordRig.DirectTwoAnchor,
+    geometry: DirectTwoAnchorCordGeometry,
+) {
+    drawFaceBitmap(canvas, image, geometry.faceBounds, geometry.faceTransform)
+
+    val supportPaths = supportPaths(geometry)
+    val strandPaths = geometry.strands.map { strand ->
+        Path().apply {
+            moveTo(strand.start.x, strand.start.y)
+            lineTo(strand.end.x, strand.end.y)
+        }
+    }
+    val mainPaths = supportPaths.dropLast(1) + strandPaths
+    val knotOverpass = supportPaths.last()
+    drawRope(canvas, mainPaths, geometry.scale)
+    drawRope(canvas, listOf(knotOverpass), geometry.scale)
+
+    val ridgePaths = mainPaths + knotOverpass
+    val ridgeSave = canvas.save()
+    canvas.translate(-2f * geometry.scale, -1f * geometry.scale)
+    strokePaths(
+        canvas = canvas,
+        paths = ridgePaths,
+        color = 0x2EC4C9CC,
+        width = 2.4f * geometry.scale,
+        pathEffect = DashPathEffect(
+            floatArrayOf(1.5f * geometry.scale, 5.5f * geometry.scale),
+            0f,
+        ),
+    )
+    canvas.restoreToCount(ridgeSave)
+
+    geometry.pairedAttachments.zip(geometry.strands.map { it.start }).forEach { (attachment, exit) ->
+        val crescent = eyeletForegroundCrescent(
+            center = attachment,
+            toward = exit,
+            radius = rig.eyeletRadius * geometry.scale,
+            chordOffset = 7f * geometry.scale,
+        ) ?: return@forEach
+        drawFaceBitmap(
+            canvas = canvas,
+            image = image,
+            bounds = geometry.faceBounds,
+            transform = geometry.faceTransform,
+            clip = crescent,
+        )
+    }
+}
+
+private fun drawFaceBitmap(
+    canvas: android.graphics.Canvas,
+    image: ImageBitmap,
+    bounds: BoardBounds,
+    transform: BoardInPlaneTransform,
+    clip: Path? = null,
+) {
+    val save = canvas.save()
+    clip?.let(canvas::clipPath)
+    canvas.concat(transform.toAndroidMatrix())
+    canvas.drawBitmap(
+        image.asAndroidBitmap(),
+        null,
+        RectF(bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height),
+        Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG),
+    )
+    canvas.restoreToCount(save)
+}
+
+private fun BoardInPlaneTransform.toAndroidMatrix(): Matrix = Matrix().apply {
+    setValues(
+        floatArrayOf(
+            a, c, tx,
+            b, d, ty,
+            0f, 0f, 1f,
+        ),
+    )
+}
+
+private fun supportPaths(geometry: DirectTwoAnchorCordGeometry): List<Path> {
+    fun point(x: Float, y: Float): Point = Point(
+        x = geometry.pullPoint.x + x * geometry.scale,
+        y = geometry.pullPoint.y + y * geometry.scale,
+    )
+
+    val bight = Path().apply {
+        point(-12f, -61f).also { moveTo(it.x, it.y) }
+        val firstEnd = point(-21f, -142f)
+        val firstControl1 = point(-26f, -82f)
+        val firstControl2 = point(-30f, -115f)
+        cubicTo(
+            firstControl1.x,
+            firstControl1.y,
+            firstControl2.x,
+            firstControl2.y,
+            firstEnd.x,
+            firstEnd.y,
+        )
+        val secondEnd = point(1f, -177f)
+        val secondControl1 = point(-14f, -163f)
+        val secondControl2 = point(-5f, -174f)
+        cubicTo(
+            secondControl1.x,
+            secondControl1.y,
+            secondControl2.x,
+            secondControl2.y,
+            secondEnd.x,
+            secondEnd.y,
+        )
+        val thirdEnd = point(24f, -136f)
+        val thirdControl1 = point(9f, -171f)
+        val thirdControl2 = point(18f, -157f)
+        cubicTo(
+            thirdControl1.x,
+            thirdControl1.y,
+            thirdControl2.x,
+            thirdControl2.y,
+            thirdEnd.x,
+            thirdEnd.y,
+        )
+        val fourthEnd = point(12f, -61f)
+        val fourthControl1 = point(31f, -109f)
+        val fourthControl2 = point(26f, -81f)
+        cubicTo(
+            fourthControl1.x,
+            fourthControl1.y,
+            fourthControl2.x,
+            fourthControl2.y,
+            fourthEnd.x,
+            fourthEnd.y,
+        )
+    }
+
+    fun knotAndExit(mirror: Float): Path = Path().apply {
+        point(-12f * mirror, -63f).also { moveTo(it.x, it.y) }
+        val firstEnd = point(21f * mirror, -39f)
+        val firstControl1 = point(1f * mirror, -52f)
+        val firstControl2 = point(18f * mirror, -51f)
+        cubicTo(
+            firstControl1.x,
+            firstControl1.y,
+            firstControl2.x,
+            firstControl2.y,
+            firstEnd.x,
+            firstEnd.y,
+        )
+        val secondEnd = point(5f * mirror, -18f)
+        val secondControl1 = point(24f * mirror, -28f)
+        val secondControl2 = point(16f * mirror, -19f)
+        cubicTo(
+            secondControl1.x,
+            secondControl1.y,
+            secondControl2.x,
+            secondControl2.y,
+            secondEnd.x,
+            secondEnd.y,
+        )
+        val thirdEnd = point(-22f * mirror, 0f)
+        val thirdControl1 = point(-8f * mirror, -17f)
+        val thirdControl2 = point(-17f * mirror, -9f)
+        cubicTo(
+            thirdControl1.x,
+            thirdControl1.y,
+            thirdControl2.x,
+            thirdControl2.y,
+            thirdEnd.x,
+            thirdEnd.y,
+        )
+    }
+
+    val overpass = Path().apply {
+        point(-18f, -35f).also { moveTo(it.x, it.y) }
+        val end = point(18f, -35f)
+        val control1 = point(-10f, -24f)
+        val control2 = point(9f, -22f)
+        cubicTo(control1.x, control1.y, control2.x, control2.y, end.x, end.y)
+    }
+    return listOf(bight, knotAndExit(1f), knotAndExit(-1f), overpass)
+}
+
+private fun drawRope(
+    canvas: android.graphics.Canvas,
+    paths: List<Path>,
+    scale: Float,
+) {
+    val shadowSave = canvas.save()
+    canvas.translate(4f * scale, 5f * scale)
+    strokePaths(canvas, paths, color = 0x57000000, width = 35f * scale)
+    canvas.restoreToCount(shadowSave)
+
+    strokePaths(canvas, paths, color = 0xFF050607.toInt(), width = 31f * scale)
+    strokePaths(canvas, paths, color = 0xFF151718.toInt(), width = 25f * scale)
+
+    val lightStamp = Path().apply {
+        moveTo(-4f * scale, -5f * scale)
+        lineTo(4f * scale, 5f * scale)
+    }
+    strokePaths(
+        canvas = canvas,
+        paths = paths,
+        color = 0x94939698.toInt(),
+        width = 1.7f * scale,
+        pathEffect = PathDashPathEffect(
+            lightStamp,
+            12f * scale,
+            0f,
+            PathDashPathEffect.Style.ROTATE,
+        ),
+    )
+    val darkStamp = Path().apply {
+        moveTo(-4f * scale, 5f * scale)
+        lineTo(4f * scale, -5f * scale)
+    }
+    strokePaths(
+        canvas = canvas,
+        paths = paths,
+        color = 0xE6030404.toInt(),
+        width = 2f * scale,
+        pathEffect = PathDashPathEffect(
+            darkStamp,
+            12f * scale,
+            6f * scale,
+            PathDashPathEffect.Style.ROTATE,
+        ),
+    )
+}
+
+private fun strokePaths(
+    canvas: android.graphics.Canvas,
+    paths: List<Path>,
+    color: Int,
+    width: Float,
+    pathEffect: android.graphics.PathEffect? = null,
+) {
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG).apply {
+        this.color = color
+        style = Paint.Style.STROKE
+        strokeWidth = width
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
+        this.pathEffect = pathEffect
+    }
+    paths.forEach { canvas.drawPath(it, paint) }
+}
+
+private fun eyeletForegroundCrescent(
+    center: Point,
+    toward: Point,
+    radius: Float,
+    chordOffset: Float,
+): Path? {
+    val deltaX = toward.x - center.x
+    val deltaY = toward.y - center.y
+    val length = sqrt(deltaX * deltaX + deltaY * deltaY)
+    if (!length.isFinite() || length <= 0f || radius < chordOffset) return null
+
+    val unitX = deltaX / length
+    val unitY = deltaY / length
+    val normalX = -unitY
+    val normalY = unitX
+    val halfChord = sqrt(radius * radius - chordOffset * chordOffset)
+    val start = Point(
+        center.x + chordOffset * unitX + halfChord * normalX,
+        center.y + chordOffset * unitY + halfChord * normalY,
+    )
+    val end = Point(
+        center.x + chordOffset * unitX - halfChord * normalX,
+        center.y + chordOffset * unitY - halfChord * normalY,
+    )
+    val startDegrees = Math.toDegrees(
+        atan2((start.y - center.y).toDouble(), (start.x - center.x).toDouble()),
+    ).toFloat()
+    val endDegrees = Math.toDegrees(
+        atan2((end.y - center.y).toDouble(), (end.x - center.x).toDouble()),
+    ).toFloat()
+    val sweepDegrees = ((endDegrees - startDegrees) % 360f + 360f) % 360f
+    return Path().apply {
+        moveTo(start.x, start.y)
+        arcTo(
+            RectF(center.x - radius, center.y - radius, center.x + radius, center.y + radius),
+            startDegrees,
+            sweepDegrees,
+            false,
+        )
+        close()
     }
 }
 

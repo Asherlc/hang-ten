@@ -106,6 +106,110 @@ class BoardRepositoryTest {
         assertTrueFailureContaining(result, "fingerCapacity")
     }
 
+    @Test
+    fun decodesDirectTwoAnchorRigAndResolvesItsInvertedAliasToCanonicalArtwork() {
+        val board = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to riggedBoardJson(),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards().getOrThrow().single()
+
+        val canonical = board.presentation("primary")!!
+        val inverted = board.presentation("primary-inverted")!!
+        val expectedRig = BoardCordRig.DirectTwoAnchor(
+            sceneSize = BoardCordSize(width = 1200f, height = 1464f),
+            sourceFrame = BoardCordRect(x = 0f, y = 214f, width = 1200f, height = 1250f),
+            innerFaceFrame = BoardCordRect(x = -100f, y = -10f, width = 1400f, height = 1400f),
+            attachmentPoints = listOf(Point(276f, 804f), Point(920f, 804f)),
+            pullPoint = Point(600f, 71.5f),
+            eyeletRadius = 34f,
+        )
+
+        assertEquals("demo", board.packageName)
+        assertEquals(expectedRig, canonical.cordRig)
+        assertEquals(expectedRig, board.resolvedCordRig(inverted))
+        assertEquals(canonical, board.artworkPresentation(inverted))
+        assertEquals("primary", board.holdPresentationId(inverted))
+        assertEquals(BoardGeometryRotationAnchor(0.5f, 113f / 183f), inverted.geometryRotationAnchor)
+    }
+
+    @Test
+    fun rejectsDirectTwoAnchorRigWithNonPositiveEyeletRadius() {
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to riggedBoardJson().replace(
+                        "\"eyeletRadius\": 34",
+                        "\"eyeletRadius\": 0",
+                    ),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+
+        assertTrueFailureContaining(result, "eyeletRadius")
+    }
+
+    private fun riggedBoardJson(): String =
+        """
+        {
+          "id": "demo.board",
+          "manufacturer": "Demo",
+          "name": "Demo Board",
+          "subtitle": "A test board.",
+          "productURL": "https://example.com/demo",
+          "aspectRatio": 0.819672131147541,
+          "presentations": [
+            {
+              "id": "primary",
+              "name": "Primary",
+              "assetPath": "assets/primary.png",
+              "aspectRatio": 0.819672131147541,
+              "default": true,
+              "cordRig": {
+                "type": "directTwoAnchor",
+                "sceneSize": { "width": 1200, "height": 1464 },
+                "sourceFrame": { "x": 0, "y": 214, "width": 1200, "height": 1250 },
+                "innerFaceFrame": { "x": -100, "y": -10, "width": 1400, "height": 1400 },
+                "attachmentPoints": [
+                  { "x": 276, "y": 804 },
+                  { "x": 920, "y": 804 }
+                ],
+                "pullPoint": { "x": 600, "y": 71.5 },
+                "eyeletRadius": 34
+              }
+            },
+            {
+              "id": "primary-inverted",
+              "name": "Primary inverted",
+              "assetPath": "assets/primary.png",
+              "aspectRatio": 0.819672131147541,
+              "default": false,
+              "sourcePresentationID": "primary",
+              "isInverted": true,
+              "geometryRotationAnchor": { "x": 0.5, "y": 0.6174863387978142 }
+            }
+          ],
+          "holds": [
+            {
+              "id": "edge",
+              "name": "Edge",
+              "kind": "edge",
+              "presentationID": "primary",
+              "geometry": [
+                {
+                  "frame": { "x": 0.2, "y": 0.3, "width": 0.4, "height": 0.2 },
+                  "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.2 }
+                }
+              ]
+            }
+          ]
+        }
+        """.trimIndent()
+
     private fun boardJson(): String =
         """
         {

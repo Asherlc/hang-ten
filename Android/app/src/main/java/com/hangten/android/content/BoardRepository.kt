@@ -42,9 +42,30 @@ class AssetBoardRepository(
         if (presentations.isEmpty()) fail("$path.presentations must not be empty.")
         if (presentations.count { it.isDefault } != 1) fail("$path.presentations must contain exactly one default presentation.")
         if (presentations.map { it.id }.toSet().size != presentations.size) fail("$path.presentations contains duplicate IDs.")
+        val presentationsById = presentations.associateBy { it.id }
         presentations.forEach { presentation ->
             val assetPath = "$BOARDS_ROOT/$packageName/${presentation.assetPath}"
             if (!assets.exists(assetPath)) fail("Board $boardId is missing presentation asset ${presentation.assetPath}.")
+            if (presentation.cordRig != null && (presentation.sourcePresentationId != null || presentation.isInverted)) {
+                fail("Board $boardId presentation ${presentation.id}.cordRig must be owned by a canonical non-inverted presentation.")
+            }
+            presentation.geometryRotationAnchor?.let { anchor ->
+                if (anchor.x !in 0f..1f || anchor.y !in 0f..1f) {
+                    fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor must contain normalized coordinates.")
+                }
+                if (presentation.sourcePresentationId == null || !presentation.isInverted) {
+                    fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor requires an inverted alias.")
+                }
+            }
+            presentation.sourcePresentationId?.let { sourceId ->
+                val source = presentationsById[sourceId]
+                if (sourceId == presentation.id || source == null || source.sourcePresentationId != null) {
+                    fail("Board $boardId presentation ${presentation.id} must reference a canonical presentation.")
+                }
+                if (!aspectRatiosMatch(presentation.aspectRatio, source.aspectRatio, ALIAS_ASPECT_RATIO_TOLERANCE)) {
+                    fail("Board $boardId presentation ${presentation.id}.aspectRatio must match its source presentation.")
+                }
+            }
         }
 
         val holds = objectValue.required("holds", path)
@@ -68,6 +89,7 @@ class AssetBoardRepository(
             aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio"),
             presentations = presentations,
             holds = holds,
+            packageName = packageName,
         )
     }
 
@@ -78,14 +100,90 @@ class AssetBoardRepository(
         }
         val isDefault = (objectValue.required("default", path) as? JsonValue.BooleanValue)?.value
             ?: fail("$path.default must be a boolean.")
+        val aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio")
+        val sourcePresentationId = objectValue.optional("sourcePresentationID")?.asString("$path.sourcePresentationID")
+            ?.also { requireContentId(it, "$path.sourcePresentationID") }
+        val isInverted = objectValue.optional("isInverted")?.let {
+            (it as? JsonValue.BooleanValue)?.value ?: fail("$path.isInverted must be a boolean.")
+        } ?: false
+        val geometryRotationAnchor = objectValue.optional("geometryRotationAnchor")?.let {
+            decodeRotationAnchor(it.asObject("$path.geometryRotationAnchor"), "$path.geometryRotationAnchor")
+        }
+        val cordRig = objectValue.optional("cordRig")?.let {
+            decodeCordRig(it.asObject("$path.cordRig"), "$path.cordRig")
+        }
+        if (cordRig is BoardCordRig.DirectTwoAnchor && !aspectRatiosMatch(
+                aspectRatio,
+                cordRig.sceneSize.width / cordRig.sceneSize.height,
+                PRESENTATION_ASPECT_RATIO_TOLERANCE,
+            )
+        ) {
+            fail("$path.aspectRatio must match cordRig.sceneSize within 0.1%.")
+        }
         return BoardPresentation(
             id = objectValue.requiredString("id", path),
             name = objectValue.requiredString("name", path),
             assetPath = assetPath,
-            aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio"),
+            aspectRatio = aspectRatio,
             isDefault = isDefault,
+            sourcePresentationId = sourcePresentationId,
+            isInverted = isInverted,
+            geometryRotationAnchor = geometryRotationAnchor,
+            cordRig = cordRig,
         )
     }
+
+    private fun decodeRotationAnchor(objectValue: JsonValue.Object, path: String): BoardGeometryRotationAnchor =
+        BoardGeometryRotationAnchor(
+            x = objectValue.required("x", path).asFiniteFloat("$path.x"),
+            y = objectValue.required("y", path).asFiniteFloat("$path.y"),
+        )
+
+    private fun decodeCordRig(objectValue: JsonValue.Object, path: String): BoardCordRig {
+        if (objectValue.requiredString("type", path) != "directTwoAnchor") {
+            fail("$path.type is unsupported.")
+        }
+        val sceneSizeObject = objectValue.required("sceneSize", path).asObject("$path.sceneSize")
+        val sourceFrameObject = objectValue.required("sourceFrame", path).asObject("$path.sourceFrame")
+        val innerFaceFrameObject = objectValue.required("innerFaceFrame", path).asObject("$path.innerFaceFrame")
+        val attachmentPoints = objectValue.required("attachmentPoints", path)
+            .asArray("$path.attachmentPoints")
+            .mapIndexed { index, value ->
+                decodeCordPoint(value.asObject("$path.attachmentPoints[$index]"), "$path.attachmentPoints[$index]")
+            }
+        val rig = BoardCordRig.DirectTwoAnchor(
+            sceneSize = BoardCordSize(
+                width = positiveFiniteFloat(sceneSizeObject.required("width", "$path.sceneSize"), "$path.sceneSize.width"),
+                height = positiveFiniteFloat(sceneSizeObject.required("height", "$path.sceneSize"), "$path.sceneSize.height"),
+            ),
+            sourceFrame = decodeCordRect(sourceFrameObject, "$path.sourceFrame"),
+            innerFaceFrame = decodeCordRect(innerFaceFrameObject, "$path.innerFaceFrame"),
+            attachmentPoints = attachmentPoints,
+            pullPoint = decodeCordPoint(
+                objectValue.required("pullPoint", path).asObject("$path.pullPoint"),
+                "$path.pullPoint",
+            ),
+            eyeletRadius = positiveFiniteFloat(objectValue.required("eyeletRadius", path), "$path.eyeletRadius"),
+        )
+        if (rig.attachmentPoints.size != 2 || rig.attachmentPoints[0] == rig.attachmentPoints[1]) {
+            fail("$path.attachmentPoints must contain two distinct finite points.")
+        }
+        return rig
+    }
+
+    private fun decodeCordRect(objectValue: JsonValue.Object, path: String): BoardCordRect =
+        BoardCordRect(
+            x = objectValue.required("x", path).asFiniteFloat("$path.x"),
+            y = objectValue.required("y", path).asFiniteFloat("$path.y"),
+            width = positiveFiniteFloat(objectValue.required("width", path), "$path.width"),
+            height = positiveFiniteFloat(objectValue.required("height", path), "$path.height"),
+        )
+
+    private fun decodeCordPoint(objectValue: JsonValue.Object, path: String): Point =
+        Point(
+            x = objectValue.required("x", path).asFiniteFloat("$path.x"),
+            y = objectValue.required("y", path).asFiniteFloat("$path.y"),
+        )
 
     private fun decodeHold(objectValue: JsonValue.Object, path: String): BoardHold {
         val geometry = objectValue.required("geometry", path)
@@ -222,6 +320,10 @@ class AssetBoardRepository(
     private fun positiveFiniteFloat(value: JsonValue, path: String): Float =
         value.asFiniteFloat(path).also { if (it <= 0f) fail("$path must be positive.") }
 
+    private fun aspectRatiosMatch(lhs: Float, rhs: Float, tolerance: Float): Boolean =
+        lhs.isFinite() && rhs.isFinite() && lhs > 0f && rhs > 0f &&
+            kotlin.math.abs(lhs - rhs) / rhs <= tolerance
+
     private fun JsonValue.asFingerCapacity(path: String): Int {
         val value = (this as? JsonValue.Number)?.value ?: fail("$path must be a number.")
         if (!value.isFinite() || value != value.toInt().toDouble() || value.toInt() !in FINGER_CAPACITY_RANGE) {
@@ -235,6 +337,8 @@ class AssetBoardRepository(
     private companion object {
         const val BOARDS_ROOT = "Hangboards"
         const val PLAN_LIBRARY_PATH = "PlanLibrary.json"
+        const val PRESENTATION_ASPECT_RATIO_TOLERANCE = 0.001f
+        const val ALIAS_ASPECT_RATIO_TOLERANCE = 0.000001f
         val FINGER_CAPACITY_RANGE = 1..4
     }
 }
