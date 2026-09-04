@@ -205,6 +205,10 @@ struct BoardPackageStore {
                 in: boardDocument,
                 presentations: presentations
             )
+            try Self.validateAvailableHoldIDs(
+                in: boardDocument,
+                presentations: presentations
+            )
             try Self.validateAliasProjections(
                 in: boardDocument,
                 presentations: presentations
@@ -677,6 +681,26 @@ struct BoardPackageStore {
                 }
             }
             if presentation.isDefault { defaultCount += 1 }
+            if let availableHoldIDs = presentation.availableHoldIDs {
+                guard !availableHoldIDs.isEmpty else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).availableHoldIDs must not be empty"
+                    )
+                }
+                guard Set(availableHoldIDs).count == availableHoldIDs.count else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).availableHoldIDs must be unique"
+                    )
+                }
+                guard availableHoldIDs.allSatisfy(\.isBoardPackageIdentifier) else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).availableHoldIDs must be identifier-shaped"
+                    )
+                }
+            }
             try validatePresentationAssetPath(
                 presentation.assetPath,
                 boardID: document.id,
@@ -844,6 +868,34 @@ struct BoardPackageStore {
                 boardID: document.id,
                 reason: "equipment object \(object.id) must own at least one hold"
             )
+        }
+    }
+
+    private static func validateAvailableHoldIDs(
+        in document: BoardPackageBoardDocument,
+        presentations: [BoardPackagePresentationDocument]
+    ) throws {
+        let holdsByID = Dictionary(
+            uniqueKeysWithValues: document.holds.map { ($0.id, $0) }
+        )
+        for presentation in presentations {
+            guard let availableHoldIDs = presentation.availableHoldIDs else { continue }
+            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+            for holdID in availableHoldIDs {
+                guard let hold = holdsByID[holdID] else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).availableHoldIDs references unknown hold \(holdID)"
+                    )
+                }
+                guard hold.presentationID == canonicalPresentationID else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).availableHoldIDs hold \(holdID) "
+                            + "must belong to canonical presentation \(canonicalPresentationID)"
+                    )
+                }
+            }
         }
     }
 
@@ -1144,7 +1196,9 @@ struct BoardPackageStore {
             }
             let anchor = presentation.geometryRotationAnchor ?? .center
             let resolvedCordRig = resolvedCordRig(for: presentation, in: presentations)
+            let availableHoldIDs = presentation.availableHoldIDs.map(Set.init)
             for hold in document.holds where hold.presentationID == sourcePresentationID {
+                if let availableHoldIDs, !availableHoldIDs.contains(hold.id) { continue }
                 for piece in hold.geometry {
                     let frame = piece.frame
                     let isInsideCanvas: Bool
@@ -1549,6 +1603,7 @@ private struct BoardPackagePresentationDocument: Decodable {
     let aspectRatio: Double
     let isDefault: Bool
     let sourcePresentationID: String?
+    let availableHoldIDs: [String]?
     let isInverted: Bool
     let declaresIsInverted: Bool
     let rotationDegrees: Double?
@@ -1562,6 +1617,7 @@ private struct BoardPackagePresentationDocument: Decodable {
         case aspectRatio
         case isDefault = "default"
         case sourcePresentationID
+        case availableHoldIDs
         case isInverted
         case rotationDegrees
         case geometryRotationAnchor
@@ -1571,7 +1627,7 @@ private struct BoardPackagePresentationDocument: Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted", "rotationDegrees",
+            "sourcePresentationID", "availableHoldIDs", "isInverted", "rotationDegrees",
             "geometryRotationAnchor", "cordRig"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -1584,6 +1640,9 @@ private struct BoardPackagePresentationDocument: Decodable {
             String.self,
             forKey: .sourcePresentationID
         )
+        availableHoldIDs = container.contains(.availableHoldIDs)
+            ? try container.decode([String].self, forKey: .availableHoldIDs)
+            : nil
         declaresIsInverted = container.contains(.isInverted)
         isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
         rotationDegrees = try container.decodeIfPresent(
@@ -1611,6 +1670,7 @@ private struct BoardPackagePresentationDocument: Decodable {
             aspectRatio: CGFloat(aspectRatio),
             isDefault: isDefault,
             sourcePresentationID: sourcePresentationID,
+            availableHoldIDs: availableHoldIDs,
             isInverted: isInverted,
             rotationDegrees: rotationDegrees.map { CGFloat($0) },
             geometryRotationAnchor: geometryRotationAnchor,

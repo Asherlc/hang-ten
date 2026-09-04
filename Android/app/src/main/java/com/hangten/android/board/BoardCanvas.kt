@@ -308,9 +308,8 @@ fun BoardCanvas(
             val canvasGeometry = boardCanvasGeometry(board, selectedPresentation, canvasSize)
                 ?: return@detectTapGestures
             val clipBounds = BoardBounds(0f, 0f, canvasSize.width.toFloat(), canvasSize.height.toFloat())
-            val holdPresentationId = board.holdPresentationId(selectedPresentation)
-            board.holds.asReversed().firstOrNull { hold ->
-                hold.presentationId == holdPresentationId && hold.geometry.any { geometry ->
+            board.effectiveHolds(selectedPresentation).asReversed().firstOrNull { hold ->
+                hold.geometry.any { geometry ->
                     geometry.toBoardPath(canvasGeometry.holdBounds)
                         .transformed(canvasGeometry.faceTransform)
                         .contains(tap.x, tap.y, clipBounds)
@@ -363,9 +362,7 @@ fun BoardCanvas(
                 }
             }
         }
-        val holdPresentationId = board.holdPresentationId(selectedPresentation)
-        board.holds
-            .filter { it.presentationId == holdPresentationId }
+        board.effectiveHolds(selectedPresentation)
             .forEach { hold ->
                 val path = hold.geometry.fold(Path()) { combined, geometry ->
                     combined.addPath(

@@ -187,6 +187,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
     /// An alternate rendering of a canonical presentation, such as an
     /// upside-down mounting. Holds remain owned by the canonical source.
     var sourcePresentationID: String?
+    var availableHoldIDs: [String]?
     var isInverted: Bool
     var rotationDegrees: Double?
     var geometryRotationAnchor: BoardGeometryRotationAnchor?
@@ -201,6 +202,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         case aspectRatio
         case isDefault = "default"
         case sourcePresentationID
+        case availableHoldIDs
         case isInverted
         case rotationDegrees
         case geometryRotationAnchor
@@ -214,6 +216,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         aspectRatio: Double,
         isDefault: Bool,
         sourcePresentationID: String? = nil,
+        availableHoldIDs: [String]? = nil,
         isInverted: Bool = false,
         rotationDegrees: Double? = nil,
         geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
@@ -225,6 +228,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         self.aspectRatio = aspectRatio
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
+        self.availableHoldIDs = availableHoldIDs
         self.isInverted = isInverted
         self.rotationDegrees = rotationDegrees
         self.geometryRotationAnchor = geometryRotationAnchor
@@ -235,7 +239,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted", "rotationDegrees",
+            "sourcePresentationID", "availableHoldIDs", "isInverted", "rotationDegrees",
             "geometryRotationAnchor", "cordRig"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -248,6 +252,9 @@ struct BoardEditablePresentation: Equatable, Decodable {
             String.self,
             forKey: .sourcePresentationID
         )
+        availableHoldIDs = container.contains(.availableHoldIDs)
+            ? try container.decode([String].self, forKey: .availableHoldIDs)
+            : nil
         declaresIsInverted = container.contains(.isInverted)
         isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
         rotationDegrees = try container.decodeIfPresent(
@@ -787,6 +794,26 @@ enum BoardPackageWriter {
             if presentation.isDefault {
                 defaultPresentationCount += 1
             }
+            if let availableHoldIDs = presentation.availableHoldIDs {
+                guard !availableHoldIDs.isEmpty else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs must not be empty",
+                        document
+                    )
+                }
+                guard Set(availableHoldIDs).count == availableHoldIDs.count else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs must be unique",
+                        document
+                    )
+                }
+                guard availableHoldIDs.allSatisfy(\.isEditorBoardIdentifier) else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs must be identifier-shaped",
+                        document
+                    )
+                }
+            }
         }
         guard defaultPresentationCount == 1 else {
             throw invalid("presentations must declare exactly one default", document)
@@ -938,6 +965,25 @@ enum BoardPackageWriter {
         }
         try validateEquipmentObjectOwnership(in: document)
         let holdsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
+        for presentation in document.presentations {
+            guard let availableHoldIDs = presentation.availableHoldIDs else { continue }
+            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+            for holdID in availableHoldIDs {
+                guard let hold = holdsByID[holdID] else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs references unknown hold \(holdID)",
+                        document
+                    )
+                }
+                guard hold.presentationID == canonicalPresentationID else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs hold \(holdID) "
+                            + "must belong to canonical presentation \(canonicalPresentationID)",
+                        document
+                    )
+                }
+            }
+        }
         for hold in document.holds where hold.kind == .gaston {
             let pairedHoldID = hold.pairedHoldID!
             guard pairedHoldID != hold.id,
@@ -1023,7 +1069,9 @@ enum BoardPackageWriter {
             }
             let anchor = presentation.geometryRotationAnchor ?? .center
             let resolvedCordRig = presentationsByID[sourcePresentationID]?.cordRig
+            let availableHoldIDs = presentation.availableHoldIDs.map(Set.init)
             for hold in document.holds where hold.presentationID == sourcePresentationID {
+                if let availableHoldIDs, !availableHoldIDs.contains(hold.id) { continue }
                 for piece in hold.geometry {
                     let frame = piece.frame
                     let isInsideCanvas: Bool
@@ -1306,6 +1354,12 @@ enum BoardPackageWriter {
         ]
         if let sourcePresentationID = presentation.sourcePresentationID {
             entries.append(("sourcePresentationID", .string(sourcePresentationID)))
+        }
+        if let availableHoldIDs = presentation.availableHoldIDs {
+            entries.append((
+                "availableHoldIDs",
+                .array(availableHoldIDs.map(CanonicalJSONValue.string))
+            ))
         }
         if presentation.isInverted {
             entries.append(("isInverted", .bool(true)))

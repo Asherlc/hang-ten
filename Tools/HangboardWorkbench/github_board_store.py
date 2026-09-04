@@ -1117,6 +1117,10 @@ def _save_loaded_editor_document(
         hold["id"]: hold
         for hold in live.board["holds"]
         if hold["presentationID"] == presentation.id
+        and (
+            presentation.available_hold_ids is None
+            or hold["id"] in presentation.available_hold_ids
+        )
     }
     current_paths = board_package._current_display_paths(
         pieces_by_hold, current_holds, width, height
@@ -1132,6 +1136,7 @@ def _save_loaded_editor_document(
         width,
         height,
         presentation_id=presentation.id,
+        available_hold_ids=presentation.available_hold_ids,
     )
     board_package._validate_board(
         board,
@@ -1350,6 +1355,7 @@ def _load_selected_presentation(
             rotation_degrees=board_package._raw_presentation_rotation_degrees(
                 board, item[0]
             ),
+            available_hold_ids=item[7],
         )
         for item in presentation_values
     )
@@ -1616,6 +1622,7 @@ def _load_package_from_entries(
             rotation_degrees=board_package._raw_presentation_rotation_degrees(
                 board, presentation_id
             ),
+            available_hold_ids=available_hold_ids,
         )
         for (
             presentation_id,
@@ -1625,6 +1632,7 @@ def _load_package_from_entries(
             is_default,
             source_presentation_id,
             is_inverted,
+            available_hold_ids,
         ) in presentation_values
     )
     default = next(item for item in presentations if item.is_default)

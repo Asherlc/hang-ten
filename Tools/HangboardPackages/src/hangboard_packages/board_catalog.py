@@ -503,6 +503,7 @@ class BoardPresentation:
     rotation_degrees: float | None = None
     geometry_rotation_anchor: NormalizedPoint | None = None
     cord_rig: DirectTwoAnchorCordRig | None = None
+    available_hold_ids: tuple[str, ...] | None = None
 
     @property
     def resolved_rotation_degrees(self) -> float:
@@ -519,6 +520,7 @@ class BoardPresentation:
             source,
             optional={
                 "sourcePresentationID",
+                "availableHoldIDs",
                 "isInverted",
                 "rotationDegrees",
                 "geometryRotationAnchor",
@@ -532,6 +534,17 @@ class BoardPresentation:
         aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
         if aspect_ratio <= 0:
             raise ValueError(f"{source}.aspectRatio must be positive")
+        available_hold_ids: tuple[str, ...] | None = None
+        if "availableHoldIDs" in payload:
+            raw_available_hold_ids = payload["availableHoldIDs"]
+            if not isinstance(raw_available_hold_ids, list) or not raw_available_hold_ids:
+                raise ValueError(f"{source}.availableHoldIDs must be a non-empty array")
+            available_hold_ids = tuple(
+                _identifier(item, f"{source}.availableHoldIDs[{index}]")
+                for index, item in enumerate(raw_available_hold_ids)
+            )
+            if len(set(available_hold_ids)) != len(available_hold_ids):
+                raise ValueError(f"{source}.availableHoldIDs must be unique")
         return cls(
             _identifier(payload["id"], f"{source}.id"),
             _string(payload["name"], f"{source}.name"),
@@ -560,6 +573,7 @@ class BoardPresentation:
             DirectTwoAnchorCordRig.from_json(payload["cordRig"], f"{source}.cordRig")
             if "cordRig" in payload
             else None,
+            available_hold_ids,
         )
 
 
@@ -674,10 +688,16 @@ class BoardDocument:
         canonical_presentation_id = (
             presentation.source_presentation_id or presentation.id
         )
+        available_hold_ids = (
+            set(presentation.available_hold_ids)
+            if presentation.available_hold_ids is not None
+            else None
+        )
         return tuple(
             hold.id
             for hold in self.holds
             if hold.presentation_id == canonical_presentation_id
+            and (available_hold_ids is None or hold.id in available_hold_ids)
         )
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
@@ -978,8 +998,15 @@ def _validate_alias_presentations(
 
         anchor = presentation.geometry_rotation_anchor or NormalizedPoint(0.5, 0.5)
         resolved_cord_rig = source.cord_rig
+        available_hold_ids = (
+            set(presentation.available_hold_ids)
+            if presentation.available_hold_ids is not None
+            else None
+        )
         for hold in holds:
             if hold.presentation_id != source.id:
+                continue
+            if available_hold_ids is not None and hold.id not in available_hold_ids:
                 continue
             for piece in hold.geometry:
                 frame = piece.frame
@@ -1182,6 +1209,25 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
+    holds_by_id = {hold.id: hold for hold in holds_tuple}
+    for presentation in presentations:
+        if presentation.available_hold_ids is None:
+            continue
+        canonical_presentation_id = (
+            presentation.source_presentation_id or presentation.id
+        )
+        for hold_id in presentation.available_hold_ids:
+            hold = holds_by_id.get(hold_id)
+            if hold is None:
+                raise ValueError(
+                    f"presentation {presentation.id}.availableHoldIDs references "
+                    f"unknown hold {hold_id}"
+                )
+            if hold.presentation_id != canonical_presentation_id:
+                raise ValueError(
+                    f"presentation {presentation.id}.availableHoldIDs hold {hold_id} "
+                    f"must belong to canonical presentation {canonical_presentation_id}"
+                )
     _validate_alias_presentations(presentations, holds_tuple)
     equipment_object_ids = set(equipment_objects)
     for hold in holds_tuple:
@@ -1195,7 +1241,6 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
             raise ValueError(
                 f"equipment object {equipment_object_id} must own at least one hold"
             )
-    holds_by_id = {hold.id: hold for hold in holds_tuple}
     for hold in holds_tuple:
         if hold.kind != "gaston":
             continue

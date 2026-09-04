@@ -94,6 +94,21 @@ class AssetBoardRepository(
                 fail("Board $boardId hold ${hold.id} must be owned by a canonical presentation.")
             }
         }
+        val holdsById = holds.associateBy { it.id }
+        presentations.forEach { presentation ->
+            val availableHoldIds = presentation.availableHoldIds ?: return@forEach
+            val canonicalPresentationId = presentation.sourcePresentationId ?: presentation.id
+            availableHoldIds.forEach { holdId ->
+                val hold = holdsById[holdId]
+                    ?: fail("Board $boardId presentation ${presentation.id}.availableHoldIDs references unknown hold $holdId.")
+                if (hold.presentationId != canonicalPresentationId) {
+                    fail(
+                        "Board $boardId presentation ${presentation.id}.availableHoldIDs hold $holdId " +
+                            "must belong to canonical presentation $canonicalPresentationId.",
+                    )
+                }
+            }
+        }
         validateAliasProjections(boardId, presentations, holds)
 
         return Board(
@@ -134,7 +149,11 @@ class AssetBoardRepository(
             val faceHeight = rig?.innerFaceFrame?.height?.toDouble() ?: 1.0
             val tolerance = max(canvasWidth, canvasHeight) * 1e-6
 
-            holds.filter { it.presentationId == sourcePresentationId }.forEach { hold ->
+            val availableHoldIds = presentation.availableHoldIds?.toSet()
+            holds.filter {
+                it.presentationId == sourcePresentationId &&
+                    (availableHoldIds == null || it.id in availableHoldIds)
+            }.forEach { hold ->
                 hold.geometry.forEach { geometry ->
                     val frame = geometry.frame
                     val corners = listOf(
@@ -174,6 +193,7 @@ class AssetBoardRepository(
                 "aspectRatio",
                 "default",
                 "sourcePresentationID",
+                "availableHoldIDs",
                 "isInverted",
                 "rotationDegrees",
                 "geometryRotationAnchor",
@@ -190,6 +210,15 @@ class AssetBoardRepository(
         val aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio")
         val sourcePresentationId = objectValue.optional("sourcePresentationID")?.asString("$path.sourcePresentationID")
             ?.also { requireContentId(it, "$path.sourcePresentationID") }
+        val availableHoldIds = objectValue.optional("availableHoldIDs")?.asArray("$path.availableHoldIDs")
+            ?.mapIndexed { index, value ->
+                value.asString("$path.availableHoldIDs[$index]")
+                    .also { requireContentId(it, "$path.availableHoldIDs[$index]") }
+            }
+            ?.also { values ->
+                if (values.isEmpty()) fail("$path.availableHoldIDs must not be empty.")
+                if (values.toSet().size != values.size) fail("$path.availableHoldIDs must be unique.")
+            }
         val isInverted = objectValue.optional("isInverted")?.let {
             (it as? JsonValue.BooleanValue)?.value ?: fail("$path.isInverted must be a boolean.")
         } ?: false
@@ -225,6 +254,7 @@ class AssetBoardRepository(
             rotationDegrees = rotationDegrees,
             geometryRotationAnchor = geometryRotationAnchor,
             cordRig = cordRig,
+            availableHoldIds = availableHoldIds,
         )
     }
 

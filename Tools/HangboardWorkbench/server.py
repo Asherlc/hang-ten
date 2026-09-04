@@ -179,6 +179,11 @@ def _presentation_payload(
             if presentation.source_presentation_id is not None
             else {}
         ),
+        **(
+            {"availableHoldIDs": list(presentation.available_hold_ids)}
+            if presentation.available_hold_ids is not None
+            else {}
+        ),
         **({"isInverted": True} if presentation.is_inverted else {}),
         **(
             {"rotationDegrees": presentation.rotation_degrees}

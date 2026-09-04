@@ -100,6 +100,14 @@ while a cord rig's pull point and support loop remain world-up under gravity.
 Do not declare both `rotationDegrees` and the legacy `isInverted` field;
 `isInverted: true` remains readable as 180 degrees only for compatibility.
 
+A presentation may also declare `availableHoldIDs` when only part of its
+canonical face is usable in that orientation. The array must be nonempty,
+contain unique identifier-shaped hold IDs, and reference only existing holds
+owned by that presentation's canonical face. When the field is omitted, every
+hold on the canonical face remains available for backward compatibility.
+Rendering, highlighting, hit testing, position resolution, and Workbench's
+focused editor view all use this effective hold subset.
+
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the
 physical board is symmetric, and multiple pieces only for one genuinely

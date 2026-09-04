@@ -397,6 +397,7 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
             "aspectRatio": 1774 / 457,
             "default": False,
             "sourcePresentationID": "primary",
+            "availableHoldIDs": ["hold-left"],
             "isInverted": True,
         }
     )
@@ -413,12 +414,13 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
         (
             presentation.id,
             presentation.source_presentation_id,
+            presentation.available_hold_ids,
             presentation.is_inverted,
         )
         for presentation in opened.presentations
     ] == [
-        ("primary", None, False),
-        ("primary-inverted", "primary", True),
+        ("primary", None, None, False),
+        ("primary-inverted", "primary", ("hold-left",), True),
     ]
     assert opened.presentation("primary-inverted").asset_path == "assets/primary.png"
 

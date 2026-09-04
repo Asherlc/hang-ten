@@ -162,6 +162,7 @@ test("the browser client preserves valid inverted alias anchor metadata", async 
     imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
     default: false,
     sourcePresentationID: "front",
+    availableHoldIDs: ["hold-1"],
     isInverted: true,
     geometryRotationAnchor: { x: 0.5, y: 0.68 },
   };
@@ -183,6 +184,32 @@ test("the browser client preserves valid inverted alias anchor metadata", async 
   const board = await createWorkbenchClient(runtime).getBoard("compact");
 
   assert.deepEqual(board.presentations?.[1], alias);
+});
+
+test("the browser client rejects malformed available hold IDs", async (context) => {
+  const invalidValues: unknown[] = [null, [], ["hold-1", "hold-1"], [1]];
+
+  for (const availableHoldIDs of invalidValues) {
+    await context.test(JSON.stringify(availableHoldIDs), async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          presentations: [{
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+            availableHoldIDs,
+          } as BoardPresentation],
+        }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
 });
 
 test("the browser client preserves an explicit arbitrary alias rotation", async () => {

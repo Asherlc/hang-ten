@@ -122,6 +122,7 @@ function isBoardPresentation(value: unknown): boolean {
     "holdIDs",
     "default",
     "sourcePresentationID",
+    "availableHoldIDs",
     "isInverted",
     "rotationDegrees",
     "geometryRotationAnchor",
@@ -133,6 +134,10 @@ function isBoardPresentation(value: unknown): boolean {
     && (value.holdIDs === undefined || isStringArray(value.holdIDs))
     && typeof value.default === "boolean"
     && isOptionalString(value.sourcePresentationID)
+    && (value.availableHoldIDs === undefined
+      || (isStringArray(value.availableHoldIDs)
+        && value.availableHoldIDs.length > 0
+        && new Set(value.availableHoldIDs).size === value.availableHoldIDs.length))
     && (value.isInverted === undefined || value.isInverted === true)
     && (value.rotationDegrees === undefined
       || (typeof value.sourcePresentationID === "string"

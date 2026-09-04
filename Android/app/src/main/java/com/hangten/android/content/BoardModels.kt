@@ -88,6 +88,7 @@ data class BoardPresentation(
     val rotationDegrees: Float? = null,
     val geometryRotationAnchor: BoardGeometryRotationAnchor? = null,
     val cordRig: BoardCordRig? = null,
+    val availableHoldIds: List<String>? = null,
 ) {
     val resolvedRotationDegrees: Float
         get() = rotationDegrees ?: if (isInverted) 180f else 0f
@@ -123,6 +124,15 @@ data class Board(
 
     fun holdPresentationId(presentation: BoardPresentation): String =
         presentation.sourcePresentationId ?: presentation.id
+
+    fun effectiveHolds(presentation: BoardPresentation): List<BoardHold> {
+        val canonicalPresentationId = holdPresentationId(presentation)
+        val availableHoldIds = presentation.availableHoldIds?.toSet()
+        return holds.filter { hold ->
+            hold.presentationId == canonicalPresentationId &&
+                (availableHoldIds == null || hold.id in availableHoldIds)
+        }
+    }
 }
 
 internal class ContentDecodingException(message: String) : IllegalArgumentException(message)

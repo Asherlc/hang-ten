@@ -88,11 +88,14 @@ from B to A. Remaining in the same position is an implicit free transition; a
 self-transition declaration is invalid. An omitted edge defaults
 conservatively to `setupRequired`. `unsupported` must always be explicit.
 
-Hold availability in a position is derived rather than copied. A position
-references a presentation. Its available holds are those owned by that
-presentation's canonical source: `sourcePresentationID` when present, otherwise
-the presentation's own ID. Thus an inverted presentation naturally exposes the
-same canonical holds in a different position.
+Hold availability in a position is derived from its presentation. By default,
+the available holds are every hold owned by the presentation's canonical
+source: `sourcePresentationID` when present, otherwise the presentation's own
+ID. A presentation may narrow that set with a nonempty, unique
+`availableHoldIDs` array containing only holds owned by the same canonical
+source. Thus an inverted presentation continues to expose all canonical holds
+when the field is omitted, while orientations that make only some holds usable
+can declare the exact effective subset.
 
 Board-specific semantic mapping definitions, currently loaded from the plan
 library and attached to the runtime board, may constrain a semantic target to a

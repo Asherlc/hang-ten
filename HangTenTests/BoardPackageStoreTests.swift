@@ -2490,6 +2490,102 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.transitionKind(from: "flipped", to: "front"), .setupRequired)
     }
 
+    func testAvailableHoldIDsDrivePositionMapAndActivePresentationSelection() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            try self.presentationBytes().write(
+                to: packageURL.appendingPathComponent("assets/flipped.png")
+            )
+            try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "flipped",
+                    "name": "Flipped",
+                    "assetPath": "assets/flipped.png",
+                    "aspectRatio": 2,
+                    "default": false,
+                    "sourcePresentationID": "primary",
+                    "availableHoldIDs": ["hold-right"],
+                ])
+                board["presentations"] = presentations
+
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var right = holds[0]
+                right["id"] = "hold-right"
+                right["name"] = "Right hold"
+                holds.append(right)
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.holdIDs(inPosition: "primary"), ["hold-left", "hold-right"])
+        XCTAssertEqual(board.holdIDs(inPosition: "flipped"), ["hold-right"])
+        XCTAssertEqual(
+            BoardMapPresentationContent(board: board, selectedPresentationID: "flipped")
+                .holds.map(\.id),
+            ["hold-right"]
+        )
+        let selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: "flipped",
+            activeHoldID: "hold-left",
+            highlightedHoldIDs: []
+        )
+        XCTAssertEqual(selection.presentationID, "primary")
+    }
+
+    func testStoreRejectsInvalidAvailableHoldIDs() throws {
+        let invalidValues: [([String], String)] = [
+            ([], "presentation flipped.availableHoldIDs must not be empty"),
+            (["hold-left", "hold-left"], "presentation flipped.availableHoldIDs must be unique"),
+            (["missing"], "presentation flipped.availableHoldIDs references unknown hold missing"),
+        ]
+        for (availableHoldIDs, expectedReason) in invalidValues {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+                try self.presentationBytes().write(
+                    to: packageURL.appendingPathComponent("assets/flipped.png")
+                )
+                try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                    var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                    presentations.append([
+                        "id": "flipped",
+                        "name": "Flipped",
+                        "assetPath": "assets/flipped.png",
+                        "aspectRatio": 2,
+                        "default": false,
+                        "sourcePresentationID": "primary",
+                        "availableHoldIDs": availableHoldIDs,
+                    ])
+                    board["presentations"] = presentations
+                }
+            }
+            defer { fixture.remove() }
+
+            assertInvalidPackage(
+                try BoardPackageStore(bundle: fixture.bundle),
+                reason: expectedReason
+            )
+        }
+    }
+
+    func testStoreRejectsAvailableHoldOwnedByAnotherCanonicalFace() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[0]["availableHoldIDs"] = ["hold-back"]
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front.availableHoldIDs hold hold-back must belong to canonical presentation front"
+        )
+    }
+
     func testStoreRejectsInvalidPositionsAndTransitions() throws {
         let mutations: [(String, (inout [String: Any]) -> Void)] = [
             ("duplicate position ID", { board in

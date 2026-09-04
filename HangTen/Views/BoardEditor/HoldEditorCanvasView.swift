@@ -7,19 +7,22 @@ struct BoardEditorCanvasArtwork {
     let directTwoAnchorRig: BoardDirectTwoAnchorCordRig?
     let projection: BoardPresentationGeometryProjection
     let sourcePresentationID: String?
+    let availableHoldIDs: Set<String>?
 
     init(
         image: UIImage,
         presentationAspectRatio: CGFloat,
         directTwoAnchorRig: BoardDirectTwoAnchorCordRig?,
         projection: BoardPresentationGeometryProjection,
-        sourcePresentationID: String? = nil
+        sourcePresentationID: String? = nil,
+        availableHoldIDs: [String]? = nil
     ) {
         self.image = image
         self.presentationAspectRatio = presentationAspectRatio
         self.directTwoAnchorRig = directTwoAnchorRig
         self.projection = projection
         self.sourcePresentationID = sourcePresentationID
+        self.availableHoldIDs = availableHoldIDs.map(Set.init)
     }
 
     @MainActor
@@ -47,7 +50,8 @@ struct BoardEditorCanvasArtwork {
                     presentationAspectRatio: CGFloat(presentation.aspectRatio),
                     directTwoAnchorRig: nil,
                     projection: projection,
-                    sourcePresentationID: sourcePresentationID
+                    sourcePresentationID: sourcePresentationID,
+                    availableHoldIDs: presentation.availableHoldIDs
                 )
             }
             return fallback(package: package, sourceImage: sourceImage)
@@ -84,7 +88,8 @@ struct BoardEditorCanvasArtwork {
             presentationAspectRatio: CGFloat(presentation.aspectRatio),
             directTwoAnchorRig: rig,
             projection: projection,
-            sourcePresentationID: sourcePresentationID
+            sourcePresentationID: sourcePresentationID,
+            availableHoldIDs: presentation.availableHoldIDs
         )
     }
 
@@ -190,8 +195,10 @@ final class HoldEditorCanvasUIView: UIView {
               let sourcePresentationID = boardArtwork?.sourcePresentationID else {
             return session?.document.holds ?? []
         }
-        return session.document.holds.filter {
-            $0.presentationID == sourcePresentationID
+        let availableHoldIDs = boardArtwork?.availableHoldIDs
+        return session.document.holds.filter { hold in
+            guard hold.presentationID == sourcePresentationID else { return false }
+            return availableHoldIDs?.contains(hold.id) ?? true
         }
     }
 

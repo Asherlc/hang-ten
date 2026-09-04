@@ -3,6 +3,73 @@ import XCTest
 
 final class BoardPackageWriterTests: XCTestCase {
 
+    func testAvailableHoldIDsRoundTripThroughTheCanonicalWriter() throws {
+        let source = Data(
+            """
+            {
+              "id": "test.board",
+              "manufacturer": "Test",
+              "name": "Test board",
+              "subtitle": "Fixture",
+              "productURL": "https://example.com/board",
+              "dimensions": "70 × 25 cm",
+              "aspectRatio": 2,
+              "presentations": [
+                {
+                  "id": "front",
+                  "name": "Front",
+                  "assetPath": "assets/primary.png",
+                  "aspectRatio": 2,
+                  "default": true
+                },
+                {
+                  "id": "flipped",
+                  "name": "Flipped",
+                  "assetPath": "assets/flipped.png",
+                  "aspectRatio": 2,
+                  "default": false,
+                  "sourcePresentationID": "front",
+                  "availableHoldIDs": ["hold-right"]
+                }
+              ],
+              "holds": [
+                {
+                  "id": "hold-left",
+                  "name": "Left",
+                  "kind": "jug",
+                  "equipmentObjectID": "primary",
+                  "presentationID": "front",
+                  "geometry": [{
+                    "frame": {"x": 0, "y": 0, "width": 0.4, "height": 1},
+                    "shape": {"type": "roundedRect", "cornerRadiusFraction": 0}
+                  }]
+                },
+                {
+                  "id": "hold-right",
+                  "name": "Right",
+                  "kind": "jug",
+                  "equipmentObjectID": "primary",
+                  "presentationID": "front",
+                  "geometry": [{
+                    "frame": {"x": 0.6, "y": 0, "width": 0.4, "height": 1},
+                    "shape": {"type": "roundedRect", "cornerRadiusFraction": 0}
+                  }]
+                }
+              ]
+            }
+            """.utf8
+        )
+
+        let document = try BoardEditableDocument(data: source)
+        let output = try BoardPackageWriter.data(for: document)
+        let payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: output) as? [String: Any]
+        )
+        let presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+
+        XCTAssertEqual(presentations[1]["availableHoldIDs"] as? [String], ["hold-right"])
+    }
+
     private func repositoryHangboardsURL() -> URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()

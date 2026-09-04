@@ -166,6 +166,7 @@ class BoardPresentation:
     geometry_rotation_anchor: tuple[float, float] | None = None
     cord_rig: DirectTwoAnchorCordRig | None = None
     rotation_degrees: float | None = None
+    available_hold_ids: tuple[str, ...] | None = None
 
     @property
     def resolved_rotation_degrees(self) -> float:
@@ -253,6 +254,7 @@ _ParsedBoardPresentation = tuple[
     bool,
     str | None,
     bool,
+    tuple[str, ...] | None,
 ]
 
 
@@ -364,6 +366,7 @@ def _load_board_package(
             _raw_presentation_geometry_rotation_anchor(board, presentation_id),
             _raw_presentation_cord_rig(board, presentation_id),
             _raw_presentation_rotation_degrees(board, presentation_id),
+            available_hold_ids,
         )
         for (
             presentation_id,
@@ -373,6 +376,7 @@ def _load_board_package(
             is_default,
             source_presentation_id,
             is_inverted,
+            available_hold_ids,
         ) in presentation_values
     )
     default = next(item for item in presentations if item.is_default)
@@ -426,6 +430,11 @@ def editor_document(
     """Expose every geometry piece as an independently keyed editable region."""
     presentation = package.presentation(presentation_id)
     source_presentation_id = presentation.source_presentation_id or presentation.id
+    available_hold_ids = (
+        set(presentation.available_hold_ids)
+        if presentation.available_hold_ids is not None
+        else None
+    )
     width, height = presentation.image_width, presentation.image_height
     regions: list[dict[str, object]] = []
     region_id = 1
@@ -434,6 +443,8 @@ def editor_document(
         if hold_presentation_id != source_presentation_id:
             continue
         hold_id = hold["id"]
+        if available_hold_ids is not None and hold_id not in available_hold_ids:
+            continue
         for piece_index, piece in enumerate(hold["geometry"]):
             key = _piece_key(hold_id, piece_index)
             try:
@@ -666,6 +677,10 @@ def save_editor_document(
             hold["id"]: hold
             for hold in live.board["holds"]
             if hold["presentationID"] == presentation.id
+            and (
+                presentation.available_hold_ids is None
+                or hold["id"] in presentation.available_hold_ids
+            )
         }
         # Derive current display paths before staging a candidate so unchanged
         # editor documents avoid an unnecessary package rewrite.
@@ -685,6 +700,7 @@ def save_editor_document(
                 width,
                 height,
                 presentation_id=presentation.id,
+                available_hold_ids=presentation.available_hold_ids,
             )
             _write_json(board_path, board)
             # _replace_package_locked already fully validates `candidate` (the
@@ -810,14 +826,20 @@ def _apply_editor_document(
     height: int,
     *,
     presentation_id: str | None = None,
+    available_hold_ids: tuple[str, ...] | None = None,
 ) -> dict[str, Any]:
     """Return a board with editable regions merged into its holds."""
     copied_board = json.loads(json.dumps(board))
+    available_hold_id_set = (
+        set(available_hold_ids) if available_hold_ids is not None else None
+    )
     existing_by_id = {
         hold["id"]: hold
         for hold in copied_board["holds"]
         if presentation_id is None
             or hold["presentationID"] == presentation_id
+        if available_hold_id_set is None
+            or hold["id"] in available_hold_id_set
     }
     current_paths = (
         pieces_by_hold.current_paths
@@ -918,6 +940,12 @@ def _apply_editor_document(
         emitted: set[str] = set()
         for hold in copied_board["holds"]:
             if hold["presentationID"] != presentation_id:
+                merged_holds.append(hold)
+                continue
+            if (
+                available_hold_id_set is not None
+                and hold["id"] not in available_hold_id_set
+            ):
                 merged_holds.append(hold)
                 continue
             replacement = updated_by_id.get(hold["id"])
@@ -1368,7 +1396,7 @@ def _parse_board_presentations(
             {
                 "id", "name", "assetPath", "aspectRatio", "default",
                 "sourcePresentationID", "isInverted", "geometryRotationAnchor",
-                "rotationDegrees", "cordRig",
+                "rotationDegrees", "cordRig", "availableHoldIDs",
             },
             label,
         )
@@ -1388,6 +1416,19 @@ def _parse_board_presentations(
             if "sourcePresentationID" in value
             else None
         )
+        available_hold_ids: tuple[str, ...] | None = None
+        if "availableHoldIDs" in value:
+            raw_available_hold_ids = value["availableHoldIDs"]
+            if not isinstance(raw_available_hold_ids, list) or not raw_available_hold_ids:
+                raise BoardPackageError(
+                    f"{label}.availableHoldIDs must be a non-empty array"
+                )
+            available_hold_ids = tuple(
+                _identifier(item, f"{label}.availableHoldIDs[{item_index}]")
+                for item_index, item in enumerate(raw_available_hold_ids)
+            )
+            if len(set(available_hold_ids)) != len(available_hold_ids):
+                raise BoardPackageError(f"{label}.availableHoldIDs must be unique")
         is_inverted = value.get("isInverted", False)
         if not isinstance(is_inverted, bool):
             raise BoardPackageError(f"{label}.isInverted must be a boolean")
@@ -1428,6 +1469,7 @@ def _parse_board_presentations(
                 is_default,
                 source_presentation_id,
                 is_inverted,
+                available_hold_ids,
             )
         )
     if defaults != 1:
@@ -1441,6 +1483,7 @@ def _parse_board_presentations(
         _,
         source_presentation_id,
         is_inverted,
+        _available_hold_ids,
     ) in presentations:
         geometry_rotation_anchor = geometry_rotation_anchors[presentation_id]
         cord_rig = cord_rigs[presentation_id]
@@ -1605,6 +1648,7 @@ def _validate_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_available_hold_ids(parsed_presentations, holds)
     _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
     _validate_inverted_alias_projection(board, parsed_presentations, holds)
     _validate_gaston_pairs(holds)
@@ -1665,9 +1709,39 @@ def validate_catalog_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_available_hold_ids(parsed_presentations, holds)
     _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
     _validate_inverted_alias_projection(board, parsed_presentations, holds)
     _validate_gaston_pairs(holds)
+
+
+def _validate_available_hold_ids(
+    presentations: tuple[_ParsedBoardPresentation, ...],
+    holds: list[Any],
+) -> None:
+    holds_by_id = {
+        hold["id"]: hold
+        for hold in holds
+        if isinstance(hold, Mapping) and isinstance(hold.get("id"), str)
+    }
+    for presentation in presentations:
+        presentation_id = presentation[0]
+        canonical_presentation_id = presentation[5] or presentation_id
+        available_hold_ids = presentation[7]
+        if available_hold_ids is None:
+            continue
+        for hold_id in available_hold_ids:
+            hold = holds_by_id.get(hold_id)
+            if hold is None:
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.availableHoldIDs references "
+                    f"unknown hold {hold_id}"
+                )
+            if hold.get("presentationID") != canonical_presentation_id:
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.availableHoldIDs hold {hold_id} "
+                    f"must belong to canonical presentation {canonical_presentation_id}"
+                )
 
 
 def _validate_inverted_alias_projection(
@@ -1693,8 +1767,13 @@ def _validate_inverted_alias_projection(
             or (0.5, 0.5)
         )
         cord_rig = _raw_presentation_cord_rig(board, source_presentation_id)
+        available_hold_ids = (
+            set(presentation[7]) if presentation[7] is not None else None
+        )
         for hold in holds:
             if not isinstance(hold, Mapping) or hold.get("presentationID") != source_presentation_id:
+                continue
+            if available_hold_ids is not None and hold.get("id") not in available_hold_ids:
                 continue
             geometry = hold.get("geometry")
             if not isinstance(geometry, list):

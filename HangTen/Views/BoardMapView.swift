@@ -86,9 +86,7 @@ struct BoardMapPresentationContent {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        let sourcePresentationID = resolvedPresentation.sourcePresentationID
-            ?? resolvedPresentation.id
-        holds = board.holds.filter { $0.presentationID == sourcePresentationID }
+        holds = board.availableHolds(for: resolvedPresentation)
     }
 }
 
@@ -201,17 +199,16 @@ struct BoardMapPresentationSelection: Equatable {
         on board: TrainingBoard
     ) -> String? {
         guard let holdID else { return nil }
-        guard let hold = board.holds.first(where: { $0.id == holdID }) else {
+        guard board.holds.contains(where: { $0.id == holdID }) else {
             return nil
         }
-        guard let preferredPresentation = board.presentation(id: preferredPresentationID) else {
-            return hold.presentationID
+        if let preferredPresentation = board.presentation(id: preferredPresentationID),
+           board.availableHolds(for: preferredPresentation).contains(where: { $0.id == holdID }) {
+            return preferredPresentation.id
         }
-        let preferredSourceID = preferredPresentation.sourcePresentationID
-            ?? preferredPresentation.id
-        return preferredSourceID == hold.presentationID
-            ? preferredPresentation.id
-            : hold.presentationID
+        return board.presentations.first(where: { presentation in
+            board.availableHolds(for: presentation).contains(where: { $0.id == holdID })
+        })?.id
     }
 }
 

@@ -37,6 +37,38 @@ class BoardEditorStoreTest {
     }
 
     @Test
+    fun presentationAvailabilitySurvivesAPathEdit() {
+        val root = createTempDirectory("board-editor-availability").toFile()
+        try {
+            val source = File(root, "source").also { it.mkdirs() }
+            writeSourcePackage(source)
+            val boardFile = File(source, "demo/board.json")
+            boardFile.writeText(
+                boardFile.readText().replace(
+                    "\"default\":true",
+                    "\"default\":true,\"availableHoldIDs\":[\"edge\"]",
+                ),
+            )
+            val store = BoardEditorStore(File(root, "edited"), FileBoardPackageSource(source))
+
+            store.startEditing("demo")
+            val edited = store.movePathPoint(
+                slug = "demo",
+                holdId = "edge",
+                geometryIndex = 0,
+                commandIndex = 1,
+                field = EditablePathPoint.To,
+                x = 0.75,
+                y = 0.25,
+            )
+
+            assertTrue(edited.contains("\"availableHoldIDs\":[\"edge\"]"))
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
     fun invalidBoardNeverReplacesPreviouslySavedDocument() {
         val root = createTempDirectory("board-editor-atomic").toFile()
         try {

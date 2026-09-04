@@ -776,6 +776,23 @@ def test_board_payload_exposes_only_declared_inverted_alias_anchor_metadata(
     assert "geometryRotationAnchor" not in source
 
 
+def test_board_payload_exposes_available_hold_ids_without_starting_a_server(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    board["presentations"][0]["availableHoldIDs"] = ["hold-left"]
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["availableHoldIDs"] == ["hold-left"]
+
+
 def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
     tmp_path: Path,
 ) -> None:

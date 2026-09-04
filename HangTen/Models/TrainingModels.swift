@@ -856,6 +856,9 @@ struct BoardPresentation: Identifiable, Hashable {
     /// A presentation may show an existing physical surface in a different
     /// mounting orientation, without duplicating the board's hold inventory.
     let sourcePresentationID: String?
+    /// When present, limits this presentation to a non-empty subset of holds
+    /// owned by its canonical physical face.
+    let availableHoldIDs: [String]?
     let isInverted: Bool
     /// Explicit clockwise in-plane rotation normalized to [0, 360).
     /// `nil` preserves the legacy `isInverted` representation.
@@ -869,6 +872,7 @@ struct BoardPresentation: Identifiable, Hashable {
         aspectRatio: CGFloat,
         isDefault: Bool,
         sourcePresentationID: String? = nil,
+        availableHoldIDs: [String]? = nil,
         isInverted: Bool = false,
         rotationDegrees: CGFloat? = nil,
         geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
@@ -879,6 +883,7 @@ struct BoardPresentation: Identifiable, Hashable {
         self.aspectRatio = aspectRatio
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
+        self.availableHoldIDs = availableHoldIDs
         self.isInverted = isInverted
         self.rotationDegrees = rotationDegrees
         self.geometryRotationAnchor = geometryRotationAnchor
@@ -995,15 +1000,21 @@ struct TrainingBoard: Identifiable, Hashable {
         canonicalPresentation(for: presentation)?.cordRig
     }
 
+    func availableHolds(for presentation: BoardPresentation) -> [BoardHold] {
+        let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+        let availableHoldIDs = presentation.availableHoldIDs.map(Set.init)
+        return holds.filter { hold in
+            guard hold.presentationID == canonicalPresentationID else { return false }
+            return availableHoldIDs?.contains(hold.id) ?? true
+        }
+    }
+
     func holdIDs(inPosition positionID: String) -> [String] {
         guard let position = positions.first(where: { $0.id == positionID }),
               let presentation = presentation(id: position.presentationID) else {
             return []
         }
-        let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
-        return holds.compactMap { hold in
-            hold.presentationID == canonicalPresentationID ? hold.id : nil
-        }
+        return availableHolds(for: presentation).map(\.id)
     }
 
     func transitionKind(

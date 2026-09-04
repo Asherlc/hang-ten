@@ -102,7 +102,8 @@ final class BoardEditorSessionTests: XCTestCase {
 
     private func aliasFixtureDocument(
         isRigged: Bool,
-        rotationDegrees: Double? = nil
+        rotationDegrees: Double? = nil,
+        availableHoldIDs: [String]? = nil
     ) -> BoardEditableDocument {
         var document = BoardEditorTestFixtures.sampleDocument()
         let cordRig: BoardCordRig? = isRigged
@@ -124,6 +125,7 @@ final class BoardEditorSessionTests: XCTestCase {
                 aspectRatio: 2,
                 isDefault: true,
                 sourcePresentationID: "front",
+                availableHoldIDs: availableHoldIDs,
                 isInverted: rotationDegrees == nil,
                 rotationDegrees: rotationDegrees,
                 geometryRotationAnchor: .center
@@ -148,6 +150,12 @@ final class BoardEditorSessionTests: XCTestCase {
             height: 0.1
         )
         document.holds.append(hiddenHold)
+        if availableHoldIDs != nil {
+            var filteredOutHold = document.holds[0]
+            filteredOutHold.id = "filtered-out-hold"
+            filteredOutHold.name = "Filtered out hold"
+            document.holds.append(filteredOutHold)
+        }
         return document
     }
 
@@ -166,7 +174,8 @@ final class BoardEditorSessionTests: XCTestCase {
 
     private func makeAliasFixture(
         isRigged: Bool,
-        rotationDegrees: Double? = nil
+        rotationDegrees: Double? = nil,
+        availableHoldIDs: [String]? = nil
     ) throws -> AliasFixture {
         let sourceLibraryURL = temporaryDirectory.appendingPathComponent(
             "alias-source-\(UUID().uuidString)",
@@ -187,7 +196,8 @@ final class BoardEditorSessionTests: XCTestCase {
         try BoardPackageWriter.data(
             for: aliasFixtureDocument(
                 isRigged: isRigged,
-                rotationDegrees: rotationDegrees
+                rotationDegrees: rotationDegrees,
+                availableHoldIDs: availableHoldIDs
             )
         )
             .write(to: packageURL.appendingPathComponent("board.json"))
@@ -203,7 +213,8 @@ final class BoardEditorSessionTests: XCTestCase {
 
     private func loadAliasFixture(
         isRigged: Bool,
-        rotationDegrees: Double? = nil
+        rotationDegrees: Double? = nil,
+        availableHoldIDs: [String]? = nil
     ) throws -> (
         package: BoardEditedPackage,
         store: BoardEditorStore,
@@ -211,7 +222,8 @@ final class BoardEditorSessionTests: XCTestCase {
     ) {
         let fixture = try makeAliasFixture(
             isRigged: isRigged,
-            rotationDegrees: rotationDegrees
+            rotationDegrees: rotationDegrees,
+            availableHoldIDs: availableHoldIDs
         )
         let fixtureStore = BoardEditorStore(
             baseDirectory: temporaryDirectory.appendingPathComponent(
@@ -466,6 +478,38 @@ final class BoardEditorSessionTests: XCTestCase {
         canvas.updateMetadataWarningAccessibility()
 
         XCTAssertEqual(session.incompleteMetadataHoldIDs, ["hold-one", "other-hold"])
+        let elements = try XCTUnwrap(
+            canvas.accessibilityElements as? [UIAccessibilityElement]
+        )
+        XCTAssertEqual(
+            elements.dropFirst().compactMap(\.accessibilityLabel),
+            ["Incomplete hold metadata: hold-one"]
+        )
+    }
+
+    func testRiggedDefaultAliasShowsOnlyItsAvailableCanonicalHolds() throws {
+        let loaded = try loadAliasFixture(
+            isRigged: true,
+            availableHoldIDs: ["hold-one"]
+        )
+        let session = BoardEditorSession(package: loaded.package, store: loaded.store)
+        let sourceImage = try XCTUnwrap(
+            UIImage(contentsOfFile: loaded.package.imageURL.path)
+        )
+        let canvas = HoldEditorCanvasUIView(
+            frame: CGRect(x: 0, y: 0, width: 400, height: 200)
+        )
+        canvas.session = session
+        canvas.boardArtwork = BoardEditorCanvasArtwork.make(
+            package: loaded.package,
+            sourceImage: sourceImage
+        )
+        canvas.updateMetadataWarningAccessibility()
+
+        XCTAssertEqual(
+            session.incompleteMetadataHoldIDs,
+            ["hold-one", "other-hold", "filtered-out-hold"]
+        )
         let elements = try XCTUnwrap(
             canvas.accessibilityElements as? [UIAccessibilityElement]
         )

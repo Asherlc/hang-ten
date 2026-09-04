@@ -111,6 +111,51 @@ def test_board_schema_loads_positions_and_directed_transitions() -> None:
     assert board.transition_kind("flipped", "front") == "setupRequired"
 
 
+def test_available_hold_ids_filter_a_position_without_changing_legacy_positions() -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    second_hold = json.loads(json.dumps(document["holds"][0]))
+    second_hold.update(id="hold-right", name="Right hold")
+    document["holds"].append(second_hold)
+    document["presentations"][1]["availableHoldIDs"] = ["hold-right"]
+
+    board = module._load_board(document)
+
+    assert board.hold_ids_for_position("front") == ("hold-left", "hold-right")
+    assert board.hold_ids_for_position("flipped") == ("hold-right",)
+
+
+@pytest.mark.parametrize(
+    ("available_hold_ids", "message"),
+    [
+        ([], "availableHoldIDs must be a non-empty array"),
+        (["hold-left", "hold-left"], "availableHoldIDs must be unique"),
+        (["missing"], "availableHoldIDs references unknown hold missing"),
+    ],
+)
+def test_board_schema_rejects_invalid_available_hold_ids(
+    available_hold_ids: list[str], message: str
+) -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    document["presentations"][1]["availableHoldIDs"] = available_hold_ids
+
+    with pytest.raises(ValueError, match=message):
+        module._load_board(document)
+
+
+def test_board_schema_rejects_available_hold_from_another_canonical_face() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["availableHoldIDs"] = ["hold-right"]
+
+    with pytest.raises(
+        ValueError,
+        match="presentation front.availableHoldIDs hold hold-right must belong to canonical presentation front",
+    ):
+        module._load_board(document)
+
+
 @pytest.mark.parametrize("field", ["positions", "positionTransitions"])
 def test_board_schema_rejects_explicit_null_position_fields(field: str) -> None:
     module = load_board_catalog_module()

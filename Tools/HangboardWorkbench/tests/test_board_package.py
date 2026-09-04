@@ -384,6 +384,115 @@ def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> Non
     ]
 
 
+def test_available_hold_ids_filter_alias_editor_document(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    holds = board["holds"]
+    presentations = board["presentations"]
+    assert isinstance(holds, list) and isinstance(presentations, list)
+    second_front_hold = copy.deepcopy(holds[0])
+    second_front_hold.update(id="hold-front-secondary", name="Front secondary")
+    holds.append(second_front_hold)
+    presentations.append(
+        {
+            "id": "front-filtered",
+            "name": "Front filtered",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "front",
+            "availableHoldIDs": ["hold-front-secondary"],
+        }
+    )
+    _write_json(package_root / "board.json", board)
+
+    package = board_package.load_board_package(package_root)
+    legacy = board_package.editor_document(package, "front")
+    filtered = board_package.editor_document(package, "front-filtered")
+
+    assert package.presentation("front-filtered").available_hold_ids == (
+        "hold-front-secondary",
+    )
+    assert {region["metadata"]["holdID"] for region in legacy["regions"]} == {
+        "hold-left",
+        "hold-front-secondary",
+    }
+    assert {region["metadata"]["holdID"] for region in filtered["regions"]} == {
+        "hold-front-secondary"
+    }
+    for region in legacy["regions"]:
+        if region["metadata"]["holdID"] == "hold-left":
+            region["fingerCapacity"] = 1
+
+    board_package.save_editor_document(
+        library, "fixture-multi-presentation", legacy
+    )
+
+    saved_presentations = _read_board(package_root)["presentations"]
+    assert saved_presentations[2]["availableHoldIDs"] == ["hold-front-secondary"]
+
+
+def test_saving_a_filtered_canonical_presentation_preserves_unavailable_holds(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    holds = board["holds"]
+    presentations = board["presentations"]
+    assert isinstance(holds, list) and isinstance(presentations, list)
+    hidden_hold = copy.deepcopy(holds[0])
+    hidden_hold.update(id="hold-front-hidden", name="Front hidden")
+    holds.append(hidden_hold)
+    presentations[0]["availableHoldIDs"] = ["hold-left"]
+    _write_json(package_root / "board.json", board)
+
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package, "front")
+    assert {region["metadata"]["holdID"] for region in document["regions"]} == {
+        "hold-left"
+    }
+    for region in document["regions"]:
+        region["fingerCapacity"] = 1
+
+    board_package.save_editor_document(
+        library, "fixture-multi-presentation", document
+    )
+
+    saved = _read_board(package_root)
+    assert {hold["id"] for hold in saved["holds"]} == {
+        "hold-left",
+        "hold-back",
+        "hold-front-hidden",
+    }
+    assert saved["presentations"][0]["availableHoldIDs"] == ["hold-left"]
+
+
+@pytest.mark.parametrize(
+    ("available_hold_ids", "message"),
+    [
+        ([], "availableHoldIDs must be a non-empty array"),
+        (["hold-left", "hold-left"], "availableHoldIDs must be unique"),
+        (["missing"], "availableHoldIDs references unknown hold missing"),
+        (
+            ["hold-back"],
+            "availableHoldIDs hold hold-back must belong to canonical presentation front",
+        ),
+    ],
+)
+def test_rejects_invalid_available_hold_ids(
+    available_hold_ids: list[str], message: str
+) -> None:
+    board = multi_presentation_board_document("fixture.multi")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations[0]["availableHoldIDs"] = available_hold_ids
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.validate_catalog_board(board)
+
+
 def test_deleting_a_canonical_surface_with_the_default_alias_promotes_a_remaining_canonical() -> None:
     board = multi_presentation_board_document("fixture.multi")
     presentations = board["presentations"]

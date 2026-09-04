@@ -254,6 +254,48 @@ class BoardRepositoryTest {
         }
     }
 
+    @Test
+    fun presentationAvailabilityFiltersCanonicalHoldsAndLegacyPresentationsRemainUnfiltered() {
+        val board = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to boardJsonWithAvailability("[\"rounded-hold\"]"),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards().getOrThrow().single()
+
+        assertEquals(
+            listOf("path-hold", "rounded-hold"),
+            board.effectiveHolds(board.presentation("primary")!!).map { it.id },
+        )
+        assertEquals(
+            listOf("rounded-hold"),
+            board.effectiveHolds(board.presentation("filtered")!!).map { it.id },
+        )
+    }
+
+    @Test
+    fun rejectsMalformedPresentationAvailability() {
+        listOf(
+            "[]" to "availableHoldIDs must not be empty",
+            "[\"path-hold\", \"path-hold\"]" to "availableHoldIDs must be unique",
+            "[\"missing\"]" to "availableHoldIDs references unknown hold missing",
+            "\"path-hold\"" to "availableHoldIDs must be an array",
+        ).forEach { (availableHoldIds, expectedMessage) ->
+            val result = AssetBoardRepository(
+                FixtureAssets(
+                    mapOf(
+                        "Hangboards/demo/board.json" to boardJsonWithAvailability(availableHoldIds),
+                        "Hangboards/demo/assets/primary.png" to "png",
+                    ),
+                ),
+            ).loadBoards()
+
+            assertTrueFailureContaining(result, expectedMessage)
+        }
+    }
+
     private fun loadRiggedBoard(source: String): Result<List<Board>> =
         AssetBoardRepository(
             FixtureAssets(
@@ -320,6 +362,20 @@ class BoardRepositoryTest {
           ]
         }
         """.trimIndent()
+
+    private fun boardJsonWithAvailability(availableHoldIds: String): String =
+        boardJson().replace(
+            "      \"default\": true\n    }\n  ],",
+            "      \"default\": true\n    },\n    {\n"
+                + "      \"id\": \"filtered\",\n"
+                + "      \"name\": \"Filtered\",\n"
+                + "      \"assetPath\": \"assets/primary.png\",\n"
+                + "      \"aspectRatio\": 2.0,\n"
+                + "      \"default\": false,\n"
+                + "      \"sourcePresentationID\": \"primary\",\n"
+                + "      \"availableHoldIDs\": $availableHoldIds\n"
+                + "    }\n  ],",
+        )
 
     private fun boardJson(): String =
         """
