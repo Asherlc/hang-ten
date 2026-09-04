@@ -7,6 +7,9 @@ import com.hangten.android.content.BoardGeometryRotationAnchor
 import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.BoardRoutedCordLayer
 import com.hangten.android.content.BoardRoutedCordPairing
+import com.hangten.android.content.BoardRoutedCordOcclusion
+import com.hangten.android.content.BoardRoutedCordPath
+import com.hangten.android.content.BoardRoutedCordPathCommand
 import com.hangten.android.content.BoardRoutedCordPort
 import com.hangten.android.content.BoardRoutedCordSpace
 import com.hangten.android.content.BoardRoutedCordStyle
@@ -43,7 +46,180 @@ class BoardRoutedCordRigGeometryTest {
         }
     }
 
-    private fun routedRig() = BoardCordRig.Routed(
+    @Test
+    fun declaredPairingPreservesIdsWhileScreenOrderUsesTransformedCoordinates() {
+        val rig = routedRig(
+            ports = listOf(
+                port("body-a", BoardRoutedCordSpace.Body, 20f, 40f),
+                port("body-b", BoardRoutedCordSpace.Body, 60f, 40f),
+                port("world-a", BoardRoutedCordSpace.World, 10f, -10f),
+                port("world-b", BoardRoutedCordSpace.World, 70f, -10f),
+            ),
+            tensionGroups = listOf(
+                tensionGroup(
+                    id = "declared",
+                    bodyPortIds = listOf("body-a", "body-b"),
+                    worldPortIds = listOf("world-b", "world-a"),
+                    pairing = BoardRoutedCordPairing.Declared,
+                ),
+                tensionGroup(
+                    id = "screen",
+                    bodyPortIds = listOf("body-a", "body-b"),
+                    worldPortIds = listOf("world-b", "world-a"),
+                    pairing = BoardRoutedCordPairing.ScreenOrder,
+                ),
+            ),
+        )
+
+        val spans = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(180f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!.spans
+
+        assertEquals(
+            listOf(
+                "declared:body-a:world-b",
+                "declared:body-b:world-a",
+                "screen:body-b:world-a",
+                "screen:body-a:world-b",
+            ),
+            spans.map { "${it.groupId}:${it.bodyPortId}:${it.worldPortId}" },
+        )
+    }
+
+    @Test
+    fun screenOrderUsesYThenDeclarationIndexAsStableTieBreakers() {
+        val rig = routedRig(
+            ports = listOf(
+                port("body-first", BoardRoutedCordSpace.Body, 40f, 40f),
+                port("body-second", BoardRoutedCordSpace.Body, 40f, 40f),
+                port("world-first", BoardRoutedCordSpace.World, 40f, -10f),
+                port("world-second", BoardRoutedCordSpace.World, 40f, -10f),
+            ),
+            tensionGroups = listOf(
+                tensionGroup(
+                    id = "ties",
+                    bodyPortIds = listOf("body-second", "body-first"),
+                    worldPortIds = listOf("world-second", "world-first"),
+                    pairing = BoardRoutedCordPairing.ScreenOrder,
+                ),
+            ),
+        )
+
+        val spans = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(180f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!.spans
+
+        assertEquals(
+            listOf("body-second:world-second", "body-first:world-first"),
+            spans.map { "${it.bodyPortId}:${it.worldPortId}" },
+        )
+    }
+
+    @Test
+    fun pathsAndOcclusionsResolveInTheirDeclaredSpacesAndLayers() {
+        val bodyCommands = listOf(
+            BoardRoutedCordPathCommand.Move(Point(20f, 40f)),
+            BoardRoutedCordPathCommand.Line(Point(30f, 40f)),
+            BoardRoutedCordPathCommand.Quad(Point(35f, 30f), Point(40f, 40f)),
+            BoardRoutedCordPathCommand.Curve(
+                control1 = Point(45f, 30f),
+                control2 = Point(50f, 35f),
+                to = Point(50f, 40f),
+            ),
+            BoardRoutedCordPathCommand.Close,
+        )
+        val facePatchCommands = listOf(
+            BoardRoutedCordPathCommand.Move(Point(15f, 15f)),
+            BoardRoutedCordPathCommand.Line(Point(25f, 15f)),
+            BoardRoutedCordPathCommand.Line(Point(25f, 25f)),
+            BoardRoutedCordPathCommand.Close,
+        )
+        val rig = routedRig(
+            paths = listOf(
+                BoardRoutedCordPath(
+                    id = "body-return",
+                    space = BoardRoutedCordSpace.Body,
+                    layer = BoardRoutedCordLayer.AboveFace,
+                    commands = bodyCommands,
+                ),
+                BoardRoutedCordPath(
+                    id = "world-loop",
+                    space = BoardRoutedCordSpace.World,
+                    layer = BoardRoutedCordLayer.Overpass,
+                    commands = listOf(
+                        BoardRoutedCordPathCommand.Move(Point(0f, 0f)),
+                        BoardRoutedCordPathCommand.Line(Point(10f, 0f)),
+                    ),
+                ),
+            ),
+            occlusions = listOf(
+                BoardRoutedCordOcclusion.RadialLip("body", radius = 6f, chordOffset = 2f),
+                BoardRoutedCordOcclusion.FacePatch(facePatchCommands),
+            ),
+        )
+
+        val geometry = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(90f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!
+
+        assertEquals(
+            listOf(
+                BoardPathCommand.MoveTo(40f, 30f),
+                BoardPathCommand.LineTo(40f, 40f),
+                BoardPathCommand.QuadTo(50f, 45f, 40f, 50f),
+                BoardPathCommand.CubicTo(50f, 55f, 45f, 60f, 40f, 60f),
+                BoardPathCommand.Close,
+            ),
+            geometry.paths.single { it.id == "body-return" }.path.commands,
+        )
+        assertEquals(
+            listOf(
+                BoardPathCommand.MoveTo(10f, 20f),
+                BoardPathCommand.LineTo(20f, 20f),
+            ),
+            geometry.paths.single { it.id == "world-loop" }.path.commands,
+        )
+        val lip = geometry.radialLips.single()
+        assertPoint(Point(40f, 30f), lip.center)
+        assertPoint(Point(50f, 20f), lip.toward)
+        assertEquals(6f, lip.radius, 0.0001f)
+        assertEquals(2f, lip.chordOffset, 0.0001f)
+        assertEquals(
+            listOf(
+                BoardPathCommand.MoveTo(65f, 25f),
+                BoardPathCommand.LineTo(65f, 35f),
+                BoardPathCommand.LineTo(55f, 35f),
+                BoardPathCommand.Close,
+            ),
+            geometry.facePatches.single().path.commands,
+        )
+    }
+
+    private fun routedRig(
+        ports: List<BoardRoutedCordPort> = listOf(
+            port("body", BoardRoutedCordSpace.Body, 20f, 40f),
+            port("world", BoardRoutedCordSpace.World, 40f, 0f),
+        ),
+        tensionGroups: List<BoardRoutedCordTensionGroup> = listOf(
+            tensionGroup(
+                id = "main",
+                bodyPortIds = listOf("body"),
+                worldPortIds = listOf("world"),
+                pairing = BoardRoutedCordPairing.Declared,
+            ),
+        ),
+        paths: List<BoardRoutedCordPath> = emptyList(),
+        occlusions: List<BoardRoutedCordOcclusion> = emptyList(),
+    ) = BoardCordRig.Routed(
         sceneSize = BoardCordSize(100f, 100f),
         sourceFrame = BoardCordRect(10f, 20f, 80f, 60f),
         innerFaceFrame = BoardCordRect(10f, 10f, 60f, 40f),
@@ -53,21 +229,31 @@ class BoardRoutedCordRigGeometryTest {
             baseColor = "#2255AA",
             braidColors = listOf("#FFD000", "#0055CC"),
         ),
-        ports = listOf(
-            BoardRoutedCordPort("body", BoardRoutedCordSpace.Body, Point(20f, 40f)),
-            BoardRoutedCordPort("world", BoardRoutedCordSpace.World, Point(40f, 0f)),
-        ),
-        tensionGroups = listOf(
-            BoardRoutedCordTensionGroup(
-                id = "main",
-                bodyPortIds = listOf("body"),
-                worldPortIds = listOf("world"),
-                pairing = BoardRoutedCordPairing.Declared,
-                layer = BoardRoutedCordLayer.BehindFace,
-            ),
-        ),
-        paths = emptyList(),
-        occlusions = emptyList(),
+        ports = ports,
+        tensionGroups = tensionGroups,
+        paths = paths,
+        occlusions = occlusions,
+    )
+
+    private fun port(
+        id: String,
+        space: BoardRoutedCordSpace,
+        x: Float,
+        y: Float,
+    ) = BoardRoutedCordPort(id, space, Point(x, y))
+
+    private fun tensionGroup(
+        id: String,
+        bodyPortIds: List<String>,
+        worldPortIds: List<String>,
+        pairing: BoardRoutedCordPairing,
+        layer: BoardRoutedCordLayer = BoardRoutedCordLayer.BehindFace,
+    ) = BoardRoutedCordTensionGroup(
+        id = id,
+        bodyPortIds = bodyPortIds,
+        worldPortIds = worldPortIds,
+        pairing = pairing,
+        layer = layer,
     )
 
     private fun presentation(rotationDegrees: Float) = BoardPresentation(
