@@ -164,7 +164,22 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
             {"x": 400, "y": 300},
             {"x": 1374, "y": 300},
         ],
-        "pullPoint": {"x": 887, "y": 50},
+        "pullPoint": {"x": 887, "y": 210},
+        "eyeletRadius": 20,
+    }
+
+
+def _quarter_turn_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 2000, "height": 2000},
+        "sourceFrame": {"x": 100, "y": 900, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [
+            {"x": 400, "y": 300},
+            {"x": 1374, "y": 300},
+        ],
+        "pullPoint": {"x": 887, "y": -690},
         "eyeletRadius": 20,
     }
 
@@ -338,6 +353,10 @@ def _add_rigged_inverted_alias(
         presentations = board["presentations"]
         assert isinstance(presentations, list)
         rig = _direct_two_anchor_cord_rig()
+        rig["sourceFrame"]["y"] = 150
+        rig["attachmentPoints"][0]["y"] = 200
+        rig["attachmentPoints"][1]["y"] = 200
+        rig["pullPoint"]["y"] = 52
         rig["innerFaceFrame"] = {
             "x": inner_face_x,
             "y": 0,
@@ -354,7 +373,7 @@ def _add_rigged_inverted_alias(
                 "default": False,
                 "sourcePresentationID": "front",
                 "isInverted": True,
-                "geometryRotationAnchor": {"x": anchor_x, "y": 0.5},
+                "geometryRotationAnchor": {"x": anchor_x, "y": 0.7},
             }
         )
 
@@ -688,6 +707,35 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
     assert inverted.resolved_rotation_degrees == 180
 
 
+def test_rigged_legacy_alias_uses_the_canonical_source_raster(
+    tmp_path: Path,
+) -> None:
+    """The Workbench must not rotate an already-inverted historical raster."""
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[0]["cordRig"] = _direct_two_anchor_cord_rig()
+    presentations[1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.5, "y": 0.7},
+    )
+    board["holds"] = holds[:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}
+    _write_json(package_root / "board.json", board)
+
+    package = board_package.load_board_package(package_root)
+
+    assert package.presentation("back").asset_path == "assets/back.png"
+    assert board_package.presentation_image_path(package, "back") == (
+        package_root / "assets" / "primary.png"
+    )
+
+
 def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
     tmp_path: Path,
 ) -> None:
@@ -697,9 +745,11 @@ def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
     presentations = board["presentations"]
     holds = board["holds"]
     assert isinstance(presentations, list) and isinstance(holds, list)
-    presentations[0]["cordRig"] = _direct_two_anchor_cord_rig()
+    board["aspectRatio"] = 1
+    presentations[0].update(aspectRatio=1, cordRig=_quarter_turn_cord_rig())
     presentations[1].update(
         assetPath="assets/primary.png",
+        aspectRatio=1,
         sourcePresentationID="front",
         rotationDegrees=90,
         geometryRotationAnchor={"x": 0.5, "y": 0.5},
@@ -722,8 +772,8 @@ def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
         projected["regions"][0]["displayPath"], 1774, 457
     )
     xs, ys = zip(*path.contour)
-    assert (min(xs), max(xs)) == pytest.approx((864.15, 909.85))
-    assert (min(ys), max(ys)) == pytest.approx((210.76, 246.24))
+    assert (min(xs), max(xs)) == pytest.approx((748.65, 794.35))
+    assert (min(ys), max(ys)) == pytest.approx((69.26, 104.74))
 
 
 def test_rigged_alias_projects_face_paths_around_scene_anchor_and_filters_holds(
@@ -744,7 +794,7 @@ def test_rigged_alias_projects_face_paths_around_scene_anchor_and_filters_holds(
             "sourceFrame": {"x": 100, "y": 800, "width": 1774, "height": 457},
             "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
             "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
-            "pullPoint": {"x": 900, "y": -600},
+            "pullPoint": {"x": 900, "y": -590},
             "eyeletRadius": 20,
         },
     )
@@ -883,22 +933,79 @@ def test_direct_two_anchor_cord_rig_loads_into_the_public_presentation_model(
             board_package.CordPoint(400, 300),
             board_package.CordPoint(1374, 300),
         ),
-        pull_point=board_package.CordPoint(887, 50),
+        pull_point=board_package.CordPoint(887, 210),
         eyelet_radius=20,
     )
 
 
 @pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda rig: rig["pullPoint"].__setitem__("y", 190),
+        lambda rig: rig["attachmentPoints"][0].__setitem__("x", 10),
+    ],
+    ids=["support-shadow-above-scene", "strand-shadow-left-of-scene"],
+)
+def test_direct_two_anchor_cord_rig_rejects_rendered_stroke_outside_scene(
+    tmp_path: Path, mutation
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    mutation(rig)
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(
+        BoardPackageError, match="cord drawing must remain inside sceneSize"
+    ):
+        board_package.load_board_package(package_root)
+
+
+def test_direct_two_anchor_alias_rejects_gravity_inverted_cord_strands(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[0]["cordRig"] = _direct_two_anchor_cord_rig()
+    presentations[1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=180,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    board["holds"] = holds[:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}
+    (package_root / "assets" / "back.png").unlink()
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(
+        BoardPackageError,
+        match="cord pull exits must remain above both attachment points",
+    ):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
     ("source_origin", "pull_point"),
     [
-        ((100, 0), (-100, 50)),
-        ((-100, 0), (1874, 50)),
-        ((0, 100), (887, -100)),
-        ((0, -100), (887, 557)),
+        ((100, 0), (787, 210)),
+        ((-100, 0), (987, 210)),
+        ((0, 20), (887, 190)),
+        ((0, -20), (887, 230)),
     ],
     ids=["left", "right", "top", "bottom"],
 )
-def test_direct_two_anchor_cord_rig_accepts_pull_point_translated_to_scene_boundary(
+def test_direct_two_anchor_cord_rig_accepts_safely_translated_pull_point(
     tmp_path: Path,
     source_origin: tuple[int, int],
     pull_point: tuple[int, int],
@@ -1123,8 +1230,8 @@ def test_default_alias_inherits_canonical_cord_rig_for_board_aspect_validation(
     (package_root / "assets" / "primary.png").write_bytes(_rgba_png(10, 10))
     rig = {
         "type": "directTwoAnchor",
-        "sceneSize": {"width": 100, "height": 200},
-        "sourceFrame": {"x": 0, "y": 50, "width": 100, "height": 100},
+        "sceneSize": {"width": 250, "height": 500},
+        "sourceFrame": {"x": 75, "y": 210, "width": 100, "height": 100},
         "innerFaceFrame": {"x": 0, "y": 0, "width": 100, "height": 100},
         "attachmentPoints": [{"x": 20, "y": 50}, {"x": 80, "y": 50}],
         "pullPoint": {"x": 50, "y": 0},
@@ -1385,7 +1492,7 @@ def test_rigged_alias_projection_uses_scene_and_inner_face_frames(
     library = _library(tmp_path)
     package_root = _write_multi_presentation_package(library)
     _add_rigged_inverted_alias(
-        package_root, inner_face_x=-500, anchor_x=0.1
+        package_root, inner_face_x=-50, anchor_x=0.5
     )
 
     package = board_package.load_board_package(package_root)

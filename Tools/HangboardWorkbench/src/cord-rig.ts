@@ -18,6 +18,7 @@ export interface CordRigPresentationGeometry {
   pullPoint: Point;
   strands: [CordStrand, CordStrand];
   supportPaths: [string, string, string, string];
+  eyeletForegroundCrescents: [string, string];
   eyeletRadius: number;
   cordUnitScale: number;
 }
@@ -51,6 +52,37 @@ function pointCommand(command: string, points: readonly Point[]): string {
     pathNumber(point.x),
     pathNumber(point.y),
   ]).join(" ")}`;
+}
+
+function eyeletForegroundCrescent(
+  center: Point,
+  toward: Point,
+  radius: number,
+  chordOffset: number,
+): string {
+  const deltaX = toward.x - center.x;
+  const deltaY = toward.y - center.y;
+  const length = Math.hypot(deltaX, deltaY);
+  if (!Number.isFinite(length) || length <= 0 || radius < chordOffset) return "";
+
+  const unitX = deltaX / length;
+  const unitY = deltaY / length;
+  const normalX = -unitY;
+  const normalY = unitX;
+  const halfChord = Math.sqrt(radius * radius - chordOffset * chordOffset);
+  const start = {
+    x: center.x + chordOffset * unitX + halfChord * normalX,
+    y: center.y + chordOffset * unitY + halfChord * normalY,
+  };
+  const end = {
+    x: center.x + chordOffset * unitX - halfChord * normalX,
+    y: center.y + chordOffset * unitY - halfChord * normalY,
+  };
+  return [
+    pointCommand("M", [start]),
+    `A ${pathNumber(radius)} ${pathNumber(radius)} 0 0 0 ${pathNumber(end.x)} ${pathNumber(end.y)}`,
+    "Z",
+  ].join(" ");
 }
 
 export function resolveCordRigPresentationGeometry(
@@ -110,6 +142,16 @@ export function resolveCordRigPresentationGeometry(
     { start: exits[0], end: projectedAttachments[0]! },
     { start: exits[1], end: projectedAttachments[1]! },
   ] as const;
+  const cordUnitScale = 1 / Math.sqrt(sceneUnitsPerFaceX * sceneUnitsPerFaceY);
+  const eyeletRadius = rig.eyeletRadius * cordUnitScale;
+  const eyeletForegroundCrescents = strands.map((strand) => (
+    eyeletForegroundCrescent(
+      strand.end,
+      strand.start,
+      eyeletRadius,
+      7 * cordUnitScale,
+    )
+  )) as [string, string];
 
   const offsetPoint = (x: number, y: number): Point => sceneToFace({
     x: scenePullPoint.x + x,
@@ -158,8 +200,9 @@ export function resolveCordRigPresentationGeometry(
     pullPoint,
     strands: [strands[0], strands[1]],
     supportPaths: [bight, knotAndExit(1), knotAndExit(-1), overpass],
-    eyeletRadius: rig.eyeletRadius / Math.sqrt(sceneUnitsPerFaceX * sceneUnitsPerFaceY),
-    cordUnitScale: 1 / Math.sqrt(sceneUnitsPerFaceX * sceneUnitsPerFaceY),
+    eyeletForegroundCrescents,
+    eyeletRadius,
+    cordUnitScale,
   };
 }
 

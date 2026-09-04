@@ -816,6 +816,62 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testStoreRejectsDirectTwoAnchorCordStrokeOutsideScene() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[1]["aspectRatio"] = 50.0 / 61.0
+            presentations[1]["cordRig"] = [
+                "type": "directTwoAnchor",
+                "sceneSize": ["width": 1200, "height": 1464],
+                "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+                "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+                "attachmentPoints": [["x": 203, "y": 712], ["x": 997, "y": 712]],
+                "pullPoint": ["x": 600, "y": -200],
+                "eyeletRadius": 34,
+            ]
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation back cord drawing must remain inside sceneSize"
+        )
+    }
+
+    func testStoreRejectsGravityInvertedDirectTwoAnchorAlias() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[1]["aspectRatio"] = 50.0 / 61.0
+            presentations[1]["cordRig"] = [
+                "type": "directTwoAnchor",
+                "sceneSize": ["width": 1200, "height": 1464],
+                "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+                "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+                "attachmentPoints": [["x": 203, "y": 712], ["x": 997, "y": 712]],
+                "pullPoint": ["x": 600, "y": 71.5],
+                "eyeletRadius": 34,
+            ]
+            presentations.append([
+                "id": "back-inverted",
+                "name": "Back inverted",
+                "assetPath": "assets/back.png",
+                "aspectRatio": 50.0 / 61.0,
+                "default": false,
+                "sourcePresentationID": "back",
+                "rotationDegrees": 180,
+                "geometryRotationAnchor": ["x": 0.5, "y": 0.4],
+            ])
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation back-inverted cord pull exits must remain above both attachment points"
+        )
+    }
+
     func testStorePreservesAnInvertedAliasRotationAnchor() throws {
         let fixture = try makeAnchoredAliasFixtureBundle()
         defer { fixture.remove() }
@@ -836,11 +892,11 @@ final class BoardPackageStoreTests: XCTestCase {
             presentations[0]["aspectRatio"] = 1
             presentations[0]["cordRig"] = [
                 "type": "directTwoAnchor",
-                "sceneSize": ["width": 240, "height": 240],
-                "sourceFrame": ["x": 20, "y": 70, "width": 200, "height": 100],
+                "sceneSize": ["width": 600, "height": 600],
+                "sourceFrame": ["x": 200, "y": 300, "width": 200, "height": 100],
                 "innerFaceFrame": ["x": 0, "y": 0, "width": 200, "height": 100],
-                "attachmentPoints": [["x": 40, "y": 50], ["x": 160, "y": 50]],
-                "pullPoint": ["x": 100, "y": 0],
+                "attachmentPoints": [["x": 70, "y": 50], ["x": 130, "y": 50]],
+                "pullPoint": ["x": 100, "y": -90],
                 "eyeletRadius": 5,
             ]
             presentations[2].removeValue(forKey: "isInverted")

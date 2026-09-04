@@ -61,7 +61,7 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
             {"x": 400, "y": 300},
             {"x": 1374, "y": 300},
         ],
-        "pullPoint": {"x": 887, "y": 50},
+        "pullPoint": {"x": 887, "y": 210},
         "eyeletRadius": 20,
     }
 
@@ -933,6 +933,46 @@ def test_hosted_presentation_image_reads_only_the_requested_asset() -> None:
     assert image == files["Hangboards/fixture-v2/assets/back.png"]
     assert loaded_image_shas == {
         image_shas["Hangboards/fixture-v2/assets/back.png"]
+    }
+
+
+def test_hosted_rigged_legacy_alias_reads_only_the_canonical_source_raster() -> None:
+    """A legacy alias asset may remain packaged but must not be double-rotated."""
+    board = multi_presentation_board_document("fixture.multi")
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[0]["cordRig"] = _direct_two_anchor_cord_rig()
+    presentations[1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.5, "y": 0.7},
+    )
+    board["holds"] = holds[:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"already-inverted"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    image_shas = {
+        path: FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.startswith("Hangboards/fixture-v2/assets/")
+    }
+
+    image = store.presentation_image_bytes(TOKEN, BRANCH, "fixture.multi", "back")
+
+    loaded_image_shas = {
+        call.args[1]
+        for call in client.calls_named("get_blob")
+        if call.args[1] in image_shas.values()
+    }
+    assert image == files["Hangboards/fixture-v2/assets/primary.png"]
+    assert loaded_image_shas == {
+        image_shas["Hangboards/fixture-v2/assets/primary.png"]
     }
 
 

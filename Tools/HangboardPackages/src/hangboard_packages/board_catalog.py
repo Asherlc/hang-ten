@@ -87,6 +87,13 @@ _ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE = 1e-12
 # zero even though it is mathematically exact. Keep this far below meaningful
 # normalized geometry overflow.
 _PROJECTED_FRAME_EDGE_TOLERANCE = 1e-12
+_CORD_PULL_EXIT_HALF_SPACING = 22.0
+_CORD_SUPPORT_MIN_X_OFFSET = -30.0
+_CORD_SUPPORT_MAX_X_OFFSET = 31.0
+_CORD_SUPPORT_MIN_Y_OFFSET = -177.0
+_CORD_SUPPORT_MAX_Y_OFFSET = 0.0
+_CORD_SHADOW_X_MARGIN = 35.0 / 2 + 4.0 + 2.3
+_CORD_SHADOW_Y_MARGIN = 35.0 / 2 + 5.0 + 2.3
 
 
 def _closed(
@@ -888,6 +895,58 @@ def _rotate_point(
     )
 
 
+def _validate_direct_two_anchor_cord_presentation(
+    rig: DirectTwoAnchorCordRig,
+    *,
+    presentation_id: str,
+    rotation_degrees: float,
+    rotation_anchor: NormalizedPoint,
+) -> None:
+    pull_x = rig.source_frame.x + rig.pull_point.x
+    pull_y = rig.source_frame.y + rig.pull_point.y
+    anchor_x = rotation_anchor.x * rig.scene_size.width
+    anchor_y = rotation_anchor.y * rig.scene_size.height
+    attachments = tuple(
+        _rotate_point(
+            rig.source_frame.x + point.x,
+            rig.source_frame.y + point.y,
+            anchor_x=anchor_x,
+            anchor_y=anchor_y,
+            rotation_degrees=rotation_degrees,
+        )
+        for point in rig.attachment_points
+    )
+    centerline_x = (
+        pull_x + _CORD_SUPPORT_MIN_X_OFFSET,
+        pull_x + _CORD_SUPPORT_MAX_X_OFFSET,
+        pull_x - _CORD_PULL_EXIT_HALF_SPACING,
+        pull_x + _CORD_PULL_EXIT_HALF_SPACING,
+        *(point[0] for point in attachments),
+    )
+    centerline_y = (
+        pull_y + _CORD_SUPPORT_MIN_Y_OFFSET,
+        pull_y + _CORD_SUPPORT_MAX_Y_OFFSET,
+        *(point[1] for point in attachments),
+    )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-9
+    if (
+        min(centerline_x) - _CORD_SHADOW_X_MARGIN < -tolerance
+        or max(centerline_x) + _CORD_SHADOW_X_MARGIN
+        > rig.scene_size.width + tolerance
+        or min(centerline_y) - _CORD_SHADOW_Y_MARGIN < -tolerance
+        or max(centerline_y) + _CORD_SHADOW_Y_MARGIN
+        > rig.scene_size.height + tolerance
+    ):
+        raise ValueError(
+            f"presentation {presentation_id} cord drawing must remain inside sceneSize"
+        )
+    if any(point[1] <= pull_y + tolerance for point in attachments):
+        raise ValueError(
+            f"presentation {presentation_id} cord pull exits must remain above "
+            "both attachment points"
+        )
+
+
 def _rigged_alias_frame_is_inside_canvas(
     frame: NormalizedFrame,
     rig: DirectTwoAnchorCordRig,
@@ -972,6 +1031,14 @@ def _validate_alias_presentations(
                     f"presentation {presentation.id}.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
                 )
         if presentation.source_presentation_id is None:
+            if presentation.cord_rig is not None:
+                _validate_direct_two_anchor_cord_presentation(
+                    presentation.cord_rig,
+                    presentation_id=presentation.id,
+                    rotation_degrees=presentation.resolved_rotation_degrees,
+                    rotation_anchor=presentation.geometry_rotation_anchor
+                    or NormalizedPoint(0.5, 0.5),
+                )
             continue
 
         source = presentations_by_id.get(presentation.source_presentation_id)
@@ -1004,6 +1071,14 @@ def _validate_alias_presentations(
                     "canonical cordRig to prevent artwork clipping"
                 )
         rotation_degrees = presentation.resolved_rotation_degrees
+        if source.cord_rig is not None:
+            _validate_direct_two_anchor_cord_presentation(
+                source.cord_rig,
+                presentation_id=presentation.id,
+                rotation_degrees=rotation_degrees,
+                rotation_anchor=presentation.geometry_rotation_anchor
+                or NormalizedPoint(0.5, 0.5),
+            )
         if rotation_degrees == 0:
             continue
 

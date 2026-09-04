@@ -496,7 +496,7 @@ test("a rigged alias rotates the face in plane while its complete cord stays wor
     innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
     attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
     pullPoint: { x: 50, y: 0 },
-    eyeletRadius: 2,
+    eyeletRadius: 10,
   };
   const presentations = [{
     presentationID: "front",
@@ -552,8 +552,34 @@ test("a rigged alias rotates the face in plane while its complete cord stays wor
       x2: Number(strand.getAttribute("x2")),
       y2: Number(strand.getAttribute("y2")),
     })), [{ x1: 2.8, y1: 0, x2: 5, y2: 2 }, { x1: 7.2, y1: 0, x2: 5, y2: 8 }]);
-    assert.equal(app.document.querySelectorAll("#cord-support path").length, 4);
+    assert.equal(app.document.querySelectorAll("#cord-support path").length, 3);
+    assert.equal(app.document.querySelectorAll("#cord-overpass path").length, 3);
     assert.equal(app.document.querySelector("#cord-rig")?.getAttribute("data-pull-y"), "0");
+    assert.equal(
+      app.document.querySelector("#cord-shadow")?.getAttribute("filter"),
+      "url(#cord-shadow-filter)",
+    );
+    assert.equal(app.document.querySelectorAll("#cord-braid-clips mask").length, 2);
+    assert.equal(app.document.querySelectorAll("#cord-braid-fibers line").length > 10, true);
+    assert.equal(app.document.querySelectorAll("#cord-eyelet-clips clipPath").length, 2);
+    const eyeletCrescents = [...app.document.querySelectorAll<SVGPathElement>(
+      "#cord-eyelet-clips path",
+    )];
+    assert.equal(eyeletCrescents.length, 2);
+    assert.notEqual(eyeletCrescents[0]?.getAttribute("d"), eyeletCrescents[1]?.getAttribute("d"));
+    assert.match(eyeletCrescents[0]?.getAttribute("d") ?? "", /^M 4\.9/);
+    assert.match(eyeletCrescents[1]?.getAttribute("d") ?? "", /^M 5\.8/);
+    const eyeletForegroundImages = [...app.document.querySelectorAll<SVGImageElement>(
+      "#cord-eyelet-foreground image",
+    )];
+    assert.equal(eyeletForegroundImages.length, 2);
+    assert.deepEqual(eyeletForegroundImages.map((entry) => ({
+      href: entry.getAttribute("href"),
+      transform: entry.getAttribute("transform"),
+    })), [
+      { href: "/api/boards/board-a/image", transform: "rotate(90 5 5)" },
+      { href: "/api/boards/board-a/image", transform: "rotate(90 5 5)" },
+    ]);
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
   });
 });

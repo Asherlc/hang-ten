@@ -138,6 +138,36 @@ class BoardRepositoryTest {
     }
 
     @Test
+    fun rejectsDirectTwoAnchorCordStrokeOutsideScene() {
+        val result = loadRiggedBoard(
+            riggedBoardJson().replace(
+                "\"pullPoint\": { \"x\": 600, \"y\": 71.5 }",
+                "\"pullPoint\": { \"x\": 600, \"y\": -200 }",
+            ),
+        )
+
+        assertTrueFailureContaining(
+            result,
+            "presentation primary cord drawing must remain inside sceneSize",
+        )
+    }
+
+    @Test
+    fun rejectsGravityInvertedDirectTwoAnchorAlias() {
+        val result = loadRiggedBoard(
+            riggedBoardJson().replace(
+                "\"geometryRotationAnchor\": { \"x\": 0.5, \"y\": 0.6174863387978142 }",
+                "\"geometryRotationAnchor\": { \"x\": 0.5, \"y\": 0.4 }",
+            ),
+        )
+
+        assertTrueFailureContaining(
+            result,
+            "presentation primary-inverted cord pull exits must remain above both attachment points",
+        )
+    }
+
+    @Test
     fun decodesExplicitArbitraryAliasRotation() {
         val board = loadRiggedBoard(
             riggedBoardJson().replace("\"isInverted\": true", "\"rotationDegrees\": 135"),

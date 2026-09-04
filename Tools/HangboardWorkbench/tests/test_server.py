@@ -64,7 +64,19 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
         "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
         "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
         "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
-        "pullPoint": {"x": 887, "y": 200},
+        "pullPoint": {"x": 887, "y": 210},
+        "eyeletRadius": 20,
+    }
+
+
+def _quarter_turn_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 2000, "height": 2000},
+        "sourceFrame": {"x": 100, "y": 900, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+        "pullPoint": {"x": 887, "y": -690},
         "eyeletRadius": 20,
     }
 
@@ -817,7 +829,7 @@ def test_board_payload_exposes_canonical_direct_two_anchor_rig(
         "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
         "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
         "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
-        "pullPoint": {"x": 887, "y": 200},
+                "pullPoint": {"x": 887, "y": 210},
         "eyeletRadius": 20,
     }
     board["presentations"][0]["cordRig"] = rig
@@ -840,9 +852,14 @@ def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
     board["holds"] = board["holds"][:1]
     for piece in board["holds"][0]["geometry"]:
         piece["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
-    board["presentations"][0]["cordRig"] = _direct_two_anchor_cord_rig()
+    board["aspectRatio"] = 1
+    board["presentations"][0].update(
+        aspectRatio=1,
+        cordRig=_quarter_turn_cord_rig(),
+    )
     board["presentations"][1].update(
         assetPath="assets/primary.png",
+        aspectRatio=1,
         sourcePresentationID="front",
         rotationDegrees=90,
         geometryRotationAnchor={"x": 0.5, "y": 0.5},

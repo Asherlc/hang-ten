@@ -102,6 +102,13 @@ _SHAPE_CONSTRAINTS = frozenset(
     {"oval", "circle", "pill", "roundedRectangle", "rectangle"}
 )
 _FRAME_EDGE_TOLERANCE = 0.0000005
+_CORD_PULL_EXIT_HALF_SPACING = 22.0
+_CORD_SUPPORT_MIN_X_OFFSET = -30.0
+_CORD_SUPPORT_MAX_X_OFFSET = 31.0
+_CORD_SUPPORT_MIN_Y_OFFSET = -177.0
+_CORD_SUPPORT_MAX_Y_OFFSET = 0.0
+_CORD_SHADOW_X_MARGIN = 35.0 / 2 + 4.0 + 2.3
+_CORD_SHADOW_Y_MARGIN = 35.0 / 2 + 5.0 + 2.3
 _RECOVERY_DIRECTORY_NAME = ".workbench-recovery"
 _STAGING_DIRECTORY_PREFIXES = (
     ".workbench-delete-",
@@ -415,13 +422,26 @@ def primary_image_path(package: BoardPackage) -> Path:
 def presentation_image_path(
     package: BoardPackage, presentation_id: str | None = None
 ) -> Path:
-    """Return one validated presentation image confined to its package."""
-    presentation = package.presentation(presentation_id)
-    image = package.root / presentation.asset_path
+    """Return the source raster used to draw one validated presentation."""
+    image = package.root / presentation_artwork_asset_path(package, presentation_id)
     if not image.is_file() or image.is_symlink():
         raise BoardPackageError("package presentation image is missing")
     _png_dimensions(image)
     return image
+
+
+def presentation_artwork_asset_path(
+    package: BoardPackage, presentation_id: str | None = None
+) -> str:
+    """Resolve a rigged alias to its canonical, unrotated face raster."""
+    presentation = package.presentation(presentation_id)
+    if (
+        presentation.source_presentation_id is not None
+        and _resolved_presentation_cord_rig(package.presentations, presentation)
+        is not None
+    ):
+        return package.presentation(presentation.source_presentation_id).asset_path
+    return presentation.asset_path
 
 
 def editor_document(
@@ -1374,6 +1394,63 @@ def _direct_two_anchor_cord_rig(
     )
 
 
+def _validate_direct_two_anchor_cord_presentation(
+    rig: DirectTwoAnchorCordRig,
+    *,
+    presentation_id: str,
+    rotation_degrees: float,
+    rotation_anchor: tuple[float, float],
+) -> None:
+    pull_x = rig.source_frame.x + rig.pull_point.x
+    pull_y = rig.source_frame.y + rig.pull_point.y
+    anchor_x = rotation_anchor[0] * rig.scene_size.width
+    anchor_y = rotation_anchor[1] * rig.scene_size.height
+    radians = math.radians(rotation_degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+
+    def rotated_attachment(point: CordPoint) -> tuple[float, float]:
+        source_x = rig.source_frame.x + point.x
+        source_y = rig.source_frame.y + point.y
+        delta_x = source_x - anchor_x
+        delta_y = source_y - anchor_y
+        return (
+            anchor_x + cosine * delta_x - sine * delta_y,
+            anchor_y + sine * delta_x + cosine * delta_y,
+        )
+
+    attachments = tuple(rotated_attachment(point) for point in rig.attachment_points)
+    centerline_x = (
+        pull_x + _CORD_SUPPORT_MIN_X_OFFSET,
+        pull_x + _CORD_SUPPORT_MAX_X_OFFSET,
+        pull_x - _CORD_PULL_EXIT_HALF_SPACING,
+        pull_x + _CORD_PULL_EXIT_HALF_SPACING,
+        *(point[0] for point in attachments),
+    )
+    centerline_y = (
+        pull_y + _CORD_SUPPORT_MIN_Y_OFFSET,
+        pull_y + _CORD_SUPPORT_MAX_Y_OFFSET,
+        *(point[1] for point in attachments),
+    )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-9
+    if (
+        min(centerline_x) - _CORD_SHADOW_X_MARGIN < -tolerance
+        or max(centerline_x) + _CORD_SHADOW_X_MARGIN
+        > rig.scene_size.width + tolerance
+        or min(centerline_y) - _CORD_SHADOW_Y_MARGIN < -tolerance
+        or max(centerline_y) + _CORD_SHADOW_Y_MARGIN
+        > rig.scene_size.height + tolerance
+    ):
+        raise BoardPackageError(
+            f"presentation {presentation_id} cord drawing must remain inside sceneSize"
+        )
+    if any(point[1] <= pull_y + tolerance for point in attachments):
+        raise BoardPackageError(
+            f"presentation {presentation_id} cord pull exits must remain above "
+            "both attachment points"
+        )
+
+
 def _raw_presentation_cord_rig(
     board: Mapping[str, Any], presentation_id: str
 ) -> DirectTwoAnchorCordRig | None:
@@ -1599,6 +1676,18 @@ def _parse_board_presentations(
                     f"presentation {presentation_id} non-180 rotation requires a "
                     "canonical cordRig to prevent artwork clipping"
                 )
+        resolved_cord_rig = (
+            cord_rig
+            if source_presentation_id is None
+            else cord_rigs[source_presentation_id]
+        )
+        if resolved_cord_rig is not None:
+            _validate_direct_two_anchor_cord_presentation(
+                resolved_cord_rig,
+                presentation_id=presentation_id,
+                rotation_degrees=resolved_rotation_degrees,
+                rotation_anchor=geometry_rotation_anchor or (0.5, 0.5),
+            )
     return tuple(presentations)
 
 

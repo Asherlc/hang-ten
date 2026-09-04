@@ -765,6 +765,16 @@ struct BoardPackageStore {
                     }
                 }
             }
+            if case .directTwoAnchor(let rig) = Self.resolvedCordRig(
+                for: presentation,
+                in: presentations
+            ) {
+                try validateCordPresentation(
+                    rig,
+                    presentation: presentation,
+                    boardID: document.id
+                )
+            }
         }
         guard defaultCount == 1 else {
             throw BoardPackageStoreError.invalidPackage(
@@ -836,6 +846,28 @@ struct BoardPackageStore {
                 reason: "presentation \(presentation.id).aspectRatio must match cordRig.sceneSize within 0.1%"
             )
         }
+    }
+
+    private static func validateCordPresentation(
+        _ rig: BoardDirectTwoAnchorCordRig,
+        presentation: BoardPackagePresentationDocument,
+        boardID: String
+    ) throws {
+        let failure = BoardCordRigPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+        )
+        let reason: String
+        switch failure {
+        case .drawingOutsideScene:
+            reason = "presentation \(presentation.id) cord drawing must remain inside sceneSize"
+        case .pullExitsNotAboveAttachments:
+            reason = "presentation \(presentation.id) cord pull exits must remain above both attachment points"
+        case nil:
+            return
+        }
+        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: reason)
     }
 
     private static func resolvedCordRig(

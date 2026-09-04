@@ -940,12 +940,16 @@ def presentation_image_bytes(
     selected = _selected_package(discover_packages(client, token, branch), board_id)
     package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id == board_id:
-        return images[package.presentation(presentation_id).asset_path]
+        return images[
+            board_package.presentation_artwork_asset_path(package, presentation_id)
+        ]
     selected = _selected_package(discover_packages(client, token, branch), board_id)
     package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
-    return images[package.presentation(presentation_id).asset_path]
+    return images[
+        board_package.presentation_artwork_asset_path(package, presentation_id)
+    ]
 
 
 def save_editor_document(
@@ -1306,16 +1310,19 @@ def _load_selected_presentation(
     )
     if selected_value is None:
         raise board_package.BoardPackageError("presentation is not available")
-    selected_asset = selected_value[2]
+    canonical_presentation_id = selected_value[5] or selected_value[0]
+    canonical_value = next(
+        item for item in presentation_values if item[0] == canonical_presentation_id
+    )
+    cord_rig = board_package._raw_presentation_cord_rig(
+        board, canonical_presentation_id
+    )
+    selected_asset = canonical_value[2] if cord_rig is not None else selected_value[2]
     image = _get_blob(
         client, token, asset_entries[selected_asset], "package presentation image"
     )
     width, height = board_package._png_dimensions_from_bytes(image)
     image_aspect_ratio = width / height
-    canonical_presentation_id = selected_value[5] or selected_value[0]
-    cord_rig = board_package._raw_presentation_cord_rig(
-        board, canonical_presentation_id
-    )
     expected_image_aspect_ratio = selected_value[3]
     aspect_source = f"board.json presentation {selected_value[0]}.aspectRatio"
     if cord_rig is not None:

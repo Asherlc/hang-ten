@@ -1236,6 +1236,48 @@ def test_unversioned_board_rejects_arbitrarily_rotated_frame_outside_canvas() ->
         module._load_board(document)
 
 
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda rig: rig["pullPoint"].__setitem__("y", -120),
+        lambda rig: rig["attachmentPoints"][0].__setitem__("x", -390),
+    ],
+    ids=["support-shadow-above-scene", "strand-shadow-left-of-scene"],
+)
+def test_unversioned_board_rejects_cord_stroke_outside_scene(mutation) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _wide_pivot_cord_rig()
+    mutation(rig)
+    document["presentations"][0]["cordRig"] = rig
+
+    with pytest.raises(ValueError, match="cord drawing must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_gravity_inverted_rigged_alias() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=180,
+        geometryRotationAnchor={"x": 0.5, "y": 0.4},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}],
+        )
+    ]
+
+    with pytest.raises(
+        ValueError, match="cord pull exits must remain above both attachment points"
+    ):
+        module._load_board(document)
+
+
 def _source_hold_with_frames(
     hold_id: str, frames: list[dict[str, float]]
 ) -> dict[str, object]:
@@ -1257,12 +1299,12 @@ def _source_hold_with_frames(
 def _wide_pivot_cord_rig() -> dict[str, object]:
     return {
         "type": "directTwoAnchor",
-        "sceneSize": {"width": 2, "height": 1},
-        "sourceFrame": {"x": 0, "y": 0, "width": 2, "height": 1},
-        "innerFaceFrame": {"x": 0, "y": 0, "width": 2, "height": 1},
-        "attachmentPoints": [{"x": 0.5, "y": 0.5}, {"x": 1.5, "y": 0.5}],
-        "pullPoint": {"x": 1, "y": 0},
-        "eyeletRadius": 0.1,
+        "sceneSize": {"width": 1200, "height": 600},
+        "sourceFrame": {"x": 350, "y": 50, "width": 500, "height": 500},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 500, "height": 500},
+        "attachmentPoints": [{"x": 200, "y": 300}, {"x": 300, "y": 300}],
+        "pullPoint": {"x": 250, "y": 160},
+        "eyeletRadius": 10,
     }
 
 

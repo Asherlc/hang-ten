@@ -857,6 +857,16 @@ enum BoardPackageWriter {
                     }
                 }
             }
+            let resolvedCordRig = presentation.sourcePresentationID.flatMap {
+                presentationsByID[$0]?.cordRig
+            } ?? presentation.cordRig
+            if case .directTwoAnchor(let rig) = resolvedCordRig {
+                try validateCordPresentation(
+                    rig,
+                    presentation: presentation,
+                    in: document
+                )
+            }
         }
 
         guard !document.holds.isEmpty else {
@@ -1071,6 +1081,32 @@ enum BoardPackageWriter {
                 "presentation \(presentation.id).aspectRatio must match cordRig.sceneSize within 0.1%",
                 document
             )
+        }
+    }
+
+    private static func validateCordPresentation(
+        _ rig: BoardDirectTwoAnchorCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let failure = BoardCordRigPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+        )
+        switch failure {
+        case .drawingOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) cord drawing must remain inside sceneSize",
+                document
+            )
+        case .pullExitsNotAboveAttachments:
+            throw invalid(
+                "presentation \(presentation.id) cord pull exits must remain above both attachment points",
+                document
+            )
+        case nil:
+            return
         }
     }
 

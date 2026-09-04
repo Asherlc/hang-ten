@@ -89,6 +89,16 @@ class AssetBoardRepository(
                     }
                 }
             }
+            val artworkPresentation = presentation.sourcePresentationId
+                ?.let { presentationsById[it] }
+                ?: presentation
+            (artworkPresentation.cordRig as? BoardCordRig.DirectTwoAnchor)?.let { rig ->
+                validateDirectTwoAnchorCordPresentation(
+                    boardId = boardId,
+                    presentation = presentation,
+                    rig = rig,
+                )
+            }
         }
 
         val holds = objectValue.required("holds", path)
@@ -195,6 +205,60 @@ class AssetBoardRepository(
                     }
                 }
             }
+        }
+    }
+
+    private fun validateDirectTwoAnchorCordPresentation(
+        boardId: String,
+        presentation: BoardPresentation,
+        rig: BoardCordRig.DirectTwoAnchor,
+    ) {
+        val sceneWidth = rig.sceneSize.width.toDouble()
+        val sceneHeight = rig.sceneSize.height.toDouble()
+        val sourceX = rig.sourceFrame.x.toDouble()
+        val sourceY = rig.sourceFrame.y.toDouble()
+        val pullX = sourceX + rig.pullPoint.x.toDouble()
+        val pullY = sourceY + rig.pullPoint.y.toDouble()
+        val rotationAnchor = presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center
+        val anchorX = rotationAnchor.x.toDouble() * sceneWidth
+        val anchorY = rotationAnchor.y.toDouble() * sceneHeight
+        val rotationRadians = Math.toRadians(presentation.resolvedRotationDegrees.toDouble())
+        val cosine = cos(rotationRadians)
+        val sine = sin(rotationRadians)
+        val attachments = rig.attachmentPoints.map { point ->
+            val pointX = sourceX + point.x.toDouble()
+            val pointY = sourceY + point.y.toDouble()
+            val deltaX = pointX - anchorX
+            val deltaY = pointY - anchorY
+            PointD(
+                x = anchorX + cosine * deltaX - sine * deltaY,
+                y = anchorY + sine * deltaX + cosine * deltaY,
+            )
+        }
+        val centerlineX = listOf(
+            pullX + CORD_SUPPORT_MIN_X_OFFSET,
+            pullX + CORD_SUPPORT_MAX_X_OFFSET,
+            pullX - CORD_PULL_EXIT_HALF_SPACING,
+            pullX + CORD_PULL_EXIT_HALF_SPACING,
+        ) + attachments.map { it.x }
+        val centerlineY = listOf(
+            pullY + CORD_SUPPORT_MIN_Y_OFFSET,
+            pullY + CORD_SUPPORT_MAX_Y_OFFSET,
+        ) + attachments.map { it.y }
+        val tolerance = max(sceneWidth, sceneHeight) * 1e-9
+        if (
+            centerlineX.minOrNull()!! - CORD_SHADOW_X_MARGIN < -tolerance ||
+            centerlineX.maxOrNull()!! + CORD_SHADOW_X_MARGIN > sceneWidth + tolerance ||
+            centerlineY.minOrNull()!! - CORD_SHADOW_Y_MARGIN < -tolerance ||
+            centerlineY.maxOrNull()!! + CORD_SHADOW_Y_MARGIN > sceneHeight + tolerance
+        ) {
+            fail("Board $boardId presentation ${presentation.id} cord drawing must remain inside sceneSize.")
+        }
+        if (attachments.any { it.y <= pullY + tolerance }) {
+            fail(
+                "Board $boardId presentation ${presentation.id} cord pull exits must remain " +
+                    "above both attachment points.",
+            )
         }
     }
 
@@ -503,6 +567,15 @@ class AssetBoardRepository(
         const val PLAN_LIBRARY_PATH = "PlanLibrary.json"
         const val PRESENTATION_ASPECT_RATIO_TOLERANCE = 0.001f
         const val ALIAS_ASPECT_RATIO_TOLERANCE = 0.000001f
+        const val CORD_PULL_EXIT_HALF_SPACING = 22.0
+        const val CORD_SUPPORT_MIN_X_OFFSET = -30.0
+        const val CORD_SUPPORT_MAX_X_OFFSET = 31.0
+        const val CORD_SUPPORT_MIN_Y_OFFSET = -177.0
+        const val CORD_SUPPORT_MAX_Y_OFFSET = 0.0
+        const val CORD_SHADOW_X_MARGIN = 23.8
+        const val CORD_SHADOW_Y_MARGIN = 24.8
         val FINGER_CAPACITY_RANGE = 1..4
     }
+
+    private data class PointD(val x: Double, val y: Double)
 }

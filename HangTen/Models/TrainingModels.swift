@@ -39,6 +39,72 @@ struct BoardDirectTwoAnchorCordRig: Hashable {
     let eyeletRadius: CGFloat
 }
 
+enum BoardCordRigPresentationValidationFailure {
+    case drawingOutsideScene
+    case pullExitsNotAboveAttachments
+}
+
+enum BoardCordRigPresentationValidation {
+    private static let pullExitHalfSpacing = 22.0
+    private static let supportMinXOffset = -30.0
+    private static let supportMaxXOffset = 31.0
+    private static let supportMinYOffset = -177.0
+    private static let supportMaxYOffset = 0.0
+    private static let shadowXMargin = 35.0 / 2 + 4.0 + 2.3
+    private static let shadowYMargin = 35.0 / 2 + 5.0 + 2.3
+
+    static func failure(
+        for rig: BoardDirectTwoAnchorCordRig,
+        rotationDegrees: Double,
+        rotationAnchor: BoardGeometryRotationAnchor
+    ) -> BoardCordRigPresentationValidationFailure? {
+        let sceneWidth = Double(rig.sceneSize.width)
+        let sceneHeight = Double(rig.sceneSize.height)
+        let sourceX = Double(rig.sourceFrame.x)
+        let sourceY = Double(rig.sourceFrame.y)
+        let pullX = sourceX + Double(rig.pullPoint.x)
+        let pullY = sourceY + Double(rig.pullPoint.y)
+        let anchorX = rotationAnchor.x * sceneWidth
+        let anchorY = rotationAnchor.y * sceneHeight
+        let radians = rotationDegrees * .pi / 180
+        let cosine = cos(radians)
+        let sine = sin(radians)
+        let attachments = rig.attachmentPoints.map { point -> (x: Double, y: Double) in
+            let pointX = sourceX + Double(point.x)
+            let pointY = sourceY + Double(point.y)
+            let deltaX = pointX - anchorX
+            let deltaY = pointY - anchorY
+            return (
+                anchorX + cosine * deltaX - sine * deltaY,
+                anchorY + sine * deltaX + cosine * deltaY
+            )
+        }
+        let centerlineX = [
+            pullX + supportMinXOffset,
+            pullX + supportMaxXOffset,
+            pullX - pullExitHalfSpacing,
+            pullX + pullExitHalfSpacing,
+        ] + attachments.map(\.x)
+        let centerlineY = [
+            pullY + supportMinYOffset,
+            pullY + supportMaxYOffset,
+        ] + attachments.map(\.y)
+        let tolerance = max(sceneWidth, sceneHeight) * 1e-9
+        guard let minX = centerlineX.min(), let maxX = centerlineX.max(),
+              let minY = centerlineY.min(), let maxY = centerlineY.max(),
+              minX - shadowXMargin >= -tolerance,
+              maxX + shadowXMargin <= sceneWidth + tolerance,
+              minY - shadowYMargin >= -tolerance,
+              maxY + shadowYMargin <= sceneHeight + tolerance else {
+            return .drawingOutsideScene
+        }
+        guard attachments.allSatisfy({ $0.y > pullY + tolerance }) else {
+            return .pullExitsNotAboveAttachments
+        }
+        return nil
+    }
+}
+
 struct HoldFrame: Hashable {
     let x: CGFloat
     let y: CGFloat

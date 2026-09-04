@@ -670,14 +670,14 @@ final class BoardPackageWriterTests: XCTestCase {
         document.presentations[0].aspectRatio = 1
         document.presentations[0].cordRig = .directTwoAnchor(
             BoardDirectTwoAnchorCordRig(
-                sceneSize: BoardCordSize(width: 240, height: 240),
-                sourceFrame: BoardCordRect(x: 20, y: 70, width: 200, height: 100),
+                sceneSize: BoardCordSize(width: 600, height: 600),
+                sourceFrame: BoardCordRect(x: 200, y: 300, width: 200, height: 100),
                 innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
                 attachmentPoints: [
-                    BoardCordPoint(x: 40, y: 50),
-                    BoardCordPoint(x: 160, y: 50),
+                    BoardCordPoint(x: 70, y: 50),
+                    BoardCordPoint(x: 130, y: 50),
                 ],
-                pullPoint: BoardCordPoint(x: 100, y: 0),
+                pullPoint: BoardCordPoint(x: 100, y: -90),
                 eyeletRadius: 5
             )
         )
@@ -694,6 +694,58 @@ final class BoardPackageWriterTests: XCTestCase {
                 "      \"rotationDegrees\": 135.0,\n"
                     + "      \"geometryRotationAnchor\": {\n"
             )
+        )
+    }
+
+    func testWriterRejectsDirectTwoAnchorCordStrokeOutsideScene() throws {
+        var document = makeDocument(aspectRatio: 50.0 / 61.0)
+        document.presentations[0].cordRig = .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: -200),
+                eyeletRadius: 34
+            )
+        )
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front cord drawing must remain inside sceneSize"
+        )
+    }
+
+    func testWriterRejectsGravityInvertedDirectTwoAnchorAlias() throws {
+        var document = makeAliasDocument(
+            anchor: BoardGeometryRotationAnchor(x: 0.5, y: 0.4),
+            isInverted: false,
+            rotationDegrees: 180
+        )
+        document.aspectRatio = 50.0 / 61.0
+        document.presentations[0].aspectRatio = 50.0 / 61.0
+        document.presentations[0].cordRig = .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: 71.5),
+                eyeletRadius: 34
+            )
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+        document.presentations[1].aspectRatio = 50.0 / 61.0
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front-inverted cord pull exits must remain above both attachment points"
         )
     }
 
