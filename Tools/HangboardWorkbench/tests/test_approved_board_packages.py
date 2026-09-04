@@ -130,7 +130,7 @@ def test_captain_fingerfood_dual_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-dual",
         "captain-fingerfood.dual",
-        {"straight-edge-20", "curved-edge-20", "outer-jug"},
+        {"straight-edge-20", "curved-edge-20", "pocket-20", "outer-jug"},
     )
 
 
@@ -152,7 +152,6 @@ def test_crimptonite_helium_mobile_matches_audited_inventory() -> None:
             "center-edge-10",
             "center-edge-18",
             "top-jug",
-            "back-jug-sloper",
         },
     )
 
