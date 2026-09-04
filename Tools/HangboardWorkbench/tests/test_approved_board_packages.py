@@ -189,10 +189,9 @@ def test_port_a_board_has_one_object_and_approved_dynamic_presentations() -> Non
         "edge-10",
         "edge-8",
         "jug-outer-rim",
-        "pinch-body",
     }
     assert all("handCapacity" not in hold for hold in board["holds"])
-    assert {hold["kind"] for hold in board["holds"]} >= {"edge", "pocket", "jug", "pinch"}
+    assert {hold["kind"] for hold in board["holds"]} == {"edge", "pocket", "jug"}
     assert [
         (presentation["id"], presentation["assetPath"])
         for presentation in board["presentations"]
@@ -200,7 +199,6 @@ def test_port_a_board_has_one_object_and_approved_dynamic_presentations() -> Non
         ("primary", "assets/primary.png"),
         ("front-inverted", "assets/primary.png"),
         ("back", "assets/back.png"),
-        ("side", "assets/side.png"),
     ]
     assert package.presentation("primary").cord_rig is not None
     assert package.presentation("back").cord_rig is not None
@@ -208,7 +206,6 @@ def test_port_a_board_has_one_object_and_approved_dynamic_presentations() -> Non
     assert {path.name for path in (package_root / "assets").iterdir()} == {
         "primary.png",
         "back.png",
-        "side.png",
     }
 
 

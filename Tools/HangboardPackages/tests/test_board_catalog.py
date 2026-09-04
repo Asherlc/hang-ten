@@ -24,16 +24,34 @@ from conftest import (
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
-def test_port_back_is_one_distinct_approved_physical_face_without_changing_holds() -> None:
+def test_port_has_only_approved_front_and_back_physical_faces() -> None:
     module = load_board_catalog_module()
     repository_root = Path(__file__).resolve().parents[3]
     package_root = repository_root / "Hangboards" / "frictitious-port-a-board"
     document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
     presentations = {item["id"]: item for item in document["presentations"]}
 
+    assert [(item["id"], item["assetPath"]) for item in document["presentations"]] == [
+        ("primary", "assets/primary.png"),
+        ("front-inverted", "assets/primary.png"),
+        ("back", "assets/back.png"),
+    ]
     assert presentations["back"]["assetPath"] == "assets/back.png"
     assert "back-inverted" not in presentations
+    assert "side" not in presentations
     assert not (package_root / "assets" / "back-inverted.png").exists()
+    assert not (package_root / "assets" / "side.png").exists()
+    assert {hold["id"] for hold in document["holds"]} == {
+        "edge-30",
+        "pocket-30-two-finger-mono",
+        "edge-25",
+        "edge-20",
+        "edge-15",
+        "edge-12",
+        "edge-10",
+        "edge-8",
+        "jug-outer-rim",
+    }
     assert hashlib.sha256((package_root / "assets" / "back.png").read_bytes()).hexdigest() == (
         "39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e"
     )
@@ -44,7 +62,7 @@ def test_port_back_is_one_distinct_approved_physical_face_without_changing_holds
         ensure_ascii=False,
     ).encode()
     assert hashlib.sha256(canonical_holds).hexdigest() == (
-        "c9ed1d63504559f02e33a17527ee028ac077767d57b9c44e2293e78bd515bb68"
+        "f8ca1ab25f3b1fd70f4cf756bd6b4a4ac8b5478e6da4048e1ed005ba835074d8"
     )
 
     package = module.load_board_package(package_root)

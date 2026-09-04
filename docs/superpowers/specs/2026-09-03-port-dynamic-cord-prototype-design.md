@@ -21,8 +21,10 @@ and its `front-inverted` presentation. After that source and runtime treatment
 were reviewed, the same proven seam was extended to the separately reviewed
 `back` physical face at its approved upright position. `back` is a face
 identity, not an orientation label, and no rotated-back presentation ships.
-Workbench support, the pinch side, and catalog-wide migration remain separate
-work.
+The later one-by-one review rejected the proposed `side` record as an invalid
+physical face, so this current design supersedes the earlier side-face claim:
+`side`, its raster, and its solely owned `pinch-body` hold are deleted.
+Workbench support and catalog-wide migration remain separate work.
 
 ## Goal
 
@@ -52,7 +54,6 @@ dark eyelet entry, and wood face appearance:
 - product: <https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard>
 - front: <https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840>
 - back: <https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840>
-- side: <https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840>
 
 The photographs crop the upper suspension connection. The compact top bight
 and interwoven knot are therefore a generic, physically plausible
@@ -309,23 +310,21 @@ For a presentation with no resolved rig, the resolver must call the existing
 `BoardPresentationImage(board:presentationID:)` with the selected
 presentation's own ID, use the full current map rectangle for holds, add no
 cord/crescent layer, and apply no image transform. This explicit legacy branch
-keeps all non-rig boards and the non-opted-in Port pinch-side presentation
-unchanged.
+keeps all non-rig boards unchanged.
 
 ## Port asset and rollout contract
 
-Commit `e12e7f66` is the only approved source for the three transparent,
+Commit `e12e7f66` is the approved source for the two transparent,
 cord-free Port physical faces:
 
 | Physical face | Historical path | SHA-256 |
 | --- | --- | --- |
 | front | `assets/primary.png` | `6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0` |
 | back | `assets/back.png` | `39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e` |
-| pinch side | `assets/side.png` | `cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad` |
 
-All three are `1400 × 1400` RGBA images with transparent backgrounds. The
-vertical slice verifies all three historical blobs and promotes only the exact
-`primary.png` and `back.png` bytes for the two reviewed physical faces.
+Both are `1400 × 1400` RGBA images with transparent backgrounds. The vertical
+slice promotes the exact `primary.png` and `back.png` bytes for the two
+reviewed physical faces.
 
 Only these presentation changes ship initially:
 
@@ -340,9 +339,10 @@ duplicate presentation metadata. `cord-option-4-20mm-incut` resolved to the
 same front face and exact 180-degree rotation as `front-inverted`, so that
 duplicate record and the redundant front alias PNG are removed. A proposed
 rotated presentation of the separate back physical face was rejected and is
-not part of the package. No hold
-record, hold path, hold metadata, remaining presentation name, training
-content, or product URL changes.
+not part of the package. The subsequently rejected `side` record is also not
+part of the package. Its checked-in raster and its solely owned `pinch-body`
+hold are removed; all nine retained hold objects remain unchanged. No
+training content, accepted presentation name, or product URL changes.
 
 ## Proportional verification
 
@@ -377,13 +377,12 @@ following:
 - Workbench parsing, authoring, preview, and round-trip support;
 - exhaustive malformed/semantic fixture matrices;
 - full package, unit, UI, interaction, and accessibility suites;
-- changing the Port pinch-side presentation;
 - additional rig topology cases; and
 - catalog-wide migration.
 
 A catalog audit found 19 remaining cord-attached packages and multiple routing
 topology families. “Apply this to all” is therefore a staged program, not a
 single `directTwoAnchor` data migration. After this vertical slice is approved,
-first migrate the remaining Port faces one by one. Then classify each of the
-19 packages from manufacturer evidence and design only the topology families
-they actually require. No board is forced into the Port two-anchor model.
+classify each of the 19 packages from manufacturer evidence and design only
+the topology families they actually require. No board is forced into the Port
+two-anchor model.

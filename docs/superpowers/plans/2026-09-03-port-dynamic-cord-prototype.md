@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Ship one narrow production proof in which the Port-A-Board front face and its inverted alias share the exact cord-free primary image and render the visually approved, world-up dynamic cord over a transparent `1200 × 1464` scene.
+**Goal:** Ship one narrow production proof in which the Port-A-Board's two accepted physical-face sources render with the visually approved, world-up dynamic cord over a transparent `1200 × 1464` scene; the front face and its inverted position share one exact cord-free image.
 
 **Architecture:** A canonical presentation may own a generic `directTwoAnchor` rig containing canonical scene, source-frame, inner-face-frame, attachment, pull-point, and eyelet-radius data. The selected presentation supplies a 0° or 180° two-dimensional clock-face transform for the face, holds, markers, attachments, and eyelet image fragments; support geometry remains world-up, and projected endpoints are paired by screen x. Presentations without a resolved rig retain the existing selected-asset/full-map path.
 
@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - This plan supersedes the previous eleven-task plan. Do not execute any task from the superseded revision.
-- Implement only `primary` and `front-inverted` for `frictitious.port-a-board`; leave its other three presentations and every non-rig board unchanged.
+- The final Port inventory is exactly `primary`, `front-inverted`, and `back`, backed by exactly two physical-face rasters: `assets/primary.png` and `assets/back.png`. The user rejected `side` as an invalid face; Task 5 deletes that record, asset, and its solely owned `pinch-body` hold.
 - Rotate in the 2D image plane like a clock face. Do not use 3D rotation, perspective, skew, an x-axis flip, or a barber-pole transform.
 - The canonical transparent scene is `1200 × 1464` (`50 / 61` aspect ratio). Its `sourceFrame` is `(0, 214, 1200, 1250)` and `innerFaceFrame`, relative to the source frame, is `(-100, -10, 1400, 1400)`.
 - Preserve the board's scale: the added `214` units are transparent headroom, not a rescale of the former `1200 × 1250` composition.
@@ -23,10 +23,10 @@
 - Render the approved dark braided, path-driven cord with the fixed bight/knot template and direction-aware foreground eyelet crescent from the spec. The bight/knot is a generic illustration, not a manufacturer-proven knot.
 - Keep the complete stroked cord inside the scene and keep the background transparent.
 - Cord and eyelet-continuity layers are decorative: `.allowsHitTesting(false)` and `.accessibilityHidden(true)`.
-- Commit `e12e7f66` is the source of truth for all three `1400 × 1400` RGBA cord-free Port faces. Verify all three historical hashes, but promote only exact `assets/primary.png` in this slice.
-- Do not change holds, hold paths, constraints, hold metadata, training content, remaining presentation names, product URL, or the other three Port presentation records.
+- Commit `e12e7f66` is the source of truth for the two accepted `1400 × 1400` RGBA cord-free Port faces, `assets/primary.png` and `assets/back.png`.
+- Apart from deleting the rejected `side` record and its solely owned `pinch-body` hold, do not change retained holds, hold paths, constraints, hold metadata, training content, accepted presentation names, or product URL.
 - The user explicitly approved one stored image per physical face and duplicate-position cleanup: `front-inverted` shares `assets/primary.png`; remove its redundant PNG and remove the identical `cord-option-4-20mm-incut` record/PNG.
-- Do not implement Workbench support, exhaustive invalid-fixture matrices, a full unit/UI suite, an app-review screenshot gallery, the other Port faces, additional topology cases, or catalog-wide migration before the two production renders are approved.
+- Do not implement exhaustive invalid-fixture matrices, a full unit/UI suite, an app-review screenshot gallery, additional Port faces, additional topology cases, or catalog-wide migration before the production renders are approved.
 - A catalog audit found 19 remaining cord-attached packages across multiple topology families. Do not model them all as `directTwoAnchor`.
 - Use a fresh implementation subagent and a separate review gate for each task. Push each new task/fix commit to `origin` immediately.
 - Generated review output belongs under `.context/joyful-donkey-port-dynamic-cord-front-review/`; record owner `joyful-donkey` before generation. Start no HTTP server.
@@ -61,7 +61,7 @@
 
 - Modify only the board aspect ratio plus `primary`/`front-inverted` presentation fields in `Hangboards/frictitious-port-a-board/board.json`, and remove the approved duplicate option-4 record.
 - Restore `Hangboards/frictitious-port-a-board/assets/primary.png` byte-for-byte from `e12e7f66`; delete only the two redundant front-position PNGs.
-- Create `docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md`: record manufacturer links, all approved constants, the three historical hashes, the promoted front hash, commands, and the human review decision.
+- Create `docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md`: record manufacturer links, all approved constants, the two accepted source hashes, commands, and the human review decision.
 
 ## Exact Interfaces
 
@@ -443,12 +443,11 @@ rtk git push origin HEAD
 
 - [ ] **Step 1: Restore and verify the approved source bytes.**
 
-Verify all three historical blobs without modifying the tree:
+Verify both accepted historical blobs without modifying the tree:
 
 ```bash
 rtk proxy git show e12e7f66:Hangboards/frictitious-port-a-board/assets/primary.png | shasum -a 256
 rtk proxy git show e12e7f66:Hangboards/frictitious-port-a-board/assets/back.png | shasum -a 256
-rtk proxy git show e12e7f66:Hangboards/frictitious-port-a-board/assets/side.png | shasum -a 256
 ```
 
 Expected, in order:
@@ -456,7 +455,6 @@ Expected, in order:
 ```text
 6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0
 39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e
-cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad
 ```
 
 Restore only the exact front face and confirm format/hash:
@@ -553,12 +551,12 @@ absent, retain only the Task 1 geometry assertions.
 
 Create `docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md` with:
 
-- the spec path and four manufacturer URLs;
+- the spec path plus the product, front, and back manufacturer URLs;
 - the explicit generic-knot caveat;
 - all scene/frame/pivot/attachment/pull/exit/radius values;
 - the exact 1.5× equation;
-- all three historical hashes and dimensions;
-- the promoted front hash and unchanged-holds hash;
+- both accepted source hashes and dimensions;
+- the promoted source hashes and canonical hold hashes before and after any intentional inventory deletion;
 - an explicit statement that no image detection, vectorization, cropping, or
   regeneration occurred;
 - the focused command results below; and
@@ -619,9 +617,8 @@ the relevant focused gate/output/commit/push cycle.
 
 After both are approved, remove only the recorded `.context` review directory,
 verify it is absent, and record the approval in a small audit-only commit that
-is pushed immediately. The next plan may add Workbench parity and migrate the
-remaining Port faces; it must not silently begin the 19-package catalog
-migration.
+is pushed immediately. The next plan may add Workbench parity, but it must not
+invent additional Port faces or silently begin the 19-package catalog migration.
 
 ### Task 4: Reuse the Approved Renderer for the Port Back Face
 
@@ -640,4 +637,15 @@ canonical holds hash. Run only that test, the existing
 focused package parser/validator gates, and package validation. Inspect the
 new production render at original size, commit and push the package/test/audit
 changes, then stop for one-by-one review with the manufacturer product link.
-Do not modify the side presentation, Workbench, or any other package.
+Do not modify Workbench or any other package during this back-face task.
+
+### Task 5: Delete the Rejected Port Side Record
+
+The user rejected `side` as an invalid physical face. Delete only that
+presentation, `assets/side.png`, and its solely owned `pinch-body` hold; keep
+the other nine holds unchanged. Update the current audit/spec and focused
+Python/Workbench inventory tests to require three presentation records over
+only `assets/primary.png` and `assets/back.png`. Record the hold hash transition
+from `c9ed1d63504559f02e33a17527ee028ac077767d57b9c44e2293e78bd515bb68`
+to `f8ca1ab25f3b1fd70f4cf756bd6b4a4ac8b5478e6da4048e1ed005ba835074d8`,
+run focused package gates, and push without staging shared-tree edits.

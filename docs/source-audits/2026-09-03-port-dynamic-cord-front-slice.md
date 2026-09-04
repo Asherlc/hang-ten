@@ -14,12 +14,19 @@ changes its face identity. The proposed `back-inverted` position was rejected
 and removed from the package and review contract. The accepted
 `front-inverted` presentation remains a 180-degree position of `primary`.
 
+**Face-inventory supersession (2026-09-03):** the proposed `side` / “Pinch
+Side” record was subsequently reviewed and rejected as an invalid physical
+face. This current audit supersedes its earlier side-face claim. The package
+now contains only two accepted physical-face sources: front
+`assets/primary.png` (also reused by the approved `front-inverted` position)
+and canonical back `assets/back.png`. The rejected `side` presentation,
+`assets/side.png`, and its solely owned `pinch-body` hold were deleted.
+
 ## Primary manufacturer evidence
 
 - [Port-A-Board product page](https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard)
 - [Official front photograph](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840)
 - [Official back photograph](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840)
-- [Official pinch-side photograph](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840)
 
 The photographs support the board identity, wood faces, dark eyelet entries,
 and near-black braided cord. They crop the upper suspension connection. The
@@ -29,15 +36,14 @@ supplied by Frictitious.
 
 ## Source-raster custody
 
-Commit `e12e7f66` is the approved cord-free source for the three physical
-faces. Each historical blob is a `1400 × 1400`, 8-bit RGBA PNG with a
+Commit `e12e7f66` is the approved cord-free source for the two accepted
+physical faces. Each blob is a `1400 × 1400`, 8-bit RGBA PNG with a
 transparent background.
 
 | Physical face | Historical path | SHA-256 at `e12e7f66` | This slice |
 | --- | --- | --- | --- |
 | front | `assets/primary.png` | `6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0` | Restored byte-for-byte and promoted unchanged |
 | back | `assets/back.png` | `39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e` | Restored byte-for-byte after explicit source review and promoted unchanged |
-| pinch side | `assets/side.png` | `cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad` | Verified only; not promoted or changed by this slice |
 
 The promoted `primary.png` and `back.png` remain `1400 × 1400` RGBA and have
 the SHA-256 values in the table above.
@@ -45,10 +51,28 @@ No detection, segmentation, mask or contour generation, registration,
 alignment, vectorization, automatic cropping, generation, or recompression
 was used. The exact source bytes are decoded by the app and drawn once.
 
-The canonical JSON hash of the complete `holds` array before and after this
-slice is
-`c9ed1d63504559f02e33a17527ee028ac077767d57b9c44e2293e78bd515bb68`.
-No hold path or hold metadata changed.
+The later face-inventory correction intentionally changes the canonical
+`holds` hash from
+`c9ed1d63504559f02e33a17527ee028ac077767d57b9c44e2293e78bd515bb68`
+(10 holds) to
+`f8ca1ab25f3b1fd70f4cf756bd6b4a4ac8b5478e6da4048e1ed005ba835074d8`
+(9 holds) by removing only `pinch-body`, whose sole presentation owner was
+the rejected `side`. The canonical pre-change hash of those same nine
+retained hold objects is also
+`f8ca1ab25f3b1fd70f4cf756bd6b4a4ac8b5478e6da4048e1ed005ba835074d8`;
+therefore every retained hold object, path, constraint, and metadata field is
+byte-for-byte equivalent after canonical serialization.
+
+The deleted checked-in `assets/side.png` had SHA-256
+`aac716dae81b701638945d35f2230f0fe5588b712976e439336c899d6b160893`.
+The canonical `presentations` hash changed from
+`c0c5ee36e6640b38aa287cb32e9ff6969d67df260f2f7c3b8509ac50bd68e900`
+to `05b123ef0899b434fb461da842302aca99355d9beea958c1343b5178500f164d`
+by removing only `side`. The complete `board.json` file hash changed from
+`ac568ebf75cdca433dd3622dfab77d3ef6aa958e6fc1665b92b366ba6c41e7d1`
+to `d376fc352b5dd80d7a95113a547af515713ad6c785f175d6f071a74bc75edb6e`;
+that file-level change also includes removing “pinch” from the inventory
+subtitle.
 
 ## Approved authored geometry
 
@@ -100,12 +124,13 @@ foreground crescent makes each cord enter its eyelet continuously.
 | `front-inverted` | shares `assets/primary.png` | same face at `180°`; same world-up support | Approved geometry/reference proof; isolated runtime output awaits final one-by-one review |
 | `back` | `assets/back.png` | separate physical 8/10/12/15 face at `0°`; dynamic cord rig with attachment points `(203, 712)` and `(997, 712)` | Approved source and production output |
 
-The user approved one stored PNG per physical face. The redundant
+The user approved one stored PNG per accepted physical face. The redundant
 `assets/front-inverted.png` was removed. No `back-inverted` presentation or
 asset remains after the correction recorded above. The
 `cord-option-4-20mm-incut` presentation described the same physical front face
 at the same 180-degree rotation as `front-inverted`; its duplicate metadata and
-PNG were removed together. The side presentation remains outside this slice.
+PNG were removed together. The later explicit rejection deleted the invalid
+`side` presentation and source rather than treating it as another position.
 
 ## Review evidence
 
