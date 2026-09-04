@@ -71,7 +71,7 @@
             "id": "support-left-exit",
             "space": "world",
             "point": {
-              "x": 763,
+              "x": 768,
               "y": 42
             }
           },
@@ -79,7 +79,7 @@
             "id": "support-right-exit",
             "space": "world",
             "point": {
-              "x": 773,
+              "x": 768,
               "y": 42
             }
           }
@@ -100,23 +100,6 @@
           }
         ],
         "paths": [
-          {
-            "id": "rounded-support-apex",
-            "space": "world",
-            "layer": "aboveFace",
-            "commands": [
-              {
-                "command": "move",
-                "to": [763, 42]
-              },
-              {
-                "command": "curve",
-                "control1": [763, 38],
-                "control2": [773, 38],
-                "to": [773, 42]
-              }
-            ]
-          },
           {
             "id": "hidden-return-bight",
             "space": "body",

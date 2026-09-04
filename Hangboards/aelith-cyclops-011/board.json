@@ -69,16 +69,16 @@
             "id": "support-left-exit",
             "space": "world",
             "point": {
-              "x": 757,
-              "y": 180
+              "x": 768,
+              "y": 118
             }
           },
           {
             "id": "support-right-exit",
             "space": "world",
             "point": {
-              "x": 779,
-              "y": 180
+              "x": 768,
+              "y": 118
             }
           }
         ],
@@ -97,140 +97,7 @@
             "layer": "aboveFace"
           }
         ],
-        "paths": [
-          {
-            "id": "support-bight",
-            "space": "world",
-            "layer": "aboveFace",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  757,
-                  180
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  725,
-                  154
-                ],
-                "control2": [
-                  704,
-                  112
-                ],
-                "to": [
-                  710,
-                  80
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  716,
-                  48
-                ],
-                "control2": [
-                  740,
-                  37
-                ],
-                "to": [
-                  761,
-                  38
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  784,
-                  37
-                ],
-                "control2": [
-                  812,
-                  48
-                ],
-                "to": [
-                  824,
-                  80
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  830,
-                  112
-                ],
-                "control2": [
-                  809,
-                  154
-                ],
-                "to": [
-                  779,
-                  180
-                ]
-              }
-            ]
-          },
-          {
-            "id": "support-knot-underpass",
-            "space": "world",
-            "layer": "aboveFace",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  753,
-                  167
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  761,
-                  156
-                ],
-                "control2": [
-                  779,
-                  156
-                ],
-                "to": [
-                  787,
-                  167
-                ]
-              }
-            ]
-          },
-          {
-            "id": "support-knot-overpass",
-            "space": "world",
-            "layer": "overpass",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  751,
-                  170
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  760,
-                  180
-                ],
-                "control2": [
-                  778,
-                  182
-                ],
-                "to": [
-                  787,
-                  170
-                ]
-              }
-            ]
-          }
-        ],
+        "paths": [],
         "occlusions": [
           {
             "type": "facePatch",
