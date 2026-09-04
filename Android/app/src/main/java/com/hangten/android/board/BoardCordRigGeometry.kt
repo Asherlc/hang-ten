@@ -10,6 +10,7 @@ import com.hangten.android.content.BoardRoutedCordPathCommand
 import com.hangten.android.content.BoardRoutedCordSpace
 import com.hangten.android.content.Point
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
@@ -344,6 +345,73 @@ internal fun resolveRoutedCordRigGeometry(
         radialLips = radialLips,
         facePatches = facePatches,
     )
+}
+
+internal sealed interface RoutedCordPresentationValidationFailure {
+    data object UnresolvedGeometry : RoutedCordPresentationValidationFailure
+    data object CenterlineOutsideScene : RoutedCordPresentationValidationFailure
+    data object FacePatchOutsideScene : RoutedCordPresentationValidationFailure
+    data object RadialLipOutsideScene : RoutedCordPresentationValidationFailure
+    data class BodyNotBelowWorld(
+        val bodyPortId: String,
+        val worldPortId: String,
+    ) : RoutedCordPresentationValidationFailure
+}
+
+internal fun routedCordPresentationValidationFailure(
+    rig: BoardCordRig.Routed,
+    presentation: BoardPresentation,
+): RoutedCordPresentationValidationFailure? {
+    val geometry = resolveRoutedCordRigGeometry(
+        rig = rig,
+        presentation = presentation,
+        canvasWidth = rig.sceneSize.width,
+        canvasHeight = rig.sceneSize.height,
+    ) ?: return RoutedCordPresentationValidationFailure.UnresolvedGeometry
+
+    val tolerance = max(geometry.sceneBounds.width, geometry.sceneBounds.height) * 1e-9f
+    val styleInset = 0.8f * rig.style.diameter * geometry.scale
+
+    fun contains(point: Point, inset: Float): Boolean =
+        point.x >= geometry.sceneBounds.left + inset - tolerance &&
+            point.y >= geometry.sceneBounds.top + inset - tolerance &&
+            point.x <= geometry.sceneBounds.left + geometry.sceneBounds.width - inset + tolerance &&
+            point.y <= geometry.sceneBounds.top + geometry.sceneBounds.height - inset + tolerance
+
+    geometry.spans.forEach { span ->
+        if (!contains(span.bodyPoint, styleInset) || !contains(span.worldPoint, styleInset)) {
+            return RoutedCordPresentationValidationFailure.CenterlineOutsideScene
+        }
+    }
+    geometry.paths.forEach { path ->
+        if (!path.definingPoints.all { contains(it, styleInset) }) {
+            return RoutedCordPresentationValidationFailure.CenterlineOutsideScene
+        }
+    }
+    geometry.facePatches.forEach { patch ->
+        if (!patch.definingPoints.all { contains(it, 0f) }) {
+            return RoutedCordPresentationValidationFailure.FacePatchOutsideScene
+        }
+    }
+    geometry.radialLips.forEach { lip ->
+        if (
+            lip.center.x - lip.radius < geometry.sceneBounds.left - tolerance ||
+            lip.center.y - lip.radius < geometry.sceneBounds.top - tolerance ||
+            lip.center.x + lip.radius > geometry.sceneBounds.left + geometry.sceneBounds.width + tolerance ||
+            lip.center.y + lip.radius > geometry.sceneBounds.top + geometry.sceneBounds.height + tolerance
+        ) {
+            return RoutedCordPresentationValidationFailure.RadialLipOutsideScene
+        }
+    }
+    geometry.spans.forEach { span ->
+        if (span.bodyPoint.y <= span.worldPoint.y + tolerance) {
+            return RoutedCordPresentationValidationFailure.BodyNotBelowWorld(
+                bodyPortId = span.bodyPortId,
+                worldPortId = span.worldPortId,
+            )
+        }
+    }
+    return null
 }
 
 internal fun resolveDirectTwoAnchorCordGeometry(
