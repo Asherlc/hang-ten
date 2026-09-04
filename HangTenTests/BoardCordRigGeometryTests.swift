@@ -50,6 +50,22 @@ final class BoardCordRigGeometryTests: XCTestCase {
         XCTAssertNotNil(renderer.uiImage)
     }
 
+    func testDirectCordRigHasTwoTautLegsMeetingAtOneApex() {
+        let geometry = BoardCordRigGeometry.make(
+            rig: portFrontRig,
+            projection: BoardPresentationGeometryProjection(
+                rotationDegrees: 0,
+                rotationAnchor: BoardGeometryRotationAnchor(x: 0.5, y: 113.0 / 183.0)
+            ),
+            in: CGRect(x: 0, y: 0, width: 1200, height: 1464)
+        )
+
+        XCTAssertEqual(geometry.strands.count, 2)
+        assertEqual(geometry.strands[0].start, CGPoint(x: 600, y: 285.5))
+        assertEqual(geometry.strands[1].start, CGPoint(x: 600, y: 285.5))
+        XCTAssertEqual(geometry.strokeBounds.minY, 260.7, accuracy: 1e-9)
+    }
+
     @MainActor
     func testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport() throws {
         XCTAssertEqual(
@@ -122,8 +138,8 @@ final class BoardCordRigGeometryTests: XCTestCase {
             invertedGeometry.pairedAttachments[1],
             CGPoint(x: 924, y: 790)
         )
-        assertEqual(invertedGeometry.strands[0].start, CGPoint(x: 578, y: 285.5))
-        assertEqual(invertedGeometry.strands[1].start, CGPoint(x: 622, y: 285.5))
+        assertEqual(invertedGeometry.strands[0].start, CGPoint(x: 600, y: 285.5))
+        assertEqual(invertedGeometry.strands[1].start, CGPoint(x: 600, y: 285.5))
         XCTAssertTrue(canvas.contains(invertedGeometry.strokeBounds))
         XCTAssertEqual(invertedGeometry.eyeletForegroundCrescents.count, 2)
         XCTAssertTrue(
@@ -137,8 +153,12 @@ final class BoardCordRigGeometryTests: XCTestCase {
             )
         )
         XCTAssertEqual(
-            uprightGeometry.supportPaths.map(pathElements),
-            invertedGeometry.supportPaths.map(pathElements)
+            uprightGeometry.strands.map(\.start),
+            invertedGeometry.strands.map(\.start)
+        )
+        XCTAssertNotEqual(
+            pathElements(uprightGeometry.tensionPath),
+            pathElements(invertedGeometry.tensionPath)
         )
         XCTAssertNotEqual(uprightGeometry.faceTransform, invertedGeometry.faceTransform)
 

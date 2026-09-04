@@ -603,22 +603,18 @@ test("a rigged alias rotates the face in plane while its complete cord stays wor
       app.document.querySelector("#board-image")?.getAttribute("transform"),
       "rotate(90 5 5)",
     );
-    const strands = [...app.document.querySelectorAll<SVGLineElement>("#cord-strands line")];
-    assert.equal(strands.length, 2);
-    assert.deepEqual(strands.map((strand) => ({
-      x1: Number(strand.getAttribute("x1")),
-      y1: Number(strand.getAttribute("y1")),
-      x2: Number(strand.getAttribute("x2")),
-      y2: Number(strand.getAttribute("y2")),
-    })), [{ x1: 2.8, y1: 0, x2: 5, y2: 2 }, { x1: 7.2, y1: 0, x2: 5, y2: 8 }]);
-    assert.equal(app.document.querySelectorAll("#cord-support path").length, 3);
-    assert.equal(app.document.querySelectorAll("#cord-overpass path").length, 3);
+    const tensionPath = app.document.querySelector("#cord-strands path");
+    assert.equal(tensionPath?.getAttribute("d"), "M 5 2 L 5 0 L 5 8");
+    assert.equal(app.document.querySelector("#cord-support"), null);
+    assert.equal(app.document.querySelector("#cord-overpass"), null);
+    assert.equal(app.document.querySelectorAll("#cord-shadow path").length, 1);
+    assert.equal(app.document.querySelectorAll("#cord-shadow line").length, 0);
     assert.equal(app.document.querySelector("#cord-rig")?.getAttribute("data-pull-y"), "0");
     assert.equal(
       app.document.querySelector("#cord-shadow")?.getAttribute("filter"),
       "url(#cord-shadow-filter)",
     );
-    assert.equal(app.document.querySelectorAll("#cord-braid-clips mask").length, 2);
+    assert.equal(app.document.querySelectorAll("#cord-braid-clips mask").length, 1);
     assert.equal(app.document.querySelectorAll("#cord-braid-fibers line").length > 10, true);
     assert.equal(app.document.querySelectorAll("#cord-eyelet-clips clipPath").length, 2);
     const eyeletCrescents = [...app.document.querySelectorAll<SVGPathElement>(
@@ -626,8 +622,8 @@ test("a rigged alias rotates the face in plane while its complete cord stays wor
     )];
     assert.equal(eyeletCrescents.length, 2);
     assert.notEqual(eyeletCrescents[0]?.getAttribute("d"), eyeletCrescents[1]?.getAttribute("d"));
-    assert.match(eyeletCrescents[0]?.getAttribute("d") ?? "", /^M 4\.9/);
-    assert.match(eyeletCrescents[1]?.getAttribute("d") ?? "", /^M 5\.8/);
+    assert.match(eyeletCrescents[0]?.getAttribute("d") ?? "", /^M 5\.714142842854 1\.3 /);
+    assert.match(eyeletCrescents[1]?.getAttribute("d") ?? "", /^M 5\.714142842854 7\.3 /);
     const eyeletForegroundImages = [...app.document.querySelectorAll<SVGImageElement>(
       "#cord-eyelet-foreground image",
     )];

@@ -26,7 +26,7 @@ export interface DirectCordRigPresentationGeometry extends CommonCordRigPresenta
   rig: DirectTwoAnchorCordRig;
   pullPoint: Point;
   strands: [CordStrand, CordStrand];
-  supportPaths: [string, string, string, string];
+  tensionPath: string;
   eyeletForegroundCrescents: [string, string];
   eyeletRadius: number;
 }
@@ -310,13 +310,9 @@ export function resolveCordRigPresentationGeometry(
   )).sort((left, right) => left.x - right.x || left.y - right.y);
   const scenePullPoint = sourceRelativeScenePoint(rig.pullPoint);
   const pullPoint = sceneToFace(scenePullPoint);
-  const exits = [
-    sceneToFace({ x: scenePullPoint.x - 22, y: scenePullPoint.y }),
-    sceneToFace({ x: scenePullPoint.x + 22, y: scenePullPoint.y }),
-  ] as const;
   const strands = [
-    { start: exits[0], end: projectedAttachments[0]! },
-    { start: exits[1], end: projectedAttachments[1]! },
+    { start: pullPoint, end: projectedAttachments[0]! },
+    { start: pullPoint, end: projectedAttachments[1]! },
   ] as const;
   const eyeletRadius = rig.eyeletRadius * cordUnitScale;
   const eyeletForegroundCrescents = strands.map((strand) => (
@@ -328,38 +324,10 @@ export function resolveCordRigPresentationGeometry(
     )
   )) as [string, string];
 
-  const offsetPoint = (x: number, y: number): Point => sceneToFace({
-    x: scenePullPoint.x + x,
-    y: scenePullPoint.y + y,
-  });
-  const bight = [
-    pointCommand("M", [offsetPoint(-12, -61)]),
-    pointCommand("C", [offsetPoint(-26, -82), offsetPoint(-30, -115), offsetPoint(-21, -142)]),
-    pointCommand("C", [offsetPoint(-14, -163), offsetPoint(-5, -174), offsetPoint(1, -177)]),
-    pointCommand("C", [offsetPoint(9, -171), offsetPoint(18, -157), offsetPoint(24, -136)]),
-    pointCommand("C", [offsetPoint(31, -109), offsetPoint(26, -81), offsetPoint(12, -61)]),
-  ].join(" ");
-  const knotAndExit = (mirror: number): string => [
-    pointCommand("M", [offsetPoint(-12 * mirror, -63)]),
-    pointCommand("C", [
-      offsetPoint(1 * mirror, -52),
-      offsetPoint(18 * mirror, -51),
-      offsetPoint(21 * mirror, -39),
-    ]),
-    pointCommand("C", [
-      offsetPoint(24 * mirror, -28),
-      offsetPoint(16 * mirror, -19),
-      offsetPoint(5 * mirror, -18),
-    ]),
-    pointCommand("C", [
-      offsetPoint(-8 * mirror, -17),
-      offsetPoint(-17 * mirror, -9),
-      offsetPoint(-22 * mirror, 0),
-    ]),
-  ].join(" ");
-  const overpass = [
-    pointCommand("M", [offsetPoint(-18, -35)]),
-    pointCommand("C", [offsetPoint(-10, -24), offsetPoint(9, -22), offsetPoint(18, -35)]),
+  const tensionPath = [
+    pointCommand("M", [projectedAttachments[0]!]),
+    pointCommand("L", [pullPoint]),
+    pointCommand("L", [projectedAttachments[1]!]),
   ].join(" ");
 
   return {
@@ -370,7 +338,7 @@ export function resolveCordRigPresentationGeometry(
     rotationAnchor,
     pullPoint,
     strands: [strands[0], strands[1]],
-    supportPaths: [bight, knotAndExit(1), knotAndExit(-1), overpass],
+    tensionPath,
     eyeletForegroundCrescents,
     eyeletRadius,
     cordUnitScale,

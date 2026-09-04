@@ -13,8 +13,7 @@ struct BoardCordRigGeometry {
     let projectedAttachments: [CGPoint]
     let pairedAttachments: [CGPoint]
     let strands: [BoardCordStrand]
-    let supportPaths: [Path]
-    let knotOverpass: Path
+    let tensionPath: Path
     let eyeletForegroundCrescents: [Path]
     let strokeBounds: CGRect
 
@@ -79,106 +78,27 @@ struct BoardCordRigGeometry {
         }
 
         let pullPoint = sourceRelativePoint(rig.pullPoint)
-        let exits = [
-            CGPoint(x: pullPoint.x - 22 * scale, y: pullPoint.y),
-            CGPoint(x: pullPoint.x + 22 * scale, y: pullPoint.y),
-        ]
-        let strands = zip(exits, pairedAttachments).map {
-            BoardCordStrand(start: $0.0, end: $0.1)
+        let strands = pairedAttachments.map {
+            BoardCordStrand(start: pullPoint, end: $0)
         }
 
-        func offsetPoint(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
-            CGPoint(x: pullPoint.x + x * scale, y: pullPoint.y + y * scale)
+        var tensionPath = Path()
+        if let leftAttachment = pairedAttachments.first,
+           let rightAttachment = pairedAttachments.last {
+            tensionPath.move(to: leftAttachment)
+            tensionPath.addLine(to: pullPoint)
+            tensionPath.addLine(to: rightAttachment)
         }
 
-        var bight = Path()
-        bight.move(to: offsetPoint(-12, -61))
-        bight.addCurve(
-            to: offsetPoint(-21, -142),
-            control1: offsetPoint(-26, -82),
-            control2: offsetPoint(-30, -115)
-        )
-        bight.addCurve(
-            to: offsetPoint(1, -177),
-            control1: offsetPoint(-14, -163),
-            control2: offsetPoint(-5, -174)
-        )
-        bight.addCurve(
-            to: offsetPoint(24, -136),
-            control1: offsetPoint(9, -171),
-            control2: offsetPoint(18, -157)
-        )
-        bight.addCurve(
-            to: offsetPoint(12, -61),
-            control1: offsetPoint(31, -109),
-            control2: offsetPoint(26, -81)
-        )
-
-        var leftKnotAndExit = Path()
-        leftKnotAndExit.move(to: offsetPoint(-12, -63))
-        leftKnotAndExit.addCurve(
-            to: offsetPoint(21, -39),
-            control1: offsetPoint(1, -52),
-            control2: offsetPoint(18, -51)
-        )
-        leftKnotAndExit.addCurve(
-            to: offsetPoint(5, -18),
-            control1: offsetPoint(24, -28),
-            control2: offsetPoint(16, -19)
-        )
-        leftKnotAndExit.addCurve(
-            to: offsetPoint(-22, 0),
-            control1: offsetPoint(-8, -17),
-            control2: offsetPoint(-17, -9)
-        )
-
-        var rightKnotAndExit = Path()
-        rightKnotAndExit.move(to: offsetPoint(12, -63))
-        rightKnotAndExit.addCurve(
-            to: offsetPoint(-21, -39),
-            control1: offsetPoint(-1, -52),
-            control2: offsetPoint(-18, -51)
-        )
-        rightKnotAndExit.addCurve(
-            to: offsetPoint(-5, -18),
-            control1: offsetPoint(-24, -28),
-            control2: offsetPoint(-16, -19)
-        )
-        rightKnotAndExit.addCurve(
-            to: offsetPoint(22, 0),
-            control1: offsetPoint(8, -17),
-            control2: offsetPoint(17, -9)
-        )
-
-        let supportPaths = [bight, leftKnotAndExit, rightKnotAndExit]
-
-        var knotOverpass = Path()
-        knotOverpass.move(to: offsetPoint(-18, -35))
-        knotOverpass.addCurve(
-            to: offsetPoint(18, -35),
-            control1: offsetPoint(-10, -24),
-            control2: offsetPoint(9, -22)
-        )
-
-        let eyeletForegroundCrescents = zip(pairedAttachments, exits).map {
+        let eyeletForegroundCrescents = pairedAttachments.map {
             eyeletCrescent(
-                center: $0.0,
-                toward: $0.1,
+                center: $0,
+                toward: pullPoint,
                 radius: rig.eyeletRadius * scale,
                 chordOffset: 7 * scale
             )
         }
-
-        let strandPaths = strands.map { strand in
-            var path = Path()
-            path.move(to: strand.start)
-            path.addLine(to: strand.end)
-            return path
-        }
-        let cordPaths = supportPaths + strandPaths + [knotOverpass]
-        let pathBounds = cordPaths.reduce(CGRect.null) {
-            $0.union($1.boundingRect)
-        }
+        let pathBounds = tensionPath.boundingRect
         let shadowXMargin = (35 / 2 + 4 + 2.3) * scale
         let shadowYMargin = (35 / 2 + 5 + 2.3) * scale
         let strokeBounds = pathBounds.insetBy(
@@ -194,8 +114,7 @@ struct BoardCordRigGeometry {
             projectedAttachments: projectedAttachments,
             pairedAttachments: pairedAttachments,
             strands: strands,
-            supportPaths: supportPaths,
-            knotOverpass: knotOverpass,
+            tensionPath: tensionPath,
             eyeletForegroundCrescents: eyeletForegroundCrescents,
             strokeBounds: strokeBounds
         )

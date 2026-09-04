@@ -69,8 +69,7 @@ function DirectCordRigArtwork({
   const braidWidth = 23 * geometry.cordUnitScale;
   const ridgeWidth = 2.4 * geometry.cordUnitScale;
   const braidDash = `${1.5 * geometry.cordUnitScale} ${5.5 * geometry.cordUnitScale}`;
-  const mainSupportPaths = geometry.supportPaths.slice(0, 3);
-  const overpass = geometry.supportPaths[3];
+  const tensionPath = geometry.tensionPath;
   const scene = geometry.viewBox;
   const spacing = 12 * geometry.cordUnitScale;
   const diagonalSpan = scene.width + scene.height;
@@ -149,33 +148,8 @@ function DirectCordRigArtwork({
           maskContentUnits="userSpaceOnUse"
         >
           <g fill="none" stroke="white" strokeWidth={braidWidth} strokeLinecap="round" strokeLinejoin="round">
-            {mainSupportPaths.map((path, index) => <path key={index} d={path} />)}
-            {geometry.strands.map((strand, index) => <line
-              key={index}
-              x1={strand.start.x}
-              y1={strand.start.y}
-              x2={strand.end.x}
-              y2={strand.end.y}
-            />)}
+            <path d={tensionPath} />
           </g>
-        </mask>
-        <mask
-          id="cord-overpass-braid-mask"
-          x={scene.x}
-          y={scene.y}
-          width={scene.width}
-          height={scene.height}
-          maskUnits="userSpaceOnUse"
-          maskContentUnits="userSpaceOnUse"
-        >
-          <path
-            d={overpass}
-            fill="none"
-            stroke="white"
-            strokeWidth={braidWidth}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
         </mask>
       </g>
       <g id="cord-eyelet-clips">
@@ -199,47 +173,16 @@ function DirectCordRigArtwork({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {mainSupportPaths.map((path, index) => <path key={`support-${index}`} d={path} />)}
-      {geometry.strands.map((strand, index) => <line
-        key={`strand-${index}`}
-        x1={strand.start.x}
-        y1={strand.start.y}
-        x2={strand.end.x}
-        y2={strand.end.y}
-      />)}
+      <path d={tensionPath} />
     </g>
-    <g id="cord-support" fill="none" stroke="#050607" strokeWidth={ropeWidth} strokeLinecap="round" strokeLinejoin="round">
-      {mainSupportPaths.map((path, index) => <path key={index} d={path} />)}
-    </g>
-    <g id="cord-strands" stroke="#050607" strokeWidth={ropeWidth} strokeLinecap="round">
-      {geometry.strands.map((strand, index) => <line
-        key={index}
-        x1={strand.start.x}
-        y1={strand.start.y}
-        x2={strand.end.x}
-        y2={strand.end.y}
-      />)}
+    <g id="cord-strands" fill="none" stroke="#050607" strokeWidth={ropeWidth} strokeLinecap="round" strokeLinejoin="round">
+      <path d={tensionPath} />
     </g>
     <g fill="none" stroke="#151718" strokeWidth={coreWidth} strokeLinecap="round" strokeLinejoin="round">
-      {mainSupportPaths.map((path, index) => <path key={`support-${index}`} d={path} />)}
-      {geometry.strands.map((strand, index) => <line
-        key={`strand-${index}`}
-        x1={strand.start.x}
-        y1={strand.start.y}
-        x2={strand.end.x}
-        y2={strand.end.y}
-      />)}
+      <path d={tensionPath} />
     </g>
     <g id="cord-braid-fibers">
       <g mask="url(#cord-main-braid-mask)">{braidFibers("main")}</g>
-    </g>
-    <g id="cord-overpass" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <path d={overpass} stroke="black" strokeOpacity="0.52" strokeWidth={35 * geometry.cordUnitScale} />
-      <path d={overpass} stroke="#050607" strokeWidth={ropeWidth} />
-      <path d={overpass} stroke="#151718" strokeWidth={coreWidth} />
-    </g>
-    <g id="cord-overpass-braid-fibers" mask="url(#cord-overpass-braid-mask)">
-      {braidFibers("overpass")}
     </g>
     <g
       id="cord-ridge"
@@ -252,15 +195,7 @@ function DirectCordRigArtwork({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {mainSupportPaths.map((path, index) => <path key={`support-${index}`} d={path} />)}
-      {geometry.strands.map((strand, index) => <line
-        key={`strand-${index}`}
-        x1={strand.start.x}
-        y1={strand.start.y}
-        x2={strand.end.x}
-        y2={strand.end.y}
-      />)}
-      <path d={overpass} />
+      <path d={tensionPath} />
     </g>
     <g id="cord-eyelet-foreground">
       {geometry.eyeletForegroundCrescents.map((_path, index) => <g

@@ -148,66 +148,35 @@ struct BoardPresentationArtwork: View {
         faceContext.transform = geometry.faceTransform
         faceContext.draw(resolvedImage, in: geometry.faceRect)
 
-        let strandPaths = geometry.strands.map { strand in
-            var path = Path()
-            path.move(to: strand.start)
-            path.addLine(to: strand.end)
-            return path
-        }
-        let mainCordPaths = geometry.supportPaths + strandPaths
+        let cordPaths = [geometry.tensionPath]
 
         var shadowContext = context
         shadowContext.translateBy(x: 4 * scale, y: 5 * scale)
         shadowContext.addFilter(.blur(radius: 2.3 * scale))
         stroke(
-            mainCordPaths,
+            cordPaths,
             in: &shadowContext,
             color: Color.black.opacity(0.34),
             width: 35 * scale
         )
         stroke(
-            mainCordPaths,
+            cordPaths,
             in: &context,
             color: Color(red: 5 / 255, green: 6 / 255, blue: 7 / 255),
             width: 31 * scale
         )
         stroke(
-            mainCordPaths,
+            cordPaths,
             in: &context,
             color: Color(red: 21 / 255, green: 23 / 255, blue: 24 / 255),
             width: 25 * scale
         )
-        drawBraid(over: mainCordPaths, geometry: geometry, scale: scale, in: &context)
-
-        stroke(
-            [geometry.knotOverpass],
-            in: &context,
-            color: Color.black.opacity(0.52),
-            width: 35 * scale
-        )
-        stroke(
-            [geometry.knotOverpass],
-            in: &context,
-            color: Color(red: 5 / 255, green: 6 / 255, blue: 7 / 255),
-            width: 31 * scale
-        )
-        stroke(
-            [geometry.knotOverpass],
-            in: &context,
-            color: Color(red: 21 / 255, green: 23 / 255, blue: 24 / 255),
-            width: 25 * scale
-        )
-        drawBraid(
-            over: [geometry.knotOverpass],
-            geometry: geometry,
-            scale: scale,
-            in: &context
-        )
+        drawBraid(over: cordPaths, geometry: geometry, scale: scale, in: &context)
 
         var ridgeContext = context
         ridgeContext.translateBy(x: -2 * scale, y: -1 * scale)
         stroke(
-            mainCordPaths + [geometry.knotOverpass],
+            cordPaths,
             in: &ridgeContext,
             color: Color(red: 196 / 255, green: 201 / 255, blue: 204 / 255)
                 .opacity(0.18),

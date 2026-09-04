@@ -678,9 +678,41 @@ test("the eyelet foreground keeps the board-side face above the incoming cord", 
   if (geometry.type !== "directTwoAnchor") assert.fail("expected a direct-two-anchor rig");
   const strand = geometry.strands[0];
   const path = geometry.eyeletForegroundCrescents[0];
-  assert.deepEqual(strand, { start: { x: 20, y: 0 }, end: { x: 20, y: 50 } });
+  assert.deepEqual(strand, { start: { x: 42, y: 0 }, end: { x: 20, y: 50 } });
   assert.equal(circularArcClipContains(path, strand.end, { x: 20, y: 58 }), true);
   assert.equal(circularArcClipContains(path, strand.end, { x: 20, y: 42 }), false);
+});
+
+test("a direct cord rig uses two taut legs meeting at one apex", () => {
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
+    pullPoint: { x: 50, y: 0 },
+    eyeletRadius: 10,
+  };
+  const document: EditorDocument = { canvas: { width: 100, height: 100 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+  assert.ok(geometry);
+  if (geometry.type !== "directTwoAnchor") assert.fail("expected a direct-two-anchor rig");
+  assert.deepEqual(geometry.strands.map((strand) => strand.start), [
+    { x: 50, y: 0 },
+    { x: 50, y: 0 },
+  ]);
 });
 
 test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {
