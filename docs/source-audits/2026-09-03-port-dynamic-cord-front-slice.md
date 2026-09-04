@@ -1,8 +1,8 @@
-# Port-A-Board dynamic-cord front slice — source audit
+# Port-A-Board dynamic-cord front and back slice — source audit
 
 Reviewed 2026-09-03. This audit covers only the Frictitious Port-A-Board
-`primary` and `front-inverted` presentations. The implementation contract is
-recorded in
+`primary`, `front-inverted`, `back`, and `back-inverted` presentations. The
+implementation contract is recorded in
 [`docs/superpowers/specs/2026-09-03-port-dynamic-cord-prototype-design.md`](../superpowers/specs/2026-09-03-port-dynamic-cord-prototype-design.md)
 and its execution plan in
 [`docs/superpowers/plans/2026-09-03-port-dynamic-cord-prototype.md`](../superpowers/plans/2026-09-03-port-dynamic-cord-prototype.md).
@@ -29,12 +29,11 @@ transparent background.
 | Physical face | Historical path | SHA-256 at `e12e7f66` | This slice |
 | --- | --- | --- | --- |
 | front | `assets/primary.png` | `6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0` | Restored byte-for-byte and promoted unchanged |
-| back | `assets/back.png` | `39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e` | Verified only; not promoted or changed by this slice |
+| back | `assets/back.png` | `39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e` | Restored byte-for-byte after explicit source review and promoted unchanged |
 | pinch side | `assets/side.png` | `cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad` | Verified only; not promoted or changed by this slice |
 
-The promoted `Hangboards/frictitious-port-a-board/assets/primary.png` remains
-`1400 × 1400` RGBA and has SHA-256
-`6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0`.
+The promoted `primary.png` and `back.png` remain `1400 × 1400` RGBA and have
+the SHA-256 values in the table above.
 No detection, segmentation, mask or contour generation, registration,
 alignment, vectorization, automatic cropping, generation, or recompression
 was used. The exact source bytes are decoded by the app and drawn once.
@@ -58,9 +57,12 @@ pixels or inferred from hold geometry.
 | face pivot, source-relative | `(600, 690)` |
 | face pivot, scene | `(600, 904)` |
 | normalized rotation anchor | `(0.5, 0.6174863387978142)` (`0.5, 113/183`) |
-| attachment points, source-relative | `(276, 804)` and `(920, 804)` |
-| attachment points, upright scene | `(276, 1018)` and `(920, 1018)` |
-| attachment points, inverted scene | `(924, 790)` and `(280, 790)`; screen-sorted before strand pairing |
+| front attachment points, source-relative | `(276, 804)` and `(920, 804)` |
+| front attachment points, upright scene | `(276, 1018)` and `(920, 1018)` |
+| front attachment points, inverted scene | `(924, 790)` and `(280, 790)`; screen-sorted before strand pairing |
+| back attachment points, source-relative | `(203, 712)` and `(997, 712)` |
+| back attachment points, upright scene | `(203, 926)` and `(997, 926)` |
+| back attachment points, inverted scene | `(997, 882)` and `(203, 882)`; screen-sorted before strand pairing |
 | pull point, source-relative | `(600, 71.5)` |
 | pull point, scene | `(600, 285.5)` |
 | strand exits, scene | `(578, 285.5)` and `(622, 285.5)` |
@@ -90,13 +92,14 @@ foreground crescent makes each cord enter its eyelet continuously.
 | --- | --- | --- | --- |
 | `primary` | `assets/primary.png` | canonical face at `0°`; dynamic cord rig | Included; isolated runtime output awaits final one-by-one review |
 | `front-inverted` | shares `assets/primary.png` | same face at `180°`; same world-up support | Approved geometry/reference proof; isolated runtime output awaits final one-by-one review |
+| `back` | `assets/back.png` | canonical face at `0°`; dynamic cord rig with attachment points `(203, 712)` and `(997, 712)` | Approved source; isolated production output awaits one-by-one review |
+| `back-inverted` | shares `assets/back.png` | same face at `180°` about `(0.5, 113/183)`; same world-up support | Metadata-only position; isolated production output awaits one-by-one review |
 
 The user approved one stored PNG per physical face. The redundant
-`assets/front-inverted.png` was removed. The
+`assets/front-inverted.png` and `assets/back-inverted.png` were removed. The
 `cord-option-4-20mm-incut` presentation described the same physical front face
 at the same 180-degree rotation as `front-inverted`; its duplicate metadata and
-PNG were removed together. Back, back-inverted, and side presentations are
-outside this slice.
+PNG were removed together. The side presentation remains outside this slice.
 
 ## Review evidence
 
@@ -114,15 +117,21 @@ artifacts:
 | --- | --- | --- | --- |
 | `primary` | `.context/joyful-donkey-port-dynamic-cord-front-review/primary.png` | `125350a675166e4dd4f6ba2b914151893fe5176833a15b24e1bd308726545504` | `1200 × 1464` RGBA; four transparent corners |
 | `front-inverted` | `.context/joyful-donkey-port-dynamic-cord-front-review/front-inverted.png` | `b039bf5181d6cf041ed74442e27a7e8f99664163967915396b9c83e966fd6a15` | `1200 × 1464` RGBA; four transparent corners |
+| `back` | `.context/joyful-donkey-port-dynamic-cord-back-production-review-20260903/back.png` | `88e447dfae0844a343d16f3f1b5b2700e058153bc0b85130675a7d007b1e9994` | `1200 × 1464` RGBA; four transparent corners |
+| `back-inverted` | `.context/joyful-donkey-port-dynamic-cord-back-production-review-20260903/back-inverted.png` | `1507143891ceb7fb1d5935ad7798ff3a81b0d4e62bef53a351af8fdf17e6eefa` | `1200 × 1464` RGBA; four transparent corners |
 
-Both were visually inspected for complete uncropped cords, head-on face
+Both front renders were visually inspected for complete uncropped cords, head-on face
 geometry, continuous eyelet entry, world-up support, tension, and transparent
-background. They remain pending explicit one-by-one production review.
+background. The fresh `back` and `back-inverted` production renders were also
+inspected at original size for complete cords, tension, eyelet continuity,
+head-on geometry, and transparency. They await separate one-by-one review;
+the previously rejected disposable back-inverted preview is not acceptance
+evidence.
 
 ## Verification
 
-- Focused geometry/render test: `1` test executed, `0` failures; artifact
-  dimensions and transparent corners passed.
+- Focused geometry/render test: `1` test executed, `0` failures; both fresh
+  back artifact dimensions and transparent corners passed.
 - Package inventory validation:
   `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`
   passed with no drafts.
@@ -131,7 +140,7 @@ background. They remain pending explicit one-by-one production review.
   drafts.
 - Focused iOS package gates: `2` tests executed, `0` failures (one loader and
   alias-resolution test; one canonical writer round-trip test).
-- Focused Python package-parser gate: `1` test passed.
+- Focused Python package/parser and production custody gates: `2` tests passed.
 - Generic iOS Simulator app build: `BUILD SUCCEEDED`.
 
 Workbench parsing/preview parity is intentionally handled by a separate task

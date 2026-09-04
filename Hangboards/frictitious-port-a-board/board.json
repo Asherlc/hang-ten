@@ -39,8 +39,35 @@
       "isInverted": true,
       "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142}
     },
-    {"id": "back", "name": "Back Upright", "assetPath": "assets/back.png", "aspectRatio": 1.0, "default": false},
-    {"id": "back-inverted", "name": "Back Inverted", "assetPath": "assets/back-inverted.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "back", "isInverted": true},
+    {
+      "id": "back",
+      "name": "Back Upright",
+      "assetPath": "assets/back.png",
+      "aspectRatio": 0.819672131147541,
+      "default": false,
+      "cordRig": {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1200, "height": 1464},
+        "sourceFrame": {"x": 0, "y": 214, "width": 1200, "height": 1250},
+        "innerFaceFrame": {"x": -100, "y": -10, "width": 1400, "height": 1400},
+        "attachmentPoints": [
+          {"x": 203, "y": 712},
+          {"x": 997, "y": 712}
+        ],
+        "pullPoint": {"x": 600, "y": 71.5},
+        "eyeletRadius": 34
+      }
+    },
+    {
+      "id": "back-inverted",
+      "name": "Back Inverted",
+      "assetPath": "assets/back.png",
+      "aspectRatio": 0.819672131147541,
+      "default": false,
+      "sourcePresentationID": "back",
+      "isInverted": true,
+      "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142}
+    },
     {"id": "side", "name": "Pinch Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}
   ],
   "holds": [

@@ -15,6 +15,18 @@ final class BoardCordRigGeometryTests: XCTestCase {
         eyeletRadius: 34
     )
 
+    private let portBackRig = BoardDirectTwoAnchorCordRig(
+        sceneSize: BoardCordSize(width: 1200, height: 1464),
+        sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+        innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+        attachmentPoints: [
+            BoardCordPoint(x: 203, y: 712),
+            BoardCordPoint(x: 997, y: 712),
+        ],
+        pullPoint: BoardCordPoint(x: 600, y: 71.5),
+        eyeletRadius: 34
+    )
+
     @MainActor
     func testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport() throws {
         XCTAssertEqual(
@@ -138,6 +150,43 @@ final class BoardCordRigGeometryTests: XCTestCase {
                 "primary.png"
             )
         }
+        let back = try XCTUnwrap(board.presentation(id: "back"))
+        let backInverted = try XCTUnwrap(board.presentation(id: "back-inverted"))
+        XCTAssertEqual(back.cordRig, .directTwoAnchor(portBackRig))
+        XCTAssertNil(backInverted.cordRig)
+        XCTAssertEqual(board.resolvedCordRig(for: backInverted), .directTwoAnchor(portBackRig))
+        XCTAssertEqual(
+            backInverted.geometryRotationAnchor,
+            BoardGeometryRotationAnchor(x: 0.5, y: 113.0 / 183.0)
+        )
+        for presentationID in ["primary", "front-inverted", "back", "back-inverted"] {
+            XCTAssertEqual(
+                BoardCatalog.packageStore.presentationImageURL(
+                    for: board,
+                    presentationID: presentationID
+                )?.lastPathComponent,
+                "back.png"
+            )
+            XCTAssertEqual(
+                BoardCatalog.packageStore.presentationArtworkImageURL(
+                    for: board,
+                    presentationID: presentationID
+                )?.lastPathComponent,
+                "back.png"
+            )
+        }
+        let backURL = try XCTUnwrap(
+            BoardCatalog.packageStore.presentationImageURL(
+                for: board,
+                presentationID: "back"
+            )
+        )
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: backURL.deletingLastPathComponent()
+                    .appendingPathComponent("back-inverted.png").path
+            )
+        )
         guard let directoryPath = ProcessInfo.processInfo.environment["HANGTEN_CORD_REVIEW_DIR"] else {
             return
         }
@@ -148,7 +197,7 @@ final class BoardCordRigGeometryTests: XCTestCase {
             withIntermediateDirectories: true
         )
 
-        for presentationID in ["primary", "front-inverted"] {
+        for presentationID in ["back", "back-inverted"] {
             let presentation = try XCTUnwrap(board.presentation(id: presentationID))
             let canvasSize = CGSize(width: 1200, height: 1464)
             let renderer = ImageRenderer(

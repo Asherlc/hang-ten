@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import struct
@@ -21,6 +22,34 @@ from conftest import (
 )
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def test_port_back_uses_one_approved_source_raster_without_changing_holds() -> None:
+    module = load_board_catalog_module()
+    repository_root = Path(__file__).resolve().parents[3]
+    package_root = repository_root / "Hangboards" / "frictitious-port-a-board"
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    presentations = {item["id"]: item for item in document["presentations"]}
+
+    assert presentations["back"]["assetPath"] == "assets/back.png"
+    assert presentations["back-inverted"]["assetPath"] == "assets/back.png"
+    assert not (package_root / "assets" / "back-inverted.png").exists()
+    assert hashlib.sha256((package_root / "assets" / "back.png").read_bytes()).hexdigest() == (
+        "39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e"
+    )
+    canonical_holds = json.dumps(
+        document["holds"],
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode()
+    assert hashlib.sha256(canonical_holds).hexdigest() == (
+        "c9ed1d63504559f02e33a17527ee028ac077767d57b9c44e2293e78bd515bb68"
+    )
+
+    package = module.load_board_package(package_root)
+    parsed_presentations = {item.id: item for item in package.board.presentations}
+    assert parsed_presentations["back-inverted"].source_presentation_id == "back"
 
 
 def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:

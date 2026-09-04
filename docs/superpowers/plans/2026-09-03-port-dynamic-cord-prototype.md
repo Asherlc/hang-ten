@@ -622,3 +622,22 @@ verify it is absent, and record the approval in a small audit-only commit that
 is pushed immediately. The next plan may add Workbench parity and migrate the
 remaining Port faces; it must not silently begin the 19-package catalog
 migration.
+
+### Task 4: Reuse the Approved Renderer for the Port Back Face
+
+After explicit review of the exact historical back source, restore
+`e12e7f66:Hangboards/frictitious-port-a-board/assets/back.png` byte-for-byte.
+Make canonical `back` own the same scene/frame/pull/radius contract, with its
+deliberately authored attachment points `(203, 712)` and `(997, 712)`.
+Keep `back-inverted` as the existing semantic presentation, but make it a
+metadata-only 180-degree position about `(0.5, 113 / 183)` sharing
+`assets/back.png`; then delete only redundant `assets/back-inverted.png`.
+
+Extend the one focused production-render test to write fresh `back.png` and
+`back-inverted.png` review canvases at `1200 × 1464`, assert transparent
+corners and canonical artwork resolution, and directly lock the approved back
+SHA-256 plus unchanged canonical holds hash. Run only that test, the existing
+focused package parser/validator gates, and package validation. Inspect the two
+new production renders at original size, commit and push the package/test/audit
+changes, then stop for one-by-one review with the manufacturer product link.
+Do not modify the side presentation, Workbench, or any other package.

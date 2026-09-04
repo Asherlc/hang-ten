@@ -16,21 +16,22 @@ the user approved it as good enough to implement:
 - raising the pull point to exactly 1.5 times its former vertical distance
   gives the suspension enough height.
 
-The first production slice is intentionally only the Port-A-Board `primary`
-front face and its `front-inverted` presentation. It proves the app renderer and package seam
-before Workbench support, exhaustive schema matrices, asset cleanup, the other
-Port faces, or any catalog-wide migration are built.
+The first production slice established the Port-A-Board `primary` front face
+and its `front-inverted` presentation. After that source and runtime treatment
+were reviewed, the same proven seam was extended to the separately reviewed
+`back` face and its metadata-only `back-inverted` position. Workbench support,
+the pinch side, and catalog-wide migration remain separate work.
 
 ## Goal
 
-Render the Port front face from one exact transparent, cord-free source image
-in upright and 180-degree clock-face orientations. The board, holds, markers,
+Render each opted-in Port physical face from one exact transparent, cord-free
+source image in upright and 180-degree clock-face orientations. The board, holds, markers,
 hit shapes, eyelets, and eyelet foreground pieces share one 2D affine
 transform. The support bight, knot, and pull point stay fixed above the board
 in screen coordinates.
 
-The slice succeeds when two isolated transparent board-canvas renders match
-the approved spike at `0°` and `180°`, the hold geometry stays aligned, and
+The slice succeeds when isolated transparent board-canvas renders match the
+approved treatment at `0°` and `180°`, the hold geometry stays aligned, and
 every presentation without a resolved rig follows the current image path
 unchanged.
 
@@ -305,7 +306,7 @@ For a presentation with no resolved rig, the resolver must call the existing
 `BoardPresentationImage(board:presentationID:)` with the selected
 presentation's own ID, use the full current map rectangle for holds, add no
 cord/crescent layer, and apply no image transform. This explicit legacy branch
-keeps all non-rig boards and the three non-opted-in Port presentations
+keeps all non-rig boards and the non-opted-in Port pinch-side presentation
 unchanged.
 
 ## Port asset and rollout contract
@@ -320,8 +321,8 @@ cord-free Port physical faces:
 | pinch side | `assets/side.png` | `cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad` |
 
 All three are `1400 × 1400` RGBA images with transparent backgrounds. The
-vertical slice verifies all three historical blobs but promotes only the exact
-`primary.png` bytes.
+vertical slice verifies all three historical blobs and promotes only the exact
+`primary.png` and `back.png` bytes for the two reviewed physical faces.
 
 Only these presentation changes ship initially:
 
@@ -329,6 +330,8 @@ Only these presentation changes ship initially:
 | --- | --- |
 | `primary` | restore exact cord-free `primary.png`; own the approved rig; set aspect ratio to `50 / 61` |
 | `front-inverted` | inherit the `primary` rig; share `assets/primary.png`; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)` |
+| `back` | restore exact cord-free `back.png`; own the approved rig with attachment points `(203, 712)` and `(997, 712)`; set aspect ratio to `50 / 61` |
+| `back-inverted` | inherit the `back` rig; share `assets/back.png`; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)` |
 
 The user approved one stored raster per physical face and the removal of
 duplicate presentation metadata. `cord-option-4-20mm-incut` resolved to the
@@ -352,7 +355,8 @@ Implementation therefore stops at these gates:
 - one Python parser-compatibility test for the same object and Port alias;
 - one focused iOS Simulator build; and
 - two isolated transparent `1200 × 1464` board-canvas outputs, shown one at a
-  time (`primary`, then `front-inverted`) with the manufacturer link.
+  time with the manufacturer link; back outputs are freshly rendered from the
+  production path rather than accepted from any rejected disposable preview.
 
 There is no full unit/UI suite, app-review screenshot set, multi-size matrix,
 Workbench gallery, interaction matrix, or accessibility matrix before this
@@ -362,13 +366,13 @@ accepted.
 
 ## Explicit deferrals
 
-Until the production `primary` and `front-inverted` outputs receive visual
-approval, defer all of the following:
+Until each production output receives visual approval, defer all of the
+following:
 
 - Workbench parsing, authoring, preview, and round-trip support;
 - exhaustive malformed/semantic fixture matrices;
 - full package, unit, UI, interaction, and accessibility suites;
-- changing the other three Port presentations;
+- changing the Port pinch-side presentation;
 - additional rig topology cases; and
 - catalog-wide migration.
 
