@@ -10,6 +10,7 @@ HangTen/Models/BoardCordRigGeometry.swift
 HangTen/Models/BoardEditorStore.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardPackageWriter.swift
+HangTen/Models/BoardRoutedCordRigGeometry.swift
 HangTen/Models/BoardStorage.swift
 HangTen/Models/ClimbroProtocol.swift
 HangTen/Models/CountdownAudioScheduler.swift
