@@ -227,11 +227,6 @@ class RoutedCordRigRepositoryTest {
                 "radialLip must reference a body port",
             ),
             Mutation(
-                "{ \"command\": \"line\", \"to\": [840, 690] },\n            { \"command\": \"close\" }",
-                "{ \"command\": \"line\", \"to\": [840, 690] }",
-                "facePatch commands must be closed",
-            ),
-            Mutation(
                 "\"type\": \"facePatch\"",
                 "\"type\": \"mask\"",
                 "type is unsupported",
@@ -258,6 +253,14 @@ class RoutedCordRigRepositoryTest {
             val source = boardJson(routedRigJson().replaceFixture(mutation.old, mutation.new))
             assertFailureContains(loadBoard(source), mutation.expectedMessage)
         }
+        assertFailureContains(
+            loadBoard(
+                boardJson(
+                    routedRigJson(occlusions = occlusionJson(closeFacePatch = false)),
+                ),
+            ),
+            "facePatch commands must be closed",
+        )
     }
 
     @Test
@@ -513,8 +516,14 @@ class RoutedCordRigRepositoryTest {
         }
       ]"""
 
-    private fun occlusionJson(): String =
-        """"occlusions": [
+    private fun occlusionJson(closeFacePatch: Boolean = true): String {
+        val closeCommand = if (closeFacePatch) {
+            """,
+            { "command": "close" }"""
+        } else {
+            ""
+        }
+        return """"occlusions": [
         {
           "type": "radialLip",
           "bodyPortID": "body-left",
@@ -526,11 +535,11 @@ class RoutedCordRigRepositoryTest {
           "commands": [
             { "command": "move", "to": [760, 610] },
             { "command": "line", "to": [840, 610] },
-            { "command": "line", "to": [840, 690] },
-            { "command": "close" }
+            { "command": "line", "to": [840, 690] }$closeCommand
           ]
         }
       ]"""
+    }
 
     private fun appendArrayEntry(json: String, entry: String): String =
         json.dropLast(1) + ",\n$entry\n      ]"
