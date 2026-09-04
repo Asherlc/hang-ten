@@ -1242,9 +1242,11 @@ def _direct_two_anchor_cord_rig(
     scene_size = _cord_size(value["sceneSize"], f"{label}.sceneSize")
     source_frame = _cord_rect(value["sourceFrame"], f"{label}.sourceFrame")
     pull_point = _cord_point(value["pullPoint"], f"{label}.pullPoint")
+    scene_pull_x = source_frame.x + pull_point.x
+    scene_pull_y = source_frame.y + pull_point.y
     if not (
-        0 <= pull_point.x <= scene_size.width
-        and 0 <= pull_point.y <= scene_size.height
+        0 <= scene_pull_x <= scene_size.width
+        and 0 <= scene_pull_y <= scene_size.height
     ):
         raise BoardPackageError(f"{label}.pullPoint must be inside sceneSize")
     return DirectTwoAnchorCordRig(
@@ -1438,7 +1440,8 @@ def _validate_board(
         board.get("aspectRatio"), "board.json.aspectRatio"
     )
     default_presentation = next(item for item in parsed_presentations if item[4])
-    default_cord_rig = _raw_presentation_cord_rig(board, default_presentation[0])
+    default_canonical_id = default_presentation[5] or default_presentation[0]
+    default_cord_rig = _raw_presentation_cord_rig(board, default_canonical_id)
     expected_board_aspect_ratio = (
         default_presentation[3] if default_cord_rig is not None else width / height
     )

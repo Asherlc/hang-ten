@@ -117,6 +117,24 @@ def _png_with_corrupt_post_ihdr_data() -> bytes:
     return bytes(data)
 
 
+def _rgba_png(width: int, height: int) -> bytes:
+    scanlines = b"".join(
+        b"\x00" + (b"\x00\x00\x00\x00" * width)
+        for _ in range(height)
+    )
+    return b"".join(
+        (
+            b"\x89PNG\r\n\x1a\n",
+            _png_chunk(
+                b"IHDR",
+                struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0),
+            ),
+            _png_chunk(b"IDAT", zlib.compress(scanlines)),
+            _png_chunk(b"IEND", b""),
+        )
+    )
+
+
 def _write_finished_package(
     library: Path,
     slug: str,
@@ -149,6 +167,30 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
         "pullPoint": {"x": 887, "y": 50},
         "eyeletRadius": 20,
     }
+
+
+def _make_default_alias_with_square_asset(
+    board: dict[str, object], *, cord_rig: dict[str, object] | None
+) -> None:
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    canonical = presentations[0]
+    assert isinstance(canonical, dict)
+    canonical.update(default=False, aspectRatio=0.5)
+    if cord_rig is not None:
+        canonical["cordRig"] = cord_rig
+    presentations.append(
+        {
+            "id": "primary-inverted",
+            "name": "Primary inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 0.5,
+            "default": True,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+        }
+    )
+    board["aspectRatio"] = 0.5
 
 
 def _write_draft(library: Path, slug: str) -> Path:
@@ -516,6 +558,70 @@ def test_direct_two_anchor_cord_rig_loads_into_the_public_presentation_model(
 
 
 @pytest.mark.parametrize(
+    ("source_origin", "pull_point"),
+    [
+        ((100, 0), (-100, 50)),
+        ((-100, 0), (1874, 50)),
+        ((0, 100), (887, -100)),
+        ((0, -100), (887, 557)),
+    ],
+    ids=["left", "right", "top", "bottom"],
+)
+def test_direct_two_anchor_cord_rig_accepts_pull_point_translated_to_scene_boundary(
+    tmp_path: Path,
+    source_origin: tuple[int, int],
+    pull_point: tuple[int, int],
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    rig["sourceFrame"].update(x=source_origin[0], y=source_origin[1])
+    rig["pullPoint"].update(x=pull_point[0], y=pull_point[1])
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    presentation = board_package.load_board_package(package_root).presentation()
+
+    assert presentation.cord_rig is not None
+    assert presentation.cord_rig.pull_point == board_package.CordPoint(*pull_point)
+
+
+@pytest.mark.parametrize(
+    ("source_origin", "pull_point"),
+    [
+        ((-100, 0), (99, 50)),
+        ((100, 0), (1675, 50)),
+        ((0, -100), (887, 99)),
+        ((0, 100), (887, 358)),
+    ],
+    ids=["left", "right", "top", "bottom"],
+)
+def test_direct_two_anchor_cord_rig_rejects_pull_point_translated_outside_scene(
+    tmp_path: Path,
+    source_origin: tuple[int, int],
+    pull_point: tuple[int, int],
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    rig["sourceFrame"].update(x=source_origin[0], y=source_origin[1])
+    rig["pullPoint"].update(x=pull_point[0], y=pull_point[1])
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(BoardPackageError, match="pullPoint must be inside sceneSize"):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
     ("mutation", "message"),
     [
         (
@@ -671,6 +777,61 @@ def test_direct_two_anchor_cord_rig_face_ratio_must_match_asset(
         match=(
             "presentation primary.cordRig.innerFaceFrame aspect ratio must match "
             "its image width/height within 0.1%"
+        ),
+    ):
+        board_package.load_board_package(package_root)
+
+
+def test_default_alias_inherits_canonical_cord_rig_for_board_aspect_validation(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    (package_root / "assets" / "primary.png").write_bytes(_rgba_png(10, 10))
+    rig = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 100, "height": 200},
+        "sourceFrame": {"x": 0, "y": 50, "width": 100, "height": 100},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 100, "height": 100},
+        "attachmentPoints": [{"x": 20, "y": 50}, {"x": 80, "y": 50}],
+        "pullPoint": {"x": 50, "y": 0},
+        "eyeletRadius": 2,
+    }
+    _mutate_board(
+        package_root,
+        lambda board: _make_default_alias_with_square_asset(
+            board, cord_rig=rig
+        ),
+    )
+
+    package = board_package.load_board_package(package_root)
+
+    assert package.presentation().id == "primary-inverted"
+    assert package.presentation("primary").cord_rig is not None
+
+
+def test_default_alias_without_canonical_rig_uses_image_aspect_fallback(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    (package_root / "assets" / "primary.png").write_bytes(_rgba_png(10, 10))
+    _mutate_board(
+        package_root,
+        lambda board: _make_default_alias_with_square_asset(
+            board, cord_rig=None
+        ),
+    )
+
+    with pytest.raises(
+        BoardPackageError,
+        match=(
+            "board.json.aspectRatio must match the primary image width/height "
+            "within 0.1%"
         ),
     ):
         board_package.load_board_package(package_root)
