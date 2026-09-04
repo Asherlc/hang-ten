@@ -3,6 +3,7 @@ package com.hangten.android.board
 import com.hangten.android.content.BoardCordRect
 import com.hangten.android.content.BoardCordRig
 import com.hangten.android.content.BoardCordSize
+import com.hangten.android.content.Board
 import com.hangten.android.content.BoardGeometryRotationAnchor
 import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.BoardRoutedCordLayer
@@ -298,6 +299,86 @@ class BoardRoutedCordRigGeometryTest {
         assertEquals(
             RoutedCordPresentationValidationFailure.BodyNotBelowWorld("body", "world"),
             routedCordPresentationValidationFailure(slackRig, presentation(0f)),
+        )
+    }
+
+    @Test
+    fun boardCanvasUsesCanonicalRoutedFaceGeometryForRotationAliases() {
+        val rig = routedRig()
+        val canonical = presentation(0f).copy(id = "primary", cordRig = rig)
+        val alias = presentation(90f)
+        val board = Board(
+            id = "demo.board",
+            manufacturer = "Demo",
+            name = "Demo",
+            subtitle = "Demo",
+            productUrl = "https://example.com/demo",
+            aspectRatio = 1f,
+            presentations = listOf(canonical, alias),
+            holds = emptyList(),
+        )
+
+        val canvas = boardCanvasGeometry(board, alias, width = 100f, height = 100f)!!
+
+        assertEquals(BoardBounds(20f, 30f, 60f, 40f), canvas.holdBounds)
+        assertEquals(BoardInPlaneTransform(0f, 1f, -1f, 0f, 100f, 0f), canvas.faceTransform)
+        assertEquals(rig, canvas.routedRig)
+        assertNotNull(canvas.routedCordGeometry)
+        assertNull(canvas.directTwoAnchorRig)
+        assertNull(canvas.cordGeometry)
+    }
+
+    @Test
+    fun routedArtworkOperationsFollowTheFrozenLayerAndOcclusionOrder() {
+        val rig = routedRig(
+            paths = listOf(
+                BoardRoutedCordPath(
+                    id = "overpass",
+                    space = BoardRoutedCordSpace.World,
+                    layer = BoardRoutedCordLayer.Overpass,
+                    commands = listOf(
+                        BoardRoutedCordPathCommand.Move(Point(0f, 0f)),
+                        BoardRoutedCordPathCommand.Line(Point(10f, 0f)),
+                    ),
+                ),
+            ),
+            occlusions = listOf(
+                BoardRoutedCordOcclusion.RadialLip("body", radius = 6f, chordOffset = 2f),
+                BoardRoutedCordOcclusion.FacePatch(
+                    listOf(
+                        BoardRoutedCordPathCommand.Move(Point(15f, 15f)),
+                        BoardRoutedCordPathCommand.Line(Point(25f, 15f)),
+                        BoardRoutedCordPathCommand.Close,
+                    ),
+                ),
+            ),
+        )
+        val geometry = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(0f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!
+
+        val stages = routedArtworkOperations(geometry).map { operation ->
+            when (operation) {
+                is RoutedArtworkOperation.CordLayer -> "cord:${operation.layer}"
+                RoutedArtworkOperation.Face -> "face"
+                is RoutedArtworkOperation.RadialLipFaceRedraw -> "redraw:radialLip"
+                is RoutedArtworkOperation.FacePatchFaceRedraw -> "redraw:facePatch"
+            }
+        }
+
+        assertEquals(
+            listOf(
+                "cord:BehindFace",
+                "face",
+                "cord:AboveFace",
+                "redraw:radialLip",
+                "redraw:facePatch",
+                "cord:Overpass",
+            ),
+            stages,
         )
     }
 
