@@ -77,6 +77,57 @@ final class BoardPackageWriterTests: XCTestCase {
             .appendingPathComponent("Hangboards", isDirectory: true)
     }
 
+    private func routedCordRigJSON() -> [String: Any] {
+        [
+            "type": "routed",
+            "sceneSize": ["width": 1000, "height": 500],
+            "sourceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "innerFaceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "style": [
+                "diameter": 12,
+                "outlineColor": "#101010",
+                "baseColor": "#2255AA",
+                "braidColors": ["#FFD000", "#0055CC"],
+            ],
+            "ports": [
+                ["id": "body-left", "space": "body", "point": ["x": 180, "y": 330]],
+                ["id": "body-right", "space": "body", "point": ["x": 820, "y": 330]],
+                ["id": "world-left", "space": "world", "point": ["x": 420, "y": 70]],
+                ["id": "world-right", "space": "world", "point": ["x": 580, "y": 70]],
+            ],
+            "tensionGroups": [[
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "screenOrder",
+                "layer": "behindFace",
+            ]],
+            "paths": [[
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    ["command": "move", "to": [180, 330]],
+                    ["command": "quad", "control": [500, 470], "to": [820, 330]],
+                ],
+            ]],
+            "occlusions": [[
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 22,
+                "chordOffset": 6,
+            ], [
+                "type": "facePatch",
+                "commands": [
+                    ["command": "move", "to": [800, 310]],
+                    ["command": "line", "to": [840, 310]],
+                    ["command": "line", "to": [840, 350]],
+                    ["command": "close"],
+                ],
+            ]],
+        ]
+    }
+
     private func makePiece(
         frame: BoardPackageFrameDocument = BoardPackageFrameDocument(x: 0, y: 0, width: 1, height: 1),
         shape: BoardGeometryShapeDocument? = nil,
@@ -1125,6 +1176,87 @@ final class BoardPackageWriterTests: XCTestCase {
                 "type", "sceneSize", "sourceFrame", "innerFaceFrame",
                 "attachmentPoints", "pullPoint", "eyeletRadius",
             ]
+        )
+    }
+
+    func testRoutedCordRigRoundTripsWithoutDroppingRequiredArraysOrPathCommands() throws {
+        let source = try BoardPackageWriter.data(for: makeDocument())
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: source) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        let expectedRig = routedCordRigJSON()
+        presentations[0]["cordRig"] = expectedRig
+        payload["presentations"] = presentations
+
+        let document = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+        let encodedPayload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let encodedPresentations = try XCTUnwrap(
+            encodedPayload["presentations"] as? [[String: Any]]
+        )
+
+        XCTAssertEqual(redecoded, document)
+        XCTAssertEqual(
+            encodedPresentations[0]["cordRig"] as? NSDictionary,
+            expectedRig as NSDictionary
+        )
+        guard case .routed(let rig) = try XCTUnwrap(redecoded.presentations[0].cordRig) else {
+            return XCTFail("Expected routed cord rig")
+        }
+        XCTAssertEqual(rig.paths[0].commands, [
+            .move(to: BoardCordPoint(x: 180, y: 330)),
+            .quad(
+                control: BoardCordPoint(x: 500, y: 470),
+                to: BoardCordPoint(x: 820, y: 330)
+            ),
+        ])
+        XCTAssertEqual(rig.occlusions.count, 2)
+    }
+
+    func testWriterRejectsProgrammaticallyInvalidRoutedCordTopology() throws {
+        let source = try BoardPackageWriter.data(for: makeDocument())
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: source) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        presentations[0]["cordRig"] = routedCordRigJSON()
+        payload["presentations"] = presentations
+        var document = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        guard case .routed(let rig) = try XCTUnwrap(document.presentations[0].cordRig) else {
+            return XCTFail("Expected routed cord rig")
+        }
+        document.presentations[0].cordRig = .routed(
+            BoardRoutedCordRig(
+                sceneSize: rig.sceneSize,
+                sourceFrame: rig.sourceFrame,
+                innerFaceFrame: rig.innerFaceFrame,
+                style: rig.style,
+                ports: rig.ports,
+                tensionGroups: [
+                    BoardRoutedCordTensionGroup(
+                        id: "main",
+                        bodyPortIDs: ["body-right"],
+                        worldPortIDs: ["world-right"],
+                        pairing: .declared,
+                        layer: .behindFace
+                    ),
+                ],
+                paths: rig.paths,
+                occlusions: rig.occlusions
+            )
+        )
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front.cordRig.occlusions[0] radialLip body port must have exactly one incident tension-group span"
         )
     }
 

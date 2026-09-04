@@ -816,6 +816,224 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testRoutedCordRigLoadsEveryStructuralElementAndIsInheritedByAlias() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            presentations[0]["cordRig"] = self.routedCordRigJSON()
+            presentations.append([
+                "id": "front-quarter-turn",
+                "name": "Front quarter turn",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1,
+                "default": false,
+                "sourcePresentationID": "front",
+                "rotationDegrees": 90,
+            ])
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let canonical = try XCTUnwrap(board.presentation(id: "front"))
+        let alias = try XCTUnwrap(board.presentation(id: "front-quarter-turn"))
+        guard case .routed(let rig) = try XCTUnwrap(canonical.cordRig) else {
+            return XCTFail("Expected routed cord rig")
+        }
+
+        XCTAssertEqual(
+            rig.style,
+            BoardRoutedCordStyle(
+                diameter: 12,
+                outlineColor: "#101010",
+                baseColor: "#2255AA",
+                braidColors: ["#FFD000", "#0055CC"]
+            )
+        )
+        XCTAssertEqual(rig.sceneSize, BoardCordSize(width: 1000, height: 1000))
+        XCTAssertEqual(rig.sourceFrame, BoardCordRect(x: 0, y: 250, width: 1000, height: 500))
+        XCTAssertEqual(rig.innerFaceFrame, BoardCordRect(x: 0, y: 0, width: 1000, height: 500))
+        XCTAssertEqual(rig.ports, [
+            BoardRoutedCordPort(
+                id: "body-left",
+                space: .body,
+                point: BoardCordPoint(x: 180, y: 330)
+            ),
+            BoardRoutedCordPort(
+                id: "body-right",
+                space: .body,
+                point: BoardCordPoint(x: 820, y: 330)
+            ),
+            BoardRoutedCordPort(
+                id: "world-left",
+                space: .world,
+                point: BoardCordPoint(x: 420, y: 70)
+            ),
+            BoardRoutedCordPort(
+                id: "world-right",
+                space: .world,
+                point: BoardCordPoint(x: 580, y: 70)
+            ),
+        ])
+        XCTAssertEqual(rig.tensionGroups, [
+            BoardRoutedCordTensionGroup(
+                id: "main",
+                bodyPortIDs: ["body-left", "body-right"],
+                worldPortIDs: ["world-left", "world-right"],
+                pairing: .screenOrder,
+                layer: .behindFace
+            ),
+        ])
+        XCTAssertEqual(rig.paths, [
+            BoardRoutedCordPath(
+                id: "return-bight",
+                space: .body,
+                layer: .aboveFace,
+                commands: [
+                    .move(to: BoardCordPoint(x: 180, y: 330)),
+                    .quad(
+                        control: BoardCordPoint(x: 500, y: 470),
+                        to: BoardCordPoint(x: 820, y: 330)
+                    ),
+                ]
+            ),
+        ])
+        XCTAssertEqual(rig.occlusions, [
+            .radialLip(
+                BoardRoutedCordRadialLip(
+                    bodyPortID: "body-left",
+                    radius: 22,
+                    chordOffset: 6
+                )
+            ),
+            .facePatch(
+                BoardRoutedCordFacePatch(commands: [
+                    .move(to: BoardCordPoint(x: 800, y: 310)),
+                    .line(to: BoardCordPoint(x: 840, y: 310)),
+                    .line(to: BoardCordPoint(x: 840, y: 350)),
+                    .close,
+                ])
+            ),
+        ])
+        XCTAssertNil(alias.cordRig)
+        XCTAssertEqual(board.resolvedCordRig(for: alias), .routed(rig))
+    }
+
+    func testStoreRejectsInvalidRoutedCordStructure() throws {
+        let cases: [((inout [String: Any]) throws -> Void, String)] = [
+            (
+                { rig in
+                    var style = try XCTUnwrap(rig["style"] as? [String: Any])
+                    style["baseColor"] = "blue"
+                    rig["style"] = style
+                },
+                "presentation front.cordRig.style colors must use #RRGGBB"
+            ),
+            (
+                { rig in
+                    var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+                    ports.append(ports[0])
+                    rig["ports"] = ports
+                },
+                "presentation front.cordRig.ports must have unique IDs"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["bodyPortIDs"] = [String]()
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.tensionGroups[0] port lists must be nonempty"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["worldPortIDs"] = ["world-left"]
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.tensionGroups[0] port lists must have equal cardinality"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["worldPortIDs"] = ["body-left", "world-right"]
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.tensionGroups[0].worldPortIDs must reference world ports"
+            ),
+            (
+                { rig in
+                    var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+                    paths[0]["commands"] = [
+                        ["command": "move", "to": [180, 330]],
+                        ["command": "move", "to": [820, 330]],
+                    ]
+                    rig["paths"] = paths
+                },
+                "presentation front.cordRig.paths[0].commands must begin with exactly one move command"
+            ),
+            (
+                { rig in
+                    var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+                    paths[0]["commands"] = [
+                        ["command": "move", "to": [180, 330]],
+                        ["command": "close"],
+                    ]
+                    rig["paths"] = paths
+                },
+                "presentation front.cordRig.paths[0].commands must contain a drawing segment"
+            ),
+            (
+                { rig in
+                    var occlusions = try XCTUnwrap(rig["occlusions"] as? [[String: Any]])
+                    var commands = try XCTUnwrap(occlusions[1]["commands"] as? [[String: Any]])
+                    commands.removeLast()
+                    occlusions[1]["commands"] = commands
+                    rig["occlusions"] = occlusions
+                },
+                "presentation front.cordRig.occlusions[1] facePatch commands must be closed"
+            ),
+            (
+                { rig in
+                    var occlusions = try XCTUnwrap(rig["occlusions"] as? [[String: Any]])
+                    occlusions[0]["chordOffset"] = 22
+                    rig["occlusions"] = occlusions
+                },
+                "presentation front.cordRig.occlusions[0] must satisfy 0 < chordOffset < radius"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["bodyPortIDs"] = ["body-right"]
+                    groups[0]["worldPortIDs"] = ["world-right"]
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.occlusions[0] radialLip body port must have exactly one incident tension-group span"
+            ),
+        ]
+
+        for (mutation, reason) in cases {
+            let fixture = try makeMultiPresentationFixtureBundle { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                board["aspectRatio"] = 1
+                presentations[0]["aspectRatio"] = 1
+                var rig = self.routedCordRigJSON()
+                try mutation(&rig)
+                presentations[0]["cordRig"] = rig
+                board["presentations"] = presentations
+            }
+            defer { fixture.remove() }
+
+            assertInvalidPackage(
+                try BoardPackageStore(bundle: fixture.bundle),
+                reason: reason,
+                file: #filePath,
+                line: #line
+            )
+        }
+    }
+
     func testStoreRejectsDirectTwoAnchorCordStrokeOutsideScene() throws {
         let fixture = try makeMultiPresentationFixtureBundle { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
@@ -2821,6 +3039,57 @@ final class BoardPackageStoreTests: XCTestCase {
 
     private func presentationBytes() throws -> Data {
         try pngFixture(named: "validTwoByOneBase64")
+    }
+
+    private func routedCordRigJSON() -> [String: Any] {
+        [
+            "type": "routed",
+            "sceneSize": ["width": 1000, "height": 1000],
+            "sourceFrame": ["x": 0, "y": 250, "width": 1000, "height": 500],
+            "innerFaceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "style": [
+                "diameter": 12,
+                "outlineColor": "#101010",
+                "baseColor": "#2255AA",
+                "braidColors": ["#FFD000", "#0055CC"],
+            ],
+            "ports": [
+                ["id": "body-left", "space": "body", "point": ["x": 180, "y": 330]],
+                ["id": "body-right", "space": "body", "point": ["x": 820, "y": 330]],
+                ["id": "world-left", "space": "world", "point": ["x": 420, "y": 70]],
+                ["id": "world-right", "space": "world", "point": ["x": 580, "y": 70]],
+            ],
+            "tensionGroups": [[
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "screenOrder",
+                "layer": "behindFace",
+            ]],
+            "paths": [[
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    ["command": "move", "to": [180, 330]],
+                    ["command": "quad", "control": [500, 470], "to": [820, 330]],
+                ],
+            ]],
+            "occlusions": [[
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 22,
+                "chordOffset": 6,
+            ], [
+                "type": "facePatch",
+                "commands": [
+                    ["command": "move", "to": [800, 310]],
+                    ["command": "line", "to": [840, 310]],
+                    ["command": "line", "to": [840, 350]],
+                    ["command": "close"],
+                ],
+            ]],
+        ]
     }
 
     private func squarePresentationBytes() throws -> Data {

@@ -28,6 +28,28 @@ struct BoardCordRect: Hashable {
 
 enum BoardCordRig: Hashable {
     case directTwoAnchor(BoardDirectTwoAnchorCordRig)
+    case routed(BoardRoutedCordRig)
+
+    var sceneSize: BoardCordSize {
+        switch self {
+        case .directTwoAnchor(let rig): rig.sceneSize
+        case .routed(let rig): rig.sceneSize
+        }
+    }
+
+    var sourceFrame: BoardCordRect {
+        switch self {
+        case .directTwoAnchor(let rig): rig.sourceFrame
+        case .routed(let rig): rig.sourceFrame
+        }
+    }
+
+    var innerFaceFrame: BoardCordRect {
+        switch self {
+        case .directTwoAnchor(let rig): rig.innerFaceFrame
+        case .routed(let rig): rig.innerFaceFrame
+        }
+    }
 }
 
 struct BoardDirectTwoAnchorCordRig: Hashable {
@@ -37,6 +59,661 @@ struct BoardDirectTwoAnchorCordRig: Hashable {
     let attachmentPoints: [BoardCordPoint]
     let pullPoint: BoardCordPoint
     let eyeletRadius: CGFloat
+}
+
+enum BoardRoutedCordSpace: String, Decodable, Hashable {
+    case body
+    case world
+}
+
+enum BoardRoutedCordLayer: String, Decodable, Hashable {
+    case behindFace
+    case aboveFace
+    case overpass
+}
+
+enum BoardRoutedCordPairing: String, Decodable, Hashable {
+    case declared
+    case screenOrder
+}
+
+struct BoardRoutedCordStyle: Hashable {
+    let diameter: CGFloat
+    let outlineColor: String
+    let baseColor: String
+    let braidColors: [String]
+}
+
+struct BoardRoutedCordPort: Hashable {
+    let id: String
+    let space: BoardRoutedCordSpace
+    let point: BoardCordPoint
+}
+
+struct BoardRoutedCordTensionGroup: Hashable {
+    let id: String
+    let bodyPortIDs: [String]
+    let worldPortIDs: [String]
+    let pairing: BoardRoutedCordPairing
+    let layer: BoardRoutedCordLayer
+}
+
+enum BoardRoutedCordPathCommand: Hashable {
+    case move(to: BoardCordPoint)
+    case line(to: BoardCordPoint)
+    case quad(control: BoardCordPoint, to: BoardCordPoint)
+    case curve(
+        control1: BoardCordPoint,
+        control2: BoardCordPoint,
+        to: BoardCordPoint
+    )
+    case close
+}
+
+struct BoardRoutedCordPath: Hashable {
+    let id: String
+    let space: BoardRoutedCordSpace
+    let layer: BoardRoutedCordLayer
+    let commands: [BoardRoutedCordPathCommand]
+}
+
+struct BoardRoutedCordRadialLip: Hashable {
+    let bodyPortID: String
+    let radius: CGFloat
+    let chordOffset: CGFloat
+}
+
+struct BoardRoutedCordFacePatch: Hashable {
+    let commands: [BoardRoutedCordPathCommand]
+}
+
+enum BoardRoutedCordOcclusion: Hashable {
+    case radialLip(BoardRoutedCordRadialLip)
+    case facePatch(BoardRoutedCordFacePatch)
+}
+
+struct BoardRoutedCordRig: Hashable {
+    let sceneSize: BoardCordSize
+    let sourceFrame: BoardCordRect
+    let innerFaceFrame: BoardCordRect
+    let style: BoardRoutedCordStyle
+    let ports: [BoardRoutedCordPort]
+    let tensionGroups: [BoardRoutedCordTensionGroup]
+    let paths: [BoardRoutedCordPath]
+    let occlusions: [BoardRoutedCordOcclusion]
+}
+
+private struct BoardRoutedCordAnyCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        self.intValue = nil
+    }
+
+    init?(intValue: Int) {
+        self.stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
+private extension Decoder {
+    func rejectUnknownRoutedCordKeys(_ allowedKeys: Set<String>) throws {
+        let container = try container(keyedBy: BoardRoutedCordAnyCodingKey.self)
+        guard let unknownKey = container.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) else {
+            return
+        }
+        throw DecodingError.dataCorrupted(
+            DecodingError.Context(
+                codingPath: codingPath + [unknownKey],
+                debugDescription: "Unknown key \(unknownKey.stringValue)"
+            )
+        )
+    }
+}
+
+private struct BoardRoutedCordPointDocument: Decodable {
+    let point: BoardCordPoint
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys(["x", "y"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        point = BoardCordPoint(
+            x: try CGFloat(container.decode(Double.self, forKey: .x)),
+            y: try CGFloat(container.decode(Double.self, forKey: .y))
+        )
+    }
+}
+
+private struct BoardRoutedCordSizeDocument: Decodable {
+    let size: BoardCordSize
+
+    private enum CodingKeys: String, CodingKey {
+        case width
+        case height
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys(["width", "height"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        size = BoardCordSize(
+            width: try CGFloat(container.decode(Double.self, forKey: .width)),
+            height: try CGFloat(container.decode(Double.self, forKey: .height))
+        )
+    }
+}
+
+private struct BoardRoutedCordRectDocument: Decodable {
+    let rect: BoardCordRect
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+        case width
+        case height
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys(["x", "y", "width", "height"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        rect = BoardCordRect(
+            x: try CGFloat(container.decode(Double.self, forKey: .x)),
+            y: try CGFloat(container.decode(Double.self, forKey: .y)),
+            width: try CGFloat(container.decode(Double.self, forKey: .width)),
+            height: try CGFloat(container.decode(Double.self, forKey: .height))
+        )
+    }
+}
+
+private struct BoardRoutedCordStyleDocument: Decodable {
+    let style: BoardRoutedCordStyle
+
+    private enum CodingKeys: String, CodingKey {
+        case diameter
+        case outlineColor
+        case baseColor
+        case braidColors
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys([
+            "diameter", "outlineColor", "baseColor", "braidColors",
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        style = BoardRoutedCordStyle(
+            diameter: try CGFloat(container.decode(Double.self, forKey: .diameter)),
+            outlineColor: try container.decode(String.self, forKey: .outlineColor),
+            baseColor: try container.decode(String.self, forKey: .baseColor),
+            braidColors: try container.decode([String].self, forKey: .braidColors)
+        )
+    }
+}
+
+private struct BoardRoutedCordPortDocument: Decodable {
+    let port: BoardRoutedCordPort
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case space
+        case point
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys(["id", "space", "point"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        port = BoardRoutedCordPort(
+            id: try container.decode(String.self, forKey: .id),
+            space: try container.decode(BoardRoutedCordSpace.self, forKey: .space),
+            point: try container.decode(
+                BoardRoutedCordPointDocument.self,
+                forKey: .point
+            ).point
+        )
+    }
+}
+
+private struct BoardRoutedCordTensionGroupDocument: Decodable {
+    let tensionGroup: BoardRoutedCordTensionGroup
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case bodyPortIDs
+        case worldPortIDs
+        case pairing
+        case layer
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys([
+            "id", "bodyPortIDs", "worldPortIDs", "pairing", "layer",
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        tensionGroup = BoardRoutedCordTensionGroup(
+            id: try container.decode(String.self, forKey: .id),
+            bodyPortIDs: try container.decode([String].self, forKey: .bodyPortIDs),
+            worldPortIDs: try container.decode([String].self, forKey: .worldPortIDs),
+            pairing: try container.decode(BoardRoutedCordPairing.self, forKey: .pairing),
+            layer: try container.decode(BoardRoutedCordLayer.self, forKey: .layer)
+        )
+    }
+}
+
+private struct BoardRoutedCordPathCommandDocument: Decodable {
+    let command: BoardRoutedCordPathCommand
+
+    private enum CodingKeys: String, CodingKey {
+        case command
+        case to
+        case control
+        case control1
+        case control2
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let commandName = try container.decode(String.self, forKey: .command)
+        switch commandName {
+        case "move":
+            try decoder.rejectUnknownRoutedCordKeys(["command", "to"])
+            command = .move(to: try Self.point(forKey: .to, in: container))
+        case "line":
+            try decoder.rejectUnknownRoutedCordKeys(["command", "to"])
+            command = .line(to: try Self.point(forKey: .to, in: container))
+        case "quad":
+            try decoder.rejectUnknownRoutedCordKeys(["command", "control", "to"])
+            command = .quad(
+                control: try Self.point(forKey: .control, in: container),
+                to: try Self.point(forKey: .to, in: container)
+            )
+        case "curve":
+            try decoder.rejectUnknownRoutedCordKeys([
+                "command", "control1", "control2", "to",
+            ])
+            command = .curve(
+                control1: try Self.point(forKey: .control1, in: container),
+                control2: try Self.point(forKey: .control2, in: container),
+                to: try Self.point(forKey: .to, in: container)
+            )
+        case "close":
+            try decoder.rejectUnknownRoutedCordKeys(["command"])
+            command = .close
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .command,
+                in: container,
+                debugDescription: "Unsupported routed cord path command \(commandName)"
+            )
+        }
+    }
+
+    private static func point(
+        forKey key: CodingKeys,
+        in container: KeyedDecodingContainer<CodingKeys>
+    ) throws -> BoardCordPoint {
+        let coordinates = try container.decode([Double].self, forKey: key)
+        guard coordinates.count == 2 else {
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: container,
+                debugDescription: "Point must contain exactly two coordinates"
+            )
+        }
+        return BoardCordPoint(x: CGFloat(coordinates[0]), y: CGFloat(coordinates[1]))
+    }
+}
+
+private struct BoardRoutedCordPathDocument: Decodable {
+    let path: BoardRoutedCordPath
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case space
+        case layer
+        case commands
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys(["id", "space", "layer", "commands"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        path = BoardRoutedCordPath(
+            id: try container.decode(String.self, forKey: .id),
+            space: try container.decode(BoardRoutedCordSpace.self, forKey: .space),
+            layer: try container.decode(BoardRoutedCordLayer.self, forKey: .layer),
+            commands: try container.decode(
+                [BoardRoutedCordPathCommandDocument].self,
+                forKey: .commands
+            ).map(\.command)
+        )
+    }
+}
+
+private struct BoardRoutedCordOcclusionDocument: Decodable {
+    let occlusion: BoardRoutedCordOcclusion
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case bodyPortID
+        case radius
+        case chordOffset
+        case commands
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "radialLip":
+            try decoder.rejectUnknownRoutedCordKeys([
+                "type", "bodyPortID", "radius", "chordOffset",
+            ])
+            occlusion = .radialLip(
+                BoardRoutedCordRadialLip(
+                    bodyPortID: try container.decode(String.self, forKey: .bodyPortID),
+                    radius: try CGFloat(container.decode(Double.self, forKey: .radius)),
+                    chordOffset: try CGFloat(
+                        container.decode(Double.self, forKey: .chordOffset)
+                    )
+                )
+            )
+        case "facePatch":
+            try decoder.rejectUnknownRoutedCordKeys(["type", "commands"])
+            occlusion = .facePatch(
+                BoardRoutedCordFacePatch(
+                    commands: try container.decode(
+                        [BoardRoutedCordPathCommandDocument].self,
+                        forKey: .commands
+                    ).map(\.command)
+                )
+            )
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported routed cord occlusion type \(type)"
+            )
+        }
+    }
+}
+
+struct BoardRoutedCordRigDocument: Decodable {
+    let rig: BoardRoutedCordRig
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case sceneSize
+        case sourceFrame
+        case innerFaceFrame
+        case style
+        case ports
+        case tensionGroups
+        case paths
+        case occlusions
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys([
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame", "style",
+            "ports", "tensionGroups", "paths", "occlusions",
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        guard type == "routed" else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+        rig = BoardRoutedCordRig(
+            sceneSize: try container.decode(
+                BoardRoutedCordSizeDocument.self,
+                forKey: .sceneSize
+            ).size,
+            sourceFrame: try container.decode(
+                BoardRoutedCordRectDocument.self,
+                forKey: .sourceFrame
+            ).rect,
+            innerFaceFrame: try container.decode(
+                BoardRoutedCordRectDocument.self,
+                forKey: .innerFaceFrame
+            ).rect,
+            style: try container.decode(
+                BoardRoutedCordStyleDocument.self,
+                forKey: .style
+            ).style,
+            ports: try container.decode(
+                [BoardRoutedCordPortDocument].self,
+                forKey: .ports
+            ).map(\.port),
+            tensionGroups: try container.decode(
+                [BoardRoutedCordTensionGroupDocument].self,
+                forKey: .tensionGroups
+            ).map(\.tensionGroup),
+            paths: try container.decode(
+                [BoardRoutedCordPathDocument].self,
+                forKey: .paths
+            ).map(\.path),
+            occlusions: try container.decode(
+                [BoardRoutedCordOcclusionDocument].self,
+                forKey: .occlusions
+            ).map(\.occlusion)
+        )
+    }
+}
+
+enum BoardRoutedCordRigValidation {
+    static func failureReason(for rig: BoardRoutedCordRig) -> String? {
+        guard rig.style.diameter.isFinite, rig.style.diameter > 0 else {
+            return "cordRig.style.diameter must be finite and positive"
+        }
+        guard isHexColor(rig.style.outlineColor),
+              isHexColor(rig.style.baseColor),
+              rig.style.braidColors.allSatisfy(isHexColor) else {
+            return "cordRig.style colors must use #RRGGBB"
+        }
+        guard rig.style.braidColors.count == 2 else {
+            return "cordRig.style.braidColors must contain exactly two colors"
+        }
+
+        guard !rig.ports.isEmpty else {
+            return "cordRig.ports must be nonempty"
+        }
+        for (index, port) in rig.ports.enumerated() {
+            guard isIdentifier(port.id) else {
+                return "cordRig.ports[\(index)].id must be identifier-shaped"
+            }
+            guard port.point.x.isFinite, port.point.y.isFinite else {
+                return "cordRig.ports[\(index)].point must be finite"
+            }
+        }
+        guard Set(rig.ports.map(\.id)).count == rig.ports.count else {
+            return "cordRig.ports must have unique IDs"
+        }
+        let portsByID = Dictionary(uniqueKeysWithValues: rig.ports.map { ($0.id, $0) })
+
+        guard !rig.tensionGroups.isEmpty else {
+            return "cordRig.tensionGroups must be nonempty"
+        }
+        for (index, group) in rig.tensionGroups.enumerated() {
+            let label = "cordRig.tensionGroups[\(index)]"
+            guard isIdentifier(group.id) else {
+                return "\(label).id must be identifier-shaped"
+            }
+            guard !group.bodyPortIDs.isEmpty, !group.worldPortIDs.isEmpty else {
+                return "\(label) port lists must be nonempty"
+            }
+            guard group.bodyPortIDs.count == group.worldPortIDs.count else {
+                return "\(label) port lists must have equal cardinality"
+            }
+            guard Set(group.bodyPortIDs).count == group.bodyPortIDs.count else {
+                return "\(label).bodyPortIDs must be unique"
+            }
+            guard Set(group.worldPortIDs).count == group.worldPortIDs.count else {
+                return "\(label).worldPortIDs must be unique"
+            }
+            guard group.bodyPortIDs.allSatisfy(isIdentifier),
+                  group.worldPortIDs.allSatisfy(isIdentifier) else {
+                return "\(label) port IDs must be identifier-shaped"
+            }
+            guard group.bodyPortIDs.allSatisfy({ portsByID[$0]?.space == .body }) else {
+                return "\(label).bodyPortIDs must reference body ports"
+            }
+            guard group.worldPortIDs.allSatisfy({ portsByID[$0]?.space == .world }) else {
+                return "\(label).worldPortIDs must reference world ports"
+            }
+        }
+        guard Set(rig.tensionGroups.map(\.id)).count == rig.tensionGroups.count else {
+            return "cordRig.tensionGroups must have unique IDs"
+        }
+
+        for (index, path) in rig.paths.enumerated() {
+            let label = "cordRig.paths[\(index)]"
+            guard isIdentifier(path.id) else {
+                return "\(label).id must be identifier-shaped"
+            }
+            if let failure = pathFailureReason(
+                commands: path.commands,
+                label: "\(label).commands",
+                requiresClosed: false
+            ) {
+                return failure
+            }
+        }
+        guard Set(rig.paths.map(\.id)).count == rig.paths.count else {
+            return "cordRig.paths must have unique IDs"
+        }
+
+        for (index, occlusion) in rig.occlusions.enumerated() {
+            let label = "cordRig.occlusions[\(index)]"
+            switch occlusion {
+            case .radialLip(let lip):
+                guard isIdentifier(lip.bodyPortID),
+                      portsByID[lip.bodyPortID]?.space == .body else {
+                    return "\(label) radialLip must reference a body port"
+                }
+                guard lip.radius.isFinite,
+                      lip.chordOffset.isFinite,
+                      lip.chordOffset > 0,
+                      lip.chordOffset < lip.radius else {
+                    return "\(label) must satisfy 0 < chordOffset < radius"
+                }
+                let incidentSpanCount = rig.tensionGroups.reduce(into: 0) { count, group in
+                    count += group.bodyPortIDs.filter { $0 == lip.bodyPortID }.count
+                }
+                guard incidentSpanCount == 1 else {
+                    return "\(label) radialLip body port must have exactly one incident tension-group span"
+                }
+            case .facePatch(let patch):
+                if let failure = pathFailureReason(
+                    commands: patch.commands,
+                    label: "\(label) facePatch commands",
+                    requiresClosed: true
+                ) {
+                    return failure
+                }
+            }
+        }
+        return nil
+    }
+
+    private static func pathFailureReason(
+        commands: [BoardRoutedCordPathCommand],
+        label: String,
+        requiresClosed: Bool
+    ) -> String? {
+        guard commands.first?.isMove == true,
+              commands.filter(\.isMove).count == 1 else {
+            return "\(label) must begin with exactly one move command"
+        }
+        let closeIndexes = commands.indices.filter { commands[$0].isClose }
+        guard closeIndexes.isEmpty || closeIndexes == [commands.index(before: commands.endIndex)] else {
+            return "\(label) close command must appear only at the end"
+        }
+        if requiresClosed, commands.last?.isClose != true {
+            return "\(label) must be closed"
+        }
+        guard commands.contains(where: \.isDrawingSegment) else {
+            return "\(label) must contain a drawing segment"
+        }
+        guard commands.allSatisfy(\.hasFiniteCoordinates) else {
+            return "\(label) coordinates must be finite"
+        }
+        return nil
+    }
+
+    private static func isHexColor(_ value: String) -> Bool {
+        let scalars = Array(value.unicodeScalars)
+        guard scalars.count == 7, scalars[0] == "#" else { return false }
+        return scalars.dropFirst().allSatisfy { scalar in
+            (48...57).contains(scalar.value)
+                || (65...70).contains(scalar.value)
+                || (97...102).contains(scalar.value)
+        }
+    }
+
+    private static func isIdentifier(_ value: String) -> Bool {
+        guard let first = value.unicodeScalars.first,
+              let last = value.unicodeScalars.last,
+              isLowercaseASCIIOrDigit(first),
+              isLowercaseASCIIOrDigit(last) else {
+            return false
+        }
+        return value.unicodeScalars.allSatisfy {
+            isLowercaseASCIIOrDigit($0) || $0 == "." || $0 == "_" || $0 == "-"
+        }
+    }
+
+    private static func isLowercaseASCIIOrDigit(_ scalar: Unicode.Scalar) -> Bool {
+        (97...122).contains(scalar.value) || (48...57).contains(scalar.value)
+    }
+}
+
+private extension BoardRoutedCordPathCommand {
+    var isMove: Bool {
+        if case .move = self { return true }
+        return false
+    }
+
+    var isClose: Bool {
+        if case .close = self { return true }
+        return false
+    }
+
+    var isDrawingSegment: Bool {
+        switch self {
+        case .line, .quad, .curve: true
+        case .move, .close: false
+        }
+    }
+
+    var hasFiniteCoordinates: Bool {
+        switch self {
+        case .move(let to), .line(let to):
+            to.hasFiniteCoordinates
+        case .quad(let control, let to):
+            control.hasFiniteCoordinates && to.hasFiniteCoordinates
+        case .curve(let control1, let control2, let to):
+            control1.hasFiniteCoordinates
+                && control2.hasFiniteCoordinates
+                && to.hasFiniteCoordinates
+        case .close:
+            true
+        }
+    }
+}
+
+private extension BoardCordPoint {
+    var hasFiniteCoordinates: Bool {
+        x.isFinite && y.isFinite
+    }
 }
 
 enum BoardCordRigPresentationValidationFailure {

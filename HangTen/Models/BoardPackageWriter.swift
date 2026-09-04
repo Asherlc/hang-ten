@@ -355,6 +355,33 @@ private struct BoardEditableCordRectDocument: Decodable {
 }
 
 private struct BoardEditableCordRigDocument: Decodable {
+    let cordRig: BoardCordRig
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "directTwoAnchor":
+            cordRig = .directTwoAnchor(
+                try BoardEditableDirectTwoAnchorCordRigDocument(from: decoder).rig
+            )
+        case "routed":
+            cordRig = .routed(try BoardRoutedCordRigDocument(from: decoder).rig)
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+    }
+}
+
+private struct BoardEditableDirectTwoAnchorCordRigDocument: Decodable {
     let sceneSize: BoardEditableCordSizeDocument
     let sourceFrame: BoardEditableCordRectDocument
     let innerFaceFrame: BoardEditableCordRectDocument
@@ -409,16 +436,14 @@ private struct BoardEditableCordRigDocument: Decodable {
         eyeletRadius = try container.decode(Double.self, forKey: .eyeletRadius)
     }
 
-    var cordRig: BoardCordRig {
-        .directTwoAnchor(
-            BoardDirectTwoAnchorCordRig(
-                sceneSize: sceneSize.cordSize,
-                sourceFrame: sourceFrame.cordRect,
-                innerFaceFrame: innerFaceFrame.cordRect,
-                attachmentPoints: attachmentPoints.map(\.cordPoint),
-                pullPoint: pullPoint.cordPoint,
-                eyeletRadius: CGFloat(eyeletRadius)
-            )
+    var rig: BoardDirectTwoAnchorCordRig {
+        BoardDirectTwoAnchorCordRig(
+            sceneSize: sceneSize.cordSize,
+            sourceFrame: sourceFrame.cordRect,
+            innerFaceFrame: innerFaceFrame.cordRect,
+            attachmentPoints: attachmentPoints.map(\.cordPoint),
+            pullPoint: pullPoint.cordPoint,
+            eyeletRadius: CGFloat(eyeletRadius)
         )
     }
 }
@@ -1028,53 +1053,56 @@ enum BoardPackageWriter {
         presentation: BoardEditablePresentation,
         in document: BoardEditableDocument
     ) throws {
-        let rig: BoardDirectTwoAnchorCordRig
-        switch cordRig {
-        case .directTwoAnchor(let value):
-            rig = value
-        }
-
-        let sceneSizeIsValid = rig.sceneSize.width.isFinite
-            && rig.sceneSize.height.isFinite
-            && rig.sceneSize.width > 0
-            && rig.sceneSize.height > 0
-        let sourceFrameIsValid = rig.sourceFrame.x.isFinite
-            && rig.sourceFrame.y.isFinite
-            && rig.sourceFrame.width.isFinite
-            && rig.sourceFrame.height.isFinite
-            && rig.sourceFrame.width > 0
-            && rig.sourceFrame.height > 0
-        let innerFaceFrameIsValid = rig.innerFaceFrame.x.isFinite
-            && rig.innerFaceFrame.y.isFinite
-            && rig.innerFaceFrame.width.isFinite
-            && rig.innerFaceFrame.height.isFinite
-            && rig.innerFaceFrame.width > 0
-            && rig.innerFaceFrame.height > 0
+        let sceneSizeIsValid = cordRig.sceneSize.width.isFinite
+            && cordRig.sceneSize.height.isFinite
+            && cordRig.sceneSize.width > 0
+            && cordRig.sceneSize.height > 0
+        let sourceFrameIsValid = cordRig.sourceFrame.x.isFinite
+            && cordRig.sourceFrame.y.isFinite
+            && cordRig.sourceFrame.width.isFinite
+            && cordRig.sourceFrame.height.isFinite
+            && cordRig.sourceFrame.width > 0
+            && cordRig.sourceFrame.height > 0
+        let innerFaceFrameIsValid = cordRig.innerFaceFrame.x.isFinite
+            && cordRig.innerFaceFrame.y.isFinite
+            && cordRig.innerFaceFrame.width.isFinite
+            && cordRig.innerFaceFrame.height.isFinite
+            && cordRig.innerFaceFrame.width > 0
+            && cordRig.innerFaceFrame.height > 0
         guard sceneSizeIsValid, sourceFrameIsValid, innerFaceFrameIsValid else {
             throw invalid(
                 "presentation \(presentation.id).cordRig must contain finite positive sizes",
                 document
             )
         }
-        guard rig.attachmentPoints.count == 2,
-              rig.attachmentPoints.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
-              rig.attachmentPoints[0] != rig.attachmentPoints[1] else {
+        if case .directTwoAnchor(let rig) = cordRig {
+            guard rig.attachmentPoints.count == 2,
+                  rig.attachmentPoints.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+                  rig.attachmentPoints[0] != rig.attachmentPoints[1] else {
+                throw invalid(
+                    "presentation \(presentation.id).cordRig must contain two distinct finite attachment points",
+                    document
+                )
+            }
+            guard rig.pullPoint.x.isFinite,
+                  rig.pullPoint.y.isFinite,
+                  rig.eyeletRadius.isFinite,
+                  rig.eyeletRadius > 0 else {
+                throw invalid(
+                    "presentation \(presentation.id).cordRig pull point must be finite "
+                        + "and eyelet radius must be finite and positive",
+                    document
+                )
+            }
+        }
+        if case .routed(let rig) = cordRig,
+           let reason = BoardRoutedCordRigValidation.failureReason(for: rig) {
             throw invalid(
-                "presentation \(presentation.id).cordRig must contain two distinct finite attachment points",
+                "presentation \(presentation.id).\(reason)",
                 document
             )
         }
-        guard rig.pullPoint.x.isFinite,
-              rig.pullPoint.y.isFinite,
-              rig.eyeletRadius.isFinite,
-              rig.eyeletRadius > 0 else {
-            throw invalid(
-                "presentation \(presentation.id).cordRig pull point must be finite "
-                    + "and eyelet radius must be finite and positive",
-                document
-            )
-        }
-        let sceneAspectRatio = Double(rig.sceneSize.width / rig.sceneSize.height)
+        let sceneAspectRatio = Double(cordRig.sceneSize.width / cordRig.sceneSize.height)
         let relativeError = abs(presentation.aspectRatio - sceneAspectRatio) / sceneAspectRatio
         guard relativeError <= presentationAspectRatioRelativeTolerance else {
             throw invalid(
@@ -1126,7 +1154,7 @@ enum BoardPackageWriter {
                 for piece in hold.geometry {
                     let frame = piece.frame
                     let isInsideCanvas: Bool
-                    if case .directTwoAnchor(let rig) = resolvedCordRig {
+                    if let rig = resolvedCordRig {
                         isInsideCanvas = riggedAliasFrameIsInsideCanvas(
                             frame,
                             rig: rig,
@@ -1157,7 +1185,7 @@ enum BoardPackageWriter {
 
     private static func riggedAliasFrameIsInsideCanvas(
         _ frame: BoardPackageFrameDocument,
-        rig: BoardDirectTwoAnchorCordRig,
+        rig: BoardCordRig,
         anchor: BoardGeometryRotationAnchor,
         rotationDegrees: Double
     ) -> Bool {
@@ -1433,41 +1461,159 @@ enum BoardPackageWriter {
     private static func canonicalCordRigValue(
         _ cordRig: BoardCordRig
     ) -> CanonicalJSONValue {
-        let rig: BoardDirectTwoAnchorCordRig
         switch cordRig {
-        case .directTwoAnchor(let value):
-            rig = value
+        case .directTwoAnchor(let rig):
+            return .object([
+                ("type", .string("directTwoAnchor")),
+                ("sceneSize", canonicalCordSizeValue(rig.sceneSize)),
+                ("sourceFrame", canonicalCordRectValue(rig.sourceFrame)),
+                ("innerFaceFrame", canonicalCordRectValue(rig.innerFaceFrame)),
+                ("attachmentPoints", .array(rig.attachmentPoints.map { point in
+                    canonicalCordPointObjectValue(point)
+                })),
+                ("pullPoint", canonicalCordPointObjectValue(rig.pullPoint)),
+                ("eyeletRadius", .double(Double(rig.eyeletRadius))),
+            ])
+        case .routed(let rig):
+            return .object([
+                ("type", .string("routed")),
+                ("sceneSize", canonicalCordSizeValue(rig.sceneSize)),
+                ("sourceFrame", canonicalCordRectValue(rig.sourceFrame)),
+                ("innerFaceFrame", canonicalCordRectValue(rig.innerFaceFrame)),
+                ("style", .object([
+                    ("diameter", .double(Double(rig.style.diameter))),
+                    ("outlineColor", .string(rig.style.outlineColor)),
+                    ("baseColor", .string(rig.style.baseColor)),
+                    ("braidColors", .array(rig.style.braidColors.map {
+                        .string($0)
+                    })),
+                ])),
+                ("ports", .array(rig.ports.map { port in
+                    .object([
+                        ("id", .string(port.id)),
+                        ("space", .string(port.space.rawValue)),
+                        ("point", canonicalCordPointObjectValue(port.point)),
+                    ])
+                })),
+                ("tensionGroups", .array(rig.tensionGroups.map { group in
+                    .object([
+                        ("id", .string(group.id)),
+                        ("bodyPortIDs", .array(group.bodyPortIDs.map {
+                            .string($0)
+                        })),
+                        ("worldPortIDs", .array(group.worldPortIDs.map {
+                            .string($0)
+                        })),
+                        ("pairing", .string(group.pairing.rawValue)),
+                        ("layer", .string(group.layer.rawValue)),
+                    ])
+                })),
+                ("paths", .array(rig.paths.map { path in
+                    .object([
+                        ("id", .string(path.id)),
+                        ("space", .string(path.space.rawValue)),
+                        ("layer", .string(path.layer.rawValue)),
+                        ("commands", .array(path.commands.map(
+                            canonicalRoutedCordCommandValue
+                        ))),
+                    ])
+                })),
+                ("occlusions", .array(rig.occlusions.map(
+                    canonicalRoutedCordOcclusionValue
+                ))),
+            ])
         }
-        return .object([
-            ("type", .string("directTwoAnchor")),
-            ("sceneSize", .object([
-                ("width", .double(Double(rig.sceneSize.width))),
-                ("height", .double(Double(rig.sceneSize.height))),
-            ])),
-            ("sourceFrame", .object([
-                ("x", .double(Double(rig.sourceFrame.x))),
-                ("y", .double(Double(rig.sourceFrame.y))),
-                ("width", .double(Double(rig.sourceFrame.width))),
-                ("height", .double(Double(rig.sourceFrame.height))),
-            ])),
-            ("innerFaceFrame", .object([
-                ("x", .double(Double(rig.innerFaceFrame.x))),
-                ("y", .double(Double(rig.innerFaceFrame.y))),
-                ("width", .double(Double(rig.innerFaceFrame.width))),
-                ("height", .double(Double(rig.innerFaceFrame.height))),
-            ])),
-            ("attachmentPoints", .array(rig.attachmentPoints.map { point in
-                .object([
-                    ("x", .double(Double(point.x))),
-                    ("y", .double(Double(point.y))),
-                ])
-            })),
-            ("pullPoint", .object([
-                ("x", .double(Double(rig.pullPoint.x))),
-                ("y", .double(Double(rig.pullPoint.y))),
-            ])),
-            ("eyeletRadius", .double(Double(rig.eyeletRadius))),
+    }
+
+    private static func canonicalCordSizeValue(
+        _ size: BoardCordSize
+    ) -> CanonicalJSONValue {
+        .object([
+            ("width", .double(Double(size.width))),
+            ("height", .double(Double(size.height))),
         ])
+    }
+
+    private static func canonicalCordRectValue(
+        _ rect: BoardCordRect
+    ) -> CanonicalJSONValue {
+        .object([
+            ("x", .double(Double(rect.x))),
+            ("y", .double(Double(rect.y))),
+            ("width", .double(Double(rect.width))),
+            ("height", .double(Double(rect.height))),
+        ])
+    }
+
+    private static func canonicalCordPointObjectValue(
+        _ point: BoardCordPoint
+    ) -> CanonicalJSONValue {
+        .object([
+            ("x", .double(Double(point.x))),
+            ("y", .double(Double(point.y))),
+        ])
+    }
+
+    private static func canonicalCordPointArrayValue(
+        _ point: BoardCordPoint
+    ) -> CanonicalJSONValue {
+        .array([
+            .double(Double(point.x)),
+            .double(Double(point.y)),
+        ])
+    }
+
+    private static func canonicalRoutedCordCommandValue(
+        _ command: BoardRoutedCordPathCommand
+    ) -> CanonicalJSONValue {
+        switch command {
+        case .move(let to):
+            .object([
+                ("command", .string("move")),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .line(let to):
+            .object([
+                ("command", .string("line")),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .quad(let control, let to):
+            .object([
+                ("command", .string("quad")),
+                ("control", canonicalCordPointArrayValue(control)),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .curve(let control1, let control2, let to):
+            .object([
+                ("command", .string("curve")),
+                ("control1", canonicalCordPointArrayValue(control1)),
+                ("control2", canonicalCordPointArrayValue(control2)),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .close:
+            .object([("command", .string("close"))])
+        }
+    }
+
+    private static func canonicalRoutedCordOcclusionValue(
+        _ occlusion: BoardRoutedCordOcclusion
+    ) -> CanonicalJSONValue {
+        switch occlusion {
+        case .radialLip(let lip):
+            .object([
+                ("type", .string("radialLip")),
+                ("bodyPortID", .string(lip.bodyPortID)),
+                ("radius", .double(Double(lip.radius))),
+                ("chordOffset", .double(Double(lip.chordOffset))),
+            ])
+        case .facePatch(let patch):
+            .object([
+                ("type", .string("facePatch")),
+                ("commands", .array(patch.commands.map(
+                    canonicalRoutedCordCommandValue
+                ))),
+            ])
+        }
     }
 
     private static func canonicalPositionValue(_ position: BoardPosition) -> CanonicalJSONValue {

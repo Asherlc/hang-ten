@@ -161,7 +161,7 @@ struct BoardPackageStore {
                 }
                 let declaredImageRatio: Double
                 let aspectMismatchReason: String?
-                if case .directTwoAnchor(let rig) = Self.resolvedCordRig(
+                if let rig = Self.resolvedCordRig(
                     for: presentation,
                     in: presentations
                 ) {
@@ -790,53 +790,56 @@ struct BoardPackageStore {
         presentation: BoardPackagePresentationDocument,
         boardID: String
     ) throws {
-        let rig: BoardDirectTwoAnchorCordRig
-        switch cordRig {
-        case .directTwoAnchor(let value):
-            rig = value
-        }
-
-        let sceneSizeIsValid = rig.sceneSize.width.isFinite
-            && rig.sceneSize.height.isFinite
-            && rig.sceneSize.width > 0
-            && rig.sceneSize.height > 0
-        let sourceFrameIsValid = rig.sourceFrame.x.isFinite
-            && rig.sourceFrame.y.isFinite
-            && rig.sourceFrame.width.isFinite
-            && rig.sourceFrame.height.isFinite
-            && rig.sourceFrame.width > 0
-            && rig.sourceFrame.height > 0
-        let innerFaceFrameIsValid = rig.innerFaceFrame.x.isFinite
-            && rig.innerFaceFrame.y.isFinite
-            && rig.innerFaceFrame.width.isFinite
-            && rig.innerFaceFrame.height.isFinite
-            && rig.innerFaceFrame.width > 0
-            && rig.innerFaceFrame.height > 0
+        let sceneSizeIsValid = cordRig.sceneSize.width.isFinite
+            && cordRig.sceneSize.height.isFinite
+            && cordRig.sceneSize.width > 0
+            && cordRig.sceneSize.height > 0
+        let sourceFrameIsValid = cordRig.sourceFrame.x.isFinite
+            && cordRig.sourceFrame.y.isFinite
+            && cordRig.sourceFrame.width.isFinite
+            && cordRig.sourceFrame.height.isFinite
+            && cordRig.sourceFrame.width > 0
+            && cordRig.sourceFrame.height > 0
+        let innerFaceFrameIsValid = cordRig.innerFaceFrame.x.isFinite
+            && cordRig.innerFaceFrame.y.isFinite
+            && cordRig.innerFaceFrame.width.isFinite
+            && cordRig.innerFaceFrame.height.isFinite
+            && cordRig.innerFaceFrame.width > 0
+            && cordRig.innerFaceFrame.height > 0
         guard sceneSizeIsValid, sourceFrameIsValid, innerFaceFrameIsValid else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "presentation \(presentation.id).cordRig must contain finite positive sizes"
             )
         }
-        guard rig.attachmentPoints.count == 2,
-              rig.attachmentPoints.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
-              rig.attachmentPoints[0] != rig.attachmentPoints[1] else {
+        if case .directTwoAnchor(let rig) = cordRig {
+            guard rig.attachmentPoints.count == 2,
+                  rig.attachmentPoints.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+                  rig.attachmentPoints[0] != rig.attachmentPoints[1] else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "presentation \(presentation.id).cordRig must contain two distinct finite attachment points"
+                )
+            }
+            guard rig.pullPoint.x.isFinite,
+                  rig.pullPoint.y.isFinite,
+                  rig.eyeletRadius.isFinite,
+                  rig.eyeletRadius > 0 else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "presentation \(presentation.id).cordRig pull point must be "
+                        + "finite and eyelet radius must be finite and positive"
+                )
+            }
+        }
+        if case .routed(let rig) = cordRig,
+           let reason = BoardRoutedCordRigValidation.failureReason(for: rig) {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
-                reason: "presentation \(presentation.id).cordRig must contain two distinct finite attachment points"
+                reason: "presentation \(presentation.id).\(reason)"
             )
         }
-        guard rig.pullPoint.x.isFinite,
-              rig.pullPoint.y.isFinite,
-              rig.eyeletRadius.isFinite,
-              rig.eyeletRadius > 0 else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "presentation \(presentation.id).cordRig pull point must be "
-                    + "finite and eyelet radius must be finite and positive"
-            )
-        }
-        let sceneAspectRatio = Double(rig.sceneSize.width / rig.sceneSize.height)
+        let sceneAspectRatio = Double(cordRig.sceneSize.width / cordRig.sceneSize.height)
         guard presentationAspectRatiosMatch(
             presentation.aspectRatio,
             sceneAspectRatio
@@ -1249,7 +1252,7 @@ struct BoardPackageStore {
                 for piece in hold.geometry {
                     let frame = piece.frame
                     let isInsideCanvas: Bool
-                    if case .directTwoAnchor(let rig) = resolvedCordRig {
+                    if let rig = resolvedCordRig {
                         isInsideCanvas = riggedAliasFrameIsInsideCanvas(
                             frame,
                             rig: rig,
@@ -1280,7 +1283,7 @@ struct BoardPackageStore {
 
     private static func riggedAliasFrameIsInsideCanvas(
         _ frame: BoardPackageFrameDocument,
-        rig: BoardDirectTwoAnchorCordRig,
+        rig: BoardCordRig,
         anchor: BoardGeometryRotationAnchor,
         rotationDegrees: Double
     ) -> Bool {
@@ -1575,6 +1578,33 @@ private struct BoardPackageCordRectDocument: Decodable {
 }
 
 private struct BoardPackageCordRigDocument: Decodable {
+    let cordRig: BoardCordRig
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "directTwoAnchor":
+            cordRig = .directTwoAnchor(
+                try BoardPackageDirectTwoAnchorCordRigDocument(from: decoder).rig
+            )
+        case "routed":
+            cordRig = .routed(try BoardRoutedCordRigDocument(from: decoder).rig)
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+    }
+}
+
+private struct BoardPackageDirectTwoAnchorCordRigDocument: Decodable {
     let sceneSize: BoardPackageCordSizeDocument
     let sourceFrame: BoardPackageCordRectDocument
     let innerFaceFrame: BoardPackageCordRectDocument
@@ -1629,16 +1659,14 @@ private struct BoardPackageCordRigDocument: Decodable {
         eyeletRadius = try container.decode(Double.self, forKey: .eyeletRadius)
     }
 
-    var cordRig: BoardCordRig {
-        .directTwoAnchor(
-            BoardDirectTwoAnchorCordRig(
-                sceneSize: sceneSize.cordSize,
-                sourceFrame: sourceFrame.cordRect,
-                innerFaceFrame: innerFaceFrame.cordRect,
-                attachmentPoints: attachmentPoints.map(\.cordPoint),
-                pullPoint: pullPoint.cordPoint,
-                eyeletRadius: CGFloat(eyeletRadius)
-            )
+    var rig: BoardDirectTwoAnchorCordRig {
+        BoardDirectTwoAnchorCordRig(
+            sceneSize: sceneSize.cordSize,
+            sourceFrame: sourceFrame.cordRect,
+            innerFaceFrame: innerFaceFrame.cordRect,
+            attachmentPoints: attachmentPoints.map(\.cordPoint),
+            pullPoint: pullPoint.cordPoint,
+            eyeletRadius: CGFloat(eyeletRadius)
         )
     }
 }
