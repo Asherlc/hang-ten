@@ -35,12 +35,14 @@ import com.hangten.android.content.Board
 import com.hangten.android.content.BoardCordRig
 import com.hangten.android.content.BoardGeometry
 import com.hangten.android.content.BoardPresentation
+import com.hangten.android.content.BoardRoutedCordLayer
 import com.hangten.android.content.HoldShape
 import com.hangten.android.content.PathCommand
 import com.hangten.android.content.Point
 import kotlin.math.atan2
 import kotlin.math.ceil
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
@@ -340,25 +342,35 @@ fun BoardCanvas(
         boardImage?.let { image ->
             drawIntoCanvas { canvas ->
                 val nativeCanvas = canvas.nativeCanvas
-                val rig = canvasGeometry.cordGeometry
-                if (rig == null) {
-                    drawFaceBitmap(
-                        nativeCanvas,
-                        image,
-                        canvasGeometry.holdBounds,
-                        if (selectedPresentation.rotationDegrees == null) {
-                            BoardInPlaneTransform.Identity
-                        } else {
-                            canvasGeometry.faceTransform
-                        },
-                    )
-                } else {
-                    drawRiggedBoardArtwork(
-                        nativeCanvas,
-                        image,
-                        canvasGeometry.directTwoAnchorRig!!,
-                        rig,
-                    )
+                when {
+                    canvasGeometry.routedRig != null && canvasGeometry.routedCordGeometry != null -> {
+                        drawRoutedBoardArtwork(
+                            nativeCanvas,
+                            image,
+                            canvasGeometry.routedRig,
+                            canvasGeometry.routedCordGeometry,
+                        )
+                    }
+                    canvasGeometry.cordGeometry != null -> {
+                        drawRiggedBoardArtwork(
+                            nativeCanvas,
+                            image,
+                            canvasGeometry.directTwoAnchorRig!!,
+                            canvasGeometry.cordGeometry,
+                        )
+                    }
+                    else -> {
+                        drawFaceBitmap(
+                            nativeCanvas,
+                            image,
+                            canvasGeometry.holdBounds,
+                            if (selectedPresentation.rotationDegrees == null) {
+                                BoardInPlaneTransform.Identity
+                            } else {
+                                canvasGeometry.faceTransform
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -392,6 +404,8 @@ internal data class BoardCanvasGeometry(
     val faceTransform: BoardInPlaneTransform,
     val directTwoAnchorRig: BoardCordRig.DirectTwoAnchor? = null,
     val cordGeometry: DirectTwoAnchorCordGeometry? = null,
+    val routedRig: BoardCordRig.Routed? = null,
+    val routedCordGeometry: RoutedCordRigGeometry? = null,
 )
 
 private fun boardCanvasGeometry(
@@ -412,22 +426,197 @@ internal fun boardCanvasGeometry(
     height: Float,
 ): BoardCanvasGeometry? {
     if (!width.isFinite() || !height.isFinite() || width <= 0f || height <= 0f) return null
-    val rig = board.resolvedCordRig(presentation) as? BoardCordRig.DirectTwoAnchor
-    if (rig != null) {
-        val geometry = resolveDirectTwoAnchorCordGeometry(rig, presentation, width, height)
-            ?: return null
-        return BoardCanvasGeometry(
-            holdBounds = geometry.faceBounds,
-            faceTransform = geometry.faceTransform,
-            directTwoAnchorRig = rig,
-            cordGeometry = geometry,
-        )
+    when (val rig = board.resolvedCordRig(presentation)) {
+        is BoardCordRig.DirectTwoAnchor -> {
+            val geometry = resolveDirectTwoAnchorCordGeometry(rig, presentation, width, height)
+                ?: return null
+            return BoardCanvasGeometry(
+                holdBounds = geometry.faceBounds,
+                faceTransform = geometry.faceTransform,
+                directTwoAnchorRig = rig,
+                cordGeometry = geometry,
+            )
+        }
+        is BoardCordRig.Routed -> {
+            val geometry = resolveRoutedCordRigGeometry(rig, presentation, width, height)
+                ?: return null
+            return BoardCanvasGeometry(
+                holdBounds = geometry.faceBounds,
+                faceTransform = geometry.faceTransform,
+                routedRig = rig,
+                routedCordGeometry = geometry,
+            )
+        }
+        null -> Unit
     }
     val holdBounds = boardBounds(width, height, presentation.aspectRatio)
     return BoardCanvasGeometry(
         holdBounds = holdBounds,
         faceTransform = BoardInPlaneTransform.forPresentation(presentation, holdBounds),
     )
+}
+
+internal sealed interface RoutedArtworkOperation {
+    data class CordLayer(val layer: BoardRoutedCordLayer) : RoutedArtworkOperation
+    data object Face : RoutedArtworkOperation
+    data class RadialLipFaceRedraw(
+        val lip: ResolvedRoutedCordRadialLip,
+    ) : RoutedArtworkOperation
+    data class FacePatchFaceRedraw(
+        val patch: ResolvedRoutedCordFacePatch,
+    ) : RoutedArtworkOperation
+}
+
+internal fun routedArtworkOperations(
+    geometry: RoutedCordRigGeometry,
+): List<RoutedArtworkOperation> = buildList {
+    add(RoutedArtworkOperation.CordLayer(BoardRoutedCordLayer.BehindFace))
+    add(RoutedArtworkOperation.Face)
+    add(RoutedArtworkOperation.CordLayer(BoardRoutedCordLayer.AboveFace))
+    geometry.radialLips.forEach { add(RoutedArtworkOperation.RadialLipFaceRedraw(it)) }
+    geometry.facePatches.forEach { add(RoutedArtworkOperation.FacePatchFaceRedraw(it)) }
+    add(RoutedArtworkOperation.CordLayer(BoardRoutedCordLayer.Overpass))
+}
+
+private fun drawRoutedBoardArtwork(
+    canvas: android.graphics.Canvas,
+    image: ImageBitmap,
+    rig: BoardCordRig.Routed,
+    geometry: RoutedCordRigGeometry,
+) {
+    routedArtworkOperations(geometry).forEach { operation ->
+        when (operation) {
+            is RoutedArtworkOperation.CordLayer -> drawRoutedCordLayer(
+                canvas = canvas,
+                rig = rig,
+                geometry = geometry,
+                layer = operation.layer,
+            )
+            RoutedArtworkOperation.Face -> drawFaceBitmap(
+                canvas = canvas,
+                image = image,
+                bounds = geometry.faceBounds,
+                transform = geometry.faceTransform,
+            )
+            is RoutedArtworkOperation.RadialLipFaceRedraw -> {
+                val clip = eyeletForegroundCrescent(
+                    center = operation.lip.center,
+                    toward = operation.lip.toward,
+                    radius = operation.lip.radius,
+                    chordOffset = operation.lip.chordOffset,
+                ) ?: return@forEach
+                drawFaceBitmap(
+                    canvas = canvas,
+                    image = image,
+                    bounds = geometry.faceBounds,
+                    transform = geometry.faceTransform,
+                    clip = clip,
+                )
+            }
+            is RoutedArtworkOperation.FacePatchFaceRedraw -> drawFaceBitmap(
+                canvas = canvas,
+                image = image,
+                bounds = geometry.faceBounds,
+                transform = geometry.faceTransform,
+                clip = operation.patch.path.toAndroidPath(),
+            )
+        }
+    }
+}
+
+private fun drawRoutedCordLayer(
+    canvas: android.graphics.Canvas,
+    rig: BoardCordRig.Routed,
+    geometry: RoutedCordRigGeometry,
+    layer: BoardRoutedCordLayer,
+) {
+    val paths = geometry.tensionSpans(layer).map { it.path.toAndroidPath() } +
+        geometry.authoredPaths(layer).map { it.path.toAndroidPath() }
+    if (paths.isEmpty()) return
+
+    val diameter = rig.style.diameter * geometry.scale
+    if (!diameter.isFinite() || diameter <= 0f) return
+    strokePaths(
+        canvas = canvas,
+        paths = paths,
+        color = routedColor(rig.style.outlineColor),
+        width = diameter * 1.6f,
+    )
+    strokePaths(
+        canvas = canvas,
+        paths = paths,
+        color = routedColor(rig.style.baseColor),
+        width = diameter,
+    )
+    drawRoutedBraid(
+        canvas = canvas,
+        paths = paths,
+        geometry = geometry,
+        diameter = diameter,
+        colors = rig.style.braidColors.map(::routedColor),
+    )
+}
+
+private fun drawRoutedBraid(
+    canvas: android.graphics.Canvas,
+    paths: List<Path>,
+    geometry: RoutedCordRigGeometry,
+    diameter: Float,
+    colors: List<Int>,
+) {
+    if (colors.size != 2) return
+    val clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = diameter * 0.84f
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
+    }
+    val braidClip = Path()
+    paths.forEach { path ->
+        val strokedPath = Path()
+        clipPaint.getFillPath(path, strokedPath)
+        braidClip.addPath(strokedPath)
+    }
+
+    val save = canvas.save()
+    canvas.clipPath(braidClip)
+    val spacing = max(diameter * 0.72f, 1f)
+    val fiberWidth = max(diameter * 0.18f, 0.5f)
+    val diagonalSpan = geometry.sceneBounds.width + geometry.sceneBounds.height
+    var offset = -diagonalSpan
+    var index = 0
+    while (offset <= diagonalSpan * 2f) {
+        val fiber = Path().apply {
+            if (index % 2 == 0) {
+                moveTo(geometry.sceneBounds.left + offset, geometry.sceneBounds.top + geometry.sceneBounds.height)
+                lineTo(
+                    geometry.sceneBounds.left + offset + geometry.sceneBounds.height,
+                    geometry.sceneBounds.top,
+                )
+            } else {
+                moveTo(geometry.sceneBounds.left + offset, geometry.sceneBounds.top)
+                lineTo(
+                    geometry.sceneBounds.left + offset + geometry.sceneBounds.height,
+                    geometry.sceneBounds.top + geometry.sceneBounds.height,
+                )
+            }
+        }
+        strokePaths(
+            canvas = canvas,
+            paths = listOf(fiber),
+            color = colors[index % colors.size],
+            width = fiberWidth,
+        )
+        offset += spacing
+        index += 1
+    }
+    canvas.restoreToCount(save)
+}
+
+private fun routedColor(hex: String): Int {
+    if (hex.length != 7 || hex.firstOrNull() != '#') return android.graphics.Color.TRANSPARENT
+    return hex.drop(1).toIntOrNull(16)?.let { 0xFF000000.toInt() or it }
+        ?: android.graphics.Color.TRANSPARENT
 }
 
 private fun drawRiggedBoardArtwork(
