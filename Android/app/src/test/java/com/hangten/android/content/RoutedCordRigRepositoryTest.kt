@@ -217,8 +217,8 @@ class RoutedCordRigRepositoryTest {
                 "begin with exactly one move",
             ),
             Mutation(
-                "\"radius\": 22, \"chordOffset\": 6",
-                "\"radius\": 22, \"chordOffset\": 22",
+                "\"radius\": 22,\n          \"chordOffset\": 6",
+                "\"radius\": 22,\n          \"chordOffset\": 22",
                 "0 < chordOffset < radius",
             ),
             Mutation(
