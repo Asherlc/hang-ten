@@ -1,5 +1,7 @@
 package com.hangten.android.content
 
+import com.hangten.android.board.RoutedCordPresentationValidationFailure
+import com.hangten.android.board.routedCordPresentationValidationFailure
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -95,12 +97,18 @@ class AssetBoardRepository(
             val artworkPresentation = presentation.sourcePresentationId
                 ?.let { presentationsById[it] }
                 ?: presentation
-            (artworkPresentation.cordRig as? BoardCordRig.DirectTwoAnchor)?.let { rig ->
-                validateDirectTwoAnchorCordPresentation(
+            when (val rig = artworkPresentation.cordRig) {
+                is BoardCordRig.DirectTwoAnchor -> validateDirectTwoAnchorCordPresentation(
                     boardId = boardId,
                     presentation = presentation,
                     rig = rig,
                 )
+                is BoardCordRig.Routed -> validateRoutedCordPresentation(
+                    boardId = boardId,
+                    presentation = presentation,
+                    rig = rig,
+                )
+                null -> Unit
             }
         }
         validateCordRigImageAspects(boardId, packageName, presentations, presentationsById)
@@ -299,6 +307,33 @@ class AssetBoardRepository(
             fail(
                 "Board $boardId presentation ${presentation.id} cord pull exits must remain " +
                     "above both attachment points.",
+            )
+        }
+    }
+
+    private fun validateRoutedCordPresentation(
+        boardId: String,
+        presentation: BoardPresentation,
+        rig: BoardCordRig.Routed,
+    ) {
+        when (val failure = routedCordPresentationValidationFailure(rig, presentation)) {
+            null -> Unit
+            RoutedCordPresentationValidationFailure.UnresolvedGeometry -> fail(
+                "Board $boardId presentation ${presentation.id} routed cord geometry must resolve.",
+            )
+            RoutedCordPresentationValidationFailure.CenterlineOutsideScene -> fail(
+                "Board $boardId presentation ${presentation.id} routed cord centerlines must remain " +
+                    "inside sceneSize with a 0.8 * style.diameter inset.",
+            )
+            RoutedCordPresentationValidationFailure.FacePatchOutsideScene -> fail(
+                "Board $boardId presentation ${presentation.id} routed cord face patches must remain inside sceneSize.",
+            )
+            RoutedCordPresentationValidationFailure.RadialLipOutsideScene -> fail(
+                "Board $boardId presentation ${presentation.id} routed cord radial lips must remain inside sceneSize.",
+            )
+            is RoutedCordPresentationValidationFailure.BodyNotBelowWorld -> fail(
+                "Board $boardId presentation ${presentation.id} routed cord body port " +
+                    "${failure.bodyPortId} must remain strictly below world port ${failure.worldPortId}.",
             )
         }
     }
