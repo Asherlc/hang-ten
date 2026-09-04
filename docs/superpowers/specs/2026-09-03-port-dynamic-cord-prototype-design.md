@@ -16,14 +16,14 @@ the user approved it as good enough to implement:
 - raising the pull point to exactly 1.5 times its former vertical distance
   gives the suspension enough height.
 
-The first production slice is intentionally only the Port-A-Board `back` and
-`back-inverted` presentations. It proves the app renderer and package seam
+The first production slice is intentionally only the Port-A-Board `primary`
+front face and its `front-inverted` presentation. It proves the app renderer and package seam
 before Workbench support, exhaustive schema matrices, asset cleanup, the other
 Port faces, or any catalog-wide migration are built.
 
 ## Goal
 
-Render the Port back face from one exact transparent, cord-free source image
+Render the Port front face from one exact transparent, cord-free source image
 in upright and 180-degree clock-face orientations. The board, holds, markers,
 hit shapes, eyelets, and eyelet foreground pieces share one 2D affine
 transform. The support bight, knot, and pull point stay fixed above the board
@@ -36,9 +36,11 @@ unchanged.
 
 ## Validated reference
 
-The approved spike is recorded under
-`.context/joyful-donkey-port-dynamic-cord-spike-20260903/`. It is evidence for
-the geometry and visual treatment, not production code.
+The approved inverted proof is recorded at
+`.context/joyful-donkey-port-front-imagemagick-rotation/front-rotated-180-with-cords.png`.
+Its exact bytes are also tracked under `docs/source-audits/review-assets/` so
+the PR can retain the approved evidence. It is evidence for the geometry and
+visual treatment, not production code.
 
 The manufacturer's product photography supports the near-black braided cord,
 dark eyelet entry, and wood face appearance:
@@ -89,19 +91,21 @@ The following values are relative to `sourceFrame` unless noted otherwise:
 | Item | Source-frame value | Scene value |
 | --- | --- | --- |
 | face rotation center | `(600, 690)` | `(600, 904)` |
-| left eyelet center | `(203, 712)` | `(203, 926)` |
-| right eyelet center | `(997, 712)` | `(997, 926)` |
+| left eyelet endpoint | `(276, 804)` | `(276, 1018)` |
+| right eyelet endpoint | `(920, 804)` | `(920, 1018)` |
 | pull point / strand-exit midpoint | `(600, 71.5)` | `(600, 285.5)` |
 | left strand exit | `(578, 71.5)` | `(578, 285.5)` |
 | right strand exit | `(622, 71.5)` | `(622, 285.5)` |
 
-The two source-image eyelet centers are `(303, 722)` and `(1097, 722)`;
-placing that image in `innerFaceFrame` yields the source-frame centers above.
+The front proof manually selected source-image eyelet centers near `(375, 813)`
+and `(1019, 813)`. The rig endpoints are one pixel-center unit lower/right,
+which makes the exact cardinal runtime transform land at the approved raster's
+screen endpoints `(280, 790)` and `(924, 790)`.
 The inverted alias declares a normalized scene rotation anchor of
 `(0.5, 113 / 183)`, which resolves to the scene point `(600, 904)`.
 
-The approved pull-point distance is an exact relationship, not an
-approximation:
+The `71.5` pull-point y-coordinate is inherited unchanged from the previously
+approved raised-support template. That template's 50% raise was exact:
 
 ```text
 old vertical distance = 712 - 285   = 427
@@ -124,8 +128,8 @@ x' = c_x + cos(θ)(x - c_x) - sin(θ)(y - c_y)
 y' = c_y + sin(θ)(x - c_x) + cos(θ)(y - c_y)
 ```
 
-Production currently requests only `θ = 0°` for `back` and `θ = 180°` for
-`back-inverted`; the browser spike's `90°` view was only an axis proof. One
+Production currently requests only `θ = 0°` for `primary` and `θ = 180°` for
+`front-inverted`; the browser spike's `90°` view was only an axis proof. One
 affine transform rotates all face-owned layers:
 
 - the cord-free face image;
@@ -136,7 +140,7 @@ affine transform rotates all face-owned layers:
 - the source image used by the small foreground eyelet crescents.
 
 The pull point, strand exits, bight, and knot never receive that transform.
-At `180°`, the projected physical endpoints are `(997, 882)` and `(203, 882)`.
+At `180°`, the projected physical endpoints are `(924, 790)` and `(280, 790)`.
 They are sorted by screen `x` (then `y` only as a deterministic tie-break) and
 paired to the left and right exits in that order. This intentional visual
 pairing supersedes the earlier declared-order rule and prevents a crossed
@@ -159,8 +163,8 @@ clean extension point without claiming it fits every board.
   "sourceFrame": {"x": 0, "y": 214, "width": 1200, "height": 1250},
   "innerFaceFrame": {"x": -100, "y": -10, "width": 1400, "height": 1400},
   "attachmentPoints": [
-    {"x": 203, "y": 712},
-    {"x": 997, "y": 712}
+    {"x": 276, "y": 804},
+    {"x": 920, "y": 804}
   ],
   "pullPoint": {"x": 600, "y": 71.5},
   "eyeletRadius": 34
@@ -201,16 +205,14 @@ non-rig aliases retain the current normalized validation path.
 For a resolved rig, the presentation aspect ratio describes `sceneSize`, while
 the PNG aspect ratio describes `innerFaceFrame`. This deliberate distinction
 allows the exact square source PNG to sit inside the taller transparent scene.
-The transitional alias asset is also checked against the square inner-face
-ratio even though artwork resolves the canonical source bytes. Non-rig image
-aspect checks remain unchanged.
+An alias may declare that same canonical square asset path; it is checked
+against the square inner-face ratio even though the presentation itself uses
+the taller scene ratio. Non-rig image-aspect checks remain unchanged.
 
-During this vertical slice, a rigged alias may keep its existing legacy
-`assetPath` so no tracked asset is deleted before visual approval. Rendering a
-resolved rig deliberately loads the canonical source presentation's asset;
-ordinary package validation still requires the alias's legacy declared file
-to exist. After approval, a cleanup phase may point the alias at the canonical
-path and delete the redundant file atomically.
+Rendering a resolved rig deliberately loads the canonical source
+presentation's asset. In this approved slice, `front-inverted` also declares
+that canonical `assets/primary.png` path, so there is exactly one stored front
+face raster and no transitional alias raster.
 
 ## Deterministic cord artwork
 
@@ -303,7 +305,7 @@ For a presentation with no resolved rig, the resolver must call the existing
 `BoardPresentationImage(board:presentationID:)` with the selected
 presentation's own ID, use the full current map rectangle for holds, add no
 cord/crescent layer, and apply no image transform. This explicit legacy branch
-keeps all non-rig boards and the four non-opted-in Port presentations
+keeps all non-rig boards and the three non-opted-in Port presentations
 unchanged.
 
 ## Port asset and rollout contract
@@ -319,28 +321,28 @@ cord-free Port physical faces:
 
 All three are `1400 × 1400` RGBA images with transparent backgrounds. The
 vertical slice verifies all three historical blobs but promotes only the exact
-`back.png` bytes. `primary.png` and `side.png` remain at their current tracked
-versions until their own presentations enter the reviewed migration.
+`primary.png` bytes.
 
 Only these presentation changes ship initially:
 
 | Presentation | Change in this slice |
 | --- | --- |
-| `back` | restore exact cord-free `back.png`; own the approved rig; set aspect ratio to `50 / 61` |
-| `back-inverted` | inherit `back` rig; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)`; retain legacy asset path/file temporarily |
+| `primary` | restore exact cord-free `primary.png`; own the approved rig; set aspect ratio to `50 / 61` |
+| `front-inverted` | inherit the `primary` rig; share `assets/primary.png`; set aspect ratio to `50 / 61`; declare rotation anchor `(0.5, 113 / 183)` |
 
-`primary`, `front-inverted`, `cord-option-4-20mm-incut`, and `side` remain
-byte-for-byte and field-for-field unchanged. No hold record, hold path, hold
-metadata, presentation name, training content, or product URL changes.
-
-No asset is deleted in this slice.
+The user approved one stored raster per physical face and the removal of
+duplicate presentation metadata. `cord-option-4-20mm-incut` resolved to the
+same front face and exact 180-degree rotation as `front-inverted`, so that
+duplicate record and both redundant front alias PNGs are removed. No hold
+record, hold path, hold metadata, remaining presentation name, training
+content, or product URL changes.
 
 ## Proportional verification
 
 The user explicitly chose visual proof before a broad test/setup investment.
 Implementation therefore stops at these gates:
 
-- one geometry test covering canonical frames, the 1.5× pull distance,
+- one geometry test covering canonical frames, the approved raised pull point,
   `90°` clock-face axis proof, `180°` projection, screen-x pairing, uncropped
   upper geometry, and the eyelet-crescent formula;
 - one iOS loader/alias test covering canonical ownership, inheritance,
@@ -350,7 +352,7 @@ Implementation therefore stops at these gates:
 - one Python parser-compatibility test for the same object and Port alias;
 - one focused iOS Simulator build; and
 - two isolated transparent `1200 × 1464` board-canvas outputs, shown one at a
-  time (`back`, then `back-inverted`) with the manufacturer link.
+  time (`primary`, then `front-inverted`) with the manufacturer link.
 
 There is no full unit/UI suite, app-review screenshot set, multi-size matrix,
 Workbench gallery, interaction matrix, or accessibility matrix before this
@@ -360,14 +362,13 @@ accepted.
 
 ## Explicit deferrals
 
-Until the production `back` and `back-inverted` outputs receive visual
+Until the production `primary` and `front-inverted` outputs receive visual
 approval, defer all of the following:
 
 - Workbench parsing, authoring, preview, and round-trip support;
 - exhaustive malformed/semantic fixture matrices;
 - full package, unit, UI, interaction, and accessibility suites;
-- changing the other four Port presentations;
-- deleting or deduplicating any Port asset;
+- changing the other three Port presentations;
 - additional rig topology cases; and
 - catalog-wide migration.
 

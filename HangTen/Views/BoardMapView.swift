@@ -286,8 +286,20 @@ struct BoardDetailMapView: View {
             let projection = BoardPresentationGeometryProjection(
                 presentation: map.presentation
             )
+            let cordGeometry = BoardPresentationArtwork.geometry(
+                for: board,
+                presentation: map.presentation,
+                projection: projection,
+                canvasSize: boardBounds
+            )
             ZStack {
-                BoardPresentationImage(board: board, presentationID: map.presentation.id)
+                BoardPresentationArtwork(
+                    board: board,
+                    presentation: map.presentation,
+                    projection: projection,
+                    canvasSize: boardBounds,
+                    geometry: cordGeometry
+                )
 
                 ForEach(map.entries) { entry in
                     PhysicalHoldVisual(
@@ -295,6 +307,7 @@ struct BoardDetailMapView: View {
                         isHighlighted: selectedHoldID == entry.hold.id,
                         highlightMode: .active,
                         projection: projection,
+                        canonicalRect: cordGeometry?.faceRect,
                         onTap: { select($0.id) }
                     )
                     .frame(width: boardBounds.width, height: boardBounds.height)
@@ -309,7 +322,8 @@ struct BoardDetailMapView: View {
                         markerPosition(
                             for: entry.hold,
                             in: boardRect,
-                            projection: projection
+                            projection: projection,
+                            canonicalRect: cordGeometry?.faceRect
                         )
                     )
                 }
@@ -381,11 +395,15 @@ struct BoardDetailMapView: View {
     private func markerPosition(
         for hold: BoardHold,
         in bounds: CGRect,
-        projection: BoardPresentationGeometryProjection
+        projection: BoardPresentationGeometryProjection,
+        canonicalRect: CGRect?
     ) -> CGPoint {
+        let sourceRect = canonicalRect ?? bounds
         let center = CGPoint(
-            x: bounds.minX + hold.frame.x * bounds.width + hold.frame.width * bounds.width / 2,
-            y: bounds.minY + hold.frame.y * bounds.height + hold.frame.height * bounds.height / 2
+            x: sourceRect.minX + hold.frame.x * sourceRect.width
+                + hold.frame.width * sourceRect.width / 2,
+            y: sourceRect.minY + hold.frame.y * sourceRect.height
+                + hold.frame.height * sourceRect.height / 2
         )
         return projection.project(center, in: bounds)
     }
@@ -477,10 +495,19 @@ struct BoardMapView: View {
                 let projection = BoardPresentationGeometryProjection(
                     presentation: content.presentation
                 )
+                let cordGeometry = BoardPresentationArtwork.geometry(
+                    for: board,
+                    presentation: content.presentation,
+                    projection: projection,
+                    canvasSize: boardBounds
+                )
                 ZStack {
-                    BoardPresentationImage(
+                    BoardPresentationArtwork(
                         board: board,
-                        presentationID: content.presentation.id
+                        presentation: content.presentation,
+                        projection: projection,
+                        canvasSize: boardBounds,
+                        geometry: cordGeometry
                     )
 
                     ForEach(content.holds) { hold in
@@ -489,6 +516,7 @@ struct BoardMapView: View {
                             isHighlighted: highlightedHoldIDs.contains(hold.id),
                             highlightMode: highlightMode,
                             projection: projection,
+                            canonicalRect: cordGeometry?.faceRect,
                             onTap: onHoldTap
                         )
                         .frame(width: boardBounds.width, height: boardBounds.height)
@@ -558,13 +586,15 @@ private struct PhysicalHoldVisual: View {
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
     let projection: BoardPresentationGeometryProjection
+    let canonicalRect: CGRect?
     let onTap: ((BoardHold) -> Void)?
 
     @ViewBuilder
     var body: some View {
         let shape = BoardHoldPathShape(
             pieces: hold.geometry,
-            projection: projection
+            projection: projection,
+            canonicalRect: canonicalRect
         )
         let visual = ZStack {
             shape

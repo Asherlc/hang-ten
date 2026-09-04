@@ -77,6 +77,7 @@ HangTen/Views/BoardEditor/GitHubEditorSyncViews.swift
 HangTen/Views/BoardEditor/HoldEditorCanvasView.swift
 HangTen/Views/BoardEditor/HoldInspectorView.swift
 HangTen/Views/BoardMapView.swift
+HangTen/Views/BoardPresentationArtwork.swift
 HangTen/Views/CustomRoutineEditorView.swift
 HangTen/Views/DesignSystem.swift
 HangTen/Views/GripDiagramView.swift

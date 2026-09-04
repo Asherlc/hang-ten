@@ -3,29 +3,30 @@ import XCTest
 @testable import HangTen
 
 final class BoardCordRigGeometryTests: XCTestCase {
-    private let portBackRig = BoardDirectTwoAnchorCordRig(
+    private let portFrontRig = BoardDirectTwoAnchorCordRig(
         sceneSize: BoardCordSize(width: 1200, height: 1464),
         sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
         innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
         attachmentPoints: [
-            BoardCordPoint(x: 203, y: 712),
-            BoardCordPoint(x: 997, y: 712),
+            BoardCordPoint(x: 276, y: 804),
+            BoardCordPoint(x: 920, y: 804),
         ],
         pullPoint: BoardCordPoint(x: 600, y: 71.5),
         eyeletRadius: 34
     )
 
-    func testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport() {
+    @MainActor
+    func testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport() throws {
         XCTAssertEqual(
-            portBackRig.attachmentPoints.map(\.y).reduce(0, +) / 2 - portBackRig.pullPoint.y,
-            640.5
+            portFrontRig.attachmentPoints.map(\.y).reduce(0, +) / 2 - portFrontRig.pullPoint.y,
+            732.5
         )
-        XCTAssertEqual(640.5, 1.5 * 427)
+        XCTAssertEqual(portFrontRig.pullPoint.y, 71.5)
 
         let canvas = CGRect(x: 0, y: 0, width: 1200, height: 1464)
         let anchor = BoardGeometryRotationAnchor(x: 0.5, y: 113.0 / 183.0)
         let uprightGeometry = BoardCordRigGeometry.make(
-            rig: portBackRig,
+            rig: portFrontRig,
             projection: BoardPresentationGeometryProjection(
                 rotationDegrees: 0,
                 rotationAnchor: anchor
@@ -40,7 +41,7 @@ final class BoardCordRigGeometryTests: XCTestCase {
         XCTAssertEqual(uprightGeometry.faceTransform, .identity)
 
         let ninetyGeometry = BoardCordRigGeometry.make(
-            rig: portBackRig,
+            rig: portFrontRig,
             projection: BoardPresentationGeometryProjection(
                 rotationDegrees: 90,
                 rotationAnchor: anchor
@@ -51,11 +52,11 @@ final class BoardCordRigGeometryTests: XCTestCase {
             ninetyGeometry.faceTransform,
             CGAffineTransform(a: 0, b: 1, c: -1, d: 0, tx: 1504, ty: 304)
         )
-        assertEqual(ninetyGeometry.projectedAttachments[0], CGPoint(x: 578, y: 507))
-        assertEqual(ninetyGeometry.projectedAttachments[1], CGPoint(x: 578, y: 1301))
+        assertEqual(ninetyGeometry.projectedAttachments[0], CGPoint(x: 486, y: 580))
+        assertEqual(ninetyGeometry.projectedAttachments[1], CGPoint(x: 486, y: 1224))
 
         let invertedGeometry = BoardCordRigGeometry.make(
-            rig: portBackRig,
+            rig: portFrontRig,
             projection: BoardPresentationGeometryProjection(
                 rotationDegrees: 180,
                 rotationAnchor: anchor
@@ -72,19 +73,19 @@ final class BoardCordRigGeometryTests: XCTestCase {
         )
         assertEqual(
             invertedGeometry.projectedAttachments[0],
-            CGPoint(x: 997, y: 882)
+            CGPoint(x: 924, y: 790)
         )
         assertEqual(
             invertedGeometry.projectedAttachments[1],
-            CGPoint(x: 203, y: 882)
+            CGPoint(x: 280, y: 790)
         )
         assertEqual(
             invertedGeometry.pairedAttachments[0],
-            CGPoint(x: 203, y: 882)
+            CGPoint(x: 280, y: 790)
         )
         assertEqual(
             invertedGeometry.pairedAttachments[1],
-            CGPoint(x: 997, y: 882)
+            CGPoint(x: 924, y: 790)
         )
         assertEqual(invertedGeometry.strands[0].start, CGPoint(x: 578, y: 285.5))
         assertEqual(invertedGeometry.strands[1].start, CGPoint(x: 622, y: 285.5))
@@ -92,12 +93,12 @@ final class BoardCordRigGeometryTests: XCTestCase {
         XCTAssertEqual(invertedGeometry.eyeletForegroundCrescents.count, 2)
         XCTAssertTrue(
             uprightGeometry.eyeletForegroundCrescents[0].contains(
-                CGPoint(x: 188, y: 952)
+                CGPoint(x: 261, y: 1044)
             )
         )
         XCTAssertFalse(
             uprightGeometry.eyeletForegroundCrescents[0].contains(
-                CGPoint(x: 218, y: 900)
+                CGPoint(x: 291, y: 992)
             )
         )
         XCTAssertEqual(
@@ -107,7 +108,7 @@ final class BoardCordRigGeometryTests: XCTestCase {
         XCTAssertNotEqual(uprightGeometry.faceTransform, invertedGeometry.faceTransform)
 
         let twoSeventyGeometry = BoardCordRigGeometry.make(
-            rig: portBackRig,
+            rig: portFrontRig,
             projection: BoardPresentationGeometryProjection(
                 rotationDegrees: 270,
                 rotationAnchor: anchor
@@ -118,6 +119,90 @@ final class BoardCordRigGeometryTests: XCTestCase {
             twoSeventyGeometry.faceTransform,
             CGAffineTransform(a: 0, b: -1, c: 1, d: 0, tx: -304, ty: 1504)
         )
+
+        try writeReviewArtifactsIfRequested()
+    }
+
+    @MainActor
+    private func writeReviewArtifactsIfRequested() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.packageStore.board(id: "frictitious.port-a-board")
+        )
+        XCTAssertNil(board.presentation(id: "cord-option-4-20mm-incut"))
+        for presentationID in ["primary", "front-inverted"] {
+            XCTAssertEqual(
+                BoardCatalog.packageStore.presentationImageURL(
+                    for: board,
+                    presentationID: presentationID
+                )?.lastPathComponent,
+                "primary.png"
+            )
+        }
+        guard let directoryPath = ProcessInfo.processInfo.environment["HANGTEN_CORD_REVIEW_DIR"] else {
+            return
+        }
+
+        let directory = URL(fileURLWithPath: directoryPath, isDirectory: true)
+        try FileManager.default.createDirectory(
+            at: directory,
+            withIntermediateDirectories: true
+        )
+
+        for presentationID in ["primary", "front-inverted"] {
+            let presentation = try XCTUnwrap(board.presentation(id: presentationID))
+            let canvasSize = CGSize(width: 1200, height: 1464)
+            let renderer = ImageRenderer(
+                content: BoardPresentationArtwork(
+                    board: board,
+                    presentation: presentation,
+                    projection: BoardPresentationGeometryProjection(
+                        presentation: presentation
+                    ),
+                    canvasSize: canvasSize
+                )
+                .frame(width: canvasSize.width, height: canvasSize.height)
+            )
+            renderer.scale = 1
+            renderer.isOpaque = false
+
+            let image = try XCTUnwrap(renderer.uiImage)
+            XCTAssertEqual(image.size, canvasSize)
+            let data = try XCTUnwrap(image.pngData())
+            let decoded = try XCTUnwrap(UIImage(data: data)?.cgImage)
+            XCTAssertEqual(decoded.width, 1200)
+            XCTAssertEqual(decoded.height, 1464)
+            assertTransparentCorners(in: decoded)
+            try data.write(
+                to: directory.appendingPathComponent("\(presentationID).png"),
+                options: .atomic
+            )
+        }
+    }
+
+    private func assertTransparentCorners(
+        in image: CGImage,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let providerData = image.dataProvider?.data,
+              let bytes = CFDataGetBytePtr(providerData) else {
+            return XCTFail("Rendered image has no pixel data", file: file, line: line)
+        }
+        let bytesPerPixel = image.bitsPerPixel / 8
+        let alphaOffset = image.alphaInfo == .first || image.alphaInfo == .premultipliedFirst
+            ? 0
+            : bytesPerPixel - 1
+        for point in [
+            CGPoint(x: 0, y: 0),
+            CGPoint(x: image.width - 1, y: 0),
+            CGPoint(x: 0, y: image.height - 1),
+            CGPoint(x: image.width - 1, y: image.height - 1),
+        ] {
+            let offset = Int(point.y) * image.bytesPerRow
+                + Int(point.x) * bytesPerPixel
+                + alphaOffset
+            XCTAssertEqual(bytes[offset], 0, file: file, line: line)
+        }
     }
 
     private func assertEqual(

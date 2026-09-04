@@ -134,6 +134,7 @@
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
 		D10000000000000000000001 /* BoardCordRigGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* BoardCordRigGeometry.swift */; };
 		D10000000000000000000002 /* BoardCordRigGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* BoardCordRigGeometryTests.swift */; };
+		D10000000000000000000003 /* BoardPresentationArtwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000003 /* BoardPresentationArtwork.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -266,6 +267,7 @@
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
 		D20000000000000000000001 /* BoardCordRigGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCordRigGeometry.swift; sourceTree = "<group>"; };
 		D20000000000000000000002 /* BoardCordRigGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCordRigGeometryTests.swift; sourceTree = "<group>"; };
+		D20000000000000000000003 /* BoardPresentationArtwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPresentationArtwork.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -394,6 +396,7 @@
 			children = (
 				BB0000000000000000000004 /* DesignSystem.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
+				D20000000000000000000003 /* BoardPresentationArtwork.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
 				BB0000000000000000000094 /* BoardEditorSession.swift */,
@@ -699,6 +702,7 @@
 				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				D10000000000000000000001 /* BoardCordRigGeometry.swift in Sources */,
+				D10000000000000000000003 /* BoardPresentationArtwork.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,

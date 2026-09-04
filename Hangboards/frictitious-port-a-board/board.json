@@ -5,14 +5,40 @@
   "subtitle": "Portable single-object board with edges, pocket, jug, and pinch contacts.",
   "productURL": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
   "dimensions": "128 × 140 × 48 mm",
-  "aspectRatio": 1.0,
+  "aspectRatio": 0.819672131147541,
   "equipmentObjects": [
     {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
   ],
   "presentations": [
-    {"id": "primary", "name": "Front Upright", "assetPath": "assets/primary.png", "aspectRatio": 1.0, "default": true},
-    {"id": "front-inverted", "name": "Front Inverted", "assetPath": "assets/front-inverted.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "primary", "isInverted": true},
-    {"id": "cord-option-4-20mm-incut", "name": "Cord Option 4 — 20 mm In-cut", "assetPath": "assets/cord-option-4-20mm-incut.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "primary", "isInverted": true},
+    {
+      "id": "primary",
+      "name": "Front Upright",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 0.819672131147541,
+      "default": true,
+      "cordRig": {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1200, "height": 1464},
+        "sourceFrame": {"x": 0, "y": 214, "width": 1200, "height": 1250},
+        "innerFaceFrame": {"x": -100, "y": -10, "width": 1400, "height": 1400},
+        "attachmentPoints": [
+          {"x": 276, "y": 804},
+          {"x": 920, "y": 804}
+        ],
+        "pullPoint": {"x": 600, "y": 71.5},
+        "eyeletRadius": 34
+      }
+    },
+    {
+      "id": "front-inverted",
+      "name": "Front Inverted",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 0.819672131147541,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "isInverted": true,
+      "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142}
+    },
     {"id": "back", "name": "Back Upright", "assetPath": "assets/back.png", "aspectRatio": 1.0, "default": false},
     {"id": "back-inverted", "name": "Back Inverted", "assetPath": "assets/back-inverted.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "back", "isInverted": true},
     {"id": "side", "name": "Pinch Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}

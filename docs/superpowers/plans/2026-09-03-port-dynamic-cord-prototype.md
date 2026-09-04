@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Ship one narrow production proof in which the Port-A-Board back face and its inverted alias share the exact cord-free back image and render the visually approved, world-up dynamic cord over a transparent `1200 × 1464` scene.
+**Goal:** Ship one narrow production proof in which the Port-A-Board front face and its inverted alias share the exact cord-free primary image and render the visually approved, world-up dynamic cord over a transparent `1200 × 1464` scene.
 
 **Architecture:** A canonical presentation may own a generic `directTwoAnchor` rig containing canonical scene, source-frame, inner-face-frame, attachment, pull-point, and eyelet-radius data. The selected presentation supplies a 0° or 180° two-dimensional clock-face transform for the face, holds, markers, attachments, and eyelet image fragments; support geometry remains world-up, and projected endpoints are paired by screen x. Presentations without a resolved rig retain the existing selected-asset/full-map path.
 
@@ -13,23 +13,23 @@
 ## Global Constraints
 
 - This plan supersedes the previous eleven-task plan. Do not execute any task from the superseded revision.
-- Implement only `back` and `back-inverted` for `frictitious.port-a-board`; leave its other four presentations and every non-rig board unchanged.
+- Implement only `primary` and `front-inverted` for `frictitious.port-a-board`; leave its other three presentations and every non-rig board unchanged.
 - Rotate in the 2D image plane like a clock face. Do not use 3D rotation, perspective, skew, an x-axis flip, or a barber-pole transform.
 - The canonical transparent scene is `1200 × 1464` (`50 / 61` aspect ratio). Its `sourceFrame` is `(0, 214, 1200, 1250)` and `innerFaceFrame`, relative to the source frame, is `(-100, -10, 1400, 1400)`.
 - Preserve the board's scale: the added `214` units are transparent headroom, not a rescale of the former `1200 × 1250` composition.
-- Port back source coordinates are: rotation center `(600, 690)`, attachments `(203, 712)` and `(997, 712)`, pull point `(600, 71.5)`, strand exits `(578, 71.5)` and `(622, 71.5)`, and eyelet radius `34`.
-- The pull-point separation is exact: `712 - 71.5 == 1.5 * (712 - 285) == 640.5`.
+- Port front source coordinates are: rotation center `(600, 690)`, attachments `(276, 804)` and `(920, 804)`, pull point `(600, 71.5)`, strand exits `(578, 71.5)` and `(622, 71.5)`, and eyelet radius `34`.
+- The front attachment-to-pull separation is `732.5`; pull y `71.5` is inherited from the already approved raised-support template.
 - Sort projected attachments by screen x, then y as a deterministic tie-break, before pairing them with the left and right strand exits. This supersedes the old declared-order rule.
 - Render the approved dark braided, path-driven cord with the fixed bight/knot template and direction-aware foreground eyelet crescent from the spec. The bight/knot is a generic illustration, not a manufacturer-proven knot.
 - Keep the complete stroked cord inside the scene and keep the background transparent.
 - Cord and eyelet-continuity layers are decorative: `.allowsHitTesting(false)` and `.accessibilityHidden(true)`.
-- Commit `e12e7f66` is the source of truth for all three `1400 × 1400` RGBA cord-free Port faces. Verify all three historical hashes, but promote only exact `assets/back.png` in this slice.
-- Do not change holds, hold paths, constraints, hold metadata, training content, presentation names, product URL, or the other four Port presentation records.
-- Do not delete or deduplicate any Port asset in this slice. `back-inverted` retains its declared legacy file, while rigged artwork resolves the canonical `back.png` bytes.
+- Commit `e12e7f66` is the source of truth for all three `1400 × 1400` RGBA cord-free Port faces. Verify all three historical hashes, but promote only exact `assets/primary.png` in this slice.
+- Do not change holds, hold paths, constraints, hold metadata, training content, remaining presentation names, product URL, or the other three Port presentation records.
+- The user explicitly approved one stored image per physical face and duplicate-position cleanup: `front-inverted` shares `assets/primary.png`; remove its redundant PNG and remove the identical `cord-option-4-20mm-incut` record/PNG.
 - Do not implement Workbench support, exhaustive invalid-fixture matrices, a full unit/UI suite, an app-review screenshot gallery, the other Port faces, additional topology cases, or catalog-wide migration before the two production renders are approved.
 - A catalog audit found 19 remaining cord-attached packages across multiple topology families. Do not model them all as `directTwoAnchor`.
 - Use a fresh implementation subagent and a separate review gate for each task. Push each new task/fix commit to `origin` immediately.
-- Generated review output belongs under `.context/joyful-donkey-port-dynamic-cord-back-review/`; record owner `joyful-donkey` before generation. Start no HTTP server.
+- Generated review output belongs under `.context/joyful-donkey-port-dynamic-cord-front-review/`; record owner `joyful-donkey` before generation. Start no HTTP server.
 
 ---
 
@@ -59,9 +59,9 @@
 
 ### Port data and evidence
 
-- Modify only `back` and `back-inverted` presentation fields in `Hangboards/frictitious-port-a-board/board.json`.
-- Restore `Hangboards/frictitious-port-a-board/assets/back.png` byte-for-byte from `e12e7f66`.
-- Create `docs/source-audits/2026-09-03-port-dynamic-cord-back-slice.md`: record manufacturer links, all approved constants, the three historical hashes, the promoted back hash, commands, and the two human review decisions.
+- Modify only the board aspect ratio plus `primary`/`front-inverted` presentation fields in `Hangboards/frictitious-port-a-board/board.json`, and remove the approved duplicate option-4 record.
+- Restore `Hangboards/frictitious-port-a-board/assets/primary.png` byte-for-byte from `e12e7f66`; delete only the two redundant front-position PNGs.
+- Create `docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md`: record manufacturer links, all approved constants, the three historical hashes, the promoted front hash, commands, and the human review decision.
 
 ## Exact Interfaces
 
@@ -187,13 +187,13 @@ Create `BoardCordRigGeometryTests.swift` with one test named
 the exact rig below in a private helper:
 
 ```swift
-private let portBackRig = BoardDirectTwoAnchorCordRig(
+private let portFrontRig = BoardDirectTwoAnchorCordRig(
     sceneSize: BoardCordSize(width: 1200, height: 1464),
     sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
     innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
     attachmentPoints: [
-        BoardCordPoint(x: 203, y: 712),
-        BoardCordPoint(x: 997, y: 712),
+        BoardCordPoint(x: 276, y: 804),
+        BoardCordPoint(x: 920, y: 804),
     ],
     pullPoint: BoardCordPoint(x: 600, y: 71.5),
     eyeletRadius: 34
@@ -203,8 +203,8 @@ private let portBackRig = BoardDirectTwoAnchorCordRig(
 In that single test, assert all of the following:
 
 ```swift
-XCTAssertEqual(portBackRig.attachmentPoints.map(\.y).reduce(0, +) / 2 - portBackRig.pullPoint.y, 640.5)
-XCTAssertEqual(640.5, 1.5 * 427)
+XCTAssertEqual(portFrontRig.attachmentPoints.map(\.y).reduce(0, +) / 2 - portFrontRig.pullPoint.y, 732.5)
+XCTAssertEqual(portFrontRig.pullPoint.y, 71.5)
 
 let canvas = CGRect(x: 0, y: 0, width: 1200, height: 1464)
 let ninety = BoardPresentationGeometryProjection(
@@ -212,21 +212,21 @@ let ninety = BoardPresentationGeometryProjection(
     rotationAnchor: BoardGeometryRotationAnchor(x: 0.5, y: 113.0 / 183.0)
 )
 let ninetyGeometry = BoardCordRigGeometry.make(
-    rig: portBackRig, projection: ninety, in: canvas
+    rig: portFrontRig, projection: ninety, in: canvas
 )
-XCTAssertEqual(ninetyGeometry.projectedAttachments[0], CGPoint(x: 578, y: 507))
-XCTAssertEqual(ninetyGeometry.projectedAttachments[1], CGPoint(x: 578, y: 1301))
+XCTAssertEqual(ninetyGeometry.projectedAttachments[0], CGPoint(x: 486, y: 580))
+XCTAssertEqual(ninetyGeometry.projectedAttachments[1], CGPoint(x: 486, y: 1224))
 
 let inverted = BoardPresentationGeometryProjection(
     rotationDegrees: 180,
     rotationAnchor: BoardGeometryRotationAnchor(x: 0.5, y: 113.0 / 183.0)
 )
 let invertedGeometry = BoardCordRigGeometry.make(
-    rig: portBackRig, projection: inverted, in: canvas
+    rig: portFrontRig, projection: inverted, in: canvas
 )
 XCTAssertEqual(invertedGeometry.faceRect, CGRect(x: -100, y: 204, width: 1400, height: 1400))
-XCTAssertEqual(invertedGeometry.projectedAttachments, [CGPoint(x: 997, y: 882), CGPoint(x: 203, y: 882)])
-XCTAssertEqual(invertedGeometry.pairedAttachments, [CGPoint(x: 203, y: 882), CGPoint(x: 997, y: 882)])
+XCTAssertEqual(invertedGeometry.projectedAttachments, [CGPoint(x: 924, y: 790), CGPoint(x: 280, y: 790)])
+XCTAssertEqual(invertedGeometry.pairedAttachments, [CGPoint(x: 280, y: 790), CGPoint(x: 924, y: 790)])
 XCTAssertEqual(invertedGeometry.strands[0].start, CGPoint(x: 578, y: 285.5))
 XCTAssertEqual(invertedGeometry.strands[1].start, CGPoint(x: 622, y: 285.5))
 XCTAssertTrue(canvas.contains(invertedGeometry.strokeBounds))
@@ -284,7 +284,7 @@ time, randomness, simulation state, collision behavior, or product IDs.
 
 Run the Step 2 command again.
 
-Expected: PASS for canonical frames, 1.5× spacing, the 90° axis proof, the 180°
+Expected: PASS for canonical frames, the approved pull point, the 90° axis proof, the 180°
 endpoint values, screen-x pairing, world-up support, complete bounds, and two
 crescents.
 
@@ -357,7 +357,7 @@ source/aspect/anchor, and no rig on `primary`.
 
 ```bash
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardPackageStoreTests/testDirectTwoAnchorRigLoadsAndAliasUsesCanonicalArtworkWithoutChangingLegacySelection -only-testing:HangTenTests/BoardPackageWriterTests/testDirectTwoAnchorCordRigRoundTripsInCanonicalOrder
-rtk python3 -m pytest Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_vertical_slice -q
+rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_vertical_slice
 ```
 
 Expected: both commands fail because `cordRig` is not recognized.
@@ -377,11 +377,12 @@ document to `.directTwoAnchor` after checking:
   store's existing aspect tolerance.
 
 Aliases cannot own `cordRig`; they resolve from their direct canonical source.
-Do not require the transitional alias `assetPath` to equal the canonical path.
+Do not require an alias `assetPath` to equal the canonical path; existing
+packages may still have distinct stored alias artwork.
 For every resolved rig, compare the presentation ratio to `sceneSize` and its
-declared PNG ratio to `innerFaceFrame`; this keeps both transitional square
-files valid inside the taller scene. Preserve the existing presentation-to-PNG
-ratio check for non-rig presentations.
+declared PNG ratio to `innerFaceFrame`; this keeps square canonical or legacy
+alias files valid inside the taller scene. Preserve the existing
+presentation-to-PNG ratio check for non-rig presentations.
 For a rigged alias, update projected-hold validation to map each canonical hold
 corner through `innerFaceFrame` and `sourceFrame` before applying the scene
 affine; retain the existing normalized validation path for non-rig aliases.
@@ -418,7 +419,7 @@ rtk git commit -m "feat: load and round trip dynamic cord rigs"
 rtk git push origin HEAD
 ```
 
-### Task 3: Render and Review the Port Back Vertical Slice
+### Task 3: Render and Review the Port Front Vertical Slice
 
 **Files:**
 
@@ -429,8 +430,10 @@ rtk git push origin HEAD
 - Modify: `HangTen.xcodeproj/project.pbxproj`
 - Modify: `HangTenTests/BoardSourceBoundaryTrackedPaths.txt`
 - Modify: `Hangboards/frictitious-port-a-board/board.json`
-- Modify: `Hangboards/frictitious-port-a-board/assets/back.png`
-- Create: `docs/source-audits/2026-09-03-port-dynamic-cord-back-slice.md`
+- Modify: `Hangboards/frictitious-port-a-board/assets/primary.png`
+- Delete: `Hangboards/frictitious-port-a-board/assets/front-inverted.png`
+- Delete: `Hangboards/frictitious-port-a-board/assets/cord-option-4-20mm-incut.png`
+- Create: `docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md`
 
 **Interfaces:**
 
@@ -456,29 +459,30 @@ Expected, in order:
 cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad
 ```
 
-Restore only the exact back face and confirm format/hash:
+Restore only the exact front face and confirm format/hash:
 
 ```bash
-rtk git restore --source=e12e7f66 -- Hangboards/frictitious-port-a-board/assets/back.png
-rtk shasum -a 256 Hangboards/frictitious-port-a-board/assets/back.png
-rtk file Hangboards/frictitious-port-a-board/assets/back.png
+rtk git restore --source=e12e7f66 -- Hangboards/frictitious-port-a-board/assets/primary.png
+rtk shasum -a 256 Hangboards/frictitious-port-a-board/assets/primary.png
+rtk file Hangboards/frictitious-port-a-board/assets/primary.png
 ```
 
-Expected: the back hash above and `1400 x 1400, 8-bit/color RGBA`. Do not
+Expected: the front hash above and `1400 x 1400, 8-bit/color RGBA`. Do not
 process, crop, regenerate, or recompress the file.
 
-- [ ] **Step 2: Opt in only the two back presentations.**
+- [ ] **Step 2: Opt in only the two front presentations and remove duplicate front storage.**
 
 Use `apply_patch` on `board.json`:
 
-- add the exact spec `cordRig` to `back`;
-- change `back.aspectRatio` to `0.819672131147541`;
-- change `back-inverted.aspectRatio` to the same value;
-- retain `back-inverted.sourcePresentationID == "back"` and
+- add the exact spec `cordRig` to `primary`;
+- change the board, `primary`, and `front-inverted` aspect ratios to `0.819672131147541`;
+- retain `front-inverted.sourcePresentationID == "primary"` and
   `isInverted == true`;
 - add `geometryRotationAnchor` with x `0.5` and y
   `0.6174863387978142`; and
-- leave `back-inverted.assetPath == "assets/back-inverted.png"`.
+- point `front-inverted.assetPath` at `assets/primary.png`;
+- remove the identical `cord-option-4-20mm-incut` presentation; and
+- delete only its PNG and `assets/front-inverted.png` after no references remain.
 
 Before and after the patch, calculate the canonical JSON hash of `holds` with:
 
@@ -487,7 +491,7 @@ rtk python3 -c 'import hashlib,json; d=json.load(open("Hangboards/frictitious-po
 ```
 
 Require the same value both times. Record it in the source audit. Do not touch
-the other presentation objects or any asset besides `back.png`.
+the other presentation objects or physical-face assets.
 
 - [ ] **Step 3: Implement the shared artwork with the approved cord style.**
 
@@ -539,26 +543,26 @@ accessibility behavior.
 Without adding another test method, extend
 `testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport`: when
 `HANGTEN_CORD_REVIEW_DIR` is present, load the real Port package, render only
-`BoardPresentationArtwork` for `back` and `back-inverted` through
+`BoardPresentationArtwork` for `primary` and `front-inverted` through
 `ImageRenderer` at exactly `1200 × 1464` points and scale `1`, and write
-`back.png` and `back-inverted.png` to that exact directory. Assert both PNGs
+`primary.png` and `front-inverted.png` to that exact directory. Assert both PNGs
 decode as `1200 × 1464` and have transparent corner pixels. With the variable
 absent, retain only the Task 1 geometry assertions.
 
 - [ ] **Step 6: Write the evidence audit.**
 
-Create `docs/source-audits/2026-09-03-port-dynamic-cord-back-slice.md` with:
+Create `docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md` with:
 
 - the spec path and four manufacturer URLs;
 - the explicit generic-knot caveat;
 - all scene/frame/pivot/attachment/pull/exit/radius values;
 - the exact 1.5× equation;
 - all three historical hashes and dimensions;
-- the promoted back hash and unchanged-holds hash;
+- the promoted front hash and unchanged-holds hash;
 - an explicit statement that no image detection, vectorization, cropping, or
   regeneration occurred;
 - the focused command results below; and
-- separate pending decision rows for `back` and `back-inverted`, filled only
+- separate decision rows for `primary` and `front-inverted`, filled only
   after the user reviews each isolated output.
 
 - [ ] **Step 7: Run the proportional automated gates.**
@@ -567,7 +571,7 @@ Run only the already-defined focused tests and focused build:
 
 ```bash
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardCordRigGeometryTests/testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport -only-testing:HangTenTests/BoardPackageStoreTests/testDirectTwoAnchorRigLoadsAndAliasUsesCanonicalArtworkWithoutChangingLegacySelection -only-testing:HangTenTests/BoardPackageWriterTests/testDirectTwoAnchorCordRigRoundTripsInCanonicalOrder
-rtk python3 -m pytest Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_vertical_slice -q
+rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py::test_direct_two_anchor_cord_rig_matches_ios_vertical_slice
 rtk xcodebuild build -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'
 ```
 
@@ -578,15 +582,15 @@ test suites before visual review.
 - [ ] **Step 8: Generate the two isolated transparent board canvases.**
 
 Create
-`.context/joyful-donkey-port-dynamic-cord-back-review/OWNERSHIP.md` with
+`.context/joyful-donkey-port-dynamic-cord-front-review/OWNERSHIP.md` with
 `apply_patch` before running the renderer. Record owner `joyful-donkey`, the
 absolute directory, the two intended PNG paths, and that no server/process is
 owned. Then run:
 
 ```bash
-rtk env HANGTEN_CORD_REVIEW_DIR="$PWD/.context/joyful-donkey-port-dynamic-cord-back-review" xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardCordRigGeometryTests/testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport
-rtk file .context/joyful-donkey-port-dynamic-cord-back-review/back.png .context/joyful-donkey-port-dynamic-cord-back-review/back-inverted.png
-rtk shasum -a 256 .context/joyful-donkey-port-dynamic-cord-back-review/back.png .context/joyful-donkey-port-dynamic-cord-back-review/back-inverted.png
+rtk env HANGTEN_CORD_REVIEW_DIR="$PWD/.context/joyful-donkey-port-dynamic-cord-front-review" xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' -only-testing:HangTenTests/BoardCordRigGeometryTests/testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport
+rtk file .context/joyful-donkey-port-dynamic-cord-front-review/primary.png .context/joyful-donkey-port-dynamic-cord-front-review/front-inverted.png
+rtk shasum -a 256 .context/joyful-donkey-port-dynamic-cord-front-review/primary.png .context/joyful-donkey-port-dynamic-cord-front-review/front-inverted.png
 ```
 
 Expected: two distinct `1200 × 1464` RGBA PNGs with transparent corners,
@@ -600,16 +604,16 @@ Do not add `.context` artifacts. Run:
 
 ```bash
 rtk git diff --check
-rtk git add HangTen/Views/BoardPresentationArtwork.swift HangTen/Views/BoardMapView.swift HangTen/Models/TrainingModels.swift HangTenTests/BoardCordRigGeometryTests.swift HangTen.xcodeproj/project.pbxproj HangTenTests/BoardSourceBoundaryTrackedPaths.txt Hangboards/frictitious-port-a-board/board.json Hangboards/frictitious-port-a-board/assets/back.png docs/source-audits/2026-09-03-port-dynamic-cord-back-slice.md
-rtk git commit -m "feat: render Port back with dynamic cords"
+rtk git add HangTen/Views/BoardPresentationArtwork.swift HangTen/Views/BoardMapView.swift HangTenTests/BoardCordRigGeometryTests.swift HangTen.xcodeproj/project.pbxproj HangTenTests/BoardSourceBoundaryTrackedPaths.txt Hangboards/frictitious-port-a-board/board.json Hangboards/frictitious-port-a-board/assets docs/source-audits/2026-09-03-port-dynamic-cord-front-slice.md docs/source-audits/review-assets/2026-09-03-port-dynamic-cord-front-inverted-approved.png
+rtk git commit -m "feat: render Port front with dynamic cords"
 rtk git push origin HEAD
 ```
 
 - [ ] **Step 10: Stop for one-by-one production visual review.**
 
-Show only the isolated `back.png` first, with the official product link. After
+Show only the isolated `primary.png` first, with the official product link. After
 an explicit decision, record it in the audit and show only
-`back-inverted.png`, again with the product link. Do not show app chrome or a
+`front-inverted.png`, again with the product link. Do not show app chrome or a
 contact sheet. If either is rejected, keep fixes inside this task and repeat
 the relevant focused gate/output/commit/push cycle.
 
