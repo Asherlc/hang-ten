@@ -3,6 +3,10 @@ package com.hangten.android.board
 import com.hangten.android.content.BoardCordRig
 import com.hangten.android.content.BoardGeometryRotationAnchor
 import com.hangten.android.content.BoardPresentation
+import com.hangten.android.content.BoardRoutedCordLayer
+import com.hangten.android.content.BoardRoutedCordOcclusion
+import com.hangten.android.content.BoardRoutedCordPairing
+import com.hangten.android.content.BoardRoutedCordPathCommand
 import com.hangten.android.content.BoardRoutedCordSpace
 import com.hangten.android.content.Point
 import kotlin.math.cos
@@ -98,6 +102,54 @@ internal data class RoutedCordRigGeometry(
     val faceTransform: BoardInPlaneTransform,
     val scale: Float,
     val portPoints: Map<String, Point>,
+    val spans: List<RoutedCordTensionSpan>,
+    val paths: List<ResolvedRoutedCordPath>,
+    val radialLips: List<ResolvedRoutedCordRadialLip>,
+    val facePatches: List<ResolvedRoutedCordFacePatch>,
+) {
+    fun tensionSpans(layer: BoardRoutedCordLayer): List<RoutedCordTensionSpan> =
+        spans.filter { it.layer == layer }
+
+    fun authoredPaths(layer: BoardRoutedCordLayer): List<ResolvedRoutedCordPath> =
+        paths.filter { it.layer == layer }
+}
+
+internal data class RoutedCordTensionSpan(
+    val groupId: String,
+    val layer: BoardRoutedCordLayer,
+    val bodyPortId: String,
+    val worldPortId: String,
+    val bodyPoint: Point,
+    val worldPoint: Point,
+) {
+    val path: BoardPath
+        get() = BoardPath(
+            commands = listOf(
+                BoardPathCommand.MoveTo(worldPoint.x, worldPoint.y),
+                BoardPathCommand.LineTo(bodyPoint.x, bodyPoint.y),
+            ),
+        )
+}
+
+internal data class ResolvedRoutedCordPath(
+    val id: String,
+    val space: BoardRoutedCordSpace,
+    val layer: BoardRoutedCordLayer,
+    val path: BoardPath,
+    val definingPoints: List<Point>,
+)
+
+internal data class ResolvedRoutedCordRadialLip(
+    val bodyPortId: String,
+    val center: Point,
+    val toward: Point,
+    val radius: Float,
+    val chordOffset: Float,
+)
+
+internal data class ResolvedRoutedCordFacePatch(
+    val path: BoardPath,
+    val definingPoints: List<Point>,
 )
 
 internal fun resolveRoutedCordRigGeometry(
@@ -142,12 +194,141 @@ internal fun resolveRoutedCordRigGeometry(
         y = sourceBounds.top + point.y * scale,
     )
 
+    fun resolvedPoint(point: Point, space: BoardRoutedCordSpace): Point {
+        val sourcePoint = sourceRelativePoint(point)
+        return if (space == BoardRoutedCordSpace.Body) faceTransform.map(sourcePoint) else sourcePoint
+    }
+
     val portPoints = rig.ports.associate { port ->
-        val point = sourceRelativePoint(port.point)
-        port.id to if (port.space == BoardRoutedCordSpace.Body) {
-            faceTransform.map(point)
+        port.id to resolvedPoint(port.point, port.space)
+    }
+
+    data class OrderedPort(
+        val id: String,
+        val point: Point,
+        val declarationIndex: Int,
+    )
+
+    fun orderedPorts(ids: List<String>, pairing: BoardRoutedCordPairing): List<OrderedPort>? {
+        val resolved = ids.mapIndexed { index, id ->
+            OrderedPort(
+                id = id,
+                point = portPoints[id] ?: return null,
+                declarationIndex = index,
+            )
+        }
+        return if (pairing == BoardRoutedCordPairing.ScreenOrder) {
+            resolved.sortedWith(
+                compareBy<OrderedPort> { it.point.x }
+                    .thenBy { it.point.y }
+                    .thenBy { it.declarationIndex },
+            )
         } else {
-            point
+            resolved
+        }
+    }
+
+    val spans = buildList {
+        rig.tensionGroups.forEach { group ->
+            val bodyPorts = orderedPorts(group.bodyPortIds, group.pairing) ?: return null
+            val worldPorts = orderedPorts(group.worldPortIds, group.pairing) ?: return null
+            if (bodyPorts.size != worldPorts.size) return null
+            bodyPorts.zip(worldPorts).forEach { (bodyPort, worldPort) ->
+                add(
+                    RoutedCordTensionSpan(
+                        groupId = group.id,
+                        layer = group.layer,
+                        bodyPortId = bodyPort.id,
+                        worldPortId = worldPort.id,
+                        bodyPoint = bodyPort.point,
+                        worldPoint = worldPort.point,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun resolvedPath(
+        commands: List<BoardRoutedCordPathCommand>,
+        space: BoardRoutedCordSpace,
+    ): Pair<BoardPath, List<Point>> {
+        val definingPoints = mutableListOf<Point>()
+        val boardCommands = commands.map { command ->
+            when (command) {
+                is BoardRoutedCordPathCommand.Move -> resolvedPoint(command.to, space).let { point ->
+                    definingPoints += point
+                    BoardPathCommand.MoveTo(point.x, point.y)
+                }
+                is BoardRoutedCordPathCommand.Line -> resolvedPoint(command.to, space).let { point ->
+                    definingPoints += point
+                    BoardPathCommand.LineTo(point.x, point.y)
+                }
+                is BoardRoutedCordPathCommand.Quad -> {
+                    val control = resolvedPoint(command.control, space)
+                    val destination = resolvedPoint(command.to, space)
+                    definingPoints += control
+                    definingPoints += destination
+                    BoardPathCommand.QuadTo(
+                        controlX = control.x,
+                        controlY = control.y,
+                        x = destination.x,
+                        y = destination.y,
+                    )
+                }
+                is BoardRoutedCordPathCommand.Curve -> {
+                    val control1 = resolvedPoint(command.control1, space)
+                    val control2 = resolvedPoint(command.control2, space)
+                    val destination = resolvedPoint(command.to, space)
+                    definingPoints += control1
+                    definingPoints += control2
+                    definingPoints += destination
+                    BoardPathCommand.CubicTo(
+                        control1X = control1.x,
+                        control1Y = control1.y,
+                        control2X = control2.x,
+                        control2Y = control2.y,
+                        x = destination.x,
+                        y = destination.y,
+                    )
+                }
+                BoardRoutedCordPathCommand.Close -> BoardPathCommand.Close
+            }
+        }
+        return BoardPath(commands = boardCommands) to definingPoints
+    }
+
+    val paths = rig.paths.map { authoredPath ->
+        val (path, definingPoints) = resolvedPath(authoredPath.commands, authoredPath.space)
+        ResolvedRoutedCordPath(
+            id = authoredPath.id,
+            space = authoredPath.space,
+            layer = authoredPath.layer,
+            path = path,
+            definingPoints = definingPoints,
+        )
+    }
+    val radialLips = mutableListOf<ResolvedRoutedCordRadialLip>()
+    val facePatches = mutableListOf<ResolvedRoutedCordFacePatch>()
+    rig.occlusions.forEach { occlusion ->
+        when (occlusion) {
+            is BoardRoutedCordOcclusion.RadialLip -> {
+                val incidentSpan = spans.singleOrNull { it.bodyPortId == occlusion.bodyPortId }
+                    ?: return null
+                radialLips += ResolvedRoutedCordRadialLip(
+                    bodyPortId = occlusion.bodyPortId,
+                    center = incidentSpan.bodyPoint,
+                    toward = incidentSpan.worldPoint,
+                    radius = occlusion.radius * scale,
+                    chordOffset = occlusion.chordOffset * scale,
+                )
+            }
+            is BoardRoutedCordOcclusion.FacePatch -> {
+                val (path, definingPoints) = resolvedPath(
+                    commands = occlusion.commands,
+                    space = BoardRoutedCordSpace.Body,
+                )
+                facePatches += ResolvedRoutedCordFacePatch(path, definingPoints)
+            }
         }
     }
 
@@ -158,6 +339,10 @@ internal fun resolveRoutedCordRigGeometry(
         faceTransform = faceTransform,
         scale = scale,
         portPoints = portPoints,
+        spans = spans,
+        paths = paths,
+        radialLips = radialLips,
+        facePatches = facePatches,
     )
 }
 
