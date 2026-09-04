@@ -821,7 +821,12 @@ final class BoardPackageStoreTests: XCTestCase {
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
             board["aspectRatio"] = 1
             presentations[0]["aspectRatio"] = 1
-            presentations[0]["cordRig"] = self.routedCordRigJSON()
+            var routedRig = self.routedCordRigJSON()
+            var routedPorts = try XCTUnwrap(routedRig["ports"] as? [[String: Any]])
+            routedPorts[2]["point"] = ["x": 420, "y": -200]
+            routedPorts[3]["point"] = ["x": 580, "y": -200]
+            routedRig["ports"] = routedPorts
+            presentations[0]["cordRig"] = routedRig
             presentations.append([
                 "id": "front-quarter-turn",
                 "name": "Front quarter turn",
@@ -868,12 +873,12 @@ final class BoardPackageStoreTests: XCTestCase {
             BoardRoutedCordPort(
                 id: "world-left",
                 space: .world,
-                point: BoardCordPoint(x: 420, y: 70)
+                point: BoardCordPoint(x: 420, y: -200)
             ),
             BoardRoutedCordPort(
                 id: "world-right",
                 space: .world,
-                point: BoardCordPoint(x: 580, y: 70)
+                point: BoardCordPoint(x: 580, y: -200)
             ),
         ])
         XCTAssertEqual(rig.tensionGroups, [
@@ -1032,6 +1037,76 @@ final class BoardPackageStoreTests: XCTestCase {
                 line: #line
             )
         }
+    }
+
+    func testStoreRejectsRoutedCordGravityForCanonicalAndRotatedAlias() throws {
+        let canonicalFixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var rig = self.routedCordRigJSON()
+            var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+            ports[2]["point"] = ["x": 420, "y": 330]
+            rig["ports"] = ports
+            presentations[0]["cordRig"] = rig
+            board["presentations"] = presentations
+        }
+        defer { canonicalFixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: canonicalFixture.bundle),
+            reason: "presentation front routed body port body-left must be strictly below world port world-left"
+        )
+
+        let aliasFixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var rig = self.routedCordRigJSON()
+            var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+            ports[2]["point"] = ["x": 420, "y": 0]
+            ports[3]["point"] = ["x": 580, "y": 0]
+            rig["ports"] = ports
+            presentations[0]["cordRig"] = rig
+            presentations.append([
+                "id": "front-quarter-turn",
+                "name": "Front quarter turn",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1,
+                "default": false,
+                "sourcePresentationID": "front",
+                "rotationDegrees": 90,
+            ])
+            board["presentations"] = presentations
+        }
+        defer { aliasFixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: aliasFixture.bundle),
+            reason: "presentation front-quarter-turn routed body port body-left must be strictly below world port world-left"
+        )
+    }
+
+    func testStoreRejectsRoutedCordPathControlOutsideStyleInset() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var rig = self.routedCordRigJSON()
+            var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+            var commands = try XCTUnwrap(paths[0]["commands"] as? [[String: Any]])
+            commands[1]["control"] = [-1, 470]
+            paths[0]["commands"] = commands
+            rig["paths"] = paths
+            presentations[0]["cordRig"] = rig
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front routed cord centerline geometry must remain inside sceneSize with the style margin"
+        )
     }
 
     func testStoreRejectsDirectTwoAnchorCordStrokeOutsideScene() throws {

@@ -11,6 +11,8 @@ struct BoardPresentationArtwork: View {
 
     private let geometry: BoardCordRigGeometry?
     private let directTwoAnchorRig: BoardDirectTwoAnchorCordRig?
+    private let routedGeometry: BoardRoutedCordRigGeometry?
+    private let routedRig: BoardRoutedCordRig?
     private let faceImage: UIImage?
 
     init(
@@ -27,7 +29,22 @@ struct BoardPresentationArtwork: View {
 
         if case .directTwoAnchor(let rig) = board.resolvedCordRig(for: presentation) {
             directTwoAnchorRig = rig
+            routedRig = nil
+            routedGeometry = nil
             self.geometry = geometry ?? BoardCordRigGeometry.make(
+                rig: rig,
+                projection: projection,
+                in: CGRect(origin: .zero, size: canvasSize)
+            )
+            faceImage = BoardCatalog.packageStore.presentationArtworkImageURL(
+                for: board,
+                presentationID: presentation.id
+            ).flatMap { UIImage(contentsOfFile: $0.path) }
+        } else if case .routed(let rig) = board.resolvedCordRig(for: presentation) {
+            directTwoAnchorRig = nil
+            self.geometry = nil
+            routedRig = rig
+            routedGeometry = BoardRoutedCordRigGeometry.resolve(
                 rig: rig,
                 projection: projection,
                 in: CGRect(origin: .zero, size: canvasSize)
@@ -39,6 +56,8 @@ struct BoardPresentationArtwork: View {
         } else if presentation.rotationDegrees != nil {
             directTwoAnchorRig = nil
             self.geometry = nil
+            routedRig = nil
+            routedGeometry = nil
             faceImage = BoardCatalog.packageStore.presentationArtworkImageURL(
                 for: board,
                 presentationID: presentation.id
@@ -46,6 +65,8 @@ struct BoardPresentationArtwork: View {
         } else {
             directTwoAnchorRig = nil
             self.geometry = nil
+            routedRig = nil
+            routedGeometry = nil
             faceImage = nil
         }
     }
@@ -66,9 +87,31 @@ struct BoardPresentationArtwork: View {
         )
     }
 
+    static func routedGeometry(
+        for board: TrainingBoard,
+        presentation: BoardPresentation,
+        projection: BoardPresentationGeometryProjection,
+        canvasSize: CGSize
+    ) -> BoardRoutedCordRigGeometry? {
+        guard case .routed(let rig) = board.resolvedCordRig(for: presentation) else {
+            return nil
+        }
+        return BoardRoutedCordRigGeometry.resolve(
+            rig: rig,
+            projection: projection,
+            in: CGRect(origin: .zero, size: canvasSize)
+        )
+    }
+
     @ViewBuilder
     var body: some View {
-        if let geometry, let rig = directTwoAnchorRig, let faceImage {
+        if let routedGeometry, let routedRig, let faceImage {
+            BoardRoutedPresentationArtwork(
+                faceImage: faceImage,
+                rig: routedRig,
+                geometry: routedGeometry
+            )
+        } else if let geometry, let rig = directTwoAnchorRig, let faceImage {
             BoardRiggedPresentationArtwork(
                 faceImage: faceImage,
                 rig: rig,
@@ -178,6 +221,156 @@ struct BoardPresentationArtwork: View {
             eyeletContext.transform = geometry.faceTransform
             eyeletContext.draw(resolvedImage, in: geometry.faceRect)
         }
+    }
+
+    fileprivate static func drawRoutedArtwork(
+        image: Image,
+        rig: BoardRoutedCordRig,
+        geometry: BoardRoutedCordRigGeometry,
+        in context: inout GraphicsContext
+    ) {
+        let resolvedImage = context.resolve(image)
+
+        drawRoutedCord(layer: .behindFace, rig: rig, geometry: geometry, in: &context)
+        drawRoutedFace(resolvedImage, geometry: geometry, in: &context)
+        drawRoutedCord(layer: .aboveFace, rig: rig, geometry: geometry, in: &context)
+
+        for lip in geometry.radialLips {
+            var occlusionContext = context
+            occlusionContext.clip(to: lip.path)
+            drawRoutedFace(resolvedImage, geometry: geometry, in: &occlusionContext)
+        }
+        for patch in geometry.facePatches {
+            var occlusionContext = context
+            occlusionContext.clip(to: patch.path)
+            drawRoutedFace(resolvedImage, geometry: geometry, in: &occlusionContext)
+        }
+
+        drawRoutedCord(layer: .overpass, rig: rig, geometry: geometry, in: &context)
+    }
+
+    private static func drawRoutedFace(
+        _ image: GraphicsContext.ResolvedImage,
+        geometry: BoardRoutedCordRigGeometry,
+        in context: inout GraphicsContext
+    ) {
+        var faceContext = context
+        faceContext.transform = geometry.faceTransform
+        faceContext.draw(image, in: geometry.faceRect)
+    }
+
+    private static func drawRoutedCord(
+        layer: BoardRoutedCordLayer,
+        rig: BoardRoutedCordRig,
+        geometry: BoardRoutedCordRigGeometry,
+        in context: inout GraphicsContext
+    ) {
+        let paths = geometry.tensionSpans(in: layer).map(\.path)
+            + geometry.authoredPaths(in: layer).map(\.path)
+        guard !paths.isEmpty else { return }
+
+        let diameter = rig.style.diameter * geometry.scale
+        guard diameter.isFinite, diameter > 0 else { return }
+        stroke(
+            paths,
+            in: &context,
+            color: routedColor(rig.style.outlineColor),
+            width: diameter * 1.6
+        )
+        stroke(
+            paths,
+            in: &context,
+            color: routedColor(rig.style.baseColor),
+            width: diameter
+        )
+        drawRoutedBraid(
+            over: paths,
+            geometry: geometry,
+            diameter: diameter,
+            colors: rig.style.braidColors.map(routedColor),
+            in: &context
+        )
+    }
+
+    private static func drawRoutedBraid(
+        over paths: [Path],
+        geometry: BoardRoutedCordRigGeometry,
+        diameter: CGFloat,
+        colors: [Color],
+        in context: inout GraphicsContext
+    ) {
+        guard colors.count == 2 else { return }
+        let clipStyle = StrokeStyle(
+            lineWidth: diameter * 0.84,
+            lineCap: .round,
+            lineJoin: .round
+        )
+        var braidClip = Path()
+        for path in paths {
+            braidClip.addPath(path.strokedPath(clipStyle))
+        }
+
+        var braidContext = context
+        braidContext.clip(to: braidClip)
+        let spacing = max(diameter * 0.72, 1)
+        let fiberWidth = max(diameter * 0.18, 0.5)
+        let diagonalSpan = geometry.sceneRect.width + geometry.sceneRect.height
+        var offset = -diagonalSpan
+        var index = 0
+        while offset <= diagonalSpan * 2 {
+            var fiber = Path()
+            if index.isMultiple(of: 2) {
+                fiber.move(
+                    to: CGPoint(
+                        x: geometry.sceneRect.minX + offset,
+                        y: geometry.sceneRect.maxY
+                    )
+                )
+                fiber.addLine(
+                    to: CGPoint(
+                        x: geometry.sceneRect.minX + offset + geometry.sceneRect.height,
+                        y: geometry.sceneRect.minY
+                    )
+                )
+            } else {
+                fiber.move(
+                    to: CGPoint(
+                        x: geometry.sceneRect.minX + offset,
+                        y: geometry.sceneRect.minY
+                    )
+                )
+                fiber.addLine(
+                    to: CGPoint(
+                        x: geometry.sceneRect.minX + offset + geometry.sceneRect.height,
+                        y: geometry.sceneRect.maxY
+                    )
+                )
+            }
+            braidContext.stroke(
+                fiber,
+                with: .color(colors[index % colors.count]),
+                style: StrokeStyle(
+                    lineWidth: fiberWidth,
+                    lineCap: .round,
+                    lineJoin: .round
+                )
+            )
+            offset += spacing
+            index += 1
+        }
+    }
+
+    private static func routedColor(_ hex: String) -> Color {
+        guard hex.count == 7,
+              hex.first == "#",
+              let value = UInt64(hex.dropFirst(), radix: 16) else {
+            return .clear
+        }
+        return Color(
+            red: Double((value >> 16) & 0xFF) / 255,
+            green: Double((value >> 8) & 0xFF) / 255,
+            blue: Double(value & 0xFF) / 255
+        )
     }
 
     private static func stroke(
@@ -308,6 +501,25 @@ struct BoardRiggedPresentationArtwork: View {
     var body: some View {
         Canvas(opaque: false, rendersAsynchronously: false) { context, _ in
             BoardPresentationArtwork.drawRiggedArtwork(
+                image: Image(uiImage: faceImage),
+                rig: rig,
+                geometry: geometry,
+                in: &context
+            )
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
+struct BoardRoutedPresentationArtwork: View {
+    let faceImage: UIImage
+    let rig: BoardRoutedCordRig
+    let geometry: BoardRoutedCordRigGeometry
+
+    var body: some View {
+        Canvas(opaque: false, rendersAsynchronously: false) { context, _ in
+            BoardPresentationArtwork.drawRoutedArtwork(
                 image: Image(uiImage: faceImage),
                 rig: rig,
                 geometry: geometry,

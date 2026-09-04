@@ -1260,6 +1260,47 @@ final class BoardPackageWriterTests: XCTestCase {
         )
     }
 
+    func testWriterRejectsRoutedCordGravityAndPathBoundsUsingPresentationGeometry() throws {
+        func decodedDocument(
+            mutatingRig mutation: (inout [String: Any]) throws -> Void
+        ) throws -> BoardEditableDocument {
+            let source = try BoardPackageWriter.data(for: makeDocument())
+            var payload = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: source) as? [String: Any]
+            )
+            var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+            var rig = routedCordRigJSON()
+            try mutation(&rig)
+            presentations[0]["cordRig"] = rig
+            payload["presentations"] = presentations
+            return try BoardEditableDocument(
+                data: JSONSerialization.data(withJSONObject: payload)
+            )
+        }
+
+        let invalidGravity = try decodedDocument { rig in
+            var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+            ports[2]["point"] = ["x": 420, "y": 330]
+            rig["ports"] = ports
+        }
+        assertWriterInvalid(
+            invalidGravity,
+            reason: "presentation front routed body port body-left must be strictly below world port world-left"
+        )
+
+        let invalidPathBounds = try decodedDocument { rig in
+            var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+            var commands = try XCTUnwrap(paths[0]["commands"] as? [[String: Any]])
+            commands[1]["control"] = [5, 470]
+            paths[0]["commands"] = commands
+            rig["paths"] = paths
+        }
+        assertWriterInvalid(
+            invalidPathBounds,
+            reason: "presentation front routed cord centerline geometry must remain inside sceneSize with the style margin"
+        )
+    }
+
     func testReencodedRealPackageKeepsTopLevelOrderEscapesAndTrailingNewline() throws {
         let slug = "zlagboard-pro"
         let originalData = try Data(

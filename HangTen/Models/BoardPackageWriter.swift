@@ -885,12 +885,21 @@ enum BoardPackageWriter {
             let resolvedCordRig = presentation.sourcePresentationID.flatMap {
                 presentationsByID[$0]?.cordRig
             } ?? presentation.cordRig
-            if case .directTwoAnchor(let rig) = resolvedCordRig {
-                try validateCordPresentation(
-                    rig,
-                    presentation: presentation,
-                    in: document
-                )
+            if let resolvedCordRig {
+                switch resolvedCordRig {
+                case .directTwoAnchor(let rig):
+                    try validateCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        in: document
+                    )
+                case .routed(let rig):
+                    try validateRoutedCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        in: document
+                    )
+                }
             }
         }
 
@@ -1131,6 +1140,51 @@ enum BoardPackageWriter {
         case .pullExitsNotAboveAttachments:
             throw invalid(
                 "presentation \(presentation.id) cord pull exits must remain above both attachment points",
+                document
+            )
+        case nil:
+            return
+        }
+    }
+
+    private static func validateRoutedCordPresentation(
+        _ rig: BoardRoutedCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let failure = BoardRoutedCordPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+        )
+        switch failure {
+        case .unresolvedGeometry:
+            throw invalid(
+                "presentation \(presentation.id) routed cord geometry could not be resolved",
+                document
+            )
+        case .centerlineOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) routed cord centerline geometry "
+                    + "must remain inside sceneSize with the style margin",
+                document
+            )
+        case .facePatchOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) routed facePatch geometry "
+                    + "must remain inside sceneSize",
+                document
+            )
+        case .radialLipOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) routed radialLip circle "
+                    + "must remain inside sceneSize",
+                document
+            )
+        case .bodyNotBelowWorld(let bodyPortID, let worldPortID):
+            throw invalid(
+                "presentation \(presentation.id) routed body port \(bodyPortID) "
+                    + "must be strictly below world port \(worldPortID)",
                 document
             )
         case nil:

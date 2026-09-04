@@ -765,15 +765,21 @@ struct BoardPackageStore {
                     }
                 }
             }
-            if case .directTwoAnchor(let rig) = Self.resolvedCordRig(
-                for: presentation,
-                in: presentations
-            ) {
-                try validateCordPresentation(
-                    rig,
-                    presentation: presentation,
-                    boardID: document.id
-                )
+            if let cordRig = Self.resolvedCordRig(for: presentation, in: presentations) {
+                switch cordRig {
+                case .directTwoAnchor(let rig):
+                    try validateCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        boardID: document.id
+                    )
+                case .routed(let rig):
+                    try validateRoutedCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        boardID: document.id
+                    )
+                }
             }
         }
         guard defaultCount == 1 else {
@@ -867,6 +873,38 @@ struct BoardPackageStore {
             reason = "presentation \(presentation.id) cord drawing must remain inside sceneSize"
         case .pullExitsNotAboveAttachments:
             reason = "presentation \(presentation.id) cord pull exits must remain above both attachment points"
+        case nil:
+            return
+        }
+        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: reason)
+    }
+
+    private static func validateRoutedCordPresentation(
+        _ rig: BoardRoutedCordRig,
+        presentation: BoardPackagePresentationDocument,
+        boardID: String
+    ) throws {
+        let failure = BoardRoutedCordPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+        )
+        let reason: String
+        switch failure {
+        case .unresolvedGeometry:
+            reason = "presentation \(presentation.id) routed cord geometry could not be resolved"
+        case .centerlineOutsideScene:
+            reason = "presentation \(presentation.id) routed cord centerline geometry "
+                + "must remain inside sceneSize with the style margin"
+        case .facePatchOutsideScene:
+            reason = "presentation \(presentation.id) routed facePatch geometry "
+                + "must remain inside sceneSize"
+        case .radialLipOutsideScene:
+            reason = "presentation \(presentation.id) routed radialLip circle "
+                + "must remain inside sceneSize"
+        case .bodyNotBelowWorld(let bodyPortID, let worldPortID):
+            reason = "presentation \(presentation.id) routed body port \(bodyPortID) "
+                + "must be strictly below world port \(worldPortID)"
         case nil:
             return
         }

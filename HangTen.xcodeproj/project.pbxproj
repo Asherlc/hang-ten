@@ -136,6 +136,8 @@
 		D10000000000000000000001 /* BoardCordRigGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* BoardCordRigGeometry.swift */; };
 		D10000000000000000000002 /* BoardCordRigGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* BoardCordRigGeometryTests.swift */; };
 		D10000000000000000000003 /* BoardPresentationArtwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000003 /* BoardPresentationArtwork.swift */; };
+		D10000000000000000000004 /* BoardRoutedCordRigGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000004 /* BoardRoutedCordRigGeometryTests.swift */; };
+		D10000000000000000000005 /* BoardRoutedCordRigGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000005 /* BoardRoutedCordRigGeometry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -270,6 +272,8 @@
 		D20000000000000000000001 /* BoardCordRigGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCordRigGeometry.swift; sourceTree = "<group>"; };
 		D20000000000000000000002 /* BoardCordRigGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCordRigGeometryTests.swift; sourceTree = "<group>"; };
 		D20000000000000000000003 /* BoardPresentationArtwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPresentationArtwork.swift; sourceTree = "<group>"; };
+		D20000000000000000000004 /* BoardRoutedCordRigGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardRoutedCordRigGeometryTests.swift; sourceTree = "<group>"; };
+		D20000000000000000000005 /* BoardRoutedCordRigGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardRoutedCordRigGeometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,6 +347,7 @@
 				D20000000000000000000001 /* BoardCordRigGeometry.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
+				D20000000000000000000005 /* BoardRoutedCordRigGeometry.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000093 /* CountdownAudioScheduler.swift */,
@@ -436,6 +441,7 @@
 			children = (
 				FA1000000000000000000002 /* BoardMapPresentationSelectionTests.swift */,
 				D20000000000000000000002 /* BoardCordRigGeometryTests.swift */,
+				D20000000000000000000004 /* BoardRoutedCordRigGeometryTests.swift */,
 				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
@@ -705,6 +711,7 @@
 				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				D10000000000000000000001 /* BoardCordRigGeometry.swift in Sources */,
+				D10000000000000000000005 /* BoardRoutedCordRigGeometry.swift in Sources */,
 				D10000000000000000000003 /* BoardPresentationArtwork.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
@@ -773,6 +780,7 @@
 			files = (
 				FA1000000000000000000001 /* BoardMapPresentationSelectionTests.swift in Sources */,
 				D10000000000000000000002 /* BoardCordRigGeometryTests.swift in Sources */,
+				D10000000000000000000004 /* BoardRoutedCordRigGeometryTests.swift in Sources */,
 				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
