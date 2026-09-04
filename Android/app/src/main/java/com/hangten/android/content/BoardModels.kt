@@ -18,14 +18,88 @@ data class BoardCordRect(
 )
 
 sealed interface BoardCordRig {
+    val sceneSize: BoardCordSize
+    val sourceFrame: BoardCordRect
+    val innerFaceFrame: BoardCordRect
+
     data class DirectTwoAnchor(
-        val sceneSize: BoardCordSize,
-        val sourceFrame: BoardCordRect,
-        val innerFaceFrame: BoardCordRect,
+        override val sceneSize: BoardCordSize,
+        override val sourceFrame: BoardCordRect,
+        override val innerFaceFrame: BoardCordRect,
         val attachmentPoints: List<Point>,
         val pullPoint: Point,
         val eyeletRadius: Float,
     ) : BoardCordRig
+
+    data class Routed(
+        override val sceneSize: BoardCordSize,
+        override val sourceFrame: BoardCordRect,
+        override val innerFaceFrame: BoardCordRect,
+        val style: BoardRoutedCordStyle,
+        val ports: List<BoardRoutedCordPort>,
+        val tensionGroups: List<BoardRoutedCordTensionGroup>,
+        val paths: List<BoardRoutedCordPath>,
+        val occlusions: List<BoardRoutedCordOcclusion>,
+    ) : BoardCordRig
+}
+
+enum class BoardRoutedCordSpace { Body, World }
+
+enum class BoardRoutedCordLayer { BehindFace, AboveFace, Overpass }
+
+enum class BoardRoutedCordPairing { Declared, ScreenOrder }
+
+data class BoardRoutedCordStyle(
+    val diameter: Float,
+    val outlineColor: String,
+    val baseColor: String,
+    val braidColors: List<String>,
+)
+
+data class BoardRoutedCordPort(
+    val id: String,
+    val space: BoardRoutedCordSpace,
+    val point: Point,
+)
+
+data class BoardRoutedCordTensionGroup(
+    val id: String,
+    val bodyPortIds: List<String>,
+    val worldPortIds: List<String>,
+    val pairing: BoardRoutedCordPairing,
+    val layer: BoardRoutedCordLayer,
+)
+
+sealed interface BoardRoutedCordPathCommand {
+    data class Move(val to: Point) : BoardRoutedCordPathCommand
+    data class Line(val to: Point) : BoardRoutedCordPathCommand
+    data class Quad(val control: Point, val to: Point) : BoardRoutedCordPathCommand
+    data class Curve(
+        val control1: Point,
+        val control2: Point,
+        val to: Point,
+    ) : BoardRoutedCordPathCommand
+
+    data object Close : BoardRoutedCordPathCommand
+}
+
+data class BoardRoutedCordPath(
+    val id: String,
+    val space: BoardRoutedCordSpace,
+    val layer: BoardRoutedCordLayer,
+    val commands: List<BoardRoutedCordPathCommand>,
+)
+
+sealed interface BoardRoutedCordOcclusion {
+    data class RadialLip(
+        val bodyPortId: String,
+        val radius: Float,
+        val chordOffset: Float,
+    ) : BoardRoutedCordOcclusion
+
+    data class FacePatch(
+        val commands: List<BoardRoutedCordPathCommand>,
+    ) : BoardRoutedCordOcclusion
 }
 
 data class BoardGeometryRotationAnchor(

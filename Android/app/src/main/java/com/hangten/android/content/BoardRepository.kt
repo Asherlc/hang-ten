@@ -161,7 +161,7 @@ class AssetBoardRepository(
             val rotationRadians = Math.toRadians(presentation.resolvedRotationDegrees.toDouble())
             val cosine = cos(rotationRadians)
             val sine = sin(rotationRadians)
-            val rig = sourcePresentation.cordRig as? BoardCordRig.DirectTwoAnchor
+            val rig = sourcePresentation.cordRig
 
             val canvasWidth = rig?.sceneSize?.width?.toDouble() ?: 1.0
             val canvasHeight = rig?.sceneSize?.height?.toDouble() ?: 1.0
@@ -313,7 +313,7 @@ class AssetBoardRepository(
         val cordRig = objectValue.optional("cordRig")?.let {
             decodeCordRig(it.asObject("$path.cordRig"), "$path.cordRig")
         }
-        if (cordRig is BoardCordRig.DirectTwoAnchor && !aspectRatiosMatch(
+        if (cordRig != null && !aspectRatiosMatch(
                 aspectRatio,
                 cordRig.sceneSize.width / cordRig.sceneSize.height,
                 PRESENTATION_ASPECT_RATIO_TOLERANCE,
@@ -345,6 +345,17 @@ class AssetBoardRepository(
     }
 
     private fun decodeCordRig(objectValue: JsonValue.Object, path: String): BoardCordRig {
+        return when (objectValue.requiredString("type", path)) {
+            "directTwoAnchor" -> decodeDirectTwoAnchorCordRig(objectValue, path)
+            "routed" -> decodeRoutedCordRig(objectValue, path)
+            else -> fail("$path.type is unsupported.")
+        }
+    }
+
+    private fun decodeDirectTwoAnchorCordRig(
+        objectValue: JsonValue.Object,
+        path: String,
+    ): BoardCordRig.DirectTwoAnchor {
         objectValue.rejectUnknownKeys(
             setOf(
                 "type",
@@ -357,9 +368,6 @@ class AssetBoardRepository(
             ),
             path,
         )
-        if (objectValue.requiredString("type", path) != "directTwoAnchor") {
-            fail("$path.type is unsupported.")
-        }
         val sceneSizeObject = objectValue.required("sceneSize", path).asObject("$path.sceneSize")
         val sourceFrameObject = objectValue.required("sourceFrame", path).asObject("$path.sourceFrame")
         val innerFaceFrameObject = objectValue.required("innerFaceFrame", path).asObject("$path.innerFaceFrame")
@@ -388,6 +396,315 @@ class AssetBoardRepository(
         }
         return rig
     }
+
+    private fun decodeRoutedCordRig(
+        objectValue: JsonValue.Object,
+        path: String,
+    ): BoardCordRig.Routed {
+        objectValue.rejectUnknownKeys(
+            setOf(
+                "type",
+                "sceneSize",
+                "sourceFrame",
+                "innerFaceFrame",
+                "style",
+                "ports",
+                "tensionGroups",
+                "paths",
+                "occlusions",
+            ),
+            path,
+        )
+        val sceneSizeObject = objectValue.required("sceneSize", path).asObject("$path.sceneSize")
+        sceneSizeObject.rejectUnknownKeys(setOf("width", "height"), "$path.sceneSize")
+        val sceneSize = BoardCordSize(
+            width = positiveFiniteFloat(sceneSizeObject.required("width", "$path.sceneSize"), "$path.sceneSize.width"),
+            height = positiveFiniteFloat(sceneSizeObject.required("height", "$path.sceneSize"), "$path.sceneSize.height"),
+        )
+        val sourceFrame = decodeCordRect(
+            objectValue.required("sourceFrame", path).asObject("$path.sourceFrame"),
+            "$path.sourceFrame",
+        )
+        val innerFaceFrame = decodeCordRect(
+            objectValue.required("innerFaceFrame", path).asObject("$path.innerFaceFrame"),
+            "$path.innerFaceFrame",
+        )
+
+        val stylePath = "$path.style"
+        val styleObject = objectValue.required("style", path).asObject(stylePath)
+        styleObject.rejectUnknownKeys(setOf("diameter", "outlineColor", "baseColor", "braidColors"), stylePath)
+        val braidColors = styleObject.required("braidColors", stylePath)
+            .asArray("$stylePath.braidColors")
+            .mapIndexed { index, value -> decodeRoutedColor(value, "$stylePath.braidColors[$index]") }
+        if (braidColors.size != 2) fail("$stylePath.braidColors must contain exactly two colors.")
+        val style = BoardRoutedCordStyle(
+            diameter = positiveFiniteFloat(styleObject.required("diameter", stylePath), "$stylePath.diameter"),
+            outlineColor = decodeRoutedColor(styleObject.required("outlineColor", stylePath), "$stylePath.outlineColor"),
+            baseColor = decodeRoutedColor(styleObject.required("baseColor", stylePath), "$stylePath.baseColor"),
+            braidColors = braidColors,
+        )
+
+        val portsPath = "$path.ports"
+        val ports = objectValue.required("ports", path).asArray(portsPath).mapIndexed { index, value ->
+            val portPath = "$portsPath[$index]"
+            val portObject = value.asObject(portPath)
+            portObject.rejectUnknownKeys(setOf("id", "space", "point"), portPath)
+            BoardRoutedCordPort(
+                id = decodeRoutedIdentifier(portObject.required("id", portPath), "$portPath.id"),
+                space = decodeRoutedSpace(portObject.required("space", portPath), "$portPath.space"),
+                point = decodeCordPoint(
+                    portObject.required("point", portPath).asObject("$portPath.point"),
+                    "$portPath.point",
+                ),
+            )
+        }
+        if (ports.isEmpty()) fail("$portsPath must be a non-empty array.")
+        if (ports.map { it.id }.toSet().size != ports.size) fail("$portsPath must have unique IDs.")
+        val portsById = ports.associateBy { it.id }
+
+        val groupsPath = "$path.tensionGroups"
+        val tensionGroups = objectValue.required("tensionGroups", path)
+            .asArray(groupsPath)
+            .mapIndexed { index, value ->
+                val groupPath = "$groupsPath[$index]"
+                val groupObject = value.asObject(groupPath)
+                groupObject.rejectUnknownKeys(
+                    setOf("id", "bodyPortIDs", "worldPortIDs", "pairing", "layer"),
+                    groupPath,
+                )
+                val bodyPortIds = decodeRoutedIdArray(
+                    groupObject.required("bodyPortIDs", groupPath),
+                    "$groupPath.bodyPortIDs",
+                )
+                val worldPortIds = decodeRoutedIdArray(
+                    groupObject.required("worldPortIDs", groupPath),
+                    "$groupPath.worldPortIDs",
+                )
+                if (bodyPortIds.size != worldPortIds.size) {
+                    fail("$groupPath port lists must have equal cardinality.")
+                }
+                if (bodyPortIds.any { portsById[it]?.space != BoardRoutedCordSpace.Body }) {
+                    fail("$groupPath.bodyPortIDs must reference body ports.")
+                }
+                if (worldPortIds.any { portsById[it]?.space != BoardRoutedCordSpace.World }) {
+                    fail("$groupPath.worldPortIDs must reference world ports.")
+                }
+                BoardRoutedCordTensionGroup(
+                    id = decodeRoutedIdentifier(groupObject.required("id", groupPath), "$groupPath.id"),
+                    bodyPortIds = bodyPortIds,
+                    worldPortIds = worldPortIds,
+                    pairing = decodeRoutedPairing(groupObject.required("pairing", groupPath), "$groupPath.pairing"),
+                    layer = decodeRoutedLayer(groupObject.required("layer", groupPath), "$groupPath.layer"),
+                )
+            }
+        if (tensionGroups.isEmpty()) fail("$groupsPath must be a non-empty array.")
+        if (tensionGroups.map { it.id }.toSet().size != tensionGroups.size) {
+            fail("$groupsPath must have unique IDs.")
+        }
+
+        val pathsPath = "$path.paths"
+        val paths = objectValue.required("paths", path).asArray(pathsPath).mapIndexed { index, value ->
+            val routedPath = "$pathsPath[$index]"
+            val pathObject = value.asObject(routedPath)
+            pathObject.rejectUnknownKeys(setOf("id", "space", "layer", "commands"), routedPath)
+            BoardRoutedCordPath(
+                id = decodeRoutedIdentifier(pathObject.required("id", routedPath), "$routedPath.id"),
+                space = decodeRoutedSpace(pathObject.required("space", routedPath), "$routedPath.space"),
+                layer = decodeRoutedLayer(pathObject.required("layer", routedPath), "$routedPath.layer"),
+                commands = decodeRoutedCommands(
+                    pathObject.required("commands", routedPath),
+                    "$routedPath.commands",
+                    requireClosed = false,
+                ),
+            )
+        }
+        if (paths.map { it.id }.toSet().size != paths.size) fail("$pathsPath must have unique IDs.")
+
+        val occlusionsPath = "$path.occlusions"
+        val occlusions = objectValue.required("occlusions", path)
+            .asArray(occlusionsPath)
+            .mapIndexed { index, value ->
+                val occlusionPath = "$occlusionsPath[$index]"
+                val occlusionObject = value.asObject(occlusionPath)
+                when (occlusionObject.requiredString("type", occlusionPath)) {
+                    "radialLip" -> {
+                        occlusionObject.rejectUnknownKeys(
+                            setOf("type", "bodyPortID", "radius", "chordOffset"),
+                            occlusionPath,
+                        )
+                        val bodyPortId = decodeRoutedIdentifier(
+                            occlusionObject.required("bodyPortID", occlusionPath),
+                            "$occlusionPath.bodyPortID",
+                        )
+                        if (portsById[bodyPortId]?.space != BoardRoutedCordSpace.Body) {
+                            fail("$occlusionPath radialLip must reference a body port.")
+                        }
+                        val radius = positiveFiniteFloat(
+                            occlusionObject.required("radius", occlusionPath),
+                            "$occlusionPath.radius",
+                        )
+                        val chordOffset = positiveFiniteFloat(
+                            occlusionObject.required("chordOffset", occlusionPath),
+                            "$occlusionPath.chordOffset",
+                        )
+                        if (chordOffset >= radius) {
+                            fail("$occlusionPath must satisfy 0 < chordOffset < radius.")
+                        }
+                        BoardRoutedCordOcclusion.RadialLip(bodyPortId, radius, chordOffset)
+                    }
+                    "facePatch" -> {
+                        occlusionObject.rejectUnknownKeys(setOf("type", "commands"), occlusionPath)
+                        BoardRoutedCordOcclusion.FacePatch(
+                            decodeRoutedCommands(
+                                occlusionObject.required("commands", occlusionPath),
+                                "$occlusionPath facePatch commands",
+                                requireClosed = true,
+                            ),
+                        )
+                    }
+                    else -> fail("$occlusionPath.type is unsupported.")
+                }
+            }
+        occlusions.filterIsInstance<BoardRoutedCordOcclusion.RadialLip>().forEachIndexed { index, lip ->
+            val incidentSpanCount = tensionGroups.sumOf { group ->
+                group.bodyPortIds.count { it == lip.bodyPortId }
+            }
+            if (incidentSpanCount != 1) {
+                fail("$occlusionsPath[$index] radialLip body port must have exactly one incident tension-group span.")
+            }
+        }
+
+        return BoardCordRig.Routed(
+            sceneSize = sceneSize,
+            sourceFrame = sourceFrame,
+            innerFaceFrame = innerFaceFrame,
+            style = style,
+            ports = ports,
+            tensionGroups = tensionGroups,
+            paths = paths,
+            occlusions = occlusions,
+        )
+    }
+
+    private fun decodeRoutedCommands(
+        value: JsonValue,
+        path: String,
+        requireClosed: Boolean,
+    ): List<BoardRoutedCordPathCommand> {
+        val commands = value.asArray(path).mapIndexed { index, commandValue ->
+            val commandPath = "$path[$index]"
+            val commandObject = commandValue.asObject(commandPath)
+            when (commandObject.requiredString("command", commandPath)) {
+                "move" -> {
+                    commandObject.rejectUnknownKeys(setOf("command", "to"), commandPath)
+                    BoardRoutedCordPathCommand.Move(
+                        decodePoint(commandObject.required("to", commandPath), "$commandPath.to"),
+                    )
+                }
+                "line" -> {
+                    commandObject.rejectUnknownKeys(setOf("command", "to"), commandPath)
+                    BoardRoutedCordPathCommand.Line(
+                        decodePoint(commandObject.required("to", commandPath), "$commandPath.to"),
+                    )
+                }
+                "quad" -> {
+                    commandObject.rejectUnknownKeys(setOf("command", "control", "to"), commandPath)
+                    BoardRoutedCordPathCommand.Quad(
+                        control = decodePoint(
+                            commandObject.required("control", commandPath),
+                            "$commandPath.control",
+                        ),
+                        to = decodePoint(commandObject.required("to", commandPath), "$commandPath.to"),
+                    )
+                }
+                "curve" -> {
+                    commandObject.rejectUnknownKeys(
+                        setOf("command", "control1", "control2", "to"),
+                        commandPath,
+                    )
+                    BoardRoutedCordPathCommand.Curve(
+                        control1 = decodePoint(
+                            commandObject.required("control1", commandPath),
+                            "$commandPath.control1",
+                        ),
+                        control2 = decodePoint(
+                            commandObject.required("control2", commandPath),
+                            "$commandPath.control2",
+                        ),
+                        to = decodePoint(commandObject.required("to", commandPath), "$commandPath.to"),
+                    )
+                }
+                "close" -> {
+                    commandObject.rejectUnknownKeys(setOf("command"), commandPath)
+                    BoardRoutedCordPathCommand.Close
+                }
+                else -> fail("$commandPath.command is unsupported.")
+            }
+        }
+        if (commands.firstOrNull() !is BoardRoutedCordPathCommand.Move ||
+            commands.count { it is BoardRoutedCordPathCommand.Move } != 1
+        ) {
+            fail("$path must begin with exactly one move command.")
+        }
+        if (commands.none {
+                it is BoardRoutedCordPathCommand.Line ||
+                    it is BoardRoutedCordPathCommand.Quad ||
+                    it is BoardRoutedCordPathCommand.Curve
+            }
+        ) {
+            fail("$path must contain at least one line, quad, or curve.")
+        }
+        val closeIndexes = commands.indices.filter { commands[it] is BoardRoutedCordPathCommand.Close }
+        if (closeIndexes.isNotEmpty() && closeIndexes != listOf(commands.lastIndex)) {
+            fail("$path close command must appear only at the end.")
+        }
+        if (requireClosed && commands.lastOrNull() !is BoardRoutedCordPathCommand.Close) {
+            fail("$path must be closed.")
+        }
+        return commands
+    }
+
+    private fun decodeRoutedIdentifier(value: JsonValue, path: String): String {
+        val identifier = value.asString(path)
+        if (!ROUTED_IDENTIFIER.matches(identifier)) fail("$path must be identifier-shaped.")
+        return identifier
+    }
+
+    private fun decodeRoutedIdArray(value: JsonValue, path: String): List<String> {
+        val ids = value.asArray(path).mapIndexed { index, item ->
+            decodeRoutedIdentifier(item, "$path[$index]")
+        }
+        if (ids.isEmpty()) fail("$path must be a non-empty array.")
+        if (ids.toSet().size != ids.size) fail("$path must be unique.")
+        return ids
+    }
+
+    private fun decodeRoutedColor(value: JsonValue, path: String): String =
+        value.asString(path).also { color ->
+            if (!ROUTED_COLOR.matches(color)) fail("$path must be a #RRGGBB color.")
+        }
+
+    private fun decodeRoutedSpace(value: JsonValue, path: String): BoardRoutedCordSpace =
+        when (value.asString(path)) {
+            "body" -> BoardRoutedCordSpace.Body
+            "world" -> BoardRoutedCordSpace.World
+            else -> fail("$path space is unsupported.")
+        }
+
+    private fun decodeRoutedLayer(value: JsonValue, path: String): BoardRoutedCordLayer =
+        when (value.asString(path)) {
+            "behindFace" -> BoardRoutedCordLayer.BehindFace
+            "aboveFace" -> BoardRoutedCordLayer.AboveFace
+            "overpass" -> BoardRoutedCordLayer.Overpass
+            else -> fail("$path layer is unsupported.")
+        }
+
+    private fun decodeRoutedPairing(value: JsonValue, path: String): BoardRoutedCordPairing =
+        when (value.asString(path)) {
+            "declared" -> BoardRoutedCordPairing.Declared
+            "screenOrder" -> BoardRoutedCordPairing.ScreenOrder
+            else -> fail("$path pairing is unsupported.")
+        }
 
     private fun decodeCordRect(objectValue: JsonValue.Object, path: String): BoardCordRect {
         objectValue.rejectUnknownKeys(setOf("x", "y", "width", "height"), path)
@@ -574,6 +891,8 @@ class AssetBoardRepository(
         const val CORD_SUPPORT_MAX_Y_OFFSET = 0.0
         const val CORD_SHADOW_X_MARGIN = 23.8
         const val CORD_SHADOW_Y_MARGIN = 24.8
+        val ROUTED_IDENTIFIER = Regex("[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?")
+        val ROUTED_COLOR = Regex("#[0-9A-Fa-f]{6}")
         val FINGER_CAPACITY_RANGE = 1..4
     }
 

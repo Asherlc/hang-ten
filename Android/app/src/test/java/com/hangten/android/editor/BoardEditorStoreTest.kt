@@ -69,6 +69,43 @@ class BoardEditorStoreTest {
     }
 
     @Test
+    fun routedCordRigSurvivesAPathEditWithoutLosingRequiredArrays() {
+        val root = createTempDirectory("board-editor-routed-cord").toFile()
+        try {
+            val source = File(root, "source").also { it.mkdirs() }
+            writeSourcePackage(source)
+            val boardFile = File(source, "demo/board.json")
+            boardFile.writeText(
+                boardFile.readText()
+                    .replace("\"aspectRatio\":2.0", "\"aspectRatio\":1.0")
+                    .replace(
+                        "\"default\":true}",
+                        "\"default\":true,\"cordRig\":${routedCordRigJson()}}",
+                    ),
+            )
+            val store = BoardEditorStore(File(root, "edited"), FileBoardPackageSource(source))
+
+            store.startEditing("demo")
+            val originalRig = store.loadBoard("demo").presentations.single().cordRig
+            val edited = store.movePathPoint(
+                slug = "demo",
+                holdId = "edge",
+                geometryIndex = 0,
+                commandIndex = 1,
+                field = EditablePathPoint.To,
+                x = 0.75,
+                y = 0.25,
+            )
+
+            assertEquals(originalRig, store.loadBoard("demo").presentations.single().cordRig)
+            assertTrue(edited.contains("\"paths\":[]"))
+            assertTrue(edited.contains("\"occlusions\":[]"))
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
     fun invalidBoardNeverReplacesPreviouslySavedDocument() {
         val root = createTempDirectory("board-editor-atomic").toFile()
         try {
@@ -170,6 +207,25 @@ class BoardEditorStoreTest {
           "aspectRatio":2.0,
           "presentations":[{"id":"primary","name":"Primary","assetPath":"assets/primary.png","aspectRatio":2.0,"default":true}],
           "holds":[{"id":"edge","name":"Edge","kind":"edge","presentationID":"primary","geometry":[{"frame":{"x":0.1,"y":0.2,"width":0.3,"height":0.4},"shape":{"type":"path","commands":[{"command":"move","to":[0.0,0.0]},{"command":"line","to":[1.0,0.0]},{"command":"quad","control":[0.5,0.5],"to":[1.0,1.0]},{"command":"close"}]}}]}]
+        }
+    """.trimIndent()
+
+    private fun routedCordRigJson(): String = """
+        {
+          "type":"routed",
+          "sceneSize":{"width":1000,"height":1000},
+          "sourceFrame":{"x":0,"y":0,"width":1000,"height":1000},
+          "innerFaceFrame":{"x":0,"y":0,"width":1000,"height":1000},
+          "style":{"diameter":12,"outlineColor":"#101010","baseColor":"#2255AA","braidColors":["#FFD000","#0055CC"]},
+          "ports":[
+            {"id":"body-left","space":"body","point":{"x":200,"y":650}},
+            {"id":"world-left","space":"world","point":{"x":400,"y":100}}
+          ],
+          "tensionGroups":[
+            {"id":"main","bodyPortIDs":["body-left"],"worldPortIDs":["world-left"],"pairing":"declared","layer":"behindFace"}
+          ],
+          "paths":[],
+          "occlusions":[]
         }
     """.trimIndent()
 }
