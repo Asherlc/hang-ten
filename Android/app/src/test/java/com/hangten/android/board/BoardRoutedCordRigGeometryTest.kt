@@ -124,39 +124,46 @@ class BoardRoutedCordRigGeometryTest {
     }
 
     @Test
-    fun coincidentWorldEndpointsBecomeOneJoinedApexPathWithinTheirTensionGroup() {
+    fun effectivelyCoincidentWorldEndpointsBecomeOneContinuousJoinedApexPathWithinTheirTensionGroup() {
         val rig = routedRig(
             ports = listOf(
                 port("body-left", BoardRoutedCordSpace.Body, 20f, 40f),
                 port("body-right", BoardRoutedCordSpace.Body, 60f, 40f),
+                port("body-center", BoardRoutedCordSpace.Body, 40f, 50f),
                 port("world-left", BoardRoutedCordSpace.World, 40f, 0f),
-                port("world-right", BoardRoutedCordSpace.World, 40f, 0f),
+                port("world-right", BoardRoutedCordSpace.World, 40.0005f, 0f),
+                port("world-center", BoardRoutedCordSpace.World, 39.9996f, 0f),
             ),
             tensionGroups = listOf(
                 tensionGroup(
                     id = "support",
-                    bodyPortIds = listOf("body-left", "body-right"),
-                    worldPortIds = listOf("world-left", "world-right"),
+                    bodyPortIds = listOf("body-left", "body-right", "body-center"),
+                    worldPortIds = listOf("world-left", "world-right", "world-center"),
                     pairing = BoardRoutedCordPairing.Declared,
                     layer = BoardRoutedCordLayer.AboveFace,
                 ),
             ),
+        ).copy(
+            sceneSize = BoardCordSize(1_000_000f, 1_000_000f),
+            sourceFrame = BoardCordRect(0f, 0f, 100f, 100f),
         )
 
         val geometry = resolveRoutedCordRigGeometry(
             rig,
             presentation(0f),
-            canvasWidth = 100f,
-            canvasHeight = 100f,
+            canvasWidth = 1_000_000f,
+            canvasHeight = 1_000_000f,
         )!!
 
         assertEquals(
             listOf(
                 BoardPath(
                     commands = listOf(
-                        BoardPathCommand.MoveTo(30f, 60f),
-                        BoardPathCommand.LineTo(50f, 20f),
-                        BoardPathCommand.LineTo(70f, 60f),
+                        BoardPathCommand.MoveTo(20f, 40f),
+                        BoardPathCommand.LineTo(40.000034f, 0f),
+                        BoardPathCommand.LineTo(60f, 40f),
+                        BoardPathCommand.LineTo(40.000034f, 0f),
+                        BoardPathCommand.LineTo(40f, 50f),
                     ),
                 ),
             ),

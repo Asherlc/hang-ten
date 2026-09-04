@@ -10,6 +10,7 @@ import com.hangten.android.content.BoardRoutedCordPathCommand
 import com.hangten.android.content.BoardRoutedCordSpace
 import com.hangten.android.content.Point
 import kotlin.math.cos
+import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
@@ -85,6 +86,7 @@ internal data class DirectTwoAnchorCordGeometry(
     val projectedAttachments: List<Point>,
     val pairedAttachments: List<Point>,
     val strands: List<BoardCordStrand>,
+    val tensionPath: BoardPath,
     val pullPoint: Point,
     val scale: Float,
 ) {
@@ -111,8 +113,58 @@ internal data class RoutedCordRigGeometry(
     fun tensionSpans(layer: BoardRoutedCordLayer): List<RoutedCordTensionSpan> =
         spans.filter { it.layer == layer }
 
+    fun tensionPaths(layer: BoardRoutedCordLayer): List<BoardPath> {
+        data class ApexCluster(
+            val groupId: String,
+            val worldPoint: Point,
+            val spans: MutableList<RoutedCordTensionSpan>,
+        )
+
+        val tolerance = max(sceneBounds.width, sceneBounds.height) * 1e-9f
+        val clusters = mutableListOf<ApexCluster>()
+        tensionSpans(layer).forEach { span ->
+            val cluster = clusters.firstOrNull { candidate ->
+                candidate.groupId == span.groupId &&
+                    hypot(
+                        (candidate.worldPoint.x - span.worldPoint.x).toDouble(),
+                        (candidate.worldPoint.y - span.worldPoint.y).toDouble(),
+                    ) <= tolerance.toDouble()
+            }
+            if (cluster == null) {
+                clusters += ApexCluster(span.groupId, span.worldPoint, mutableListOf(span))
+            } else {
+                cluster.spans += span
+            }
+        }
+        return clusters.map { cluster ->
+            val apex = Point(
+                x = cluster.spans.map { it.worldPoint.x.toDouble() }.average().toFloat(),
+                y = cluster.spans.map { it.worldPoint.y.toDouble() }.average().toFloat(),
+            )
+            cluster.spans.joinedAtWorldEndpoint(apex)
+        }
+    }
+
     fun authoredPaths(layer: BoardRoutedCordLayer): List<ResolvedRoutedCordPath> =
         paths.filter { it.layer == layer }
+}
+
+private fun List<RoutedCordTensionSpan>.joinedAtWorldEndpoint(apex: Point): BoardPath {
+    val first = first()
+    if (size == 1) return first.path
+
+    return BoardPath(
+        commands = buildList {
+            add(BoardPathCommand.MoveTo(first.bodyPoint.x, first.bodyPoint.y))
+            add(BoardPathCommand.LineTo(apex.x, apex.y))
+            drop(1).forEachIndexed { index, span ->
+                add(BoardPathCommand.LineTo(span.bodyPoint.x, span.bodyPoint.y))
+                if (index < size - 2) {
+                    add(BoardPathCommand.LineTo(apex.x, apex.y))
+                }
+            }
+        },
+    )
 }
 
 internal data class RoutedCordTensionSpan(
@@ -453,11 +505,14 @@ internal fun resolveDirectTwoAnchorCordGeometry(
     val projectedAttachments = rig.attachmentPoints.map { faceTransform.map(sourceRelativePoint(it)) }
     val pairedAttachments = projectedAttachments.sortedWith(compareBy<Point> { it.x }.thenBy { it.y })
     val pullPoint = sourceRelativePoint(rig.pullPoint)
-    val exits = listOf(
-        Point(pullPoint.x - 22f * scale, pullPoint.y),
-        Point(pullPoint.x + 22f * scale, pullPoint.y),
+    val strands = pairedAttachments.map { attachment -> BoardCordStrand(pullPoint, attachment) }
+    val tensionPath = BoardPath(
+        commands = listOf(
+            BoardPathCommand.MoveTo(pairedAttachments.first().x, pairedAttachments.first().y),
+            BoardPathCommand.LineTo(pullPoint.x, pullPoint.y),
+            BoardPathCommand.LineTo(pairedAttachments.last().x, pairedAttachments.last().y),
+        ),
     )
-    val strands = exits.zip(pairedAttachments) { exit, attachment -> BoardCordStrand(exit, attachment) }
 
     return DirectTwoAnchorCordGeometry(
         sceneBounds = sceneBounds,
@@ -466,6 +521,7 @@ internal fun resolveDirectTwoAnchorCordGeometry(
         projectedAttachments = projectedAttachments,
         pairedAttachments = pairedAttachments,
         strands = strands,
+        tensionPath = tensionPath,
         pullPoint = pullPoint,
         scale = scale,
     )

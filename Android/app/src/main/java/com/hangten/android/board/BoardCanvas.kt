@@ -530,7 +530,7 @@ private fun drawRoutedCordLayer(
     geometry: RoutedCordRigGeometry,
     layer: BoardRoutedCordLayer,
 ) {
-    val paths = geometry.tensionSpans(layer).map { it.path.toAndroidPath() } +
+    val paths = geometry.tensionPaths(layer).map { it.toAndroidPath() } +
         geometry.authoredPaths(layer).map { it.path.toAndroidPath() }
     if (paths.isEmpty()) return
 
@@ -627,24 +627,14 @@ private fun drawRiggedBoardArtwork(
 ) {
     drawFaceBitmap(canvas, image, geometry.faceBounds, geometry.faceTransform)
 
-    val supportPaths = supportPaths(geometry)
-    val strandPaths = geometry.strands.map { strand ->
-        Path().apply {
-            moveTo(strand.start.x, strand.start.y)
-            lineTo(strand.end.x, strand.end.y)
-        }
-    }
-    val mainPaths = supportPaths.dropLast(1) + strandPaths
-    val knotOverpass = supportPaths.last()
-    drawRope(canvas, mainPaths, geometry.scale)
-    drawRope(canvas, listOf(knotOverpass), geometry.scale)
+    val tensionPaths = listOf(geometry.tensionPath.toAndroidPath())
+    drawRope(canvas, tensionPaths, geometry.scale)
 
-    val ridgePaths = mainPaths + knotOverpass
     val ridgeSave = canvas.save()
     canvas.translate(-2f * geometry.scale, -1f * geometry.scale)
     strokePaths(
         canvas = canvas,
-        paths = ridgePaths,
+        paths = tensionPaths,
         color = 0x2EC4C9CC,
         width = 2.4f * geometry.scale,
         pathEffect = DashPathEffect(
@@ -698,107 +688,6 @@ private fun BoardInPlaneTransform.toAndroidMatrix(): Matrix = Matrix().apply {
             0f, 0f, 1f,
         ),
     )
-}
-
-private fun supportPaths(geometry: DirectTwoAnchorCordGeometry): List<Path> {
-    fun point(x: Float, y: Float): Point = Point(
-        x = geometry.pullPoint.x + x * geometry.scale,
-        y = geometry.pullPoint.y + y * geometry.scale,
-    )
-
-    val bight = Path().apply {
-        point(-12f, -61f).also { moveTo(it.x, it.y) }
-        val firstEnd = point(-21f, -142f)
-        val firstControl1 = point(-26f, -82f)
-        val firstControl2 = point(-30f, -115f)
-        cubicTo(
-            firstControl1.x,
-            firstControl1.y,
-            firstControl2.x,
-            firstControl2.y,
-            firstEnd.x,
-            firstEnd.y,
-        )
-        val secondEnd = point(1f, -177f)
-        val secondControl1 = point(-14f, -163f)
-        val secondControl2 = point(-5f, -174f)
-        cubicTo(
-            secondControl1.x,
-            secondControl1.y,
-            secondControl2.x,
-            secondControl2.y,
-            secondEnd.x,
-            secondEnd.y,
-        )
-        val thirdEnd = point(24f, -136f)
-        val thirdControl1 = point(9f, -171f)
-        val thirdControl2 = point(18f, -157f)
-        cubicTo(
-            thirdControl1.x,
-            thirdControl1.y,
-            thirdControl2.x,
-            thirdControl2.y,
-            thirdEnd.x,
-            thirdEnd.y,
-        )
-        val fourthEnd = point(12f, -61f)
-        val fourthControl1 = point(31f, -109f)
-        val fourthControl2 = point(26f, -81f)
-        cubicTo(
-            fourthControl1.x,
-            fourthControl1.y,
-            fourthControl2.x,
-            fourthControl2.y,
-            fourthEnd.x,
-            fourthEnd.y,
-        )
-    }
-
-    fun knotAndExit(mirror: Float): Path = Path().apply {
-        point(-12f * mirror, -63f).also { moveTo(it.x, it.y) }
-        val firstEnd = point(21f * mirror, -39f)
-        val firstControl1 = point(1f * mirror, -52f)
-        val firstControl2 = point(18f * mirror, -51f)
-        cubicTo(
-            firstControl1.x,
-            firstControl1.y,
-            firstControl2.x,
-            firstControl2.y,
-            firstEnd.x,
-            firstEnd.y,
-        )
-        val secondEnd = point(5f * mirror, -18f)
-        val secondControl1 = point(24f * mirror, -28f)
-        val secondControl2 = point(16f * mirror, -19f)
-        cubicTo(
-            secondControl1.x,
-            secondControl1.y,
-            secondControl2.x,
-            secondControl2.y,
-            secondEnd.x,
-            secondEnd.y,
-        )
-        val thirdEnd = point(-22f * mirror, 0f)
-        val thirdControl1 = point(-8f * mirror, -17f)
-        val thirdControl2 = point(-17f * mirror, -9f)
-        cubicTo(
-            thirdControl1.x,
-            thirdControl1.y,
-            thirdControl2.x,
-            thirdControl2.y,
-            thirdEnd.x,
-            thirdEnd.y,
-        )
-    }
-
-    val overpass = Path().apply {
-        point(-18f, -35f).also { moveTo(it.x, it.y) }
-        val end = point(18f, -35f)
-        val control1 = point(-10f, -24f)
-        val control2 = point(9f, -22f)
-        cubicTo(control1.x, control1.y, control2.x, control2.y, end.x, end.y)
-    }
-    return listOf(bight, knotAndExit(1f), knotAndExit(-1f), overpass)
 }
 
 private fun drawRope(
