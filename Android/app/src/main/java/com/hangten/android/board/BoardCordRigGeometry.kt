@@ -150,16 +150,17 @@ internal data class RoutedCordRigGeometry(
 }
 
 private fun List<RoutedCordTensionSpan>.joinedAtWorldEndpoint(apex: Point): BoardPath {
-    val first = first()
-    if (size == 1) return first.path
+    val spans = this
+    val first = spans.first()
+    if (spans.size == 1) return first.path
 
     return BoardPath(
         commands = buildList {
             add(BoardPathCommand.MoveTo(first.bodyPoint.x, first.bodyPoint.y))
             add(BoardPathCommand.LineTo(apex.x, apex.y))
-            drop(1).forEachIndexed { index, span ->
+            spans.drop(1).forEachIndexed { index, span ->
                 add(BoardPathCommand.LineTo(span.bodyPoint.x, span.bodyPoint.y))
-                if (index < size - 2) {
+                if (index < spans.size - 2) {
                     add(BoardPathCommand.LineTo(apex.x, apex.y))
                 }
             }
