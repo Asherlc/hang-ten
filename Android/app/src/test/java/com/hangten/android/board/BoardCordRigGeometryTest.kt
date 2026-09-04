@@ -37,8 +37,16 @@ class BoardCordRigGeometryTest {
         assertPoint(Point(276f, 1018f), geometry.projectedAttachments[0])
         assertPoint(Point(920f, 1018f), geometry.projectedAttachments[1])
         assertPoint(Point(600f, 285.5f), geometry.pullPoint)
-        assertPoint(Point(578f, 285.5f), geometry.strands[0].start)
-        assertPoint(Point(622f, 285.5f), geometry.strands[1].start)
+        assertPoint(Point(600f, 285.5f), geometry.strands[0].start)
+        assertPoint(Point(600f, 285.5f), geometry.strands[1].start)
+        assertEquals(
+            listOf(
+                BoardPathCommand.MoveTo(276f, 1018f),
+                BoardPathCommand.LineTo(600f, 285.5f),
+                BoardPathCommand.LineTo(920f, 1018f),
+            ),
+            geometry.tensionPath.commands,
+        )
     }
 
     @Test
@@ -76,8 +84,16 @@ class BoardCordRigGeometryTest {
         assertPoint(Point(486f, 580f), geometry.projectedAttachments[0])
         assertPoint(Point(486f, 1224f), geometry.projectedAttachments[1])
         assertPoint(Point(600f, 285.5f), geometry.pullPoint)
-        assertPoint(Point(578f, 285.5f), geometry.strands[0].start)
-        assertPoint(Point(622f, 285.5f), geometry.strands[1].start)
+        assertPoint(Point(600f, 285.5f), geometry.strands[0].start)
+        assertPoint(Point(600f, 285.5f), geometry.strands[1].start)
+        assertEquals(
+            listOf(
+                BoardPathCommand.MoveTo(486f, 580f),
+                BoardPathCommand.LineTo(600f, 285.5f),
+                BoardPathCommand.LineTo(486f, 1224f),
+            ),
+            geometry.tensionPath.commands,
+        )
     }
 
     @Test

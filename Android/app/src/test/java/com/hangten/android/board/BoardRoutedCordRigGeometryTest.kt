@@ -124,6 +124,100 @@ class BoardRoutedCordRigGeometryTest {
     }
 
     @Test
+    fun coincidentWorldEndpointsBecomeOneJoinedApexPathWithinTheirTensionGroup() {
+        val rig = routedRig(
+            ports = listOf(
+                port("body-left", BoardRoutedCordSpace.Body, 20f, 40f),
+                port("body-right", BoardRoutedCordSpace.Body, 60f, 40f),
+                port("world-left", BoardRoutedCordSpace.World, 40f, 0f),
+                port("world-right", BoardRoutedCordSpace.World, 40f, 0f),
+            ),
+            tensionGroups = listOf(
+                tensionGroup(
+                    id = "support",
+                    bodyPortIds = listOf("body-left", "body-right"),
+                    worldPortIds = listOf("world-left", "world-right"),
+                    pairing = BoardRoutedCordPairing.Declared,
+                    layer = BoardRoutedCordLayer.AboveFace,
+                ),
+            ),
+        )
+
+        val geometry = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(0f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!
+
+        assertEquals(
+            listOf(
+                BoardPath(
+                    commands = listOf(
+                        BoardPathCommand.MoveTo(30f, 60f),
+                        BoardPathCommand.LineTo(50f, 20f),
+                        BoardPathCommand.LineTo(70f, 60f),
+                    ),
+                ),
+            ),
+            geometry.tensionPaths(BoardRoutedCordLayer.AboveFace),
+        )
+    }
+
+    @Test
+    fun distinctWorldEndpointsAndSeparateGroupsRemainIndependentPaths() {
+        val rig = routedRig(
+            ports = listOf(
+                port("body-a", BoardRoutedCordSpace.Body, 20f, 40f),
+                port("body-b", BoardRoutedCordSpace.Body, 60f, 40f),
+                port("body-c", BoardRoutedCordSpace.Body, 40f, 50f),
+                port("world-a", BoardRoutedCordSpace.World, 30f, 0f),
+                port("world-b", BoardRoutedCordSpace.World, 50f, 0f),
+                port("world-c", BoardRoutedCordSpace.World, 30f, 0f),
+            ),
+            tensionGroups = listOf(
+                tensionGroup(
+                    id = "separate-endpoints",
+                    bodyPortIds = listOf("body-a", "body-b"),
+                    worldPortIds = listOf("world-a", "world-b"),
+                    pairing = BoardRoutedCordPairing.Declared,
+                ),
+                tensionGroup(
+                    id = "separate-group",
+                    bodyPortIds = listOf("body-c"),
+                    worldPortIds = listOf("world-c"),
+                    pairing = BoardRoutedCordPairing.Declared,
+                ),
+            ),
+        )
+
+        val geometry = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(0f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!
+
+        assertEquals(
+            listOf(
+                listOf(
+                    BoardPathCommand.MoveTo(40f, 20f),
+                    BoardPathCommand.LineTo(30f, 60f),
+                ),
+                listOf(
+                    BoardPathCommand.MoveTo(60f, 20f),
+                    BoardPathCommand.LineTo(70f, 60f),
+                ),
+                listOf(
+                    BoardPathCommand.MoveTo(40f, 20f),
+                    BoardPathCommand.LineTo(50f, 70f),
+                ),
+            ),
+            geometry.tensionPaths(BoardRoutedCordLayer.BehindFace).map { it.commands },
+        )
+    }
+
+    @Test
     fun pathsAndOcclusionsResolveInTheirDeclaredSpacesAndLayers() {
         val bodyCommands = listOf(
             BoardRoutedCordPathCommand.Move(Point(20f, 40f)),
