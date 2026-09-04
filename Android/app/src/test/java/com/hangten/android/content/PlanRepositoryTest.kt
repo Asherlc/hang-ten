@@ -1,7 +1,6 @@
 package com.hangten.android.content
 
 import java.io.File
-import javax.imageio.ImageIO
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -180,18 +179,41 @@ private class StagedContentAssets(
 
     override fun imageDimensions(path: String): ContentImageDimensions? {
         val file = File(root, path).takeIf(File::isFile) ?: return null
-        return runCatching {
-            ImageIO.createImageInputStream(file)?.use { input ->
-                val readers = ImageIO.getImageReaders(input)
-                if (!readers.hasNext()) return@use null
-                val reader = readers.next()
-                try {
-                    reader.input = input
-                    ContentImageDimensions(width = reader.getWidth(0), height = reader.getHeight(0))
-                } finally {
-                    reader.dispose()
-                }
-            }
-        }.getOrNull()
+        return runCatching { pngHeaderDimensions(file) }.getOrNull()
     }
 }
+
+private fun pngHeaderDimensions(file: File): ContentImageDimensions? {
+    val header = ByteArray(24)
+    file.inputStream().use { input ->
+        var offset = 0
+        while (offset < header.size) {
+            val count = input.read(header, offset, header.size - offset)
+            if (count < 0) return null
+            offset += count
+        }
+    }
+    if (!header.copyOfRange(0, PNG_SIGNATURE.size).contentEquals(PNG_SIGNATURE) ||
+        !header.copyOfRange(12, 16).contentEquals(byteArrayOf(0x49, 0x48, 0x44, 0x52))
+    ) return null
+    val width = header.bigEndianInt(16)
+    val height = header.bigEndianInt(20)
+    return if (width > 0 && height > 0) ContentImageDimensions(width, height) else null
+}
+
+private fun ByteArray.bigEndianInt(offset: Int): Int =
+    ((this[offset].toInt() and 0xff) shl 24) or
+        ((this[offset + 1].toInt() and 0xff) shl 16) or
+        ((this[offset + 2].toInt() and 0xff) shl 8) or
+        (this[offset + 3].toInt() and 0xff)
+
+private val PNG_SIGNATURE = byteArrayOf(
+    0x89.toByte(),
+    0x50,
+    0x4e,
+    0x47,
+    0x0d,
+    0x0a,
+    0x1a,
+    0x0a,
+)

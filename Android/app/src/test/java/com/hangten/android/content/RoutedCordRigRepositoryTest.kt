@@ -124,7 +124,7 @@ class RoutedCordRigRepositoryTest {
             .single()
         val alias = board.presentation("primary-inverted")!!
 
-        assertEquals("primary", board.artworkPresentation(alias).id)
+        assertEquals("primary", board.artworkPresentation(alias)?.id)
         assertTrue(board.resolvedCordRig(alias) is BoardCordRig.Routed)
     }
 
