@@ -8,6 +8,7 @@ import {
   validateEditorDocument,
   validateEditorDocumentForSave,
 } from "../src/workbench-controller.ts";
+import { resolveCordRigPresentationGeometry } from "../src/cord-rig.ts";
 import { createWorkbenchClient } from "../src/workbench-client.ts";
 import { cloneEditorDocument } from "../src/editor-model.ts";
 import { postNativeDiagnostic } from "../src/native-bridge.ts";
@@ -75,6 +76,43 @@ function boardFixture(overrides: Partial<Board> = {}): Board {
     document: editorDocument(),
     ...overrides,
   };
+}
+
+function circularArcClipContains(
+  path: string,
+  center: { x: number; y: number },
+  point: { x: number; y: number },
+): boolean {
+  const tokens = path.split(" ");
+  assert.equal(tokens.length, 12, `unexpected circular-arc path: ${path}`);
+  assert.equal(tokens[0], "M");
+  assert.equal(tokens[3], "A");
+  assert.equal(tokens[6], "0");
+  assert.equal(tokens[11], "Z");
+  const start = { x: Number(tokens[1]), y: Number(tokens[2]) };
+  const radius = Number(tokens[4]);
+  assert.equal(Number(tokens[5]), radius);
+  const largeArc = tokens[7] === "1";
+  const positiveSweep = tokens[8] === "1";
+  const end = { x: Number(tokens[9]), y: Number(tokens[10]) };
+  const startAngle = Math.atan2(start.y - center.y, start.x - center.x);
+  const endAngle = Math.atan2(end.y - center.y, end.x - center.x);
+  const fullTurn = 2 * Math.PI;
+  let sweep = ((endAngle - startAngle) % fullTurn + fullTurn) % fullTurn;
+  if (!positiveSweep) sweep -= fullTurn;
+  if (largeArc && Math.abs(sweep) < Math.PI) sweep += positiveSweep ? fullTurn : -fullTurn;
+  if (!largeArc && Math.abs(sweep) > Math.PI) sweep += positiveSweep ? -fullTurn : fullTurn;
+  const arcMidpointAngle = startAngle + sweep / 2;
+  const arcMidpoint = {
+    x: center.x + radius * Math.cos(arcMidpointAngle),
+    y: center.y + radius * Math.sin(arcMidpointAngle),
+  };
+  const sideOfChord = (candidate: { x: number; y: number }): number => (
+    (end.x - start.x) * (candidate.y - start.y)
+      - (end.y - start.y) * (candidate.x - start.x)
+  );
+  return Math.hypot(point.x - center.x, point.y - center.y) <= radius
+    && sideOfChord(point) * sideOfChord(arcMidpoint) >= 0;
 }
 
 test("the browser client lists and opens direct boards", async () => {
@@ -262,6 +300,41 @@ test("the browser client preserves a canonical direct-two-anchor cord rig", asyn
     (board.presentations?.[0] as unknown as { cordRig?: unknown })?.cordRig,
     rig,
   );
+});
+
+test("the eyelet foreground keeps the board-side face above the incoming cord", () => {
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 64, y: 50 }],
+    pullPoint: { x: 42, y: 0 },
+    eyeletRadius: 10,
+  };
+  const document: EditorDocument = {
+    canvas: { width: 100, height: 100 },
+    regions: [],
+  };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+  assert.ok(geometry);
+  const strand = geometry.strands[0];
+  const path = geometry.eyeletForegroundCrescents[0];
+  assert.deepEqual(strand, { start: { x: 20, y: 0 }, end: { x: 20, y: 50 } });
+  assert.equal(circularArcClipContains(path, strand.end, { x: 20, y: 58 }), true);
+  assert.equal(circularArcClipContains(path, strand.end, { x: 20, y: 42 }), false);
 });
 
 test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {

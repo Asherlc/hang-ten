@@ -80,7 +80,7 @@ function eyeletForegroundCrescent(
   };
   return [
     pointCommand("M", [start]),
-    `A ${pathNumber(radius)} ${pathNumber(radius)} 0 0 0 ${pathNumber(end.x)} ${pathNumber(end.y)}`,
+    `A ${pathNumber(radius)} ${pathNumber(radius)} 0 1 1 ${pathNumber(end.x)} ${pathNumber(end.y)}`,
     "Z",
   ].join(" ");
 }
