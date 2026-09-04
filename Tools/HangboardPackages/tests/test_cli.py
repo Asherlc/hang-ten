@@ -6,6 +6,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+from PIL import Image
+
 from conftest import (
     write_board_package,
     write_multi_presentation_board_package,
@@ -40,6 +43,952 @@ def _run_cli(
 
 def _json_output(output: str) -> dict[str, object]:
     return json.loads(output[output.find("{") :])
+
+
+def _write_chroma_config(context: Path, payload: object | None = None) -> Path:
+    path = context / "chroma-config.json"
+    path.write_text(
+        json.dumps(
+            payload
+            if payload is not None
+            else {
+                "keyRGB": [0, 255, 0],
+                "distanceThreshold": 36,
+                "edgeDistanceThreshold": 72,
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _source_record(path: Path, source_id: str = "fixture") -> dict[str, object]:
+    return {
+        "path": str(path),
+        "sourceID": source_id,
+        "url": f"https://manufacturer.example/{source_id}",
+        "publisher": "Fixture Manufacturer",
+        "role": "product",
+        "revision": "fixture-revision",
+        "reviewedAt": "2026-09-02",
+    }
+
+
+def _source_manifest(context: Path, records: list[dict[str, object]]) -> Path:
+    path = context / "sources" / "index.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"sources": records}), encoding="utf-8")
+    return path
+
+
+def test_cord_assets_cli_rejects_paths_outside_owner_context(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-assets"
+    context.mkdir(parents=True)
+    raw = tmp_path / "raw.png"
+    Image.new("RGB", (3, 3), (0, 255, 0)).save(raw, format="PNG")
+    config = _write_chroma_config(context)
+    pseudo = tmp_path / "not.context" / "joyful-donkey-pseudo" / "out.png"
+
+    result = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(pseudo),
+        "--config",
+        str(config),
+        "--report",
+        str(context / "report.json"),
+    )
+
+    assert result.returncode == 1
+    assert "owner-named .context" in result.stderr
+
+
+def test_cord_assets_literal_p3_lock_and_atlas_share_one_frozen_manifest(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-assets"
+    context.mkdir(parents=True)
+    source = tmp_path / "external-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source)])
+
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+
+    assert locked.returncode == 0, locked.stderr
+    artifact = json.loads(manifest.read_text(encoding="utf-8"))
+    assert set(artifact) == {
+        "schemaVersion",
+        "toolVersion",
+        "kind",
+        "digestVersion",
+        "sourceLockSHA256",
+        "sources",
+    }
+    assert artifact["kind"] == "cordSourceLock"
+    assert len(artifact["sourceLockSHA256"]) == 64
+    locked_record = artifact["sources"][0]
+    assert Path(locked_record["originalPath"]) == source.resolve()
+    cache = Path(locked_record["cachePath"])
+    assert cache.is_relative_to(context.resolve())
+    assert cache.read_bytes() == source.read_bytes()
+
+    atlas_root = context / "atlases"
+    atlas = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(atlas_root),
+    )
+
+    assert atlas.returncode == 0, atlas.stderr
+    atlas_report = json.loads((atlas_root / "index.json").read_text(encoding="utf-8"))
+    assert atlas_report["verification"] == {"valid": True, "verified_panels": 1}
+    assert atlas_report["index"]["sources"] == artifact["sources"]
+
+
+def test_cord_assets_lock_preflights_report_before_freezing_manifest(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-lock-preflight"
+    context.mkdir(parents=True)
+    source = tmp_path / "preflight-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "preflight")])
+    original_manifest = manifest.read_bytes()
+    pseudo_report = (
+        tmp_path / "not.context" / "joyful-donkey-pseudo" / "lock-report.json"
+    )
+
+    result = _run_cli(
+        "cord-assets",
+        "lock",
+        "--manifest",
+        str(manifest),
+        "--report",
+        str(pseudo_report),
+    )
+
+    assert result.returncode == 1
+    assert "owner-named .context" in result.stderr
+    assert manifest.read_bytes() == original_manifest
+
+
+def test_cord_assets_lock_rejects_invalid_report_leaf_before_any_artifact_changes(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-lock-leaf-preflight"
+    context.mkdir(parents=True)
+    source = tmp_path / "leaf-preflight-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "leaf-preflight")])
+    original_manifest = manifest.read_bytes()
+    report_directory = context / "report-directory"
+    report_directory.mkdir()
+
+    result = _run_cli(
+        "cord-assets",
+        "lock",
+        "--manifest",
+        str(manifest),
+        "--report",
+        str(report_directory),
+    )
+
+    assert result.returncode == 1
+    assert (
+        result.stderr
+        == "error: output target must be absent or a regular file: report-directory\n"
+    )
+    assert manifest.read_bytes() == original_manifest
+    assert not (context / "sources" / "locked").exists()
+
+
+def test_cord_assets_lock_rejects_manifest_report_alias_before_freezing(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-lock-alias"
+    context.mkdir(parents=True)
+    source = tmp_path / "lock-alias-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "lock-alias")])
+    original_manifest = manifest.read_bytes()
+
+    result = _run_cli(
+        "cord-assets",
+        "lock",
+        "--manifest",
+        str(manifest),
+        "--report",
+        str(manifest),
+    )
+
+    assert result.returncode == 1
+    assert "path roles alias" in result.stderr
+    assert manifest.read_bytes() == original_manifest
+    assert not (context / "sources" / "locked").exists()
+
+
+def test_cord_assets_atlas_fails_if_original_changes_after_lock(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-mutable-original"
+    context.mkdir(parents=True)
+    source = tmp_path / "mutable-original.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "mutable-original")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    Image.new("RGB", (3, 3), (40, 50, 60)).save(source, format="PNG")
+
+    atlas = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(context / "atlases"),
+    )
+
+    assert atlas.returncode == 1
+    assert atlas.stderr == "error: original source hash mismatch: mutable-original\n"
+
+
+def test_cord_assets_atlas_fails_if_frozen_cache_changes_after_lock(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-mutable-cache"
+    context.mkdir(parents=True)
+    source = tmp_path / "cache-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "mutable-cache")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    artifact = json.loads(manifest.read_text(encoding="utf-8"))
+    cache = Path(artifact["sources"][0]["cachePath"])
+    Image.new("RGB", (3, 3), (40, 50, 60)).save(cache, format="PNG")
+
+    atlas = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(context / "atlases"),
+    )
+
+    assert atlas.returncode == 1
+    assert atlas.stderr == "error: locked source hash mismatch: mutable-cache\n"
+
+
+def test_cord_assets_atlas_rejects_valid_value_frozen_provenance_tamper(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-provenance-tamper"
+    context.mkdir(parents=True)
+    source = tmp_path / "provenance-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "provenance")])
+    assert _run_cli("cord-assets", "lock", "--manifest", str(manifest)).returncode == 0
+    artifact = json.loads(manifest.read_text(encoding="utf-8"))
+    artifact["sources"][0]["url"] = "https://different.example/valid-revision"
+    manifest.write_text(json.dumps(artifact), encoding="utf-8")
+
+    atlas = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(context / "atlases"),
+    )
+
+    assert atlas.returncode == 1
+    assert "source lock digest mismatch" in atlas.stderr
+    assert not (context / "atlases").exists()
+
+
+def test_cord_assets_atlas_rejects_wrong_typed_frozen_schema_version(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-schema-type"
+    context.mkdir(parents=True)
+    source = tmp_path / "schema-type-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "schema-type")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    artifact = json.loads(manifest.read_text(encoding="utf-8"))
+    artifact["schemaVersion"] = True
+    manifest.write_text(json.dumps(artifact), encoding="utf-8")
+
+    atlas = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(context / "atlases"),
+    )
+
+    assert atlas.returncode == 1
+    assert (
+        atlas.stderr
+        == "error: locked source manifest.schemaVersion must be an integer\n"
+    )
+
+
+@pytest.mark.parametrize(
+    ("payload", "message"),
+    [
+        (42, "manifest must be a JSON object"),
+        ({"sources": [], "unknown": True}, "manifest has unknown fields"),
+        ({"sources": [{"sourceID": "missing-fields"}]}, "sources[0] is missing fields"),
+    ],
+)
+def test_cord_assets_lock_rejects_malformed_manifest_with_concise_error(
+    tmp_path: Path, payload: object, message: str
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-bad-manifest"
+    context.mkdir(parents=True)
+    manifest = context / "manifest.json"
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = _run_cli(
+        "cord-assets",
+        "lock",
+        "--manifest",
+        str(manifest),
+        "--report",
+        str(context / "report.json"),
+    )
+
+    assert result.returncode == 1
+    assert result.stderr == f"error: {message}\n"
+    assert "Traceback" not in result.stderr
+
+
+def test_cord_assets_lock_rejects_duplicate_and_escaping_source_ids(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-source-ids"
+    context.mkdir(parents=True)
+    source = tmp_path / "source-id.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    duplicate_manifest = _source_manifest(
+        context,
+        [_source_record(source, "same"), _source_record(source, "same")],
+    )
+
+    duplicate = _run_cli("cord-assets", "lock", "--manifest", str(duplicate_manifest))
+
+    assert duplicate.returncode == 1
+    assert duplicate.stderr == "error: duplicate source ID: same\n"
+
+    escape_context = tmp_path / ".context" / "joyful-donkey-cli-source-id-escape"
+    escape_context.mkdir(parents=True)
+    escape_manifest = _source_manifest(
+        escape_context, [_source_record(source, "../../../escape")]
+    )
+    escape = _run_cli("cord-assets", "lock", "--manifest", str(escape_manifest))
+
+    assert escape.returncode == 1
+    assert escape.stderr == "error: sources[0].sourceID must be a safe path component\n"
+
+
+def test_cord_assets_atlas_rejects_preexisting_page_symlink(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-page-symlink"
+    context.mkdir(parents=True)
+    source = tmp_path / "page-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "page-source")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    output = context / "atlases"
+    output.mkdir()
+    unrelated = tmp_path / "unrelated.png"
+    unrelated.write_bytes(b"unrelated")
+    (output / "page-01.png").symlink_to(unrelated)
+
+    atlas = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+    )
+
+    assert atlas.returncode == 1
+    assert "symlink" in atlas.stderr
+    assert unrelated.read_bytes() == b"unrelated"
+
+
+def test_cord_assets_atlas_rejects_manifest_report_alias_before_pages_change(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-alias"
+    context.mkdir(parents=True)
+    source = tmp_path / "atlas-alias-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "atlas-alias")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    frozen_manifest = manifest.read_bytes()
+    output = context / "atlases"
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(manifest),
+    )
+
+    assert result.returncode == 1
+    assert "path roles alias" in result.stderr
+    assert manifest.read_bytes() == frozen_manifest
+    assert not output.exists()
+
+
+def test_cord_assets_atlas_rejects_invalid_report_before_pages_change(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-report-leaf"
+    context.mkdir(parents=True)
+    source = tmp_path / "atlas-report-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "atlas-report")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    output = context / "atlases"
+    invalid_report = context / "report-directory"
+    invalid_report.mkdir()
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(invalid_report),
+    )
+
+    assert result.returncode == 1
+    assert "output target must be absent or a regular file" in result.stderr
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    "relative_report",
+    ["report.json", "page-99.png", "nested/report.json"],
+)
+def test_cord_assets_atlas_rejects_custom_report_below_output_before_mutation(
+    tmp_path: Path, relative_report: str
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-report-inside"
+    context.mkdir(parents=True)
+    source = tmp_path / "atlas-report-inside-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "report-inside")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    before = {
+        str(path.relative_to(context)): path.read_bytes()
+        for path in sorted(context.rglob("*"))
+        if path.is_file()
+    }
+    output = context / "atlases"
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(output / relative_report),
+    )
+
+    assert result.returncode == 1
+    assert "custom atlas report must be outside the atlas output root" in result.stderr
+    assert not output.exists()
+    assert {
+        str(path.relative_to(context)): path.read_bytes()
+        for path in sorted(context.rglob("*"))
+        if path.is_file()
+    } == before
+
+
+def test_cord_assets_atlas_rejects_report_ancestor_of_output_before_mutation(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-report-ancestor"
+    context.mkdir(parents=True)
+    source = tmp_path / "atlas-report-ancestor-source.png"
+    Image.new("RGB", (3, 3), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, "report-ancestor")])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    report = context / "atlas-report"
+    output = report / "pages"
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(report),
+    )
+
+    assert result.returncode == 1
+    assert "custom atlas report must be outside the atlas output root" in result.stderr
+    assert not report.exists()
+
+
+@pytest.mark.parametrize("report_kind", ["canonical", "external"])
+def test_cord_assets_atlas_allows_identical_rebuild_with_coherent_report_location(
+    tmp_path: Path, report_kind: str
+) -> None:
+    context = tmp_path / ".context" / f"joyful-donkey-cli-atlas-{report_kind}"
+    context.mkdir(parents=True)
+    source = tmp_path / f"atlas-{report_kind}-source.png"
+    Image.new("RGB", (7, 5), (4, 5, 6)).save(source, format="PNG")
+    manifest = _source_manifest(context, [_source_record(source, report_kind)])
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+    output = context / "atlases"
+    report = (
+        output / "index.json"
+        if report_kind == "canonical"
+        else context / "reports" / "atlas.json"
+    )
+
+    first = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(report),
+    )
+    assert first.returncode == 0, first.stderr
+    first_index = (output / "index.json").read_bytes()
+    first_page = (output / "page-01.png").read_bytes()
+
+    rebuilt = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(output),
+        "--report",
+        str(report),
+    )
+
+    assert rebuilt.returncode == 0, rebuilt.stderr
+    assert (output / "index.json").read_bytes() == first_index
+    assert (output / "page-01.png").read_bytes() == first_page
+    assert report.is_file()
+
+
+def test_cord_assets_atlas_rebuild_removes_stale_page_and_rejects_unknown_files(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-atlas-rebuild"
+    context.mkdir(parents=True)
+    sources = []
+    for number in range(2):
+        source = tmp_path / f"atlas-rebuild-{number}.png"
+        Image.new("RGB", (2000, 1100), (number + 1, 4, 5)).save(source, format="PNG")
+        sources.append(source)
+    first_manifest = _source_manifest(
+        context,
+        [
+            _source_record(path, f"rebuild-{number}")
+            for number, path in enumerate(sources)
+        ],
+    )
+    assert (
+        _run_cli("cord-assets", "lock", "--manifest", str(first_manifest)).returncode
+        == 0
+    )
+    output = context / "atlases"
+    first = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(first_manifest),
+        "--output-root",
+        str(output),
+    )
+    assert first.returncode == 0, first.stderr
+    assert (output / "page-02.png").is_file()
+
+    second_manifest = context / "sources" / "single.json"
+    second_manifest.write_text(
+        json.dumps({"sources": [_source_record(sources[0], "rebuild-0")]}),
+        encoding="utf-8",
+    )
+    assert (
+        _run_cli("cord-assets", "lock", "--manifest", str(second_manifest)).returncode
+        == 0
+    )
+    rebuilt = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(second_manifest),
+        "--output-root",
+        str(output),
+    )
+    assert rebuilt.returncode == 0, rebuilt.stderr
+    assert not (output / "page-02.png").exists()
+
+    unknown = output / "notes.txt"
+    unknown.write_text("keep", encoding="utf-8")
+    before_index = (output / "index.json").read_bytes()
+    before_page = (output / "page-01.png").read_bytes()
+    rejected = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(second_manifest),
+        "--output-root",
+        str(output),
+    )
+    assert rejected.returncode == 1
+    assert "unknown atlas output" in rejected.stderr
+    assert unknown.read_text(encoding="utf-8") == "keep"
+    assert (output / "index.json").read_bytes() == before_index
+    assert (output / "page-01.png").read_bytes() == before_page
+
+
+def test_cord_assets_literal_p6_key_and_inspect_resolve_declared_canvas(
+    tmp_path: Path,
+) -> None:
+    board_root = tmp_path / "Hangboards" / "fixture-board"
+    write_board_package(board_root)
+    context = tmp_path / ".context" / "joyful-donkey-cli-p6"
+    context.mkdir(parents=True)
+    raw = tmp_path / "candidate-raw.png"
+    image = Image.new("RGBA", (40, 20), (0, 255, 0, 255))
+    for x in range(15, 25):
+        for y in range(7, 13):
+            image.putpixel((x, y), (90, 80, 70, 255))
+    image.save(raw, format="PNG")
+    config = _write_chroma_config(context)
+    output = context / "candidate-rgba.png"
+    key_report = context / "candidate-report.json"
+
+    keyed = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(output),
+        "--config",
+        str(config),
+        "--report",
+        str(key_report),
+    )
+    assert keyed.returncode == 0, keyed.stderr
+    inspect_report = context / "candidate-inspection.json"
+    inspected = _run_cli(
+        "cord-assets",
+        "inspect",
+        "--image",
+        str(output),
+        "--expected-from",
+        f"{board_root / 'board.json'}:primary",
+        "--config",
+        str(config),
+        "--report",
+        str(inspect_report),
+    )
+
+    assert inspected.returncode == 0, inspected.stderr
+    report = json.loads(inspect_report.read_text(encoding="utf-8"))
+    assert (report["width"], report["height"]) == (40, 20)
+    assert report["config"] == {
+        "keyRGB": [0, 255, 0],
+        "distanceThreshold": 36,
+        "edgeDistanceThreshold": 72,
+    }
+
+
+@pytest.mark.parametrize(
+    "collision",
+    ["input-hardlink", "output", "config"],
+)
+def test_cord_assets_key_preflights_all_role_aliases_before_mutation(
+    tmp_path: Path, collision: str
+) -> None:
+    context = tmp_path / ".context" / f"joyful-donkey-cli-key-alias-{collision}"
+    context.mkdir(parents=True)
+    raw = context / "candidate-raw.png"
+    image = Image.new("RGB", (9, 9), (0, 255, 0))
+    image.putpixel((4, 4), (90, 80, 70))
+    image.save(raw, format="PNG")
+    raw_before = raw.read_bytes()
+    config = _write_chroma_config(context)
+    config_before = config.read_bytes()
+    output = context / "candidate-rgba.png"
+    if collision == "input-hardlink":
+        report = context / "candidate-report.json"
+        os.link(raw, report)
+    elif collision == "output":
+        report = output
+    else:
+        report = config
+
+    result = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(output),
+        "--config",
+        str(config),
+        "--report",
+        str(report),
+    )
+
+    assert result.returncode == 1
+    assert "path roles alias" in result.stderr
+    assert raw.read_bytes() == raw_before
+    assert config.read_bytes() == config_before
+    assert not output.exists()
+
+
+def test_cord_assets_key_rejects_invalid_output_leaf_before_report_changes(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-key-output-leaf"
+    context.mkdir(parents=True)
+    raw = context / "raw.png"
+    Image.new("RGB", (9, 9), (0, 255, 0)).save(raw, format="PNG")
+    config = _write_chroma_config(context)
+    output_directory = context / "output-directory"
+    output_directory.mkdir()
+    report = context / "report.json"
+
+    result = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(output_directory),
+        "--config",
+        str(config),
+        "--report",
+        str(report),
+    )
+
+    assert result.returncode == 1
+    assert "output target must be absent or a regular file" in result.stderr
+    assert output_directory.is_dir()
+    assert not report.exists()
+
+
+def test_cord_assets_inspect_preflights_image_report_hardlink_alias(
+    tmp_path: Path,
+) -> None:
+    board_root = tmp_path / "Hangboards" / "fixture-board"
+    write_board_package(board_root)
+    context = tmp_path / ".context" / "joyful-donkey-cli-inspect-alias"
+    context.mkdir(parents=True)
+    accepted = context / "accepted.png"
+    image = Image.new("RGBA", (40, 20), (0, 0, 0, 0))
+    image.putpixel((20, 10), (90, 80, 70, 255))
+    image.save(accepted, format="PNG")
+    accepted_before = accepted.read_bytes()
+    report = context / "inspection.json"
+    os.link(accepted, report)
+    config = _write_chroma_config(context)
+
+    result = _run_cli(
+        "cord-assets",
+        "inspect",
+        "--image",
+        str(accepted),
+        "--expected-from",
+        f"{board_root / 'board.json'}:primary",
+        "--config",
+        str(config),
+        "--report",
+        str(report),
+    )
+
+    assert result.returncode == 1
+    assert "path roles alias" in result.stderr
+    assert accepted.read_bytes() == accepted_before
+
+
+def test_cord_assets_inspect_rejects_invalid_report_leaf_without_mutation(
+    tmp_path: Path,
+) -> None:
+    board_root = tmp_path / "Hangboards" / "fixture-board"
+    write_board_package(board_root)
+    context = tmp_path / ".context" / "joyful-donkey-cli-inspect-report-leaf"
+    context.mkdir(parents=True)
+    accepted = context / "accepted.png"
+    image = Image.new("RGBA", (40, 20), (0, 0, 0, 0))
+    image.putpixel((20, 10), (90, 80, 70, 255))
+    image.save(accepted, format="PNG")
+    accepted_before = accepted.read_bytes()
+    report_directory = context / "report-directory"
+    report_directory.mkdir()
+    config = _write_chroma_config(context)
+
+    result = _run_cli(
+        "cord-assets",
+        "inspect",
+        "--image",
+        str(accepted),
+        "--expected-from",
+        f"{board_root / 'board.json'}:primary",
+        "--config",
+        str(config),
+        "--report",
+        str(report_directory),
+    )
+
+    assert result.returncode == 1
+    assert "output target must be absent or a regular file" in result.stderr
+    assert accepted.read_bytes() == accepted_before
+
+
+def test_cord_assets_key_requires_explicit_strict_config(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-required-config"
+    context.mkdir(parents=True)
+    raw = tmp_path / "required-config.png"
+    Image.new("RGB", (3, 3), (0, 255, 0)).save(raw, format="PNG")
+
+    missing = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(context / "output.png"),
+        "--report",
+        str(context / "report.json"),
+    )
+
+    assert missing.returncode == 2
+    assert "--config" in missing.stderr
+
+    malformed = _write_chroma_config(context, 42)
+    invalid = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(context / "invalid-output.png"),
+        "--config",
+        str(malformed),
+        "--report",
+        str(context / "invalid-report.json"),
+    )
+
+    assert invalid.returncode == 1
+    assert invalid.stderr == "error: chroma config must be a JSON object\n"
+    assert "Traceback" not in invalid.stderr
+
+
+def test_cord_assets_config_rejects_unknown_fields_and_non_integer_values(
+    tmp_path: Path,
+) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-config-schema"
+    context.mkdir(parents=True)
+    raw = tmp_path / "config-schema.png"
+    Image.new("RGB", (3, 3), (0, 255, 0)).save(raw, format="PNG")
+    bad = _write_chroma_config(
+        context,
+        {
+            "keyRGB": [0, 255, 0],
+            "distanceThreshold": True,
+            "edgeDistanceThreshold": 72,
+            "unknown": "field",
+        },
+    )
+
+    result = _run_cli(
+        "cord-assets",
+        "key",
+        "--input",
+        str(raw),
+        "--output",
+        str(context / "output.png"),
+        "--config",
+        str(bad),
+        "--report",
+        str(context / "report.json"),
+    )
+
+    assert result.returncode == 1
+    assert result.stderr.startswith("error: chroma config ")
+    assert "Traceback" not in result.stderr
+
+
+def test_cord_assets_cli_refuses_a_real_sixth_atlas_page(tmp_path: Path) -> None:
+    context = tmp_path / ".context" / "joyful-donkey-cli-overflow"
+    context.mkdir(parents=True)
+    records = []
+    for number in range(6):
+        image = context / f"source-{number}.png"
+        Image.new("RGB", (2000, 1100), (number, 255 - number, 0)).save(
+            image, format="PNG"
+        )
+        records.append(
+            {
+                "path": str(image),
+                "sourceID": f"source-{number}",
+                "url": f"https://example.com/{number}",
+                "publisher": "Fixture",
+                "role": "product",
+                "revision": "fixture",
+                "reviewedAt": "2026-09-02",
+            }
+        )
+    manifest = context / "sources.json"
+    manifest.write_text(json.dumps({"sources": records}), encoding="utf-8")
+
+    locked = _run_cli("cord-assets", "lock", "--manifest", str(manifest))
+    assert locked.returncode == 0, locked.stderr
+
+    result = _run_cli(
+        "cord-assets",
+        "atlas",
+        "--manifest",
+        str(manifest),
+        "--output-root",
+        str(context / "atlases"),
+        "--max-pages",
+        "5",
+    )
+
+    assert result.returncode == 1
+    assert "requires more than 5 atlas pages; limit is 5" in result.stderr
 
 
 def _write_audit_ledger(

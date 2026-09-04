@@ -90,6 +90,82 @@ for each supported variation. Scope each hold record to the presentation whose
 image and canonical geometry it describes; do not split one physical product
 into separate catalog boards solely because its presentation changes.
 
+When multiple positions show the same physical face, keep one canonical face
+image and make each additional presentation an alias with
+`sourcePresentationID`. An alias may declare `rotationDegrees`, a finite
+clockwise in-plane rotation normalized to the half-open range `[0, 360)`.
+Artwork, hold geometry, markers, and cord attachment points rotate together
+around `geometryRotationAnchor` (the normalized canvas center when omitted),
+while a cord rig's pull point and support loop remain world-up under gravity.
+An alias that declares `rotationDegrees` must reuse its canonical face's
+`assetPath`; this keeps one raster per physical face. Explicit rotations other
+than 0 or 180 degrees require a `cordRig` on the canonical presentation so its
+padded scene prevents rotated artwork from being clipped.
+Do not declare both `rotationDegrees` and the legacy `isInverted` field;
+`isInverted: true` remains readable as 180 degrees only for compatibility,
+including older packages whose inverted alias used a distinct asset.
+
+A presentation may also declare `availableHoldIDs` when only part of its
+canonical face is usable in that orientation. The array must be nonempty,
+contain unique identifier-shaped hold IDs, and reference only existing holds
+owned by that presentation's canonical face. When the field is omitted, every
+hold on the canonical face remains available for backward compatibility.
+Rendering, highlighting, hit testing, position resolution, and Workbench's
+focused editor view all use this effective hold subset.
+
+A canonical presentation may own either the compatible `directTwoAnchor` rig
+or a generalized `routed` cord rig. A routed rig retains `sceneSize`,
+`sourceFrame`, and `innerFaceFrame`, then declares these required fields:
+
+- `style`: positive finite `diameter`; `outlineColor`, `baseColor`, and exactly
+  two `braidColors`, each encoded as `#RRGGBB`. The diameter is measured in
+  source-frame units.
+- `ports`: unique identifier-shaped ports with `space` equal to `body` or
+  `world` and a finite `{x, y}` point.
+- `tensionGroups`: unique groups containing equally sized, nonempty, internally
+  unique `bodyPortIDs` and `worldPortIDs`; `pairing` is `declared` or
+  `screenOrder`, and `layer` is `behindFace`, `aboveFace`, or `overpass`.
+  `declared` pairs the two arrays by list index. `screenOrder` independently
+  stable-sorts the transformed body and world lists by screen x, then screen y,
+  then declaration index before pairing them by index.
+- `paths`: unique authored cord paths with a `body` or `world` space, a layer,
+  and path commands in the same array vocabulary as hold paths: `move`,
+  `line`, `quad`, `curve`, and optional terminal `close`. A path must contain
+  at least one `line`, `quad`, or `curve`; `move` followed only by `close` does
+  not draw a valid path.
+- `occlusions`: `radialLip` entries reference a body port and require
+  `0 < chordOffset < radius`, while `facePatch` entries contain a closed path.
+  A radial lip's body port must occur exactly once across every tension group's
+  `bodyPortIDs`, which gives the lip one unambiguous incident span. `radius` and
+  `chordOffset` are measured in source-frame units. A face patch has implicit
+  body space: all of its commands are source-frame-local and rotate with the
+  board.
+
+All four routed arrays are required in canonical JSON, including when `paths`
+or `occlusions` is empty. Every point and path coordinate is expressed in
+finite source-frame-local units: add `sourceFrame`'s origin to place it in the
+scene. Body-space geometry rotates with the board; world-space geometry stays
+fixed in that scene. For the canonical face and every alias, each paired body
+port must be strictly below its world port in screen coordinates after that
+transform (with a scene-proportional floating-point tolerance), so every
+tension span pulls upward under gravity.
+
+Routed centerline geometry must leave a safe inset of `0.8 * style.diameter`
+on all four scene edges. This applies after each presentation transform to
+every port used by a tension span and to every endpoint and control point of
+every authored cord path; keeping those defining points inside the inset also
+keeps each line, quadratic, and cubic convex hull inside it. Every transformed
+face-patch endpoint and control point must remain within the scene bounds (with
+no cord-style inset), and each transformed radial lip's full radius circle
+must remain within the scene.
+
+Render layers in this exact order: `behindFace` spans and paths, face artwork,
+`aboveFace` spans and paths, occlusion redraw, `overpass` spans and paths, hold
+highlights, then markers. Routed rigs follow the same canonical-presentation
+ownership, alias inheritance, scene-aspect, and PNG-to-`innerFaceFrame` aspect
+rules as `directTwoAnchor` rigs. Unknown rig, space, pairing, layer, command,
+and occlusion types are rejected.
+
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the
 physical board is symmetric, and multiple pieces only for one genuinely

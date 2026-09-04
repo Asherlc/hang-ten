@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from hangboard_packages.board_geometry_schema import BoardShapeDocument, NormalizedFrame, PathCommand
+from hangboard_packages.board_geometry_schema import (
+    BoardShapeDocument,
+    NormalizedFrame,
+    NormalizedPoint,
+    PathCommand,
+)
 
 
 def _move(x: float, y: float) -> dict:
@@ -32,6 +37,32 @@ def test_normalized_frame_allows_manual_off_canvas_bounds() -> None:
     frame = NormalizedFrame.from_json({"x": -0.01, "y": 0.97, "width": 1.05, "height": 0.08}, "frame")
 
     assert frame == NormalizedFrame(x=-0.01, y=0.97, width=1.05, height=0.08)
+
+
+def test_normalized_point_requires_finite_unit_coordinates() -> None:
+    assert NormalizedPoint.from_json({"x": 0.5, "y": 0.68}, "anchor") == NormalizedPoint(
+        0.5, 0.68
+    )
+
+
+@pytest.mark.parametrize(
+    ("payload", "message"),
+    [
+        ({"x": 0.5}, "missing keys"),
+        ({"x": 0.5, "y": 0.68, "z": 0}, "unknown keys"),
+        ({"x": True, "y": 0.68}, "finite number"),
+        ({"x": 0.5, "y": False}, "finite number"),
+        ({"x": float("nan"), "y": 0.68}, "finite number"),
+        ({"x": 0.5, "y": float("inf")}, "finite number"),
+        ({"x": -0.01, "y": 0.68}, "at least 0"),
+        ({"x": 0.5, "y": 1.01}, "at most 1"),
+    ],
+)
+def test_normalized_point_rejects_non_closed_or_out_of_bounds_coordinates(
+    payload: dict[str, float | bool], message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        NormalizedPoint.from_json(payload, "anchor")
 
 
 @pytest.mark.parametrize(

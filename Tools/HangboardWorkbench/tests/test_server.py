@@ -57,6 +57,58 @@ HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
 
 
+def _direct_two_anchor_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+        "pullPoint": {"x": 887, "y": 210},
+        "eyeletRadius": 20,
+    }
+
+
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body", "space": "body", "point": {"x": 400, "y": 300}},
+            {"id": "world", "space": "world", "point": {"x": 887, "y": 90}},
+        ],
+        "tensionGroups": [{
+            "id": "main",
+            "bodyPortIDs": ["body"],
+            "worldPortIDs": ["world"],
+            "pairing": "declared",
+            "layer": "behindFace",
+        }],
+        "paths": [],
+        "occlusions": [],
+    }
+
+
+def _quarter_turn_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 2000, "height": 2000},
+        "sourceFrame": {"x": 100, "y": 900, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+        "pullPoint": {"x": 887, "y": -690},
+        "eyeletRadius": 20,
+    }
+
+
 class _ScriptTagParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
@@ -716,12 +768,24 @@ def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
             assert response.headers["Content-Type"] == "image/png"
 
 
-def test_board_payload_marks_alias_presentations_with_their_canonical_source(
+def test_board_payload_exposes_only_declared_inverted_alias_anchor_metadata(
     tmp_path: Path,
 ) -> None:
     library = _write_multi_presentation_library(tmp_path)
     package = library / "fixture-v2"
     board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.1,
+        "y": 0.4,
+        "width": 0.2,
+        "height": 0.2,
+    }
+    board["holds"][0]["geometry"][1]["frame"] = {
+        "x": 0.4,
+        "y": 0.5,
+        "width": 0.1,
+        "height": 0.1,
+    }
     board["presentations"].append(
         {
             "id": "front-inverted",
@@ -731,6 +795,7 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
             "default": False,
             "sourcePresentationID": "front",
             "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
         }
     )
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
@@ -744,7 +809,128 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
         for presentation in opened["board"]["presentations"]
         if presentation["presentationID"] == "front-inverted"
     )
-    assert alias["sourcePresentationID"] == "front"
+    assert alias == {
+        "presentationID": "front-inverted",
+        "displayName": "Front Inverted",
+        "imageUrl": "/api/boards/fixture.multi/image?presentationID=front-inverted",
+        "default": False,
+        "sourcePresentationID": "front",
+        "isInverted": True,
+        "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+    }
+    source = next(
+        presentation
+        for presentation in opened["board"]["presentations"]
+        if presentation["presentationID"] == "front"
+    )
+    assert "sourcePresentationID" not in source
+    assert "isInverted" not in source
+    assert "geometryRotationAnchor" not in source
+
+
+def test_board_payload_exposes_available_hold_ids_without_starting_a_server(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    board["presentations"][0]["availableHoldIDs"] = ["hold-left"]
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["availableHoldIDs"] == ["hold-left"]
+
+
+def test_board_payload_exposes_canonical_direct_two_anchor_rig(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    rig = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+                "pullPoint": {"x": 887, "y": 210},
+        "eyeletRadius": 20,
+    }
+    board["presentations"][0]["cordRig"] = rig
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["cordRig"] == rig
+
+
+def test_board_payload_exposes_canonical_routed_rig_with_empty_arrays(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    rig = _routed_cord_rig()
+    board["presentations"][0]["cordRig"] = rig
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["cordRig"] == rig
+    assert payload["cordRig"]["paths"] == []
+    assert payload["cordRig"]["occlusions"] == []
+
+
+def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package = library / "fixture-v2"
+    board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["holds"] = board["holds"][:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
+    board["aspectRatio"] = 1
+    board["presentations"][0].update(
+        aspectRatio=1,
+        cordRig=_quarter_turn_cord_rig(),
+    )
+    board["presentations"][1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=1,
+        sourcePresentationID="front",
+        rotationDegrees=90,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    (package / "assets" / "back.png").unlink()
+
+    with running_server(library) as base:
+        status, opened = request_json(
+            base,
+            "GET",
+            "/api/boards/fixture.multi?presentationID=back",
+        )
+
+    assert status == 200
+    alias = next(
+        presentation
+        for presentation in opened["board"]["presentations"]
+        if presentation["presentationID"] == "back"
+    )
+    assert alias["rotationDegrees"] == 90
+    assert "isInverted" not in alias
+    assert alias["geometryRotationAnchor"] == {"x": 0.5, "y": 0.5}
 
 
 def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(

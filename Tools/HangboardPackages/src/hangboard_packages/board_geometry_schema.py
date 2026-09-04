@@ -69,6 +69,21 @@ class NormalizedFrame:
         return cls(x, y, width, height)
 
 
+@dataclass(frozen=True)
+class NormalizedPoint:
+    x: float
+    y: float
+
+    @classmethod
+    def from_json(cls, value: Any, label: str = "point") -> "NormalizedPoint":
+        payload = _mapping(value, label)
+        _closed(payload, label, required={"x", "y"})
+        return cls(
+            _float(payload["x"], label=f"{label}.x", minimum=0, maximum=1),
+            _float(payload["y"], label=f"{label}.y", minimum=0, maximum=1),
+        )
+
+
 # A control point only needs to be finite, but the app quantizes flattened
 # contour coordinates into an Int64 by scaling by 1e12 (see
 # BoardPackageStore.swift's QuantizedBoardPoint), which traps for values

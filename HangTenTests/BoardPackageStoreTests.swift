@@ -1,4 +1,5 @@
 import XCTest
+import SwiftUI
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
@@ -705,6 +706,759 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testDirectTwoAnchorRigLoadsAndAliasUsesCanonicalArtworkWithoutChangingLegacySelection() throws {
+        let expectedRig = BoardCordRig.directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: 71.5),
+                eyeletRadius: 34
+            )
+        )
+        let fixture = try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[0]["id"] = "primary"
+                presentations[0]["name"] = "Primary"
+                presentations[1]["aspectRatio"] = 50.0 / 61.0
+                presentations[1]["cordRig"] = [
+                    "type": "directTwoAnchor",
+                    "sceneSize": ["width": 1200, "height": 1464],
+                    "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+                    "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+                    "attachmentPoints": [
+                        ["x": 203, "y": 712],
+                        ["x": 997, "y": 712],
+                    ],
+                    "pullPoint": ["x": 600, "y": 71.5],
+                    "eyeletRadius": 34,
+                ]
+                presentations.append([
+                    "id": "back-inverted",
+                    "name": "Back inverted",
+                    "assetPath": "assets/back-inverted.png",
+                    "aspectRatio": 50.0 / 61.0,
+                    "default": false,
+                    "sourcePresentationID": "back",
+                    "isInverted": true,
+                    "geometryRotationAnchor": [
+                        "x": 0.5,
+                        "y": 0.6174863387978142,
+                    ],
+                ])
+                board["presentations"] = presentations
+
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["presentationID"] = "primary"
+                var backGeometry = try XCTUnwrap(holds[1]["geometry"] as? [[String: Any]])
+                backGeometry[0]["frame"] = [
+                    "x": 0.2, "y": 0.2, "width": 0.1, "height": 0.2,
+                ]
+                backGeometry[1]["frame"] = [
+                    "x": 0.4, "y": 0.2, "width": 0.1, "height": 0.1,
+                ]
+                holds[1]["geometry"] = backGeometry
+                board["holds"] = holds
+            },
+            mutateAssets: { assetsURL in
+                try self.squarePresentationBytes().write(
+                    to: assetsURL.appendingPathComponent("back-inverted.png")
+                )
+            }
+        )
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+        let primary = try XCTUnwrap(board.presentation(id: "primary"))
+        let back = try XCTUnwrap(board.presentation(id: "back"))
+        let backInverted = try XCTUnwrap(board.presentation(id: "back-inverted"))
+
+        XCTAssertEqual(back.cordRig, expectedRig)
+        XCTAssertNil(backInverted.cordRig)
+        XCTAssertEqual(board.resolvedCordRig(for: backInverted), expectedRig)
+        XCTAssertNil(primary.cordRig)
+        XCTAssertEqual(
+            store.presentationImageURL(for: board, presentationID: backInverted.id)?.lastPathComponent,
+            "back-inverted.png"
+        )
+        XCTAssertEqual(
+            store.presentationArtworkImageURL(for: board, presentationID: back.id)?.lastPathComponent,
+            "back.png"
+        )
+        XCTAssertEqual(
+            store.presentationArtworkImageURL(for: board, presentationID: backInverted.id)?.lastPathComponent,
+            "back.png"
+        )
+        XCTAssertEqual(
+            store.presentationImageURL(for: board, presentationID: primary.id)?.lastPathComponent,
+            "primary.png"
+        )
+        XCTAssertEqual(
+            store.presentationArtworkImageURL(for: board, presentationID: primary.id)?.lastPathComponent,
+            "primary.png"
+        )
+
+        try presentationBytes().write(
+            to: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/back.png"
+            )
+        )
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation back.cordRig.innerFaceFrame aspect ratio must match "
+                + "presentation image width/height within 0.1%"
+        )
+    }
+
+    func testRoutedCordRigLoadsEveryStructuralElementAndIsInheritedByAlias() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var routedRig = self.routedCordRigJSON()
+            var routedPorts = try XCTUnwrap(routedRig["ports"] as? [[String: Any]])
+            routedPorts[2]["point"] = ["x": 420, "y": -200]
+            routedPorts[3]["point"] = ["x": 580, "y": -200]
+            routedRig["ports"] = routedPorts
+            presentations[0]["cordRig"] = routedRig
+            presentations.append([
+                "id": "front-quarter-turn",
+                "name": "Front quarter turn",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1,
+                "default": false,
+                "sourcePresentationID": "front",
+                "rotationDegrees": 90,
+            ])
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let canonical = try XCTUnwrap(board.presentation(id: "front"))
+        let alias = try XCTUnwrap(board.presentation(id: "front-quarter-turn"))
+        guard case .routed(let rig) = try XCTUnwrap(canonical.cordRig) else {
+            return XCTFail("Expected routed cord rig")
+        }
+
+        XCTAssertEqual(
+            rig.style,
+            BoardRoutedCordStyle(
+                diameter: 12,
+                outlineColor: "#101010",
+                baseColor: "#2255AA",
+                braidColors: ["#FFD000", "#0055CC"]
+            )
+        )
+        XCTAssertEqual(rig.sceneSize, BoardCordSize(width: 1000, height: 1000))
+        XCTAssertEqual(rig.sourceFrame, BoardCordRect(x: 0, y: 250, width: 1000, height: 500))
+        XCTAssertEqual(rig.innerFaceFrame, BoardCordRect(x: 0, y: 0, width: 1000, height: 500))
+        XCTAssertEqual(rig.ports, [
+            BoardRoutedCordPort(
+                id: "body-left",
+                space: .body,
+                point: BoardCordPoint(x: 180, y: 330)
+            ),
+            BoardRoutedCordPort(
+                id: "body-right",
+                space: .body,
+                point: BoardCordPoint(x: 820, y: 330)
+            ),
+            BoardRoutedCordPort(
+                id: "world-left",
+                space: .world,
+                point: BoardCordPoint(x: 420, y: -200)
+            ),
+            BoardRoutedCordPort(
+                id: "world-right",
+                space: .world,
+                point: BoardCordPoint(x: 580, y: -200)
+            ),
+        ])
+        XCTAssertEqual(rig.tensionGroups, [
+            BoardRoutedCordTensionGroup(
+                id: "main",
+                bodyPortIDs: ["body-left", "body-right"],
+                worldPortIDs: ["world-left", "world-right"],
+                pairing: .screenOrder,
+                layer: .behindFace
+            ),
+        ])
+        XCTAssertEqual(rig.paths, [
+            BoardRoutedCordPath(
+                id: "return-bight",
+                space: .body,
+                layer: .aboveFace,
+                commands: [
+                    .move(to: BoardCordPoint(x: 180, y: 330)),
+                    .quad(
+                        control: BoardCordPoint(x: 500, y: 470),
+                        to: BoardCordPoint(x: 820, y: 330)
+                    ),
+                ]
+            ),
+        ])
+        XCTAssertEqual(rig.occlusions, [
+            .radialLip(
+                BoardRoutedCordRadialLip(
+                    bodyPortID: "body-left",
+                    radius: 22,
+                    chordOffset: 6
+                )
+            ),
+            .facePatch(
+                BoardRoutedCordFacePatch(commands: [
+                    .move(to: BoardCordPoint(x: 800, y: 310)),
+                    .line(to: BoardCordPoint(x: 840, y: 310)),
+                    .line(to: BoardCordPoint(x: 840, y: 350)),
+                    .close,
+                ])
+            ),
+        ])
+        XCTAssertNil(alias.cordRig)
+        XCTAssertEqual(board.resolvedCordRig(for: alias), .routed(rig))
+    }
+
+    func testStoreRejectsInvalidRoutedCordStructure() throws {
+        let cases: [((inout [String: Any]) throws -> Void, String)] = [
+            (
+                { rig in
+                    var style = try XCTUnwrap(rig["style"] as? [String: Any])
+                    style["baseColor"] = "blue"
+                    rig["style"] = style
+                },
+                "presentation front.cordRig.style colors must use #RRGGBB"
+            ),
+            (
+                { rig in
+                    var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+                    ports.append(ports[0])
+                    rig["ports"] = ports
+                },
+                "presentation front.cordRig.ports must have unique IDs"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["bodyPortIDs"] = [String]()
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.tensionGroups[0] port lists must be nonempty"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["worldPortIDs"] = ["world-left"]
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.tensionGroups[0] port lists must have equal cardinality"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["worldPortIDs"] = ["body-left", "world-right"]
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.tensionGroups[0].worldPortIDs must reference world ports"
+            ),
+            (
+                { rig in
+                    var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+                    paths[0]["commands"] = [
+                        ["command": "move", "to": [180, 330]],
+                        ["command": "move", "to": [820, 330]],
+                    ]
+                    rig["paths"] = paths
+                },
+                "presentation front.cordRig.paths[0].commands must begin with exactly one move command"
+            ),
+            (
+                { rig in
+                    var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+                    paths[0]["commands"] = [
+                        ["command": "move", "to": [180, 330]],
+                        ["command": "close"],
+                    ]
+                    rig["paths"] = paths
+                },
+                "presentation front.cordRig.paths[0].commands must contain a drawing segment"
+            ),
+            (
+                { rig in
+                    var occlusions = try XCTUnwrap(rig["occlusions"] as? [[String: Any]])
+                    var commands = try XCTUnwrap(occlusions[1]["commands"] as? [[String: Any]])
+                    commands.removeLast()
+                    occlusions[1]["commands"] = commands
+                    rig["occlusions"] = occlusions
+                },
+                "presentation front.cordRig.occlusions[1] facePatch commands must be closed"
+            ),
+            (
+                { rig in
+                    var occlusions = try XCTUnwrap(rig["occlusions"] as? [[String: Any]])
+                    occlusions[0]["chordOffset"] = 22
+                    rig["occlusions"] = occlusions
+                },
+                "presentation front.cordRig.occlusions[0] must satisfy 0 < chordOffset < radius"
+            ),
+            (
+                { rig in
+                    var groups = try XCTUnwrap(rig["tensionGroups"] as? [[String: Any]])
+                    groups[0]["bodyPortIDs"] = ["body-right"]
+                    groups[0]["worldPortIDs"] = ["world-right"]
+                    rig["tensionGroups"] = groups
+                },
+                "presentation front.cordRig.occlusions[0] radialLip body port must have exactly one incident tension-group span"
+            ),
+        ]
+
+        for (mutation, reason) in cases {
+            let fixture = try makeMultiPresentationFixtureBundle { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                board["aspectRatio"] = 1
+                presentations[0]["aspectRatio"] = 1
+                var rig = self.routedCordRigJSON()
+                try mutation(&rig)
+                presentations[0]["cordRig"] = rig
+                board["presentations"] = presentations
+            }
+            defer { fixture.remove() }
+
+            assertInvalidPackage(
+                try BoardPackageStore(bundle: fixture.bundle),
+                reason: reason,
+                file: #filePath,
+                line: #line
+            )
+        }
+    }
+
+    func testStoreRejectsRoutedCordGravityForCanonicalAndRotatedAlias() throws {
+        let canonicalFixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var rig = self.routedCordRigJSON()
+            var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+            ports[2]["point"] = ["x": 420, "y": 330]
+            rig["ports"] = ports
+            presentations[0]["cordRig"] = rig
+            board["presentations"] = presentations
+        }
+        defer { canonicalFixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: canonicalFixture.bundle),
+            reason: "presentation front routed body port body-left must be strictly below world port world-left"
+        )
+
+        let aliasFixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var rig = self.routedCordRigJSON()
+            var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+            ports[2]["point"] = ["x": 420, "y": 0]
+            ports[3]["point"] = ["x": 580, "y": 0]
+            rig["ports"] = ports
+            presentations[0]["cordRig"] = rig
+            presentations.append([
+                "id": "front-quarter-turn",
+                "name": "Front quarter turn",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1,
+                "default": false,
+                "sourcePresentationID": "front",
+                "rotationDegrees": 90,
+            ])
+            board["presentations"] = presentations
+        }
+        defer { aliasFixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: aliasFixture.bundle),
+            reason: "presentation front-quarter-turn routed body port body-left must be strictly below world port world-left"
+        )
+    }
+
+    func testStoreRejectsRoutedCordPathControlOutsideStyleInset() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            board["aspectRatio"] = 1
+            presentations[0]["aspectRatio"] = 1
+            var rig = self.routedCordRigJSON()
+            var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+            var commands = try XCTUnwrap(paths[0]["commands"] as? [[String: Any]])
+            commands[1]["control"] = [-1, 470]
+            paths[0]["commands"] = commands
+            rig["paths"] = paths
+            presentations[0]["cordRig"] = rig
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front routed cord centerline geometry must remain inside sceneSize with the style margin"
+        )
+    }
+
+    func testStoreRejectsDirectTwoAnchorCordStrokeOutsideScene() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[1]["aspectRatio"] = 50.0 / 61.0
+            presentations[1]["cordRig"] = [
+                "type": "directTwoAnchor",
+                "sceneSize": ["width": 1200, "height": 1464],
+                "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+                "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+                "attachmentPoints": [["x": 203, "y": 712], ["x": 997, "y": 712]],
+                "pullPoint": ["x": 600, "y": -200],
+                "eyeletRadius": 34,
+            ]
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation back cord drawing must remain inside sceneSize"
+        )
+    }
+
+    func testStoreRejectsGravityInvertedDirectTwoAnchorAlias() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[1]["aspectRatio"] = 50.0 / 61.0
+            presentations[1]["cordRig"] = [
+                "type": "directTwoAnchor",
+                "sceneSize": ["width": 1200, "height": 1464],
+                "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+                "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+                "attachmentPoints": [["x": 203, "y": 712], ["x": 997, "y": 712]],
+                "pullPoint": ["x": 600, "y": 71.5],
+                "eyeletRadius": 34,
+            ]
+            presentations.append([
+                "id": "back-inverted",
+                "name": "Back inverted",
+                "assetPath": "assets/back.png",
+                "aspectRatio": 50.0 / 61.0,
+                "default": false,
+                "sourcePresentationID": "back",
+                "rotationDegrees": 180,
+                "geometryRotationAnchor": ["x": 0.5, "y": 0.4],
+            ])
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation back-inverted cord pull exits must remain above both attachment points"
+        )
+    }
+
+    func testStorePreservesAnInvertedAliasRotationAnchor() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle()
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+
+        XCTAssertNil(board.presentation(id: "front")?.geometryRotationAnchor)
+        XCTAssertEqual(
+            board.presentation(id: "front-inverted")?.geometryRotationAnchor,
+            BoardGeometryRotationAnchor(x: 0.5, y: 0.68)
+        )
+        XCTAssertEqual(BoardGeometryRotationAnchor.center, .init(x: 0.5, y: 0.5))
+    }
+
+    func testStoreLoadsExplicitArbitraryAliasRotation() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[0]["aspectRatio"] = 1
+            presentations[0]["cordRig"] = [
+                "type": "directTwoAnchor",
+                "sceneSize": ["width": 600, "height": 600],
+                "sourceFrame": ["x": 200, "y": 300, "width": 200, "height": 100],
+                "innerFaceFrame": ["x": 0, "y": 0, "width": 200, "height": 100],
+                "attachmentPoints": [["x": 70, "y": 50], ["x": 130, "y": 50]],
+                "pullPoint": ["x": 100, "y": -90],
+                "eyeletRadius": 5,
+            ]
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["rotationDegrees"] = 90
+            presentations[2]["geometryRotationAnchor"] = ["x": 0.5, "y": 0.5]
+            presentations[2]["assetPath"] = "assets/primary.png"
+            presentations[2]["aspectRatio"] = 1
+        }
+        defer { fixture.remove() }
+        try FileManager.default.removeItem(
+            at: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/front-inverted.png"
+            )
+        )
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        try mutateBoard(at: boardURL) { board in
+            board["aspectRatio"] = 1
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+            for index in geometry.indices {
+                geometry[index]["frame"] = [
+                    "x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1,
+                ]
+            }
+            holds[0]["geometry"] = geometry
+            board["holds"] = holds
+        }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let alias = try XCTUnwrap(board.presentation(id: "front-inverted"))
+
+        XCTAssertEqual(alias.rotationDegrees, 90)
+        XCTAssertEqual(alias.resolvedRotationDegrees, 90)
+        XCTAssertFalse(alias.isInverted)
+        let projection = BoardPresentationGeometryProjection(presentation: alias)
+        XCTAssertEqual(
+            projection.project(
+                CGPoint(x: 75, y: 50),
+                in: CGRect(x: 0, y: 0, width: 100, height: 100)
+            ),
+            CGPoint(x: 50, y: 75)
+        )
+    }
+
+    func testStoreRejectsExplicitRotationUsingADistinctAliasAsset() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["rotationDegrees"] = 180
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted.assetPath must reuse source presentation assetPath for an explicit rotation"
+        )
+    }
+
+    func testStoreRejectsExplicitNonHalfTurnWithoutCanonicalCordRig() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["rotationDegrees"] = 90
+            presentations[2]["assetPath"] = "assets/primary.png"
+        }
+        defer { fixture.remove() }
+        try FileManager.default.removeItem(
+            at: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/front-inverted.png"
+            )
+        )
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted non-180 rotation requires a canonical cordRig to prevent artwork clipping"
+        )
+    }
+
+    func testStoreRejectsInvalidAndAmbiguousExplicitAliasRotation() throws {
+        for rotation in [-1.0, 360.0] {
+            let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+                presentations[2].removeValue(forKey: "isInverted")
+                presentations[2]["rotationDegrees"] = rotation
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+
+        let ambiguous = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["rotationDegrees"] = 180
+        }
+        defer { ambiguous.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: ambiguous.bundle))
+    }
+
+    func testStoreKeepsAnOmittedAliasRotationAnchorAsNil() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "geometryRotationAnchor")
+        }
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+
+        XCTAssertNil(board.presentation(id: "front-inverted")?.geometryRotationAnchor)
+    }
+
+    func testStoreRejectsRotationAnchorOnCanonicalPresentation() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[0]["geometryRotationAnchor"] = ["x": 0.5, "y": 0.5]
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front.geometryRotationAnchor requires sourcePresentationID"
+        )
+    }
+
+    func testStoreRejectsRotationAnchorOnNonInvertedAlias() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["isInverted"] = false
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
+        )
+    }
+
+    func testStoreRejectsNonFiniteRotationAnchorJSON() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle()
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        let finiteJSON = try String(contentsOf: boardURL, encoding: .utf8)
+        let nonFiniteJSON = finiteJSON.replacingOccurrences(of: "\"x\":0.5", with: "\"x\":1e999")
+        XCTAssertNotEqual(nonFiniteJSON, finiteJSON)
+        try Data(nonFiniteJSON.utf8).write(to: boardURL)
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
+    func testStoreRejectsRotationAnchorCoordinatesOutsideTheNormalizedRange() throws {
+        for anchor in [["x": 1.01, "y": 0.68], ["x": 0.5, "y": -0.01]] {
+            let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+                presentations[2]["geometryRotationAnchor"] = anchor
+            }
+            defer { fixture.remove() }
+
+            assertInvalidPackage(
+                try BoardPackageStore(bundle: fixture.bundle),
+                reason: "presentation front-inverted.geometryRotationAnchor must contain finite normalized coordinates"
+            )
+        }
+    }
+
+    func testStoreRejectsAliasAspectMismatch() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["aspectRatio"] = 2.0001
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted.aspectRatio must match source presentation aspectRatio"
+        )
+    }
+
+    func testStoreAcceptsTaskOneAliasRoundingTolerances() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["aspectRatio"] = 2.000000001
+        }
+        defer { fixture.remove() }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreAcceptsProjectedFrameOnArithmeticNoiseBoundary() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["geometryRotationAnchor"] = ["x": 0.15, "y": 0.15]
+        }
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        try mutateBoard(at: boardURL) { board in
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+            geometry[0]["frame"] = ["x": 0.1, "y": 0.1, "width": 0.2, "height": 0.2]
+            geometry[1]["frame"] = ["x": 0.12, "y": 0.12, "width": 0.1, "height": 0.1]
+            holds[0]["geometry"] = geometry
+            board["holds"] = holds
+        }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsAnOffCanvasLaterPieceOfALaterSourceHold() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle()
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        try mutateBoard(at: boardURL) { board in
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            var laterHold = holds[0]
+            laterHold["id"] = "hold-front-later"
+            laterHold["name"] = "Later front hold"
+            var geometry = try XCTUnwrap(laterHold["geometry"] as? [[String: Any]])
+            geometry[0]["frame"] = ["x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2]
+            geometry[1]["frame"] = ["x": 0.95, "y": 0.5, "width": 0.1, "height": 0.1]
+            laterHold["geometry"] = geometry
+            holds.append(laterHold)
+            board["holds"] = holds
+        }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted projects source hold geometry outside the normalized canvas"
+        )
+    }
+
+    func testStoreStrictlyDecodesRotationAnchorObjectAndNumericCoordinates() throws {
+        let mutations: [(inout [[String: Any]]) throws -> Void] = [
+            { presentations in
+                var anchor = try XCTUnwrap(
+                    presentations[2]["geometryRotationAnchor"] as? [String: Any]
+                )
+                anchor.removeValue(forKey: "x")
+                presentations[2]["geometryRotationAnchor"] = anchor
+            },
+            { presentations in
+                var anchor = try XCTUnwrap(
+                    presentations[2]["geometryRotationAnchor"] as? [String: Any]
+                )
+                anchor["unexpected"] = 1
+                presentations[2]["geometryRotationAnchor"] = anchor
+            },
+            { presentations in
+                var anchor = try XCTUnwrap(
+                    presentations[2]["geometryRotationAnchor"] as? [String: Any]
+                )
+                anchor["x"] = true
+                presentations[2]["geometryRotationAnchor"] = anchor
+            },
+            { $0[2]["geometryRotationAnchor"] = NSNull() },
+            { $0[2]["geometryRotationAnchor"] = "center" },
+        ]
+        for mutation in mutations {
+            let fixture = try makeAnchoredAliasFixtureBundle(mutatePresentations: mutation)
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+                )
+            }
+        }
+    }
+
     func testStoreAcceptsCanonicalNestedAssetsWithEqualBasenames() throws {
         let fixture = try makeMultiPresentationFixtureBundle(
             boardMutation: { board in
@@ -1057,6 +1811,107 @@ final class BoardPackageStoreTests: XCTestCase {
             on: board
         )
         XCTAssertEqual(selection.presentationID, "front-inverted")
+    }
+
+    func testPresentationGeometryProjectionLeavesNonInvertedPointUnchanged() {
+        let presentation = BoardPresentation(
+            id: "front",
+            name: "Front",
+            aspectRatio: 2,
+            isDefault: true
+        )
+        let projection = BoardPresentationGeometryProjection(presentation: presentation)
+        let boardRect = CGRect(x: 10, y: 20, width: 100, height: 60)
+
+        XCTAssertEqual(
+            projection.project(CGPoint(x: 20, y: 30), in: boardRect),
+            CGPoint(x: 20, y: 30)
+        )
+    }
+
+    func testPresentationGeometryProjectionInvertsAroundBoardRectCenter() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 10, y: 20, width: 100, height: 60)
+
+        XCTAssertEqual(
+            projection.project(CGPoint(x: 20, y: 30), in: boardRect),
+            CGPoint(x: 100, y: 70)
+        )
+    }
+
+    func testPresentationGeometryProjectionUsesNonCenterNormalizedAnchor() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .init(x: 0.5, y: 0.68)
+        )
+
+        XCTAssertEqual(
+            projection.project(
+                CGPoint(x: 20, y: 30),
+                in: CGRect(x: 0, y: 0, width: 100, height: 100)
+            ),
+            CGPoint(x: 80, y: 106)
+        )
+    }
+
+    func testPresentationGeometryProjectionTransformsEveryPathSubpath() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        var sourcePath = Path()
+        sourcePath.addRect(CGRect(x: 10, y: 20, width: 10, height: 10))
+        sourcePath.addRect(CGRect(x: 70, y: 50, width: 20, height: 10))
+
+        let projectedPath = projection.project(sourcePath, in: boardRect)
+
+        XCTAssertEqual(projectedPath.boundingRect, CGRect(x: 10, y: 40, width: 80, height: 40))
+        XCTAssertTrue(projectedPath.contains(CGPoint(x: 85, y: 75)))
+        XCTAssertTrue(projectedPath.contains(CGPoint(x: 20, y: 45)))
+        XCTAssertFalse(projectedPath.contains(CGPoint(x: 15, y: 25)))
+    }
+
+    func testPresentationGeometryProjectionProjectsHoldMarkerCenter() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 10, y: 20, width: 200, height: 100)
+        let holdFrame = CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.1)
+        let canonicalMarkerCenter = CGPoint(
+            x: boardRect.minX + holdFrame.midX * boardRect.width,
+            y: boardRect.minY + holdFrame.midY * boardRect.height
+        )
+
+        XCTAssertEqual(
+            projection.project(canonicalMarkerCenter, in: boardRect),
+            CGPoint(x: 170, y: 95)
+        )
+    }
+
+    func testProjectedRectangularHoldContainsTheProjectedMarkerCenter() {
+        let projection = BoardPresentationGeometryProjection(
+            isInverted: true,
+            rotationAnchor: .center
+        )
+        let boardRect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        let piece = BoardHoldPiece(
+            id: "fixture-piece",
+            holdID: "fixture-hold",
+            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0),
+            treatment: .surface
+        )
+        let shape = BoardHoldPathShape(pieces: [piece], projection: projection)
+        let canonicalCenter = CGPoint(x: 20, y: 25)
+        let markerPoint = projection.project(canonicalCenter, in: boardRect)
+
+        XCTAssertEqual(markerPoint, CGPoint(x: 80, y: 75))
+        XCTAssertTrue(shape.path(in: boardRect).contains(markerPoint))
     }
 
     func testBoardMapSelectionAppliesCallerPresentationChangeDespiteStaleActiveHold() throws {
@@ -2034,6 +2889,102 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.transitionKind(from: "flipped", to: "front"), .setupRequired)
     }
 
+    func testAvailableHoldIDsDrivePositionMapAndActivePresentationSelection() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            try self.presentationBytes().write(
+                to: packageURL.appendingPathComponent("assets/flipped.png")
+            )
+            try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "flipped",
+                    "name": "Flipped",
+                    "assetPath": "assets/flipped.png",
+                    "aspectRatio": 2,
+                    "default": false,
+                    "sourcePresentationID": "primary",
+                    "availableHoldIDs": ["hold-right"],
+                ])
+                board["presentations"] = presentations
+
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var right = holds[0]
+                right["id"] = "hold-right"
+                right["name"] = "Right hold"
+                holds.append(right)
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.holdIDs(inPosition: "primary"), ["hold-left", "hold-right"])
+        XCTAssertEqual(board.holdIDs(inPosition: "flipped"), ["hold-right"])
+        XCTAssertEqual(
+            BoardMapPresentationContent(board: board, selectedPresentationID: "flipped")
+                .holds.map(\.id),
+            ["hold-right"]
+        )
+        let selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: "flipped",
+            activeHoldID: "hold-left",
+            highlightedHoldIDs: []
+        )
+        XCTAssertEqual(selection.presentationID, "primary")
+    }
+
+    func testStoreRejectsInvalidAvailableHoldIDs() throws {
+        let invalidValues: [([String], String)] = [
+            ([], "presentation flipped.availableHoldIDs must not be empty"),
+            (["hold-left", "hold-left"], "presentation flipped.availableHoldIDs must be unique"),
+            (["missing"], "presentation flipped.availableHoldIDs references unknown hold missing"),
+        ]
+        for (availableHoldIDs, expectedReason) in invalidValues {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+                try self.presentationBytes().write(
+                    to: packageURL.appendingPathComponent("assets/flipped.png")
+                )
+                try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                    var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                    presentations.append([
+                        "id": "flipped",
+                        "name": "Flipped",
+                        "assetPath": "assets/flipped.png",
+                        "aspectRatio": 2,
+                        "default": false,
+                        "sourcePresentationID": "primary",
+                        "availableHoldIDs": availableHoldIDs,
+                    ])
+                    board["presentations"] = presentations
+                }
+            }
+            defer { fixture.remove() }
+
+            assertInvalidPackage(
+                try BoardPackageStore(bundle: fixture.bundle),
+                reason: expectedReason
+            )
+        }
+    }
+
+    func testStoreRejectsAvailableHoldOwnedByAnotherCanonicalFace() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[0]["availableHoldIDs"] = ["hold-back"]
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front.availableHoldIDs hold hold-back must belong to canonical presentation front"
+        )
+    }
+
     func testStoreRejectsInvalidPositionsAndTransitions() throws {
         let mutations: [(String, (inout [String: Any]) -> Void)] = [
             ("duplicate position ID", { board in
@@ -2165,6 +3116,57 @@ final class BoardPackageStoreTests: XCTestCase {
         try pngFixture(named: "validTwoByOneBase64")
     }
 
+    private func routedCordRigJSON() -> [String: Any] {
+        [
+            "type": "routed",
+            "sceneSize": ["width": 1000, "height": 1000],
+            "sourceFrame": ["x": 0, "y": 250, "width": 1000, "height": 500],
+            "innerFaceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "style": [
+                "diameter": 12,
+                "outlineColor": "#101010",
+                "baseColor": "#2255AA",
+                "braidColors": ["#FFD000", "#0055CC"],
+            ],
+            "ports": [
+                ["id": "body-left", "space": "body", "point": ["x": 180, "y": 330]],
+                ["id": "body-right", "space": "body", "point": ["x": 820, "y": 330]],
+                ["id": "world-left", "space": "world", "point": ["x": 420, "y": 70]],
+                ["id": "world-right", "space": "world", "point": ["x": 580, "y": 70]],
+            ],
+            "tensionGroups": [[
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "screenOrder",
+                "layer": "behindFace",
+            ]],
+            "paths": [[
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    ["command": "move", "to": [180, 330]],
+                    ["command": "quad", "control": [500, 470], "to": [820, 330]],
+                ],
+            ]],
+            "occlusions": [[
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 22,
+                "chordOffset": 6,
+            ], [
+                "type": "facePatch",
+                "commands": [
+                    ["command": "move", "to": [800, 310]],
+                    ["command": "line", "to": [840, 310]],
+                    ["command": "line", "to": [840, 350]],
+                    ["command": "close"],
+                ],
+            ]],
+        ]
+    }
+
     private func squarePresentationBytes() throws -> Data {
         try XCTUnwrap(
             Data(
@@ -2206,6 +3208,56 @@ final class BoardPackageStoreTests: XCTestCase {
                 try boardMutation?(&board)
             }
             try mutateAssets?(assetsURL)
+        }
+    }
+
+    private func makeAnchoredAliasFixtureBundle(
+        mutatePresentations: ((inout [[String: Any]]) throws -> Void)? = nil
+    ) throws -> FixtureBundle {
+        try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "front-inverted",
+                    "name": "Front upside down",
+                    "assetPath": "assets/front-inverted.png",
+                    "aspectRatio": 2,
+                    "default": false,
+                    "sourcePresentationID": "front",
+                    "isInverted": true,
+                    "geometryRotationAnchor": ["x": 0.5, "y": 0.68],
+                ])
+                try mutatePresentations?(&presentations)
+                board["presentations"] = presentations
+
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["frame"] = ["x": 0.05, "y": 0.4, "width": 0.1, "height": 0.2]
+                geometry[1]["frame"] = ["x": 0.35, "y": 0.5, "width": 0.1, "height": 0.1]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            },
+            mutateAssets: { assetsURL in
+                try Data(contentsOf: assetsURL.appendingPathComponent("primary.png")).write(
+                    to: assetsURL.appendingPathComponent("front-inverted.png")
+                )
+            }
+        )
+    }
+
+    private func assertInvalidPackage<T>(
+        _ expression: @autoclosure () throws -> T,
+        reason: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertThrowsError(try expression(), file: file, line: line) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(boardID: "fixture.board", reason: reason),
+                file: file,
+                line: line
+            )
         }
     }
 

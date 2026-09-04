@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import struct
@@ -23,6 +24,55 @@ from conftest import (
 from _board_package_helpers import board_positions_document
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def test_port_has_only_approved_front_and_back_physical_faces() -> None:
+    module = load_board_catalog_module()
+    repository_root = Path(__file__).resolve().parents[3]
+    package_root = repository_root / "Hangboards" / "frictitious-port-a-board"
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    presentations = {item["id"]: item for item in document["presentations"]}
+
+    assert [(item["id"], item["assetPath"]) for item in document["presentations"]] == [
+        ("primary", "assets/primary.png"),
+        ("front-inverted", "assets/primary.png"),
+        ("back", "assets/back.png"),
+    ]
+    assert presentations["back"]["assetPath"] == "assets/back.png"
+    assert "back-inverted" not in presentations
+    assert "side" not in presentations
+    assert not (package_root / "assets" / "back-inverted.png").exists()
+    assert not (package_root / "assets" / "side.png").exists()
+    assert {hold["id"] for hold in document["holds"]} == {
+        "edge-30",
+        "pocket-30-two-finger-mono",
+        "edge-25",
+        "edge-20",
+        "edge-15",
+        "edge-12",
+        "edge-10",
+        "edge-8",
+        "jug-outer-rim",
+    }
+    assert hashlib.sha256((package_root / "assets" / "back.png").read_bytes()).hexdigest() == (
+        "39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e"
+    )
+    canonical_holds = json.dumps(
+        document["holds"],
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode()
+    assert hashlib.sha256(canonical_holds).hexdigest() == (
+        "f8ca1ab25f3b1fd70f4cf756bd6b4a4ac8b5478e6da4048e1ed005ba835074d8"
+    )
+
+    package = module.load_board_package(package_root)
+    parsed_presentations = {item.id: item for item in package.board.presentations}
+    assert parsed_presentations["front-inverted"].rotation_degrees == 180
+    assert parsed_presentations["front-inverted"].is_inverted is False
+    assert parsed_presentations["back"].source_presentation_id is None
+    assert "back-inverted" not in parsed_presentations
 
 
 def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:
@@ -59,6 +109,51 @@ def test_board_schema_loads_positions_and_directed_transitions() -> None:
     assert board.transition_kind("front", "front") == "same"
     assert board.transition_kind("front", "flipped") == "seamless"
     assert board.transition_kind("flipped", "front") == "setupRequired"
+
+
+def test_available_hold_ids_filter_a_position_without_changing_legacy_positions() -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    second_hold = json.loads(json.dumps(document["holds"][0]))
+    second_hold.update(id="hold-right", name="Right hold")
+    document["holds"].append(second_hold)
+    document["presentations"][1]["availableHoldIDs"] = ["hold-right"]
+
+    board = module._load_board(document)
+
+    assert board.hold_ids_for_position("front") == ("hold-left", "hold-right")
+    assert board.hold_ids_for_position("flipped") == ("hold-right",)
+
+
+@pytest.mark.parametrize(
+    ("available_hold_ids", "message"),
+    [
+        ([], "availableHoldIDs must be a non-empty array"),
+        (["hold-left", "hold-left"], "availableHoldIDs must be unique"),
+        (["missing"], "availableHoldIDs references unknown hold missing"),
+    ],
+)
+def test_board_schema_rejects_invalid_available_hold_ids(
+    available_hold_ids: list[str], message: str
+) -> None:
+    module = load_board_catalog_module()
+    document = board_positions_document(board_document())
+    document["presentations"][1]["availableHoldIDs"] = available_hold_ids
+
+    with pytest.raises(ValueError, match=message):
+        module._load_board(document)
+
+
+def test_board_schema_rejects_available_hold_from_another_canonical_face() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["availableHoldIDs"] = ["hold-right"]
+
+    with pytest.raises(
+        ValueError,
+        match="presentation front.availableHoldIDs hold hold-right must belong to canonical presentation front",
+    ):
+        module._load_board(document)
 
 
 @pytest.mark.parametrize("field", ["positions", "positionTransitions"])
@@ -820,6 +915,1053 @@ def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
     (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
     with pytest.raises(ValueError, match="must be owned by a canonical presentation"):
+        module.load_board_package(package_root)
+
+
+def test_direct_two_anchor_cord_rig_matches_ios_schema(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    rig = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1200, "height": 1464},
+        "sourceFrame": {"x": 0, "y": 214, "width": 1200, "height": 1250},
+        "innerFaceFrame": {"x": -100, "y": -10, "width": 1400, "height": 1400},
+        "attachmentPoints": [
+            {"x": 203, "y": 712},
+            {"x": 997, "y": 712},
+        ],
+        "pullPoint": {"x": 600, "y": 71.5},
+        "eyeletRadius": 34,
+    }
+    document["presentations"][0].update(id="primary", name="Primary")
+    document["presentations"][1].update(
+        aspectRatio=50 / 61,
+        cordRig=rig,
+    )
+    document["presentations"].append(
+        {
+            "id": "rig-rotated",
+            "name": "Rig rotated",
+            "assetPath": "assets/rig-rotated.png",
+            "aspectRatio": 50 / 61,
+            "default": False,
+            "sourcePresentationID": "back",
+            "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142},
+        }
+    )
+    document["holds"][0]["presentationID"] = "primary"
+    document["holds"][1]["geometry"][0]["frame"] = {
+        "x": 0.2,
+        "y": 0.2,
+        "width": 0.1,
+        "height": 0.2,
+    }
+    square_png = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0))
+        + _png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00"))
+        + _png_chunk(b"IEND")
+    )
+    (package_root / "assets" / "back.png").write_bytes(square_png)
+    (package_root / "assets" / "rig-rotated.png").write_bytes(square_png)
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+    presentations = {item.id: item for item in package.board.presentations}
+    back = presentations["back"]
+    rig_rotated = presentations["rig-rotated"]
+    primary = presentations["primary"]
+
+    assert back.cord_rig == module.DirectTwoAnchorCordRig(
+        scene_size=module.CordSize(1200, 1464),
+        source_frame=module.CordRect(0, 214, 1200, 1250),
+        inner_face_frame=module.CordRect(-100, -10, 1400, 1400),
+        attachment_points=(module.CordPoint(203, 712), module.CordPoint(997, 712)),
+        pull_point=module.CordPoint(600, 71.5),
+        eyelet_radius=34,
+    )
+    assert back.source_presentation_id is None
+    assert rig_rotated.cord_rig is None
+    assert rig_rotated.source_presentation_id == "back"
+    assert rig_rotated.aspect_ratio == 50 / 61
+    assert rig_rotated.geometry_rotation_anchor == module.NormalizedPoint(
+        0.5, 0.6174863387978142
+    )
+    assert primary.cord_rig is None
+
+    wide_png = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 2, 1, 8, 2, 0, 0, 0))
+        + _png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00\x00\x00"))
+        + _png_chunk(b"IEND")
+    )
+    (package_root / "assets" / "back.png").write_bytes(wide_png)
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "board.json.presentations[back].cordRig.innerFaceFrame aspect ratio "
+            "must match its image width/height within 0.1%"
+        ),
+    ):
+        module.load_board_package(package_root)
+    (package_root / "assets" / "back.png").write_bytes(square_png)
+
+    document["presentations"][1]["cordRig"]["unexpected"] = True
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"cordRig has unknown keys: \['unexpected'\]"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("scene_width", "scene_height"),
+    [(1e308, 1e-308), (1e-308, 1e308)],
+    ids=("overflow", "underflow"),
+)
+def test_direct_two_anchor_cord_rig_rejects_unrepresentable_scene_ratio(
+    tmp_path: Path,
+    scene_width: float,
+    scene_height: float,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["presentations"][1]["cordRig"] = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": scene_width, "height": scene_height},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1, "height": 1},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1, "height": 1},
+        "attachmentPoints": [{"x": 0, "y": 1}, {"x": 1, "y": 1}],
+        "pullPoint": {"x": 0.5, "y": 0},
+        "eyeletRadius": 0.1,
+    }
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "presentation back.aspectRatio must match cordRig.sceneSize within 0.1%"
+        ),
+    ):
+        module.load_board_package(package_root)
+
+
+def test_unversioned_board_keeps_omitted_alias_rotation_anchor_as_center_compatibility(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.4, "y": 0.4, "width": 0.2, "height": 0.2}],
+        )
+    ]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].geometry_rotation_anchor is None
+
+
+def test_unversioned_board_preserves_a_valid_non_center_alias_rotation_anchor(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.6, "y": 0.5},
+    )
+    document["holds"] = document["holds"][:1]
+    document["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.2,
+        "y": 0.1,
+        "width": 0.1,
+        "height": 0.4,
+    }
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].geometry_rotation_anchor == module.NormalizedPoint(
+        0.6, 0.5
+    )
+
+
+def test_unversioned_board_loads_explicit_arbitrary_alias_rotation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=135,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.4, "y": 0.4, "width": 0.2, "height": 0.2}],
+        )
+    ]
+
+    board = module._load_board(document)
+
+    alias = board.presentations[1]
+    assert alias.rotation_degrees == 135
+    assert alias.resolved_rotation_degrees == 135
+    assert alias.is_inverted is False
+
+
+def test_unversioned_board_requires_explicit_rotation_alias_to_reuse_source_asset() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=180,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="must reuse source presentation assetPath"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_non_rig_arbitrary_alias_rotation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=90,
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}],
+        )
+    ]
+
+    with pytest.raises(ValueError, match="non-180 rotation requires a canonical cordRig"):
+        module._load_board(document)
+
+
+def test_unversioned_board_keeps_legacy_inverted_alias_asset_compatibility() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.asset_path == "assets/back.png"
+
+
+def test_unversioned_board_maps_legacy_inversion_to_180_degrees() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.rotation_degrees is None
+    assert alias.resolved_rotation_degrees == 180
+
+
+@pytest.mark.parametrize("rotation", [-0.1, 360, float("inf"), float("nan"), True])
+def test_unversioned_board_rejects_non_normalized_alias_rotation(
+    rotation: object,
+) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=rotation,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="rotationDegrees"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_ambiguous_legacy_and_explicit_rotation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=180,
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="must not declare both"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_arbitrarily_rotated_frame_outside_canvas() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=45,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "corner-source",
+            [{"x": 0.8, "y": 0.8, "width": 0.2, "height": 0.2}],
+        )
+    ]
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside"):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda rig: rig["pullPoint"].__setitem__("y", -120),
+        lambda rig: rig["attachmentPoints"][0].__setitem__("x", -390),
+    ],
+    ids=["support-shadow-above-scene", "strand-shadow-left-of-scene"],
+)
+def test_unversioned_board_rejects_cord_stroke_outside_scene(mutation) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _wide_pivot_cord_rig()
+    mutation(rig)
+    document["presentations"][0]["cordRig"] = rig
+
+    with pytest.raises(ValueError, match="cord drawing must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_gravity_inverted_rigged_alias() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=180,
+        geometryRotationAnchor={"x": 0.5, "y": 0.4},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}],
+        )
+    ]
+
+    with pytest.raises(
+        ValueError, match="cord pull exits must remain above both attachment points"
+    ):
+        module._load_board(document)
+
+
+def _source_hold_with_frames(
+    hold_id: str, frames: list[dict[str, float]]
+) -> dict[str, object]:
+    return {
+        "id": hold_id,
+        "name": hold_id,
+        "kind": "jug",
+        "presentationID": "front",
+        "geometry": [
+            {
+                "frame": frame,
+                "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+            }
+            for frame in frames
+        ],
+    }
+
+
+def _wide_pivot_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1200, "height": 600},
+        "sourceFrame": {"x": 350, "y": 50, "width": 500, "height": 500},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 500, "height": 500},
+        "attachmentPoints": [{"x": 200, "y": 300}, {"x": 300, "y": 300}],
+        "pullPoint": {"x": 250, "y": 160},
+        "eyeletRadius": 10,
+    }
+
+
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1000, "height": 500},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1000, "height": 500},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1000, "height": 500},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body-left", "space": "body", "point": {"x": 180, "y": 330}},
+            {"id": "body-right", "space": "body", "point": {"x": 820, "y": 330}},
+            {"id": "world-left", "space": "world", "point": {"x": 420, "y": 70}},
+            {"id": "world-right", "space": "world", "point": {"x": 580, "y": 70}},
+        ],
+        "tensionGroups": [
+            {
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "screenOrder",
+                "layer": "behindFace",
+            }
+        ],
+        "paths": [
+            {
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    {"command": "move", "to": [180, 330]},
+                    {"command": "quad", "control": [500, 470], "to": [820, 330]},
+                ],
+            }
+        ],
+        "occlusions": [
+            {
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 22,
+                "chordOffset": 6,
+            },
+            {
+                "type": "facePatch",
+                "commands": [
+                    {"command": "move", "to": [800, 310]},
+                    {"command": "line", "to": [840, 310]},
+                    {"command": "line", "to": [840, 350]},
+                    {"command": "close"},
+                ],
+            },
+        ],
+    }
+
+
+def _routed_safety_rig() -> dict[str, object]:
+    """A hand-checked rig that remains valid at 0, 90, and 180 degrees."""
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 200, "height": 200},
+        "sourceFrame": {"x": 40, "y": 40, "width": 120, "height": 120},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 120, "height": 120},
+        "style": {
+            "diameter": 10,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body-left", "space": "body", "point": {"x": 30, "y": 90}},
+            {"id": "body-right", "space": "body", "point": {"x": 90, "y": 90}},
+            {"id": "world-left", "space": "world", "point": {"x": 10, "y": 10}},
+            {"id": "world-right", "space": "world", "point": {"x": 110, "y": 10}},
+        ],
+        "tensionGroups": [
+            {
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "declared",
+                "layer": "behindFace",
+            }
+        ],
+        "paths": [
+            {
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    {"command": "move", "to": [30, 90]},
+                    {"command": "quad", "control": [60, 110], "to": [90, 90]},
+                ],
+            }
+        ],
+        "occlusions": [
+            {
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 6,
+                "chordOffset": 2,
+            },
+            {
+                "type": "facePatch",
+                "commands": [
+                    {"command": "move", "to": [80, 70]},
+                    {"command": "line", "to": [100, 70]},
+                    {"command": "line", "to": [100, 85]},
+                    {"command": "close"},
+                ],
+            },
+        ],
+    }
+
+
+def _document_with_routed_safety_rig(
+    rig: dict[str, object],
+    *,
+    rotation_degrees: float = 0,
+    rotation_anchor: dict[str, float] | None = None,
+) -> dict[str, object]:
+    document = multi_presentation_board_document()
+    document["aspectRatio"] = 1
+    document["presentations"][0].update(aspectRatio=1, cordRig=rig)
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=1,
+        sourcePresentationID="front",
+        rotationDegrees=rotation_degrees,
+    )
+    if rotation_anchor is not None:
+        document["presentations"][1]["geometryRotationAnchor"] = rotation_anchor
+    document["holds"] = document["holds"][:1]
+    document["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.45,
+        "y": 0.45,
+        "width": 0.1,
+        "height": 0.1,
+    }
+    return document
+
+
+def test_routed_cord_rig_loads_with_all_structural_elements() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0].update(aspectRatio=2, cordRig=_routed_cord_rig())
+
+    board = module._load_board(document)
+    rig = board.presentations[0].cord_rig
+
+    assert isinstance(rig, module.RoutedCordRig)
+    assert rig.style == module.RoutedCordStyle(
+        diameter=12,
+        outline_color="#101010",
+        base_color="#2255AA",
+        braid_colors=("#FFD000", "#0055CC"),
+    )
+    assert [port.id for port in rig.ports] == [
+        "body-left", "body-right", "world-left", "world-right"
+    ]
+    assert rig.tension_groups[0].pairing.value == "screenOrder"
+    assert rig.paths[0].commands[-1].command == "quad"
+    assert rig.occlusions[0].body_port_id == "body-left"
+    assert rig.occlusions[1].commands[-1].command == "close"
+
+
+def test_routed_cord_rig_is_owned_once_and_inherited_by_rotated_alias() -> None:
+    module = load_board_catalog_module()
+    document = _document_with_routed_safety_rig(
+        _routed_safety_rig(), rotation_degrees=90
+    )
+
+    board = module._load_board(document)
+
+    assert isinstance(board.presentations[0].cord_rig, module.RoutedCordRig)
+    assert board.presentations[1].cord_rig is None
+    assert board.presentations[1].source_presentation_id == "front"
+
+
+def test_routed_cord_rig_inner_face_ratio_must_match_png(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    rig = _routed_cord_rig()
+    rig["innerFaceFrame"] = {"x": 0, "y": 0, "width": 500, "height": 500}
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="cordRig.innerFaceFrame aspect ratio"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda rig: rig["style"].__setitem__("extra", True), "unknown keys"),
+        (lambda rig: rig.pop("paths"), "missing keys"),
+        (lambda rig: rig["style"].__setitem__("baseColor", "blue"), "#RRGGBB"),
+        (lambda rig: rig["ports"].append(dict(rig["ports"][0])), "ports must have unique IDs"),
+        (lambda rig: rig["ports"][0].__setitem__("space", "world"), "bodyPortIDs must reference body ports"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("worldPortIDs", ["world-left"]), "equal cardinality"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("pairing", "nearest"), "pairing is unsupported"),
+        (lambda rig: rig["paths"][0]["commands"][0].__setitem__("command", "arc"), "command is unsupported"),
+        (lambda rig: rig["paths"][0]["commands"].append({"command": "move", "to": [1, 2]}), "exactly one move"),
+        (lambda rig: rig["occlusions"][1]["commands"].pop(), "facePatch commands must be closed"),
+        (lambda rig: rig["occlusions"][0].__setitem__("bodyPortID", "world-left"), "radialLip must reference a body port"),
+        (lambda rig: rig["occlusions"][0].__setitem__("chordOffset", 22), "chordOffset must be less than radius"),
+    ],
+)
+def test_routed_cord_rig_rejects_malformed_structure(mutation, message: str) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _routed_cord_rig()
+    mutation(rig)
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(ValueError, match=message):
+        module._load_board(document)
+
+
+def test_routed_cord_rig_rejects_unknown_type_fail_closed() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _routed_cord_rig()
+    rig["type"] = "futureRig"
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(ValueError, match="cordRig.type is unsupported"):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize("command_owner", ["path", "facePatch"])
+def test_routed_cord_rig_rejects_move_close_without_a_drawing_segment(
+    command_owner: str,
+) -> None:
+    """Catch accepting a nominally nonempty path that cannot draw a centerline or patch."""
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _routed_cord_rig()
+    commands = [{"command": "move", "to": [100, 100]}, {"command": "close"}]
+    if command_owner == "path":
+        rig["paths"][0]["commands"] = commands
+    else:
+        rig["occlusions"][1]["commands"] = commands
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(ValueError, match="at least one line, quad, or curve"):
+        module._load_board(document)
+
+
+def test_routed_cord_safety_uses_source_local_body_rotation_and_fixed_world_ports() -> None:
+    """Catch rotating world ports or omitting sourceFrame origin from body geometry."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["sourceFrame"]["x"] = 60
+    rig["ports"][0]["point"]["y"] = 70
+    rig["ports"][1]["point"]["y"] = 70
+    rig["ports"][2]["point"]["y"] = 40
+    rig["ports"][3]["point"]["y"] = 40
+    rig["paths"][0]["commands"] = [
+        {"command": "move", "to": [30, 70]},
+        {"command": "quad", "control": [60, 100], "to": [90, 70]},
+    ]
+    rig["paths"].append(
+        {
+            "id": "world-knot",
+            "space": "world",
+            "layer": "overpass",
+            "commands": [
+                {"command": "move", "to": [120, -30]},
+                {"command": "line", "to": [110, -20]},
+            ],
+        }
+    )
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=90,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    board = module._load_board(document)
+
+    assert board.presentations[1].rotation_degrees == 90
+
+
+@pytest.mark.parametrize(
+    "body_local_y",
+    [10, 5, 10.00000001],
+    ids=["equal", "above-world", "inside-scene-scaled-tolerance"],
+)
+def test_routed_cord_safety_rejects_body_endpoints_not_strictly_below_world(
+    body_local_y: float,
+) -> None:
+    """Catch accepting slack or downward-pulling tension spans."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"]["y"] = body_local_y
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="must be strictly below world port"):
+        module._load_board(document)
+
+
+def test_routed_declared_pairing_uses_list_index_instead_of_screen_order() -> None:
+    """Catch silently reordering a declared body/world pairing."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"] = {"x": 30, "y": 50}
+    rig["ports"][2]["point"] = {"x": 30, "y": 60}
+    rig["tensionGroups"][0]["bodyPortIDs"] = ["body-right", "body-left"]
+    rig["tensionGroups"][0]["worldPortIDs"] = ["world-left", "world-right"]
+    document = _document_with_routed_safety_rig(rig)
+
+    board = module._load_board(document)
+
+    assert board.presentations[0].id == "front"
+
+
+def test_routed_screen_order_reorders_transformed_ports_for_each_alias() -> None:
+    """Catch pairing from canonical or declaration order after the body rotates."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][1]["point"]["y"] = 70
+    rig["ports"][2]["point"] = {"x": 30, "y": 40}
+    rig["ports"][3]["point"] = {"x": 90, "y": 10}
+    rig["tensionGroups"][0]["pairing"] = "screenOrder"
+    document = _document_with_routed_safety_rig(rig, rotation_degrees=180)
+
+    board = module._load_board(document)
+
+    assert board.presentations[1].resolved_rotation_degrees == 180
+
+
+def test_routed_cord_safety_rejects_gravity_only_after_alias_rotation() -> None:
+    """Catch validating tension direction only on the canonical presentation."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][2]["point"]["y"] = 40
+    rig["ports"][3]["point"]["y"] = 40
+    document = _document_with_routed_safety_rig(rig, rotation_degrees=180)
+
+    with pytest.raises(
+        ValueError,
+        match=r"presentation back.*must be strictly below world port",
+    ):
+        module._load_board(document)
+
+
+def test_routed_screen_order_ties_use_y_then_declaration_index() -> None:
+    """Catch unstable or ID-based ordering when screen x coordinates tie."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"] = {"x": 60, "y": 60}
+    rig["ports"][1]["point"] = {"x": 60, "y": 60}
+    rig["ports"][2]["point"] = {"x": 60, "y": 10}
+    rig["ports"][3]["point"] = {"x": 60, "y": 70}
+    rig["tensionGroups"][0].update(
+        bodyPortIDs=["body-right", "body-left"],
+        worldPortIDs=["world-right", "world-left"],
+        pairing="screenOrder",
+    )
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(
+        ValueError,
+        match=r"body-left.*must be strictly below world port world-right",
+    ):
+        module._load_board(document)
+
+
+def test_routed_cord_safety_rejects_used_port_inside_style_margin() -> None:
+    """Catch allowing a tension-span stroke to be clipped by the scene edge."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][2]["point"]["x"] = -35
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="cord centerline geometry.*style margin"):
+        module._load_board(document)
+
+
+def test_routed_cord_safety_rejects_path_control_inside_style_margin() -> None:
+    """Catch checking Bézier endpoints while overlooking a control point."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["paths"][0]["commands"][1]["control"] = [-35, 110]
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="cord centerline geometry.*style margin"):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize("geometry_owner", ["used-port", "path-control"])
+def test_routed_cord_safety_rejects_style_margin_violation_after_alias_rotation(
+    geometry_owner: str,
+) -> None:
+    """Catch checking routed stroke bounds only in the canonical orientation."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    if geometry_owner == "used-port":
+        rig["ports"][1]["point"]["x"] = 113
+    else:
+        rig["paths"][0]["commands"][1]["control"] = [122, 110]
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=180,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=r"presentation back.*cord centerline geometry.*style margin",
+    ):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize("incident_count", [0, 2])
+def test_routed_radial_lip_requires_exactly_one_incident_tension_span(
+    incident_count: int,
+) -> None:
+    """Catch ambiguous radial-lip orientation from absent or repeated incident spans."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    if incident_count == 0:
+        rig["tensionGroups"][0]["bodyPortIDs"] = ["body-right"]
+        rig["tensionGroups"][0]["worldPortIDs"] = ["world-right"]
+    else:
+        rig["tensionGroups"].append(
+            {
+                "id": "duplicate-incident",
+                "bodyPortIDs": ["body-left"],
+                "worldPortIDs": ["world-left"],
+                "pairing": "declared",
+                "layer": "overpass",
+            }
+        )
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="radialLip body port.*exactly one tension span"):
+        module._load_board(document)
+
+
+def test_routed_radial_lip_circle_must_fit_canonical_scene() -> None:
+    """Catch validating only a radial lip's center instead of its full radius."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"]["x"] = -25
+    rig["occlusions"][0]["radius"] = 20
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="radialLip circle must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_routed_radial_lip_circle_must_fit_rotated_alias_scene() -> None:
+    """Catch checking a radial lip only in its canonical orientation."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"]["x"] = 110
+    rig["occlusions"][0]["radius"] = 20
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=180,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    with pytest.raises(ValueError, match="radialLip circle must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_routed_face_patch_is_source_local_body_geometry_for_rotated_alias() -> None:
+    """Catch leaving facePatch coordinates unrotated or treating them as scene-absolute."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["occlusions"][1]["commands"] = [
+        {"command": "move", "to": [110, 50]},
+        {"command": "line", "to": [122, 50]},
+        {"command": "line", "to": [122, 60]},
+        {"command": "close"},
+    ]
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=180,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    with pytest.raises(ValueError, match="facePatch geometry must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_routed_safety_validation_leaves_direct_two_anchor_compatible() -> None:
+    """Catch accidentally applying routed-only margin and path rules to the legacy rig."""
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
+
+    board = module._load_board(document)
+
+    assert isinstance(board.presentations[0].cord_rig, module.DirectTwoAnchorCordRig)
+
+
+def test_unversioned_board_accepts_alias_aspect_ratio_serialization_rounding(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        aspectRatio=2.0000000005,
+    )
+    document["holds"] = document["holds"][:1]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].aspect_ratio == 2.0000000005
+
+
+def test_unversioned_board_accepts_a_projected_frame_on_the_exact_boundary(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.15, "y": 0.15},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "boundary-source",
+            [{"x": 0.1, "y": 0.1, "width": 0.2, "height": 0.2}],
+        )
+    ]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations[1].geometry_rotation_anchor == module.NormalizedPoint(
+        0.15, 0.15
+    )
+
+
+@pytest.mark.parametrize(
+    ("anchor", "frame"),
+    [
+        ({"x": 0.1, "y": 0.5}, {"x": 0.2, "y": 0.4, "width": 0.2, "height": 0.1}),
+        ({"x": 0.9, "y": 0.5}, {"x": 0.7, "y": 0.4, "width": 0.1, "height": 0.1}),
+        ({"x": 0.5, "y": 0.1}, {"x": 0.4, "y": 0.2, "width": 0.1, "height": 0.2}),
+        ({"x": 0.5, "y": 0.9}, {"x": 0.4, "y": 0.7, "width": 0.1, "height": 0.1}),
+    ],
+    ids=["left", "right", "top", "bottom"],
+)
+def test_unversioned_board_rejects_each_projected_frame_boundary(
+    tmp_path: Path, anchor: dict[str, float], frame: dict[str, float]
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor=anchor,
+    )
+    document["holds"] = [_source_hold_with_frames("boundary-source", [frame])]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside the normalized canvas"):
+        module.load_board_package(package_root)
+
+
+def test_unversioned_board_rejects_an_off_canvas_later_piece_of_a_later_source_hold(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.1, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "first-source",
+            [{"x": 0.1, "y": 0.4, "width": 0.1, "height": 0.1}],
+        ),
+        _source_hold_with_frames(
+            "second-source",
+            [
+                {"x": 0.1, "y": 0.4, "width": 0.1, "height": 0.1},
+                {"x": 0.2, "y": 0.4, "width": 0.2, "height": 0.1},
+            ],
+        ),
+    ]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside the normalized canvas"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda document: document["presentations"][0].__setitem__(
+                "geometryRotationAnchor", {"x": 0.5, "y": 0.5}
+            ),
+            "requires sourcePresentationID",
+        ),
+        (
+            lambda document: document["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=False,
+                geometryRotationAnchor={"x": 0.5, "y": 0.5},
+            ),
+            "requires isInverted true",
+        ),
+        (
+            lambda document: document["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=True,
+                aspectRatio=2.0001,
+            ),
+            "must match source presentation aspectRatio",
+        ),
+        (
+            lambda document: document["presentations"][1].update(
+                sourcePresentationID="front",
+                isInverted=True,
+                geometryRotationAnchor={"x": 0.04, "y": 0.5},
+            ),
+            "projects source hold geometry outside the normalized canvas",
+        ),
+    ],
+    ids=["canonical", "non-inverted", "aspect-ratio", "off-canvas-projection"],
+)
+def test_unversioned_board_rejects_invalid_alias_rotation_anchor_contract(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    mutation(document)
+    document["holds"] = document["holds"][:1]
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
         module.load_board_package(package_root)
 
 

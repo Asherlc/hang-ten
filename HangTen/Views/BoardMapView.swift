@@ -86,9 +86,7 @@ struct BoardMapPresentationContent {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        let sourcePresentationID = resolvedPresentation.sourcePresentationID
-            ?? resolvedPresentation.id
-        holds = board.holds.filter { $0.presentationID == sourcePresentationID }
+        holds = board.availableHolds(for: resolvedPresentation)
     }
 }
 
@@ -103,12 +101,13 @@ struct BoardMapPresentationSelection: Equatable {
     ) {
         let initialPresentationID = board.presentation(id: requestedPresentationID)?.id
             ?? board.defaultPresentation.id
-        if let activePresentationID = Self.presentationID(
-            for: activeHoldID,
+        if let matchingPresentationID = Self.presentationID(
+            matching: highlightedHoldIDs,
+            activeHoldID: activeHoldID,
             preferring: initialPresentationID,
             on: board
         ) {
-            presentationID = activePresentationID
+            presentationID = matchingPresentationID
         } else if let highlightedHoldID = board.holds.first(where: {
             highlightedHoldIDs.contains($0.id)
         })?.id,
@@ -134,12 +133,13 @@ struct BoardMapPresentationSelection: Equatable {
         activeHoldID: String?,
         on board: TrainingBoard
     ) {
-        if let activePresentationID = Self.presentationID(
-            for: activeHoldID,
+        if let matchingPresentationID = Self.presentationID(
+            matching: highlightedHoldIDs,
+            activeHoldID: activeHoldID,
             preferring: presentationID,
             on: board
         ) {
-            presentationID = activePresentationID
+            presentationID = matchingPresentationID
             return
         }
         let addedHoldIDs = highlightedHoldIDs.subtracting(previousHoldIDs)
@@ -152,15 +152,20 @@ struct BoardMapPresentationSelection: Equatable {
         }
     }
 
-    mutating func activateHold(id: String?, on board: TrainingBoard) {
-        guard let activePresentationID = Self.presentationID(
-            for: id,
+    mutating func activateHold(
+        id: String?,
+        highlightedHoldIDs: Set<String> = [],
+        on board: TrainingBoard
+    ) {
+        guard let matchingPresentationID = Self.presentationID(
+            matching: highlightedHoldIDs,
+            activeHoldID: id,
             preferring: presentationID,
             on: board
         ) else {
             return
         }
-        presentationID = activePresentationID
+        presentationID = matchingPresentationID
     }
 
     mutating func updateRequestedPresentation(
@@ -196,22 +201,76 @@ struct BoardMapPresentationSelection: Equatable {
     }
 
     private static func presentationID(
+        matching highlightedHoldIDs: Set<String>,
+        activeHoldID: String?,
+        preferring preferredPresentationID: String,
+        on board: TrainingBoard
+    ) -> String? {
+        if let activeHoldID,
+           !highlightedHoldIDs.isEmpty,
+           !highlightedHoldIDs.contains(activeHoldID),
+           let activePresentationID = presentationID(
+               for: activeHoldID,
+               preferring: preferredPresentationID,
+               on: board
+           ) {
+            return activePresentationID
+        }
+
+        let requiredHoldIDs = highlightedHoldIDs.isEmpty
+            ? Set(activeHoldID.map { [$0] } ?? [])
+            : highlightedHoldIDs
+        return presentationID(
+            containing: requiredHoldIDs,
+            preferring: preferredPresentationID,
+            on: board
+        ) ?? presentationID(
+            for: activeHoldID,
+            preferring: preferredPresentationID,
+            on: board
+        )
+    }
+
+    private static func presentationID(
         for holdID: String?,
         preferring preferredPresentationID: String,
         on board: TrainingBoard
     ) -> String? {
         guard let holdID else { return nil }
-        guard let hold = board.holds.first(where: { $0.id == holdID }) else {
+        guard board.holds.contains(where: { $0.id == holdID }) else {
             return nil
         }
-        guard let preferredPresentation = board.presentation(id: preferredPresentationID) else {
-            return hold.presentationID
+        if let preferredPresentation = board.presentation(id: preferredPresentationID),
+           board.availableHolds(for: preferredPresentation).contains(where: { $0.id == holdID }) {
+            return preferredPresentation.id
         }
-        let preferredSourceID = preferredPresentation.sourcePresentationID
-            ?? preferredPresentation.id
-        return preferredSourceID == hold.presentationID
-            ? preferredPresentation.id
-            : hold.presentationID
+        return board.presentations.first(where: { presentation in
+            board.availableHolds(for: presentation).contains(where: { $0.id == holdID })
+        })?.id
+    }
+
+    private static func presentationID(
+        containing holdIDs: Set<String>,
+        preferring preferredPresentationID: String,
+        on board: TrainingBoard
+    ) -> String? {
+        guard !holdIDs.isEmpty else { return nil }
+        let knownHoldIDs = Set(board.holds.map(\.id))
+        guard holdIDs.isSubset(of: knownHoldIDs) else { return nil }
+
+        var candidates: [BoardPresentation] = []
+        if let preferredPresentation = board.presentation(id: preferredPresentationID) {
+            candidates.append(preferredPresentation)
+        }
+        candidates.append(board.defaultPresentation)
+        candidates.append(contentsOf: board.presentations)
+
+        var seenPresentationIDs = Set<String>()
+        return candidates.first(where: { candidate in
+            guard seenPresentationIDs.insert(candidate.id).inserted else { return false }
+            let availableHoldIDs = Set(board.availableHolds(for: candidate).map(\.id))
+            return holdIDs.isSubset(of: availableHoldIDs)
+        })?.id
     }
 }
 
@@ -282,15 +341,32 @@ struct BoardDetailMapView: View {
 
         GeometryReader { proxy in
             let boardBounds = proxy.size
+            let boardRect = CGRect(origin: .zero, size: boardBounds)
+            let projection = BoardPresentationGeometryProjection(
+                presentation: map.presentation
+            )
+            let cordGeometry = BoardPresentationArtwork.geometry(
+                for: board,
+                presentation: map.presentation,
+                projection: projection,
+                canvasSize: boardBounds
+            )
             ZStack {
-                BoardPresentationImage(board: board, presentationID: map.presentation.id)
+                BoardPresentationArtwork(
+                    board: board,
+                    presentation: map.presentation,
+                    projection: projection,
+                    canvasSize: boardBounds,
+                    geometry: cordGeometry
+                )
 
                 ForEach(map.entries) { entry in
                     PhysicalHoldVisual(
                         hold: entry.hold,
                         isHighlighted: selectedHoldID == entry.hold.id,
                         highlightMode: .active,
-                        isInverted: map.presentation.isInverted,
+                        projection: projection,
+                        canonicalRect: cordGeometry?.faceRect,
                         onTap: { select($0.id) }
                     )
                     .frame(width: boardBounds.width, height: boardBounds.height)
@@ -301,7 +377,14 @@ struct BoardDetailMapView: View {
                     ) {
                         select(entry.hold.id)
                     }
-                    .position(markerPosition(for: entry.hold, in: boardBounds, isInverted: map.presentation.isInverted))
+                    .position(
+                        markerPosition(
+                            for: entry.hold,
+                            in: boardRect,
+                            projection: projection,
+                            canonicalRect: cordGeometry?.faceRect
+                        )
+                    )
                 }
             }
         }
@@ -370,15 +453,18 @@ struct BoardDetailMapView: View {
 
     private func markerPosition(
         for hold: BoardHold,
-        in bounds: CGSize,
-        isInverted: Bool
+        in bounds: CGRect,
+        projection: BoardPresentationGeometryProjection,
+        canonicalRect: CGRect?
     ) -> CGPoint {
+        let sourceRect = canonicalRect ?? bounds
         let center = CGPoint(
-            x: hold.frame.x * bounds.width + hold.frame.width * bounds.width / 2,
-            y: hold.frame.y * bounds.height + hold.frame.height * bounds.height / 2
+            x: sourceRect.minX + hold.frame.x * sourceRect.width
+                + hold.frame.width * sourceRect.width / 2,
+            y: sourceRect.minY + hold.frame.y * sourceRect.height
+                + hold.frame.height * sourceRect.height / 2
         )
-        guard isInverted else { return center }
-        return CGPoint(x: bounds.width - center.x, y: bounds.height - center.y)
+        return projection.project(center, in: bounds)
     }
 }
 
@@ -465,10 +551,22 @@ struct BoardMapView: View {
 
             GeometryReader { proxy in
                 let boardBounds = proxy.size
+                let projection = BoardPresentationGeometryProjection(
+                    presentation: content.presentation
+                )
+                let cordGeometry = BoardPresentationArtwork.geometry(
+                    for: board,
+                    presentation: content.presentation,
+                    projection: projection,
+                    canvasSize: boardBounds
+                )
                 ZStack {
-                    BoardPresentationImage(
+                    BoardPresentationArtwork(
                         board: board,
-                        presentationID: content.presentation.id
+                        presentation: content.presentation,
+                        projection: projection,
+                        canvasSize: boardBounds,
+                        geometry: cordGeometry
                     )
 
                     ForEach(content.holds) { hold in
@@ -476,7 +574,8 @@ struct BoardMapView: View {
                             hold: hold,
                             isHighlighted: highlightedHoldIDs.contains(hold.id),
                             highlightMode: highlightMode,
-                            isInverted: content.presentation.isInverted,
+                            projection: projection,
+                            canonicalRect: cordGeometry?.faceRect,
                             onTap: onHoldTap
                         )
                         .frame(width: boardBounds.width, height: boardBounds.height)
@@ -496,7 +595,11 @@ struct BoardMapView: View {
             )
         }
         .onChange(of: activeHoldID) { _, holdID in
-            presentationSelection.activateHold(id: holdID, on: board)
+            presentationSelection.activateHold(
+                id: holdID,
+                highlightedHoldIDs: highlightedHoldIDs,
+                on: board
+            )
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
             presentationSelection.updateRequestedPresentation(
@@ -545,12 +648,17 @@ private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
-    let isInverted: Bool
+    let projection: BoardPresentationGeometryProjection
+    let canonicalRect: CGRect?
     let onTap: ((BoardHold) -> Void)?
 
     @ViewBuilder
     var body: some View {
-        let shape = BoardHoldPathShape(pieces: hold.geometry)
+        let shape = BoardHoldPathShape(
+            pieces: hold.geometry,
+            projection: projection,
+            canonicalRect: canonicalRect
+        )
         let visual = ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
@@ -563,7 +671,6 @@ private struct PhysicalHoldVisual: View {
         }
         if let onTap {
             visual
-                .rotationEffect(isInverted ? .degrees(180) : .zero)
                 .contentShape(.interaction, shape)
                 .contentShape(.accessibility, shape)
                 .onTapGesture {
@@ -574,7 +681,6 @@ private struct PhysicalHoldVisual: View {
                 .accessibilityAddTraits(.isButton)
         } else {
             visual
-                .rotationEffect(isInverted ? .degrees(180) : .zero)
         }
     }
 

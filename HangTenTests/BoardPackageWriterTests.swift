@@ -3,11 +3,129 @@ import XCTest
 
 final class BoardPackageWriterTests: XCTestCase {
 
+    func testAvailableHoldIDsRoundTripThroughTheCanonicalWriter() throws {
+        let source = Data(
+            """
+            {
+              "id": "test.board",
+              "manufacturer": "Test",
+              "name": "Test board",
+              "subtitle": "Fixture",
+              "productURL": "https://example.com/board",
+              "dimensions": "70 × 25 cm",
+              "aspectRatio": 2,
+              "presentations": [
+                {
+                  "id": "front",
+                  "name": "Front",
+                  "assetPath": "assets/primary.png",
+                  "aspectRatio": 2,
+                  "default": true
+                },
+                {
+                  "id": "flipped",
+                  "name": "Flipped",
+                  "assetPath": "assets/flipped.png",
+                  "aspectRatio": 2,
+                  "default": false,
+                  "sourcePresentationID": "front",
+                  "availableHoldIDs": ["hold-right"]
+                }
+              ],
+              "holds": [
+                {
+                  "id": "hold-left",
+                  "name": "Left",
+                  "kind": "jug",
+                  "equipmentObjectID": "primary",
+                  "presentationID": "front",
+                  "geometry": [{
+                    "frame": {"x": 0, "y": 0, "width": 0.4, "height": 1},
+                    "shape": {"type": "roundedRect", "cornerRadiusFraction": 0}
+                  }]
+                },
+                {
+                  "id": "hold-right",
+                  "name": "Right",
+                  "kind": "jug",
+                  "equipmentObjectID": "primary",
+                  "presentationID": "front",
+                  "geometry": [{
+                    "frame": {"x": 0.6, "y": 0, "width": 0.4, "height": 1},
+                    "shape": {"type": "roundedRect", "cornerRadiusFraction": 0}
+                  }]
+                }
+              ]
+            }
+            """.utf8
+        )
+
+        let document = try BoardEditableDocument(data: source)
+        let output = try BoardPackageWriter.data(for: document)
+        let payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: output) as? [String: Any]
+        )
+        let presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+
+        XCTAssertEqual(presentations[1]["availableHoldIDs"] as? [String], ["hold-right"])
+    }
+
     private func repositoryHangboardsURL() -> URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .appendingPathComponent("Hangboards", isDirectory: true)
+    }
+
+    private func routedCordRigJSON() -> [String: Any] {
+        [
+            "type": "routed",
+            "sceneSize": ["width": 1000, "height": 500],
+            "sourceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "innerFaceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "style": [
+                "diameter": 12,
+                "outlineColor": "#101010",
+                "baseColor": "#2255AA",
+                "braidColors": ["#FFD000", "#0055CC"],
+            ],
+            "ports": [
+                ["id": "body-left", "space": "body", "point": ["x": 180, "y": 330]],
+                ["id": "body-right", "space": "body", "point": ["x": 820, "y": 330]],
+                ["id": "world-left", "space": "world", "point": ["x": 420, "y": 70]],
+                ["id": "world-right", "space": "world", "point": ["x": 580, "y": 70]],
+            ],
+            "tensionGroups": [[
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "screenOrder",
+                "layer": "behindFace",
+            ]],
+            "paths": [[
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    ["command": "move", "to": [180, 330]],
+                    ["command": "quad", "control": [500, 470], "to": [820, 330]],
+                ],
+            ]],
+            "occlusions": [[
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 22,
+                "chordOffset": 6,
+            ], [
+                "type": "facePatch",
+                "commands": [
+                    ["command": "move", "to": [800, 310]],
+                    ["command": "line", "to": [840, 310]],
+                    ["command": "line", "to": [840, 350]],
+                    ["command": "close"],
+                ],
+            ]],
+        ]
     }
 
     private func makePiece(
@@ -81,6 +199,40 @@ final class BoardPackageWriterTests: XCTestCase {
                 )
             ]
         )
+    }
+
+    private func makeAliasDocument(
+        anchor: BoardGeometryRotationAnchor? = .init(x: 0.5, y: 0.68),
+        aliasAspectRatio: Double = 2.0,
+        isInverted: Bool = true,
+        rotationDegrees: Double? = nil
+    ) -> BoardEditableDocument {
+        var document = makeDocument(
+            holds: [
+                makeHold(geometry: [
+                    makePiece(
+                        frame: .init(x: 0.05, y: 0.4, width: 0.1, height: 0.2)
+                    ),
+                    makePiece(
+                        frame: .init(x: 0.35, y: 0.5, width: 0.1, height: 0.1)
+                    ),
+                ])
+            ]
+        )
+        document.presentations.append(
+            BoardEditablePresentation(
+                id: "front-inverted",
+                name: "Front upside down",
+                assetPath: "assets/front-inverted.png",
+                aspectRatio: aliasAspectRatio,
+                isDefault: false,
+                sourcePresentationID: "front",
+                isInverted: isInverted,
+                rotationDegrees: rotationDegrees,
+                geometryRotationAnchor: anchor
+            )
+        )
+        return document
     }
 
     private func shapeDroppingLastCommand(
@@ -523,6 +675,296 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testWriterRoundTripsAliasRotationAnchorInCanonicalOrder() throws {
+        let input = try BoardPackageWriter.data(for: makeAliasDocument())
+        let document = try BoardEditableDocument(data: input)
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded, document)
+        XCTAssertEqual(try BoardPackageWriter.data(for: redecoded), encoded)
+        XCTAssertEqual(
+            redecoded.presentations[1].geometryRotationAnchor,
+            BoardGeometryRotationAnchor(x: 0.5, y: 0.68)
+        )
+        XCTAssertTrue(
+            String(decoding: encoded, as: UTF8.self).contains(
+                "      \"isInverted\": true,\n"
+                    + "      \"geometryRotationAnchor\": {\n"
+                    + "        \"x\": 0.5,\n"
+                    + "        \"y\": 0.68\n"
+                    + "      }\n"
+            )
+        )
+    }
+
+    func testWriterRoundTripsExplicitArbitraryAliasRotationInCanonicalOrder() throws {
+        var document = makeAliasDocument(
+            anchor: .center,
+            isInverted: false,
+            rotationDegrees: 135
+        )
+        document.holds[0].geometry[0].frame = .init(
+            x: 0.45,
+            y: 0.45,
+            width: 0.05,
+            height: 0.05
+        )
+        document.holds[0].geometry[1].frame = .init(
+            x: 0.5,
+            y: 0.5,
+            width: 0.05,
+            height: 0.05
+        )
+        document.aspectRatio = 1
+        document.presentations[0].aspectRatio = 1
+        document.presentations[0].cordRig = .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 600, height: 600),
+                sourceFrame: BoardCordRect(x: 200, y: 300, width: 200, height: 100),
+                innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
+                attachmentPoints: [
+                    BoardCordPoint(x: 70, y: 50),
+                    BoardCordPoint(x: 130, y: 50),
+                ],
+                pullPoint: BoardCordPoint(x: 100, y: -90),
+                eyeletRadius: 5
+            )
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+        document.presentations[1].aspectRatio = 1
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded.presentations[1].rotationDegrees, 135)
+        XCTAssertFalse(redecoded.presentations[1].isInverted)
+        XCTAssertTrue(
+            String(decoding: encoded, as: UTF8.self).contains(
+                "      \"rotationDegrees\": 135.0,\n"
+                    + "      \"geometryRotationAnchor\": {\n"
+            )
+        )
+    }
+
+    func testWriterRejectsDirectTwoAnchorCordStrokeOutsideScene() throws {
+        var document = makeDocument(aspectRatio: 50.0 / 61.0)
+        document.presentations[0].cordRig = .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: -200),
+                eyeletRadius: 34
+            )
+        )
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front cord drawing must remain inside sceneSize"
+        )
+    }
+
+    func testWriterRejectsGravityInvertedDirectTwoAnchorAlias() throws {
+        var document = makeAliasDocument(
+            anchor: BoardGeometryRotationAnchor(x: 0.5, y: 0.4),
+            isInverted: false,
+            rotationDegrees: 180
+        )
+        document.aspectRatio = 50.0 / 61.0
+        document.presentations[0].aspectRatio = 50.0 / 61.0
+        document.presentations[0].cordRig = .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: 71.5),
+                eyeletRadius: 34
+            )
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+        document.presentations[1].aspectRatio = 50.0 / 61.0
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front-inverted cord pull exits must remain above both attachment points"
+        )
+    }
+
+    func testWriterRejectsExplicitRotationUsingADistinctAliasAsset() throws {
+        assertWriterInvalid(
+            makeAliasDocument(isInverted: false, rotationDegrees: 180),
+            reason: "presentation front-inverted.assetPath must reuse source presentation assetPath for an explicit rotation"
+        )
+    }
+
+    func testWriterRejectsExplicitNonHalfTurnWithoutCanonicalCordRig() throws {
+        var document = makeAliasDocument(
+            anchor: .center,
+            isInverted: false,
+            rotationDegrees: 90
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front-inverted non-180 rotation requires a canonical cordRig to prevent artwork clipping"
+        )
+    }
+
+    func testWriterRejectsInvalidAndAmbiguousExplicitAliasRotation() throws {
+        for rotation in [-1.0, 360.0, .infinity, .nan] {
+            assertWriterInvalid(
+                makeAliasDocument(isInverted: false, rotationDegrees: rotation),
+                reason: "presentation front-inverted.rotationDegrees must be finite and normalized to [0, 360)"
+            )
+        }
+        assertWriterInvalid(
+            makeAliasDocument(rotationDegrees: 180),
+            reason: "presentation front-inverted must not declare both isInverted and rotationDegrees"
+        )
+    }
+
+    func testWriterOmitsAbsentAliasRotationAnchor() throws {
+        let document = makeAliasDocument(anchor: nil)
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertNil(redecoded.presentations[1].geometryRotationAnchor)
+        XCTAssertFalse(String(decoding: encoded, as: UTF8.self).contains("geometryRotationAnchor"))
+    }
+
+    func testWriterRejectsRotationAnchorOnCanonicalPresentation() throws {
+        var document = makeDocument()
+        document.presentations[0].geometryRotationAnchor = .center
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front.geometryRotationAnchor requires sourcePresentationID"
+        )
+    }
+
+    func testWriterRejectsRotationAnchorOnNonInvertedAlias() throws {
+        assertWriterInvalid(
+            makeAliasDocument(isInverted: false),
+            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
+        )
+    }
+
+    func testWriterRejectsNonFiniteRotationAnchor() throws {
+        assertWriterInvalid(
+            makeAliasDocument(anchor: .init(x: .infinity, y: 0.68)),
+            reason: "presentation front-inverted.geometryRotationAnchor must contain finite normalized coordinates"
+        )
+    }
+
+    func testWriterRejectsRotationAnchorCoordinatesOutsideTheNormalizedRange() throws {
+        for anchor in [
+            BoardGeometryRotationAnchor(x: 1.01, y: 0.68),
+            BoardGeometryRotationAnchor(x: 0.5, y: -0.01),
+        ] {
+            assertWriterInvalid(
+                makeAliasDocument(anchor: anchor),
+                reason: "presentation front-inverted.geometryRotationAnchor must contain finite normalized coordinates"
+            )
+        }
+    }
+
+    func testWriterRejectsAliasAspectMismatch() throws {
+        assertWriterInvalid(
+            makeAliasDocument(aliasAspectRatio: 2.0001),
+            reason: "presentation front-inverted.aspectRatio must match source presentation aspectRatio"
+        )
+    }
+
+    func testWriterAcceptsTaskOneAliasAspectRoundingTolerance() throws {
+        XCTAssertNoThrow(
+            try BoardPackageWriter.data(
+                for: makeAliasDocument(aliasAspectRatio: 2.000000001)
+            )
+        )
+    }
+
+    func testWriterAcceptsProjectedFrameOnArithmeticNoiseBoundary() throws {
+        var document = makeAliasDocument(anchor: .init(x: 0.15, y: 0.15))
+        document.holds[0].geometry[0] = makePiece(
+            frame: .init(x: 0.1, y: 0.1, width: 0.2, height: 0.2)
+        )
+        document.holds[0].geometry[1] = makePiece(
+            frame: .init(x: 0.12, y: 0.12, width: 0.1, height: 0.1)
+        )
+
+        XCTAssertNoThrow(try BoardPackageWriter.data(for: document))
+    }
+
+    func testWriterRejectsAnOffCanvasLaterPieceOfALaterSourceHold() throws {
+        var document = makeAliasDocument()
+        document.holds.append(
+            makeHold(
+                id: "hold-front-later",
+                name: "Later front hold",
+                geometry: [
+                    makePiece(frame: .init(x: 0.05, y: 0.4, width: 0.1, height: 0.2)),
+                    makePiece(frame: .init(x: 0.95, y: 0.5, width: 0.1, height: 0.1)),
+                ]
+            )
+        )
+        assertWriterInvalid(
+            document,
+            reason: "presentation front-inverted projects source hold geometry outside the normalized canvas"
+        )
+    }
+
+    func testEditorStrictlyDecodesRotationAnchorObjectAndNumericCoordinates() throws {
+        let encoded = try BoardPackageWriter.data(for: makeAliasDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+        let invalidSources = [
+            source.replacingOccurrences(of: "        \"x\": 0.5,\n", with: ""),
+            source.replacingOccurrences(of: "        \"y\": 0.68", with: "        \"y\": 0.68,\n        \"unexpected\": 1"),
+            source.replacingOccurrences(of: "        \"x\": 0.5", with: "        \"x\": true"),
+            source.replacingOccurrences(of: "        \"x\": 0.5", with: "        \"x\": 1e999"),
+            source.replacingOccurrences(
+                of: "{\n        \"x\": 0.5,\n        \"y\": 0.68\n      }",
+                with: "null"
+            ),
+            source.replacingOccurrences(
+                of: "{\n        \"x\": 0.5,\n        \"y\": 0.68\n      }",
+                with: "\"center\""
+            ),
+        ]
+
+        for invalidSource in invalidSources {
+            XCTAssertNotEqual(invalidSource, source)
+            XCTAssertThrowsError(try editorDocument(invalidSource))
+        }
+    }
+
+    private func assertWriterInvalid(
+        _ document: BoardEditableDocument,
+        reason: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document), file: file, line: line) {
+            XCTAssertEqual(
+                $0 as? BoardPackageWriterError,
+                .invalid("board \(document.id): \(reason)"),
+                file: file,
+                line: line
+            )
+        }
+    }
+
     private func editorDocument(_ source: String) throws -> BoardEditableDocument {
         try BoardEditableDocument(data: Data(source.utf8))
     }
@@ -672,6 +1114,191 @@ final class BoardPackageWriterTests: XCTestCase {
 
         let redecoded = try BoardEditableDocument(data: encoded)
         assertSemanticallyEqual(document, redecoded)
+    }
+
+    func testDirectTwoAnchorCordRigRoundTripsInCanonicalOrder() throws {
+        let initialBytes = try BoardPackageWriter.data(
+            for: makeDocument(aspectRatio: 50.0 / 61.0)
+        )
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: initialBytes) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        presentations[0]["cordRig"] = [
+            "type": "directTwoAnchor",
+            "sceneSize": ["width": 1200, "height": 1464],
+            "sourceFrame": ["x": 0, "y": 214, "width": 1200, "height": 1250],
+            "innerFaceFrame": ["x": -100, "y": -10, "width": 1400, "height": 1400],
+            "attachmentPoints": [
+                ["x": 203, "y": 712],
+                ["x": 997, "y": 712],
+            ],
+            "pullPoint": ["x": 600, "y": 71.5],
+            "eyeletRadius": 34,
+        ]
+        payload["presentations"] = presentations
+
+        let decoded = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        let expectedRig = BoardCordRig.directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 1200, height: 1464),
+                sourceFrame: BoardCordRect(x: 0, y: 214, width: 1200, height: 1250),
+                innerFaceFrame: BoardCordRect(x: -100, y: -10, width: 1400, height: 1400),
+                attachmentPoints: [
+                    BoardCordPoint(x: 203, y: 712),
+                    BoardCordPoint(x: 997, y: 712),
+                ],
+                pullPoint: BoardCordPoint(x: 600, y: 71.5),
+                eyeletRadius: 34
+            )
+        )
+        XCTAssertEqual(decoded.presentations.first?.cordRig, expectedRig)
+
+        let encoded = try BoardPackageWriter.data(for: decoded)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded, decoded)
+        XCTAssertEqual(try BoardPackageWriter.data(for: redecoded), encoded)
+
+        let topLevelRigKeys = String(decoding: encoded, as: UTF8.self)
+            .split(separator: "\n", omittingEmptySubsequences: false)
+            .compactMap { line -> String? in
+                guard line.hasPrefix("        \"") && !line.hasPrefix("          \"") else {
+                    return nil
+                }
+                return line.dropFirst(9).split(separator: "\"", maxSplits: 1).first.map(String.init)
+            }
+        XCTAssertEqual(
+            topLevelRigKeys,
+            [
+                "type", "sceneSize", "sourceFrame", "innerFaceFrame",
+                "attachmentPoints", "pullPoint", "eyeletRadius",
+            ]
+        )
+    }
+
+    func testRoutedCordRigRoundTripsWithoutDroppingRequiredArraysOrPathCommands() throws {
+        let source = try BoardPackageWriter.data(for: makeDocument())
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: source) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        let expectedRig = routedCordRigJSON()
+        presentations[0]["cordRig"] = expectedRig
+        payload["presentations"] = presentations
+
+        let document = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+        let encodedPayload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let encodedPresentations = try XCTUnwrap(
+            encodedPayload["presentations"] as? [[String: Any]]
+        )
+
+        XCTAssertEqual(redecoded, document)
+        XCTAssertEqual(
+            encodedPresentations[0]["cordRig"] as? NSDictionary,
+            expectedRig as NSDictionary
+        )
+        guard case .routed(let rig) = try XCTUnwrap(redecoded.presentations[0].cordRig) else {
+            return XCTFail("Expected routed cord rig")
+        }
+        XCTAssertEqual(rig.paths[0].commands, [
+            .move(to: BoardCordPoint(x: 180, y: 330)),
+            .quad(
+                control: BoardCordPoint(x: 500, y: 470),
+                to: BoardCordPoint(x: 820, y: 330)
+            ),
+        ])
+        XCTAssertEqual(rig.occlusions.count, 2)
+    }
+
+    func testWriterRejectsProgrammaticallyInvalidRoutedCordTopology() throws {
+        let source = try BoardPackageWriter.data(for: makeDocument())
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: source) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        presentations[0]["cordRig"] = routedCordRigJSON()
+        payload["presentations"] = presentations
+        var document = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        guard case .routed(let rig) = try XCTUnwrap(document.presentations[0].cordRig) else {
+            return XCTFail("Expected routed cord rig")
+        }
+        document.presentations[0].cordRig = .routed(
+            BoardRoutedCordRig(
+                sceneSize: rig.sceneSize,
+                sourceFrame: rig.sourceFrame,
+                innerFaceFrame: rig.innerFaceFrame,
+                style: rig.style,
+                ports: rig.ports,
+                tensionGroups: [
+                    BoardRoutedCordTensionGroup(
+                        id: "main",
+                        bodyPortIDs: ["body-right"],
+                        worldPortIDs: ["world-right"],
+                        pairing: .declared,
+                        layer: .behindFace
+                    ),
+                ],
+                paths: rig.paths,
+                occlusions: rig.occlusions
+            )
+        )
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front.cordRig.occlusions[0] radialLip body port must have exactly one incident tension-group span"
+        )
+    }
+
+    func testWriterRejectsRoutedCordGravityAndPathBoundsUsingPresentationGeometry() throws {
+        func decodedDocument(
+            mutatingRig mutation: (inout [String: Any]) throws -> Void
+        ) throws -> BoardEditableDocument {
+            let source = try BoardPackageWriter.data(for: makeDocument())
+            var payload = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: source) as? [String: Any]
+            )
+            var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+            var rig = routedCordRigJSON()
+            try mutation(&rig)
+            presentations[0]["cordRig"] = rig
+            payload["presentations"] = presentations
+            return try BoardEditableDocument(
+                data: JSONSerialization.data(withJSONObject: payload)
+            )
+        }
+
+        let invalidGravity = try decodedDocument { rig in
+            var ports = try XCTUnwrap(rig["ports"] as? [[String: Any]])
+            ports[2]["point"] = ["x": 420, "y": 330]
+            rig["ports"] = ports
+        }
+        assertWriterInvalid(
+            invalidGravity,
+            reason: "presentation front routed body port body-left must be strictly below world port world-left"
+        )
+
+        let invalidPathBounds = try decodedDocument { rig in
+            var paths = try XCTUnwrap(rig["paths"] as? [[String: Any]])
+            var commands = try XCTUnwrap(paths[0]["commands"] as? [[String: Any]])
+            commands[1]["control"] = [5, 470]
+            paths[0]["commands"] = commands
+            rig["paths"] = paths
+        }
+        assertWriterInvalid(
+            invalidPathBounds,
+            reason: "presentation front routed cord centerline geometry must remain inside sceneSize with the style margin"
+        )
     }
 
     func testReencodedRealPackageKeepsTopLevelOrderEscapesAndTrailingNewline() throws {

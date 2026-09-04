@@ -33,11 +33,18 @@ from board_package import (
     BoardNotAvailableError,
     BoardPackage,
     BoardPackageError,
+    BoardPresentation,
     BoardSaveConflictError,
+    CordRig,
+    DirectTwoAnchorCordRig,
+    RoutedCordPathCommand,
+    RoutedCordRadialLip,
+    RoutedCordRig,
     discover_packages,
     editor_document,
     delete_presentation,
     open_package,
+    presentation_geometry_rotation_anchor,
     presentation_image_path,
     save_editor_document,
 )
@@ -163,6 +170,168 @@ def _presentation_image_url(board_id: str, presentation_id: str) -> str:
     return f"/api/boards/{board_id}/image?presentationID={presentation_id}"
 
 
+def _presentation_payload(
+    package: BoardPackage, presentation: BoardPresentation
+) -> dict[str, object]:
+    anchor = presentation_geometry_rotation_anchor(package.board, presentation)
+    return {
+        "presentationID": presentation.id,
+        "displayName": presentation.name,
+        "imageUrl": _presentation_image_url(package.board_id, presentation.id),
+        "default": presentation.is_default,
+        **(
+            {"sourcePresentationID": presentation.source_presentation_id}
+            if presentation.source_presentation_id is not None
+            else {}
+        ),
+        **(
+            {"availableHoldIDs": list(presentation.available_hold_ids)}
+            if presentation.available_hold_ids is not None
+            else {}
+        ),
+        **({"isInverted": True} if presentation.is_inverted else {}),
+        **(
+            {"rotationDegrees": presentation.rotation_degrees}
+            if presentation.rotation_degrees is not None
+            else {}
+        ),
+        **(
+            {"geometryRotationAnchor": {"x": anchor[0], "y": anchor[1]}}
+            if anchor is not None
+            else {}
+        ),
+        **(
+            {"cordRig": _cord_rig_payload(presentation.cord_rig)}
+            if presentation.cord_rig is not None
+            else {}
+        ),
+    }
+
+
+def _direct_two_anchor_cord_rig_payload(
+    rig: DirectTwoAnchorCordRig,
+) -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {
+            "width": rig.scene_size.width,
+            "height": rig.scene_size.height,
+        },
+        "sourceFrame": {
+            "x": rig.source_frame.x,
+            "y": rig.source_frame.y,
+            "width": rig.source_frame.width,
+            "height": rig.source_frame.height,
+        },
+        "innerFaceFrame": {
+            "x": rig.inner_face_frame.x,
+            "y": rig.inner_face_frame.y,
+            "width": rig.inner_face_frame.width,
+            "height": rig.inner_face_frame.height,
+        },
+        "attachmentPoints": [
+            {"x": point.x, "y": point.y} for point in rig.attachment_points
+        ],
+        "pullPoint": {"x": rig.pull_point.x, "y": rig.pull_point.y},
+        "eyeletRadius": rig.eyelet_radius,
+    }
+
+
+def _routed_command_payload(command: RoutedCordPathCommand) -> dict[str, object]:
+    payload: dict[str, object] = {"command": command.command}
+    if command.control is not None:
+        payload["control"] = list(command.control)
+    if command.control1 is not None:
+        payload["control1"] = list(command.control1)
+    if command.control2 is not None:
+        payload["control2"] = list(command.control2)
+    if command.to is not None:
+        payload["to"] = list(command.to)
+    return payload
+
+
+def _routed_cord_rig_payload(rig: RoutedCordRig) -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {
+            "width": rig.scene_size.width,
+            "height": rig.scene_size.height,
+        },
+        "sourceFrame": {
+            "x": rig.source_frame.x,
+            "y": rig.source_frame.y,
+            "width": rig.source_frame.width,
+            "height": rig.source_frame.height,
+        },
+        "innerFaceFrame": {
+            "x": rig.inner_face_frame.x,
+            "y": rig.inner_face_frame.y,
+            "width": rig.inner_face_frame.width,
+            "height": rig.inner_face_frame.height,
+        },
+        "style": {
+            "diameter": rig.style.diameter,
+            "outlineColor": rig.style.outline_color,
+            "baseColor": rig.style.base_color,
+            "braidColors": list(rig.style.braid_colors),
+        },
+        "ports": [
+            {
+                "id": port.id,
+                "space": port.space.value,
+                "point": {"x": port.point.x, "y": port.point.y},
+            }
+            for port in rig.ports
+        ],
+        "tensionGroups": [
+            {
+                "id": group.id,
+                "bodyPortIDs": list(group.body_port_ids),
+                "worldPortIDs": list(group.world_port_ids),
+                "pairing": group.pairing.value,
+                "layer": group.layer.value,
+            }
+            for group in rig.tension_groups
+        ],
+        "paths": [
+            {
+                "id": path.id,
+                "space": path.space.value,
+                "layer": path.layer.value,
+                "commands": [
+                    _routed_command_payload(command) for command in path.commands
+                ],
+            }
+            for path in rig.paths
+        ],
+        "occlusions": [
+            (
+                {
+                    "type": "radialLip",
+                    "bodyPortID": occlusion.body_port_id,
+                    "radius": occlusion.radius,
+                    "chordOffset": occlusion.chord_offset,
+                }
+                if isinstance(occlusion, RoutedCordRadialLip)
+                else {
+                    "type": "facePatch",
+                    "commands": [
+                        _routed_command_payload(command)
+                        for command in occlusion.commands
+                    ],
+                }
+            )
+            for occlusion in rig.occlusions
+        ],
+    }
+
+
+def _cord_rig_payload(rig: CordRig) -> dict[str, object]:
+    if isinstance(rig, DirectTwoAnchorCordRig):
+        return _direct_two_anchor_cord_rig_payload(rig)
+    return _routed_cord_rig_payload(rig)
+
+
 def _hold_needs_attention(hold: dict[str, object]) -> bool:
     return (
         hold["kind"] in {"edge", "pocket"}
@@ -196,18 +365,7 @@ def _board_payload(
             saveUrl=f"/api/boards/{board_id}",
             selectedPresentationID=presentation.id,
             presentations=[
-                {
-                    "presentationID": item.id,
-                    "displayName": item.name,
-                    "imageUrl": _presentation_image_url(board_id, item.id),
-                    "default": item.is_default,
-                    **(
-                        {"sourcePresentationID": item.source_presentation_id}
-                        if item.source_presentation_id is not None
-                        else {}
-                    ),
-                }
-                for item in package.presentations
+                _presentation_payload(package, item) for item in package.presentations
             ],
             document=editor_document(package, presentation.id),
         )

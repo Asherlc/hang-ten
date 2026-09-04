@@ -13,10 +13,12 @@ import type {
   BrowserRuntime,
   CommitResult,
   Dialogs,
+  DirectTwoAnchorCordRig,
   EditorDocument,
   GitStatus,
   PullRequestResult,
   PushResult,
+  RoutedCordRig,
   UseWorkbenchResult,
   WorkbenchClient,
   WorkbenchDependencies,
@@ -70,6 +72,64 @@ function boardFixture(boardId = "board-a", document = editorDocument()): Board {
     holdCount: document.regions.length,
     imageUrl: `/api/boards/${boardId}/image`,
     document,
+  };
+}
+
+function routedReactRig(): RoutedCordRig {
+  return {
+    type: "routed",
+    sceneSize: { width: 200, height: 200 },
+    sourceFrame: { x: 40, y: 40, width: 120, height: 120 },
+    innerFaceFrame: { x: 0, y: 0, width: 120, height: 120 },
+    style: {
+      diameter: 10,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 30, y: 90 } },
+      { id: "body-right", space: "body", point: { x: 90, y: 90 } },
+      { id: "world-left", space: "world", point: { x: 10, y: 10 } },
+      { id: "world-right", space: "world", point: { x: 110, y: 10 } },
+    ],
+    tensionGroups: [
+      {
+        id: "behind",
+        bodyPortIDs: ["body-left"],
+        worldPortIDs: ["world-left"],
+        pairing: "declared",
+        layer: "behindFace",
+      },
+      {
+        id: "above",
+        bodyPortIDs: ["body-right"],
+        worldPortIDs: ["world-right"],
+        pairing: "declared",
+        layer: "aboveFace",
+      },
+    ],
+    paths: [{
+      id: "knot-overpass",
+      space: "world",
+      layer: "overpass",
+      commands: [
+        { command: "move", to: [45, 15] },
+        { command: "curve", control1: [50, 5], control2: [70, 5], to: [75, 15] },
+      ],
+    }],
+    occlusions: [
+      { type: "radialLip", bodyPortID: "body-left", radius: 6, chordOffset: 2 },
+      {
+        type: "facePatch",
+        commands: [
+          { command: "move", to: [80, 70] },
+          { command: "line", to: [100, 70] },
+          { command: "line", to: [100, 85] },
+          { command: "close" },
+        ],
+      },
+    ],
   };
 }
 
@@ -344,6 +404,532 @@ test("mobile canvas controls open the board drawer, repository sheet, and hold i
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 2);
     await app.click("#mobile-save-button");
     assert.equal(saves, 1);
+  });
+});
+
+test("a constrained alias remains selectable without canvas edit affordances while its source restores constrained handles", async () => {
+  const image = imageFixture();
+  const sourceDocument: EditorDocument = {
+    ...editorDocument("M 10 10 L 30 10 L 30 30 L 10 30 Z"),
+    presentationID: "source",
+    equipmentObjects: ["panel-a", "panel-b"],
+    regions: [{
+      ...editorDocument().regions[0]!,
+      equipmentObjectID: "panel-a",
+      metadata: { holdID: "hold-1", pieceIndex: 0, presentationID: "source" },
+      fingerCapacity: 4,
+      sizeMillimeters: 20,
+      handCapacity: 2,
+      shapeConstraint: { shape: "roundedRectangle", rotationDegrees: 0 },
+    }],
+  };
+  const presentations = [
+    {
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentation=source",
+      default: true,
+    },
+    {
+      presentationID: "inverted-alias",
+      displayName: "Inverted alias",
+      imageUrl: "/api/boards/board-a/image",
+      default: false,
+      sourcePresentationID: "source",
+      rotationDegrees: 90,
+      geometryRotationAnchor: { x: 0.5, y: 0.68 },
+    },
+  ];
+  const boardForPresentation = (presentationID: string): Board => ({
+    ...boardFixture("board-a", sourceDocument),
+    imageUrl: presentations.find((presentation) => (
+      presentation.presentationID === presentationID
+    ))!.imageUrl,
+    selectedPresentationID: presentationID,
+    presentations,
+    document: {
+      ...structuredClone(sourceDocument),
+      presentationID,
+      regions: sourceDocument.regions.map((region) => ({
+        ...structuredClone(region),
+        metadata: region.metadata ? { ...region.metadata, presentationID } : undefined,
+      })),
+    },
+  });
+  let saves = 0;
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard(_boardId, presentationID) {
+        return boardForPresentation(presentationID ?? "inverted-alias");
+      },
+      async saveBoard(_boardId, document) {
+        saves += 1;
+        return { ...boardForPresentation("source"), document };
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(90 50 34)",
+    );
+    await app.click('[data-hold-key="hold-1"]');
+    const aliasPath = app.document.querySelector('[data-hold-key="hold-1"]');
+    assert.equal(aliasPath?.getAttribute("aria-pressed"), "true");
+    assert.equal(aliasPath?.getAttribute("tabindex"), "0");
+    assert.equal(app.text("#hold-heading"), "hold-1");
+    assert.equal(app.document.querySelectorAll(".path-editor-vertex").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-rotation-handle").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-resize-handle").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-overlay [tabindex=\"0\"]").length, 0);
+
+    for (const selector of [
+      "#save-button",
+      "#mobile-save-button",
+      "#add-hold-button",
+      "#mobile-add-hold-button",
+      "#delete-presentation-button",
+      "#hold-type-select",
+      "#equipment-object-select",
+      "#finger-capacity-select",
+      "#depth-measurement-select",
+      "#hold-depth-input",
+      "#hand-capacity-select",
+      "#outline-shape-select",
+      "#rotate-ccw-button",
+      "#rotate-cw-button",
+      "#rotate-by-input",
+      "#rotate-by-apply-button",
+      "#add-hold-segment-button",
+      "#duplicate-mirror-hold-button",
+      "#delete-hold-button",
+    ]) {
+      assert.equal(app.disabled(selector), true, `${selector} must be disabled for an alias`);
+    }
+
+    await app.change("#presentation-select", "source");
+    await app.flush(() => image.images.succeed());
+    assert.equal(app.documentValue("#presentation-select"), "source");
+    assert.equal(app.disabled("#save-button"), false);
+    assert.equal(app.disabled("#add-hold-button"), false);
+    await app.click('[data-hold-key="hold-1"]');
+    assert.equal(app.disabled("#hold-type-select"), false);
+    assert.equal(app.document.querySelectorAll(".path-editor-rotation-handle").length, 1);
+    assert.equal(app.document.querySelectorAll(".path-editor-resize-handle").length > 0, true);
+    assert.equal(app.document.querySelectorAll(".path-editor-overlay [tabindex=\"0\"]").length, 0);
+    assert.equal(saves, 0);
+  });
+});
+
+test("a rigged alias rotates the face in plane while its complete cord stays world-up", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "front-vertical",
+    equipmentObjects: ["primary"],
+    canvas: { width: 10, height: 10 },
+    regions: [{
+      key: "edge-piece-0",
+      type: "edge",
+      equipmentObjectID: "primary",
+      displayPath: "M 6 2 L 7 2 L 7 4 L 6 4 Z",
+      metadata: {
+        holdID: "edge",
+        pieceIndex: 0,
+        presentationID: "front-vertical",
+      },
+      sizeMillimeters: 20,
+      fingerCapacity: 4,
+      handCapacity: 1,
+    }],
+  };
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 400 },
+    sourceFrame: { x: 0, y: 200, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
+    pullPoint: { x: 50, y: 0 },
+    eyeletRadius: 10,
+  };
+  const presentations = [{
+    presentationID: "front",
+    displayName: "Front",
+    imageUrl: "/api/boards/board-a/image?presentationID=front",
+    default: true,
+    cordRig: rig,
+  }, {
+    presentationID: "front-vertical",
+    displayName: "Front vertical",
+    imageUrl: "/api/boards/board-a/image",
+    default: false,
+    sourcePresentationID: "front",
+    availableHoldIDs: ["edge"],
+    rotationDegrees: 90,
+    geometryRotationAnchor: { x: 0.5, y: 0.625 },
+  }];
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: presentations[1]!.imageUrl,
+    selectedPresentationID: "front-vertical",
+    presentations,
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard() {
+        return board;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    const editorSvg = app.document.querySelector("#editor-svg");
+    assert.equal(
+      editorSvg?.getAttribute("viewBox"),
+      "0 -20 10 40",
+      editorSvg?.outerHTML ?? "editor SVG missing",
+    );
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(90 5 5)",
+    );
+    const tensionPath = app.document.querySelector("#cord-strands path");
+    assert.equal(tensionPath?.getAttribute("d"), "M 5 2 L 5 0 L 5 8");
+    assert.equal(app.document.querySelector("#cord-support"), null);
+    assert.equal(app.document.querySelector("#cord-overpass"), null);
+    assert.equal(app.document.querySelectorAll("#cord-shadow path").length, 1);
+    assert.equal(app.document.querySelectorAll("#cord-shadow line").length, 0);
+    assert.equal(app.document.querySelector("#cord-rig")?.getAttribute("data-pull-y"), "0");
+    assert.equal(
+      app.document.querySelector("#cord-shadow")?.getAttribute("filter"),
+      "url(#cord-shadow-filter)",
+    );
+    assert.equal(app.document.querySelectorAll("#cord-braid-clips mask").length, 1);
+    assert.equal(app.document.querySelectorAll("#cord-braid-fibers line").length > 10, true);
+    assert.equal(app.document.querySelectorAll("#cord-eyelet-clips clipPath").length, 2);
+    const eyeletCrescents = [...app.document.querySelectorAll<SVGPathElement>(
+      "#cord-eyelet-clips path",
+    )];
+    assert.equal(eyeletCrescents.length, 2);
+    assert.notEqual(eyeletCrescents[0]?.getAttribute("d"), eyeletCrescents[1]?.getAttribute("d"));
+    assert.match(eyeletCrescents[0]?.getAttribute("d") ?? "", /^M 5\.714142842854 1\.3 /);
+    assert.match(eyeletCrescents[1]?.getAttribute("d") ?? "", /^M 5\.714142842854 7\.3 /);
+    const eyeletForegroundImages = [...app.document.querySelectorAll<SVGImageElement>(
+      "#cord-eyelet-foreground image",
+    )];
+    assert.equal(eyeletForegroundImages.length, 2);
+    assert.deepEqual(eyeletForegroundImages.map((entry) => ({
+      href: entry.getAttribute("href"),
+      transform: entry.getAttribute("transform"),
+    })), [
+      { href: "/api/boards/board-a/image", transform: "rotate(90 5 5)" },
+      { href: "/api/boards/board-a/image", transform: "rotate(90 5 5)" },
+    ]);
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+  });
+});
+
+test("a routed alias renders the frozen cord stages around one dynamically rotated face", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "front-quarter-turn",
+    equipmentObjects: ["primary"],
+    canvas: { width: 120, height: 120 },
+    regions: [{
+      key: "edge-piece-0",
+      type: "edge",
+      equipmentObjectID: "primary",
+      displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z",
+      metadata: {
+        holdID: "edge",
+        pieceIndex: 0,
+        presentationID: "front-quarter-turn",
+      },
+      sizeMillimeters: 20,
+      fingerCapacity: 4,
+      handCapacity: 1,
+    }],
+  };
+  const presentations = [{
+    presentationID: "front",
+    displayName: "Front",
+    imageUrl: "/api/boards/board-a/image?presentationID=front",
+    default: true,
+    cordRig: routedReactRig(),
+  }, {
+    presentationID: "front-quarter-turn",
+    displayName: "Front quarter turn",
+    imageUrl: "/api/boards/board-a/image",
+    default: false,
+    sourcePresentationID: "front",
+    availableHoldIDs: ["edge"],
+    rotationDegrees: 90,
+    geometryRotationAnchor: { x: 0.5, y: 0.5 },
+  }];
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: presentations[1]!.imageUrl,
+    selectedPresentationID: "front-quarter-turn",
+    presentations,
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard() {
+        return board;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    const editorSvg = app.document.querySelector("#editor-svg");
+    assert.equal(
+      editorSvg?.getAttribute("viewBox"),
+      "-40 -40 200 200",
+      editorSvg?.outerHTML ?? app.document.body.textContent ?? "editor SVG missing",
+    );
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(90 60 60)",
+    );
+    const frozenStageIDs = new Set([
+      "routed-cord-behind-face",
+      "board-image",
+      "routed-cord-above-face",
+      "routed-cord-occlusion-redraw",
+      "routed-cord-overpass",
+      "hold-overlay",
+    ]);
+    const renderedStages = [...(editorSvg?.children ?? [])]
+      .map((element) => element.id)
+      .filter((id) => frozenStageIDs.has(id));
+    assert.deepEqual(renderedStages, [
+      "routed-cord-behind-face",
+      "board-image",
+      "routed-cord-above-face",
+      "routed-cord-occlusion-redraw",
+      "routed-cord-overpass",
+      "hold-overlay",
+    ]);
+    assert.equal(app.document.querySelectorAll("#routed-cord-behind-face [data-cord-path]").length, 1);
+    assert.equal(app.document.querySelectorAll("#routed-cord-above-face [data-cord-path]").length, 1);
+    assert.equal(app.document.querySelectorAll("#routed-cord-overpass [data-cord-path]").length, 1);
+    const braidColors = new Set(
+      [...app.document.querySelectorAll("[data-cord-braid-color]")]
+        .map((element) => element.getAttribute("stroke")),
+    );
+    assert.deepEqual(braidColors, new Set(["#FFD000", "#0055CC"]));
+    assert.deepEqual(
+      [...app.document.querySelectorAll("#routed-cord-occlusion-clips clipPath")]
+        .map((element) => element.getAttribute("data-occlusion-type")),
+      ["radialLip", "facePatch"],
+    );
+    const redrawnFaces = [...app.document.querySelectorAll<SVGImageElement>(
+      "#routed-cord-occlusion-redraw image",
+    )];
+    assert.equal(redrawnFaces.length, 2);
+    assert.deepEqual(redrawnFaces.map((entry) => ({
+      href: entry.getAttribute("href"),
+      transform: entry.getAttribute("transform"),
+    })), [
+      {
+        href: "/api/boards/board-a/image",
+        transform: "rotate(90 60 60)",
+      },
+      {
+        href: "/api/boards/board-a/image",
+        transform: "rotate(90 60 60)",
+      },
+    ]);
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+  });
+});
+
+test("a freeform alias rejects path and inspector mutations while its source can become unsaved", async () => {
+  const image = imageFixture();
+  const sourceDocument: EditorDocument = {
+    ...editorDocument(),
+    presentationID: "source",
+    equipmentObjects: ["panel-a", "panel-b"],
+    regions: [{
+      ...editorDocument().regions[0]!,
+      equipmentObjectID: "panel-a",
+      metadata: { holdID: "hold-1", pieceIndex: 0, presentationID: "source" },
+      fingerCapacity: 4,
+      sizeMillimeters: 20,
+      handCapacity: 2,
+    }],
+  };
+  const presentations = [
+    {
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentation=source",
+      default: true,
+    },
+    {
+      presentationID: "inverted-alias",
+      displayName: "Inverted alias",
+      imageUrl: "/api/boards/board-a/image",
+      default: false,
+      sourcePresentationID: "source",
+      isInverted: true as const,
+      geometryRotationAnchor: { x: 0.5, y: 0.68 },
+    },
+  ];
+  const boardForPresentation = (presentationID: string): Board => ({
+    ...boardFixture("board-a", sourceDocument),
+    imageUrl: presentations.find((presentation) => (
+      presentation.presentationID === presentationID
+    ))!.imageUrl,
+    selectedPresentationID: presentationID,
+    presentations,
+    document: {
+      ...structuredClone(sourceDocument),
+      presentationID,
+      regions: sourceDocument.regions.map((region) => ({
+        ...structuredClone(region),
+        metadata: region.metadata ? { ...region.metadata, presentationID } : undefined,
+      })),
+    },
+  });
+  let saves = 0;
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard(_boardId, presentationID) {
+        return boardForPresentation(presentationID ?? "inverted-alias");
+      },
+      async saveBoard(_boardId, document) {
+        saves += 1;
+        return { ...boardForPresentation("source"), document };
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
+    await app.click('[data-hold-key="hold-1"]');
+    const pathBefore = app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d");
+    const typeBefore = app.documentValue("#hold-type-select");
+    const countBefore = app.document.querySelectorAll("#hold-overlay path").length;
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.pointer('[data-hold-key="hold-1"]', "pointerdown", {
+      pointerId: 7,
+      button: 0,
+      clientX: 10,
+      clientY: 10,
+    });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 20, clientY: 10 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 20, clientY: 10 });
+    await app.change("#hold-type-select", "sloper");
+    await app.click("#add-hold-button");
+    await app.click("#delete-hold-button");
+    await app.click("#save-button");
+
+    assert.equal(app.document.querySelector('[data-hold-key="hold-1"]')?.getAttribute("d"), pathBefore);
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, countBefore);
+    assert.equal(app.documentValue("#hold-type-select"), typeBefore);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(saves, 0);
+
+    await app.change("#presentation-select", "source");
+    await app.flush(() => image.images.succeed());
+    await app.click('[data-hold-key="hold-1"]');
+    await app.change("#hold-type-select", "sloper");
+
+    assert.equal(app.documentValue("#hold-type-select"), "sloper");
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+  });
+});
+
+test("alias Ctrl/Cmd-S prevents the browser default without saving", async () => {
+  const image = imageFixture();
+  const sourceDocument: EditorDocument = {
+    ...editorDocument(),
+    presentationID: "source",
+    equipmentObjects: ["panel-a"],
+    regions: [{
+      ...editorDocument().regions[0]!,
+      equipmentObjectID: "panel-a",
+      metadata: { holdID: "hold-1", pieceIndex: 0, presentationID: "source" },
+      fingerCapacity: 4,
+      sizeMillimeters: 20,
+      handCapacity: 2,
+    }],
+  };
+  const presentations = [
+    {
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentation=source",
+      default: true,
+    },
+    {
+      presentationID: "inverted-alias",
+      displayName: "Inverted alias",
+      imageUrl: "/api/boards/board-a/image",
+      default: false,
+      sourcePresentationID: "source",
+      isInverted: true as const,
+      geometryRotationAnchor: { x: 0.5, y: 0.68 },
+    },
+  ];
+  const boardForPresentation = (presentationID: string): Board => ({
+    ...boardFixture("board-a", sourceDocument),
+    imageUrl: presentations.find((presentation) => presentation.presentationID === presentationID)!.imageUrl,
+    selectedPresentationID: presentationID,
+    presentations,
+    document: {
+      ...structuredClone(sourceDocument),
+      presentationID,
+      regions: sourceDocument.regions.map((region) => ({
+        ...structuredClone(region),
+        metadata: region.metadata ? { ...region.metadata, presentationID } : undefined,
+      })),
+    },
+  });
+  let saves = 0;
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard(_boardId, presentationID) {
+        return boardForPresentation(presentationID ?? "inverted-alias");
+      },
+      async saveBoard() {
+        saves += 1;
+        return boardForPresentation("source");
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    while (image.images.pending.length > 0) await app.flush(() => image.images.succeed());
+
+    assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
+    const prevented = await app.keyDown("#editor-svg", "s", { ctrlKey: true });
+
+    assert.equal(prevented, true);
+    assert.equal(saves, 0);
   });
 });
 

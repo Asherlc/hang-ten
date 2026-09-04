@@ -92,6 +92,21 @@ the decoded image within 0.1% relative error.
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
 
+For a canonical `directTwoAnchor` cord rig, Workbench previews the full padded
+scene. Alias `rotationDegrees` rotate the face artwork, visible holds, markers,
+and attachment points in plane around `geometryRotationAnchor`; the pull point
+stays fixed above the board and both cord strands remain tensioned. Explicit
+rotation aliases reuse the canonical `assetPath`, and non-0/180 rotations are
+accepted only when that canonical rig supplies enough scene padding.
+
+Workbench also previews canonical `routed` rigs with their authored cord style,
+paths, pairing, and occlusion geometry. Body-space points rotate clockwise with
+an alias while world-space points remain fixed. The SVG stage order is
+`behindFace` cord, face, `aboveFace` cord, clipped face redraw, `overpass` cord,
+hold highlights, then editor markers. Routed centerlines use the validated
+full-scene view box, so the package validator's diameter inset and complete
+radial-lip/face-patch bounds remain the clipping authority.
+
 ### Editor-local geometry identities
 
 While a freeform contour is being edited, its anchors, Bézier controls, and

@@ -1,16 +1,160 @@
 import SwiftUI
 import UIKit
 
+struct BoardEditorCanvasArtwork {
+    let image: UIImage
+    let presentationAspectRatio: CGFloat
+    let directTwoAnchorRig: BoardDirectTwoAnchorCordRig?
+    let routedCordRig: BoardRoutedCordRig?
+    let projection: BoardPresentationGeometryProjection
+    let sourcePresentationID: String?
+    let availableHoldIDs: Set<String>?
+
+    init(
+        image: UIImage,
+        presentationAspectRatio: CGFloat,
+        directTwoAnchorRig: BoardDirectTwoAnchorCordRig?,
+        routedCordRig: BoardRoutedCordRig? = nil,
+        projection: BoardPresentationGeometryProjection,
+        sourcePresentationID: String? = nil,
+        availableHoldIDs: [String]? = nil
+    ) {
+        self.image = image
+        self.presentationAspectRatio = presentationAspectRatio
+        self.directTwoAnchorRig = directTwoAnchorRig
+        self.routedCordRig = routedCordRig
+        self.projection = projection
+        self.sourcePresentationID = sourcePresentationID
+        self.availableHoldIDs = availableHoldIDs.map(Set.init)
+    }
+
+    @MainActor
+    static func make(
+        package: BoardEditedPackage,
+        sourceImage: UIImage
+    ) -> BoardEditorCanvasArtwork {
+        guard let presentation = package.document.presentations.first(where: \.isDefault)
+                ?? package.document.presentations.first else {
+            return fallback(package: package, sourceImage: sourceImage)
+        }
+        let projection = BoardPresentationGeometryProjection(
+            rotationDegrees: CGFloat(presentation.resolvedRotationDegrees),
+            rotationAnchor: presentation.geometryRotationAnchor
+        )
+        let sourcePresentationID = presentation.sourcePresentationID ?? presentation.id
+        let resolvedCordRig = presentation.cordRig
+            ?? package.document.presentations.first {
+                $0.id == presentation.sourcePresentationID
+            }?.cordRig
+        guard let resolvedCordRig else {
+            if presentation.rotationDegrees != nil {
+                return BoardEditorCanvasArtwork(
+                    image: sourceImage,
+                    presentationAspectRatio: CGFloat(presentation.aspectRatio),
+                    directTwoAnchorRig: nil,
+                    projection: projection,
+                    sourcePresentationID: sourcePresentationID,
+                    availableHoldIDs: presentation.availableHoldIDs
+                )
+            }
+            return fallback(package: package, sourceImage: sourceImage)
+        }
+
+        let canvasSize = resolvedCordRig.sceneSize.cgSize
+        guard canvasSize.width.isFinite,
+              canvasSize.height.isFinite,
+              canvasSize.width > 0,
+              canvasSize.height > 0 else {
+            return fallback(package: package, sourceImage: sourceImage)
+        }
+
+        let canvas = CGRect(origin: .zero, size: canvasSize)
+        switch resolvedCordRig {
+        case .directTwoAnchor(let rig):
+            let geometry = BoardCordRigGeometry.make(
+                rig: rig,
+                projection: projection,
+                in: canvas
+            )
+            let renderer = ImageRenderer(
+                content: BoardRiggedPresentationArtwork(
+                    faceImage: sourceImage,
+                    rig: rig,
+                    geometry: geometry
+                )
+                .frame(width: canvasSize.width, height: canvasSize.height)
+            )
+            renderer.scale = 1
+            renderer.isOpaque = false
+            guard let renderedImage = renderer.uiImage else {
+                return fallback(package: package, sourceImage: sourceImage)
+            }
+
+            return BoardEditorCanvasArtwork(
+                image: renderedImage,
+                presentationAspectRatio: CGFloat(presentation.aspectRatio),
+                directTwoAnchorRig: rig,
+                projection: projection,
+                sourcePresentationID: sourcePresentationID,
+                availableHoldIDs: presentation.availableHoldIDs
+            )
+        case .routed(let rig):
+            guard let geometry = BoardRoutedCordRigGeometry.resolve(
+                rig: rig,
+                projection: projection,
+                in: canvas
+            ) else {
+                return fallback(package: package, sourceImage: sourceImage)
+            }
+            let renderer = ImageRenderer(
+                content: BoardRoutedPresentationArtwork(
+                    faceImage: sourceImage,
+                    rig: rig,
+                    geometry: geometry
+                )
+                .frame(width: canvasSize.width, height: canvasSize.height)
+            )
+            renderer.scale = 1
+            renderer.isOpaque = false
+            guard let renderedImage = renderer.uiImage else {
+                return fallback(package: package, sourceImage: sourceImage)
+            }
+
+            return BoardEditorCanvasArtwork(
+                image: renderedImage,
+                presentationAspectRatio: CGFloat(presentation.aspectRatio),
+                directTwoAnchorRig: nil,
+                routedCordRig: rig,
+                projection: projection,
+                sourcePresentationID: sourcePresentationID,
+                availableHoldIDs: presentation.availableHoldIDs
+            )
+        }
+    }
+
+    private static func fallback(
+        package: BoardEditedPackage,
+        sourceImage: UIImage
+    ) -> BoardEditorCanvasArtwork {
+        BoardEditorCanvasArtwork(
+            image: sourceImage,
+            presentationAspectRatio: CGFloat(package.document.aspectRatio),
+            directTwoAnchorRig: nil,
+            projection: BoardPresentationGeometryProjection(isInverted: false)
+        )
+    }
+}
+
 struct HoldEditorCanvasView: UIViewRepresentable {
     @ObservedObject var session: BoardEditorSession
-    let image: UIImage?
+    let artwork: BoardEditorCanvasArtwork?
     let editorBackgroundColor: UIColor
     var reference: HoldEditorCanvasReference?
 
     func makeUIView(context: Context) -> HoldEditorCanvasUIView {
         let view = HoldEditorCanvasUIView()
         view.session = session
-        view.boardImage = image
+        view.boardArtwork = artwork
         view.editorBackgroundColor = editorBackgroundColor
         reference?.view = view
         return view
@@ -19,9 +163,7 @@ struct HoldEditorCanvasView: UIViewRepresentable {
     func updateUIView(_ uiView: HoldEditorCanvasUIView, context: Context) {
         uiView.session = session
         uiView.updateMetadataWarningAccessibility()
-        if uiView.boardImage !== image {
-            uiView.boardImage = image
-        }
+        uiView.boardArtwork = artwork
         uiView.editorBackgroundColor = editorBackgroundColor
         uiView.setNeedsDisplay()
     }
@@ -36,7 +178,7 @@ final class HoldEditorCanvasUIView: UIView {
         }
     }
 
-    var boardImage: UIImage? {
+    var boardArtwork: BoardEditorCanvasArtwork? {
         didSet { setNeedsDisplay() }
     }
 
@@ -80,7 +222,23 @@ final class HoldEditorCanvasUIView: UIView {
     }
 
     var boardAspectRatio: CGFloat {
-        session?.document.aspectRatio ?? 2
+        if boardArtwork?.sourcePresentationID != nil,
+           let presentationAspectRatio = boardArtwork?.presentationAspectRatio {
+            return presentationAspectRatio
+        }
+        return session?.document.aspectRatio ?? 2
+    }
+
+    private var visibleHolds: [BoardEditableHold] {
+        guard let session,
+              let sourcePresentationID = boardArtwork?.sourcePresentationID else {
+            return session?.document.holds ?? []
+        }
+        let availableHoldIDs = boardArtwork?.availableHoldIDs
+        return session.document.holds.filter { hold in
+            guard hold.presentationID == sourcePresentationID else { return false }
+            return availableHoldIDs?.contains(hold.id) ?? true
+        }
     }
 
     func updateMetadataWarningAccessibility() {
@@ -92,7 +250,7 @@ final class HoldEditorCanvasUIView: UIView {
 
         var elements: [UIAccessibilityElement] = [aggregate]
         if let session {
-            for hold in session.document.holds where !session.missingRequiredMetadata(for: hold).isEmpty {
+            for hold in visibleHolds where !session.missingRequiredMetadata(for: hold).isEmpty {
                 let warning = UIAccessibilityElement(accessibilityContainer: self)
                 warning.accessibilityTraits = .image
                 warning.accessibilityLabel = "Incomplete hold metadata: \(hold.id)"
@@ -157,10 +315,71 @@ final class HoldEditorCanvasUIView: UIView {
         baseScale(for: bounds) * zoom
     }
 
+    private func riggedSceneRect(for bounds: CGRect) -> CGRect {
+        let fittedRect = fittedBoardRect(for: bounds)
+        let scaledSize = CGSize(
+            width: fittedRect.width * zoom,
+            height: fittedRect.height * zoom
+        )
+        let center = CGPoint(
+            x: fittedRect.midX + (0.5 - viewportCenter.x) * scaledSize.width,
+            y: fittedRect.midY + (0.5 - viewportCenter.y) * scaledSize.height
+        )
+        return CGRect(
+            x: center.x - scaledSize.width / 2,
+            y: center.y - scaledSize.height / 2,
+            width: scaledSize.width,
+            height: scaledSize.height
+        )
+    }
+
+    private func riggedFrames(
+        for bounds: CGRect
+    ) -> (sceneRect: CGRect, faceRect: CGRect)? {
+        guard let artwork = boardArtwork else { return nil }
+        let canvas = riggedSceneRect(for: bounds)
+        if let rig = artwork.directTwoAnchorRig {
+            let geometry = BoardCordRigGeometry.make(
+                rig: rig,
+                projection: artwork.projection,
+                in: canvas
+            )
+            return (geometry.sceneRect, geometry.faceRect)
+        }
+        if let rig = artwork.routedCordRig,
+           let geometry = BoardRoutedCordRigGeometry.resolve(
+               rig: rig,
+               projection: artwork.projection,
+               in: canvas
+           ) {
+            return (geometry.sceneRect, geometry.faceRect)
+        }
+        return nil
+    }
+
     /// Board-normalized point to screen point. Board space spans 0...1 across
     /// the presentation image on both axes; the fitted board rect encodes the
     /// aspect ratio, so one scale serves both axes.
     private func screenPoint(fromBoard point: CGPoint, bounds: CGRect) -> CGPoint {
+        if let artwork = boardArtwork,
+           let frames = riggedFrames(for: bounds),
+           frames.faceRect.width > 0,
+           frames.faceRect.height > 0 {
+            let facePoint = CGPoint(
+                x: frames.faceRect.minX + point.x * frames.faceRect.width,
+                y: frames.faceRect.minY + point.y * frames.faceRect.height
+            )
+            return artwork.projection.project(facePoint, in: frames.sceneRect)
+        }
+        if let artwork = boardArtwork,
+           artwork.sourcePresentationID != nil {
+            let sceneRect = riggedSceneRect(for: bounds)
+            let facePoint = CGPoint(
+                x: sceneRect.minX + point.x * sceneRect.width,
+                y: sceneRect.minY + point.y * sceneRect.height
+            )
+            return artwork.projection.project(facePoint, in: sceneRect)
+        }
         let rect = fittedBoardRect(for: bounds)
         let s = scale(for: bounds)
         return CGPoint(
@@ -170,6 +389,29 @@ final class HoldEditorCanvasUIView: UIView {
     }
 
     private func boardPoint(fromScreen point: CGPoint, bounds: CGRect) -> CGPoint {
+        if let artwork = boardArtwork,
+           let frames = riggedFrames(for: bounds),
+           frames.faceRect.width > 0,
+           frames.faceRect.height > 0 {
+            let facePoint = point.applying(
+                artwork.projection.affineTransform(in: frames.sceneRect).inverted()
+            )
+            return CGPoint(
+                x: (facePoint.x - frames.faceRect.minX) / frames.faceRect.width,
+                y: (facePoint.y - frames.faceRect.minY) / frames.faceRect.height
+            )
+        }
+        if let artwork = boardArtwork,
+           artwork.sourcePresentationID != nil {
+            let sceneRect = riggedSceneRect(for: bounds)
+            let facePoint = point.applying(
+                artwork.projection.affineTransform(in: sceneRect).inverted()
+            )
+            return CGPoint(
+                x: (facePoint.x - sceneRect.minX) / sceneRect.width,
+                y: (facePoint.y - sceneRect.minY) / sceneRect.height
+            )
+        }
         let rect = fittedBoardRect(for: bounds)
         let s = scale(for: bounds)
         return CGPoint(
@@ -254,11 +496,19 @@ final class HoldEditorCanvasUIView: UIView {
 
     func updateViewportPan(translation: CGPoint) {
         guard case .viewport(let startCenter) = dragState else { return }
-        let s = scale(for: bounds)
-        viewportCenter = CGPoint(
-            x: startCenter.x - translation.x / s,
-            y: startCenter.y - translation.y / s
-        )
+        if boardArtwork?.sourcePresentationID != nil {
+            let fittedRect = fittedBoardRect(for: bounds)
+            viewportCenter = CGPoint(
+                x: startCenter.x - translation.x / (fittedRect.width * zoom),
+                y: startCenter.y - translation.y / (fittedRect.height * zoom)
+            )
+        } else {
+            let s = scale(for: bounds)
+            viewportCenter = CGPoint(
+                x: startCenter.x - translation.x / s,
+                y: startCenter.y - translation.y / s
+            )
+        }
         clampViewport()
         updateMetadataWarningAccessibility()
         setNeedsDisplay()
@@ -567,7 +817,7 @@ final class HoldEditorCanvasUIView: UIView {
         guard let session else { return nil }
         let boardLocation = boardPoint(fromScreen: location, bounds: bounds)
         var best: (selection: BoardEditorSession.PieceSelection, area: CGFloat)?
-        for hold in session.document.holds {
+        for hold in visibleHolds {
             for (pieceIndex, piece) in hold.geometry.enumerated() {
                 guard let commands = try? session.boardCommands(for: piece),
                   commands.containsBoard(point: boardLocation) else {
@@ -597,22 +847,37 @@ final class HoldEditorCanvasUIView: UIView {
         context.setLineJoin(.round)
         context.setLineCap(.round)
 
-        if let boardImage {
-            let topLeft = screenPoint(fromBoard: .zero, bounds: bounds)
-            let bottomRight = screenPoint(fromBoard: CGPoint(x: 1, y: 1), bounds: bounds)
-            boardImage.draw(in: CGRect(
-                x: topLeft.x,
-                y: topLeft.y,
-                width: bottomRight.x - topLeft.x,
-                height: bottomRight.y - topLeft.y
-            ))
+        if let boardArtwork {
+            if boardArtwork.directTwoAnchorRig != nil || boardArtwork.routedCordRig != nil {
+                boardArtwork.image.draw(in: riggedSceneRect(for: bounds))
+            } else if boardArtwork.sourcePresentationID != nil {
+                let sceneRect = riggedSceneRect(for: bounds)
+                context.saveGState()
+                context.concatenate(
+                    boardArtwork.projection.affineTransform(in: sceneRect)
+                )
+                boardArtwork.image.draw(in: sceneRect)
+                context.restoreGState()
+            } else {
+                let topLeft = screenPoint(fromBoard: .zero, bounds: bounds)
+                let bottomRight = screenPoint(
+                    fromBoard: CGPoint(x: 1, y: 1),
+                    bounds: bounds
+                )
+                boardArtwork.image.draw(in: CGRect(
+                    x: topLeft.x,
+                    y: topLeft.y,
+                    width: bottomRight.x - topLeft.x,
+                    height: bottomRight.y - topLeft.y
+                ))
+            }
         }
 
         let selectedHoldID = session.selectedPiece?.holdID
         let selectedPieceIndex = session.selectedPiece?.pieceIndex
         let incompleteHoldIDs = Set(session.incompleteMetadataHoldIDs)
 
-        for hold in session.document.holds {
+        for hold in visibleHolds {
             for (pieceIndex, piece) in hold.geometry.enumerated() {
                 let isSelected = hold.id == selectedHoldID && pieceIndex == selectedPieceIndex
                 let isMetadataIncomplete = incompleteHoldIDs.contains(hold.id)

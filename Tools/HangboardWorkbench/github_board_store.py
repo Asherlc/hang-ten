@@ -940,12 +940,16 @@ def presentation_image_bytes(
     selected = _selected_package(discover_packages(client, token, branch), board_id)
     package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id == board_id:
-        return images[package.presentation(presentation_id).asset_path]
+        return images[
+            board_package.presentation_artwork_asset_path(package, presentation_id)
+        ]
     selected = _selected_package(discover_packages(client, token, branch), board_id)
     package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
-    return images[package.presentation(presentation_id).asset_path]
+    return images[
+        board_package.presentation_artwork_asset_path(package, presentation_id)
+    ]
 
 
 def save_editor_document(
@@ -1117,6 +1121,10 @@ def _save_loaded_editor_document(
         hold["id"]: hold
         for hold in live.board["holds"]
         if hold["presentationID"] == presentation.id
+        and (
+            presentation.available_hold_ids is None
+            or hold["id"] in presentation.available_hold_ids
+        )
     }
     current_paths = board_package._current_display_paths(
         pieces_by_hold, current_holds, width, height
@@ -1132,12 +1140,24 @@ def _save_loaded_editor_document(
         width,
         height,
         presentation_id=presentation.id,
+        available_hold_ids=presentation.available_hold_ids,
+    )
+    available_hold_ids_by_presentation = {
+        item[0]: item[7]
+        for item in board_package._parse_board_presentations(board)
+    }
+    updated_presentations = tuple(
+        replace(
+            item,
+            available_hold_ids=available_hold_ids_by_presentation[item.id],
+        )
+        for item in live.presentations
     )
     board_package._validate_board(
         board,
         width,
         height,
-        presentations=live.presentations,
+        presentations=updated_presentations,
         allow_missing_kind=True,
     )
     content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
@@ -1158,7 +1178,7 @@ def _save_loaded_editor_document(
         live.image_width,
         live.image_height,
         _git_blob_sha(content),
-        live.presentations,
+        updated_presentations,
     ), commit_sha
 
 
@@ -1290,16 +1310,35 @@ def _load_selected_presentation(
     )
     if selected_value is None:
         raise board_package.BoardPackageError("presentation is not available")
-    selected_asset = selected_value[2]
+    canonical_presentation_id = selected_value[5] or selected_value[0]
+    canonical_value = next(
+        item for item in presentation_values if item[0] == canonical_presentation_id
+    )
+    cord_rig = board_package._raw_presentation_cord_rig(
+        board, canonical_presentation_id
+    )
+    selected_asset = canonical_value[2] if cord_rig is not None else selected_value[2]
     image = _get_blob(
         client, token, asset_entries[selected_asset], "package presentation image"
     )
     width, height = board_package._png_dimensions_from_bytes(image)
     image_aspect_ratio = width / height
-    relative_error = abs(selected_value[3] - image_aspect_ratio) / image_aspect_ratio
+    expected_image_aspect_ratio = selected_value[3]
+    aspect_source = f"board.json presentation {selected_value[0]}.aspectRatio"
+    if cord_rig is not None:
+        expected_image_aspect_ratio = (
+            cord_rig.inner_face_frame.width / cord_rig.inner_face_frame.height
+        )
+        aspect_source = (
+            f"board.json presentation {canonical_presentation_id}.cordRig."
+            "innerFaceFrame aspect ratio"
+        )
+    relative_error = (
+        abs(expected_image_aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+    )
     if relative_error > board_package._ASPECT_RATIO_RELATIVE_TOLERANCE:
         raise board_package.BoardPackageError(
-            f"board.json presentation {selected_value[0]}.aspectRatio must match its image width/height within 0.1%"
+            f"{aspect_source} must match its image width/height within 0.1%"
         )
     source_presentation_id = selected_value[5] or selected_value[0]
     for index, hold in enumerate(board["holds"]):
@@ -1327,6 +1366,14 @@ def _load_selected_presentation(
             image_height=height,
             source_presentation_id=item[5],
             is_inverted=item[6],
+            geometry_rotation_anchor=board_package._raw_presentation_geometry_rotation_anchor(
+                board, item[0]
+            ),
+            cord_rig=board_package._raw_presentation_cord_rig(board, item[0]),
+            rotation_degrees=board_package._raw_presentation_rotation_degrees(
+                board, item[0]
+            ),
+            available_hold_ids=item[7],
         )
         for item in presentation_values
     )
@@ -1584,6 +1631,16 @@ def _load_package_from_entries(
             image_height=dimensions[asset_path][1],
             source_presentation_id=source_presentation_id,
             is_inverted=is_inverted,
+            geometry_rotation_anchor=board_package._raw_presentation_geometry_rotation_anchor(
+                board, presentation_id
+            ),
+            cord_rig=board_package._raw_presentation_cord_rig(
+                board, presentation_id
+            ),
+            rotation_degrees=board_package._raw_presentation_rotation_degrees(
+                board, presentation_id
+            ),
+            available_hold_ids=available_hold_ids,
         )
         for (
             presentation_id,
@@ -1593,6 +1650,7 @@ def _load_package_from_entries(
             is_default,
             source_presentation_id,
             is_inverted,
+            available_hold_ids,
         ) in presentation_values
     )
     default = next(item for item in presentations if item.is_default)

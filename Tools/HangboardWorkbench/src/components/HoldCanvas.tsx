@@ -1,5 +1,11 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import {
+  cordRigViewBox,
+  resolveCordRigPresentationGeometry,
+  type DirectCordRigPresentationGeometry,
+  type RoutedCordRigPresentationGeometry,
+} from "../cord-rig.ts";
 import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
 import type {
@@ -8,6 +14,7 @@ import type {
   EditorDocument,
   PathCommand,
   PathEditor,
+  RoutedCordLayer,
 } from "../types.ts";
 
 const TYPE_COLORS: Readonly<Record<string, string>> = {
@@ -42,6 +49,339 @@ interface GuideDragState {
   svg: SVGSVGElement;
 }
 
+interface DirectCordRigArtworkProps {
+  geometry: DirectCordRigPresentationGeometry;
+  imageHref: string;
+  imageWidth: number;
+  imageHeight: number;
+  imageTransform?: string;
+}
+
+function DirectCordRigArtwork({
+  geometry,
+  imageHref,
+  imageWidth,
+  imageHeight,
+  imageTransform,
+}: DirectCordRigArtworkProps) {
+  const ropeWidth = 31 * geometry.cordUnitScale;
+  const coreWidth = 25 * geometry.cordUnitScale;
+  const braidWidth = 23 * geometry.cordUnitScale;
+  const ridgeWidth = 2.4 * geometry.cordUnitScale;
+  const braidDash = `${1.5 * geometry.cordUnitScale} ${5.5 * geometry.cordUnitScale}`;
+  const tensionPath = geometry.tensionPath;
+  const scene = geometry.viewBox;
+  const spacing = 12 * geometry.cordUnitScale;
+  const diagonalSpan = scene.width + scene.height;
+  const braidOffsets: number[] = [];
+  for (let offset = -diagonalSpan; offset <= diagonalSpan * 2; offset += spacing) {
+    braidOffsets.push(offset);
+  }
+  const braidFibers = (prefix: string) => <>
+    <rect
+      x={scene.x}
+      y={scene.y}
+      width={scene.width}
+      height={scene.height}
+      fill="#17191a"
+    />
+    {braidOffsets.flatMap((offset, index) => [
+      <line
+        key={`${prefix}-light-${index}`}
+        x1={scene.x + offset}
+        y1={scene.y + scene.height}
+        x2={scene.x + offset + scene.height}
+        y2={scene.y}
+        stroke="#5d6163"
+        strokeOpacity="0.58"
+        strokeWidth={2 * geometry.cordUnitScale}
+      />,
+      <line
+        key={`${prefix}-dark-${index}`}
+        x1={scene.x + offset}
+        y1={scene.y}
+        x2={scene.x + offset + scene.height}
+        y2={scene.y + scene.height}
+        stroke="#030404"
+        strokeOpacity="0.94"
+        strokeWidth={2.3 * geometry.cordUnitScale}
+      />,
+      <line
+        key={`${prefix}-highlight-${index}`}
+        x1={scene.x + offset + 3 * geometry.cordUnitScale}
+        y1={scene.y + scene.height}
+        x2={scene.x + offset + scene.height + 3 * geometry.cordUnitScale}
+        y2={scene.y}
+        stroke="#9ca0a2"
+        strokeOpacity="0.32"
+        strokeWidth={0.7 * geometry.cordUnitScale}
+      />,
+    ])}
+  </>;
+  return <g
+    id="cord-rig"
+    aria-label="Tensioned suspension cord"
+    data-pull-x={geometry.pullPoint.x}
+    data-pull-y={geometry.pullPoint.y}
+    pointerEvents="none"
+  >
+    <defs>
+      <filter
+        id="cord-shadow-filter"
+        x={scene.x}
+        y={scene.y}
+        width={scene.width}
+        height={scene.height}
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feGaussianBlur stdDeviation={2.3 * geometry.cordUnitScale} />
+      </filter>
+      <g id="cord-braid-clips">
+        <mask
+          id="cord-main-braid-mask"
+          x={scene.x}
+          y={scene.y}
+          width={scene.width}
+          height={scene.height}
+          maskUnits="userSpaceOnUse"
+          maskContentUnits="userSpaceOnUse"
+        >
+          <g fill="none" stroke="white" strokeWidth={braidWidth} strokeLinecap="round" strokeLinejoin="round">
+            <path d={tensionPath} />
+          </g>
+        </mask>
+      </g>
+      <g id="cord-eyelet-clips">
+        {geometry.eyeletForegroundCrescents.map((path, index) => <clipPath
+          id={`cord-eyelet-clip-${index}`}
+          key={index}
+          clipPathUnits="userSpaceOnUse"
+        >
+          <path d={path} />
+        </clipPath>)}
+      </g>
+    </defs>
+    <g
+      id="cord-shadow"
+      transform={`translate(${4 * geometry.cordUnitScale} ${5 * geometry.cordUnitScale})`}
+      filter="url(#cord-shadow-filter)"
+      fill="none"
+      stroke="black"
+      strokeOpacity="0.34"
+      strokeWidth={35 * geometry.cordUnitScale}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={tensionPath} />
+    </g>
+    <g id="cord-strands" fill="none" stroke="#050607" strokeWidth={ropeWidth} strokeLinecap="round" strokeLinejoin="round">
+      <path d={tensionPath} />
+    </g>
+    <g fill="none" stroke="#151718" strokeWidth={coreWidth} strokeLinecap="round" strokeLinejoin="round">
+      <path d={tensionPath} />
+    </g>
+    <g id="cord-braid-fibers">
+      <g mask="url(#cord-main-braid-mask)">{braidFibers("main")}</g>
+    </g>
+    <g
+      id="cord-ridge"
+      transform={`translate(${-2 * geometry.cordUnitScale} ${-1 * geometry.cordUnitScale})`}
+      fill="none"
+      stroke="#c4c9cc"
+      strokeOpacity="0.18"
+      strokeWidth={ridgeWidth}
+      strokeDasharray={braidDash}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={tensionPath} />
+    </g>
+    <g id="cord-eyelet-foreground">
+      {geometry.eyeletForegroundCrescents.map((_path, index) => <g
+        key={index}
+        clipPath={`url(#cord-eyelet-clip-${index})`}
+      >
+        <image
+          x="0"
+          y="0"
+          preserveAspectRatio="none"
+          href={imageHref}
+          width={imageWidth}
+          height={imageHeight}
+          transform={imageTransform}
+        />
+      </g>)}
+    </g>
+  </g>;
+}
+
+const ROUTED_LAYER_IDS: Record<RoutedCordLayer, string> = {
+  behindFace: "routed-cord-behind-face",
+  aboveFace: "routed-cord-above-face",
+  overpass: "routed-cord-overpass",
+};
+
+interface RoutedCordLayerArtworkProps {
+  geometry: RoutedCordRigPresentationGeometry;
+  layer: RoutedCordLayer;
+}
+
+function RoutedCordLayerArtwork({ geometry, layer }: RoutedCordLayerArtworkProps) {
+  const paths = geometry.renderLayers[layer];
+  const scene = geometry.viewBox;
+  const diameter = geometry.rig.style.diameter * geometry.cordUnitScale;
+  const outlineWidth = diameter * 1.28;
+  const braidWidth = diameter * 0.72;
+  const stripeWidth = diameter * 0.24;
+  const highlightWidth = diameter * 0.11;
+  const stripeSpacing = diameter * 0.9;
+  const diagonalSpan = scene.width + scene.height;
+  const stripeOffsets: number[] = [];
+  for (
+    let offset = -diagonalSpan;
+    offset <= diagonalSpan * 2;
+    offset += stripeSpacing
+  ) {
+    stripeOffsets.push(offset);
+  }
+  const layerID = ROUTED_LAYER_IDS[layer];
+  const maskID = `${layerID}-braid-mask`;
+  const renderedPaths = () => paths.map((path) => (
+    <path key={`${path.kind}:${path.id}`} d={path.d} />
+  ));
+
+  return <g
+    id={layerID}
+    data-cord-layer={layer}
+    aria-label={`${layer} routed suspension cord`}
+    pointerEvents="none"
+  >
+    <defs>
+      <mask
+        id={maskID}
+        x={scene.x}
+        y={scene.y}
+        width={scene.width}
+        height={scene.height}
+        maskUnits="userSpaceOnUse"
+        maskContentUnits="userSpaceOnUse"
+      >
+        <g
+          fill="none"
+          stroke="white"
+          strokeWidth={braidWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {renderedPaths()}
+        </g>
+      </mask>
+    </defs>
+    <g
+      fill="none"
+      stroke={geometry.rig.style.outlineColor}
+      strokeWidth={outlineWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {renderedPaths()}
+    </g>
+    <g
+      fill="none"
+      stroke={geometry.rig.style.baseColor}
+      strokeWidth={diameter}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {paths.map((path) => <path
+        key={path.id}
+        d={path.d}
+        data-cord-path={path.id}
+        data-cord-path-kind={path.kind}
+      />)}
+    </g>
+    <g mask={`url(#${maskID})`}>
+      {stripeOffsets.map((offset, index) => <line
+        key={`first-${index}`}
+        x1={scene.x + offset}
+        y1={scene.y + scene.height}
+        x2={scene.x + offset + scene.height}
+        y2={scene.y}
+        stroke={geometry.rig.style.braidColors[0]}
+        strokeWidth={stripeWidth}
+        strokeLinecap="round"
+        data-cord-braid-color="0"
+      />)}
+      {stripeOffsets.map((offset, index) => <line
+        key={`second-${index}`}
+        x1={scene.x + offset}
+        y1={scene.y}
+        x2={scene.x + offset + scene.height}
+        y2={scene.y + scene.height}
+        stroke={geometry.rig.style.braidColors[1]}
+        strokeWidth={stripeWidth}
+        strokeLinecap="round"
+        data-cord-braid-color="1"
+      />)}
+    </g>
+    <g
+      fill="none"
+      stroke="#FFFFFF"
+      strokeOpacity="0.24"
+      strokeWidth={highlightWidth}
+      strokeDasharray={`${diameter * 0.7} ${diameter * 0.55}`}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      transform={`translate(${-diameter * 0.15} ${-diameter * 0.12})`}
+    >
+      {renderedPaths()}
+    </g>
+  </g>;
+}
+
+interface RoutedCordOcclusionArtworkProps {
+  geometry: RoutedCordRigPresentationGeometry;
+  imageHref: string;
+  imageWidth: number;
+  imageHeight: number;
+  imageTransform?: string;
+}
+
+function RoutedCordOcclusionArtwork({
+  geometry,
+  imageHref,
+  imageWidth,
+  imageHeight,
+  imageTransform,
+}: RoutedCordOcclusionArtworkProps) {
+  return <g id="routed-cord-occlusion-redraw" pointerEvents="none">
+    <defs>
+      <g id="routed-cord-occlusion-clips">
+        {geometry.occlusions.map((occlusion, index) => <clipPath
+          id={`routed-cord-occlusion-${index}`}
+          key={index}
+          clipPathUnits="userSpaceOnUse"
+          data-occlusion-type={occlusion.type}
+        >
+          <path d={occlusion.d} />
+        </clipPath>)}
+      </g>
+    </defs>
+    {geometry.occlusions.map((_occlusion, index) => <image
+      key={index}
+      x="0"
+      y="0"
+      preserveAspectRatio="none"
+      href={imageHref}
+      width={imageWidth}
+      height={imageHeight}
+      transform={imageTransform}
+      clipPath={`url(#routed-cord-occlusion-${index})`}
+    />)}
+  </g>;
+}
+
 function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
   const flipped = anchor + size > viewportSize ? anchor - size : anchor;
   return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
@@ -53,6 +393,7 @@ export interface HoldCanvasProps {
   selectedKey: string | null;
   selectedKeys: readonly string[];
   busy: boolean;
+  editingDisabled?: boolean;
   onSelectHold(key: string, toggle: boolean): void;
   pathEditor: PathEditor;
   editor: HoldEditorActions;
@@ -72,6 +413,7 @@ export function HoldCanvas({
   selectedKey,
   selectedKeys,
   busy,
+  editingDisabled = false,
   onSelectHold,
   pathEditor,
   editor,
@@ -96,6 +438,24 @@ export function HoldCanvas({
   const onZoomChangeRef = useRef(onZoomChange);
   const canZoomChangeRef = useRef(canZoomChange);
   const onPinchZoomChangeRef = useRef(onPinchZoomChange);
+  const selectedPresentation = board?.presentations?.find(
+    (presentation) => presentation.presentationID === board.selectedPresentationID,
+  );
+  const cordRigGeometry = resolveCordRigPresentationGeometry(board, document);
+  const artworkRotation = cordRigGeometry?.rotationDegrees ?? selectedPresentation?.rotationDegrees;
+  const artworkAnchor = cordRigGeometry?.rotationAnchor ?? (
+    selectedPresentation?.geometryRotationAnchor && document
+      ? {
+        x: selectedPresentation.geometryRotationAnchor.x * document.canvas.width,
+        y: selectedPresentation.geometryRotationAnchor.y * document.canvas.height,
+      }
+      : document
+        ? { x: document.canvas.width / 2, y: document.canvas.height / 2 }
+        : { x: 0, y: 0 }
+  );
+  const artworkTransform = artworkRotation === undefined || !document
+    ? undefined
+    : `rotate(${artworkRotation} ${artworkAnchor.x} ${artworkAnchor.y})`;
   const canPinchZoomChangeRef = useRef(canPinchZoomChange);
   editorRef.current = editor;
   onZoomChangeRef.current = onZoomChange;
@@ -309,7 +669,11 @@ export function HoldCanvas({
           id="editor-svg"
           xmlns="http://www.w3.org/2000/svg"
           aria-label="Hangboard hold editor"
-          viewBox={document ? `0 0 ${document.canvas.width} ${document.canvas.height}` : undefined}
+          viewBox={document
+            ? cordRigGeometry
+              ? cordRigViewBox(cordRigGeometry)
+              : `0 0 ${document.canvas.width} ${document.canvas.height}`
+            : undefined}
           width={document?.canvas.width}
           height={document?.canvas.height}
           style={{
@@ -339,6 +703,10 @@ export function HoldCanvas({
           onDoubleClick={editor.onDoubleClick}
           onContextMenu={editor.onContextMenu}
         >
+          {cordRigGeometry?.type === "routed" && <RoutedCordLayerArtwork
+            geometry={cordRigGeometry}
+            layer="behindFace"
+          />}
           <image
             id="board-image"
             x="0"
@@ -347,7 +715,30 @@ export function HoldCanvas({
             href={board?.imageUrl}
             width={document?.canvas.width}
             height={document?.canvas.height}
+            transform={artworkTransform}
           />
+          {cordRigGeometry?.type === "directTwoAnchor" && board && document && <DirectCordRigArtwork
+            geometry={cordRigGeometry}
+            imageHref={board.imageUrl}
+            imageWidth={document.canvas.width}
+            imageHeight={document.canvas.height}
+            imageTransform={artworkTransform}
+          />}
+          {cordRigGeometry?.type === "routed" && <RoutedCordLayerArtwork
+            geometry={cordRigGeometry}
+            layer="aboveFace"
+          />}
+          {cordRigGeometry?.type === "routed" && board && document && <RoutedCordOcclusionArtwork
+            geometry={cordRigGeometry}
+            imageHref={board.imageUrl}
+            imageWidth={document.canvas.width}
+            imageHeight={document.canvas.height}
+            imageTransform={artworkTransform}
+          />}
+          {cordRigGeometry?.type === "routed" && <RoutedCordLayerArtwork
+            geometry={cordRigGeometry}
+            layer="overpass"
+          />}
           <g id="guide-overlay" aria-label="Alignment guides">
             {guides.map((guide) => guide.axis === "horizontal" ? (
               <line
@@ -426,7 +817,7 @@ export function HoldCanvas({
               />
             })}
           </g>
-          {selectedCommands && pivot && rotationHandle && (
+          {selectedCommands && pivot && rotationHandle && !editingDisabled && (
             <g className={`path-editor-overlay${busy ? " busy" : ""}`}>
               <line
                 className="path-editor-rotation-connector"

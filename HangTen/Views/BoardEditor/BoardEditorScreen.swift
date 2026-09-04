@@ -37,11 +37,14 @@ struct BoardEditorScreen: View {
     @State private var canvasReference = HoldEditorCanvasReference()
     @State private var canvasBackground = EditorCanvasBackground.hangBackground
     private let store: BoardEditorStore
-    private let image: UIImage
+    private let artwork: BoardEditorCanvasArtwork
 
     init(package: BoardEditedPackage, image: UIImage, store: BoardEditorStore) {
         self.store = store
-        self.image = image
+        artwork = BoardEditorCanvasArtwork.make(
+            package: package,
+            sourceImage: image
+        )
         _session = StateObject(wrappedValue: BoardEditorSession(package: package, store: store))
     }
 
@@ -104,7 +107,7 @@ struct BoardEditorScreen: View {
         ZStack {
             HoldEditorCanvasView(
                 session: session,
-                image: image,
+                artwork: artwork,
                 editorBackgroundColor: UIColor(canvasBackground.color),
                 reference: canvasReference
             )

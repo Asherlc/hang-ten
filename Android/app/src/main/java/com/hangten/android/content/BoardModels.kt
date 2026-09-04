@@ -5,6 +5,112 @@ data class Point(
     val y: Float,
 )
 
+data class BoardCordSize(
+    val width: Float,
+    val height: Float,
+)
+
+data class BoardCordRect(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float,
+)
+
+sealed interface BoardCordRig {
+    val sceneSize: BoardCordSize
+    val sourceFrame: BoardCordRect
+    val innerFaceFrame: BoardCordRect
+
+    data class DirectTwoAnchor(
+        override val sceneSize: BoardCordSize,
+        override val sourceFrame: BoardCordRect,
+        override val innerFaceFrame: BoardCordRect,
+        val attachmentPoints: List<Point>,
+        val pullPoint: Point,
+        val eyeletRadius: Float,
+    ) : BoardCordRig
+
+    data class Routed(
+        override val sceneSize: BoardCordSize,
+        override val sourceFrame: BoardCordRect,
+        override val innerFaceFrame: BoardCordRect,
+        val style: BoardRoutedCordStyle,
+        val ports: List<BoardRoutedCordPort>,
+        val tensionGroups: List<BoardRoutedCordTensionGroup>,
+        val paths: List<BoardRoutedCordPath>,
+        val occlusions: List<BoardRoutedCordOcclusion>,
+    ) : BoardCordRig
+}
+
+enum class BoardRoutedCordSpace { Body, World }
+
+enum class BoardRoutedCordLayer { BehindFace, AboveFace, Overpass }
+
+enum class BoardRoutedCordPairing { Declared, ScreenOrder }
+
+data class BoardRoutedCordStyle(
+    val diameter: Float,
+    val outlineColor: String,
+    val baseColor: String,
+    val braidColors: List<String>,
+)
+
+data class BoardRoutedCordPort(
+    val id: String,
+    val space: BoardRoutedCordSpace,
+    val point: Point,
+)
+
+data class BoardRoutedCordTensionGroup(
+    val id: String,
+    val bodyPortIds: List<String>,
+    val worldPortIds: List<String>,
+    val pairing: BoardRoutedCordPairing,
+    val layer: BoardRoutedCordLayer,
+)
+
+sealed interface BoardRoutedCordPathCommand {
+    data class Move(val to: Point) : BoardRoutedCordPathCommand
+    data class Line(val to: Point) : BoardRoutedCordPathCommand
+    data class Quad(val control: Point, val to: Point) : BoardRoutedCordPathCommand
+    data class Curve(
+        val control1: Point,
+        val control2: Point,
+        val to: Point,
+    ) : BoardRoutedCordPathCommand
+
+    data object Close : BoardRoutedCordPathCommand
+}
+
+data class BoardRoutedCordPath(
+    val id: String,
+    val space: BoardRoutedCordSpace,
+    val layer: BoardRoutedCordLayer,
+    val commands: List<BoardRoutedCordPathCommand>,
+)
+
+sealed interface BoardRoutedCordOcclusion {
+    data class RadialLip(
+        val bodyPortId: String,
+        val radius: Float,
+        val chordOffset: Float,
+    ) : BoardRoutedCordOcclusion
+
+    data class FacePatch(
+        val commands: List<BoardRoutedCordPathCommand>,
+    ) : BoardRoutedCordOcclusion
+}
+
+data class BoardGeometryRotationAnchor(
+    val x: Float,
+    val y: Float,
+) {
+    companion object {
+        val Center = BoardGeometryRotationAnchor(0.5f, 0.5f)
+    }
+}
+
 data class NormalizedFrame(
     val x: Float,
     val y: Float,
@@ -51,7 +157,16 @@ data class BoardPresentation(
     val assetPath: String,
     val aspectRatio: Float,
     val isDefault: Boolean,
-)
+    val sourcePresentationId: String? = null,
+    val isInverted: Boolean = false,
+    val rotationDegrees: Float? = null,
+    val geometryRotationAnchor: BoardGeometryRotationAnchor? = null,
+    val cordRig: BoardCordRig? = null,
+    val availableHoldIds: List<String>? = null,
+) {
+    val resolvedRotationDegrees: Float
+        get() = rotationDegrees ?: if (isInverted) 180f else 0f
+}
 
 data class Board(
     val id: String,
@@ -63,7 +178,55 @@ data class Board(
     val presentations: List<BoardPresentation>,
     val holds: List<BoardHold>,
     val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
-)
+    val packageName: String = id,
+) {
+    val defaultPresentation: BoardPresentation?
+        get() = presentations.firstOrNull { it.isDefault } ?: presentations.firstOrNull()
+
+    fun presentation(id: String?): BoardPresentation? =
+        presentations.firstOrNull { it.id == id }
+
+    fun canonicalPresentation(presentation: BoardPresentation): BoardPresentation? =
+        presentation(presentation.sourcePresentationId ?: presentation.id)
+
+    fun resolvedCordRig(presentation: BoardPresentation): BoardCordRig? =
+        canonicalPresentation(presentation)?.cordRig
+
+    fun artworkPresentation(presentation: BoardPresentation): BoardPresentation? =
+        if (resolvedCordRig(presentation) == null && presentation.rotationDegrees == null) {
+            presentation
+        } else {
+            canonicalPresentation(presentation)
+        }
+
+    fun holdPresentationId(presentation: BoardPresentation): String =
+        presentation.sourcePresentationId ?: presentation.id
+
+    fun effectiveHolds(presentation: BoardPresentation): List<BoardHold> {
+        val canonicalPresentationId = holdPresentationId(presentation)
+        val availableHoldIds = presentation.availableHoldIds?.toSet()
+        return holds.filter { hold ->
+            hold.presentationId == canonicalPresentationId &&
+                (availableHoldIds == null || hold.id in availableHoldIds)
+        }
+    }
+
+    fun presentationContaining(
+        holdIds: Set<String>,
+        preferredPresentationId: String? = null,
+    ): BoardPresentation? {
+        val candidates = buildList {
+            presentation(preferredPresentationId)?.let(::add)
+            defaultPresentation?.let(::add)
+            addAll(presentations)
+        }.distinctBy { it.id }
+
+        return candidates.firstOrNull { candidate ->
+            val availableIds = effectiveHolds(candidate).mapTo(mutableSetOf()) { it.id }
+            availableIds.containsAll(holdIds)
+        }
+    }
+}
 
 internal class ContentDecodingException(message: String) : IllegalArgumentException(message)
 

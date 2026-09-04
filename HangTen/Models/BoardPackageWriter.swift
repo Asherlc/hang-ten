@@ -187,7 +187,13 @@ struct BoardEditablePresentation: Equatable, Decodable {
     /// An alternate rendering of a canonical presentation, such as an
     /// upside-down mounting. Holds remain owned by the canonical source.
     var sourcePresentationID: String?
+    var availableHoldIDs: [String]?
     var isInverted: Bool
+    var rotationDegrees: Double?
+    var geometryRotationAnchor: BoardGeometryRotationAnchor?
+    var cordRig: BoardCordRig?
+
+    fileprivate var declaresIsInverted: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -196,7 +202,11 @@ struct BoardEditablePresentation: Equatable, Decodable {
         case aspectRatio
         case isDefault = "default"
         case sourcePresentationID
+        case availableHoldIDs
         case isInverted
+        case rotationDegrees
+        case geometryRotationAnchor
+        case cordRig
     }
 
     init(
@@ -206,7 +216,11 @@ struct BoardEditablePresentation: Equatable, Decodable {
         aspectRatio: Double,
         isDefault: Bool,
         sourcePresentationID: String? = nil,
-        isInverted: Bool = false
+        availableHoldIDs: [String]? = nil,
+        isInverted: Bool = false,
+        rotationDegrees: Double? = nil,
+        geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
+        cordRig: BoardCordRig? = nil
     ) {
         self.id = id
         self.name = name
@@ -214,13 +228,19 @@ struct BoardEditablePresentation: Equatable, Decodable {
         self.aspectRatio = aspectRatio
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
+        self.availableHoldIDs = availableHoldIDs
         self.isInverted = isInverted
+        self.rotationDegrees = rotationDegrees
+        self.geometryRotationAnchor = geometryRotationAnchor
+        self.cordRig = cordRig
+        self.declaresIsInverted = isInverted
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted"
+            "sourcePresentationID", "availableHoldIDs", "isInverted", "rotationDegrees",
+            "geometryRotationAnchor", "cordRig"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -232,7 +252,220 @@ struct BoardEditablePresentation: Equatable, Decodable {
             String.self,
             forKey: .sourcePresentationID
         )
+        availableHoldIDs = container.contains(.availableHoldIDs)
+            ? try container.decode([String].self, forKey: .availableHoldIDs)
+            : nil
+        declaresIsInverted = container.contains(.isInverted)
         isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
+        rotationDegrees = try container.decodeIfPresent(
+            Double.self,
+            forKey: .rotationDegrees
+        )
+        geometryRotationAnchor = container.contains(.geometryRotationAnchor)
+            ? try container.decode(
+                BoardEditableGeometryRotationAnchorDocument.self,
+                forKey: .geometryRotationAnchor
+            ).rotationAnchor
+            : nil
+        cordRig = container.contains(.cordRig)
+            ? try container.decode(
+                BoardEditableCordRigDocument.self,
+                forKey: .cordRig
+            ).cordRig
+            : nil
+    }
+
+    var resolvedRotationDegrees: Double {
+        rotationDegrees ?? (isInverted ? 180 : 0)
+    }
+}
+
+private struct BoardEditableCordPointDocument: Decodable {
+    let x: Double
+    let y: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["x", "y"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+    }
+
+    var cordPoint: BoardCordPoint {
+        BoardCordPoint(x: CGFloat(x), y: CGFloat(y))
+    }
+}
+
+private struct BoardEditableCordSizeDocument: Decodable {
+    let width: Double
+    let height: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case width
+        case height
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["width", "height"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        width = try container.decode(Double.self, forKey: .width)
+        height = try container.decode(Double.self, forKey: .height)
+    }
+
+    var cordSize: BoardCordSize {
+        BoardCordSize(width: CGFloat(width), height: CGFloat(height))
+    }
+}
+
+private struct BoardEditableCordRectDocument: Decodable {
+    let x: Double
+    let y: Double
+    let width: Double
+    let height: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+        case width
+        case height
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["x", "y", "width", "height"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+        width = try container.decode(Double.self, forKey: .width)
+        height = try container.decode(Double.self, forKey: .height)
+    }
+
+    var cordRect: BoardCordRect {
+        BoardCordRect(
+            x: CGFloat(x),
+            y: CGFloat(y),
+            width: CGFloat(width),
+            height: CGFloat(height)
+        )
+    }
+}
+
+private struct BoardEditableCordRigDocument: Decodable {
+    let cordRig: BoardCordRig
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "directTwoAnchor":
+            cordRig = .directTwoAnchor(
+                try BoardEditableDirectTwoAnchorCordRigDocument(from: decoder).rig
+            )
+        case "routed":
+            cordRig = .routed(try BoardRoutedCordRigDocument(from: decoder).rig)
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+    }
+}
+
+private struct BoardEditableDirectTwoAnchorCordRigDocument: Decodable {
+    let sceneSize: BoardEditableCordSizeDocument
+    let sourceFrame: BoardEditableCordRectDocument
+    let innerFaceFrame: BoardEditableCordRectDocument
+    let attachmentPoints: [BoardEditableCordPointDocument]
+    let pullPoint: BoardEditableCordPointDocument
+    let eyeletRadius: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case sceneSize
+        case sourceFrame
+        case innerFaceFrame
+        case attachmentPoints
+        case pullPoint
+        case eyeletRadius
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys([
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame",
+            "attachmentPoints", "pullPoint", "eyeletRadius",
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        guard type == "directTwoAnchor" else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+        sceneSize = try container.decode(
+            BoardEditableCordSizeDocument.self,
+            forKey: .sceneSize
+        )
+        sourceFrame = try container.decode(
+            BoardEditableCordRectDocument.self,
+            forKey: .sourceFrame
+        )
+        innerFaceFrame = try container.decode(
+            BoardEditableCordRectDocument.self,
+            forKey: .innerFaceFrame
+        )
+        attachmentPoints = try container.decode(
+            [BoardEditableCordPointDocument].self,
+            forKey: .attachmentPoints
+        )
+        pullPoint = try container.decode(
+            BoardEditableCordPointDocument.self,
+            forKey: .pullPoint
+        )
+        eyeletRadius = try container.decode(Double.self, forKey: .eyeletRadius)
+    }
+
+    var rig: BoardDirectTwoAnchorCordRig {
+        BoardDirectTwoAnchorCordRig(
+            sceneSize: sceneSize.cordSize,
+            sourceFrame: sourceFrame.cordRect,
+            innerFaceFrame: innerFaceFrame.cordRect,
+            attachmentPoints: attachmentPoints.map(\.cordPoint),
+            pullPoint: pullPoint.cordPoint,
+            eyeletRadius: CGFloat(eyeletRadius)
+        )
+    }
+}
+
+private struct BoardEditableGeometryRotationAnchorDocument: Decodable {
+    let x: Double
+    let y: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case x
+        case y
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["x", "y"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        x = try container.decode(Double.self, forKey: .x)
+        y = try container.decode(Double.self, forKey: .y)
+    }
+
+    var rotationAnchor: BoardGeometryRotationAnchor {
+        BoardGeometryRotationAnchor(x: x, y: y)
     }
 }
 
@@ -477,6 +710,8 @@ enum BoardPackageWriterError: Error, Equatable, LocalizedError {
 }
 
 enum BoardPackageWriter {
+    private static let presentationAspectRatioRelativeTolerance = 0.001
+
     static func data(for document: BoardEditableDocument) throws -> Data {
         try validate(document)
         return CanonicalJSONSerializer.data(canonicalValue(document))
@@ -524,8 +759,85 @@ enum BoardPackageWriter {
             guard presentation.aspectRatio.isFinite, presentation.aspectRatio > 0 else {
                 throw invalid("presentation \(presentation.id) aspect ratio must be positive", document)
             }
+            if let cordRig = presentation.cordRig {
+                guard presentation.sourcePresentationID == nil,
+                      presentation.resolvedRotationDegrees == 0 else {
+                    throw invalid(
+                        "presentation \(presentation.id).cordRig must be owned "
+                            + "by a canonical non-inverted presentation",
+                        document
+                    )
+                }
+                try validateCordRig(
+                    cordRig,
+                    presentation: presentation,
+                    in: document
+                )
+            }
+            if presentation.declaresIsInverted,
+               presentation.rotationDegrees != nil {
+                throw invalid(
+                    "presentation \(presentation.id) must not declare both isInverted and rotationDegrees",
+                    document
+                )
+            }
+            if let rotationDegrees = presentation.rotationDegrees {
+                guard rotationDegrees.isFinite,
+                      (0..<360).contains(rotationDegrees) else {
+                    throw invalid(
+                        "presentation \(presentation.id).rotationDegrees must be finite and normalized to [0, 360)",
+                        document
+                    )
+                }
+                guard presentation.sourcePresentationID != nil else {
+                    throw invalid(
+                        "presentation \(presentation.id).rotationDegrees requires sourcePresentationID",
+                        document
+                    )
+                }
+            }
+            if let anchor = presentation.geometryRotationAnchor {
+                guard anchor.hasFiniteNormalizedCoordinates else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryRotationAnchor must contain finite normalized coordinates",
+                        document
+                    )
+                }
+                guard presentation.sourcePresentationID != nil else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryRotationAnchor requires sourcePresentationID",
+                        document
+                    )
+                }
+                guard presentation.resolvedRotationDegrees != 0 else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryRotationAnchor requires isInverted true or nonzero rotationDegrees",
+                        document
+                    )
+                }
+            }
             if presentation.isDefault {
                 defaultPresentationCount += 1
+            }
+            if let availableHoldIDs = presentation.availableHoldIDs {
+                guard !availableHoldIDs.isEmpty else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs must not be empty",
+                        document
+                    )
+                }
+                guard Set(availableHoldIDs).count == availableHoldIDs.count else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs must be unique",
+                        document
+                    )
+                }
+                guard availableHoldIDs.allSatisfy(\.isEditorBoardIdentifier) else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs must be identifier-shaped",
+                        document
+                    )
+                }
             }
         }
         guard defaultPresentationCount == 1 else {
@@ -543,6 +855,49 @@ enum BoardPackageWriter {
                     throw invalid(
                         "presentation \(presentation.id) must reference a canonical presentation",
                         document
+                    )
+                }
+                guard BoardAliasGeometryValidation.aspectRatiosMatch(
+                    presentation.aspectRatio,
+                    sourcePresentation.aspectRatio
+                ) else {
+                    throw invalid(
+                        "presentation \(presentation.id).aspectRatio must match source presentation aspectRatio",
+                        document
+                    )
+                }
+                if let rotationDegrees = presentation.rotationDegrees {
+                    guard presentation.assetPath == sourcePresentation.assetPath else {
+                        throw invalid(
+                            "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation",
+                            document
+                        )
+                    }
+                    guard rotationDegrees == 0 || rotationDegrees == 180
+                            || sourcePresentation.cordRig != nil else {
+                        throw invalid(
+                            "presentation \(presentation.id) non-180 rotation requires a canonical cordRig to prevent artwork clipping",
+                            document
+                        )
+                    }
+                }
+            }
+            let resolvedCordRig = presentation.sourcePresentationID.flatMap {
+                presentationsByID[$0]?.cordRig
+            } ?? presentation.cordRig
+            if let resolvedCordRig {
+                switch resolvedCordRig {
+                case .directTwoAnchor(let rig):
+                    try validateCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        in: document
+                    )
+                case .routed(let rig):
+                    try validateRoutedCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        in: document
                     )
                 }
             }
@@ -669,6 +1024,25 @@ enum BoardPackageWriter {
         }
         try validateEquipmentObjectOwnership(in: document)
         let holdsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
+        for presentation in document.presentations {
+            guard let availableHoldIDs = presentation.availableHoldIDs else { continue }
+            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+            for holdID in availableHoldIDs {
+                guard let hold = holdsByID[holdID] else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs references unknown hold \(holdID)",
+                        document
+                    )
+                }
+                guard hold.presentationID == canonicalPresentationID else {
+                    throw invalid(
+                        "presentation \(presentation.id).availableHoldIDs hold \(holdID) "
+                            + "must belong to canonical presentation \(canonicalPresentationID)",
+                        document
+                    )
+                }
+            }
+        }
         for hold in document.holds where hold.kind == .gaston {
             let pairedHoldID = hold.pairedHoldID!
             guard pairedHoldID != hold.id,
@@ -679,6 +1053,227 @@ enum BoardPackageWriter {
                   pairedHold.pairedHoldID == hold.id else {
                 throw invalid("gaston hold \(hold.id) must have a reciprocal gaston pair", document)
             }
+        }
+        try validateAliasProjections(in: document)
+    }
+
+    private static func validateCordRig(
+        _ cordRig: BoardCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let sceneSizeIsValid = cordRig.sceneSize.width.isFinite
+            && cordRig.sceneSize.height.isFinite
+            && cordRig.sceneSize.width > 0
+            && cordRig.sceneSize.height > 0
+        let sourceFrameIsValid = cordRig.sourceFrame.x.isFinite
+            && cordRig.sourceFrame.y.isFinite
+            && cordRig.sourceFrame.width.isFinite
+            && cordRig.sourceFrame.height.isFinite
+            && cordRig.sourceFrame.width > 0
+            && cordRig.sourceFrame.height > 0
+        let innerFaceFrameIsValid = cordRig.innerFaceFrame.x.isFinite
+            && cordRig.innerFaceFrame.y.isFinite
+            && cordRig.innerFaceFrame.width.isFinite
+            && cordRig.innerFaceFrame.height.isFinite
+            && cordRig.innerFaceFrame.width > 0
+            && cordRig.innerFaceFrame.height > 0
+        guard sceneSizeIsValid, sourceFrameIsValid, innerFaceFrameIsValid else {
+            throw invalid(
+                "presentation \(presentation.id).cordRig must contain finite positive sizes",
+                document
+            )
+        }
+        if case .directTwoAnchor(let rig) = cordRig {
+            guard rig.attachmentPoints.count == 2,
+                  rig.attachmentPoints.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+                  rig.attachmentPoints[0] != rig.attachmentPoints[1] else {
+                throw invalid(
+                    "presentation \(presentation.id).cordRig must contain two distinct finite attachment points",
+                    document
+                )
+            }
+            guard rig.pullPoint.x.isFinite,
+                  rig.pullPoint.y.isFinite,
+                  rig.eyeletRadius.isFinite,
+                  rig.eyeletRadius > 0 else {
+                throw invalid(
+                    "presentation \(presentation.id).cordRig pull point must be finite "
+                        + "and eyelet radius must be finite and positive",
+                    document
+                )
+            }
+        }
+        if case .routed(let rig) = cordRig,
+           let reason = BoardRoutedCordRigValidation.failureReason(for: rig) {
+            throw invalid(
+                "presentation \(presentation.id).\(reason)",
+                document
+            )
+        }
+        let sceneAspectRatio = Double(cordRig.sceneSize.width / cordRig.sceneSize.height)
+        let relativeError = abs(presentation.aspectRatio - sceneAspectRatio) / sceneAspectRatio
+        guard relativeError <= presentationAspectRatioRelativeTolerance else {
+            throw invalid(
+                "presentation \(presentation.id).aspectRatio must match cordRig.sceneSize within 0.1%",
+                document
+            )
+        }
+    }
+
+    private static func validateCordPresentation(
+        _ rig: BoardDirectTwoAnchorCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let failure = BoardCordRigPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+        )
+        switch failure {
+        case .drawingOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) cord drawing must remain inside sceneSize",
+                document
+            )
+        case .pullExitsNotAboveAttachments:
+            throw invalid(
+                "presentation \(presentation.id) cord pull exits must remain above both attachment points",
+                document
+            )
+        case nil:
+            return
+        }
+    }
+
+    private static func validateRoutedCordPresentation(
+        _ rig: BoardRoutedCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let failure = BoardRoutedCordPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+        )
+        switch failure {
+        case .unresolvedGeometry:
+            throw invalid(
+                "presentation \(presentation.id) routed cord geometry could not be resolved",
+                document
+            )
+        case .centerlineOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) routed cord centerline geometry "
+                    + "must remain inside sceneSize with the style margin",
+                document
+            )
+        case .facePatchOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) routed facePatch geometry "
+                    + "must remain inside sceneSize",
+                document
+            )
+        case .radialLipOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) routed radialLip circle "
+                    + "must remain inside sceneSize",
+                document
+            )
+        case .bodyNotBelowWorld(let bodyPortID, let worldPortID):
+            throw invalid(
+                "presentation \(presentation.id) routed body port \(bodyPortID) "
+                    + "must be strictly below world port \(worldPortID)",
+                document
+            )
+        case nil:
+            return
+        }
+    }
+
+    private static func validateAliasProjections(in document: BoardEditableDocument) throws {
+        let presentationsByID = Dictionary(
+            uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
+        )
+        for presentation in document.presentations where presentation.resolvedRotationDegrees != 0 {
+            guard let sourcePresentationID = presentation.sourcePresentationID else {
+                continue
+            }
+            let anchor = presentation.geometryRotationAnchor ?? .center
+            let resolvedCordRig = presentationsByID[sourcePresentationID]?.cordRig
+            let availableHoldIDs = presentation.availableHoldIDs.map(Set.init)
+            for hold in document.holds where hold.presentationID == sourcePresentationID {
+                if let availableHoldIDs, !availableHoldIDs.contains(hold.id) { continue }
+                for piece in hold.geometry {
+                    let frame = piece.frame
+                    let isInsideCanvas: Bool
+                    if let rig = resolvedCordRig {
+                        isInsideCanvas = riggedAliasFrameIsInsideCanvas(
+                            frame,
+                            rig: rig,
+                            anchor: anchor,
+                            rotationDegrees: presentation.resolvedRotationDegrees
+                        )
+                    } else {
+                        isInsideCanvas = BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
+                            x: frame.x,
+                            y: frame.y,
+                            width: frame.width,
+                            height: frame.height,
+                            anchor: anchor,
+                            rotationDegrees: presentation.resolvedRotationDegrees
+                        )
+                    }
+                    guard isInsideCanvas else {
+                        throw invalid(
+                            "presentation \(presentation.id) projects source hold "
+                                + "geometry outside the normalized canvas",
+                            document
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private static func riggedAliasFrameIsInsideCanvas(
+        _ frame: BoardPackageFrameDocument,
+        rig: BoardCordRig,
+        anchor: BoardGeometryRotationAnchor,
+        rotationDegrees: Double
+    ) -> Bool {
+        let sceneRect = CGRect(origin: .zero, size: rig.sceneSize.cgSize)
+        let faceRect = CGRect(
+            x: rig.sourceFrame.x + rig.innerFaceFrame.x,
+            y: rig.sourceFrame.y + rig.innerFaceFrame.y,
+            width: rig.innerFaceFrame.width,
+            height: rig.innerFaceFrame.height
+        )
+        let transform = BoardPresentationGeometryProjection(
+            rotationDegrees: CGFloat(rotationDegrees),
+            rotationAnchor: anchor
+        ).affineTransform(in: sceneRect)
+        let corners = [
+            CGPoint(x: CGFloat(frame.x), y: CGFloat(frame.y)),
+            CGPoint(x: CGFloat(frame.x + frame.width), y: CGFloat(frame.y)),
+            CGPoint(x: CGFloat(frame.x), y: CGFloat(frame.y + frame.height)),
+            CGPoint(
+                x: CGFloat(frame.x + frame.width),
+                y: CGFloat(frame.y + frame.height)
+            ),
+        ].map { normalizedPoint in
+            CGPoint(
+                x: faceRect.minX + faceRect.width * normalizedPoint.x,
+                y: faceRect.minY + faceRect.height * normalizedPoint.y
+            ).applying(transform)
+        }
+        let tolerance = max(sceneRect.width, sceneRect.height) * 1e-12
+        return corners.allSatisfy { point in
+            point.x >= sceneRect.minX - tolerance
+                && point.y >= sceneRect.minY - tolerance
+                && point.x <= sceneRect.maxX + tolerance
+                && point.y <= sceneRect.maxY + tolerance
         }
     }
 
@@ -893,10 +1488,186 @@ enum BoardPackageWriter {
         if let sourcePresentationID = presentation.sourcePresentationID {
             entries.append(("sourcePresentationID", .string(sourcePresentationID)))
         }
+        if let availableHoldIDs = presentation.availableHoldIDs {
+            entries.append((
+                "availableHoldIDs",
+                .array(availableHoldIDs.map(CanonicalJSONValue.string))
+            ))
+        }
         if presentation.isInverted {
             entries.append(("isInverted", .bool(true)))
         }
+        if let rotationDegrees = presentation.rotationDegrees {
+            entries.append(("rotationDegrees", .double(rotationDegrees)))
+        }
+        if let anchor = presentation.geometryRotationAnchor {
+            entries.append(("geometryRotationAnchor", .object([
+                ("x", .double(anchor.x)),
+                ("y", .double(anchor.y)),
+            ])))
+        }
+        if let cordRig = presentation.cordRig {
+            entries.append(("cordRig", canonicalCordRigValue(cordRig)))
+        }
         return .object(entries)
+    }
+
+    private static func canonicalCordRigValue(
+        _ cordRig: BoardCordRig
+    ) -> CanonicalJSONValue {
+        switch cordRig {
+        case .directTwoAnchor(let rig):
+            return .object([
+                ("type", .string("directTwoAnchor")),
+                ("sceneSize", canonicalCordSizeValue(rig.sceneSize)),
+                ("sourceFrame", canonicalCordRectValue(rig.sourceFrame)),
+                ("innerFaceFrame", canonicalCordRectValue(rig.innerFaceFrame)),
+                ("attachmentPoints", .array(rig.attachmentPoints.map { point in
+                    canonicalCordPointObjectValue(point)
+                })),
+                ("pullPoint", canonicalCordPointObjectValue(rig.pullPoint)),
+                ("eyeletRadius", .double(Double(rig.eyeletRadius))),
+            ])
+        case .routed(let rig):
+            return .object([
+                ("type", .string("routed")),
+                ("sceneSize", canonicalCordSizeValue(rig.sceneSize)),
+                ("sourceFrame", canonicalCordRectValue(rig.sourceFrame)),
+                ("innerFaceFrame", canonicalCordRectValue(rig.innerFaceFrame)),
+                ("style", .object([
+                    ("diameter", .double(Double(rig.style.diameter))),
+                    ("outlineColor", .string(rig.style.outlineColor)),
+                    ("baseColor", .string(rig.style.baseColor)),
+                    ("braidColors", .array(rig.style.braidColors.map {
+                        .string($0)
+                    })),
+                ])),
+                ("ports", .array(rig.ports.map { port in
+                    .object([
+                        ("id", .string(port.id)),
+                        ("space", .string(port.space.rawValue)),
+                        ("point", canonicalCordPointObjectValue(port.point)),
+                    ])
+                })),
+                ("tensionGroups", .array(rig.tensionGroups.map { group in
+                    .object([
+                        ("id", .string(group.id)),
+                        ("bodyPortIDs", .array(group.bodyPortIDs.map {
+                            .string($0)
+                        })),
+                        ("worldPortIDs", .array(group.worldPortIDs.map {
+                            .string($0)
+                        })),
+                        ("pairing", .string(group.pairing.rawValue)),
+                        ("layer", .string(group.layer.rawValue)),
+                    ])
+                })),
+                ("paths", .array(rig.paths.map { path in
+                    .object([
+                        ("id", .string(path.id)),
+                        ("space", .string(path.space.rawValue)),
+                        ("layer", .string(path.layer.rawValue)),
+                        ("commands", .array(path.commands.map(
+                            canonicalRoutedCordCommandValue
+                        ))),
+                    ])
+                })),
+                ("occlusions", .array(rig.occlusions.map(
+                    canonicalRoutedCordOcclusionValue
+                ))),
+            ])
+        }
+    }
+
+    private static func canonicalCordSizeValue(
+        _ size: BoardCordSize
+    ) -> CanonicalJSONValue {
+        .object([
+            ("width", .double(Double(size.width))),
+            ("height", .double(Double(size.height))),
+        ])
+    }
+
+    private static func canonicalCordRectValue(
+        _ rect: BoardCordRect
+    ) -> CanonicalJSONValue {
+        .object([
+            ("x", .double(Double(rect.x))),
+            ("y", .double(Double(rect.y))),
+            ("width", .double(Double(rect.width))),
+            ("height", .double(Double(rect.height))),
+        ])
+    }
+
+    private static func canonicalCordPointObjectValue(
+        _ point: BoardCordPoint
+    ) -> CanonicalJSONValue {
+        .object([
+            ("x", .double(Double(point.x))),
+            ("y", .double(Double(point.y))),
+        ])
+    }
+
+    private static func canonicalCordPointArrayValue(
+        _ point: BoardCordPoint
+    ) -> CanonicalJSONValue {
+        .array([
+            .double(Double(point.x)),
+            .double(Double(point.y)),
+        ])
+    }
+
+    private static func canonicalRoutedCordCommandValue(
+        _ command: BoardRoutedCordPathCommand
+    ) -> CanonicalJSONValue {
+        switch command {
+        case .move(let to):
+            .object([
+                ("command", .string("move")),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .line(let to):
+            .object([
+                ("command", .string("line")),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .quad(let control, let to):
+            .object([
+                ("command", .string("quad")),
+                ("control", canonicalCordPointArrayValue(control)),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .curve(let control1, let control2, let to):
+            .object([
+                ("command", .string("curve")),
+                ("control1", canonicalCordPointArrayValue(control1)),
+                ("control2", canonicalCordPointArrayValue(control2)),
+                ("to", canonicalCordPointArrayValue(to)),
+            ])
+        case .close:
+            .object([("command", .string("close"))])
+        }
+    }
+
+    private static func canonicalRoutedCordOcclusionValue(
+        _ occlusion: BoardRoutedCordOcclusion
+    ) -> CanonicalJSONValue {
+        switch occlusion {
+        case .radialLip(let lip):
+            .object([
+                ("type", .string("radialLip")),
+                ("bodyPortID", .string(lip.bodyPortID)),
+                ("radius", .double(Double(lip.radius))),
+                ("chordOffset", .double(Double(lip.chordOffset))),
+            ])
+        case .facePatch(let patch):
+            .object([
+                ("type", .string("facePatch")),
+                ("commands", .array(patch.commands.map(
+                    canonicalRoutedCordCommandValue
+                ))),
+            ])
+        }
     }
 
     private static func canonicalPositionValue(_ position: BoardPosition) -> CanonicalJSONValue {

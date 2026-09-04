@@ -19,6 +19,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
+  return Object.keys(value).length === keys.length
+    && Object.keys(value).every((key) => keys.includes(key));
+}
+
+function isIdentifier(value: unknown): value is string {
+  return typeof value === "string"
+    && /^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$/.test(value);
+}
+
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
@@ -33,6 +43,226 @@ function isFingerCapacity(value: unknown): value is number {
 
 function isPositiveFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function isGeometryRotationAnchor(value: unknown): value is { x: number; y: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 2
+    && Object.hasOwn(value, "x")
+    && Object.hasOwn(value, "y")
+    && typeof value.x === "number"
+    && typeof value.y === "number"
+    && Number.isFinite(value.x)
+    && Number.isFinite(value.y)
+    && value.x >= 0
+    && value.x <= 1
+    && value.y >= 0
+    && value.y <= 1;
+}
+
+function isFinitePoint(value: unknown): value is { x: number; y: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 2
+    && typeof value.x === "number"
+    && Number.isFinite(value.x)
+    && typeof value.y === "number"
+    && Number.isFinite(value.y);
+}
+
+function isPositiveSize(value: unknown): value is { width: number; height: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 2
+    && isPositiveFiniteNumber(value.width)
+    && isPositiveFiniteNumber(value.height);
+}
+
+function isCordRect(value: unknown): value is { x: number; y: number; width: number; height: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 4
+    && typeof value.x === "number"
+    && Number.isFinite(value.x)
+    && typeof value.y === "number"
+    && Number.isFinite(value.y)
+    && isPositiveFiniteNumber(value.width)
+    && isPositiveFiniteNumber(value.height);
+}
+
+function isDirectTwoAnchorCordRig(value: unknown): boolean {
+  if (!isRecord(value) || value.type !== "directTwoAnchor") return false;
+  const allowedKeys = new Set([
+    "type",
+    "sceneSize",
+    "sourceFrame",
+    "innerFaceFrame",
+    "attachmentPoints",
+    "pullPoint",
+    "eyeletRadius",
+  ]);
+  if (!Object.keys(value).every((key) => allowedKeys.has(key))
+    || Object.keys(value).length !== allowedKeys.size
+    || !isPositiveSize(value.sceneSize)
+    || !isCordRect(value.sourceFrame)
+    || !isCordRect(value.innerFaceFrame)
+    || !Array.isArray(value.attachmentPoints)
+    || value.attachmentPoints.length !== 2
+    || !value.attachmentPoints.every(isFinitePoint)
+    || !isFinitePoint(value.pullPoint)
+    || !isPositiveFiniteNumber(value.eyeletRadius)) return false;
+  const [first, second] = value.attachmentPoints;
+  if (!first || !second || (first.x === second.x && first.y === second.y)) return false;
+  const pullX = value.sourceFrame.x + value.pullPoint.x;
+  const pullY = value.sourceFrame.y + value.pullPoint.y;
+  return pullX >= 0
+    && pullX <= value.sceneSize.width
+    && pullY >= 0
+    && pullY <= value.sceneSize.height;
+}
+
+function isHexColor(value: unknown): value is string {
+  return typeof value === "string" && /^#[0-9A-Fa-f]{6}$/.test(value);
+}
+
+function isFinitePair(value: unknown): value is [number, number] {
+  return Array.isArray(value)
+    && value.length === 2
+    && value.every((coordinate) => typeof coordinate === "number" && Number.isFinite(coordinate));
+}
+
+function isRoutedPathCommands(value: unknown, requireClosed: boolean): boolean {
+  if (!Array.isArray(value) || value.length < 2) return false;
+  let moveCount = 0;
+  let drawingCommandCount = 0;
+  let closeIndex = -1;
+  let closeCount = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    const command = value[index];
+    if (!isRecord(command) || typeof command.command !== "string") return false;
+    switch (command.command) {
+      case "move":
+      case "line":
+        if (!hasExactKeys(command, ["command", "to"]) || !isFinitePair(command.to)) return false;
+        if (command.command === "move") moveCount += 1;
+        else drawingCommandCount += 1;
+        break;
+      case "quad":
+        if (!hasExactKeys(command, ["command", "control", "to"])
+          || !isFinitePair(command.control)
+          || !isFinitePair(command.to)) return false;
+        drawingCommandCount += 1;
+        break;
+      case "curve":
+        if (!hasExactKeys(command, ["command", "control1", "control2", "to"])
+          || !isFinitePair(command.control1)
+          || !isFinitePair(command.control2)
+          || !isFinitePair(command.to)) return false;
+        drawingCommandCount += 1;
+        break;
+      case "close":
+        if (!hasExactKeys(command, ["command"])) return false;
+        closeIndex = index;
+        closeCount += 1;
+        break;
+      default:
+        return false;
+    }
+  }
+  if (!isRecord(value[0]) || value[0].command !== "move" || moveCount !== 1) return false;
+  if (drawingCommandCount === 0) return false;
+  if (closeCount > 1 || (closeIndex !== -1 && closeIndex !== value.length - 1)) return false;
+  return !requireClosed || closeIndex === value.length - 1;
+}
+
+function isRoutedCordRig(value: unknown): boolean {
+  if (!isRecord(value) || value.type !== "routed" || !hasExactKeys(value, [
+    "type",
+    "sceneSize",
+    "sourceFrame",
+    "innerFaceFrame",
+    "style",
+    "ports",
+    "tensionGroups",
+    "paths",
+    "occlusions",
+  ])) return false;
+  if (!isPositiveSize(value.sceneSize)
+    || !isCordRect(value.sourceFrame)
+    || !isCordRect(value.innerFaceFrame)
+    || !isRecord(value.style)
+    || !hasExactKeys(value.style, ["diameter", "outlineColor", "baseColor", "braidColors"])
+    || !isPositiveFiniteNumber(value.style.diameter)
+    || !isHexColor(value.style.outlineColor)
+    || !isHexColor(value.style.baseColor)
+    || !Array.isArray(value.style.braidColors)
+    || value.style.braidColors.length !== 2
+    || !value.style.braidColors.every(isHexColor)) return false;
+  if (!Array.isArray(value.ports) || value.ports.length === 0) return false;
+  const ports = new Map<string, "body" | "world">();
+  for (const port of value.ports) {
+    if (!isRecord(port)
+      || !hasExactKeys(port, ["id", "space", "point"])
+      || !isIdentifier(port.id)
+      || (port.space !== "body" && port.space !== "world")
+      || !isFinitePoint(port.point)
+      || ports.has(port.id)) return false;
+    ports.set(port.id, port.space);
+  }
+  if (!Array.isArray(value.tensionGroups) || value.tensionGroups.length === 0) return false;
+  const tensionGroupIDs = new Set<string>();
+  for (const group of value.tensionGroups) {
+    if (!isRecord(group)
+      || !hasExactKeys(group, ["id", "bodyPortIDs", "worldPortIDs", "pairing", "layer"])
+      || !isIdentifier(group.id)
+      || tensionGroupIDs.has(group.id)
+      || !isStringArray(group.bodyPortIDs)
+      || group.bodyPortIDs.length === 0
+      || new Set(group.bodyPortIDs).size !== group.bodyPortIDs.length
+      || !group.bodyPortIDs.every(isIdentifier)
+      || !isStringArray(group.worldPortIDs)
+      || group.worldPortIDs.length === 0
+      || new Set(group.worldPortIDs).size !== group.worldPortIDs.length
+      || !group.worldPortIDs.every(isIdentifier)
+      || group.bodyPortIDs.length !== group.worldPortIDs.length
+      || !group.bodyPortIDs.every((id) => ports.get(id) === "body")
+      || !group.worldPortIDs.every((id) => ports.get(id) === "world")
+      || (group.pairing !== "declared" && group.pairing !== "screenOrder")
+      || (group.layer !== "behindFace" && group.layer !== "aboveFace" && group.layer !== "overpass")) {
+      return false;
+    }
+    tensionGroupIDs.add(group.id);
+  }
+  if (!Array.isArray(value.paths)) return false;
+  const pathIDs = new Set<string>();
+  for (const path of value.paths) {
+    if (!isRecord(path)
+      || !hasExactKeys(path, ["id", "space", "layer", "commands"])
+      || !isIdentifier(path.id)
+      || pathIDs.has(path.id)
+      || (path.space !== "body" && path.space !== "world")
+      || (path.layer !== "behindFace" && path.layer !== "aboveFace" && path.layer !== "overpass")
+      || !isRoutedPathCommands(path.commands, false)) return false;
+    pathIDs.add(path.id);
+  }
+  if (!Array.isArray(value.occlusions)) return false;
+  return value.occlusions.every((occlusion) => {
+    if (!isRecord(occlusion) || typeof occlusion.type !== "string") return false;
+    if (occlusion.type === "radialLip") {
+      return hasExactKeys(occlusion, ["type", "bodyPortID", "radius", "chordOffset"])
+        && isIdentifier(occlusion.bodyPortID)
+        && ports.get(occlusion.bodyPortID) === "body"
+        && isPositiveFiniteNumber(occlusion.radius)
+        && isPositiveFiniteNumber(occlusion.chordOffset)
+        && occlusion.chordOffset < occlusion.radius;
+    }
+    if (occlusion.type === "facePatch") {
+      return hasExactKeys(occlusion, ["type", "commands"])
+        && isRoutedPathCommands(occlusion.commands, true);
+    }
+    return false;
+  });
+}
+
+function isCordRig(value: unknown): boolean {
+  return isDirectTwoAnchorCordRig(value) || isRoutedCordRig(value);
 }
 
 function isSloperMetadata(value: unknown): boolean {
@@ -99,13 +329,49 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
 }
 
 function isBoardPresentation(value: unknown): boolean {
-  return isRecord(value)
+  if (!isRecord(value)) return false;
+  const allowedKeys = new Set([
+    "presentationID",
+    "displayName",
+    "imageUrl",
+    "holdIDs",
+    "default",
+    "sourcePresentationID",
+    "availableHoldIDs",
+    "isInverted",
+    "rotationDegrees",
+    "geometryRotationAnchor",
+    "cordRig",
+  ]);
+  return Object.keys(value).every((key) => allowedKeys.has(key))
     && typeof value.presentationID === "string"
     && typeof value.displayName === "string"
     && typeof value.imageUrl === "string"
     && (value.holdIDs === undefined || isStringArray(value.holdIDs))
     && typeof value.default === "boolean"
-    && isOptionalString(value.sourcePresentationID);
+    && isOptionalString(value.sourcePresentationID)
+    && (value.availableHoldIDs === undefined
+      || (isStringArray(value.availableHoldIDs)
+        && value.availableHoldIDs.length > 0
+        && new Set(value.availableHoldIDs).size === value.availableHoldIDs.length))
+    && (value.isInverted === undefined || value.isInverted === true)
+    && (value.rotationDegrees === undefined
+      || (typeof value.sourcePresentationID === "string"
+        && typeof value.rotationDegrees === "number"
+        && Number.isFinite(value.rotationDegrees)
+        && value.rotationDegrees >= 0
+        && value.rotationDegrees < 360))
+    && !(value.isInverted === true && value.rotationDegrees !== undefined)
+    && (value.cordRig === undefined
+      || (value.sourcePresentationID === undefined
+        && value.isInverted === undefined
+        && value.rotationDegrees === undefined
+        && isCordRig(value.cordRig)))
+    && (value.geometryRotationAnchor === undefined
+      || (typeof value.sourcePresentationID === "string"
+        && (value.isInverted === true
+          || (typeof value.rotationDegrees === "number" && value.rotationDegrees !== 0))
+        && isGeometryRotationAnchor(value.geometryRotationAnchor)));
 }
 
 function isBoardSummary(value: unknown): value is BoardSummary {

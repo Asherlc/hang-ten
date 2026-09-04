@@ -8,17 +8,22 @@ import {
   validateEditorDocument,
   validateEditorDocumentForSave,
 } from "../src/workbench-controller.ts";
+import { resolveCordRigPresentationGeometry } from "../src/cord-rig.ts";
 import { createWorkbenchClient } from "../src/workbench-client.ts";
 import { cloneEditorDocument } from "../src/editor-model.ts";
 import { postNativeDiagnostic } from "../src/native-bridge.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import type {
   Board,
+  BoardPresentation,
   BrowserRuntime,
   Dialogs,
+  DirectTwoAnchorCordRig,
   EditorDocument,
   LoadedBoard,
   PathEditor,
+  Point,
+  RoutedCordRig,
   WorkbenchClient,
   WorkbenchController,
   WorkbenchDependencies,
@@ -73,6 +78,113 @@ function boardFixture(overrides: Partial<Board> = {}): Board {
     document: editorDocument(),
     ...overrides,
   };
+}
+
+function routedRenderRig(overrides: Partial<RoutedCordRig> = {}): RoutedCordRig {
+  return {
+    type: "routed",
+    sceneSize: { width: 200, height: 200 },
+    sourceFrame: { x: 40, y: 40, width: 120, height: 120 },
+    innerFaceFrame: { x: 0, y: 0, width: 120, height: 120 },
+    style: {
+      diameter: 10,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 30, y: 90 } },
+      { id: "body-right", space: "body", point: { x: 90, y: 90 } },
+      { id: "world-left", space: "world", point: { x: 10, y: 10 } },
+      { id: "world-right", space: "world", point: { x: 110, y: 10 } },
+    ],
+    tensionGroups: [{
+      id: "main",
+      bodyPortIDs: ["body-left", "body-right"],
+      worldPortIDs: ["world-left", "world-right"],
+      pairing: "declared",
+      layer: "behindFace",
+    }],
+    paths: [
+      {
+        id: "world-tail",
+        space: "world",
+        layer: "behindFace",
+        commands: [
+          { command: "move", to: [15, 15] },
+          { command: "line", to: [25, 15] },
+        ],
+      },
+      {
+        id: "body-return",
+        space: "body",
+        layer: "aboveFace",
+        commands: [
+          { command: "move", to: [30, 90] },
+          { command: "quad", control: [60, 110], to: [90, 90] },
+        ],
+      },
+      {
+        id: "world-knot",
+        space: "world",
+        layer: "overpass",
+        commands: [
+          { command: "move", to: [45, 15] },
+          { command: "curve", control1: [50, 5], control2: [70, 5], to: [75, 15] },
+        ],
+      },
+    ],
+    occlusions: [
+      { type: "radialLip", bodyPortID: "body-left", radius: 6, chordOffset: 2 },
+      {
+        type: "facePatch",
+        commands: [
+          { command: "move", to: [80, 70] },
+          { command: "line", to: [100, 70] },
+          { command: "line", to: [100, 85] },
+          { command: "close" },
+        ],
+      },
+    ],
+    ...overrides,
+  };
+}
+
+function circularArcClipContains(
+  path: string,
+  center: { x: number; y: number },
+  point: { x: number; y: number },
+): boolean {
+  const tokens = path.split(" ");
+  assert.equal(tokens.length, 12, `unexpected circular-arc path: ${path}`);
+  assert.equal(tokens[0], "M");
+  assert.equal(tokens[3], "A");
+  assert.equal(tokens[6], "0");
+  assert.equal(tokens[11], "Z");
+  const start = { x: Number(tokens[1]), y: Number(tokens[2]) };
+  const radius = Number(tokens[4]);
+  assert.equal(Number(tokens[5]), radius);
+  const largeArc = tokens[7] === "1";
+  const positiveSweep = tokens[8] === "1";
+  const end = { x: Number(tokens[9]), y: Number(tokens[10]) };
+  const startAngle = Math.atan2(start.y - center.y, start.x - center.x);
+  const endAngle = Math.atan2(end.y - center.y, end.x - center.x);
+  const fullTurn = 2 * Math.PI;
+  let sweep = ((endAngle - startAngle) % fullTurn + fullTurn) % fullTurn;
+  if (!positiveSweep) sweep -= fullTurn;
+  if (largeArc && Math.abs(sweep) < Math.PI) sweep += positiveSweep ? fullTurn : -fullTurn;
+  if (!largeArc && Math.abs(sweep) > Math.PI) sweep += positiveSweep ? -fullTurn : fullTurn;
+  const arcMidpointAngle = startAngle + sweep / 2;
+  const arcMidpoint = {
+    x: center.x + radius * Math.cos(arcMidpointAngle),
+    y: center.y + radius * Math.sin(arcMidpointAngle),
+  };
+  const sideOfChord = (candidate: { x: number; y: number }): number => (
+    (end.x - start.x) * (candidate.y - start.y)
+      - (end.y - start.y) * (candidate.x - start.x)
+  );
+  return Math.hypot(point.x - center.x, point.y - center.y) <= radius
+    && sideOfChord(point) * sideOfChord(arcMidpoint) >= 0;
 }
 
 test("the browser client lists and opens direct boards", async () => {
@@ -152,6 +264,660 @@ test("the browser client requests and validates a selected presentation", async 
   assert.equal(board.document.presentationID, "back");
   assert.equal(board.document.regions[0]?.metadata?.presentationID, "back");
   assert.deepEqual(calls, ["/api/boards/compact?presentationID=back"]);
+});
+
+test("the browser client preserves valid inverted alias anchor metadata", async () => {
+  const alias: BoardPresentation = {
+    presentationID: "front-inverted",
+    displayName: "Front inverted",
+    imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+    default: false,
+    sourcePresentationID: "front",
+    availableHoldIDs: ["hold-1"],
+    isInverted: true,
+    geometryRotationAnchor: { x: 0.5, y: 0.68 },
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [
+        {
+          presentationID: "front",
+          displayName: "Front",
+          imageUrl: "/api/boards/compact/image?presentationID=front",
+          default: true,
+        },
+        alias,
+      ],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[1], alias);
+});
+
+test("the browser client rejects malformed available hold IDs", async (context) => {
+  const invalidValues: unknown[] = [null, [], ["hold-1", "hold-1"], [1]];
+
+  for (const availableHoldIDs of invalidValues) {
+    await context.test(JSON.stringify(availableHoldIDs), async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          presentations: [{
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+            availableHoldIDs,
+          } as unknown as BoardPresentation],
+        }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
+});
+
+test("the browser client preserves an explicit arbitrary alias rotation", async () => {
+  const alias: BoardPresentation = {
+    presentationID: "front-angled",
+    displayName: "Front angled",
+    imageUrl: "/api/boards/compact/image?presentationID=front-angled",
+    default: false,
+    sourcePresentationID: "front",
+    rotationDegrees: 135,
+    geometryRotationAnchor: { x: 0.5, y: 0.68 },
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({ presentations: [alias] }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[0], alias);
+});
+
+test("the browser client preserves a canonical direct-two-anchor cord rig", async () => {
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 400 },
+    sourceFrame: { x: 0, y: 200, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
+    pullPoint: { x: 50, y: 0 },
+    eyeletRadius: 2,
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: rig,
+      }],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(
+    (board.presentations?.[0] as unknown as { cordRig?: unknown })?.cordRig,
+    rig,
+  );
+});
+
+test("the browser client preserves a structurally valid canonical routed cord rig", async () => {
+  const rig: RoutedCordRig = {
+    type: "routed",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    style: {
+      diameter: 4,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 20, y: 50 } },
+      { id: "world-left", space: "world", point: { x: 20, y: 0 } },
+    ],
+    tensionGroups: [{
+      id: "main",
+      bodyPortIDs: ["body-left"],
+      worldPortIDs: ["world-left"],
+      pairing: "declared",
+      layer: "behindFace",
+    }],
+    paths: [{
+      id: "return",
+      space: "body",
+      layer: "aboveFace",
+      commands: [
+        { command: "move", to: [20, 50] },
+        { command: "quad", control: [50, 90], to: [80, 50] },
+      ],
+    }],
+    occlusions: [{
+      type: "radialLip",
+      bodyPortID: "body-left",
+      radius: 6,
+      chordOffset: 2,
+    }],
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: rig,
+      }],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[0]?.cordRig, rig);
+});
+
+test("the browser client rejects malformed routed cord structure", async (context) => {
+  const baseRig = {
+    type: "routed",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    style: {
+      diameter: 4,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 20, y: 50 } },
+      { id: "world-left", space: "world", point: { x: 20, y: 0 } },
+    ],
+    tensionGroups: [{
+      id: "main",
+      bodyPortIDs: ["body-left"],
+      worldPortIDs: ["world-left"],
+      pairing: "declared",
+      layer: "behindFace",
+    }],
+    paths: [],
+    occlusions: [],
+  };
+  const cases: Array<[string, (rig: Record<string, any>) => void]> = [
+    ["unknown key", (rig) => { rig.extra = true; }],
+    ["bad color", (rig) => { rig.style.baseColor = "blue"; }],
+    ["duplicate ports", (rig) => { rig.ports.push({ ...rig.ports[0] }); }],
+    ["wrong port space", (rig) => { rig.ports[0].space = "world"; }],
+    ["unequal cardinality", (rig) => { rig.tensionGroups[0].worldPortIDs = ["world-left", "world-left-2"]; }],
+    ["multiple closes", (rig) => {
+      rig.paths = [{
+        id: "bad-path",
+        space: "body",
+        layer: "aboveFace",
+        commands: [
+          { command: "move", to: [0, 0] },
+          { command: "close" },
+          { command: "close" },
+        ],
+      }];
+    }],
+    ["move and close path without a drawing segment", (rig) => {
+      rig.paths = [{
+        id: "bad-path",
+        space: "body",
+        layer: "aboveFace",
+        commands: [
+          { command: "move", to: [20, 50] },
+          { command: "close" },
+        ],
+      }];
+    }],
+    ["move and close face patch without a drawing segment", (rig) => {
+      rig.occlusions = [{
+        type: "facePatch",
+        commands: [
+          { command: "move", to: [20, 50] },
+          { command: "close" },
+        ],
+      }];
+    }],
+  ];
+
+  for (const [name, mutate] of cases) {
+    await context.test(name, async () => {
+      const rig = structuredClone(baseRig);
+      mutate(rig);
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          presentations: [{
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+            cordRig: rig,
+          } as unknown as BoardPresentation],
+        }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
+});
+
+test("routed rig geometry rotates body points clockwise while world points stay fixed", () => {
+  const document: EditorDocument = {
+    presentationID: "front-quarter-turn",
+    canvas: { width: 120, height: 120 },
+    regions: [],
+  };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front-quarter-turn",
+    presentations: [
+      {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: routedRenderRig(),
+      },
+      {
+        presentationID: "front-quarter-turn",
+        displayName: "Front quarter turn",
+        imageUrl: "/api/boards/compact/image?presentationID=front-quarter-turn",
+        default: false,
+        sourcePresentationID: "front",
+        rotationDegrees: 90,
+        geometryRotationAnchor: { x: 0.5, y: 0.5 },
+      },
+    ],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document) as unknown as {
+    type: "routed";
+    viewBox: { x: number; y: number; width: number; height: number };
+    rotationAnchor: Point;
+    layers: Record<"behindFace" | "aboveFace" | "overpass", Array<{
+      kind: "span" | "path";
+      id: string;
+      d: string;
+      bodyPortID?: string;
+      worldPortID?: string;
+    }>>;
+    occlusions: Array<{ type: "radialLip" | "facePatch"; d: string }>;
+  } | null;
+
+  assert.ok(geometry);
+  assert.equal(geometry.type, "routed");
+  assert.deepEqual(geometry.viewBox, { x: -40, y: -40, width: 200, height: 200 });
+  assert.deepEqual(geometry.rotationAnchor, { x: 60, y: 60 });
+  assert.deepEqual(geometry.layers.behindFace, [
+    {
+      kind: "span",
+      id: "main:0",
+      bodyPortID: "body-left",
+      worldPortID: "world-left",
+      d: "M 10 10 L 30 30",
+    },
+    {
+      kind: "span",
+      id: "main:1",
+      bodyPortID: "body-right",
+      worldPortID: "world-right",
+      d: "M 110 10 L 30 90",
+    },
+    { kind: "path", id: "world-tail", d: "M 15 15 L 25 15" },
+  ]);
+  assert.deepEqual(geometry.layers.aboveFace, [
+    { kind: "path", id: "body-return", d: "M 30 30 Q 10 60 30 90" },
+  ]);
+  assert.deepEqual(geometry.layers.overpass, [
+    { kind: "path", id: "world-knot", d: "M 45 15 C 50 5 70 5 75 15" },
+  ]);
+  assert.equal(geometry.occlusions[0]?.type, "radialLip");
+  assert.match(geometry.occlusions[0]?.d ?? "", /^M 32\.585786437627 24\.585786437627 A 6 6/);
+  assert.deepEqual(geometry.occlusions[1], {
+    type: "facePatch",
+    d: "M 50 80 L 50 100 L 35 100 Z",
+  });
+});
+
+test("routed screenOrder pairing stable-sorts transformed ports by x, y, then declaration index", () => {
+  const rig = routedRenderRig({
+    ports: [
+      { id: "body-second", space: "body", point: { x: 30, y: 100 } },
+      { id: "body-first", space: "body", point: { x: 30, y: 90 } },
+      { id: "world-second", space: "world", point: { x: 10, y: 10 } },
+      { id: "world-first", space: "world", point: { x: 10, y: 10 } },
+    ],
+    tensionGroups: [{
+      id: "ordered",
+      bodyPortIDs: ["body-second", "body-first"],
+      worldPortIDs: ["world-second", "world-first"],
+      pairing: "screenOrder",
+      layer: "behindFace",
+    }],
+    paths: [],
+    occlusions: [],
+  });
+  const document: EditorDocument = { canvas: { width: 120, height: 120 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document) as unknown as {
+    type: "routed";
+    layers: { behindFace: Array<{ bodyPortID?: string; worldPortID?: string }> };
+  } | null;
+
+  assert.ok(geometry);
+  assert.equal(geometry.type, "routed");
+  assert.deepEqual(
+    geometry.layers.behindFace.map(({ bodyPortID, worldPortID }) => ({ bodyPortID, worldPortID })),
+    [
+      { bodyPortID: "body-first", worldPortID: "world-second" },
+      { bodyPortID: "body-second", worldPortID: "world-first" },
+    ],
+  );
+});
+
+test("routed render layers join effectively coincident world endpoints at one apex", () => {
+  const rig = routedRenderRig({
+    ports: [
+      { id: "body-left", space: "body", point: { x: 30, y: 90 } },
+      { id: "body-right", space: "body", point: { x: 90, y: 90 } },
+      { id: "world-left", space: "world", point: { x: 60, y: 10 } },
+      { id: "world-right", space: "world", point: { x: 60.00000001, y: 10 } },
+    ],
+    paths: [],
+    occlusions: [],
+  });
+  const document: EditorDocument = { canvas: { width: 120, height: 120 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+  assert.ok(geometry);
+  if (geometry.type !== "routed") assert.fail("expected a routed rig");
+  assert.equal(geometry.layers.behindFace.length, 2, "pairing geometry remains lossless");
+  assert.deepEqual(geometry.renderLayers.behindFace, [{
+    kind: "span",
+    id: "main:apex:0",
+    d: "M 30 90 L 60.000000005 10 L 90 90",
+  }]);
+});
+
+test("the eyelet foreground keeps the board-side face above the incoming cord", () => {
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 64, y: 50 }],
+    pullPoint: { x: 42, y: 0 },
+    eyeletRadius: 10,
+  };
+  const document: EditorDocument = {
+    canvas: { width: 100, height: 100 },
+    regions: [],
+  };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+  assert.ok(geometry);
+  if (geometry.type !== "directTwoAnchor") assert.fail("expected a direct-two-anchor rig");
+  const strand = geometry.strands[0];
+  const path = geometry.eyeletForegroundCrescents[0];
+  assert.deepEqual(strand, { start: { x: 42, y: 0 }, end: { x: 20, y: 50 } });
+  assert.equal(circularArcClipContains(path, strand.end, { x: 20, y: 58 }), true);
+  assert.equal(circularArcClipContains(path, strand.end, { x: 20, y: 42 }), false);
+});
+
+test("a direct cord rig uses two taut legs meeting at one apex", () => {
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
+    pullPoint: { x: 50, y: 0 },
+    eyeletRadius: 10,
+  };
+  const document: EditorDocument = { canvas: { width: 100, height: 100 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+  assert.ok(geometry);
+  if (geometry.type !== "directTwoAnchor") assert.fail("expected a direct-two-anchor rig");
+  assert.deepEqual(geometry.strands.map((strand) => strand.start), [
+    { x: 50, y: 0 },
+    { x: 50, y: 0 },
+  ]);
+});
+
+test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {
+  const invalidPresentations: Array<{ name: string; presentation: unknown }> = [
+    {
+      name: "null anchor",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: null,
+      },
+    },
+    {
+      name: "missing anchor coordinate",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5 },
+      },
+    },
+    {
+      name: "unknown anchor key",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5, y: 0.68, z: 0 },
+      },
+    },
+    {
+      name: "coordinate outside the normalized canvas",
+      presentation: {
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5, y: 1.01 },
+      },
+    },
+    {
+      name: "anchor on a source presentation",
+      presentation: {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        isInverted: true,
+        geometryRotationAnchor: { x: 0.5, y: 0.68 },
+      },
+    },
+    {
+      name: "anchor on a non-inverted alias",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        geometryRotationAnchor: { x: 0.5, y: 0.68 },
+      },
+    },
+    {
+      name: "explicit false inversion flag",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: false,
+      },
+    },
+    {
+      name: "rotation on a source presentation",
+      presentation: {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        rotationDegrees: 90,
+      },
+    },
+    {
+      name: "rotation outside normalized range",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        rotationDegrees: 360,
+      },
+    },
+    {
+      name: "legacy and explicit rotation together",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        rotationDegrees: 180,
+      },
+    },
+    {
+      name: "unknown presentation key",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        unexpected: true,
+      },
+    },
+  ];
+
+  for (const fixture of invalidPresentations) {
+    await context.test(fixture.name, async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({ presentations: [fixture.presentation] as never[] }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
+});
+
+test("the browser client rejects a non-finite alias anchor coordinate", async () => {
+  const payload = JSON.stringify({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front-inverted",
+        displayName: "Front inverted",
+        imageUrl: "/api/boards/compact/image?presentationID=front-inverted",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        geometryRotationAnchor: { x: "__nonfinite__", y: 0.68 },
+      }] as never[],
+    }),
+  }).replace('"__nonfinite__"', "1e999");
+  const { runtime } = runtimeFixture(async () => new Response(payload, {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  }));
+
+  await assert.rejects(
+    createWorkbenchClient(runtime).getBoard("compact"),
+    /invalid board/,
+  );
 });
 
 test("the browser client deletes a selected presentation and returns the next focused board", async () => {

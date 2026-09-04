@@ -120,7 +120,7 @@ struct BoardEditorListView: View {
         } label: {
             HStack(spacing: 14) {
                 BoardEditorThumbnailView(
-                    imageURL: BoardCatalog.packageStore.presentationImageURL(for: board)
+                    board: board
                 )
                 VStack(alignment: .leading, spacing: 4) {
                     Text(board.name)
@@ -240,11 +240,38 @@ struct BoardEditorListView: View {
 private struct BoardEditorThumbnailView: View {
     private static let displaySize = CGSize(width: 74, height: 52)
 
-    let imageURL: URL?
+    let board: TrainingBoard
     @State private var image: UIImage?
     private let imagePreparer = BoardEditorUIKitImagePreparer()
 
+    private var presentation: BoardPresentation { board.defaultPresentation }
+    private var imageURL: URL? {
+        BoardCatalog.packageStore.presentationImageURL(
+            for: board,
+            presentationID: presentation.id
+        )
+    }
+
+    @ViewBuilder
     var body: some View {
+        if board.resolvedCordRig(for: presentation) != nil {
+            GeometryReader { proxy in
+                BoardPresentationArtwork(
+                    board: board,
+                    presentation: presentation,
+                    projection: BoardPresentationGeometryProjection(
+                        presentation: presentation
+                    ),
+                    canvasSize: proxy.size
+                )
+            }
+            .frame(width: 74, height: 52)
+        } else {
+            rawThumbnail
+        }
+    }
+
+    private var rawThumbnail: some View {
         Group {
             if let image {
                 Image(uiImage: image)

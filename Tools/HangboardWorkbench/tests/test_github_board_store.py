@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package
@@ -48,6 +49,49 @@ def _client(*packages: tuple[str, dict[str, object]]) -> FakeGitHubClient:
     for slug, board in packages:
         files.update(_complete_package(slug, board))
     return FakeGitHubClient({BRANCH: files})
+
+
+def _direct_two_anchor_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [
+            {"x": 400, "y": 300},
+            {"x": 1374, "y": 300},
+        ],
+        "pullPoint": {"x": 887, "y": 210},
+        "eyeletRadius": 20,
+    }
+
+
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body", "space": "body", "point": {"x": 400, "y": 300}},
+            {"id": "world", "space": "world", "point": {"x": 887, "y": 90}},
+        ],
+        "tensionGroups": [{
+            "id": "main",
+            "bodyPortIDs": ["body"],
+            "worldPortIDs": ["world"],
+            "pairing": "screenOrder",
+            "layer": "behindFace",
+        }],
+        "paths": [],
+        "occlusions": [],
+    }
 
 
 class _TreeRaceClient(FakeGitHubClient):
@@ -381,6 +425,7 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
             "aspectRatio": 1774 / 457,
             "default": False,
             "sourcePresentationID": "primary",
+            "availableHoldIDs": ["hold-left"],
             "isInverted": True,
         }
     )
@@ -397,14 +442,112 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
         (
             presentation.id,
             presentation.source_presentation_id,
+            presentation.available_hold_ids,
             presentation.is_inverted,
         )
         for presentation in opened.presentations
     ] == [
-        ("primary", None, False),
-        ("primary-inverted", "primary", True),
+        ("primary", None, None, False),
+        ("primary-inverted", "primary", ("hold-left",), True),
     ]
     assert opened.presentation("primary-inverted").asset_path == "assets/primary.png"
+
+
+def test_hosted_package_loads_declared_alias_anchor_into_public_model() -> None:
+    """Fails if the full hosted package loader drops a declared alias anchor."""
+    board = board_document("fixture.board")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations.append(
+        {
+            "id": "primary-inverted",
+            "name": "Primary inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+        }
+    )
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    for hold in holds:
+        assert isinstance(hold, dict)
+        geometry = hold["geometry"]
+        assert isinstance(geometry, list)
+        for piece in geometry:
+            assert isinstance(piece, dict)
+            frame = piece["frame"]
+            assert isinstance(frame, dict)
+            frame["y"] = 0.5
+
+    opened = github_board_store.open_package(
+        _client(("fixture-board", board)), TOKEN, BRANCH, "fixture.board"
+    )
+
+    assert opened.presentation("primary-inverted").geometry_rotation_anchor == (
+        0.5,
+        0.68,
+    )
+
+
+def test_hosted_selected_presentation_loads_declared_alias_anchor_into_public_model() -> None:
+    """Fails if the selected-presentation hosted loader drops the public anchor."""
+    board = board_document("fixture.board")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations.append(
+        {
+            "id": "primary-inverted",
+            "name": "Primary inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+        }
+    )
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    for hold in holds:
+        assert isinstance(hold, dict)
+        geometry = hold["geometry"]
+        assert isinstance(geometry, list)
+        for piece in geometry:
+            assert isinstance(piece, dict)
+            frame = piece["frame"]
+            assert isinstance(frame, dict)
+            frame["y"] = 0.5
+    store = github_board_store.GitHubBoardStore(_client(("fixture-board", board)))
+
+    opened = store.open_presentation(
+        TOKEN, BRANCH, "fixture.board", "primary-inverted"
+    )
+
+    assert opened.presentation("primary-inverted").geometry_rotation_anchor == (
+        0.5,
+        0.68,
+    )
+
+
+def test_hosted_package_loads_current_port_dynamic_rigs() -> None:
+    package_root = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
+    files = {
+        f"Hangboards/frictitious-port-a-board/{path.relative_to(package_root).as_posix()}": path.read_bytes()
+        for path in package_root.rglob("*")
+        if path.is_file()
+    }
+    client = FakeGitHubClient({BRANCH: files})
+
+    opened = github_board_store.open_package(
+        client, TOKEN, BRANCH, "frictitious.port-a-board"
+    )
+
+    assert opened.presentation("primary").cord_rig is not None
+    assert opened.presentation("back").cord_rig is not None
+    assert opened.presentation("front-inverted").cord_rig is None
 
 
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
@@ -818,6 +961,46 @@ def test_hosted_presentation_image_reads_only_the_requested_asset() -> None:
     assert image == files["Hangboards/fixture-v2/assets/back.png"]
     assert loaded_image_shas == {
         image_shas["Hangboards/fixture-v2/assets/back.png"]
+    }
+
+
+def test_hosted_rigged_legacy_alias_reads_only_the_canonical_source_raster() -> None:
+    """A legacy alias asset may remain packaged but must not be double-rotated."""
+    board = multi_presentation_board_document("fixture.multi")
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[0]["cordRig"] = _direct_two_anchor_cord_rig()
+    presentations[1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        geometryRotationAnchor={"x": 0.5, "y": 0.7},
+    )
+    board["holds"] = holds[:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"already-inverted"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    image_shas = {
+        path: FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.startswith("Hangboards/fixture-v2/assets/")
+    }
+
+    image = store.presentation_image_bytes(TOKEN, BRANCH, "fixture.multi", "back")
+
+    loaded_image_shas = {
+        call.args[1]
+        for call in client.calls_named("get_blob")
+        if call.args[1] in image_shas.values()
+    }
+    assert image == files["Hangboards/fixture-v2/assets/primary.png"]
+    assert loaded_image_shas == {
+        image_shas["Hangboards/fixture-v2/assets/primary.png"]
     }
 
 
@@ -1409,6 +1592,102 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     ).hexdigest()
     assert put[0].args[3] == expected_content
     assert saved.board_json_sha == expected_sha
+
+
+def test_changed_hosted_save_reconciles_filtered_canonical_hold_ids() -> None:
+    board = board_document("fixture.board")
+    holds = board["holds"]
+    presentations = board["presentations"]
+    assert isinstance(holds, list) and isinstance(presentations, list)
+    second_hold = copy.deepcopy(holds[0])
+    second_hold.update(id="hold-second", name="Second hold")
+    hidden_hold = copy.deepcopy(holds[0])
+    hidden_hold.update(id="hold-hidden", name="Hidden hold")
+    holds.extend((second_hold, hidden_hold))
+    presentations[0]["availableHoldIDs"] = ["hold-left", "hold-second"]
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document["regions"] = [
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "hold-second"
+    ]
+    new_region = copy.deepcopy(document["regions"][0])
+    new_region.update(id=99, key="hold-new-piece-0")
+    new_region["metadata"].update(holdID="hold-new", pieceIndex=0)
+    document["regions"].append(new_region)
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    assert [hold["id"] for hold in saved.board["holds"]] == [
+        "hold-second",
+        "hold-hidden",
+        "hold-new",
+    ]
+    assert saved.board["presentations"][0]["availableHoldIDs"] == [
+        "hold-second",
+        "hold-new",
+    ]
+    assert saved.presentation("primary").available_hold_ids == (
+        "hold-second",
+        "hold-new",
+    )
+    assert {
+        region["metadata"]["holdID"]
+        for region in board_package.editor_document(saved, "primary")["regions"]
+    } == {"hold-second", "hold-new"}
+
+
+def test_changed_hosted_save_preserves_direct_two_anchor_cord_rig() -> None:
+    board = board_document("fixture.board")
+    board["presentations"][0]["cordRig"] = _direct_two_anchor_cord_rig()
+    expected_rig = copy.deepcopy(board["presentations"][0]["cordRig"])
+    client = _client(("fixture-board", board))
+    opened = github_board_store.open_package(
+        client, TOKEN, BRANCH, "fixture.board"
+    )
+    document = copy.deepcopy(board_package.editor_document(opened))
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert stored["presentations"][0]["cordRig"] == expected_rig
+    assert saved.presentation().cord_rig == opened.presentation().cord_rig
+    assert saved.presentation().cord_rig is not None
+
+
+def test_changed_hosted_save_preserves_routed_cord_rig_canonically() -> None:
+    board = board_document("fixture.board")
+    board["presentations"][0]["cordRig"] = _routed_cord_rig()
+    expected_rig = copy.deepcopy(board["presentations"][0]["cordRig"])
+    client = _client(("fixture-board", board))
+    opened = github_board_store.open_package(
+        client, TOKEN, BRANCH, "fixture.board"
+    )
+    document = copy.deepcopy(board_package.editor_document(opened))
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert stored["presentations"][0]["cordRig"] == expected_rig
+    assert saved.presentation().cord_rig == opened.presentation().cord_rig
+    assert isinstance(saved.presentation().cord_rig, board_package.RoutedCordRig)
 
 
 def test_changed_hosted_save_reassigns_a_hold_between_equipment_objects() -> None:

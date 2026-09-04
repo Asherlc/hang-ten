@@ -5,7 +5,7 @@
   "subtitle": "Portable reversible training rail with four holds.",
   "productURL": "https://www.metoliusclimbing.com/products/light-rail",
   "dimensions": "18 \u00d7 3 \u00d7 1.5 in",
-  "aspectRatio": 1.0,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
     {"id": "primary"}
   ],
@@ -14,14 +14,14 @@
       "id": "20mm-side",
       "name": "40 mm jug and 20 mm edge",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.0,
+      "aspectRatio": 1.5,
       "default": true
     },
     {
       "id": "15mm-side",
       "name": "40 mm jug and 15 mm edge",
       "assetPath": "assets/15mm-surface.png",
-      "aspectRatio": 1.0,
+      "aspectRatio": 1.5,
       "default": false
     }
   ],

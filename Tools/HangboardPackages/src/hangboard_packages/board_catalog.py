@@ -15,7 +15,11 @@ from typing import Any, Mapping
 import zlib
 
 try:  # Standard package import, plus direct-file loading used by staging tests.
-    from .board_geometry_schema import BoardShapeDocument, NormalizedFrame
+    from .board_geometry_schema import (
+        BoardShapeDocument,
+        NormalizedFrame,
+        NormalizedPoint,
+    )
 except ImportError:  # pragma: no cover - exercised by direct module consumers
     _schema_path = Path(__file__).with_name("board_geometry_schema.py")
     _spec = importlib.util.spec_from_file_location(
@@ -29,6 +33,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     _spec.loader.exec_module(_module)
     BoardShapeDocument = _module.BoardShapeDocument
     NormalizedFrame = _module.NormalizedFrame
+    NormalizedPoint = _module.NormalizedPoint
 
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
@@ -73,6 +78,22 @@ _SHAPE_CONSTRAINTS = frozenset(
 )
 _ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
 _FRAME_EDGE_TOLERANCE = 0.0000005
+# Alias images may compute their ratio independently before serializing it.
+# One part per billion accepts harmless decimal/binary rounding without
+# admitting a materially different canvas shape.
+_ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE = 1e-9
+_ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE = 1e-12
+# A projected boundary such as 2 * 0.15 - (0.1 + 0.2) can be a few ulps below
+# zero even though it is mathematically exact. Keep this far below meaningful
+# normalized geometry overflow.
+_PROJECTED_FRAME_EDGE_TOLERANCE = 1e-12
+_CORD_PULL_EXIT_HALF_SPACING = 22.0
+_CORD_SUPPORT_MIN_X_OFFSET = -30.0
+_CORD_SUPPORT_MAX_X_OFFSET = 31.0
+_CORD_SUPPORT_MIN_Y_OFFSET = -177.0
+_CORD_SUPPORT_MAX_Y_OFFSET = 0.0
+_CORD_SHADOW_X_MARGIN = 35.0 / 2 + 4.0 + 2.3
+_CORD_SHADOW_Y_MARGIN = 35.0 / 2 + 5.0 + 2.3
 
 
 def _closed(
@@ -143,6 +164,13 @@ def _positive_number(value: Any, source: str) -> float:
     if number <= 0:
         raise ValueError(f"{source} must be a positive number")
     return number
+
+
+def _presentation_rotation_degrees(value: Any, source: str) -> float:
+    degrees = _number(value, source)
+    if not 0 <= degrees < 360:
+        raise ValueError(f"{source} must be normalized to [0, 360)")
+    return degrees
 
 
 def _boolean(value: Any, source: str) -> bool:
@@ -369,6 +397,514 @@ class BoardGeometryPiece:
 
 
 @dataclass(frozen=True)
+class CordPoint:
+    x: float
+    y: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "CordPoint":
+        payload = _mapping(value, source)
+        _closed(payload, {"x", "y"}, source)
+        return cls(
+            _number(payload["x"], f"{source}.x"),
+            _number(payload["y"], f"{source}.y"),
+        )
+
+
+@dataclass(frozen=True)
+class CordSize:
+    width: float
+    height: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "CordSize":
+        payload = _mapping(value, source)
+        _closed(payload, {"width", "height"}, source)
+        return cls(
+            _positive_number(payload["width"], f"{source}.width"),
+            _positive_number(payload["height"], f"{source}.height"),
+        )
+
+
+@dataclass(frozen=True)
+class CordRect:
+    x: float
+    y: float
+    width: float
+    height: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "CordRect":
+        payload = _mapping(value, source)
+        _closed(payload, {"x", "y", "width", "height"}, source)
+        return cls(
+            _number(payload["x"], f"{source}.x"),
+            _number(payload["y"], f"{source}.y"),
+            _positive_number(payload["width"], f"{source}.width"),
+            _positive_number(payload["height"], f"{source}.height"),
+        )
+
+
+@dataclass(frozen=True)
+class DirectTwoAnchorCordRig:
+    scene_size: CordSize
+    source_frame: CordRect
+    inner_face_frame: CordRect
+    attachment_points: tuple[CordPoint, CordPoint]
+    pull_point: CordPoint
+    eyelet_radius: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "DirectTwoAnchorCordRig":
+        payload = _mapping(value, source)
+        _closed(
+            payload,
+            {
+                "type",
+                "sceneSize",
+                "sourceFrame",
+                "innerFaceFrame",
+                "attachmentPoints",
+                "pullPoint",
+                "eyeletRadius",
+            },
+            source,
+        )
+        rig_type = _string(payload["type"], f"{source}.type")
+        if rig_type != "directTwoAnchor":
+            raise ValueError(f"{source}.type is unsupported")
+        raw_attachment_points = payload["attachmentPoints"]
+        if not isinstance(raw_attachment_points, list) or len(raw_attachment_points) != 2:
+            raise ValueError(f"{source}.attachmentPoints must contain exactly two points")
+        attachment_points = tuple(
+            CordPoint.from_json(point, f"{source}.attachmentPoints[{index}]")
+            for index, point in enumerate(raw_attachment_points)
+        )
+        if attachment_points[0] == attachment_points[1]:
+            raise ValueError(f"{source}.attachmentPoints must be distinct")
+        return cls(
+            scene_size=CordSize.from_json(payload["sceneSize"], f"{source}.sceneSize"),
+            source_frame=CordRect.from_json(
+                payload["sourceFrame"], f"{source}.sourceFrame"
+            ),
+            inner_face_frame=CordRect.from_json(
+                payload["innerFaceFrame"], f"{source}.innerFaceFrame"
+            ),
+            attachment_points=attachment_points,
+            pull_point=CordPoint.from_json(payload["pullPoint"], f"{source}.pullPoint"),
+            eyelet_radius=_positive_number(
+                payload["eyeletRadius"], f"{source}.eyeletRadius"
+            ),
+        )
+
+
+class RoutedCordSpace(StrEnum):
+    BODY = "body"
+    WORLD = "world"
+
+
+class RoutedCordLayer(StrEnum):
+    BEHIND_FACE = "behindFace"
+    ABOVE_FACE = "aboveFace"
+    OVERPASS = "overpass"
+
+
+class RoutedCordPairing(StrEnum):
+    DECLARED = "declared"
+    SCREEN_ORDER = "screenOrder"
+
+
+@dataclass(frozen=True)
+class RoutedCordStyle:
+    diameter: float
+    outline_color: str
+    base_color: str
+    braid_colors: tuple[str, str]
+
+
+@dataclass(frozen=True)
+class RoutedCordPort:
+    id: str
+    space: RoutedCordSpace
+    point: CordPoint
+
+
+@dataclass(frozen=True)
+class RoutedCordTensionGroup:
+    id: str
+    body_port_ids: tuple[str, ...]
+    world_port_ids: tuple[str, ...]
+    pairing: RoutedCordPairing
+    layer: RoutedCordLayer
+
+
+@dataclass(frozen=True)
+class RoutedCordPathCommand:
+    command: str
+    to: tuple[float, float] | None = None
+    control: tuple[float, float] | None = None
+    control1: tuple[float, float] | None = None
+    control2: tuple[float, float] | None = None
+
+
+@dataclass(frozen=True)
+class RoutedCordPath:
+    id: str
+    space: RoutedCordSpace
+    layer: RoutedCordLayer
+    commands: tuple[RoutedCordPathCommand, ...]
+
+
+@dataclass(frozen=True)
+class RoutedCordRadialLip:
+    body_port_id: str
+    radius: float
+    chord_offset: float
+
+
+@dataclass(frozen=True)
+class RoutedCordFacePatch:
+    commands: tuple[RoutedCordPathCommand, ...]
+
+
+RoutedCordOcclusion = RoutedCordRadialLip | RoutedCordFacePatch
+
+
+@dataclass(frozen=True)
+class RoutedCordRig:
+    scene_size: CordSize
+    source_frame: CordRect
+    inner_face_frame: CordRect
+    style: RoutedCordStyle
+    ports: tuple[RoutedCordPort, ...]
+    tension_groups: tuple[RoutedCordTensionGroup, ...]
+    paths: tuple[RoutedCordPath, ...]
+    occlusions: tuple[RoutedCordOcclusion, ...]
+
+
+CordRig = DirectTwoAnchorCordRig | RoutedCordRig
+
+
+_ROUTED_COLOR = re.compile(r"^#[0-9A-Fa-f]{6}$")
+
+
+def _routed_color(value: Any, source: str) -> str:
+    color = _string(value, source)
+    if _ROUTED_COLOR.fullmatch(color) is None:
+        raise ValueError(f"{source} must be a #RRGGBB color")
+    return color
+
+
+def _routed_enum(value: Any, enum_type: type[StrEnum], source: str, noun: str):
+    raw = _string(value, source)
+    try:
+        return enum_type(raw)
+    except ValueError as error:
+        raise ValueError(f"{source} {noun} is unsupported") from error
+
+
+def _routed_point_array(value: Any, source: str) -> tuple[float, float]:
+    if not isinstance(value, list) or len(value) != 2:
+        raise ValueError(f"{source} must contain exactly two finite coordinates")
+    return (_number(value[0], f"{source}[0]"), _number(value[1], f"{source}[1]"))
+
+
+def _routed_commands(
+    value: Any,
+    source: str,
+    *,
+    require_closed: bool,
+) -> tuple[RoutedCordPathCommand, ...]:
+    if not isinstance(value, list) or len(value) < 2:
+        raise ValueError(f"{source} must contain a move and at least one drawing command")
+    result: list[RoutedCordPathCommand] = []
+    for index, raw in enumerate(value):
+        label = f"{source}[{index}]"
+        payload = _mapping(raw, label)
+        command = _string(payload.get("command"), f"{label}.command")
+        if command in {"move", "line"}:
+            _closed(payload, {"command", "to"}, label)
+            result.append(
+                RoutedCordPathCommand(
+                    command=command,
+                    to=_routed_point_array(payload["to"], f"{label}.to"),
+                )
+            )
+        elif command == "quad":
+            _closed(payload, {"command", "control", "to"}, label)
+            result.append(
+                RoutedCordPathCommand(
+                    command=command,
+                    control=_routed_point_array(
+                        payload["control"], f"{label}.control"
+                    ),
+                    to=_routed_point_array(payload["to"], f"{label}.to"),
+                )
+            )
+        elif command == "curve":
+            _closed(payload, {"command", "control1", "control2", "to"}, label)
+            result.append(
+                RoutedCordPathCommand(
+                    command=command,
+                    control1=_routed_point_array(
+                        payload["control1"], f"{label}.control1"
+                    ),
+                    control2=_routed_point_array(
+                        payload["control2"], f"{label}.control2"
+                    ),
+                    to=_routed_point_array(payload["to"], f"{label}.to"),
+                )
+            )
+        elif command == "close":
+            _closed(payload, {"command"}, label)
+            result.append(RoutedCordPathCommand(command=command))
+        else:
+            raise ValueError(f"{label}.command is unsupported")
+    if result[0].command != "move" or sum(
+        command.command == "move" for command in result
+    ) != 1:
+        raise ValueError(f"{source} must begin with exactly one move command")
+    if not any(
+        command.command in {"line", "quad", "curve"} for command in result
+    ):
+        raise ValueError(f"{source} must contain at least one line, quad, or curve")
+    close_indexes = [
+        index for index, command in enumerate(result) if command.command == "close"
+    ]
+    if close_indexes and close_indexes != [len(result) - 1]:
+        raise ValueError(f"{source} close command must appear only at the end")
+    if require_closed and (not result or result[-1].command != "close"):
+        raise ValueError(f"{source.removesuffix('.commands')} facePatch commands must be closed")
+    return tuple(result)
+
+
+def _routed_id_array(value: Any, source: str) -> tuple[str, ...]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"{source} must be a non-empty array")
+    result = tuple(
+        _identifier(item, f"{source}[{index}]") for index, item in enumerate(value)
+    )
+    if len(set(result)) != len(result):
+        raise ValueError(f"{source} must be unique")
+    return result
+
+
+def _routed_cord_rig(value: Any, source: str) -> RoutedCordRig:
+    payload = _mapping(value, source)
+    _closed(
+        payload,
+        {
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame", "style",
+            "ports", "tensionGroups", "paths", "occlusions",
+        },
+        source,
+    )
+    style_payload = _mapping(payload["style"], f"{source}.style")
+    _closed(
+        style_payload,
+        {"diameter", "outlineColor", "baseColor", "braidColors"},
+        f"{source}.style",
+    )
+    raw_braid_colors = style_payload["braidColors"]
+    if not isinstance(raw_braid_colors, list) or len(raw_braid_colors) != 2:
+        raise ValueError(f"{source}.style.braidColors must contain exactly two colors")
+    style = RoutedCordStyle(
+        diameter=_positive_number(
+            style_payload["diameter"], f"{source}.style.diameter"
+        ),
+        outline_color=_routed_color(
+            style_payload["outlineColor"], f"{source}.style.outlineColor"
+        ),
+        base_color=_routed_color(
+            style_payload["baseColor"], f"{source}.style.baseColor"
+        ),
+        braid_colors=(
+            _routed_color(raw_braid_colors[0], f"{source}.style.braidColors[0]"),
+            _routed_color(raw_braid_colors[1], f"{source}.style.braidColors[1]"),
+        ),
+    )
+
+    raw_ports = payload["ports"]
+    if not isinstance(raw_ports, list) or not raw_ports:
+        raise ValueError(f"{source}.ports must be a non-empty array")
+    ports: list[RoutedCordPort] = []
+    for index, raw in enumerate(raw_ports):
+        label = f"{source}.ports[{index}]"
+        port_payload = _mapping(raw, label)
+        _closed(port_payload, {"id", "space", "point"}, label)
+        ports.append(
+            RoutedCordPort(
+                id=_identifier(port_payload["id"], f"{label}.id"),
+                space=_routed_enum(
+                    port_payload["space"], RoutedCordSpace, f"{label}.space", "space"
+                ),
+                point=CordPoint.from_json(port_payload["point"], f"{label}.point"),
+            )
+        )
+    if len({port.id for port in ports}) != len(ports):
+        raise ValueError(f"{source}.ports must have unique IDs")
+    ports_by_id = {port.id: port for port in ports}
+
+    raw_groups = payload["tensionGroups"]
+    if not isinstance(raw_groups, list) or not raw_groups:
+        raise ValueError(f"{source}.tensionGroups must be a non-empty array")
+    tension_groups: list[RoutedCordTensionGroup] = []
+    for index, raw in enumerate(raw_groups):
+        label = f"{source}.tensionGroups[{index}]"
+        group_payload = _mapping(raw, label)
+        _closed(
+            group_payload,
+            {"id", "bodyPortIDs", "worldPortIDs", "pairing", "layer"},
+            label,
+        )
+        body_port_ids = _routed_id_array(
+            group_payload["bodyPortIDs"], f"{label}.bodyPortIDs"
+        )
+        world_port_ids = _routed_id_array(
+            group_payload["worldPortIDs"], f"{label}.worldPortIDs"
+        )
+        if len(body_port_ids) != len(world_port_ids):
+            raise ValueError(f"{label} port lists must have equal cardinality")
+        if any(
+            ports_by_id.get(port_id) is None
+            or ports_by_id[port_id].space != RoutedCordSpace.BODY
+            for port_id in body_port_ids
+        ):
+            raise ValueError(f"{label}.bodyPortIDs must reference body ports")
+        if any(
+            ports_by_id.get(port_id) is None
+            or ports_by_id[port_id].space != RoutedCordSpace.WORLD
+            for port_id in world_port_ids
+        ):
+            raise ValueError(f"{label}.worldPortIDs must reference world ports")
+        tension_groups.append(
+            RoutedCordTensionGroup(
+                id=_identifier(group_payload["id"], f"{label}.id"),
+                body_port_ids=body_port_ids,
+                world_port_ids=world_port_ids,
+                pairing=_routed_enum(
+                    group_payload["pairing"],
+                    RoutedCordPairing,
+                    f"{label}.pairing",
+                    "pairing",
+                ),
+                layer=_routed_enum(
+                    group_payload["layer"],
+                    RoutedCordLayer,
+                    f"{label}.layer",
+                    "layer",
+                ),
+            )
+        )
+    if len({group.id for group in tension_groups}) != len(tension_groups):
+        raise ValueError(f"{source}.tensionGroups must have unique IDs")
+
+    raw_paths = payload["paths"]
+    if not isinstance(raw_paths, list):
+        raise ValueError(f"{source}.paths must be an array")
+    paths: list[RoutedCordPath] = []
+    for index, raw in enumerate(raw_paths):
+        label = f"{source}.paths[{index}]"
+        path_payload = _mapping(raw, label)
+        _closed(path_payload, {"id", "space", "layer", "commands"}, label)
+        paths.append(
+            RoutedCordPath(
+                id=_identifier(path_payload["id"], f"{label}.id"),
+                space=_routed_enum(
+                    path_payload["space"],
+                    RoutedCordSpace,
+                    f"{label}.space",
+                    "space",
+                ),
+                layer=_routed_enum(
+                    path_payload["layer"],
+                    RoutedCordLayer,
+                    f"{label}.layer",
+                    "layer",
+                ),
+                commands=_routed_commands(
+                    path_payload["commands"], f"{label}.commands", require_closed=False
+                ),
+            )
+        )
+    if len({path.id for path in paths}) != len(paths):
+        raise ValueError(f"{source}.paths must have unique IDs")
+
+    raw_occlusions = payload["occlusions"]
+    if not isinstance(raw_occlusions, list):
+        raise ValueError(f"{source}.occlusions must be an array")
+    occlusions: list[RoutedCordOcclusion] = []
+    for index, raw in enumerate(raw_occlusions):
+        label = f"{source}.occlusions[{index}]"
+        occlusion_payload = _mapping(raw, label)
+        occlusion_type = _string(occlusion_payload.get("type"), f"{label}.type")
+        if occlusion_type == "radialLip":
+            _closed(
+                occlusion_payload,
+                {"type", "bodyPortID", "radius", "chordOffset"},
+                label,
+            )
+            body_port_id = _identifier(
+                occlusion_payload["bodyPortID"], f"{label}.bodyPortID"
+            )
+            if (
+                ports_by_id.get(body_port_id) is None
+                or ports_by_id[body_port_id].space != RoutedCordSpace.BODY
+            ):
+                raise ValueError(f"{label} radialLip must reference a body port")
+            radius = _positive_number(occlusion_payload["radius"], f"{label}.radius")
+            chord_offset = _positive_number(
+                occlusion_payload["chordOffset"], f"{label}.chordOffset"
+            )
+            if chord_offset >= radius:
+                raise ValueError(f"{label}.chordOffset must be less than radius")
+            occlusions.append(
+                RoutedCordRadialLip(
+                    body_port_id=body_port_id,
+                    radius=radius,
+                    chord_offset=chord_offset,
+                )
+            )
+        elif occlusion_type == "facePatch":
+            _closed(occlusion_payload, {"type", "commands"}, label)
+            occlusions.append(
+                RoutedCordFacePatch(
+                    commands=_routed_commands(
+                        occlusion_payload["commands"],
+                        f"{label}.commands",
+                        require_closed=True,
+                    )
+                )
+            )
+        else:
+            raise ValueError(f"{label}.type is unsupported")
+    return RoutedCordRig(
+        scene_size=CordSize.from_json(payload["sceneSize"], f"{source}.sceneSize"),
+        source_frame=CordRect.from_json(
+            payload["sourceFrame"], f"{source}.sourceFrame"
+        ),
+        inner_face_frame=CordRect.from_json(
+            payload["innerFaceFrame"], f"{source}.innerFaceFrame"
+        ),
+        style=style,
+        ports=tuple(ports),
+        tension_groups=tuple(tension_groups),
+        paths=tuple(paths),
+        occlusions=tuple(occlusions),
+    )
+
+
+def _cord_rig_from_json(value: Any, source: str) -> CordRig:
+    payload = _mapping(value, source)
+    rig_type = _string(payload.get("type"), f"{source}.type")
+    if rig_type == "directTwoAnchor":
+        return DirectTwoAnchorCordRig.from_json(payload, source)
+    if rig_type == "routed":
+        return _routed_cord_rig(payload, source)
+    raise ValueError(f"{source}.type is unsupported")
+
+
+@dataclass(frozen=True)
 class BoardPresentation:
     id: str
     name: str
@@ -377,6 +913,16 @@ class BoardPresentation:
     is_default: bool
     source_presentation_id: str | None = None
     is_inverted: bool = False
+    rotation_degrees: float | None = None
+    geometry_rotation_anchor: NormalizedPoint | None = None
+    cord_rig: CordRig | None = None
+    available_hold_ids: tuple[str, ...] | None = None
+
+    @property
+    def resolved_rotation_degrees(self) -> float:
+        return self.rotation_degrees if self.rotation_degrees is not None else (
+            180.0 if self.is_inverted else 0.0
+        )
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
@@ -385,11 +931,33 @@ class BoardPresentation:
             payload,
             {"id", "name", "assetPath", "aspectRatio", "default"},
             source,
-            optional={"sourcePresentationID", "isInverted"},
+            optional={
+                "sourcePresentationID",
+                "availableHoldIDs",
+                "isInverted",
+                "rotationDegrees",
+                "geometryRotationAnchor",
+                "cordRig",
+            },
         )
+        if "isInverted" in payload and "rotationDegrees" in payload:
+            raise ValueError(
+                f"{source} must not declare both isInverted and rotationDegrees"
+            )
         aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
         if aspect_ratio <= 0:
             raise ValueError(f"{source}.aspectRatio must be positive")
+        available_hold_ids: tuple[str, ...] | None = None
+        if "availableHoldIDs" in payload:
+            raw_available_hold_ids = payload["availableHoldIDs"]
+            if not isinstance(raw_available_hold_ids, list) or not raw_available_hold_ids:
+                raise ValueError(f"{source}.availableHoldIDs must be a non-empty array")
+            available_hold_ids = tuple(
+                _identifier(item, f"{source}.availableHoldIDs[{index}]")
+                for index, item in enumerate(raw_available_hold_ids)
+            )
+            if len(set(available_hold_ids)) != len(available_hold_ids):
+                raise ValueError(f"{source}.availableHoldIDs must be unique")
         return cls(
             _identifier(payload["id"], f"{source}.id"),
             _string(payload["name"], f"{source}.name"),
@@ -404,6 +972,21 @@ class BoardPresentation:
             _boolean(payload["isInverted"], f"{source}.isInverted")
             if "isInverted" in payload
             else False,
+            _presentation_rotation_degrees(
+                payload["rotationDegrees"], f"{source}.rotationDegrees"
+            )
+            if "rotationDegrees" in payload
+            else None,
+            NormalizedPoint.from_json(
+                payload["geometryRotationAnchor"],
+                f"{source}.geometryRotationAnchor",
+            )
+            if "geometryRotationAnchor" in payload
+            else None,
+            _cord_rig_from_json(payload["cordRig"], f"{source}.cordRig")
+            if "cordRig" in payload
+            else None,
+            available_hold_ids,
         )
 
 
@@ -518,10 +1101,16 @@ class BoardDocument:
         canonical_presentation_id = (
             presentation.source_presentation_id or presentation.id
         )
+        available_hold_ids = (
+            set(presentation.available_hold_ids)
+            if presentation.available_hold_ids is not None
+            else None
+        )
         return tuple(
             hold.id
             for hold in self.holds
             if hold.presentation_id == canonical_presentation_id
+            and (available_hold_ids is None or hold.id in available_hold_ids)
         )
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
@@ -684,26 +1273,426 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
         raise ValueError("duplicate presentation id")
     if sum(presentation.is_default for presentation in presentations) != 1:
         raise ValueError("board.json.presentations must have exactly one default presentation")
-    presentation_ids = {presentation.id for presentation in presentations}
-    for presentation in presentations:
-        if presentation.source_presentation_id is not None:
-            source = next(
-                (
-                    candidate
-                    for candidate in presentations
-                    if candidate.id == presentation.source_presentation_id
-                ),
-                None,
-            )
-            if source is None or source.source_presentation_id is not None:
-                raise ValueError(
-                    f"presentation {presentation.id} must reference a canonical presentation"
-                )
-            if presentation.source_presentation_id == presentation.id:
-                raise ValueError(
-                    f"presentation {presentation.id} must reference a canonical presentation"
-                )
     return presentations
+
+
+def project_normalized_point(
+    point: NormalizedPoint, anchor: NormalizedPoint
+) -> tuple[float, float]:
+    return (2 * anchor.x - point.x, 2 * anchor.y - point.y)
+
+
+def _rotate_point(
+    x: float,
+    y: float,
+    *,
+    anchor_x: float,
+    anchor_y: float,
+    rotation_degrees: float,
+) -> tuple[float, float]:
+    radians = math.radians(rotation_degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+    delta_x = x - anchor_x
+    delta_y = y - anchor_y
+    return (
+        anchor_x + cosine * delta_x - sine * delta_y,
+        anchor_y + sine * delta_x + cosine * delta_y,
+    )
+
+
+def _validate_direct_two_anchor_cord_presentation(
+    rig: DirectTwoAnchorCordRig,
+    *,
+    presentation_id: str,
+    rotation_degrees: float,
+    rotation_anchor: NormalizedPoint,
+) -> None:
+    pull_x = rig.source_frame.x + rig.pull_point.x
+    pull_y = rig.source_frame.y + rig.pull_point.y
+    anchor_x = rotation_anchor.x * rig.scene_size.width
+    anchor_y = rotation_anchor.y * rig.scene_size.height
+    attachments = tuple(
+        _rotate_point(
+            rig.source_frame.x + point.x,
+            rig.source_frame.y + point.y,
+            anchor_x=anchor_x,
+            anchor_y=anchor_y,
+            rotation_degrees=rotation_degrees,
+        )
+        for point in rig.attachment_points
+    )
+    centerline_x = (
+        pull_x + _CORD_SUPPORT_MIN_X_OFFSET,
+        pull_x + _CORD_SUPPORT_MAX_X_OFFSET,
+        pull_x - _CORD_PULL_EXIT_HALF_SPACING,
+        pull_x + _CORD_PULL_EXIT_HALF_SPACING,
+        *(point[0] for point in attachments),
+    )
+    centerline_y = (
+        pull_y + _CORD_SUPPORT_MIN_Y_OFFSET,
+        pull_y + _CORD_SUPPORT_MAX_Y_OFFSET,
+        *(point[1] for point in attachments),
+    )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-9
+    if (
+        min(centerline_x) - _CORD_SHADOW_X_MARGIN < -tolerance
+        or max(centerline_x) + _CORD_SHADOW_X_MARGIN
+        > rig.scene_size.width + tolerance
+        or min(centerline_y) - _CORD_SHADOW_Y_MARGIN < -tolerance
+        or max(centerline_y) + _CORD_SHADOW_Y_MARGIN
+        > rig.scene_size.height + tolerance
+    ):
+        raise ValueError(
+            f"presentation {presentation_id} cord drawing must remain inside sceneSize"
+        )
+    if any(point[1] <= pull_y + tolerance for point in attachments):
+        raise ValueError(
+            f"presentation {presentation_id} cord pull exits must remain above "
+            "both attachment points"
+        )
+
+
+def _routed_command_points(
+    command: RoutedCordPathCommand,
+) -> tuple[tuple[float, float], ...]:
+    return tuple(
+        point
+        for point in (
+            command.to,
+            command.control,
+            command.control1,
+            command.control2,
+        )
+        if point is not None
+    )
+
+
+def _validate_routed_cord_presentation(
+    rig: RoutedCordRig,
+    *,
+    presentation_id: str,
+    rotation_degrees: float,
+    rotation_anchor: NormalizedPoint,
+) -> None:
+    anchor_x = rotation_anchor.x * rig.scene_size.width
+    anchor_y = rotation_anchor.y * rig.scene_size.height
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-9
+
+    def transform_point(
+        x: float, y: float, space: RoutedCordSpace
+    ) -> tuple[float, float]:
+        scene_x = rig.source_frame.x + x
+        scene_y = rig.source_frame.y + y
+        if space == RoutedCordSpace.WORLD:
+            return (scene_x, scene_y)
+        return _rotate_point(
+            scene_x,
+            scene_y,
+            anchor_x=anchor_x,
+            anchor_y=anchor_y,
+            rotation_degrees=rotation_degrees,
+        )
+
+    transformed_ports = {
+        port.id: transform_point(port.point.x, port.point.y, port.space)
+        for port in rig.ports
+    }
+    used_port_ids = tuple(
+        dict.fromkeys(
+            port_id
+            for group in rig.tension_groups
+            for port_id in (*group.body_port_ids, *group.world_port_ids)
+        )
+    )
+    style_margin = 0.8 * rig.style.diameter
+
+    def inside_scene(point: tuple[float, float], inset: float) -> bool:
+        x, y = point
+        return (
+            x >= inset - tolerance
+            and y >= inset - tolerance
+            and x <= rig.scene_size.width - inset + tolerance
+            and y <= rig.scene_size.height - inset + tolerance
+        )
+
+    for port_id in used_port_ids:
+        if not inside_scene(transformed_ports[port_id], style_margin):
+            raise ValueError(
+                f"presentation {presentation_id} routed cord centerline geometry "
+                "must remain inside sceneSize with the style margin"
+            )
+
+    for path in rig.paths:
+        for command in path.commands:
+            for x, y in _routed_command_points(command):
+                if not inside_scene(
+                    transform_point(x, y, path.space), style_margin
+                ):
+                    raise ValueError(
+                        f"presentation {presentation_id} routed cord centerline "
+                        "geometry must remain inside sceneSize with the style margin"
+                    )
+
+    body_port_incidence = {
+        port.id: sum(
+            group.body_port_ids.count(port.id) for group in rig.tension_groups
+        )
+        for port in rig.ports
+        if port.space == RoutedCordSpace.BODY
+    }
+    for occlusion in rig.occlusions:
+        if isinstance(occlusion, RoutedCordFacePatch):
+            for command in occlusion.commands:
+                for x, y in _routed_command_points(command):
+                    if not inside_scene(
+                        transform_point(x, y, RoutedCordSpace.BODY), 0
+                    ):
+                        raise ValueError(
+                            f"presentation {presentation_id} routed facePatch "
+                            "geometry must remain inside sceneSize"
+                        )
+            continue
+
+        if body_port_incidence[occlusion.body_port_id] != 1:
+            raise ValueError(
+                f"presentation {presentation_id} radialLip body port "
+                f"{occlusion.body_port_id} must occur in exactly one tension span"
+            )
+        center_x, center_y = transformed_ports[occlusion.body_port_id]
+        if (
+            center_x - occlusion.radius < -tolerance
+            or center_y - occlusion.radius < -tolerance
+            or center_x + occlusion.radius > rig.scene_size.width + tolerance
+            or center_y + occlusion.radius > rig.scene_size.height + tolerance
+        ):
+            raise ValueError(
+                f"presentation {presentation_id} routed radialLip circle must "
+                "remain inside sceneSize"
+            )
+
+    for group in rig.tension_groups:
+        body_ports = [
+            (port_id, transformed_ports[port_id], index)
+            for index, port_id in enumerate(group.body_port_ids)
+        ]
+        world_ports = [
+            (port_id, transformed_ports[port_id], index)
+            for index, port_id in enumerate(group.world_port_ids)
+        ]
+        if group.pairing == RoutedCordPairing.SCREEN_ORDER:
+            body_ports.sort(key=lambda item: (item[1][0], item[1][1], item[2]))
+            world_ports.sort(key=lambda item: (item[1][0], item[1][1], item[2]))
+        for (body_id, body_point, _), (world_id, world_point, _) in zip(
+            body_ports, world_ports, strict=True
+        ):
+            if body_point[1] <= world_point[1] + tolerance:
+                raise ValueError(
+                    f"presentation {presentation_id} routed body port {body_id} "
+                    f"must be strictly below world port {world_id}"
+                )
+
+
+def _rigged_alias_frame_is_inside_canvas(
+    frame: NormalizedFrame,
+    rig: CordRig,
+    anchor: NormalizedPoint,
+    rotation_degrees: float,
+) -> bool:
+    face_min_x = rig.source_frame.x + rig.inner_face_frame.x
+    face_min_y = rig.source_frame.y + rig.inner_face_frame.y
+    pivot_x = anchor.x * rig.scene_size.width
+    pivot_y = anchor.y * rig.scene_size.height
+    corners = (
+        (frame.x, frame.y),
+        (frame.x + frame.width, frame.y),
+        (frame.x, frame.y + frame.height),
+        (frame.x + frame.width, frame.y + frame.height),
+    )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-12
+    for normalized_x, normalized_y in corners:
+        face_x = face_min_x + normalized_x * rig.inner_face_frame.width
+        face_y = face_min_y + normalized_y * rig.inner_face_frame.height
+        projected_x, projected_y = _rotate_point(
+            face_x,
+            face_y,
+            anchor_x=pivot_x,
+            anchor_y=pivot_y,
+            rotation_degrees=rotation_degrees,
+        )
+        if (
+            projected_x < -tolerance
+            or projected_y < -tolerance
+            or projected_x > rig.scene_size.width + tolerance
+            or projected_y > rig.scene_size.height + tolerance
+        ):
+            return False
+    return True
+
+
+def _validate_alias_presentations(
+    presentations: tuple[BoardPresentation, ...], holds: tuple[BoardHold, ...]
+) -> None:
+    presentations_by_id = {presentation.id: presentation for presentation in presentations}
+    for presentation in presentations:
+        if presentation.cord_rig is not None:
+            if (
+                presentation.source_presentation_id is not None
+                or presentation.resolved_rotation_degrees != 0
+            ):
+                raise ValueError(
+                    f"presentation {presentation.id}.cordRig must be owned by a "
+                    "canonical non-inverted presentation"
+                )
+            scene_aspect_ratio = (
+                presentation.cord_rig.scene_size.width
+                / presentation.cord_rig.scene_size.height
+            )
+            scene_aspect_error = (
+                f"presentation {presentation.id}.aspectRatio must match "
+                "cordRig.sceneSize within 0.1%"
+            )
+            if not math.isfinite(scene_aspect_ratio) or scene_aspect_ratio <= 0:
+                raise ValueError(scene_aspect_error)
+            relative_error = (
+                abs(presentation.aspect_ratio - scene_aspect_ratio)
+                / scene_aspect_ratio
+            )
+            if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+                raise ValueError(scene_aspect_error)
+        if (
+            presentation.rotation_degrees is not None
+            and presentation.source_presentation_id is None
+        ):
+            raise ValueError(
+                f"presentation {presentation.id}.rotationDegrees requires sourcePresentationID"
+            )
+        if presentation.geometry_rotation_anchor is not None:
+            if presentation.source_presentation_id is None:
+                raise ValueError(
+                    f"presentation {presentation.id}.geometryRotationAnchor requires sourcePresentationID"
+                )
+            if presentation.resolved_rotation_degrees == 0:
+                raise ValueError(
+                    f"presentation {presentation.id}.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
+                )
+        if presentation.source_presentation_id is None:
+            if isinstance(presentation.cord_rig, DirectTwoAnchorCordRig):
+                _validate_direct_two_anchor_cord_presentation(
+                    presentation.cord_rig,
+                    presentation_id=presentation.id,
+                    rotation_degrees=presentation.resolved_rotation_degrees,
+                    rotation_anchor=presentation.geometry_rotation_anchor
+                    or NormalizedPoint(0.5, 0.5),
+                )
+            elif isinstance(presentation.cord_rig, RoutedCordRig):
+                _validate_routed_cord_presentation(
+                    presentation.cord_rig,
+                    presentation_id=presentation.id,
+                    rotation_degrees=presentation.resolved_rotation_degrees,
+                    rotation_anchor=presentation.geometry_rotation_anchor
+                    or NormalizedPoint(0.5, 0.5),
+                )
+            continue
+
+        source = presentations_by_id.get(presentation.source_presentation_id)
+        if (
+            source is None
+            or source.source_presentation_id is not None
+            or source.id == presentation.id
+        ):
+            raise ValueError(
+                f"presentation {presentation.id} must reference a canonical presentation"
+            )
+        if not math.isclose(
+            presentation.aspect_ratio,
+            source.aspect_ratio,
+            rel_tol=_ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE,
+            abs_tol=_ALIAS_ASPECT_RATIO_ABSOLUTE_TOLERANCE,
+        ):
+            raise ValueError(
+                f"presentation {presentation.id}.aspectRatio must match source presentation aspectRatio"
+            )
+        if presentation.rotation_degrees is not None:
+            if presentation.asset_path != source.asset_path:
+                raise ValueError(
+                    f"presentation {presentation.id}.assetPath must reuse source "
+                    "presentation assetPath for an explicit rotation"
+                )
+            if presentation.rotation_degrees not in (0, 180) and source.cord_rig is None:
+                raise ValueError(
+                    f"presentation {presentation.id} non-180 rotation requires a "
+                    "canonical cordRig to prevent artwork clipping"
+                )
+        rotation_degrees = presentation.resolved_rotation_degrees
+        if isinstance(source.cord_rig, DirectTwoAnchorCordRig):
+            _validate_direct_two_anchor_cord_presentation(
+                source.cord_rig,
+                presentation_id=presentation.id,
+                rotation_degrees=rotation_degrees,
+                rotation_anchor=presentation.geometry_rotation_anchor
+                or NormalizedPoint(0.5, 0.5),
+            )
+        elif isinstance(source.cord_rig, RoutedCordRig):
+            _validate_routed_cord_presentation(
+                source.cord_rig,
+                presentation_id=presentation.id,
+                rotation_degrees=rotation_degrees,
+                rotation_anchor=presentation.geometry_rotation_anchor
+                or NormalizedPoint(0.5, 0.5),
+            )
+        if rotation_degrees == 0:
+            continue
+
+        anchor = presentation.geometry_rotation_anchor or NormalizedPoint(0.5, 0.5)
+        resolved_cord_rig = source.cord_rig
+        available_hold_ids = (
+            set(presentation.available_hold_ids)
+            if presentation.available_hold_ids is not None
+            else None
+        )
+        for hold in holds:
+            if hold.presentation_id != source.id:
+                continue
+            if available_hold_ids is not None and hold.id not in available_hold_ids:
+                continue
+            for piece in hold.geometry:
+                frame = piece.frame
+                if resolved_cord_rig is not None:
+                    if not _rigged_alias_frame_is_inside_canvas(
+                        frame, resolved_cord_rig, anchor, rotation_degrees
+                    ):
+                        raise ValueError(
+                            f"presentation {presentation.id} projects source hold "
+                            "geometry outside the normalized canvas"
+                        )
+                    continue
+                corners = (
+                    (frame.x, frame.y),
+                    (frame.x + frame.width, frame.y),
+                    (frame.x, frame.y + frame.height),
+                    (frame.x + frame.width, frame.y + frame.height),
+                )
+                projected_corners = (
+                    _rotate_point(
+                        x,
+                        y,
+                        anchor_x=anchor.x,
+                        anchor_y=anchor.y,
+                        rotation_degrees=rotation_degrees,
+                    )
+                    for x, y in corners
+                )
+                if any(
+                    projected_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    for projected_x, projected_y in projected_corners
+                ):
+                    raise ValueError(
+                        f"presentation {presentation.id} projects source hold geometry outside the normalized canvas"
+                    )
 
 
 def _load_positions(
@@ -868,6 +1857,26 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
+    holds_by_id = {hold.id: hold for hold in holds_tuple}
+    for presentation in presentations:
+        if presentation.available_hold_ids is None:
+            continue
+        canonical_presentation_id = (
+            presentation.source_presentation_id or presentation.id
+        )
+        for hold_id in presentation.available_hold_ids:
+            hold = holds_by_id.get(hold_id)
+            if hold is None:
+                raise ValueError(
+                    f"presentation {presentation.id}.availableHoldIDs references "
+                    f"unknown hold {hold_id}"
+                )
+            if hold.presentation_id != canonical_presentation_id:
+                raise ValueError(
+                    f"presentation {presentation.id}.availableHoldIDs hold {hold_id} "
+                    f"must belong to canonical presentation {canonical_presentation_id}"
+                )
+    _validate_alias_presentations(presentations, holds_tuple)
     equipment_object_ids = set(equipment_objects)
     for hold in holds_tuple:
         if hold.equipment_object_id not in equipment_object_ids:
@@ -880,7 +1889,6 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
             raise ValueError(
                 f"equipment object {equipment_object_id} must own at least one hold"
             )
-    holds_by_id = {hold.id: hold for hold in holds_tuple}
     for hold in holds_tuple:
         if hold.kind != "gaston":
             continue
@@ -943,16 +1951,34 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
         if asset.is_symlink() or not asset.is_file():
             raise ValueError(f"{asset_path} must be a regular non-symlink file")
         image_dimensions[asset_path] = _validate_png_structure(asset, asset_path)
+    presentations_by_id = {
+        presentation.id: presentation for presentation in board.presentations
+    }
     for presentation in board.presentations:
         width, height = image_dimensions[presentation.asset_path]
         image_aspect_ratio = width / height
+        canonical = (
+            presentations_by_id[presentation.source_presentation_id]
+            if presentation.source_presentation_id is not None
+            else presentation
+        )
+        expected_image_aspect_ratio = presentation.aspect_ratio
+        aspect_source = f"board.json.presentations[{presentation.id}].aspectRatio"
+        if canonical.cord_rig is not None:
+            expected_image_aspect_ratio = (
+                canonical.cord_rig.inner_face_frame.width
+                / canonical.cord_rig.inner_face_frame.height
+            )
+            aspect_source = (
+                f"board.json.presentations[{canonical.id}].cordRig.innerFaceFrame "
+                "aspect ratio"
+            )
         relative_error = (
-            abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+            abs(expected_image_aspect_ratio - image_aspect_ratio) / image_aspect_ratio
         )
         if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
             raise ValueError(
-                f"board.json.presentations[{presentation.id}].aspectRatio must match "
-                "its image width/height within 0.1%"
+                f"{aspect_source} must match its image width/height within 0.1%"
             )
 
 
