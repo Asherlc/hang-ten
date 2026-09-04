@@ -841,6 +841,21 @@ enum BoardPackageWriter {
                         document
                     )
                 }
+                if let rotationDegrees = presentation.rotationDegrees {
+                    guard presentation.assetPath == sourcePresentation.assetPath else {
+                        throw invalid(
+                            "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation",
+                            document
+                        )
+                    }
+                    guard rotationDegrees == 0 || rotationDegrees == 180
+                            || sourcePresentation.cordRig != nil else {
+                        throw invalid(
+                            "presentation \(presentation.id) non-180 rotation requires a canonical cordRig to prevent artwork clipping",
+                            document
+                        )
+                    }
+                }
             }
         }
 

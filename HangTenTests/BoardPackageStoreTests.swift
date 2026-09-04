@@ -833,15 +833,33 @@ final class BoardPackageStoreTests: XCTestCase {
 
     func testStoreLoadsExplicitArbitraryAliasRotation() throws {
         let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[0]["aspectRatio"] = 1
+            presentations[0]["cordRig"] = [
+                "type": "directTwoAnchor",
+                "sceneSize": ["width": 240, "height": 240],
+                "sourceFrame": ["x": 20, "y": 70, "width": 200, "height": 100],
+                "innerFaceFrame": ["x": 0, "y": 0, "width": 200, "height": 100],
+                "attachmentPoints": [["x": 40, "y": 50], ["x": 160, "y": 50]],
+                "pullPoint": ["x": 100, "y": 0],
+                "eyeletRadius": 5,
+            ]
             presentations[2].removeValue(forKey: "isInverted")
             presentations[2]["rotationDegrees"] = 90
             presentations[2]["geometryRotationAnchor"] = ["x": 0.5, "y": 0.5]
+            presentations[2]["assetPath"] = "assets/primary.png"
+            presentations[2]["aspectRatio"] = 1
         }
         defer { fixture.remove() }
+        try FileManager.default.removeItem(
+            at: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/front-inverted.png"
+            )
+        )
         let boardURL = fixture.rootURL.appendingPathComponent(
             "Hangboards/fixture-model/board.json"
         )
         try mutateBoard(at: boardURL) { board in
+            board["aspectRatio"] = 1
             var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
             var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
             for index in geometry.indices {
@@ -866,6 +884,38 @@ final class BoardPackageStoreTests: XCTestCase {
                 in: CGRect(x: 0, y: 0, width: 100, height: 100)
             ),
             CGPoint(x: 50, y: 75)
+        )
+    }
+
+    func testStoreRejectsExplicitRotationUsingADistinctAliasAsset() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["rotationDegrees"] = 180
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted.assetPath must reuse source presentation assetPath for an explicit rotation"
+        )
+    }
+
+    func testStoreRejectsExplicitNonHalfTurnWithoutCanonicalCordRig() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["rotationDegrees"] = 90
+            presentations[2]["assetPath"] = "assets/primary.png"
+        }
+        defer { fixture.remove() }
+        try FileManager.default.removeItem(
+            at: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/front-inverted.png"
+            )
+        )
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted non-180 rotation requires a canonical cordRig to prevent artwork clipping"
         )
     }
 

@@ -3,6 +3,23 @@ export interface Point {
   y: number;
 }
 
+export interface CordSize {
+  width: number;
+  height: number;
+}
+
+export interface CordRect extends Point, CordSize {}
+
+export interface DirectTwoAnchorCordRig {
+  type: "directTwoAnchor";
+  sceneSize: CordSize;
+  sourceFrame: CordRect;
+  innerFaceFrame: CordRect;
+  attachmentPoints: [Point, Point];
+  pullPoint: Point;
+  eyeletRadius: number;
+}
+
 export type PathCommandType = "M" | "L" | "Q" | "C" | "Z";
 
 export interface PathCommand {
@@ -121,6 +138,7 @@ export interface BoardPresentation {
   isInverted?: true;
   rotationDegrees?: number;
   geometryRotationAnchor?: Point;
+  cordRig?: DirectTwoAnchorCordRig;
 }
 
 export interface BoardSummary {

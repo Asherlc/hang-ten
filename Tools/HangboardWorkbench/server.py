@@ -35,6 +35,7 @@ from board_package import (
     BoardPackageError,
     BoardPresentation,
     BoardSaveConflictError,
+    DirectTwoAnchorCordRig,
     discover_packages,
     editor_document,
     delete_presentation,
@@ -195,6 +196,40 @@ def _presentation_payload(
             if anchor is not None
             else {}
         ),
+        **(
+            {"cordRig": _direct_two_anchor_cord_rig_payload(presentation.cord_rig)}
+            if presentation.cord_rig is not None
+            else {}
+        ),
+    }
+
+
+def _direct_two_anchor_cord_rig_payload(
+    rig: DirectTwoAnchorCordRig,
+) -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {
+            "width": rig.scene_size.width,
+            "height": rig.scene_size.height,
+        },
+        "sourceFrame": {
+            "x": rig.source_frame.x,
+            "y": rig.source_frame.y,
+            "width": rig.source_frame.width,
+            "height": rig.source_frame.height,
+        },
+        "innerFaceFrame": {
+            "x": rig.inner_face_frame.x,
+            "y": rig.inner_face_frame.y,
+            "width": rig.inner_face_frame.width,
+            "height": rig.inner_face_frame.height,
+        },
+        "attachmentPoints": [
+            {"x": point.x, "y": point.y} for point in rig.attachment_points
+        ],
+        "pullPoint": {"x": rig.pull_point.x, "y": rig.pull_point.y},
+        "eyeletRadius": rig.eyelet_radius,
     }
 
 

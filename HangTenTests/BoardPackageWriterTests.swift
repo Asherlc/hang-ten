@@ -666,6 +666,23 @@ final class BoardPackageWriterTests: XCTestCase {
             width: 0.05,
             height: 0.05
         )
+        document.aspectRatio = 1
+        document.presentations[0].aspectRatio = 1
+        document.presentations[0].cordRig = .directTwoAnchor(
+            BoardDirectTwoAnchorCordRig(
+                sceneSize: BoardCordSize(width: 240, height: 240),
+                sourceFrame: BoardCordRect(x: 20, y: 70, width: 200, height: 100),
+                innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
+                attachmentPoints: [
+                    BoardCordPoint(x: 40, y: 50),
+                    BoardCordPoint(x: 160, y: 50),
+                ],
+                pullPoint: BoardCordPoint(x: 100, y: 0),
+                eyeletRadius: 5
+            )
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+        document.presentations[1].aspectRatio = 1
 
         let encoded = try BoardPackageWriter.data(for: document)
         let redecoded = try BoardEditableDocument(data: encoded)
@@ -677,6 +694,27 @@ final class BoardPackageWriterTests: XCTestCase {
                 "      \"rotationDegrees\": 135.0,\n"
                     + "      \"geometryRotationAnchor\": {\n"
             )
+        )
+    }
+
+    func testWriterRejectsExplicitRotationUsingADistinctAliasAsset() throws {
+        assertWriterInvalid(
+            makeAliasDocument(isInverted: false, rotationDegrees: 180),
+            reason: "presentation front-inverted.assetPath must reuse source presentation assetPath for an explicit rotation"
+        )
+    }
+
+    func testWriterRejectsExplicitNonHalfTurnWithoutCanonicalCordRig() throws {
+        var document = makeAliasDocument(
+            anchor: .center,
+            isInverted: false,
+            rotationDegrees: 90
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+
+        assertWriterInvalid(
+            document,
+            reason: "presentation front-inverted non-180 rotation requires a canonical cordRig to prevent artwork clipping"
         )
     }
 

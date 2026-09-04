@@ -992,6 +992,17 @@ def _validate_alias_presentations(
             raise ValueError(
                 f"presentation {presentation.id}.aspectRatio must match source presentation aspectRatio"
             )
+        if presentation.rotation_degrees is not None:
+            if presentation.asset_path != source.asset_path:
+                raise ValueError(
+                    f"presentation {presentation.id}.assetPath must reuse source "
+                    "presentation assetPath for an explicit rotation"
+                )
+            if presentation.rotation_degrees not in (0, 180) and source.cord_rig is None:
+                raise ValueError(
+                    f"presentation {presentation.id} non-180 rotation requires a "
+                    "canonical cordRig to prevent artwork clipping"
+                )
         rotation_degrees = presentation.resolved_rotation_degrees
         if rotation_degrees == 0:
             continue

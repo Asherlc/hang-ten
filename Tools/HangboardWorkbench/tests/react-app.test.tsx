@@ -13,6 +13,7 @@ import type {
   BrowserRuntime,
   CommitResult,
   Dialogs,
+  DirectTwoAnchorCordRig,
   EditorDocument,
   GitStatus,
   PullRequestResult,
@@ -464,6 +465,96 @@ test("a constrained alias remains selectable without canvas edit affordances whi
     assert.equal(app.document.querySelectorAll(".path-editor-resize-handle").length > 0, true);
     assert.equal(app.document.querySelectorAll(".path-editor-overlay [tabindex=\"0\"]").length, 0);
     assert.equal(saves, 0);
+  });
+});
+
+test("a rigged alias rotates the face in plane while its complete cord stays world-up", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "front-vertical",
+    equipmentObjects: ["primary"],
+    canvas: { width: 10, height: 10 },
+    regions: [{
+      key: "edge-piece-0",
+      type: "edge",
+      equipmentObjectID: "primary",
+      displayPath: "M 6 2 L 7 2 L 7 4 L 6 4 Z",
+      metadata: {
+        holdID: "edge",
+        pieceIndex: 0,
+        presentationID: "front-vertical",
+      },
+      sizeMillimeters: 20,
+      fingerCapacity: 4,
+      handCapacity: 1,
+    }],
+  };
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 400 },
+    sourceFrame: { x: 0, y: 200, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
+    pullPoint: { x: 50, y: 0 },
+    eyeletRadius: 2,
+  };
+  const presentations = [{
+    presentationID: "front",
+    displayName: "Front",
+    imageUrl: "/api/boards/board-a/image?presentationID=front",
+    default: true,
+    cordRig: rig,
+  }, {
+    presentationID: "front-vertical",
+    displayName: "Front vertical",
+    imageUrl: "/api/boards/board-a/image",
+    default: false,
+    sourcePresentationID: "front",
+    availableHoldIDs: ["edge"],
+    rotationDegrees: 90,
+    geometryRotationAnchor: { x: 0.5, y: 0.625 },
+  }];
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: presentations[1]!.imageUrl,
+    selectedPresentationID: "front-vertical",
+    presentations,
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard() {
+        return board;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    const editorSvg = app.document.querySelector("#editor-svg");
+    assert.equal(
+      editorSvg?.getAttribute("viewBox"),
+      "0 -20 10 40",
+      editorSvg?.outerHTML ?? "editor SVG missing",
+    );
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(90 5 5)",
+    );
+    const strands = [...app.document.querySelectorAll<SVGLineElement>("#cord-strands line")];
+    assert.equal(strands.length, 2);
+    assert.deepEqual(strands.map((strand) => ({
+      x1: Number(strand.getAttribute("x1")),
+      y1: Number(strand.getAttribute("y1")),
+      x2: Number(strand.getAttribute("x2")),
+      y2: Number(strand.getAttribute("y2")),
+    })), [{ x1: 2.8, y1: 0, x2: 5, y2: 2 }, { x1: 7.2, y1: 0, x2: 5, y2: 8 }]);
+    assert.equal(app.document.querySelectorAll("#cord-support path").length, 4);
+    assert.equal(app.document.querySelector("#cord-rig")?.getAttribute("data-pull-y"), "0");
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
   });
 });
 

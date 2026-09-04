@@ -1,5 +1,10 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import {
+  cordRigViewBox,
+  resolveCordRigPresentationGeometry,
+  type CordRigPresentationGeometry,
+} from "../cord-rig.ts";
 import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
 import type {
@@ -40,6 +45,76 @@ interface GuideDragState {
   axis: GuideAxis;
   pointerId: number;
   svg: SVGSVGElement;
+}
+
+function CordRigArtwork({ geometry }: { geometry: CordRigPresentationGeometry }) {
+  const ropeWidth = 31 * geometry.cordUnitScale;
+  const coreWidth = 25 * geometry.cordUnitScale;
+  const ridgeWidth = 2.4 * geometry.cordUnitScale;
+  const braidDash = `${1.5 * geometry.cordUnitScale} ${5.5 * geometry.cordUnitScale}`;
+  const mainSupportPaths = geometry.supportPaths.slice(0, 3);
+  const overpass = geometry.supportPaths[3];
+  return <g
+    id="cord-rig"
+    aria-label="Tensioned suspension cord"
+    data-pull-x={geometry.pullPoint.x}
+    data-pull-y={geometry.pullPoint.y}
+    pointerEvents="none"
+  >
+    <g id="cord-eyelets">
+      {geometry.strands.map((strand, index) => <circle
+        key={index}
+        cx={strand.end.x}
+        cy={strand.end.y}
+        r={geometry.eyeletRadius}
+        fill="#050607"
+        stroke="#303234"
+        strokeWidth={2 * geometry.cordUnitScale}
+      />)}
+    </g>
+    <g id="cord-support" fill="none" stroke="#050607" strokeWidth={ropeWidth} strokeLinecap="round" strokeLinejoin="round">
+      {geometry.supportPaths.map((path, index) => <path key={index} d={path} />)}
+    </g>
+    <g id="cord-strands" stroke="#050607" strokeWidth={ropeWidth} strokeLinecap="round">
+      {geometry.strands.map((strand, index) => <line
+        key={index}
+        x1={strand.start.x}
+        y1={strand.start.y}
+        x2={strand.end.x}
+        y2={strand.end.y}
+      />)}
+    </g>
+    <g fill="none" stroke="#151718" strokeWidth={coreWidth} strokeLinecap="round" strokeLinejoin="round">
+      {mainSupportPaths.map((path, index) => <path key={`support-${index}`} d={path} />)}
+      {geometry.strands.map((strand, index) => <line
+        key={`strand-${index}`}
+        x1={strand.start.x}
+        y1={strand.start.y}
+        x2={strand.end.x}
+        y2={strand.end.y}
+      />)}
+      <path d={overpass} />
+    </g>
+    <g
+      id="cord-braid"
+      fill="none"
+      stroke="#c4c9cc"
+      strokeOpacity="0.28"
+      strokeWidth={ridgeWidth}
+      strokeDasharray={braidDash}
+      strokeLinecap="round"
+    >
+      {mainSupportPaths.map((path, index) => <path key={`support-${index}`} d={path} />)}
+      {geometry.strands.map((strand, index) => <line
+        key={`strand-${index}`}
+        x1={strand.start.x}
+        y1={strand.start.y}
+        x2={strand.end.x}
+        y2={strand.end.y}
+      />)}
+      <path d={overpass} />
+    </g>
+  </g>;
 }
 
 function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
@@ -101,8 +176,18 @@ export function HoldCanvas({
   const selectedPresentation = board?.presentations?.find(
     (presentation) => presentation.presentationID === board.selectedPresentationID,
   );
-  const artworkRotation = selectedPresentation?.rotationDegrees;
-  const artworkAnchor = selectedPresentation?.geometryRotationAnchor ?? { x: 0.5, y: 0.5 };
+  const cordRigGeometry = resolveCordRigPresentationGeometry(board, document);
+  const artworkRotation = cordRigGeometry?.rotationDegrees ?? selectedPresentation?.rotationDegrees;
+  const artworkAnchor = cordRigGeometry?.rotationAnchor ?? (
+    selectedPresentation?.geometryRotationAnchor && document
+      ? {
+        x: selectedPresentation.geometryRotationAnchor.x * document.canvas.width,
+        y: selectedPresentation.geometryRotationAnchor.y * document.canvas.height,
+      }
+      : document
+        ? { x: document.canvas.width / 2, y: document.canvas.height / 2 }
+        : { x: 0, y: 0 }
+  );
   const canPinchZoomChangeRef = useRef(canPinchZoomChange);
   editorRef.current = editor;
   onZoomChangeRef.current = onZoomChange;
@@ -316,7 +401,11 @@ export function HoldCanvas({
           id="editor-svg"
           xmlns="http://www.w3.org/2000/svg"
           aria-label="Hangboard hold editor"
-          viewBox={document ? `0 0 ${document.canvas.width} ${document.canvas.height}` : undefined}
+          viewBox={document
+            ? cordRigGeometry
+              ? cordRigViewBox(cordRigGeometry)
+              : `0 0 ${document.canvas.width} ${document.canvas.height}`
+            : undefined}
           width={document?.canvas.width}
           height={document?.canvas.height}
           style={{
@@ -356,8 +445,9 @@ export function HoldCanvas({
             height={document?.canvas.height}
             transform={artworkRotation === undefined || !document
               ? undefined
-              : `rotate(${artworkRotation} ${artworkAnchor.x * document.canvas.width} ${artworkAnchor.y * document.canvas.height})`}
+              : `rotate(${artworkRotation} ${artworkAnchor.x} ${artworkAnchor.y})`}
           />
+          {cordRigGeometry && <CordRigArtwork geometry={cordRigGeometry} />}
           <g id="guide-overlay" aria-label="Alignment guides">
             {guides.map((guide) => guide.axis === "horizontal" ? (
               <line

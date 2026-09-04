@@ -1102,7 +1102,9 @@ def test_unversioned_board_preserves_a_valid_non_center_alias_rotation_anchor(
 def test_unversioned_board_loads_explicit_arbitrary_alias_rotation() -> None:
     module = load_board_catalog_module()
     document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
     document["presentations"][1].update(
+        assetPath="assets/primary.png",
         sourcePresentationID="front",
         rotationDegrees=135,
         geometryRotationAnchor={"x": 0.5, "y": 0.5},
@@ -1120,6 +1122,52 @@ def test_unversioned_board_loads_explicit_arbitrary_alias_rotation() -> None:
     assert alias.rotation_degrees == 135
     assert alias.resolved_rotation_degrees == 135
     assert alias.is_inverted is False
+
+
+def test_unversioned_board_requires_explicit_rotation_alias_to_reuse_source_asset() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=180,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="must reuse source presentation assetPath"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_non_rig_arbitrary_alias_rotation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=90,
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1}],
+        )
+    ]
+
+    with pytest.raises(ValueError, match="non-180 rotation requires a canonical cordRig"):
+        module._load_board(document)
+
+
+def test_unversioned_board_keeps_legacy_inverted_alias_asset_compatibility() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.asset_path == "assets/back.png"
 
 
 def test_unversioned_board_maps_legacy_inversion_to_180_degrees() -> None:
@@ -1170,7 +1218,9 @@ def test_unversioned_board_rejects_ambiguous_legacy_and_explicit_rotation() -> N
 def test_unversioned_board_rejects_arbitrarily_rotated_frame_outside_canvas() -> None:
     module = load_board_catalog_module()
     document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
     document["presentations"][1].update(
+        assetPath="assets/primary.png",
         sourcePresentationID="front",
         rotationDegrees=45,
         geometryRotationAnchor={"x": 0.5, "y": 0.5},
@@ -1201,6 +1251,18 @@ def _source_hold_with_frames(
             }
             for frame in frames
         ],
+    }
+
+
+def _wide_pivot_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 2, "height": 1},
+        "sourceFrame": {"x": 0, "y": 0, "width": 2, "height": 1},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 2, "height": 1},
+        "attachmentPoints": [{"x": 0.5, "y": 0.5}, {"x": 1.5, "y": 0.5}],
+        "pullPoint": {"x": 1, "y": 0},
+        "eyeletRadius": 0.1,
     }
 
 

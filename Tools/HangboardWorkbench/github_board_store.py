@@ -1138,11 +1138,22 @@ def _save_loaded_editor_document(
         presentation_id=presentation.id,
         available_hold_ids=presentation.available_hold_ids,
     )
+    available_hold_ids_by_presentation = {
+        item[0]: item[7]
+        for item in board_package._parse_board_presentations(board)
+    }
+    updated_presentations = tuple(
+        replace(
+            item,
+            available_hold_ids=available_hold_ids_by_presentation[item.id],
+        )
+        for item in live.presentations
+    )
     board_package._validate_board(
         board,
         width,
         height,
-        presentations=live.presentations,
+        presentations=updated_presentations,
         allow_missing_kind=True,
     )
     content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
@@ -1163,7 +1174,7 @@ def _save_loaded_editor_document(
         live.image_width,
         live.image_height,
         _git_blob_sha(content),
-        live.presentations,
+        updated_presentations,
     ), commit_sha
 
 

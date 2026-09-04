@@ -456,14 +456,21 @@ def editor_document(
                     label=f"hold {key}",
                 )
                 if presentation.resolved_rotation_degrees != 0:
+                    anchor = presentation_geometry_rotation_anchor(
+                        package.board, presentation
+                    ) or (0.5, 0.5)
+                    cord_rig = _resolved_presentation_cord_rig(
+                        package.presentations, presentation
+                    )
+                    if cord_rig is not None:
+                        anchor = _scene_anchor_in_face_normalized_coordinates(
+                            cord_rig, anchor
+                        )
                     path = _rotated_display_path(
                         path,
                         width,
                         height,
-                        presentation_geometry_rotation_anchor(
-                            package.board, presentation
-                        )
-                        or (0.5, 0.5),
+                        anchor,
                         presentation.resolved_rotation_degrees,
                         label=f"hold {key}",
                     )
@@ -573,6 +580,38 @@ def presentation_geometry_rotation_anchor(
 ) -> tuple[float, float] | None:
     """Return the validated alias anchor declared by the package model."""
     return presentation.geometry_rotation_anchor
+
+
+def _resolved_presentation_cord_rig(
+    presentations: tuple[BoardPresentation, ...],
+    presentation: BoardPresentation,
+) -> DirectTwoAnchorCordRig | None:
+    if presentation.source_presentation_id is None:
+        return presentation.cord_rig
+    source = next(
+        (
+            candidate
+            for candidate in presentations
+            if candidate.id == presentation.source_presentation_id
+        ),
+        None,
+    )
+    return source.cord_rig if source is not None else None
+
+
+def _scene_anchor_in_face_normalized_coordinates(
+    rig: DirectTwoAnchorCordRig,
+    anchor: tuple[float, float],
+) -> tuple[float, float]:
+    """Map a scene-normalized pivot into canonical face-image coordinates."""
+    face_min_x = rig.source_frame.x + rig.inner_face_frame.x
+    face_min_y = rig.source_frame.y + rig.inner_face_frame.y
+    return (
+        (anchor[0] * rig.scene_size.width - face_min_x)
+        / rig.inner_face_frame.width,
+        (anchor[1] * rig.scene_size.height - face_min_y)
+        / rig.inner_face_frame.height,
+    )
 
 
 def _raw_presentation_geometry_rotation_anchor(
@@ -956,6 +995,16 @@ def _apply_editor_document(
             hold for hold in updated_holds if hold["id"] not in emitted
         )
         copied_board["holds"] = merged_holds
+        if available_hold_id_set is not None:
+            visible_hold_ids = [hold["id"] for hold in updated_holds]
+            if not visible_hold_ids:
+                raise BoardPackageError(
+                    "a filtered presentation must keep at least one visible hold"
+                )
+            for raw_presentation in copied_board["presentations"]:
+                if raw_presentation["id"] == presentation_id:
+                    raw_presentation["availableHoldIDs"] = visible_hold_ids
+                    break
     return copied_board
 
 
@@ -1478,7 +1527,7 @@ def _parse_board_presentations(
     for (
         presentation_id,
         _,
-        _,
+        asset_path,
         aspect_ratio,
         _,
         source_presentation_id,
@@ -1538,6 +1587,18 @@ def _parse_board_presentations(
             raise BoardPackageError(
                 f"presentation {presentation_id}.aspectRatio must match source presentation aspectRatio"
             )
+        if source_presentation_id is not None and rotation_degrees is not None:
+            source = presentations_by_id[source_presentation_id]
+            if asset_path != source[2]:
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.assetPath must reuse source "
+                    "presentation assetPath for an explicit rotation"
+                )
+            if rotation_degrees not in (0, 180) and cord_rigs[source_presentation_id] is None:
+                raise BoardPackageError(
+                    f"presentation {presentation_id} non-180 rotation requires a "
+                    "canonical cordRig to prevent artwork clipping"
+                )
     return tuple(presentations)
 
 

@@ -50,6 +50,64 @@ function isGeometryRotationAnchor(value: unknown): value is { x: number; y: numb
     && value.y <= 1;
 }
 
+function isFinitePoint(value: unknown): value is { x: number; y: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 2
+    && typeof value.x === "number"
+    && Number.isFinite(value.x)
+    && typeof value.y === "number"
+    && Number.isFinite(value.y);
+}
+
+function isPositiveSize(value: unknown): value is { width: number; height: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 2
+    && isPositiveFiniteNumber(value.width)
+    && isPositiveFiniteNumber(value.height);
+}
+
+function isCordRect(value: unknown): value is { x: number; y: number; width: number; height: number } {
+  return isRecord(value)
+    && Object.keys(value).length === 4
+    && typeof value.x === "number"
+    && Number.isFinite(value.x)
+    && typeof value.y === "number"
+    && Number.isFinite(value.y)
+    && isPositiveFiniteNumber(value.width)
+    && isPositiveFiniteNumber(value.height);
+}
+
+function isDirectTwoAnchorCordRig(value: unknown): boolean {
+  if (!isRecord(value) || value.type !== "directTwoAnchor") return false;
+  const allowedKeys = new Set([
+    "type",
+    "sceneSize",
+    "sourceFrame",
+    "innerFaceFrame",
+    "attachmentPoints",
+    "pullPoint",
+    "eyeletRadius",
+  ]);
+  if (!Object.keys(value).every((key) => allowedKeys.has(key))
+    || Object.keys(value).length !== allowedKeys.size
+    || !isPositiveSize(value.sceneSize)
+    || !isCordRect(value.sourceFrame)
+    || !isCordRect(value.innerFaceFrame)
+    || !Array.isArray(value.attachmentPoints)
+    || value.attachmentPoints.length !== 2
+    || !value.attachmentPoints.every(isFinitePoint)
+    || !isFinitePoint(value.pullPoint)
+    || !isPositiveFiniteNumber(value.eyeletRadius)) return false;
+  const [first, second] = value.attachmentPoints;
+  if (!first || !second || (first.x === second.x && first.y === second.y)) return false;
+  const pullX = value.sourceFrame.x + value.pullPoint.x;
+  const pullY = value.sourceFrame.y + value.pullPoint.y;
+  return pullX >= 0
+    && pullX <= value.sceneSize.width
+    && pullY >= 0
+    && pullY <= value.sceneSize.height;
+}
+
 function isSloperMetadata(value: unknown): boolean {
   if (!isRecord(value) || (value.type !== "flat" && value.type !== "round")) return false;
   const allowedKeys = value.type === "flat" ? ["type", "angleDegrees"] : ["type"];
@@ -126,6 +184,7 @@ function isBoardPresentation(value: unknown): boolean {
     "isInverted",
     "rotationDegrees",
     "geometryRotationAnchor",
+    "cordRig",
   ]);
   return Object.keys(value).every((key) => allowedKeys.has(key))
     && typeof value.presentationID === "string"
@@ -146,6 +205,11 @@ function isBoardPresentation(value: unknown): boolean {
         && value.rotationDegrees >= 0
         && value.rotationDegrees < 360))
     && !(value.isInverted === true && value.rotationDegrees !== undefined)
+    && (value.cordRig === undefined
+      || (value.sourcePresentationID === undefined
+        && value.isInverted === undefined
+        && value.rotationDegrees === undefined
+        && isDirectTwoAnchorCordRig(value.cordRig)))
     && (value.geometryRotationAnchor === undefined
       || (typeof value.sourcePresentationID === "string"
         && (value.isInverted === true

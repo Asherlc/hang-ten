@@ -57,6 +57,18 @@ HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
 
 
+def _direct_two_anchor_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+        "pullPoint": {"x": 887, "y": 200},
+        "eyeletRadius": 20,
+    }
+
+
 class _ScriptTagParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
@@ -793,6 +805,32 @@ def test_board_payload_exposes_available_hold_ids_without_starting_a_server(
     assert payload["availableHoldIDs"] == ["hold-left"]
 
 
+def test_board_payload_exposes_canonical_direct_two_anchor_rig(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    rig = {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+        "pullPoint": {"x": 887, "y": 200},
+        "eyeletRadius": 20,
+    }
+    board["presentations"][0]["cordRig"] = rig
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["cordRig"] == rig
+
+
 def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
     tmp_path: Path,
 ) -> None:
@@ -802,12 +840,15 @@ def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
     board["holds"] = board["holds"][:1]
     for piece in board["holds"][0]["geometry"]:
         piece["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
+    board["presentations"][0]["cordRig"] = _direct_two_anchor_cord_rig()
     board["presentations"][1].update(
+        assetPath="assets/primary.png",
         sourcePresentationID="front",
         rotationDegrees=90,
         geometryRotationAnchor={"x": 0.5, "y": 0.5},
     )
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    (package / "assets" / "back.png").unlink()
 
     with running_server(library) as base:
         status, opened = request_json(

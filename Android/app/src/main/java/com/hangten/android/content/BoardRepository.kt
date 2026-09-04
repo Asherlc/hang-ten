@@ -74,6 +74,20 @@ class AssetBoardRepository(
                 if (!aspectRatiosMatch(presentation.aspectRatio, source.aspectRatio, ALIAS_ASPECT_RATIO_TOLERANCE)) {
                     fail("Board $boardId presentation ${presentation.id}.aspectRatio must match its source presentation.")
                 }
+                presentation.rotationDegrees?.let { rotationDegrees ->
+                    if (presentation.assetPath != source.assetPath) {
+                        fail(
+                            "Board $boardId presentation ${presentation.id}.assetPath must reuse " +
+                                "source presentation assetPath for an explicit rotation.",
+                        )
+                    }
+                    if (rotationDegrees != 0f && rotationDegrees != 180f && source.cordRig == null) {
+                        fail(
+                            "Board $boardId presentation ${presentation.id} non-180 rotation requires " +
+                                "a canonical cordRig to prevent artwork clipping.",
+                        )
+                    }
+                }
             }
         }
 

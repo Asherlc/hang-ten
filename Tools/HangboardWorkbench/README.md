@@ -92,6 +92,13 @@ the decoded image within 0.1% relative error.
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
 
+For a canonical `directTwoAnchor` cord rig, Workbench previews the full padded
+scene. Alias `rotationDegrees` rotate the face artwork, visible holds, markers,
+and attachment points in plane around `geometryRotationAnchor`; the pull point
+stays fixed above the board and both cord strands remain tensioned. Explicit
+rotation aliases reuse the canonical `assetPath`, and non-0/180 rotations are
+accepted only when that canonical rig supplies enough scene padding.
+
 ### Editor-local geometry identities
 
 While a freeform contour is being edited, its anchors, Bézier controls, and

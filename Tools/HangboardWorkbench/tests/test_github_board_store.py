@@ -1526,6 +1526,54 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     assert saved.board_json_sha == expected_sha
 
 
+def test_changed_hosted_save_reconciles_filtered_canonical_hold_ids() -> None:
+    board = board_document("fixture.board")
+    holds = board["holds"]
+    presentations = board["presentations"]
+    assert isinstance(holds, list) and isinstance(presentations, list)
+    second_hold = copy.deepcopy(holds[0])
+    second_hold.update(id="hold-second", name="Second hold")
+    hidden_hold = copy.deepcopy(holds[0])
+    hidden_hold.update(id="hold-hidden", name="Hidden hold")
+    holds.extend((second_hold, hidden_hold))
+    presentations[0]["availableHoldIDs"] = ["hold-left", "hold-second"]
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document["regions"] = [
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "hold-second"
+    ]
+    new_region = copy.deepcopy(document["regions"][0])
+    new_region.update(id=99, key="hold-new-piece-0")
+    new_region["metadata"].update(holdID="hold-new", pieceIndex=0)
+    document["regions"].append(new_region)
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    assert [hold["id"] for hold in saved.board["holds"]] == [
+        "hold-second",
+        "hold-hidden",
+        "hold-new",
+    ]
+    assert saved.board["presentations"][0]["availableHoldIDs"] == [
+        "hold-second",
+        "hold-new",
+    ]
+    assert saved.presentation("primary").available_hold_ids == (
+        "hold-second",
+        "hold-new",
+    )
+    assert {
+        region["metadata"]["holdID"]
+        for region in board_package.editor_document(saved, "primary")["regions"]
+    } == {"hold-second", "hold-new"}
+
+
 def test_changed_hosted_save_preserves_direct_two_anchor_cord_rig() -> None:
     board = board_document("fixture.board")
     board["presentations"][0]["cordRig"] = _direct_two_anchor_cord_rig()

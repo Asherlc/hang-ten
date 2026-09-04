@@ -151,6 +151,48 @@ class BoardRepositoryTest {
     }
 
     @Test
+    fun rejectsExplicitRotationUsingDistinctAliasAsset() {
+        val source = explicitRotationBoardJson(
+            assetPath = "assets/rotated.png",
+            rotationDegrees = 180,
+        )
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to source,
+                    "Hangboards/demo/assets/primary.png" to "png",
+                    "Hangboards/demo/assets/rotated.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+
+        assertTrueFailureContaining(
+            result,
+            "assetPath must reuse source presentation assetPath for an explicit rotation",
+        )
+    }
+
+    @Test
+    fun rejectsExplicitNonHalfTurnWithoutCanonicalCordRig() {
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to explicitRotationBoardJson(
+                        assetPath = "assets/primary.png",
+                        rotationDegrees = 90,
+                    ),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+
+        assertTrueFailureContaining(
+            result,
+            "non-180 rotation requires a canonical cordRig to prevent artwork clipping",
+        )
+    }
+
+    @Test
     fun rejectsInvalidOrAmbiguousExplicitAliasRotation() {
         listOf(
             riggedBoardJson().replace("\"isInverted\": true", "\"rotationDegrees\": -1"),
@@ -376,6 +418,22 @@ class BoardRepositoryTest {
                 + "      \"availableHoldIDs\": $availableHoldIds\n"
                 + "    }\n  ],",
         )
+
+    private fun explicitRotationBoardJson(
+        assetPath: String,
+        rotationDegrees: Int,
+    ): String = boardJson().replace(
+        "      \"default\": true\n    }\n  ],",
+        "      \"default\": true\n    },\n    {\n"
+            + "      \"id\": \"rotated\",\n"
+            + "      \"name\": \"Rotated\",\n"
+            + "      \"assetPath\": \"$assetPath\",\n"
+            + "      \"aspectRatio\": 2.0,\n"
+            + "      \"default\": false,\n"
+            + "      \"sourcePresentationID\": \"primary\",\n"
+            + "      \"rotationDegrees\": $rotationDegrees\n"
+            + "    }\n  ],",
+    )
 
     private fun boardJson(): String =
         """

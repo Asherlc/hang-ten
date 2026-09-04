@@ -17,6 +17,7 @@ import type {
   BoardPresentation,
   BrowserRuntime,
   Dialogs,
+  DirectTwoAnchorCordRig,
   EditorDocument,
   LoadedBoard,
   PathEditor,
@@ -230,6 +231,37 @@ test("the browser client preserves an explicit arbitrary alias rotation", async 
   const board = await createWorkbenchClient(runtime).getBoard("compact");
 
   assert.deepEqual(board.presentations?.[0], alias);
+});
+
+test("the browser client preserves a canonical direct-two-anchor cord rig", async () => {
+  const rig: DirectTwoAnchorCordRig = {
+    type: "directTwoAnchor",
+    sceneSize: { width: 100, height: 400 },
+    sourceFrame: { x: 0, y: 200, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    attachmentPoints: [{ x: 20, y: 50 }, { x: 80, y: 50 }],
+    pullPoint: { x: 50, y: 0 },
+    eyeletRadius: 2,
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: rig,
+      }],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(
+    (board.presentations?.[0] as unknown as { cordRig?: unknown })?.cordRig,
+    rig,
+  );
 });
 
 test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {

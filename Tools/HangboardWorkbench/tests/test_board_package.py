@@ -469,6 +469,55 @@ def test_saving_a_filtered_canonical_presentation_preserves_unavailable_holds(
     assert saved["presentations"][0]["availableHoldIDs"] == ["hold-left"]
 
 
+def test_saving_a_filtered_canonical_presentation_reconciles_visible_hold_ids(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    board = _read_board(package_root)
+    holds = board["holds"]
+    presentations = board["presentations"]
+    assert isinstance(holds, list) and isinstance(presentations, list)
+    second_hold = copy.deepcopy(holds[0])
+    second_hold.update(id="hold-second", name="Second hold")
+    hidden_hold = copy.deepcopy(holds[0])
+    hidden_hold.update(id="hold-hidden", name="Hidden hold")
+    holds.extend((second_hold, hidden_hold))
+    presentations[0]["availableHoldIDs"] = ["hold-left", "hold-second"]
+    _write_json(package_root / "board.json", board)
+
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root), "primary"
+    )
+    document["regions"] = [
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "hold-second"
+    ]
+    new_region = copy.deepcopy(document["regions"][0])
+    new_region.update(id=99, key="hold-new-piece-0")
+    new_region["metadata"].update(holdID="hold-new", pieceIndex=0)
+    document["regions"].append(new_region)
+
+    saved = board_package.save_editor_document(
+        library, "fixture-board", document
+    )
+
+    assert [
+        hold["id"] for hold in saved.board["holds"]
+    ] == ["hold-second", "hold-hidden", "hold-new"]
+    assert saved.board["presentations"][0]["availableHoldIDs"] == [
+        "hold-second",
+        "hold-new",
+    ]
+    assert {
+        region["metadata"]["holdID"]
+        for region in board_package.editor_document(saved, "primary")["regions"]
+    } == {"hold-second", "hold-new"}
+
+
 @pytest.mark.parametrize(
     ("available_hold_ids", "message"),
     [
@@ -648,7 +697,9 @@ def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
     presentations = board["presentations"]
     holds = board["holds"]
     assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[0]["cordRig"] = _direct_two_anchor_cord_rig()
     presentations[1].update(
+        assetPath="assets/primary.png",
         sourcePresentationID="front",
         rotationDegrees=90,
         geometryRotationAnchor={"x": 0.5, "y": 0.5},
@@ -659,6 +710,7 @@ def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
     geometry[0]["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
     geometry[1]["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
     _write_json(package_root / "board.json", board)
+    (package_root / "assets" / "back.png").unlink()
 
     package = board_package.load_board_package(package_root)
     alias = package.presentation("back")
@@ -672,6 +724,103 @@ def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
     xs, ys = zip(*path.contour)
     assert (min(xs), max(xs)) == pytest.approx((864.15, 909.85))
     assert (min(ys), max(ys)) == pytest.approx((210.76, 246.24))
+
+
+def test_rigged_alias_projects_face_paths_around_scene_anchor_and_filters_holds(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    board["aspectRatio"] = 1
+    presentations[0].update(
+        aspectRatio=1,
+        cordRig={
+            "type": "directTwoAnchor",
+            "sceneSize": {"width": 2000, "height": 2000},
+            "sourceFrame": {"x": 100, "y": 800, "width": 1774, "height": 457},
+            "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+            "attachmentPoints": [{"x": 400, "y": 300}, {"x": 1374, "y": 300}],
+            "pullPoint": {"x": 900, "y": -600},
+            "eyeletRadius": 20,
+        },
+    )
+    presentations[1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=1,
+        sourcePresentationID="front",
+        rotationDegrees=90,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+        availableHoldIDs=["hold-left"],
+    )
+    (package_root / "assets" / "back.png").unlink()
+    holds[1].update(id="hold-other", presentationID="front")
+    for piece in holds[0]["geometry"]:
+        piece["frame"] = {"x": 0.4, "y": 0.4, "width": 0.1, "height": 0.1}
+    _write_json(package_root / "board.json", board)
+
+    package = board_package.load_board_package(package_root)
+    canonical = board_package.editor_document(package, "front")
+    rotated = board_package.editor_document(package, "back")
+
+    assert {region["metadata"]["holdID"] for region in canonical["regions"]} == {
+        "hold-left",
+        "hold-other",
+    }
+    assert {region["metadata"]["holdID"] for region in rotated["regions"]} == {
+        "hold-left"
+    }
+    canonical_path = board_package.parse_closed_path(
+        canonical["regions"][0]["displayPath"], 1774, 457
+    )
+    canonical_xs, canonical_ys = zip(*canonical_path.contour)
+    assert (min(canonical_xs), max(canonical_xs)) == pytest.approx((709.6, 887.0))
+    assert (min(canonical_ys), max(canonical_ys)) == pytest.approx((182.8, 228.5))
+    rotated_path = board_package.parse_closed_path(
+        rotated["regions"][0]["displayPath"], 1774, 457
+    )
+    rotated_xs, rotated_ys = zip(*rotated_path.contour)
+    assert (min(rotated_xs), max(rotated_xs)) == pytest.approx((871.5, 917.2))
+    assert (min(rotated_ys), max(rotated_ys)) == pytest.approx((9.6, 187.0))
+
+
+def test_explicit_rotation_alias_must_reuse_canonical_asset_path(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=180,
+    )
+    board["holds"] = board["holds"][:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="must reuse source presentation assetPath"):
+        board_package.load_board_package(package_root)
+
+
+def test_non_rig_explicit_non_180_rotation_is_rejected(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        rotationDegrees=90,
+    )
+    board["holds"] = board["holds"][:1]
+    (package_root / "assets" / "back.png").unlink()
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="non-180 rotation requires a canonical cordRig"):
+        board_package.load_board_package(package_root)
 
 
 @pytest.mark.parametrize("rotation", [-1, 360, float("inf"), float("nan"), True])

@@ -749,6 +749,21 @@ struct BoardPackageStore {
                         reason: "presentation \(presentation.id).aspectRatio must match source presentation aspectRatio"
                     )
                 }
+                if let rotationDegrees = presentation.rotationDegrees {
+                    guard presentation.assetPath == sourcePresentation.assetPath else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation"
+                        )
+                    }
+                    guard rotationDegrees == 0 || rotationDegrees == 180
+                            || sourcePresentation.cordRig != nil else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "presentation \(presentation.id) non-180 rotation requires a canonical cordRig to prevent artwork clipping"
+                        )
+                    }
+                }
             }
         }
         guard defaultCount == 1 else {
