@@ -385,6 +385,33 @@ class RoutedCordRigRepositoryTest {
         assertFailureContains(loadBoard(aliasOwned), "cordRig must be owned by a canonical")
     }
 
+    @Test
+    fun rejectsUnsafeRoutedGeometryOnCanonicalAndRotatedAliasPresentations() {
+        val canonicalCenterlineOutside = boardJson(
+            routedRigJson().replaceFixture(
+                """{ "id": "world-left", "space": "world", "point": { "x": 400, "y": 100 } }""",
+                """{ "id": "world-left", "space": "world", "point": { "x": 4, "y": 100 } }""",
+            ),
+        )
+        val aliasViolatesGravity = boardJson(
+            routedRigJson().replaceFixture(
+                """{ "id": "body-left", "space": "body", "point": { "x": 200, "y": 650 } }""",
+                """{ "id": "body-left", "space": "body", "point": { "x": 200, "y": 950 } }""",
+            ),
+        )
+
+        assertFailureContains(
+            loadBoard(canonicalCenterlineOutside),
+            "presentation primary routed cord centerlines must remain inside sceneSize " +
+                "with a 0.8 * style.diameter inset",
+        )
+        assertFailureContains(
+            loadBoard(aliasViolatesGravity),
+            "presentation primary-inverted routed cord body port body-left must remain " +
+                "strictly below world port world-right",
+        )
+    }
+
     private fun loadBoard(
         source: String,
         imageDimensions: ContentImageDimensions = ContentImageDimensions(width = 1000, height = 1000),
