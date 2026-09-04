@@ -209,13 +209,24 @@ struct BoardPackageStore {
                 in: boardDocument,
                 presentations: presentations
             )
+            let positions = try Self.validatePositions(
+                in: boardDocument,
+                presentations: presentations.map(\.trainingPresentation),
+                holds: holds
+            )
+            let positionTransitions = try Self.validatePositionTransitions(
+                in: boardDocument,
+                positions: positions
+            )
             try Self.validateEquipmentObjectOwnership(in: boardDocument)
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
             }
             let board = try boardDocument.trainingBoard(
                 holds: holds,
-                presentations: presentations.map(\.trainingPresentation)
+                presentations: presentations.map(\.trainingPresentation),
+                positions: positions,
+                positionTransitions: positionTransitions
             )
             loadedBoards.append(board)
             loadedPresentationURLs[board.id] = Dictionary(
@@ -813,6 +824,89 @@ struct BoardPackageStore {
         }
     }
 
+    private static func validatePositions(
+        in document: BoardPackageBoardDocument,
+        presentations: [BoardPresentation],
+        holds: [BoardHold]
+    ) throws -> [BoardPosition] {
+        let positions = document.positions?.map(\.boardPosition) ?? presentations.map {
+            BoardPosition(id: $0.id, presentationID: $0.id)
+        }
+        guard !positions.isEmpty else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "positions must not be empty"
+            )
+        }
+        var positionIDs = Set<String>()
+        let presentationsByID = Dictionary(uniqueKeysWithValues: presentations.map { ($0.id, $0) })
+        for position in positions {
+            guard position.id.isBoardPackageIdentifier else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "position ID must be identifier-shaped"
+                )
+            }
+            guard positionIDs.insert(position.id).inserted else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "duplicate position id"
+                )
+            }
+            guard let presentation = presentationsByID[position.presentationID] else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "position \(position.id) references unknown presentationID"
+                )
+            }
+            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+            guard holds.contains(where: { $0.presentationID == canonicalPresentationID }) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "position \(position.id) must own at least one hold"
+                )
+            }
+        }
+        return positions
+    }
+
+    private static func validatePositionTransitions(
+        in document: BoardPackageBoardDocument,
+        positions: [BoardPosition]
+    ) throws -> [BoardPositionTransition] {
+        let transitions = document.positionTransitions?.map(\.boardPositionTransition) ?? []
+        let positionIDs = Set(positions.map(\.id))
+        var transitionPairs = Set<[String]>()
+        for transition in transitions {
+            guard positionIDs.contains(transition.fromPositionID) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "position transition references unknown fromPositionID"
+                )
+            }
+            guard positionIDs.contains(transition.toPositionID) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "position transition references unknown toPositionID"
+                )
+            }
+            guard transition.fromPositionID != transition.toPositionID else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "position transition must not be self-edge"
+                )
+            }
+            let pair = [transition.fromPositionID, transition.toPositionID]
+            guard transitionPairs.insert(pair).inserted else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "duplicate position transition"
+                )
+            }
+        }
+        return transitions
+    }
+
     private static func validatePresentationAssetPath(
         _ assetPath: String,
         boardID: String,
@@ -1109,6 +1203,8 @@ private struct BoardPackageBoardDocument: Decodable {
     let aspectRatio: Double
     let equipmentObjects: [BoardPackageEquipmentObjectDocument]
     let presentations: [BoardPackagePresentationDocument]
+    let positions: [BoardPackagePositionDocument]?
+    let positionTransitions: [BoardPackagePositionTransitionDocument]?
     let holds: [BoardPackageHoldDocument]
 
     private enum CodingKeys: String, CodingKey {
@@ -1121,13 +1217,15 @@ private struct BoardPackageBoardDocument: Decodable {
         case aspectRatio
         case equipmentObjects
         case presentations
+        case positions
+        case positionTransitions
         case holds
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "manufacturer", "name", "subtitle", "productURL", "dimensions",
-            "aspectRatio", "equipmentObjects", "presentations", "holds"
+            "aspectRatio", "equipmentObjects", "presentations", "positions", "positionTransitions", "holds"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -1147,12 +1245,23 @@ private struct BoardPackageBoardDocument: Decodable {
             [BoardPackagePresentationDocument].self,
             forKey: .presentations
         )
+        positions = container.contains(.positions)
+            ? try container.decode([BoardPackagePositionDocument].self, forKey: .positions)
+            : nil
+        positionTransitions = container.contains(.positionTransitions)
+            ? try container.decode(
+                [BoardPackagePositionTransitionDocument].self,
+                forKey: .positionTransitions
+            )
+            : nil
         holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
     }
 
     func trainingBoard(
         holds: [BoardHold],
-        presentations: [BoardPresentation]
+        presentations: [BoardPresentation],
+        positions: [BoardPosition],
+        positionTransitions: [BoardPositionTransition]
     ) throws -> TrainingBoard {
         guard aspectRatio.isFinite, aspectRatio > 0 else {
             throw BoardPackageStoreError.invalidPackage(
@@ -1173,7 +1282,58 @@ private struct BoardPackageBoardDocument: Decodable {
             semanticHolds: [:],
             productURL: productURL,
             photoAssetName: nil,
-            presentations: presentations
+            presentations: presentations,
+            positions: positions,
+            positionTransitions: positionTransitions
+        )
+    }
+}
+
+private struct BoardPackagePositionDocument: Decodable {
+    let id: String
+    let presentationID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case presentationID
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "presentationID"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        presentationID = try container.decode(String.self, forKey: .presentationID)
+    }
+
+    var boardPosition: BoardPosition {
+        BoardPosition(id: id, presentationID: presentationID)
+    }
+}
+
+private struct BoardPackagePositionTransitionDocument: Decodable {
+    let fromPositionID: String
+    let toPositionID: String
+    let kind: BoardPositionTransitionKind
+
+    private enum CodingKeys: String, CodingKey {
+        case fromPositionID
+        case toPositionID
+        case kind
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["fromPositionID", "toPositionID", "kind"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        fromPositionID = try container.decode(String.self, forKey: .fromPositionID)
+        toPositionID = try container.decode(String.self, forKey: .toPositionID)
+        kind = try container.decode(BoardPositionTransitionKind.self, forKey: .kind)
+    }
+
+    var boardPositionTransition: BoardPositionTransition {
+        BoardPositionTransition(
+            fromPositionID: fromPositionID,
+            toPositionID: toPositionID,
+            kind: kind
         )
     }
 }

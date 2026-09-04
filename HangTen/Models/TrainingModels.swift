@@ -869,6 +869,30 @@ struct BoardPresentation: Identifiable, Hashable {
     }
 }
 
+enum BoardPositionTransitionKind: String, Codable, Hashable {
+    case seamless
+    case setupRequired
+    case unsupported
+}
+
+enum ResolvedBoardPositionTransitionKind: Hashable {
+    case same
+    case seamless
+    case setupRequired
+    case unsupported
+}
+
+struct BoardPosition: Identifiable, Codable, Hashable {
+    let id: String
+    let presentationID: String
+}
+
+struct BoardPositionTransition: Codable, Hashable {
+    let fromPositionID: String
+    let toPositionID: String
+    let kind: BoardPositionTransitionKind
+}
+
 struct TrainingBoard: Identifiable, Hashable {
     let id: String
     let manufacturer: String
@@ -879,6 +903,8 @@ struct TrainingBoard: Identifiable, Hashable {
     let equipmentObjects: [EquipmentObject]
     let holds: [BoardHold]
     let presentations: [BoardPresentation]
+    let positions: [BoardPosition]
+    let positionTransitions: [BoardPositionTransition]
     /// Board-owned semantic targets loaded alongside the physical hold data.
     /// The empty default preserves hand-built board fixtures and catalog entries.
     let semanticHolds: [String: SemanticHoldMappingDefinition]
@@ -899,7 +925,9 @@ struct TrainingBoard: Identifiable, Hashable {
         semanticHolds: [String: SemanticHoldMappingDefinition] = [:],
         productURL: URL,
         photoAssetName: String?,
-        presentations: [BoardPresentation] = []
+        presentations: [BoardPresentation] = [],
+        positions: [BoardPosition]? = nil,
+        positionTransitions: [BoardPositionTransition] = []
     ) {
         self.id = id
         self.manufacturer = manufacturer
@@ -909,7 +937,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.aspectRatio = aspectRatio
         self.equipmentObjects = equipmentObjects
         self.holds = holds
-        self.presentations = presentations.isEmpty
+        let resolvedPresentations = presentations.isEmpty
             ? [
                 BoardPresentation(
                     id: BoardPresentation.primaryID,
@@ -919,6 +947,11 @@ struct TrainingBoard: Identifiable, Hashable {
                 )
             ]
             : presentations
+        self.presentations = resolvedPresentations
+        self.positions = positions ?? resolvedPresentations.map {
+            BoardPosition(id: $0.id, presentationID: $0.id)
+        }
+        self.positionTransitions = positionTransitions
         self.semanticHolds = semanticHolds
         self.productURL = productURL
         self.photoAssetName = photoAssetName
@@ -939,6 +972,38 @@ struct TrainingBoard: Identifiable, Hashable {
 
     func resolvedCordRig(for presentation: BoardPresentation) -> BoardCordRig? {
         canonicalPresentation(for: presentation)?.cordRig
+    }
+
+    func holdIDs(inPosition positionID: String) -> [String] {
+        guard let position = positions.first(where: { $0.id == positionID }),
+              let presentation = presentation(id: position.presentationID) else {
+            return []
+        }
+        let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+        return holds.compactMap { hold in
+            hold.presentationID == canonicalPresentationID ? hold.id : nil
+        }
+    }
+
+    func transitionKind(
+        from fromPositionID: String,
+        to toPositionID: String
+    ) -> ResolvedBoardPositionTransitionKind {
+        guard positions.contains(where: { $0.id == fromPositionID }),
+              positions.contains(where: { $0.id == toPositionID }) else {
+            return .unsupported
+        }
+        guard fromPositionID != toPositionID else { return .same }
+        guard let transition = positionTransitions.first(where: {
+            $0.fromPositionID == fromPositionID && $0.toPositionID == toPositionID
+        }) else {
+            return .setupRequired
+        }
+        switch transition.kind {
+        case .seamless: return .seamless
+        case .setupRequired: return .setupRequired
+        case .unsupported: return .unsupported
+        }
     }
 
     func object(id: String) -> EquipmentObject? {

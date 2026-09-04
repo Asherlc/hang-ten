@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import StrEnum
 import importlib.util
 import json
 import math
@@ -539,6 +540,49 @@ class BoardPresentation:
 
 
 @dataclass(frozen=True)
+class BoardPosition:
+    id: str
+    presentation_id: str
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "BoardPosition":
+        payload = _mapping(value, source)
+        _closed(payload, {"id", "presentationID"}, source)
+        return cls(
+            _identifier(payload["id"], f"{source}.id"),
+            _identifier(payload["presentationID"], f"{source}.presentationID"),
+        )
+
+
+class BoardPositionTransitionKind(StrEnum):
+    SEAMLESS = "seamless"
+    SETUP_REQUIRED = "setupRequired"
+    UNSUPPORTED = "unsupported"
+
+
+@dataclass(frozen=True)
+class BoardPositionTransition:
+    from_position_id: str
+    to_position_id: str
+    kind: BoardPositionTransitionKind
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "BoardPositionTransition":
+        payload = _mapping(value, source)
+        _closed(payload, {"fromPositionID", "toPositionID", "kind"}, source)
+        kind = _string(payload["kind"], f"{source}.kind")
+        try:
+            transition_kind = BoardPositionTransitionKind(kind)
+        except ValueError as error:
+            raise ValueError(f"{source}.kind is unsupported") from error
+        return cls(
+            _identifier(payload["fromPositionID"], f"{source}.fromPositionID"),
+            _identifier(payload["toPositionID"], f"{source}.toPositionID"),
+            transition_kind,
+        )
+
+
+@dataclass(frozen=True)
 class BoardHold:
     id: str
     equipment_object_id: str
@@ -571,6 +615,8 @@ class BoardDocument:
     equipment_objects: tuple[str, ...]
     holds: tuple[BoardHold, ...]
     presentations: tuple[BoardPresentation, ...]
+    positions: tuple[BoardPosition, ...]
+    position_transitions: tuple[BoardPositionTransition, ...]
 
     @property
     def manufacturer(self) -> str:
@@ -588,6 +634,48 @@ class BoardDocument:
             for presentation in self.presentations
             if presentation.is_default
         )
+
+    def hold_ids_for_position(self, position_id: str) -> tuple[str, ...]:
+        position = next(
+            (candidate for candidate in self.positions if candidate.id == position_id),
+            None,
+        )
+        if position is None:
+            raise ValueError(f"unknown position id: {position_id}")
+        presentation = next(
+            candidate
+            for candidate in self.presentations
+            if candidate.id == position.presentation_id
+        )
+        canonical_presentation_id = (
+            presentation.source_presentation_id or presentation.id
+        )
+        return tuple(
+            hold.id
+            for hold in self.holds
+            if hold.presentation_id == canonical_presentation_id
+        )
+
+    def transition_kind(self, from_id: str, to_id: str) -> str:
+        position_ids = {position.id for position in self.positions}
+        if from_id not in position_ids:
+            raise ValueError(f"unknown position id: {from_id}")
+        if to_id not in position_ids:
+            raise ValueError(f"unknown position id: {to_id}")
+        if from_id == to_id:
+            return "same"
+        transition = next(
+            (
+                candidate
+                for candidate in self.position_transitions
+                if candidate.from_position_id == from_id
+                and candidate.to_position_id == to_id
+            ),
+            None,
+        )
+        if transition is None:
+            return BoardPositionTransitionKind.SETUP_REQUIRED.value
+        return transition.kind.value
 
 
 @dataclass(frozen=True)
@@ -863,6 +951,59 @@ def _validate_alias_presentations(
                     )
 
 
+def _load_positions(
+    value: Any,
+    source: str,
+    *,
+    presentations: tuple[BoardPresentation, ...],
+) -> tuple[BoardPosition, ...]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"{source} must be a non-empty array")
+    positions = tuple(
+        BoardPosition.from_json(item, f"{source}[{index}]")
+        for index, item in enumerate(value)
+    )
+    if len({position.id for position in positions}) != len(positions):
+        raise ValueError("duplicate position id")
+    presentation_ids = {presentation.id for presentation in presentations}
+    for position in positions:
+        if position.presentation_id not in presentation_ids:
+            raise ValueError(
+                f"position {position.id} references unknown presentationID"
+            )
+    return positions
+
+
+def _load_position_transitions(
+    value: Any,
+    source: str,
+    *,
+    positions: tuple[BoardPosition, ...],
+) -> tuple[BoardPositionTransition, ...]:
+    if not isinstance(value, list):
+        raise ValueError(f"{source} must be an array")
+    transitions = tuple(
+        BoardPositionTransition.from_json(item, f"{source}[{index}]")
+        for index, item in enumerate(value)
+    )
+    position_ids = {position.id for position in positions}
+    for transition in transitions:
+        if transition.from_position_id not in position_ids:
+            raise ValueError("position transition references unknown fromPositionID")
+        if transition.to_position_id not in position_ids:
+            raise ValueError("position transition references unknown toPositionID")
+        if transition.from_position_id == transition.to_position_id:
+            raise ValueError("position transition must not be self-edge")
+    if len(
+        {
+            (transition.from_position_id, transition.to_position_id)
+            for transition in transitions
+        }
+    ) != len(transitions):
+        raise ValueError("duplicate position transition")
+    return transitions
+
+
 def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     required = {
         "id",
@@ -874,7 +1015,12 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "presentations",
         "holds",
     }
-    _closed(value, required, "board.json", optional={"dimensions", "equipmentObjects"})
+    _closed(
+        value,
+        required,
+        "board.json",
+        optional={"dimensions", "equipmentObjects", "positions", "positionTransitions"},
+    )
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL"):
         facts[key] = _string(value[key], f"board.json.{key}")
@@ -914,6 +1060,27 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")
+    positions = (
+        _load_positions(
+            value["positions"],
+            "board.json.positions",
+            presentations=presentations,
+        )
+        if "positions" in value
+        else tuple(
+            BoardPosition(presentation.id, presentation.id)
+            for presentation in presentations
+        )
+    )
+    position_transitions = (
+        _load_position_transitions(
+            value["positionTransitions"],
+            "board.json.positionTransitions",
+            positions=positions,
+        )
+        if "positionTransitions" in value
+        else ()
+    )
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
@@ -968,12 +1135,24 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         paired_hold = holds_by_id[hold.paired_hold_id]
         if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
             raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
+    presentations_by_id = {presentation.id: presentation for presentation in presentations}
+    canonical_presentation_ids_with_holds = {hold.presentation_id for hold in holds_tuple}
+    for position in positions:
+        presentation = presentations_by_id[position.presentation_id]
+        canonical_presentation_id = presentation.source_presentation_id or presentation.id
+        if canonical_presentation_id not in canonical_presentation_ids_with_holds:
+            raise ValueError(
+                f"position {position.id} canonical presentation "
+                f"{canonical_presentation_id} must own at least one hold"
+            )
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),
         equipment_objects,
         holds_tuple,
         presentations,
+        positions,
+        position_transitions,
     )
 
 
