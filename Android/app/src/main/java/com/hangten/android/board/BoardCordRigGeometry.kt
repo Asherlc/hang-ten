@@ -3,6 +3,7 @@ package com.hangten.android.board
 import com.hangten.android.content.BoardCordRig
 import com.hangten.android.content.BoardGeometryRotationAnchor
 import com.hangten.android.content.BoardPresentation
+import com.hangten.android.content.BoardRoutedCordSpace
 import com.hangten.android.content.Point
 import kotlin.math.cos
 import kotlin.math.min
@@ -87,6 +88,76 @@ internal data class DirectTwoAnchorCordGeometry(
             x = faceBounds.left + faceBounds.width * normalizedPoint.x,
             y = faceBounds.top + faceBounds.height * normalizedPoint.y,
         ),
+    )
+}
+
+internal data class RoutedCordRigGeometry(
+    val sceneBounds: BoardBounds,
+    val sourceBounds: BoardBounds,
+    val faceBounds: BoardBounds,
+    val faceTransform: BoardInPlaneTransform,
+    val scale: Float,
+    val portPoints: Map<String, Point>,
+)
+
+internal fun resolveRoutedCordRigGeometry(
+    rig: BoardCordRig.Routed,
+    presentation: BoardPresentation,
+    canvasWidth: Float,
+    canvasHeight: Float,
+): RoutedCordRigGeometry? {
+    if (!canvasWidth.isFinite() || !canvasHeight.isFinite() || canvasWidth <= 0f || canvasHeight <= 0f) {
+        return null
+    }
+    if (!rig.sceneSize.width.isFinite() || !rig.sceneSize.height.isFinite() ||
+        rig.sceneSize.width <= 0f || rig.sceneSize.height <= 0f
+    ) {
+        return null
+    }
+    val scale = min(canvasWidth / rig.sceneSize.width, canvasHeight / rig.sceneSize.height)
+    if (!scale.isFinite() || scale <= 0f) return null
+
+    val sceneBounds = BoardBounds(
+        left = (canvasWidth - rig.sceneSize.width * scale) / 2f,
+        top = (canvasHeight - rig.sceneSize.height * scale) / 2f,
+        width = rig.sceneSize.width * scale,
+        height = rig.sceneSize.height * scale,
+    )
+    val sourceBounds = BoardBounds(
+        left = sceneBounds.left + rig.sourceFrame.x * scale,
+        top = sceneBounds.top + rig.sourceFrame.y * scale,
+        width = rig.sourceFrame.width * scale,
+        height = rig.sourceFrame.height * scale,
+    )
+    val faceBounds = BoardBounds(
+        left = sourceBounds.left + rig.innerFaceFrame.x * scale,
+        top = sourceBounds.top + rig.innerFaceFrame.y * scale,
+        width = rig.innerFaceFrame.width * scale,
+        height = rig.innerFaceFrame.height * scale,
+    )
+    val faceTransform = BoardInPlaneTransform.forPresentation(presentation, sceneBounds)
+
+    fun sourceRelativePoint(point: Point): Point = Point(
+        x = sourceBounds.left + point.x * scale,
+        y = sourceBounds.top + point.y * scale,
+    )
+
+    val portPoints = rig.ports.associate { port ->
+        val point = sourceRelativePoint(port.point)
+        port.id to if (port.space == BoardRoutedCordSpace.Body) {
+            faceTransform.map(point)
+        } else {
+            point
+        }
+    }
+
+    return RoutedCordRigGeometry(
+        sceneBounds = sceneBounds,
+        sourceBounds = sourceBounds,
+        faceBounds = faceBounds,
+        faceTransform = faceTransform,
+        scale = scale,
+        portPoints = portPoints,
     )
 }
 
