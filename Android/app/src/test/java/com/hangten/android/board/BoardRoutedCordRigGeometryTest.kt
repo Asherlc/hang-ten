@@ -17,6 +17,7 @@ import com.hangten.android.content.BoardRoutedCordTensionGroup
 import com.hangten.android.content.Point
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class BoardRoutedCordRigGeometryTest {
@@ -201,6 +202,102 @@ class BoardRoutedCordRigGeometryTest {
                 BoardPathCommand.Close,
             ),
             geometry.facePatches.single().path.commands,
+        )
+    }
+
+    @Test
+    fun validGeometrySatisfiesGravityAndSceneSafetyAtEveryPresentationAngle() {
+        listOf(0f, 45f, 90f, 180f).forEach { rotationDegrees ->
+            assertNull(
+                "Expected valid routed geometry at $rotationDegrees degrees",
+                routedCordPresentationValidationFailure(
+                    rig = routedRig(),
+                    presentation = presentation(rotationDegrees),
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun centerlinesLeavePointEightCordDiametersInsideEverySceneEdge() {
+        val diameter = 10f
+        val exactlyOnInset = routedRig(
+            ports = listOf(
+                port("body", BoardRoutedCordSpace.Body, 20f, 40f),
+                port("world", BoardRoutedCordSpace.World, -2f, 0f),
+            ),
+        ).copy(style = routedRig().style.copy(diameter = diameter))
+        val crossingInset = exactlyOnInset.copy(
+            ports = exactlyOnInset.ports.map { port ->
+                if (port.id == "world") port.copy(point = Point(-2.1f, 0f)) else port
+            },
+        )
+
+        assertNull(
+            routedCordPresentationValidationFailure(exactlyOnInset, presentation(0f)),
+        )
+        assertEquals(
+            RoutedCordPresentationValidationFailure.CenterlineOutsideScene,
+            routedCordPresentationValidationFailure(crossingInset, presentation(0f)),
+        )
+    }
+
+    @Test
+    fun safetyChecksPathControlsFacePatchesRadialLipsAndGravity() {
+        val outsideControlRig = routedRig(
+            paths = listOf(
+                BoardRoutedCordPath(
+                    id = "outside-control",
+                    space = BoardRoutedCordSpace.World,
+                    layer = BoardRoutedCordLayer.AboveFace,
+                    commands = listOf(
+                        BoardRoutedCordPathCommand.Move(Point(0f, 0f)),
+                        BoardRoutedCordPathCommand.Quad(
+                            control = Point(-9f, 10f),
+                            to = Point(10f, 0f),
+                        ),
+                    ),
+                ),
+            ),
+        )
+        val outsidePatchRig = routedRig(
+            occlusions = listOf(
+                BoardRoutedCordOcclusion.FacePatch(
+                    listOf(
+                        BoardRoutedCordPathCommand.Move(Point(-11f, 0f)),
+                        BoardRoutedCordPathCommand.Line(Point(0f, 0f)),
+                        BoardRoutedCordPathCommand.Close,
+                    ),
+                ),
+            ),
+        )
+        val outsideLipRig = routedRig(
+            occlusions = listOf(
+                BoardRoutedCordOcclusion.RadialLip("body", radius = 31f, chordOffset = 2f),
+            ),
+        )
+        val slackRig = routedRig(
+            ports = listOf(
+                port("body", BoardRoutedCordSpace.Body, 40f, 0f),
+                port("world", BoardRoutedCordSpace.World, 40f, 0f),
+            ),
+        )
+
+        assertEquals(
+            RoutedCordPresentationValidationFailure.CenterlineOutsideScene,
+            routedCordPresentationValidationFailure(outsideControlRig, presentation(0f)),
+        )
+        assertEquals(
+            RoutedCordPresentationValidationFailure.FacePatchOutsideScene,
+            routedCordPresentationValidationFailure(outsidePatchRig, presentation(0f)),
+        )
+        assertEquals(
+            RoutedCordPresentationValidationFailure.RadialLipOutsideScene,
+            routedCordPresentationValidationFailure(outsideLipRig, presentation(0f)),
+        )
+        assertEquals(
+            RoutedCordPresentationValidationFailure.BodyNotBelowWorld("body", "world"),
+            routedCordPresentationValidationFailure(slackRig, presentation(0f)),
         )
     }
 
