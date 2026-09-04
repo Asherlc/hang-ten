@@ -1573,6 +1573,12 @@ def _routed_commands(
         command.command == "move" for command in commands
     ) != 1:
         raise BoardPackageError(f"{label} must begin with exactly one move command")
+    if not any(
+        command.command in {"line", "quad", "curve"} for command in commands
+    ):
+        raise BoardPackageError(
+            f"{label} must contain at least one line, quad, or curve"
+        )
     close_indexes = [
         index for index, command in enumerate(commands) if command.command == "close"
     ]
@@ -1870,6 +1876,146 @@ def _validate_direct_two_anchor_cord_presentation(
         )
 
 
+def _routed_command_points(
+    command: RoutedCordPathCommand,
+) -> tuple[tuple[float, float], ...]:
+    return tuple(
+        point
+        for point in (
+            command.to,
+            command.control,
+            command.control1,
+            command.control2,
+        )
+        if point is not None
+    )
+
+
+def _validate_routed_cord_presentation(
+    rig: RoutedCordRig,
+    *,
+    presentation_id: str,
+    rotation_degrees: float,
+    rotation_anchor: tuple[float, float],
+) -> None:
+    anchor_x = rotation_anchor[0] * rig.scene_size.width
+    anchor_y = rotation_anchor[1] * rig.scene_size.height
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-9
+
+    def transform_point(
+        x: float, y: float, space: RoutedCordSpace
+    ) -> tuple[float, float]:
+        scene_x = rig.source_frame.x + x
+        scene_y = rig.source_frame.y + y
+        if space == RoutedCordSpace.WORLD:
+            return (scene_x, scene_y)
+        return _rotate_canvas_point(
+            scene_x,
+            scene_y,
+            anchor_x,
+            anchor_y,
+            rotation_degrees,
+        )
+
+    transformed_ports = {
+        port.id: transform_point(port.point.x, port.point.y, port.space)
+        for port in rig.ports
+    }
+    used_port_ids = tuple(
+        dict.fromkeys(
+            port_id
+            for group in rig.tension_groups
+            for port_id in (*group.body_port_ids, *group.world_port_ids)
+        )
+    )
+    style_margin = 0.8 * rig.style.diameter
+
+    def inside_scene(point: tuple[float, float], inset: float) -> bool:
+        x, y = point
+        return (
+            x >= inset - tolerance
+            and y >= inset - tolerance
+            and x <= rig.scene_size.width - inset + tolerance
+            and y <= rig.scene_size.height - inset + tolerance
+        )
+
+    for port_id in used_port_ids:
+        if not inside_scene(transformed_ports[port_id], style_margin):
+            raise BoardPackageError(
+                f"presentation {presentation_id} routed cord centerline geometry "
+                "must remain inside sceneSize with the style margin"
+            )
+
+    for path in rig.paths:
+        for command in path.commands:
+            for x, y in _routed_command_points(command):
+                if not inside_scene(
+                    transform_point(x, y, path.space), style_margin
+                ):
+                    raise BoardPackageError(
+                        f"presentation {presentation_id} routed cord centerline "
+                        "geometry must remain inside sceneSize with the style margin"
+                    )
+
+    body_port_incidence = {
+        port.id: sum(
+            group.body_port_ids.count(port.id) for group in rig.tension_groups
+        )
+        for port in rig.ports
+        if port.space == RoutedCordSpace.BODY
+    }
+    for occlusion in rig.occlusions:
+        if isinstance(occlusion, RoutedCordFacePatch):
+            for command in occlusion.commands:
+                for x, y in _routed_command_points(command):
+                    if not inside_scene(
+                        transform_point(x, y, RoutedCordSpace.BODY), 0
+                    ):
+                        raise BoardPackageError(
+                            f"presentation {presentation_id} routed facePatch "
+                            "geometry must remain inside sceneSize"
+                        )
+            continue
+
+        if body_port_incidence[occlusion.body_port_id] != 1:
+            raise BoardPackageError(
+                f"presentation {presentation_id} radialLip body port "
+                f"{occlusion.body_port_id} must occur in exactly one tension span"
+            )
+        center_x, center_y = transformed_ports[occlusion.body_port_id]
+        if (
+            center_x - occlusion.radius < -tolerance
+            or center_y - occlusion.radius < -tolerance
+            or center_x + occlusion.radius > rig.scene_size.width + tolerance
+            or center_y + occlusion.radius > rig.scene_size.height + tolerance
+        ):
+            raise BoardPackageError(
+                f"presentation {presentation_id} routed radialLip circle must "
+                "remain inside sceneSize"
+            )
+
+    for group in rig.tension_groups:
+        body_ports = [
+            (port_id, transformed_ports[port_id], index)
+            for index, port_id in enumerate(group.body_port_ids)
+        ]
+        world_ports = [
+            (port_id, transformed_ports[port_id], index)
+            for index, port_id in enumerate(group.world_port_ids)
+        ]
+        if group.pairing == RoutedCordPairing.SCREEN_ORDER:
+            body_ports.sort(key=lambda item: (item[1][0], item[1][1], item[2]))
+            world_ports.sort(key=lambda item: (item[1][0], item[1][1], item[2]))
+        for (body_id, body_point, _), (world_id, world_point, _) in zip(
+            body_ports, world_ports, strict=True
+        ):
+            if body_point[1] <= world_point[1] + tolerance:
+                raise BoardPackageError(
+                    f"presentation {presentation_id} routed body port {body_id} "
+                    f"must be strictly below world port {world_id}"
+                )
+
+
 def _raw_presentation_cord_rig(
     board: Mapping[str, Any], presentation_id: str
 ) -> CordRig | None:
@@ -2102,6 +2248,13 @@ def _parse_board_presentations(
         )
         if isinstance(resolved_cord_rig, DirectTwoAnchorCordRig):
             _validate_direct_two_anchor_cord_presentation(
+                resolved_cord_rig,
+                presentation_id=presentation_id,
+                rotation_degrees=resolved_rotation_degrees,
+                rotation_anchor=geometry_rotation_anchor or (0.5, 0.5),
+            )
+        elif isinstance(resolved_cord_rig, RoutedCordRig):
+            _validate_routed_cord_presentation(
                 resolved_cord_rig,
                 presentation_id=presentation_id,
                 rotation_degrees=resolved_rotation_degrees,

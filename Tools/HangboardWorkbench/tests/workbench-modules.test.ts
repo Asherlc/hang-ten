@@ -404,6 +404,26 @@ test("the browser client rejects malformed routed cord structure", async (contex
         ],
       }];
     }],
+    ["move and close path without a drawing segment", (rig) => {
+      rig.paths = [{
+        id: "bad-path",
+        space: "body",
+        layer: "aboveFace",
+        commands: [
+          { command: "move", to: [20, 50] },
+          { command: "close" },
+        ],
+      }];
+    }],
+    ["move and close face patch without a drawing segment", (rig) => {
+      rig.occlusions = [{
+        type: "facePatch",
+        commands: [
+          { command: "move", to: [20, 50] },
+          { command: "close" },
+        ],
+      }];
+    }],
   ];
 
   for (const [name, mutate] of cases) {

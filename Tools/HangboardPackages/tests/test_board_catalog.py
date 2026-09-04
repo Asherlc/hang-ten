@@ -1366,6 +1366,92 @@ def _routed_cord_rig() -> dict[str, object]:
     }
 
 
+def _routed_safety_rig() -> dict[str, object]:
+    """A hand-checked rig that remains valid at 0, 90, and 180 degrees."""
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 200, "height": 200},
+        "sourceFrame": {"x": 40, "y": 40, "width": 120, "height": 120},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 120, "height": 120},
+        "style": {
+            "diameter": 10,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body-left", "space": "body", "point": {"x": 30, "y": 90}},
+            {"id": "body-right", "space": "body", "point": {"x": 90, "y": 90}},
+            {"id": "world-left", "space": "world", "point": {"x": 10, "y": 10}},
+            {"id": "world-right", "space": "world", "point": {"x": 110, "y": 10}},
+        ],
+        "tensionGroups": [
+            {
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "declared",
+                "layer": "behindFace",
+            }
+        ],
+        "paths": [
+            {
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    {"command": "move", "to": [30, 90]},
+                    {"command": "quad", "control": [60, 110], "to": [90, 90]},
+                ],
+            }
+        ],
+        "occlusions": [
+            {
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 6,
+                "chordOffset": 2,
+            },
+            {
+                "type": "facePatch",
+                "commands": [
+                    {"command": "move", "to": [80, 70]},
+                    {"command": "line", "to": [100, 70]},
+                    {"command": "line", "to": [100, 85]},
+                    {"command": "close"},
+                ],
+            },
+        ],
+    }
+
+
+def _document_with_routed_safety_rig(
+    rig: dict[str, object],
+    *,
+    rotation_degrees: float = 0,
+    rotation_anchor: dict[str, float] | None = None,
+) -> dict[str, object]:
+    document = multi_presentation_board_document()
+    document["aspectRatio"] = 1
+    document["presentations"][0].update(aspectRatio=1, cordRig=rig)
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=1,
+        sourcePresentationID="front",
+        rotationDegrees=rotation_degrees,
+    )
+    if rotation_anchor is not None:
+        document["presentations"][1]["geometryRotationAnchor"] = rotation_anchor
+    document["holds"] = document["holds"][:1]
+    document["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.45,
+        "y": 0.45,
+        "width": 0.1,
+        "height": 0.1,
+    }
+    return document
+
+
 def test_routed_cord_rig_loads_with_all_structural_elements() -> None:
     module = load_board_catalog_module()
     document = multi_presentation_board_document()
@@ -1392,18 +1478,9 @@ def test_routed_cord_rig_loads_with_all_structural_elements() -> None:
 
 def test_routed_cord_rig_is_owned_once_and_inherited_by_rotated_alias() -> None:
     module = load_board_catalog_module()
-    document = multi_presentation_board_document()
-    document["presentations"][0].update(aspectRatio=2, cordRig=_routed_cord_rig())
-    document["presentations"][1].update(
-        assetPath="assets/primary.png",
-        aspectRatio=2,
-        sourcePresentationID="front",
-        rotationDegrees=90,
+    document = _document_with_routed_safety_rig(
+        _routed_safety_rig(), rotation_degrees=90
     )
-    document["holds"] = document["holds"][:1]
-    document["holds"][0]["geometry"][0]["frame"] = {
-        "x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1
-    }
 
     board = module._load_board(document)
 
@@ -1463,6 +1540,276 @@ def test_routed_cord_rig_rejects_unknown_type_fail_closed() -> None:
 
     with pytest.raises(ValueError, match="cordRig.type is unsupported"):
         module._load_board(document)
+
+
+@pytest.mark.parametrize("command_owner", ["path", "facePatch"])
+def test_routed_cord_rig_rejects_move_close_without_a_drawing_segment(
+    command_owner: str,
+) -> None:
+    """Catch accepting a nominally nonempty path that cannot draw a centerline or patch."""
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _routed_cord_rig()
+    commands = [{"command": "move", "to": [100, 100]}, {"command": "close"}]
+    if command_owner == "path":
+        rig["paths"][0]["commands"] = commands
+    else:
+        rig["occlusions"][1]["commands"] = commands
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(ValueError, match="at least one line, quad, or curve"):
+        module._load_board(document)
+
+
+def test_routed_cord_safety_uses_source_local_body_rotation_and_fixed_world_ports() -> None:
+    """Catch rotating world ports or omitting sourceFrame origin from body geometry."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["sourceFrame"]["x"] = 60
+    rig["ports"][0]["point"]["y"] = 70
+    rig["ports"][1]["point"]["y"] = 70
+    rig["ports"][2]["point"]["y"] = 40
+    rig["ports"][3]["point"]["y"] = 40
+    rig["paths"][0]["commands"] = [
+        {"command": "move", "to": [30, 70]},
+        {"command": "quad", "control": [60, 100], "to": [90, 70]},
+    ]
+    rig["paths"].append(
+        {
+            "id": "world-knot",
+            "space": "world",
+            "layer": "overpass",
+            "commands": [
+                {"command": "move", "to": [120, -30]},
+                {"command": "line", "to": [110, -20]},
+            ],
+        }
+    )
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=90,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    board = module._load_board(document)
+
+    assert board.presentations[1].rotation_degrees == 90
+
+
+@pytest.mark.parametrize(
+    "body_local_y",
+    [10, 5, 10.00000001],
+    ids=["equal", "above-world", "inside-scene-scaled-tolerance"],
+)
+def test_routed_cord_safety_rejects_body_endpoints_not_strictly_below_world(
+    body_local_y: float,
+) -> None:
+    """Catch accepting slack or downward-pulling tension spans."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"]["y"] = body_local_y
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="must be strictly below world port"):
+        module._load_board(document)
+
+
+def test_routed_declared_pairing_uses_list_index_instead_of_screen_order() -> None:
+    """Catch silently reordering a declared body/world pairing."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"] = {"x": 30, "y": 50}
+    rig["ports"][2]["point"] = {"x": 30, "y": 60}
+    rig["tensionGroups"][0]["bodyPortIDs"] = ["body-right", "body-left"]
+    rig["tensionGroups"][0]["worldPortIDs"] = ["world-left", "world-right"]
+    document = _document_with_routed_safety_rig(rig)
+
+    board = module._load_board(document)
+
+    assert board.presentations[0].id == "front"
+
+
+def test_routed_screen_order_reorders_transformed_ports_for_each_alias() -> None:
+    """Catch pairing from canonical or declaration order after the body rotates."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][1]["point"]["y"] = 70
+    rig["ports"][2]["point"] = {"x": 30, "y": 40}
+    rig["ports"][3]["point"] = {"x": 90, "y": 10}
+    rig["tensionGroups"][0]["pairing"] = "screenOrder"
+    document = _document_with_routed_safety_rig(rig, rotation_degrees=180)
+
+    board = module._load_board(document)
+
+    assert board.presentations[1].resolved_rotation_degrees == 180
+
+
+def test_routed_cord_safety_rejects_gravity_only_after_alias_rotation() -> None:
+    """Catch validating tension direction only on the canonical presentation."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][2]["point"]["y"] = 40
+    rig["ports"][3]["point"]["y"] = 40
+    document = _document_with_routed_safety_rig(rig, rotation_degrees=180)
+
+    with pytest.raises(
+        ValueError,
+        match=r"presentation back.*must be strictly below world port",
+    ):
+        module._load_board(document)
+
+
+def test_routed_screen_order_ties_use_y_then_declaration_index() -> None:
+    """Catch unstable or ID-based ordering when screen x coordinates tie."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"] = {"x": 60, "y": 60}
+    rig["ports"][1]["point"] = {"x": 60, "y": 60}
+    rig["ports"][2]["point"] = {"x": 60, "y": 10}
+    rig["ports"][3]["point"] = {"x": 60, "y": 70}
+    rig["tensionGroups"][0].update(
+        bodyPortIDs=["body-right", "body-left"],
+        worldPortIDs=["world-right", "world-left"],
+        pairing="screenOrder",
+    )
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(
+        ValueError,
+        match=r"body-left.*must be strictly below world port world-right",
+    ):
+        module._load_board(document)
+
+
+def test_routed_cord_safety_rejects_used_port_inside_style_margin() -> None:
+    """Catch allowing a tension-span stroke to be clipped by the scene edge."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][2]["point"]["x"] = -35
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="cord centerline geometry.*style margin"):
+        module._load_board(document)
+
+
+def test_routed_cord_safety_rejects_path_control_inside_style_margin() -> None:
+    """Catch checking Bézier endpoints while overlooking a control point."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["paths"][0]["commands"][1]["control"] = [-35, 110]
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="cord centerline geometry.*style margin"):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize("geometry_owner", ["used-port", "path-control"])
+def test_routed_cord_safety_rejects_style_margin_violation_after_alias_rotation(
+    geometry_owner: str,
+) -> None:
+    """Catch checking routed stroke bounds only in the canonical orientation."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    if geometry_owner == "used-port":
+        rig["ports"][1]["point"]["x"] = 113
+    else:
+        rig["paths"][0]["commands"][1]["control"] = [122, 110]
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=180,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=r"presentation back.*cord centerline geometry.*style margin",
+    ):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize("incident_count", [0, 2])
+def test_routed_radial_lip_requires_exactly_one_incident_tension_span(
+    incident_count: int,
+) -> None:
+    """Catch ambiguous radial-lip orientation from absent or repeated incident spans."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    if incident_count == 0:
+        rig["tensionGroups"][0]["bodyPortIDs"] = ["body-right"]
+        rig["tensionGroups"][0]["worldPortIDs"] = ["world-right"]
+    else:
+        rig["tensionGroups"].append(
+            {
+                "id": "duplicate-incident",
+                "bodyPortIDs": ["body-left"],
+                "worldPortIDs": ["world-left"],
+                "pairing": "declared",
+                "layer": "overpass",
+            }
+        )
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="radialLip body port.*exactly one tension span"):
+        module._load_board(document)
+
+
+def test_routed_radial_lip_circle_must_fit_canonical_scene() -> None:
+    """Catch validating only a radial lip's center instead of its full radius."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"]["x"] = -25
+    rig["occlusions"][0]["radius"] = 20
+    document = _document_with_routed_safety_rig(rig)
+
+    with pytest.raises(ValueError, match="radialLip circle must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_routed_radial_lip_circle_must_fit_rotated_alias_scene() -> None:
+    """Catch checking a radial lip only in its canonical orientation."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["ports"][0]["point"]["x"] = 110
+    rig["occlusions"][0]["radius"] = 20
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=180,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    with pytest.raises(ValueError, match="radialLip circle must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_routed_face_patch_is_source_local_body_geometry_for_rotated_alias() -> None:
+    """Catch leaving facePatch coordinates unrotated or treating them as scene-absolute."""
+    module = load_board_catalog_module()
+    rig = _routed_safety_rig()
+    rig["occlusions"][1]["commands"] = [
+        {"command": "move", "to": [110, 50]},
+        {"command": "line", "to": [122, 50]},
+        {"command": "line", "to": [122, 60]},
+        {"command": "close"},
+    ]
+    document = _document_with_routed_safety_rig(
+        rig,
+        rotation_degrees=180,
+        rotation_anchor={"x": 0.4, "y": 0.5},
+    )
+
+    with pytest.raises(ValueError, match="facePatch geometry must remain inside sceneSize"):
+        module._load_board(document)
+
+
+def test_routed_safety_validation_leaves_direct_two_anchor_compatible() -> None:
+    """Catch accidentally applying routed-only margin and path rules to the legacy rig."""
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["cordRig"] = _wide_pivot_cord_rig()
+
+    board = module._load_board(document)
+
+    assert isinstance(board.presentations[0].cord_rig, module.DirectTwoAnchorCordRig)
 
 
 def test_unversioned_board_accepts_alias_aspect_ratio_serialization_rounding(

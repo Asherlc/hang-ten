@@ -131,6 +131,7 @@ function isFinitePair(value: unknown): value is [number, number] {
 function isRoutedPathCommands(value: unknown, requireClosed: boolean): boolean {
   if (!Array.isArray(value) || value.length < 2) return false;
   let moveCount = 0;
+  let drawingCommandCount = 0;
   let closeIndex = -1;
   let closeCount = 0;
   for (let index = 0; index < value.length; index += 1) {
@@ -141,17 +142,20 @@ function isRoutedPathCommands(value: unknown, requireClosed: boolean): boolean {
       case "line":
         if (!hasExactKeys(command, ["command", "to"]) || !isFinitePair(command.to)) return false;
         if (command.command === "move") moveCount += 1;
+        else drawingCommandCount += 1;
         break;
       case "quad":
         if (!hasExactKeys(command, ["command", "control", "to"])
           || !isFinitePair(command.control)
           || !isFinitePair(command.to)) return false;
+        drawingCommandCount += 1;
         break;
       case "curve":
         if (!hasExactKeys(command, ["command", "control1", "control2", "to"])
           || !isFinitePair(command.control1)
           || !isFinitePair(command.control2)
           || !isFinitePair(command.to)) return false;
+        drawingCommandCount += 1;
         break;
       case "close":
         if (!hasExactKeys(command, ["command"])) return false;
@@ -163,6 +167,7 @@ function isRoutedPathCommands(value: unknown, requireClosed: boolean): boolean {
     }
   }
   if (!isRecord(value[0]) || value[0].command !== "move" || moveCount !== 1) return false;
+  if (drawingCommandCount === 0) return false;
   if (closeCount > 1 || (closeIndex !== -1 && closeIndex !== value.length - 1)) return false;
   return !requireClosed || closeIndex === value.length - 1;
 }
