@@ -18,32 +18,364 @@
       "name": "Front — 14/10 mm side right-side up",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
-      "default": true
+      "default": true,
+      "availableHoldIDs": [
+        "edge-14",
+        "center-edge-10",
+        "top-jug"
+      ],
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "style": {
+          "diameter": 13,
+          "outlineColor": "#7B1C31",
+          "baseColor": "#F64E69",
+          "braidColors": [
+            "#FFDDA8",
+            "#FFF1DD"
+          ]
+        },
+        "ports": [
+          {
+            "id": "left-through-hole",
+            "space": "body",
+            "point": {
+              "x": 175.35,
+              "y": 492.73
+            }
+          },
+          {
+            "id": "right-through-hole",
+            "space": "body",
+            "point": {
+              "x": 1362.61,
+              "y": 492.5
+            }
+          },
+          {
+            "id": "support-left-exit",
+            "space": "world",
+            "point": {
+              "x": 747.5,
+              "y": 250
+            }
+          },
+          {
+            "id": "support-right-exit",
+            "space": "world",
+            "point": {
+              "x": 791.5,
+              "y": 250
+            }
+          }
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": [
+              "left-through-hole",
+              "right-through-hole"
+            ],
+            "worldPortIDs": [
+              "support-left-exit",
+              "support-right-exit"
+            ],
+            "pairing": "screenOrder",
+            "layer": "aboveFace"
+          }
+        ],
+        "paths": [
+          {
+            "id": "hidden-through-board-return",
+            "space": "body",
+            "layer": "behindFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  175.35,
+                  492.73
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1362.61,
+                  492.5
+                ]
+              }
+            ]
+          },
+          {
+            "id": "support-bight",
+            "space": "world",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  757.5,
+                  189
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  743.5,
+                  168
+                ],
+                "control2": [
+                  739.5,
+                  135
+                ],
+                "to": [
+                  748.5,
+                  108
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  755.5,
+                  87
+                ],
+                "control2": [
+                  764.5,
+                  76
+                ],
+                "to": [
+                  770.5,
+                  73
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  778.5,
+                  79
+                ],
+                "control2": [
+                  787.5,
+                  93
+                ],
+                "to": [
+                  793.5,
+                  114
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  800.5,
+                  141
+                ],
+                "control2": [
+                  795.5,
+                  169
+                ],
+                "to": [
+                  781.5,
+                  189
+                ]
+              }
+            ]
+          },
+          {
+            "id": "support-knot-left",
+            "space": "world",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  757.5,
+                  187
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  770.5,
+                  198
+                ],
+                "control2": [
+                  787.5,
+                  199
+                ],
+                "to": [
+                  790.5,
+                  211
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  793.5,
+                  222
+                ],
+                "control2": [
+                  785.5,
+                  231
+                ],
+                "to": [
+                  774.5,
+                  232
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  761.5,
+                  233
+                ],
+                "control2": [
+                  752.5,
+                  241
+                ],
+                "to": [
+                  747.5,
+                  250
+                ]
+              }
+            ]
+          },
+          {
+            "id": "support-knot-right",
+            "space": "world",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  781.5,
+                  187
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  768.5,
+                  198
+                ],
+                "control2": [
+                  751.5,
+                  199
+                ],
+                "to": [
+                  748.5,
+                  211
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  745.5,
+                  222
+                ],
+                "control2": [
+                  753.5,
+                  231
+                ],
+                "to": [
+                  764.5,
+                  232
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  777.5,
+                  233
+                ],
+                "control2": [
+                  786.5,
+                  241
+                ],
+                "to": [
+                  791.5,
+                  250
+                ]
+              }
+            ]
+          },
+          {
+            "id": "support-knot-overpass",
+            "space": "world",
+            "layer": "overpass",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  751.5,
+                  215
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  759.5,
+                  226
+                ],
+                "control2": [
+                  778.5,
+                  228
+                ],
+                "to": [
+                  787.5,
+                  215
+                ]
+              }
+            ]
+          }
+        ],
+        "occlusions": [
+          {
+            "type": "radialLip",
+            "bodyPortID": "left-through-hole",
+            "radius": 13,
+            "chordOffset": 4.5
+          },
+          {
+            "type": "radialLip",
+            "bodyPortID": "right-through-hole",
+            "radius": 13,
+            "chordOffset": 4.5
+          }
+        ]
+      }
     },
     {
       "id": "front-inverted",
       "name": "Front — 22/18 mm side right-side up",
-      "assetPath": "assets/front-inverted.png",
+      "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
       "default": false,
       "sourcePresentationID": "primary",
-      "isInverted": true
-    },
-    {
-      "id": "reverse",
-      "name": "Back — sloper side right-side up",
-      "assetPath": "assets/reverse.png",
-      "aspectRatio": 1.5,
-      "default": false
-    },
-    {
-      "id": "reverse-inverted",
-      "name": "Back — jug side right-side up",
-      "assetPath": "assets/reverse-inverted.png",
-      "aspectRatio": 1.5,
-      "default": false,
-      "sourcePresentationID": "reverse",
-      "isInverted": true
+      "rotationDegrees": 180,
+      "geometryRotationAnchor": {
+        "x": 0.5009765625,
+        "y": 0.49267578125
+      },
+      "availableHoldIDs": [
+        "edge-22",
+        "center-edge-18"
+      ]
     }
   ],
   "holds": [
@@ -696,134 +1028,6 @@
                 "command": "close"
               }
             ]
-          },
-          "treatment": {
-            "type": "surface"
-          }
-        }
-      ]
-    },
-    {
-      "id": "back-jug-sloper",
-      "equipmentObjectID": "primary",
-      "name": "Back jug / sloper surface",
-      "kind": "sloper",
-      "handCapacity": 1,
-      "presentationID": "reverse",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.178,
-            "y": 0.412,
-            "width": 0.648,
-            "height": 0.156
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.032,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.968,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.986,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.09
-                ],
-                "to": [
-                  1.0,
-                  0.2
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.91
-                ],
-                "control2": [
-                  0.986,
-                  1.0
-                ],
-                "to": [
-                  0.968,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.032,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.014,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.91
-                ],
-                "to": [
-                  0.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.2
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.09
-                ],
-                "control2": [
-                  0.014,
-                  0.0
-                ],
-                "to": [
-                  0.032,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0.0
           },
           "treatment": {
             "type": "surface"
