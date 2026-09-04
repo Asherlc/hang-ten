@@ -3,6 +3,12 @@ import XCTest
 
 @MainActor
 final class BoardEditorSessionTests: XCTestCase {
+    private struct AliasFixture {
+        let sourceLibraryURL: URL
+        let canonicalPNG: Data
+        let aliasPNG: Data
+    }
+
     private var temporaryDirectory: URL!
     private var store: BoardEditorStore!
 
@@ -78,6 +84,130 @@ final class BoardEditorSessionTests: XCTestCase {
         )
         session.select(holdID: holdID)
         return session
+    }
+
+    private func aliasFixtureCordRig() -> BoardDirectTwoAnchorCordRig {
+        BoardDirectTwoAnchorCordRig(
+            sceneSize: BoardCordSize(width: 200, height: 100),
+            sourceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
+            innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
+            attachmentPoints: [
+                BoardCordPoint(x: 40, y: 70),
+                BoardCordPoint(x: 160, y: 70),
+            ],
+            pullPoint: BoardCordPoint(x: 100, y: 10),
+            eyeletRadius: 4
+        )
+    }
+
+    private func aliasFixtureDocument(isRigged: Bool) -> BoardEditableDocument {
+        var document = BoardEditorTestFixtures.sampleDocument()
+        let cordRig: BoardCordRig? = isRigged
+            ? .directTwoAnchor(aliasFixtureCordRig())
+            : nil
+        document.presentations = [
+            BoardEditablePresentation(
+                id: "front",
+                name: "Front",
+                assetPath: "assets/primary.png",
+                aspectRatio: 2,
+                isDefault: false,
+                cordRig: cordRig
+            ),
+            BoardEditablePresentation(
+                id: "front-inverted",
+                name: "Front inverted",
+                assetPath: "assets/front-inverted.png",
+                aspectRatio: 2,
+                isDefault: true,
+                sourcePresentationID: "front",
+                isInverted: true,
+                geometryRotationAnchor: .center
+            ),
+            BoardEditablePresentation(
+                id: "other",
+                name: "Other",
+                assetPath: "assets/other.png",
+                aspectRatio: 2,
+                isDefault: false
+            ),
+        ]
+
+        var hiddenHold = document.holds[0]
+        hiddenHold.id = "other-hold"
+        hiddenHold.name = "Other hold"
+        hiddenHold.presentationID = "other"
+        hiddenHold.geometry[0].frame = BoardPackageFrameDocument(
+            x: 0.2,
+            y: 0.35,
+            width: 0.1,
+            height: 0.1
+        )
+        document.holds.append(hiddenHold)
+        return document
+    }
+
+    private func solidPNG(_ color: UIColor) -> Data {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        return UIGraphicsImageRenderer(
+            size: CGSize(width: 200, height: 100),
+            format: format
+        ).pngData { context in
+            color.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 200, height: 100))
+        }
+    }
+
+    private func makeAliasFixture(isRigged: Bool) throws -> AliasFixture {
+        let sourceLibraryURL = temporaryDirectory.appendingPathComponent(
+            "alias-source-\(UUID().uuidString)",
+            isDirectory: true
+        )
+        let packageURL = sourceLibraryURL.appendingPathComponent(
+            "alias-fixture",
+            isDirectory: true
+        )
+        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
+        try FileManager.default.createDirectory(
+            at: assetsURL,
+            withIntermediateDirectories: true
+        )
+
+        let canonicalPNG = solidPNG(.red)
+        let aliasPNG = solidPNG(.blue)
+        try BoardPackageWriter.data(for: aliasFixtureDocument(isRigged: isRigged))
+            .write(to: packageURL.appendingPathComponent("board.json"))
+        try canonicalPNG.write(to: assetsURL.appendingPathComponent("primary.png"))
+        try aliasPNG.write(to: assetsURL.appendingPathComponent("front-inverted.png"))
+        try solidPNG(.green).write(to: assetsURL.appendingPathComponent("other.png"))
+        return AliasFixture(
+            sourceLibraryURL: sourceLibraryURL,
+            canonicalPNG: canonicalPNG,
+            aliasPNG: aliasPNG
+        )
+    }
+
+    private func loadAliasFixture(isRigged: Bool) throws -> (
+        package: BoardEditedPackage,
+        store: BoardEditorStore,
+        fixture: AliasFixture
+    ) {
+        let fixture = try makeAliasFixture(isRigged: isRigged)
+        let fixtureStore = BoardEditorStore(
+            baseDirectory: temporaryDirectory.appendingPathComponent(
+                "alias-edits-\(UUID().uuidString)",
+                isDirectory: true
+            ),
+            sourceLibraryURL: fixture.sourceLibraryURL
+        )
+        _ = try fixtureStore.startEditing(slug: "alias-fixture")
+        return (
+            try fixtureStore.loadDocument(slug: "alias-fixture"),
+            fixtureStore,
+            fixture
+        )
     }
 
     func testSelectedSloperMetadataTransitionsPreserveOnlyValidAngleState() throws {
@@ -273,6 +403,123 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertNotNil(artwork.directTwoAnchorRig)
         XCTAssertEqual(artwork.image.size, CGSize(width: 1200, height: 1464))
         XCTAssertFalse(artwork.image === sourceImage)
+    }
+
+    func testRiggedDefaultAliasLoadsAndRendersItsCanonicalSourceArtwork() throws {
+        let loaded = try loadAliasFixture(isRigged: true)
+
+        XCTAssertEqual(loaded.package.imageURL.lastPathComponent, "primary.png")
+        XCTAssertEqual(try Data(contentsOf: loaded.package.imageURL), loaded.fixture.canonicalPNG)
+        XCTAssertNotEqual(try Data(contentsOf: loaded.package.imageURL), loaded.fixture.aliasPNG)
+
+        let sourceImage = try XCTUnwrap(
+            UIImage(contentsOfFile: loaded.package.imageURL.path)
+        )
+        let artwork = BoardEditorCanvasArtwork.make(
+            package: loaded.package,
+            sourceImage: sourceImage
+        )
+        XCTAssertNotNil(artwork.directTwoAnchorRig)
+        XCTAssertEqual(artwork.sourcePresentationID, "front")
+        XCTAssertEqual(artwork.image.size, CGSize(width: 200, height: 100))
+        XCTAssertEqual(
+            artwork.projection.project(
+                CGPoint(x: 20, y: 30),
+                in: CGRect(x: 0, y: 0, width: 200, height: 100)
+            ),
+            CGPoint(x: 180, y: 70)
+        )
+    }
+
+    func testRiggedDefaultAliasShowsOnlyCanonicalSourceHolds() throws {
+        let loaded = try loadAliasFixture(isRigged: true)
+        let session = BoardEditorSession(package: loaded.package, store: loaded.store)
+        let sourceImage = try XCTUnwrap(
+            UIImage(contentsOfFile: loaded.package.imageURL.path)
+        )
+        let canvas = HoldEditorCanvasUIView(
+            frame: CGRect(x: 0, y: 0, width: 400, height: 200)
+        )
+        canvas.session = session
+        canvas.boardArtwork = BoardEditorCanvasArtwork.make(
+            package: loaded.package,
+            sourceImage: sourceImage
+        )
+        canvas.updateMetadataWarningAccessibility()
+
+        XCTAssertEqual(session.incompleteMetadataHoldIDs, ["hold-one", "other-hold"])
+        let elements = try XCTUnwrap(
+            canvas.accessibilityElements as? [UIAccessibilityElement]
+        )
+        XCTAssertEqual(
+            elements.dropFirst().compactMap(\.accessibilityLabel),
+            ["Incomplete hold metadata: hold-one"]
+        )
+    }
+
+    func testRiggedInvertedAliasInverseProjectsHitTestingAndDragEditing() throws {
+        let loaded = try loadAliasFixture(isRigged: true)
+        let session = BoardEditorSession(package: loaded.package, store: loaded.store)
+        let sourceImage = try XCTUnwrap(
+            UIImage(contentsOfFile: loaded.package.imageURL.path)
+        )
+        let canvas = HoldEditorCanvasUIView(
+            frame: CGRect(x: 0, y: 0, width: 400, height: 200)
+        )
+        canvas.session = session
+        canvas.boardArtwork = BoardEditorCanvasArtwork.make(
+            package: loaded.package,
+            sourceImage: sourceImage
+        )
+
+        // The canonical hold center is (0.25, 0.4). A 180-degree projection
+        // puts it at (0.75, 0.6) in the fitted 376 x 188 scene at (12, 6).
+        let pan = TestBoardEditorPanGestureRecognizer()
+        let selector = NSSelectorFromString("handlePan:")
+        XCTAssertTrue(canvas.responds(to: selector))
+        pan.locationValue = CGPoint(x: 294, y: 118.8)
+        pan.simulatedState = .began
+        _ = canvas.perform(selector, with: pan)
+
+        XCTAssertEqual(
+            session.selectedPiece,
+            BoardEditorSession.PieceSelection(holdID: "hold-one", pieceIndex: 0)
+        )
+
+        // Moving +10% right and down on the inverted screen is -10% on each
+        // canonical board axis.
+        pan.locationValue = CGPoint(x: 331.6, y: 137.6)
+        pan.simulatedState = .changed
+        _ = canvas.perform(selector, with: pan)
+
+        let movedFrame = try XCTUnwrap(session.selectedPieceDocument?.frame)
+        XCTAssertEqual(movedFrame.x, 0, accuracy: 1e-9)
+        XCTAssertEqual(movedFrame.y, 0.1, accuracy: 1e-9)
+        XCTAssertEqual(movedFrame.width, 0.3, accuracy: 1e-9)
+        XCTAssertEqual(movedFrame.height, 0.4, accuracy: 1e-9)
+
+        pan.simulatedState = .ended
+        _ = canvas.perform(selector, with: pan)
+        XCTAssertTrue(session.canUndo)
+    }
+
+    func testNonRiggedDefaultAliasKeepsItsOwnStaticArtworkFallback() throws {
+        let loaded = try loadAliasFixture(isRigged: false)
+
+        XCTAssertEqual(
+            loaded.package.imageURL.lastPathComponent,
+            "front-inverted.png"
+        )
+        XCTAssertEqual(try Data(contentsOf: loaded.package.imageURL), loaded.fixture.aliasPNG)
+        let sourceImage = try XCTUnwrap(
+            UIImage(contentsOfFile: loaded.package.imageURL.path)
+        )
+        let artwork = BoardEditorCanvasArtwork.make(
+            package: loaded.package,
+            sourceImage: sourceImage
+        )
+        XCTAssertNil(artwork.directTwoAnchorRig)
+        XCTAssertTrue(artwork.image === sourceImage)
     }
 
     func testCanvasMapsEditableHoldsThroughRiggedArtworkFaceRect() throws {
@@ -656,5 +903,26 @@ final class BoardEditorSessionTests: XCTestCase {
             .deletingLastPathComponent()
             .appendingPathComponent("Hangboards", isDirectory: true)
         return fallback
+    }
+}
+
+@MainActor
+private final class TestBoardEditorPanGestureRecognizer: UIPanGestureRecognizer {
+    var simulatedState: UIGestureRecognizer.State = .possible
+    var locationValue = CGPoint.zero
+
+    override var state: UIGestureRecognizer.State {
+        get { simulatedState }
+        set { simulatedState = newValue }
+    }
+
+    override var numberOfTouches: Int { 1 }
+
+    override func location(in view: UIView?) -> CGPoint {
+        locationValue
+    }
+
+    override func translation(in view: UIView?) -> CGPoint {
+        .zero
     }
 }

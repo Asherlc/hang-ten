@@ -162,8 +162,23 @@ struct BoardEditorStore: Sendable {
             in: document,
             slug: slug
         )
-        let imageURL = packageURL.appendingPathComponent(defaultPresentation.assetPath)
-        let pixelDimensions = try Self.validatePNGDimensions(at: imageURL, slug: slug)
+        let defaultImageURL = packageURL.appendingPathComponent(
+            defaultPresentation.assetPath
+        )
+        let defaultPixelDimensions = try Self.validatePNGDimensions(
+            at: defaultImageURL,
+            slug: slug
+        )
+        let artworkSourcePresentation = Self.artworkSourcePresentation(
+            for: defaultPresentation,
+            in: document
+        )
+        let imageURL = packageURL.appendingPathComponent(
+            artworkSourcePresentation.assetPath
+        )
+        let pixelDimensions = artworkSourcePresentation.id == defaultPresentation.id
+            ? defaultPixelDimensions
+            : try Self.validatePNGDimensions(at: imageURL, slug: slug)
         return BoardEditedPackage(
             slug: slug,
             packageURL: packageURL,
@@ -293,6 +308,23 @@ struct BoardEditorStore: Sendable {
             throw BoardEditorStoreError.invalidEditedDocument(slug: slug)
         }
         return first
+    }
+
+    /// Dynamic rig aliases project their canonical face at render time, so the
+    /// editor must prepare that face rather than an alias-specific static image.
+    /// Non-rig aliases continue to use their own declared artwork unchanged.
+    private static func artworkSourcePresentation(
+        for presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) -> BoardEditablePresentation {
+        guard let sourcePresentationID = presentation.sourcePresentationID,
+              let sourcePresentation = document.presentations.first(where: {
+                  $0.id == sourcePresentationID
+              }),
+              sourcePresentation.cordRig != nil else {
+            return presentation
+        }
+        return sourcePresentation
     }
 
     private func validSlug(_ slug: String) throws -> String {
