@@ -32,12 +32,22 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.hangten.android.board.BoardCanvas
 import com.hangten.android.content.Board
+import com.hangten.android.content.BoardHold
+import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.HoldShape
 import com.hangten.android.content.PathCommand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+
+internal class BoardEditorPresentationContent(board: Board) {
+    val presentation: BoardPresentation? = board.defaultPresentation
+    val holds: List<BoardHold> = presentation?.let(board::effectiveHolds).orEmpty()
+
+    fun selectedHold(id: String?): BoardHold? =
+        holds.firstOrNull { it.id == id } ?: holds.firstOrNull()
+}
 
 @Composable
 fun BoardEditorListScreen(
@@ -142,12 +152,14 @@ fun BoardEditorScreen(
         Text("Edit $slug")
         error?.let { Text(it) }
         if (current != null) {
-            val selected = current.holds.firstOrNull { it.id == selectedHoldId } ?: current.holds.firstOrNull()
+            val editorContent = BoardEditorPresentationContent(current)
+            val selected = editorContent.selectedHold(selectedHoldId)
             BoardCanvas(
                 board = current,
                 activeHoldIDs = setOfNotNull(selected?.id),
                 onHoldTap = { selectedHoldId = it; selectedGeometry = 0; selectedCommand = 0 },
                 imageOverride = localImage,
+                presentationId = editorContent.presentation?.id,
                 modifier = Modifier.pointerInput(selected, selectedGeometry, selectedCommand) {
                     var start: Pair<Double, Double>? = null
                     var totalDragX = 0f

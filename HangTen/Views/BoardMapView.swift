@@ -101,12 +101,13 @@ struct BoardMapPresentationSelection: Equatable {
     ) {
         let initialPresentationID = board.presentation(id: requestedPresentationID)?.id
             ?? board.defaultPresentation.id
-        if let activePresentationID = Self.presentationID(
-            for: activeHoldID,
+        if let matchingPresentationID = Self.presentationID(
+            matching: highlightedHoldIDs,
+            activeHoldID: activeHoldID,
             preferring: initialPresentationID,
             on: board
         ) {
-            presentationID = activePresentationID
+            presentationID = matchingPresentationID
         } else if let highlightedHoldID = board.holds.first(where: {
             highlightedHoldIDs.contains($0.id)
         })?.id,
@@ -132,12 +133,13 @@ struct BoardMapPresentationSelection: Equatable {
         activeHoldID: String?,
         on board: TrainingBoard
     ) {
-        if let activePresentationID = Self.presentationID(
-            for: activeHoldID,
+        if let matchingPresentationID = Self.presentationID(
+            matching: highlightedHoldIDs,
+            activeHoldID: activeHoldID,
             preferring: presentationID,
             on: board
         ) {
-            presentationID = activePresentationID
+            presentationID = matchingPresentationID
             return
         }
         let addedHoldIDs = highlightedHoldIDs.subtracting(previousHoldIDs)
@@ -150,15 +152,20 @@ struct BoardMapPresentationSelection: Equatable {
         }
     }
 
-    mutating func activateHold(id: String?, on board: TrainingBoard) {
-        guard let activePresentationID = Self.presentationID(
-            for: id,
+    mutating func activateHold(
+        id: String?,
+        highlightedHoldIDs: Set<String> = [],
+        on board: TrainingBoard
+    ) {
+        guard let matchingPresentationID = Self.presentationID(
+            matching: highlightedHoldIDs,
+            activeHoldID: id,
             preferring: presentationID,
             on: board
         ) else {
             return
         }
-        presentationID = activePresentationID
+        presentationID = matchingPresentationID
     }
 
     mutating func updateRequestedPresentation(
@@ -194,6 +201,37 @@ struct BoardMapPresentationSelection: Equatable {
     }
 
     private static func presentationID(
+        matching highlightedHoldIDs: Set<String>,
+        activeHoldID: String?,
+        preferring preferredPresentationID: String,
+        on board: TrainingBoard
+    ) -> String? {
+        if let activeHoldID,
+           !highlightedHoldIDs.isEmpty,
+           !highlightedHoldIDs.contains(activeHoldID),
+           let activePresentationID = presentationID(
+               for: activeHoldID,
+               preferring: preferredPresentationID,
+               on: board
+           ) {
+            return activePresentationID
+        }
+
+        let requiredHoldIDs = highlightedHoldIDs.isEmpty
+            ? Set(activeHoldID.map { [$0] } ?? [])
+            : highlightedHoldIDs
+        return presentationID(
+            containing: requiredHoldIDs,
+            preferring: preferredPresentationID,
+            on: board
+        ) ?? presentationID(
+            for: activeHoldID,
+            preferring: preferredPresentationID,
+            on: board
+        )
+    }
+
+    private static func presentationID(
         for holdID: String?,
         preferring preferredPresentationID: String,
         on board: TrainingBoard
@@ -208,6 +246,30 @@ struct BoardMapPresentationSelection: Equatable {
         }
         return board.presentations.first(where: { presentation in
             board.availableHolds(for: presentation).contains(where: { $0.id == holdID })
+        })?.id
+    }
+
+    private static func presentationID(
+        containing holdIDs: Set<String>,
+        preferring preferredPresentationID: String,
+        on board: TrainingBoard
+    ) -> String? {
+        guard !holdIDs.isEmpty else { return nil }
+        let knownHoldIDs = Set(board.holds.map(\.id))
+        guard holdIDs.isSubset(of: knownHoldIDs) else { return nil }
+
+        var candidates: [BoardPresentation] = []
+        if let preferredPresentation = board.presentation(id: preferredPresentationID) {
+            candidates.append(preferredPresentation)
+        }
+        candidates.append(board.defaultPresentation)
+        candidates.append(contentsOf: board.presentations)
+
+        var seenPresentationIDs = Set<String>()
+        return candidates.first(where: { candidate in
+            guard seenPresentationIDs.insert(candidate.id).inserted else { return false }
+            let availableHoldIDs = Set(board.availableHolds(for: candidate).map(\.id))
+            return holdIDs.isSubset(of: availableHoldIDs)
         })?.id
     }
 }
@@ -533,7 +595,11 @@ struct BoardMapView: View {
             )
         }
         .onChange(of: activeHoldID) { _, holdID in
-            presentationSelection.activateHold(id: holdID, on: board)
+            presentationSelection.activateHold(
+                id: holdID,
+                highlightedHoldIDs: highlightedHoldIDs,
+                on: board
+            )
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
             presentationSelection.updateRequestedPresentation(

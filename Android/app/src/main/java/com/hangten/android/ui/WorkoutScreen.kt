@@ -18,7 +18,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -80,6 +82,14 @@ fun WorkoutScreen(
     val sensorMeter = sensorController?.state?.collectAsState()?.value
     val lifecycleOwner = LocalLifecycleOwner.current
     val activeStep = plan.steps.getOrNull(snapshot.activeStepIndex)
+    val activeHoldIDs = activeStep?.let { resolveTargets(it.targets, board) }.orEmpty()
+    var currentPresentationID by remember(board.id) {
+        mutableStateOf(board.defaultPresentation?.id)
+    }
+    val workoutPresentation = board.presentationContaining(
+        holdIds = activeHoldIDs,
+        preferredPresentationId = currentPresentationID,
+    )
 
     DisposableEffect(lifecycleOwner, viewModel) {
         val observer = LifecycleEventObserver { _, event ->
@@ -108,6 +118,9 @@ fun WorkoutScreen(
     LaunchedEffect(sensorController, viewModel) {
         sensorController?.measurements?.collect(viewModel::consumeSensorMeasurement)
     }
+    LaunchedEffect(workoutPresentation?.id) {
+        currentPresentationID = workoutPresentation?.id
+    }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(contentPadding).padding(20.dp)) {
         val horizontal = maxWidth >= 700.dp
@@ -129,11 +142,14 @@ fun WorkoutScreen(
                     stateDescription = activeStep?.targets.orEmpty().joinToString { it.semantic ?: it.kind ?: "hold" }
                 },
             ) {
-                BoardCanvas(
-                    board = board,
-                    activeHoldIDs = activeStep?.let { resolveTargets(it.targets, board) }.orEmpty(),
-                    onHoldTap = {},
-                )
+                workoutPresentation?.let { presentation ->
+                    BoardCanvas(
+                        board = board,
+                        activeHoldIDs = activeHoldIDs,
+                        onHoldTap = {},
+                        presentationId = presentation.id,
+                    )
+                }
             }
         }
         if (horizontal) {

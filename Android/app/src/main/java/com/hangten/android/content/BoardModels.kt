@@ -106,6 +106,9 @@ data class Board(
     val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
     val packageName: String = id,
 ) {
+    val defaultPresentation: BoardPresentation?
+        get() = presentations.firstOrNull { it.isDefault } ?: presentations.firstOrNull()
+
     fun presentation(id: String?): BoardPresentation? =
         presentations.firstOrNull { it.id == id }
 
@@ -131,6 +134,22 @@ data class Board(
         return holds.filter { hold ->
             hold.presentationId == canonicalPresentationId &&
                 (availableHoldIds == null || hold.id in availableHoldIds)
+        }
+    }
+
+    fun presentationContaining(
+        holdIds: Set<String>,
+        preferredPresentationId: String? = null,
+    ): BoardPresentation? {
+        val candidates = buildList {
+            presentation(preferredPresentationId)?.let(::add)
+            defaultPresentation?.let(::add)
+            addAll(presentations)
+        }.distinctBy { it.id }
+
+        return candidates.firstOrNull { candidate ->
+            val availableIds = effectiveHolds(candidate).mapTo(mutableSetOf()) { it.id }
+            availableIds.containsAll(holdIds)
         }
     }
 }

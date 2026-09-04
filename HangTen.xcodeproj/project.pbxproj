@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA1000000000000000000001 /* BoardMapPresentationSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1000000000000000000002 /* BoardMapPresentationSelectionTests.swift */; };
 		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
@@ -138,6 +139,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FA1000000000000000000002 /* BoardMapPresentationSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardMapPresentationSelectionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000010 /* HangTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
+				FA1000000000000000000002 /* BoardMapPresentationSelectionTests.swift */,
 				D20000000000000000000002 /* BoardCordRigGeometryTests.swift */,
 				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
@@ -768,6 +771,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA1000000000000000000001 /* BoardMapPresentationSelectionTests.swift in Sources */,
 				D10000000000000000000002 /* BoardCordRigGeometryTests.swift in Sources */,
 				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
