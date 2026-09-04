@@ -234,7 +234,7 @@ struct BoardPresentationArtwork: View {
         geometry: BoardRoutedCordRigGeometry,
         in context: inout GraphicsContext
     ) {
-        let paths = geometry.tensionSpans(in: layer).map(\.path)
+        let paths = geometry.renderableTensionPaths(in: layer)
             + geometry.authoredPaths(in: layer).map(\.path)
         guard !paths.isEmpty else { return }
 

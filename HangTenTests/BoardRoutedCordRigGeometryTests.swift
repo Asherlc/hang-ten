@@ -28,6 +28,47 @@ final class BoardRoutedCordRigGeometryTests: XCTestCase {
         XCTAssertTrue(geometry.authoredPaths(in: .overpass).isEmpty)
     }
 
+    func testRenderableTensionPathsJoinEffectivelyCoincidentWorldEndpointsAtOneApex() throws {
+        let template = makeRig()
+        let rig = replacing(
+            template,
+            ports: template.ports.map { port in
+                guard port.id == "world-left" || port.id == "world-right" else {
+                    return port
+                }
+                return BoardRoutedCordPort(
+                    id: port.id,
+                    space: port.space,
+                    point: BoardCordPoint(
+                        x: port.id == "world-left" ? 150 : 150.00000001,
+                        y: 0
+                    )
+                )
+            },
+            paths: []
+        )
+        let geometry = try XCTUnwrap(
+            BoardRoutedCordRigGeometry.resolve(
+                rig: rig,
+                projection: BoardPresentationGeometryProjection(rotationDegrees: 0),
+                in: CGRect(x: 0, y: 0, width: 400, height: 400)
+            )
+        )
+
+        let paths = geometry.renderableTensionPaths(in: .behindFace)
+        XCTAssertEqual(paths.count, 1)
+        let elements = pathElements(try XCTUnwrap(paths.first))
+        XCTAssertEqual(elements.count, 3)
+        guard case .move(let leftBody) = elements[0],
+              case .line(let apex) = elements[1],
+              case .line(let rightBody) = elements[2] else {
+            return XCTFail("Coincident routed spans must form one joined V path")
+        }
+        assertEqual(leftBody, CGPoint(x: 100, y: 260))
+        assertEqual(apex, CGPoint(x: 200.000000005, y: 40), accuracy: 1e-6)
+        assertEqual(rightBody, CGPoint(x: 300, y: 260))
+    }
+
     func testBodyRotationSupportsUprightHalfTurnAndArbitraryAngles() throws {
         let canvas = CGRect(x: 0, y: 0, width: 400, height: 400)
         let upright = try XCTUnwrap(

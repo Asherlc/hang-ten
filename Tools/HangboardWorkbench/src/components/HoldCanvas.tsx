@@ -228,7 +228,7 @@ interface RoutedCordLayerArtworkProps {
 }
 
 function RoutedCordLayerArtwork({ geometry, layer }: RoutedCordLayerArtworkProps) {
-  const paths = geometry.layers[layer];
+  const paths = geometry.renderLayers[layer];
   const scene = geometry.viewBox;
   const diameter = geometry.rig.style.diameter * geometry.cordUnitScale;
   const outlineWidth = diameter * 1.28;

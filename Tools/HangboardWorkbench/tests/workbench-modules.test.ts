@@ -647,6 +647,41 @@ test("routed screenOrder pairing stable-sorts transformed ports by x, y, then de
   );
 });
 
+test("routed render layers join effectively coincident world endpoints at one apex", () => {
+  const rig = routedRenderRig({
+    ports: [
+      { id: "body-left", space: "body", point: { x: 30, y: 90 } },
+      { id: "body-right", space: "body", point: { x: 90, y: 90 } },
+      { id: "world-left", space: "world", point: { x: 60, y: 10 } },
+      { id: "world-right", space: "world", point: { x: 60.00000001, y: 10 } },
+    ],
+    paths: [],
+    occlusions: [],
+  });
+  const document: EditorDocument = { canvas: { width: 120, height: 120 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+  assert.ok(geometry);
+  if (geometry.type !== "routed") assert.fail("expected a routed rig");
+  assert.equal(geometry.layers.behindFace.length, 2, "pairing geometry remains lossless");
+  assert.deepEqual(geometry.renderLayers.behindFace, [{
+    kind: "span",
+    id: "main:apex:0",
+    d: "M 30 90 L 60.000000005 10 L 90 90",
+  }]);
+});
+
 test("the eyelet foreground keeps the board-side face above the incoming cord", () => {
   const rig: DirectTwoAnchorCordRig = {
     type: "directTwoAnchor",

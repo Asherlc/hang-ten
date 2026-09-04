@@ -287,6 +287,51 @@ struct BoardRoutedCordRigGeometry {
         spans.filter { $0.layer == layer }
     }
 
+    func renderableTensionPaths(in layer: BoardRoutedCordLayer) -> [Path] {
+        let tolerance = max(sceneRect.width, sceneRect.height) * 1e-9
+        var clusters: [(
+            groupID: String,
+            worldPoint: CGPoint,
+            spans: [BoardRoutedCordTensionSpan]
+        )] = []
+
+        for span in tensionSpans(in: layer) {
+            if let index = clusters.firstIndex(where: { cluster in
+                guard cluster.groupID == span.groupID else { return false }
+                return hypot(
+                    cluster.worldPoint.x - span.worldPoint.x,
+                    cluster.worldPoint.y - span.worldPoint.y
+                ) <= tolerance
+            }) {
+                clusters[index].spans.append(span)
+            } else {
+                clusters.append((span.groupID, span.worldPoint, [span]))
+            }
+        }
+
+        return clusters.map { cluster in
+            guard cluster.spans.count > 1 else {
+                return cluster.spans[0].path
+            }
+            let count = CGFloat(cluster.spans.count)
+            let apex = CGPoint(
+                x: cluster.spans.reduce(0) { $0 + $1.worldPoint.x } / count,
+                y: cluster.spans.reduce(0) { $0 + $1.worldPoint.y } / count
+            )
+
+            var path = Path()
+            path.move(to: cluster.spans[0].bodyPoint)
+            path.addLine(to: apex)
+            for (index, span) in cluster.spans.dropFirst().enumerated() {
+                path.addLine(to: span.bodyPoint)
+                if index < cluster.spans.count - 2 {
+                    path.addLine(to: apex)
+                }
+            }
+            return path
+        }
+    }
+
     func authoredPaths(in layer: BoardRoutedCordLayer) -> [BoardResolvedRoutedCordPath] {
         paths.filter { $0.layer == layer }
     }

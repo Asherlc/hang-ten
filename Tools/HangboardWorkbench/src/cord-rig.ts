@@ -48,6 +48,7 @@ export interface RoutedCordRigPresentationGeometry extends CommonCordRigPresenta
   type: "routed";
   rig: RoutedCordRig;
   layers: Record<RoutedCordLayer, RoutedCordDrawPath[]>;
+  renderLayers: Record<RoutedCordLayer, RoutedCordDrawPath[]>;
   occlusions: RoutedCordOcclusionPath[];
 }
 
@@ -208,6 +209,13 @@ export function resolveCordRigPresentationGeometry(
       aboveFace: [],
       overpass: [],
     };
+    const spanRecords: Array<{
+      groupID: string;
+      layer: RoutedCordLayer;
+      bodyPoint: Point;
+      worldPoint: Point;
+      drawPath: RoutedCordDrawPath;
+    }> = [];
     const incidentWorldPoint = new Map<string, Point>();
 
     for (const group of rig.tensionGroups) {
@@ -240,12 +248,20 @@ export function resolveCordRigPresentationGeometry(
         const body = bodyPorts[index]!;
         const world = worldPorts[index]!;
         incidentWorldPoint.set(body.id, world.point!);
-        layers[group.layer].push({
+        const drawPath: RoutedCordDrawPath = {
           kind: "span",
           id: `${group.id}:${index}`,
           bodyPortID: body.id,
           worldPortID: world.id,
           d: [pointCommand("M", [world.point!]), pointCommand("L", [body.point!])].join(" "),
+        };
+        layers[group.layer].push(drawPath);
+        spanRecords.push({
+          groupID: group.id,
+          layer: group.layer,
+          bodyPoint: body.point!,
+          worldPoint: world.point!,
+          drawPath,
         });
       }
     }
@@ -265,6 +281,67 @@ export function resolveCordRigPresentationGeometry(
           (point) => transformRoutedPoint(point, path.space),
         ),
       });
+    }
+
+    const renderLayers: RoutedCordRigPresentationGeometry["renderLayers"] = {
+      behindFace: [],
+      aboveFace: [],
+      overpass: [],
+    };
+    const coincidentPointTolerance = Math.max(viewBox.width, viewBox.height) * 1e-9;
+    for (const layer of ["behindFace", "aboveFace", "overpass"] as const) {
+      const clusters: Array<{
+        groupID: string;
+        worldPoint: Point;
+        records: typeof spanRecords;
+      }> = [];
+
+      for (const record of spanRecords.filter((candidate) => candidate.layer === layer)) {
+        const cluster = clusters.find((candidate) => (
+          candidate.groupID === record.groupID
+          && Math.hypot(
+            candidate.worldPoint.x - record.worldPoint.x,
+            candidate.worldPoint.y - record.worldPoint.y,
+          ) <= coincidentPointTolerance
+        ));
+        if (cluster) {
+          cluster.records.push(record);
+        } else {
+          clusters.push({
+            groupID: record.groupID,
+            worldPoint: record.worldPoint,
+            records: [record],
+          });
+        }
+      }
+
+      for (const [clusterIndex, cluster] of clusters.entries()) {
+        if (cluster.records.length === 1) {
+          renderLayers[layer].push(cluster.records[0]!.drawPath);
+          continue;
+        }
+        const apex = cluster.records.reduce<Point>((sum, record) => ({
+          x: sum.x + record.worldPoint.x,
+          y: sum.y + record.worldPoint.y,
+        }), { x: 0, y: 0 });
+        apex.x /= cluster.records.length;
+        apex.y /= cluster.records.length;
+
+        const points = [cluster.records[0]!.bodyPoint, apex];
+        for (const [recordIndex, record] of cluster.records.slice(1).entries()) {
+          points.push(record.bodyPoint);
+          if (recordIndex < cluster.records.length - 2) points.push(apex);
+        }
+        renderLayers[layer].push({
+          kind: "span",
+          id: `${cluster.groupID}:apex:${clusterIndex}`,
+          d: [
+            pointCommand("M", [points[0]!]),
+            ...points.slice(1).map((point) => pointCommand("L", [point])),
+          ].join(" "),
+        });
+      }
+      renderLayers[layer].push(...layers[layer].filter((path) => path.kind === "path"));
     }
 
     const occlusions: RoutedCordOcclusionPath[] = [];
@@ -301,6 +378,7 @@ export function resolveCordRigPresentationGeometry(
       rotationAnchor,
       cordUnitScale,
       layers,
+      renderLayers,
       occlusions,
     };
   }
