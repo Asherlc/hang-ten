@@ -3,6 +3,10 @@ import type {
   DirectTwoAnchorCordRig,
   EditorDocument,
   Point,
+  RoutedCordLayer,
+  RoutedCordPathCommand,
+  RoutedCordRig,
+  RoutedCordSpace,
 } from "./types.ts";
 
 export interface CordStrand {
@@ -10,18 +14,46 @@ export interface CordStrand {
   end: Point;
 }
 
-export interface CordRigPresentationGeometry {
-  rig: DirectTwoAnchorCordRig;
+interface CommonCordRigPresentationGeometry {
   viewBox: { x: number; y: number; width: number; height: number };
   rotationDegrees: number;
   rotationAnchor: Point;
+  cordUnitScale: number;
+}
+
+export interface DirectCordRigPresentationGeometry extends CommonCordRigPresentationGeometry {
+  type: "directTwoAnchor";
+  rig: DirectTwoAnchorCordRig;
   pullPoint: Point;
   strands: [CordStrand, CordStrand];
   supportPaths: [string, string, string, string];
   eyeletForegroundCrescents: [string, string];
   eyeletRadius: number;
-  cordUnitScale: number;
 }
+
+export interface RoutedCordDrawPath {
+  kind: "span" | "path";
+  id: string;
+  d: string;
+  bodyPortID?: string;
+  worldPortID?: string;
+}
+
+export interface RoutedCordOcclusionPath {
+  type: "radialLip" | "facePatch";
+  d: string;
+}
+
+export interface RoutedCordRigPresentationGeometry extends CommonCordRigPresentationGeometry {
+  type: "routed";
+  rig: RoutedCordRig;
+  layers: Record<RoutedCordLayer, RoutedCordDrawPath[]>;
+  occlusions: RoutedCordOcclusionPath[];
+}
+
+export type CordRigPresentationGeometry =
+  | DirectCordRigPresentationGeometry
+  | RoutedCordRigPresentationGeometry;
 
 function rotateClockwise(point: Point, anchor: Point, degrees: number): Point {
   const normalizedDegrees = ((degrees % 360) + 360) % 360;
@@ -52,6 +84,33 @@ function pointCommand(command: string, points: readonly Point[]): string {
     pathNumber(point.x),
     pathNumber(point.y),
   ]).join(" ")}`;
+}
+
+function routedCommandPath(
+  commands: readonly RoutedCordPathCommand[],
+  transform: (point: Point) => Point,
+): string {
+  return commands.map((command) => {
+    switch (command.command) {
+      case "close":
+        return "Z";
+      case "move":
+        return pointCommand("M", [transform({ x: command.to[0], y: command.to[1] })]);
+      case "line":
+        return pointCommand("L", [transform({ x: command.to[0], y: command.to[1] })]);
+      case "quad": {
+        const control = transform({ x: command.control[0], y: command.control[1] });
+        const destination = transform({ x: command.to[0], y: command.to[1] });
+        return pointCommand("Q", [control, destination]);
+      }
+      case "curve": {
+        const control1 = transform({ x: command.control1[0], y: command.control1[1] });
+        const control2 = transform({ x: command.control2[0], y: command.control2[1] });
+        const destination = transform({ x: command.to[0], y: command.to[1] });
+        return pointCommand("C", [control1, control2, destination]);
+      }
+    }
+  }).join(" ");
 }
 
 function eyeletForegroundCrescent(
@@ -100,8 +159,7 @@ export function resolveCordRigPresentationGeometry(
     )
     : presentation;
   const rig = canonical?.cordRig;
-  if (!rig || rig.type !== "directTwoAnchor"
-    || document.canvas.width <= 0 || document.canvas.height <= 0) return null;
+  if (!rig || document.canvas.width <= 0 || document.canvas.height <= 0) return null;
 
   const faceOrigin = {
     x: rig.sourceFrame.x + rig.innerFaceFrame.x,
@@ -130,6 +188,123 @@ export function resolveCordRigPresentationGeometry(
     y: normalizedAnchor.y * rig.sceneSize.height,
   };
   const rotationAnchor = sceneToFace(sceneAnchor);
+  const cordUnitScale = 1 / Math.sqrt(sceneUnitsPerFaceX * sceneUnitsPerFaceY);
+  const viewBox = {
+    x: -faceOrigin.x / sceneUnitsPerFaceX,
+    y: -faceOrigin.y / sceneUnitsPerFaceY,
+    width: rig.sceneSize.width / sceneUnitsPerFaceX,
+    height: rig.sceneSize.height / sceneUnitsPerFaceY,
+  };
+
+  if (rig.type === "routed") {
+    const transformedPorts = new Map(rig.ports.map((port) => {
+      const scenePoint = sourceRelativeScenePoint(port.point);
+      return [port.id, sceneToFace(port.space === "body"
+        ? rotateClockwise(scenePoint, sceneAnchor, rotationDegrees)
+        : scenePoint)] as const;
+    }));
+    const layers: RoutedCordRigPresentationGeometry["layers"] = {
+      behindFace: [],
+      aboveFace: [],
+      overpass: [],
+    };
+    const incidentWorldPoint = new Map<string, Point>();
+
+    for (const group of rig.tensionGroups) {
+      const bodyPorts = group.bodyPortIDs.map((id, declarationIndex) => ({
+        id,
+        declarationIndex,
+        point: transformedPorts.get(id),
+      }));
+      const worldPorts = group.worldPortIDs.map((id, declarationIndex) => ({
+        id,
+        declarationIndex,
+        point: transformedPorts.get(id),
+      }));
+      if (bodyPorts.some((port) => !port.point) || worldPorts.some((port) => !port.point)) {
+        return null;
+      }
+      const screenOrder = (
+        left: { point: Point | undefined; declarationIndex: number },
+        right: { point: Point | undefined; declarationIndex: number },
+      ): number => (
+        left.point!.x - right.point!.x
+        || left.point!.y - right.point!.y
+        || left.declarationIndex - right.declarationIndex
+      );
+      if (group.pairing === "screenOrder") {
+        bodyPorts.sort(screenOrder);
+        worldPorts.sort(screenOrder);
+      }
+      for (let index = 0; index < bodyPorts.length; index += 1) {
+        const body = bodyPorts[index]!;
+        const world = worldPorts[index]!;
+        incidentWorldPoint.set(body.id, world.point!);
+        layers[group.layer].push({
+          kind: "span",
+          id: `${group.id}:${index}`,
+          bodyPortID: body.id,
+          worldPortID: world.id,
+          d: [pointCommand("M", [world.point!]), pointCommand("L", [body.point!])].join(" "),
+        });
+      }
+    }
+
+    const transformRoutedPoint = (point: Point, space: RoutedCordSpace): Point => {
+      const scenePoint = sourceRelativeScenePoint(point);
+      return sceneToFace(space === "body"
+        ? rotateClockwise(scenePoint, sceneAnchor, rotationDegrees)
+        : scenePoint);
+    };
+    for (const path of rig.paths) {
+      layers[path.layer].push({
+        kind: "path",
+        id: path.id,
+        d: routedCommandPath(
+          path.commands,
+          (point) => transformRoutedPoint(point, path.space),
+        ),
+      });
+    }
+
+    const occlusions: RoutedCordOcclusionPath[] = [];
+    for (const occlusion of rig.occlusions) {
+      if (occlusion.type === "facePatch") {
+        occlusions.push({
+          type: "facePatch",
+          d: routedCommandPath(
+            occlusion.commands,
+            (point) => transformRoutedPoint(point, "body"),
+          ),
+        });
+        continue;
+      }
+      const center = transformedPorts.get(occlusion.bodyPortID);
+      const toward = incidentWorldPoint.get(occlusion.bodyPortID);
+      if (!center || !toward) return null;
+      occlusions.push({
+        type: "radialLip",
+        d: eyeletForegroundCrescent(
+          center,
+          toward,
+          occlusion.radius * cordUnitScale,
+          occlusion.chordOffset * cordUnitScale,
+        ),
+      });
+    }
+
+    return {
+      type: "routed",
+      rig,
+      viewBox,
+      rotationDegrees,
+      rotationAnchor,
+      cordUnitScale,
+      layers,
+      occlusions,
+    };
+  }
+
   const projectedAttachments = rig.attachmentPoints.map((point) => sceneToFace(
     rotateClockwise(sourceRelativeScenePoint(point), sceneAnchor, rotationDegrees),
   )).sort((left, right) => left.x - right.x || left.y - right.y);
@@ -143,7 +318,6 @@ export function resolveCordRigPresentationGeometry(
     { start: exits[0], end: projectedAttachments[0]! },
     { start: exits[1], end: projectedAttachments[1]! },
   ] as const;
-  const cordUnitScale = 1 / Math.sqrt(sceneUnitsPerFaceX * sceneUnitsPerFaceY);
   const eyeletRadius = rig.eyeletRadius * cordUnitScale;
   const eyeletForegroundCrescents = strands.map((strand) => (
     eyeletForegroundCrescent(
@@ -189,13 +363,9 @@ export function resolveCordRigPresentationGeometry(
   ].join(" ");
 
   return {
+    type: "directTwoAnchor",
     rig,
-    viewBox: {
-      x: -faceOrigin.x / sceneUnitsPerFaceX,
-      y: -faceOrigin.y / sceneUnitsPerFaceY,
-      width: rig.sceneSize.width / sceneUnitsPerFaceX,
-      height: rig.sceneSize.height / sceneUnitsPerFaceY,
-    },
+    viewBox,
     rotationDegrees,
     rotationAnchor,
     pullPoint,

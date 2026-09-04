@@ -22,6 +22,7 @@ import type {
   EditorDocument,
   LoadedBoard,
   PathEditor,
+  Point,
   RoutedCordRig,
   WorkbenchClient,
   WorkbenchController,
@@ -75,6 +76,76 @@ function boardFixture(overrides: Partial<Board> = {}): Board {
     holdCount: 0,
     imageUrl: "/api/boards/compact/image",
     document: editorDocument(),
+    ...overrides,
+  };
+}
+
+function routedRenderRig(overrides: Partial<RoutedCordRig> = {}): RoutedCordRig {
+  return {
+    type: "routed",
+    sceneSize: { width: 200, height: 200 },
+    sourceFrame: { x: 40, y: 40, width: 120, height: 120 },
+    innerFaceFrame: { x: 0, y: 0, width: 120, height: 120 },
+    style: {
+      diameter: 10,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 30, y: 90 } },
+      { id: "body-right", space: "body", point: { x: 90, y: 90 } },
+      { id: "world-left", space: "world", point: { x: 10, y: 10 } },
+      { id: "world-right", space: "world", point: { x: 110, y: 10 } },
+    ],
+    tensionGroups: [{
+      id: "main",
+      bodyPortIDs: ["body-left", "body-right"],
+      worldPortIDs: ["world-left", "world-right"],
+      pairing: "declared",
+      layer: "behindFace",
+    }],
+    paths: [
+      {
+        id: "world-tail",
+        space: "world",
+        layer: "behindFace",
+        commands: [
+          { command: "move", to: [15, 15] },
+          { command: "line", to: [25, 15] },
+        ],
+      },
+      {
+        id: "body-return",
+        space: "body",
+        layer: "aboveFace",
+        commands: [
+          { command: "move", to: [30, 90] },
+          { command: "quad", control: [60, 110], to: [90, 90] },
+        ],
+      },
+      {
+        id: "world-knot",
+        space: "world",
+        layer: "overpass",
+        commands: [
+          { command: "move", to: [45, 15] },
+          { command: "curve", control1: [50, 5], control2: [70, 5], to: [75, 15] },
+        ],
+      },
+    ],
+    occlusions: [
+      { type: "radialLip", bodyPortID: "body-left", radius: 6, chordOffset: 2 },
+      {
+        type: "facePatch",
+        commands: [
+          { command: "move", to: [80, 70] },
+          { command: "line", to: [100, 70] },
+          { command: "line", to: [100, 85] },
+          { command: "close" },
+        ],
+      },
+    ],
     ...overrides,
   };
 }
@@ -451,6 +522,131 @@ test("the browser client rejects malformed routed cord structure", async (contex
   }
 });
 
+test("routed rig geometry rotates body points clockwise while world points stay fixed", () => {
+  const document: EditorDocument = {
+    presentationID: "front-quarter-turn",
+    canvas: { width: 120, height: 120 },
+    regions: [],
+  };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front-quarter-turn",
+    presentations: [
+      {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: routedRenderRig(),
+      },
+      {
+        presentationID: "front-quarter-turn",
+        displayName: "Front quarter turn",
+        imageUrl: "/api/boards/compact/image?presentationID=front-quarter-turn",
+        default: false,
+        sourcePresentationID: "front",
+        rotationDegrees: 90,
+        geometryRotationAnchor: { x: 0.5, y: 0.5 },
+      },
+    ],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document) as unknown as {
+    type: "routed";
+    viewBox: { x: number; y: number; width: number; height: number };
+    rotationAnchor: Point;
+    layers: Record<"behindFace" | "aboveFace" | "overpass", Array<{
+      kind: "span" | "path";
+      id: string;
+      d: string;
+      bodyPortID?: string;
+      worldPortID?: string;
+    }>>;
+    occlusions: Array<{ type: "radialLip" | "facePatch"; d: string }>;
+  } | null;
+
+  assert.ok(geometry);
+  assert.equal(geometry.type, "routed");
+  assert.deepEqual(geometry.viewBox, { x: -40, y: -40, width: 200, height: 200 });
+  assert.deepEqual(geometry.rotationAnchor, { x: 60, y: 60 });
+  assert.deepEqual(geometry.layers.behindFace, [
+    {
+      kind: "span",
+      id: "main:0",
+      bodyPortID: "body-left",
+      worldPortID: "world-left",
+      d: "M 10 10 L 30 30",
+    },
+    {
+      kind: "span",
+      id: "main:1",
+      bodyPortID: "body-right",
+      worldPortID: "world-right",
+      d: "M 110 10 L 30 90",
+    },
+    { kind: "path", id: "world-tail", d: "M 15 15 L 25 15" },
+  ]);
+  assert.deepEqual(geometry.layers.aboveFace, [
+    { kind: "path", id: "body-return", d: "M 30 30 Q 10 60 30 90" },
+  ]);
+  assert.deepEqual(geometry.layers.overpass, [
+    { kind: "path", id: "world-knot", d: "M 45 15 C 50 5 70 5 75 15" },
+  ]);
+  assert.equal(geometry.occlusions[0]?.type, "radialLip");
+  assert.match(geometry.occlusions[0]?.d ?? "", /^M 32\.585786437627 24\.585786437627 A 6 6/);
+  assert.deepEqual(geometry.occlusions[1], {
+    type: "facePatch",
+    d: "M 50 80 L 50 100 L 35 100 Z",
+  });
+});
+
+test("routed screenOrder pairing stable-sorts transformed ports by x, y, then declaration index", () => {
+  const rig = routedRenderRig({
+    ports: [
+      { id: "body-second", space: "body", point: { x: 30, y: 100 } },
+      { id: "body-first", space: "body", point: { x: 30, y: 90 } },
+      { id: "world-second", space: "world", point: { x: 10, y: 10 } },
+      { id: "world-first", space: "world", point: { x: 10, y: 10 } },
+    ],
+    tensionGroups: [{
+      id: "ordered",
+      bodyPortIDs: ["body-second", "body-first"],
+      worldPortIDs: ["world-second", "world-first"],
+      pairing: "screenOrder",
+      layer: "behindFace",
+    }],
+    paths: [],
+    occlusions: [],
+  });
+  const document: EditorDocument = { canvas: { width: 120, height: 120 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document) as unknown as {
+    type: "routed";
+    layers: { behindFace: Array<{ bodyPortID?: string; worldPortID?: string }> };
+  } | null;
+
+  assert.ok(geometry);
+  assert.equal(geometry.type, "routed");
+  assert.deepEqual(
+    geometry.layers.behindFace.map(({ bodyPortID, worldPortID }) => ({ bodyPortID, worldPortID })),
+    [
+      { bodyPortID: "body-first", worldPortID: "world-second" },
+      { bodyPortID: "body-second", worldPortID: "world-first" },
+    ],
+  );
+});
+
 test("the eyelet foreground keeps the board-side face above the incoming cord", () => {
   const rig: DirectTwoAnchorCordRig = {
     type: "directTwoAnchor",
@@ -479,6 +675,7 @@ test("the eyelet foreground keeps the board-side face above the incoming cord", 
 
   const geometry = resolveCordRigPresentationGeometry(board, document);
   assert.ok(geometry);
+  if (geometry.type !== "directTwoAnchor") assert.fail("expected a direct-two-anchor rig");
   const strand = geometry.strands[0];
   const path = geometry.eyeletForegroundCrescents[0];
   assert.deepEqual(strand, { start: { x: 20, y: 0 }, end: { x: 20, y: 50 } });

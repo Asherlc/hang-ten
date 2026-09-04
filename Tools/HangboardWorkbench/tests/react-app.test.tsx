@@ -18,6 +18,7 @@ import type {
   GitStatus,
   PullRequestResult,
   PushResult,
+  RoutedCordRig,
   UseWorkbenchResult,
   WorkbenchClient,
   WorkbenchDependencies,
@@ -71,6 +72,64 @@ function boardFixture(boardId = "board-a", document = editorDocument()): Board {
     holdCount: document.regions.length,
     imageUrl: `/api/boards/${boardId}/image`,
     document,
+  };
+}
+
+function routedReactRig(): RoutedCordRig {
+  return {
+    type: "routed",
+    sceneSize: { width: 200, height: 200 },
+    sourceFrame: { x: 40, y: 40, width: 120, height: 120 },
+    innerFaceFrame: { x: 0, y: 0, width: 120, height: 120 },
+    style: {
+      diameter: 10,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 30, y: 90 } },
+      { id: "body-right", space: "body", point: { x: 90, y: 90 } },
+      { id: "world-left", space: "world", point: { x: 10, y: 10 } },
+      { id: "world-right", space: "world", point: { x: 110, y: 10 } },
+    ],
+    tensionGroups: [
+      {
+        id: "behind",
+        bodyPortIDs: ["body-left"],
+        worldPortIDs: ["world-left"],
+        pairing: "declared",
+        layer: "behindFace",
+      },
+      {
+        id: "above",
+        bodyPortIDs: ["body-right"],
+        worldPortIDs: ["world-right"],
+        pairing: "declared",
+        layer: "aboveFace",
+      },
+    ],
+    paths: [{
+      id: "knot-overpass",
+      space: "world",
+      layer: "overpass",
+      commands: [
+        { command: "move", to: [45, 15] },
+        { command: "curve", control1: [50, 5], control2: [70, 5], to: [75, 15] },
+      ],
+    }],
+    occlusions: [
+      { type: "radialLip", bodyPortID: "body-left", radius: 6, chordOffset: 2 },
+      {
+        type: "facePatch",
+        commands: [
+          { command: "move", to: [80, 70] },
+          { command: "line", to: [100, 70] },
+          { command: "line", to: [100, 85] },
+          { command: "close" },
+        ],
+      },
+    ],
   };
 }
 
@@ -579,6 +638,126 @@ test("a rigged alias rotates the face in plane while its complete cord stays wor
     })), [
       { href: "/api/boards/board-a/image", transform: "rotate(90 5 5)" },
       { href: "/api/boards/board-a/image", transform: "rotate(90 5 5)" },
+    ]);
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+  });
+});
+
+test("a routed alias renders the frozen cord stages around one dynamically rotated face", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "front-quarter-turn",
+    equipmentObjects: ["primary"],
+    canvas: { width: 120, height: 120 },
+    regions: [{
+      key: "edge-piece-0",
+      type: "edge",
+      equipmentObjectID: "primary",
+      displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z",
+      metadata: {
+        holdID: "edge",
+        pieceIndex: 0,
+        presentationID: "front-quarter-turn",
+      },
+      sizeMillimeters: 20,
+      fingerCapacity: 4,
+      handCapacity: 1,
+    }],
+  };
+  const presentations = [{
+    presentationID: "front",
+    displayName: "Front",
+    imageUrl: "/api/boards/board-a/image?presentationID=front",
+    default: true,
+    cordRig: routedReactRig(),
+  }, {
+    presentationID: "front-quarter-turn",
+    displayName: "Front quarter turn",
+    imageUrl: "/api/boards/board-a/image",
+    default: false,
+    sourcePresentationID: "front",
+    availableHoldIDs: ["edge"],
+    rotationDegrees: 90,
+    geometryRotationAnchor: { x: 0.5, y: 0.5 },
+  }];
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: presentations[1]!.imageUrl,
+    selectedPresentationID: "front-quarter-turn",
+    presentations,
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard() {
+        return board;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    const editorSvg = app.document.querySelector("#editor-svg");
+    assert.equal(
+      editorSvg?.getAttribute("viewBox"),
+      "-40 -40 200 200",
+      editorSvg?.outerHTML ?? app.document.body.textContent ?? "editor SVG missing",
+    );
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(90 60 60)",
+    );
+    const frozenStageIDs = new Set([
+      "routed-cord-behind-face",
+      "board-image",
+      "routed-cord-above-face",
+      "routed-cord-occlusion-redraw",
+      "routed-cord-overpass",
+      "hold-overlay",
+    ]);
+    const renderedStages = [...(editorSvg?.children ?? [])]
+      .map((element) => element.id)
+      .filter((id) => frozenStageIDs.has(id));
+    assert.deepEqual(renderedStages, [
+      "routed-cord-behind-face",
+      "board-image",
+      "routed-cord-above-face",
+      "routed-cord-occlusion-redraw",
+      "routed-cord-overpass",
+      "hold-overlay",
+    ]);
+    assert.equal(app.document.querySelectorAll("#routed-cord-behind-face [data-cord-path]").length, 1);
+    assert.equal(app.document.querySelectorAll("#routed-cord-above-face [data-cord-path]").length, 1);
+    assert.equal(app.document.querySelectorAll("#routed-cord-overpass [data-cord-path]").length, 1);
+    const braidColors = new Set(
+      [...app.document.querySelectorAll("[data-cord-braid-color]")]
+        .map((element) => element.getAttribute("stroke")),
+    );
+    assert.deepEqual(braidColors, new Set(["#FFD000", "#0055CC"]));
+    assert.deepEqual(
+      [...app.document.querySelectorAll("#routed-cord-occlusion-clips clipPath")]
+        .map((element) => element.getAttribute("data-occlusion-type")),
+      ["radialLip", "facePatch"],
+    );
+    const redrawnFaces = [...app.document.querySelectorAll<SVGImageElement>(
+      "#routed-cord-occlusion-redraw image",
+    )];
+    assert.equal(redrawnFaces.length, 2);
+    assert.deepEqual(redrawnFaces.map((entry) => ({
+      href: entry.getAttribute("href"),
+      transform: entry.getAttribute("transform"),
+    })), [
+      {
+        href: "/api/boards/board-a/image",
+        transform: "rotate(90 60 60)",
+      },
+      {
+        href: "/api/boards/board-a/image",
+        transform: "rotate(90 60 60)",
+      },
     ]);
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
   });
