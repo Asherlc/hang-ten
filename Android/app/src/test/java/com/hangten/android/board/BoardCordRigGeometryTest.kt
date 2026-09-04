@@ -61,6 +61,45 @@ class BoardCordRigGeometryTest {
     }
 
     @Test
+    fun arbitraryRotationTurnsFaceAndAttachmentsButLeavesSupportWorldUp() {
+        val geometry = resolveDirectTwoAnchorCordGeometry(
+            rig = rig,
+            presentation = presentation(rotationDegrees = 90f),
+            canvasWidth = 1200f,
+            canvasHeight = 1464f,
+        )!!
+
+        assertTransform(
+            BoardInPlaneTransform(0f, 1f, -1f, 0f, 1504f, 304f),
+            geometry.faceTransform,
+        )
+        assertPoint(Point(486f, 580f), geometry.projectedAttachments[0])
+        assertPoint(Point(486f, 1224f), geometry.projectedAttachments[1])
+        assertPoint(Point(600f, 285.5f), geometry.pullPoint)
+        assertPoint(Point(578f, 285.5f), geometry.strands[0].start)
+        assertPoint(Point(622f, 285.5f), geometry.strands[1].start)
+    }
+
+    @Test
+    fun arbitraryRotationTransformsRoundedHoldOutlineInsteadOfKeepingAxisAlignedBounds() {
+        val hold = BoardGeometry(
+            frame = NormalizedFrame(x = 0.4f, y = 0.4f, width = 0.2f, height = 0.1f),
+            shape = HoldShape.RoundedRect(cornerRadiusFraction = 0.2f),
+        )
+        val transform = BoardInPlaneTransform.rotatedAround(
+            BoardBounds(0f, 0f, 100f, 100f),
+            BoardGeometryRotationAnchor.Center,
+            45f,
+        )
+
+        val transformed = hold.toBoardPath(BoardBounds(0f, 0f, 100f, 100f))
+            .transformed(transform)
+
+        assertNull(transformed.roundedRectangle)
+        assertEquals(10, transformed.commands.size)
+    }
+
+    @Test
     fun zeroSizedCanvasDoesNotProduceNonFiniteRigGeometry() {
         assertNull(
             resolveDirectTwoAnchorCordGeometry(
@@ -105,21 +144,34 @@ class BoardCordRigGeometryTest {
         assertEquals(56f, rounded.radiusY, 0.0001f)
     }
 
-    private fun presentation(isInverted: Boolean) = BoardPresentation(
-        id = if (isInverted) "primary-inverted" else "primary",
+    private fun presentation(
+        isInverted: Boolean = false,
+        rotationDegrees: Float? = null,
+    ) = BoardPresentation(
+        id = if (isInverted || rotationDegrees != null) "primary-rotated" else "primary",
         name = "Primary",
         assetPath = "assets/primary.png",
         aspectRatio = 1200f / 1464f,
         isDefault = !isInverted,
         sourcePresentationId = if (isInverted) "primary" else null,
         isInverted = isInverted,
-        geometryRotationAnchor = if (isInverted) {
+        rotationDegrees = rotationDegrees,
+        geometryRotationAnchor = if (isInverted || rotationDegrees != null) {
             BoardGeometryRotationAnchor(0.5f, 113f / 183f)
         } else {
             null
         },
-        cordRig = if (isInverted) null else rig,
+        cordRig = if (isInverted || rotationDegrees != null) null else rig,
     )
+
+    private fun assertTransform(expected: BoardInPlaneTransform, actual: BoardInPlaneTransform) {
+        assertEquals(expected.a, actual.a, 0.0001f)
+        assertEquals(expected.b, actual.b, 0.0001f)
+        assertEquals(expected.c, actual.c, 0.0001f)
+        assertEquals(expected.d, actual.d, 0.0001f)
+        assertEquals(expected.tx, actual.tx, 0.0001f)
+        assertEquals(expected.ty, actual.ty, 0.0001f)
+    }
 
     private fun assertPoint(expected: Point, actual: Point) {
         assertEquals(expected.x, actual.x, 0.0001f)

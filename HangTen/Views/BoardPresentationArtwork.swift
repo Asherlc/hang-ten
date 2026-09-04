@@ -36,6 +36,13 @@ struct BoardPresentationArtwork: View {
                 for: board,
                 presentationID: presentation.id
             ).flatMap { UIImage(contentsOfFile: $0.path) }
+        } else if presentation.rotationDegrees != nil {
+            directTwoAnchorRig = nil
+            self.geometry = nil
+            faceImage = BoardCatalog.packageStore.presentationArtworkImageURL(
+                for: board,
+                presentationID: presentation.id
+            ).flatMap { UIImage(contentsOfFile: $0.path) }
         } else {
             directTwoAnchorRig = nil
             self.geometry = nil
@@ -67,6 +74,17 @@ struct BoardPresentationArtwork: View {
                 rig: rig,
                 geometry: geometry
             )
+        } else if presentation.rotationDegrees != nil, let faceImage {
+            Canvas { context, size in
+                var faceContext = context
+                faceContext.transform = projection.affineTransform(
+                    in: CGRect(origin: .zero, size: size)
+                )
+                faceContext.draw(
+                    context.resolve(Image(uiImage: faceImage)),
+                    in: CGRect(origin: .zero, size: size)
+                )
+            }
         } else if board.resolvedCordRig(for: presentation) == nil {
             BoardPresentationImage(board: board, presentationID: presentation.id)
         }

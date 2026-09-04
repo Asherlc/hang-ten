@@ -86,7 +86,8 @@ final class BoardPackageWriterTests: XCTestCase {
     private func makeAliasDocument(
         anchor: BoardGeometryRotationAnchor? = .init(x: 0.5, y: 0.68),
         aliasAspectRatio: Double = 2.0,
-        isInverted: Bool = true
+        isInverted: Bool = true,
+        rotationDegrees: Double? = nil
     ) -> BoardEditableDocument {
         var document = makeDocument(
             holds: [
@@ -109,6 +110,7 @@ final class BoardPackageWriterTests: XCTestCase {
                 isDefault: false,
                 sourcePresentationID: "front",
                 isInverted: isInverted,
+                rotationDegrees: rotationDegrees,
                 geometryRotationAnchor: anchor
             )
         )
@@ -579,6 +581,51 @@ final class BoardPackageWriterTests: XCTestCase {
         )
     }
 
+    func testWriterRoundTripsExplicitArbitraryAliasRotationInCanonicalOrder() throws {
+        var document = makeAliasDocument(
+            anchor: .center,
+            isInverted: false,
+            rotationDegrees: 135
+        )
+        document.holds[0].geometry[0].frame = .init(
+            x: 0.45,
+            y: 0.45,
+            width: 0.05,
+            height: 0.05
+        )
+        document.holds[0].geometry[1].frame = .init(
+            x: 0.5,
+            y: 0.5,
+            width: 0.05,
+            height: 0.05
+        )
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded.presentations[1].rotationDegrees, 135)
+        XCTAssertFalse(redecoded.presentations[1].isInverted)
+        XCTAssertTrue(
+            String(decoding: encoded, as: UTF8.self).contains(
+                "      \"rotationDegrees\": 135.0,\n"
+                    + "      \"geometryRotationAnchor\": {\n"
+            )
+        )
+    }
+
+    func testWriterRejectsInvalidAndAmbiguousExplicitAliasRotation() throws {
+        for rotation in [-1.0, 360.0, .infinity, .nan] {
+            assertWriterInvalid(
+                makeAliasDocument(isInverted: false, rotationDegrees: rotation),
+                reason: "presentation front-inverted.rotationDegrees must be finite and normalized to [0, 360)"
+            )
+        }
+        assertWriterInvalid(
+            makeAliasDocument(rotationDegrees: 180),
+            reason: "presentation front-inverted must not declare both isInverted and rotationDegrees"
+        )
+    }
+
     func testWriterOmitsAbsentAliasRotationAnchor() throws {
         let document = makeAliasDocument(anchor: nil)
 
@@ -602,7 +649,7 @@ final class BoardPackageWriterTests: XCTestCase {
     func testWriterRejectsRotationAnchorOnNonInvertedAlias() throws {
         assertWriterInvalid(
             makeAliasDocument(isInverted: false),
-            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true"
+            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
         )
     }
 

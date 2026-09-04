@@ -776,6 +776,40 @@ def test_board_payload_exposes_only_declared_inverted_alias_anchor_metadata(
     assert "geometryRotationAnchor" not in source
 
 
+def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package = library / "fixture-v2"
+    board = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    board["holds"] = board["holds"][:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
+    board["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=90,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, opened = request_json(
+            base,
+            "GET",
+            "/api/boards/fixture.multi?presentationID=back",
+        )
+
+    assert status == 200
+    alias = next(
+        presentation
+        for presentation in opened["board"]["presentations"]
+        if presentation["presentationID"] == "back"
+    )
+    assert alias["rotationDegrees"] == 90
+    assert "isInverted" not in alias
+    assert alias["geometryRotationAnchor"] == {"x": 0.5, "y": 0.5}
+
+
 def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(
     tmp_path: Path,
 ) -> None:

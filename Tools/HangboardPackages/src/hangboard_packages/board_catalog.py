@@ -159,6 +159,13 @@ def _positive_number(value: Any, source: str) -> float:
     return number
 
 
+def _presentation_rotation_degrees(value: Any, source: str) -> float:
+    degrees = _number(value, source)
+    if not 0 <= degrees < 360:
+        raise ValueError(f"{source} must be normalized to [0, 360)")
+    return degrees
+
+
 def _boolean(value: Any, source: str) -> bool:
     if not isinstance(value, bool):
         raise ValueError(f"{source} must be a boolean")
@@ -493,8 +500,15 @@ class BoardPresentation:
     is_default: bool
     source_presentation_id: str | None = None
     is_inverted: bool = False
+    rotation_degrees: float | None = None
     geometry_rotation_anchor: NormalizedPoint | None = None
     cord_rig: DirectTwoAnchorCordRig | None = None
+
+    @property
+    def resolved_rotation_degrees(self) -> float:
+        return self.rotation_degrees if self.rotation_degrees is not None else (
+            180.0 if self.is_inverted else 0.0
+        )
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
@@ -506,10 +520,15 @@ class BoardPresentation:
             optional={
                 "sourcePresentationID",
                 "isInverted",
+                "rotationDegrees",
                 "geometryRotationAnchor",
                 "cordRig",
             },
         )
+        if "isInverted" in payload and "rotationDegrees" in payload:
+            raise ValueError(
+                f"{source} must not declare both isInverted and rotationDegrees"
+            )
         aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
         if aspect_ratio <= 0:
             raise ValueError(f"{source}.aspectRatio must be positive")
@@ -527,6 +546,11 @@ class BoardPresentation:
             _boolean(payload["isInverted"], f"{source}.isInverted")
             if "isInverted" in payload
             else False,
+            _presentation_rotation_degrees(
+                payload["rotationDegrees"], f"{source}.rotationDegrees"
+            )
+            if "rotationDegrees" in payload
+            else None,
             NormalizedPoint.from_json(
                 payload["geometryRotationAnchor"],
                 f"{source}.geometryRotationAnchor",
@@ -825,10 +849,30 @@ def project_normalized_point(
     return (2 * anchor.x - point.x, 2 * anchor.y - point.y)
 
 
+def _rotate_point(
+    x: float,
+    y: float,
+    *,
+    anchor_x: float,
+    anchor_y: float,
+    rotation_degrees: float,
+) -> tuple[float, float]:
+    radians = math.radians(rotation_degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+    delta_x = x - anchor_x
+    delta_y = y - anchor_y
+    return (
+        anchor_x + cosine * delta_x - sine * delta_y,
+        anchor_y + sine * delta_x + cosine * delta_y,
+    )
+
+
 def _rigged_alias_frame_is_inside_canvas(
     frame: NormalizedFrame,
     rig: DirectTwoAnchorCordRig,
     anchor: NormalizedPoint,
+    rotation_degrees: float,
 ) -> bool:
     face_min_x = rig.source_frame.x + rig.inner_face_frame.x
     face_min_y = rig.source_frame.y + rig.inner_face_frame.y
@@ -844,8 +888,13 @@ def _rigged_alias_frame_is_inside_canvas(
     for normalized_x, normalized_y in corners:
         face_x = face_min_x + normalized_x * rig.inner_face_frame.width
         face_y = face_min_y + normalized_y * rig.inner_face_frame.height
-        projected_x = 2 * pivot_x - face_x
-        projected_y = 2 * pivot_y - face_y
+        projected_x, projected_y = _rotate_point(
+            face_x,
+            face_y,
+            anchor_x=pivot_x,
+            anchor_y=pivot_y,
+            rotation_degrees=rotation_degrees,
+        )
         if (
             projected_x < -tolerance
             or projected_y < -tolerance
@@ -862,7 +911,10 @@ def _validate_alias_presentations(
     presentations_by_id = {presentation.id: presentation for presentation in presentations}
     for presentation in presentations:
         if presentation.cord_rig is not None:
-            if presentation.source_presentation_id is not None or presentation.is_inverted:
+            if (
+                presentation.source_presentation_id is not None
+                or presentation.resolved_rotation_degrees != 0
+            ):
                 raise ValueError(
                     f"presentation {presentation.id}.cordRig must be owned by a "
                     "canonical non-inverted presentation"
@@ -883,14 +935,21 @@ def _validate_alias_presentations(
             )
             if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
                 raise ValueError(scene_aspect_error)
+        if (
+            presentation.rotation_degrees is not None
+            and presentation.source_presentation_id is None
+        ):
+            raise ValueError(
+                f"presentation {presentation.id}.rotationDegrees requires sourcePresentationID"
+            )
         if presentation.geometry_rotation_anchor is not None:
             if presentation.source_presentation_id is None:
                 raise ValueError(
                     f"presentation {presentation.id}.geometryRotationAnchor requires sourcePresentationID"
                 )
-            if not presentation.is_inverted:
+            if presentation.resolved_rotation_degrees == 0:
                 raise ValueError(
-                    f"presentation {presentation.id}.geometryRotationAnchor requires isInverted true"
+                    f"presentation {presentation.id}.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
                 )
         if presentation.source_presentation_id is None:
             continue
@@ -913,7 +972,8 @@ def _validate_alias_presentations(
             raise ValueError(
                 f"presentation {presentation.id}.aspectRatio must match source presentation aspectRatio"
             )
-        if not presentation.is_inverted:
+        rotation_degrees = presentation.resolved_rotation_degrees
+        if rotation_degrees == 0:
             continue
 
         anchor = presentation.geometry_rotation_anchor or NormalizedPoint(0.5, 0.5)
@@ -925,26 +985,35 @@ def _validate_alias_presentations(
                 frame = piece.frame
                 if resolved_cord_rig is not None:
                     if not _rigged_alias_frame_is_inside_canvas(
-                        frame, resolved_cord_rig, anchor
+                        frame, resolved_cord_rig, anchor, rotation_degrees
                     ):
                         raise ValueError(
                             f"presentation {presentation.id} projects source hold "
                             "geometry outside the normalized canvas"
                         )
                     continue
-                projected_min_x, projected_min_y = project_normalized_point(
-                    NormalizedPoint(frame.x + frame.width, frame.y + frame.height),
-                    anchor,
+                corners = (
+                    (frame.x, frame.y),
+                    (frame.x + frame.width, frame.y),
+                    (frame.x, frame.y + frame.height),
+                    (frame.x + frame.width, frame.y + frame.height),
                 )
-                projected_max_x, projected_max_y = project_normalized_point(
-                    NormalizedPoint(frame.x, frame.y),
-                    anchor,
+                projected_corners = (
+                    _rotate_point(
+                        x,
+                        y,
+                        anchor_x=anchor.x,
+                        anchor_y=anchor.y,
+                        rotation_degrees=rotation_degrees,
+                    )
+                    for x, y in corners
                 )
-                if (
-                    projected_min_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
-                    or projected_min_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
-                    or projected_max_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
-                    or projected_max_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                if any(
+                    projected_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    for projected_x, projected_y in projected_corners
                 ):
                     raise ValueError(
                         f"presentation {presentation.id} projects source hold geometry outside the normalized canvas"

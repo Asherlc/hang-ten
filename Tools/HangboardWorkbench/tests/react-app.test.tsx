@@ -376,7 +376,7 @@ test("a constrained alias remains selectable without canvas edit affordances whi
       imageUrl: "/api/boards/board-a/image",
       default: false,
       sourcePresentationID: "source",
-      isInverted: true as const,
+      rotationDegrees: 90,
       geometryRotationAnchor: { x: 0.5, y: 0.68 },
     },
   ];
@@ -415,6 +415,10 @@ test("a constrained alias remains selectable without canvas edit affordances whi
     await app.flush(() => image.images.succeed());
 
     assert.equal(app.documentValue("#presentation-select"), "inverted-alias");
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(90 50 34)",
+    );
     await app.click('[data-hold-key="hold-1"]');
     const aliasPath = app.document.querySelector('[data-hold-key="hold-1"]');
     assert.equal(aliasPath?.getAttribute("aria-pressed"), "true");

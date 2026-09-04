@@ -4,7 +4,9 @@ import com.hangten.android.content.BoardCordRig
 import com.hangten.android.content.BoardGeometryRotationAnchor
 import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.Point
+import kotlin.math.cos
 import kotlin.math.min
+import kotlin.math.sin
 
 internal data class BoardInPlaneTransform(
     val a: Float,
@@ -25,19 +27,42 @@ internal data class BoardInPlaneTransform(
         fun forPresentation(
             presentation: BoardPresentation,
             bounds: BoardBounds,
-        ): BoardInPlaneTransform = if (presentation.isInverted) {
-            invertedAround(
-                bounds,
-                presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center,
-            )
-        } else {
-            Identity
-        }
+        ): BoardInPlaneTransform = rotatedAround(
+            bounds,
+            presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center,
+            presentation.resolvedRotationDegrees,
+        )
 
         fun invertedAround(bounds: BoardBounds, anchor: BoardGeometryRotationAnchor): BoardInPlaneTransform {
+            return rotatedAround(bounds, anchor, 180f)
+        }
+
+        fun rotatedAround(
+            bounds: BoardBounds,
+            anchor: BoardGeometryRotationAnchor,
+            rotationDegrees: Float,
+        ): BoardInPlaneTransform {
+            val normalizedDegrees = ((rotationDegrees % 360f) + 360f) % 360f
+            val (cosine, sine) = when (normalizedDegrees) {
+                0f -> 1f to 0f
+                90f -> 0f to 1f
+                180f -> -1f to 0f
+                270f -> 0f to -1f
+                else -> {
+                    val radians = Math.toRadians(normalizedDegrees.toDouble())
+                    cos(radians).toFloat() to sin(radians).toFloat()
+                }
+            }
             val anchorX = bounds.left + bounds.width * anchor.x
             val anchorY = bounds.top + bounds.height * anchor.y
-            return BoardInPlaneTransform(-1f, 0f, 0f, -1f, 2f * anchorX, 2f * anchorY)
+            return BoardInPlaneTransform(
+                a = cosine,
+                b = sine,
+                c = if (sine == 0f) 0f else -sine,
+                d = cosine,
+                tx = anchorX - cosine * anchorX + sine * anchorY,
+                ty = anchorY - sine * anchorX - cosine * anchorY,
+            )
         }
     }
 }

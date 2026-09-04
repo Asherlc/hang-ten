@@ -32,7 +32,7 @@ struct BoardEditorCanvasArtwork {
             return fallback(package: package, sourceImage: sourceImage)
         }
         let projection = BoardPresentationGeometryProjection(
-            isInverted: presentation.isInverted,
+            rotationDegrees: CGFloat(presentation.resolvedRotationDegrees),
             rotationAnchor: presentation.geometryRotationAnchor
         )
         let sourcePresentationID = presentation.sourcePresentationID ?? presentation.id
@@ -41,6 +41,15 @@ struct BoardEditorCanvasArtwork {
                 $0.id == presentation.sourcePresentationID
             }?.cordRig
         guard case .directTwoAnchor(let rig) = resolvedCordRig else {
+            if presentation.rotationDegrees != nil {
+                return BoardEditorCanvasArtwork(
+                    image: sourceImage,
+                    presentationAspectRatio: CGFloat(presentation.aspectRatio),
+                    directTwoAnchorRig: nil,
+                    projection: projection,
+                    sourcePresentationID: sourcePresentationID
+                )
+            }
             return fallback(package: package, sourceImage: sourceImage)
         }
 
@@ -169,7 +178,7 @@ final class HoldEditorCanvasUIView: UIView {
     }
 
     var boardAspectRatio: CGFloat {
-        if boardArtwork?.directTwoAnchorRig != nil,
+        if boardArtwork?.sourcePresentationID != nil,
            let presentationAspectRatio = boardArtwork?.presentationAspectRatio {
             return presentationAspectRatio
         }
@@ -178,7 +187,6 @@ final class HoldEditorCanvasUIView: UIView {
 
     private var visibleHolds: [BoardEditableHold] {
         guard let session,
-              boardArtwork?.directTwoAnchorRig != nil,
               let sourcePresentationID = boardArtwork?.sourcePresentationID else {
             return session?.document.holds ?? []
         }
@@ -305,6 +313,15 @@ final class HoldEditorCanvasUIView: UIView {
             )
             return artwork.projection.project(facePoint, in: geometry.sceneRect)
         }
+        if let artwork = boardArtwork,
+           artwork.sourcePresentationID != nil {
+            let sceneRect = riggedSceneRect(for: bounds)
+            let facePoint = CGPoint(
+                x: sceneRect.minX + point.x * sceneRect.width,
+                y: sceneRect.minY + point.y * sceneRect.height
+            )
+            return artwork.projection.project(facePoint, in: sceneRect)
+        }
         let rect = fittedBoardRect(for: bounds)
         let s = scale(for: bounds)
         return CGPoint(
@@ -324,6 +341,17 @@ final class HoldEditorCanvasUIView: UIView {
             return CGPoint(
                 x: (facePoint.x - geometry.faceRect.minX) / geometry.faceRect.width,
                 y: (facePoint.y - geometry.faceRect.minY) / geometry.faceRect.height
+            )
+        }
+        if let artwork = boardArtwork,
+           artwork.sourcePresentationID != nil {
+            let sceneRect = riggedSceneRect(for: bounds)
+            let facePoint = point.applying(
+                artwork.projection.affineTransform(in: sceneRect).inverted()
+            )
+            return CGPoint(
+                x: (facePoint.x - sceneRect.minX) / sceneRect.width,
+                y: (facePoint.y - sceneRect.minY) / sceneRect.height
             )
         }
         let rect = fittedBoardRect(for: bounds)
@@ -410,7 +438,7 @@ final class HoldEditorCanvasUIView: UIView {
 
     func updateViewportPan(translation: CGPoint) {
         guard case .viewport(let startCenter) = dragState else { return }
-        if boardArtwork?.directTwoAnchorRig != nil {
+        if boardArtwork?.sourcePresentationID != nil {
             let fittedRect = fittedBoardRect(for: bounds)
             viewportCenter = CGPoint(
                 x: startCenter.x - translation.x / (fittedRect.width * zoom),
@@ -764,6 +792,14 @@ final class HoldEditorCanvasUIView: UIView {
         if let boardArtwork {
             if boardArtwork.directTwoAnchorRig != nil {
                 boardArtwork.image.draw(in: riggedSceneRect(for: bounds))
+            } else if boardArtwork.sourcePresentationID != nil {
+                let sceneRect = riggedSceneRect(for: bounds)
+                context.saveGState()
+                context.concatenate(
+                    boardArtwork.projection.affineTransform(in: sceneRect)
+                )
+                boardArtwork.image.draw(in: sceneRect)
+                context.restoreGState()
             } else {
                 let topLeft = screenPoint(fromBoard: .zero, bounds: bounds)
                 let bottomRight = screenPoint(

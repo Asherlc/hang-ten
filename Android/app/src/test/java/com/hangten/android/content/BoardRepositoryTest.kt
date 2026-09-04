@@ -134,6 +134,49 @@ class BoardRepositoryTest {
         assertEquals(canonical, board.artworkPresentation(inverted))
         assertEquals("primary", board.holdPresentationId(inverted))
         assertEquals(BoardGeometryRotationAnchor(0.5f, 113f / 183f), inverted.geometryRotationAnchor)
+        assertEquals(180f, inverted.resolvedRotationDegrees)
+    }
+
+    @Test
+    fun decodesExplicitArbitraryAliasRotation() {
+        val board = loadRiggedBoard(
+            riggedBoardJson().replace("\"isInverted\": true", "\"rotationDegrees\": 135"),
+        ).getOrThrow().single()
+
+        val rotated = board.presentation("primary-inverted")!!
+
+        assertEquals(135f, rotated.rotationDegrees)
+        assertEquals(135f, rotated.resolvedRotationDegrees)
+        assertFalse(rotated.isInverted)
+    }
+
+    @Test
+    fun rejectsInvalidOrAmbiguousExplicitAliasRotation() {
+        listOf(
+            riggedBoardJson().replace("\"isInverted\": true", "\"rotationDegrees\": -1"),
+            riggedBoardJson().replace("\"isInverted\": true", "\"rotationDegrees\": 360"),
+            riggedBoardJson().replace(
+                "\"isInverted\": true,",
+                "\"isInverted\": true, \"rotationDegrees\": 180,",
+            ),
+        ).forEach { source ->
+            assertTrueFailureContaining(loadRiggedBoard(source), "rotation")
+        }
+    }
+
+    @Test
+    fun rejectsArbitraryAliasRotationThatProjectsHoldGeometryOutsideCanvas() {
+        val source = riggedBoardJson()
+            .replace("\"isInverted\": true", "\"rotationDegrees\": 45")
+            .replace(
+                "\"x\": 0.2, \"y\": 0.3, \"width\": 0.4, \"height\": 0.2",
+                "\"x\": 0.9, \"y\": 0.9, \"width\": 0.1, \"height\": 0.1",
+            )
+
+        assertTrueFailureContaining(
+            loadRiggedBoard(source),
+            "projects source hold geometry outside",
+        )
     }
 
     @Test

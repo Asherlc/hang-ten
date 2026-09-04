@@ -165,6 +165,13 @@ class BoardPresentation:
     is_inverted: bool = False
     geometry_rotation_anchor: tuple[float, float] | None = None
     cord_rig: DirectTwoAnchorCordRig | None = None
+    rotation_degrees: float | None = None
+
+    @property
+    def resolved_rotation_degrees(self) -> float:
+        return self.rotation_degrees if self.rotation_degrees is not None else (
+            180.0 if self.is_inverted else 0.0
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -356,6 +363,7 @@ def _load_board_package(
             is_inverted,
             _raw_presentation_geometry_rotation_anchor(board, presentation_id),
             _raw_presentation_cord_rig(board, presentation_id),
+            _raw_presentation_rotation_degrees(board, presentation_id),
         )
         for (
             presentation_id,
@@ -436,8 +444,8 @@ def editor_document(
                     height,
                     label=f"hold {key}",
                 )
-                if presentation.is_inverted:
-                    path = _inverted_display_path(
+                if presentation.resolved_rotation_degrees != 0:
+                    path = _rotated_display_path(
                         path,
                         width,
                         height,
@@ -445,6 +453,7 @@ def editor_document(
                             package.board, presentation
                         )
                         or (0.5, 0.5),
+                        presentation.resolved_rotation_degrees,
                         label=f"hold {key}",
                     )
             except (GeometryError, KeyError, TypeError) as error:
@@ -505,20 +514,45 @@ def _inverted_display_path(
     label: str,
 ) -> ClosedPath:
     """Rotate a source-owned display path 180 degrees for an inverted alias."""
+    return _rotated_display_path(path, width, height, anchor, 180, label=label)
+
+
+def _rotated_display_path(
+    path: ClosedPath,
+    width: int,
+    height: int,
+    anchor: tuple[float, float],
+    rotation_degrees: float,
+    *,
+    label: str,
+) -> ClosedPath:
+    """Rotate a source-owned display path clockwise around its canvas anchor."""
     anchor_x, anchor_y = anchor
+    pivot_x = anchor_x * width
+    pivot_y = anchor_y * height
+    radians = math.radians(rotation_degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+
+    def rotate(x: float, y: float) -> tuple[float, float]:
+        delta_x = x - pivot_x
+        delta_y = y - pivot_y
+        return (
+            pivot_x + cosine * delta_x - sine * delta_y,
+            pivot_y + sine * delta_x + cosine * delta_y,
+        )
+
     commands: list[str] = []
     for command, values in path.commands:
         if command == "Z":
             commands.append(command)
             continue
-        inverted_values = tuple(
-            (2 * anchor_x * width - value)
-            if index % 2 == 0
-            else (2 * anchor_y * height - value)
-            for index, value in enumerate(values)
-        )
+        rotated_values: list[float] = []
+        for index in range(0, len(values), 2):
+            x, y = rotate(values[index], values[index + 1])
+            rotated_values.extend((x, y))
         commands.append(
-            " ".join((command, *(format(value, ".12g") for value in inverted_values)))
+            " ".join((command, *(format(value, ".12g") for value in rotated_values)))
         )
     return parse_closed_path(" ".join(commands), width, height, label=label)
 
@@ -1282,6 +1316,28 @@ def _raw_presentation_cord_rig(
     return None
 
 
+def _raw_presentation_rotation_degrees(
+    board: Mapping[str, Any], presentation_id: str
+) -> float | None:
+    raw_presentations = board.get("presentations")
+    if not isinstance(raw_presentations, list):
+        return None
+    for index, value in enumerate(raw_presentations):
+        if isinstance(value, Mapping) and value.get("id") == presentation_id:
+            if "rotationDegrees" not in value:
+                return None
+            degrees = _finite_number(
+                value["rotationDegrees"],
+                f"board.json.presentations[{index}].rotationDegrees",
+            )
+            if not 0 <= degrees < 360:
+                raise BoardPackageError(
+                    f"board.json.presentations[{index}].rotationDegrees must be normalized to [0, 360)"
+                )
+            return degrees
+    return None
+
+
 def _parse_board_presentations(
     board: Mapping[str, Any],
 ) -> tuple[_ParsedBoardPresentation, ...]:
@@ -1297,6 +1353,7 @@ def _parse_board_presentations(
     presentations: list[_ParsedBoardPresentation] = []
     geometry_rotation_anchors: dict[str, tuple[float, float] | None] = {}
     cord_rigs: dict[str, DirectTwoAnchorCordRig | None] = {}
+    rotation_degrees_by_id: dict[str, float | None] = {}
     identifiers: set[str] = set()
     defaults = 0
     for index, value in enumerate(raw_presentations):
@@ -1311,7 +1368,7 @@ def _parse_board_presentations(
             {
                 "id", "name", "assetPath", "aspectRatio", "default",
                 "sourcePresentationID", "isInverted", "geometryRotationAnchor",
-                "cordRig",
+                "rotationDegrees", "cordRig",
             },
             label,
         )
@@ -1334,6 +1391,20 @@ def _parse_board_presentations(
         is_inverted = value.get("isInverted", False)
         if not isinstance(is_inverted, bool):
             raise BoardPackageError(f"{label}.isInverted must be a boolean")
+        if "isInverted" in value and "rotationDegrees" in value:
+            raise BoardPackageError(
+                f"{label} must not declare both isInverted and rotationDegrees"
+            )
+        rotation_degrees = (
+            _finite_number(value["rotationDegrees"], f"{label}.rotationDegrees")
+            if "rotationDegrees" in value
+            else None
+        )
+        if rotation_degrees is not None and not 0 <= rotation_degrees < 360:
+            raise BoardPackageError(
+                f"{label}.rotationDegrees must be normalized to [0, 360)"
+            )
+        rotation_degrees_by_id[presentation_id] = rotation_degrees
         geometry_rotation_anchor = (
             _normalized_point(
                 value["geometryRotationAnchor"],
@@ -1373,8 +1444,12 @@ def _parse_board_presentations(
     ) in presentations:
         geometry_rotation_anchor = geometry_rotation_anchors[presentation_id]
         cord_rig = cord_rigs[presentation_id]
+        rotation_degrees = rotation_degrees_by_id[presentation_id]
+        resolved_rotation_degrees = (
+            rotation_degrees if rotation_degrees is not None else (180 if is_inverted else 0)
+        )
         if cord_rig is not None:
-            if source_presentation_id is not None or is_inverted:
+            if source_presentation_id is not None or resolved_rotation_degrees != 0:
                 raise BoardPackageError(
                     f"presentation {presentation_id}.cordRig must be owned by a "
                     "canonical non-inverted presentation"
@@ -1390,14 +1465,18 @@ def _parse_board_presentations(
                     f"presentation {presentation_id}.aspectRatio must match "
                     "cordRig.sceneSize within 0.1%"
                 )
+        if rotation_degrees is not None and source_presentation_id is None:
+            raise BoardPackageError(
+                f"presentation {presentation_id}.rotationDegrees requires sourcePresentationID"
+            )
         if geometry_rotation_anchor is not None:
             if source_presentation_id is None:
                 raise BoardPackageError(
                     f"presentation {presentation_id}.geometryRotationAnchor requires sourcePresentationID"
                 )
-            if not is_inverted:
+            if resolved_rotation_degrees == 0:
                 raise BoardPackageError(
-                    f"presentation {presentation_id}.geometryRotationAnchor requires isInverted true"
+                    f"presentation {presentation_id}.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
                 )
         if source_presentation_id is not None and (
             source_presentation_id == presentation_id
@@ -1599,7 +1678,15 @@ def _validate_inverted_alias_projection(
     for presentation in presentations:
         presentation_id = presentation[0]
         source_presentation_id = presentation[5]
-        if source_presentation_id is None or not presentation[6]:
+        explicit_rotation = _raw_presentation_rotation_degrees(
+            board, presentation_id
+        )
+        rotation_degrees = (
+            explicit_rotation
+            if explicit_rotation is not None
+            else (180.0 if presentation[6] else 0.0)
+        )
+        if source_presentation_id is None or rotation_degrees == 0:
             continue
         anchor_x, anchor_y = (
             _raw_presentation_geometry_rotation_anchor(board, presentation_id)
@@ -1624,21 +1711,33 @@ def _validate_inverted_alias_projection(
                     raise BoardPackageError(str(error)) from error
                 if cord_rig is not None:
                     if not _rigged_alias_frame_is_inside_canvas(
-                        frame, cord_rig, (anchor_x, anchor_y)
+                        frame, cord_rig, (anchor_x, anchor_y), rotation_degrees
                     ):
                         raise BoardPackageError(
                             f"presentation {presentation_id} projects source hold geometry outside the normalized canvas"
                         )
                     continue
-                projected_min_x = 2 * anchor_x - (frame.x + frame.width)
-                projected_min_y = 2 * anchor_y - (frame.y + frame.height)
-                projected_max_x = 2 * anchor_x - frame.x
-                projected_max_y = 2 * anchor_y - frame.y
-                if (
-                    projected_min_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
-                    or projected_min_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
-                    or projected_max_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
-                    or projected_max_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                corners = (
+                    (frame.x, frame.y),
+                    (frame.x + frame.width, frame.y),
+                    (frame.x, frame.y + frame.height),
+                    (frame.x + frame.width, frame.y + frame.height),
+                )
+                if any(
+                    projected_x < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_y < -_PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_x > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    or projected_y > 1 + _PROJECTED_FRAME_EDGE_TOLERANCE
+                    for projected_x, projected_y in (
+                        _rotate_canvas_point(
+                            x,
+                            y,
+                            anchor_x,
+                            anchor_y,
+                            rotation_degrees,
+                        )
+                        for x, y in corners
+                    )
                 ):
                     raise BoardPackageError(
                         f"presentation {presentation_id} projects source hold geometry outside the normalized canvas"
@@ -1649,6 +1748,7 @@ def _rigged_alias_frame_is_inside_canvas(
     frame: NormalizedFrame,
     rig: DirectTwoAnchorCordRig,
     anchor: tuple[float, float],
+    rotation_degrees: float,
 ) -> bool:
     face_min_x = rig.source_frame.x + rig.inner_face_frame.x
     face_min_y = rig.source_frame.y + rig.inner_face_frame.y
@@ -1664,8 +1764,13 @@ def _rigged_alias_frame_is_inside_canvas(
     for normalized_x, normalized_y in corners:
         face_x = face_min_x + normalized_x * rig.inner_face_frame.width
         face_y = face_min_y + normalized_y * rig.inner_face_frame.height
-        projected_x = 2 * pivot_x - face_x
-        projected_y = 2 * pivot_y - face_y
+        projected_x, projected_y = _rotate_canvas_point(
+            face_x,
+            face_y,
+            pivot_x,
+            pivot_y,
+            rotation_degrees,
+        )
         if (
             projected_x < -tolerance
             or projected_y < -tolerance
@@ -1674,6 +1779,24 @@ def _rigged_alias_frame_is_inside_canvas(
         ):
             return False
     return True
+
+
+def _rotate_canvas_point(
+    x: float,
+    y: float,
+    anchor_x: float,
+    anchor_y: float,
+    rotation_degrees: float,
+) -> tuple[float, float]:
+    radians = math.radians(rotation_degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+    delta_x = x - anchor_x
+    delta_y = y - anchor_y
+    return (
+        anchor_x + cosine * delta_x - sine * delta_y,
+        anchor_y + sine * delta_x + cosine * delta_y,
+    )
 
 
 def _validate_equipment_objects(board: Mapping[str, Any]) -> set[str]:

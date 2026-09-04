@@ -69,6 +69,8 @@ def test_port_has_only_approved_front_and_back_physical_faces() -> None:
 
     package = module.load_board_package(package_root)
     parsed_presentations = {item.id: item for item in package.board.presentations}
+    assert parsed_presentations["front-inverted"].rotation_degrees == 180
+    assert parsed_presentations["front-inverted"].is_inverted is False
     assert parsed_presentations["back"].source_presentation_id is None
     assert "back-inverted" not in parsed_presentations
 
@@ -1012,7 +1014,12 @@ def test_unversioned_board_keeps_omitted_alias_rotation_anchor_as_center_compati
         sourcePresentationID="front",
         isInverted=True,
     )
-    document["holds"] = document["holds"][:1]
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.4, "y": 0.4, "width": 0.2, "height": 0.2}],
+        )
+    ]
     (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
     package = module.load_board_package(package_root)
@@ -1045,6 +1052,93 @@ def test_unversioned_board_preserves_a_valid_non_center_alias_rotation_anchor(
     assert package.board.presentations[1].geometry_rotation_anchor == module.NormalizedPoint(
         0.6, 0.5
     )
+
+
+def test_unversioned_board_loads_explicit_arbitrary_alias_rotation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=135,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "center-source",
+            [{"x": 0.4, "y": 0.4, "width": 0.2, "height": 0.2}],
+        )
+    ]
+
+    board = module._load_board(document)
+
+    alias = board.presentations[1]
+    assert alias.rotation_degrees == 135
+    assert alias.resolved_rotation_degrees == 135
+    assert alias.is_inverted is False
+
+
+def test_unversioned_board_maps_legacy_inversion_to_180_degrees() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.rotation_degrees is None
+    assert alias.resolved_rotation_degrees == 180
+
+
+@pytest.mark.parametrize("rotation", [-0.1, 360, float("inf"), float("nan"), True])
+def test_unversioned_board_rejects_non_normalized_alias_rotation(
+    rotation: object,
+) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=rotation,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="rotationDegrees"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_ambiguous_legacy_and_explicit_rotation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=180,
+        isInverted=True,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="must not declare both"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_arbitrarily_rotated_frame_outside_canvas() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=45,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "corner-source",
+            [{"x": 0.8, "y": 0.8, "width": 0.2, "height": 0.2}],
+        )
+    ]
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside"):
+        module._load_board(document)
 
 
 def _source_hold_with_frames(

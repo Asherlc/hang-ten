@@ -181,6 +181,11 @@ def _presentation_payload(
         ),
         **({"isInverted": True} if presentation.is_inverted else {}),
         **(
+            {"rotationDegrees": presentation.rotation_degrees}
+            if presentation.rotation_degrees is not None
+            else {}
+        ),
+        **(
             {"geometryRotationAnchor": {"x": anchor[0], "y": anchor[1]}}
             if anchor is not None
             else {}

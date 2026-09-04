@@ -118,6 +118,7 @@ export interface BoardPresentation {
   default: boolean;
   sourcePresentationID?: string;
   isInverted?: true;
+  rotationDegrees?: number;
   geometryRotationAnchor?: Point;
 }
 

@@ -1,5 +1,9 @@
 package com.hangten.android.content
 
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.sin
+
 interface ContentAssets {
     fun list(path: String): List<String>?
     fun read(path: String): String?
@@ -46,16 +50,21 @@ class AssetBoardRepository(
         presentations.forEach { presentation ->
             val assetPath = "$BOARDS_ROOT/$packageName/${presentation.assetPath}"
             if (!assets.exists(assetPath)) fail("Board $boardId is missing presentation asset ${presentation.assetPath}.")
-            if (presentation.cordRig != null && (presentation.sourcePresentationId != null || presentation.isInverted)) {
+            if (presentation.cordRig != null &&
+                (presentation.sourcePresentationId != null || presentation.resolvedRotationDegrees != 0f)
+            ) {
                 fail("Board $boardId presentation ${presentation.id}.cordRig must be owned by a canonical non-inverted presentation.")
             }
             presentation.geometryRotationAnchor?.let { anchor ->
                 if (anchor.x !in 0f..1f || anchor.y !in 0f..1f) {
                     fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor must contain normalized coordinates.")
                 }
-                if (presentation.sourcePresentationId == null || !presentation.isInverted) {
-                    fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor requires an inverted alias.")
+                if (presentation.sourcePresentationId == null || presentation.resolvedRotationDegrees == 0f) {
+                    fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor requires an inverted or explicitly rotated alias.")
                 }
+            }
+            if (presentation.rotationDegrees != null && presentation.sourcePresentationId == null) {
+                fail("Board $boardId presentation ${presentation.id}.rotationDegrees requires sourcePresentationID.")
             }
             presentation.sourcePresentationId?.let { sourceId ->
                 val source = presentationsById[sourceId]
@@ -85,6 +94,7 @@ class AssetBoardRepository(
                 fail("Board $boardId hold ${hold.id} must be owned by a canonical presentation.")
             }
         }
+        validateAliasProjections(boardId, presentations, holds)
 
         return Board(
             id = boardId,
@@ -99,6 +109,62 @@ class AssetBoardRepository(
         )
     }
 
+    private fun validateAliasProjections(
+        boardId: String,
+        presentations: List<BoardPresentation>,
+        holds: List<BoardHold>,
+    ) {
+        val presentationsById = presentations.associateBy { it.id }
+        presentations.filter { it.resolvedRotationDegrees != 0f }.forEach { presentation ->
+            val sourcePresentationId = presentation.sourcePresentationId ?: return@forEach
+            val sourcePresentation = presentationsById[sourcePresentationId] ?: return@forEach
+            val anchor = presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center
+            val rotationRadians = Math.toRadians(presentation.resolvedRotationDegrees.toDouble())
+            val cosine = cos(rotationRadians)
+            val sine = sin(rotationRadians)
+            val rig = sourcePresentation.cordRig as? BoardCordRig.DirectTwoAnchor
+
+            val canvasWidth = rig?.sceneSize?.width?.toDouble() ?: 1.0
+            val canvasHeight = rig?.sceneSize?.height?.toDouble() ?: 1.0
+            val anchorX = canvasWidth * anchor.x.toDouble()
+            val anchorY = canvasHeight * anchor.y.toDouble()
+            val faceX = rig?.let { it.sourceFrame.x + it.innerFaceFrame.x }?.toDouble() ?: 0.0
+            val faceY = rig?.let { it.sourceFrame.y + it.innerFaceFrame.y }?.toDouble() ?: 0.0
+            val faceWidth = rig?.innerFaceFrame?.width?.toDouble() ?: 1.0
+            val faceHeight = rig?.innerFaceFrame?.height?.toDouble() ?: 1.0
+            val tolerance = max(canvasWidth, canvasHeight) * 1e-6
+
+            holds.filter { it.presentationId == sourcePresentationId }.forEach { hold ->
+                hold.geometry.forEach { geometry ->
+                    val frame = geometry.frame
+                    val corners = listOf(
+                        Point(frame.x, frame.y),
+                        Point(frame.x + frame.width, frame.y),
+                        Point(frame.x, frame.y + frame.height),
+                        Point(frame.x + frame.width, frame.y + frame.height),
+                    )
+                    val isInside = corners.all { point ->
+                        val sourceX = faceX + faceWidth * point.x.toDouble()
+                        val sourceY = faceY + faceHeight * point.y.toDouble()
+                        val deltaX = sourceX - anchorX
+                        val deltaY = sourceY - anchorY
+                        val projectedX = anchorX + cosine * deltaX - sine * deltaY
+                        val projectedY = anchorY + sine * deltaX + cosine * deltaY
+                        projectedX >= -tolerance && projectedY >= -tolerance &&
+                            projectedX <= canvasWidth + tolerance &&
+                            projectedY <= canvasHeight + tolerance
+                    }
+                    if (!isInside) {
+                        fail(
+                            "Board $boardId presentation ${presentation.id} projects source " +
+                                "hold geometry outside the normalized canvas.",
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private fun decodePresentation(objectValue: JsonValue.Object, path: String): BoardPresentation {
         objectValue.rejectUnknownKeys(
             setOf(
@@ -109,6 +175,7 @@ class AssetBoardRepository(
                 "default",
                 "sourcePresentationID",
                 "isInverted",
+                "rotationDegrees",
                 "geometryRotationAnchor",
                 "cordRig",
             ),
@@ -126,6 +193,13 @@ class AssetBoardRepository(
         val isInverted = objectValue.optional("isInverted")?.let {
             (it as? JsonValue.BooleanValue)?.value ?: fail("$path.isInverted must be a boolean.")
         } ?: false
+        if (objectValue.optional("isInverted") != null && objectValue.optional("rotationDegrees") != null) {
+            fail("$path must not declare both isInverted and rotationDegrees.")
+        }
+        val rotationDegrees = objectValue.optional("rotationDegrees")?.asFiniteFloat("$path.rotationDegrees")
+        if (rotationDegrees != null && rotationDegrees !in 0f..<360f) {
+            fail("$path.rotationDegrees must be normalized to [0, 360).")
+        }
         val geometryRotationAnchor = objectValue.optional("geometryRotationAnchor")?.let {
             decodeRotationAnchor(it.asObject("$path.geometryRotationAnchor"), "$path.geometryRotationAnchor")
         }
@@ -148,6 +222,7 @@ class AssetBoardRepository(
             isDefault = isDefault,
             sourcePresentationId = sourcePresentationId,
             isInverted = isInverted,
+            rotationDegrees = rotationDegrees,
             geometryRotationAnchor = geometryRotationAnchor,
             cordRig = cordRig,
         )

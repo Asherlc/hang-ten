@@ -103,7 +103,7 @@ struct BoardPresentationGeometryProjection: Hashable {
 
     init(presentation: BoardPresentation) {
         self.init(
-            rotationDegrees: presentation.isInverted ? 180 : 0,
+            rotationDegrees: presentation.resolvedRotationDegrees,
             rotationAnchor: presentation.geometryRotationAnchor
         )
     }
@@ -821,16 +821,28 @@ enum BoardAliasGeometryValidation {
         y: Double,
         width: Double,
         height: Double,
-        anchor: BoardGeometryRotationAnchor
+        anchor: BoardGeometryRotationAnchor,
+        rotationDegrees: Double = 180
     ) -> Bool {
-        let projectedMinX = 2 * anchor.x - (x + width)
-        let projectedMinY = 2 * anchor.y - (y + height)
-        let projectedMaxX = 2 * anchor.x - x
-        let projectedMaxY = 2 * anchor.y - y
-        return projectedMinX >= -projectedFrameEdgeTolerance &&
-            projectedMinY >= -projectedFrameEdgeTolerance &&
-            projectedMaxX <= 1 + projectedFrameEdgeTolerance &&
-            projectedMaxY <= 1 + projectedFrameEdgeTolerance
+        let radians = rotationDegrees * .pi / 180
+        let cosine = cos(radians)
+        let sine = sin(radians)
+        let corners = [
+            (x, y),
+            (x + width, y),
+            (x, y + height),
+            (x + width, y + height),
+        ]
+        return corners.allSatisfy { pointX, pointY in
+            let deltaX = pointX - anchor.x
+            let deltaY = pointY - anchor.y
+            let projectedX = anchor.x + cosine * deltaX - sine * deltaY
+            let projectedY = anchor.y + sine * deltaX + cosine * deltaY
+            return projectedX >= -projectedFrameEdgeTolerance &&
+                projectedY >= -projectedFrameEdgeTolerance &&
+                projectedX <= 1 + projectedFrameEdgeTolerance &&
+                projectedY <= 1 + projectedFrameEdgeTolerance
+        }
     }
 }
 
@@ -845,6 +857,9 @@ struct BoardPresentation: Identifiable, Hashable {
     /// mounting orientation, without duplicating the board's hold inventory.
     let sourcePresentationID: String?
     let isInverted: Bool
+    /// Explicit clockwise in-plane rotation normalized to [0, 360).
+    /// `nil` preserves the legacy `isInverted` representation.
+    let rotationDegrees: CGFloat?
     let geometryRotationAnchor: BoardGeometryRotationAnchor?
     let cordRig: BoardCordRig?
 
@@ -855,6 +870,7 @@ struct BoardPresentation: Identifiable, Hashable {
         isDefault: Bool,
         sourcePresentationID: String? = nil,
         isInverted: Bool = false,
+        rotationDegrees: CGFloat? = nil,
         geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
         cordRig: BoardCordRig? = nil
     ) {
@@ -864,8 +880,13 @@ struct BoardPresentation: Identifiable, Hashable {
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
+        self.rotationDegrees = rotationDegrees
         self.geometryRotationAnchor = geometryRotationAnchor
         self.cordRig = cordRig
+    }
+
+    var resolvedRotationDegrees: CGFloat {
+        rotationDegrees ?? (isInverted ? 180 : 0)
     }
 }
 

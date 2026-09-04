@@ -141,7 +141,8 @@ internal fun BoardGeometry.toBoardPath(bounds: BoardBounds): BoardPath {
 internal fun BoardPath.transformed(transform: BoardInPlaneTransform): BoardPath {
     fun mapped(x: Float, y: Float): Point = transform.map(Point(x, y))
 
-    val transformedRoundedRectangle = roundedRectangle?.let { rounded ->
+    val keepsAxesAligned = transform.b == 0f && transform.c == 0f
+    val transformedRoundedRectangle = roundedRectangle?.takeIf { keepsAxesAligned }?.let { rounded ->
         val first = mapped(rounded.left, rounded.top)
         val second = mapped(rounded.right, rounded.bottom)
         BoardPath.RoundedRectangle(
@@ -153,7 +154,12 @@ internal fun BoardPath.transformed(transform: BoardInPlaneTransform): BoardPath 
             radiusY = rounded.radiusY,
         )
     }
-    val transformedCommands = commands.map { command ->
+    val sourceCommands = if (roundedRectangle != null && !keepsAxesAligned) {
+        roundedRectangle.commands()
+    } else {
+        commands
+    }
+    val transformedCommands = sourceCommands.map { command ->
         when (command) {
             is BoardPathCommand.MoveTo -> mapped(command.x, command.y).let {
                 BoardPathCommand.MoveTo(it.x, it.y)
@@ -183,6 +189,54 @@ internal fun BoardPath.transformed(transform: BoardInPlaneTransform): BoardPath 
         }
     }
     return BoardPath(commands = transformedCommands, roundedRectangle = transformedRoundedRectangle)
+}
+
+private fun BoardPath.RoundedRectangle.commands(): List<BoardPathCommand> {
+    val controlScale = 0.5522848f
+    val leftInner = left + radiusX
+    val rightInner = right - radiusX
+    val topInner = top + radiusY
+    val bottomInner = bottom - radiusY
+    return listOf(
+        BoardPathCommand.MoveTo(leftInner, top),
+        BoardPathCommand.LineTo(rightInner, top),
+        BoardPathCommand.CubicTo(
+            rightInner + radiusX * controlScale,
+            top,
+            right,
+            topInner - radiusY * controlScale,
+            right,
+            topInner,
+        ),
+        BoardPathCommand.LineTo(right, bottomInner),
+        BoardPathCommand.CubicTo(
+            right,
+            bottomInner + radiusY * controlScale,
+            rightInner + radiusX * controlScale,
+            bottom,
+            rightInner,
+            bottom,
+        ),
+        BoardPathCommand.LineTo(leftInner, bottom),
+        BoardPathCommand.CubicTo(
+            leftInner - radiusX * controlScale,
+            bottom,
+            left,
+            bottomInner + radiusY * controlScale,
+            left,
+            bottomInner,
+        ),
+        BoardPathCommand.LineTo(left, topInner),
+        BoardPathCommand.CubicTo(
+            left,
+            topInner - radiusY * controlScale,
+            leftInner - radiusX * controlScale,
+            top,
+            leftInner,
+            top,
+        ),
+        BoardPathCommand.Close,
+    )
 }
 
 private fun BoardPath.toAndroidPath(): Path = Path().apply {
@@ -293,7 +347,11 @@ fun BoardCanvas(
                         nativeCanvas,
                         image,
                         canvasGeometry.holdBounds,
-                        BoardInPlaneTransform.Identity,
+                        if (selectedPresentation.rotationDegrees == null) {
+                            BoardInPlaneTransform.Identity
+                        } else {
+                            canvasGeometry.faceTransform
+                        },
                     )
                 } else {
                     drawRiggedBoardArtwork(

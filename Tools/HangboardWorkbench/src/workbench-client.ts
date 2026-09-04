@@ -123,6 +123,7 @@ function isBoardPresentation(value: unknown): boolean {
     "default",
     "sourcePresentationID",
     "isInverted",
+    "rotationDegrees",
     "geometryRotationAnchor",
   ]);
   return Object.keys(value).every((key) => allowedKeys.has(key))
@@ -133,9 +134,17 @@ function isBoardPresentation(value: unknown): boolean {
     && typeof value.default === "boolean"
     && isOptionalString(value.sourcePresentationID)
     && (value.isInverted === undefined || value.isInverted === true)
+    && (value.rotationDegrees === undefined
+      || (typeof value.sourcePresentationID === "string"
+        && typeof value.rotationDegrees === "number"
+        && Number.isFinite(value.rotationDegrees)
+        && value.rotationDegrees >= 0
+        && value.rotationDegrees < 360))
+    && !(value.isInverted === true && value.rotationDegrees !== undefined)
     && (value.geometryRotationAnchor === undefined
       || (typeof value.sourcePresentationID === "string"
-        && value.isInverted === true
+        && (value.isInverted === true
+          || (typeof value.rotationDegrees === "number" && value.rotationDegrees !== 0))
         && isGeometryRotationAnchor(value.geometryRotationAnchor)));
 }
 

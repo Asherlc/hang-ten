@@ -1347,6 +1347,9 @@ def _load_selected_presentation(
                 board, item[0]
             ),
             cord_rig=board_package._raw_presentation_cord_rig(board, item[0]),
+            rotation_degrees=board_package._raw_presentation_rotation_degrees(
+                board, item[0]
+            ),
         )
         for item in presentation_values
     )
@@ -1608,6 +1611,9 @@ def _load_package_from_entries(
                 board, presentation_id
             ),
             cord_rig=board_package._raw_presentation_cord_rig(
+                board, presentation_id
+            ),
+            rotation_degrees=board_package._raw_presentation_rotation_degrees(
                 board, presentation_id
             ),
         )

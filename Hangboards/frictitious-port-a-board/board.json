@@ -36,7 +36,7 @@
       "aspectRatio": 0.819672131147541,
       "default": false,
       "sourcePresentationID": "primary",
-      "isInverted": true,
+      "rotationDegrees": 180,
       "geometryRotationAnchor": {"x": 0.5, "y": 0.6174863387978142}
     },
     {

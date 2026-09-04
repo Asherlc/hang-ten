@@ -310,9 +310,9 @@ struct BoardEditorStore: Sendable {
         return first
     }
 
-    /// Dynamic rig aliases project their canonical face at render time, so the
-    /// editor must prepare that face rather than an alias-specific static image.
-    /// Non-rig aliases continue to use their own declared artwork unchanged.
+    /// Explicitly rotated aliases project their canonical face at render time,
+    /// as do legacy aliases that inherit a dynamic cord rig. Other legacy
+    /// non-rig aliases continue to use their declared static artwork unchanged.
     private static func artworkSourcePresentation(
         for presentation: BoardEditablePresentation,
         in document: BoardEditableDocument
@@ -321,7 +321,7 @@ struct BoardEditorStore: Sendable {
               let sourcePresentation = document.presentations.first(where: {
                   $0.id == sourcePresentationID
               }),
-              sourcePresentation.cordRig != nil else {
+              presentation.rotationDegrees != nil || sourcePresentation.cordRig != nil else {
             return presentation
         }
         return sourcePresentation

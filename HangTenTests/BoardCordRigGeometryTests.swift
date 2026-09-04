@@ -178,7 +178,9 @@ final class BoardCordRigGeometryTests: XCTestCase {
         XCTAssertNil(frontInverted.cordRig)
         XCTAssertEqual(board.resolvedCordRig(for: frontInverted), .directTwoAnchor(portFrontRig))
         XCTAssertEqual(frontInverted.sourcePresentationID, "primary")
-        XCTAssertTrue(frontInverted.isInverted)
+        XCTAssertFalse(frontInverted.isInverted)
+        XCTAssertEqual(frontInverted.rotationDegrees, 180)
+        XCTAssertEqual(frontInverted.resolvedRotationDegrees, 180)
         XCTAssertEqual(
             frontInverted.geometryRotationAnchor,
             BoardGeometryRotationAnchor(x: 0.5, y: 113.0 / 183.0)

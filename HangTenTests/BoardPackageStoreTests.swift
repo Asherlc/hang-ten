@@ -831,6 +831,61 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(BoardGeometryRotationAnchor.center, .init(x: 0.5, y: 0.5))
     }
 
+    func testStoreLoadsExplicitArbitraryAliasRotation() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["rotationDegrees"] = 90
+            presentations[2]["geometryRotationAnchor"] = ["x": 0.5, "y": 0.5]
+        }
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        try mutateBoard(at: boardURL) { board in
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+            for index in geometry.indices {
+                geometry[index]["frame"] = [
+                    "x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1,
+                ]
+            }
+            holds[0]["geometry"] = geometry
+            board["holds"] = holds
+        }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let alias = try XCTUnwrap(board.presentation(id: "front-inverted"))
+
+        XCTAssertEqual(alias.rotationDegrees, 90)
+        XCTAssertEqual(alias.resolvedRotationDegrees, 90)
+        XCTAssertFalse(alias.isInverted)
+        let projection = BoardPresentationGeometryProjection(presentation: alias)
+        XCTAssertEqual(
+            projection.project(
+                CGPoint(x: 75, y: 50),
+                in: CGRect(x: 0, y: 0, width: 100, height: 100)
+            ),
+            CGPoint(x: 50, y: 75)
+        )
+    }
+
+    func testStoreRejectsInvalidAndAmbiguousExplicitAliasRotation() throws {
+        for rotation in [-1.0, 360.0] {
+            let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+                presentations[2].removeValue(forKey: "isInverted")
+                presentations[2]["rotationDegrees"] = rotation
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+
+        let ambiguous = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["rotationDegrees"] = 180
+        }
+        defer { ambiguous.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: ambiguous.bundle))
+    }
+
     func testStoreKeepsAnOmittedAliasRotationAnchorAsNil() throws {
         let fixture = try makeAnchoredAliasFixtureBundle { presentations in
             presentations[2].removeValue(forKey: "geometryRotationAnchor")
@@ -863,7 +918,7 @@ final class BoardPackageStoreTests: XCTestCase {
 
         assertInvalidPackage(
             try BoardPackageStore(bundle: fixture.bundle),
-            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true"
+            reason: "presentation front-inverted.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
         )
     }
 

@@ -185,6 +185,26 @@ test("the browser client preserves valid inverted alias anchor metadata", async 
   assert.deepEqual(board.presentations?.[1], alias);
 });
 
+test("the browser client preserves an explicit arbitrary alias rotation", async () => {
+  const alias: BoardPresentation = {
+    presentationID: "front-angled",
+    displayName: "Front angled",
+    imageUrl: "/api/boards/compact/image?presentationID=front-angled",
+    default: false,
+    sourcePresentationID: "front",
+    rotationDegrees: 135,
+    geometryRotationAnchor: { x: 0.5, y: 0.68 },
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({ presentations: [alias] }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[0], alias);
+});
+
 test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {
   const invalidPresentations: Array<{ name: string; presentation: unknown }> = [
     {
@@ -266,6 +286,39 @@ test("the browser client rejects malformed or illegally placed alias anchors", a
         default: false,
         sourcePresentationID: "front",
         isInverted: false,
+      },
+    },
+    {
+      name: "rotation on a source presentation",
+      presentation: {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        rotationDegrees: 90,
+      },
+    },
+    {
+      name: "rotation outside normalized range",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        rotationDegrees: 360,
+      },
+    },
+    {
+      name: "legacy and explicit rotation together",
+      presentation: {
+        presentationID: "front-alias",
+        displayName: "Front alias",
+        imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+        default: false,
+        sourcePresentationID: "front",
+        isInverted: true,
+        rotationDegrees: 180,
       },
     },
     {

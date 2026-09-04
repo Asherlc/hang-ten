@@ -527,6 +527,79 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
 
     assert inverted.source_presentation_id == "front"
     assert inverted.is_inverted is True
+    assert inverted.resolved_rotation_degrees == 180
+
+
+def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[1].update(
+        sourcePresentationID="front",
+        rotationDegrees=90,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    board["holds"] = holds[:1]
+    geometry = board["holds"][0]["geometry"]
+    assert isinstance(geometry, list)
+    geometry[0]["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
+    geometry[1]["frame"] = {"x": 0.49, "y": 0.45, "width": 0.02, "height": 0.1}
+    _write_json(package_root / "board.json", board)
+
+    package = board_package.load_board_package(package_root)
+    alias = package.presentation("back")
+    projected = board_package.editor_document(package, "back")
+
+    assert alias.rotation_degrees == 90
+    assert alias.resolved_rotation_degrees == 90
+    path = board_package.parse_closed_path(
+        projected["regions"][0]["displayPath"], 1774, 457
+    )
+    xs, ys = zip(*path.contour)
+    assert (min(xs), max(xs)) == pytest.approx((864.15, 909.85))
+    assert (min(ys), max(ys)) == pytest.approx((210.76, 246.24))
+
+
+@pytest.mark.parametrize("rotation", [-1, 360, float("inf"), float("nan"), True])
+def test_rejects_non_normalized_explicit_presentation_rotation(
+    tmp_path: Path,
+    rotation: object,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][1].update(
+        sourcePresentationID="front",
+        rotationDegrees=rotation,
+    )
+    board["holds"] = board["holds"][:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="rotationDegrees"):
+        board_package.load_board_package(package_root)
+
+
+def test_rejects_both_legacy_and_explicit_presentation_rotation(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][1].update(
+        sourcePresentationID="front",
+        isInverted=True,
+        rotationDegrees=180,
+    )
+    board["holds"] = board["holds"][:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="must not declare both"):
+        board_package.load_board_package(package_root)
 
 
 def test_direct_two_anchor_cord_rig_loads_into_the_public_presentation_model(

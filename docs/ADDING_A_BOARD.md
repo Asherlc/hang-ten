@@ -90,6 +90,16 @@ for each supported variation. Scope each hold record to the presentation whose
 image and canonical geometry it describes; do not split one physical product
 into separate catalog boards solely because its presentation changes.
 
+When multiple positions show the same physical face, keep one canonical face
+image and make each additional presentation an alias with
+`sourcePresentationID`. An alias may declare `rotationDegrees`, a finite
+clockwise in-plane rotation normalized to the half-open range `[0, 360)`.
+Artwork, hold geometry, markers, and cord attachment points rotate together
+around `geometryRotationAnchor` (the normalized canvas center when omitted),
+while a cord rig's pull point and support loop remain world-up under gravity.
+Do not declare both `rotationDegrees` and the legacy `isInverted` field;
+`isInverted: true` remains readable as 180 degrees only for compatibility.
+
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the
 physical board is symmetric, and multiple pieces only for one genuinely

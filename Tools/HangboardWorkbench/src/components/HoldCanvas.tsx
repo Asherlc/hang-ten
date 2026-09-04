@@ -98,6 +98,11 @@ export function HoldCanvas({
   const onZoomChangeRef = useRef(onZoomChange);
   const canZoomChangeRef = useRef(canZoomChange);
   const onPinchZoomChangeRef = useRef(onPinchZoomChange);
+  const selectedPresentation = board?.presentations?.find(
+    (presentation) => presentation.presentationID === board.selectedPresentationID,
+  );
+  const artworkRotation = selectedPresentation?.rotationDegrees;
+  const artworkAnchor = selectedPresentation?.geometryRotationAnchor ?? { x: 0.5, y: 0.5 };
   const canPinchZoomChangeRef = useRef(canPinchZoomChange);
   editorRef.current = editor;
   onZoomChangeRef.current = onZoomChange;
@@ -349,6 +354,9 @@ export function HoldCanvas({
             href={board?.imageUrl}
             width={document?.canvas.width}
             height={document?.canvas.height}
+            transform={artworkRotation === undefined || !document
+              ? undefined
+              : `rotate(${artworkRotation} ${artworkAnchor.x * document.canvas.width} ${artworkAnchor.y * document.canvas.height})`}
           />
           <g id="guide-overlay" aria-label="Alignment guides">
             {guides.map((guide) => guide.axis === "horizontal" ? (
