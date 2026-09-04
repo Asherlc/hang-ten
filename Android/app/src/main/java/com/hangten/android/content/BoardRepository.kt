@@ -74,9 +74,15 @@ class AssetBoardRepository(
         if (holds.isEmpty()) fail("$path.holds must not be empty.")
         if (holds.map { it.id }.toSet().size != holds.size) fail("$path.holds contains duplicate IDs.")
         val presentationIds = presentations.map { it.id }.toSet()
+        val canonicalPresentationIds = presentations
+            .filter { it.sourcePresentationId == null }
+            .mapTo(mutableSetOf()) { it.id }
         holds.forEach { hold ->
             if (hold.presentationId !in presentationIds) {
                 fail("Board $boardId hold ${hold.id} references missing presentation ${hold.presentationId}.")
+            }
+            if (hold.presentationId !in canonicalPresentationIds) {
+                fail("Board $boardId hold ${hold.id} must be owned by a canonical presentation.")
             }
         }
 
@@ -94,6 +100,20 @@ class AssetBoardRepository(
     }
 
     private fun decodePresentation(objectValue: JsonValue.Object, path: String): BoardPresentation {
+        objectValue.rejectUnknownKeys(
+            setOf(
+                "id",
+                "name",
+                "assetPath",
+                "aspectRatio",
+                "default",
+                "sourcePresentationID",
+                "isInverted",
+                "geometryRotationAnchor",
+                "cordRig",
+            ),
+            path,
+        )
         val assetPath = objectValue.requiredString("assetPath", path)
         if (!assetPath.startsWith("assets/") || assetPath.split('/').any { it == ".." || it.isBlank() }) {
             fail("$path.assetPath must be a relative assets path.")
@@ -133,19 +153,34 @@ class AssetBoardRepository(
         )
     }
 
-    private fun decodeRotationAnchor(objectValue: JsonValue.Object, path: String): BoardGeometryRotationAnchor =
-        BoardGeometryRotationAnchor(
+    private fun decodeRotationAnchor(objectValue: JsonValue.Object, path: String): BoardGeometryRotationAnchor {
+        objectValue.rejectUnknownKeys(setOf("x", "y"), path)
+        return BoardGeometryRotationAnchor(
             x = objectValue.required("x", path).asFiniteFloat("$path.x"),
             y = objectValue.required("y", path).asFiniteFloat("$path.y"),
         )
+    }
 
     private fun decodeCordRig(objectValue: JsonValue.Object, path: String): BoardCordRig {
+        objectValue.rejectUnknownKeys(
+            setOf(
+                "type",
+                "sceneSize",
+                "sourceFrame",
+                "innerFaceFrame",
+                "attachmentPoints",
+                "pullPoint",
+                "eyeletRadius",
+            ),
+            path,
+        )
         if (objectValue.requiredString("type", path) != "directTwoAnchor") {
             fail("$path.type is unsupported.")
         }
         val sceneSizeObject = objectValue.required("sceneSize", path).asObject("$path.sceneSize")
         val sourceFrameObject = objectValue.required("sourceFrame", path).asObject("$path.sourceFrame")
         val innerFaceFrameObject = objectValue.required("innerFaceFrame", path).asObject("$path.innerFaceFrame")
+        sceneSizeObject.rejectUnknownKeys(setOf("width", "height"), "$path.sceneSize")
         val attachmentPoints = objectValue.required("attachmentPoints", path)
             .asArray("$path.attachmentPoints")
             .mapIndexed { index, value ->
@@ -171,19 +206,23 @@ class AssetBoardRepository(
         return rig
     }
 
-    private fun decodeCordRect(objectValue: JsonValue.Object, path: String): BoardCordRect =
-        BoardCordRect(
+    private fun decodeCordRect(objectValue: JsonValue.Object, path: String): BoardCordRect {
+        objectValue.rejectUnknownKeys(setOf("x", "y", "width", "height"), path)
+        return BoardCordRect(
             x = objectValue.required("x", path).asFiniteFloat("$path.x"),
             y = objectValue.required("y", path).asFiniteFloat("$path.y"),
             width = positiveFiniteFloat(objectValue.required("width", path), "$path.width"),
             height = positiveFiniteFloat(objectValue.required("height", path), "$path.height"),
         )
+    }
 
-    private fun decodeCordPoint(objectValue: JsonValue.Object, path: String): Point =
-        Point(
+    private fun decodeCordPoint(objectValue: JsonValue.Object, path: String): Point {
+        objectValue.rejectUnknownKeys(setOf("x", "y"), path)
+        return Point(
             x = objectValue.required("x", path).asFiniteFloat("$path.x"),
             y = objectValue.required("y", path).asFiniteFloat("$path.y"),
         )
+    }
 
     private fun decodeHold(objectValue: JsonValue.Object, path: String): BoardHold {
         val geometry = objectValue.required("geometry", path)
@@ -330,6 +369,12 @@ class AssetBoardRepository(
             fail("$path must be an integer within $FINGER_CAPACITY_RANGE.")
         }
         return value.toInt()
+    }
+
+    private fun JsonValue.Object.rejectUnknownKeys(allowedKeys: Set<String>, path: String) {
+        fields.keys.firstOrNull { it !in allowedKeys }?.let { unknownKey ->
+            fail("$path contains unknown key $unknownKey.")
+        }
     }
 
     private fun fail(message: String): Nothing = throw ContentDecodingException(message)

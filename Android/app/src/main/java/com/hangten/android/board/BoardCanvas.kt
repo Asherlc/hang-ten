@@ -332,7 +332,7 @@ fun BoardCanvas(
     }
 }
 
-private data class BoardCanvasGeometry(
+internal data class BoardCanvasGeometry(
     val holdBounds: BoardBounds,
     val faceTransform: BoardInPlaneTransform,
     val directTwoAnchorRig: BoardCordRig.DirectTwoAnchor? = null,
@@ -350,7 +350,7 @@ private fun boardCanvasGeometry(
     height = size.height.toFloat(),
 )
 
-private fun boardCanvasGeometry(
+internal fun boardCanvasGeometry(
     board: Board,
     presentation: BoardPresentation,
     width: Float,
@@ -368,9 +368,10 @@ private fun boardCanvasGeometry(
             cordGeometry = geometry,
         )
     }
+    val holdBounds = boardBounds(width, height, presentation.aspectRatio)
     return BoardCanvasGeometry(
-        holdBounds = boardBounds(width, height, presentation.aspectRatio),
-        faceTransform = BoardInPlaneTransform.Identity,
+        holdBounds = holdBounds,
+        faceTransform = BoardInPlaneTransform.forPresentation(presentation, holdBounds),
     )
 }
 

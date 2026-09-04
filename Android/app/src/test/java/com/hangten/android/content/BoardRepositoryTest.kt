@@ -153,6 +153,74 @@ class BoardRepositoryTest {
         assertTrueFailureContaining(result, "eyeletRadius")
     }
 
+    @Test
+    fun rejectsHoldOwnedByAliasPresentation() {
+        val result = loadRiggedBoard(
+            riggedBoardJson().replace(
+                "\"presentationID\": \"primary\"",
+                "\"presentationID\": \"primary-inverted\"",
+            ),
+        )
+
+        assertTrueFailureContaining(result, "hold edge must be owned by a canonical presentation")
+    }
+
+    @Test
+    fun rejectsUnknownKeysThroughoutPresentationAndCordRigObjects() {
+        val malformedDocuments = listOf(
+            riggedBoardJson().replace(
+                "\"default\": true,",
+                "\"default\": true, \"defualt\": true,",
+            ) to "defualt",
+            riggedBoardJson().replace(
+                "\"isInverted\": true,",
+                "\"isInverted\": true, \"isInvertedd\": true,",
+            ) to "isInvertedd",
+            riggedBoardJson().replace(
+                "\"geometryRotationAnchor\": { \"x\": 0.5, \"y\": 0.6174863387978142 }",
+                "\"geometryRotationAnchor\": { \"x\": 0.5, \"y\": 0.6174863387978142, \"pivot\": 1 }",
+            ) to "pivot",
+            riggedBoardJson().replace(
+                "\"eyeletRadius\": 34",
+                "\"eyeletRadius\": 34, \"eyeletRaduis\": 34",
+            ) to "eyeletRaduis",
+            riggedBoardJson().replace(
+                "\"sceneSize\": { \"width\": 1200, \"height\": 1464 }",
+                "\"sceneSize\": { \"width\": 1200, \"height\": 1464, \"depth\": 1 }",
+            ) to "depth",
+            riggedBoardJson().replace(
+                "\"sourceFrame\": { \"x\": 0, \"y\": 214, \"width\": 1200, \"height\": 1250 }",
+                "\"sourceFrame\": { \"x\": 0, \"y\": 214, \"width\": 1200, \"height\": 1250, \"left\": 0 }",
+            ) to "left",
+            riggedBoardJson().replace(
+                "\"innerFaceFrame\": { \"x\": -100, \"y\": -10, \"width\": 1400, \"height\": 1400 }",
+                "\"innerFaceFrame\": { \"x\": -100, \"y\": -10, \"width\": 1400, \"height\": 1400, \"top\": -10 }",
+            ) to "top",
+            riggedBoardJson().replace(
+                "{ \"x\": 276, \"y\": 804 }",
+                "{ \"x\": 276, \"y\": 804, \"z\": 0 }",
+            ) to "z",
+            riggedBoardJson().replace(
+                "\"pullPoint\": { \"x\": 600, \"y\": 71.5 }",
+                "\"pullPoint\": { \"x\": 600, \"y\": 71.5, \"z\": 0 }",
+            ) to "z",
+        )
+
+        malformedDocuments.forEach { (source, unknownKey) ->
+            assertTrueFailureContaining(loadRiggedBoard(source), unknownKey)
+        }
+    }
+
+    private fun loadRiggedBoard(source: String): Result<List<Board>> =
+        AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to source,
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+
     private fun riggedBoardJson(): String =
         """
         {

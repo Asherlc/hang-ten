@@ -22,6 +22,18 @@ internal data class BoardInPlaneTransform(
     companion object {
         val Identity = BoardInPlaneTransform(1f, 0f, 0f, 1f, 0f, 0f)
 
+        fun forPresentation(
+            presentation: BoardPresentation,
+            bounds: BoardBounds,
+        ): BoardInPlaneTransform = if (presentation.isInverted) {
+            invertedAround(
+                bounds,
+                presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center,
+            )
+        } else {
+            Identity
+        }
+
         fun invertedAround(bounds: BoardBounds, anchor: BoardGeometryRotationAnchor): BoardInPlaneTransform {
             val anchorX = bounds.left + bounds.width * anchor.x
             val anchorY = bounds.top + bounds.height * anchor.y
@@ -82,14 +94,7 @@ internal fun resolveDirectTwoAnchorCordGeometry(
         width = rig.innerFaceFrame.width * scale,
         height = rig.innerFaceFrame.height * scale,
     )
-    val faceTransform = if (presentation.isInverted) {
-        BoardInPlaneTransform.invertedAround(
-            sceneBounds,
-            presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center,
-        )
-    } else {
-        BoardInPlaneTransform.Identity
-    }
+    val faceTransform = BoardInPlaneTransform.forPresentation(presentation, sceneBounds)
 
     fun sourceRelativePoint(point: Point): Point = Point(
         x = sceneBounds.left + (rig.sourceFrame.x + point.x) * scale,
