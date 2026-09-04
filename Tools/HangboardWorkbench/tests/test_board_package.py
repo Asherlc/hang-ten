@@ -136,6 +136,21 @@ def _write_finished_package(
     return package
 
 
+def _direct_two_anchor_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [
+            {"x": 400, "y": 300},
+            {"x": 1374, "y": 300},
+        ],
+        "pullPoint": {"x": 887, "y": 50},
+        "eyeletRadius": 20,
+    }
+
+
 def _write_draft(library: Path, slug: str) -> Path:
     assets = library / slug / "assets"
     assets.mkdir(parents=True)
@@ -268,6 +283,36 @@ def _add_non_center_inverted_alias(package: Path) -> None:
                 "sourcePresentationID": "front",
                 "isInverted": True,
                 "geometryRotationAnchor": {"x": 0.5, "y": 0.68},
+            }
+        )
+
+    _mutate_board(package, mutate)
+
+
+def _add_rigged_inverted_alias(
+    package: Path, *, inner_face_x: float, anchor_x: float
+) -> None:
+    def mutate(board: dict[str, object]) -> None:
+        presentations = board["presentations"]
+        assert isinstance(presentations, list)
+        rig = _direct_two_anchor_cord_rig()
+        rig["innerFaceFrame"] = {
+            "x": inner_face_x,
+            "y": 0,
+            "width": 1774,
+            "height": 457,
+        }
+        presentations[0]["cordRig"] = rig
+        presentations.append(
+            {
+                "id": "front-inverted",
+                "name": "Front inverted",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front",
+                "isInverted": True,
+                "geometryRotationAnchor": {"x": anchor_x, "y": 0.5},
             }
         )
 
@@ -440,6 +485,195 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
 
     assert inverted.source_presentation_id == "front"
     assert inverted.is_inverted is True
+
+
+def test_direct_two_anchor_cord_rig_loads_into_the_public_presentation_model(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    presentation = board_package.load_board_package(package_root).presentation()
+
+    assert presentation.cord_rig == board_package.DirectTwoAnchorCordRig(
+        scene_size=board_package.CordSize(1774, 457),
+        source_frame=board_package.CordRect(0, 0, 1774, 457),
+        inner_face_frame=board_package.CordRect(0, 0, 1774, 457),
+        attachment_points=(
+            board_package.CordPoint(400, 300),
+            board_package.CordPoint(1374, 300),
+        ),
+        pull_point=board_package.CordPoint(887, 50),
+        eyelet_radius=20,
+    )
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda rig: rig.__setitem__("unexpected", True),
+            "cordRig has unknown keys",
+        ),
+        (
+            lambda rig: rig["sceneSize"].__setitem__("unexpected", True),
+            "sceneSize has unknown keys",
+        ),
+        (
+            lambda rig: rig.__setitem__("type", "wrapped"),
+            "cordRig.type is unsupported",
+        ),
+        (
+            lambda rig: rig["sceneSize"].__setitem__("width", 0),
+            "sceneSize.width must be a positive finite number",
+        ),
+        (
+            lambda rig: rig["sourceFrame"].__setitem__("x", float("inf")),
+            "sourceFrame.x must be a finite number",
+        ),
+        (
+            lambda rig: rig["innerFaceFrame"].__setitem__("height", float("nan")),
+            "innerFaceFrame.height must be a positive finite number",
+        ),
+        (
+            lambda rig: rig.__setitem__("attachmentPoints", [{"x": 1, "y": 2}]),
+            "attachmentPoints must contain exactly two points",
+        ),
+        (
+            lambda rig: rig.__setitem__(
+                "attachmentPoints", [{"x": 1, "y": 2}, {"x": 1, "y": 2}]
+            ),
+            "attachmentPoints must be distinct",
+        ),
+        (
+            lambda rig: rig["attachmentPoints"][0].__setitem__(
+                "x", float("inf")
+            ),
+            r"attachmentPoints\[0\].x must be a finite number",
+        ),
+        (
+            lambda rig: rig["pullPoint"].__setitem__("x", 1775),
+            "pullPoint must be inside sceneSize",
+        ),
+        (
+            lambda rig: rig.__setitem__("eyeletRadius", 0),
+            "eyeletRadius must be a positive finite number",
+        ),
+    ],
+    ids=[
+        "rig-unknown-key",
+        "nested-unknown-key",
+        "unsupported-type",
+        "nonpositive-scene-size",
+        "nonfinite-frame-origin",
+        "nonfinite-frame-size",
+        "attachment-count",
+        "duplicate-attachments",
+        "nonfinite-attachment",
+        "pull-outside-scene",
+        "nonpositive-radius",
+    ],
+)
+def test_direct_two_anchor_cord_rig_rejects_malformed_geometry(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    mutation(rig)
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda presentation: presentation.update(
+                sourcePresentationID="front", isInverted=True
+            ),
+            "cordRig must be owned by a canonical non-inverted presentation",
+        ),
+        (
+            lambda presentation: presentation.update(isInverted=True),
+            "cordRig must be owned by a canonical non-inverted presentation",
+        ),
+    ],
+    ids=["alias", "inverted-canonical"],
+)
+def test_direct_two_anchor_cord_rig_requires_canonical_non_inverted_ownership(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentation = board["presentations"][1]
+    presentation["cordRig"] = _direct_two_anchor_cord_rig()
+    mutation(presentation)
+    board["holds"] = board["holds"][:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+def test_direct_two_anchor_cord_rig_scene_ratio_must_match_presentation(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    rig["sceneSize"] = {"width": 1774, "height": 1774}
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(
+        BoardPackageError,
+        match="presentation primary.aspectRatio must match cordRig.sceneSize within 0.1%",
+    ):
+        board_package.load_board_package(package_root)
+
+
+def test_direct_two_anchor_cord_rig_face_ratio_must_match_asset(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _direct_two_anchor_cord_rig()
+    rig["innerFaceFrame"] = {"x": 0, "y": 0, "width": 1, "height": 1}
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(
+        BoardPackageError,
+        match=(
+            "presentation primary.cordRig.innerFaceFrame aspect ratio must match "
+            "its image width/height within 0.1%"
+        ),
+    ):
+        board_package.load_board_package(package_root)
 
 
 def test_non_center_alias_rotation_anchor_is_strictly_parsed_and_preserved(
@@ -653,6 +887,37 @@ def test_non_center_alias_anchor_projects_from_validated_public_package_model(
     assert (min(first_ys), max(first_ys)) == pytest.approx((347.32, 438.72))
 
 
+def test_rigged_alias_projection_uses_scene_and_inner_face_frames(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    _add_rigged_inverted_alias(
+        package_root, inner_face_x=-500, anchor_x=0.1
+    )
+
+    package = board_package.load_board_package(package_root)
+
+    assert package.presentation("front").cord_rig is not None
+    assert package.presentation("front-inverted").source_presentation_id == "front"
+
+
+def test_rigged_alias_rejects_hold_projected_outside_scene(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    _add_rigged_inverted_alias(
+        package_root, inner_face_x=-100, anchor_x=0.5
+    )
+
+    with pytest.raises(
+        BoardPackageError,
+        match="projects source hold geometry outside the normalized canvas",
+    ):
+        board_package.load_board_package(package_root)
+
+
 def test_save_rejects_edits_to_an_inverted_alias_presentation(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_multi_presentation_package(library)
@@ -855,13 +1120,29 @@ def _presentation_aspect_ratio_mismatches(library: Path) -> list[str]:
         if not board_path.is_file():
             continue
         board = json.loads(board_path.read_text(encoding="utf-8"))
+        presentations_by_id = {
+            presentation["id"]: presentation
+            for presentation in board["presentations"]
+        }
         for presentation in board["presentations"]:
             width, height = board_package._png_dimensions(
                 package / presentation["assetPath"]
             )
             image_aspect_ratio = width / height
-            declared_aspect_ratio = presentation["aspectRatio"]
-            if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
+            canonical = presentations_by_id[
+                presentation.get("sourcePresentationID", presentation["id"])
+            ]
+            cord_rig = canonical.get("cordRig")
+            declared_aspect_ratio = (
+                cord_rig["innerFaceFrame"]["width"]
+                / cord_rig["innerFaceFrame"]["height"]
+                if cord_rig is not None
+                else presentation["aspectRatio"]
+            )
+            if (
+                abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+                > 0.001
+            ):
                 mismatches.append(
                     f"{package.name}/{presentation['id']}: declared "
                     f"{declared_aspect_ratio}, image {width}/{height}"
@@ -876,7 +1157,16 @@ def _presentation_aspect_ratio_mismatches(library: Path) -> list[str]:
         )
         image_aspect_ratio = width / height
         declared_aspect_ratio = board["aspectRatio"]
-        if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
+        expected_board_aspect_ratio = (
+            default_presentation["aspectRatio"]
+            if default_presentation.get("cordRig") is not None
+            else image_aspect_ratio
+        )
+        if (
+            abs(declared_aspect_ratio - expected_board_aspect_ratio)
+            / expected_board_aspect_ratio
+            > 0.001
+        ):
             mismatches.append(
                 f"{package.name}: board declared {declared_aspect_ratio}, default "
                 f"{default_presentation['id']} image {width}/{height}"

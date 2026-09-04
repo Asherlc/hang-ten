@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import copy
 from pathlib import Path
+import shutil
 import sys
 
 
@@ -170,7 +172,7 @@ def test_compact_single_hand_packages_omit_unpublished_outer_dimensions() -> Non
     assert helium["dimensions"] == "400 × 58 × 24 mm"
 
 
-def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
+def test_port_a_board_has_one_object_and_approved_dynamic_presentations() -> None:
     package_root = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
     package = board_package.load_board_package(package_root)
     board = package.board
@@ -191,28 +193,47 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
     }
     assert all("handCapacity" not in hold for hold in board["holds"])
     assert {hold["kind"] for hold in board["holds"]} >= {"edge", "pocket", "jug", "pinch"}
-    assert {presentation["id"] for presentation in board["presentations"]} == {
-        "primary",
-        "front-inverted",
-        "cord-option-4-20mm-incut",
-        "back",
-        "back-inverted",
-        "side",
-    }
-    option_4 = next(
-        presentation
+    assert [
+        (presentation["id"], presentation["assetPath"])
         for presentation in board["presentations"]
-        if presentation["id"] == "cord-option-4-20mm-incut"
-    )
-    assert option_4["sourcePresentationID"] == "primary"
-    assert option_4["isInverted"] is True
-    assert option_4["assetPath"] == "assets/cord-option-4-20mm-incut.png"
-    option_4_document = board_package.editor_document(
-        package, "cord-option-4-20mm-incut"
-    )
-    assert "edge-20-piece-0" in {
-        region["key"] for region in option_4_document["regions"]
+    ] == [
+        ("primary", "assets/primary.png"),
+        ("front-inverted", "assets/primary.png"),
+        ("back", "assets/back.png"),
+        ("side", "assets/side.png"),
+    ]
+    assert package.presentation("primary").cord_rig is not None
+    assert package.presentation("back").cord_rig is not None
+    assert package.presentation("front-inverted").cord_rig is None
+    assert {path.name for path in (package_root / "assets").iterdir()} == {
+        "primary.png",
+        "back.png",
+        "side.png",
     }
-    assert (package_root / "assets" / "primary.png").is_file()
-    assert (package_root / "assets" / "cord-option-4-20mm-incut.png").is_file()
-    assert (package_root / "assets" / "side.png").is_file()
+
+
+def test_port_a_board_dynamic_rigs_survive_a_workbench_save(tmp_path: Path) -> None:
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    source = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
+    package_root = library / source.name
+    shutil.copytree(source, package_root)
+    package = board_package.load_board_package(package_root)
+    expected_presentations = copy.deepcopy(package.board["presentations"])
+    document = board_package.editor_document(package, "primary")
+    edge_30 = next(
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "edge-30"
+    )
+    edge_30["fingerCapacity"] = 4
+
+    saved = board_package.save_editor_document(
+        library, "frictitious-port-a-board", document
+    )
+
+    assert saved.board["presentations"] == expected_presentations
+    assert saved.presentation("primary").cord_rig == package.presentation(
+        "primary"
+    ).cord_rig
+    assert saved.presentation("back").cord_rig == package.presentation("back").cord_rig

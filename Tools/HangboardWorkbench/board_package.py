@@ -123,6 +123,36 @@ class BoardNotAvailableError(BoardPackageError):
 
 
 @dataclass(frozen=True, slots=True)
+class CordPoint:
+    x: float
+    y: float
+
+
+@dataclass(frozen=True, slots=True)
+class CordSize:
+    width: float
+    height: float
+
+
+@dataclass(frozen=True, slots=True)
+class CordRect:
+    x: float
+    y: float
+    width: float
+    height: float
+
+
+@dataclass(frozen=True, slots=True)
+class DirectTwoAnchorCordRig:
+    scene_size: CordSize
+    source_frame: CordRect
+    inner_face_frame: CordRect
+    attachment_points: tuple[CordPoint, CordPoint]
+    pull_point: CordPoint
+    eyelet_radius: float
+
+
+@dataclass(frozen=True, slots=True)
 class BoardPresentation:
     id: str
     name: str
@@ -134,6 +164,7 @@ class BoardPresentation:
     source_presentation_id: str | None = None
     is_inverted: bool = False
     geometry_rotation_anchor: tuple[float, float] | None = None
+    cord_rig: DirectTwoAnchorCordRig | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -324,6 +355,7 @@ def _load_board_package(
             source_presentation_id,
             is_inverted,
             _raw_presentation_geometry_rotation_anchor(board, presentation_id),
+            _raw_presentation_cord_rig(board, presentation_id),
         )
         for (
             presentation_id,
@@ -1144,6 +1176,110 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
         pass
 
 
+def _cord_point(value: object, label: str) -> CordPoint:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(value, {"x", "y"}, label)
+    return CordPoint(
+        _finite_number(value["x"], f"{label}.x"),
+        _finite_number(value["y"], f"{label}.y"),
+    )
+
+
+def _cord_size(value: object, label: str) -> CordSize:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(value, {"width", "height"}, label)
+    return CordSize(
+        _positive_number(value["width"], f"{label}.width"),
+        _positive_number(value["height"], f"{label}.height"),
+    )
+
+
+def _cord_rect(value: object, label: str) -> CordRect:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(value, {"x", "y", "width", "height"}, label)
+    return CordRect(
+        _finite_number(value["x"], f"{label}.x"),
+        _finite_number(value["y"], f"{label}.y"),
+        _positive_number(value["width"], f"{label}.width"),
+        _positive_number(value["height"], f"{label}.height"),
+    )
+
+
+def _direct_two_anchor_cord_rig(
+    value: object, label: str
+) -> DirectTwoAnchorCordRig:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(
+        value,
+        {
+            "type",
+            "sceneSize",
+            "sourceFrame",
+            "innerFaceFrame",
+            "attachmentPoints",
+            "pullPoint",
+            "eyeletRadius",
+        },
+        label,
+    )
+    if value["type"] != "directTwoAnchor":
+        raise BoardPackageError(f"{label}.type is unsupported")
+    raw_attachment_points = value["attachmentPoints"]
+    if not isinstance(raw_attachment_points, list) or len(raw_attachment_points) != 2:
+        raise BoardPackageError(
+            f"{label}.attachmentPoints must contain exactly two points"
+        )
+    attachment_points = tuple(
+        _cord_point(point, f"{label}.attachmentPoints[{index}]")
+        for index, point in enumerate(raw_attachment_points)
+    )
+    if attachment_points[0] == attachment_points[1]:
+        raise BoardPackageError(f"{label}.attachmentPoints must be distinct")
+    scene_size = _cord_size(value["sceneSize"], f"{label}.sceneSize")
+    source_frame = _cord_rect(value["sourceFrame"], f"{label}.sourceFrame")
+    pull_point = _cord_point(value["pullPoint"], f"{label}.pullPoint")
+    if not (
+        0 <= pull_point.x <= scene_size.width
+        and 0 <= pull_point.y <= scene_size.height
+    ):
+        raise BoardPackageError(f"{label}.pullPoint must be inside sceneSize")
+    return DirectTwoAnchorCordRig(
+        scene_size=scene_size,
+        source_frame=source_frame,
+        inner_face_frame=_cord_rect(
+            value["innerFaceFrame"], f"{label}.innerFaceFrame"
+        ),
+        attachment_points=(attachment_points[0], attachment_points[1]),
+        pull_point=pull_point,
+        eyelet_radius=_positive_number(
+            value["eyeletRadius"], f"{label}.eyeletRadius"
+        ),
+    )
+
+
+def _raw_presentation_cord_rig(
+    board: Mapping[str, Any], presentation_id: str
+) -> DirectTwoAnchorCordRig | None:
+    raw_presentations = board.get("presentations")
+    if not isinstance(raw_presentations, list):
+        return None
+    for index, value in enumerate(raw_presentations):
+        if isinstance(value, Mapping) and value.get("id") == presentation_id:
+            return (
+                _direct_two_anchor_cord_rig(
+                    value["cordRig"],
+                    f"board.json.presentations[{index}].cordRig",
+                )
+                if "cordRig" in value
+                else None
+            )
+    return None
+
+
 def _parse_board_presentations(
     board: Mapping[str, Any],
 ) -> tuple[_ParsedBoardPresentation, ...]:
@@ -1158,6 +1294,7 @@ def _parse_board_presentations(
         raise BoardPackageError("board.json.presentations must be a non-empty array")
     presentations: list[_ParsedBoardPresentation] = []
     geometry_rotation_anchors: dict[str, tuple[float, float] | None] = {}
+    cord_rigs: dict[str, DirectTwoAnchorCordRig | None] = {}
     identifiers: set[str] = set()
     defaults = 0
     for index, value in enumerate(raw_presentations):
@@ -1172,6 +1309,7 @@ def _parse_board_presentations(
             {
                 "id", "name", "assetPath", "aspectRatio", "default",
                 "sourcePresentationID", "isInverted", "geometryRotationAnchor",
+                "cordRig",
             },
             label,
         )
@@ -1203,6 +1341,11 @@ def _parse_board_presentations(
             else None
         )
         geometry_rotation_anchors[presentation_id] = geometry_rotation_anchor
+        cord_rigs[presentation_id] = (
+            _direct_two_anchor_cord_rig(value["cordRig"], f"{label}.cordRig")
+            if "cordRig" in value
+            else None
+        )
         presentations.append(
             (
                 presentation_id,
@@ -1227,6 +1370,24 @@ def _parse_board_presentations(
         is_inverted,
     ) in presentations:
         geometry_rotation_anchor = geometry_rotation_anchors[presentation_id]
+        cord_rig = cord_rigs[presentation_id]
+        if cord_rig is not None:
+            if source_presentation_id is not None or is_inverted:
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.cordRig must be owned by a "
+                    "canonical non-inverted presentation"
+                )
+            scene_aspect_ratio = cord_rig.scene_size.width / cord_rig.scene_size.height
+            if (
+                not math.isfinite(scene_aspect_ratio)
+                or scene_aspect_ratio <= 0
+                or abs(aspect_ratio - scene_aspect_ratio) / scene_aspect_ratio
+                > _ASPECT_RATIO_RELATIVE_TOLERANCE
+            ):
+                raise BoardPackageError(
+                    f"presentation {presentation_id}.aspectRatio must match "
+                    "cordRig.sceneSize within 0.1%"
+                )
         if geometry_rotation_anchor is not None:
             if source_presentation_id is None:
                 raise BoardPackageError(
@@ -1276,19 +1437,44 @@ def _validate_board(
     aspect_ratio = _positive_number(
         board.get("aspectRatio"), "board.json.aspectRatio"
     )
-    image_aspect_ratio = width / height
-    relative_error = abs(aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+    default_presentation = next(item for item in parsed_presentations if item[4])
+    default_cord_rig = _raw_presentation_cord_rig(board, default_presentation[0])
+    expected_board_aspect_ratio = (
+        default_presentation[3] if default_cord_rig is not None else width / height
+    )
+    relative_error = (
+        abs(aspect_ratio - expected_board_aspect_ratio) / expected_board_aspect_ratio
+    )
     if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
         raise BoardPackageError(
             "board.json.aspectRatio must match the primary image width/height within 0.1%"
         )
     if presentations is not None:
+        presentations_by_id = {item.id: item for item in presentations}
         for presentation in presentations:
             image_aspect_ratio = presentation.image_width / presentation.image_height
-            relative_error = abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+            canonical = (
+                presentations_by_id[presentation.source_presentation_id]
+                if presentation.source_presentation_id is not None
+                else presentation
+            )
+            expected_image_aspect_ratio = presentation.aspect_ratio
+            aspect_source = f"presentation {presentation.id}.aspectRatio"
+            if canonical.cord_rig is not None:
+                expected_image_aspect_ratio = (
+                    canonical.cord_rig.inner_face_frame.width
+                    / canonical.cord_rig.inner_face_frame.height
+                )
+                aspect_source = (
+                    f"presentation {canonical.id}.cordRig.innerFaceFrame aspect ratio"
+                )
+            relative_error = (
+                abs(expected_image_aspect_ratio - image_aspect_ratio)
+                / image_aspect_ratio
+            )
             if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
                 raise BoardPackageError(
-                    f"board.json presentation {presentation.id}.aspectRatio must match its image width/height within 0.1%"
+                    f"{aspect_source} must match its image width/height within 0.1%"
                 )
     holds = board.get("holds")
     if not isinstance(holds, list) or not holds:
@@ -1416,6 +1602,7 @@ def _validate_inverted_alias_projection(
             _raw_presentation_geometry_rotation_anchor(board, presentation_id)
             or (0.5, 0.5)
         )
+        cord_rig = _raw_presentation_cord_rig(board, source_presentation_id)
         for hold in holds:
             if not isinstance(hold, Mapping) or hold.get("presentationID") != source_presentation_id:
                 continue
@@ -1432,6 +1619,14 @@ def _validate_inverted_alias_projection(
                     )
                 except GeometryError as error:
                     raise BoardPackageError(str(error)) from error
+                if cord_rig is not None:
+                    if not _rigged_alias_frame_is_inside_canvas(
+                        frame, cord_rig, (anchor_x, anchor_y)
+                    ):
+                        raise BoardPackageError(
+                            f"presentation {presentation_id} projects source hold geometry outside the normalized canvas"
+                        )
+                    continue
                 projected_min_x = 2 * anchor_x - (frame.x + frame.width)
                 projected_min_y = 2 * anchor_y - (frame.y + frame.height)
                 projected_max_x = 2 * anchor_x - frame.x
@@ -1445,6 +1640,37 @@ def _validate_inverted_alias_projection(
                     raise BoardPackageError(
                         f"presentation {presentation_id} projects source hold geometry outside the normalized canvas"
                     )
+
+
+def _rigged_alias_frame_is_inside_canvas(
+    frame: NormalizedFrame,
+    rig: DirectTwoAnchorCordRig,
+    anchor: tuple[float, float],
+) -> bool:
+    face_min_x = rig.source_frame.x + rig.inner_face_frame.x
+    face_min_y = rig.source_frame.y + rig.inner_face_frame.y
+    pivot_x = anchor[0] * rig.scene_size.width
+    pivot_y = anchor[1] * rig.scene_size.height
+    corners = (
+        (frame.x, frame.y),
+        (frame.x + frame.width, frame.y),
+        (frame.x, frame.y + frame.height),
+        (frame.x + frame.width, frame.y + frame.height),
+    )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-12
+    for normalized_x, normalized_y in corners:
+        face_x = face_min_x + normalized_x * rig.inner_face_frame.width
+        face_y = face_min_y + normalized_y * rig.inner_face_frame.height
+        projected_x = 2 * pivot_x - face_x
+        projected_y = 2 * pivot_y - face_y
+        if (
+            projected_x < -tolerance
+            or projected_y < -tolerance
+            or projected_x > rig.scene_size.width + tolerance
+            or projected_y > rig.scene_size.height + tolerance
+        ):
+            return False
+    return True
 
 
 def _validate_equipment_objects(board: Mapping[str, Any]) -> set[str]:
@@ -2235,6 +2461,16 @@ def _non_empty_string(value: object, label: str) -> str:
     if not isinstance(value, str) or not value:
         raise BoardPackageError(f"{label} must be a non-empty string")
     return value
+
+
+def _finite_number(value: object, label: str) -> float:
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(value)
+    ):
+        raise BoardPackageError(f"{label} must be a finite number")
+    return float(value)
 
 
 def _positive_number(value: object, label: str) -> float:

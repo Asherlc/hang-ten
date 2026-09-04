@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package
@@ -48,6 +49,21 @@ def _client(*packages: tuple[str, dict[str, object]]) -> FakeGitHubClient:
     for slug, board in packages:
         files.update(_complete_package(slug, board))
     return FakeGitHubClient({BRANCH: files})
+
+
+def _direct_two_anchor_cord_rig() -> dict[str, object]:
+    return {
+        "type": "directTwoAnchor",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "attachmentPoints": [
+            {"x": 400, "y": 300},
+            {"x": 1374, "y": 300},
+        ],
+        "pullPoint": {"x": 887, "y": 50},
+        "eyeletRadius": 20,
+    }
 
 
 class _TreeRaceClient(FakeGitHubClient):
@@ -484,6 +500,24 @@ def test_hosted_selected_presentation_loads_declared_alias_anchor_into_public_mo
         0.5,
         0.68,
     )
+
+
+def test_hosted_package_loads_current_port_dynamic_rigs() -> None:
+    package_root = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
+    files = {
+        f"Hangboards/frictitious-port-a-board/{path.relative_to(package_root).as_posix()}": path.read_bytes()
+        for path in package_root.rglob("*")
+        if path.is_file()
+    }
+    client = FakeGitHubClient({BRANCH: files})
+
+    opened = github_board_store.open_package(
+        client, TOKEN, BRANCH, "frictitious.port-a-board"
+    )
+
+    assert opened.presentation("primary").cord_rig is not None
+    assert opened.presentation("back").cord_rig is not None
+    assert opened.presentation("front-inverted").cord_rig is None
 
 
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
@@ -1488,6 +1522,30 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     ).hexdigest()
     assert put[0].args[3] == expected_content
     assert saved.board_json_sha == expected_sha
+
+
+def test_changed_hosted_save_preserves_direct_two_anchor_cord_rig() -> None:
+    board = board_document("fixture.board")
+    board["presentations"][0]["cordRig"] = _direct_two_anchor_cord_rig()
+    expected_rig = copy.deepcopy(board["presentations"][0]["cordRig"])
+    client = _client(("fixture-board", board))
+    opened = github_board_store.open_package(
+        client, TOKEN, BRANCH, "fixture.board"
+    )
+    document = copy.deepcopy(board_package.editor_document(opened))
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert stored["presentations"][0]["cordRig"] == expected_rig
+    assert saved.presentation().cord_rig == opened.presentation().cord_rig
+    assert saved.presentation().cord_rig is not None
 
 
 def test_changed_hosted_save_reassigns_a_hold_between_equipment_objects() -> None:
