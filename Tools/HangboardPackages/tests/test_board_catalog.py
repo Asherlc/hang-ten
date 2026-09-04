@@ -1308,6 +1308,163 @@ def _wide_pivot_cord_rig() -> dict[str, object]:
     }
 
 
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1000, "height": 500},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1000, "height": 500},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1000, "height": 500},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body-left", "space": "body", "point": {"x": 180, "y": 330}},
+            {"id": "body-right", "space": "body", "point": {"x": 820, "y": 330}},
+            {"id": "world-left", "space": "world", "point": {"x": 420, "y": 70}},
+            {"id": "world-right", "space": "world", "point": {"x": 580, "y": 70}},
+        ],
+        "tensionGroups": [
+            {
+                "id": "main",
+                "bodyPortIDs": ["body-left", "body-right"],
+                "worldPortIDs": ["world-left", "world-right"],
+                "pairing": "screenOrder",
+                "layer": "behindFace",
+            }
+        ],
+        "paths": [
+            {
+                "id": "return-bight",
+                "space": "body",
+                "layer": "aboveFace",
+                "commands": [
+                    {"command": "move", "to": [180, 330]},
+                    {"command": "quad", "control": [500, 470], "to": [820, 330]},
+                ],
+            }
+        ],
+        "occlusions": [
+            {
+                "type": "radialLip",
+                "bodyPortID": "body-left",
+                "radius": 22,
+                "chordOffset": 6,
+            },
+            {
+                "type": "facePatch",
+                "commands": [
+                    {"command": "move", "to": [800, 310]},
+                    {"command": "line", "to": [840, 310]},
+                    {"command": "line", "to": [840, 350]},
+                    {"command": "close"},
+                ],
+            },
+        ],
+    }
+
+
+def test_routed_cord_rig_loads_with_all_structural_elements() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0].update(aspectRatio=2, cordRig=_routed_cord_rig())
+
+    board = module._load_board(document)
+    rig = board.presentations[0].cord_rig
+
+    assert isinstance(rig, module.RoutedCordRig)
+    assert rig.style == module.RoutedCordStyle(
+        diameter=12,
+        outline_color="#101010",
+        base_color="#2255AA",
+        braid_colors=("#FFD000", "#0055CC"),
+    )
+    assert [port.id for port in rig.ports] == [
+        "body-left", "body-right", "world-left", "world-right"
+    ]
+    assert rig.tension_groups[0].pairing.value == "screenOrder"
+    assert rig.paths[0].commands[-1].command == "quad"
+    assert rig.occlusions[0].body_port_id == "body-left"
+    assert rig.occlusions[1].commands[-1].command == "close"
+
+
+def test_routed_cord_rig_is_owned_once_and_inherited_by_rotated_alias() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0].update(aspectRatio=2, cordRig=_routed_cord_rig())
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=2,
+        sourcePresentationID="front",
+        rotationDegrees=90,
+    )
+    document["holds"] = document["holds"][:1]
+    document["holds"][0]["geometry"][0]["frame"] = {
+        "x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1
+    }
+
+    board = module._load_board(document)
+
+    assert isinstance(board.presentations[0].cord_rig, module.RoutedCordRig)
+    assert board.presentations[1].cord_rig is None
+    assert board.presentations[1].source_presentation_id == "front"
+
+
+def test_routed_cord_rig_inner_face_ratio_must_match_png(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    rig = _routed_cord_rig()
+    rig["innerFaceFrame"] = {"x": 0, "y": 0, "width": 500, "height": 500}
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="cordRig.innerFaceFrame aspect ratio"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda rig: rig["style"].__setitem__("extra", True), "unknown keys"),
+        (lambda rig: rig.pop("paths"), "missing keys"),
+        (lambda rig: rig["style"].__setitem__("baseColor", "blue"), "#RRGGBB"),
+        (lambda rig: rig["ports"].append(dict(rig["ports"][0])), "ports must have unique IDs"),
+        (lambda rig: rig["ports"][0].__setitem__("space", "world"), "bodyPortIDs must reference body ports"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("worldPortIDs", ["world-left"]), "equal cardinality"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("pairing", "nearest"), "pairing is unsupported"),
+        (lambda rig: rig["paths"][0]["commands"][0].__setitem__("command", "arc"), "command is unsupported"),
+        (lambda rig: rig["paths"][0]["commands"].append({"command": "move", "to": [1, 2]}), "exactly one move"),
+        (lambda rig: rig["occlusions"][1]["commands"].pop(), "facePatch commands must be closed"),
+        (lambda rig: rig["occlusions"][0].__setitem__("bodyPortID", "world-left"), "radialLip must reference a body port"),
+        (lambda rig: rig["occlusions"][0].__setitem__("chordOffset", 22), "chordOffset must be less than radius"),
+    ],
+)
+def test_routed_cord_rig_rejects_malformed_structure(mutation, message: str) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _routed_cord_rig()
+    mutation(rig)
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(ValueError, match=message):
+        module._load_board(document)
+
+
+def test_routed_cord_rig_rejects_unknown_type_fail_closed() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _routed_cord_rig()
+    rig["type"] = "futureRig"
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(ValueError, match="cordRig.type is unsupported"):
+        module._load_board(document)
+
+
 def test_unversioned_board_accepts_alias_aspect_ratio_serialization_rounding(
     tmp_path: Path,
 ) -> None:

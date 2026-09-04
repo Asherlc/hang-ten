@@ -69,6 +69,34 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
     }
 
 
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body", "space": "body", "point": {"x": 400, "y": 300}},
+            {"id": "world", "space": "world", "point": {"x": 887, "y": 90}},
+        ],
+        "tensionGroups": [{
+            "id": "main",
+            "bodyPortIDs": ["body"],
+            "worldPortIDs": ["world"],
+            "pairing": "declared",
+            "layer": "behindFace",
+        }],
+        "paths": [],
+        "occlusions": [],
+    }
+
+
 def _quarter_turn_cord_rig() -> dict[str, object]:
     return {
         "type": "directTwoAnchor",
@@ -841,6 +869,26 @@ def test_board_payload_exposes_canonical_direct_two_anchor_rig(
     )
 
     assert payload["cordRig"] == rig
+
+
+def test_board_payload_exposes_canonical_routed_rig_with_empty_arrays(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    rig = _routed_cord_rig()
+    board["presentations"][0]["cordRig"] = rig
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["cordRig"] == rig
+    assert payload["cordRig"]["paths"] == []
+    assert payload["cordRig"]["occlusions"] == []
 
 
 def test_board_payload_exposes_explicit_arbitrary_alias_rotation(

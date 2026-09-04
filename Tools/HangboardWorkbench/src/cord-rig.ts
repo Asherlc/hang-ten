@@ -100,7 +100,8 @@ export function resolveCordRigPresentationGeometry(
     )
     : presentation;
   const rig = canonical?.cordRig;
-  if (!rig || document.canvas.width <= 0 || document.canvas.height <= 0) return null;
+  if (!rig || rig.type !== "directTwoAnchor"
+    || document.canvas.width <= 0 || document.canvas.height <= 0) return null;
 
   const faceOrigin = {
     x: rig.sourceFrame.x + rig.innerFaceFrame.x,

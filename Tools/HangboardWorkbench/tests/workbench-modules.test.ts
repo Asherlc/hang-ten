@@ -22,6 +22,7 @@ import type {
   EditorDocument,
   LoadedBoard,
   PathEditor,
+  RoutedCordRig,
   WorkbenchClient,
   WorkbenchController,
   WorkbenchDependencies,
@@ -239,7 +240,7 @@ test("the browser client rejects malformed available hold IDs", async (context) 
             imageUrl: "/api/boards/compact/image?presentationID=front",
             default: true,
             availableHoldIDs,
-          } as BoardPresentation],
+          } as unknown as BoardPresentation],
         }),
       }));
 
@@ -300,6 +301,134 @@ test("the browser client preserves a canonical direct-two-anchor cord rig", asyn
     (board.presentations?.[0] as unknown as { cordRig?: unknown })?.cordRig,
     rig,
   );
+});
+
+test("the browser client preserves a structurally valid canonical routed cord rig", async () => {
+  const rig: RoutedCordRig = {
+    type: "routed",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    style: {
+      diameter: 4,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 20, y: 50 } },
+      { id: "world-left", space: "world", point: { x: 20, y: 0 } },
+    ],
+    tensionGroups: [{
+      id: "main",
+      bodyPortIDs: ["body-left"],
+      worldPortIDs: ["world-left"],
+      pairing: "declared",
+      layer: "behindFace",
+    }],
+    paths: [{
+      id: "return",
+      space: "body",
+      layer: "aboveFace",
+      commands: [
+        { command: "move", to: [20, 50] },
+        { command: "quad", control: [50, 90], to: [80, 50] },
+      ],
+    }],
+    occlusions: [{
+      type: "radialLip",
+      bodyPortID: "body-left",
+      radius: 6,
+      chordOffset: 2,
+    }],
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: rig,
+      }],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[0]?.cordRig, rig);
+});
+
+test("the browser client rejects malformed routed cord structure", async (context) => {
+  const baseRig = {
+    type: "routed",
+    sceneSize: { width: 100, height: 200 },
+    sourceFrame: { x: 0, y: 100, width: 100, height: 100 },
+    innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+    style: {
+      diameter: 4,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    ports: [
+      { id: "body-left", space: "body", point: { x: 20, y: 50 } },
+      { id: "world-left", space: "world", point: { x: 20, y: 0 } },
+    ],
+    tensionGroups: [{
+      id: "main",
+      bodyPortIDs: ["body-left"],
+      worldPortIDs: ["world-left"],
+      pairing: "declared",
+      layer: "behindFace",
+    }],
+    paths: [],
+    occlusions: [],
+  };
+  const cases: Array<[string, (rig: Record<string, any>) => void]> = [
+    ["unknown key", (rig) => { rig.extra = true; }],
+    ["bad color", (rig) => { rig.style.baseColor = "blue"; }],
+    ["duplicate ports", (rig) => { rig.ports.push({ ...rig.ports[0] }); }],
+    ["wrong port space", (rig) => { rig.ports[0].space = "world"; }],
+    ["unequal cardinality", (rig) => { rig.tensionGroups[0].worldPortIDs = ["world-left", "world-left-2"]; }],
+    ["multiple closes", (rig) => {
+      rig.paths = [{
+        id: "bad-path",
+        space: "body",
+        layer: "aboveFace",
+        commands: [
+          { command: "move", to: [0, 0] },
+          { command: "close" },
+          { command: "close" },
+        ],
+      }];
+    }],
+  ];
+
+  for (const [name, mutate] of cases) {
+    await context.test(name, async () => {
+      const rig = structuredClone(baseRig);
+      mutate(rig);
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          presentations: [{
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+            cordRig: rig,
+          } as unknown as BoardPresentation],
+        }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
 });
 
 test("the eyelet foreground keeps the board-side face above the incoming cord", () => {

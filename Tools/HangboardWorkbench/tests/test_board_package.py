@@ -169,6 +169,49 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
     }
 
 
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body-left", "space": "body", "point": {"x": 400, "y": 300}},
+            {"id": "body-right", "space": "body", "point": {"x": 1374, "y": 300}},
+            {"id": "world-left", "space": "world", "point": {"x": 800, "y": 90}},
+            {"id": "world-right", "space": "world", "point": {"x": 974, "y": 90}},
+        ],
+        "tensionGroups": [{
+            "id": "main",
+            "bodyPortIDs": ["body-left", "body-right"],
+            "worldPortIDs": ["world-left", "world-right"],
+            "pairing": "declared",
+            "layer": "behindFace",
+        }],
+        "paths": [{
+            "id": "return-bight",
+            "space": "body",
+            "layer": "aboveFace",
+            "commands": [
+                {"command": "move", "to": [400, 300]},
+                {"command": "curve", "control1": [500, 430], "control2": [1274, 430], "to": [1374, 300]},
+            ],
+        }],
+        "occlusions": [{
+            "type": "radialLip",
+            "bodyPortID": "body-left",
+            "radius": 20,
+            "chordOffset": 6,
+        }],
+    }
+
+
 def _quarter_turn_cord_rig() -> dict[str, object]:
     return {
         "type": "directTwoAnchor",
@@ -936,6 +979,143 @@ def test_direct_two_anchor_cord_rig_loads_into_the_public_presentation_model(
         pull_point=board_package.CordPoint(887, 210),
         eyelet_radius=20,
     )
+
+
+def test_routed_cord_rig_loads_into_the_public_presentation_model(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__(
+            "cordRig", _routed_cord_rig()
+        ),
+    )
+
+    rig = board_package.load_board_package(package_root).presentation().cord_rig
+
+    assert isinstance(rig, board_package.RoutedCordRig)
+    assert rig.style.diameter == 12
+    assert rig.style.braid_colors == ("#FFD000", "#0055CC")
+    assert tuple(port.id for port in rig.ports) == (
+        "body-left", "body-right", "world-left", "world-right"
+    )
+    assert rig.tension_groups[0].pairing.value == "declared"
+    assert rig.paths[0].commands[1].command == "curve"
+    assert rig.occlusions[0].body_port_id == "body-left"
+
+
+def test_routed_cord_rig_is_inherited_by_a_rotated_alias(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations[0]["cordRig"] = _routed_cord_rig()
+    presentations[1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=1774 / 457,
+        sourcePresentationID="front",
+        rotationDegrees=180,
+    )
+    board["holds"] = board["holds"][:1]
+    (package_root / "assets" / "back.png").unlink()
+    _write_json(package_root / "board.json", board)
+
+    package = board_package.load_board_package(package_root)
+
+    assert isinstance(package.presentation("front").cord_rig, board_package.RoutedCordRig)
+    assert package.presentation("back").cord_rig is None
+    assert isinstance(
+        board_package._resolved_presentation_cord_rig(
+            package.presentations, package.presentation("back")
+        ),
+        board_package.RoutedCordRig,
+    )
+
+
+def test_routed_cord_rig_inner_face_ratio_must_match_png(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _routed_cord_rig()
+    rig["innerFaceFrame"] = {"x": 0, "y": 0, "width": 457, "height": 457}
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(BoardPackageError, match="cordRig.innerFaceFrame aspect ratio"):
+        board_package.load_board_package(package_root)
+
+
+def test_local_editor_save_preserves_routed_cord_rig_and_present_arrays(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    expected_rig = _routed_cord_rig()
+    expected_rig["paths"] = []
+    expected_rig["occlusions"] = []
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__(
+            "cordRig", expected_rig
+        ),
+    )
+    opened = board_package.load_board_package(package_root)
+    document = board_package.editor_document(opened)
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved = board_package.save_editor_document(
+        library, "fixture-board", document
+    )
+
+    stored = _read_board(package_root)["presentations"][0]["cordRig"]
+    assert stored == expected_rig
+    assert stored["paths"] == []
+    assert stored["occlusions"] == []
+    assert isinstance(saved.presentation().cord_rig, board_package.RoutedCordRig)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda rig: rig["style"].__setitem__("diameter", 0), "positive"),
+        (lambda rig: rig["style"].__setitem__("outlineColor", "#12345"), "#RRGGBB"),
+        (lambda rig: rig["ports"][0].__setitem__("id", "Bad ID"), "identifier-shaped"),
+        (lambda rig: rig["ports"].append(dict(rig["ports"][0])), "unique IDs"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("bodyPortIDs", []), "non-empty array"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("worldPortIDs", ["world-left"]), "equal cardinality"),
+        (lambda rig: rig["tensionGroups"][0].__setitem__("layer", "front"), "layer is unsupported"),
+        (lambda rig: rig["paths"][0]["commands"][1].__setitem__("control2", [float("inf"), 1]), "finite"),
+        (lambda rig: rig["occlusions"][0].__setitem__("chordOffset", 0), "positive"),
+        (lambda rig: rig["occlusions"][0].__setitem__("type", "mask"), "type is unsupported"),
+    ],
+)
+def test_routed_cord_rig_rejects_malformed_structure(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    rig = _routed_cord_rig()
+    mutation(rig)
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__("cordRig", rig),
+    )
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
 
 
 @pytest.mark.parametrize(

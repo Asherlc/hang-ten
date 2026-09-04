@@ -113,6 +113,32 @@ hold on the canonical face remains available for backward compatibility.
 Rendering, highlighting, hit testing, position resolution, and Workbench's
 focused editor view all use this effective hold subset.
 
+A canonical presentation may own either the compatible `directTwoAnchor` rig
+or a generalized `routed` cord rig. A routed rig retains `sceneSize`,
+`sourceFrame`, and `innerFaceFrame`, then declares these required fields:
+
+- `style`: positive finite `diameter`; `outlineColor`, `baseColor`, and exactly
+  two `braidColors`, each encoded as `#RRGGBB`.
+- `ports`: unique identifier-shaped ports with `space` equal to `body` or
+  `world` and a finite `{x, y}` point.
+- `tensionGroups`: unique groups containing equally sized, nonempty, internally
+  unique `bodyPortIDs` and `worldPortIDs`; `pairing` is `declared` or
+  `screenOrder`, and `layer` is `behindFace`, `aboveFace`, or `overpass`.
+- `paths`: unique authored cord paths with a `body` or `world` space, a layer,
+  and path commands in the same array vocabulary as hold paths: `move`,
+  `line`, `quad`, `curve`, and optional terminal `close`.
+- `occlusions`: `radialLip` entries reference a body port and require
+  `0 < chordOffset < radius`, while `facePatch` entries contain a closed path.
+
+All four routed arrays are required in canonical JSON, including when `paths`
+or `occlusions` is empty. Every point and path coordinate is expressed in
+finite source-frame-local units: add `sourceFrame`'s origin to place it in the
+scene. Body-space geometry rotates with the board; world-space geometry stays
+fixed in that scene. Routed rigs follow the same canonical-presentation
+ownership, alias inheritance, scene-aspect, and PNG-to-`innerFaceFrame` aspect
+rules as `directTwoAnchor` rigs. Unknown rig, space, pairing, layer, command,
+and occlusion types are rejected.
+
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the
 physical board is symmetric, and multiple pieces only for one genuinely

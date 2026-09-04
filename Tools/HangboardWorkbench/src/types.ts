@@ -20,6 +20,66 @@ export interface DirectTwoAnchorCordRig {
   eyeletRadius: number;
 }
 
+export type RoutedCordSpace = "body" | "world";
+export type RoutedCordLayer = "behindFace" | "aboveFace" | "overpass";
+export type RoutedCordPairing = "declared" | "screenOrder";
+
+export type RoutedCordPathCommand =
+  | { command: "move" | "line"; to: [number, number] }
+  | { command: "quad"; control: [number, number]; to: [number, number] }
+  | {
+    command: "curve";
+    control1: [number, number];
+    control2: [number, number];
+    to: [number, number];
+  }
+  | { command: "close" };
+
+export interface RoutedCordRig {
+  type: "routed";
+  sceneSize: CordSize;
+  sourceFrame: CordRect;
+  innerFaceFrame: CordRect;
+  style: {
+    diameter: number;
+    outlineColor: string;
+    baseColor: string;
+    braidColors: [string, string];
+  };
+  ports: Array<{
+    id: string;
+    space: RoutedCordSpace;
+    point: Point;
+  }>;
+  tensionGroups: Array<{
+    id: string;
+    bodyPortIDs: string[];
+    worldPortIDs: string[];
+    pairing: RoutedCordPairing;
+    layer: RoutedCordLayer;
+  }>;
+  paths: Array<{
+    id: string;
+    space: RoutedCordSpace;
+    layer: RoutedCordLayer;
+    commands: RoutedCordPathCommand[];
+  }>;
+  occlusions: Array<
+    | {
+      type: "radialLip";
+      bodyPortID: string;
+      radius: number;
+      chordOffset: number;
+    }
+    | {
+      type: "facePatch";
+      commands: RoutedCordPathCommand[];
+    }
+  >;
+}
+
+export type CordRig = DirectTwoAnchorCordRig | RoutedCordRig;
+
 export type PathCommandType = "M" | "L" | "Q" | "C" | "Z";
 
 export interface PathCommand {
@@ -138,7 +198,7 @@ export interface BoardPresentation {
   isInverted?: true;
   rotationDegrees?: number;
   geometryRotationAnchor?: Point;
-  cordRig?: DirectTwoAnchorCordRig;
+  cordRig?: CordRig;
 }
 
 export interface BoardSummary {

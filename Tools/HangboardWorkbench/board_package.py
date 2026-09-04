@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from dataclasses import dataclass, replace as _dataclass_replace
+from enum import StrEnum
 import fcntl
 import json
 import math
@@ -31,6 +32,7 @@ from board_geometry import (
 
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
+_ROUTED_COLOR = re.compile(r"^#[0-9A-Fa-f]{6}$")
 _SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
 _ALIAS_ASPECT_RATIO_RELATIVE_TOLERANCE = 1e-9
@@ -159,6 +161,93 @@ class DirectTwoAnchorCordRig:
     eyelet_radius: float
 
 
+class RoutedCordSpace(StrEnum):
+    BODY = "body"
+    WORLD = "world"
+
+
+class RoutedCordLayer(StrEnum):
+    BEHIND_FACE = "behindFace"
+    ABOVE_FACE = "aboveFace"
+    OVERPASS = "overpass"
+
+
+class RoutedCordPairing(StrEnum):
+    DECLARED = "declared"
+    SCREEN_ORDER = "screenOrder"
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordStyle:
+    diameter: float
+    outline_color: str
+    base_color: str
+    braid_colors: tuple[str, str]
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordPort:
+    id: str
+    space: RoutedCordSpace
+    point: CordPoint
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordTensionGroup:
+    id: str
+    body_port_ids: tuple[str, ...]
+    world_port_ids: tuple[str, ...]
+    pairing: RoutedCordPairing
+    layer: RoutedCordLayer
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordPathCommand:
+    command: str
+    to: tuple[float, float] | None = None
+    control: tuple[float, float] | None = None
+    control1: tuple[float, float] | None = None
+    control2: tuple[float, float] | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordPath:
+    id: str
+    space: RoutedCordSpace
+    layer: RoutedCordLayer
+    commands: tuple[RoutedCordPathCommand, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordRadialLip:
+    body_port_id: str
+    radius: float
+    chord_offset: float
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordFacePatch:
+    commands: tuple[RoutedCordPathCommand, ...]
+
+
+RoutedCordOcclusion = RoutedCordRadialLip | RoutedCordFacePatch
+
+
+@dataclass(frozen=True, slots=True)
+class RoutedCordRig:
+    scene_size: CordSize
+    source_frame: CordRect
+    inner_face_frame: CordRect
+    style: RoutedCordStyle
+    ports: tuple[RoutedCordPort, ...]
+    tension_groups: tuple[RoutedCordTensionGroup, ...]
+    paths: tuple[RoutedCordPath, ...]
+    occlusions: tuple[RoutedCordOcclusion, ...]
+
+
+CordRig = DirectTwoAnchorCordRig | RoutedCordRig
+
+
 @dataclass(frozen=True, slots=True)
 class BoardPresentation:
     id: str
@@ -171,7 +260,7 @@ class BoardPresentation:
     source_presentation_id: str | None = None
     is_inverted: bool = False
     geometry_rotation_anchor: tuple[float, float] | None = None
-    cord_rig: DirectTwoAnchorCordRig | None = None
+    cord_rig: CordRig | None = None
     rotation_degrees: float | None = None
     available_hold_ids: tuple[str, ...] | None = None
 
@@ -605,7 +694,7 @@ def presentation_geometry_rotation_anchor(
 def _resolved_presentation_cord_rig(
     presentations: tuple[BoardPresentation, ...],
     presentation: BoardPresentation,
-) -> DirectTwoAnchorCordRig | None:
+) -> CordRig | None:
     if presentation.source_presentation_id is None:
         return presentation.cord_rig
     source = next(
@@ -620,7 +709,7 @@ def _resolved_presentation_cord_rig(
 
 
 def _scene_anchor_in_face_normalized_coordinates(
-    rig: DirectTwoAnchorCordRig,
+    rig: CordRig,
     anchor: tuple[float, float],
 ) -> tuple[float, float]:
     """Map a scene-normalized pivot into canonical face-image coordinates."""
@@ -1394,6 +1483,336 @@ def _direct_two_anchor_cord_rig(
     )
 
 
+def _routed_color(value: object, label: str) -> str:
+    if not isinstance(value, str) or _ROUTED_COLOR.fullmatch(value) is None:
+        raise BoardPackageError(f"{label} must be a #RRGGBB color")
+    return value
+
+
+def _routed_enum(value: object, enum_type: type[StrEnum], label: str, noun: str):
+    if not isinstance(value, str):
+        raise BoardPackageError(f"{label} must be a string")
+    try:
+        return enum_type(value)
+    except ValueError as error:
+        raise BoardPackageError(f"{label} {noun} is unsupported") from error
+
+
+def _routed_point_array(value: object, label: str) -> tuple[float, float]:
+    if not isinstance(value, list) or len(value) != 2:
+        raise BoardPackageError(
+            f"{label} must contain exactly two finite coordinates"
+        )
+    return (
+        _finite_number(value[0], f"{label}[0]"),
+        _finite_number(value[1], f"{label}[1]"),
+    )
+
+
+def _routed_commands(
+    value: object,
+    label: str,
+    *,
+    require_closed: bool,
+) -> tuple[RoutedCordPathCommand, ...]:
+    if not isinstance(value, list) or len(value) < 2:
+        raise BoardPackageError(
+            f"{label} must contain a move and at least one drawing command"
+        )
+    commands: list[RoutedCordPathCommand] = []
+    for index, raw in enumerate(value):
+        command_label = f"{label}[{index}]"
+        if not isinstance(raw, Mapping):
+            raise BoardPackageError(f"{command_label} must be an object")
+        command = raw.get("command")
+        if not isinstance(command, str):
+            raise BoardPackageError(f"{command_label}.command must be a string")
+        if command in {"move", "line"}:
+            _exact_keys(raw, {"command", "to"}, command_label)
+            commands.append(
+                RoutedCordPathCommand(
+                    command=command,
+                    to=_routed_point_array(raw["to"], f"{command_label}.to"),
+                )
+            )
+        elif command == "quad":
+            _exact_keys(raw, {"command", "control", "to"}, command_label)
+            commands.append(
+                RoutedCordPathCommand(
+                    command=command,
+                    control=_routed_point_array(
+                        raw["control"], f"{command_label}.control"
+                    ),
+                    to=_routed_point_array(raw["to"], f"{command_label}.to"),
+                )
+            )
+        elif command == "curve":
+            _exact_keys(
+                raw,
+                {"command", "control1", "control2", "to"},
+                command_label,
+            )
+            commands.append(
+                RoutedCordPathCommand(
+                    command=command,
+                    control1=_routed_point_array(
+                        raw["control1"], f"{command_label}.control1"
+                    ),
+                    control2=_routed_point_array(
+                        raw["control2"], f"{command_label}.control2"
+                    ),
+                    to=_routed_point_array(raw["to"], f"{command_label}.to"),
+                )
+            )
+        elif command == "close":
+            _exact_keys(raw, {"command"}, command_label)
+            commands.append(RoutedCordPathCommand(command=command))
+        else:
+            raise BoardPackageError(f"{command_label}.command is unsupported")
+    if commands[0].command != "move" or sum(
+        command.command == "move" for command in commands
+    ) != 1:
+        raise BoardPackageError(f"{label} must begin with exactly one move command")
+    close_indexes = [
+        index for index, command in enumerate(commands) if command.command == "close"
+    ]
+    if close_indexes and close_indexes != [len(commands) - 1]:
+        raise BoardPackageError(f"{label} close command must appear only at the end")
+    if require_closed and commands[-1].command != "close":
+        raise BoardPackageError(
+            f"{label.removesuffix('.commands')} facePatch commands must be closed"
+        )
+    return tuple(commands)
+
+
+def _routed_id_array(value: object, label: str) -> tuple[str, ...]:
+    if not isinstance(value, list) or not value:
+        raise BoardPackageError(f"{label} must be a non-empty array")
+    result = tuple(
+        _identifier(item, f"{label}[{index}]") for index, item in enumerate(value)
+    )
+    if len(set(result)) != len(result):
+        raise BoardPackageError(f"{label} must be unique")
+    return result
+
+
+def _routed_cord_rig(value: object, label: str) -> RoutedCordRig:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(
+        value,
+        {
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame", "style",
+            "ports", "tensionGroups", "paths", "occlusions",
+        },
+        label,
+    )
+    style_value = value["style"]
+    if not isinstance(style_value, Mapping):
+        raise BoardPackageError(f"{label}.style must be an object")
+    _exact_keys(
+        style_value,
+        {"diameter", "outlineColor", "baseColor", "braidColors"},
+        f"{label}.style",
+    )
+    braid_colors = style_value["braidColors"]
+    if not isinstance(braid_colors, list) or len(braid_colors) != 2:
+        raise BoardPackageError(
+            f"{label}.style.braidColors must contain exactly two colors"
+        )
+    style = RoutedCordStyle(
+        diameter=_positive_number(style_value["diameter"], f"{label}.style.diameter"),
+        outline_color=_routed_color(
+            style_value["outlineColor"], f"{label}.style.outlineColor"
+        ),
+        base_color=_routed_color(style_value["baseColor"], f"{label}.style.baseColor"),
+        braid_colors=(
+            _routed_color(braid_colors[0], f"{label}.style.braidColors[0]"),
+            _routed_color(braid_colors[1], f"{label}.style.braidColors[1]"),
+        ),
+    )
+
+    ports_value = value["ports"]
+    if not isinstance(ports_value, list) or not ports_value:
+        raise BoardPackageError(f"{label}.ports must be a non-empty array")
+    ports: list[RoutedCordPort] = []
+    for index, raw in enumerate(ports_value):
+        port_label = f"{label}.ports[{index}]"
+        if not isinstance(raw, Mapping):
+            raise BoardPackageError(f"{port_label} must be an object")
+        _exact_keys(raw, {"id", "space", "point"}, port_label)
+        ports.append(
+            RoutedCordPort(
+                id=_identifier(raw["id"], f"{port_label}.id"),
+                space=_routed_enum(
+                    raw["space"], RoutedCordSpace, f"{port_label}.space", "space"
+                ),
+                point=_cord_point(raw["point"], f"{port_label}.point"),
+            )
+        )
+    if len({port.id for port in ports}) != len(ports):
+        raise BoardPackageError(f"{label}.ports must have unique IDs")
+    ports_by_id = {port.id: port for port in ports}
+
+    groups_value = value["tensionGroups"]
+    if not isinstance(groups_value, list) or not groups_value:
+        raise BoardPackageError(f"{label}.tensionGroups must be a non-empty array")
+    groups: list[RoutedCordTensionGroup] = []
+    for index, raw in enumerate(groups_value):
+        group_label = f"{label}.tensionGroups[{index}]"
+        if not isinstance(raw, Mapping):
+            raise BoardPackageError(f"{group_label} must be an object")
+        _exact_keys(
+            raw,
+            {"id", "bodyPortIDs", "worldPortIDs", "pairing", "layer"},
+            group_label,
+        )
+        body_port_ids = _routed_id_array(
+            raw["bodyPortIDs"], f"{group_label}.bodyPortIDs"
+        )
+        world_port_ids = _routed_id_array(
+            raw["worldPortIDs"], f"{group_label}.worldPortIDs"
+        )
+        if len(body_port_ids) != len(world_port_ids):
+            raise BoardPackageError(
+                f"{group_label} port lists must have equal cardinality"
+            )
+        if any(
+            ports_by_id.get(port_id) is None
+            or ports_by_id[port_id].space != RoutedCordSpace.BODY
+            for port_id in body_port_ids
+        ):
+            raise BoardPackageError(
+                f"{group_label}.bodyPortIDs must reference body ports"
+            )
+        if any(
+            ports_by_id.get(port_id) is None
+            or ports_by_id[port_id].space != RoutedCordSpace.WORLD
+            for port_id in world_port_ids
+        ):
+            raise BoardPackageError(
+                f"{group_label}.worldPortIDs must reference world ports"
+            )
+        groups.append(
+            RoutedCordTensionGroup(
+                id=_identifier(raw["id"], f"{group_label}.id"),
+                body_port_ids=body_port_ids,
+                world_port_ids=world_port_ids,
+                pairing=_routed_enum(
+                    raw["pairing"],
+                    RoutedCordPairing,
+                    f"{group_label}.pairing",
+                    "pairing",
+                ),
+                layer=_routed_enum(
+                    raw["layer"], RoutedCordLayer, f"{group_label}.layer", "layer"
+                ),
+            )
+        )
+    if len({group.id for group in groups}) != len(groups):
+        raise BoardPackageError(f"{label}.tensionGroups must have unique IDs")
+
+    paths_value = value["paths"]
+    if not isinstance(paths_value, list):
+        raise BoardPackageError(f"{label}.paths must be an array")
+    paths: list[RoutedCordPath] = []
+    for index, raw in enumerate(paths_value):
+        path_label = f"{label}.paths[{index}]"
+        if not isinstance(raw, Mapping):
+            raise BoardPackageError(f"{path_label} must be an object")
+        _exact_keys(raw, {"id", "space", "layer", "commands"}, path_label)
+        paths.append(
+            RoutedCordPath(
+                id=_identifier(raw["id"], f"{path_label}.id"),
+                space=_routed_enum(
+                    raw["space"], RoutedCordSpace, f"{path_label}.space", "space"
+                ),
+                layer=_routed_enum(
+                    raw["layer"], RoutedCordLayer, f"{path_label}.layer", "layer"
+                ),
+                commands=_routed_commands(
+                    raw["commands"], f"{path_label}.commands", require_closed=False
+                ),
+            )
+        )
+    if len({path.id for path in paths}) != len(paths):
+        raise BoardPackageError(f"{label}.paths must have unique IDs")
+
+    occlusions_value = value["occlusions"]
+    if not isinstance(occlusions_value, list):
+        raise BoardPackageError(f"{label}.occlusions must be an array")
+    occlusions: list[RoutedCordOcclusion] = []
+    for index, raw in enumerate(occlusions_value):
+        occlusion_label = f"{label}.occlusions[{index}]"
+        if not isinstance(raw, Mapping):
+            raise BoardPackageError(f"{occlusion_label} must be an object")
+        occlusion_type = raw.get("type")
+        if occlusion_type == "radialLip":
+            _exact_keys(
+                raw,
+                {"type", "bodyPortID", "radius", "chordOffset"},
+                occlusion_label,
+            )
+            body_port_id = _identifier(
+                raw["bodyPortID"], f"{occlusion_label}.bodyPortID"
+            )
+            if (
+                ports_by_id.get(body_port_id) is None
+                or ports_by_id[body_port_id].space != RoutedCordSpace.BODY
+            ):
+                raise BoardPackageError(
+                    f"{occlusion_label} radialLip must reference a body port"
+                )
+            radius = _positive_number(raw["radius"], f"{occlusion_label}.radius")
+            chord_offset = _positive_number(
+                raw["chordOffset"], f"{occlusion_label}.chordOffset"
+            )
+            if chord_offset >= radius:
+                raise BoardPackageError(
+                    f"{occlusion_label}.chordOffset must be less than radius"
+                )
+            occlusions.append(
+                RoutedCordRadialLip(body_port_id, radius, chord_offset)
+            )
+        elif occlusion_type == "facePatch":
+            _exact_keys(raw, {"type", "commands"}, occlusion_label)
+            occlusions.append(
+                RoutedCordFacePatch(
+                    _routed_commands(
+                        raw["commands"],
+                        f"{occlusion_label}.commands",
+                        require_closed=True,
+                    )
+                )
+            )
+        else:
+            raise BoardPackageError(f"{occlusion_label}.type is unsupported")
+
+    return RoutedCordRig(
+        scene_size=_cord_size(value["sceneSize"], f"{label}.sceneSize"),
+        source_frame=_cord_rect(value["sourceFrame"], f"{label}.sourceFrame"),
+        inner_face_frame=_cord_rect(
+            value["innerFaceFrame"], f"{label}.innerFaceFrame"
+        ),
+        style=style,
+        ports=tuple(ports),
+        tension_groups=tuple(groups),
+        paths=tuple(paths),
+        occlusions=tuple(occlusions),
+    )
+
+
+def _cord_rig(value: object, label: str) -> CordRig:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    rig_type = value.get("type")
+    if rig_type == "directTwoAnchor":
+        return _direct_two_anchor_cord_rig(value, label)
+    if rig_type == "routed":
+        return _routed_cord_rig(value, label)
+    raise BoardPackageError(f"{label}.type is unsupported")
+
+
 def _validate_direct_two_anchor_cord_presentation(
     rig: DirectTwoAnchorCordRig,
     *,
@@ -1453,14 +1872,14 @@ def _validate_direct_two_anchor_cord_presentation(
 
 def _raw_presentation_cord_rig(
     board: Mapping[str, Any], presentation_id: str
-) -> DirectTwoAnchorCordRig | None:
+) -> CordRig | None:
     raw_presentations = board.get("presentations")
     if not isinstance(raw_presentations, list):
         return None
     for index, value in enumerate(raw_presentations):
         if isinstance(value, Mapping) and value.get("id") == presentation_id:
             return (
-                _direct_two_anchor_cord_rig(
+                _cord_rig(
                     value["cordRig"],
                     f"board.json.presentations[{index}].cordRig",
                 )
@@ -1506,7 +1925,7 @@ def _parse_board_presentations(
         raise BoardPackageError("board.json.presentations must be a non-empty array")
     presentations: list[_ParsedBoardPresentation] = []
     geometry_rotation_anchors: dict[str, tuple[float, float] | None] = {}
-    cord_rigs: dict[str, DirectTwoAnchorCordRig | None] = {}
+    cord_rigs: dict[str, CordRig | None] = {}
     rotation_degrees_by_id: dict[str, float | None] = {}
     identifiers: set[str] = set()
     defaults = 0
@@ -1582,7 +2001,7 @@ def _parse_board_presentations(
         )
         geometry_rotation_anchors[presentation_id] = geometry_rotation_anchor
         cord_rigs[presentation_id] = (
-            _direct_two_anchor_cord_rig(value["cordRig"], f"{label}.cordRig")
+            _cord_rig(value["cordRig"], f"{label}.cordRig")
             if "cordRig" in value
             else None
         )
@@ -1681,7 +2100,7 @@ def _parse_board_presentations(
             if source_presentation_id is None
             else cord_rigs[source_presentation_id]
         )
-        if resolved_cord_rig is not None:
+        if isinstance(resolved_cord_rig, DirectTwoAnchorCordRig):
             _validate_direct_two_anchor_cord_presentation(
                 resolved_cord_rig,
                 presentation_id=presentation_id,
@@ -1975,7 +2394,7 @@ def _validate_inverted_alias_projection(
 
 def _rigged_alias_frame_is_inside_canvas(
     frame: NormalizedFrame,
-    rig: DirectTwoAnchorCordRig,
+    rig: CordRig,
     anchor: tuple[float, float],
     rotation_degrees: float,
 ) -> bool:

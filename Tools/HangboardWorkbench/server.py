@@ -35,7 +35,11 @@ from board_package import (
     BoardPackageError,
     BoardPresentation,
     BoardSaveConflictError,
+    CordRig,
     DirectTwoAnchorCordRig,
+    RoutedCordPathCommand,
+    RoutedCordRadialLip,
+    RoutedCordRig,
     discover_packages,
     editor_document,
     delete_presentation,
@@ -197,7 +201,7 @@ def _presentation_payload(
             else {}
         ),
         **(
-            {"cordRig": _direct_two_anchor_cord_rig_payload(presentation.cord_rig)}
+            {"cordRig": _cord_rig_payload(presentation.cord_rig)}
             if presentation.cord_rig is not None
             else {}
         ),
@@ -231,6 +235,101 @@ def _direct_two_anchor_cord_rig_payload(
         "pullPoint": {"x": rig.pull_point.x, "y": rig.pull_point.y},
         "eyeletRadius": rig.eyelet_radius,
     }
+
+
+def _routed_command_payload(command: RoutedCordPathCommand) -> dict[str, object]:
+    payload: dict[str, object] = {"command": command.command}
+    if command.control is not None:
+        payload["control"] = list(command.control)
+    if command.control1 is not None:
+        payload["control1"] = list(command.control1)
+    if command.control2 is not None:
+        payload["control2"] = list(command.control2)
+    if command.to is not None:
+        payload["to"] = list(command.to)
+    return payload
+
+
+def _routed_cord_rig_payload(rig: RoutedCordRig) -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {
+            "width": rig.scene_size.width,
+            "height": rig.scene_size.height,
+        },
+        "sourceFrame": {
+            "x": rig.source_frame.x,
+            "y": rig.source_frame.y,
+            "width": rig.source_frame.width,
+            "height": rig.source_frame.height,
+        },
+        "innerFaceFrame": {
+            "x": rig.inner_face_frame.x,
+            "y": rig.inner_face_frame.y,
+            "width": rig.inner_face_frame.width,
+            "height": rig.inner_face_frame.height,
+        },
+        "style": {
+            "diameter": rig.style.diameter,
+            "outlineColor": rig.style.outline_color,
+            "baseColor": rig.style.base_color,
+            "braidColors": list(rig.style.braid_colors),
+        },
+        "ports": [
+            {
+                "id": port.id,
+                "space": port.space.value,
+                "point": {"x": port.point.x, "y": port.point.y},
+            }
+            for port in rig.ports
+        ],
+        "tensionGroups": [
+            {
+                "id": group.id,
+                "bodyPortIDs": list(group.body_port_ids),
+                "worldPortIDs": list(group.world_port_ids),
+                "pairing": group.pairing.value,
+                "layer": group.layer.value,
+            }
+            for group in rig.tension_groups
+        ],
+        "paths": [
+            {
+                "id": path.id,
+                "space": path.space.value,
+                "layer": path.layer.value,
+                "commands": [
+                    _routed_command_payload(command) for command in path.commands
+                ],
+            }
+            for path in rig.paths
+        ],
+        "occlusions": [
+            (
+                {
+                    "type": "radialLip",
+                    "bodyPortID": occlusion.body_port_id,
+                    "radius": occlusion.radius,
+                    "chordOffset": occlusion.chord_offset,
+                }
+                if isinstance(occlusion, RoutedCordRadialLip)
+                else {
+                    "type": "facePatch",
+                    "commands": [
+                        _routed_command_payload(command)
+                        for command in occlusion.commands
+                    ],
+                }
+            )
+            for occlusion in rig.occlusions
+        ],
+    }
+
+
+def _cord_rig_payload(rig: CordRig) -> dict[str, object]:
+    if isinstance(rig, DirectTwoAnchorCordRig):
+        return _direct_two_anchor_cord_rig_payload(rig)
+    return _routed_cord_rig_payload(rig)
 
 
 def _hold_needs_attention(hold: dict[str, object]) -> bool:

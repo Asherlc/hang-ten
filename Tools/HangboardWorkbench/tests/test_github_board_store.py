@@ -66,6 +66,34 @@ def _direct_two_anchor_cord_rig() -> dict[str, object]:
     }
 
 
+def _routed_cord_rig() -> dict[str, object]:
+    return {
+        "type": "routed",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "ports": [
+            {"id": "body", "space": "body", "point": {"x": 400, "y": 300}},
+            {"id": "world", "space": "world", "point": {"x": 887, "y": 90}},
+        ],
+        "tensionGroups": [{
+            "id": "main",
+            "bodyPortIDs": ["body"],
+            "worldPortIDs": ["world"],
+            "pairing": "screenOrder",
+            "layer": "behindFace",
+        }],
+        "paths": [],
+        "occlusions": [],
+    }
+
+
 class _TreeRaceClient(FakeGitHubClient):
     def __init__(
         self, original: dict[str, object], replacement: dict[str, object]
@@ -1636,6 +1664,30 @@ def test_changed_hosted_save_preserves_direct_two_anchor_cord_rig() -> None:
     assert stored["presentations"][0]["cordRig"] == expected_rig
     assert saved.presentation().cord_rig == opened.presentation().cord_rig
     assert saved.presentation().cord_rig is not None
+
+
+def test_changed_hosted_save_preserves_routed_cord_rig_canonically() -> None:
+    board = board_document("fixture.board")
+    board["presentations"][0]["cordRig"] = _routed_cord_rig()
+    expected_rig = copy.deepcopy(board["presentations"][0]["cordRig"])
+    client = _client(("fixture-board", board))
+    opened = github_board_store.open_package(
+        client, TOKEN, BRANCH, "fixture.board"
+    )
+    document = copy.deepcopy(board_package.editor_document(opened))
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert stored["presentations"][0]["cordRig"] == expected_rig
+    assert saved.presentation().cord_rig == opened.presentation().cord_rig
+    assert isinstance(saved.presentation().cord_rig, board_package.RoutedCordRig)
 
 
 def test_changed_hosted_save_reassigns_a_hold_between_equipment_objects() -> None:
