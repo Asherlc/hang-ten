@@ -2,6 +2,7 @@ package com.hangten.android.board
 
 import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
@@ -203,7 +204,9 @@ class BoardCanvasTest {
         }
 
         composeRule.setContent {
-            Box(Modifier.size(200.dp)) {
+            // Node captures are composited by the host window; a sentinel behind the canvas
+            // proves that routed artwork leaves pixels outside the scene transparent.
+            Box(Modifier.size(200.dp).background(Color.Magenta)) {
                 BoardCanvas(
                     board = board,
                     activeHoldIDs = emptySet(),
@@ -226,7 +229,7 @@ class BoardCanvasTest {
         assertColor(Color.Red, pixel(0.3f, 0.45f))
         assertColor(Color.Green, pixel(0.3f, 0.55f))
         assertColor(Color.Red, pixel(0.7f, 0.55f))
-        assertEquals(0f, pixel(0.05f, 0.95f).alpha, 0.02f)
+        assertColor(Color.Magenta, pixel(0.05f, 0.95f))
     }
 
     private fun tensionGroup(
