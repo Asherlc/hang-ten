@@ -241,8 +241,8 @@ struct BoardRoutedCordRigGeometry {
                 }) else {
                     return nil
                 }
-                let radius = lip.radius * scale
-                let chordOffset = lip.chordOffset * scale
+                let radius = lip.radius * scale * projection.geometryScale
+                let chordOffset = lip.chordOffset * scale * projection.geometryScale
                 radialLips.append(
                     BoardResolvedRoutedCordRadialLip(
                         bodyPortID: lip.bodyPortID,
@@ -394,13 +394,15 @@ enum BoardRoutedCordPresentationValidation {
     static func failure(
         for rig: BoardRoutedCordRig,
         rotationDegrees: Double,
-        rotationAnchor: BoardGeometryRotationAnchor
+        rotationAnchor: BoardGeometryRotationAnchor,
+        geometryScale: Double = 1
     ) -> BoardRoutedCordPresentationValidationFailure? {
         let canvas = CGRect(origin: .zero, size: rig.sceneSize.cgSize)
         guard let geometry = BoardRoutedCordRigGeometry.resolve(
             rig: rig,
             projection: BoardPresentationGeometryProjection(
                 rotationDegrees: CGFloat(rotationDegrees),
+                geometryScale: CGFloat(geometryScale),
                 rotationAnchor: rotationAnchor
             ),
             in: canvas

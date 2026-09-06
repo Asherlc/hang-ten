@@ -268,7 +268,7 @@ struct BoardPackageStore {
     ) -> URL? {
         guard let presentation = board.presentation(id: presentationID),
               (board.resolvedCordRig(for: presentation) != nil
-                  || presentation.rotationDegrees != nil),
+                  || presentation.usesCanonicalArtworkTransform),
               let canonicalPresentation = board.canonicalPresentation(for: presentation) else {
             return presentationImageURL(for: board, presentationID: presentationID)
         }
@@ -645,7 +645,8 @@ struct BoardPackageStore {
             }
             if let cordRig = presentation.cordRig {
                 guard presentation.sourcePresentationID == nil,
-                      presentation.resolvedRotationDegrees == 0 else {
+                      presentation.resolvedRotationDegrees == 0,
+                      presentation.resolvedGeometryScale == 1 else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
                         reason: "presentation \(presentation.id).cordRig must be owned "
@@ -677,6 +678,20 @@ struct BoardPackageStore {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
                         reason: "presentation \(presentation.id).rotationDegrees requires sourcePresentationID"
+                    )
+                }
+            }
+            if let geometryScale = presentation.geometryScale {
+                guard geometryScale.isFinite, geometryScale > 0 else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).geometryScale must be finite and positive"
+                    )
+                }
+                guard presentation.sourcePresentationID != nil else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id).geometryScale requires sourcePresentationID"
                     )
                 }
             }
@@ -724,7 +739,8 @@ struct BoardPackageStore {
                         reason: "presentation \(presentation.id).geometryRotationAnchor requires sourcePresentationID"
                     )
                 }
-                guard presentation.resolvedRotationDegrees != 0 else {
+                guard presentation.resolvedRotationDegrees != 0
+                        || presentation.resolvedGeometryScale != 1 else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
                         reason: "presentation \(presentation.id).geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
@@ -749,13 +765,17 @@ struct BoardPackageStore {
                         reason: "presentation \(presentation.id).aspectRatio must match source presentation aspectRatio"
                     )
                 }
-                if let rotationDegrees = presentation.rotationDegrees {
+                if presentation.usesExplicitGeometryTransform {
                     guard presentation.assetPath == sourcePresentation.assetPath else {
                         throw BoardPackageStoreError.invalidPackage(
                             boardID: document.id,
-                            reason: "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation"
+                            reason: presentation.geometryScale == nil
+                                ? "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation"
+                                : "presentation \(presentation.id).assetPath must reuse source presentation assetPath for a geometry transform"
                         )
                     }
+                }
+                if let rotationDegrees = presentation.rotationDegrees {
                     guard rotationDegrees == 0 || rotationDegrees == 180
                             || sourcePresentation.cordRig != nil else {
                         throw BoardPackageStoreError.invalidPackage(
@@ -865,7 +885,8 @@ struct BoardPackageStore {
         let failure = BoardCordRigPresentationValidation.failure(
             for: rig,
             rotationDegrees: presentation.resolvedRotationDegrees,
-            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center,
+            geometryScale: presentation.resolvedGeometryScale
         )
         let reason: String
         switch failure {
@@ -887,7 +908,8 @@ struct BoardPackageStore {
         let failure = BoardRoutedCordPresentationValidation.failure(
             for: rig,
             rotationDegrees: presentation.resolvedRotationDegrees,
-            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center,
+            geometryScale: presentation.resolvedGeometryScale
         )
         let reason: String
         switch failure {
@@ -1278,7 +1300,9 @@ struct BoardPackageStore {
         in document: BoardPackageBoardDocument,
         presentations: [BoardPackagePresentationDocument]
     ) throws {
-        for presentation in presentations where presentation.resolvedRotationDegrees != 0 {
+        for presentation in presentations
+            where presentation.resolvedRotationDegrees != 0
+                || presentation.resolvedGeometryScale != 1 {
             guard let sourcePresentationID = presentation.sourcePresentationID else {
                 continue
             }
@@ -1295,7 +1319,8 @@ struct BoardPackageStore {
                             frame,
                             rig: rig,
                             anchor: anchor,
-                            rotationDegrees: presentation.resolvedRotationDegrees
+                            rotationDegrees: presentation.resolvedRotationDegrees,
+                            geometryScale: presentation.resolvedGeometryScale
                         )
                     } else {
                         isInsideCanvas = BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
@@ -1304,7 +1329,8 @@ struct BoardPackageStore {
                             width: frame.width,
                             height: frame.height,
                             anchor: anchor,
-                            rotationDegrees: presentation.resolvedRotationDegrees
+                            rotationDegrees: presentation.resolvedRotationDegrees,
+                            geometryScale: presentation.resolvedGeometryScale
                         )
                     }
                     guard isInsideCanvas else {
@@ -1323,7 +1349,8 @@ struct BoardPackageStore {
         _ frame: BoardPackageFrameDocument,
         rig: BoardCordRig,
         anchor: BoardGeometryRotationAnchor,
-        rotationDegrees: Double
+        rotationDegrees: Double,
+        geometryScale: Double
     ) -> Bool {
         let sceneRect = CGRect(origin: .zero, size: rig.sceneSize.cgSize)
         let faceRect = CGRect(
@@ -1334,6 +1361,7 @@ struct BoardPackageStore {
         )
         let transform = BoardPresentationGeometryProjection(
             rotationDegrees: CGFloat(rotationDegrees),
+            geometryScale: CGFloat(geometryScale),
             rotationAnchor: anchor
         ).affineTransform(in: sceneRect)
         let corners = [
@@ -1720,6 +1748,7 @@ private struct BoardPackagePresentationDocument: Decodable {
     let isInverted: Bool
     let declaresIsInverted: Bool
     let rotationDegrees: Double?
+    let geometryScale: Double?
     let geometryRotationAnchor: BoardGeometryRotationAnchor?
     let cordRig: BoardCordRig?
 
@@ -1733,6 +1762,7 @@ private struct BoardPackagePresentationDocument: Decodable {
         case availableHoldIDs
         case isInverted
         case rotationDegrees
+        case geometryScale
         case geometryRotationAnchor
         case cordRig
     }
@@ -1741,7 +1771,7 @@ private struct BoardPackagePresentationDocument: Decodable {
         try decoder.rejectUnknownKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
             "sourcePresentationID", "availableHoldIDs", "isInverted", "rotationDegrees",
-            "geometryRotationAnchor", "cordRig"
+            "geometryScale", "geometryRotationAnchor", "cordRig"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -1761,6 +1791,10 @@ private struct BoardPackagePresentationDocument: Decodable {
         rotationDegrees = try container.decodeIfPresent(
             Double.self,
             forKey: .rotationDegrees
+        )
+        geometryScale = try container.decodeIfPresent(
+            Double.self,
+            forKey: .geometryScale
         )
         geometryRotationAnchor = container.contains(.geometryRotationAnchor)
             ? try container.decode(
@@ -1786,6 +1820,7 @@ private struct BoardPackagePresentationDocument: Decodable {
             availableHoldIDs: availableHoldIDs,
             isInverted: isInverted,
             rotationDegrees: rotationDegrees.map { CGFloat($0) },
+            geometryScale: geometryScale.map { CGFloat($0) },
             geometryRotationAnchor: geometryRotationAnchor,
             cordRig: cordRig
         )
@@ -1793,6 +1828,14 @@ private struct BoardPackagePresentationDocument: Decodable {
 
     var resolvedRotationDegrees: Double {
         rotationDegrees ?? (isInverted ? 180 : 0)
+    }
+
+    var resolvedGeometryScale: Double {
+        geometryScale ?? 1
+    }
+
+    var usesExplicitGeometryTransform: Bool {
+        rotationDegrees != nil || geometryScale != nil
     }
 }
 

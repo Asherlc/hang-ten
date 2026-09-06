@@ -160,12 +160,19 @@ data class BoardPresentation(
     val sourcePresentationId: String? = null,
     val isInverted: Boolean = false,
     val rotationDegrees: Float? = null,
+    val geometryScale: Float? = null,
     val geometryRotationAnchor: BoardGeometryRotationAnchor? = null,
     val cordRig: BoardCordRig? = null,
     val availableHoldIds: List<String>? = null,
 ) {
     val resolvedRotationDegrees: Float
         get() = rotationDegrees ?: if (isInverted) 180f else 0f
+
+    val resolvedGeometryScale: Float
+        get() = geometryScale ?: 1f
+
+    val usesCanonicalArtworkTransform: Boolean
+        get() = rotationDegrees != null || geometryScale != null
 }
 
 data class Board(
@@ -193,7 +200,7 @@ data class Board(
         canonicalPresentation(presentation)?.cordRig
 
     fun artworkPresentation(presentation: BoardPresentation): BoardPresentation? =
-        if (resolvedCordRig(presentation) == null && presentation.rotationDegrees == null) {
+        if (resolvedCordRig(presentation) == null && !presentation.usesCanonicalArtworkTransform) {
             presentation
         } else {
             canonicalPresentation(presentation)

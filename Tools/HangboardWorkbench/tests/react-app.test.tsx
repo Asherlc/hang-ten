@@ -527,6 +527,128 @@ test("a constrained alias remains selectable without canvas edit affordances whi
   });
 });
 
+test("a scaled alias applies one anchored transform to the canonical raster while using projected hold paths", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "source-smaller",
+    equipmentObjects: ["primary"],
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      key: "hold-1-piece-0",
+      type: "edge",
+      equipmentObjectID: "primary",
+      displayPath: "M 45 20 L 55 20 L 55 30 L 45 30 Z",
+      metadata: { holdID: "hold-1", pieceIndex: 0, presentationID: "source-smaller" },
+    }],
+  };
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: "/api/boards/board-a/image?presentationID=source-smaller",
+    selectedPresentationID: "source-smaller",
+    presentations: [{
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentationID=source",
+      default: true,
+    }, {
+      presentationID: "source-smaller",
+      displayName: "Source smaller",
+      imageUrl: "/api/boards/board-a/image?presentationID=source-smaller",
+      default: false,
+      sourcePresentationID: "source",
+      rotationDegrees: 90,
+      geometryScale: 0.5,
+      geometryRotationAnchor: { x: 0.5, y: 0.5 },
+    }],
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards() {
+        return [{
+          boardId: board.boardId,
+          displayName: board.displayName,
+          holdCount: board.holdCount,
+          imageUrl: board.imageUrl,
+          needsAttention: false,
+        }];
+      },
+      async getBoard() { return board; },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "translate(50 25) rotate(90) scale(0.5) translate(-50 -25)",
+    );
+    assert.equal(
+      app.document.querySelector("#hold-overlay path")?.getAttribute("d"),
+      aliasDocument.regions[0]!.displayPath,
+    );
+  });
+});
+
+test("a scaled legacy inverted alias composes its half turn into the raster transform", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "source-inverted-smaller",
+    equipmentObjects: ["primary"],
+    canvas: { width: 100, height: 50 },
+    regions: [],
+  };
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: "/api/boards/board-a/image?presentationID=source-inverted-smaller",
+    selectedPresentationID: "source-inverted-smaller",
+    presentations: [{
+      presentationID: "source",
+      displayName: "Source",
+      imageUrl: "/api/boards/board-a/image?presentationID=source",
+      default: true,
+    }, {
+      presentationID: "source-inverted-smaller",
+      displayName: "Source inverted smaller",
+      imageUrl: "/api/boards/board-a/image?presentationID=source-inverted-smaller",
+      default: false,
+      sourcePresentationID: "source",
+      isInverted: true,
+      geometryScale: 0.5,
+      geometryRotationAnchor: { x: 0.5, y: 0.5 },
+    }],
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards() {
+        return [{
+          boardId: board.boardId,
+          displayName: board.displayName,
+          holdCount: board.holdCount,
+          imageUrl: board.imageUrl,
+          needsAttention: false,
+        }];
+      },
+      async getBoard() { return board; },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "translate(50 25) rotate(180) scale(0.5) translate(-50 -25)",
+    );
+  });
+});
+
 test("a rigged alias rotates the face in plane while its complete cord stays world-up", async () => {
   const image = imageFixture();
   const aliasDocument: EditorDocument = {

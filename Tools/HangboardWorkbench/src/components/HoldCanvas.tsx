@@ -442,7 +442,13 @@ export function HoldCanvas({
     (presentation) => presentation.presentationID === board.selectedPresentationID,
   );
   const cordRigGeometry = resolveCordRigPresentationGeometry(board, document);
-  const artworkRotation = cordRigGeometry?.rotationDegrees ?? selectedPresentation?.rotationDegrees;
+  const artworkRotation = cordRigGeometry?.rotationDegrees
+    ?? selectedPresentation?.rotationDegrees
+    ?? (selectedPresentation?.geometryScale !== undefined
+      && selectedPresentation.isInverted === true
+      ? 180
+      : undefined);
+  const artworkScale = cordRigGeometry?.geometryScale ?? selectedPresentation?.geometryScale ?? 1;
   const artworkAnchor = cordRigGeometry?.rotationAnchor ?? (
     selectedPresentation?.geometryRotationAnchor && document
       ? {
@@ -453,9 +459,11 @@ export function HoldCanvas({
         ? { x: document.canvas.width / 2, y: document.canvas.height / 2 }
         : { x: 0, y: 0 }
   );
-  const artworkTransform = artworkRotation === undefined || !document
+  const artworkTransform = !document || (artworkRotation === undefined && artworkScale === 1)
     ? undefined
-    : `rotate(${artworkRotation} ${artworkAnchor.x} ${artworkAnchor.y})`;
+    : artworkScale === 1
+      ? `rotate(${artworkRotation ?? 0} ${artworkAnchor.x} ${artworkAnchor.y})`
+      : `translate(${artworkAnchor.x} ${artworkAnchor.y}) rotate(${artworkRotation ?? 0}) scale(${artworkScale}) translate(${-artworkAnchor.x} ${-artworkAnchor.y})`;
   const canPinchZoomChangeRef = useRef(canPinchZoomChange);
   editorRef.current = editor;
   onZoomChangeRef.current = onZoomChange;

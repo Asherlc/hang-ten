@@ -933,6 +933,29 @@ def test_board_payload_exposes_explicit_arbitrary_alias_rotation(
     assert alias["geometryRotationAnchor"] == {"x": 0.5, "y": 0.5}
 
 
+def test_board_payload_exposes_alias_geometry_scale(tmp_path: Path) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    board["holds"] = board["holds"][:1]
+    board["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=0.75,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    (package_root / "assets" / "back.png").unlink()
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("back")
+    )
+
+    assert payload["geometryScale"] == 0.75
+    assert payload["geometryRotationAnchor"] == {"x": 0.5, "y": 0.5}
+
+
 def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(
     tmp_path: Path,
 ) -> None:

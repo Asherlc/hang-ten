@@ -190,6 +190,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
     var availableHoldIDs: [String]?
     var isInverted: Bool
     var rotationDegrees: Double?
+    var geometryScale: Double?
     var geometryRotationAnchor: BoardGeometryRotationAnchor?
     var cordRig: BoardCordRig?
 
@@ -205,6 +206,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         case availableHoldIDs
         case isInverted
         case rotationDegrees
+        case geometryScale
         case geometryRotationAnchor
         case cordRig
     }
@@ -219,6 +221,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         availableHoldIDs: [String]? = nil,
         isInverted: Bool = false,
         rotationDegrees: Double? = nil,
+        geometryScale: Double? = nil,
         geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
         cordRig: BoardCordRig? = nil
     ) {
@@ -231,6 +234,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         self.availableHoldIDs = availableHoldIDs
         self.isInverted = isInverted
         self.rotationDegrees = rotationDegrees
+        self.geometryScale = geometryScale
         self.geometryRotationAnchor = geometryRotationAnchor
         self.cordRig = cordRig
         self.declaresIsInverted = isInverted
@@ -240,7 +244,7 @@ struct BoardEditablePresentation: Equatable, Decodable {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "assetPath", "aspectRatio", "default",
             "sourcePresentationID", "availableHoldIDs", "isInverted", "rotationDegrees",
-            "geometryRotationAnchor", "cordRig"
+            "geometryScale", "geometryRotationAnchor", "cordRig"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -261,6 +265,10 @@ struct BoardEditablePresentation: Equatable, Decodable {
             Double.self,
             forKey: .rotationDegrees
         )
+        geometryScale = try container.decodeIfPresent(
+            Double.self,
+            forKey: .geometryScale
+        )
         geometryRotationAnchor = container.contains(.geometryRotationAnchor)
             ? try container.decode(
                 BoardEditableGeometryRotationAnchorDocument.self,
@@ -277,6 +285,14 @@ struct BoardEditablePresentation: Equatable, Decodable {
 
     var resolvedRotationDegrees: Double {
         rotationDegrees ?? (isInverted ? 180 : 0)
+    }
+
+    var resolvedGeometryScale: Double {
+        geometryScale ?? 1
+    }
+
+    var usesExplicitGeometryTransform: Bool {
+        rotationDegrees != nil || geometryScale != nil
     }
 }
 
@@ -761,7 +777,8 @@ enum BoardPackageWriter {
             }
             if let cordRig = presentation.cordRig {
                 guard presentation.sourcePresentationID == nil,
-                      presentation.resolvedRotationDegrees == 0 else {
+                      presentation.resolvedRotationDegrees == 0,
+                      presentation.resolvedGeometryScale == 1 else {
                     throw invalid(
                         "presentation \(presentation.id).cordRig must be owned "
                             + "by a canonical non-inverted presentation",
@@ -796,6 +813,20 @@ enum BoardPackageWriter {
                     )
                 }
             }
+            if let geometryScale = presentation.geometryScale {
+                guard geometryScale.isFinite, geometryScale > 0 else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryScale must be finite and positive",
+                        document
+                    )
+                }
+                guard presentation.sourcePresentationID != nil else {
+                    throw invalid(
+                        "presentation \(presentation.id).geometryScale requires sourcePresentationID",
+                        document
+                    )
+                }
+            }
             if let anchor = presentation.geometryRotationAnchor {
                 guard anchor.hasFiniteNormalizedCoordinates else {
                     throw invalid(
@@ -809,7 +840,8 @@ enum BoardPackageWriter {
                         document
                     )
                 }
-                guard presentation.resolvedRotationDegrees != 0 else {
+                guard presentation.resolvedRotationDegrees != 0
+                        || presentation.resolvedGeometryScale != 1 else {
                     throw invalid(
                         "presentation \(presentation.id).geometryRotationAnchor requires isInverted true or nonzero rotationDegrees",
                         document
@@ -866,13 +898,17 @@ enum BoardPackageWriter {
                         document
                     )
                 }
-                if let rotationDegrees = presentation.rotationDegrees {
+                if presentation.usesExplicitGeometryTransform {
                     guard presentation.assetPath == sourcePresentation.assetPath else {
                         throw invalid(
-                            "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation",
+                            presentation.geometryScale == nil
+                                ? "presentation \(presentation.id).assetPath must reuse source presentation assetPath for an explicit rotation"
+                                : "presentation \(presentation.id).assetPath must reuse source presentation assetPath for a geometry transform",
                             document
                         )
                     }
+                }
+                if let rotationDegrees = presentation.rotationDegrees {
                     guard rotationDegrees == 0 || rotationDegrees == 180
                             || sourcePresentation.cordRig != nil else {
                         throw invalid(
@@ -1129,7 +1165,8 @@ enum BoardPackageWriter {
         let failure = BoardCordRigPresentationValidation.failure(
             for: rig,
             rotationDegrees: presentation.resolvedRotationDegrees,
-            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center,
+            geometryScale: presentation.resolvedGeometryScale
         )
         switch failure {
         case .drawingOutsideScene:
@@ -1155,7 +1192,8 @@ enum BoardPackageWriter {
         let failure = BoardRoutedCordPresentationValidation.failure(
             for: rig,
             rotationDegrees: presentation.resolvedRotationDegrees,
-            rotationAnchor: presentation.geometryRotationAnchor ?? .center
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center,
+            geometryScale: presentation.resolvedGeometryScale
         )
         switch failure {
         case .unresolvedGeometry:
@@ -1196,7 +1234,9 @@ enum BoardPackageWriter {
         let presentationsByID = Dictionary(
             uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
         )
-        for presentation in document.presentations where presentation.resolvedRotationDegrees != 0 {
+        for presentation in document.presentations
+            where presentation.resolvedRotationDegrees != 0
+                || presentation.resolvedGeometryScale != 1 {
             guard let sourcePresentationID = presentation.sourcePresentationID else {
                 continue
             }
@@ -1213,7 +1253,8 @@ enum BoardPackageWriter {
                             frame,
                             rig: rig,
                             anchor: anchor,
-                            rotationDegrees: presentation.resolvedRotationDegrees
+                            rotationDegrees: presentation.resolvedRotationDegrees,
+                            geometryScale: presentation.resolvedGeometryScale
                         )
                     } else {
                         isInsideCanvas = BoardAliasGeometryValidation.projectedFrameIsInsideCanvas(
@@ -1222,7 +1263,8 @@ enum BoardPackageWriter {
                             width: frame.width,
                             height: frame.height,
                             anchor: anchor,
-                            rotationDegrees: presentation.resolvedRotationDegrees
+                            rotationDegrees: presentation.resolvedRotationDegrees,
+                            geometryScale: presentation.resolvedGeometryScale
                         )
                     }
                     guard isInsideCanvas else {
@@ -1241,7 +1283,8 @@ enum BoardPackageWriter {
         _ frame: BoardPackageFrameDocument,
         rig: BoardCordRig,
         anchor: BoardGeometryRotationAnchor,
-        rotationDegrees: Double
+        rotationDegrees: Double,
+        geometryScale: Double
     ) -> Bool {
         let sceneRect = CGRect(origin: .zero, size: rig.sceneSize.cgSize)
         let faceRect = CGRect(
@@ -1252,6 +1295,7 @@ enum BoardPackageWriter {
         )
         let transform = BoardPresentationGeometryProjection(
             rotationDegrees: CGFloat(rotationDegrees),
+            geometryScale: CGFloat(geometryScale),
             rotationAnchor: anchor
         ).affineTransform(in: sceneRect)
         let corners = [
@@ -1499,6 +1543,9 @@ enum BoardPackageWriter {
         }
         if let rotationDegrees = presentation.rotationDegrees {
             entries.append(("rotationDegrees", .double(rotationDegrees)))
+        }
+        if let geometryScale = presentation.geometryScale {
+            entries.append(("geometryScale", .double(geometryScale)))
         }
         if let anchor = presentation.geometryRotationAnchor {
             entries.append(("geometryRotationAnchor", .object([

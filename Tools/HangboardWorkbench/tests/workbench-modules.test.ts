@@ -343,6 +343,53 @@ test("the browser client preserves an explicit arbitrary alias rotation", async 
   assert.deepEqual(board.presentations?.[0], alias);
 });
 
+test("the browser client preserves a valid alias geometry scale", async () => {
+  const alias: BoardPresentation = {
+    presentationID: "front-smaller",
+    displayName: "Front smaller",
+    imageUrl: "/api/boards/compact/image?presentationID=front-smaller",
+    default: false,
+    sourcePresentationID: "front",
+    geometryScale: 0.75,
+    geometryRotationAnchor: { x: 0.4, y: 0.6 },
+  };
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({ presentations: [alias] }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[0], alias);
+});
+
+test("the browser client rejects malformed or canonical geometry scales", async (context) => {
+  for (const [name, geometryScale, sourcePresentationID] of [
+    ["zero", 0, "front"],
+    ["negative", -0.5, "front"],
+    ["string", "0.5", "front"],
+    ["canonical", 0.5, undefined],
+  ] as const) {
+    await context.test(name, async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          presentations: [{
+            presentationID: "front-alias",
+            displayName: "Front alias",
+            imageUrl: "/api/boards/compact/image?presentationID=front-alias",
+            default: false,
+            sourcePresentationID,
+            geometryScale,
+          } as unknown as BoardPresentation],
+        }),
+      }));
+
+      await assert.rejects(createWorkbenchClient(runtime).getBoard("compact"), /invalid board/);
+    });
+  }
+});
+
 test("the browser client preserves a canonical direct-two-anchor cord rig", async () => {
   const rig: DirectTwoAnchorCordRig = {
     type: "directTwoAnchor",
@@ -597,6 +644,60 @@ test("routed rig geometry rotates body points clockwise while world points stay 
   assert.deepEqual(geometry.occlusions[1], {
     type: "facePatch",
     d: "M 50 80 L 50 100 L 35 100 Z",
+  });
+});
+
+test("routed rig geometry scales all body geometry around the alias anchor but keeps world geometry and cord style fixed", () => {
+  const document: EditorDocument = {
+    presentationID: "front-scaled",
+    canvas: { width: 120, height: 120 },
+    regions: [],
+  };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front-scaled",
+    presentations: [
+      {
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: routedRenderRig(),
+      },
+      {
+        presentationID: "front-scaled",
+        displayName: "Front scaled",
+        imageUrl: "/api/boards/compact/image?presentationID=front-scaled",
+        default: false,
+        sourcePresentationID: "front",
+        rotationDegrees: 90,
+        geometryScale: 0.5,
+        geometryRotationAnchor: { x: 0.5, y: 0.5 },
+      },
+    ],
+  });
+
+  const geometry = resolveCordRigPresentationGeometry(board, document);
+
+  assert.ok(geometry);
+  assert.equal(geometry.type, "routed");
+  assert.equal(geometry.cordUnitScale, 1);
+  assert.deepEqual(geometry.layers.behindFace.slice(0, 2).map((path) => path.d), [
+    "M 10 10 L 45 45",
+    "M 110 10 L 45 75",
+  ]);
+  assert.deepEqual(geometry.layers.aboveFace, [
+    { kind: "path", id: "body-return", d: "M 45 45 Q 35 60 45 75" },
+  ]);
+  assert.deepEqual(geometry.layers.behindFace[2], {
+    kind: "path",
+    id: "world-tail",
+    d: "M 15 15 L 25 15",
+  });
+  assert.match(geometry.occlusions[0]?.d ?? "", / A 3 3 /);
+  assert.deepEqual(geometry.occlusions[1], {
+    type: "facePatch",
+    d: "M 55 70 L 55 80 L 47.5 80 Z",
   });
 });
 

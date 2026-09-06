@@ -205,7 +205,8 @@ final class BoardPackageWriterTests: XCTestCase {
         anchor: BoardGeometryRotationAnchor? = .init(x: 0.5, y: 0.68),
         aliasAspectRatio: Double = 2.0,
         isInverted: Bool = true,
-        rotationDegrees: Double? = nil
+        rotationDegrees: Double? = nil,
+        geometryScale: Double? = nil
     ) -> BoardEditableDocument {
         var document = makeDocument(
             holds: [
@@ -229,6 +230,7 @@ final class BoardPackageWriterTests: XCTestCase {
                 sourcePresentationID: "front",
                 isInverted: isInverted,
                 rotationDegrees: rotationDegrees,
+                geometryScale: geometryScale,
                 geometryRotationAnchor: anchor
             )
         )
@@ -745,6 +747,42 @@ final class BoardPackageWriterTests: XCTestCase {
                 "      \"rotationDegrees\": 135.0,\n"
                     + "      \"geometryRotationAnchor\": {\n"
             )
+        )
+    }
+
+    func testWriterRoundTripsAliasGeometryScaleInCanonicalOrder() throws {
+        var document = makeAliasDocument(
+            anchor: .center,
+            isInverted: false,
+            geometryScale: 0.75
+        )
+        document.presentations[1].assetPath = "assets/primary.png"
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(redecoded.presentations[1].geometryScale, 0.75)
+        XCTAssertEqual(redecoded.presentations[1].resolvedGeometryScale, 0.75)
+        XCTAssertTrue(
+            String(decoding: encoded, as: UTF8.self).contains(
+                "      \"geometryScale\": 0.75,\n"
+                    + "      \"geometryRotationAnchor\": {\n"
+            )
+        )
+    }
+
+    func testWriterRejectsInvalidOrCanonicalGeometryScale() throws {
+        for scale in [0.0, -0.5, .infinity, .nan] {
+            assertWriterInvalid(
+                makeAliasDocument(isInverted: false, geometryScale: scale),
+                reason: "presentation front-inverted.geometryScale must be finite and positive"
+            )
+        }
+        var canonical = makeDocument()
+        canonical.presentations[0].geometryScale = 0.5
+        assertWriterInvalid(
+            canonical,
+            reason: "presentation front.geometryScale requires sourcePresentationID"
         )
     }
 

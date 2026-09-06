@@ -197,6 +197,7 @@ export interface BoardPresentation {
   availableHoldIDs?: string[];
   isInverted?: true;
   rotationDegrees?: number;
+  geometryScale?: number;
   geometryRotationAnchor?: Point;
   cordRig?: CordRig;
 }

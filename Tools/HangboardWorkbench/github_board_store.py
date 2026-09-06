@@ -1373,6 +1373,9 @@ def _load_selected_presentation(
             rotation_degrees=board_package._raw_presentation_rotation_degrees(
                 board, item[0]
             ),
+            geometry_scale=board_package._raw_presentation_geometry_scale(
+                board, item[0]
+            ),
             available_hold_ids=item[7],
         )
         for item in presentation_values
@@ -1638,6 +1641,9 @@ def _load_package_from_entries(
                 board, presentation_id
             ),
             rotation_degrees=board_package._raw_presentation_rotation_degrees(
+                board, presentation_id
+            ),
+            geometry_scale=board_package._raw_presentation_geometry_scale(
                 board, presentation_id
             ),
             available_hold_ids=available_hold_ids,

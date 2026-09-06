@@ -38,6 +38,7 @@ internal data class BoardInPlaneTransform(
             bounds,
             presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center,
             presentation.resolvedRotationDegrees,
+            presentation.resolvedGeometryScale,
         )
 
         fun invertedAround(bounds: BoardBounds, anchor: BoardGeometryRotationAnchor): BoardInPlaneTransform {
@@ -48,6 +49,7 @@ internal data class BoardInPlaneTransform(
             bounds: BoardBounds,
             anchor: BoardGeometryRotationAnchor,
             rotationDegrees: Float,
+            geometryScale: Float = 1f,
         ): BoardInPlaneTransform {
             val normalizedDegrees = ((rotationDegrees % 360f) + 360f) % 360f
             val (cosine, sine) = when (normalizedDegrees) {
@@ -62,13 +64,17 @@ internal data class BoardInPlaneTransform(
             }
             val anchorX = bounds.left + bounds.width * anchor.x
             val anchorY = bounds.top + bounds.height * anchor.y
+            val a = cosine * geometryScale
+            val b = sine * geometryScale
+            val c = if (sine == 0f) 0f else -sine * geometryScale
+            val d = cosine * geometryScale
             return BoardInPlaneTransform(
-                a = cosine,
-                b = sine,
-                c = if (sine == 0f) 0f else -sine,
-                d = cosine,
-                tx = anchorX - cosine * anchorX + sine * anchorY,
-                ty = anchorY - sine * anchorX - cosine * anchorY,
+                a = a,
+                b = b,
+                c = c,
+                d = d,
+                tx = anchorX - a * anchorX - c * anchorY,
+                ty = anchorY - b * anchorX - d * anchorY,
             )
         }
     }
@@ -89,6 +95,7 @@ internal data class DirectTwoAnchorCordGeometry(
     val tensionPath: BoardPath,
     val pullPoint: Point,
     val scale: Float,
+    val geometryScale: Float,
 ) {
     fun projectFacePoint(normalizedPoint: Point): Point = faceTransform.map(
         Point(
@@ -372,8 +379,8 @@ internal fun resolveRoutedCordRigGeometry(
                     bodyPortId = occlusion.bodyPortId,
                     center = incidentSpan.bodyPoint,
                     toward = incidentSpan.worldPoint,
-                    radius = occlusion.radius * scale,
-                    chordOffset = occlusion.chordOffset * scale,
+                    radius = occlusion.radius * scale * presentation.resolvedGeometryScale,
+                    chordOffset = occlusion.chordOffset * scale * presentation.resolvedGeometryScale,
                 )
             }
             is BoardRoutedCordOcclusion.FacePatch -> {
@@ -525,5 +532,6 @@ internal fun resolveDirectTwoAnchorCordGeometry(
         tensionPath = tensionPath,
         pullPoint = pullPoint,
         scale = scale,
+        geometryScale = presentation.resolvedGeometryScale,
     )
 }

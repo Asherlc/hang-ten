@@ -1236,6 +1236,66 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testStoreLoadsAliasGeometryScaleAndProjectsAroundAnchor() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2].removeValue(forKey: "isInverted")
+            presentations[2]["geometryScale"] = 0.5
+            presentations[2]["geometryRotationAnchor"] = ["x": 0.5, "y": 0.5]
+            presentations[2]["assetPath"] = "assets/primary.png"
+        }
+        defer { fixture.remove() }
+        try FileManager.default.removeItem(
+            at: fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/front-inverted.png"
+            )
+        )
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let alias = try XCTUnwrap(board.presentation(id: "front-inverted"))
+
+        XCTAssertEqual(alias.geometryScale, 0.5)
+        XCTAssertEqual(alias.resolvedGeometryScale, 0.5)
+        let projection = BoardPresentationGeometryProjection(presentation: alias)
+        XCTAssertEqual(
+            projection.project(
+                CGPoint(x: 75, y: 50),
+                in: CGRect(x: 0, y: 0, width: 100, height: 100)
+            ),
+            CGPoint(x: 62.5, y: 50)
+        )
+    }
+
+    func testStoreRejectsInvalidOrCanonicalGeometryScale() throws {
+        for scale in [0.0, -0.5] {
+            let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+                presentations[2]["geometryScale"] = scale
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+
+        let canonical = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[0]["geometryScale"] = 0.5
+        }
+        defer { canonical.remove() }
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: canonical.bundle),
+            reason: "presentation front.geometryScale requires sourcePresentationID"
+        )
+    }
+
+    func testStoreRejectsGeometryScaleUsingDistinctAliasAsset() throws {
+        let fixture = try makeAnchoredAliasFixtureBundle { presentations in
+            presentations[2]["geometryScale"] = 0.5
+        }
+        defer { fixture.remove() }
+
+        assertInvalidPackage(
+            try BoardPackageStore(bundle: fixture.bundle),
+            reason: "presentation front-inverted.assetPath must reuse source presentation assetPath for a geometry transform"
+        )
+    }
+
     func testStoreRejectsExplicitRotationUsingADistinctAliasAsset() throws {
         let fixture = try makeAnchoredAliasFixtureBundle { presentations in
             presentations[2].removeValue(forKey: "isInverted")
@@ -1854,6 +1914,22 @@ final class BoardPackageStoreTests: XCTestCase {
                 in: CGRect(x: 0, y: 0, width: 100, height: 100)
             ),
             CGPoint(x: 80, y: 106)
+        )
+    }
+
+    func testPresentationGeometryProjectionComposesUniformScaleAndClockwiseRotation() {
+        let projection = BoardPresentationGeometryProjection(
+            rotationDegrees: 90,
+            geometryScale: 0.5,
+            rotationAnchor: .center
+        )
+
+        XCTAssertEqual(
+            projection.project(
+                CGPoint(x: 75, y: 50),
+                in: CGRect(x: 0, y: 0, width: 100, height: 100)
+            ),
+            CGPoint(x: 50, y: 62.5)
         )
     }
 

@@ -351,6 +351,13 @@ struct BoardDetailMapView: View {
                 projection: projection,
                 canvasSize: boardBounds
             )
+            let routedCordGeometry = BoardPresentationArtwork.routedGeometry(
+                for: board,
+                presentation: map.presentation,
+                projection: projection,
+                canvasSize: boardBounds
+            )
+            let canonicalFaceRect = cordGeometry?.faceRect ?? routedCordGeometry?.faceRect
             ZStack {
                 BoardPresentationArtwork(
                     board: board,
@@ -366,7 +373,7 @@ struct BoardDetailMapView: View {
                         isHighlighted: selectedHoldID == entry.hold.id,
                         highlightMode: .active,
                         projection: projection,
-                        canonicalRect: cordGeometry?.faceRect,
+                        canonicalRect: canonicalFaceRect,
                         onTap: { select($0.id) }
                     )
                     .frame(width: boardBounds.width, height: boardBounds.height)
@@ -382,7 +389,7 @@ struct BoardDetailMapView: View {
                             for: entry.hold,
                             in: boardRect,
                             projection: projection,
-                            canonicalRect: cordGeometry?.faceRect
+                            canonicalRect: canonicalFaceRect
                         )
                     )
                 }
@@ -560,6 +567,13 @@ struct BoardMapView: View {
                     projection: projection,
                     canvasSize: boardBounds
                 )
+                let routedCordGeometry = BoardPresentationArtwork.routedGeometry(
+                    for: board,
+                    presentation: content.presentation,
+                    projection: projection,
+                    canvasSize: boardBounds
+                )
+                let canonicalFaceRect = cordGeometry?.faceRect ?? routedCordGeometry?.faceRect
                 ZStack {
                     BoardPresentationArtwork(
                         board: board,
@@ -575,7 +589,7 @@ struct BoardMapView: View {
                             isHighlighted: highlightedHoldIDs.contains(hold.id),
                             highlightMode: highlightMode,
                             projection: projection,
-                            canonicalRect: cordGeometry?.faceRect,
+                            canonicalRect: canonicalFaceRect,
                             onTap: onHoldTap
                         )
                         .frame(width: boardBounds.width, height: boardBounds.height)

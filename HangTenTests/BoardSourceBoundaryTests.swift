@@ -337,6 +337,29 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
+    func testBoardMapProjectsHoldPathsIntoEitherCordRigFace() throws {
+        let source = try String(
+            contentsOf: repositoryRootURL()
+                .appendingPathComponent("HangTen/Views/BoardMapView.swift"),
+            encoding: .utf8
+        )
+
+        XCTAssertEqual(
+            source.components(
+                separatedBy: "BoardPresentationArtwork.routedGeometry("
+            ).count - 1,
+            2,
+            "Both board-map surfaces must resolve the routed rig's canonical face."
+        )
+        XCTAssertEqual(
+            source.components(
+                separatedBy: "canonicalRect: canonicalFaceRect"
+            ).count - 1,
+            3,
+            "Hold drawing, hit testing, and detail markers must share the resolved cord-rig face."
+        )
+    }
+
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)

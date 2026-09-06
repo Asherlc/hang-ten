@@ -93,14 +93,21 @@ into separate catalog boards solely because its presentation changes.
 When multiple positions show the same physical face, keep one canonical face
 image and make each additional presentation an alias with
 `sourcePresentationID`. An alias may declare `rotationDegrees`, a finite
-clockwise in-plane rotation normalized to the half-open range `[0, 360)`.
-Artwork, hold geometry, markers, and cord attachment points rotate together
-around `geometryRotationAnchor` (the normalized canvas center when omitted),
-while a cord rig's pull point and support loop remain world-up under gravity.
-An alias that declares `rotationDegrees` must reuse its canonical face's
-`assetPath`; this keeps one raster per physical face. Explicit rotations other
-than 0 or 180 degrees require a `cordRig` on the canonical presentation so its
-padded scene prevents rotated artwork from being clipped.
+clockwise in-plane rotation normalized to the half-open range `[0, 360)`, and
+may declare `geometryScale`, a finite positive uniform scale that defaults to
+`1`. These transforms compose around `geometryRotationAnchor` (the normalized
+canvas center when omitted). Artwork, hold geometry, markers, and all
+body-space cord geometry transform together, while world-space cord ports and
+the pull point or apex remain fixed under gravity; cord stroke styling remains
+scene-sized. `geometryRotationAnchor` is valid when either rotation is nonzero
+or scale differs from `1`.
+
+Any alias that explicitly declares `rotationDegrees` or `geometryScale` must
+reuse its canonical face's `assetPath`; this keeps one raster per physical
+face. The transformed geometry must remain inside the canvas. Explicit
+rotations other than 0 or 180 degrees require a `cordRig` on the canonical
+presentation so its padded scene prevents rotated artwork from being clipped;
+`geometryScale` itself does not require a rig.
 Do not declare both `rotationDegrees` and the legacy `isInverted` field;
 `isInverted: true` remains readable as 180 degrees only for compatibility,
 including older packages whose inverted alias used a distinct asset.

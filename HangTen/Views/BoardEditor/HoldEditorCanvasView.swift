@@ -39,6 +39,7 @@ struct BoardEditorCanvasArtwork {
         }
         let projection = BoardPresentationGeometryProjection(
             rotationDegrees: CGFloat(presentation.resolvedRotationDegrees),
+            geometryScale: CGFloat(presentation.resolvedGeometryScale),
             rotationAnchor: presentation.geometryRotationAnchor
         )
         let sourcePresentationID = presentation.sourcePresentationID ?? presentation.id
@@ -47,7 +48,7 @@ struct BoardEditorCanvasArtwork {
                 $0.id == presentation.sourcePresentationID
             }?.cordRig
         guard let resolvedCordRig else {
-            if presentation.rotationDegrees != nil {
+            if presentation.rotationDegrees != nil || presentation.geometryScale != nil {
                 return BoardEditorCanvasArtwork(
                     image: sourceImage,
                     presentationAspectRatio: CGFloat(presentation.aspectRatio),

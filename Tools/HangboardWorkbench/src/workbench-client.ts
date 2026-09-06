@@ -340,6 +340,7 @@ function isBoardPresentation(value: unknown): boolean {
     "availableHoldIDs",
     "isInverted",
     "rotationDegrees",
+    "geometryScale",
     "geometryRotationAnchor",
     "cordRig",
   ]);
@@ -362,6 +363,11 @@ function isBoardPresentation(value: unknown): boolean {
         && value.rotationDegrees >= 0
         && value.rotationDegrees < 360))
     && !(value.isInverted === true && value.rotationDegrees !== undefined)
+    && (value.geometryScale === undefined
+      || (typeof value.sourcePresentationID === "string"
+        && typeof value.geometryScale === "number"
+        && Number.isFinite(value.geometryScale)
+        && value.geometryScale > 0))
     && (value.cordRig === undefined
       || (value.sourcePresentationID === undefined
         && value.isInverted === undefined
@@ -370,7 +376,8 @@ function isBoardPresentation(value: unknown): boolean {
     && (value.geometryRotationAnchor === undefined
       || (typeof value.sourcePresentationID === "string"
         && (value.isInverted === true
-          || (typeof value.rotationDegrees === "number" && value.rotationDegrees !== 0))
+          || (typeof value.rotationDegrees === "number" && value.rotationDegrees !== 0)
+          || (typeof value.geometryScale === "number" && value.geometryScale !== 1))
         && isGeometryRotationAnchor(value.geometryRotationAnchor)));
 }
 

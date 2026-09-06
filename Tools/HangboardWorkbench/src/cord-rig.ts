@@ -17,6 +17,7 @@ export interface CordStrand {
 interface CommonCordRigPresentationGeometry {
   viewBox: { x: number; y: number; width: number; height: number };
   rotationDegrees: number;
+  geometryScale: number;
   rotationAnchor: Point;
   cordUnitScale: number;
 }
@@ -56,7 +57,12 @@ export type CordRigPresentationGeometry =
   | DirectCordRigPresentationGeometry
   | RoutedCordRigPresentationGeometry;
 
-function rotateClockwise(point: Point, anchor: Point, degrees: number): Point {
+function transformBodyPoint(
+  point: Point,
+  anchor: Point,
+  degrees: number,
+  geometryScale: number,
+): Point {
   const normalizedDegrees = ((degrees % 360) + 360) % 360;
   const radians = normalizedDegrees * Math.PI / 180;
   const cosine = normalizedDegrees === 90 || normalizedDegrees === 270
@@ -67,8 +73,8 @@ function rotateClockwise(point: Point, anchor: Point, degrees: number): Point {
     : normalizedDegrees === 180 || normalizedDegrees === 0
       ? 0
       : normalizedDegrees === 270 ? -1 : Math.sin(radians);
-  const deltaX = point.x - anchor.x;
-  const deltaY = point.y - anchor.y;
+  const deltaX = (point.x - anchor.x) * geometryScale;
+  const deltaY = (point.y - anchor.y) * geometryScale;
   return {
     x: anchor.x + cosine * deltaX - sine * deltaY,
     y: anchor.y + sine * deltaX + cosine * deltaY,
@@ -183,6 +189,7 @@ export function resolveCordRigPresentationGeometry(
   });
   const rotationDegrees = presentation.rotationDegrees
     ?? (presentation.isInverted === true ? 180 : 0);
+  const geometryScale = presentation.geometryScale ?? 1;
   const normalizedAnchor = presentation.geometryRotationAnchor ?? { x: 0.5, y: 0.5 };
   const sceneAnchor = {
     x: normalizedAnchor.x * rig.sceneSize.width,
@@ -201,7 +208,7 @@ export function resolveCordRigPresentationGeometry(
     const transformedPorts = new Map(rig.ports.map((port) => {
       const scenePoint = sourceRelativeScenePoint(port.point);
       return [port.id, sceneToFace(port.space === "body"
-        ? rotateClockwise(scenePoint, sceneAnchor, rotationDegrees)
+        ? transformBodyPoint(scenePoint, sceneAnchor, rotationDegrees, geometryScale)
         : scenePoint)] as const;
     }));
     const layers: RoutedCordRigPresentationGeometry["layers"] = {
@@ -269,7 +276,7 @@ export function resolveCordRigPresentationGeometry(
     const transformRoutedPoint = (point: Point, space: RoutedCordSpace): Point => {
       const scenePoint = sourceRelativeScenePoint(point);
       return sceneToFace(space === "body"
-        ? rotateClockwise(scenePoint, sceneAnchor, rotationDegrees)
+        ? transformBodyPoint(scenePoint, sceneAnchor, rotationDegrees, geometryScale)
         : scenePoint);
     };
     for (const path of rig.paths) {
@@ -364,8 +371,8 @@ export function resolveCordRigPresentationGeometry(
         d: eyeletForegroundCrescent(
           center,
           toward,
-          occlusion.radius * cordUnitScale,
-          occlusion.chordOffset * cordUnitScale,
+          occlusion.radius * geometryScale * cordUnitScale,
+          occlusion.chordOffset * geometryScale * cordUnitScale,
         ),
       });
     }
@@ -375,6 +382,7 @@ export function resolveCordRigPresentationGeometry(
       rig,
       viewBox,
       rotationDegrees,
+      geometryScale,
       rotationAnchor,
       cordUnitScale,
       layers,
@@ -384,7 +392,12 @@ export function resolveCordRigPresentationGeometry(
   }
 
   const projectedAttachments = rig.attachmentPoints.map((point) => sceneToFace(
-    rotateClockwise(sourceRelativeScenePoint(point), sceneAnchor, rotationDegrees),
+    transformBodyPoint(
+      sourceRelativeScenePoint(point),
+      sceneAnchor,
+      rotationDegrees,
+      geometryScale,
+    ),
   )).sort((left, right) => left.x - right.x || left.y - right.y);
   const scenePullPoint = sourceRelativeScenePoint(rig.pullPoint);
   const pullPoint = sceneToFace(scenePullPoint);
@@ -392,13 +405,13 @@ export function resolveCordRigPresentationGeometry(
     { start: pullPoint, end: projectedAttachments[0]! },
     { start: pullPoint, end: projectedAttachments[1]! },
   ] as const;
-  const eyeletRadius = rig.eyeletRadius * cordUnitScale;
+  const eyeletRadius = rig.eyeletRadius * geometryScale * cordUnitScale;
   const eyeletForegroundCrescents = strands.map((strand) => (
     eyeletForegroundCrescent(
       strand.end,
       strand.start,
       eyeletRadius,
-      7 * cordUnitScale,
+      7 * geometryScale * cordUnitScale,
     )
   )) as [string, string];
 
@@ -413,6 +426,7 @@ export function resolveCordRigPresentationGeometry(
     rig,
     viewBox,
     rotationDegrees,
+    geometryScale,
     rotationAnchor,
     pullPoint,
     strands: [strands[0], strands[1]],

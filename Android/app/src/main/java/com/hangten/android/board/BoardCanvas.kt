@@ -364,7 +364,7 @@ fun BoardCanvas(
                             nativeCanvas,
                             image,
                             canvasGeometry.holdBounds,
-                            if (selectedPresentation.rotationDegrees == null) {
+                            if (!selectedPresentation.usesCanonicalArtworkTransform) {
                                 BoardInPlaneTransform.Identity
                             } else {
                                 canvasGeometry.faceTransform
@@ -648,8 +648,8 @@ private fun drawRiggedBoardArtwork(
         val crescent = eyeletForegroundCrescent(
             center = attachment,
             toward = exit,
-            radius = rig.eyeletRadius * geometry.scale,
-            chordOffset = 7f * geometry.scale,
+            radius = rig.eyeletRadius * geometry.scale * geometry.geometryScale,
+            chordOffset = 7f * geometry.scale * geometry.geometryScale,
         ) ?: return@forEach
         drawFaceBitmap(
             canvas = canvas,

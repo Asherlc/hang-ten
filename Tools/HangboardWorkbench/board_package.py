@@ -262,6 +262,7 @@ class BoardPresentation:
     geometry_rotation_anchor: tuple[float, float] | None = None
     cord_rig: CordRig | None = None
     rotation_degrees: float | None = None
+    geometry_scale: float | None = None
     available_hold_ids: tuple[str, ...] | None = None
 
     @property
@@ -269,6 +270,10 @@ class BoardPresentation:
         return self.rotation_degrees if self.rotation_degrees is not None else (
             180.0 if self.is_inverted else 0.0
         )
+
+    @property
+    def resolved_geometry_scale(self) -> float:
+        return self.geometry_scale if self.geometry_scale is not None else 1.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -462,6 +467,7 @@ def _load_board_package(
             _raw_presentation_geometry_rotation_anchor(board, presentation_id),
             _raw_presentation_cord_rig(board, presentation_id),
             _raw_presentation_rotation_degrees(board, presentation_id),
+            _raw_presentation_geometry_scale(board, presentation_id),
             available_hold_ids,
         )
         for (
@@ -526,8 +532,12 @@ def presentation_artwork_asset_path(
     presentation = package.presentation(presentation_id)
     if (
         presentation.source_presentation_id is not None
-        and _resolved_presentation_cord_rig(package.presentations, presentation)
-        is not None
+        and (
+            _resolved_presentation_cord_rig(package.presentations, presentation)
+            is not None
+            or presentation.rotation_degrees is not None
+            or presentation.geometry_scale is not None
+        )
     ):
         return package.presentation(presentation.source_presentation_id).asset_path
     return presentation.asset_path
@@ -564,7 +574,10 @@ def editor_document(
                     height,
                     label=f"hold {key}",
                 )
-                if presentation.resolved_rotation_degrees != 0:
+                if (
+                    presentation.resolved_rotation_degrees != 0
+                    or presentation.resolved_geometry_scale != 1
+                ):
                     anchor = presentation_geometry_rotation_anchor(
                         package.board, presentation
                     ) or (0.5, 0.5)
@@ -581,6 +594,7 @@ def editor_document(
                         height,
                         anchor,
                         presentation.resolved_rotation_degrees,
+                        geometry_scale=presentation.resolved_geometry_scale,
                         label=f"hold {key}",
                     )
             except (GeometryError, KeyError, TypeError) as error:
@@ -651,9 +665,10 @@ def _rotated_display_path(
     anchor: tuple[float, float],
     rotation_degrees: float,
     *,
+    geometry_scale: float = 1.0,
     label: str,
 ) -> ClosedPath:
-    """Rotate a source-owned display path clockwise around its canvas anchor."""
+    """Scale and rotate a source-owned display path around its canvas anchor."""
     anchor_x, anchor_y = anchor
     pivot_x = anchor_x * width
     pivot_y = anchor_y * height
@@ -662,8 +677,8 @@ def _rotated_display_path(
     sine = math.sin(radians)
 
     def rotate(x: float, y: float) -> tuple[float, float]:
-        delta_x = x - pivot_x
-        delta_y = y - pivot_y
+        delta_x = (x - pivot_x) * geometry_scale
+        delta_y = (y - pivot_y) * geometry_scale
         return (
             pivot_x + cosine * delta_x - sine * delta_y,
             pivot_y + sine * delta_x + cosine * delta_y,
@@ -1825,6 +1840,7 @@ def _validate_direct_two_anchor_cord_presentation(
     presentation_id: str,
     rotation_degrees: float,
     rotation_anchor: tuple[float, float],
+    geometry_scale: float,
 ) -> None:
     pull_x = rig.source_frame.x + rig.pull_point.x
     pull_y = rig.source_frame.y + rig.pull_point.y
@@ -1837,8 +1853,8 @@ def _validate_direct_two_anchor_cord_presentation(
     def rotated_attachment(point: CordPoint) -> tuple[float, float]:
         source_x = rig.source_frame.x + point.x
         source_y = rig.source_frame.y + point.y
-        delta_x = source_x - anchor_x
-        delta_y = source_y - anchor_y
+        delta_x = (source_x - anchor_x) * geometry_scale
+        delta_y = (source_y - anchor_y) * geometry_scale
         return (
             anchor_x + cosine * delta_x - sine * delta_y,
             anchor_y + sine * delta_x + cosine * delta_y,
@@ -1897,6 +1913,7 @@ def _validate_routed_cord_presentation(
     presentation_id: str,
     rotation_degrees: float,
     rotation_anchor: tuple[float, float],
+    geometry_scale: float,
 ) -> None:
     anchor_x = rotation_anchor[0] * rig.scene_size.width
     anchor_y = rotation_anchor[1] * rig.scene_size.height
@@ -1915,6 +1932,7 @@ def _validate_routed_cord_presentation(
             anchor_x,
             anchor_y,
             rotation_degrees,
+            geometry_scale,
         )
 
     transformed_ports = {
@@ -1984,10 +2002,10 @@ def _validate_routed_cord_presentation(
             )
         center_x, center_y = transformed_ports[occlusion.body_port_id]
         if (
-            center_x - occlusion.radius < -tolerance
-            or center_y - occlusion.radius < -tolerance
-            or center_x + occlusion.radius > rig.scene_size.width + tolerance
-            or center_y + occlusion.radius > rig.scene_size.height + tolerance
+            center_x - occlusion.radius * geometry_scale < -tolerance
+            or center_y - occlusion.radius * geometry_scale < -tolerance
+            or center_x + occlusion.radius * geometry_scale > rig.scene_size.width + tolerance
+            or center_y + occlusion.radius * geometry_scale > rig.scene_size.height + tolerance
         ):
             raise BoardPackageError(
                 f"presentation {presentation_id} routed radialLip circle must "
@@ -2057,6 +2075,23 @@ def _raw_presentation_rotation_degrees(
     return None
 
 
+def _raw_presentation_geometry_scale(
+    board: Mapping[str, Any], presentation_id: str
+) -> float | None:
+    raw_presentations = board.get("presentations")
+    if not isinstance(raw_presentations, list):
+        return None
+    for index, value in enumerate(raw_presentations):
+        if isinstance(value, Mapping) and value.get("id") == presentation_id:
+            if "geometryScale" not in value:
+                return None
+            return _positive_number(
+                value["geometryScale"],
+                f"board.json.presentations[{index}].geometryScale",
+            )
+    return None
+
+
 def _parse_board_presentations(
     board: Mapping[str, Any],
 ) -> tuple[_ParsedBoardPresentation, ...]:
@@ -2073,6 +2108,7 @@ def _parse_board_presentations(
     geometry_rotation_anchors: dict[str, tuple[float, float] | None] = {}
     cord_rigs: dict[str, CordRig | None] = {}
     rotation_degrees_by_id: dict[str, float | None] = {}
+    geometry_scales_by_id: dict[str, float | None] = {}
     identifiers: set[str] = set()
     defaults = 0
     for index, value in enumerate(raw_presentations):
@@ -2087,7 +2123,7 @@ def _parse_board_presentations(
             {
                 "id", "name", "assetPath", "aspectRatio", "default",
                 "sourcePresentationID", "isInverted", "geometryRotationAnchor",
-                "rotationDegrees", "cordRig", "availableHoldIDs",
+                "rotationDegrees", "geometryScale", "cordRig", "availableHoldIDs",
             },
             label,
         )
@@ -2137,6 +2173,11 @@ def _parse_board_presentations(
                 f"{label}.rotationDegrees must be normalized to [0, 360)"
             )
         rotation_degrees_by_id[presentation_id] = rotation_degrees
+        geometry_scales_by_id[presentation_id] = (
+            _positive_number(value["geometryScale"], f"{label}.geometryScale")
+            if "geometryScale" in value
+            else None
+        )
         geometry_rotation_anchor = (
             _normalized_point(
                 value["geometryRotationAnchor"],
@@ -2179,6 +2220,8 @@ def _parse_board_presentations(
         geometry_rotation_anchor = geometry_rotation_anchors[presentation_id]
         cord_rig = cord_rigs[presentation_id]
         rotation_degrees = rotation_degrees_by_id[presentation_id]
+        geometry_scale = geometry_scales_by_id[presentation_id]
+        resolved_geometry_scale = geometry_scale if geometry_scale is not None else 1.0
         resolved_rotation_degrees = (
             rotation_degrees if rotation_degrees is not None else (180 if is_inverted else 0)
         )
@@ -2203,14 +2246,23 @@ def _parse_board_presentations(
             raise BoardPackageError(
                 f"presentation {presentation_id}.rotationDegrees requires sourcePresentationID"
             )
+        if geometry_scale is not None and source_presentation_id is None:
+            raise BoardPackageError(
+                f"presentation {presentation_id}.geometryScale requires sourcePresentationID"
+            )
         if geometry_rotation_anchor is not None:
             if source_presentation_id is None:
                 raise BoardPackageError(
                     f"presentation {presentation_id}.geometryRotationAnchor requires sourcePresentationID"
                 )
-            if resolved_rotation_degrees == 0:
+            if resolved_rotation_degrees == 0 and resolved_geometry_scale == 1:
                 raise BoardPackageError(
-                    f"presentation {presentation_id}.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
+                    f"presentation {presentation_id}.geometryRotationAnchor requires "
+                    + (
+                        "isInverted true or nonzero rotationDegrees"
+                        if geometry_scale is None
+                        else "a nontrivial geometry transform"
+                    )
                 )
         if source_presentation_id is not None and (
             source_presentation_id == presentation_id
@@ -2229,13 +2281,20 @@ def _parse_board_presentations(
             raise BoardPackageError(
                 f"presentation {presentation_id}.aspectRatio must match source presentation aspectRatio"
             )
-        if source_presentation_id is not None and rotation_degrees is not None:
+        if source_presentation_id is not None and (
+            rotation_degrees is not None or geometry_scale is not None
+        ):
             source = presentations_by_id[source_presentation_id]
             if asset_path != source[2]:
                 raise BoardPackageError(
                     f"presentation {presentation_id}.assetPath must reuse source "
-                    "presentation assetPath for an explicit rotation"
+                    + (
+                        "presentation assetPath for an explicit rotation"
+                        if geometry_scale is None
+                        else "presentation assetPath for a geometry transform"
+                    )
                 )
+        if source_presentation_id is not None and rotation_degrees is not None:
             if rotation_degrees not in (0, 180) and cord_rigs[source_presentation_id] is None:
                 raise BoardPackageError(
                     f"presentation {presentation_id} non-180 rotation requires a "
@@ -2252,6 +2311,7 @@ def _parse_board_presentations(
                 presentation_id=presentation_id,
                 rotation_degrees=resolved_rotation_degrees,
                 rotation_anchor=geometry_rotation_anchor or (0.5, 0.5),
+                geometry_scale=resolved_geometry_scale,
             )
         elif isinstance(resolved_cord_rig, RoutedCordRig):
             _validate_routed_cord_presentation(
@@ -2259,6 +2319,7 @@ def _parse_board_presentations(
                 presentation_id=presentation_id,
                 rotation_degrees=resolved_rotation_degrees,
                 rotation_anchor=geometry_rotation_anchor or (0.5, 0.5),
+                geometry_scale=resolved_geometry_scale,
             )
     return tuple(presentations)
 
@@ -2482,7 +2543,13 @@ def _validate_inverted_alias_projection(
             if explicit_rotation is not None
             else (180.0 if presentation[6] else 0.0)
         )
-        if source_presentation_id is None or rotation_degrees == 0:
+        geometry_scale = (
+            _raw_presentation_geometry_scale(board, presentation_id) or 1.0
+        )
+        if (
+            source_presentation_id is None
+            or (rotation_degrees == 0 and geometry_scale == 1)
+        ):
             continue
         anchor_x, anchor_y = (
             _raw_presentation_geometry_rotation_anchor(board, presentation_id)
@@ -2512,7 +2579,11 @@ def _validate_inverted_alias_projection(
                     raise BoardPackageError(str(error)) from error
                 if cord_rig is not None:
                     if not _rigged_alias_frame_is_inside_canvas(
-                        frame, cord_rig, (anchor_x, anchor_y), rotation_degrees
+                        frame,
+                        cord_rig,
+                        (anchor_x, anchor_y),
+                        rotation_degrees,
+                        geometry_scale,
                     ):
                         raise BoardPackageError(
                             f"presentation {presentation_id} projects source hold geometry outside the normalized canvas"
@@ -2536,6 +2607,7 @@ def _validate_inverted_alias_projection(
                             anchor_x,
                             anchor_y,
                             rotation_degrees,
+                            geometry_scale,
                         )
                         for x, y in corners
                     )
@@ -2550,6 +2622,7 @@ def _rigged_alias_frame_is_inside_canvas(
     rig: CordRig,
     anchor: tuple[float, float],
     rotation_degrees: float,
+    geometry_scale: float,
 ) -> bool:
     face_min_x = rig.source_frame.x + rig.inner_face_frame.x
     face_min_y = rig.source_frame.y + rig.inner_face_frame.y
@@ -2571,6 +2644,7 @@ def _rigged_alias_frame_is_inside_canvas(
             pivot_x,
             pivot_y,
             rotation_degrees,
+            geometry_scale,
         )
         if (
             projected_x < -tolerance
@@ -2588,12 +2662,13 @@ def _rotate_canvas_point(
     anchor_x: float,
     anchor_y: float,
     rotation_degrees: float,
+    geometry_scale: float = 1.0,
 ) -> tuple[float, float]:
     radians = math.radians(rotation_degrees)
     cosine = math.cos(radians)
     sine = math.sin(radians)
-    delta_x = x - anchor_x
-    delta_y = y - anchor_y
+    delta_x = (x - anchor_x) * geometry_scale
+    delta_y = (y - anchor_y) * geometry_scale
     return (
         anchor_x + cosine * delta_x - sine * delta_y,
         anchor_y + sine * delta_x + cosine * delta_y,

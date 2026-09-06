@@ -915,6 +915,7 @@ class BoardPresentation:
     is_inverted: bool = False
     rotation_degrees: float | None = None
     geometry_rotation_anchor: NormalizedPoint | None = None
+    geometry_scale: float | None = None
     cord_rig: CordRig | None = None
     available_hold_ids: tuple[str, ...] | None = None
 
@@ -923,6 +924,10 @@ class BoardPresentation:
         return self.rotation_degrees if self.rotation_degrees is not None else (
             180.0 if self.is_inverted else 0.0
         )
+
+    @property
+    def resolved_geometry_scale(self) -> float:
+        return self.geometry_scale if self.geometry_scale is not None else 1.0
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
@@ -937,6 +942,7 @@ class BoardPresentation:
                 "isInverted",
                 "rotationDegrees",
                 "geometryRotationAnchor",
+                "geometryScale",
                 "cordRig",
             },
         )
@@ -982,6 +988,9 @@ class BoardPresentation:
                 f"{source}.geometryRotationAnchor",
             )
             if "geometryRotationAnchor" in payload
+            else None,
+            _positive_number(payload["geometryScale"], f"{source}.geometryScale")
+            if "geometryScale" in payload
             else None,
             _cord_rig_from_json(payload["cordRig"], f"{source}.cordRig")
             if "cordRig" in payload
@@ -1289,12 +1298,13 @@ def _rotate_point(
     anchor_x: float,
     anchor_y: float,
     rotation_degrees: float,
+    geometry_scale: float = 1.0,
 ) -> tuple[float, float]:
     radians = math.radians(rotation_degrees)
     cosine = math.cos(radians)
     sine = math.sin(radians)
-    delta_x = x - anchor_x
-    delta_y = y - anchor_y
+    delta_x = (x - anchor_x) * geometry_scale
+    delta_y = (y - anchor_y) * geometry_scale
     return (
         anchor_x + cosine * delta_x - sine * delta_y,
         anchor_y + sine * delta_x + cosine * delta_y,
@@ -1307,6 +1317,7 @@ def _validate_direct_two_anchor_cord_presentation(
     presentation_id: str,
     rotation_degrees: float,
     rotation_anchor: NormalizedPoint,
+    geometry_scale: float,
 ) -> None:
     pull_x = rig.source_frame.x + rig.pull_point.x
     pull_y = rig.source_frame.y + rig.pull_point.y
@@ -1319,6 +1330,7 @@ def _validate_direct_two_anchor_cord_presentation(
             anchor_x=anchor_x,
             anchor_y=anchor_y,
             rotation_degrees=rotation_degrees,
+            geometry_scale=geometry_scale,
         )
         for point in rig.attachment_points
     )
@@ -1374,6 +1386,7 @@ def _validate_routed_cord_presentation(
     presentation_id: str,
     rotation_degrees: float,
     rotation_anchor: NormalizedPoint,
+    geometry_scale: float,
 ) -> None:
     anchor_x = rotation_anchor.x * rig.scene_size.width
     anchor_y = rotation_anchor.y * rig.scene_size.height
@@ -1392,6 +1405,7 @@ def _validate_routed_cord_presentation(
             anchor_x=anchor_x,
             anchor_y=anchor_y,
             rotation_degrees=rotation_degrees,
+            geometry_scale=geometry_scale,
         )
 
     transformed_ports = {
@@ -1461,10 +1475,10 @@ def _validate_routed_cord_presentation(
             )
         center_x, center_y = transformed_ports[occlusion.body_port_id]
         if (
-            center_x - occlusion.radius < -tolerance
-            or center_y - occlusion.radius < -tolerance
-            or center_x + occlusion.radius > rig.scene_size.width + tolerance
-            or center_y + occlusion.radius > rig.scene_size.height + tolerance
+            center_x - occlusion.radius * geometry_scale < -tolerance
+            or center_y - occlusion.radius * geometry_scale < -tolerance
+            or center_x + occlusion.radius * geometry_scale > rig.scene_size.width + tolerance
+            or center_y + occlusion.radius * geometry_scale > rig.scene_size.height + tolerance
         ):
             raise ValueError(
                 f"presentation {presentation_id} routed radialLip circle must "
@@ -1498,6 +1512,7 @@ def _rigged_alias_frame_is_inside_canvas(
     rig: CordRig,
     anchor: NormalizedPoint,
     rotation_degrees: float,
+    geometry_scale: float,
 ) -> bool:
     face_min_x = rig.source_frame.x + rig.inner_face_frame.x
     face_min_y = rig.source_frame.y + rig.inner_face_frame.y
@@ -1519,6 +1534,7 @@ def _rigged_alias_frame_is_inside_canvas(
             anchor_x=pivot_x,
             anchor_y=pivot_y,
             rotation_degrees=rotation_degrees,
+            geometry_scale=geometry_scale,
         )
         if (
             projected_x < -tolerance
@@ -1567,14 +1583,29 @@ def _validate_alias_presentations(
             raise ValueError(
                 f"presentation {presentation.id}.rotationDegrees requires sourcePresentationID"
             )
+        if (
+            presentation.geometry_scale is not None
+            and presentation.source_presentation_id is None
+        ):
+            raise ValueError(
+                f"presentation {presentation.id}.geometryScale requires sourcePresentationID"
+            )
         if presentation.geometry_rotation_anchor is not None:
             if presentation.source_presentation_id is None:
                 raise ValueError(
                     f"presentation {presentation.id}.geometryRotationAnchor requires sourcePresentationID"
                 )
-            if presentation.resolved_rotation_degrees == 0:
+            if (
+                presentation.resolved_rotation_degrees == 0
+                and presentation.resolved_geometry_scale == 1
+            ):
                 raise ValueError(
-                    f"presentation {presentation.id}.geometryRotationAnchor requires isInverted true or nonzero rotationDegrees"
+                    f"presentation {presentation.id}.geometryRotationAnchor requires "
+                    + (
+                        "isInverted true or nonzero rotationDegrees"
+                        if presentation.geometry_scale is None
+                        else "a nontrivial geometry transform"
+                    )
                 )
         if presentation.source_presentation_id is None:
             if isinstance(presentation.cord_rig, DirectTwoAnchorCordRig):
@@ -1584,6 +1615,7 @@ def _validate_alias_presentations(
                     rotation_degrees=presentation.resolved_rotation_degrees,
                     rotation_anchor=presentation.geometry_rotation_anchor
                     or NormalizedPoint(0.5, 0.5),
+                    geometry_scale=presentation.resolved_geometry_scale,
                 )
             elif isinstance(presentation.cord_rig, RoutedCordRig):
                 _validate_routed_cord_presentation(
@@ -1592,6 +1624,7 @@ def _validate_alias_presentations(
                     rotation_degrees=presentation.resolved_rotation_degrees,
                     rotation_anchor=presentation.geometry_rotation_anchor
                     or NormalizedPoint(0.5, 0.5),
+                    geometry_scale=presentation.resolved_geometry_scale,
                 )
             continue
 
@@ -1613,12 +1646,20 @@ def _validate_alias_presentations(
             raise ValueError(
                 f"presentation {presentation.id}.aspectRatio must match source presentation aspectRatio"
             )
-        if presentation.rotation_degrees is not None:
+        if (
+            presentation.rotation_degrees is not None
+            or presentation.geometry_scale is not None
+        ):
             if presentation.asset_path != source.asset_path:
                 raise ValueError(
                     f"presentation {presentation.id}.assetPath must reuse source "
-                    "presentation assetPath for an explicit rotation"
+                    + (
+                        "presentation assetPath for an explicit rotation"
+                        if presentation.geometry_scale is None
+                        else "presentation assetPath for a geometry transform"
+                    )
                 )
+        if presentation.rotation_degrees is not None:
             if presentation.rotation_degrees not in (0, 180) and source.cord_rig is None:
                 raise ValueError(
                     f"presentation {presentation.id} non-180 rotation requires a "
@@ -1632,6 +1673,7 @@ def _validate_alias_presentations(
                 rotation_degrees=rotation_degrees,
                 rotation_anchor=presentation.geometry_rotation_anchor
                 or NormalizedPoint(0.5, 0.5),
+                geometry_scale=presentation.resolved_geometry_scale,
             )
         elif isinstance(source.cord_rig, RoutedCordRig):
             _validate_routed_cord_presentation(
@@ -1640,8 +1682,9 @@ def _validate_alias_presentations(
                 rotation_degrees=rotation_degrees,
                 rotation_anchor=presentation.geometry_rotation_anchor
                 or NormalizedPoint(0.5, 0.5),
+                geometry_scale=presentation.resolved_geometry_scale,
             )
-        if rotation_degrees == 0:
+        if rotation_degrees == 0 and presentation.resolved_geometry_scale == 1:
             continue
 
         anchor = presentation.geometry_rotation_anchor or NormalizedPoint(0.5, 0.5)
@@ -1660,7 +1703,11 @@ def _validate_alias_presentations(
                 frame = piece.frame
                 if resolved_cord_rig is not None:
                     if not _rigged_alias_frame_is_inside_canvas(
-                        frame, resolved_cord_rig, anchor, rotation_degrees
+                        frame,
+                        resolved_cord_rig,
+                        anchor,
+                        rotation_degrees,
+                        presentation.resolved_geometry_scale,
                     ):
                         raise ValueError(
                             f"presentation {presentation.id} projects source hold "
@@ -1680,6 +1727,7 @@ def _validate_alias_presentations(
                         anchor_x=anchor.x,
                         anchor_y=anchor.y,
                         rotation_degrees=rotation_degrees,
+                        geometry_scale=presentation.resolved_geometry_scale,
                     )
                     for x, y in corners
                 )

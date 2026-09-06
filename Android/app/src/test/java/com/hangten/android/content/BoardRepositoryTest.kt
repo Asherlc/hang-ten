@@ -220,6 +220,69 @@ class BoardRepositoryTest {
     }
 
     @Test
+    fun decodesAliasGeometryScaleAndReusesCanonicalArtwork() {
+        val board = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to geometryScaleBoardJson(),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards().getOrThrow().single()
+
+        val canonical = board.presentation("primary")!!
+        val scaled = board.presentation("scaled")!!
+
+        assertEquals(0.5f, scaled.geometryScale)
+        assertEquals(0.5f, scaled.resolvedGeometryScale)
+        assertEquals(canonical, board.artworkPresentation(scaled))
+    }
+
+    @Test
+    fun rejectsInvalidCanonicalOrDistinctAssetGeometryScale() {
+        listOf(0, -1).forEach { invalidScale ->
+            val result = AssetBoardRepository(
+                FixtureAssets(
+                    mapOf(
+                        "Hangboards/demo/board.json" to geometryScaleBoardJson()
+                            .replace("\"geometryScale\": 0.5", "\"geometryScale\": $invalidScale"),
+                        "Hangboards/demo/assets/primary.png" to "png",
+                    ),
+                ),
+            ).loadBoards()
+            assertTrueFailureContaining(result, "geometryScale")
+        }
+
+        val canonical = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to boardJson().replace(
+                        "      \"default\": true",
+                        "      \"default\": true,\n      \"geometryScale\": 0.5",
+                    ),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+        assertTrueFailureContaining(canonical, "geometryScale requires sourcePresentationID")
+
+        val distinctAsset = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to geometryScaleBoardJson()
+                        .replace(
+                            "\"assetPath\": \"assets/primary.png\",\n      \"aspectRatio\": 2.0,\n      \"default\": false",
+                            "\"assetPath\": \"assets/scaled.png\",\n      \"aspectRatio\": 2.0,\n      \"default\": false",
+                        ),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                    "Hangboards/demo/assets/scaled.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+        assertTrueFailureContaining(distinctAsset, "for a geometry transform")
+    }
+
+    @Test
     fun rejectsExplicitNonHalfTurnWithoutCanonicalCordRig() {
         val result = AssetBoardRepository(
             FixtureAssets(
@@ -483,6 +546,20 @@ class BoardRepositoryTest {
             + "      \"default\": false,\n"
             + "      \"sourcePresentationID\": \"primary\",\n"
             + "      \"rotationDegrees\": $rotationDegrees\n"
+            + "    }\n  ],",
+    )
+
+    private fun geometryScaleBoardJson(): String = boardJson().replace(
+        "      \"default\": true\n    }\n  ],",
+        "      \"default\": true\n    },\n    {\n"
+            + "      \"id\": \"scaled\",\n"
+            + "      \"name\": \"Scaled\",\n"
+            + "      \"assetPath\": \"assets/primary.png\",\n"
+            + "      \"aspectRatio\": 2.0,\n"
+            + "      \"default\": false,\n"
+            + "      \"sourcePresentationID\": \"primary\",\n"
+            + "      \"geometryScale\": 0.5,\n"
+            + "      \"geometryRotationAnchor\": { \"x\": 0.5, \"y\": 0.5 }\n"
             + "    }\n  ],",
     )
 

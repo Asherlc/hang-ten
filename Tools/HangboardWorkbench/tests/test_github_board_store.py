@@ -532,6 +532,36 @@ def test_hosted_selected_presentation_loads_declared_alias_anchor_into_public_mo
     )
 
 
+def test_hosted_loaders_preserve_alias_geometry_scale_in_the_public_model() -> None:
+    board = board_document("fixture.board")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations.append(
+        {
+            "id": "primary-scaled",
+            "name": "Primary scaled",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "geometryScale": 0.75,
+            "geometryRotationAnchor": {"x": 0.5, "y": 0.5},
+        }
+    )
+    client = _client(("fixture-board", board))
+    store = github_board_store.GitHubBoardStore(client)
+
+    complete = github_board_store.open_package(
+        client, TOKEN, BRANCH, "fixture.board"
+    )
+    selected = store.open_presentation(
+        TOKEN, BRANCH, "fixture.board", "primary-scaled"
+    )
+
+    assert complete.presentation("primary-scaled").geometry_scale == 0.75
+    assert selected.presentation("primary-scaled").geometry_scale == 0.75
+
+
 def test_hosted_package_loads_current_port_dynamic_rigs() -> None:
     package_root = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
     files = {

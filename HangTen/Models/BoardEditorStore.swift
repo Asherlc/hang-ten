@@ -321,7 +321,9 @@ struct BoardEditorStore: Sendable {
               let sourcePresentation = document.presentations.first(where: {
                   $0.id == sourcePresentationID
               }),
-              presentation.rotationDegrees != nil || sourcePresentation.cordRig != nil else {
+              presentation.rotationDegrees != nil
+                || presentation.geometryScale != nil
+                || sourcePresentation.cordRig != nil else {
             return presentation
         }
         return sourcePresentation

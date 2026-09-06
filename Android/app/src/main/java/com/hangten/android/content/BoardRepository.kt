@@ -56,15 +56,39 @@ class AssetBoardRepository(
             val assetPath = "$BOARDS_ROOT/$packageName/${presentation.assetPath}"
             if (!assets.exists(assetPath)) fail("Board $boardId is missing presentation asset ${presentation.assetPath}.")
             if (presentation.cordRig != null &&
-                (presentation.sourcePresentationId != null || presentation.resolvedRotationDegrees != 0f)
+                (
+                    presentation.sourcePresentationId != null ||
+                        presentation.resolvedRotationDegrees != 0f ||
+                        presentation.resolvedGeometryScale != 1f
+                    )
             ) {
                 fail("Board $boardId presentation ${presentation.id}.cordRig must be owned by a canonical non-inverted presentation.")
+            }
+            presentation.geometryScale?.let { geometryScale ->
+                if (!geometryScale.isFinite() || geometryScale <= 0f) {
+                    fail(
+                        "Board $boardId presentation ${presentation.id}.geometryScale " +
+                            "must be finite and positive.",
+                    )
+                }
+                if (presentation.sourcePresentationId == null) {
+                    fail(
+                        "Board $boardId presentation ${presentation.id}.geometryScale " +
+                            "requires sourcePresentationID.",
+                    )
+                }
             }
             presentation.geometryRotationAnchor?.let { anchor ->
                 if (anchor.x !in 0f..1f || anchor.y !in 0f..1f) {
                     fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor must contain normalized coordinates.")
                 }
-                if (presentation.sourcePresentationId == null || presentation.resolvedRotationDegrees == 0f) {
+                if (
+                    presentation.sourcePresentationId == null ||
+                    (
+                        presentation.resolvedRotationDegrees == 0f &&
+                            presentation.resolvedGeometryScale == 1f
+                        )
+                ) {
                     fail("Board $boardId presentation ${presentation.id}.geometryRotationAnchor requires an inverted or explicitly rotated alias.")
                 }
             }
@@ -79,13 +103,19 @@ class AssetBoardRepository(
                 if (!aspectRatiosMatch(presentation.aspectRatio, source.aspectRatio, ALIAS_ASPECT_RATIO_TOLERANCE)) {
                     fail("Board $boardId presentation ${presentation.id}.aspectRatio must match its source presentation.")
                 }
-                presentation.rotationDegrees?.let { rotationDegrees ->
+                if (presentation.rotationDegrees != null || presentation.geometryScale != null) {
                     if (presentation.assetPath != source.assetPath) {
                         fail(
                             "Board $boardId presentation ${presentation.id}.assetPath must reuse " +
-                                "source presentation assetPath for an explicit rotation.",
+                                if (presentation.geometryScale == null) {
+                                    "source presentation assetPath for an explicit rotation."
+                                } else {
+                                    "source presentation assetPath for a geometry transform."
+                                },
                         )
                     }
+                }
+                presentation.rotationDegrees?.let { rotationDegrees ->
                     if (rotationDegrees != 0f && rotationDegrees != 180f && source.cordRig == null) {
                         fail(
                             "Board $boardId presentation ${presentation.id} non-180 rotation requires " +
@@ -203,7 +233,9 @@ class AssetBoardRepository(
         holds: List<BoardHold>,
     ) {
         val presentationsById = presentations.associateBy { it.id }
-        presentations.filter { it.resolvedRotationDegrees != 0f }.forEach { presentation ->
+        presentations.filter {
+            it.resolvedRotationDegrees != 0f || it.resolvedGeometryScale != 1f
+        }.forEach { presentation ->
             val sourcePresentationId = presentation.sourcePresentationId ?: return@forEach
             val sourcePresentation = presentationsById[sourcePresentationId] ?: return@forEach
             val anchor = presentation.geometryRotationAnchor ?: BoardGeometryRotationAnchor.Center
@@ -238,8 +270,8 @@ class AssetBoardRepository(
                     val isInside = corners.all { point ->
                         val sourceX = faceX + faceWidth * point.x.toDouble()
                         val sourceY = faceY + faceHeight * point.y.toDouble()
-                        val deltaX = sourceX - anchorX
-                        val deltaY = sourceY - anchorY
+                        val deltaX = (sourceX - anchorX) * presentation.resolvedGeometryScale
+                        val deltaY = (sourceY - anchorY) * presentation.resolvedGeometryScale
                         val projectedX = anchorX + cosine * deltaX - sine * deltaY
                         val projectedY = anchorY + sine * deltaX + cosine * deltaY
                         projectedX >= -tolerance && projectedY >= -tolerance &&
@@ -277,8 +309,8 @@ class AssetBoardRepository(
         val attachments = rig.attachmentPoints.map { point ->
             val pointX = sourceX + point.x.toDouble()
             val pointY = sourceY + point.y.toDouble()
-            val deltaX = pointX - anchorX
-            val deltaY = pointY - anchorY
+            val deltaX = (pointX - anchorX) * presentation.resolvedGeometryScale
+            val deltaY = (pointY - anchorY) * presentation.resolvedGeometryScale
             PointD(
                 x = anchorX + cosine * deltaX - sine * deltaY,
                 y = anchorY + sine * deltaX + cosine * deltaY,
@@ -350,6 +382,7 @@ class AssetBoardRepository(
                 "availableHoldIDs",
                 "isInverted",
                 "rotationDegrees",
+                "geometryScale",
                 "geometryRotationAnchor",
                 "cordRig",
             ),
@@ -383,6 +416,7 @@ class AssetBoardRepository(
         if (rotationDegrees != null && rotationDegrees !in 0f..<360f) {
             fail("$path.rotationDegrees must be normalized to [0, 360).")
         }
+        val geometryScale = objectValue.optional("geometryScale")?.asFiniteFloat("$path.geometryScale")
         val geometryRotationAnchor = objectValue.optional("geometryRotationAnchor")?.let {
             decodeRotationAnchor(it.asObject("$path.geometryRotationAnchor"), "$path.geometryRotationAnchor")
         }
@@ -406,6 +440,7 @@ class AssetBoardRepository(
             sourcePresentationId = sourcePresentationId,
             isInverted = isInverted,
             rotationDegrees = rotationDegrees,
+            geometryScale = geometryScale,
             geometryRotationAnchor = geometryRotationAnchor,
             cordRig = cordRig,
             availableHoldIds = availableHoldIds,

@@ -53,7 +53,7 @@ struct BoardPresentationArtwork: View {
                 for: board,
                 presentationID: presentation.id
             ).flatMap { UIImage(contentsOfFile: $0.path) }
-        } else if presentation.rotationDegrees != nil {
+        } else if presentation.usesCanonicalArtworkTransform {
             directTwoAnchorRig = nil
             self.geometry = nil
             routedRig = nil
@@ -117,7 +117,7 @@ struct BoardPresentationArtwork: View {
                 rig: rig,
                 geometry: geometry
             )
-        } else if presentation.rotationDegrees != nil, let faceImage {
+        } else if presentation.usesCanonicalArtworkTransform, let faceImage {
             Canvas { context, size in
                 var faceContext = context
                 faceContext.transform = projection.affineTransform(

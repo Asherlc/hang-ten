@@ -733,7 +733,8 @@ enum BoardCordRigPresentationValidation {
     static func failure(
         for rig: BoardDirectTwoAnchorCordRig,
         rotationDegrees: Double,
-        rotationAnchor: BoardGeometryRotationAnchor
+        rotationAnchor: BoardGeometryRotationAnchor,
+        geometryScale: Double = 1
     ) -> BoardCordRigPresentationValidationFailure? {
         let sceneWidth = Double(rig.sceneSize.width)
         let sceneHeight = Double(rig.sceneSize.height)
@@ -749,8 +750,8 @@ enum BoardCordRigPresentationValidation {
         let attachments = rig.attachmentPoints.map { point -> (x: Double, y: Double) in
             let pointX = sourceX + Double(point.x)
             let pointY = sourceY + Double(point.y)
-            let deltaX = pointX - anchorX
-            let deltaY = pointY - anchorY
+            let deltaX = (pointX - anchorX) * geometryScale
+            let deltaY = (pointY - anchorY) * geometryScale
             return (
                 anchorX + cosine * deltaX - sine * deltaY,
                 anchorY + sine * deltaX + cosine * deltaY
@@ -843,10 +844,12 @@ struct BoardHoldPathShape: Shape {
 struct BoardPresentationGeometryProjection: Hashable {
     private let rotationDegrees: CGFloat
     private let rotationAnchor: BoardGeometryRotationAnchor
+    let geometryScale: CGFloat
 
     init(presentation: BoardPresentation) {
         self.init(
             rotationDegrees: presentation.resolvedRotationDegrees,
+            geometryScale: presentation.resolvedGeometryScale,
             rotationAnchor: presentation.geometryRotationAnchor
         )
     }
@@ -857,16 +860,19 @@ struct BoardPresentationGeometryProjection: Hashable {
     ) {
         self.init(
             rotationDegrees: isInverted ? 180 : 0,
+            geometryScale: 1,
             rotationAnchor: rotationAnchor
         )
     }
 
     init(
         rotationDegrees: CGFloat,
+        geometryScale: CGFloat = 1,
         rotationAnchor: BoardGeometryRotationAnchor? = nil
     ) {
         self.rotationDegrees = rotationDegrees
         self.rotationAnchor = rotationAnchor ?? .center
+        self.geometryScale = geometryScale
     }
 
     func project(_ point: CGPoint, in rect: CGRect) -> CGPoint {
@@ -885,18 +891,23 @@ struct BoardPresentationGeometryProjection: Hashable {
 
         switch normalizedDegrees {
         case 0:
-            coefficients = (1, 0, 0, 1)
+            coefficients = (geometryScale, 0, 0, geometryScale)
         case 90:
-            coefficients = (0, 1, -1, 0)
+            coefficients = (0, geometryScale, -geometryScale, 0)
         case 180:
-            coefficients = (-1, 0, 0, -1)
+            coefficients = (-geometryScale, 0, 0, -geometryScale)
         case 270:
-            coefficients = (0, -1, 1, 0)
+            coefficients = (0, -geometryScale, geometryScale, 0)
         default:
             let radians = normalizedDegrees * .pi / 180
             let cosine = cos(radians)
             let sine = sin(radians)
-            coefficients = (cosine, sine, -sine, cosine)
+            coefficients = (
+                geometryScale * cosine,
+                geometryScale * sine,
+                -geometryScale * sine,
+                geometryScale * cosine
+            )
         }
 
         return CGAffineTransform(
@@ -1565,7 +1576,8 @@ enum BoardAliasGeometryValidation {
         width: Double,
         height: Double,
         anchor: BoardGeometryRotationAnchor,
-        rotationDegrees: Double = 180
+        rotationDegrees: Double = 180,
+        geometryScale: Double = 1
     ) -> Bool {
         let radians = rotationDegrees * .pi / 180
         let cosine = cos(radians)
@@ -1577,8 +1589,8 @@ enum BoardAliasGeometryValidation {
             (x + width, y + height),
         ]
         return corners.allSatisfy { pointX, pointY in
-            let deltaX = pointX - anchor.x
-            let deltaY = pointY - anchor.y
+            let deltaX = (pointX - anchor.x) * geometryScale
+            let deltaY = (pointY - anchor.y) * geometryScale
             let projectedX = anchor.x + cosine * deltaX - sine * deltaY
             let projectedY = anchor.y + sine * deltaX + cosine * deltaY
             return projectedX >= -projectedFrameEdgeTolerance &&
@@ -1606,6 +1618,9 @@ struct BoardPresentation: Identifiable, Hashable {
     /// Explicit clockwise in-plane rotation normalized to [0, 360).
     /// `nil` preserves the legacy `isInverted` representation.
     let rotationDegrees: CGFloat?
+    /// Optional uniform scale applied to alias body geometry around the
+    /// geometry rotation anchor. Canonical presentations resolve to 1.
+    let geometryScale: CGFloat?
     let geometryRotationAnchor: BoardGeometryRotationAnchor?
     let cordRig: BoardCordRig?
 
@@ -1618,6 +1633,7 @@ struct BoardPresentation: Identifiable, Hashable {
         availableHoldIDs: [String]? = nil,
         isInverted: Bool = false,
         rotationDegrees: CGFloat? = nil,
+        geometryScale: CGFloat? = nil,
         geometryRotationAnchor: BoardGeometryRotationAnchor? = nil,
         cordRig: BoardCordRig? = nil
     ) {
@@ -1629,12 +1645,21 @@ struct BoardPresentation: Identifiable, Hashable {
         self.availableHoldIDs = availableHoldIDs
         self.isInverted = isInverted
         self.rotationDegrees = rotationDegrees
+        self.geometryScale = geometryScale
         self.geometryRotationAnchor = geometryRotationAnchor
         self.cordRig = cordRig
     }
 
     var resolvedRotationDegrees: CGFloat {
         rotationDegrees ?? (isInverted ? 180 : 0)
+    }
+
+    var resolvedGeometryScale: CGFloat {
+        geometryScale ?? 1
+    }
+
+    var usesCanonicalArtworkTransform: Bool {
+        rotationDegrees != nil || geometryScale != nil
     }
 }
 

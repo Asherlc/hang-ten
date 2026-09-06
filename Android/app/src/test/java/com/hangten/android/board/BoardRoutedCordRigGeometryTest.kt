@@ -308,6 +308,67 @@ class BoardRoutedCordRigGeometryTest {
     }
 
     @Test
+    fun uniformScaleTransformsEveryBodyPrimitiveButLeavesWorldGeometryAndCordStyleFixed() {
+        val bodyPath = BoardRoutedCordPath(
+            id = "body-return",
+            space = BoardRoutedCordSpace.Body,
+            layer = BoardRoutedCordLayer.AboveFace,
+            commands = listOf(
+                BoardRoutedCordPathCommand.Move(Point(20f, 40f)),
+                BoardRoutedCordPathCommand.Line(Point(40f, 40f)),
+            ),
+        )
+        val worldPath = BoardRoutedCordPath(
+            id = "world-loop",
+            space = BoardRoutedCordSpace.World,
+            layer = BoardRoutedCordLayer.Overpass,
+            commands = listOf(
+                BoardRoutedCordPathCommand.Move(Point(0f, 0f)),
+                BoardRoutedCordPathCommand.Line(Point(10f, 0f)),
+            ),
+        )
+        val rig = routedRig(
+            paths = listOf(bodyPath, worldPath),
+            occlusions = listOf(
+                BoardRoutedCordOcclusion.RadialLip("body", radius = 6f, chordOffset = 2f),
+                BoardRoutedCordOcclusion.FacePatch(
+                    listOf(
+                        BoardRoutedCordPathCommand.Move(Point(15f, 15f)),
+                        BoardRoutedCordPathCommand.Line(Point(25f, 15f)),
+                        BoardRoutedCordPathCommand.Close,
+                    ),
+                ),
+            ),
+        )
+        val geometry = resolveRoutedCordRigGeometry(
+            rig,
+            presentation(0f).copy(
+                id = "scaled",
+                sourcePresentationId = "primary",
+                geometryScale = 0.5f,
+                geometryRotationAnchor = BoardGeometryRotationAnchor.Center,
+            ),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!
+
+        assertPoint(Point(40f, 55f), geometry.portPoints.getValue("body"))
+        assertPoint(Point(50f, 20f), geometry.portPoints.getValue("world"))
+        assertEquals(
+            listOf(BoardPathCommand.MoveTo(40f, 55f), BoardPathCommand.LineTo(50f, 55f)),
+            geometry.paths.single { it.id == "body-return" }.path.commands,
+        )
+        assertEquals(
+            listOf(BoardPathCommand.MoveTo(10f, 20f), BoardPathCommand.LineTo(20f, 20f)),
+            geometry.paths.single { it.id == "world-loop" }.path.commands,
+        )
+        assertPoint(Point(37.5f, 42.5f), geometry.facePatches.single().definingPoints.first())
+        assertEquals(3f, geometry.radialLips.single().radius, 0.0001f)
+        assertEquals(1f, geometry.radialLips.single().chordOffset, 0.0001f)
+        assertEquals(1f, geometry.scale, 0.0001f)
+    }
+
+    @Test
     fun validGeometrySatisfiesGravityAndSceneSafetyAtEveryPresentationAngle() {
         listOf(0f, 45f, 90f, 180f).forEach { rotationDegrees ->
             assertNull(

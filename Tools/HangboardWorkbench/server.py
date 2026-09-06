@@ -196,6 +196,11 @@ def _presentation_payload(
             else {}
         ),
         **(
+            {"geometryScale": presentation.geometry_scale}
+            if presentation.geometry_scale is not None
+            else {}
+        ),
+        **(
             {"geometryRotationAnchor": {"x": anchor[0], "y": anchor[1]}}
             if anchor is not None
             else {}

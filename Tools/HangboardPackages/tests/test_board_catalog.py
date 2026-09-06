@@ -1124,6 +1124,113 @@ def test_unversioned_board_loads_explicit_arbitrary_alias_rotation() -> None:
     assert alias.is_inverted is False
 
 
+def test_unversioned_board_loads_alias_geometry_scale() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=0.75,
+        geometryRotationAnchor={"x": 0.4, "y": 0.6},
+    )
+    document["holds"] = document["holds"][:1]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.geometry_scale == 0.75
+    assert alias.resolved_geometry_scale == 0.75
+
+
+def test_unversioned_board_defaults_omitted_alias_geometry_scale_to_one() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(sourcePresentationID="front")
+    document["holds"] = document["holds"][:1]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.geometry_scale is None
+    assert alias.resolved_geometry_scale == 1
+
+
+@pytest.mark.parametrize("scale", [0, -0.25, float("inf"), float("nan"), True])
+def test_unversioned_board_rejects_invalid_alias_geometry_scale(scale: object) -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=scale,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="geometryScale"):
+        module._load_board(document)
+
+
+def test_unversioned_board_rejects_geometry_scale_on_canonical_presentation() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0]["geometryScale"] = 0.75
+
+    with pytest.raises(ValueError, match="geometryScale requires sourcePresentationID"):
+        module._load_board(document)
+
+
+def test_unversioned_board_requires_scaled_alias_to_reuse_source_asset() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        sourcePresentationID="front",
+        geometryScale=0.75,
+    )
+    document["holds"] = document["holds"][:1]
+
+    with pytest.raises(ValueError, match="must reuse source presentation assetPath"):
+        module._load_board(document)
+
+
+def test_unversioned_board_scaling_can_keep_source_hold_geometry_inside_canvas() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=0.5,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "corner-source",
+            [{"x": 0.8, "y": 0.8, "width": 0.2, "height": 0.2}],
+        )
+    ]
+
+    alias = module._load_board(document).presentations[1]
+
+    assert alias.resolved_geometry_scale == 0.5
+
+
+def test_unversioned_board_rejects_scaled_source_hold_geometry_outside_canvas() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=2,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    document["holds"] = [
+        _source_hold_with_frames(
+            "corner-source",
+            [{"x": 0.8, "y": 0.8, "width": 0.2, "height": 0.2}],
+        )
+    ]
+
+    with pytest.raises(ValueError, match="projects source hold geometry outside"):
+        module._load_board(document)
+
+
 def test_unversioned_board_requires_explicit_rotation_alias_to_reuse_source_asset() -> None:
     module = load_board_catalog_module()
     document = multi_presentation_board_document()

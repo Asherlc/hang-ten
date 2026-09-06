@@ -254,7 +254,8 @@ private struct BoardEditorThumbnailView: View {
 
     @ViewBuilder
     var body: some View {
-        if board.resolvedCordRig(for: presentation) != nil {
+        if board.resolvedCordRig(for: presentation) != nil
+            || presentation.usesCanonicalArtworkTransform {
             GeometryReader { proxy in
                 BoardPresentationArtwork(
                     board: board,

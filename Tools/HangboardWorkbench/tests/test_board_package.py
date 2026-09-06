@@ -905,6 +905,88 @@ def test_explicit_arbitrary_rotation_is_preserved_and_projects_editor_paths(
     assert (min(ys), max(ys)) == pytest.approx((69.26, 104.74))
 
 
+def test_alias_geometry_scale_is_preserved_and_projects_editor_paths(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list) and isinstance(holds, list)
+    presentations[1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=0.5,
+        geometryRotationAnchor={"x": 0.5, "y": 0.5},
+    )
+    board["holds"] = holds[:1]
+    for piece in board["holds"][0]["geometry"]:
+        piece["frame"] = {"x": 0.4, "y": 0.4, "width": 0.1, "height": 0.1}
+    _write_json(package_root / "board.json", board)
+    (package_root / "assets" / "back.png").unlink()
+
+    package = board_package.load_board_package(package_root)
+    alias = package.presentation("back")
+    projected = board_package.editor_document(package, "back")
+
+    assert alias.geometry_scale == 0.5
+    assert alias.resolved_geometry_scale == 0.5
+    assert board_package.presentation_image_path(package, "back") == (
+        package_root / "assets" / "primary.png"
+    )
+    path = board_package.parse_closed_path(
+        projected["regions"][0]["displayPath"], 1774, 457
+    )
+    xs, ys = zip(*path.contour)
+    assert (min(xs), max(xs)) == pytest.approx((798.3, 887.0))
+    assert (min(ys), max(ys)) == pytest.approx((205.65, 228.5))
+
+
+@pytest.mark.parametrize("scale", [0, -0.25, float("inf"), float("nan"), True])
+def test_rejects_invalid_alias_geometry_scale(tmp_path: Path, scale: object) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][1].update(
+        assetPath="assets/primary.png",
+        sourcePresentationID="front",
+        geometryScale=scale,
+    )
+    board["holds"] = board["holds"][:1]
+    (package_root / "assets" / "back.png").unlink()
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="geometryScale"):
+        board_package.load_board_package(package_root)
+
+
+def test_rejects_geometry_scale_on_canonical_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][0]["geometryScale"] = 0.5
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="geometryScale requires sourcePresentationID"):
+        board_package.load_board_package(package_root)
+
+
+def test_scaled_alias_must_reuse_canonical_asset_path(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    board = _read_board(package_root)
+    board["presentations"][1].update(
+        sourcePresentationID="front",
+        geometryScale=0.5,
+    )
+    board["holds"] = board["holds"][:1]
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match="must reuse source presentation assetPath"):
+        board_package.load_board_package(package_root)
+
+
 def test_rigged_alias_projects_face_paths_around_scene_anchor_and_filters_holds(
     tmp_path: Path,
 ) -> None:

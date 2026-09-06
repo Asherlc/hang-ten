@@ -105,6 +105,70 @@ final class BoardRoutedCordRigGeometryTests: XCTestCase {
         }
     }
 
+    func testGeometryScaleTransformsBodyPortsPathsAndOcclusionsButKeepsWorldAndCordScaleFixed() throws {
+        let rig = replacing(
+            makeRig(),
+            occlusions: [
+                .radialLip(
+                    BoardRoutedCordRadialLip(
+                        bodyPortID: "body-left",
+                        radius: 20,
+                        chordOffset: 5
+                    )
+                ),
+                .facePatch(
+                    BoardRoutedCordFacePatch(commands: [
+                        .move(to: BoardCordPoint(x: 120, y: 180)),
+                        .line(to: BoardCordPoint(x: 180, y: 180)),
+                        .line(to: BoardCordPoint(x: 180, y: 220)),
+                        .close,
+                    ])
+                ),
+            ]
+        )
+        let geometry = try XCTUnwrap(
+            BoardRoutedCordRigGeometry.resolve(
+                rig: rig,
+                projection: BoardPresentationGeometryProjection(
+                    rotationDegrees: 0,
+                    geometryScale: 0.5
+                ),
+                in: CGRect(x: 0, y: 0, width: 400, height: 400)
+            )
+        )
+
+        XCTAssertEqual(geometry.scale, 1, "cord stroke scale remains scene-stable")
+        assertEqual(geometry.portPoints["body-left"], CGPoint(x: 150, y: 230))
+        assertEqual(geometry.portPoints["body-right"], CGPoint(x: 250, y: 230))
+        assertEqual(geometry.portPoints["world-left"], CGPoint(x: 110, y: 40))
+        XCTAssertEqual(
+            pathElements(try XCTUnwrap(geometry.paths.first { $0.id == "body-return" }).path),
+            [
+                .move(CGPoint(x: 150, y: 230)),
+                .quadCurve(CGPoint(x: 250, y: 230), CGPoint(x: 200, y: 270)),
+            ]
+        )
+        XCTAssertEqual(
+            pathElements(try XCTUnwrap(geometry.paths.first { $0.id == "world-bight" }).path),
+            [
+                .move(CGPoint(x: 110, y: 40)),
+                .line(CGPoint(x: 290, y: 40)),
+            ]
+        )
+        let lip = try XCTUnwrap(geometry.radialLips.first)
+        XCTAssertEqual(lip.radius, 10)
+        XCTAssertEqual(lip.chordOffset, 2.5)
+        XCTAssertEqual(
+            pathElements(try XCTUnwrap(geometry.facePatches.first).path),
+            [
+                .move(CGPoint(x: 185, y: 210)),
+                .line(CGPoint(x: 215, y: 210)),
+                .line(CGPoint(x: 215, y: 230)),
+                .closeSubpath,
+            ]
+        )
+    }
+
     func testDeclaredPairingPreservesAuthoredListOrder() throws {
         let geometry = try XCTUnwrap(
             BoardRoutedCordRigGeometry.resolve(

@@ -66,6 +66,25 @@ final class BoardCordRigGeometryTests: XCTestCase {
         XCTAssertEqual(geometry.strokeBounds.minY, 260.7, accuracy: 1e-9)
     }
 
+    func testDirectCordRigScalesBodyAttachmentsButKeepsWorldPullPointFixed() {
+        let geometry = BoardCordRigGeometry.make(
+            rig: portFrontRig,
+            projection: BoardPresentationGeometryProjection(
+                rotationDegrees: 0,
+                geometryScale: 0.5,
+                rotationAnchor: .center
+            ),
+            in: CGRect(x: 0, y: 0, width: 1200, height: 1464)
+        )
+
+        XCTAssertEqual(geometry.faceTransform.a, 0.5)
+        XCTAssertEqual(geometry.faceTransform.d, 0.5)
+        assertEqual(geometry.projectedAttachments[0], CGPoint(x: 438, y: 875))
+        assertEqual(geometry.projectedAttachments[1], CGPoint(x: 760, y: 875))
+        assertEqual(geometry.strands[0].start, CGPoint(x: 600, y: 285.5))
+        assertEqual(geometry.strands[1].start, CGPoint(x: 600, y: 285.5))
+    }
+
     @MainActor
     func testApprovedPortGeometryUsesClockFaceProjectionAndWorldUpSupport() throws {
         XCTAssertEqual(

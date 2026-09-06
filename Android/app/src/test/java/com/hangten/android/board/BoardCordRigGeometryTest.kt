@@ -97,6 +97,27 @@ class BoardCordRigGeometryTest {
     }
 
     @Test
+    fun uniformScaleTransformsBodyAndEyeletGeometryButLeavesWorldPullFixed() {
+        val geometry = resolveDirectTwoAnchorCordGeometry(
+            rig = rig,
+            presentation = presentation(geometryScale = 0.5f).copy(
+                geometryRotationAnchor = BoardGeometryRotationAnchor.Center,
+            ),
+            canvasWidth = 1200f,
+            canvasHeight = 1464f,
+        )!!
+
+        assertTransform(
+            BoardInPlaneTransform(0.5f, 0f, 0f, 0.5f, 300f, 366f),
+            geometry.faceTransform,
+        )
+        assertPoint(Point(438f, 875f), geometry.projectedAttachments[0])
+        assertPoint(Point(760f, 875f), geometry.projectedAttachments[1])
+        assertPoint(Point(600f, 285.5f), geometry.pullPoint)
+        assertEquals(0.5f, geometry.geometryScale, 0.0001f)
+    }
+
+    @Test
     fun arbitraryRotationTransformsRoundedHoldOutlineInsteadOfKeepingAxisAlignedBounds() {
         val hold = BoardGeometry(
             frame = NormalizedFrame(x = 0.4f, y = 0.4f, width = 0.2f, height = 0.1f),
@@ -163,16 +184,26 @@ class BoardCordRigGeometryTest {
     private fun presentation(
         isInverted: Boolean = false,
         rotationDegrees: Float? = null,
+        geometryScale: Float? = null,
     ) = BoardPresentation(
-        id = if (isInverted || rotationDegrees != null) "primary-rotated" else "primary",
+        id = if (isInverted || rotationDegrees != null || geometryScale != null) {
+            "primary-transformed"
+        } else {
+            "primary"
+        },
         name = "Primary",
         assetPath = "assets/primary.png",
         aspectRatio = 1200f / 1464f,
         isDefault = !isInverted,
-        sourcePresentationId = if (isInverted) "primary" else null,
+        sourcePresentationId = if (isInverted || rotationDegrees != null || geometryScale != null) {
+            "primary"
+        } else {
+            null
+        },
         isInverted = isInverted,
         rotationDegrees = rotationDegrees,
-        geometryRotationAnchor = if (isInverted || rotationDegrees != null) {
+        geometryScale = geometryScale,
+        geometryRotationAnchor = if (isInverted || rotationDegrees != null || geometryScale != null) {
             BoardGeometryRotationAnchor(0.5f, 113f / 183f)
         } else {
             null

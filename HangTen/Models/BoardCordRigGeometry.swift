@@ -94,8 +94,8 @@ struct BoardCordRigGeometry {
             eyeletCrescent(
                 center: $0,
                 toward: pullPoint,
-                radius: rig.eyeletRadius * scale,
-                chordOffset: 7 * scale
+                radius: rig.eyeletRadius * scale * projection.geometryScale,
+                chordOffset: 7 * scale * projection.geometryScale
             )
         }
         let pathBounds = tensionPath.boundingRect
