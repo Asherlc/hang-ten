@@ -14,7 +14,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.hypot
-import kotlin.math.min
 import kotlin.math.tan
 
 class BoardCordRigGeometryTest {
@@ -126,12 +125,15 @@ class BoardCordRigGeometryTest {
         val angle = kotlin.math.acos(
             (incomingRayX * outgoingRayX + incomingRayY * outgoingRayY).coerceIn(-1f, 1f),
         )
-        val expectedTrim = min(1.25f * 31f / tan(angle / 2f), 0.15f * min(incomingLength, outgoingLength))
         val incomingTrim = geometry.tensionPath.commands[1] as BoardPathCommand.LineTo
-        assertEquals(
-            expectedTrim,
-            hypot(incomingTrim.x - geometry.pullPoint.x, incomingTrim.y - geometry.pullPoint.y),
-            0.001f,
+        val actualTrim = hypot(
+            incomingTrim.x - geometry.pullPoint.x,
+            incomingTrim.y - geometry.pullPoint.y,
+        )
+        val actualRadius = actualTrim * tan(angle / 2f)
+        assertTrue(
+            "Expected the rounded turn to retain its requested 1.25-diameter radius, got $actualRadius",
+            actualRadius >= 1.25f * 31f - 0.001f,
         )
     }
 

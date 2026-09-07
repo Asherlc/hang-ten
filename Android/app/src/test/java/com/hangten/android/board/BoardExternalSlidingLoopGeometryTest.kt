@@ -50,6 +50,36 @@ class BoardExternalSlidingLoopGeometryTest {
     }
 
     @Test
+    fun roundedTensionApexClearsInvisiblePullPointForOutlinedStroke() {
+        val geometry = resolveExternalSlidingLoopCordGeometry(
+            rig = rig.copy(
+                sceneSize = BoardCordSize(100f, 100f),
+                sourceFrame = BoardCordRect(0f, 0f, 100f, 100f),
+                innerFaceFrame = BoardCordRect(25f, 40f, 50f, 20f),
+                style = BoardRoutedCordStyle(4f, "#FF0000", "#FF0000", listOf("#FF0000", "#FF0000")),
+                bodyContactFrame = BoardCordRect(25f, 40f, 50f, 20f),
+                cornerRadius = 4f,
+                clearance = 1f,
+                pullPoint = Point(50f, 10f),
+            ),
+            presentation = presentation(180f),
+            canvasWidth = 100f,
+            canvasHeight = 100f,
+        )!!
+
+        val tension = geometry.tensionPaths(BoardRoutedCordLayer.BehindFace).single()
+        val roundedCenterlineApex = tension.commands
+            .filterIsInstance<BoardPathCommand.CubicTo>()
+            .minBy { it.y }
+        val centerlineClearance = roundedCenterlineApex.y - geometry.spans.first().worldPoint.y
+
+        assertTrue(
+            "Expected enough apex clearance for the 1.18-diameter outline and raster fringe, got $centerlineClearance",
+            centerlineClearance >= geometry.cordDiameter * 0.64f,
+        )
+    }
+
+    @Test
     fun diagonalPositionReturnsThroughLowestCornerWithoutCrossingEitherLoadedLeg() {
         val geometry = resolve(45f)
         val points = geometry.paths.single().definingPoints
