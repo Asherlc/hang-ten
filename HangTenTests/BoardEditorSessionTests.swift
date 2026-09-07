@@ -88,8 +88,8 @@ final class BoardEditorSessionTests: XCTestCase {
 
     private func aliasFixtureCordRig() -> BoardDirectTwoAnchorCordRig {
         BoardDirectTwoAnchorCordRig(
-            sceneSize: BoardCordSize(width: 200, height: 100),
-            sourceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
+            sceneSize: BoardCordSize(width: 1000, height: 500),
+            sourceFrame: BoardCordRect(x: 400, y: 200, width: 200, height: 100),
             innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 200, height: 100),
             attachmentPoints: [
                 BoardCordPoint(x: 40, y: 70),
@@ -121,7 +121,9 @@ final class BoardEditorSessionTests: XCTestCase {
             BoardEditablePresentation(
                 id: "front-inverted",
                 name: "Front inverted",
-                assetPath: "assets/front-inverted.png",
+                assetPath: rotationDegrees == nil
+                    ? "assets/front-inverted.png"
+                    : "assets/primary.png",
                 aspectRatio: 2,
                 isDefault: true,
                 sourcePresentationID: "front",
@@ -451,7 +453,7 @@ final class BoardEditorSessionTests: XCTestCase {
         )
         XCTAssertNotNil(artwork.directTwoAnchorRig)
         XCTAssertEqual(artwork.sourcePresentationID, "front")
-        XCTAssertEqual(artwork.image.size, CGSize(width: 200, height: 100))
+        XCTAssertEqual(artwork.image.size, CGSize(width: 1000, height: 500))
         XCTAssertEqual(
             artwork.projection.project(
                 CGPoint(x: 20, y: 30),
@@ -535,11 +537,11 @@ final class BoardEditorSessionTests: XCTestCase {
         )
 
         // The canonical hold center is (0.25, 0.4). A 180-degree projection
-        // puts it at (0.75, 0.6) in the fitted 376 x 188 scene at (12, 6).
+        // puts it at (0.55, 0.52) in the fitted 376 x 188 scene at (12, 6).
         let pan = TestBoardEditorPanGestureRecognizer()
         let selector = NSSelectorFromString("handlePan:")
         XCTAssertTrue(canvas.responds(to: selector))
-        pan.locationValue = CGPoint(x: 294, y: 118.8)
+        pan.locationValue = CGPoint(x: 218.8, y: 103.76)
         pan.simulatedState = .began
         _ = canvas.perform(selector, with: pan)
 
@@ -548,9 +550,9 @@ final class BoardEditorSessionTests: XCTestCase {
             BoardEditorSession.PieceSelection(holdID: "hold-one", pieceIndex: 0)
         )
 
-        // Moving +10% right and down on the inverted screen is -10% on each
-        // canonical board axis.
-        pan.locationValue = CGPoint(x: 331.6, y: 137.6)
+        // Moving +10% of the 200 x 100 source frame right and down on the
+        // inverted screen is -10% on each canonical board axis.
+        pan.locationValue = CGPoint(x: 226.32, y: 107.52)
         pan.simulatedState = .changed
         _ = canvas.perform(selector, with: pan)
 
