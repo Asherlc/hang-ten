@@ -14,15 +14,26 @@ import board_package  # noqa: E402
 
 
 def _assert_audited_single_hand_package(
-    slug: str, board_id: str, hold_ids: set[str]
+    slug: str,
+    board_id: str,
+    hold_ids: set[str],
+    hold_ids_without_hand_capacity: set[str] | None = None,
 ) -> None:
     package_root = REPOSITORY_ROOT / "Hangboards" / slug
     package = board_package.load_board_package(package_root)
     board = package.board
+    expected_missing_hand_capacity = hold_ids_without_hand_capacity or set()
 
     assert board["id"] == board_id
     assert {hold["id"] for hold in board["holds"]} == hold_ids
-    assert all(hold.get("handCapacity") == 1 for hold in board["holds"])
+    assert {
+        hold["id"] for hold in board["holds"] if "handCapacity" not in hold
+    } == expected_missing_hand_capacity
+    assert all(
+        hold["handCapacity"] == 1
+        for hold in board["holds"]
+        if hold["id"] not in expected_missing_hand_capacity
+    )
     for presentation in board["presentations"]:
         assert (package_root / presentation["assetPath"]).is_file()
 
@@ -122,7 +133,14 @@ def test_captain_fingerfood_unlevel_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-unlevel",
         "captain-fingerfood.unlevel",
-        {"curved-edge-20", "curved-edge-25", "outer-jug"},
+        {
+            "curved-edge-20",
+            "curved-edge-25",
+            "vertical-pocket-left-end",
+            "vertical-pocket-right-end",
+            "outer-jug",
+        },
+        {"vertical-pocket-left-end", "vertical-pocket-right-end"},
     )
 
 
