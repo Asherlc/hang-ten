@@ -25,7 +25,7 @@ is inferred from a marketing photograph.
 | Plateau | Lifting Edge base kit | [product](https://www.plateauclimbing.com/products/plateau-lifting-edge): current add-to-cart compact aluminium body, 18 mm Oak-or-Pine edge, and supplied 15/10 mm blocker.  Separate aftermarket inserts only when their own current page provides a complete direct visual inventory. | included |
 | Frictitious | The NUG | [product](https://frictitiousclimbing.com/products/the-nug): 130 x 60 x 40 mm; 40 mm jug, 60 mm pinch, and 8/13/20/25 mm edges. | included |
 | Captain Fingerfood | POCKET (two-depth revision, Lines cosmetic edition) | [Lines product](https://en.captainfingerfood.rocks/products/lines-hangboard): 110 x 66 x 29 mm and the current grip chart names the 15/20 mm bars and their rotated two-finger use. The current Lines evidence supports one continuous outer edge used for one-arm pulling / fitting a hand, not two independently selectable outer contacts. | included |
-| Captain Fingerfood | UNLEVEL | [product](https://en.captainfingerfood.rocks/products/unlevel-hangboard): 12 x 7 x 3 cm, two curved rung depths (20/25 mm), and a jug explicitly shown in the manufacturer grip chart. | included |
+| Captain Fingerfood | UNLEVEL | [product](https://en.captainfingerfood.rocks/products/unlevel-hangboard): 12 x 7 x 3 cm, two curved rung depths (20/25 mm), a jug, and two 25/20 mm pocket orientations explicitly shown in the manufacturer grip chart. | included |
 | Captain Fingerfood | DUAL | [product](https://en.captainfingerfood.rocks/products/dual-hangboard): 12 x 7 x 3 cm, one straight and one single centrally curved 20 mm edge on opposing sides of the same cavity, plus a jug explicitly shown in the manufacturer grip chart. | included |
 | Aelith | Cyclops Portable Hangboard (current SKU 1001-011, Blue x Black) | [current product](https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/): product is in stock and add-to-cart. The complete selectable inventory is one 20 mm mono edge; the lanyard and carabiner hole are suspension hardware, not contacts. Other grip postures named on the page use that same mono edge and are not separate holds. | included |
 | Crimptonite | Helium Mobile | [product](https://crimptonite.com/product/helium-mobile/): current 400 × 58 × 24 mm, 125 g portable board; 14 mm, 22 mm, 10/18 mm centre hold, top jug, and a back jug/sloper are explicitly described. | included |
@@ -54,7 +54,11 @@ mapping of the inventory in the inclusion table, not additional product
 claims. A named rotated use of the same physical edge is not duplicated as a
 second hold: Captain Fingerfood's two-finger uses reuse the corresponding edge.
 DUAL and UNLEVEL each add one `outer-jug` because their own grip charts
-explicitly name the top exterior band as a jug. The current Lines evidence
+explicitly name the top exterior band as a jug. UNLEVEL's grip chart also
+explicitly labels two 25/20 mm pocket orientations; these map to
+`vertical-pocket-left-end` and `vertical-pocket-right-end`. The left/right
+names are app-specific stable IDs distinguishing the physical end exposed by
+the 270° and 90° presentations, respectively. The current Lines evidence
 supports only one continuous outer edge, mapped as `jug-outer-rim`; it does not
 support splitting the same body into a separate pinch and jug. The Plateau
 blocker's two sourced faces remain separate contacts.
@@ -74,7 +78,7 @@ capacity claim about any product.
 | `plateau-lifting-edge` | `plateau.lifting-edge` | `edge-18`, `blocker-edge-15`, `blocker-edge-10` |
 | `frictitious-nug` | `frictitious.nug` | `edge-8`, `edge-13`, `edge-20`, `edge-25`, `jug-40`, `pinch-60` |
 | `captain-fingerfood-pocket` | `captain-fingerfood.pocket` | `edge-15`, `edge-20`, `jug-outer-rim` |
-| `captain-fingerfood-unlevel` | `captain-fingerfood.unlevel` | `curved-edge-20`, `curved-edge-25`, `outer-jug` |
+| `captain-fingerfood-unlevel` | `captain-fingerfood.unlevel` | `curved-edge-20`, `curved-edge-25`, `vertical-pocket-left-end`, `vertical-pocket-right-end`, `outer-jug` |
 | `captain-fingerfood-dual` | `captain-fingerfood.dual` | `straight-edge-20`, `curved-edge-20`, `outer-jug` |
 | `aelith-cyclops-011` | `aelith.cyclops-011` | `mono-20` |
 | `crimptonite-helium-mobile` | `crimptonite.helium-mobile` | `edge-14`, `edge-22`, `center-edge-10`, `center-edge-18`, `top-jug`, `back-jug-sloper` |
