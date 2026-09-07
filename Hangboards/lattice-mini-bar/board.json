@@ -262,7 +262,83 @@
       "name": "Ergonomic jug",
       "assetPath": "assets/ergonomic-jug.png",
       "aspectRatio": 1.5,
-      "default": false
+      "default": false,
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {"width": 1536, "height": 1024},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1536, "height": 1024},
+        "innerFaceFrame": {"x": 128, "y": 188, "width": 1280, "height": 853.33333333},
+        "style": {
+          "diameter": 18,
+          "outlineColor": "#06384E",
+          "baseColor": "#087FB5",
+          "braidColors": ["#39AEDD", "#F2A51F"]
+        },
+        "ports": [
+          {"id": "left-station-outer", "space": "body", "point": {"x": 298.83333333, "y": 516.33333333}},
+          {"id": "left-station-inner", "space": "body", "point": {"x": 318.83333333, "y": 516.33333333}},
+          {"id": "right-station-inner", "space": "body", "point": {"x": 1217.16666667, "y": 516.33333333}},
+          {"id": "right-station-outer", "space": "body", "point": {"x": 1237.16666667, "y": 516.33333333}},
+          {"id": "support-lane-0", "space": "world", "point": {"x": 768, "y": 62}},
+          {"id": "support-lane-1", "space": "world", "point": {"x": 768, "y": 62}},
+          {"id": "support-lane-2", "space": "world", "point": {"x": 768, "y": 62}},
+          {"id": "support-lane-3", "space": "world", "point": {"x": 768, "y": 62}}
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": ["left-station-outer", "left-station-inner", "right-station-inner", "right-station-outer"],
+            "worldPortIDs": ["support-lane-0", "support-lane-1", "support-lane-2", "support-lane-3"],
+            "pairing": "declared",
+            "layer": "aboveFace"
+          }
+        ],
+        "paths": [
+          {
+            "id": "left-station-outer-front", "space": "body", "layer": "aboveFace",
+            "commands": [
+              {"command": "move", "to": [298.83333333, 516.33333333]},
+              {"command": "curve", "control1": [298.83333333, 564.66666667], "control2": [298.83333333, 645.5], "to": [300.5, 691.33333333]}
+            ]
+          },
+          {
+            "id": "left-station-hidden-return", "space": "body", "layer": "behindFace",
+            "commands": [
+              {"command": "move", "to": [300.5, 691.33333333]},
+              {"command": "curve", "control1": [301.33333333, 708], "control2": [316.33333333, 708], "to": [317.16666667, 691.33333333]}
+            ]
+          },
+          {
+            "id": "left-station-inner-front", "space": "body", "layer": "aboveFace",
+            "commands": [
+              {"command": "move", "to": [317.16666667, 691.33333333]},
+              {"command": "curve", "control1": [318.83333333, 645.5], "control2": [318.83333333, 564.66666667], "to": [318.83333333, 516.33333333]}
+            ]
+          },
+          {
+            "id": "right-station-inner-front", "space": "body", "layer": "aboveFace",
+            "commands": [
+              {"command": "move", "to": [1217.16666667, 516.33333333]},
+              {"command": "curve", "control1": [1217.16666667, 564.66666667], "control2": [1217.16666667, 645.5], "to": [1218.83333333, 691.33333333]}
+            ]
+          },
+          {
+            "id": "right-station-hidden-return", "space": "body", "layer": "behindFace",
+            "commands": [
+              {"command": "move", "to": [1218.83333333, 691.33333333]},
+              {"command": "curve", "control1": [1219.66666667, 708], "control2": [1234.66666667, 708], "to": [1235.5, 691.33333333]}
+            ]
+          },
+          {
+            "id": "right-station-outer-front", "space": "body", "layer": "aboveFace",
+            "commands": [
+              {"command": "move", "to": [1235.5, 691.33333333]},
+              {"command": "curve", "control1": [1237.16666667, 645.5], "control2": [1237.16666667, 564.66666667], "to": [1237.16666667, 516.33333333]}
+            ]
+          }
+        ],
+        "occlusions": []
+      }
     },
     {
       "id": "mini-pinch",
@@ -283,10 +359,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.312,
-            "y": 0.754,
-            "width": 0.375,
-            "height": 0.132
+            "x": 0.087,
+            "y": 0.382,
+            "width": 0.827,
+            "height": 0.219
           },
           "shape": {
             "type": "path",
@@ -294,82 +370,98 @@
               {
                 "command": "move",
                 "to": [
-                  0.0,
-                  0.12
+                  0.038,
+                  0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.16,
-                  0.03
+                  0.24,
+                  0.0
                 ],
                 "control2": [
-                  0.34,
+                  0.76,
                   0.0
                 ],
                 "to": [
-                  0.5,
+                  0.962,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.66,
+                  0.986,
                   0.0
                 ],
                 "control2": [
-                  0.84,
-                  0.03
+                  1.0,
+                  0.2
                 ],
                 "to": [
                   1.0,
-                  0.12
+                  0.5
                 ]
               },
               {
-                "command": "line",
-                "to": [
+                "command": "curve",
+                "control1": [
                   1.0,
-                  0.84
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.82,
-                  0.95
+                  0.8
                 ],
                 "control2": [
-                  0.66,
+                  0.986,
                   1.0
                 ],
                 "to": [
-                  0.5,
+                  0.962,
                   1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.34,
+                  0.76,
                   1.0
                 ],
                 "control2": [
-                  0.18,
-                  0.95
+                  0.24,
+                  1.0
                 ],
                 "to": [
-                  0.0,
-                  0.84
+                  0.038,
+                  1.0
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.014,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.8
+                ],
                 "to": [
                   0.0,
-                  0.12
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.2
+                ],
+                "control2": [
+                  0.014,
+                  0.0
+                ],
+                "to": [
+                  0.038,
+                  0.0
                 ]
               },
               {
