@@ -484,7 +484,7 @@ class BoardRoutedCordRigGeometryTest {
 
         assertEquals(BoardBounds(20f, 30f, 60f, 40f), canvas.holdBounds)
         assertEquals(BoardInPlaneTransform(0f, 1f, -1f, 0f, 100f, 0f), canvas.faceTransform)
-        assertEquals(rig, canvas.routedRig)
+        assertEquals(rig.style, canvas.routedStyle)
         assertNotNull(canvas.routedCordGeometry)
         assertNull(canvas.directTwoAnchorRig)
         assertNull(canvas.cordGeometry)

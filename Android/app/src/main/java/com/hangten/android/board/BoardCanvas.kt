@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.IntSize
 import com.hangten.android.content.Board
 import com.hangten.android.content.BoardCordRig
+import com.hangten.android.content.BoardRoutedCordStyle
 import com.hangten.android.content.BoardGeometry
 import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.BoardRoutedCordLayer
@@ -343,11 +344,11 @@ fun BoardCanvas(
             drawIntoCanvas { canvas ->
                 val nativeCanvas = canvas.nativeCanvas
                 when {
-                    canvasGeometry.routedRig != null && canvasGeometry.routedCordGeometry != null -> {
+                    canvasGeometry.routedStyle != null && canvasGeometry.routedCordGeometry != null -> {
                         drawRoutedBoardArtwork(
                             nativeCanvas,
                             image,
-                            canvasGeometry.routedRig,
+                            canvasGeometry.routedStyle,
                             canvasGeometry.routedCordGeometry,
                         )
                     }
@@ -404,7 +405,7 @@ internal data class BoardCanvasGeometry(
     val faceTransform: BoardInPlaneTransform,
     val directTwoAnchorRig: BoardCordRig.DirectTwoAnchor? = null,
     val cordGeometry: DirectTwoAnchorCordGeometry? = null,
-    val routedRig: BoardCordRig.Routed? = null,
+    val routedStyle: BoardRoutedCordStyle? = null,
     val routedCordGeometry: RoutedCordRigGeometry? = null,
 )
 
@@ -443,7 +444,17 @@ internal fun boardCanvasGeometry(
             return BoardCanvasGeometry(
                 holdBounds = geometry.faceBounds,
                 faceTransform = geometry.faceTransform,
-                routedRig = rig,
+                routedStyle = rig.style,
+                routedCordGeometry = geometry,
+            )
+        }
+        is BoardCordRig.ExternalSlidingLoop -> {
+            val geometry = resolveExternalSlidingLoopCordGeometry(rig, presentation, width, height)
+                ?: return null
+            return BoardCanvasGeometry(
+                holdBounds = geometry.faceBounds,
+                faceTransform = geometry.faceTransform,
+                routedStyle = rig.style,
                 routedCordGeometry = geometry,
             )
         }
@@ -481,14 +492,14 @@ internal fun routedArtworkOperations(
 private fun drawRoutedBoardArtwork(
     canvas: android.graphics.Canvas,
     image: ImageBitmap,
-    rig: BoardCordRig.Routed,
+    style: BoardRoutedCordStyle,
     geometry: RoutedCordRigGeometry,
 ) {
     routedArtworkOperations(geometry).forEach { operation ->
         when (operation) {
             is RoutedArtworkOperation.CordLayer -> drawRoutedCordLayer(
                 canvas = canvas,
-                rig = rig,
+                style = style,
                 geometry = geometry,
                 layer = operation.layer,
             )
@@ -526,7 +537,7 @@ private fun drawRoutedBoardArtwork(
 
 private fun drawRoutedCordLayer(
     canvas: android.graphics.Canvas,
-    rig: BoardCordRig.Routed,
+    style: BoardRoutedCordStyle,
     geometry: RoutedCordRigGeometry,
     layer: BoardRoutedCordLayer,
 ) {
@@ -534,18 +545,18 @@ private fun drawRoutedCordLayer(
         geometry.authoredPaths(layer).map { it.path.toAndroidPath() }
     if (paths.isEmpty()) return
 
-    val diameter = rig.style.diameter * geometry.scale
+    val diameter = style.diameter * geometry.scale
     if (!diameter.isFinite() || diameter <= 0f) return
     strokePaths(
         canvas = canvas,
         paths = paths,
-        color = routedColor(rig.style.outlineColor),
+        color = routedColor(style.outlineColor),
         width = diameter * 1.6f,
     )
     strokePaths(
         canvas = canvas,
         paths = paths,
-        color = routedColor(rig.style.baseColor),
+        color = routedColor(style.baseColor),
         width = diameter,
     )
     drawRoutedBraid(
@@ -553,7 +564,7 @@ private fun drawRoutedCordLayer(
         paths = paths,
         geometry = geometry,
         diameter = diameter,
-        colors = rig.style.braidColors.map(::routedColor),
+        colors = style.braidColors.map(::routedColor),
     )
 }
 

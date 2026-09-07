@@ -41,6 +41,17 @@ sealed interface BoardCordRig {
         val paths: List<BoardRoutedCordPath>,
         val occlusions: List<BoardRoutedCordOcclusion>,
     ) : BoardCordRig
+
+    data class ExternalSlidingLoop(
+        override val sceneSize: BoardCordSize,
+        override val sourceFrame: BoardCordRect,
+        override val innerFaceFrame: BoardCordRect,
+        val style: BoardRoutedCordStyle,
+        val bodyContactFrame: BoardCordRect,
+        val cornerRadius: Float,
+        val clearance: Float,
+        val pullPoint: Point,
+    ) : BoardCordRig
 }
 
 enum class BoardRoutedCordSpace { Body, World }

@@ -1,6 +1,7 @@
 package com.hangten.android.content
 
 import com.hangten.android.board.RoutedCordPresentationValidationFailure
+import com.hangten.android.board.externalSlidingLoopPresentationValidationFailure
 import com.hangten.android.board.routedCordPresentationValidationFailure
 import kotlin.math.cos
 import kotlin.math.max
@@ -138,6 +139,11 @@ class AssetBoardRepository(
                     presentation = presentation,
                     rig = rig,
                 )
+                is BoardCordRig.ExternalSlidingLoop -> {
+                    externalSlidingLoopPresentationValidationFailure(rig, presentation)?.let { reason ->
+                        fail("Board $boardId presentation ${presentation.id} external sliding loop $reason.")
+                    }
+                }
                 null -> Unit
             }
         }
@@ -459,8 +465,61 @@ class AssetBoardRepository(
         return when (objectValue.requiredString("type", path)) {
             "directTwoAnchor" -> decodeDirectTwoAnchorCordRig(objectValue, path)
             "routed" -> decodeRoutedCordRig(objectValue, path)
+            "externalSlidingLoop" -> decodeExternalSlidingLoopCordRig(objectValue, path)
             else -> fail("$path.type is unsupported.")
         }
+    }
+
+    private fun decodeExternalSlidingLoopCordRig(
+        objectValue: JsonValue.Object,
+        path: String,
+    ): BoardCordRig.ExternalSlidingLoop {
+        objectValue.rejectUnknownKeys(
+            setOf(
+                "type", "sceneSize", "sourceFrame", "innerFaceFrame", "style",
+                "bodyContactFrame", "cornerRadius", "clearance", "pullPoint",
+            ),
+            path,
+        )
+        val scene = objectValue.required("sceneSize", path).asObject("$path.sceneSize")
+        scene.rejectUnknownKeys(setOf("width", "height"), "$path.sceneSize")
+        fun rect(name: String) = decodeCordRect(
+            objectValue.required(name, path).asObject("$path.$name"), "$path.$name",
+        )
+        val contactFrame = rect("bodyContactFrame")
+        val cornerRadius = objectValue.required("cornerRadius", path).asFiniteFloat("$path.cornerRadius")
+        if (cornerRadius < 0f || cornerRadius > minOf(contactFrame.width, contactFrame.height) / 2f) {
+            fail("$path.cornerRadius must be non-negative and at most half the shorter bodyContactFrame side.")
+        }
+        val clearance = objectValue.required("clearance", path).asFiniteFloat("$path.clearance")
+        if (clearance < 0f) fail("$path.clearance must be non-negative.")
+        return BoardCordRig.ExternalSlidingLoop(
+            sceneSize = BoardCordSize(
+                positiveFiniteFloat(scene.required("width", "$path.sceneSize"), "$path.sceneSize.width"),
+                positiveFiniteFloat(scene.required("height", "$path.sceneSize"), "$path.sceneSize.height"),
+            ),
+            sourceFrame = rect("sourceFrame"),
+            innerFaceFrame = rect("innerFaceFrame"),
+            style = decodeRoutedCordStyle(objectValue.required("style", path), "$path.style"),
+            bodyContactFrame = contactFrame,
+            cornerRadius = cornerRadius,
+            clearance = clearance,
+            pullPoint = decodeCordPoint(objectValue.required("pullPoint", path).asObject("$path.pullPoint"), "$path.pullPoint"),
+        )
+    }
+
+    private fun decodeRoutedCordStyle(value: JsonValue, path: String): BoardRoutedCordStyle {
+        val style = value.asObject(path)
+        style.rejectUnknownKeys(setOf("diameter", "outlineColor", "baseColor", "braidColors"), path)
+        val colors = style.required("braidColors", path).asArray("$path.braidColors")
+            .mapIndexed { index, color -> decodeRoutedColor(color, "$path.braidColors[$index]") }
+        if (colors.size != 2) fail("$path.braidColors must contain exactly two colors.")
+        return BoardRoutedCordStyle(
+            diameter = positiveFiniteFloat(style.required("diameter", path), "$path.diameter"),
+            outlineColor = decodeRoutedColor(style.required("outlineColor", path), "$path.outlineColor"),
+            baseColor = decodeRoutedColor(style.required("baseColor", path), "$path.baseColor"),
+            braidColors = colors,
+        )
     }
 
     private fun decodeDirectTwoAnchorCordRig(
@@ -541,19 +600,7 @@ class AssetBoardRepository(
             "$path.innerFaceFrame",
         )
 
-        val stylePath = "$path.style"
-        val styleObject = objectValue.required("style", path).asObject(stylePath)
-        styleObject.rejectUnknownKeys(setOf("diameter", "outlineColor", "baseColor", "braidColors"), stylePath)
-        val braidColors = styleObject.required("braidColors", stylePath)
-            .asArray("$stylePath.braidColors")
-            .mapIndexed { index, value -> decodeRoutedColor(value, "$stylePath.braidColors[$index]") }
-        if (braidColors.size != 2) fail("$stylePath.braidColors must contain exactly two colors.")
-        val style = BoardRoutedCordStyle(
-            diameter = positiveFiniteFloat(styleObject.required("diameter", stylePath), "$stylePath.diameter"),
-            outlineColor = decodeRoutedColor(styleObject.required("outlineColor", stylePath), "$stylePath.outlineColor"),
-            baseColor = decodeRoutedColor(styleObject.required("baseColor", stylePath), "$stylePath.baseColor"),
-            braidColors = braidColors,
-        )
+        val style = decodeRoutedCordStyle(objectValue.required("style", path), "$path.style")
 
         val portsPath = "$path.ports"
         val ports = objectValue.required("ports", path).asArray(portsPath).mapIndexed { index, value ->

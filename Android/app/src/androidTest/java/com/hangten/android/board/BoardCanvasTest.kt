@@ -297,11 +297,34 @@ class BoardCanvasTest {
         assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.12f))
     }
 
+    @Test
+    fun invertedExternalLoopDrawsJoinedApexAndLowerReturnBehindCanonicalFace() {
+        val rig = BoardCordRig.ExternalSlidingLoop(
+            sceneSize = BoardCordSize(100f, 100f),
+            sourceFrame = BoardCordRect(0f, 0f, 100f, 100f),
+            innerFaceFrame = BoardCordRect(25f, 40f, 50f, 20f),
+            style = BoardRoutedCordStyle(4f, "#FF0000", "#FF0000", listOf("#FF0000", "#FF0000")),
+            bodyContactFrame = BoardCordRect(25f, 40f, 50f, 20f),
+            cornerRadius = 4f,
+            clearance = 1f,
+            pullPoint = Point(50f, 10f),
+        )
+        val pixels = captureRig("Sliding Loop Fixture", rig, 50, 20, rotationDegrees = 180f)
+
+        assertColor(Color.Red, pixels.percentPixel(0.5f, 0.1f))
+        assertColor(Color.Green, pixels.percentPixel(0.5f, 0.5f))
+        assertColor(Color.Red, pixels.percentPixel(0.5f, 0.63f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.04f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.3f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.7f))
+    }
+
     private fun captureRig(
         boardName: String,
         rig: BoardCordRig,
         faceWidth: Int,
         faceHeight: Int,
+        rotationDegrees: Float = 0f,
     ) = BoardPresentation(
         id = "primary",
         name = "Primary",
@@ -317,7 +340,13 @@ class BoardCanvasTest {
             subtitle = "Fixture",
             productUrl = "https://example.invalid/apex-fixture",
             aspectRatio = 1f,
-            presentations = listOf(presentation),
+            presentations = listOf(
+                presentation,
+                presentation.copy(
+                    id = "rotated", isDefault = false, cordRig = null,
+                    sourcePresentationId = "primary", rotationDegrees = rotationDegrees,
+                ),
+            ),
             holds = emptyList(),
         )
         val faceBitmap = Bitmap.createBitmap(faceWidth, faceHeight, Bitmap.Config.ARGB_8888).apply {
@@ -331,6 +360,7 @@ class BoardCanvasTest {
                     onHoldTap = {},
                     modifier = Modifier.size(200.dp),
                     imageOverride = faceBitmap.asImageBitmap(),
+                    presentationId = if (rotationDegrees == 0f) "primary" else "rotated",
                 )
             }
         }
