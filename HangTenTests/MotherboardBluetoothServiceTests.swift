@@ -326,7 +326,9 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             ),
             Date(timeIntervalSince1970: 1_234)
         ))
-        try await Task.sleep(for: .milliseconds(30))
+        try await waitForService("WH-C06 advertisement liveness failure") {
+            service.state == .failed
+        }
 
         XCTAssertEqual(service.state, .failed)
         XCTAssertEqual(
