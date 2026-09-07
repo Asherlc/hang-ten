@@ -45,6 +45,10 @@ function isPositiveFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
 }
 
+function isNonNegativeFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
 function isGeometryRotationAnchor(value: unknown): value is { x: number; y: number } {
   return isRecord(value)
     && Object.keys(value).length === 2
@@ -261,8 +265,41 @@ function isRoutedCordRig(value: unknown): boolean {
   });
 }
 
+function isExternalSlidingLoopCordRig(value: unknown): boolean {
+  if (!isRecord(value) || value.type !== "externalSlidingLoop" || !hasExactKeys(value, [
+    "type",
+    "sceneSize",
+    "sourceFrame",
+    "innerFaceFrame",
+    "style",
+    "bodyContactFrame",
+    "cornerRadius",
+    "clearance",
+    "pullPoint",
+  ])) return false;
+  if (!isPositiveSize(value.sceneSize)
+    || !isCordRect(value.sourceFrame)
+    || !isCordRect(value.innerFaceFrame)
+    || !isCordRect(value.bodyContactFrame)
+    || !isNonNegativeFiniteNumber(value.cornerRadius)
+    || value.cornerRadius > Math.min(value.bodyContactFrame.width, value.bodyContactFrame.height) / 2
+    || !isNonNegativeFiniteNumber(value.clearance)
+    || !isFinitePoint(value.pullPoint)
+    || !isRecord(value.style)
+    || !hasExactKeys(value.style, ["diameter", "outlineColor", "baseColor", "braidColors"])
+    || !isPositiveFiniteNumber(value.style.diameter)
+    || !isHexColor(value.style.outlineColor)
+    || !isHexColor(value.style.baseColor)
+    || !Array.isArray(value.style.braidColors)
+    || value.style.braidColors.length !== 2
+    || !value.style.braidColors.every(isHexColor)) return false;
+  return true;
+}
+
 function isCordRig(value: unknown): boolean {
-  return isDirectTwoAnchorCordRig(value) || isRoutedCordRig(value);
+  return isDirectTwoAnchorCordRig(value)
+    || isRoutedCordRig(value)
+    || isExternalSlidingLoopCordRig(value);
 }
 
 function isSloperMetadata(value: unknown): boolean {

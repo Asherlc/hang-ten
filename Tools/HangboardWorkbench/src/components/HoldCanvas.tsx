@@ -4,6 +4,7 @@ import {
   cordRigViewBox,
   resolveCordRigPresentationGeometry,
   type DirectCordRigPresentationGeometry,
+  type ExternalSlidingLoopPresentationGeometry,
   type RoutedCordRigPresentationGeometry,
 } from "../cord-rig.ts";
 import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
@@ -223,7 +224,7 @@ const ROUTED_LAYER_IDS: Record<RoutedCordLayer, string> = {
 };
 
 interface RoutedCordLayerArtworkProps {
-  geometry: RoutedCordRigPresentationGeometry;
+  geometry: RoutedCordRigPresentationGeometry | ExternalSlidingLoopPresentationGeometry;
   layer: RoutedCordLayer;
 }
 
@@ -711,7 +712,8 @@ export function HoldCanvas({
           onDoubleClick={editor.onDoubleClick}
           onContextMenu={editor.onContextMenu}
         >
-          {cordRigGeometry?.type === "routed" && <RoutedCordLayerArtwork
+          {(cordRigGeometry?.type === "routed"
+            || cordRigGeometry?.type === "externalSlidingLoop") && <RoutedCordLayerArtwork
             geometry={cordRigGeometry}
             layer="behindFace"
           />}

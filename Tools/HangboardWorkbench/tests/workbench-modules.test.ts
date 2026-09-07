@@ -20,6 +20,7 @@ import type {
   Dialogs,
   DirectTwoAnchorCordRig,
   EditorDocument,
+  ExternalSlidingLoopCordRig,
   LoadedBoard,
   PathEditor,
   Point,
@@ -146,6 +147,28 @@ function routedRenderRig(overrides: Partial<RoutedCordRig> = {}): RoutedCordRig 
         ],
       },
     ],
+    ...overrides,
+  };
+}
+
+function externalSlidingLoopRenderRig(
+  overrides: Partial<ExternalSlidingLoopCordRig> = {},
+): ExternalSlidingLoopCordRig {
+  return {
+    type: "externalSlidingLoop",
+    sceneSize: { width: 120, height: 170 },
+    sourceFrame: { x: 0, y: 0, width: 120, height: 170 },
+    innerFaceFrame: { x: 0, y: 0, width: 120, height: 170 },
+    style: {
+      diameter: 10,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    bodyContactFrame: { x: 30, y: 70, width: 60, height: 30 },
+    cornerRadius: 0,
+    clearance: 0,
+    pullPoint: { x: 60, y: 10 },
     ...overrides,
   };
 }
@@ -478,6 +501,57 @@ test("the browser client preserves a structurally valid canonical routed cord ri
   assert.deepEqual(board.presentations?.[0]?.cordRig, rig);
 });
 
+test("the browser client preserves a canonical external sliding loop cord rig", async () => {
+  const rig = externalSlidingLoopRenderRig();
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({
+      presentations: [{
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: rig,
+      }],
+    }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.presentations?.[0]?.cordRig, rig);
+});
+
+test("the browser client rejects malformed external sliding loop structure", async (context) => {
+  const cases: Array<[string, (rig: Record<string, any>) => void]> = [
+    ["negative clearance", (rig) => { rig.clearance = -1; }],
+    ["oversized corner radius", (rig) => { rig.cornerRadius = 16; }],
+    ["non-finite contact frame", (rig) => { rig.bodyContactFrame.x = Number.NaN; }],
+    ["missing pull point", (rig) => { delete rig.pullPoint; }],
+    ["unknown key", (rig) => { rig.paths = []; }],
+  ];
+
+  for (const [name, mutate] of cases) {
+    await context.test(name, async () => {
+      const rig = structuredClone(externalSlidingLoopRenderRig()) as unknown as Record<string, any>;
+      mutate(rig);
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          presentations: [{
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+            cordRig: rig,
+          } as unknown as BoardPresentation],
+        }),
+      }));
+
+      await assert.rejects(createWorkbenchClient(runtime).getBoard("compact"), /invalid board/);
+    });
+  }
+});
+
 test("the browser client rejects malformed routed cord structure", async (context) => {
   const baseRig = {
     type: "routed",
@@ -781,6 +855,143 @@ test("routed render layers join effectively coincident world endpoints at one ap
     id: "main:apex:0",
     d: "M 30 90 L 60.000000005 10 L 90 90",
   }]);
+});
+
+function externalSlidingLoopGeometry(
+  rotationDegrees: number,
+  options: {
+    rig?: ExternalSlidingLoopCordRig;
+    geometryScale?: number;
+    anchor?: Point;
+  } = {},
+) {
+  const document: EditorDocument = {
+    presentationID: rotationDegrees === 0 ? "front" : `front-${rotationDegrees}`,
+    canvas: { width: 120, height: 170 },
+    regions: [],
+  };
+  const presentations: BoardPresentation[] = [{
+    presentationID: "front",
+    displayName: "Front",
+    imageUrl: "/api/boards/compact/image?presentationID=front",
+    default: rotationDegrees === 0,
+    cordRig: options.rig ?? externalSlidingLoopRenderRig(),
+  }];
+  if (rotationDegrees !== 0) {
+    presentations.push({
+      presentationID: `front-${rotationDegrees}`,
+      displayName: `Front ${rotationDegrees}`,
+      imageUrl: `/api/boards/compact/image?presentationID=front-${rotationDegrees}`,
+      default: true,
+      sourcePresentationID: "front",
+      rotationDegrees,
+      geometryRotationAnchor: options.anchor ?? { x: 0.5, y: 0.5 },
+      ...(options.geometryScale === undefined ? {} : { geometryScale: options.geometryScale }),
+    });
+  }
+  const geometry = resolveCordRigPresentationGeometry(boardFixture({
+    document,
+    selectedPresentationID: document.presentationID,
+    presentations,
+  }), document);
+  assert.ok(geometry);
+  if (geometry.type !== "externalSlidingLoop") {
+    assert.fail("expected an external sliding loop rig");
+  }
+  return geometry;
+}
+
+function properSegmentIntersection(
+  firstStart: Point,
+  firstEnd: Point,
+  secondStart: Point,
+  secondEnd: Point,
+): boolean {
+  const side = (start: Point, end: Point, point: Point): number => (
+    (end.x - start.x) * (point.y - start.y)
+      - (end.y - start.y) * (point.x - start.x)
+  );
+  const firstSide = side(firstStart, firstEnd, secondStart);
+  const secondSide = side(firstStart, firstEnd, secondEnd);
+  const thirdSide = side(secondStart, secondEnd, firstStart);
+  const fourthSide = side(secondStart, secondEnd, firstEnd);
+  return firstSide * secondSide < -1e-9 && thirdSide * fourthSide < -1e-9;
+}
+
+test("external sliding loop resolves taut legs and a world-lower return at 0 and 180 degrees", () => {
+  for (const rotationDegrees of [0, 180]) {
+    const geometry = externalSlidingLoopGeometry(rotationDegrees);
+
+    assert.equal(geometry.contactPoints.length, 2);
+    assert.ok(Math.abs(geometry.contactPoints[0].x - 25.7) < 0.3);
+    assert.ok(Math.abs(geometry.contactPoints[0].y - 67.4) < 0.3);
+    assert.ok(Math.abs(geometry.contactPoints[1].x - 94.3) < 0.3);
+    assert.ok(Math.abs(geometry.contactPoints[1].y - 67.4) < 0.3);
+    assert.ok(Math.abs(Math.max(...geometry.returnPoints.map((point) => point.y)) - 105) < 1e-9);
+    assert.deepEqual(geometry.returnPoints[0], geometry.contactPoints[0]);
+    assert.deepEqual(geometry.returnPoints.at(-1), geometry.contactPoints[1]);
+    assert.deepEqual(geometry.renderLayers.behindFace.map((path) => path.id), [
+      "external-loop-tension",
+      "external-loop-return",
+    ]);
+    assert.match(geometry.tensionPath, /^M .* L 60 10 L /);
+    assert.doesNotMatch(geometry.returnPath, /60 10/);
+  }
+});
+
+test("external sliding loop follows a 45-degree body perimeter without crossing either loaded leg", () => {
+  const geometry = externalSlidingLoopGeometry(45);
+  const lowestReturnY = Math.max(...geometry.returnPoints.map((point) => point.y));
+
+  assert.ok(Math.abs(lowestReturnY - 121.819805153) < 0.001);
+  for (let index = 0; index < geometry.returnPoints.length - 1; index += 1) {
+    const start = geometry.returnPoints[index]!;
+    const end = geometry.returnPoints[index + 1]!;
+    if (index > 0) {
+      assert.equal(
+        properSegmentIntersection(geometry.pullPoint, geometry.contactPoints[0], start, end),
+        false,
+      );
+    }
+    if (index < geometry.returnPoints.length - 2) {
+      assert.equal(
+        properSegmentIntersection(geometry.pullPoint, geometry.contactPoints[1], start, end),
+        false,
+      );
+    }
+  }
+});
+
+test("external sliding loop rejects an apex that is above center but below the contact-shape top", () => {
+  const rig = externalSlidingLoopRenderRig({ pullPoint: { x: 5, y: 75 } });
+  const document: EditorDocument = { canvas: { width: 120, height: 170 }, regions: [] };
+  const board = boardFixture({
+    document,
+    selectedPresentationID: "front",
+    presentations: [{
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/compact/image?presentationID=front",
+      default: true,
+      cordRig: rig,
+    }],
+  });
+
+  assert.equal(resolveCordRigPresentationGeometry(board, document), null);
+});
+
+test("external sliding loop composes scale and an off-center anchor while keeping its apex fixed", () => {
+  const geometry = externalSlidingLoopGeometry(45, {
+    geometryScale: 0.5,
+    anchor: { x: 0.25, y: 0.75 },
+  });
+
+  assert.deepEqual(geometry.pullPoint, { x: 60, y: 10 });
+  assert.ok(Math.abs(geometry.contactPoints[0].x - 34.8931) < 0.001);
+  assert.ok(Math.abs(geometry.contactPoints[0].y - 116.4832) < 0.001);
+  assert.ok(Math.abs(geometry.contactPoints[1].x - 76.4997) < 0.001);
+  assert.ok(Math.abs(geometry.contactPoints[1].y - 127.7313) < 0.001);
+  assert.ok(Math.abs(Math.max(...geometry.returnPoints.map((point) => point.y)) - 143.9905) < 0.001);
 });
 
 test("the eyelet foreground keeps the board-side face above the incoming cord", () => {

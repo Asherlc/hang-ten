@@ -29,11 +29,13 @@ struct BoardCordRect: Hashable {
 enum BoardCordRig: Hashable {
     case directTwoAnchor(BoardDirectTwoAnchorCordRig)
     case routed(BoardRoutedCordRig)
+    case externalSlidingLoop(BoardExternalSlidingLoopCordRig)
 
     var sceneSize: BoardCordSize {
         switch self {
         case .directTwoAnchor(let rig): rig.sceneSize
         case .routed(let rig): rig.sceneSize
+        case .externalSlidingLoop(let rig): rig.sceneSize
         }
     }
 
@@ -41,6 +43,7 @@ enum BoardCordRig: Hashable {
         switch self {
         case .directTwoAnchor(let rig): rig.sourceFrame
         case .routed(let rig): rig.sourceFrame
+        case .externalSlidingLoop(let rig): rig.sourceFrame
         }
     }
 
@@ -48,6 +51,7 @@ enum BoardCordRig: Hashable {
         switch self {
         case .directTwoAnchor(let rig): rig.innerFaceFrame
         case .routed(let rig): rig.innerFaceFrame
+        case .externalSlidingLoop(let rig): rig.innerFaceFrame
         }
     }
 }
@@ -141,6 +145,17 @@ struct BoardRoutedCordRig: Hashable {
     let tensionGroups: [BoardRoutedCordTensionGroup]
     let paths: [BoardRoutedCordPath]
     let occlusions: [BoardRoutedCordOcclusion]
+}
+
+struct BoardExternalSlidingLoopCordRig: Hashable {
+    let sceneSize: BoardCordSize
+    let sourceFrame: BoardCordRect
+    let innerFaceFrame: BoardCordRect
+    let style: BoardRoutedCordStyle
+    let bodyContactFrame: BoardCordRect
+    let cornerRadius: CGFloat
+    let clearance: CGFloat
+    let pullPoint: BoardCordPoint
 }
 
 private struct BoardRoutedCordAnyCodingKey: CodingKey {
@@ -506,6 +521,111 @@ struct BoardRoutedCordRigDocument: Decodable {
                 forKey: .occlusions
             ).map(\.occlusion)
         )
+    }
+}
+
+struct BoardExternalSlidingLoopCordRigDocument: Decodable {
+    let rig: BoardExternalSlidingLoopCordRig
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case sceneSize
+        case sourceFrame
+        case innerFaceFrame
+        case style
+        case bodyContactFrame
+        case cornerRadius
+        case clearance
+        case pullPoint
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownRoutedCordKeys([
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame", "style",
+            "bodyContactFrame", "cornerRadius", "clearance", "pullPoint",
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        guard type == "externalSlidingLoop" else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unsupported cord rig type \(type)"
+            )
+        }
+        rig = BoardExternalSlidingLoopCordRig(
+            sceneSize: try container.decode(
+                BoardRoutedCordSizeDocument.self,
+                forKey: .sceneSize
+            ).size,
+            sourceFrame: try container.decode(
+                BoardRoutedCordRectDocument.self,
+                forKey: .sourceFrame
+            ).rect,
+            innerFaceFrame: try container.decode(
+                BoardRoutedCordRectDocument.self,
+                forKey: .innerFaceFrame
+            ).rect,
+            style: try container.decode(
+                BoardRoutedCordStyleDocument.self,
+                forKey: .style
+            ).style,
+            bodyContactFrame: try container.decode(
+                BoardRoutedCordRectDocument.self,
+                forKey: .bodyContactFrame
+            ).rect,
+            cornerRadius: try CGFloat(container.decode(Double.self, forKey: .cornerRadius)),
+            clearance: try CGFloat(container.decode(Double.self, forKey: .clearance)),
+            pullPoint: try container.decode(
+                BoardRoutedCordPointDocument.self,
+                forKey: .pullPoint
+            ).point
+        )
+    }
+}
+
+enum BoardExternalSlidingLoopCordRigValidation {
+    static func failureReason(for rig: BoardExternalSlidingLoopCordRig) -> String? {
+        guard rig.style.diameter.isFinite, rig.style.diameter > 0 else {
+            return "cordRig.style.diameter must be finite and positive"
+        }
+        guard isHexColor(rig.style.outlineColor),
+              isHexColor(rig.style.baseColor),
+              rig.style.braidColors.count == 2,
+              rig.style.braidColors.allSatisfy(isHexColor) else {
+            return "cordRig.style must contain #RRGGBB colors and exactly two braidColors"
+        }
+        let frame = rig.bodyContactFrame
+        guard frame.x.isFinite,
+              frame.y.isFinite,
+              frame.width.isFinite,
+              frame.height.isFinite,
+              frame.width > 0,
+              frame.height > 0 else {
+            return "cordRig.bodyContactFrame must contain finite values and positive sizes"
+        }
+        guard rig.cornerRadius.isFinite,
+              rig.cornerRadius >= 0,
+              rig.cornerRadius <= min(frame.width, frame.height) / 2 else {
+            return "cordRig.cornerRadius must be finite, non-negative, and no more than half the shorter bodyContactFrame side"
+        }
+        guard rig.clearance.isFinite, rig.clearance >= 0 else {
+            return "cordRig.clearance must be finite and non-negative"
+        }
+        guard rig.pullPoint.x.isFinite, rig.pullPoint.y.isFinite else {
+            return "cordRig.pullPoint must be finite"
+        }
+        return nil
+    }
+
+    private static func isHexColor(_ value: String) -> Bool {
+        let scalars = Array(value.unicodeScalars)
+        guard scalars.count == 7, scalars[0] == "#" else { return false }
+        return scalars.dropFirst().allSatisfy { scalar in
+            (48...57).contains(scalar.value)
+                || (65...70).contains(scalar.value)
+                || (97...102).contains(scalar.value)
+        }
     }
 }
 

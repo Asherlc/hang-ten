@@ -212,6 +212,70 @@ def _routed_cord_rig() -> dict[str, object]:
     }
 
 
+def _external_sliding_loop_cord_rig() -> dict[str, object]:
+    return {
+        "type": "externalSlidingLoop",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "bodyContactFrame": {"x": 400, "y": 260, "width": 974, "height": 100},
+        "cornerRadius": 30,
+        "clearance": 2,
+        "pullPoint": {"x": 887, "y": 90},
+    }
+
+
+def _external_sliding_loop_safety_rig() -> dict[str, object]:
+    return {
+        "type": "externalSlidingLoop",
+        "sceneSize": {"width": 200, "height": 200},
+        "sourceFrame": {"x": 40, "y": 40, "width": 120, "height": 120},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 120, "height": 120},
+        "style": {
+            "diameter": 10,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "bodyContactFrame": {"x": 30, "y": 45, "width": 60, "height": 30},
+        "cornerRadius": 8,
+        "clearance": 2,
+        "pullPoint": {"x": 60, "y": -20},
+    }
+
+
+def _document_with_external_sliding_loop(
+    rig: dict[str, object],
+    *,
+    rotation_degrees: float = 0,
+) -> dict[str, object]:
+    document = multi_presentation_board_document("fixture.board")
+    document["aspectRatio"] = 1
+    document["presentations"][0].update(aspectRatio=1, cordRig=rig)
+    document["presentations"][1].update(
+        assetPath="assets/primary.png",
+        aspectRatio=1,
+        sourcePresentationID="front",
+        rotationDegrees=rotation_degrees,
+    )
+    if rotation_degrees != 0:
+        document["presentations"][1]["geometryRotationAnchor"] = {"x": 0.5, "y": 0.5}
+    document["holds"] = document["holds"][:1]
+    document["holds"][0]["geometry"] = [
+        {
+            "frame": {"x": 0.45, "y": 0.45, "width": 0.1, "height": 0.1},
+            "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+        }
+    ]
+    return document
+
+
 def _routed_safety_rig() -> dict[str, object]:
     """A hand-checked rig that remains valid at 0, 90, and 180 degrees."""
     return {
@@ -1174,6 +1238,104 @@ def test_routed_cord_rig_loads_into_the_public_presentation_model(
     assert rig.tension_groups[0].pairing.value == "declared"
     assert rig.paths[0].commands[1].command == "curve"
     assert rig.occlusions[0].body_port_id == "body-left"
+
+
+def test_external_sliding_loop_loads_into_the_public_presentation_model(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].__setitem__(
+            "cordRig", _external_sliding_loop_cord_rig()
+        ),
+    )
+
+    rig = board_package.load_board_package(package_root).presentation().cord_rig
+
+    assert isinstance(rig, board_package.ExternalSlidingLoopCordRig)
+    assert rig.body_contact_frame == board_package.CordRect(400, 260, 974, 100)
+    assert rig.corner_radius == 30
+    assert rig.clearance == 2
+    assert rig.pull_point == board_package.CordPoint(887, 90)
+    assert rig.style.braid_colors == ("#FFD000", "#0055CC")
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda rig: rig.__setitem__("clearance", -1), "non-negative"),
+        (lambda rig: rig.__setitem__("cornerRadius", -1), "non-negative"),
+        (lambda rig: rig.__setitem__("cornerRadius", 51), "half"),
+        (lambda rig: rig["bodyContactFrame"].__setitem__("width", 0), "positive"),
+        (lambda rig: rig["pullPoint"].__setitem__("x", float("nan")), "finite"),
+        (lambda rig: rig.__setitem__("unexpected", True), "unknown keys"),
+    ],
+)
+def test_external_sliding_loop_rejects_malformed_structure(
+    mutation, message: str
+) -> None:
+    document = board_document("fixture.board")
+    rig = _external_sliding_loop_cord_rig()
+    mutation(rig)
+    document["presentations"][0]["cordRig"] = rig
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.validate_catalog_board(document)
+
+
+@pytest.mark.parametrize("rotation_degrees", [0, 45, 180])
+def test_external_sliding_loop_validates_gravity_aware_rotations(
+    rotation_degrees: float,
+) -> None:
+    document = _document_with_external_sliding_loop(
+        _external_sliding_loop_safety_rig(),
+        rotation_degrees=rotation_degrees,
+    )
+
+    board_package.validate_catalog_board(document)
+
+
+def test_external_sliding_loop_rejects_pull_point_inside_expanded_contact_shape() -> None:
+    rig = _external_sliding_loop_safety_rig()
+    rig["pullPoint"] = {"x": 60, "y": 60}
+    document = _document_with_external_sliding_loop(rig)
+
+    with pytest.raises(
+        BoardPackageError,
+        match="pullPoint must remain outside the expanded body contact shape",
+    ):
+        board_package.validate_catalog_board(document)
+
+
+def test_external_sliding_loop_rejects_pull_point_below_contact_shape_top() -> None:
+    rig = _external_sliding_loop_safety_rig()
+    rig["pullPoint"] = {"x": 10, "y": 45}
+    document = _document_with_external_sliding_loop(rig)
+
+    with pytest.raises(
+        BoardPackageError,
+        match="pullPoint must remain above the body contact shape",
+    ):
+        board_package.validate_catalog_board(document)
+
+
+def test_external_sliding_loop_rejects_transformed_contact_outside_safe_scene() -> None:
+    rig = _external_sliding_loop_safety_rig()
+    rig["bodyContactFrame"]["x"] = -35
+    document = _document_with_external_sliding_loop(
+        rig,
+        rotation_degrees=45,
+    )
+
+    with pytest.raises(
+        BoardPackageError,
+        match="cord centerline geometry must remain inside sceneSize",
+    ):
+        board_package.validate_catalog_board(document)
 
 
 def test_routed_cord_rig_is_inherited_by_a_rotated_alias(tmp_path: Path) -> None:

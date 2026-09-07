@@ -6,6 +6,7 @@ struct BoardEditorCanvasArtwork {
     let presentationAspectRatio: CGFloat
     let directTwoAnchorRig: BoardDirectTwoAnchorCordRig?
     let routedCordRig: BoardRoutedCordRig?
+    let externalSlidingLoopRig: BoardExternalSlidingLoopCordRig?
     let projection: BoardPresentationGeometryProjection
     let sourcePresentationID: String?
     let availableHoldIDs: Set<String>?
@@ -15,6 +16,7 @@ struct BoardEditorCanvasArtwork {
         presentationAspectRatio: CGFloat,
         directTwoAnchorRig: BoardDirectTwoAnchorCordRig?,
         routedCordRig: BoardRoutedCordRig? = nil,
+        externalSlidingLoopRig: BoardExternalSlidingLoopCordRig? = nil,
         projection: BoardPresentationGeometryProjection,
         sourcePresentationID: String? = nil,
         availableHoldIDs: [String]? = nil
@@ -23,6 +25,7 @@ struct BoardEditorCanvasArtwork {
         self.presentationAspectRatio = presentationAspectRatio
         self.directTwoAnchorRig = directTwoAnchorRig
         self.routedCordRig = routedCordRig
+        self.externalSlidingLoopRig = externalSlidingLoopRig
         self.projection = projection
         self.sourcePresentationID = sourcePresentationID
         self.availableHoldIDs = availableHoldIDs.map(Set.init)
@@ -126,6 +129,37 @@ struct BoardEditorCanvasArtwork {
                 presentationAspectRatio: CGFloat(presentation.aspectRatio),
                 directTwoAnchorRig: nil,
                 routedCordRig: rig,
+                projection: projection,
+                sourcePresentationID: sourcePresentationID,
+                availableHoldIDs: presentation.availableHoldIDs
+            )
+        case .externalSlidingLoop(let rig):
+            guard let geometry = BoardExternalSlidingLoopCordRigGeometry.resolve(
+                rig: rig,
+                projection: projection,
+                in: canvas
+            ) else {
+                return fallback(package: package, sourceImage: sourceImage)
+            }
+            let renderer = ImageRenderer(
+                content: BoardExternalSlidingLoopPresentationArtwork(
+                    faceImage: sourceImage,
+                    rig: rig,
+                    geometry: geometry
+                )
+                .frame(width: canvasSize.width, height: canvasSize.height)
+            )
+            renderer.scale = 1
+            renderer.isOpaque = false
+            guard let renderedImage = renderer.uiImage else {
+                return fallback(package: package, sourceImage: sourceImage)
+            }
+
+            return BoardEditorCanvasArtwork(
+                image: renderedImage,
+                presentationAspectRatio: CGFloat(presentation.aspectRatio),
+                directTwoAnchorRig: nil,
+                externalSlidingLoopRig: rig,
                 projection: projection,
                 sourcePresentationID: sourcePresentationID,
                 availableHoldIDs: presentation.availableHoldIDs
@@ -349,6 +383,14 @@ final class HoldEditorCanvasUIView: UIView {
         }
         if let rig = artwork.routedCordRig,
            let geometry = BoardRoutedCordRigGeometry.resolve(
+               rig: rig,
+               projection: artwork.projection,
+               in: canvas
+           ) {
+            return (geometry.sceneRect, geometry.faceRect)
+        }
+        if let rig = artwork.externalSlidingLoopRig,
+           let geometry = BoardExternalSlidingLoopCordRigGeometry.resolve(
                rig: rig,
                projection: artwork.projection,
                in: canvas
@@ -849,7 +891,9 @@ final class HoldEditorCanvasUIView: UIView {
         context.setLineCap(.round)
 
         if let boardArtwork {
-            if boardArtwork.directTwoAnchorRig != nil || boardArtwork.routedCordRig != nil {
+            if boardArtwork.directTwoAnchorRig != nil
+                || boardArtwork.routedCordRig != nil
+                || boardArtwork.externalSlidingLoopRig != nil {
                 boardArtwork.image.draw(in: riggedSceneRect(for: bounds))
             } else if boardArtwork.sourcePresentationID != nil {
                 let sceneRect = riggedSceneRect(for: bounds)

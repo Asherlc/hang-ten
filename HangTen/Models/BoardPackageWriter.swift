@@ -387,6 +387,10 @@ private struct BoardEditableCordRigDocument: Decodable {
             )
         case "routed":
             cordRig = .routed(try BoardRoutedCordRigDocument(from: decoder).rig)
+        case "externalSlidingLoop":
+            cordRig = .externalSlidingLoop(
+                try BoardExternalSlidingLoopCordRigDocument(from: decoder).rig
+            )
         default:
             throw DecodingError.dataCorruptedError(
                 forKey: .type,
@@ -935,6 +939,12 @@ enum BoardPackageWriter {
                         presentation: presentation,
                         in: document
                     )
+                case .externalSlidingLoop(let rig):
+                    try validateExternalSlidingLoopCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        in: document
+                    )
                 }
             }
         }
@@ -1147,6 +1157,13 @@ enum BoardPackageWriter {
                 document
             )
         }
+        if case .externalSlidingLoop(let rig) = cordRig,
+           let reason = BoardExternalSlidingLoopCordRigValidation.failureReason(for: rig) {
+            throw invalid(
+                "presentation \(presentation.id).\(reason)",
+                document
+            )
+        }
         let sceneAspectRatio = Double(cordRig.sceneSize.width / cordRig.sceneSize.height)
         let relativeError = abs(presentation.aspectRatio - sceneAspectRatio) / sceneAspectRatio
         guard relativeError <= presentationAspectRatioRelativeTolerance else {
@@ -1223,6 +1240,46 @@ enum BoardPackageWriter {
             throw invalid(
                 "presentation \(presentation.id) routed body port \(bodyPortID) "
                     + "must be strictly below world port \(worldPortID)",
+                document
+            )
+        case nil:
+            return
+        }
+    }
+
+    private static func validateExternalSlidingLoopCordPresentation(
+        _ rig: BoardExternalSlidingLoopCordRig,
+        presentation: BoardEditablePresentation,
+        in document: BoardEditableDocument
+    ) throws {
+        let failure = BoardExternalSlidingLoopCordPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center,
+            geometryScale: presentation.resolvedGeometryScale
+        )
+        switch failure {
+        case .unresolvedGeometry:
+            throw invalid(
+                "presentation \(presentation.id) external sliding loop geometry could not be resolved",
+                document
+            )
+        case .centerlineOutsideScene:
+            throw invalid(
+                "presentation \(presentation.id) external sliding loop cord centerline geometry "
+                    + "must remain inside sceneSize with the style margin",
+                document
+            )
+        case .pullInsideContactShape:
+            throw invalid(
+                "presentation \(presentation.id) external sliding loop pullPoint must "
+                    + "remain outside the expanded body contact shape",
+                document
+            )
+        case .pullNotAboveContactShape:
+            throw invalid(
+                "presentation \(presentation.id) external sliding loop pullPoint must "
+                    + "remain above the body contact shape",
                 document
             )
         case nil:
@@ -1622,6 +1679,25 @@ enum BoardPackageWriter {
                 ("occlusions", .array(rig.occlusions.map(
                     canonicalRoutedCordOcclusionValue
                 ))),
+            ])
+        case .externalSlidingLoop(let rig):
+            return .object([
+                ("type", .string("externalSlidingLoop")),
+                ("sceneSize", canonicalCordSizeValue(rig.sceneSize)),
+                ("sourceFrame", canonicalCordRectValue(rig.sourceFrame)),
+                ("innerFaceFrame", canonicalCordRectValue(rig.innerFaceFrame)),
+                ("style", .object([
+                    ("diameter", .double(Double(rig.style.diameter))),
+                    ("outlineColor", .string(rig.style.outlineColor)),
+                    ("baseColor", .string(rig.style.baseColor)),
+                    ("braidColors", .array(rig.style.braidColors.map {
+                        .string($0)
+                    })),
+                ])),
+                ("bodyContactFrame", canonicalCordRectValue(rig.bodyContactFrame)),
+                ("cornerRadius", .double(Double(rig.cornerRadius))),
+                ("clearance", .double(Double(rig.clearance))),
+                ("pullPoint", canonicalCordPointObjectValue(rig.pullPoint)),
             ])
         }
     }

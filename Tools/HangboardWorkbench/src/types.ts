@@ -78,7 +78,24 @@ export interface RoutedCordRig {
   >;
 }
 
-export type CordRig = DirectTwoAnchorCordRig | RoutedCordRig;
+export interface ExternalSlidingLoopCordRig {
+  type: "externalSlidingLoop";
+  sceneSize: CordSize;
+  sourceFrame: CordRect;
+  innerFaceFrame: CordRect;
+  style: {
+    diameter: number;
+    outlineColor: string;
+    baseColor: string;
+    braidColors: [string, string];
+  };
+  bodyContactFrame: CordRect;
+  cornerRadius: number;
+  clearance: number;
+  pullPoint: Point;
+}
+
+export type CordRig = DirectTwoAnchorCordRig | RoutedCordRig | ExternalSlidingLoopCordRig;
 
 export type PathCommandType = "M" | "L" | "Q" | "C" | "Z";
 

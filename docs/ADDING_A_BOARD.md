@@ -120,9 +120,10 @@ hold on the canonical face remains available for backward compatibility.
 Rendering, highlighting, hit testing, position resolution, and Workbench's
 focused editor view all use this effective hold subset.
 
-A canonical presentation may own either the compatible `directTwoAnchor` rig
-or a generalized `routed` cord rig. A routed rig retains `sceneSize`,
-`sourceFrame`, and `innerFaceFrame`, then declares these required fields:
+A canonical presentation may own the compatible `directTwoAnchor` rig, a
+generalized `routed` cord rig, or an `externalSlidingLoop` rig. A routed rig
+retains `sceneSize`, `sourceFrame`, and `innerFaceFrame`, then declares these
+required fields:
 
 - `style`: positive finite `diameter`; `outlineColor`, `baseColor`, and exactly
   two `braidColors`, each encoded as `#RRGGBB`. The diameter is measured in
@@ -172,6 +173,37 @@ highlights, then markers. Routed rigs follow the same canonical-presentation
 ownership, alias inheritance, scene-aspect, and PNG-to-`innerFaceFrame` aspect
 rules as `directTwoAnchor` rigs. Unknown rig, space, pairing, layer, command,
 and occlusion types are rejected.
+
+Use `externalSlidingLoop` only for one continuous sling that is free to slide
+and reseat around the outside of the board. In addition to `sceneSize`,
+`sourceFrame`, `innerFaceFrame`, and the routed `style` object, it declares:
+
+- `bodyContactFrame`: a finite, positive, source-frame-local rectangle around
+  the board perimeter contacted by the cord.
+- `cornerRadius`: a finite non-negative radius no greater than half the
+  contact frame's shorter side.
+- `clearance`: a finite non-negative gap between the board and cord surface.
+- `pullPoint`: the finite, source-frame-local world-fixed apex.
+
+At render time, the board contact frame rotates and scales with the canonical
+face. The cord centerline is offset from it by
+`style.diameter / 2 + clearance`; that offset and the cord diameter stay
+scene-sized rather than shrinking with `geometryScale`. The renderer resolves
+the two support tangencies toward the fixed apex, draws one joined pair of
+straight loaded legs behind the face, then follows the complementary lower
+perimeter arc between the contacts. This lower return is recomputed in screen
+space for every rotation, so it settles with gravity instead of rotating into
+the loaded legs. The apex is a simple joined angle: do not author or render a
+knot, ring, circle, or extra loop there.
+
+The expanded contact centerline and apex must retain the same
+`0.8 * style.diameter` scene inset as routed centerlines. The apex must remain
+outside and strictly above the entire transformed expanded contact shape for
+the canonical presentation and every alias. These constraints ensure both
+resolved legs pull upward and geometry fails validation rather than emitting a
+detached or crossing sling. An external sliding loop owns no ports, paths,
+occlusions, or per-alias cord overrides; one canonical rig supplies every
+rotation and scale of that physical face.
 
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the

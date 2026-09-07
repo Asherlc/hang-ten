@@ -128,6 +128,25 @@ final class BoardPackageWriterTests: XCTestCase {
         ]
     }
 
+    private func externalSlidingLoopCordRigJSON() -> [String: Any] {
+        [
+            "type": "externalSlidingLoop",
+            "sceneSize": ["width": 1000, "height": 500],
+            "sourceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "innerFaceFrame": ["x": 0, "y": 0, "width": 1000, "height": 500],
+            "style": [
+                "diameter": 12,
+                "outlineColor": "#101010",
+                "baseColor": "#2255AA",
+                "braidColors": ["#FFD000", "#0055CC"],
+            ],
+            "bodyContactFrame": ["x": 180, "y": 300, "width": 640, "height": 100],
+            "cornerRadius": 30,
+            "clearance": 2,
+            "pullPoint": ["x": 500, "y": 70],
+        ]
+    }
+
     private func makePiece(
         frame: BoardPackageFrameDocument = BoardPackageFrameDocument(x: 0, y: 0, width: 1, height: 1),
         shape: BoardGeometryShapeDocument? = nil,
@@ -1255,6 +1274,41 @@ final class BoardPackageWriterTests: XCTestCase {
             ),
         ])
         XCTAssertEqual(rig.occlusions.count, 2)
+    }
+
+    func testExternalSlidingLoopCordRigRoundTripsWithoutExpandingToAuthoredPaths() throws {
+        let source = try BoardPackageWriter.data(for: makeDocument())
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: source) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        let expectedRig = externalSlidingLoopCordRigJSON()
+        presentations[0]["cordRig"] = expectedRig
+        payload["presentations"] = presentations
+
+        let document = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+        let encodedPayload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let encodedPresentations = try XCTUnwrap(
+            encodedPayload["presentations"] as? [[String: Any]]
+        )
+
+        XCTAssertEqual(redecoded, document)
+        XCTAssertEqual(
+            encodedPresentations[0]["cordRig"] as? NSDictionary,
+            expectedRig as NSDictionary
+        )
+        guard case .externalSlidingLoop(let rig) = try XCTUnwrap(
+            redecoded.presentations[0].cordRig
+        ) else {
+            return XCTFail("Expected external sliding loop cord rig")
+        }
+        XCTAssertEqual(rig.bodyContactFrame, BoardCordRect(x: 180, y: 300, width: 640, height: 100))
     }
 
     func testWriterRejectsProgrammaticallyInvalidRoutedCordTopology() throws {

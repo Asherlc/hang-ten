@@ -245,7 +245,19 @@ class RoutedCordRig:
     occlusions: tuple[RoutedCordOcclusion, ...]
 
 
-CordRig = DirectTwoAnchorCordRig | RoutedCordRig
+@dataclass(frozen=True, slots=True)
+class ExternalSlidingLoopCordRig:
+    scene_size: CordSize
+    source_frame: CordRect
+    inner_face_frame: CordRect
+    style: RoutedCordStyle
+    body_contact_frame: CordRect
+    corner_radius: float
+    clearance: float
+    pull_point: CordPoint
+
+
+CordRig = DirectTwoAnchorCordRig | RoutedCordRig | ExternalSlidingLoopCordRig
 
 
 @dataclass(frozen=True, slots=True)
@@ -1823,6 +1835,72 @@ def _routed_cord_rig(value: object, label: str) -> RoutedCordRig:
     )
 
 
+def _external_sliding_loop_cord_rig(
+    value: object, label: str
+) -> ExternalSlidingLoopCordRig:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(
+        value,
+        {
+            "type", "sceneSize", "sourceFrame", "innerFaceFrame", "style",
+            "bodyContactFrame", "cornerRadius", "clearance", "pullPoint",
+        },
+        label,
+    )
+    if value["type"] != "externalSlidingLoop":
+        raise BoardPackageError(f"{label}.type is unsupported")
+    style_value = value["style"]
+    if not isinstance(style_value, Mapping):
+        raise BoardPackageError(f"{label}.style must be an object")
+    _exact_keys(
+        style_value,
+        {"diameter", "outlineColor", "baseColor", "braidColors"},
+        f"{label}.style",
+    )
+    braid_colors = style_value["braidColors"]
+    if not isinstance(braid_colors, list) or len(braid_colors) != 2:
+        raise BoardPackageError(
+            f"{label}.style.braidColors must contain exactly two colors"
+        )
+    style = RoutedCordStyle(
+        diameter=_positive_number(style_value["diameter"], f"{label}.style.diameter"),
+        outline_color=_routed_color(
+            style_value["outlineColor"], f"{label}.style.outlineColor"
+        ),
+        base_color=_routed_color(style_value["baseColor"], f"{label}.style.baseColor"),
+        braid_colors=(
+            _routed_color(braid_colors[0], f"{label}.style.braidColors[0]"),
+            _routed_color(braid_colors[1], f"{label}.style.braidColors[1]"),
+        ),
+    )
+    body_contact_frame = _cord_rect(
+        value["bodyContactFrame"], f"{label}.bodyContactFrame"
+    )
+    corner_radius = _finite_number(value["cornerRadius"], f"{label}.cornerRadius")
+    if corner_radius < 0:
+        raise BoardPackageError(f"{label}.cornerRadius must be non-negative")
+    if corner_radius > min(body_contact_frame.width, body_contact_frame.height) / 2:
+        raise BoardPackageError(
+            f"{label}.cornerRadius must not exceed half the shorter bodyContactFrame side"
+        )
+    clearance = _finite_number(value["clearance"], f"{label}.clearance")
+    if clearance < 0:
+        raise BoardPackageError(f"{label}.clearance must be non-negative")
+    return ExternalSlidingLoopCordRig(
+        scene_size=_cord_size(value["sceneSize"], f"{label}.sceneSize"),
+        source_frame=_cord_rect(value["sourceFrame"], f"{label}.sourceFrame"),
+        inner_face_frame=_cord_rect(
+            value["innerFaceFrame"], f"{label}.innerFaceFrame"
+        ),
+        style=style,
+        body_contact_frame=body_contact_frame,
+        corner_radius=corner_radius,
+        clearance=clearance,
+        pull_point=_cord_point(value["pullPoint"], f"{label}.pullPoint"),
+    )
+
+
 def _cord_rig(value: object, label: str) -> CordRig:
     if not isinstance(value, Mapping):
         raise BoardPackageError(f"{label} must be an object")
@@ -1831,6 +1909,8 @@ def _cord_rig(value: object, label: str) -> CordRig:
         return _direct_two_anchor_cord_rig(value, label)
     if rig_type == "routed":
         return _routed_cord_rig(value, label)
+    if rig_type == "externalSlidingLoop":
+        return _external_sliding_loop_cord_rig(value, label)
     raise BoardPackageError(f"{label}.type is unsupported")
 
 
@@ -2032,6 +2112,83 @@ def _validate_routed_cord_presentation(
                     f"presentation {presentation_id} routed body port {body_id} "
                     f"must be strictly below world port {world_id}"
                 )
+
+
+def _validate_external_sliding_loop_presentation(
+    rig: ExternalSlidingLoopCordRig,
+    *,
+    presentation_id: str,
+    rotation_degrees: float,
+    rotation_anchor: tuple[float, float],
+    geometry_scale: float,
+) -> None:
+    anchor_x = rotation_anchor[0] * rig.scene_size.width
+    anchor_y = rotation_anchor[1] * rig.scene_size.height
+    frame = rig.body_contact_frame
+    source_center_x = rig.source_frame.x + frame.x + frame.width / 2
+    source_center_y = rig.source_frame.y + frame.y + frame.height / 2
+    center_x, center_y = _rotate_canvas_point(
+        source_center_x,
+        source_center_y,
+        anchor_x,
+        anchor_y,
+        rotation_degrees,
+        geometry_scale,
+    )
+    pull_x = rig.source_frame.x + rig.pull_point.x
+    pull_y = rig.source_frame.y + rig.pull_point.y
+    centerline_offset = rig.style.diameter / 2 + rig.clearance
+    half_width = frame.width * geometry_scale / 2 + centerline_offset
+    half_height = frame.height * geometry_scale / 2 + centerline_offset
+    radius = rig.corner_radius * geometry_scale + centerline_offset
+    core_half_width = half_width - radius
+    core_half_height = half_height - radius
+    radians = math.radians(rotation_degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+    extent_x = abs(cosine) * core_half_width + abs(sine) * core_half_height + radius
+    extent_y = abs(sine) * core_half_width + abs(cosine) * core_half_height + radius
+    values = (
+        center_x, center_y, pull_x, pull_y, half_width, half_height,
+        radius, core_half_width, core_half_height, extent_x, extent_y,
+    )
+    if not all(math.isfinite(value) for value in values):
+        raise BoardPackageError(
+            f"presentation {presentation_id} external sliding loop geometry must be finite"
+        )
+    tolerance = max(rig.scene_size.width, rig.scene_size.height) * 1e-9
+    style_margin = 0.8 * rig.style.diameter
+    if (
+        pull_x < style_margin - tolerance
+        or pull_y < style_margin - tolerance
+        or pull_x > rig.scene_size.width - style_margin + tolerance
+        or pull_y > rig.scene_size.height - style_margin + tolerance
+        or center_x - extent_x < style_margin - tolerance
+        or center_y - extent_y < style_margin - tolerance
+        or center_x + extent_x > rig.scene_size.width - style_margin + tolerance
+        or center_y + extent_y > rig.scene_size.height - style_margin + tolerance
+    ):
+        raise BoardPackageError(
+            f"presentation {presentation_id} external sliding loop cord centerline "
+            "geometry must remain inside sceneSize with the style margin"
+        )
+
+    delta_x = pull_x - center_x
+    delta_y = pull_y - center_y
+    local_pull_x = cosine * delta_x + sine * delta_y
+    local_pull_y = -sine * delta_x + cosine * delta_y
+    rounded_delta_x = max(0.0, abs(local_pull_x) - core_half_width)
+    rounded_delta_y = max(0.0, abs(local_pull_y) - core_half_height)
+    if math.hypot(rounded_delta_x, rounded_delta_y) <= radius + tolerance:
+        raise BoardPackageError(
+            f"presentation {presentation_id} external sliding loop pullPoint must "
+            "remain outside the expanded body contact shape"
+        )
+    if pull_y >= center_y - extent_y - tolerance:
+        raise BoardPackageError(
+            f"presentation {presentation_id} external sliding loop pullPoint must "
+            "remain above the body contact shape"
+        )
 
 
 def _raw_presentation_cord_rig(
@@ -2315,6 +2472,14 @@ def _parse_board_presentations(
             )
         elif isinstance(resolved_cord_rig, RoutedCordRig):
             _validate_routed_cord_presentation(
+                resolved_cord_rig,
+                presentation_id=presentation_id,
+                rotation_degrees=resolved_rotation_degrees,
+                rotation_anchor=geometry_rotation_anchor or (0.5, 0.5),
+                geometry_scale=resolved_geometry_scale,
+            )
+        elif isinstance(resolved_cord_rig, ExternalSlidingLoopCordRig):
+            _validate_external_sliding_loop_presentation(
                 resolved_cord_rig,
                 presentation_id=presentation_id,
                 rotation_degrees=resolved_rotation_degrees,

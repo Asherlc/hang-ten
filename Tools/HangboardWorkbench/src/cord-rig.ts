@@ -2,6 +2,7 @@ import type {
   Board,
   DirectTwoAnchorCordRig,
   EditorDocument,
+  ExternalSlidingLoopCordRig,
   Point,
   RoutedCordLayer,
   RoutedCordPathCommand,
@@ -53,9 +54,21 @@ export interface RoutedCordRigPresentationGeometry extends CommonCordRigPresenta
   occlusions: RoutedCordOcclusionPath[];
 }
 
+export interface ExternalSlidingLoopPresentationGeometry extends CommonCordRigPresentationGeometry {
+  type: "externalSlidingLoop";
+  rig: ExternalSlidingLoopCordRig;
+  pullPoint: Point;
+  contactPoints: [Point, Point];
+  returnPoints: Point[];
+  tensionPath: string;
+  returnPath: string;
+  renderLayers: Record<RoutedCordLayer, RoutedCordDrawPath[]>;
+}
+
 export type CordRigPresentationGeometry =
   | DirectCordRigPresentationGeometry
-  | RoutedCordRigPresentationGeometry;
+  | RoutedCordRigPresentationGeometry
+  | ExternalSlidingLoopPresentationGeometry;
 
 function transformBodyPoint(
   point: Point,
@@ -118,6 +131,199 @@ function routedCommandPath(
       }
     }
   }).join(" ");
+}
+
+const SLIDING_LOOP_CORNER_STEPS = 24;
+
+function roundedRectangleBoundary(
+  center: Point,
+  halfWidth: number,
+  halfHeight: number,
+  radius: number,
+  rotationDegrees: number,
+): Point[] {
+  const coreHalfWidth = Math.max(0, halfWidth - radius);
+  const coreHalfHeight = Math.max(0, halfHeight - radius);
+  const corners = [
+    { x: coreHalfWidth, y: -coreHalfHeight, start: -Math.PI / 2 },
+    { x: coreHalfWidth, y: coreHalfHeight, start: 0 },
+    { x: -coreHalfWidth, y: coreHalfHeight, start: Math.PI / 2 },
+    { x: -coreHalfWidth, y: -coreHalfHeight, start: Math.PI },
+  ];
+  const points: Point[] = [];
+  for (const corner of corners) {
+    for (let step = 0; step <= SLIDING_LOOP_CORNER_STEPS; step += 1) {
+      const angle = corner.start + step * Math.PI / (2 * SLIDING_LOOP_CORNER_STEPS);
+      const local = {
+        x: center.x + corner.x + radius * Math.cos(angle),
+        y: center.y + corner.y + radius * Math.sin(angle),
+      };
+      const transformed = transformBodyPoint(local, center, rotationDegrees, 1);
+      const previous = points.at(-1);
+      if (!previous || Math.hypot(previous.x - transformed.x, previous.y - transformed.y) > 1e-9) {
+        points.push(transformed);
+      }
+    }
+  }
+  const first = points[0];
+  const last = points.at(-1);
+  if (first && last && Math.hypot(first.x - last.x, first.y - last.y) <= 1e-9) {
+    points.pop();
+  }
+  return points;
+}
+
+function normalizedAngleDifference(angle: number, reference: number): number {
+  const fullTurn = 2 * Math.PI;
+  return ((angle - reference + Math.PI) % fullTurn + fullTurn) % fullTurn - Math.PI;
+}
+
+function cyclicBoundaryArc(
+  boundary: readonly Point[],
+  startIndex: number,
+  endIndex: number,
+  step: 1 | -1,
+): Point[] {
+  const points = [boundary[startIndex]!];
+  let index = startIndex;
+  for (let count = 0; count < boundary.length; count += 1) {
+    if (index === endIndex) return points;
+    index = (index + step + boundary.length) % boundary.length;
+    points.push(boundary[index]!);
+  }
+  return [];
+}
+
+function pathThroughPoints(points: readonly Point[]): string {
+  if (points.length === 0) return "";
+  return [
+    pointCommand("M", [points[0]!]),
+    ...points.slice(1).map((point) => pointCommand("L", [point])),
+  ].join(" ");
+}
+
+function resolveExternalSlidingLoop(
+  rig: ExternalSlidingLoopCordRig,
+  rotationDegrees: number,
+  geometryScale: number,
+  sceneAnchor: Point,
+  sceneToFace: (point: Point) => Point,
+  sourceRelativeScenePoint: (point: Point) => Point,
+): {
+  pullPoint: Point;
+  contactPoints: [Point, Point];
+  returnPoints: Point[];
+  tensionPath: string;
+  returnPath: string;
+  renderLayers: Record<RoutedCordLayer, RoutedCordDrawPath[]>;
+} | null {
+  const frame = rig.bodyContactFrame;
+  const bodyCenter = sourceRelativeScenePoint({
+    x: frame.x + frame.width / 2,
+    y: frame.y + frame.height / 2,
+  });
+  const center = transformBodyPoint(bodyCenter, sceneAnchor, rotationDegrees, geometryScale);
+  const centerlineOffset = rig.style.diameter / 2 + rig.clearance;
+  const halfWidth = frame.width * geometryScale / 2 + centerlineOffset;
+  const halfHeight = frame.height * geometryScale / 2 + centerlineOffset;
+  const radius = rig.cornerRadius * geometryScale + centerlineOffset;
+  const scenePullPoint = sourceRelativeScenePoint(rig.pullPoint);
+  if (![center.x, center.y, halfWidth, halfHeight, radius, scenePullPoint.x, scenePullPoint.y]
+    .every(Number.isFinite)
+    || halfWidth <= 0
+    || halfHeight <= 0
+    || radius < 0
+    || radius > Math.min(halfWidth, halfHeight)) return null;
+
+  const pullInBodyOrientation = transformBodyPoint(
+    scenePullPoint,
+    center,
+    -rotationDegrees,
+    1,
+  );
+  const coreHalfWidth = halfWidth - radius;
+  const coreHalfHeight = halfHeight - radius;
+  const rotationRadians = rotationDegrees * Math.PI / 180;
+  const extentY = Math.abs(Math.sin(rotationRadians)) * coreHalfWidth
+    + Math.abs(Math.cos(rotationRadians)) * coreHalfHeight
+    + radius;
+  if (!Number.isFinite(extentY) || scenePullPoint.y >= center.y - extentY) return null;
+  const contactDeltaX = Math.abs(pullInBodyOrientation.x - center.x) - coreHalfWidth;
+  const contactDeltaY = Math.abs(pullInBodyOrientation.y - center.y) - coreHalfHeight;
+  const distanceFromRoundedCore = Math.hypot(
+    Math.max(0, contactDeltaX),
+    Math.max(0, contactDeltaY),
+  );
+  if (distanceFromRoundedCore <= radius) return null;
+
+  const boundary = roundedRectangleBoundary(
+    center,
+    halfWidth,
+    halfHeight,
+    radius,
+    rotationDegrees,
+  );
+  if (boundary.length < 4) return null;
+  const centerDirection = Math.atan2(
+    center.y - scenePullPoint.y,
+    center.x - scenePullPoint.x,
+  );
+  const angularOffsets = boundary.map((point) => normalizedAngleDifference(
+    Math.atan2(point.y - scenePullPoint.y, point.x - scenePullPoint.x),
+    centerDirection,
+  ));
+  let firstTangentIndex = 0;
+  let secondTangentIndex = 0;
+  for (let index = 1; index < boundary.length; index += 1) {
+    if (angularOffsets[index]! < angularOffsets[firstTangentIndex]!) firstTangentIndex = index;
+    if (angularOffsets[index]! > angularOffsets[secondTangentIndex]!) secondTangentIndex = index;
+  }
+  if (firstTangentIndex === secondTangentIndex
+    || angularOffsets[secondTangentIndex]! - angularOffsets[firstTangentIndex]! >= Math.PI) {
+    return null;
+  }
+
+  const tangentIndexes = [firstTangentIndex, secondTangentIndex].sort((left, right) => (
+    boundary[left]!.x - boundary[right]!.x || boundary[left]!.y - boundary[right]!.y
+  ));
+  const [leftIndex, rightIndex] = tangentIndexes as [number, number];
+  const forwardArc = cyclicBoundaryArc(boundary, leftIndex, rightIndex, 1);
+  const backwardArc = cyclicBoundaryArc(boundary, leftIndex, rightIndex, -1);
+  const arcScore = (points: readonly Point[]): [number, number] => [
+    Math.max(...points.map((point) => point.y)),
+    points.reduce((sum, point) => sum + point.y, 0) / points.length,
+  ];
+  const forwardScore = arcScore(forwardArc);
+  const backwardScore = arcScore(backwardArc);
+  const sceneReturnPoints = forwardScore[0] > backwardScore[0]
+    || (forwardScore[0] === backwardScore[0] && forwardScore[1] >= backwardScore[1])
+    ? forwardArc
+    : backwardArc;
+  if (sceneReturnPoints.length < 2) return null;
+
+  const pullPoint = sceneToFace(scenePullPoint);
+  const contactPoints = [
+    sceneToFace(boundary[leftIndex]!),
+    sceneToFace(boundary[rightIndex]!),
+  ] as [Point, Point];
+  const returnPoints = sceneReturnPoints.map(sceneToFace);
+  const tensionPath = pathThroughPoints([contactPoints[0], pullPoint, contactPoints[1]]);
+  const returnPath = pathThroughPoints(returnPoints);
+  return {
+    pullPoint,
+    contactPoints,
+    returnPoints,
+    tensionPath,
+    returnPath,
+    renderLayers: {
+      behindFace: [
+        { kind: "path", id: "external-loop-tension", d: tensionPath },
+        { kind: "path", id: "external-loop-return", d: returnPath },
+      ],
+      aboveFace: [],
+      overpass: [],
+    },
+  };
 }
 
 function eyeletForegroundCrescent(
@@ -203,6 +409,28 @@ export function resolveCordRigPresentationGeometry(
     width: rig.sceneSize.width / sceneUnitsPerFaceX,
     height: rig.sceneSize.height / sceneUnitsPerFaceY,
   };
+
+  if (rig.type === "externalSlidingLoop") {
+    const externalGeometry = resolveExternalSlidingLoop(
+      rig,
+      rotationDegrees,
+      geometryScale,
+      sceneAnchor,
+      sceneToFace,
+      sourceRelativeScenePoint,
+    );
+    if (!externalGeometry) return null;
+    return {
+      type: "externalSlidingLoop",
+      rig,
+      viewBox,
+      rotationDegrees,
+      geometryScale,
+      rotationAnchor,
+      cordUnitScale,
+      ...externalGeometry,
+    };
+  }
 
   if (rig.type === "routed") {
     const transformedPorts = new Map(rig.ports.map((port) => {

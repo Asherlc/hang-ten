@@ -925,6 +925,48 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.resolvedCordRig(for: alias), .routed(rig))
     }
 
+    func testExternalSlidingLoopLoadsItsContactShapeAndIsInheritedByAlias() throws {
+        let fixture = try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                board["aspectRatio"] = 1
+                presentations[0]["aspectRatio"] = 1
+                presentations[0]["cordRig"] = self.externalSlidingLoopCordRigJSON()
+                presentations.append([
+                    "id": "front-half-turn",
+                    "name": "Front half turn",
+                    "assetPath": "assets/primary.png",
+                    "aspectRatio": 1,
+                    "default": false,
+                    "sourcePresentationID": "front",
+                    "rotationDegrees": 180,
+                ])
+                board["presentations"] = presentations
+            },
+            mutateAssets: { assetsURL in
+                try self.squarePresentationBytes().write(
+                    to: assetsURL.appendingPathComponent("primary.png")
+                )
+            }
+        )
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let canonical = try XCTUnwrap(board.presentation(id: "front"))
+        let alias = try XCTUnwrap(board.presentation(id: "front-half-turn"))
+        guard case .externalSlidingLoop(let rig) = try XCTUnwrap(canonical.cordRig) else {
+            return XCTFail("Expected external sliding loop cord rig")
+        }
+
+        XCTAssertEqual(rig.bodyContactFrame, BoardCordRect(x: 180, y: 300, width: 640, height: 100))
+        XCTAssertEqual(rig.cornerRadius, 30)
+        XCTAssertEqual(rig.clearance, 2)
+        XCTAssertEqual(rig.pullPoint, BoardCordPoint(x: 500, y: 70))
+        XCTAssertEqual(rig.style.braidColors, ["#FFD000", "#0055CC"])
+        XCTAssertNil(alias.cordRig)
+        XCTAssertEqual(board.resolvedCordRig(for: alias), .externalSlidingLoop(rig))
+    }
+
     func testStoreRejectsInvalidRoutedCordStructure() throws {
         let cases: [((inout [String: Any]) throws -> Void, String)] = [
             (
@@ -3240,6 +3282,25 @@ final class BoardPackageStoreTests: XCTestCase {
                     ["command": "close"],
                 ],
             ]],
+        ]
+    }
+
+    private func externalSlidingLoopCordRigJSON() -> [String: Any] {
+        [
+            "type": "externalSlidingLoop",
+            "sceneSize": ["width": 1000, "height": 1000],
+            "sourceFrame": ["x": 0, "y": 0, "width": 1000, "height": 1000],
+            "innerFaceFrame": ["x": 0, "y": 0, "width": 1000, "height": 1000],
+            "style": [
+                "diameter": 12,
+                "outlineColor": "#101010",
+                "baseColor": "#2255AA",
+                "braidColors": ["#FFD000", "#0055CC"],
+            ],
+            "bodyContactFrame": ["x": 180, "y": 300, "width": 640, "height": 100],
+            "cornerRadius": 30,
+            "clearance": 2,
+            "pullPoint": ["x": 500, "y": 70],
         ]
     }
 

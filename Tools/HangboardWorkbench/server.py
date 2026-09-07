@@ -37,6 +37,7 @@ from board_package import (
     BoardSaveConflictError,
     CordRig,
     DirectTwoAnchorCordRig,
+    ExternalSlidingLoopCordRig,
     RoutedCordPathCommand,
     RoutedCordRadialLip,
     RoutedCordRig,
@@ -331,10 +332,51 @@ def _routed_cord_rig_payload(rig: RoutedCordRig) -> dict[str, object]:
     }
 
 
+def _external_sliding_loop_cord_rig_payload(
+    rig: ExternalSlidingLoopCordRig,
+) -> dict[str, object]:
+    return {
+        "type": "externalSlidingLoop",
+        "sceneSize": {
+            "width": rig.scene_size.width,
+            "height": rig.scene_size.height,
+        },
+        "sourceFrame": {
+            "x": rig.source_frame.x,
+            "y": rig.source_frame.y,
+            "width": rig.source_frame.width,
+            "height": rig.source_frame.height,
+        },
+        "innerFaceFrame": {
+            "x": rig.inner_face_frame.x,
+            "y": rig.inner_face_frame.y,
+            "width": rig.inner_face_frame.width,
+            "height": rig.inner_face_frame.height,
+        },
+        "style": {
+            "diameter": rig.style.diameter,
+            "outlineColor": rig.style.outline_color,
+            "baseColor": rig.style.base_color,
+            "braidColors": list(rig.style.braid_colors),
+        },
+        "bodyContactFrame": {
+            "x": rig.body_contact_frame.x,
+            "y": rig.body_contact_frame.y,
+            "width": rig.body_contact_frame.width,
+            "height": rig.body_contact_frame.height,
+        },
+        "cornerRadius": rig.corner_radius,
+        "clearance": rig.clearance,
+        "pullPoint": {"x": rig.pull_point.x, "y": rig.pull_point.y},
+    }
+
+
 def _cord_rig_payload(rig: CordRig) -> dict[str, object]:
     if isinstance(rig, DirectTwoAnchorCordRig):
         return _direct_two_anchor_cord_rig_payload(rig)
-    return _routed_cord_rig_payload(rig)
+    if isinstance(rig, RoutedCordRig):
+        return _routed_cord_rig_payload(rig)
+    return _external_sliding_loop_cord_rig_payload(rig)
 
 
 def _hold_needs_attention(hold: dict[str, object]) -> bool:

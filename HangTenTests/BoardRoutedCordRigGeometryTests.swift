@@ -432,6 +432,95 @@ final class BoardRoutedCordRigGeometryTests: XCTestCase {
         )
     }
 
+    func testExternalSlidingLoopSettlesItsReturnBelowTheBodyAtZeroFortyFiveAndHalfTurn() throws {
+        let canvas = CGRect(x: 0, y: 0, width: 120, height: 170)
+
+        for (degrees, expectedLowestY) in [(0.0, 105.0), (45.0, 121.819805153), (180.0, 105.0)] {
+            let geometry = try XCTUnwrap(
+                BoardExternalSlidingLoopCordRigGeometry.resolve(
+                    rig: makeExternalSlidingLoopRig(),
+                    projection: BoardPresentationGeometryProjection(
+                        rotationDegrees: CGFloat(degrees)
+                    ),
+                    in: canvas
+                )
+            )
+
+            XCTAssertEqual(geometry.contactPoints.count, 2)
+            XCTAssertEqual(
+                try XCTUnwrap(geometry.returnPoints.map(\.y).max()),
+                expectedLowestY,
+                accuracy: 0.001
+            )
+            XCTAssertEqual(geometry.returnPoints.first, geometry.contactPoints[0])
+            XCTAssertEqual(geometry.returnPoints.last, geometry.contactPoints[1])
+            XCTAssertEqual(pathElements(geometry.tensionPath).count, 3)
+            XCTAssertFalse(geometry.returnPoints.contains(geometry.pullPoint))
+        }
+    }
+
+    func testExternalSlidingLoopComposesScaleAndOffCenterAnchorWithoutMovingApex() throws {
+        let geometry = try XCTUnwrap(
+            BoardExternalSlidingLoopCordRigGeometry.resolve(
+                rig: makeExternalSlidingLoopRig(),
+                projection: BoardPresentationGeometryProjection(
+                    rotationDegrees: 45,
+                    geometryScale: 0.5,
+                    rotationAnchor: .init(x: 0.25, y: 0.75)
+                ),
+                in: CGRect(x: 0, y: 0, width: 120, height: 170)
+            )
+        )
+
+        assertEqual(geometry.pullPoint, CGPoint(x: 60, y: 10))
+        assertEqual(
+            geometry.contactPoints[0],
+            CGPoint(x: 34.8930891099, y: 116.4831865332),
+            accuracy: 0.001
+        )
+        assertEqual(
+            geometry.contactPoints[1],
+            CGPoint(x: 76.4997477016, y: 127.7312525154),
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(geometry.returnPoints.map(\.y).max()),
+            143.9904851943,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(geometry.scale, 1, "cord diameter remains scene-stable")
+    }
+
+    func testExternalSlidingLoopValidationRejectsApexAboveCenterButBelowShapeTop() {
+        let template = makeExternalSlidingLoopRig()
+        let rig = BoardExternalSlidingLoopCordRig(
+            sceneSize: template.sceneSize,
+            sourceFrame: template.sourceFrame,
+            innerFaceFrame: template.innerFaceFrame,
+            style: template.style,
+            bodyContactFrame: template.bodyContactFrame,
+            cornerRadius: template.cornerRadius,
+            clearance: template.clearance,
+            pullPoint: BoardCordPoint(x: 10, y: 75)
+        )
+
+        XCTAssertEqual(
+            BoardExternalSlidingLoopCordPresentationValidation.failure(
+                for: rig,
+                rotationDegrees: 0,
+                rotationAnchor: .center
+            ),
+            .pullNotAboveContactShape
+        )
+        XCTAssertNil(
+            BoardExternalSlidingLoopCordRigGeometry.resolve(
+                rig: rig,
+                projection: BoardPresentationGeometryProjection(rotationDegrees: 0),
+                in: CGRect(x: 0, y: 0, width: 120, height: 170)
+            )
+        )
+    }
+
     @MainActor
     func testRoutedArtworkDrawsLayerOrderOcclusionAndVisibleBraidOnTransparency() throws {
         let rig = renderOrderRig()
@@ -489,6 +578,48 @@ final class BoardRoutedCordRigGeometryTests: XCTestCase {
             overpassColors.count,
             2,
             "the routed style must render a visible two-color braided texture"
+        )
+    }
+
+    @MainActor
+    func testExternalSlidingLoopArtworkDrawsBraidedLegsBehindTheFaceOnTransparency() throws {
+        let template = makeExternalSlidingLoopRig()
+        let rig = BoardExternalSlidingLoopCordRig(
+            sceneSize: template.sceneSize,
+            sourceFrame: BoardCordRect(x: 10, y: 50, width: 100, height: 70),
+            innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 100, height: 70),
+            style: template.style,
+            bodyContactFrame: BoardCordRect(x: 20, y: 10, width: 60, height: 30),
+            cornerRadius: 0,
+            clearance: 0,
+            pullPoint: BoardCordPoint(x: 50, y: -30)
+        )
+        let canvas = CGRect(x: 0, y: 0, width: 120, height: 170)
+        let geometry = try XCTUnwrap(
+            BoardExternalSlidingLoopCordRigGeometry.resolve(
+                rig: rig,
+                projection: BoardPresentationGeometryProjection(rotationDegrees: 0),
+                in: canvas
+            )
+        )
+        let renderer = ImageRenderer(
+            content: BoardExternalSlidingLoopPresentationArtwork(
+                faceImage: solidFaceImage(),
+                rig: rig,
+                geometry: geometry
+            )
+            .frame(width: canvas.width, height: canvas.height)
+        )
+        renderer.scale = 1
+        renderer.isOpaque = false
+        let image = try XCTUnwrap(renderer.uiImage?.cgImage)
+
+        XCTAssertGreaterThan(alphaByte(in: image, x: 60, y: 25), 0)
+        XCTAssertEqual(alphaByte(in: image, x: 0, y: 160), 0)
+        XCTAssertEqual(
+            pixelBytes(in: image, x: 60, y: 75),
+            pixelBytes(in: image, x: 60, y: 80),
+            "the face must occlude the sling where it contacts the board"
         )
     }
 
@@ -606,6 +737,24 @@ final class BoardRoutedCordRigGeometryTests: XCTestCase {
                 ),
             ],
             occlusions: []
+        )
+    }
+
+    private func makeExternalSlidingLoopRig() -> BoardExternalSlidingLoopCordRig {
+        BoardExternalSlidingLoopCordRig(
+            sceneSize: BoardCordSize(width: 120, height: 170),
+            sourceFrame: BoardCordRect(x: 0, y: 0, width: 120, height: 170),
+            innerFaceFrame: BoardCordRect(x: 0, y: 0, width: 120, height: 170),
+            style: BoardRoutedCordStyle(
+                diameter: 10,
+                outlineColor: "#101010",
+                baseColor: "#2255AA",
+                braidColors: ["#FFD000", "#0055CC"]
+            ),
+            bodyContactFrame: BoardCordRect(x: 30, y: 70, width: 60, height: 30),
+            cornerRadius: 0,
+            clearance: 0,
+            pullPoint: BoardCordPoint(x: 60, y: 10)
         )
     }
 

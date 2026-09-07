@@ -1473,6 +1473,25 @@ def _routed_cord_rig() -> dict[str, object]:
     }
 
 
+def _external_sliding_loop_cord_rig() -> dict[str, object]:
+    return {
+        "type": "externalSlidingLoop",
+        "sceneSize": {"width": 1000, "height": 500},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1000, "height": 500},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1000, "height": 500},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "bodyContactFrame": {"x": 180, "y": 300, "width": 640, "height": 100},
+        "cornerRadius": 30,
+        "clearance": 2,
+        "pullPoint": {"x": 500, "y": 70},
+    }
+
+
 def _routed_safety_rig() -> dict[str, object]:
     """A hand-checked rig that remains valid at 0, 90, and 180 degrees."""
     return {
@@ -1581,6 +1600,53 @@ def test_routed_cord_rig_loads_with_all_structural_elements() -> None:
     assert rig.paths[0].commands[-1].command == "quad"
     assert rig.occlusions[0].body_port_id == "body-left"
     assert rig.occlusions[1].commands[-1].command == "close"
+
+
+def test_external_sliding_loop_loads_with_contact_and_style_semantics() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    document["presentations"][0].update(
+        aspectRatio=2,
+        cordRig=_external_sliding_loop_cord_rig(),
+    )
+
+    board = module._load_board(document)
+    rig = board.presentations[0].cord_rig
+
+    assert isinstance(rig, module.ExternalSlidingLoopCordRig)
+    assert rig.body_contact_frame == module.CordRect(180, 300, 640, 100)
+    assert rig.corner_radius == 30
+    assert rig.clearance == 2
+    assert rig.pull_point == module.CordPoint(500, 70)
+    assert rig.style.braid_colors == ("#FFD000", "#0055CC")
+
+
+def test_external_sliding_loop_rejects_pull_point_inside_contact_shape() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _external_sliding_loop_cord_rig()
+    rig["pullPoint"] = {"x": 500, "y": 350}
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(
+        ValueError,
+        match="pullPoint must remain outside the expanded body contact shape",
+    ):
+        module._load_board(document)
+
+
+def test_external_sliding_loop_rejects_pull_point_below_contact_shape_top() -> None:
+    module = load_board_catalog_module()
+    document = multi_presentation_board_document()
+    rig = _external_sliding_loop_cord_rig()
+    rig["pullPoint"] = {"x": 100, "y": 310}
+    document["presentations"][0].update(aspectRatio=2, cordRig=rig)
+
+    with pytest.raises(
+        ValueError,
+        match="pullPoint must remain above the body contact shape",
+    ):
+        module._load_board(document)
 
 
 def test_routed_cord_rig_is_owned_once_and_inherited_by_rotated_alias() -> None:

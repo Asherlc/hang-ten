@@ -15,6 +15,7 @@ import type {
   Dialogs,
   DirectTwoAnchorCordRig,
   EditorDocument,
+  ExternalSlidingLoopCordRig,
   GitStatus,
   PullRequestResult,
   PushResult,
@@ -130,6 +131,25 @@ function routedReactRig(): RoutedCordRig {
         ],
       },
     ],
+  };
+}
+
+function externalSlidingLoopReactRig(): ExternalSlidingLoopCordRig {
+  return {
+    type: "externalSlidingLoop",
+    sceneSize: { width: 200, height: 200 },
+    sourceFrame: { x: 40, y: 40, width: 120, height: 120 },
+    innerFaceFrame: { x: 0, y: 0, width: 120, height: 120 },
+    style: {
+      diameter: 10,
+      outlineColor: "#101010",
+      baseColor: "#2255AA",
+      braidColors: ["#FFD000", "#0055CC"],
+    },
+    bodyContactFrame: { x: 30, y: 45, width: 60, height: 30 },
+    cornerRadius: 8,
+    clearance: 2,
+    pullPoint: { x: 60, y: -20 },
   };
 }
 
@@ -878,6 +898,84 @@ test("a routed alias renders the frozen cord stages around one dynamically rotat
       },
     ]);
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+  });
+});
+
+test("an external sliding loop alias renders both derived cord sections behind the rotated face", async () => {
+  const image = imageFixture();
+  const aliasDocument: EditorDocument = {
+    presentationID: "front-inverted",
+    equipmentObjects: ["primary"],
+    canvas: { width: 120, height: 120 },
+    regions: [],
+  };
+  const presentations = [{
+    presentationID: "front",
+    displayName: "Front",
+    imageUrl: "/api/boards/board-a/image?presentationID=front",
+    default: true,
+    cordRig: externalSlidingLoopReactRig(),
+  }, {
+    presentationID: "front-inverted",
+    displayName: "Front inverted",
+    imageUrl: "/api/boards/board-a/image",
+    default: false,
+    sourcePresentationID: "front",
+    rotationDegrees: 180,
+    geometryRotationAnchor: { x: 0.5, y: 0.5 },
+  }];
+  const board: Board = {
+    ...boardFixture("board-a", aliasDocument),
+    imageUrl: presentations[1]!.imageUrl,
+    selectedPresentationID: "front-inverted",
+    presentations,
+    document: aliasDocument,
+  };
+
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard() {
+        return board;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    const editorSvg = app.document.querySelector("#editor-svg");
+    assert.equal(editorSvg?.getAttribute("viewBox"), "-40 -40 200 200");
+    assert.equal(
+      app.document.querySelector("#board-image")?.getAttribute("transform"),
+      "rotate(180 60 60)",
+    );
+    const renderedStages = [...(editorSvg?.children ?? [])]
+      .map((element) => element.id)
+      .filter(Boolean);
+    assert.ok(
+      renderedStages.indexOf("routed-cord-behind-face")
+        < renderedStages.indexOf("board-image"),
+    );
+    assert.equal(
+      app.document.querySelectorAll("#routed-cord-behind-face [data-cord-path]").length,
+      2,
+    );
+    assert.deepEqual(
+      [...app.document.querySelectorAll("#routed-cord-behind-face [data-cord-path]")]
+        .map((element) => element.getAttribute("data-cord-path")),
+      ["external-loop-tension", "external-loop-return"],
+    );
+    assert.equal(app.document.querySelector("#routed-cord-above-face"), null);
+    assert.equal(app.document.querySelector("#routed-cord-occlusion-redraw"), null);
+    assert.equal(app.document.querySelector("#routed-cord-overpass"), null);
+    assert.deepEqual(
+      new Set(
+        [...app.document.querySelectorAll("[data-cord-braid-color]")]
+          .map((element) => element.getAttribute("stroke")),
+      ),
+      new Set(["#FFD000", "#0055CC"]),
+    );
   });
 });
 

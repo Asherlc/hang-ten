@@ -13,6 +13,8 @@ struct BoardPresentationArtwork: View {
     private let directTwoAnchorRig: BoardDirectTwoAnchorCordRig?
     private let routedGeometry: BoardRoutedCordRigGeometry?
     private let routedRig: BoardRoutedCordRig?
+    private let externalSlidingLoopGeometry: BoardExternalSlidingLoopCordRigGeometry?
+    private let externalSlidingLoopRig: BoardExternalSlidingLoopCordRig?
     private let faceImage: UIImage?
 
     init(
@@ -31,6 +33,8 @@ struct BoardPresentationArtwork: View {
             directTwoAnchorRig = rig
             routedRig = nil
             routedGeometry = nil
+            externalSlidingLoopRig = nil
+            externalSlidingLoopGeometry = nil
             self.geometry = geometry ?? BoardCordRigGeometry.make(
                 rig: rig,
                 projection: projection,
@@ -44,7 +48,24 @@ struct BoardPresentationArtwork: View {
             directTwoAnchorRig = nil
             self.geometry = nil
             routedRig = rig
+            externalSlidingLoopRig = nil
+            externalSlidingLoopGeometry = nil
             routedGeometry = BoardRoutedCordRigGeometry.resolve(
+                rig: rig,
+                projection: projection,
+                in: CGRect(origin: .zero, size: canvasSize)
+            )
+            faceImage = BoardCatalog.packageStore.presentationArtworkImageURL(
+                for: board,
+                presentationID: presentation.id
+            ).flatMap { UIImage(contentsOfFile: $0.path) }
+        } else if case .externalSlidingLoop(let rig) = board.resolvedCordRig(for: presentation) {
+            directTwoAnchorRig = nil
+            self.geometry = nil
+            routedRig = nil
+            routedGeometry = nil
+            externalSlidingLoopRig = rig
+            externalSlidingLoopGeometry = BoardExternalSlidingLoopCordRigGeometry.resolve(
                 rig: rig,
                 projection: projection,
                 in: CGRect(origin: .zero, size: canvasSize)
@@ -58,6 +79,8 @@ struct BoardPresentationArtwork: View {
             self.geometry = nil
             routedRig = nil
             routedGeometry = nil
+            externalSlidingLoopRig = nil
+            externalSlidingLoopGeometry = nil
             faceImage = BoardCatalog.packageStore.presentationArtworkImageURL(
                 for: board,
                 presentationID: presentation.id
@@ -67,6 +90,8 @@ struct BoardPresentationArtwork: View {
             self.geometry = nil
             routedRig = nil
             routedGeometry = nil
+            externalSlidingLoopRig = nil
+            externalSlidingLoopGeometry = nil
             faceImage = nil
         }
     }
@@ -105,7 +130,13 @@ struct BoardPresentationArtwork: View {
 
     @ViewBuilder
     var body: some View {
-        if let routedGeometry, let routedRig, let faceImage {
+        if let externalSlidingLoopGeometry, let externalSlidingLoopRig, let faceImage {
+            BoardExternalSlidingLoopPresentationArtwork(
+                faceImage: faceImage,
+                rig: externalSlidingLoopRig,
+                geometry: externalSlidingLoopGeometry
+            )
+        } else if let routedGeometry, let routedRig, let faceImage {
             BoardRoutedPresentationArtwork(
                 faceImage: faceImage,
                 rig: routedRig,
@@ -218,6 +249,40 @@ struct BoardPresentationArtwork: View {
         drawRoutedCord(layer: .overpass, rig: rig, geometry: geometry, in: &context)
     }
 
+    fileprivate static func drawExternalSlidingLoopArtwork(
+        image: Image,
+        rig: BoardExternalSlidingLoopCordRig,
+        geometry: BoardExternalSlidingLoopCordRigGeometry,
+        in context: inout GraphicsContext
+    ) {
+        let paths = [geometry.tensionPath, geometry.returnPath]
+        let diameter = rig.style.diameter * geometry.scale
+        guard diameter.isFinite, diameter > 0 else { return }
+        stroke(
+            paths,
+            in: &context,
+            color: routedColor(rig.style.outlineColor),
+            width: diameter * 1.6
+        )
+        stroke(
+            paths,
+            in: &context,
+            color: routedColor(rig.style.baseColor),
+            width: diameter
+        )
+        drawRoutedBraid(
+            over: paths,
+            sceneRect: geometry.sceneRect,
+            diameter: diameter,
+            colors: rig.style.braidColors.map(routedColor),
+            in: &context
+        )
+
+        var faceContext = context
+        faceContext.transform = geometry.faceTransform
+        faceContext.draw(context.resolve(image), in: geometry.faceRect)
+    }
+
     private static func drawRoutedFace(
         _ image: GraphicsContext.ResolvedImage,
         geometry: BoardRoutedCordRigGeometry,
@@ -254,7 +319,7 @@ struct BoardPresentationArtwork: View {
         )
         drawRoutedBraid(
             over: paths,
-            geometry: geometry,
+            sceneRect: geometry.sceneRect,
             diameter: diameter,
             colors: rig.style.braidColors.map(routedColor),
             in: &context
@@ -263,7 +328,7 @@ struct BoardPresentationArtwork: View {
 
     private static func drawRoutedBraid(
         over paths: [Path],
-        geometry: BoardRoutedCordRigGeometry,
+        sceneRect: CGRect,
         diameter: CGFloat,
         colors: [Color],
         in context: inout GraphicsContext
@@ -283,7 +348,7 @@ struct BoardPresentationArtwork: View {
         braidContext.clip(to: braidClip)
         let spacing = max(diameter * 0.72, 1)
         let fiberWidth = max(diameter * 0.18, 0.5)
-        let diagonalSpan = geometry.sceneRect.width + geometry.sceneRect.height
+        let diagonalSpan = sceneRect.width + sceneRect.height
         var offset = -diagonalSpan
         var index = 0
         while offset <= diagonalSpan * 2 {
@@ -291,27 +356,27 @@ struct BoardPresentationArtwork: View {
             if index.isMultiple(of: 2) {
                 fiber.move(
                     to: CGPoint(
-                        x: geometry.sceneRect.minX + offset,
-                        y: geometry.sceneRect.maxY
+                        x: sceneRect.minX + offset,
+                        y: sceneRect.maxY
                     )
                 )
                 fiber.addLine(
                     to: CGPoint(
-                        x: geometry.sceneRect.minX + offset + geometry.sceneRect.height,
-                        y: geometry.sceneRect.minY
+                        x: sceneRect.minX + offset + sceneRect.height,
+                        y: sceneRect.minY
                     )
                 )
             } else {
                 fiber.move(
                     to: CGPoint(
-                        x: geometry.sceneRect.minX + offset,
-                        y: geometry.sceneRect.minY
+                        x: sceneRect.minX + offset,
+                        y: sceneRect.minY
                     )
                 )
                 fiber.addLine(
                     to: CGPoint(
-                        x: geometry.sceneRect.minX + offset + geometry.sceneRect.height,
-                        y: geometry.sceneRect.maxY
+                        x: sceneRect.minX + offset + sceneRect.height,
+                        y: sceneRect.maxY
                     )
                 )
             }
@@ -489,6 +554,25 @@ struct BoardRoutedPresentationArtwork: View {
     var body: some View {
         Canvas(opaque: false, rendersAsynchronously: false) { context, _ in
             BoardPresentationArtwork.drawRoutedArtwork(
+                image: Image(uiImage: faceImage),
+                rig: rig,
+                geometry: geometry,
+                in: &context
+            )
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
+struct BoardExternalSlidingLoopPresentationArtwork: View {
+    let faceImage: UIImage
+    let rig: BoardExternalSlidingLoopCordRig
+    let geometry: BoardExternalSlidingLoopCordRigGeometry
+
+    var body: some View {
+        Canvas(opaque: false, rendersAsynchronously: false) { context, _ in
+            BoardPresentationArtwork.drawExternalSlidingLoopArtwork(
                 image: Image(uiImage: faceImage),
                 rig: rig,
                 geometry: geometry,

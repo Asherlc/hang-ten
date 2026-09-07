@@ -97,6 +97,25 @@ def _routed_cord_rig() -> dict[str, object]:
     }
 
 
+def _external_sliding_loop_cord_rig() -> dict[str, object]:
+    return {
+        "type": "externalSlidingLoop",
+        "sceneSize": {"width": 1774, "height": 457},
+        "sourceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "innerFaceFrame": {"x": 0, "y": 0, "width": 1774, "height": 457},
+        "style": {
+            "diameter": 12,
+            "outlineColor": "#101010",
+            "baseColor": "#2255AA",
+            "braidColors": ["#FFD000", "#0055CC"],
+        },
+        "bodyContactFrame": {"x": 400, "y": 260, "width": 974, "height": 100},
+        "cornerRadius": 30,
+        "clearance": 2,
+        "pullPoint": {"x": 887, "y": 90},
+    }
+
+
 def _quarter_turn_cord_rig() -> dict[str, object]:
     return {
         "type": "directTwoAnchor",
@@ -889,6 +908,24 @@ def test_board_payload_exposes_canonical_routed_rig_with_empty_arrays(
     assert payload["cordRig"] == rig
     assert payload["cordRig"]["paths"] == []
     assert payload["cordRig"]["occlusions"] == []
+
+
+def test_board_payload_exposes_canonical_external_sliding_loop_rig(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+    package_root = library / "fixture-v2"
+    board = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    rig = _external_sliding_loop_cord_rig()
+    board["presentations"][0]["cordRig"] = rig
+    (package_root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    package = board_package.load_board_package(package_root)
+
+    payload = server_module._presentation_payload(
+        package, package.presentation("front")
+    )
+
+    assert payload["cordRig"] == rig
 
 
 def test_board_payload_exposes_explicit_arbitrary_alias_rotation(

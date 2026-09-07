@@ -799,6 +799,12 @@ struct BoardPackageStore {
                         presentation: presentation,
                         boardID: document.id
                     )
+                case .externalSlidingLoop(let rig):
+                    try validateExternalSlidingLoopCordPresentation(
+                        rig,
+                        presentation: presentation,
+                        boardID: document.id
+                    )
                 }
             }
         }
@@ -860,6 +866,13 @@ struct BoardPackageStore {
         }
         if case .routed(let rig) = cordRig,
            let reason = BoardRoutedCordRigValidation.failureReason(for: rig) {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "presentation \(presentation.id).\(reason)"
+            )
+        }
+        if case .externalSlidingLoop(let rig) = cordRig,
+           let reason = BoardExternalSlidingLoopCordRigValidation.failureReason(for: rig) {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "presentation \(presentation.id).\(reason)"
@@ -927,6 +940,36 @@ struct BoardPackageStore {
         case .bodyNotBelowWorld(let bodyPortID, let worldPortID):
             reason = "presentation \(presentation.id) routed body port \(bodyPortID) "
                 + "must be strictly below world port \(worldPortID)"
+        case nil:
+            return
+        }
+        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: reason)
+    }
+
+    private static func validateExternalSlidingLoopCordPresentation(
+        _ rig: BoardExternalSlidingLoopCordRig,
+        presentation: BoardPackagePresentationDocument,
+        boardID: String
+    ) throws {
+        let failure = BoardExternalSlidingLoopCordPresentationValidation.failure(
+            for: rig,
+            rotationDegrees: presentation.resolvedRotationDegrees,
+            rotationAnchor: presentation.geometryRotationAnchor ?? .center,
+            geometryScale: presentation.resolvedGeometryScale
+        )
+        let reason: String
+        switch failure {
+        case .unresolvedGeometry:
+            reason = "presentation \(presentation.id) external sliding loop geometry could not be resolved"
+        case .centerlineOutsideScene:
+            reason = "presentation \(presentation.id) external sliding loop cord centerline geometry "
+                + "must remain inside sceneSize with the style margin"
+        case .pullInsideContactShape:
+            reason = "presentation \(presentation.id) external sliding loop pullPoint must "
+                + "remain outside the expanded body contact shape"
+        case .pullNotAboveContactShape:
+            reason = "presentation \(presentation.id) external sliding loop pullPoint must "
+                + "remain above the body contact shape"
         case nil:
             return
         }
@@ -1660,6 +1703,10 @@ private struct BoardPackageCordRigDocument: Decodable {
             )
         case "routed":
             cordRig = .routed(try BoardRoutedCordRigDocument(from: decoder).rig)
+        case "externalSlidingLoop":
+            cordRig = .externalSlidingLoop(
+                try BoardExternalSlidingLoopCordRigDocument(from: decoder).rig
+            )
         default:
             throw DecodingError.dataCorruptedError(
                 forKey: .type,
