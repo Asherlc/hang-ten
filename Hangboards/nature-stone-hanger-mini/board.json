@@ -5,7 +5,7 @@
   "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
   "productURL": "https://natureclimbing.com/products/stone-hanger-mini-beech",
   "dimensions": "10 × 6 × 2.5 cm",
-  "aspectRatio": 1.0,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,8 +17,92 @@
       "id": "primary",
       "name": "Front",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.0,
-      "default": true
+      "aspectRatio": 1.5,
+      "default": true,
+      "availableHoldIDs": [
+        "pull-up-jug",
+        "wood-edge-15-incut",
+        "granite-edge-15"
+      ],
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 141,
+          "y": 26,
+          "width": 1254,
+          "height": 1254
+        },
+        "style": {
+          "diameter": 23,
+          "outlineColor": "#030405",
+          "baseColor": "#17191B",
+          "braidColors": [
+            "#E6B719",
+            "#585B5D"
+          ]
+        },
+        "ports": [
+          {
+            "id": "left-top-route-exit",
+            "space": "body",
+            "point": {
+              "x": 348,
+              "y": 389
+            }
+          },
+          {
+            "id": "right-top-route-exit",
+            "space": "body",
+            "point": {
+              "x": 1188,
+              "y": 389
+            }
+          },
+          {
+            "id": "support-left",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 45
+            }
+          },
+          {
+            "id": "support-right",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 45
+            }
+          }
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": [
+              "left-top-route-exit",
+              "right-top-route-exit"
+            ],
+            "worldPortIDs": [
+              "support-left",
+              "support-right"
+            ],
+            "pairing": "declared",
+            "layer": "behindFace"
+          }
+        ],
+        "paths": [],
+        "occlusions": []
+      }
     },
     {
       "id": "side",
@@ -39,10 +123,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.249,
-            "y": 0.499,
-            "width": 0.502,
-            "height": 0.134
+            "x": 0.217,
+            "y": 0.376,
+            "width": 0.566,
+            "height": 0.135
           },
           "shape": {
             "type": "path",
@@ -133,10 +217,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.25,
-            "y": 0.627,
-            "width": 0.501,
-            "height": 0.046
+            "x": 0.22,
+            "y": 0.511,
+            "width": 0.56,
+            "height": 0.0155
           },
           "shape": {
             "type": "path",
@@ -251,10 +335,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.25,
-            "y": 0.672,
-            "width": 0.501,
-            "height": 0.051
+            "x": 0.22,
+            "y": 0.5265,
+            "width": 0.56,
+            "height": 0.0905
           },
           "shape": {
             "type": "path",
