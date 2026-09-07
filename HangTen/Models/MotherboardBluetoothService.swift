@@ -26,6 +26,7 @@ struct MotherboardDiscoveredDevice: Equatable, Identifiable {
 enum MotherboardTransportEvent {
     case powerChanged(MotherboardBluetoothPowerState)
     case discovered(MotherboardDiscoveredDevice)
+    case advertisement(MotherboardDiscoveredDevice, ForceSensorAdvertisement, Date)
     case connected
     case characteristicsReady
     case notificationsReady
@@ -90,12 +91,15 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private let transport: MotherboardTransport
     private let timeouts: MotherboardServiceTimeouts
+    private let advertisementLivenessTimeout: TimeInterval
     private let bodyweightMeasurementSleep: @Sendable (UInt64) async throws -> Void
     private var parser: MotherboardProtocolParser
     private var calibrationRows: [MotherboardCalibrationRow] = []
     private var calibration: MotherboardCalibration?
     private var tareKGF = Array(repeating: 0.0, count: 4)
     private var tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
+    private var aggregateTareKGF = 0.0
+    private var aggregateTareAccumulatorKGF = 0.0
     private var bodyweightMeanKGF: Double?
     private var wantsConnection = false
     private var reconnectAttempts = 0
@@ -114,6 +118,7 @@ final class MotherboardBluetoothService: ObservableObject {
         transport: MotherboardTransport,
         parser: MotherboardProtocolParser = .init(),
         timeouts: MotherboardServiceTimeouts = .production,
+        advertisementLivenessTimeout: TimeInterval = WHC06ProtocolAdapter.advertisementLivenessTimeout,
         tareSampleCount: Int = 15,
         bodyweightMeasurementSleep: @escaping @Sendable (UInt64) async throws -> Void = { nanoseconds in
             try await Task.sleep(nanoseconds: nanoseconds)
@@ -122,6 +127,7 @@ final class MotherboardBluetoothService: ObservableObject {
         self.transport = transport
         self.parser = parser
         self.timeouts = timeouts
+        self.advertisementLivenessTimeout = advertisementLivenessTimeout
         self.bodyweightMeasurementSleep = bodyweightMeasurementSleep
         tareSampleTarget = max(1, tareSampleCount)
         transport.eventHandler = { [weak self] event in
@@ -186,6 +192,7 @@ final class MotherboardBluetoothService: ObservableObject {
             return
         }
         tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
+        aggregateTareAccumulatorKGF = 0
         tareSamplesCollected = 0
         isTaring = true
     }
@@ -245,6 +252,13 @@ final class MotherboardBluetoothService: ObservableObject {
             state = .connecting
             scheduleTimeout(after: timeouts.connect, message: "Motherboard connection timed out. Move the sensor closer and try again.")
             transport.connect(to: device)
+
+        case .advertisement(let device, let advertisement, let receivedAt):
+            handleAdvertisement(
+                from: device,
+                advertisement: advertisement,
+                receivedAt: receivedAt
+            )
 
         case .connected:
             guard wantsConnection else { return }
@@ -381,6 +395,45 @@ final class MotherboardBluetoothService: ObservableObject {
         }
 
         consecutiveStreamingParserErrors = 0
+        publish(samples)
+    }
+
+    private func handleAdvertisement(
+        from device: MotherboardDiscoveredDevice,
+        advertisement: ForceSensorAdvertisement,
+        receivedAt: Date
+    ) {
+        guard wantsConnection,
+              device.profile == requestedProfile,
+              let adapter = WHC06ProtocolAdapter(profile: device.profile),
+              let samples = adapter.decode(advertisement, receivedAt: receivedAt) else {
+            return
+        }
+
+        if state == .scanning {
+            connectedDeviceID = device.id
+            activeProfile = device.profile
+            connectedProfile = device.profile
+            consecutiveStreamingParserErrors = 0
+            reconnectAttempts = 0
+            lastError = nil
+            state = .streaming
+        } else {
+            guard state == .streaming,
+                  connectedDeviceID == device.id,
+                  activeProfile == device.profile else {
+                return
+            }
+        }
+
+        scheduleTimeout(
+            after: advertisementLivenessTimeout,
+            message: "\(device.profile.label) stopped advertising. Move the sensor closer and try again."
+        )
+        publish(samples)
+    }
+
+    private func publish(_ samples: [ForceSensorSample]) {
         for sample in samples {
             nextForceSensorSampleNumber &+= 1
             let measurement = MotherboardMeasurement(
@@ -388,11 +441,11 @@ final class MotherboardBluetoothService: ObservableObject {
                 sampleNumber: nextForceSensorSampleNumber,
                 batteryValue: 0,
                 sensorLoadsKGF: [],
-                aggregateLoadKGF: sample.kilogramsForce
+                aggregateLoadKGF: max(0, sample.kilogramsForce - aggregateTareKGF)
             )
             latestMeasurement = measurement
             batteryValue = nil
-            collectTareSample(measurement)
+            collectTareSample(measurement, untaredAggregateLoadKGF: sample.kilogramsForce)
             collectBodyweightSample(measurement)
         }
     }
@@ -435,6 +488,7 @@ final class MotherboardBluetoothService: ObservableObject {
         calibrationRows = []
         calibration = nil
         tareKGF = Array(repeating: 0.0, count: 4)
+        aggregateTareKGF = 0
         cancelTare()
         cancelBodyweightMeasurement()
         bodyweightKGF = nil
@@ -447,15 +501,28 @@ final class MotherboardBluetoothService: ObservableObject {
         consecutiveStreamingParserErrors = 0
     }
 
-    private func collectTareSample(_ measurement: MotherboardMeasurement) {
-        guard isTaring, measurement.sensorLoadsKGF.count == tareAccumulatorKGF.count else { return }
-        tareAccumulatorKGF = zip(tareAccumulatorKGF, measurement.sensorLoadsKGF).map(+)
+    private func collectTareSample(
+        _ measurement: MotherboardMeasurement,
+        untaredAggregateLoadKGF: Double? = nil
+    ) {
+        guard isTaring else { return }
+        if let untaredAggregateLoadKGF {
+            aggregateTareAccumulatorKGF += untaredAggregateLoadKGF
+        } else if measurement.sensorLoadsKGF.count == tareAccumulatorKGF.count {
+            tareAccumulatorKGF = zip(tareAccumulatorKGF, measurement.sensorLoadsKGF).map(+)
+        } else {
+            return
+        }
         tareSamplesCollected += 1
 
         guard tareSamplesCollected >= tareSampleTarget else { return }
         let divisor = Double(tareSamplesCollected)
-        let average = tareAccumulatorKGF.map { $0 / divisor }
-        tareKGF = zip(tareKGF, average).map(+)
+        if untaredAggregateLoadKGF != nil {
+            aggregateTareKGF = aggregateTareAccumulatorKGF / divisor
+        } else {
+            let average = tareAccumulatorKGF.map { $0 / divisor }
+            tareKGF = zip(tareKGF, average).map(+)
+        }
         cancelTare()
         tareCompletionCount += 1
     }
@@ -464,6 +531,7 @@ final class MotherboardBluetoothService: ObservableObject {
         isTaring = false
         tareSamplesCollected = 0
         tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
+        aggregateTareAccumulatorKGF = 0
     }
 
     private func collectBodyweightSample(_ measurement: MotherboardMeasurement) {
@@ -714,9 +782,12 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     private func beginScanIfPossible() {
         guard let centralManager, centralManager.state == .poweredOn else { return }
         let serviceUUIDs = serviceUUIDs(for: requestedProfile).map(CBUUID.init(nsuuid:))
+        let options: [String: Any]? = WHC06ProtocolAdapter(profile: requestedProfile) == nil
+            ? nil
+            : [CBCentralManagerScanOptionAllowDuplicatesKey: true]
         centralManager.scanForPeripherals(
             withServices: serviceUUIDs.isEmpty ? nil : serviceUUIDs,
-            options: nil
+            options: options
         )
     }
 
@@ -814,6 +885,11 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         } else {
             manufacturerData = []
         }
+        let advertisement = ForceSensorAdvertisement(
+            name: peripheral.name ?? advertisedLocalName,
+            serviceUUIDs: advertisedServiceUUIDs,
+            manufacturerData: manufacturerData
+        )
         guard let profile = resolvedProfile(
             peripheralName: peripheral.name,
             advertisedLocalName: advertisedLocalName,
@@ -821,13 +897,19 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
             manufacturerData: manufacturerData
         ) else { return }
         let advertisedName = peripheral.name ?? advertisedLocalName ?? profile.label
-
-        discoveredPeripherals[peripheral.identifier] = (peripheral, profile)
-        eventHandler?(.discovered(MotherboardDiscoveredDevice(
+        let device = MotherboardDiscoveredDevice(
             id: peripheral.identifier,
             name: advertisedName,
             profile: profile
-        )))
+        )
+
+        if WHC06ProtocolAdapter(profile: profile) != nil {
+            eventHandler?(.advertisement(device, advertisement, Date()))
+            return
+        }
+
+        discoveredPeripherals[peripheral.identifier] = (peripheral, profile)
+        eventHandler?(.discovered(device))
     }
 
     func handleNotificationStateUpdate(isNotifying: Bool, error: Error?) {

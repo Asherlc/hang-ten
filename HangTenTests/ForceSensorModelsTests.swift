@@ -27,7 +27,15 @@ final class ForceSensorModelsTests: XCTestCase {
     func testConnectableProfilesIncludeOnlyImplementedBLEAdapters() {
         XCTAssertEqual(
             ForceSensorProfile.connectableCases,
-            [.automatic, .motherboard, .progressor, .pitchSix, .genericProgressor]
+            [
+                .automatic,
+                .motherboard,
+                .progressor,
+                .pitchSix,
+                .whC06,
+                .genericProgressor,
+                .genericWHC06
+            ]
         )
     }
 
@@ -50,10 +58,10 @@ final class ForceSensorModelsTests: XCTestCase {
         )
     }
 
-    func testConnectionGuidanceFallsBackToAutomaticForUnsupportedStoredProfiles() {
+    func testConnectionGuidanceNamesExplicitlySelectedWHC06Profile() {
         XCTAssertEqual(
             ForceSensorConnectionCopy.detail(for: .scanning, profile: .genericWHC06),
-            "Looking nearby for a supported sensor automatically."
+            "Looking nearby for your Generic WH-C06-compatible."
         )
     }
 
@@ -70,18 +78,18 @@ final class ForceSensorModelsTests: XCTestCase {
                 "Motherboard scan timed out. Move the sensor closer and try again.",
                 profile: .whC06
             ),
-            "A supported sensor scan timed out. Move the sensor closer and try again."
+            "WH-C06 scan timed out. Move the sensor closer and try again."
         )
         XCTAssertEqual(
             ForceSensorConnectionCopy.lastError(
                 "Generic WH-C06-compatible is not available yet.",
                 profile: .genericWHC06
             ),
-            "A supported sensor is not available yet."
+            "Generic WH-C06-compatible is not available yet."
         )
     }
 
-    func testRegistryResolvesBLEAdaptersAndKeepsAdvertisementOnlyProfilesOutOfConnectionFlow() throws {
+    func testRegistryResolvesGATTAdaptersAndKeepsAdvertisementOnlyProfilesOutOfAutomaticSelection() throws {
         let progressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .progressor))
         let pitchSix = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .pitchSix))
         let genericProgressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .genericProgressor))
