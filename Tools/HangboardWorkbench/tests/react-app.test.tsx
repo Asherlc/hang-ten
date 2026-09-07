@@ -976,6 +976,19 @@ test("an external sliding loop alias renders both derived cord sections behind t
       ),
       new Set(["#FFD000", "#0055CC"]),
     );
+    assert.deepEqual(
+      new Set(
+        [...app.document.querySelectorAll("[data-cord-braid-mark]")]
+          .map((element) => element.getAttribute("data-cord-fiber-path")),
+      ),
+      new Set(["external-loop-tension", "external-loop-return"]),
+    );
+    assert.ok(app.document.querySelectorAll("[data-cord-braid-mark]").length > 120);
+    assert.equal(
+      app.document.querySelectorAll("#routed-cord-behind-face [data-cord-cylinder-highlight]").length,
+      2,
+    );
+    assert.equal(app.document.querySelector("#routed-cord-behind-face mask"), null);
   });
 });
 

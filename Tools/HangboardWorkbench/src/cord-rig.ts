@@ -202,6 +202,130 @@ function pathThroughPoints(points: readonly Point[]): string {
   ].join(" ");
 }
 
+const APEX_FILLET_RADIUS_DIAMETER_MULTIPLIER = 1.25;
+const APEX_FILLET_MAX_LEG_FRACTION = 0.15;
+const APEX_FILLET_MAX_CUBIC_SWEEP = Math.PI / 2;
+const APEX_FILLET_MIN_ANGLE = 1e-6;
+
+function pathThroughRoundedWorldApex(
+  legEndpoints: readonly Point[],
+  apex: Point,
+  cordDiameter: number,
+): string {
+  const firstEndpoint = legEndpoints[0];
+  if (!firstEndpoint) return "";
+  const commands = [pointCommand("M", [firstEndpoint])];
+
+  for (let index = 1; index < legEndpoints.length; index += 1) {
+    const incomingEndpoint = legEndpoints[index - 1]!;
+    const outgoingEndpoint = legEndpoints[index]!;
+    const incomingLength = Math.hypot(
+      incomingEndpoint.x - apex.x,
+      incomingEndpoint.y - apex.y,
+    );
+    const outgoingLength = Math.hypot(
+      outgoingEndpoint.x - apex.x,
+      outgoingEndpoint.y - apex.y,
+    );
+    if (incomingLength > 0 && outgoingLength > 0) {
+      const incomingRay = {
+        x: (incomingEndpoint.x - apex.x) / incomingLength,
+        y: (incomingEndpoint.y - apex.y) / incomingLength,
+      };
+      const outgoingRay = {
+        x: (outgoingEndpoint.x - apex.x) / outgoingLength,
+        y: (outgoingEndpoint.y - apex.y) / outgoingLength,
+      };
+      const dot = Math.max(-1, Math.min(1,
+        incomingRay.x * outgoingRay.x + incomingRay.y * outgoingRay.y,
+      ));
+      const angle = Math.acos(dot);
+      const turnAngle = Math.PI - angle;
+      const cross = incomingRay.x * outgoingRay.y - incomingRay.y * outgoingRay.x;
+      const bisector = {
+        x: incomingRay.x + outgoingRay.x,
+        y: incomingRay.y + outgoingRay.y,
+      };
+      const bisectorLength = Math.hypot(bisector.x, bisector.y);
+      const sineHalfAngle = Math.sin(angle / 2);
+      const tangentHalfAngle = Math.tan(angle / 2);
+      const desiredRadius = APEX_FILLET_RADIUS_DIAMETER_MULTIPLIER * cordDiameter;
+      const trimDistance = Math.min(
+        desiredRadius / tangentHalfAngle,
+        APEX_FILLET_MAX_LEG_FRACTION * Math.min(incomingLength, outgoingLength),
+      );
+
+      if (Number.isFinite(trimDistance)
+        && trimDistance > 0
+        && angle > APEX_FILLET_MIN_ANGLE
+        && turnAngle > APEX_FILLET_MIN_ANGLE
+        && Math.abs(cross) > APEX_FILLET_MIN_ANGLE
+        && bisectorLength > APEX_FILLET_MIN_ANGLE
+        && sineHalfAngle > APEX_FILLET_MIN_ANGLE) {
+        const radius = trimDistance * tangentHalfAngle;
+        const centerDistance = radius / sineHalfAngle;
+        const circleCenter = {
+          x: apex.x + bisector.x / bisectorLength * centerDistance,
+          y: apex.y + bisector.y / bisectorLength * centerDistance,
+        };
+        const incomingTrim = {
+          x: apex.x + (incomingEndpoint.x - apex.x) * trimDistance / incomingLength,
+          y: apex.y + (incomingEndpoint.y - apex.y) * trimDistance / incomingLength,
+        };
+        const outgoingTrim = {
+          x: apex.x + (outgoingEndpoint.x - apex.x) * trimDistance / outgoingLength,
+          y: apex.y + (outgoingEndpoint.y - apex.y) * trimDistance / outgoingLength,
+        };
+        if ([
+          circleCenter.x,
+          circleCenter.y,
+          incomingTrim.x,
+          incomingTrim.y,
+          outgoingTrim.x,
+          outgoingTrim.y,
+          radius,
+        ].every(Number.isFinite)) {
+          commands.push(pointCommand("L", [incomingTrim]));
+          const sweep = -Math.sign(cross) * turnAngle;
+          const segmentCount = Math.ceil(Math.abs(sweep) / APEX_FILLET_MAX_CUBIC_SWEEP);
+          const segmentSweep = sweep / segmentCount;
+          let segmentStart = incomingTrim;
+          let segmentStartAngle = Math.atan2(
+            incomingTrim.y - circleCenter.y,
+            incomingTrim.x - circleCenter.x,
+          );
+          for (let segmentIndex = 0; segmentIndex < segmentCount; segmentIndex += 1) {
+            const segmentEndAngle = segmentStartAngle + segmentSweep;
+            const segmentEnd = segmentIndex === segmentCount - 1
+              ? outgoingTrim
+              : {
+                x: circleCenter.x + radius * Math.cos(segmentEndAngle),
+                y: circleCenter.y + radius * Math.sin(segmentEndAngle),
+              };
+            const controlScale = 4 / 3 * Math.tan(segmentSweep / 4) * radius;
+            const firstControl = {
+              x: segmentStart.x - Math.sin(segmentStartAngle) * controlScale,
+              y: segmentStart.y + Math.cos(segmentStartAngle) * controlScale,
+            };
+            const secondControl = {
+              x: segmentEnd.x + Math.sin(segmentEndAngle) * controlScale,
+              y: segmentEnd.y - Math.cos(segmentEndAngle) * controlScale,
+            };
+            commands.push(pointCommand("C", [firstControl, secondControl, segmentEnd]));
+            segmentStart = segmentEnd;
+            segmentStartAngle = segmentEndAngle;
+          }
+          commands.push(pointCommand("L", [outgoingEndpoint]));
+          continue;
+        }
+      }
+    }
+
+    commands.push(pointCommand("L", [apex]), pointCommand("L", [outgoingEndpoint]));
+  }
+  return commands.join(" ");
+}
+
 function resolveExternalSlidingLoop(
   rig: ExternalSlidingLoopCordRig,
   rotationDegrees: number,
@@ -209,6 +333,7 @@ function resolveExternalSlidingLoop(
   sceneAnchor: Point,
   sceneToFace: (point: Point) => Point,
   sourceRelativeScenePoint: (point: Point) => Point,
+  cordUnitScale: number,
 ): {
   pullPoint: Point;
   contactPoints: [Point, Point];
@@ -307,7 +432,11 @@ function resolveExternalSlidingLoop(
     sceneToFace(boundary[rightIndex]!),
   ] as [Point, Point];
   const returnPoints = sceneReturnPoints.map(sceneToFace);
-  const tensionPath = pathThroughPoints([contactPoints[0], pullPoint, contactPoints[1]]);
+  const tensionPath = pathThroughRoundedWorldApex(
+    contactPoints,
+    pullPoint,
+    rig.style.diameter * cordUnitScale,
+  );
   const returnPath = pathThroughPoints(returnPoints);
   return {
     pullPoint,
@@ -418,6 +547,7 @@ export function resolveCordRigPresentationGeometry(
       sceneAnchor,
       sceneToFace,
       sourceRelativeScenePoint,
+      cordUnitScale,
     );
     if (!externalGeometry) return null;
     return {
@@ -562,18 +692,14 @@ export function resolveCordRigPresentationGeometry(
         apex.x /= cluster.records.length;
         apex.y /= cluster.records.length;
 
-        const points = [cluster.records[0]!.bodyPoint, apex];
-        for (const [recordIndex, record] of cluster.records.slice(1).entries()) {
-          points.push(record.bodyPoint);
-          if (recordIndex < cluster.records.length - 2) points.push(apex);
-        }
         renderLayers[layer].push({
           kind: "span",
           id: `${cluster.groupID}:apex:${clusterIndex}`,
-          d: [
-            pointCommand("M", [points[0]!]),
-            ...points.slice(1).map((point) => pointCommand("L", [point])),
-          ].join(" "),
+          d: pathThroughRoundedWorldApex(
+            cluster.records.map((record) => record.bodyPoint),
+            apex,
+            rig.style.diameter * cordUnitScale,
+          ),
         });
       }
       renderLayers[layer].push(...layers[layer].filter((path) => path.kind === "path"));
@@ -643,11 +769,11 @@ export function resolveCordRigPresentationGeometry(
     )
   )) as [string, string];
 
-  const tensionPath = [
-    pointCommand("M", [projectedAttachments[0]!]),
-    pointCommand("L", [pullPoint]),
-    pointCommand("L", [projectedAttachments[1]!]),
-  ].join(" ");
+  const tensionPath = pathThroughRoundedWorldApex(
+    projectedAttachments,
+    pullPoint,
+    31 * cordUnitScale,
+  );
 
   return {
     type: "directTwoAnchor",

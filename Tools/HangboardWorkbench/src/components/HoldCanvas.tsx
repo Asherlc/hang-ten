@@ -7,6 +7,7 @@ import {
   type ExternalSlidingLoopPresentationGeometry,
   type RoutedCordRigPresentationGeometry,
 } from "../cord-rig.ts";
+import { cordFiberMarks } from "../cord-texture.ts";
 import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
 import type {
@@ -230,24 +231,9 @@ interface RoutedCordLayerArtworkProps {
 
 function RoutedCordLayerArtwork({ geometry, layer }: RoutedCordLayerArtworkProps) {
   const paths = geometry.renderLayers[layer];
-  const scene = geometry.viewBox;
   const diameter = geometry.rig.style.diameter * geometry.cordUnitScale;
-  const outlineWidth = diameter * 1.28;
-  const braidWidth = diameter * 0.72;
-  const stripeWidth = diameter * 0.24;
-  const highlightWidth = diameter * 0.11;
-  const stripeSpacing = diameter * 0.9;
-  const diagonalSpan = scene.width + scene.height;
-  const stripeOffsets: number[] = [];
-  for (
-    let offset = -diagonalSpan;
-    offset <= diagonalSpan * 2;
-    offset += stripeSpacing
-  ) {
-    stripeOffsets.push(offset);
-  }
+  const outlineWidth = diameter * 1.18;
   const layerID = ROUTED_LAYER_IDS[layer];
-  const maskID = `${layerID}-braid-mask`;
   const renderedPaths = () => paths.map((path) => (
     <path key={`${path.kind}:${path.id}`} d={path.d} />
   ));
@@ -258,27 +244,6 @@ function RoutedCordLayerArtwork({ geometry, layer }: RoutedCordLayerArtworkProps
     aria-label={`${layer} routed suspension cord`}
     pointerEvents="none"
   >
-    <defs>
-      <mask
-        id={maskID}
-        x={scene.x}
-        y={scene.y}
-        width={scene.width}
-        height={scene.height}
-        maskUnits="userSpaceOnUse"
-        maskContentUnits="userSpaceOnUse"
-      >
-        <g
-          fill="none"
-          stroke="white"
-          strokeWidth={braidWidth}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {renderedPaths()}
-        </g>
-      </mask>
-    </defs>
     <g
       fill="none"
       stroke={geometry.rig.style.outlineColor}
@@ -302,41 +267,55 @@ function RoutedCordLayerArtwork({ geometry, layer }: RoutedCordLayerArtworkProps
         data-cord-path-kind={path.kind}
       />)}
     </g>
-    <g mask={`url(#${maskID})`}>
-      {stripeOffsets.map((offset, index) => <line
-        key={`first-${index}`}
-        x1={scene.x + offset}
-        y1={scene.y + scene.height}
-        x2={scene.x + offset + scene.height}
-        y2={scene.y}
-        stroke={geometry.rig.style.braidColors[0]}
-        strokeWidth={stripeWidth}
-        strokeLinecap="round"
-        data-cord-braid-color="0"
-      />)}
-      {stripeOffsets.map((offset, index) => <line
-        key={`second-${index}`}
-        x1={scene.x + offset}
-        y1={scene.y}
-        x2={scene.x + offset + scene.height}
-        y2={scene.y + scene.height}
-        stroke={geometry.rig.style.braidColors[1]}
-        strokeWidth={stripeWidth}
-        strokeLinecap="round"
-        data-cord-braid-color="1"
+    <g
+      fill="none"
+      stroke="#FFFFFF"
+      strokeOpacity="0.08"
+      strokeWidth={diameter * 0.72}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {paths.map((path) => <path
+        key={path.id}
+        d={path.d}
+        data-cord-cylinder-highlight="true"
       />)}
     </g>
     <g
       fill="none"
-      stroke="#FFFFFF"
-      strokeOpacity="0.24"
-      strokeWidth={highlightWidth}
-      strokeDasharray={`${diameter * 0.7} ${diameter * 0.55}`}
+      stroke={geometry.rig.style.outlineColor}
+      strokeOpacity="0.1"
+      strokeWidth={diameter * 0.34}
       strokeLinecap="round"
       strokeLinejoin="round"
-      transform={`translate(${-diameter * 0.15} ${-diameter * 0.12})`}
     >
-      {renderedPaths()}
+      {paths.map((path) => <path
+        key={path.id}
+        d={path.d}
+        data-cord-cylinder-ridge="true"
+      />)}
+    </g>
+    <g id={`${layerID}-braid-fibers`}>
+      {paths.flatMap((path) => cordFiberMarks(path.d, diameter).map((mark, index) => <line
+        key={`${path.id}:${mark.color}:${index}`}
+        x1={mark.start.x}
+        y1={mark.start.y}
+        x2={mark.end.x}
+        y2={mark.end.y}
+        stroke={mark.color === "dark"
+          ? geometry.rig.style.outlineColor
+          : geometry.rig.style.braidColors[mark.color]}
+        strokeOpacity={mark.opacity}
+        strokeWidth={mark.width}
+        strokeLinecap="round"
+        data-cord-braid-mark="true"
+        data-cord-fiber-path={path.id}
+        {...(mark.color === "dark" ? {
+          "data-cord-dark-fiber": "true",
+        } : {
+          "data-cord-braid-color": String(mark.color),
+        })}
+      />))}
     </g>
   </g>;
 }

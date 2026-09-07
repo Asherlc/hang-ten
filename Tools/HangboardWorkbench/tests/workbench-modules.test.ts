@@ -210,6 +210,80 @@ function circularArcClipContains(
     && sideOfChord(point) * sideOfChord(arcMidpoint) >= 0;
 }
 
+function assertPointNear(actual: Point | undefined, expected: Point, tolerance = 1e-9): void {
+  assert.ok(actual, "expected a path point");
+  assert.ok(Math.abs(actual.x - expected.x) <= tolerance, `${actual.x} != ${expected.x}`);
+  assert.ok(Math.abs(actual.y - expected.y) <= tolerance, `${actual.y} != ${expected.y}`);
+}
+
+function assertCircularApexPath(
+  path: string,
+  firstContact: Point,
+  apex: Point,
+  secondContact: Point,
+): void {
+  const commands = pathEditor.parsePath(path);
+  assert.equal(commands[0]?.type, "M");
+  assert.equal(commands[1]?.type, "L");
+  assert.ok(commands.slice(2, -1).every((command) => command.type === "C"));
+  assert.ok(commands.slice(2, -1).length >= 1);
+  assert.equal(commands.at(-1)?.type, "L");
+  assertPointNear(commands[0]?.points[0], firstContact);
+  assertPointNear(commands.at(-1)?.points[0], secondContact);
+
+  const incoming = commands[1]!.points[0]!;
+  const firstCurve = commands[2]!;
+  const finalCurve = commands.at(-2)!;
+  const outgoing = finalCurve.points[0]!;
+  const cross = (first: Point, second: Point): number => first.x * second.y - first.y * second.x;
+  const vector = (start: Point, end: Point): Point => ({
+    x: end.x - start.x,
+    y: end.y - start.y,
+  });
+  assert.ok(Math.abs(cross(vector(firstContact, apex), vector(firstContact, incoming))) <= 1e-8);
+  assert.ok(Math.abs(cross(vector(apex, secondContact), vector(apex, outgoing))) <= 1e-8);
+  assert.ok(Math.abs(cross(vector(incoming, apex), vector(incoming, firstCurve.controls[0]!))) <= 1e-8);
+  assert.ok(Math.abs(cross(vector(apex, outgoing), vector(finalCurve.controls[1]!, outgoing))) <= 1e-8);
+
+  const incomingTrim = Math.hypot(incoming.x - apex.x, incoming.y - apex.y);
+  const outgoingTrim = Math.hypot(outgoing.x - apex.x, outgoing.y - apex.y);
+  assert.ok(incomingTrim > 0);
+  assert.ok(Math.abs(incomingTrim - outgoingTrim) <= 1e-8);
+  const incomingRay = {
+    x: (firstContact.x - apex.x) / Math.hypot(firstContact.x - apex.x, firstContact.y - apex.y),
+    y: (firstContact.y - apex.y) / Math.hypot(firstContact.x - apex.x, firstContact.y - apex.y),
+  };
+  const outgoingRay = {
+    x: (secondContact.x - apex.x) / Math.hypot(secondContact.x - apex.x, secondContact.y - apex.y),
+    y: (secondContact.y - apex.y) / Math.hypot(secondContact.x - apex.x, secondContact.y - apex.y),
+  };
+  const theta = Math.acos(Math.max(-1, Math.min(1,
+    incomingRay.x * outgoingRay.x + incomingRay.y * outgoingRay.y,
+  )));
+  const radius = incomingTrim * Math.tan(theta / 2);
+  const bisectorLength = Math.hypot(
+    incomingRay.x + outgoingRay.x,
+    incomingRay.y + outgoingRay.y,
+  );
+  const center = {
+    x: apex.x + (incomingRay.x + outgoingRay.x) / bisectorLength * radius / Math.sin(theta / 2),
+    y: apex.y + (incomingRay.y + outgoingRay.y) / bisectorLength * radius / Math.sin(theta / 2),
+  };
+  assert.ok(Math.abs(
+    Math.hypot(incoming.x - center.x, incoming.y - center.y)
+      - Math.hypot(outgoing.x - center.x, outgoing.y - center.y)
+  ) <= 1e-8);
+
+  const segmentSweep = (Math.PI - theta) / (commands.length - 3);
+  const expectedControlDistance = 4 / 3 * Math.tan(segmentSweep / 4) * radius;
+  assert.ok(Math.abs(
+    Math.hypot(
+      firstCurve.controls[0]!.x - incoming.x,
+      firstCurve.controls[0]!.y - incoming.y,
+    ) - expectedControlDistance
+  ) <= 1e-8);
+}
+
 test("the browser client lists and opens direct boards", async () => {
   const calls: string[] = [];
   const { runtime } = runtimeFixture(async (input) => {
@@ -850,11 +924,15 @@ test("routed render layers join effectively coincident world endpoints at one ap
   assert.ok(geometry);
   if (geometry.type !== "routed") assert.fail("expected a routed rig");
   assert.equal(geometry.layers.behindFace.length, 2, "pairing geometry remains lossless");
-  assert.deepEqual(geometry.renderLayers.behindFace, [{
-    kind: "span",
-    id: "main:apex:0",
-    d: "M 30 90 L 60.000000005 10 L 90 90",
-  }]);
+  assert.equal(geometry.renderLayers.behindFace.length, 1);
+  assert.equal(geometry.renderLayers.behindFace[0]?.kind, "span");
+  assert.equal(geometry.renderLayers.behindFace[0]?.id, "main:apex:0");
+  assertCircularApexPath(
+    geometry.renderLayers.behindFace[0]!.d,
+    { x: 30, y: 90 },
+    { x: 60.000000005, y: 10 },
+    { x: 90, y: 90 },
+  );
 });
 
 function externalSlidingLoopGeometry(
@@ -934,7 +1012,12 @@ test("external sliding loop resolves taut legs and a world-lower return at 0 and
       "external-loop-tension",
       "external-loop-return",
     ]);
-    assert.match(geometry.tensionPath, /^M .* L 60 10 L /);
+    assertCircularApexPath(
+      geometry.tensionPath,
+      geometry.contactPoints[0],
+      geometry.pullPoint,
+      geometry.contactPoints[1],
+    );
     assert.doesNotMatch(geometry.returnPath, /60 10/);
   }
 });
@@ -1060,6 +1143,48 @@ test("a direct cord rig uses two taut legs meeting at one apex", () => {
     { x: 50, y: 0 },
     { x: 50, y: 0 },
   ]);
+  assertCircularApexPath(
+    geometry.tensionPath,
+    geometry.strands[0].end,
+    geometry.pullPoint,
+    geometry.strands[1].end,
+  );
+});
+
+test("a short or degenerate direct cord rig keeps finite apex geometry", () => {
+  const attachmentCases: Array<[Point, Point]> = [
+    [{ x: 49.999999, y: 0.000001 }, { x: 50.000001, y: 0.000001 }],
+    [{ x: 50, y: 0 }, { x: 50.000001, y: 0.000001 }],
+  ];
+  for (const attachmentPoints of attachmentCases) {
+    const rig: DirectTwoAnchorCordRig = {
+      type: "directTwoAnchor",
+      sceneSize: { width: 100, height: 100 },
+      sourceFrame: { x: 0, y: 0, width: 100, height: 100 },
+      innerFaceFrame: { x: 0, y: 0, width: 100, height: 100 },
+      attachmentPoints,
+      pullPoint: { x: 50, y: 0 },
+      eyeletRadius: 1,
+    };
+    const document: EditorDocument = { canvas: { width: 100, height: 100 }, regions: [] };
+    const board = boardFixture({
+      document,
+      selectedPresentationID: "front",
+      presentations: [{
+        presentationID: "front",
+        displayName: "Front",
+        imageUrl: "/api/boards/compact/image?presentationID=front",
+        default: true,
+        cordRig: rig,
+      }],
+    });
+
+    const geometry = resolveCordRigPresentationGeometry(board, document);
+    assert.ok(geometry);
+    if (geometry.type !== "directTwoAnchor") assert.fail("expected a direct-two-anchor rig");
+    assert.doesNotMatch(geometry.tensionPath, /NaN|Infinity/);
+    assert.doesNotThrow(() => pathEditor.parsePath(geometry.tensionPath));
+  }
 });
 
 test("the browser client rejects malformed or illegally placed alias anchors", async (context) => {
