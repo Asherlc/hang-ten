@@ -132,7 +132,7 @@ class BoardCordRigGeometryTest {
         )
         val actualRadius = actualTrim * tan(angle / 2f)
         assertTrue(
-            "Expected the rounded turn to retain its requested 1.25-diameter radius, got $actualRadius",
+            "Expected the rounded turn to retain its minimum 1.25-diameter radius, got $actualRadius",
             actualRadius >= 1.25f * 31f - 0.001f,
         )
     }

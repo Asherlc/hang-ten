@@ -172,7 +172,7 @@ private fun List<RoutedCordTensionSpan>.joinedAtWorldEndpoint(apex: Point, cordD
     return pathThroughRoundedWorldApex(spans.map { it.bodyPoint }, apex, cordDiameter)
 }
 
-private const val ApexFilletRadiusDiameterMultiplier = 1.3
+private const val ApexFilletRadiusDiameterMultiplier = 1.5
 private const val ApexFilletMaxLegFraction = 0.25
 private const val ApexFilletMinAngle = 1e-6
 

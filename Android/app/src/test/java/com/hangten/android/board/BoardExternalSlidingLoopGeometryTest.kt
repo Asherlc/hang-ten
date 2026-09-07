@@ -73,9 +73,12 @@ class BoardExternalSlidingLoopGeometryTest {
             .minBy { it.y }
         val centerlineClearance = roundedCenterlineApex.y - geometry.spans.first().worldPoint.y
 
+        // This fixture's 1.5-diameter fillet clears the pull point by 0.7509 diameters.
+        // A 0.74 floor leaves approximation tolerance while keeping the centerline more
+        // than one 2x raster pixel beyond the 1.18-diameter outline's 0.59-diameter radius.
         assertTrue(
             "Expected enough apex clearance for the 1.18-diameter outline and raster fringe, got $centerlineClearance",
-            centerlineClearance >= geometry.cordDiameter * 0.64f,
+            centerlineClearance >= geometry.cordDiameter * 0.74f,
         )
     }
 
