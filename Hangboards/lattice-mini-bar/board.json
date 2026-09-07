@@ -18,7 +18,228 @@
       "name": "10 mm edge",
       "assetPath": "assets/edge-10.png",
       "aspectRatio": 1.5,
-      "default": false
+      "default": false,
+      "availableHoldIDs": [
+        "edge-10"
+      ],
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 204,
+          "y": 414,
+          "width": 1128,
+          "height": 376
+        },
+        "style": {
+          "diameter": 18,
+          "outlineColor": "#06384E",
+          "baseColor": "#087FB5",
+          "braidColors": [
+            "#39AEDD",
+            "#F2A51F"
+          ]
+        },
+        "ports": [
+          {
+            "id": "left-station-outer",
+            "space": "body",
+            "point": {
+              "x": 294.36464088,
+              "y": 514.2320442
+            }
+          },
+          {
+            "id": "left-station-inner",
+            "space": "body",
+            "point": {
+              "x": 321.37016575,
+              "y": 514.2320442
+            }
+          },
+          {
+            "id": "right-station-inner",
+            "space": "body",
+            "point": {
+              "x": 1214.62983425,
+              "y": 514.2320442
+            }
+          },
+          {
+            "id": "right-station-outer",
+            "space": "body",
+            "point": {
+              "x": 1241.63535912,
+              "y": 514.2320442
+            }
+          },
+          {
+            "id": "support-lane-0",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 62
+            }
+          },
+          {
+            "id": "support-lane-1",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 62
+            }
+          },
+          {
+            "id": "support-lane-2",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 62
+            }
+          },
+          {
+            "id": "support-lane-3",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 62
+            }
+          }
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": [
+              "left-station-outer",
+              "left-station-inner",
+              "right-station-inner",
+              "right-station-outer"
+            ],
+            "worldPortIDs": [
+              "support-lane-0",
+              "support-lane-1",
+              "support-lane-2",
+              "support-lane-3"
+            ],
+            "pairing": "declared",
+            "layer": "aboveFace"
+          }
+        ],
+        "paths": [
+          {
+            "id": "left-station-outer-front",
+            "space": "body",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [294.36464088, 514.2320442]
+              },
+              {
+                "command": "curve",
+                "control1": [294.36464088, 569.80110497],
+                "control2": [294.36464088, 642.50828729],
+                "to": [295.40331492, 687.17127072]
+              }
+            ]
+          },
+          {
+            "id": "left-station-hidden-return",
+            "space": "body",
+            "layer": "behindFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [295.40331492, 687.17127072]
+              },
+              {
+                "command": "curve",
+                "control1": [295.92265193, 699.63535912],
+                "control2": [319.8121547, 699.63535912],
+                "to": [320.33149171, 687.17127072]
+              }
+            ]
+          },
+          {
+            "id": "left-station-inner-front",
+            "space": "body",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [320.33149171, 687.17127072]
+              },
+              {
+                "command": "curve",
+                "control1": [321.37016575, 642.50828729],
+                "control2": [321.37016575, 569.80110497],
+                "to": [321.37016575, 514.2320442]
+              }
+            ]
+          },
+          {
+            "id": "right-station-inner-front",
+            "space": "body",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [1214.62983425, 514.2320442]
+              },
+              {
+                "command": "curve",
+                "control1": [1214.62983425, 569.80110497],
+                "control2": [1214.62983425, 642.50828729],
+                "to": [1215.66850829, 687.17127072]
+              }
+            ]
+          },
+          {
+            "id": "right-station-hidden-return",
+            "space": "body",
+            "layer": "behindFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [1215.66850829, 687.17127072]
+              },
+              {
+                "command": "curve",
+                "control1": [1216.1878453, 699.63535912],
+                "control2": [1240.07734807, 699.63535912],
+                "to": [1240.59668508, 687.17127072]
+              }
+            ]
+          },
+          {
+            "id": "right-station-outer-front",
+            "space": "body",
+            "layer": "aboveFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [1240.59668508, 687.17127072]
+              },
+              {
+                "command": "curve",
+                "control1": [1241.63535912, 642.50828729],
+                "control2": [1241.63535912, 569.80110497],
+                "to": [1241.63535912, 514.2320442]
+              }
+            ]
+          }
+        ],
+        "occlusions": []
+      }
     },
     {
       "id": "edge-20",
@@ -163,10 +384,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.312,
-            "y": 0.868,
-            "width": 0.375,
-            "height": 0.016
+            "x": 0.031,
+            "y": 0.399,
+            "width": 0.938,
+            "height": 0.182
           },
           "shape": {
             "type": "path",
@@ -175,14 +396,14 @@
                 "command": "move",
                 "to": [
                   0.0,
-                  0.18
+                  0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   0.25,
-                  0.08
+                  0.0
                 ],
                 "control2": [
                   0.75,
@@ -194,17 +415,19 @@
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [0.988, 0.24],
+                "control2": [0.988, 0.76],
                 "to": [
                   1.0,
-                  0.82
+                  1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   0.75,
-                  0.92
+                  1.0
                 ],
                 "control2": [
                   0.25,
@@ -216,10 +439,12 @@
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [0.012, 0.76],
+                "control2": [0.012, 0.24],
                 "to": [
                   0.0,
-                  0.18
+                  0.0
                 ]
               },
               {
