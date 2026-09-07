@@ -405,11 +405,6 @@ private struct BoardPickerCard: View {
                                 Text(board.name)
                                     .font(.system(size: 18, weight: .bold, design: .rounded))
                                     .foregroundStyle(Color.hangInk)
-                                if let dimensions = board.dimensions {
-                                    Text(dimensions)
-                                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                                        .foregroundStyle(Color.hangMuted)
-                                }
                             }
 
                             Spacer()
