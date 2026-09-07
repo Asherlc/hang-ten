@@ -19,6 +19,7 @@ import com.hangten.android.content.Point
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class BoardRoutedCordRigGeometryTest {
@@ -155,20 +156,12 @@ class BoardRoutedCordRigGeometryTest {
             canvasHeight = 1_000_000f,
         )!!
 
-        assertEquals(
-            listOf(
-                BoardPath(
-                    commands = listOf(
-                        BoardPathCommand.MoveTo(20f, 40f),
-                        BoardPathCommand.LineTo(40.000034f, 0f),
-                        BoardPathCommand.LineTo(60f, 40f),
-                        BoardPathCommand.LineTo(40.000034f, 0f),
-                        BoardPathCommand.LineTo(40f, 50f),
-                    ),
-                ),
-            ),
-            geometry.tensionPaths(BoardRoutedCordLayer.AboveFace),
-        )
+        val tension = geometry.tensionPaths(BoardRoutedCordLayer.AboveFace).single()
+        assertEquals(BoardPathCommand.MoveTo(20f, 40f), tension.commands.first())
+        assertEquals(BoardPathCommand.LineTo(40f, 50f), tension.commands.last())
+        assertEquals(4f, geometry.cordDiameter, 0.0001f)
+        assertTrue(tension.commands.count { it is BoardPathCommand.CubicTo } >= 2)
+        assertTrue(tension.commands.none { it == BoardPathCommand.LineTo(40.000034f, 0f) })
     }
 
     @Test

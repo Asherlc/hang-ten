@@ -39,8 +39,11 @@ class BoardExternalSlidingLoopGeometryTest {
             assertEquals(geometry.spans[1].bodyPoint, returnPoints.last())
             assertTrue(geometry.spans.all { it.worldPoint == Point(60f, 10f) && it.bodyPoint.y > it.worldPoint.y })
             val tension = geometry.tensionPaths(BoardRoutedCordLayer.BehindFace).single()
-            assertEquals(3, tension.commands.size)
-            assertEquals(BoardPathCommand.LineTo(60f, 10f), tension.commands[1])
+            assertEquals(BoardPathCommand.MoveTo(geometry.spans[0].bodyPoint.x, geometry.spans[0].bodyPoint.y), tension.commands.first())
+            assertEquals(BoardPathCommand.LineTo(geometry.spans[1].bodyPoint.x, geometry.spans[1].bodyPoint.y), tension.commands.last())
+            assertTrue(tension.commands.any { it is BoardPathCommand.CubicTo })
+            assertTrue(tension.commands.none { it == BoardPathCommand.LineTo(60f, 10f) })
+            assertEquals(10f, geometry.cordDiameter, 0.0001f)
             assertTrue(geometry.paths.all { it.layer == BoardRoutedCordLayer.BehindFace })
             assertTrue(geometry.radialLips.isEmpty() && geometry.facePatches.isEmpty())
         }
@@ -71,6 +74,7 @@ class BoardExternalSlidingLoopGeometryTest {
         assertEquals(143.9905f, geometry.paths.single().definingPoints.maxOf { it.y }, 0.001f)
         assertEquals(Point(60f, 10f), geometry.spans[0].worldPoint)
         assertEquals(1f, geometry.scale, 0f)
+        assertEquals(10f, geometry.cordDiameter, 0f)
     }
 
     @Test

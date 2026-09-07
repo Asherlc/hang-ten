@@ -227,14 +227,14 @@ class BoardCanvasTest {
         ]
 
         assertColor(Color.Green, pixel(0.5f, 0.55f))
-        assertColor(Color.Red, pixel(0.3f, 0.45f))
+        assertRedDominant(pixel(0.3f, 0.45f))
         assertColor(Color.Green, pixel(0.3f, 0.55f))
-        assertColor(Color.Red, pixel(0.7f, 0.55f))
+        assertRedDominant(pixel(0.7f, 0.55f))
         assertColor(Color.Magenta, pixel(0.05f, 0.95f))
     }
 
     @Test
-    fun directTwoAnchorArtworkDrawsOnlyOneSmoothVAtThePullPoint() {
+    fun directTwoAnchorArtworkDrawsOneCompactRoundedBendBelowTheInvisibleApex() {
         val rig = BoardCordRig.DirectTwoAnchor(
             sceneSize = BoardCordSize(1200f, 1200f),
             sourceFrame = BoardCordRect(0f, 0f, 1200f, 1200f),
@@ -250,7 +250,8 @@ class BoardCanvasTest {
             faceHeight = 500,
         )
 
-        assertNotColor(Color.Magenta, pixels.percentPixel(0.5f, 0.2f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.2f))
+        assertNotColor(Color.Magenta, pixels.percentPixel(0.5f, 0.23f))
         assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.055f))
     }
 
@@ -291,9 +292,10 @@ class BoardCanvasTest {
             faceHeight = 40,
         )
 
-        assertColor(Color.Red, pixels.percentPixel(0.5f, 0.2f))
-        assertColor(Color.Red, pixels.percentPixel(0.4f, 0.45f))
-        assertColor(Color.Red, pixels.percentPixel(0.6f, 0.45f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.2f))
+        assertRedDominant(pixels.percentPixel(0.5f, 0.28f))
+        assertRedDominant(pixels.percentPixel(0.4f, 0.45f))
+        assertRedDominant(pixels.percentPixel(0.6f, 0.45f))
         assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.12f))
     }
 
@@ -311,12 +313,53 @@ class BoardCanvasTest {
         )
         val pixels = captureRig("Sliding Loop Fixture", rig, 50, 20, rotationDegrees = 180f)
 
-        assertColor(Color.Red, pixels.percentPixel(0.5f, 0.1f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.1f))
+        assertRedDominant(pixels.percentPixel(0.5f, 0.15f))
         assertColor(Color.Green, pixels.percentPixel(0.5f, 0.5f))
-        assertColor(Color.Red, pixels.percentPixel(0.5f, 0.63f))
+        assertRedDominant(pixels.percentPixel(0.5f, 0.63f))
         assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.04f))
         assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.3f))
         assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.7f))
+    }
+
+    @Test
+    fun routedFiberRendererUsesConfiguredColorsAndPerMarkAlpha() {
+        val bitmap = Bitmap.createBitmap(80, 60, Bitmap.Config.ARGB_8888)
+        val marks = listOf(
+            RoutedCordFiberMark(
+                RoutedCordFiberColor.Braid0,
+                Point(10f, 10f),
+                Point(30f, 10f),
+                opacity = 0.58f,
+                width = 4f,
+            ),
+            RoutedCordFiberMark(
+                RoutedCordFiberColor.Braid1,
+                Point(10f, 30f),
+                Point(30f, 30f),
+                opacity = 0.46f,
+                width = 4f,
+            ),
+            RoutedCordFiberMark(
+                RoutedCordFiberColor.Dark,
+                Point(10f, 50f),
+                Point(30f, 50f),
+                opacity = 0.36f,
+                width = 4f,
+            ),
+        )
+
+        drawRoutedCordFibers(
+            canvas = android.graphics.Canvas(bitmap),
+            marks = marks,
+            colors = listOf(android.graphics.Color.RED, android.graphics.Color.BLUE),
+            darkColor = android.graphics.Color.GREEN,
+        )
+
+        assertAndroidColor(android.graphics.Color.RED, 0.58f, bitmap.getPixel(20, 10))
+        assertAndroidColor(android.graphics.Color.BLUE, 0.46f, bitmap.getPixel(20, 30))
+        assertAndroidColor(android.graphics.Color.GREEN, 0.36f, bitmap.getPixel(20, 50))
+        assertEquals(0, android.graphics.Color.alpha(bitmap.getPixel(20, 20)))
     }
 
     private fun captureRig(
@@ -400,5 +443,19 @@ class BoardCanvasTest {
             kotlin.math.abs(unexpected.blue - actual.blue) +
             kotlin.math.abs(unexpected.alpha - actual.alpha)
         assertTrue("Expected $actual to differ from $unexpected", distance > 0.2f)
+    }
+
+    private fun assertRedDominant(actual: Color) {
+        assertTrue("Expected red-dominant cord pixel, got $actual", actual.red > 0.7f)
+        assertTrue("Expected little green in cord pixel, got $actual", actual.green < 0.2f)
+        assertTrue("Expected little blue in cord pixel, got $actual", actual.blue < 0.2f)
+        assertTrue("Expected opaque cord pixel, got $actual", actual.alpha > 0.9f)
+    }
+
+    private fun assertAndroidColor(expected: Int, expectedAlpha: Float, actual: Int) {
+        assertEquals(android.graphics.Color.red(expected), android.graphics.Color.red(actual))
+        assertEquals(android.graphics.Color.green(expected), android.graphics.Color.green(actual))
+        assertEquals(android.graphics.Color.blue(expected), android.graphics.Color.blue(actual))
+        assertEquals(expectedAlpha, android.graphics.Color.alpha(actual) / 255f, 0.01f)
     }
 }

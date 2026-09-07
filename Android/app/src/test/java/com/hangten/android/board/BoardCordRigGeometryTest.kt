@@ -11,7 +11,11 @@ import com.hangten.android.content.NormalizedFrame
 import com.hangten.android.content.Point
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.hypot
+import kotlin.math.min
+import kotlin.math.tan
 
 class BoardCordRigGeometryTest {
     private val rig = BoardCordRig.DirectTwoAnchor(
@@ -39,13 +43,11 @@ class BoardCordRigGeometryTest {
         assertPoint(Point(600f, 285.5f), geometry.pullPoint)
         assertPoint(Point(600f, 285.5f), geometry.strands[0].start)
         assertPoint(Point(600f, 285.5f), geometry.strands[1].start)
-        assertEquals(
-            listOf(
-                BoardPathCommand.MoveTo(276f, 1018f),
-                BoardPathCommand.LineTo(600f, 285.5f),
-                BoardPathCommand.LineTo(920f, 1018f),
-            ),
-            geometry.tensionPath.commands,
+        assertRoundedApexPath(
+            path = geometry.tensionPath,
+            first = Point(276f, 1018f),
+            apex = geometry.pullPoint,
+            last = Point(920f, 1018f),
         )
     }
 
@@ -86,13 +88,11 @@ class BoardCordRigGeometryTest {
         assertPoint(Point(600f, 285.5f), geometry.pullPoint)
         assertPoint(Point(600f, 285.5f), geometry.strands[0].start)
         assertPoint(Point(600f, 285.5f), geometry.strands[1].start)
-        assertEquals(
-            listOf(
-                BoardPathCommand.MoveTo(486f, 580f),
-                BoardPathCommand.LineTo(600f, 285.5f),
-                BoardPathCommand.LineTo(486f, 1224f),
-            ),
-            geometry.tensionPath.commands,
+        assertRoundedApexPath(
+            path = geometry.tensionPath,
+            first = Point(486f, 580f),
+            apex = geometry.pullPoint,
+            last = Point(486f, 1224f),
         )
     }
 
@@ -115,6 +115,49 @@ class BoardCordRigGeometryTest {
         assertPoint(Point(760f, 875f), geometry.projectedAttachments[1])
         assertPoint(Point(600f, 285.5f), geometry.pullPoint)
         assertEquals(0.5f, geometry.geometryScale, 0.0001f)
+        val first = geometry.pairedAttachments.first()
+        val last = geometry.pairedAttachments.last()
+        val incomingLength = hypot(first.x - geometry.pullPoint.x, first.y - geometry.pullPoint.y)
+        val outgoingLength = hypot(last.x - geometry.pullPoint.x, last.y - geometry.pullPoint.y)
+        val incomingRayX = (first.x - geometry.pullPoint.x) / incomingLength
+        val incomingRayY = (first.y - geometry.pullPoint.y) / incomingLength
+        val outgoingRayX = (last.x - geometry.pullPoint.x) / outgoingLength
+        val outgoingRayY = (last.y - geometry.pullPoint.y) / outgoingLength
+        val angle = kotlin.math.acos(
+            (incomingRayX * outgoingRayX + incomingRayY * outgoingRayY).coerceIn(-1f, 1f),
+        )
+        val expectedTrim = min(1.25f * 31f / tan(angle / 2f), 0.15f * min(incomingLength, outgoingLength))
+        val incomingTrim = geometry.tensionPath.commands[1] as BoardPathCommand.LineTo
+        assertEquals(
+            expectedTrim,
+            hypot(incomingTrim.x - geometry.pullPoint.x, incomingTrim.y - geometry.pullPoint.y),
+            0.001f,
+        )
+    }
+
+    @Test
+    fun roundedApexSplitsLargeTurnsAndFallsBackOnlyForDegenerateFiniteGeometry() {
+        val rounded = pathThroughRoundedWorldApex(
+            legEndpoints = listOf(Point(-10f, 100f), Point(10f, 100f)),
+            apex = Point(0f, 0f),
+            cordDiameter = 10f,
+        )
+        assertEquals(2, rounded.commands.count { it is BoardPathCommand.CubicTo })
+        assertTrue(rounded.commands.none { it == BoardPathCommand.LineTo(0f, 0f) })
+
+        val degenerate = pathThroughRoundedWorldApex(
+            legEndpoints = listOf(Point(-10f, 0f), Point(10f, 0f)),
+            apex = Point(0f, 0f),
+            cordDiameter = 10f,
+        )
+        assertEquals(
+            listOf(
+                BoardPathCommand.MoveTo(-10f, 0f),
+                BoardPathCommand.LineTo(0f, 0f),
+                BoardPathCommand.LineTo(10f, 0f),
+            ),
+            degenerate.commands,
+        )
     }
 
     @Test
@@ -218,6 +261,33 @@ class BoardCordRigGeometryTest {
         assertEquals(expected.d, actual.d, 0.0001f)
         assertEquals(expected.tx, actual.tx, 0.0001f)
         assertEquals(expected.ty, actual.ty, 0.0001f)
+    }
+
+    private fun assertRoundedApexPath(path: BoardPath, first: Point, apex: Point, last: Point) {
+        assertEquals(BoardPathCommand.MoveTo(first.x, first.y), path.commands.first())
+        assertEquals(BoardPathCommand.LineTo(last.x, last.y), path.commands.last())
+        assertTrue(path.commands[1] is BoardPathCommand.LineTo)
+        assertTrue(path.commands.drop(2).dropLast(1).all { it is BoardPathCommand.CubicTo })
+        assertTrue(path.commands.drop(2).dropLast(1).isNotEmpty())
+        assertTrue(path.commands.none { it == BoardPathCommand.LineTo(apex.x, apex.y) })
+        path.commands.forEach { command ->
+            when (command) {
+                is BoardPathCommand.MoveTo -> assertTrue(command.x.isFinite() && command.y.isFinite())
+                is BoardPathCommand.LineTo -> assertTrue(command.x.isFinite() && command.y.isFinite())
+                is BoardPathCommand.QuadTo -> Unit
+                is BoardPathCommand.CubicTo -> assertTrue(
+                    listOf(
+                        command.control1X,
+                        command.control1Y,
+                        command.control2X,
+                        command.control2Y,
+                        command.x,
+                        command.y,
+                    ).all(Float::isFinite),
+                )
+                BoardPathCommand.Close -> Unit
+            }
+        }
     }
 
     private fun assertPoint(expected: Point, actual: Point) {

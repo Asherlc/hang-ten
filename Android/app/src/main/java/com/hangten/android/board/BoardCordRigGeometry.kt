@@ -9,11 +9,18 @@ import com.hangten.android.content.BoardRoutedCordPairing
 import com.hangten.android.content.BoardRoutedCordPathCommand
 import com.hangten.android.content.BoardRoutedCordSpace
 import com.hangten.android.content.Point
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.acos
+import kotlin.math.atan2
+import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sign
 import kotlin.math.sin
+import kotlin.math.tan
 
 internal data class BoardInPlaneTransform(
     val a: Float,
@@ -111,6 +118,7 @@ internal data class RoutedCordRigGeometry(
     val faceBounds: BoardBounds,
     val faceTransform: BoardInPlaneTransform,
     val scale: Float,
+    val cordDiameter: Float,
     val portPoints: Map<String, Point>,
     val spans: List<RoutedCordTensionSpan>,
     val paths: List<ResolvedRoutedCordPath>,
@@ -148,7 +156,7 @@ internal data class RoutedCordRigGeometry(
                 x = cluster.spans.map { it.worldPoint.x.toDouble() }.average().toFloat(),
                 y = cluster.spans.map { it.worldPoint.y.toDouble() }.average().toFloat(),
             )
-            cluster.spans.joinedAtWorldEndpoint(apex)
+            cluster.spans.joinedAtWorldEndpoint(apex, cordDiameter)
         }
     }
 
@@ -156,23 +164,126 @@ internal data class RoutedCordRigGeometry(
         paths.filter { it.layer == layer }
 }
 
-private fun List<RoutedCordTensionSpan>.joinedAtWorldEndpoint(apex: Point): BoardPath {
+private fun List<RoutedCordTensionSpan>.joinedAtWorldEndpoint(apex: Point, cordDiameter: Float): BoardPath {
     val spans = this
     val first = spans.first()
     if (spans.size == 1) return first.path
 
-    return BoardPath(
-        commands = buildList {
-            add(BoardPathCommand.MoveTo(first.bodyPoint.x, first.bodyPoint.y))
-            add(BoardPathCommand.LineTo(apex.x, apex.y))
-            spans.drop(1).forEachIndexed { index, span ->
-                add(BoardPathCommand.LineTo(span.bodyPoint.x, span.bodyPoint.y))
-                if (index < spans.size - 2) {
-                    add(BoardPathCommand.LineTo(apex.x, apex.y))
+    return pathThroughRoundedWorldApex(spans.map { it.bodyPoint }, apex, cordDiameter)
+}
+
+private const val ApexFilletRadiusDiameterMultiplier = 1.25
+private const val ApexFilletMaxLegFraction = 0.15
+private const val ApexFilletMinAngle = 1e-6
+
+internal fun pathThroughRoundedWorldApex(
+    legEndpoints: List<Point>,
+    apex: Point,
+    cordDiameter: Float,
+): BoardPath {
+    val firstEndpoint = legEndpoints.firstOrNull() ?: return BoardPath()
+    val commands = mutableListOf<BoardPathCommand>(
+        BoardPathCommand.MoveTo(firstEndpoint.x, firstEndpoint.y),
+    )
+
+    legEndpoints.zipWithNext().forEach { (incomingEndpoint, outgoingEndpoint) ->
+        val incomingLength = hypot(
+            (incomingEndpoint.x - apex.x).toDouble(),
+            (incomingEndpoint.y - apex.y).toDouble(),
+        )
+        val outgoingLength = hypot(
+            (outgoingEndpoint.x - apex.x).toDouble(),
+            (outgoingEndpoint.y - apex.y).toDouble(),
+        )
+        if (incomingLength > 0.0 && outgoingLength > 0.0) {
+            val incomingRayX = (incomingEndpoint.x - apex.x) / incomingLength
+            val incomingRayY = (incomingEndpoint.y - apex.y) / incomingLength
+            val outgoingRayX = (outgoingEndpoint.x - apex.x) / outgoingLength
+            val outgoingRayY = (outgoingEndpoint.y - apex.y) / outgoingLength
+            val dot = (incomingRayX * outgoingRayX + incomingRayY * outgoingRayY).coerceIn(-1.0, 1.0)
+            val angle = acos(dot)
+            val turnAngle = PI - angle
+            val cross = incomingRayX * outgoingRayY - incomingRayY * outgoingRayX
+            val bisectorX = incomingRayX + outgoingRayX
+            val bisectorY = incomingRayY + outgoingRayY
+            val bisectorLength = hypot(bisectorX, bisectorY)
+            val sineHalfAngle = sin(angle / 2.0)
+            val tangentHalfAngle = tan(angle / 2.0)
+            val desiredRadius = ApexFilletRadiusDiameterMultiplier * cordDiameter
+            val trimDistance = min(
+                desiredRadius / tangentHalfAngle,
+                ApexFilletMaxLegFraction * min(incomingLength, outgoingLength),
+            )
+
+            if (trimDistance.isFinite() && trimDistance > 0.0 &&
+                angle > ApexFilletMinAngle && turnAngle > ApexFilletMinAngle &&
+                abs(cross) > ApexFilletMinAngle && bisectorLength > ApexFilletMinAngle &&
+                sineHalfAngle > ApexFilletMinAngle
+            ) {
+                val radius = trimDistance * tangentHalfAngle
+                val centerDistance = radius / sineHalfAngle
+                val circleCenterX = apex.x + bisectorX / bisectorLength * centerDistance
+                val circleCenterY = apex.y + bisectorY / bisectorLength * centerDistance
+                val incomingTrimX = apex.x + (incomingEndpoint.x - apex.x) * trimDistance / incomingLength
+                val incomingTrimY = apex.y + (incomingEndpoint.y - apex.y) * trimDistance / incomingLength
+                val outgoingTrimX = apex.x + (outgoingEndpoint.x - apex.x) * trimDistance / outgoingLength
+                val outgoingTrimY = apex.y + (outgoingEndpoint.y - apex.y) * trimDistance / outgoingLength
+                if (listOf(
+                        circleCenterX,
+                        circleCenterY,
+                        incomingTrimX,
+                        incomingTrimY,
+                        outgoingTrimX,
+                        outgoingTrimY,
+                        radius,
+                    ).all(Double::isFinite)
+                ) {
+                    commands += BoardPathCommand.LineTo(incomingTrimX.toFloat(), incomingTrimY.toFloat())
+                    val sweep = -sign(cross) * turnAngle
+                    val segmentCount = ceil(abs(sweep) / (PI / 2.0)).toInt().coerceAtLeast(1)
+                    val segmentSweep = sweep / segmentCount
+                    var segmentStartX = incomingTrimX
+                    var segmentStartY = incomingTrimY
+                    var segmentStartAngle = atan2(incomingTrimY - circleCenterY, incomingTrimX - circleCenterX)
+                    repeat(segmentCount) { segmentIndex ->
+                        val segmentEndAngle = segmentStartAngle + segmentSweep
+                        val segmentEndX = if (segmentIndex == segmentCount - 1) {
+                            outgoingTrimX
+                        } else {
+                            circleCenterX + radius * cos(segmentEndAngle)
+                        }
+                        val segmentEndY = if (segmentIndex == segmentCount - 1) {
+                            outgoingTrimY
+                        } else {
+                            circleCenterY + radius * sin(segmentEndAngle)
+                        }
+                        val controlScale = 4.0 / 3.0 * tan(segmentSweep / 4.0) * radius
+                        val firstControlX = segmentStartX - sin(segmentStartAngle) * controlScale
+                        val firstControlY = segmentStartY + cos(segmentStartAngle) * controlScale
+                        val secondControlX = segmentEndX + sin(segmentEndAngle) * controlScale
+                        val secondControlY = segmentEndY - cos(segmentEndAngle) * controlScale
+                        commands += BoardPathCommand.CubicTo(
+                            firstControlX.toFloat(),
+                            firstControlY.toFloat(),
+                            secondControlX.toFloat(),
+                            secondControlY.toFloat(),
+                            segmentEndX.toFloat(),
+                            segmentEndY.toFloat(),
+                        )
+                        segmentStartX = segmentEndX
+                        segmentStartY = segmentEndY
+                        segmentStartAngle = segmentEndAngle
+                    }
+                    commands += BoardPathCommand.LineTo(outgoingEndpoint.x, outgoingEndpoint.y)
+                    return@forEach
                 }
             }
-        },
-    )
+        }
+
+        commands += BoardPathCommand.LineTo(apex.x, apex.y)
+        commands += BoardPathCommand.LineTo(outgoingEndpoint.x, outgoingEndpoint.y)
+    }
+    return BoardPath(commands)
 }
 
 internal data class RoutedCordTensionSpan(
@@ -399,6 +510,7 @@ internal fun resolveRoutedCordRigGeometry(
         faceBounds = faceBounds,
         faceTransform = faceTransform,
         scale = scale,
+        cordDiameter = rig.style.diameter * scale,
         portPoints = portPoints,
         spans = spans,
         paths = paths,
@@ -514,12 +626,10 @@ internal fun resolveDirectTwoAnchorCordGeometry(
     val pairedAttachments = projectedAttachments.sortedWith(compareBy<Point> { it.x }.thenBy { it.y })
     val pullPoint = sourceRelativePoint(rig.pullPoint)
     val strands = pairedAttachments.map { attachment -> BoardCordStrand(pullPoint, attachment) }
-    val tensionPath = BoardPath(
-        commands = listOf(
-            BoardPathCommand.MoveTo(pairedAttachments.first().x, pairedAttachments.first().y),
-            BoardPathCommand.LineTo(pullPoint.x, pullPoint.y),
-            BoardPathCommand.LineTo(pairedAttachments.last().x, pairedAttachments.last().y),
-        ),
+    val tensionPath = pathThroughRoundedWorldApex(
+        legEndpoints = pairedAttachments,
+        apex = pullPoint,
+        cordDiameter = 31f * scale,
     )
 
     return DirectTwoAnchorCordGeometry(

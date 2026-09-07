@@ -45,6 +45,7 @@ import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 internal data class BoardBounds(
@@ -541,9 +542,9 @@ private fun drawRoutedCordLayer(
     geometry: RoutedCordRigGeometry,
     layer: BoardRoutedCordLayer,
 ) {
-    val paths = geometry.tensionPaths(layer).map { it.toAndroidPath() } +
-        geometry.authoredPaths(layer).map { it.path.toAndroidPath() }
-    if (paths.isEmpty()) return
+    val boardPaths = geometry.tensionPaths(layer) + geometry.authoredPaths(layer).map { it.path }
+    if (boardPaths.isEmpty()) return
+    val paths = boardPaths.map { it.toAndroidPath() }
 
     val diameter = style.diameter * geometry.scale
     if (!diameter.isFinite() || diameter <= 0f) return
@@ -551,7 +552,7 @@ private fun drawRoutedCordLayer(
         canvas = canvas,
         paths = paths,
         color = routedColor(style.outlineColor),
-        width = diameter * 1.6f,
+        width = diameter * 1.18f,
     )
     strokePaths(
         canvas = canvas,
@@ -559,70 +560,75 @@ private fun drawRoutedCordLayer(
         color = routedColor(style.baseColor),
         width = diameter,
     )
-    drawRoutedBraid(
+    strokePaths(
         canvas = canvas,
         paths = paths,
-        geometry = geometry,
+        color = 0x14FFFFFF,
+        width = diameter * 0.72f,
+    )
+    strokePaths(
+        canvas = canvas,
+        paths = paths,
+        color = routedColor(style.outlineColor).withOpacity(0.1f),
+        width = diameter * 0.34f,
+    )
+    drawRoutedBraid(
+        canvas = canvas,
+        paths = boardPaths,
         diameter = diameter,
         colors = style.braidColors.map(::routedColor),
+        darkColor = routedColor(style.outlineColor),
     )
 }
 
 private fun drawRoutedBraid(
     canvas: android.graphics.Canvas,
-    paths: List<Path>,
-    geometry: RoutedCordRigGeometry,
+    paths: List<BoardPath>,
     diameter: Float,
     colors: List<Int>,
+    darkColor: Int,
 ) {
     if (colors.size != 2) return
-    val clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        strokeWidth = diameter * 0.84f
-        strokeCap = Paint.Cap.ROUND
-        strokeJoin = Paint.Join.ROUND
-    }
-    val braidClip = Path()
-    paths.forEach { path ->
-        val strokedPath = Path()
-        clipPaint.getFillPath(path, strokedPath)
-        braidClip.addPath(strokedPath)
-    }
+    drawRoutedCordFibers(
+        canvas = canvas,
+        marks = paths.flatMap { routedCordFiberMarks(it, diameter) },
+        colors = colors,
+        darkColor = darkColor,
+    )
+}
 
-    val save = canvas.save()
-    canvas.clipPath(braidClip)
-    val spacing = max(diameter * 0.72f, 1f)
-    val fiberWidth = max(diameter * 0.18f, 0.5f)
-    val diagonalSpan = geometry.sceneBounds.width + geometry.sceneBounds.height
-    var offset = -diagonalSpan
-    var index = 0
-    while (offset <= diagonalSpan * 2f) {
+internal fun drawRoutedCordFibers(
+    canvas: android.graphics.Canvas,
+    marks: List<RoutedCordFiberMark>,
+    colors: List<Int>,
+    darkColor: Int,
+) {
+    if (colors.size != 2) return
+    marks.forEach { mark ->
         val fiber = Path().apply {
-            if (index % 2 == 0) {
-                moveTo(geometry.sceneBounds.left + offset, geometry.sceneBounds.top + geometry.sceneBounds.height)
-                lineTo(
-                    geometry.sceneBounds.left + offset + geometry.sceneBounds.height,
-                    geometry.sceneBounds.top,
-                )
-            } else {
-                moveTo(geometry.sceneBounds.left + offset, geometry.sceneBounds.top)
-                lineTo(
-                    geometry.sceneBounds.left + offset + geometry.sceneBounds.height,
-                    geometry.sceneBounds.top + geometry.sceneBounds.height,
-                )
-            }
+            moveTo(mark.start.x, mark.start.y)
+            lineTo(mark.end.x, mark.end.y)
         }
+        val color = when (mark.color) {
+            RoutedCordFiberColor.Braid0 -> colors[0]
+            RoutedCordFiberColor.Braid1 -> colors[1]
+            RoutedCordFiberColor.Dark -> darkColor
+        }.withOpacity(mark.opacity)
         strokePaths(
             canvas = canvas,
             paths = listOf(fiber),
-            color = colors[index % colors.size],
-            width = fiberWidth,
+            color = color,
+            width = mark.width,
         )
-        offset += spacing
-        index += 1
     }
-    canvas.restoreToCount(save)
 }
+
+private fun Int.withOpacity(opacity: Float): Int = android.graphics.Color.argb(
+    (android.graphics.Color.alpha(this) * opacity.coerceIn(0f, 1f)).roundToInt(),
+    android.graphics.Color.red(this),
+    android.graphics.Color.green(this),
+    android.graphics.Color.blue(this),
+)
 
 private fun routedColor(hex: String): Int {
     if (hex.length != 7 || hex.firstOrNull() != '#') return android.graphics.Color.TRANSPARENT

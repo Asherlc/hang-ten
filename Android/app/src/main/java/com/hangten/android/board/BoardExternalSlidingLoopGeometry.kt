@@ -210,6 +210,7 @@ internal fun resolveExternalSlidingLoopCordGeometry(
     return RoutedCordRigGeometry(
         sceneBounds = sceneBounds, sourceBounds = sourceBounds, faceBounds = faceBounds,
         faceTransform = BoardInPlaneTransform.forPresentation(presentation, sceneBounds), scale = scale,
+        cordDiameter = rig.style.diameter * scale,
         portPoints = spans.associate { it.bodyPortId to it.bodyPoint } + ("external-loop-pull" to pullPoint),
         spans = spans,
         paths = listOf(ResolvedRoutedCordPath(
