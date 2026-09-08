@@ -1532,7 +1532,7 @@ and [current product page](https://www.metoliusclimbing.com/products/wood-grips-
 | Exact Compact manufacturer label | Stable hold ID(s) | Verified kind |
 | --- | --- | --- |
 | `1 — outer jugs` | `jug-left`, `jug-right` | `jug` |
-| `2 — 56 mm flat slopers` | `sloper-flat-left`, `sloper-flat-right` | `sloper` |
+| `2 — 56 mm flat sloper` | `sloper-flat-left`, `sloper-flat-right` | `sloper` |
 | `3 — 29 mm edges` | `edge-29-left`, `edge-29-right` | `edge` |
 | `4 — 29 mm 3-finger pockets` | `pocket-29-three-left`, `pocket-29-three-right` | `pocket` |
 | `5 — 29 mm 2-finger pockets` | `pocket-29-two-left`, `pocket-29-two-right` | `pocket` |
