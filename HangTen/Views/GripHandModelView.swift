@@ -313,8 +313,8 @@ private final class GripHandSurface {
         float4 selectedFingers;
         #pragma body
         float strength = clamp(dot(_geometry.color, selectedFingers), 0.0, 1.0);
-        // Shader colors are linear; keep the sage base muted and orange saturated.
-        _geometry.color = mix(float4(0.18, 0.23, 0.20, 1.0),
+        // Linear RGB for a warm skin base (sRGB #D8A887) and saturated orange highlights.
+        _geometry.color = mix(float4(0.687, 0.392, 0.242, 1.0),
                               float4(0.966, 0.0615, 0.0108, 1.0), strength);
         """]
         geometries[action] = geometry
