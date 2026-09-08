@@ -2,6 +2,7 @@ package com.hangten.android.editor
 
 import com.hangten.android.content.AssetBoardRepository
 import com.hangten.android.content.ContentAssets
+import com.hangten.android.content.ContentImageDimensions
 import com.hangten.android.content.Board
 import com.hangten.android.content.JsonParser
 import com.hangten.android.content.JsonValue
@@ -10,6 +11,7 @@ import com.hangten.android.content.asObject
 import com.hangten.android.content.asString
 import com.hangten.android.content.required
 import com.hangten.android.content.requiredString
+import com.hangten.android.content.decodePngImageDimensions
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -21,6 +23,9 @@ import java.util.UUID
 class BoardEditorStore(
     private val editedRoot: File,
     private val source: BoardPackageSource,
+    private val imageDimensionsDecoder: (ByteArray) -> ContentImageDimensions? = { data ->
+        decodePngImageDimensions(data)
+    },
 ) {
     fun startEditing(slug: String): File {
         requireSlug(slug)
@@ -136,19 +141,37 @@ class BoardEditorStore(
         if (!BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/${payload.imagePath}") ||
             defaultAssetPath != payload.imagePath
         ) throw BoardEditorException.InvalidPath("Pulled package is outside this board package.")
-        validate(slug, payload.boardJson.decodeToString(), setOf(payload.imagePath))
+        validate(
+            slug,
+            payload.boardJson.decodeToString(),
+            mapOf(payload.imagePath to payload.image),
+        )
         atomicReplace(File(packageDirectory(slug), payload.imagePath), payload.image)
         atomicReplace(boardFile(slug), payload.boardJson)
     }
 
-    private fun validate(slug: String, boardJson: String, stagedAssets: Set<String> = emptySet()) {
+    private fun validate(
+        slug: String,
+        boardJson: String,
+        stagedAssets: Map<String, ByteArray> = emptyMap(),
+    ) {
         requireSlug(slug)
         val board = decode(slug, boardJson, stagedAssets)
         if (board.id != slug) throw BoardEditorException.InvalidBoard("board ID must match the package slug.")
     }
 
-    private fun decode(slug: String, boardJson: String, stagedAssets: Set<String> = emptySet()): Board = AssetBoardRepository(
-        EditorContentAssets(editedRoot, slug, boardJson, stagedAssets),
+    private fun decode(
+        slug: String,
+        boardJson: String,
+        stagedAssets: Map<String, ByteArray> = emptyMap(),
+    ): Board = AssetBoardRepository(
+        EditorContentAssets(
+            root = editedRoot,
+            slug = slug,
+            candidateBoardJson = boardJson,
+            stagedAssets = stagedAssets,
+            imageDimensionsDecoder = imageDimensionsDecoder,
+        ),
     ).loadBoards().getOrElse { throw BoardEditorException.InvalidBoard(it.message.orEmpty()) }.single()
 
     private fun atomicReplace(destination: File, data: ByteArray) {
@@ -231,7 +254,8 @@ private class EditorContentAssets(
     private val root: File,
     private val slug: String,
     private val candidateBoardJson: String,
-    private val stagedAssets: Set<String>,
+    private val stagedAssets: Map<String, ByteArray>,
+    private val imageDimensionsDecoder: (ByteArray) -> ContentImageDimensions?,
 ) : ContentAssets {
     override fun list(path: String): List<String>? = when (path) {
         "Hangboards" -> listOf(slug)
@@ -248,6 +272,16 @@ private class EditorContentAssets(
         if (!path.startsWith(expectedPrefix)) return false
         val relative = path.removePrefix(expectedPrefix)
         return relative in stagedAssets || File(File(root, slug), relative).isFile
+    }
+
+    override fun imageDimensions(path: String): ContentImageDimensions? {
+        val expectedPrefix = "Hangboards/$slug/"
+        if (!path.startsWith(expectedPrefix)) return null
+        val relative = path.removePrefix(expectedPrefix)
+        val data = stagedAssets[relative] ?: runCatching {
+            File(File(root, slug), relative).takeIf(File::isFile)?.readBytes()
+        }.getOrNull() ?: return null
+        return runCatching { imageDimensionsDecoder(data) }.getOrNull()
     }
 }
 

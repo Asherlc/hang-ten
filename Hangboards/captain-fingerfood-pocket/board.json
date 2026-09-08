@@ -15,138 +15,167 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "15 / 20 mm face and outer contacts",
+      "name": "20 mm edge position",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
-      "default": true
-    }
-  ],
-  "holds": [
-    {
-      "id": "edge-15",
-      "equipmentObjectID": "primary",
-      "name": "15 mm edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "presentationID": "primary",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.209,
-            "y": 0.398,
-            "width": 0.582,
-            "height": 0.055
+      "default": true,
+      "availableHoldIDs": [
+        "edge-20",
+        "jug-outer-rim"
+      ],
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 146.5,
+          "y": 101.5,
+          "width": 1200,
+          "height": 800
+        },
+        "style": {
+          "diameter": 14,
+          "outlineColor": "#6C2600",
+          "baseColor": "#D95708",
+          "braidColors": [
+            "#FF9A1F",
+            "#CBD0D2"
+          ]
+        },
+        "ports": [
+          {
+            "id": "left-through-hole",
+            "space": "body",
+            "point": {
+              "x": 479.703125,
+              "y": 537.4375
+            }
           },
-          "shape": {
-            "type": "path",
+          {
+            "id": "right-through-hole",
+            "space": "body",
+            "point": {
+              "x": 1005.484375,
+              "y": 537.4375
+            }
+          },
+          {
+            "id": "support-left-exit",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 42
+            }
+          },
+          {
+            "id": "support-right-exit",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 42
+            }
+          }
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": [
+              "left-through-hole",
+              "right-through-hole"
+            ],
+            "worldPortIDs": [
+              "support-left-exit",
+              "support-right-exit"
+            ],
+            "pairing": "screenOrder",
+            "layer": "aboveFace"
+          }
+        ],
+        "paths": [
+          {
+            "id": "hidden-return-bight",
+            "space": "body",
+            "layer": "behindFace",
             "commands": [
               {
                 "command": "move",
-                "to": [
-                  0.0,
-                  0.32
-                ]
+                "to": [479.703125, 537.4375]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.06,
-                  0.08
-                ],
-                "control2": [
-                  0.1,
-                  0.0
-                ],
-                "to": [
-                  0.16,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.84,
-                  0.0
-                ]
+                "control1": [492, 585],
+                "control2": [650, 650],
+                "to": [768, 650]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.9,
-                  0.0
-                ],
-                "control2": [
-                  0.94,
-                  0.08
-                ],
-                "to": [
-                  1.0,
-                  0.32
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.84
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.91,
-                  0.96
-                ],
-                "control2": [
-                  0.87,
-                  1.0
-                ],
-                "to": [
-                  0.82,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.18,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.13,
-                  1.0
-                ],
-                "control2": [
-                  0.09,
-                  0.96
-                ],
-                "to": [
-                  0.0,
-                  0.84
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.32
-                ]
-              },
-              {
-                "command": "close"
+                "control1": [886, 650],
+                "control2": [993, 585],
+                "to": [1005.484375, 537.4375]
               }
             ]
-          },
-          "treatment": {
-            "type": "surface"
           }
-        }
-      ],
-      "sizeMillimeters": 15
+        ],
+        "occlusions": [
+          {
+            "type": "radialLip",
+            "bodyPortID": "left-through-hole",
+            "radius": 14,
+            "chordOffset": 5
+          },
+          {
+            "type": "radialLip",
+            "bodyPortID": "right-through-hole",
+            "radius": 14,
+            "chordOffset": 5
+          }
+        ]
+      }
     },
+    {
+      "id": "edge-15",
+      "name": "15 mm edge position",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 180,
+      "geometryRotationAnchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "availableHoldIDs": [
+        "edge-15"
+      ]
+    },
+    {
+      "id": "vertical-pocket",
+      "name": "15 / 20 mm pocket position",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 90,
+      "geometryScale": 0.86,
+      "geometryRotationAnchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "availableHoldIDs": [
+        "edge-15",
+        "edge-20"
+      ]
+    }
+  ],
+  "holds": [
     {
       "id": "edge-20",
       "equipmentObjectID": "primary",
@@ -157,108 +186,57 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.209400440104,
-            "y": 0.413366361328,
-            "width": 0.570027535156,
-            "height": 0.249174924805
+            "x": 0.200520833333,
+            "y": 0.3291015625,
+            "width": 0.598958333333,
+            "height": 0.1318359375
           },
           "shape": {
             "type": "path",
             "commands": [
               {
                 "command": "move",
-                "to": [
-                  0.058283717046,
-                  0.0
-                ]
+                "to": [0.058283717046, 0.0]
               },
               {
                 "command": "line",
-                "to": [
-                  0.941716282954,
-                  0.0
-                ]
+                "to": [0.941716282954, 0.0]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.973905491184,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.089543050249
-                ],
-                "to": [
-                  1.0,
-                  0.199999997648
-                ]
+                "control1": [0.973905491184, 0.0],
+                "control2": [1.0, 0.089543050249],
+                "to": [1.0, 0.199999997648]
               },
               {
                 "command": "line",
-                "to": [
-                  1.0,
-                  0.799999998432
-                ]
+                "to": [1.0, 0.799999998432]
               },
               {
                 "command": "curve",
-                "control1": [
-                  1.0,
-                  0.910456949751
-                ],
-                "control2": [
-                  0.973905491184,
-                  1.0
-                ],
-                "to": [
-                  0.941716282954,
-                  1.0
-                ]
+                "control1": [1.0, 0.910456949751],
+                "control2": [0.973905491184, 1.0],
+                "to": [0.941716282954, 1.0]
               },
               {
                 "command": "line",
-                "to": [
-                  0.058283717046,
-                  1.0
-                ]
+                "to": [0.058283717046, 1.0]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.026094508816,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.910456949751
-                ],
-                "to": [
-                  0.0,
-                  0.799999998432
-                ]
+                "control1": [0.026094508816, 1.0],
+                "control2": [0.0, 0.910456949751],
+                "to": [0.0, 0.799999998432]
               },
               {
                 "command": "line",
-                "to": [
-                  0.0,
-                  0.199999997648
-                ]
+                "to": [0.0, 0.199999997648]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.0,
-                  0.089543050249
-                ],
-                "control2": [
-                  0.026094508816,
-                  0.0
-                ],
-                "to": [
-                  0.058283717046,
-                  0.0
-                ]
+                "control1": [0.0, 0.089543050249],
+                "control2": [0.026094508816, 0.0],
+                "to": [0.058283717046, 0.0]
               },
               {
                 "command": "close"
@@ -275,6 +253,84 @@
         }
       ],
       "sizeMillimeters": 20
+    },
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.212239583333,
+            "y": 0.607421875,
+            "width": 0.575520833333,
+            "height": 0.0751953125
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [0.058283717046, 0.0]
+              },
+              {
+                "command": "line",
+                "to": [0.941716282954, 0.0]
+              },
+              {
+                "command": "curve",
+                "control1": [0.973905491184, 0.0],
+                "control2": [1.0, 0.089543050249],
+                "to": [1.0, 0.199999997648]
+              },
+              {
+                "command": "line",
+                "to": [1.0, 0.799999998432]
+              },
+              {
+                "command": "curve",
+                "control1": [1.0, 0.910456949751],
+                "control2": [0.973905491184, 1.0],
+                "to": [0.941716282954, 1.0]
+              },
+              {
+                "command": "line",
+                "to": [0.058283717046, 1.0]
+              },
+              {
+                "command": "curve",
+                "control1": [0.026094508816, 1.0],
+                "control2": [0.0, 0.910456949751],
+                "to": [0.0, 0.799999998432]
+              },
+              {
+                "command": "line",
+                "to": [0.0, 0.199999997648]
+              },
+              {
+                "command": "curve",
+                "control1": [0.0, 0.089543050249],
+                "control2": [0.026094508816, 0.0],
+                "to": [0.058283717046, 0.0]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 15
     },
     {
       "id": "jug-outer-rim",
@@ -296,98 +352,47 @@
             "commands": [
               {
                 "command": "move",
-                "to": [
-                  0.025060304897,
-                  0.0
-                ]
+                "to": [0.025060304897, 0.0]
               },
               {
                 "command": "line",
-                "to": [
-                  0.974939695103,
-                  0.0
-                ]
+                "to": [0.974939695103, 0.0]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.988780119418,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.089543049892
-                ],
-                "to": [
-                  1.0,
-                  0.200000001363
-                ]
+                "control1": [0.988780119418, 0.0],
+                "control2": [1.0, 0.089543049892],
+                "to": [1.0, 0.200000001363]
               },
               {
                 "command": "line",
-                "to": [
-                  1.0,
-                  0.799999998637
-                ]
+                "to": [1.0, 0.799999998637]
               },
               {
                 "command": "curve",
-                "control1": [
-                  1.0,
-                  0.910456950108
-                ],
-                "control2": [
-                  0.988780119418,
-                  1.0
-                ],
-                "to": [
-                  0.974939695103,
-                  1.0
-                ]
+                "control1": [1.0, 0.910456950108],
+                "control2": [0.988780119418, 1.0],
+                "to": [0.974939695103, 1.0]
               },
               {
                 "command": "line",
-                "to": [
-                  0.025060304897,
-                  1.0
-                ]
+                "to": [0.025060304897, 1.0]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.011219880582,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.910456950108
-                ],
-                "to": [
-                  0.0,
-                  0.799999998637
-                ]
+                "control1": [0.011219880582, 1.0],
+                "control2": [0.0, 0.910456950108],
+                "to": [0.0, 0.799999998637]
               },
               {
                 "command": "line",
-                "to": [
-                  0.0,
-                  0.200000001363
-                ]
+                "to": [0.0, 0.200000001363]
               },
               {
                 "command": "curve",
-                "control1": [
-                  0.0,
-                  0.089543049892
-                ],
-                "control2": [
-                  0.011219880582,
-                  0.0
-                ],
-                "to": [
-                  0.025060304897,
-                  0.0
-                ]
+                "control1": [0.0, 0.089543049892],
+                "control2": [0.011219880582, 0.0],
+                "to": [0.025060304897, 0.0]
               },
               {
                 "command": "close"

@@ -4,11 +4,26 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .cord_render_assets import (
+    PathRole,
+    build_lossless_atlases_with_report,
+    freeze_source_manifest,
+    inspect_transparency_with_report,
+    load_chroma_config,
+    load_json_file,
+    load_locked_sources,
+    preflight_atlas_command_paths,
+    preflight_path_roles,
+    read_image_metadata,
+    remove_chroma_with_report,
+    source_lock_artifact,
+)
 from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
 from .presentation_remediation_audit import (
     PresentationValidationMode,
@@ -20,6 +35,8 @@ from .presentation_remediation_audit import (
 def main(argv: Sequence[str] | None = None) -> int:
     try:
         arguments = _parser().parse_args(argv)
+        if arguments.command == "cord-assets":
+            return _cord_assets(arguments)
         inventory = discover_board_packages(
             arguments.root,
             require_complete_inventory=(
@@ -42,13 +59,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             elif arguments.phase2_final:
                 validation_mode = PresentationValidationMode.PHASE2_FINAL
             source_files = _transient_file_mapping(arguments.source_file, "source-file")
-            candidate_files = _transient_file_mapping(arguments.candidate_file, "candidate-file")
-            if arguments.batch_id is not None and validation_mode != PresentationValidationMode.PHASE2_PARTIAL:
+            candidate_files = _transient_file_mapping(
+                arguments.candidate_file, "candidate-file"
+            )
+            if (
+                arguments.batch_id is not None
+                and validation_mode != PresentationValidationMode.PHASE2_PARTIAL
+            ):
                 raise ValueError("--batch-id is legal only with --phase2-partial")
-            if validation_mode == PresentationValidationMode.PHASE2_FINAL and (source_files or candidate_files):
+            if validation_mode == PresentationValidationMode.PHASE2_FINAL and (
+                source_files or candidate_files
+            ):
                 raise ValueError("final Phase 2 validation rejects transient files")
-            if validation_mode == PresentationValidationMode.SOURCE_RECLASSIFICATION and (source_files or candidate_files or arguments.batch_id):
-                raise ValueError("Phase 1 validation rejects Phase 2 lifecycle arguments")
+            if (
+                validation_mode == PresentationValidationMode.SOURCE_RECLASSIFICATION
+                and (source_files or candidate_files or arguments.batch_id)
+            ):
+                raise ValueError(
+                    "Phase 1 validation rejects Phase 2 lifecycle arguments"
+                )
             report = validate_presentation_remediation_manifest(
                 load_presentation_remediation_manifest(arguments.manifest),
                 inventory,
@@ -135,7 +164,148 @@ def _parser() -> argparse.ArgumentParser:
         metavar=("SHA256", "PATH"),
         default=[],
     )
+    cord_assets = subcommands.add_parser(
+        "cord-assets", help="lock evidence and gate cord-render transparency"
+    )
+    cord_commands = cord_assets.add_subparsers(dest="cord_command", required=True)
+    lock = cord_commands.add_parser("lock", help="freeze immutable source metadata")
+    lock.add_argument("--manifest", type=Path, required=True)
+    lock.add_argument("--report", type=Path)
+    atlas = cord_commands.add_parser(
+        "atlas", help="build and verify lossless source atlases"
+    )
+    atlas.add_argument("--manifest", type=Path, required=True)
+    atlas.add_argument("--output-root", type=Path, required=True)
+    atlas.add_argument("--report", type=Path)
+    atlas.add_argument("--max-pages", type=int, default=5)
+    key = cord_commands.add_parser(
+        "key", help="remove the recorded chroma key to alpha"
+    )
+    key.add_argument("--input", type=Path, required=True)
+    key.add_argument("--output", type=Path, required=True)
+    key.add_argument("--config", type=Path, required=True)
+    key.add_argument("--report", type=Path, required=True)
+    inspect = cord_commands.add_parser(
+        "inspect", help="enforce the focused RGBA transparency contract"
+    )
+    inspect.add_argument("--image", type=Path, required=True)
+    inspect.add_argument("--expected-from", required=True)
+    inspect.add_argument("--config", type=Path, required=True)
+    inspect.add_argument("--report", type=Path, required=True)
     return parser
+
+
+def _cord_assets(arguments: argparse.Namespace) -> int:
+    if arguments.cord_command == "lock":
+        sources = freeze_source_manifest(
+            arguments.manifest, report_path=arguments.report
+        )
+        payload = source_lock_artifact(sources)
+    elif arguments.cord_command == "atlas":
+        preflight_atlas_command_paths(
+            arguments.manifest,
+            arguments.output_root,
+            arguments.report,
+        )
+        sources = load_locked_sources(arguments.manifest)
+        index = build_lossless_atlases_with_report(
+            sources,
+            arguments.output_root,
+            max_pages=arguments.max_pages,
+            report_path=arguments.report,
+        )
+        payload = {
+            "index": index.to_json(),
+            "verification": {
+                "valid": True,
+                "verified_panels": len(index.panels),
+            },
+        }
+    elif arguments.cord_command == "key":
+        config = load_chroma_config(arguments.config)
+        report = remove_chroma_with_report(
+            arguments.input,
+            arguments.output,
+            config,
+            arguments.report,
+            config_path=arguments.config,
+        )
+        payload = report.to_json()
+    else:
+        (
+            expected_width,
+            expected_height,
+            board_path,
+            expected_asset,
+        ) = _presentation_dimensions_and_paths(arguments.expected_from)
+        preflight_path_roles(
+            [
+                PathRole("image", arguments.image, "input"),
+                PathRole("expected board", board_path, "input"),
+                PathRole("expected asset", expected_asset, "input"),
+                PathRole("config", arguments.config, "input"),
+                PathRole("report", arguments.report, "output"),
+            ]
+        )
+        config = load_chroma_config(arguments.config)
+        report = inspect_transparency_with_report(
+            arguments.image,
+            expected_width,
+            expected_height,
+            config,
+            arguments.report,
+            config_path=arguments.config,
+        )
+        payload = report.to_json()
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+def _presentation_dimensions_and_paths(
+    reference: str,
+) -> tuple[int, int, Path, Path]:
+    if not isinstance(reference, str) or ":" not in reference:
+        raise ValueError("--expected-from requires board.json:presentationID")
+    board_text, presentation_id = reference.rsplit(":", 1)
+    if not board_text or not presentation_id:
+        raise ValueError("--expected-from requires board.json:presentationID")
+    board_path = Path(board_text)
+    payload = load_json_file(board_path, "--expected-from board.json")
+    if not isinstance(payload, dict) or not isinstance(
+        payload.get("presentations"), list
+    ):
+        raise ValueError("--expected-from board.json requires a presentations array")
+    matches = []
+    for index, record in enumerate(payload["presentations"]):
+        if not isinstance(record, dict):
+            raise ValueError(f"board.json.presentations[{index}] must be an object")
+        if record.get("id") == presentation_id:
+            matches.append((index, record))
+    if len(matches) != 1:
+        raise ValueError(
+            f"--expected-from must identify exactly one presentation: {presentation_id}"
+        )
+    index, presentation = matches[0]
+    asset_path = presentation.get("assetPath")
+    if not isinstance(asset_path, str) or not asset_path:
+        raise ValueError(
+            f"board.json.presentations[{index}].assetPath must be a non-empty string"
+        )
+    relative = Path(asset_path)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(
+            f"board.json.presentations[{index}].assetPath escapes its package"
+        )
+    package_root = Path(os.path.abspath(os.fspath(board_path))).parent
+    asset = Path(os.path.abspath(os.fspath(package_root / relative)))
+    if package_root not in asset.parents:
+        raise ValueError(
+            f"board.json.presentations[{index}].assetPath escapes its package"
+        )
+    metadata = read_image_metadata(asset)
+    if metadata.format != "PNG":
+        raise ValueError(f"presentation asset is not a PNG: {asset}")
+    return metadata.width, metadata.height, board_path, asset
 
 
 def _transient_file_mapping(

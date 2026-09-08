@@ -276,11 +276,35 @@ final class BoardSourceBoundaryTests: XCTestCase {
             .appendingPathComponent("HangTen/Views/BoardMapView.swift")
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
+        let detailMapStart = try XCTUnwrap(source.range(of: "struct BoardDetailMapView"))
+        let detailMapEnd = try XCTUnwrap(
+            source.range(of: "private struct BoardHoldNumberMarker", range: detailMapStart.upperBound..<source.endIndex)
+        )
+        let detailMapSource = String(source[detailMapStart.lowerBound..<detailMapEnd.lowerBound])
+        let physicalVisualStart = try XCTUnwrap(source.range(of: "private struct PhysicalHoldVisual"))
+        let physicalVisualSource = String(source[physicalVisualStart.lowerBound...])
+
         XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: hold.geometry)"))
-        XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
-        XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
+        XCTAssertEqual(
+            detailMapSource.components(separatedBy: "BoardPresentationGeometryProjection(").count - 1,
+            1,
+            "BoardDetailMapView must construct one projection for the active presentation."
+        )
+        XCTAssertTrue(detailMapSource.contains("projection: projection"))
+        XCTAssertTrue(detailMapSource.contains("markerPosition("))
+        XCTAssertEqual(
+            physicalVisualSource.components(separatedBy: "let shape = BoardHoldPathShape(").count - 1,
+            1,
+            "PhysicalHoldVisual must construct one projected canonical shape."
+        )
+        XCTAssertTrue(physicalVisualSource.contains("pieces: hold.geometry"))
+        XCTAssertTrue(physicalVisualSource.contains("projection: projection"))
+        XCTAssertTrue(physicalVisualSource.contains("shape\n                .fill"))
+        XCTAssertTrue(physicalVisualSource.contains("shape.stroke("))
+        XCTAssertTrue(physicalVisualSource.contains(".contentShape(.interaction, shape)"))
+        XCTAssertTrue(physicalVisualSource.contains(".contentShape(.accessibility, shape)"))
         XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
+        XCTAssertFalse(source.contains(".rotationEffect(isInverted ? .degrees(180) : .zero)"))
         XCTAssertFalse(source.contains("contentShape(Rectangle())"))
         XCTAssertFalse(source.contains("Canvas("))
         XCTAssertFalse(source.contains("BoardDesign"))
@@ -310,6 +334,29 @@ final class BoardSourceBoundaryTests: XCTestCase {
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."
+        )
+    }
+
+    func testBoardMapProjectsHoldPathsIntoEitherCordRigFace() throws {
+        let source = try String(
+            contentsOf: repositoryRootURL()
+                .appendingPathComponent("HangTen/Views/BoardMapView.swift"),
+            encoding: .utf8
+        )
+
+        XCTAssertEqual(
+            source.components(
+                separatedBy: "BoardPresentationArtwork.routedGeometry("
+            ).count - 1,
+            2,
+            "Both board-map surfaces must resolve the routed rig's canonical face."
+        )
+        XCTAssertEqual(
+            source.components(
+                separatedBy: "canonicalRect: canonicalFaceRect"
+            ).count - 1,
+            3,
+            "Hold drawing, hit testing, and detail markers must share the resolved cord-rig face."
         )
     }
 

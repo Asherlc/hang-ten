@@ -6,9 +6,11 @@ HangTen/HangTenApp.swift
 HangTen/Info.plist
 HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/AppStore.swift
+HangTen/Models/BoardCordRigGeometry.swift
 HangTen/Models/BoardEditorStore.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardPackageWriter.swift
+HangTen/Models/BoardRoutedCordRigGeometry.swift
 HangTen/Models/BoardStorage.swift
 HangTen/Models/ClimbroProtocol.swift
 HangTen/Models/CountdownAudioScheduler.swift
@@ -76,6 +78,7 @@ HangTen/Views/BoardEditor/GitHubEditorSyncViews.swift
 HangTen/Views/BoardEditor/HoldEditorCanvasView.swift
 HangTen/Views/BoardEditor/HoldInspectorView.swift
 HangTen/Views/BoardMapView.swift
+HangTen/Views/BoardPresentationArtwork.swift
 HangTen/Views/CustomRoutineEditorView.swift
 HangTen/Views/DesignSystem.swift
 HangTen/Views/GripDiagramView.swift

@@ -185,9 +185,9 @@ struct BoardDetailView: View {
 
     init(board: TrainingBoard) {
         self.board = board
-        _selectedHoldID = State(initialValue: board.holds.first(where: {
-            $0.presentationID == board.defaultPresentation.id
-        })?.id)
+        _selectedHoldID = State(
+            initialValue: board.availableHolds(for: board.defaultPresentation).first?.id
+        )
     }
 
     private var selectedHold: BoardHold? {

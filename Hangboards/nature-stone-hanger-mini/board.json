@@ -5,7 +5,7 @@
   "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
   "productURL": "https://natureclimbing.com/products/stone-hanger-mini-beech",
   "dimensions": "10 × 6 × 2.5 cm",
-  "aspectRatio": 1.0,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,15 +17,93 @@
       "id": "primary",
       "name": "Front",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.0,
-      "default": true
-    },
-    {
-      "id": "side",
-      "name": "Side",
-      "assetPath": "assets/side.png",
-      "aspectRatio": 1.0,
-      "default": false
+      "aspectRatio": 1.5,
+      "default": true,
+      "availableHoldIDs": [
+        "pull-up-jug",
+        "wood-edge-15-incut",
+        "granite-edge-15",
+        "pinch-60"
+      ],
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 141,
+          "y": 26,
+          "width": 1254,
+          "height": 1254
+        },
+        "style": {
+          "diameter": 23,
+          "outlineColor": "#030405",
+          "baseColor": "#17191B",
+          "braidColors": [
+            "#E6B719",
+            "#585B5D"
+          ]
+        },
+        "ports": [
+          {
+            "id": "left-top-route-exit",
+            "space": "body",
+            "point": {
+              "x": 348,
+              "y": 389
+            }
+          },
+          {
+            "id": "right-top-route-exit",
+            "space": "body",
+            "point": {
+              "x": 1188,
+              "y": 389
+            }
+          },
+          {
+            "id": "support-left",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 45
+            }
+          },
+          {
+            "id": "support-right",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 45
+            }
+          }
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": [
+              "left-top-route-exit",
+              "right-top-route-exit"
+            ],
+            "worldPortIDs": [
+              "support-left",
+              "support-right"
+            ],
+            "pairing": "declared",
+            "layer": "behindFace"
+          }
+        ],
+        "paths": [],
+        "occlusions": []
+      }
     }
   ],
   "holds": [
@@ -39,10 +117,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.249,
-            "y": 0.499,
-            "width": 0.502,
-            "height": 0.134
+            "x": 0.217,
+            "y": 0.376,
+            "width": 0.566,
+            "height": 0.135
           },
           "shape": {
             "type": "path",
@@ -133,10 +211,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.25,
-            "y": 0.627,
-            "width": 0.501,
-            "height": 0.046
+            "x": 0.22,
+            "y": 0.511,
+            "width": 0.56,
+            "height": 0.0155
           },
           "shape": {
             "type": "path",
@@ -251,10 +329,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.25,
-            "y": 0.672,
-            "width": 0.501,
-            "height": 0.051
+            "x": 0.22,
+            "y": 0.5265,
+            "width": 0.56,
+            "height": 0.0905
           },
           "shape": {
             "type": "path",
@@ -342,14 +420,14 @@
       "name": "60 mm pinch",
       "kind": "pinch",
       "handCapacity": 1,
-      "presentationID": "side",
+      "presentationID": "primary",
       "geometry": [
         {
           "frame": {
-            "x": 0.388,
-            "y": 0.337,
-            "width": 0.244,
-            "height": 0.547
+            "x": 0.134,
+            "y": 0.278,
+            "width": 0.732,
+            "height": 0.098
           },
           "shape": {
             "type": "path",
@@ -357,95 +435,81 @@
               {
                 "command": "move",
                 "to": [
-                  0.15,
+                  0.08,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.85,
+                  0.92,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.94,
+                  0.97,
                   0.0
                 ],
                 "control2": [
                   1.0,
-                  0.06
+                  0.28
                 ],
                 "to": [
                   1.0,
-                  0.15
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.85
+                  0.64
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   1.0,
-                  0.94
+                  0.82
                 ],
                 "control2": [
-                  0.94,
+                  0.93,
                   1.0
                 ],
                 "to": [
-                  0.85,
+                  0.88,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.15,
+                  0.12,
                   1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.06,
+                  0.07,
                   1.0
                 ],
                 "control2": [
                   0.0,
-                  0.94
+                  0.82
                 ],
                 "to": [
                   0.0,
-                  0.85
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.15
+                  0.64
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   0.0,
-                  0.06
+                  0.28
                 ],
                 "control2": [
-                  0.06,
+                  0.03,
                   0.0
                 ],
                 "to": [
-                  0.15,
+                  0.08,
                   0.0
                 ]
               },
@@ -456,10 +520,106 @@
           },
           "treatment": {
             "type": "surface"
+          }
+        },
+        {
+          "frame": {
+            "x": 0.134,
+            "y": 0.617,
+            "width": 0.732,
+            "height": 0.089
           },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.95,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.18
+                ],
+                "to": [
+                  1.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.76
+                ],
+                "control2": [
+                  0.97,
+                  1.0
+                ],
+                "to": [
+                  0.92,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.08,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.03,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.76
+                ],
+                "to": [
+                  0.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.18
+                ],
+                "control2": [
+                  0.05,
+                  0.0
+                ],
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
           }
         }
       ],

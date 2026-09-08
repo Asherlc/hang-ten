@@ -1,20 +1,43 @@
 package com.hangten.android.board
 
+import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.unit.dp
 import com.hangten.android.content.Board
+import com.hangten.android.content.BoardCordRect
+import com.hangten.android.content.BoardCordRig
+import com.hangten.android.content.BoardCordSize
 import com.hangten.android.content.BoardHold
 import com.hangten.android.content.BoardPresentation
-import com.hangten.android.content.HoldShape
 import com.hangten.android.content.BoardGeometry
+import com.hangten.android.content.BoardRoutedCordLayer
+import com.hangten.android.content.BoardRoutedCordOcclusion
+import com.hangten.android.content.BoardRoutedCordPairing
+import com.hangten.android.content.BoardRoutedCordPathCommand
+import com.hangten.android.content.BoardRoutedCordPort
+import com.hangten.android.content.BoardRoutedCordSpace
+import com.hangten.android.content.BoardRoutedCordStyle
+import com.hangten.android.content.BoardRoutedCordTensionGroup
+import com.hangten.android.content.HoldShape
 import com.hangten.android.content.NormalizedFrame
+import com.hangten.android.content.Point
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -119,5 +142,320 @@ class BoardCanvasTest {
         composeRule.runOnIdle {
             assertEquals(listOf("center-hold"), tappedHolds)
         }
+    }
+
+    @Test
+    fun routedArtworkPreservesTransparencyAndDrawsEveryLayerInPhysicalOrder() {
+        val rig = BoardCordRig.Routed(
+            sceneSize = BoardCordSize(100f, 100f),
+            sourceFrame = BoardCordRect(0f, 0f, 100f, 100f),
+            innerFaceFrame = BoardCordRect(20f, 40f, 60f, 40f),
+            style = BoardRoutedCordStyle(
+                diameter = 6f,
+                outlineColor = "#FF0000",
+                baseColor = "#FF0000",
+                braidColors = listOf("#FF0000", "#FF0000"),
+            ),
+            ports = listOf(
+                BoardRoutedCordPort("body-behind", BoardRoutedCordSpace.Body, Point(50f, 70f)),
+                BoardRoutedCordPort("world-behind", BoardRoutedCordSpace.World, Point(50f, 10f)),
+                BoardRoutedCordPort("body-above", BoardRoutedCordSpace.Body, Point(30f, 70f)),
+                BoardRoutedCordPort("world-above", BoardRoutedCordSpace.World, Point(30f, 10f)),
+                BoardRoutedCordPort("body-overpass", BoardRoutedCordSpace.Body, Point(70f, 70f)),
+                BoardRoutedCordPort("world-overpass", BoardRoutedCordSpace.World, Point(70f, 10f)),
+            ),
+            tensionGroups = listOf(
+                tensionGroup("behind", "body-behind", "world-behind", BoardRoutedCordLayer.BehindFace),
+                tensionGroup("above", "body-above", "world-above", BoardRoutedCordLayer.AboveFace),
+                tensionGroup("overpass", "body-overpass", "world-overpass", BoardRoutedCordLayer.Overpass),
+            ),
+            paths = emptyList(),
+            occlusions = listOf(
+                BoardRoutedCordOcclusion.FacePatch(
+                    commands = listOf(
+                        BoardRoutedCordPathCommand.Move(Point(27f, 50f)),
+                        BoardRoutedCordPathCommand.Line(Point(33f, 50f)),
+                        BoardRoutedCordPathCommand.Line(Point(33f, 60f)),
+                        BoardRoutedCordPathCommand.Line(Point(27f, 60f)),
+                        BoardRoutedCordPathCommand.Close,
+                    ),
+                ),
+            ),
+        )
+        val presentation = BoardPresentation(
+            id = "primary",
+            name = "Primary",
+            assetPath = "assets/missing-raster-fixture.png",
+            aspectRatio = 1f,
+            isDefault = true,
+            cordRig = rig,
+        )
+        val board = Board(
+            id = "routed-raster-fixture",
+            manufacturer = "Fixture",
+            name = "Routed Raster Fixture",
+            subtitle = "Fixture",
+            productUrl = "https://example.invalid/routed-raster-fixture",
+            aspectRatio = 1f,
+            presentations = listOf(presentation),
+            holds = emptyList(),
+        )
+        val faceBitmap = Bitmap.createBitmap(60, 40, Bitmap.Config.ARGB_8888).apply {
+            eraseColor(android.graphics.Color.GREEN)
+        }
+
+        composeRule.setContent {
+            // Node captures are composited by the host window; a sentinel behind the canvas
+            // proves that routed artwork leaves pixels outside the scene transparent.
+            Box(Modifier.size(200.dp).background(Color.Magenta)) {
+                BoardCanvas(
+                    board = board,
+                    activeHoldIDs = emptySet(),
+                    onHoldTap = {},
+                    modifier = Modifier.size(200.dp),
+                    imageOverride = faceBitmap.asImageBitmap(),
+                )
+            }
+        }
+
+        val pixels = composeRule.onNodeWithContentDescription("Board Routed Raster Fixture")
+            .captureToImage()
+            .toPixelMap()
+        fun pixel(x: Float, y: Float): Color = pixels[
+            (pixels.width * x).toInt().coerceIn(0, pixels.width - 1),
+            (pixels.height * y).toInt().coerceIn(0, pixels.height - 1),
+        ]
+
+        assertColor(Color.Green, pixel(0.5f, 0.55f))
+        assertRedDominant(pixel(0.3f, 0.45f))
+        assertColor(Color.Green, pixel(0.3f, 0.55f))
+        assertRedDominant(pixel(0.7f, 0.55f))
+        assertColor(Color.Magenta, pixel(0.05f, 0.95f))
+    }
+
+    @Test
+    fun directTwoAnchorArtworkDrawsOneCompactRoundedBendBelowTheInvisibleApex() {
+        val rig = BoardCordRig.DirectTwoAnchor(
+            sceneSize = BoardCordSize(1200f, 1200f),
+            sourceFrame = BoardCordRect(0f, 0f, 1200f, 1200f),
+            innerFaceFrame = BoardCordRect(200f, 500f, 800f, 500f),
+            attachmentPoints = listOf(Point(300f, 800f), Point(900f, 800f)),
+            pullPoint = Point(600f, 240f),
+            eyeletRadius = 34f,
+        )
+        val pixels = captureRig(
+            boardName = "Direct Apex Fixture",
+            rig = rig,
+            faceWidth = 800,
+            faceHeight = 500,
+        )
+
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.2f))
+        assertNotColor(Color.Magenta, pixels.percentPixel(0.5f, 0.23f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.055f))
+    }
+
+    @Test
+    fun coincidentRoutedWorldPortsRenderAsAJoinedVWithoutCordAboveTheApex() {
+        val rig = BoardCordRig.Routed(
+            sceneSize = BoardCordSize(100f, 100f),
+            sourceFrame = BoardCordRect(0f, 0f, 100f, 100f),
+            innerFaceFrame = BoardCordRect(20f, 50f, 60f, 40f),
+            style = BoardRoutedCordStyle(
+                diameter = 4f,
+                outlineColor = "#FF0000",
+                baseColor = "#FF0000",
+                braidColors = listOf("#FF0000", "#FF0000"),
+            ),
+            ports = listOf(
+                BoardRoutedCordPort("body-left", BoardRoutedCordSpace.Body, Point(30f, 70f)),
+                BoardRoutedCordPort("body-right", BoardRoutedCordSpace.Body, Point(70f, 70f)),
+                BoardRoutedCordPort("world-left", BoardRoutedCordSpace.World, Point(50f, 20f)),
+                BoardRoutedCordPort("world-right", BoardRoutedCordSpace.World, Point(50f, 20f)),
+            ),
+            tensionGroups = listOf(
+                BoardRoutedCordTensionGroup(
+                    id = "support",
+                    bodyPortIds = listOf("body-left", "body-right"),
+                    worldPortIds = listOf("world-left", "world-right"),
+                    pairing = BoardRoutedCordPairing.Declared,
+                    layer = BoardRoutedCordLayer.AboveFace,
+                ),
+            ),
+            paths = emptyList(),
+            occlusions = emptyList(),
+        )
+        val pixels = captureRig(
+            boardName = "Routed Apex Fixture",
+            rig = rig,
+            faceWidth = 60,
+            faceHeight = 40,
+        )
+
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.2f))
+        assertRedDominant(pixels.percentPixel(0.5f, 0.28f))
+        assertRedDominant(pixels.percentPixel(0.4f, 0.45f))
+        assertRedDominant(pixels.percentPixel(0.6f, 0.45f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.12f))
+    }
+
+    @Test
+    fun invertedExternalLoopDrawsJoinedApexAndLowerReturnBehindCanonicalFace() {
+        val rig = BoardCordRig.ExternalSlidingLoop(
+            sceneSize = BoardCordSize(100f, 100f),
+            sourceFrame = BoardCordRect(0f, 0f, 100f, 100f),
+            innerFaceFrame = BoardCordRect(25f, 40f, 50f, 20f),
+            style = BoardRoutedCordStyle(4f, "#FF0000", "#FF0000", listOf("#FF0000", "#FF0000")),
+            bodyContactFrame = BoardCordRect(25f, 40f, 50f, 20f),
+            cornerRadius = 4f,
+            clearance = 1f,
+            pullPoint = Point(50f, 10f),
+        )
+        val pixels = captureRig("Sliding Loop Fixture", rig, 50, 20, rotationDegrees = 180f)
+
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.1f))
+        assertRedDominant(pixels.percentPixel(0.5f, 0.15f))
+        assertColor(Color.Green, pixels.percentPixel(0.5f, 0.5f))
+        assertRedDominant(pixels.percentPixel(0.5f, 0.63f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.04f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.3f))
+        assertColor(Color.Magenta, pixels.percentPixel(0.5f, 0.7f))
+    }
+
+    @Test
+    fun routedFiberRendererUsesConfiguredColorsAndPerMarkAlpha() {
+        val bitmap = Bitmap.createBitmap(80, 60, Bitmap.Config.ARGB_8888)
+        val marks = listOf(
+            RoutedCordFiberMark(
+                RoutedCordFiberColor.Braid0,
+                Point(10f, 10f),
+                Point(30f, 10f),
+                opacity = 0.58f,
+                width = 4f,
+            ),
+            RoutedCordFiberMark(
+                RoutedCordFiberColor.Braid1,
+                Point(10f, 30f),
+                Point(30f, 30f),
+                opacity = 0.46f,
+                width = 4f,
+            ),
+            RoutedCordFiberMark(
+                RoutedCordFiberColor.Dark,
+                Point(10f, 50f),
+                Point(30f, 50f),
+                opacity = 0.36f,
+                width = 4f,
+            ),
+        )
+
+        drawRoutedCordFibers(
+            canvas = android.graphics.Canvas(bitmap),
+            marks = marks,
+            colors = listOf(android.graphics.Color.RED, android.graphics.Color.BLUE),
+            darkColor = android.graphics.Color.GREEN,
+        )
+
+        assertAndroidColor(android.graphics.Color.RED, 0.58f, bitmap.getPixel(20, 10))
+        assertAndroidColor(android.graphics.Color.BLUE, 0.46f, bitmap.getPixel(20, 30))
+        assertAndroidColor(android.graphics.Color.GREEN, 0.36f, bitmap.getPixel(20, 50))
+        assertEquals(0, android.graphics.Color.alpha(bitmap.getPixel(20, 20)))
+    }
+
+    private fun captureRig(
+        boardName: String,
+        rig: BoardCordRig,
+        faceWidth: Int,
+        faceHeight: Int,
+        rotationDegrees: Float = 0f,
+    ) = BoardPresentation(
+        id = "primary",
+        name = "Primary",
+        assetPath = "assets/missing-apex-fixture.png",
+        aspectRatio = 1f,
+        isDefault = true,
+        cordRig = rig,
+    ).let { presentation ->
+        val board = Board(
+            id = boardName.lowercase().replace(' ', '-'),
+            manufacturer = "Fixture",
+            name = boardName,
+            subtitle = "Fixture",
+            productUrl = "https://example.invalid/apex-fixture",
+            aspectRatio = 1f,
+            presentations = listOf(
+                presentation,
+                presentation.copy(
+                    id = "rotated", isDefault = false, cordRig = null,
+                    sourcePresentationId = "primary", rotationDegrees = rotationDegrees,
+                ),
+            ),
+            holds = emptyList(),
+        )
+        val faceBitmap = Bitmap.createBitmap(faceWidth, faceHeight, Bitmap.Config.ARGB_8888).apply {
+            eraseColor(android.graphics.Color.GREEN)
+        }
+        composeRule.setContent {
+            Box(Modifier.size(200.dp).background(Color.Magenta)) {
+                BoardCanvas(
+                    board = board,
+                    activeHoldIDs = emptySet(),
+                    onHoldTap = {},
+                    modifier = Modifier.size(200.dp),
+                    imageOverride = faceBitmap.asImageBitmap(),
+                    presentationId = if (rotationDegrees == 0f) "primary" else "rotated",
+                )
+            }
+        }
+        composeRule.onNodeWithContentDescription("Board $boardName")
+            .captureToImage()
+            .toPixelMap()
+    }
+
+    private fun androidx.compose.ui.graphics.PixelMap.percentPixel(x: Float, y: Float): Color = this[
+        (width * x).toInt().coerceIn(0, width - 1),
+        (height * y).toInt().coerceIn(0, height - 1),
+    ]
+
+    private fun tensionGroup(
+        id: String,
+        bodyPortId: String,
+        worldPortId: String,
+        layer: BoardRoutedCordLayer,
+    ) = BoardRoutedCordTensionGroup(
+        id = id,
+        bodyPortIds = listOf(bodyPortId),
+        worldPortIds = listOf(worldPortId),
+        pairing = BoardRoutedCordPairing.Declared,
+        layer = layer,
+    )
+
+    private fun assertColor(expected: Color, actual: Color) {
+        assertEquals(expected.red, actual.red, 0.05f)
+        assertEquals(expected.green, actual.green, 0.05f)
+        assertEquals(expected.blue, actual.blue, 0.05f)
+        assertEquals(expected.alpha, actual.alpha, 0.05f)
+    }
+
+    private fun assertNotColor(unexpected: Color, actual: Color) {
+        val distance = kotlin.math.abs(unexpected.red - actual.red) +
+            kotlin.math.abs(unexpected.green - actual.green) +
+            kotlin.math.abs(unexpected.blue - actual.blue) +
+            kotlin.math.abs(unexpected.alpha - actual.alpha)
+        assertTrue("Expected $actual to differ from $unexpected", distance > 0.2f)
+    }
+
+    private fun assertRedDominant(actual: Color) {
+        assertTrue("Expected red-dominant cord pixel, got $actual", actual.red > 0.7f)
+        assertTrue("Expected little green in cord pixel, got $actual", actual.green < 0.2f)
+        assertTrue("Expected little blue in cord pixel, got $actual", actual.blue < 0.2f)
+        assertTrue("Expected opaque cord pixel, got $actual", actual.alpha > 0.9f)
+    }
+
+    private fun assertAndroidColor(expected: Int, expectedAlpha: Float, actual: Int) {
+        assertEquals(android.graphics.Color.red(expected), android.graphics.Color.red(actual))
+        assertEquals(android.graphics.Color.green(expected), android.graphics.Color.green(actual))
+        assertEquals(android.graphics.Color.blue(expected), android.graphics.Color.blue(actual))
+        assertEquals(expectedAlpha, android.graphics.Color.alpha(actual) / 255f, 0.01f)
     }
 }

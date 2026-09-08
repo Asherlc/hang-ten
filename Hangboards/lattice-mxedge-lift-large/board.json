@@ -3,9 +3,9 @@
   "manufacturer": "Lattice",
   "name": "MXEdge Lift Large",
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
-  "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
+  "productURL": "https://latticetraining.com/product/mxedge-lift/",
   "dimensions": "20 × 11 × 5 cm",
-  "aspectRatio": 1.0,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,22 +17,76 @@
       "id": "primary",
       "name": "Small Edge Position",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.0,
-      "default": true
+      "aspectRatio": 1.5,
+      "default": true,
+      "availableHoldIDs": [
+        "edge-12"
+      ],
+      "cordRig": {
+        "type": "externalSlidingLoop",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 256,
+          "y": 0,
+          "width": 1024,
+          "height": 1024
+        },
+        "style": {
+          "diameter": 14,
+          "outlineColor": "#17486B",
+          "baseColor": "#168FD0",
+          "braidColors": [
+            "#F8B927",
+            "#E3E8E8"
+          ]
+        },
+        "bodyContactFrame": {
+          "x": 424,
+          "y": 267,
+          "width": 694,
+          "height": 490
+        },
+        "cornerRadius": 80,
+        "clearance": 0,
+        "pullPoint": {
+          "x": 768,
+          "y": 28
+        }
+      }
     },
     {
       "id": "large-medium-edge-position",
       "name": "Large / Medium Edge Position",
-      "assetPath": "assets/large-medium.png",
-      "aspectRatio": 1.0,
-      "default": false
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 180,
+      "availableHoldIDs": [
+        "edge-22",
+        "edge-16"
+      ]
     },
     {
       "id": "mono-position",
       "name": "Mono Position",
-      "assetPath": "assets/mono.png",
-      "aspectRatio": 1.0,
-      "default": false
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 45,
+      "availableHoldIDs": [
+        "mono-28"
+      ]
     }
   ],
   "holds": [
@@ -42,14 +96,14 @@
       "name": "MX22 edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "large-medium-edge-position",
+      "presentationID": "primary",
       "geometry": [
         {
           "frame": {
-            "x": 0.24505118,
-            "y": 0.317974937,
-            "width": 0.50994882,
-            "height": 0.097610917
+            "x": 0.207,
+            "y": 0.545,
+            "width": 0.484,
+            "height": 0.115
           },
           "shape": {
             "type": "path",
@@ -157,14 +211,14 @@
       "name": "MX16 edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "large-medium-edge-position",
+      "presentationID": "primary",
       "geometry": [
         {
           "frame": {
-            "x": 0.262013653,
-            "y": 0.493296931,
-            "width": 0.490887331,
-            "height": 0.105224067
+            "x": 0.238,
+            "y": 0.382,
+            "width": 0.535,
+            "height": 0.088
           },
           "shape": {
             "type": "path",
@@ -276,10 +330,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.251877119,
-            "y": 0.400286699,
-            "width": 0.500341271,
-            "height": 0.110976077
+            "x": 0.227,
+            "y": 0.326,
+            "width": 0.55,
+            "height": 0.096
           },
           "shape": {
             "type": "path",
@@ -387,14 +441,14 @@
       "name": "28 mm mono",
       "kind": "pocket",
       "handCapacity": 1,
-      "presentationID": "mono-position",
+      "presentationID": "primary",
       "geometry": [
         {
           "frame": {
-            "x": 0.581365188,
-            "y": 0.256095563,
-            "width": 0.098498257,
-            "height": 0.098498257
+            "x": 0.673,
+            "y": 0.541,
+            "width": 0.105,
+            "height": 0.105
           },
           "shape": {
             "type": "path",

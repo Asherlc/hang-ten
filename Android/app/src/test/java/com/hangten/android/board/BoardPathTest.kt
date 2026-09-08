@@ -1,6 +1,10 @@
 package com.hangten.android.board
 
+import com.hangten.android.content.Board
 import com.hangten.android.content.BoardGeometry
+import com.hangten.android.content.BoardGeometryRotationAnchor
+import com.hangten.android.content.BoardHold
+import com.hangten.android.content.BoardPresentation
 import com.hangten.android.content.HoldShape
 import com.hangten.android.content.NormalizedFrame
 import com.hangten.android.content.PathCommand
@@ -58,4 +62,85 @@ class BoardPathTest {
         assertEquals(12f, rounded.radiusX, 0.0001f)
         assertEquals(12f, rounded.radiusY, 0.0001f)
     }
+
+    @Test
+    fun nonRigInvertedAliasProjectsCanonicalHoldAroundItsPresentationAnchor() {
+        val canonical = presentation(id = "primary")
+        val alias = presentation(
+            id = "primary-inverted",
+            sourcePresentationId = canonical.id,
+            isInverted = true,
+            rotationAnchor = BoardGeometryRotationAnchor(x = 0.25f, y = 0.25f),
+        )
+        val board = board(canonical, alias)
+
+        val canvas = boardCanvasGeometry(board, alias, width = 200f, height = 100f)!!
+        val projectedHold = board.holds.single().geometry.single()
+            .toBoardPath(canvas.holdBounds)
+            .transformed(canvas.faceTransform)
+            .roundedRectangle!!
+
+        assertEquals(BoardBounds(left = 0f, top = 0f, width = 200f, height = 100f), canvas.holdBounds)
+        assertEquals(BoardInPlaneTransform(-1f, 0f, 0f, -1f, 100f, 50f), canvas.faceTransform)
+        assertEquals(40f, projectedHold.left, 0.0001f)
+        assertEquals(20f, projectedHold.top, 0.0001f)
+        assertEquals(80f, projectedHold.right, 0.0001f)
+        assertEquals(30f, projectedHold.bottom, 0.0001f)
+        assertEquals(alias, board.artworkPresentation(alias))
+        assertEquals(canonical.id, board.holdPresentationId(alias))
+    }
+
+    @Test
+    fun nonRigCanonicalPresentationKeepsIdentityProjection() {
+        val canonical = presentation(id = "primary")
+
+        val canvas = boardCanvasGeometry(
+            board(canonical),
+            canonical,
+            width = 200f,
+            height = 100f,
+        )!!
+
+        assertEquals(BoardInPlaneTransform.Identity, canvas.faceTransform)
+    }
+
+    private fun presentation(
+        id: String,
+        sourcePresentationId: String? = null,
+        isInverted: Boolean = false,
+        rotationAnchor: BoardGeometryRotationAnchor? = null,
+    ) = BoardPresentation(
+        id = id,
+        name = id,
+        assetPath = "assets/$id.png",
+        aspectRatio = 2f,
+        isDefault = sourcePresentationId == null,
+        sourcePresentationId = sourcePresentationId,
+        isInverted = isInverted,
+        geometryRotationAnchor = rotationAnchor,
+    )
+
+    private fun board(vararg presentations: BoardPresentation) = Board(
+        id = "demo.board",
+        manufacturer = "Demo",
+        name = "Demo",
+        subtitle = "Demo",
+        productUrl = "https://example.com/demo",
+        aspectRatio = 2f,
+        presentations = presentations.toList(),
+        holds = listOf(
+            BoardHold(
+                id = "edge",
+                name = "Edge",
+                kind = "edge",
+                presentationId = "primary",
+                geometry = listOf(
+                    BoardGeometry(
+                        frame = NormalizedFrame(x = 0.1f, y = 0.2f, width = 0.2f, height = 0.1f),
+                        shape = HoldShape.RoundedRect(cornerRadiusFraction = 0.2f),
+                    ),
+                ),
+            ),
+        ),
+    )
 }

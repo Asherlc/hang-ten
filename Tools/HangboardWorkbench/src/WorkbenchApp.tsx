@@ -66,6 +66,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const selectedPresentation = state.board?.presentations?.find(
     (presentation) => presentation.presentationID === state.board?.selectedPresentationID,
   );
+  const aliasReadOnly = Boolean(selectedPresentation?.sourcePresentationID);
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
@@ -106,7 +107,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     selectedKeys: state.selectedKeys,
     dirty: state.dirty,
     status: state.status,
-    busy: editorBusy,
+    busy: editorBusy || aliasReadOnly,
     rotationDegrees: state.rotationDegrees,
     actions,
     pathEditor: dependencies.pathEditor,
@@ -117,10 +118,10 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     reservedHoldIDs: state.board?.holdIDs ?? [],
   });
   const saveFromShortcut = React.useCallback(() => {
-    if (busy || !state.board) return;
+    if (busy || aliasReadOnly || !state.board) return;
     editor.cancelActiveEdit();
     void actions.saveBoard();
-  }, [actions, busy, editor, state.board]);
+  }, [actions, aliasReadOnly, busy, editor, state.board]);
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       const target = event.target instanceof Element ? event.target : null;
@@ -135,13 +136,13 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         return;
       }
       if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
-      if (busy || !state.board) return;
       event.preventDefault();
+      if (busy || aliasReadOnly || !state.board) return;
       saveFromShortcut();
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [busy, changeCanvasZoom, saveFromShortcut, state.board, state.document]);
+  }, [aliasReadOnly, busy, changeCanvasZoom, saveFromShortcut, state.board, state.document]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -170,7 +171,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         <div className="toolbar" aria-label="Board tools">
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
-          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
+          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy || aliasReadOnly} onClick={saveFromShortcut}>Save</button>
           <label className="tool-button" htmlFor="autosave-toggle">
             <input
               id="autosave-toggle"
@@ -187,7 +188,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         <div className="mobile-toolbar" aria-label="Mobile board tools">
           <button className="tool-button" id="mobile-boards-button" type="button" aria-expanded={mobileBoardsOpen} onClick={() => setMobileBoardsOpen((open) => !open)}>Boards</button>
           <button className="tool-button" id="mobile-menu-button" type="button" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}>Menu</button>
-          <button className="tool-button accent" id="mobile-save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
+          <button className="tool-button accent" id="mobile-save-button" type="button" disabled={!state.board || busy || aliasReadOnly} onClick={saveFromShortcut}>Save</button>
         </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>
@@ -281,10 +282,10 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM}
                 onClick={() => changeCanvasZoom(1)}
               >+</button>
-              <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
-              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedHold || editorBusy} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
-              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedHold || editorBusy} onClick={() => addGuide("vertical")}>Vertical guide</button>
-              <button className="tool-button" id="clear-guides-button" type="button" disabled={guides.length === 0 || editorBusy} onClick={() => setGuides([])}>Clear guides</button>
+              <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || editorBusy || aliasReadOnly} onClick={editor.addHold}>Add hold</button>
+              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedHold || editorBusy || aliasReadOnly} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
+              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedHold || editorBusy || aliasReadOnly} onClick={() => addGuide("vertical")}>Vertical guide</button>
+              <button className="tool-button" id="clear-guides-button" type="button" disabled={guides.length === 0 || editorBusy || aliasReadOnly} onClick={() => setGuides([])}>Clear guides</button>
             </div>
           </div>
           <HoldCanvas
@@ -293,6 +294,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             selectedKey={state.selectedKey}
             selectedKeys={state.selectedKeys}
             busy={editorBusy}
+            editingDisabled={aliasReadOnly}
             onSelectHold={(key, toggle) => {
               actions.selectHold(key, toggle);
             }}
@@ -331,7 +333,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             <button className="tool-button" id="mobile-zoom-out-button" type="button" aria-label="Zoom out" disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM} onClick={() => changeCanvasZoom(-1)}>−</button>
             <button className="tool-button" id="mobile-zoom-in-button" type="button" aria-label="Zoom in" disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM} onClick={() => changeCanvasZoom(1)}>+</button>
             <button className="tool-button" id="mobile-open-hold-sheet-button" type="button" disabled={!selectedHold} onClick={() => setMobileHoldSheetOpen(true)}>Edit hold</button>
-            <button className="tool-button accent" id="mobile-add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
+            <button className="tool-button accent" id="mobile-add-hold-button" type="button" disabled={!state.document || editorBusy || aliasReadOnly} onClick={editor.addHold}>Add hold</button>
           </div>
         </section>
 
@@ -339,7 +341,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           className={selectedHold && mobileHoldSheetOpen ? "mobile-sheet-open" : ""}
           hold={selectedHold}
           selectedCount={state.selectedKeys.length}
-          busy={editorBusy}
+          busy={editorBusy || aliasReadOnly}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}

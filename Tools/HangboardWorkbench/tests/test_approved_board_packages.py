@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import copy
 from pathlib import Path
+import shutil
 import sys
 
 
@@ -12,15 +14,26 @@ import board_package  # noqa: E402
 
 
 def _assert_audited_single_hand_package(
-    slug: str, board_id: str, hold_ids: set[str]
+    slug: str,
+    board_id: str,
+    hold_ids: set[str],
+    hold_ids_without_hand_capacity: set[str] | None = None,
 ) -> None:
     package_root = REPOSITORY_ROOT / "Hangboards" / slug
     package = board_package.load_board_package(package_root)
     board = package.board
+    expected_missing_hand_capacity = hold_ids_without_hand_capacity or set()
 
     assert board["id"] == board_id
     assert {hold["id"] for hold in board["holds"]} == hold_ids
-    assert all(hold.get("handCapacity") == 1 for hold in board["holds"])
+    assert {
+        hold["id"] for hold in board["holds"] if "handCapacity" not in hold
+    } == expected_missing_hand_capacity
+    assert all(
+        hold["handCapacity"] == 1
+        for hold in board["holds"]
+        if hold["id"] not in expected_missing_hand_capacity
+    )
     for presentation in board["presentations"]:
         assert (package_root / presentation["assetPath"]).is_file()
 
@@ -31,6 +44,34 @@ def test_nature_stone_hanger_mini_matches_audited_inventory() -> None:
         "nature.stone-hanger-mini",
         {"granite-edge-15", "wood-edge-15-incut", "pinch-60", "pull-up-jug"},
     )
+
+    package_root = REPOSITORY_ROOT / "Hangboards" / "nature-stone-hanger-mini"
+    package = board_package.load_board_package(package_root)
+    assert [
+        (presentation["id"], presentation["assetPath"])
+        for presentation in package.board["presentations"]
+    ] == [("primary", "assets/primary.png")]
+    assert {path.name for path in (package_root / "assets").iterdir()} == {
+        "primary.png"
+    }
+    primary = package.board["presentations"][0]
+    assert set(primary["availableHoldIDs"]) == {
+        "granite-edge-15",
+        "wood-edge-15-incut",
+        "pinch-60",
+        "pull-up-jug",
+    }
+    pinch = next(hold for hold in package.board["holds"] if hold["id"] == "pinch-60")
+    assert pinch["presentationID"] == "primary"
+    assert len(pinch["geometry"]) == 2
+
+    document = board_package.editor_document(package, "primary")
+    pinch_regions = [
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "pinch-60"
+    ]
+    assert [region["metadata"]["pieceIndex"] for region in pinch_regions] == [0, 1]
 
 
 def test_nature_stone_hanger_mini_karma8a_matches_audited_inventory() -> None:
@@ -55,17 +96,25 @@ def test_lattice_mini_bar_matches_audited_inventory() -> None:
         (item["id"], item["name"], item["assetPath"]) for item in presentations
     ] == [
         ("edge-10", "10 mm edge", "assets/edge-10.png"),
-        ("edge-20", "20 mm edge", "assets/edge-20.png"),
+        ("edge-20", "20 mm edge", "assets/edge-10.png"),
         ("ergonomic-jug", "Ergonomic jug", "assets/ergonomic-jug.png"),
         ("mini-pinch", "Mini pinch", "assets/mini-pinch.png"),
     ]
     assert [item["id"] for item in presentations if item["default"]] == ["edge-20"]
     assert {path.name for path in (package_root / "assets").iterdir()} == {
         "edge-10.png",
-        "edge-20.png",
         "ergonomic-jug.png",
         "mini-pinch.png",
     }
+    edge_10 = next(item for item in presentations if item["id"] == "edge-10")
+    edge_20 = next(item for item in presentations if item["id"] == "edge-20")
+    assert edge_20["sourcePresentationID"] == "edge-10"
+    assert edge_20["rotationDegrees"] == 180
+    assert "cordRig" not in edge_20
+    assert edge_10["cordRig"]["type"] == "routed"
+    assert board_package.presentation_image_path(
+        package, "edge-20"
+    ) == board_package.presentation_image_path(package, "edge-10")
 
     for presentation in presentations:
         presentation_id = presentation["id"]
@@ -120,7 +169,14 @@ def test_captain_fingerfood_unlevel_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-unlevel",
         "captain-fingerfood.unlevel",
-        {"curved-edge-20", "curved-edge-25", "outer-jug"},
+        {
+            "curved-edge-20",
+            "curved-edge-25",
+            "vertical-pocket-left-end",
+            "vertical-pocket-right-end",
+            "outer-jug",
+        },
+        {"vertical-pocket-left-end", "vertical-pocket-right-end"},
     )
 
 
@@ -128,7 +184,7 @@ def test_captain_fingerfood_dual_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-dual",
         "captain-fingerfood.dual",
-        {"straight-edge-20", "curved-edge-20", "outer-jug"},
+        {"straight-edge-20", "curved-edge-20", "pocket-20", "outer-jug"},
     )
 
 
@@ -150,7 +206,6 @@ def test_crimptonite_helium_mobile_matches_audited_inventory() -> None:
             "center-edge-10",
             "center-edge-18",
             "top-jug",
-            "back-jug-sloper",
         },
     )
 
@@ -170,7 +225,7 @@ def test_compact_single_hand_packages_omit_unpublished_outer_dimensions() -> Non
     assert helium["dimensions"] == "400 × 58 × 24 mm"
 
 
-def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
+def test_port_a_board_has_one_object_and_approved_dynamic_presentations() -> None:
     package_root = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
     package = board_package.load_board_package(package_root)
     board = package.board
@@ -187,31 +242,48 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
         "edge-10",
         "edge-8",
         "jug-outer-rim",
-        "pinch-body",
     }
     assert all("handCapacity" not in hold for hold in board["holds"])
-    assert {hold["kind"] for hold in board["holds"]} >= {"edge", "pocket", "jug", "pinch"}
-    assert {presentation["id"] for presentation in board["presentations"]} == {
-        "primary",
-        "front-inverted",
-        "cord-option-4-20mm-incut",
-        "back",
-        "back-inverted",
-        "side",
-    }
-    option_4 = next(
-        presentation
+    assert {hold["kind"] for hold in board["holds"]} == {"edge", "pocket", "jug"}
+    assert [
+        (presentation["id"], presentation["assetPath"])
         for presentation in board["presentations"]
-        if presentation["id"] == "cord-option-4-20mm-incut"
-    )
-    assert option_4["sourcePresentationID"] == "primary"
-    assert option_4["isInverted"] is True
-    assert option_4["assetPath"] == "assets/front-inverted.png"
-    option_4_document = board_package.editor_document(
-        package, "cord-option-4-20mm-incut"
-    )
-    assert "edge-20-piece-0" in {
-        region["key"] for region in option_4_document["regions"]
+    ] == [
+        ("primary", "assets/primary.png"),
+        ("front-inverted", "assets/primary.png"),
+        ("back", "assets/back.png"),
+    ]
+    assert package.presentation("primary").cord_rig is not None
+    assert package.presentation("back").cord_rig is not None
+    assert package.presentation("front-inverted").cord_rig is None
+    assert {path.name for path in (package_root / "assets").iterdir()} == {
+        "primary.png",
+        "back.png",
     }
-    assert (package_root / "assets" / "primary.png").is_file()
-    assert (package_root / "assets" / "side.png").is_file()
+
+
+def test_port_a_board_dynamic_rigs_survive_a_workbench_save(tmp_path: Path) -> None:
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    source = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
+    package_root = library / source.name
+    shutil.copytree(source, package_root)
+    package = board_package.load_board_package(package_root)
+    expected_presentations = copy.deepcopy(package.board["presentations"])
+    document = board_package.editor_document(package, "primary")
+    edge_30 = next(
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "edge-30"
+    )
+    edge_30["fingerCapacity"] = 4
+
+    saved = board_package.save_editor_document(
+        library, "frictitious-port-a-board", document
+    )
+
+    assert saved.board["presentations"] == expected_presentations
+    assert saved.presentation("primary").cord_rig == package.presentation(
+        "primary"
+    ).cord_rig
+    assert saved.presentation("back").cord_rig == package.presentation("back").cord_rig

@@ -5,7 +5,7 @@
   "subtitle": "Portable block with four edges, jug, and pinch.",
   "productURL": "https://frictitiousclimbing.com/products/the-nug",
   "dimensions": "130 × 60 × 40 mm",
-  "aspectRatio": 1.5,
+  "aspectRatio": 0.819672131147541,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -15,17 +15,127 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "20 / 25 mm face",
+      "name": "25 mm edge position",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.5,
-      "default": true
+      "aspectRatio": 0.819672131147541,
+      "default": true,
+      "availableHoldIDs": [
+        "edge-25",
+        "jug-40",
+        "pinch-60"
+      ],
+      "cordRig": {
+        "type": "directTwoAnchor",
+        "sceneSize": {
+          "width": 1200,
+          "height": 1464
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 214,
+          "width": 1200,
+          "height": 1250
+        },
+        "innerFaceFrame": {
+          "x": 37.4479,
+          "y": 308.2812,
+          "width": 1120,
+          "height": 746.6667
+        },
+        "attachmentPoints": [
+          {
+            "x": 180,
+            "y": 677.25
+          },
+          {
+            "x": 1018,
+            "y": 677.25
+          }
+        ],
+        "pullPoint": {
+          "x": 600,
+          "y": 71.5
+        },
+        "eyeletRadius": 24
+      }
+    },
+    {
+      "id": "primary-inverted",
+      "name": "20 mm edge position",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 0.819672131147541,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 180,
+      "geometryRotationAnchor": {
+        "x": 0.5,
+        "y": 0.6174863387978142
+      },
+      "availableHoldIDs": [
+        "edge-20",
+        "jug-40",
+        "pinch-60"
+      ]
     },
     {
       "id": "reverse",
-      "name": "8 / 13 mm face",
+      "name": "13 mm edge position",
       "assetPath": "assets/reverse.png",
-      "aspectRatio": 2.1569086651053864,
-      "default": false
+      "aspectRatio": 0.819672131147541,
+      "default": false,
+      "availableHoldIDs": [
+        "edge-13"
+      ],
+      "cordRig": {
+        "type": "directTwoAnchor",
+        "sceneSize": {
+          "width": 1200,
+          "height": 1464
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 214,
+          "width": 1200,
+          "height": 1250
+        },
+        "innerFaceFrame": {
+          "x": 41.626,
+          "y": 387.8862,
+          "width": 1120,
+          "height": 593.8211
+        },
+        "attachmentPoints": [
+          {
+            "x": 187,
+            "y": 686.5
+          },
+          {
+            "x": 1013,
+            "y": 686.5
+          }
+        ],
+        "pullPoint": {
+          "x": 600,
+          "y": 71.5
+        },
+        "eyeletRadius": 21
+      }
+    },
+    {
+      "id": "reverse-inverted",
+      "name": "8 mm edge position",
+      "assetPath": "assets/reverse.png",
+      "aspectRatio": 0.819672131147541,
+      "default": false,
+      "sourcePresentationID": "reverse",
+      "rotationDegrees": 180,
+      "geometryRotationAnchor": {
+        "x": 0.5,
+        "y": 0.6174863387978142
+      },
+      "availableHoldIDs": [
+        "edge-8"
+      ]
     }
   ],
   "holds": [

@@ -90,6 +90,121 @@ for each supported variation. Scope each hold record to the presentation whose
 image and canonical geometry it describes; do not split one physical product
 into separate catalog boards solely because its presentation changes.
 
+When multiple positions show the same physical face, keep one canonical face
+image and make each additional presentation an alias with
+`sourcePresentationID`. An alias may declare `rotationDegrees`, a finite
+clockwise in-plane rotation normalized to the half-open range `[0, 360)`, and
+may declare `geometryScale`, a finite positive uniform scale that defaults to
+`1`. These transforms compose around `geometryRotationAnchor` (the normalized
+canvas center when omitted). Artwork, hold geometry, markers, and all
+body-space cord geometry transform together, while world-space cord ports and
+the pull point or apex remain fixed under gravity; cord stroke styling remains
+scene-sized. `geometryRotationAnchor` is valid when either rotation is nonzero
+or scale differs from `1`.
+
+Any alias that explicitly declares `rotationDegrees` or `geometryScale` must
+reuse its canonical face's `assetPath`; this keeps one raster per physical
+face. The transformed geometry must remain inside the canvas. Explicit
+rotations other than 0 or 180 degrees require a `cordRig` on the canonical
+presentation so its padded scene prevents rotated artwork from being clipped;
+`geometryScale` itself does not require a rig.
+Do not declare both `rotationDegrees` and the legacy `isInverted` field;
+`isInverted: true` remains readable as 180 degrees only for compatibility,
+including older packages whose inverted alias used a distinct asset.
+
+A presentation may also declare `availableHoldIDs` when only part of its
+canonical face is usable in that orientation. The array must be nonempty,
+contain unique identifier-shaped hold IDs, and reference only existing holds
+owned by that presentation's canonical face. When the field is omitted, every
+hold on the canonical face remains available for backward compatibility.
+Rendering, highlighting, hit testing, position resolution, and Workbench's
+focused editor view all use this effective hold subset.
+
+A canonical presentation may own the compatible `directTwoAnchor` rig, a
+generalized `routed` cord rig, or an `externalSlidingLoop` rig. A routed rig
+retains `sceneSize`, `sourceFrame`, and `innerFaceFrame`, then declares these
+required fields:
+
+- `style`: positive finite `diameter`; `outlineColor`, `baseColor`, and exactly
+  two `braidColors`, each encoded as `#RRGGBB`. The diameter is measured in
+  source-frame units.
+- `ports`: unique identifier-shaped ports with `space` equal to `body` or
+  `world` and a finite `{x, y}` point.
+- `tensionGroups`: unique groups containing equally sized, nonempty, internally
+  unique `bodyPortIDs` and `worldPortIDs`; `pairing` is `declared` or
+  `screenOrder`, and `layer` is `behindFace`, `aboveFace`, or `overpass`.
+  `declared` pairs the two arrays by list index. `screenOrder` independently
+  stable-sorts the transformed body and world lists by screen x, then screen y,
+  then declaration index before pairing them by index.
+- `paths`: unique authored cord paths with a `body` or `world` space, a layer,
+  and path commands in the same array vocabulary as hold paths: `move`,
+  `line`, `quad`, `curve`, and optional terminal `close`. A path must contain
+  at least one `line`, `quad`, or `curve`; `move` followed only by `close` does
+  not draw a valid path.
+- `occlusions`: `radialLip` entries reference a body port and require
+  `0 < chordOffset < radius`, while `facePatch` entries contain a closed path.
+  A radial lip's body port must occur exactly once across every tension group's
+  `bodyPortIDs`, which gives the lip one unambiguous incident span. `radius` and
+  `chordOffset` are measured in source-frame units. A face patch has implicit
+  body space: all of its commands are source-frame-local and rotate with the
+  board.
+
+All four routed arrays are required in canonical JSON, including when `paths`
+or `occlusions` is empty. Every point and path coordinate is expressed in
+finite source-frame-local units: add `sourceFrame`'s origin to place it in the
+scene. Body-space geometry rotates with the board; world-space geometry stays
+fixed in that scene. For the canonical face and every alias, each paired body
+port must be strictly below its world port in screen coordinates after that
+transform (with a scene-proportional floating-point tolerance), so every
+tension span pulls upward under gravity.
+
+Routed centerline geometry must leave a safe inset of `0.8 * style.diameter`
+on all four scene edges. This applies after each presentation transform to
+every port used by a tension span and to every endpoint and control point of
+every authored cord path; keeping those defining points inside the inset also
+keeps each line, quadratic, and cubic convex hull inside it. Every transformed
+face-patch endpoint and control point must remain within the scene bounds (with
+no cord-style inset), and each transformed radial lip's full radius circle
+must remain within the scene.
+
+Render layers in this exact order: `behindFace` spans and paths, face artwork,
+`aboveFace` spans and paths, occlusion redraw, `overpass` spans and paths, hold
+highlights, then markers. Routed rigs follow the same canonical-presentation
+ownership, alias inheritance, scene-aspect, and PNG-to-`innerFaceFrame` aspect
+rules as `directTwoAnchor` rigs. Unknown rig, space, pairing, layer, command,
+and occlusion types are rejected.
+
+Use `externalSlidingLoop` only for one continuous sling that is free to slide
+and reseat around the outside of the board. In addition to `sceneSize`,
+`sourceFrame`, `innerFaceFrame`, and the routed `style` object, it declares:
+
+- `bodyContactFrame`: a finite, positive, source-frame-local rectangle around
+  the board perimeter contacted by the cord.
+- `cornerRadius`: a finite non-negative radius no greater than half the
+  contact frame's shorter side.
+- `clearance`: a finite non-negative gap between the board and cord surface.
+- `pullPoint`: the finite, source-frame-local world-fixed apex.
+
+At render time, the board contact frame rotates and scales with the canonical
+face. The cord centerline is offset from it by
+`style.diameter / 2 + clearance`; that offset and the cord diameter stay
+scene-sized rather than shrinking with `geometryScale`. The renderer resolves
+the two support tangencies toward the fixed apex, draws one joined pair of
+straight loaded legs behind the face, then follows the complementary lower
+perimeter arc between the contacts. This lower return is recomputed in screen
+space for every rotation, so it settles with gravity instead of rotating into
+the loaded legs. The apex is a simple joined angle: do not author or render a
+knot, ring, circle, or extra loop there.
+
+The expanded contact centerline and apex must retain the same
+`0.8 * style.diameter` scene inset as routed centerlines. The apex must remain
+outside and strictly above the entire transformed expanded contact shape for
+the canonical presentation and every alias. These constraints ensure both
+resolved legs pull upward and geometry fails validation rather than emitting a
+detached or crossing sling. An external sliding loop owns no ports, paths,
+occlusions, or per-alias cord overrides; one canonical rig supplies every
+rotation and scale of that physical face.
+
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the
 physical board is symmetric, and multiple pieces only for one genuinely

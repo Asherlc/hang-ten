@@ -11,7 +11,8 @@ POCKET+.
   straight 20 mm lip opposite one single centrally curved 20 mm lip in the
   same cavity, plus the source-charted outer jug.
 - UNLEVEL is the current 120 × 70 × 30 mm / 12 × 7 × 3 cm revision with curved
-  20 mm and 25 mm faces plus the source-charted outer jug.
+  20 mm and 25 mm faces, two source-charted 25/20 mm pocket orientations, and
+  the source-charted outer jug.
 - `captain-fingerfood.pocket` remains the stable physical identity for the
   110 × 66 × 29 mm two-depth POCKET revision. Its current presentation is
   explicitly the blue **POCKET Hangboard | Lines Edition** cosmetic colorway.
@@ -46,7 +47,7 @@ Product page: `https://en.captainfingerfood.rocks/products/unlevel-hangboard`
 
 | Evidence | First-party URL | SHA-256 | Mapping |
 | --- | --- | --- | --- |
-| Grip chart | `https://cdn.shopify.com/s/files/1/0602/4547/5542/files/UnlevelGriffe.jpg?v=1712754462` | `168c46c08f05d0aa13f9539068d58ae71825cf5fd0dbcb42ac2a736456867556` | Explicit 20/25 mm curved-face authority and explicit jug use on the top exterior band. |
+| Grip chart | `https://cdn.shopify.com/s/files/1/0602/4547/5542/files/UnlevelGriffe.jpg?v=1712754462` | `168c46c08f05d0aa13f9539068d58ae71825cf5fd0dbcb42ac2a736456867556` | Explicit 20/25 mm curved-face authority, explicit jug use on the top exterior band, and two explicit 25/20 mm pocket orientations. The package maps those two orientations to `vertical-pocket-left-end` and `vertical-pocket-right-end`; the left/right names are app-specific stable IDs for the physical end exposed by each rotation. |
 | Title image | `https://cdn.shopify.com/s/files/1/0602/4547/5542/files/Titelbild.jpg?v=1739704654` | `7eb711b6b28284a86835b7a460559f5ec80f9816bc691e2823982d98e1b0d813` | Exact body construction and finish. |
 | Gallery P1 | `https://cdn.shopify.com/s/files/1/0602/4547/5542/files/UnlevelP1.jpg?v=1739708294` | `ad5f5ace4d71475fb9b8f546d52bc63305868953898baf7aef67e966a571475f` | 20 mm face corroboration. |
 | Gallery P2 | `https://cdn.shopify.com/s/files/1/0602/4547/5542/files/UnlevelP2.jpg?v=1712652284` | `75432a1c60bb6f2c735107551b52fff94fde6f2ae2f0a34a96b90c300ee416e9` | 25 mm face corroboration. |
@@ -120,6 +121,8 @@ automatic path simplification was used.
 | `captain-fingerfood-dual` | `reverse` | `curved-edge-20` follows the one single centrally bowed lower cavity lip; the opposing far lip is straight. |
 | `captain-fingerfood-unlevel` | `primary` | `curved-edge-20` follows the visible upper curved contact face; `outer-jug` follows only the narrow top exterior body band, excluding the cavity and edge lip. |
 | `captain-fingerfood-unlevel` | `reverse` | `curved-edge-25` follows the visible lower curved contact face. |
+| `captain-fingerfood-unlevel` | `vertical-pocket` | `vertical-pocket-right-end` follows the physical right-end cavity contact exposed by the 90° rotation and maps to one of the grip chart's two explicit 25/20 mm pocket orientations. |
+| `captain-fingerfood-unlevel` | `vertical-pocket-reversed` | `vertical-pocket-left-end` follows the physical left-end cavity contact exposed by the 270° rotation and maps to the other explicit 25/20 mm pocket orientation in the same grip chart. |
 | `captain-fingerfood-pocket` | `primary` | `edge-15` and `edge-20` follow distinct opposing cavity lips; `jug-outer-rim` follows the single source-supported continuous U-shaped outer contact. There is no separate `pinch-body`. |
 
 The previous POCKET `outer` presentation and `assets/outer.png` were removed:

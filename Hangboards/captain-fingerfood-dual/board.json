@@ -15,17 +15,162 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Straight face",
+      "name": "Straight 20 mm",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
-      "default": true
+      "default": true,
+      "availableHoldIDs": [
+        "straight-edge-20",
+        "outer-jug"
+      ],
+      "cordRig": {
+        "type": "routed",
+        "sceneSize": {
+          "width": 1536,
+          "height": 1024
+        },
+        "sourceFrame": {
+          "x": 0,
+          "y": 0,
+          "width": 1536,
+          "height": 1024
+        },
+        "innerFaceFrame": {
+          "x": 256,
+          "y": 170.6666666667,
+          "width": 1024,
+          "height": 682.6666666667
+        },
+        "style": {
+          "diameter": 14,
+          "outlineColor": "#6C2600",
+          "baseColor": "#D95708",
+          "braidColors": [
+            "#FF9A1F",
+            "#CBD0D2"
+          ]
+        },
+        "ports": [
+          {
+            "id": "left-through-hole",
+            "space": "body",
+            "point": {
+              "x": 593,
+              "y": 508
+            }
+          },
+          {
+            "id": "right-through-hole",
+            "space": "body",
+            "point": {
+              "x": 937,
+              "y": 508
+            }
+          },
+          {
+            "id": "support-left-exit",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 42
+            }
+          },
+          {
+            "id": "support-right-exit",
+            "space": "world",
+            "point": {
+              "x": 768,
+              "y": 42
+            }
+          }
+        ],
+        "tensionGroups": [
+          {
+            "id": "world-up-support",
+            "bodyPortIDs": [
+              "left-through-hole",
+              "right-through-hole"
+            ],
+            "worldPortIDs": [
+              "support-left-exit",
+              "support-right-exit"
+            ],
+            "pairing": "screenOrder",
+            "layer": "aboveFace"
+          }
+        ],
+        "paths": [
+          {
+            "id": "hidden-return-bight",
+            "space": "body",
+            "layer": "behindFace",
+            "commands": [
+              {
+                "command": "move",
+                "to": [593, 508]
+              },
+              {
+                "command": "curve",
+                "control1": [600, 548],
+                "control2": [720, 570],
+                "to": [768, 570]
+              },
+              {
+                "command": "curve",
+                "control1": [816, 570],
+                "control2": [930, 548],
+                "to": [937, 508]
+              }
+            ]
+          }
+        ],
+        "occlusions": [
+          {
+            "type": "radialLip",
+            "bodyPortID": "left-through-hole",
+            "radius": 14,
+            "chordOffset": 5
+          },
+          {
+            "type": "radialLip",
+            "bodyPortID": "right-through-hole",
+            "radius": 14,
+            "chordOffset": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "vertical-pocket",
+      "name": "20 mm pocket",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 90,
+      "geometryRotationAnchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "availableHoldIDs": [
+        "pocket-20"
+      ]
     },
     {
       "id": "reverse",
-      "name": "Curved face",
-      "assetPath": "assets/reverse.png",
+      "name": "Curved 20 mm",
+      "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
-      "default": false
+      "default": false,
+      "sourcePresentationID": "primary",
+      "rotationDegrees": 180,
+      "geometryRotationAnchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "availableHoldIDs": [
+        "curved-edge-20"
+      ]
     }
   ],
   "holds": [
@@ -295,107 +440,69 @@
       ]
     },
     {
+      "id": "pocket-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.775,
+            "y": 0.384,
+            "width": 0.064,
+            "height": 0.232
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.0, 0.12] },
+              { "command": "curve", "control1": [0.0, 0.05], "control2": [0.14, 0.0], "to": [0.3, 0.0] },
+              { "command": "line", "to": [0.7, 0.0] },
+              { "command": "curve", "control1": [0.86, 0.0], "control2": [1.0, 0.05], "to": [1.0, 0.12] },
+              { "command": "line", "to": [1.0, 0.88] },
+              { "command": "curve", "control1": [1.0, 0.95], "control2": [0.86, 1.0], "to": [0.7, 1.0] },
+              { "command": "line", "to": [0.3, 1.0] },
+              { "command": "curve", "control1": [0.14, 1.0], "control2": [0.0, 0.95], "to": [0.0, 0.88] },
+              { "command": "line", "to": [0.0, 0.12] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 20
+    },
+    {
       "id": "curved-edge-20",
       "equipmentObjectID": "primary",
       "name": "20 mm curved edge",
       "kind": "edge",
       "handCapacity": 1,
-      "presentationID": "reverse",
+      "presentationID": "primary",
       "geometry": [
         {
           "frame": {
             "x": 0.17,
-            "y": 0.598,
+            "y": 0.326,
             "width": 0.66,
-            "height": 0.104
+            "height": 0.112
           },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.48
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.16,
-                  0.48
-                ],
-                "control2": [
-                  0.34,
-                  0.0
-                ],
-                "to": [
-                  0.5,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.66,
-                  0.0
-                ],
-                "control2": [
-                  0.84,
-                  0.48
-                ],
-                "to": [
-                  1.0,
-                  0.48
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.84,
-                  1.0
-                ],
-                "control2": [
-                  0.66,
-                  0.55
-                ],
-                "to": [
-                  0.5,
-                  0.55
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.34,
-                  0.55
-                ],
-                "control2": [
-                  0.16,
-                  1.0
-                ],
-                "to": [
-                  0.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.48
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.0, 0.52] },
+              { "command": "curve", "control1": [0.16, 0.52], "control2": [0.34, 1.0], "to": [0.5, 1.0] },
+              { "command": "curve", "control1": [0.66, 1.0], "control2": [0.84, 0.52], "to": [1.0, 0.52] },
+              { "command": "line", "to": [1.0, 0.0] },
+              { "command": "curve", "control1": [0.84, 0.0], "control2": [0.66, 0.45], "to": [0.5, 0.45] },
+              { "command": "curve", "control1": [0.34, 0.45], "control2": [0.16, 0.0], "to": [0.0, 0.0] },
+              { "command": "line", "to": [0.0, 0.52] },
+              { "command": "close" }
             ]
           },
           "treatment": {
