@@ -18,13 +18,14 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     func testMaxHangsStepOneExposesIndividualHandCuesAndCapturesDiagnosticScreenshot() throws {
         let leftHandCue = app.otherElements["workout.gripCue.left"]
         let rightHandCue = app.otherElements["workout.gripCue.right"]
-        let leftFingerIndicator = app.staticTexts["P+R+M+I"]
-        let rightFingerIndicator = app.staticTexts["I+M+R+P"]
-
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))
         XCTAssertTrue(rightHandCue.waitForExistence(timeout: 10))
-        XCTAssertTrue(leftFingerIndicator.waitForExistence(timeout: 10))
-        XCTAssertTrue(rightFingerIndicator.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["workout.gripCue.left.model"].exists)
+        XCTAssertTrue(app.buttons["workout.gripCue.right.model"].exists)
+        XCTAssertTrue(leftHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
+        XCTAssertTrue(rightHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
+        XCTAssertFalse(app.staticTexts["P+R+M+I"].exists)
+        XCTAssertFalse(app.staticTexts["I+M+R+P"].exists)
 
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "Diagnostic screenshot: Max Hangs step 1 landscape grip cues"

@@ -60,6 +60,8 @@ color to fingers while preserving a soft transition into the neutral palm.
 Actions are `Neutral`, `OpenHand`, `HalfCrimp`, `FullCrimp`, `Sloper`, and
 `Pocket0` through `Pocket15`. Pocket bits are index=1, middle=2, ring=4, pinky=8.
 A nonempty selection keeps those fingers open and curls only unused fingers.
+Pocket contact controls are independent from the `OpenHand` illustration, so
+refining its index bend does not change any pocket selection.
 `Pocket0` uses the all-open surface for unknown metadata, with no highlighted
 fingers supplied by the app. Pocket count never implies a particular finger pair.
 All thumb bones remain relaxed at their supplied rest transforms in every pose.
@@ -67,7 +69,11 @@ All thumb bones remain relaxed at their supplied rest transforms in every pose.
 ## Pose evidence and limits
 
 Page 11 of [Lattice's home-adaptation guide](https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf)
-informs the broad open-hand and half-crimp shapes. The half-crimp uses bent PIP joints on all four fingers and a relaxed thumb.
+informs the broad open-hand and half-crimp shapes. The open-hand illustration
+adds a gentle, visible index middle-joint bend requested during visual review;
+this is an explicitly illustrative adaptation of the source, whose index is
+described as straight or nearly straight. The half-crimp uses bent PIP joints
+on all four fingers and a relaxed thumb.
 Index/middle/ring retain the reviewed prototype's fitted pad positions. The pinky
 uses a visibly bent illustrative posture requested during review, with its base
 rotation adjusted to meet the same support plane. Numerical rotations include the
@@ -76,7 +82,9 @@ measurements or training prescriptions. The prototype's common support-plane
 fit is a visual construction, not a contact simulation.
 
 `FullCrimp` is an illustrative tighter finger posture with the thumb deliberately
-relaxed to match the requested presentation. It does not reproduce the thumb
+relaxed to match the requested presentation. More closed middle joints and
+modest distal extension create a lower fingertip profile, distinguishing it from
+the half-crimp's flatter shelf. It does not reproduce the thumb
 wrap in Lattice's full-crimp photograph. Sloper and pocket poses are also
 illustrative shape adaptations for existing app grip types. No routine metadata,
 exercise prescription, or coaching text is added by this asset.

@@ -59,12 +59,17 @@ def bend(digit, suffix, degrees, spread=0):
 # These are illustrative artist controls, NOT measured anatomical joint angles.
 # HalfCrimp keeps the shared support-plane fit and clearly bends all four fingers.
 HALF = [(2,84,0,-2),(1.75,91,0,-1),(-2,75,0,6),(-10.75,60,0,10)]
-OPEN = [(8,12,8,-2),(8,40,8,-1),(8,35,8,6),(12,8,5,10)]
-FULL = [(12,100,8,-2),(12,105,8,-1),(10,100,8,6),(16,65,8,10)]
+POCKET_OPEN = [(8,12,8,-2),(8,40,8,-1),(8,35,8,6),(12,8,5,10)]
+# The open-hand index has a visible, gentle middle-joint bend. Pocket contact
+# controls stay independent so this illustration change cannot alter selections.
+OPEN = [(8,35,8,-2),(8,40,8,-1),(8,35,8,6),(12,8,5,10)]
+# Tighter middle joints and modest distal extension distinguish the full crimp
+# from the flatter half-crimp shelf while keeping the thumb at rest.
+FULL = [(8,118,-15,-2),(8,120,-15,-1),(6,115,-15,6),(8,95,-12,10)]
 SLOPER = [(18,22,12,-2),(18,26,12,-1),(18,24,12,6),(18,20,10,10)]
 TUCKED = [(55,78,28,-2),(55,78,28,-1),(55,78,28,6),(55,78,28,10)]
 poses = {"Neutral": [(0,0,0,0)]*4, "OpenHand": OPEN, "HalfCrimp": HALF, "FullCrimp": FULL, "Sloper": SLOPER}
-for mask in range(16): poses[f"Pocket{mask}"] = [OPEN[i] if mask == 0 or mask & (1 << i) else TUCKED[i] for i in range(4)]
+for mask in range(16): poses[f"Pocket{mask}"] = [POCKET_OPEN[i] if mask == 0 or mask & (1 << i) else TUCKED[i] for i in range(4)]
 rig.animation_data_create()
 for name, controls in poses.items():
     rig.animation_data.action = bpy.data.actions.new(name)

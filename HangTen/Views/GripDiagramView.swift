@@ -116,12 +116,14 @@ struct GripHandCueCard: View {
                 .foregroundStyle(Color.hangMuted)
                 .lineLimit(1)
                 .minimumScaleFactor(0.68)
-            Text(fingerConfiguration == nil ? "Fingers not specified" : visibleFingerLabel)
-                .font(.system(size: 10, weight: .semibold, design: .rounded))
-                .foregroundStyle(fingerConfiguration == nil ? Color.hangMuted : Color.holdActiveDeep)
-                .lineLimit(1)
-                .minimumScaleFactor(0.68)
-                .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
+            if fingerConfiguration == nil {
+                Text("Fingers not specified")
+                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.68)
+                    .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 8)
@@ -137,18 +139,6 @@ struct GripHandCueCard: View {
         .sheet(isPresented: $showsModel) {
             GripHandModelInspector(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
         }
-    }
-
-    var visibleFingerSlots: [FingerSlot] {
-        side == .left ? Array(FingerSlot.allCases.reversed()) : FingerSlot.allCases
-    }
-
-    var visibleFingerLabel: String {
-        guard let fingerConfiguration else { return "" }
-        return visibleFingerSlots
-            .filter(fingerConfiguration.engagedFingers.contains)
-            .map(\.shortLabel)
-            .joined(separator: "+")
     }
 
     private var accessibilityLabel: String {
@@ -173,15 +163,6 @@ extension GripCueSide {
 }
 
 private extension FingerSlot {
-    var shortLabel: String {
-        switch self {
-        case .index: "I"
-        case .middle: "M"
-        case .ring: "R"
-        case .pinky: "P"
-        }
-    }
-
     var displayName: String {
         switch self {
         case .index: "index"
