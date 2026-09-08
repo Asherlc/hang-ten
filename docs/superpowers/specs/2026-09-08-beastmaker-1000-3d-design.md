@@ -1,441 +1,328 @@
-# Beastmaker 1000 Interactive 3D Display Design
+# Model-first board packages: Beastmaker 1000 and Wood Grips Compact II
 
-**Status:** Superseded by the revised user-approved contract below on 2026-09-08.
-The original design after this section is retained as historical context, not
-as implementation authority where it conflicts with this revision.
+**Status:** approved architecture specification. This replaces all earlier
+conflicting design text in this document.
 
-## Revised contract
+## Scope and principles
 
-The draft comparison precedes production integration. Compare independently
-authored candidates using identical evidence, briefs, cameras, and lights;
-isolate candidate code/artifacts and do not share candidate work. Inspect front,
-oblique, clay, and detail views before selecting, recording render-engine
-differences. Generic original wood is acceptable: species-specific tulipwood
-fidelity is no longer required.
+Migrate exactly `beastmaker-1000` and `metolius.wood-grips-compact-ii` to a
+model-first package. A migrated package owns a USDZ and a generated model
+descriptor; it removes its PNG, canonical 2D paths, raster fallback, and any
+separate app resource. Unrelated boards retain raster packages and remain
+editable in Workbench.
 
-The later migration covers both Beastmaker 1000 and the previously migrated
-Wood Grips Compact II. Remove their raster presentations and canonical 2D hold
-geometry in full. `board.json` retains physical identity, source-backed logical
-holds, equipment, positions, and stable IDs; byte-for-byte preservation is no
-longer required. Explicitly tagged raster/model presentations allow unrelated
-raster boards to coexist. Each migrated package owns its required USDZ and an
-explicit mesh-to-logical-hold-ID binding, including disconnected mesh pieces
-that share an ID. Mesh geometry alone drives rendering, highlighting, and
-picking; do not maintain parallel raster paths or hand-edited spatial bounds.
+Logical board/hold data is distinct from presentation geometry. A model is the
+sole source for its rendering, highlighting, picking, and display-derived
+matching geometry. This is display geometry, not manufacturing CAD. Screw
+holes, mounting holes, and hardware are deliberately omitted from every model.
 
-Derive workout-matching centers and bounds from the mesh in a defined board
-coordinate frame, optionally through a build-generated index bound to the model
-hash so catalog loading need not eagerly decode USDZ. Separate camera
-configuration from physical metadata; estimated geometry must not silently
-become physical dimensions. Support model media in package validation, staging,
-and sync. Workbench explicitly disables unsupported model geometry editing
-without reconstructing raster geometry. Missing or malformed USDZ is a
-validation/build defect; runtime failure shows an explicit unavailable state,
-with no raster fallback for a migrated board.
+For Beastmaker, the 580 × 150 mm face is sourced. The model uses 58 mm depth
+from current Beech/shared-layout evidence: the current Tulipwood page's `5 mm`
+text conflicts and is not treated as an exact Tulipwood thickness claim. A
+generic original pale-wood material is sufficient. Source reports must separate
+these facts from estimated positions, radii, cavity sections, and profiles.
 
-The reusable authority is the updated
-[`migrate-hangboard-to-3d` skill](../../../.codex/skills/migrate-hangboard-to-3d/SKILL.md).
-Existing source audits remain evidence for physical metadata; the historical
-byte-preservation, fallback, and mandatory-species requirements below do not
-apply.
+## Package schema
 
-## Goal
+The root `board.json` is `schemaVersion: 2`. It contains only logical board and
+hold metadata, equipment, positions, transitions, and tagged presentations.
+Hold metadata has neither `presentationID` nor render geometry.
 
-Add a faithful, interactive 3D display for the current bundled tulipwood
-Beastmaker 1000 while keeping the existing package, canonical selection
-geometry, and 2D rendering path intact. The target is the exact package and
-runtime identity `beastmaker-1000`, with overall display-model dimensions of
-**580 × 150 × 58 mm** and exactly **22 selectable physical contacts**.
+Every presentation has common `id`, `name`, `isDefault`, `aspectRatio`, and
+`derivation` fields plus `media`. `media.type` is a tagged union:
 
-The first deliverable is a visual checkpoint, not an app-integrated asset. It
-must make the model's silhouette, recesses, contact partitions, and surface
-continuity cheap to reject or refine before final texture baking, export, and
-iOS integration.
+- `raster`: `assetPath` names a confined PNG; `holdGeometry` maps logical
+  `holdID` values to path pieces.
+- `model`: `assetPath` names a confined USDZ; `descriptorPath` names its
+  generated descriptor; `display` supplies camera configuration.
 
-## Fixed product and compatibility contract
+All packages migrate explicitly. Derived or inverted model media is rejected
+until a later typed capability defines it; no renderer infers a safe model
+variant from a base presentation.
 
-- Preserve [`Hangboards/beastmaker-1000/board.json`](../../../Hangboards/beastmaker-1000/board.json)
-  byte-for-byte unless a separately approved package task is opened. Its ID,
-  hold records, names, metadata, normalized paths, path commands, constraints,
-  presentation ownership, and stable identities remain canonical.
-- Preserve [`Hangboards/beastmaker-1000/assets/primary.png`](../../../Hangboards/beastmaker-1000/assets/primary.png)
-  as the primary presentation and retain it for the editor and every 2D
-  fallback state. The 3D model does not replace, redraw, or become an input to
-  the PNG or its paths.
-- Preserve all existing saved hold IDs and training-plan references. The 3D
-  contact meshes are display/picking partitions that map back to those IDs;
-  they are not new logical holds.
-- Support only the unmodified bundled board's original, default, non-inverted
-  `primary` presentation. Edited copies, other revisions, alternate or derived
-  presentations, and inverted presentations remain 2D.
-- Omit every screw hole, mounting hole, countersink, fastener, and item of
-  mounting hardware. Reports and documentation must describe this as a
-  deliberate display simplification and must not imply that the physical
-  Beastmaker product lacks six installation openings/screws.
-- Use the product's tulipwood appearance. The export must use an original
-  procedural/baked tulipwood material, not copied pixels or grain from a source
-  photograph and not the Beech variant's material.
-
-## Evidence and modeling authority
-
-Existing audits are the provenance record; this migration does not restart
-broad web research or promote a photograph into geometry.
-
-| Claim used by the model | Repository audit | Recorded source |
-| --- | --- | --- |
-| Exact tulipwood Beastmaker 1000 identity, 580 × 150 mm face, grouped jug/sloper/contact inventory, and official front appearance | [`2026-08-12-beastmaker-board-packages.md`](../../source-audits/2026-08-12-beastmaker-board-packages.md) | [Official Beastmaker 1000 product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series) and [official tulipwood front image](https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068) |
-| Source-audited 58 mm overall thickness | [`2026-08-19-all-board-metadata-hold-audit.md`](../../source-audits/2026-08-19-all-board-metadata-hold-audit.md) | [Official Beastmaker FAQ](https://www.beastmaker.co.uk/pages/faq) and the [official Beech variant page](https://www.beastmaker.co.uk/products/beastmaker-1000-beech), used only as cross-variant corroboration for the shared 58 mm depth |
-| 580 × 150 × 58 mm wood layout, identical Beech/tulipwood hold layout, symmetric front face, and six real installation openings | [`2026-08-30-hangboard-presentation-remediation.md`](../../source-audits/2026-08-30-hangboard-presentation-remediation.md) | [Independent Beastmaker 1000 review](https://thehangboard.com/blogs/news/beastmaker-1000-review), corroborating rather than overriding first-party evidence |
-| Positioned contact kinds and exact source-backed sizes already accepted into the package | [`2026-08-12-beastmaker-board-packages.md`](../../source-audits/2026-08-12-beastmaker-board-packages.md) and [`2026-08-25-hangboard-metadata-ledger.json`](../../source-audits/2026-08-25-hangboard-metadata-ledger.json) | [Official product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series) where available, then the recorded [positioned comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000) where it does not conflict with primary evidence |
-
-The 58 mm value belongs in the model and its provenance report even though the
-current flat package deliberately exposes only `dimensions: "580 × 150 mm"`.
-This migration must not backfill the package field. The Beech page corroborates
-thickness and layout only; it is not evidence for this package's identity,
-color, or material.
-
-### Sourced dimensions versus estimates
-
-The following values are sourced and may be asserted as exact in the model
-report:
-
-- overall bounds: 580 mm wide, 150 mm high, and 58 mm front-to-back;
-- paired top outer edges: 10 mm;
-- paired top edges: 30 mm;
-- paired middle outer and inner contacts: 45 mm;
-- paired middle two-finger pockets and the middle center edge: 50 mm;
-- paired bottom outer and inner contacts: 20 mm; and
-- paired bottom two-finger pockets: 25 mm.
-
-The 10 mm value follows the first-party value retained by the audit despite a
-conflicting 15 mm secondary label. These values describe the accepted contact
-sizes in `board.json`; the build report must state the authored measurement
-datum used to express each as a recess/edge section instead of presenting that
-datum as manufacturer CAD.
-
-Exact aperture positions and widths, lip and corner radii, jug rolls, sloper
-sections, transition curves, recess wall/back profiles, back-face details,
-edge rollover, and wood-grain realization are **visual display estimates**.
-The 35° pair and 20° center sloper labels are source-backed angles, not pocket
-depths. Every estimated parameter must be grouped separately from sourced
-measurements in `model-report.json`; no report may flatten both categories into
-an undifferentiated dimensions list.
-
-## Canonical selectable inventory
-
-The model consumes the current `board.json` inventory at build and verification
-time and must contain these 22 IDs exactly:
-
-- top contacts: `jug-left`, `jug-right`, `sloper-35-left`,
-  `sloper-35-right`, `sloper-center`;
-- top row: `pocket-top-outer-left`, `pocket-top-outer-right`,
-  `pocket-top-left`, `pocket-top-right`;
-- middle row: `pocket-middle-outer-left`, `pocket-middle-mid-left`,
-  `pocket-middle-inner-left`, `pocket-middle-center`,
-  `pocket-middle-inner-right`, `pocket-middle-mid-right`,
-  `pocket-middle-outer-right`; and
-- bottom row: `pocket-bottom-outer-left`, `pocket-bottom-mid-left`,
-  `pocket-bottom-inner-left`, `pocket-bottom-inner-right`,
-  `pocket-bottom-mid-right`, `pocket-bottom-outer-right`.
-
-Historical `pocket-*` prefixes are stable identities, not permission to ignore
-the current audited `kind`. Contact surface construction must follow the
-current `edge`, `pocket`, `jug`, or `sloper` metadata and evidence mapping.
-
-## Geometry and material design
-
-Author the board as a full-depth analytic model in meters, with X across the
-580 mm width, Z across the 150 mm height, and the working face oriented
-consistently with the Compact II export convention. This is not a shallow
-extrusion of the primary PNG or canonical paths.
-
-The model must include:
-
-- a directly authored outer silhouette, full 58 mm body section, front and back
-  transitions, and rounded perimeter appropriate to the reviewed product;
-- true carved/recessed geometry for every front edge and pocket, including
-  mouth fillets, continuous sidewalls, and back transitions rather than dark
-  decals or coplanar overlays;
-- directly authored curved jug and sloper surfaces, including the paired 35°
-  and center 20° working surfaces, with enough section samples to remain smooth
-  in a close mobile oblique view;
-- one exportable body mesh and one independently material-addressable contact
-  mesh for each physical contact; and
-- an original 2048 × 2048 tulipwood PBR base-color atlas with restrained grain,
-  matte roughness, and complete material assignment on the body and contacts.
-
-Author one side and mirror it exactly for genuinely symmetric paired geometry,
-swapping the left/right canonical IDs after mirroring. Author center geometry
-independently. Do not idealize asymmetry that evidence establishes as physical,
-but do not copy incidental grain, lighting, lens distortion, or manufacturing
-variation from a photographed specimen.
-
-Do not use image-driven hold detection, tracing, segmentation, generated masks
-or contours, source registration/alignment, vectorization, automatic path
-simplification, automatic cropping, or proposal/refine/promote geometry. The
-operator selects analytic coordinates and sections by visually reviewing the
-existing evidence. The existing canonical paths are an identity and alignment
-cross-check only; they are not automatically extruded or converted into the 3D
-mesh.
-
-## First-pass review gate
-
-The first pass must already have the full silhouette, real recess topology,
-curved top contacts, all 22 contact partitions, and a provisional original
-tulipwood shader. Before final texture baking, GLB/USDZ export, native testing,
-or app integration, render and present:
-
-1. a centered orthographic `front.png`;
-2. a lit `three-quarter.png` that makes overall depth and top sections legible;
-3. a texture-free close `clay-detail.png` exposing pocket mouths, backs,
-   fillets, normals, and surface continuity; and
-4. an all-contact review consisting of a numbered overview/contact sheet plus
-   22 individual highlight renders, one for every canonical ID.
-
-The first-pass report records the Blender source hash and binds every highlight
-image to that hash. Review can reject silhouette, depth profiles, continuity,
-material, or contact partitions independently. A rejection returns to analytic
-authoring and regenerates only invalidated views. No Beastmaker USDZ is copied
-into the app bundle until this gate is explicitly accepted.
-
-## Workspace artifacts and ownership
-
-All generated source, evidence copies, renders, exports, and reports live under
-`.context/shaky-rat-beastmaker-1000-3d/`. The build creates
-`ownership.json` before other output with at least:
+### Model presentation example
 
 ```json
 {
-  "owner": "shaky-rat",
-  "resource": "beastmaker-1000-3d",
-  "path": ".context/shaky-rat-beastmaker-1000-3d"
+  "id": "primary",
+  "name": "Beastmaker 1000 3D",
+  "isDefault": true,
+  "aspectRatio": 3.866666667,
+  "derivation": { "type": "original" },
+  "media": {
+    "type": "model",
+    "assetPath": "assets/primary.usdz",
+    "descriptorPath": "assets/primary.model.json",
+    "display": {
+      "camera": {
+        "type": "orthographic",
+        "viewDirection": [0, 0, -1],
+        "up": [0, 1, 0],
+        "fitPadding": 0.08
+      }
+    }
+  }
 }
 ```
 
-The complete reviewed output set is:
+### Raster presentation example
 
-- editable `beastmaker-1000.blend`;
-- `beastmaker-1000.glb` and `beastmaker-1000.usdz`;
-- original baked texture assets;
-- `front.png`, `three-quarter.png`, `clay-three-quarter.png`, and
-  `clay-detail.png`;
-- `highlights/` with its overview, contact sheet, 22 individual images,
-  `index.html`, and report;
-- isolated `glb-roundtrip.png`, `usdz-roundtrip.png`, and corresponding clay
-  detail views;
-- `model-report.json`, `export-verification.json`, and a native SceneKit
-  verification report; and
-- source/export/bundle SHA-256 values and the evidence-to-parameter mapping.
-
-Build scripts create no external resources. Any later simulator or process
-used for validation must use a workspace-owned name containing `shaky-rat`, be
-recorded immediately, and be removed by the owning process's exit trap without
-touching shared or unknown resources.
-
-## Tooling and export verification
-
-Use [`Tools/HangboardModels/wood_grips_compact_ii.py`](../../../Tools/HangboardModels/wood_grips_compact_ii.py),
-[`verify_wood_grips_compact_ii.py`](../../../Tools/HangboardModels/verify_wood_grips_compact_ii.py),
-and [`render_hold_highlights.py`](../../../Tools/HangboardModels/render_hold_highlights.py)
-as structural precedents. Add a Beastmaker-specific generator and verifier;
-parameterize shared highlight/report behavior where that removes fixed Compact
-II assumptions without weakening Compact II regressions.
-
-The editable source and GLB should preserve canonical `hold_id` custom
-properties. USD prim-name normalization may replace hyphens with underscores,
-but the custom property and the runtime's inventory-bounded normalization must
-still resolve the original ID. Add temporary triangulation only for USDZ
-export so SceneKit cannot fill Boolean cap n-gons; remove those modifiers from
-the editable source after export.
-
-For each actual GLB and USDZ, the verifier must open a clean scene, remove all
-source-scene materials and images, import only the exported artifact, and then
-assert:
-
-- bounds of 0.580 × 0.058 × 0.150 m within the existing one-micrometer
-  round-trip tolerance and with the expected axis order;
-- exactly 22 unique canonical contact IDs and no missing or unknown ID;
-- normally 23 meshes: one body plus one mesh per physical contact. A genuinely
-  disconnected contact may use multiple meshes only when the report names the
-  ID, explains the physical need, and the verifier adjusts the mesh count while
-  retaining exactly 22 selectable IDs;
-- nonempty geometry and image-backed material coverage on every exported mesh;
-- a loaded embedded 2048-pixel tulipwood atlas rather than an accidental
-  dependency on the source `.blend`;
-- fewer than 150,000 triangles, with the actual total recorded;
-- explicit triangle faces in USDZ; and
-- visually continuous silhouette, pocket openings, pocket backs, jugs, and
-  slopers in the round-trip and clay-detail renders.
-
-The final reviewed USDZ is copied to
-`HangTen/Resources/BoardModels/beastmaker-1000.usdz` only after the first-pass
-gate and export verification pass. Source and destination SHA-256 values must
-match before it is committed.
-
-## Runtime architecture and data flow
-
-Generalize the single-board code in
-[`HangTen/Views/BoardModelView.swift`](../../../HangTen/Views/BoardModelView.swift)
-into a small, explicit model registry. Do not duplicate the SceneKit renderer.
-Each registry descriptor owns:
-
-- the exact canonical board ID;
-- USDZ resource name and extension;
-- exact expected hold-ID set;
-- camera target and portrait/landscape framing values; and
-- board-level accessibility label.
-
-The registry initially has two descriptors: the existing
-`metolius.wood-grips-compact-ii` entry and the new `beastmaker-1000` entry.
-The Beastmaker descriptor uses resource name `beastmaker-1000`, bounds
-580 × 150 × 58 mm, a model center at `(0, 0.075, 0.029)` after SceneKit's
-Y-up conversion, 8% fit padding, and accessibility label
-`"Beastmaker 1000 hangboard"`. The Compact II descriptor retains resource name
-`wood-grips-compact-ii`, its existing camera target and appearance, and label
-`"Wood Grips Compact II hangboard"`. Framing computes the orthographic scale
-from the descriptor's width/height and the live view aspect ratio, then applies
-the descriptor padding; it does not special-case a board ID inside the view.
-Matching requires equality with the currently bundled canonical board plus its
-original default primary presentation, a nil source presentation, non-inverted
-orientation, and exact inventory. Registry keys, cache keys, and SwiftUI task
-identity must use the descriptor identity rather than one global board ID.
-
-Data flows as follows:
-
-```text
-board + presentation
-  -> exact registry match or 2D fallback
-  -> descriptor-keyed asynchronous source-scene cache
-  -> isolated scene/node/material clone
-  -> material + exact inventory validation
-  -> descriptor-specific camera, framing, and accessibility label
-  -> highlight/accessibility projection/nearest-triangle tap handling
+```json
+{
+  "id": "primary",
+  "name": "Original front",
+  "isDefault": true,
+  "aspectRatio": 3.861003861,
+  "derivation": { "type": "original" },
+  "media": {
+    "type": "raster",
+    "assetPath": "assets/primary.png",
+    "holdGeometry": {
+      "hold-a": [{ "path": { "commands": [{ "command": "move", "to": [0, 0] }] } }]
+    }
+  }
+}
 ```
 
-The 2D fallback remains visible while a model loads. When board or presentation
-identity changes, clear any stale model immediately, cancel or disregard the
-old task result, and bind the replacement scene **and its camera** only if its
-descriptor still matches. Source-scene decoding remains asynchronous and
-cached per descriptor, including an isolated cached failure. Each rendered
-view receives cloned geometry/materials so highlights never leak between cards
-or model identities. Rendering remains on demand.
+The raster snippet is structural: actual path commands remain package data, and
+only raster media may contain them. `display.camera` belongs to the presentation,
+not board or hold physical metadata. Runtime derives camera target and scale
+from validated model bounds and `fitPadding`.
 
-Highlights accept only IDs in the active descriptor. Preview uses the existing
-rest-blue semantics, active uses the existing active color, and clearing
-restores the exact cloned tulipwood materials. The accessibility container uses
-the descriptor's board label when taps are unavailable and stable per-hold
-buttons/labels when taps are enabled.
+### Generated descriptor example
 
-Nearest-hit picking remains native SceneKit triangle picking. Body and unknown
-nodes never produce a hold callback. A CPU-only native regression flushes the
-SceneKit transaction and fires a parallel head-on ray through a valid interior
-sample for **every one of the 22 contacts**; the nearest result must resolve to
-that exact canonical ID, not the body or a neighboring contact.
+```json
+{
+  "schemaVersion": 1,
+  "modelSHA256": "4a50f2b98dd2c0e974ba44bb0514b6a2ccde1faa3ef2b06c5e20173f6ba9d45b",
+  "compilerVersion": "hang-ten-model-compiler/1",
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": { "min": [0, 0, 0], "max": [0.58, 0.15, 0.058] },
+  "nodes": [
+    { "nodeID": "Board/Body", "role": "body" },
+    { "nodeID": "Board/Hold/JugLeft", "role": "hold", "holdID": "jug-left" }
+  ],
+  "holds": {
+    "jug-left": {
+      "facePlaneAABB": { "min": [0.012345678, 0.101234567], "max": [0.145678901, 0.149999999] },
+      "center": [0.079012289, 0.125617283]
+    }
+  }
+}
+```
 
-## Error and fallback behavior
+`assets/primary.model.json` is generated, never manually edited. It binds the
+actual importer-visible USD node IDs to logical identities and indexes
+display-derived workout matching data. Every exact importer-visible geometry
+node appears once: its role is `body` or `hold`; `hold` requires `holdID`.
+Repeated `holdID` values are valid for genuinely disconnected pieces. Every
+logical hold has at least one node, all geometry is bound, body is
+nonselectable, and no `decoration` role exists. The compiler derives each
+per-hold normalized face-plane AABB and center from the union of its mesh
+vertices, sorts them by hold ID, and rounds every result to nine decimal
+places. Normalization is against the validated `modelBounds` X/Y face plane;
+the frame and raw model bounds retain physical metre units.
 
-The 3D path fails closed to the existing 2D presentation. Use fallback without
-a crash or partially interactive scene when:
+The canonical USDZ frame is `hang-ten-board-v1`: meters, right-handed, origin
+at back-bottom-left when viewing the working face, `+X` right, `+Y` up, and
+`+Z` toward the climber. USDZ and descriptor use this frame exactly; importers
+and runtime do not normalize names or guess axes.
 
-- no registry descriptor exactly matches;
-- the resource URL is missing or is not a regular file;
-- SceneKit decode fails or returns an empty/invalid scene;
-- any geometry has no material;
-- the imported contact inventory is missing, duplicated ambiguously, or
-  contains an unknown identity;
-- an edited board happens to retain the same IDs but differs from the bundled
-  canonical value; or
-- the board is unsupported, derived, alternate, or inverted.
+## Package trees and invariants
 
-A load failure for Beastmaker must not poison the Compact II cache. Unknown
-highlight IDs are ignored. Hits on body/unknown nodes do nothing. Relaunching
-starts fresh process-local caches, so a valid bundled asset can recover after a
-prior missing/invalid fixture test.
+Migrated packages have this shape:
 
-## Component boundaries
+```text
+Hangboards/beastmaker-1000/
+  board.json
+  assets/primary.usdz
+  assets/primary.model.json
+Hangboards/metolius-wood-grips-compact-ii/
+  board.json
+  assets/primary.usdz
+  assets/primary.model.json
+```
 
-- `Tools/HangboardModels/beastmaker_1000.py`: direct analytic authoring,
-  tulipwood material, editable source, draft/final renders, GLB/USDZ exports,
-  ownership, and model report.
-- `Tools/HangboardModels/verify_beastmaker_1000.py`: Beastmaker bounds,
-  inventory, mesh, material, texture, triangle, and isolated round-trip checks.
-- `Tools/HangboardModels/render_hold_highlights.py` and
-  `test_model_reports.py`: board/model/output parameters and 22-contact report
-  coverage while retaining Compact II behavior.
-- `Tools/HangboardModels/README.md`: Beastmaker commands, evidence mapping,
-  sourced-versus-estimated parameter table, screw-hole omission, review gate,
-  hashes, and limitations.
-- `.context/shaky-rat-beastmaker-1000-3d/`: generated source and review proof;
-  never package input.
-- `HangTen/Resources/BoardModels/beastmaker-1000.usdz`: only the approved,
-  verified runtime artifact.
-- `HangTen/Views/BoardModelView.swift`: descriptor registry, per-descriptor
-  async cache, scene validation, rebinding, framing, accessibility, highlights,
-  and picking.
-- `HangTenTests/BoardModelTests.swift`: registry compatibility, both bundled
-  assets, per-view isolation, camera rebinding, fallback matrix, all-contact
-  nearest-hit picking, and highlight lifecycle.
-- `HangTenTests/BoardSourceBoundaryAudit.swift` and
-  `BoardSourceBoundaryTrackedPaths.txt`: update only as required to recognize
-  the new display resource/registry without weakening package-source rules.
+An unrelated raster package instead retains:
 
-## Validation
+```text
+Hangboards/example-raster/
+  board.json
+  assets/primary.png
+```
 
-Before bundling, run the model report regressions, generate the editable model,
-complete the visual gate, render all 22 highlights, and pass isolated GLB and
-USDZ verification. Inspect the images rather than treating scripts as visual
-proof. Then run the native SceneKit material/inventory/picking harness against
-the exact candidate USDZ.
+The parser enforces confined, exact declared assets; a model package cannot
+carry an undeclared raster fallback. `descriptor.modelSHA256` must equal the
+SHA-256 of the package USDZ bytes, inventory IDs must equal the board's logical hold IDs, and typed
+media rules reject malformed, derived, or inverted model presentations. Sync
+copies every declared typed asset. Staging copies the validated package
+byte-for-byte; it does not substitute a separately bundled model.
 
-After bundling, run focused model and source-boundary tests plus a build. Follow
-the `validate-hang-ten-ios` workflow on an isolated simulator and inspect both
-portrait and landscape at app viewing sizes. Validation covers:
+## Stage 0: evidence preparation for geometry
 
-- normal/rest state and legible recess depth;
-- all 22 holds individually and all holds together;
-- preview highlight, active highlight, clear/wood restoration, and repeated
-  highlight changes;
-- physical taps on all 22 contacts resolving to the expected hold;
-- scene and camera rebinding across Compact II, Beastmaker, and 2D boards;
-- disappearance/reappearance and app relaunch; and
-- unsupported, edited-with-different-inventory, edited-with-same-inventory,
-  inverted, missing-resource, malformed-resource, materialless, and
-  wrong-inventory fallback fixtures.
+Before Astra receives a geometry task, a lower-cost worker creates an owned
+evidence packet under `.context/<workspace-owner>-<board-revision>/`. Luna owns
+routine source gathering and audit reconciliation; Sol or Terra handle source
+conflicts requiring deeper non-geometry reasoning. This stage does not author
+geometry. It prepares the evidence Astra needs to make geometry decisions and
+to distinguish sourced facts from its estimates.
 
-## Acceptance criteria
+The packet has a machine-readable `evidence-packet.json` and a corresponding
+human-readable evidence brief. Its compact required content is:
 
-The migration is accepted only when all of the following are true:
+```json
+{
+  "boardRevision": "beastmaker-1000",
+  "boardRevisionDate": "2026-09-08",
+  "locale": "en-GB",
+  "primarySources": [{ "sourceTier": "manufacturer", "url": "https://manufacturer.example/product", "localPath": "references/product.html", "sha256": "..." }],
+  "commerceSources": [{ "retailer": "Authorized Retailer", "url": "https://retailer.example/product", "snapshotSHA256": "..." }],
+  "logicalInventory": [{ "holdID": "jug-left", "sourceBackedMetadata": { "kind": "jug" } }],
+  "sourcedClaims": [{ "claim": "580 x 150 mm face", "citation": "primarySources[0]", "confidence": "high" }],
+  "conflictsAndRulings": [{ "conflict": "5 mm versus 58 mm depth", "ruling": "use 58 mm shared-layout evidence", "confidence": "qualified" }],
+  "unknownsForAstra": ["cavity sections", "radii", "back profile"],
+  "deliberateOmissions": ["screw holes", "mounting hardware"],
+  "materialFidelity": "generic original pale wood",
+  "requiredReviewViews": ["front", "three-quarter", "clay-detail"]
+}
+```
 
-- the user approves the first-pass front, three-quarter, clay-detail, and full
-  22-contact highlight review;
-- the model visibly matches the reviewed Beastmaker 1000 silhouette, contact
-  layout, real recess character, jug/sloper curvature, full 58 mm section, and
-  tulipwood finish at front and oblique angles;
-- screw holes and hardware are absent and every report labels the omission as
-  a deliberate display simplification;
-- sourced measurements and estimated sections/radii/profiles are separately
-  and completely reported;
-- the editable Blender source, GLB, USDZ, texture, reviews, ownership, evidence
-  mapping, reports, and hashes exist under the owned `.context` directory;
-- isolated import proves correct bounds, texture independence, material
-  coverage, triangle budget, visual continuity, and exactly 22 selectable IDs;
-- the normal export has 23 meshes, or every additional disconnected piece has
-  the narrowly justified and verified exception described above;
-- native SceneKit verifies materials and exact nearest-hit picking for all 22
-  contacts against the actual USDZ;
-- the bundled USDZ hash equals the approved candidate hash;
-- both boards use one registry-backed bridge with independent async caching,
-  cloned materials, identity-aware camera/scene rebinding, correct framing,
-  highlights, accessibility, and fallback gating; and
-- focused tests, the relevant build, and portrait/landscape iOS visual and
-  interaction validation pass.
+The full packet records the exact board revision; authoritative primary URLs;
+retained local reference paths and SHA-256 hashes; stable logical hold inventory
+and source-backed metadata; sourced dimensions, material/product claims and
+citations; conflicts, rulings and confidence; explicit unknowns Astra must
+estimate; deliberate screw-hole/hardware omissions; approved material fidelity;
+and required review views.
 
-## Non-goals
+Manufacturer product pages, manuals, dimension diagrams, and manufacturer media
+are authoritative first-party sources. Prefer the current exact board revision
+and record its revision, date, and locale. Authorized retailer/distributor
+product listings are permitted commerce sources only to fill a first-party gap;
+their identity, URL, and snapshot hash are recorded, and they cannot override a
+conflicting manufacturer claim without an explicit evidence ruling. Independent
+reviews, forums, search snippets, and AI summaries are discovery or
+corroboration only, never sole authority for dimensions, inventory, material,
+safety/training claims, or geometry facts. Search snippets are not sources: the
+packet retains the actual page or media. When only secondary evidence exists,
+the claim is marked qualified or unsupported rather than silently elevated.
 
-- This is display geometry, not manufacturing CAD, a measurement reference, or
-  a source for safe construction, mounting, or machining.
-- Do not change board metadata, hold metadata, paths, presentation PNGs,
-  training plans, exercise instructions, grip cues, or workout compatibility.
-- Do not add logos, installation hardware, wall scenery, animations, camera
-  controls, or a general-purpose asset manifest/plugin system.
-- Do not migrate Beastmaker 2000 or any other board as part of this work.
+It must not contain auto-detected, traced, vectorized, or aligned contours;
+inferred masks; proposed coordinates, sections, or radii; or any geometry made
+by lower-cost workers. Lower-cost workers may identify visibly distinct
+features and report evidence-to-render mismatches. Astra alone turns evidence
+into shape and fixes physical fidelity defects.
+
+```text
+Stage 0 lower-cost evidence packet + brief
+  -> human-approved Astra geometry source and review renders
+  -> lower-cost deterministic compiler/exporter
+  -> package parser, native SceneKit validation, staging and sync
+```
+
+## Geometry authoring, compiler, and routing
+
+Astra receives the Stage 0 packet and alone authors or refines physical geometry.
+Its owned `.context` output
+contains a tagged editable `.blend`, source-versus-estimate report, and
+human-approved front/oblique/clay review renders. Geometry mesh objects are
+tagged `role=body` or `role=hold`; every hold object carries its canonical
+`hold_id`. Astra directly authors silhouette, curved jugs/slopers, and real
+recess mouths, walls, and backs; it does not trace, vectorize, or extrude raster
+paths. Geometry/fidelity defects return to Astra with visual evidence.
+
+A deterministic lower-cost compiler/exporter consumes only approved source and
+the current logical inventory. It transforms to `hang-ten-board-v1`, exports a
+fixed package-owned USDZ, generates `assets/primary.model.json`, and never
+repairs or redesigns shape. Schema, export, material, packaging, and integration
+defects stay with lower-cost workers.
+
+Luna handles routine bounded work. Sol or Terra handle involved non-geometry
+work. Astra handles only physical geometry/refinement. Human visual approval is
+always required; inventory validation is not fidelity approval.
+
+## Runtime and Workbench data flow
+
+`BoardHold` remains logical. For workout matching it exposes a resolved frame:
+raster uses default path geometry; model uses descriptor-projected bounds.
+Render and picking geometry remains presentation media and is never copied into
+logical hold metadata.
+
+```text
+board.json + selected presentation
+  -> typed package parser and exact asset/descriptor validation
+  -> package-driven renderer cache(boardID, presentationID, modelSHA256)
+  -> USDZ nodes matched by exact descriptor nodeID
+  -> same hold meshes render, highlight, and nearest-hit pick
+  -> descriptor projected bounds resolve logical matching geometry
+```
+
+There is one generic package-driven renderer: no board registry and no
+board-specific Swift routing. Model cache keys include board ID, presentation
+ID, and model SHA. Runtime does not decode USDZ merely to match a workout; it
+uses the hash-bound descriptor. Invalid or missing model media displays generic
+unavailable UI and never falls back to raster. Body nodes cannot be selected.
+
+Workbench keeps raster presentations editable. It displays model presentations
+read-only and explicitly reports that geometry editing is unavailable. It does
+not recreate 2D paths from a model.
+
+## Validation and failure handling
+
+Validation is layered:
+
+1. The pure package parser checks schema/tagged union, confinement, exact
+   assets, logical inventory, descriptor hash and structure without decoding
+   USD.
+2. The deterministic compiler reimports its actual export and checks frame
+   bounds, exact node names, materials, triangles, bindings, and review renders.
+3. Native SceneKit CI/release tests decode the actual USDZ, verify materials and
+   nodes, and fire nearest-hit rays for every logical hold.
+
+Ordinary Xcode compilation does not require Blender. Any model failure at parse,
+compile, decode, material, node, binding, or hit-test stage is a package defect;
+runtime fails closed to the generic unavailable view. Descriptor staleness is
+rejected by SHA mismatch. No fallback scene and no partially interactive model
+is allowed.
+
+## Migration sequence and component boundaries
+
+0. Prepare and review the lower-cost evidence packet/brief before any Astra
+   geometry task; reject packets containing geometry proposals or image-derived
+   contours.
+1. Define parser/schema v2 and descriptor v1 with fixtures for raster and model
+   packages.
+2. Rebuild both named packages as model media, retaining logical IDs/metadata
+   but removing their legacy PNG/path media and separate app resources.
+3. Astra produces reviewed geometry; the compiler produces USDZ + descriptor;
+   validators prove the generated package.
+4. Route catalog, renderer, picker, matching, Workbench, staging, and sync
+   through typed package media.
+5. Run parser/compiler/SceneKit tests, then stage the validated package bytes.
+
+Expected boundaries are: package schema/parser and `BoardHold` resolution;
+model compiler/export verifier; package staging/sync; generic model renderer and
+picking; Workbench mode handling; and parser/compiler/native SceneKit tests.
+No standalone app resource, registry, or board-specific renderer belongs in the
+target architecture.
+
+After implementation validates this architecture, fold the reusable evidence
+packet, model-first, compiler, and validation rules into the
+`migrate-hangboard-to-3d` skill. The skill update follows demonstrated package
+behavior; it is not a substitute for this implementation specification. This
+closeout codification also distills the Stage 0 source hierarchy.
+
+## Acceptance and non-goals
+
+Acceptance requires both named migrated packages to validate as model-first,
+their descriptors to hash-bind the staged USDZ, every logical hold to resolve
+through exact nodes and native nearest-hit tests, and human approval of the
+geometry review renders. Each Astra source must have begun from a complete
+Stage 0 evidence packet/brief that contains no geometry proposal or automated
+image geometry and records primary/commerce source provenance, conflicts, and
+qualified or unsupported secondary-only claims. Unrelated raster boards must
+continue to parse, render, and edit as raster packages.
+
+Non-goals: manufacturing geometry, inferred physical measurements, model
+editing in Workbench, derived/inverted model variants, migration of other
+boards, and a generic decoration-node system. The work does not prescribe
+training behavior or change logical hold identities.
