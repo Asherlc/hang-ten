@@ -23,6 +23,8 @@ Carry model media through package validation, staging, and sync. Workbench must 
 
 ## Build shape before finish
 
+Use Astra (`gpt-6-astra`) for hangboard 3D model generation and geometry refinements; a controller using another model must delegate that work to Astra. This requirement applies to geometry authoring, not integration, documentation, or testing. Honor explicit user requests for other models or comparison candidates. If Astra is unavailable, flag that limitation instead of silently substituting another model.
+
 Directly author analytic silhouettes, sections, and recesses from visually reviewed evidence; do not trace or segment pixels. Author symmetric geometry once where the product is symmetric. Give every physical contact its canonical identity, preserving disconnected pieces when necessary.
 
 Model real mouth/back fillets, jug rolls, and continuous curves. A global bevel and smooth normals cannot repair blocky geometry. Inspect inexpensive front and oblique clay views, including a close pocket section, before expensive texture baking and galleries. Then use an original material appropriate to the product and enough tessellation to preserve reviewed curvature at mobile viewing sizes. Match material fidelity effort to the user's brief; generic original wood is acceptable when a species match is not required.
