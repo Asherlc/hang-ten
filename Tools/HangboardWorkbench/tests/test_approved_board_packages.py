@@ -96,17 +96,25 @@ def test_lattice_mini_bar_matches_audited_inventory() -> None:
         (item["id"], item["name"], item["assetPath"]) for item in presentations
     ] == [
         ("edge-10", "10 mm edge", "assets/edge-10.png"),
-        ("edge-20", "20 mm edge", "assets/edge-20.png"),
+        ("edge-20", "20 mm edge", "assets/edge-10.png"),
         ("ergonomic-jug", "Ergonomic jug", "assets/ergonomic-jug.png"),
         ("mini-pinch", "Mini pinch", "assets/mini-pinch.png"),
     ]
     assert [item["id"] for item in presentations if item["default"]] == ["edge-20"]
     assert {path.name for path in (package_root / "assets").iterdir()} == {
         "edge-10.png",
-        "edge-20.png",
         "ergonomic-jug.png",
         "mini-pinch.png",
     }
+    edge_10 = next(item for item in presentations if item["id"] == "edge-10")
+    edge_20 = next(item for item in presentations if item["id"] == "edge-20")
+    assert edge_20["sourcePresentationID"] == "edge-10"
+    assert edge_20["rotationDegrees"] == 180
+    assert "cordRig" not in edge_20
+    assert edge_10["cordRig"]["type"] == "routed"
+    assert board_package.presentation_image_path(
+        package, "edge-20"
+    ) == board_package.presentation_image_path(package, "edge-10")
 
     for presentation in presentations:
         presentation_id = presentation["id"]
