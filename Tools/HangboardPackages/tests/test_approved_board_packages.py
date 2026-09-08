@@ -137,9 +137,9 @@ FOUNDRY_HOLDS = (
 )
 COMPACT_HOLDS = (
     ("jug-left", "Left outer jug"),
-    ("sloper-flat-left", "Left 56 mm flat sloper"),
-    ("sloper-round-center", "Center 56 mm round sloper"),
-    ("sloper-flat-right", "Right 56 mm flat sloper"),
+    ("sloper-round-left", "Left 56 mm round sloper"),
+    ("sloper-flat-center", "Center 56 mm flat sloper"),
+    ("sloper-round-right", "Right 56 mm round sloper"),
     ("jug-right", "Right outer jug"),
     ("edge-29-left", "Left 29 mm edge"),
     ("pocket-29-three-left", "Left 29 mm three-finger pocket"),
@@ -159,9 +159,9 @@ COMPACT_HOLDS = (
 
 COMPACT_HOLD_BOUNDS = {
     "jug-left": (0.037438760543, 0.033340176927, 0.151177566966, 0.147356834014),
-    "sloper-flat-left": (0.18823738106, 0.074170080963, 0.15100319053, 0.11883253391699998),
-    "sloper-round-center": (0.335872142052, 0.067902866521, 0.331604864713, 0.130400487965),
-    "sloper-flat-right": (0.664804328636, 0.086104452954, 0.14671776268299996, 0.104897986871),
+    "sloper-round-left": (0.18823738106, 0.074170080963, 0.15100319053, 0.11883253391699998),
+    "sloper-flat-center": (0.335872142052, 0.067902866521, 0.331604864713, 0.130400487965),
+    "sloper-round-right": (0.664804328636, 0.086104452954, 0.14671776268299996, 0.104897986871),
     "jug-right": (0.808482115558, 0.046999221007, 0.151953933142, 0.151461838074),
     "edge-29-left": (0.04569001522, 0.241975420131, 0.155448063257, 0.268655293217),
     "pocket-29-three-left": (0.222529936866, 0.379677032823, 0.09641943799299998, 0.13582318380699998),
@@ -185,9 +185,9 @@ COMPACT_HOLD_BOUNDS = {
 # feature tags.
 COMPACT_HOLD_SOURCE_FACTS = {
     "jug-left": ("jug", None, None, None, ()),
-    "sloper-flat-left": ("sloper", None, None, None, ()),
-    "sloper-round-center": ("sloper", None, None, None, ()),
-    "sloper-flat-right": ("sloper", None, None, None, ()),
+    "sloper-round-left": ("sloper", None, None, None, ()),
+    "sloper-flat-center": ("sloper", None, None, None, ()),
+    "sloper-round-right": ("sloper", None, None, None, ()),
     "jug-right": ("jug", None, None, None, ()),
     "edge-29-left": ("edge", 29, None, None, ()),
     "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ()),

@@ -85,7 +85,7 @@ source SHA; copying the USDZ does not require modifying either artifact.
 | --- | --- |
 | [Manufacturer product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) | Compact identity, published 610 × 157 mm size, wood material. |
 | [Official Compact product photograph](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000) | Visually reviewed tapered outline, two-row arrangement, five enclosed pockets and two open end shelves per row, top shoulders/channels, pale wood, six visible mounting holes. |
-| [Official depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000) | The **lower Compact diagram**, not the upper Deluxe: outer jugs, 56 mm flat slopers, 56 mm center round sloper; upper 29 mm edges and 3/2/4-finger pockets; lower 19 mm equivalents. |
+| [Official depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000) | The **lower Compact diagram**, not the upper Deluxe: outer jugs, 56 mm outer round slopers, 56 mm center flat sloper; upper 29 mm edges and 3/2/4-finger pockets; lower 19 mm equivalents. |
 
 The photograph and diagram were downloaded and visually inspected before
 authoring. Optional local copies belong under the output's `references/`
@@ -94,8 +94,8 @@ directory and are not redistributed in the repository.
 | Existing hold IDs | Diagram labels / adaptation |
 | --- | --- |
 | `jug-left`, `jug-right` | Compact 1, outer jugs; rounded depth profile is an estimate. |
-| `sloper-flat-left`, `sloper-flat-right` | Compact 2, 56 mm flat slopers; planar channel slope is an estimate. |
-| `sloper-round-center` | Compact 9, 56 mm round sloper; curved profile radius is an estimate. |
+| `sloper-round-left`, `sloper-round-right` | Compact 2, 56 mm round slopers; curved profile radius is an estimate. |
+| `sloper-flat-center` | Compact 9, 56 mm flat sloper; planar channel slope is an estimate. |
 | `edge-29-left`, `edge-29-right` | Compact 3, 29 mm edges. |
 | `pocket-29-three-left`, `pocket-29-three-right` | Compact 4, 29 mm three-finger pockets. |
 | `pocket-29-two-left`, `pocket-29-two-right` | Compact 5, 29 mm two-finger pockets. |

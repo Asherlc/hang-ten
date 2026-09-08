@@ -8486,8 +8486,8 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -8495,15 +8495,15 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
-        "label": "Compact 2 — 56 mm flat sloper"
+        "label": "Compact 2 — 56 mm round sloper"
       },
       "value": "sloper"
     },
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -8518,8 +8518,8 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -8534,8 +8534,8 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -8550,8 +8550,8 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -8566,8 +8566,8 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -8582,8 +8582,8 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left",
-        "sloper-flat-right"
+        "sloper-round-left",
+        "sloper-round-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -9270,7 +9270,7 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -9278,14 +9278,14 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
-        "label": "Compact 9 — 56 mm round sloper"
+        "label": "Compact 9 — 56 mm flat sloper"
       },
       "value": "sloper"
     },
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -9300,7 +9300,7 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -9315,7 +9315,7 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -9330,7 +9330,7 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -9345,7 +9345,7 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -9360,7 +9360,7 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-round-center"
+        "sloper-flat-center"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -41021,52 +41021,52 @@
     {
       "boardID": "metolius.wood-grips-compact-ii",
       "holdIDs": [
-        "sloper-flat-left"
+        "sloper-round-left"
       ],
       "field": "sloper",
       "reviewedAt": "2026-08-26",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
-        "label": "Compact 2 — 56 mm flat sloper"
-      },
-      "outcome": "verified",
-      "value": {
-        "type": "flat"
-      }
-    },
-    {
-      "boardID": "metolius.wood-grips-compact-ii",
-      "holdIDs": [
-        "sloper-flat-right"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
-        "label": "Compact 2 — 56 mm flat sloper"
-      },
-      "outcome": "verified",
-      "value": {
-        "type": "flat"
-      }
-    },
-    {
-      "boardID": "metolius.wood-grips-compact-ii",
-      "holdIDs": [
-        "sloper-round-center"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
-        "label": "Compact 9 — 56 mm round sloper"
+        "label": "Compact 2 — 56 mm round sloper"
       },
       "outcome": "verified",
       "value": {
         "type": "round"
+      }
+    },
+    {
+      "boardID": "metolius.wood-grips-compact-ii",
+      "holdIDs": [
+        "sloper-round-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
+        "label": "Compact 2 — 56 mm round sloper"
+      },
+      "outcome": "verified",
+      "value": {
+        "type": "round"
+      }
+    },
+    {
+      "boardID": "metolius.wood-grips-compact-ii",
+      "holdIDs": [
+        "sloper-flat-center"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
+        "label": "Compact 9 — 56 mm flat sloper"
+      },
+      "outcome": "verified",
+      "value": {
+        "type": "flat"
       }
     },
     {

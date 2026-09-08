@@ -22095,8 +22095,7 @@
         },
         "flat-slopers" : {
           "holdIDs" : [
-            "sloper-flat-left",
-            "sloper-flat-right"
+            "sloper-flat-center"
           ]
         },
         "outer-jugs" : {
@@ -22141,7 +22140,8 @@
         },
         "round-sloper" : {
           "holdIDs" : [
-            "sloper-round-center"
+            "sloper-round-left",
+            "sloper-round-right"
           ]
         }
       }

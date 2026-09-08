@@ -223,6 +223,16 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
+    func testSloperFeatureTargetsOnCompactIIUseMatchingHoldIDs() {
+        let compactII = BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.roundSloper), on: compactII),
+            ["sloper-round-left", "sloper-round-right"]
+        )
+        XCTAssertEqual(compactII.holds.first(where: { $0.id == "sloper-flat-center" })?.sloper?.type, .flat)
+    }
+
     func testGenericPocketKindSelectsOneMirroredCapacityPair() {
         let board = board(holds: [
             hold(
