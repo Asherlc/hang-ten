@@ -23,7 +23,9 @@ Carry model media through package validation, staging, and sync. Workbench must 
 
 ## Build shape before finish
 
-Use Astra (`gpt-6-astra`) for hangboard 3D model generation and geometry refinements; a controller using another model must delegate that work to Astra. This requirement applies to geometry authoring, not integration, documentation, or testing. Honor explicit user requests for other models or comparison candidates. If Astra is unavailable, flag that limitation instead of silently substituting another model.
+Use Astra (`gpt-6-astra`) only for authored geometry creation, geometry refinement, and physical-shape corrections. A controller using another model must hand those tasks to Astra with the visual evidence and the defect to correct. If Astra is unavailable, flag that limitation instead of silently substituting another model. Honor explicit user requests for another model or for comparison candidates.
+
+Default routine bounded work to Luna; use Sol or Terra when non-geometry work is more involved. Lower-cost workers may handle source-backed metadata and evidence, schemas and data models, reusable exporter and validator tooling, deterministic export and render execution, packaging, staging, sync, app integration, documentation, tests, and visual or picking checks. They must not redesign geometry to make a check pass: route geometry or fidelity defects back to Astra, while keeping tooling, schema, material-export, and integration defects with lower-cost workers. Hand off stable hold IDs, the coordinate frame, sourced-versus-estimated evidence, tagged editable geometry, and validation expectations. Inventory checks do not prove fidelity; retain human visual review.
 
 Directly author analytic silhouettes, sections, and recesses from visually reviewed evidence; do not trace or segment pixels. Author symmetric geometry once where the product is symmetric. Give every physical contact its canonical identity, preserving disconnected pieces when necessary.
 
