@@ -294,22 +294,67 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
         let physicalHoldVisualFrame =
-            "                        )\n" +
-            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                    }\n" +
-            "                }"
+            "                            )\n" +
+            "                            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                        }\n" +
+            "                    }"
         XCTAssertTrue(
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
         let outerZStackFrame =
+            "                    }\n" +
+            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "                }\n" +
-            "                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "            }\n" +
             "            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)"
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."
+        )
+    }
+
+    func testBoundaryAuditAllowsOnlyScopedDisplayModelBindings() {
+        let binding = "enum BoardModelIdentity { static let boardID = \"metolius.wood-grips-compact-ii\" }"
+        let literals: Set<String> = ["metolius.wood-grips-compact-ii"]
+        XCTAssertTrue(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift", source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/OtherView.swift", source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: binding.replacingOccurrences(of: "metolius.wood-grips-compact-ii", with: "fixture.board"),
+            packageOwnedLiterals: ["fixture.board"]
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: binding + "\nlet outside = \"metolius.wood-grips-compact-ii\"", packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: "enum BoardModelIdentity { let hold = BoardHold() }", packageOwnedLiterals: literals
+        ).isEmpty)
+    }
+
+    func testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity() {
+        let source = """
+        enum BoardModelIdentity {
+            static let boardID = "metolius.wood-grips-compact-ii"
+            static let image = "assets/primary.png"
+        }
+        """
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Views/BoardModelView.swift",
+                source: source,
+                packageOwnedLiterals: ["metolius.wood-grips-compact-ii", "assets/primary.png"]
+            ),
+            ["HangTen/Views/BoardModelView.swift: package-owned literal assets/primary.png"]
         )
     }
 

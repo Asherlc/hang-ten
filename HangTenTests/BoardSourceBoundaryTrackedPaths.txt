@@ -60,6 +60,7 @@ HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/Contents.json
 HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/hand-palm.svg
 HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/Contents.json
 HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/hand-peace.svg
+HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz
 HangTen/Resources/CountdownAudio/.gitkeep
 HangTen/Resources/CountdownAudio/README.md
 HangTen/Resources/CountdownAudio/countdown-1.mp3
@@ -77,6 +78,7 @@ HangTen/Views/BoardEditor/GitHubEditorSyncViews.swift
 HangTen/Views/BoardEditor/HoldEditorCanvasView.swift
 HangTen/Views/BoardEditor/HoldInspectorView.swift
 HangTen/Views/BoardMapView.swift
+HangTen/Views/BoardModelView.swift
 HangTen/Views/CustomRoutineEditorView.swift
 HangTen/Views/DesignSystem.swift
 HangTen/Views/GripDiagramView.swift
