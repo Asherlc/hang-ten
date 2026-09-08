@@ -62,8 +62,13 @@ enum BoardSourceBoundaryAudit {
             "HangTen/Models/TrainingModels.swift"
         ]
         var findings: [String] = []
-        let sourceWithoutOwnedPlanMappings = removingOwnedPlanMappings(
-            from: source,
+        let sourceWithoutOwnedPlanMappings = removingDisplayModelBoardID(
+            from: removingOwnedDeclaration(
+                from: source,
+                relativePath: relativePath,
+                ownerPath: planMappingOwnerPath,
+                declaration: planMappingOwnerDeclaration
+            ),
             relativePath: relativePath
         )
         let exemptedPresentationLiterals = genericPresentationVocabularyOwnerPaths.contains(relativePath)
@@ -108,12 +113,27 @@ enum BoardSourceBoundaryAudit {
         return findings
     }
 
-    private static func removingOwnedPlanMappings(
+    /// Only the approved board binding is exempt; hold IDs and asset paths remain audited.
+    private static func removingDisplayModelBoardID(
         from source: String,
         relativePath: String
     ) -> String {
-        guard relativePath == planMappingOwnerPath,
-              let declarationRange = source.range(of: planMappingOwnerDeclaration) else {
+        guard relativePath == "HangTen/Views/BoardModelView.swift" else { return source }
+        return source.replacingOccurrences(
+            of: #"(enum BoardModelIdentity \{\s*)static let boardID = "metolius\.wood-grips-compact-ii""#,
+            with: "$1",
+            options: .regularExpression
+        )
+    }
+
+    private static func removingOwnedDeclaration(
+        from source: String,
+        relativePath: String,
+        ownerPath: String,
+        declaration: String
+    ) -> String {
+        guard relativePath == ownerPath,
+              let declarationRange = source.range(of: declaration) else {
             return source
         }
         let openingBrace = source.index(before: declarationRange.upperBound)
