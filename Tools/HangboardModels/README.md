@@ -94,8 +94,8 @@ directory and are not redistributed in the repository.
 | Existing hold IDs | Diagram labels / adaptation |
 | --- | --- |
 | `jug-left`, `jug-right` | Compact 1, outer jugs; rounded depth profile is an estimate. |
-| `sloper-round-left`, `sloper-round-right` | Compact 2, 56 mm round slopers; curved profile radius is an estimate. |
-| `sloper-flat-center` | Compact 9, 56 mm flat sloper; planar channel slope is an estimate. |
+| `sloper-flat-left`, `sloper-flat-right` | Compact 2, 56 mm flat slopers; planar channel slope is an estimate. |
+| `sloper-round-center` | Compact 9, 56 mm round sloper; curved profile radius is an estimate. |
 | `edge-29-left`, `edge-29-right` | Compact 3, 29 mm edges. |
 | `pocket-29-three-left`, `pocket-29-three-right` | Compact 4, 29 mm three-finger pockets. |
 | `pocket-29-two-left`, `pocket-29-two-right` | Compact 5, 29 mm two-finger pockets. |

@@ -471,9 +471,9 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
             if "sloper" in region
         }
         assert slopers == {
-            "sloper-round-left": {"type": "round"},
-            "sloper-flat-center": {"type": "flat"},
-            "sloper-round-right": {"type": "round"},
+            "sloper-flat-left": {"type": "flat"},
+            "sloper-round-center": {"type": "round"},
+            "sloper-flat-right": {"type": "flat"},
         }
         document["regions"][0]["handCapacity"] = 1
 

@@ -1532,14 +1532,14 @@ and [current product page](https://www.metoliusclimbing.com/products/wood-grips-
 | Exact Compact manufacturer label | Stable hold ID(s) | Verified kind |
 | --- | --- | --- |
 | `1 — outer jugs` | `jug-left`, `jug-right` | `jug` |
-| `2 — 56 mm round slopers` | `sloper-round-left`, `sloper-round-right` | `sloper` |
+| `2 — 56 mm flat slopers` | `sloper-flat-left`, `sloper-flat-right` | `sloper` |
 | `3 — 29 mm edges` | `edge-29-left`, `edge-29-right` | `edge` |
 | `4 — 29 mm 3-finger pockets` | `pocket-29-three-left`, `pocket-29-three-right` | `pocket` |
 | `5 — 29 mm 2-finger pockets` | `pocket-29-two-left`, `pocket-29-two-right` | `pocket` |
 | `6 — 19 mm edges` | `edge-19-left`, `edge-19-right` | `edge` |
 | `7 — 19 mm 3-finger pockets` | `pocket-19-three-left`, `pocket-19-three-right` | `pocket` |
 | `8 — 19 mm 2-finger pockets` | `pocket-19-two-left`, `pocket-19-two-right` | `pocket` |
-| `9 — 56 mm flat sloper` | `sloper-flat-center` | `sloper` |
+| `9 — 56 mm round sloper` | `sloper-round-center` | `sloper` |
 | `10 — 29 mm 4-finger pocket` | `pocket-29-four-center` | `pocket` |
 | `11 — 19 mm 4-finger pocket` | `pocket-19-four-center` | `pocket` |
 

@@ -1589,7 +1589,7 @@ enum LegacyPlanSeedBoardMappings {
                     holdIDs: ["edge-29-left", "edge-29-right"]
                 ),
                 "flat-slopers": SemanticHoldMappingDefinition(
-                    holdIDs: ["sloper-flat-center"]
+                    holdIDs: ["sloper-flat-left", "sloper-flat-right"]
                 ),
                 "outer-jugs": SemanticHoldMappingDefinition(
                     holdIDs: ["jug-left", "jug-right"]
@@ -1613,7 +1613,7 @@ enum LegacyPlanSeedBoardMappings {
                     holdIDs: ["pocket-29-two-left", "pocket-29-two-right"]
                 ),
                 "round-sloper": SemanticHoldMappingDefinition(
-                    holdIDs: ["sloper-round-left", "sloper-round-right"]
+                    holdIDs: ["sloper-round-center"]
                 )
             ]
         )

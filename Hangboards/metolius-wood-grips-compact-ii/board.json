@@ -75,12 +75,12 @@
       "presentationID": "primary"
     },
     {
-      "id": "sloper-round-left",
+      "id": "sloper-flat-left",
       "equipmentObjectID": "primary",
-      "name": "Left 56 mm round sloper",
+      "name": "Left 56 mm flat sloper",
       "kind": "sloper",
       "sloper": {
-        "type": "round"
+        "type": "flat"
       },
       "geometry": [
         {
@@ -134,12 +134,12 @@
       "presentationID": "primary"
     },
     {
-      "id": "sloper-flat-center",
+      "id": "sloper-round-center",
       "equipmentObjectID": "primary",
-      "name": "Center 56 mm flat sloper",
+      "name": "Center 56 mm round sloper",
       "kind": "sloper",
       "sloper": {
-        "type": "flat"
+        "type": "round"
       },
       "geometry": [
         {
@@ -200,12 +200,12 @@
       "presentationID": "primary"
     },
     {
-      "id": "sloper-round-right",
+      "id": "sloper-flat-right",
       "equipmentObjectID": "primary",
-      "name": "Right 56 mm round sloper",
+      "name": "Right 56 mm flat sloper",
       "kind": "sloper",
       "sloper": {
-        "type": "round"
+        "type": "flat"
       },
       "geometry": [
         {

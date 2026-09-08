@@ -228,9 +228,10 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
         XCTAssertEqual(
             BoardTargetResolver.substituteHoldIDs(for: .feature(.roundSloper), on: compactII),
-            ["sloper-round-left", "sloper-round-right"]
+            ["sloper-round-center"]
         )
-        XCTAssertEqual(compactII.holds.first(where: { $0.id == "sloper-flat-center" })?.sloper?.type, .flat)
+        XCTAssertEqual(compactII.holds.first(where: { $0.id == "sloper-flat-left" })?.sloper?.type, .flat)
+        XCTAssertEqual(compactII.holds.first(where: { $0.id == "sloper-flat-right" })?.sloper?.type, .flat)
     }
 
     func testGenericPocketKindSelectsOneMirroredCapacityPair() {

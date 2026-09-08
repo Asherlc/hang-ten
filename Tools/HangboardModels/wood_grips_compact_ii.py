@@ -237,8 +237,8 @@ for poly in body.data.polygons:
     x=center.x*1000+305
     h=center.z*1000
     if h>126 and poly.normal.z>.12:
-        name=("jug-left" if x<106 else "sloper-round-left" if x<196 else
-              "sloper-flat-center" if x<414 else "sloper-round-right" if x<504 else "jug-right")
+        name=("jug-left" if x<106 else "sloper-flat-left" if x<196 else
+              "sloper-round-center" if x<414 else "sloper-flat-right" if x<504 else "jug-right")
         poly.material_index=list(hold_mats).index(name)+1
 
 # Bake the same continuous procedural timber onto a shared UV atlas; exported
