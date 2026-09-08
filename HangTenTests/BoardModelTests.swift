@@ -36,6 +36,11 @@ final class BoardModelTests: XCTestCase {
         XCTAssertFalse(BoardModelAsset.supports(board, presentation: inverted))
     }
 
+    func testDisplayOnlyModelSurfaceDoesNotParticipateInHitTesting() {
+        XCTAssertFalse(BoardModelSurface<EmptyView>.hitTestingEnabled(onHoldTap: nil))
+        XCTAssertTrue(BoardModelSurface<EmptyView>.hitTestingEnabled(onHoldTap: { _ in }))
+    }
+
     func testMissingOrInvalidModelFallsBackWithoutCrashing() {
         XCTAssertNil(BoardModelAsset.load(url: nil))
         XCTAssertNil(BoardModelAsset.load(url: URL(fileURLWithPath: "/missing-epic-whale-model.usdz")))
