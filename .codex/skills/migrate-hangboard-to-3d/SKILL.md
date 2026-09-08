@@ -13,11 +13,21 @@ Identify the exact board revision and read its existing package and source audit
 
 Read relevant sections of the [working example](../../../Tools/HangboardModels/README.md), then inspect only the generator functions needed. Treat any dual 2D/3D structure in an older example as legacy, not as a requirement to preserve raster assets or paths. Follow `add-hangboard` for source-backed package metadata, while applying this skill's 3D-only migration contract.
 
+## Separate logical data from model geometry
+
+Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
+
+Derive spatial centers and bounds used by workout matching from the mesh in a defined board coordinate frame. A build-generated index bound to the model hash may provide these values without eagerly decoding every USDZ during catalog loading. Keep camera configuration separate from physical metadata, and never silently promote estimated model geometry to physical dimensions.
+
+Carry model media through package validation, staging, and sync. Workbench must explicitly disable model geometry editing it does not support; do not reconstruct raster geometry to enable it. A missing or malformed USDZ is a package validation/build defect, with an explicit unavailable state if encountered at runtime.
+
 ## Build shape before finish
 
 Directly author analytic silhouettes, sections, and recesses from visually reviewed evidence; do not trace or segment pixels. Author symmetric geometry once where the product is symmetric. Give every physical contact its canonical identity, preserving disconnected pieces when necessary.
 
-Model real mouth/back fillets, jug rolls, and continuous curves. A global bevel and smooth normals cannot repair blocky geometry. Inspect inexpensive front and oblique clay views, including a close pocket section, before expensive texture baking and galleries. Then use an original material appropriate to the product and enough tessellation to preserve reviewed curvature at mobile viewing sizes.
+Model real mouth/back fillets, jug rolls, and continuous curves. A global bevel and smooth normals cannot repair blocky geometry. Inspect inexpensive front and oblique clay views, including a close pocket section, before expensive texture baking and galleries. Then use an original material appropriate to the product and enough tessellation to preserve reviewed curvature at mobile viewing sizes. Match material fidelity effort to the user's brief; generic original wood is acceptable when a species match is not required.
+
+When independent comparisons are requested, give candidates identical evidence and briefs, isolate their code and artifacts, and do not share candidate work between them. Compare matched cameras and lights, inspect front, oblique, clay, and detail views before selecting, and record render-engine differences that affect comparison. Complete the requested draft comparison before production integration; the number and identity of candidates belong to the user's request, not this workflow.
 
 ## Prove the actual export
 

@@ -1,6 +1,43 @@
 # Beastmaker 1000 Interactive 3D Display Design
 
-**Status:** Approved for a first-pass geometry review on 2026-09-08.
+**Status:** Superseded by the revised user-approved contract below on 2026-09-08.
+The original design after this section is retained as historical context, not
+as implementation authority where it conflicts with this revision.
+
+## Revised contract
+
+The draft comparison precedes production integration. Compare independently
+authored candidates using identical evidence, briefs, cameras, and lights;
+isolate candidate code/artifacts and do not share candidate work. Inspect front,
+oblique, clay, and detail views before selecting, recording render-engine
+differences. Generic original wood is acceptable: species-specific tulipwood
+fidelity is no longer required.
+
+The later migration covers both Beastmaker 1000 and the previously migrated
+Wood Grips Compact II. Remove their raster presentations and canonical 2D hold
+geometry in full. `board.json` retains physical identity, source-backed logical
+holds, equipment, positions, and stable IDs; byte-for-byte preservation is no
+longer required. Explicitly tagged raster/model presentations allow unrelated
+raster boards to coexist. Each migrated package owns its required USDZ and an
+explicit mesh-to-logical-hold-ID binding, including disconnected mesh pieces
+that share an ID. Mesh geometry alone drives rendering, highlighting, and
+picking; do not maintain parallel raster paths or hand-edited spatial bounds.
+
+Derive workout-matching centers and bounds from the mesh in a defined board
+coordinate frame, optionally through a build-generated index bound to the model
+hash so catalog loading need not eagerly decode USDZ. Separate camera
+configuration from physical metadata; estimated geometry must not silently
+become physical dimensions. Support model media in package validation, staging,
+and sync. Workbench explicitly disables unsupported model geometry editing
+without reconstructing raster geometry. Missing or malformed USDZ is a
+validation/build defect; runtime failure shows an explicit unavailable state,
+with no raster fallback for a migrated board.
+
+The reusable authority is the updated
+[`migrate-hangboard-to-3d` skill](../../../.codex/skills/migrate-hangboard-to-3d/SKILL.md).
+Existing source audits remain evidence for physical metadata; the historical
+byte-preservation, fallback, and mandatory-species requirements below do not
+apply.
 
 ## Goal
 
