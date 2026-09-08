@@ -9,7 +9,7 @@ Deliver a faithful display model with selectable physical contacts. Preserve can
 
 ## Establish the contract once
 
-Identify the exact board revision and read its existing package and source audit. Reuse verified manufacturer references; research only missing evidence. Record sourced dimensions separately from estimated positions, thickness, radii, and sections. Derive physical contact IDs from the package: Compact II's 19 contacts are an example, not a universal count. Record requested simplifications; omitting screw holes was an explicit user choice.
+Identify the exact board revision and read its existing package and source audit. Reuse verified manufacturer references; research only missing evidence. Record sourced dimensions separately from estimated positions, thickness, radii, and sections. Derive physical contact IDs from the package: Compact II's 19 contacts are an example, not a universal count. Omit all screw holes, mounting holes, and mounting hardware from every hangboard display model. Document each omission as a deliberate display simplification; never imply that the physical product lacks those features.
 
 Read relevant sections of the [working example](../../../Tools/HangboardModels/README.md), then inspect only the generator functions needed. Follow `add-hangboard` if canonical package content must change.
 
