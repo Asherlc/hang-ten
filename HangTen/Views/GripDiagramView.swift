@@ -86,109 +86,66 @@ struct GripDiagramView: View {
     }
 }
 
-/// A per-hand cue follows the same information hierarchy as the supplied
-/// Grippy references: one symbol describes the grip pose and another describes
-/// the participating fingers. The ordering mirrors around the physical board.
+/// The same 3D rig drives compact workout cues and the rotatable detail view.
 struct GripHandCueCard: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
+    @State private var showsModel = false
 
     var body: some View {
-        HStack(spacing: 8) {
-            if side == .left {
-                gripPoseCue
-                fingerSetCue
-            } else {
-                fingerSetCue
-                gripPoseCue
+        VStack(spacing: 3) {
+            Button {
+                showsModel = true
+            } label: {
+                GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+                    .frame(height: 88)
+                    .overlay(alignment: .topTrailing) {
+                        Image(systemName: "arrow.up.left.and.arrow.down.right")
+                            .font(.system(size: 9, weight: .semibold))
+                            .foregroundStyle(Color.hangMuted)
+                    }
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Explore \(side.accessibilityIdentifier) hand in 3D")
+            .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).model")
+
+            Text(posture?.label ?? "Grip not specified")
+                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .lineLimit(1)
+                .minimumScaleFactor(0.68)
+            if fingerConfiguration == nil {
+                Text("Fingers not specified")
+                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.68)
+                    .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 8)
-        .padding(.vertical, 9)
-        .background(
-            Color.hangBackground.opacity(0.88),
-            in: RoundedRectangle(cornerRadius: 15, style: .continuous)
-        )
+        .padding(.vertical, 7)
+        .background(Color.hangBackground.opacity(0.88), in: RoundedRectangle(cornerRadius: 15))
         .overlay {
-            RoundedRectangle(cornerRadius: 15, style: .continuous)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Color.hangLine.opacity(0.85), lineWidth: 1)
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier)")
-    }
-
-    @ViewBuilder private var gripPoseCue: some View {
-        if let posture {
-            CueGlyph(label: gripPoseLabel(for: posture)) {
-                Image(gripPoseAsset(for: posture))
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .scaleEffect(x: side.handArtworkMirrorScale, y: 1)
-                    .foregroundStyle(Color.hangInk.opacity(0.82))
-            }
-        }
-    }
-
-    @ViewBuilder private var fingerSetCue: some View {
-        if let fingerConfiguration {
-            CueGlyph(label: visibleFingerLabel) {
-                FingerCueGlyph(
-                    fingerConfiguration: fingerConfiguration,
-                    fingerSlots: visibleFingerSlots
-                )
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
-        }
-    }
-
-    var visibleFingerSlots: [FingerSlot] {
-        side == .left ? Array(FingerSlot.allCases.reversed()) : FingerSlot.allCases
-    }
-
-    var visibleFingerLabel: String {
-        guard let fingerConfiguration else { return "" }
-
-        return visibleFingerSlots
-            .filter(fingerConfiguration.engagedFingers.contains)
-            .map(\.shortLabel)
-            .joined(separator: "+")
-    }
-
-    private func gripPoseAsset(for posture: GripType) -> String {
-        switch posture {
-        case .halfCrimp:
-            return "PhosphorHandGrabbing"
-        case .fullCrimp:
-            return "PhosphorHandFist"
-        case .openHand, .fourFingerPocket, .threeFingerPocket, .twoFingerPocket, .sloper:
-            return "PhosphorHandPalm"
-        }
-    }
-
-    private func gripPoseLabel(for posture: GripType) -> String {
-        switch posture {
-        case .halfCrimp: "Half crimp"
-        case .fullCrimp: "Full crimp"
-        case .openHand: "Open hand"
-        case .fourFingerPocket: "Four-finger pocket"
-        case .threeFingerPocket: "Three-finger pocket"
-        case .twoFingerPocket: "Two-finger pocket"
-        case .sloper: "Open-hand sloper"
+        .sheet(isPresented: $showsModel) {
+            GripHandModelInspector(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
         }
     }
 
     private var accessibilityLabel: String {
         [
-            posture.map(gripPoseLabel),
-            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }
-        ]
-        .compactMap { $0 }
-        .joined(separator: ", ")
+            posture?.label ?? "Grip not specified",
+            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "Fingers not specified"
+        ].joined(separator: ", ")
     }
 }
 
@@ -205,40 +162,7 @@ extension GripCueSide {
     }
 }
 
-private struct FingerCueGlyph: View {
-    let fingerConfiguration: FingerConfiguration
-    let fingerSlots: [FingerSlot]
-
-    var body: some View {
-        HStack(alignment: .bottom, spacing: 3) {
-            ForEach(fingerSlots) { finger in
-                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .fill(
-                        fingerConfiguration.engagedFingers.contains(finger)
-                            ? Color.holdActive
-                            : Color.hangLine.opacity(0.45)
-                    )
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 4, style: .continuous)
-                            .stroke(Color.hangInk.opacity(0.25), lineWidth: 1)
-                    }
-                    .frame(width: 7, height: finger.height * 0.62)
-            }
-        }
-        .frame(maxHeight: .infinity, alignment: .bottom)
-    }
-}
-
 private extension FingerSlot {
-    var shortLabel: String {
-        switch self {
-        case .index: "I"
-        case .middle: "M"
-        case .ring: "R"
-        case .pinky: "P"
-        }
-    }
-
     var displayName: String {
         switch self {
         case .index: "index"
@@ -258,24 +182,5 @@ private extension Array where Element == FingerSlot {
         case 2: return "\(names[0]) and \(names[1])"
         default: return "\(names.dropLast().joined(separator: ", ")), and \(names[names.count - 1])"
         }
-    }
-}
-
-private struct CueGlyph<Glyph: View>: View {
-    let label: String
-    @ViewBuilder let glyph: () -> Glyph
-
-    var body: some View {
-        VStack(spacing: 4) {
-            glyph()
-                .frame(width: 39, height: 44)
-
-            Text(label)
-                .font(.system(size: 10, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-                .lineLimit(1)
-                .minimumScaleFactor(0.68)
-        }
-        .frame(maxWidth: .infinity)
     }
 }

@@ -76,6 +76,10 @@ struct BoardModelSurface<Fallback: View>: View {
     @ViewBuilder let fallback: () -> Fallback
     @State private var model: BoardModelScene?
 
+    static func hitTestingEnabled(onHoldTap: ((BoardHold) -> Void)?) -> Bool {
+        onHoldTap != nil
+    }
+
     var body: some View {
         Group {
             if BoardModelAsset.supports(board, presentation: presentation), let model {
@@ -85,6 +89,7 @@ struct BoardModelSurface<Fallback: View>: View {
                     onHoldTap: onHoldTap
                 )
                 .accessibilityIdentifier("boardModel.3d")
+                .allowsHitTesting(Self.hitTestingEnabled(onHoldTap: onHoldTap))
             } else {
                 fallback()
             }

@@ -66,6 +66,7 @@ HangTen/Resources/CountdownAudio/README.md
 HangTen/Resources/CountdownAudio/countdown-1.mp3
 HangTen/Resources/CountdownAudio/countdown-2.mp3
 HangTen/Resources/CountdownAudio/countdown-3.mp3
+HangTen/Resources/GripHand/hand-mesh.json
 HangTen/Resources/HangTen.storekit
 HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
@@ -81,6 +82,7 @@ HangTen/Views/BoardModelView.swift
 HangTen/Views/CustomRoutineEditorView.swift
 HangTen/Views/DesignSystem.swift
 HangTen/Views/GripDiagramView.swift
+HangTen/Views/GripHandModelView.swift
 HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/RootView.swift

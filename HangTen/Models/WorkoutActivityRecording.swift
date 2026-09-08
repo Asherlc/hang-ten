@@ -521,6 +521,10 @@ internal enum BoardTargetResolver {
         if !selectedSameGroup.isEmpty { return selectedSameGroup.map(\.id) }
 
         let sameKind = holds.filter { $0.kind == feature.holdKind }
+        if feature == .roundSloper {
+            let roundSlopers = sameKind.filter { $0.sloper?.type == .round }
+            if !roundSlopers.isEmpty { return roundSlopers.map(\.id) }
+        }
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
         if feature.holdKind == .pocket, target.fingerCapacity == nil {
             return genericPocketSelection(from: preferredSameKind).map(\.id)
