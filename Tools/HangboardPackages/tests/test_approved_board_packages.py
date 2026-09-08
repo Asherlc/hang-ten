@@ -583,22 +583,28 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
 
     assert board["id"] == "metolius.light-rail-2"
     assert board["dimensions"] == "18 × 3 × 1.5 in"
-    assert board["presentations"] == [
-        {
-            "id": "20mm-side",
-            "name": "40 mm jug and 20 mm edge",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 1.5,
-            "default": True,
-        },
-        {
-            "id": "15mm-side",
-            "name": "40 mm jug and 15 mm edge",
-            "assetPath": "assets/15mm-surface.png",
-            "aspectRatio": 1.5,
-            "default": False,
-        },
+    twenty_side, fifteen_side = board["presentations"]
+    assert twenty_side["id"] == "20mm-side"
+    assert twenty_side["assetPath"] == "assets/primary.png"
+    assert twenty_side["default"] is True
+    assert twenty_side["availableHoldIDs"] == [
+        "jug-40-20mm-side",
+        "edge-20",
     ]
+    assert twenty_side["cordRig"]["type"] == "routed"
+    assert twenty_side["cordRig"]["tensionGroups"][0]["pairing"] == "screenOrder"
+
+    assert fifteen_side == {
+        "id": "15mm-side",
+        "name": "40 mm jug and 15 mm edge",
+        "assetPath": "assets/primary.png",
+        "aspectRatio": 1.5,
+        "default": False,
+        "sourcePresentationID": "20mm-side",
+        "availableHoldIDs": ["jug-40-15mm-side", "edge-15"],
+        "rotationDegrees": 180,
+        "geometryRotationAnchor": {"x": 0.5, "y": 0.76220703125},
+    }
 
     assert tuple(
         (
@@ -623,9 +629,9 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
             "40 mm rounded jug on 15 mm side",
             "jug",
             40,
-            "15mm-side",
+            "20mm-side",
         ),
-        ("edge-15", "15 mm edge", "edge", 15, "15mm-side"),
+        ("edge-15", "15 mm edge", "edge", 15, "20mm-side"),
     )
     assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
     assert all(
@@ -638,7 +644,6 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
 
     for asset_path, expected_size in {
         "assets/primary.png": (1536, 1024),
-        "assets/15mm-surface.png": (1536, 1024),
     }.items():
         with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
             assert image.format == "PNG"
