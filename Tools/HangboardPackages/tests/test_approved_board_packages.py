@@ -505,40 +505,39 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
 
     assert board["id"] == "tension.flash-board"
     assert "dimensions" not in board
-    assert board["presentations"] == [
-        {
-            "id": "three-edge-upright",
-            "name": "Three-edge surface — right side up",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 1.5,
-            "default": True,
-        },
-        {
-            "id": "three-edge-inverted",
-            "name": "Three-edge surface — upside down",
-            "assetPath": "assets/three-edge-inverted.png",
-            "aspectRatio": 1.5,
-            "default": False,
-            "sourcePresentationID": "three-edge-upright",
-            "isInverted": True,
-        },
-        {
-            "id": "two-edge-upright",
-            "name": "Two-edge surface — right side up",
-            "assetPath": "assets/two-edge-surface.png",
-            "aspectRatio": 2.0,
-            "default": False,
-        },
-        {
-            "id": "two-edge-inverted",
-            "name": "Two-edge surface — upside down",
-            "assetPath": "assets/two-edge-inverted.png",
-            "aspectRatio": 2.0,
-            "default": False,
-            "sourcePresentationID": "two-edge-upright",
-            "isInverted": True,
-        },
+    presentations = board["presentations"]
+    assert tuple((item["id"], item["name"]) for item in presentations) == (
+        ("three-edge-upright", "Three-edge surface — right side up"),
+        ("three-edge-inverted", "Three-edge surface — upside down"),
+        ("two-edge-upright", "Two-edge surface — right side up"),
+        ("two-edge-inverted", "Two-edge surface — upside down"),
+    )
+    assert [item["assetPath"] for item in presentations] == [
+        "assets/primary.png",
+        "assets/primary.png",
+        "assets/two-edge-surface.png",
+        "assets/two-edge-surface.png",
     ]
+    assert [item["aspectRatio"] for item in presentations] == [1.6] * 4
+    assert [item["default"] for item in presentations] == [True, False, False, False]
+
+    for canonical, alias in ((presentations[0], presentations[1]), (presentations[2], presentations[3])):
+        assert canonical["cordRig"]["type"] == "routed"
+        assert canonical["cordRig"]["sceneSize"] == {"width": 1600, "height": 1000}
+        assert canonical["cordRig"]["sourceFrame"] == {
+            "x": 0, "y": 0, "width": 1600, "height": 1000
+        }
+        assert canonical["cordRig"]["innerFaceFrame"] == {
+            "x": 50, "y": 450, "width": 1500, "height": 500
+        }
+        assert {port["point"]["y"] for port in canonical["cordRig"]["ports"] if port["space"] == "world"} == {100}
+        assert {port["point"]["x"] for port in canonical["cordRig"]["ports"] if port["space"] == "world"} == {800}
+        assert len(canonical["cordRig"]["tensionGroups"]) == 2
+        assert all(group["pairing"] == "declared" for group in canonical["cordRig"]["tensionGroups"])
+        assert alias["sourcePresentationID"] == canonical["id"]
+        assert alias["rotationDegrees"] == 180
+        assert alias["geometryRotationAnchor"] == {"x": 0.5, "y": 0.7}
+        assert "isInverted" not in alias
 
     holds_by_presentation = {
         presentation_id: tuple(
@@ -562,20 +561,34 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ),
     }
     assert all(hold["kind"] == "edge" for hold in board["holds"])
-    assert all("sizeMillimeters" not in hold for hold in board["holds"])
+    unsupported_physical_metadata = {
+        "sizeMillimeters",
+        "depthRangeMillimeters",
+        "fingerCapacity",
+        "handCapacity",
+        "gripPosture",
+        "features",
+    }
+    assert all(unsupported_physical_metadata.isdisjoint(hold) for hold in board["holds"])
     assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
     assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
 
-    expected_sizes = {
-        "assets/primary.png": (1536, 1024),
-        "assets/three-edge-inverted.png": (1536, 1024),
-        "assets/two-edge-surface.png": (1774, 887),
-        "assets/two-edge-inverted.png": (1774, 887),
+    expected_assets = {
+        "assets/primary.png": "2911e2ff6ccf1add0ab6519e8a99fa2287747d751eb79b5c4a5aa1c335d1fa59",
+        "assets/two-edge-surface.png": "674e6cbc39201f0f80e887dcb7c4cbc391bc4e1081df58bc94e61b97f8c57f61",
     }
-    for asset_path, expected_size in expected_sizes.items():
+    assert {path.name for path in (FLASH_BOARD_ROOT / "assets").iterdir()} == {
+        "primary.png", "two-edge-surface.png"
+    }
+    for asset_path, expected_hash in expected_assets.items():
+        assert hashlib.sha256((FLASH_BOARD_ROOT / asset_path).read_bytes()).hexdigest() == expected_hash
         with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
             assert image.format == "PNG"
-            assert image.size == expected_size
+            assert image.size == (2172, 724)
+            assert image.mode == "RGBA"
+            alpha_minimum, alpha_maximum = image.getchannel("A").getextrema()
+            assert alpha_minimum < 255
+            assert alpha_maximum == 255
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
