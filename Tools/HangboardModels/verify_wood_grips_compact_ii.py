@@ -9,7 +9,7 @@ from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parents[2]
 parser=argparse.ArgumentParser()
-parser.add_argument("output",nargs="?",type=Path,default=ROOT/".context/epic-whale-wood-grips-compact-ii")
+parser.add_argument("output",nargs="?",type=Path,default=ROOT/".context"/f"{ROOT.name}-wood-grips-compact-ii")
 parser.add_argument("--format",choices=("glb","usdz"),action="append")
 parser.add_argument("--skip-renders",action="store_true")
 args=parser.parse_args(sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else [])
@@ -83,7 +83,7 @@ for ext in args.format or ("glb","usdz"):
         scene.camera.rotation_euler=(Vector((-.175,-.028,.086))-scene.camera.location).to_track_quat("-Z","Y").to_euler()
         scene.render.filepath=str(OUT/f"{ext}-clay-detail.png")
         bpy.ops.render.render(write_still=True)
-    results[ext]={"triangles":triangles,"clay_detail_render":None if args.skip_renders else f"{ext}-clay-detail.png","mesh_count":len(objects),"hold_ids_preserved":19,"textured_mesh_count":textured,
+    results[ext]={"triangles":triangles,"clay_detail_render":None if args.skip_renders else f"{ext}-clay-detail.png","mesh_count":len(objects),"hold_ids_preserved":len(expected & ids),"textured_mesh_count":textured,
                   "bounds_meters":dims,"bounds_tolerance_meters":tolerance_meters,
                   "source_images_cleared_before_import":True,
                   "file_bytes":(OUT/f"wood-grips-compact-ii.{ext}").stat().st_size,

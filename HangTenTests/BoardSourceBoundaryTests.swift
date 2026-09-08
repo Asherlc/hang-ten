@@ -315,8 +315,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
     }
 
     func testBoundaryAuditAllowsOnlyScopedDisplayModelBindings() {
-        let binding = "enum BoardModelIdentity { static let boardID = \"fixture.board\" }"
-        let literals: Set<String> = ["fixture.board"]
+        let binding = "enum BoardModelIdentity { static let boardID = \"metolius.wood-grips-compact-ii\" }"
+        let literals: Set<String> = ["metolius.wood-grips-compact-ii"]
         XCTAssertTrue(BoardSourceBoundaryAudit.findings(
             relativePath: "HangTen/Views/BoardModelView.swift", source: binding,
             packageOwnedLiterals: literals
@@ -327,12 +327,35 @@ final class BoardSourceBoundaryTests: XCTestCase {
         ).isEmpty)
         XCTAssertFalse(BoardSourceBoundaryAudit.findings(
             relativePath: "HangTen/Views/BoardModelView.swift",
-            source: binding + "\nlet outside = \"fixture.board\"", packageOwnedLiterals: literals
+            source: binding.replacingOccurrences(of: "metolius.wood-grips-compact-ii", with: "fixture.board"),
+            packageOwnedLiterals: ["fixture.board"]
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: binding + "\nlet outside = \"metolius.wood-grips-compact-ii\"", packageOwnedLiterals: literals
         ).isEmpty)
         XCTAssertFalse(BoardSourceBoundaryAudit.findings(
             relativePath: "HangTen/Views/BoardModelView.swift",
             source: "enum BoardModelIdentity { let hold = BoardHold() }", packageOwnedLiterals: literals
         ).isEmpty)
+    }
+
+    func testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity() {
+        let source = """
+        enum BoardModelIdentity {
+            static let boardID = "metolius.wood-grips-compact-ii"
+            static let image = "assets/primary.png"
+        }
+        """
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Views/BoardModelView.swift",
+                source: source,
+                packageOwnedLiterals: ["metolius.wood-grips-compact-ii", "assets/primary.png"]
+            ),
+            ["HangTen/Views/BoardModelView.swift: package-owned literal assets/primary.png"]
+        )
     }
 
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {

@@ -15,7 +15,7 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
-parser.add_argument("--output", type=Path, default=ROOT / ".context/epic-whale-wood-grips-compact-ii")
+parser.add_argument("--output", type=Path, default=ROOT / ".context" / f"{ROOT.name}-wood-grips-compact-ii")
 args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
 OUT = args.output.resolve()
 OUT.mkdir(parents=True, exist_ok=True)

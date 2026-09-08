@@ -216,6 +216,14 @@ assert hashlib.sha256(source.read_bytes()).hexdigest() == source_sha, "Source bl
 report = {"owner": ROOT.name, "source_blend": str(source), "source_sha256": source_sha,
           "hold_count": len(holds), "geometry_modified": False,
           "overview": "all-holds-overview.png", "individual_holds": entries}
+if args.overview_only and (out / "highlight-report.json").is_file():
+    previous = json.loads((out / "highlight-report.json").read_text())
+    if previous.get("source_sha256") == source_sha:
+        report["individual_holds"] = [entry for entry in previous.get("individual_holds", [])
+                                      if (out / entry["image"]).is_file()]
+        contact_sheet = previous.get("contact_sheet")
+        if contact_sheet and (out / contact_sheet).is_file():
+            report["contact_sheet"] = contact_sheet
 (out / "highlight-report.json").write_text(json.dumps(report, indent=2) + "\n")
 
 if entries:

@@ -23,8 +23,11 @@ rtk proxy blender --background --factory-startup --python-exit-code 1 \
 The verifier accepts `-- /path/to/output`; `-- --format usdz --skip-renders`
 checks only a changed USDZ, preserves the other format's report, and marks new
 render fields as skipped. The model build accepts
-`-- --output /path/to/output`. Default output is the workspace-owned
-`.context/epic-whale-wood-grips-compact-ii/`. No server, simulator, or external
+`-- --output /path/to/output`. All three tools derive the default output from
+the repository directory name: `.context/<workspace-name>-wood-grips-compact-ii/`
+(for example, `.context/epic-whale-wood-grips-compact-ii/`). The highlight tool
+uses its `highlights/` subdirectory. These defaults follow a renamed checkout
+without editing the scripts. No server, simulator, or external
 resource is created. `ownership.json` records the generated directory owner.
 
 Outputs include editable `.blend`, image-textured `.glb`, iOS-friendly `.usdz`,
@@ -58,10 +61,11 @@ roundtrip verifier above, inspect the source/export clay views and all 19 hold
 highlights, and copy the validated asset selected for app use:
 
 ```sh
-rtk proxy cp .context/epic-whale-wood-grips-compact-ii/wood-grips-compact-ii.usdz \
+model_output=".context/${PWD##*/}-wood-grips-compact-ii"
+rtk proxy cp "$model_output/wood-grips-compact-ii.usdz" \
   HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz
 rtk proxy shasum -a 256 \
-  .context/epic-whale-wood-grips-compact-ii/wood-grips-compact-ii.usdz \
+  "$model_output/wood-grips-compact-ii.usdz" \
   HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz
 ```
 
@@ -175,7 +179,17 @@ The renderer accepts `-- --blend PATH --output DIR` and optional
 `--overview-only`. The `highlights/` output includes a numbered overview,
 contact sheet, 19 individual views, `index.html`, and a report recording the
 source blend SHA. Use these to review contact partitions alongside the clay
-geometry views.
+geometry views. `--overview-only` refreshes the overview and preserves previous
+individual-image and contact-sheet report entries only when the source SHA
+matches and their referenced files still exist. A changed source invalidates
+those report entries. `--contact-sheet-only` rebuilds the sheet from a complete
+set of individual renders tied to the same source SHA.
+
+Run the inexpensive output-path and report regressions without Blender:
+
+```sh
+rtk proxy python3 -B Tools/HangboardModels/test_model_reports.py
+```
 
 ## Native SceneKit export compatibility
 
