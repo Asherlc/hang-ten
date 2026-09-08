@@ -650,19 +650,15 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
             assert image.size == expected_size
 
 
-def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
+def test_rock_rings_package_freezes_the_approved_single_unit_inventory() -> None:
     board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "metolius.rock-rings-3d"
+    assert board["subtitle"] == "Single training ring with a jug and three finger pockets."
     assert board["dimensions"] == "184 × 146 × 57 mm"
-    assert board["presentations"] == [
-        {
-            "id": "front-pair",
-            "name": "Front pair",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 1.5,
-            "default": True,
-        }
+    assert board["aspectRatio"] == pytest.approx(1200 / 1464)
+    assert board["equipmentObjects"] == [
+        {"id": "left-ring", "missingHandCapacityPolicy": "unavailable"}
     ]
 
     assert tuple(
@@ -672,61 +668,42 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             hold["kind"],
             hold.get("sizeMillimeters"),
             hold.get("fingerCapacity"),
+            hold.get("gripType"),
             hold["presentationID"],
         )
         for hold in board["holds"]
     ) == (
-        ("jug-left", "Left unit jug", "jug", None, None, "front-pair"),
+        ("jug-left", "Jug", "jug", None, None, None, "front-pair"),
         (
             "pocket-40-four-left",
-            "Left unit 40 mm four-finger pocket",
+            "40 mm four-finger pocket",
             "pocket",
             40,
             4,
+            "fourFingerPocket",
             "front-pair",
         ),
         (
             "pocket-32-three-left",
-            "Left unit 32 mm three-finger pocket",
+            "32 mm three-finger pocket",
             "pocket",
             32,
             3,
+            "threeFingerPocket",
             "front-pair",
         ),
         (
             "pocket-25-two-left",
-            "Left unit 25 mm two-finger pocket",
+            "25 mm two-finger pocket",
             "pocket",
             25,
             2,
-            "front-pair",
-        ),
-        ("jug-right", "Right unit jug", "jug", None, None, "front-pair"),
-        (
-            "pocket-40-four-right",
-            "Right unit 40 mm four-finger pocket",
-            "pocket",
-            40,
-            4,
-            "front-pair",
-        ),
-        (
-            "pocket-32-three-right",
-            "Right unit 32 mm three-finger pocket",
-            "pocket",
-            32,
-            3,
-            "front-pair",
-        ),
-        (
-            "pocket-25-two-right",
-            "Right unit 25 mm two-finger pocket",
-            "pocket",
-            25,
-            2,
+            "twoFingerPocket",
             "front-pair",
         ),
     )
+    assert {hold["equipmentObjectID"] for hold in board["holds"]} == {"left-ring"}
+    assert all("handCapacity" not in hold for hold in board["holds"])
     assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
     assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
     assert all(
@@ -738,36 +715,43 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
 
     with Image.open(ROCK_RINGS_ROOT / "assets" / "primary.png") as image:
         assert image.format == "PNG"
-        assert image.size == (1536, 1024)
+        assert image.mode == "RGBA"
+        assert image.size == (1254, 1254)
+    assert hashlib.sha256(
+        (ROCK_RINGS_ROOT / "assets" / "primary.png").read_bytes()
+    ).hexdigest() == "a01ce830b020d49d593528426eb403bb88cddf2ebf02bdb604381bd6639b43fb"
 
 
-def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
-    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
-    holds = {hold["id"]: hold for hold in board["holds"]}
+def test_rock_rings_loader_exposes_four_available_holds_and_an_upward_rig() -> None:
+    module = load_board_catalog_module()
+    package = module.load_board_package(ROCK_RINGS_ROOT)
+    presentation = package.board.presentations[0]
 
-    for left_id, right_id in (
-        ("jug-left", "jug-right"),
-        ("pocket-40-four-left", "pocket-40-four-right"),
-        ("pocket-32-three-left", "pocket-32-three-right"),
-        ("pocket-25-two-left", "pocket-25-two-right"),
-    ):
-        left = holds[left_id]["geometry"][0]
-        right = holds[right_id]["geometry"][0]
-        left_frame = left["frame"]
-        right_frame = right["frame"]
+    expected_hold_ids = (
+        "jug-left",
+        "pocket-40-four-left",
+        "pocket-32-three-left",
+        "pocket-25-two-left",
+    )
+    assert len(package.board.presentations) == 1
+    assert presentation.id == "front-pair"
+    assert presentation.name == "Front"
+    assert presentation.asset_path == "assets/primary.png"
+    assert presentation.aspect_ratio == pytest.approx(1200 / 1464)
+    assert presentation.available_hold_ids == expected_hold_ids
+    assert package.board.hold_ids_for_position("front-pair") == expected_hold_ids
 
-        assert right_frame["x"] == pytest.approx(
-            1 - left_frame["x"] - left_frame["width"]
-        )
-        assert right_frame["y"] == left_frame["y"]
-        assert right_frame["width"] == left_frame["width"]
-        assert right_frame["height"] == left_frame["height"]
-        assert right["shape"]["type"] == left["shape"]["type"] == "path"
-        _assert_global_paths_are_horizontal_mirrors(left, right)
-        assert [
-            command.get("bendable") for command in right["shape"]["commands"]
-        ] == [command.get("bendable") for command in left["shape"]["commands"]]
-        assert right.get("shapeConstraint") == left.get("shapeConstraint")
+    rig = presentation.cord_rig
+    assert isinstance(rig, module.RoutedCordRig)
+    assert (rig.scene_size.width, rig.scene_size.height) == (1200, 1464)
+    assert (rig.inner_face_frame.x, rig.inner_face_frame.y) == (150, 464)
+    assert (rig.inner_face_frame.width, rig.inner_face_frame.height) == (900, 900)
+
+    ports = {port.id: port for port in rig.ports}
+    for group in rig.tension_groups:
+        assert group.body_port_ids
+        for body_id, world_id in zip(group.body_port_ids, group.world_port_ids):
+            assert ports[body_id].point.y > ports[world_id].point.y
 
 
 def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
