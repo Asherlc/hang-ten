@@ -84,8 +84,17 @@ enum BoardSourceBoundaryAudit {
         for token in legacyArtifactTokens where source.contains(token) {
             findings.append("\(relativePath): legacy artifact token \(token)")
         }
+        // Index all consecutive quote pairs once. Quotes are raw UTF-8 bytes so
+        // escaped quotes and quote-adjacent combining marks remain candidates.
+        let quotedSegments = Set(sourceWithoutOwnedPlanMappings.utf8
+            .split(separator: 34, omittingEmptySubsequences: false)
+            .dropFirst().dropLast()
+            .map { String(decoding: $0, as: UTF8.self) })
         for literal in packageOwnedLiterals
         where !exemptedPresentationLiterals.contains(literal)
+            && (quotedSegments.contains(literal) || literal.utf8.contains(34))
+            // Retain the original search for candidates and quote-bearing
+            // literals, including its Unicode/grapheme-boundary semantics.
             && sourceWithoutOwnedPlanMappings.contains("\"\(literal)\"") {
             findings.append("\(relativePath): package-owned literal \(literal)")
         }

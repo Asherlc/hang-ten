@@ -358,6 +358,36 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
+    func testBoundaryAuditPreservesQuotedSubstringMatching() {
+        let path = "HangTen/Views/Fixture.swift"
+        let literals: Set<String> = [
+            "", "a", "aa", "a\\", "\\", "\"", "a\"a", "\"a", "a\"",
+            "\"\u{301}", "\u{301}", "é", "e\u{301}", "K", "K", "a\u{301}", "\n"
+        ]
+        // Exercise every adjacent quote pair, including escaped quotes and quotes
+        // inside a literal. This audit matches raw source, not parsed strings.
+        let sources = [
+            "", "a", "\"a", "a\"", "\"a\"", "\"a\"a\"", "\"\"\"",
+            #"\"a\""#, #""a\""#, #""a"a""#, "\"\n\"",
+            "\"\u{301}\"", "\"\"\u{301}", "\"a\"\u{301}",
+            "\"e\u{301}\"", "\"é\"", "\"K\"", "\"K\"",
+            "\"a\"\u{301}\"a\"", "\"\"\u{301}\""
+        ]
+        for source in sources {
+            let expected = literals.filter { source.contains("\"\($0)\"") }
+                .map { "\(path): package-owned literal \($0)" }
+                + literals.filter { path.contains($0) }
+                .map { "\(path): package-owned path literal \($0)" }
+            XCTAssertEqual(
+                BoardSourceBoundaryAudit.findings(
+                    relativePath: path, source: source, packageOwnedLiterals: literals
+                ).sorted(),
+                expected.sorted(),
+                "Raw quoted-substring behavior changed for \(source.debugDescription)"
+            )
+        }
+    }
+
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
