@@ -75,7 +75,17 @@ struct HangTenApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            Group {
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
+                    GripHandModelReviewView()
+                } else {
+                    RootView()
+                }
+                #else
+                RootView()
+                #endif
+            }
                 .environmentObject(store)
 				.environmentObject(motherboardBluetoothService)
 				.environmentObject(motherboardSettingsStore)
