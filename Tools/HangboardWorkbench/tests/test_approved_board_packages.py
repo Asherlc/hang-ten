@@ -45,6 +45,34 @@ def test_nature_stone_hanger_mini_matches_audited_inventory() -> None:
         {"granite-edge-15", "wood-edge-15-incut", "pinch-60", "pull-up-jug"},
     )
 
+    package_root = REPOSITORY_ROOT / "Hangboards" / "nature-stone-hanger-mini"
+    package = board_package.load_board_package(package_root)
+    assert [
+        (presentation["id"], presentation["assetPath"])
+        for presentation in package.board["presentations"]
+    ] == [("primary", "assets/primary.png")]
+    assert {path.name for path in (package_root / "assets").iterdir()} == {
+        "primary.png"
+    }
+    primary = package.board["presentations"][0]
+    assert set(primary["availableHoldIDs"]) == {
+        "granite-edge-15",
+        "wood-edge-15-incut",
+        "pinch-60",
+        "pull-up-jug",
+    }
+    pinch = next(hold for hold in package.board["holds"] if hold["id"] == "pinch-60")
+    assert pinch["presentationID"] == "primary"
+    assert len(pinch["geometry"]) == 2
+
+    document = board_package.editor_document(package, "primary")
+    pinch_regions = [
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] == "pinch-60"
+    ]
+    assert [region["metadata"]["pieceIndex"] for region in pinch_regions] == [0, 1]
+
 
 def test_nature_stone_hanger_mini_karma8a_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
