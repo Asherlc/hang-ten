@@ -24,7 +24,7 @@ drift away from its physical hold.
 - A runnable minute-by-minute session with pause/resume, direct step selection,
   skipping the current timed step, a spoken 3-2-1 start countdown, and final
   three-second countdown cues.
-- Mirrored Phosphor hand cues for grip pose and participating fingers.
+- Mirrored, rotatable 3D hand cues with Blender-authored grip shapes and exact finger highlights.
 - Portrait and landscape workout layouts.
 - An explicit Apple Health permission card. Completed sessions save as
   functional-strength workouts after authorization.
