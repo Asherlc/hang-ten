@@ -49,27 +49,6 @@ def apply(obj, modifier):
     bpy.ops.object.modifier_apply(modifier=modifier.name)
 
 
-def bevel(obj, width, segments=3):
-    mod = obj.modifiers.new("Hand-selected soft edge radius", "BEVEL")
-    mod.width = width / 1000
-    mod.segments = segments
-    apply(obj, mod)
-
-
-def extrude(name, outline, back, front):
-    n = len(outline)
-    verts = [xyz(x, y, d) for d in (back, front) for x, y in outline]
-    faces = [tuple(reversed(range(n))), tuple(range(n, n * 2))]
-    faces += [(i, (i+1) % n, (i+1) % n+n, i+n) for i in range(n)]
-    obj = mesh(name, verts, faces)
-    active(obj)
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.normals_make_consistent(inside=False)
-    bpy.ops.object.mode_set(mode="OBJECT")
-    return obj
-
-
 def material(name, color):
     mat = bpy.data.materials.new(name)
     mat.diffuse_color = (*color, 1)
@@ -80,34 +59,74 @@ def material(name, color):
     return mat
 
 
-wood = material("Pale timber • baked grain", (.69, .49, .28))
+wood = material("wood_body_material", (.69, .49, .28))
 hold_ids = [h["id"] for h in json.loads((ROOT / "Hangboards/metolius-wood-grips-compact-ii/board.json").read_text())["holds"]]
 hold_mats = {name: material(name, (.69, .49, .28)) for name in hold_ids}
 
-# Explicitly drawn symmetric outer profile; coordinates/radii are visual estimates.
-# The inset shoulders on the upper outline are the two flat-sloper channels.
-left = [(305,151), (198,151), (194,150), (192,146), (110,146),
-        (104,151), (99,157), (26,157), (10,154), (2,146), (0,138),
-        (3,125), (9,110), (14,91), (16,77), (15,72), (18,65),
-        (22,53), (25,20), (24,13), (27,6), (35,1), (46,0), (305,0)]
-outline = left + [(610-x, y) for x,y in reversed(left[1:-1])]
-def top_profile(x, h, d):
-    if h <= 132:
+# Cubic silhouette spans are deliberately drawn from the manufacturer photograph.
+# Their control points, roundover radius and all unseen sections are estimates.
+def cubic(p0, p1, p2, p3, steps=8):
+    return [tuple((1-t)**3*p0[k]+3*(1-t)**2*t*p1[k]
+                  +3*(1-t)*t*t*p2[k]+t**3*p3[k] for k in range(2))
+            for t in [i/steps for i in range(steps)]]
+
+spans = [
+    ((305,151),(268,151),(228,151),(204,151)),
+    ((204,151),(197,151),(198,146),(190,146)),
+    ((190,146),(163,146),(133,146),(111,146)),
+    ((111,146),(103,146),(103,157),(94,157)),
+    ((94,157),(72,157),(44,157),(29,155)),
+    ((29,155),(10,153),(0,148),(0,139)),
+    ((0,139),(0,128),(14,110),(16,88)),
+    ((16,88),(18,76),(13,75),(16,68)),
+    ((16,68),(20,62),(23,52),(24,40)),
+    ((24,40),(26,25),(26,20),(25,15)),
+    ((25,15),(23,6),(34,0),(48,0)),
+    ((48,0),(112,0),(222,0),(305,0)),
+]
+left=[point for span in spans for point in cubic(*span)] + [(305,0)]
+outline=left + [(610-x,h) for x,h in reversed(left[1:-1])]
+n=len(outline)
+# Unit inward normals to this counterclockwise silhouette provide an explicit
+# body roundover, independent of tiny edges introduced later by the Booleans.
+inward=[]
+for i in range(n):
+    prev,after=outline[(i-1)%n],outline[(i+1)%n]
+    dx,dh=after[0]-prev[0],after[1]-prev[1]
+    length=math.hypot(dx,dh)
+    inward.append((-dh/length,dx/length))
+
+def smoothstep(a,b,x):
+    t=max(0,min(1,(x-a)/(b-a)))
+    return t*t*(3-2*t)
+
+def top_profile(x,h,d):
+    if h<=132:
         return h
     mirrored_x=min(x,610-x)
-    if mirrored_x < 104:  # outer rounded jug
-        t=max(0,(d-23)/33)
-        drop=(h-134)*(1-math.sqrt(max(0,1-t*t)))
-    elif mirrored_x < 196:  # planar flat-sloper channel
-        drop=5*d/56
-    else:  # broad rounded central sloper
-        t=d/56
-        drop=(h-133)*(1-math.sqrt(max(0,1-t*t)))
+    jug_t=max(0,(d-10)/46)
+    jug_drop=14*(h-132)/25*(1-math.sqrt(max(0,1-jug_t*jug_t)))
+    flat_drop=5*(h-132)/14*d/56
+    center_drop=18*(h-132)/19*(1-math.sqrt(max(0,1-(d/56)**2)))
+    jug_mix=smoothstep(99,113,mirrored_x)
+    center_mix=smoothstep(185,204,mirrored_x)
+    drop=(jug_drop*(1-jug_mix)+flat_drop*jug_mix)*(1-center_mix)+center_drop*center_mix
     return h-drop
 
-depth_rings=[0,7,14,21,28,35,42,47,51,54,56]
-n=len(outline)
-verts=[xyz(x,top_profile(x,h,d),d) for d in depth_rings for x,h in outline]
+# Angular sampling resolves the near-vertical ends of circular rolls. Front
+# and back roundovers are actual geometry, not shading or a global bevel.
+depth_rings=sorted(set([0,.25,.6,1.2,2,3,5,7,10,14,20,26,32,38,42,46,49]
+                     + [56*math.sin(i*math.pi/2/40) for i in range(1,41)]))
+verts=[]
+for d in depth_rings:
+    for (x,h),(nx,nh) in zip(outline,inward):
+        # The bottom rail allows a broad 7 mm roll. Concave top channels need
+        # 2 mm so their inward offset does not cross the shoulder curvature.
+        radius=7-5*smoothstep(15,40,h)
+        inset=(2-math.sqrt(max(0,4-(d-2)**2)) if d<2 else
+               radius-math.sqrt(max(0,radius**2-(d-(56-radius))**2))
+               if d>56-radius else 0)
+        verts.append(xyz(x+nx*inset,top_profile(x,h,d)+nh*inset,d))
 faces=[tuple(reversed(range(n))),tuple(range((len(depth_rings)-1)*n,len(depth_rings)*n))]
 faces += [(j*n+i,j*n+(i+1)%n,(j+1)*n+(i+1)%n,(j+1)*n+i)
           for j in range(len(depth_rings)-1) for i in range(n)]
@@ -120,7 +139,6 @@ bpy.ops.object.mode_set(mode="OBJECT")
 body.data.materials.append(wood)
 for mat in hold_mats.values():
     body.data.materials.append(mat)
-bevel(body, 3.0, 4)
 
 
 def subtract(cutter, hold_id=None):
@@ -136,6 +154,7 @@ def subtract(cutter, hold_id=None):
     mod.solver = "EXACT"
     mod.object = cutter
     apply(body, mod)
+    assert body.data.polygons, f"Carving {hold_id or cutter.name} removed the body"
     bpy.data.objects.remove(cutter, do_unlink=True)
 
 
@@ -146,8 +165,8 @@ def capsule(cx, cy, width, height, radius=None):
                           (cx-width/2+r,cy+height/2-r,90),
                           (cx-width/2+r,cy-height/2+r,180),
                           (cx+width/2-r,cy-height/2+r,270)]:
-        for i in range(9):
-            theta = math.radians(start+i*90/8)
+        for i in range(17):
+            theta = math.radians(start+i*90/16)
             points.append((xx+r*math.cos(theta), yy+r*math.sin(theta)))
     clean=[]
     for point in points:
@@ -159,9 +178,15 @@ def capsule(cx, cy, width, height, radius=None):
 
 
 def recess(name, cx, cy, width, height, depth, radius=None):
-    # Rounded transition into the back wall, through an explicit four-ring cutter.
-    rings = [(56-depth, 4), (56-depth+2, 1.4), (56-depth+5, 0),
-             (53,0),(55,-.6),(56,-2),(76,-2)]
+    # Two tangent quarter-circle fillets: back-to-wall and wall-to-front.
+    # Shelves get the visibly fuller rolled rail radius seen in the photograph.
+    back_r=6.0
+    mouth_r=6.0 if name.startswith("edge-") else 3.5
+    rings=[(56-depth+back_r*(1-math.cos(i*math.pi/2/12)),
+            back_r*(1-math.sin(i*math.pi/2/12))) for i in range(13)]
+    rings += [(56-mouth_r+mouth_r*math.sin(i*math.pi/2/12),
+               -mouth_r*(1-math.cos(i*math.pi/2/12))) for i in range(13)]
+    rings += [(76,-mouth_r)]
     profiles = [capsule(cx,cy,width-inset*2,height-inset*2,
                         max(1,(radius if radius else min(width,height)/2)-inset))
                 for _,inset in rings]
@@ -189,20 +214,20 @@ for depth, cy, outer, inner, outer_w, inner_w in [(29,88,151,221,66,46),(19,29,1
     recess(f"pocket-{depth}-four-center",305,cy,96,25,depth)
 
 # Outer edges open through the side of the board, as shown in both references.
-for depth,cy,w,h,cx in [(29,102,131,56,39),(19,34,139,43,43)]:
+for depth,cy,w,h,cx in [(29,98,131,48,39),(19,34,139,43,43)]:
     for side,x in [("left",cx),("right",610-cx)]:
         recess(f"edge-{depth}-{side}",x,cy,w,h,depth,8)
 
-# Six production mounting holes are visible in the primary photograph.
-for x,h in [(113,110),(253,110),(363,110),(500,110),(125,49),(487,49)]:
-    bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=.0023,depth=.09,
-        location=xyz(x,h,28),rotation=(math.pi/2,0,0))
-    subtract(bpy.context.object)
-    bpy.ops.mesh.primitive_cone_add(vertices=24,radius1=.0023,radius2=.0046,depth=.004,
-        location=xyz(x,h,55),rotation=(math.pi/2,0,0))
-    subtract(bpy.context.object)
+# The six mounting holes visible in the primary photograph are deliberately
+# omitted from this display model at the user's request.
 
-bevel(body, 2.0, 4)
+# Do not bevel the Boolean result: tiny intersection edges clamp global bevels
+# and destroy intentional cross-sections. Every contact fillet is authored above.
+active(body)
+bpy.ops.object.mode_set(mode="EDIT")
+bpy.ops.mesh.select_all(action="SELECT")
+bpy.ops.mesh.remove_doubles(threshold=.0000001)
+bpy.ops.object.mode_set(mode="OBJECT")
 
 # Partition actual top contact faces into the five existing top hold IDs.
 for poly in body.data.polygons:
@@ -211,13 +236,15 @@ for poly in body.data.polygons:
     center=poly.center
     x=center.x*1000+305
     h=center.z*1000
-    if h>132 and poly.normal.z>.20:
+    if h>126 and poly.normal.z>.12:
         name=("jug-left" if x<106 else "sloper-flat-left" if x<196 else
               "sloper-round-center" if x<414 else "sloper-flat-right" if x<504 else "jug-right")
         poly.material_index=list(hold_mats).index(name)+1
 
 # Bake the same continuous procedural timber onto a shared UV atlas; exported
 # GLB/USDZ use standard image-textured PBR, not Blender-only procedural nodes.
+if not body.data.uv_layers:
+    body.data.uv_layers.new(name="UVMap")
 active(body)
 bpy.ops.object.mode_set(mode="EDIT")
 bpy.ops.mesh.select_all(action="SELECT")
@@ -269,6 +296,18 @@ for mat in body.data.materials:
         if n not in (target,bsdf,nodes.get("Material Output")):
             nodes.remove(n)
 
+# Large Boolean cap faces remain mathematically flat, avoiding pinched shading
+# around recesses. Dense curved strips use ordinary interpolated normals;
+# weighted normals can introduce triangular artifacts on Boolean cap topology.
+for poly in body.data.polygons:
+    poly.use_smooth=True
+for poly in body.data.polygons:
+    if len(poly.vertices)>4:
+        origin=body.data.vertices[poly.vertices[0]].co
+        if all(abs((body.data.vertices[v].co-origin).dot(poly.normal))<1e-7
+               for v in poly.vertices):
+            poly.use_smooth=False
+
 # Split by material so each true carved contact is independently selectable.
 active(body)
 bpy.ops.object.mode_set(mode="EDIT")
@@ -283,11 +322,6 @@ for obj in model:
     obj["display_estimate"]=True
     if obj.name in hold_ids:
         obj["hold_id"]=obj.name
-    for poly in obj.data.polygons:
-        poly.use_smooth=True
-    normals=obj.modifiers.new("Weighted surface normals","WEIGHTED_NORMAL")
-    normals.keep_sharp=True
-    apply(obj,normals)
 
 def select_model():
     bpy.ops.object.select_all(action="DESELECT")
@@ -298,8 +332,19 @@ def select_model():
 select_model()
 bpy.ops.export_scene.gltf(filepath=str(OUT/"wood-grips-compact-ii.glb"),export_format="GLB",
     use_selection=True,export_extras=True,export_cameras=False,export_lights=False)
+# SceneKit misimports complex Boolean cap n-gons: explicit export triangles
+# preserve the intended cavities and per-face material bindings. These temporary
+# modifiers leave the editable source mesh and its vertex positions unchanged.
+usd_triangulators=[]
+for obj in model:
+    modifier=obj.modifiers.new("Portable USD triangles","TRIANGULATE")
+    modifier.quad_method="FIXED"
+    modifier.ngon_method="BEAUTY"
+    usd_triangulators.append((obj,modifier))
 bpy.ops.wm.usd_export(filepath=str(OUT/"wood-grips-compact-ii.usdz"),selected_objects_only=True,
     export_materials=True,generate_preview_surface=True)
+for obj,modifier in usd_triangulators:
+    obj.modifiers.remove(modifier)
 
 report={"owner":ROOT.name,"model":"metolius.wood-grips-compact-ii","units":"meters",
     "source_dimensions_mm":{"width":610,"height":157},"display_estimate_depth_mm":56,
@@ -307,9 +352,12 @@ report={"owner":ROOT.name,"model":"metolius.wood-grips-compact-ii","units":"mete
     "hold_count":sum(o.name in hold_ids for o in model),
     "mesh_count":len(model),"triangles":sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in model),
     "texture_resolution":[2048,2048],"estimated_geometry":True,
-    "limitations":["Display only, not manufacturing geometry","Widths, placement, radii, side and back profiles estimated from manufacturer images","Not installed into the Hang Ten runtime or canonical board package"]}
+    "geometry_revision":3,"body_depth_rings":len(depth_rings),
+    "mounting_holes_omitted":True,"mounting_hole_count":0,
+    "pocket_fillet_segments":12,"silhouette_cubic_spans":24,
+    "limitations":["Display only, not manufacturing geometry","Widths, placement, radii, side and back profiles estimated from manufacturer images","Six physical mounting holes deliberately omitted at user request for app display","Generated exports require validation and an explicit app bundle refresh; canonical 2D paths remain in use for editor and fallback"]}
 assert report["hold_ids"]==sorted(hold_ids),report
-assert report["triangles"]<80000,report
+assert report["triangles"]<150000,report
 (OUT/"model-report.json").write_text(json.dumps(report,indent=2)+"\n")
 
 # Neutral studio wall, deliberately separate from selected exportable geometry.
@@ -349,6 +397,20 @@ def render(name,location):
     bpy.ops.render.render(write_still=True)
 render("front.png",(0,-1,.0785))
 render("three-quarter.png",(.31,-1,.34))
+clay=material("Geometry review clay",(.38,.42,.46))
+scene.view_layers[0].material_override=clay
+render("clay-three-quarter.png",(.31,-1,.34))
+cam_data.ortho_scale=.34
+scene.render.resolution_x=1500
+scene.render.resolution_y=1100
+cam.location=(-.43,-.58,.36)
+cam.rotation_euler=(Vector((-.175,-.028,.086))-cam.location).to_track_quat("-Z","Y").to_euler()
+scene.render.filepath=str(OUT/"clay-detail.png")
+bpy.ops.render.render(write_still=True)
+scene.view_layers[0].material_override=None
+cam_data.ortho_scale=.76
+scene.render.resolution_x=1800
+scene.render.resolution_y=750
 highlight=material("Selection amber",(.94,.35,.035))
 selected=[]
 for obj in model:

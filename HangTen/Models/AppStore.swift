@@ -53,6 +53,12 @@ final class AppStore: ObservableObject {
         let persistedBoardID = defaults.string(forKey: Self.selectedBoardIDKey)
         selectedBoard = BoardCatalog.all.first { $0.id == persistedBoardID }
             ?? BoardCatalog.defaultBoard
+        #if DEBUG
+        if let reviewBoardID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_ID"],
+           let reviewBoard = BoardCatalog.all.first(where: { $0.id == reviewBoardID }) {
+            selectedBoard = reviewBoard
+        }
+        #endif
         self.healthKitService = healthKitService
         self.motherboardBluetoothService = motherboardBluetoothService ?? MotherboardBluetoothService(
             transport: CoreBluetoothMotherboardTransport()

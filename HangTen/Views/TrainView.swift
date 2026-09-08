@@ -35,6 +35,14 @@ struct TrainView: View {
         #endif
     }()
 
+    @State private var showsBoardDetailReview: Bool = {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DETAIL"] == "1"
+        #else
+        return false
+        #endif
+    }()
+
     init(onBrowsePlans: @escaping () -> Void) {
         self.onBrowsePlans = onBrowsePlans
     }
@@ -78,6 +86,9 @@ struct TrainView: View {
             }
             .navigationDestination(isPresented: $showsSettingsReview) {
                 AppSettingsView()
+            }
+            .navigationDestination(isPresented: $showsBoardDetailReview) {
+                BoardDetailView(board: store.selectedBoard)
             }
             .navigationDestination(isPresented: $showsBoardPickerReview) {
                 BoardPickerView()
@@ -185,9 +196,16 @@ struct BoardDetailView: View {
 
     init(board: TrainingBoard) {
         self.board = board
-        _selectedHoldID = State(initialValue: board.holds.first(where: {
+        var initialHoldID = board.holds.first(where: {
             $0.presentationID == board.defaultPresentation.id
-        })?.id)
+        })?.id
+        #if DEBUG
+        if let reviewHoldID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HOLD_ID"],
+           board.holds.contains(where: { $0.id == reviewHoldID }) {
+            initialHoldID = reviewHoldID
+        }
+        #endif
+        _selectedHoldID = State(initialValue: initialHoldID)
     }
 
     private var selectedHold: BoardHold? {

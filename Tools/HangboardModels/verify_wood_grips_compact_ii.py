@@ -1,4 +1,6 @@
 """Roundtrip actual runtime exports, verify IDs/texture/scale, render both."""
+import argparse
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -6,10 +8,16 @@ import bpy
 from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parents[2]
-OUT=Path(sys.argv[sys.argv.index("--")+1]).resolve() if "--" in sys.argv else ROOT/".context/epic-whale-wood-grips-compact-ii"
+parser=argparse.ArgumentParser()
+parser.add_argument("output",nargs="?",type=Path,default=ROOT/".context/epic-whale-wood-grips-compact-ii")
+parser.add_argument("--format",choices=("glb","usdz"),action="append")
+parser.add_argument("--skip-renders",action="store_true")
+args=parser.parse_args(sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else [])
+OUT=args.output.resolve()
 expected={h["id"] for h in json.loads((ROOT/"Hangboards/metolius-wood-grips-compact-ii/board.json").read_text())["holds"]}
-results={}
-for ext in ("glb","usdz"):
+report_path=OUT/"export-verification.json"
+results=json.loads(report_path.read_text()) if args.format and report_path.exists() else {}
+for ext in args.format or ("glb","usdz"):
     bpy.ops.wm.open_mainfile(filepath=str(OUT/"wood-grips-compact-ii.blend"))
     for obj in list(bpy.data.objects):
         if obj.type=="MESH" and not obj.name.startswith("Studio"):
@@ -51,15 +59,37 @@ for ext in ("glb","usdz"):
             assert all(i.has_data for i in images),(ext,obj.name,"missing image data")
             assert any(i.size[0]==2048 for i in images),(ext,obj.name,"missing 2048 atlas")
         textured+=1
-    scene=bpy.context.scene
-    scene.camera.location=(.31,-1,.34)
-    scene.camera.rotation_euler=(Vector((0,-.028,.0785))-scene.camera.location).to_track_quat("-Z","Y").to_euler()
-    scene.render.filepath=str(OUT/f"{ext}-roundtrip.png")
-    bpy.ops.render.render(write_still=True)
-    results[ext]={"mesh_count":len(objects),"hold_ids_preserved":19,"textured_mesh_count":textured,
+    triangles=sum(len(p.vertices)-2 for o in objects for p in o.data.polygons)
+    assert triangles<150000,(ext,triangles)
+    if ext=="usdz":
+        assert all(len(p.vertices)==3 for o in objects for p in o.data.polygons),"USDZ must contain explicit triangles for SceneKit"
+    if not args.skip_renders:
+        scene=bpy.context.scene
+        scene.camera.location=(.31,-1,.34)
+        scene.camera.rotation_euler=(Vector((0,-.028,.0785))-scene.camera.location).to_track_quat("-Z","Y").to_euler()
+        scene.render.filepath=str(OUT/f"{ext}-roundtrip.png")
+        bpy.ops.render.render(write_still=True)
+        # A close oblique view checks actual exported normals and curved sections.
+        clay=bpy.data.materials.new("Roundtrip geometry review clay")
+        clay.use_nodes=True
+        bsdf=clay.node_tree.nodes.get("Principled BSDF")
+        bsdf.inputs["Base Color"].default_value=(.38,.42,.46,1)
+        bsdf.inputs["Roughness"].default_value=.6
+        scene.view_layers[0].material_override=clay
+        scene.camera.data.ortho_scale=.34
+        scene.render.resolution_x=1500
+        scene.render.resolution_y=1100
+        scene.camera.location=(-.43,-.58,.36)
+        scene.camera.rotation_euler=(Vector((-.175,-.028,.086))-scene.camera.location).to_track_quat("-Z","Y").to_euler()
+        scene.render.filepath=str(OUT/f"{ext}-clay-detail.png")
+        bpy.ops.render.render(write_still=True)
+    results[ext]={"triangles":triangles,"clay_detail_render":None if args.skip_renders else f"{ext}-clay-detail.png","mesh_count":len(objects),"hold_ids_preserved":19,"textured_mesh_count":textured,
                   "bounds_meters":dims,"bounds_tolerance_meters":tolerance_meters,
                   "source_images_cleared_before_import":True,
                   "file_bytes":(OUT/f"wood-grips-compact-ii.{ext}").stat().st_size,
-                  "roundtrip_render":f"{ext}-roundtrip.png"}
+                  "roundtrip_render":None if args.skip_renders else f"{ext}-roundtrip.png",
+                  "renders_skipped":args.skip_renders,
+                  "sha256":hashlib.sha256((OUT/f"wood-grips-compact-ii.{ext}").read_bytes()).hexdigest(),
+                  "explicit_triangles":all(len(p.vertices)==3 for o in objects for p in o.data.polygons)}
 (OUT/"export-verification.json").write_text(json.dumps(results,indent=2)+"\n")
 print("EXPORT_VERIFICATION",json.dumps(results))

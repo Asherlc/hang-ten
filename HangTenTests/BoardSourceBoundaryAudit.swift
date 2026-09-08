@@ -62,9 +62,16 @@ enum BoardSourceBoundaryAudit {
             "HangTen/Models/TrainingModels.swift"
         ]
         var findings: [String] = []
-        let sourceWithoutOwnedPlanMappings = removingOwnedPlanMappings(
-            from: source,
-            relativePath: relativePath
+        let sourceWithoutOwnedPlanMappings = removingOwnedDeclaration(
+            from: removingOwnedDeclaration(
+                from: source,
+                relativePath: relativePath,
+                ownerPath: planMappingOwnerPath,
+                declaration: planMappingOwnerDeclaration
+            ),
+            relativePath: relativePath,
+            ownerPath: "HangTen/Views/BoardModelView.swift",
+            declaration: "enum BoardModelIdentity {"
         )
         let exemptedPresentationLiterals = genericPresentationVocabularyOwnerPaths.contains(relativePath)
             ? genericCanonicalPresentationLiterals
@@ -108,12 +115,16 @@ enum BoardSourceBoundaryAudit {
         return findings
     }
 
-    private static func removingOwnedPlanMappings(
+    /// A display model may bind mesh names to canonical IDs, but cannot define
+    /// replacement physical metadata or paths (the constructor audit still applies).
+    private static func removingOwnedDeclaration(
         from source: String,
-        relativePath: String
+        relativePath: String,
+        ownerPath: String,
+        declaration: String
     ) -> String {
-        guard relativePath == planMappingOwnerPath,
-              let declarationRange = source.range(of: planMappingOwnerDeclaration) else {
+        guard relativePath == ownerPath,
+              let declarationRange = source.range(of: declaration) else {
             return source
         }
         let openingBrace = source.index(before: declarationRange.upperBound)

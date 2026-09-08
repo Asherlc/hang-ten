@@ -294,23 +294,45 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
         let physicalHoldVisualFrame =
-            "                        )\n" +
-            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                    }\n" +
-            "                }"
+            "                            )\n" +
+            "                            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                        }\n" +
+            "                    }"
         XCTAssertTrue(
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
         let outerZStackFrame =
+            "                    }\n" +
+            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "                }\n" +
-            "                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "            }\n" +
             "            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)"
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."
         )
+    }
+
+    func testBoundaryAuditAllowsOnlyScopedDisplayModelBindings() {
+        let binding = "enum BoardModelIdentity { static let boardID = \"fixture.board\" }"
+        let literals: Set<String> = ["fixture.board"]
+        XCTAssertTrue(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift", source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/OtherView.swift", source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: binding + "\nlet outside = \"fixture.board\"", packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/BoardModelView.swift",
+            source: "enum BoardModelIdentity { let hold = BoardHold() }", packageOwnedLiterals: literals
+        ).isEmpty)
     }
 
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
