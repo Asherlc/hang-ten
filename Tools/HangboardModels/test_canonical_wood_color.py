@@ -27,6 +27,9 @@ class CanonicalWoodColorTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             assert_light_neutral_wood_srgb((0.95, 0.95, 0.95, 0.02))
 
+    def test_scene_kit_calibrated_light_tan_is_accepted(self):
+        assert_light_neutral_wood_srgb((210 / 255, 196 / 255, 173 / 255, 0.04))
+
 
 if __name__ == "__main__":
     unittest.main()

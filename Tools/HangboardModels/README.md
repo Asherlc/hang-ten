@@ -115,8 +115,9 @@ Every shipped wood display model uses the one committed original source
 and no species-match, logo, knot, stain, or board-color claim. The PNG declares
 its encoded color explicitly with standard-sRGB `sRGB`, `gAMA`, and `cHRM`
 chunks so the source and self-contained USDZ payload do not depend on a
-decoder's unprofiled-image default. The deterministic v3 generator and its
-color-profile intent are in `canonical_neutral_wood.py`; regenerate the asset
+decoder's unprofiled-image default. The deterministic v5 generator, its
+color-profile intent, and the SceneKit-calibrated light-tan albedo are in
+`canonical_neutral_wood.py`; regenerate the asset
 only with:
 
 ```sh
@@ -148,6 +149,12 @@ themselves establish bridge decoding behavior:
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
   --python Tools/HangboardModels/test_canonical_wood_material.py
 ```
+
+For albedo calibration, keep camera, lighting, geometry, and material settings
+fixed and capture at least two source-albedo samples through the actual app
+renderer. Compare matched board pixels, solve the observed response toward a
+declared exposed-face target, and validate the chosen source in the app again.
+Do not tune from Blender's color-managed review alone.
 
 ## Actual-export verifiers
 

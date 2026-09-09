@@ -23,7 +23,7 @@ TOOLS = Path(__file__).resolve().parent
 CANONICAL_TEXTURE_NAME = "canonical-neutral-wood.png"
 CANONICAL_TEXTURE_PATH = TOOLS / "assets" / CANONICAL_TEXTURE_NAME
 WIDTH = HEIGHT = 2048
-GENERATOR_VERSION = "2026-09-09-light-neutral-wood-v3-srgb-profile"
+GENERATOR_VERSION = "2026-09-09-light-neutral-wood-v5-scene-kit-calibrated"
 SRGB_RENDERING_INTENT = 0
 SRGB_GAMMA = 45455
 SRGB_CHROMATICITIES = (
@@ -53,7 +53,7 @@ def _row(y: int) -> bytes:
         offset = x * 3
         pixels[offset : offset + 3] = bytes(
             max(0, min(255, round(channel + shade)))
-            for channel in (120, 110, 94)
+            for channel in (210, 196, 173)
         )
     return bytes(pixels)
 

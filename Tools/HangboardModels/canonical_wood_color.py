@@ -118,8 +118,8 @@ def srgb_color_evidence(payload: bytes) -> tuple[float, float, float, float]:
 def assert_light_neutral_wood_srgb(evidence: tuple[float, float, float, float]) -> None:
     """Reject white/high-albedo and non-neutral encoded wood color evidence."""
     red, green, blue, grain_range = evidence
-    assert 0.35 <= (red + green + blue) / 3 <= 0.48, (
-        "canonical wood encoded sRGB must remain visibly light beige/tan rather than white",
+    assert 0.70 <= (red + green + blue) / 3 <= 0.82, (
+        "canonical wood encoded sRGB must remain light beige/tan rather than dark or white",
         evidence,
     )
     assert red > green > blue and red - blue < 0.18, evidence
