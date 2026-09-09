@@ -435,6 +435,7 @@ private struct BoardPickerCard: View {
                             }
                         }
                     }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("boardPicker.board.\(board.id)")

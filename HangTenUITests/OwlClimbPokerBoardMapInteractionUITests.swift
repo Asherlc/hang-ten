@@ -47,3 +47,31 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         add(attachment)
     }
 }
+
+final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
+    func testTappingModelCenterSelectsBoard() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = ["HANGTEN_REVIEW_BOARD_PICKER": "1"]
+        app.launch()
+
+        let search = app.searchFields["Search boards"]
+        XCTAssertTrue(search.waitForExistence(timeout: 30))
+        search.tap()
+        search.typeText("Beastmaker 1000")
+
+        let board = app.buttons["boardPicker.board.beastmaker-1000"]
+        XCTAssertTrue(board.waitForExistence(timeout: 10))
+
+        let model = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(
+            model.waitForExistence(timeout: 30),
+            "The Beastmaker picker card must expose its loaded 3D model surface."
+        )
+        model.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+
+        XCTAssertTrue(
+            app.buttons["train.changeBoard"].waitForExistence(timeout: 10),
+            "Tapping the model center must select the board and dismiss the picker."
+        )
+    }
+}
