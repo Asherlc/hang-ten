@@ -203,11 +203,42 @@ final class BoardPackageStoreTests: XCTestCase {
         assertStoreRejects(fixture.bundle, reasonContaining: "exactly once")
     }
 
+    func testStoreRejectsRedundantEmptyOriginalRasterPresentation() throws {
+        let fixture = try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "unused",
+                    "name": "Unused",
+                    "aspectRatio": 1,
+                    "isDefault": false,
+                    "derivation": ["type": "original"],
+                    "media": [
+                        "type": "raster",
+                        "assetPath": "assets/unused.png",
+                        "holdGeometry": [:],
+                    ],
+                ])
+                board["presentations"] = presentations
+            },
+            mutateAssets: { assetsURL in
+                try self.squarePresentationBytes().write(
+                    to: assetsURL.appendingPathComponent("unused.png")
+                )
+            }
+        )
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "at least one logical hold")
+    }
+
     func testStoreRejectsRasterHoldOwnedOnlyByDerivedPresentation() throws {
         let fixture = try makeDerivedRasterV2FixtureBundle { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
             var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
-            media["holdGeometry"] = [:]
+            var holdGeometry = try XCTUnwrap(media["holdGeometry"] as? [String: Any])
+            holdGeometry.removeValue(forKey: "hold-right")
+            media["holdGeometry"] = holdGeometry
             presentations[0]["media"] = media
             board["presentations"] = presentations
         }
@@ -309,6 +340,151 @@ final class BoardPackageStoreTests: XCTestCase {
         )
 
         assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
+    func testStoreAcceptsDerivedRasterGeometryWithEquivalentHighPrecisionFloatingValues() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+
+        try replaceDerivedCornerRadiusTokens(
+            in: fixture,
+            source: "0.100000000000000005",
+            derived: "0.100000000000000006"
+        )
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreAcceptsDerivedRasterGeometryWithEquivalentFloatingExponentValues() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+
+        try replaceDerivedCornerRadiusTokens(
+            in: fixture,
+            source: "1e-1",
+            derived: "0.1"
+        )
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreAcceptsDerivedRasterGeometryWithEquivalentSignedFloatingZeroValues() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+
+        try replaceDerivedCornerRadiusTokens(
+            in: fixture,
+            source: "-0.0",
+            derived: "0e0"
+        )
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsDerivedRasterGeometryWithAdjacentFloatingValues() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+
+        try replaceDerivedCornerRadiusTokens(
+            in: fixture,
+            source: "0.1",
+            derived: "0.10000000000000002"
+        )
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
+    func testStoreRejectsDerivedRasterGeometryWithDifferentIntegerValues() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        var sourceGeometry = fixtureDerivedHoldGeometry()
+        var sourcePieces = try XCTUnwrap(sourceGeometry["hold-left"])
+        sourcePieces[0]["shapeConstraint"] = [
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0,
+        ]
+        sourceGeometry["hold-left"] = sourcePieces
+        var derivedGeometry = sourceGeometry
+        var derivedPieces = try XCTUnwrap(derivedGeometry["hold-left"])
+        derivedPieces[0]["shapeConstraint"] = [
+            "shape": "roundedRectangle",
+            "rotationDegrees": 1,
+        ]
+        derivedGeometry["hold-left"] = derivedPieces
+        let original = try JSONSerialization.data(
+            withJSONObject: fixtureDerivedHoldGeometry(),
+            options: [.sortedKeys]
+        )
+        try replaceTwoOccurrences(
+            of: original,
+            firstReplacement: try JSONSerialization.data(
+                withJSONObject: sourceGeometry,
+                options: [.sortedKeys]
+            ),
+            secondReplacement: try JSONSerialization.data(
+                withJSONObject: derivedGeometry,
+                options: [.sortedKeys]
+            ),
+            in: boardURL
+        )
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
+    func testStoreAcceptsDerivedRasterGeometryWithEquivalentSignedIntegerZeroValues() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        var constrainedGeometry = fixtureDerivedHoldGeometry()
+        var pieces = try XCTUnwrap(constrainedGeometry["hold-left"])
+        pieces[0]["shapeConstraint"] = [
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0,
+        ]
+        constrainedGeometry["hold-left"] = pieces
+        let original = try JSONSerialization.data(
+            withJSONObject: fixtureDerivedHoldGeometry(),
+            options: [.sortedKeys]
+        )
+        let unsignedGeometry = try JSONSerialization.data(
+            withJSONObject: constrainedGeometry,
+            options: [.sortedKeys]
+        )
+        let signedGeometry = Data(
+            String(decoding: unsignedGeometry, as: UTF8.self)
+                .replacingOccurrences(
+                    of: #""rotationDegrees":0"#,
+                    with: #""rotationDegrees":-0"#
+                )
+                .utf8
+        )
+        XCTAssertNotEqual(signedGeometry, unsignedGeometry)
+        try replaceTwoOccurrences(
+            of: original,
+            firstReplacement: signedGeometry,
+            secondReplacement: unsignedGeometry,
+            in: boardURL
+        )
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsNonfiniteDerivedRasterFloatingValue() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+
+        try replaceDerivedCornerRadiusTokens(
+            in: fixture,
+            source: "1e999",
+            derived: "1e999"
+        )
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
     }
 
     func testStoreRejectsStaleModelHashAndMissingDescriptor() throws {
@@ -3143,6 +3319,45 @@ final class BoardPackageStoreTests: XCTestCase {
         )
         data.replaceSubrange(secondRange, with: secondReplacement)
         try data.write(to: url)
+    }
+
+    private func replaceDerivedCornerRadiusTokens(
+        in fixture: FixtureBundle,
+        source sourceToken: String,
+        derived derivedToken: String
+    ) throws {
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        let geometry = try JSONSerialization.data(
+            withJSONObject: fixtureDerivedHoldGeometry(),
+            options: [.sortedKeys]
+        )
+        let canonicalToken = #""cornerRadiusFraction":0.20000000000000001"#
+        let sourceGeometry = Data(
+            String(decoding: geometry, as: UTF8.self)
+                .replacingOccurrences(
+                    of: canonicalToken,
+                    with: #""cornerRadiusFraction":\#(sourceToken)"#
+                )
+                .utf8
+        )
+        let derivedGeometry = Data(
+            String(decoding: geometry, as: UTF8.self)
+                .replacingOccurrences(
+                    of: canonicalToken,
+                    with: #""cornerRadiusFraction":\#(derivedToken)"#
+                )
+                .utf8
+        )
+        XCTAssertNotEqual(sourceGeometry, geometry)
+        XCTAssertNotEqual(derivedGeometry, geometry)
+        try replaceTwoOccurrences(
+            of: geometry,
+            firstReplacement: sourceGeometry,
+            secondReplacement: derivedGeometry,
+            in: boardURL
+        )
     }
 
     private func assertStoreRejects(_ bundle: Bundle, reasonContaining expected: String) {

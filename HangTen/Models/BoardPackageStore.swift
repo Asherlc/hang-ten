@@ -717,6 +717,12 @@ struct BoardPackageStore {
             switch presentation.media {
             case .raster(let assetPath, let geometryDocuments):
                 let presentationHoldIDs = Set(geometryDocuments.keys)
+                guard !presentationHoldIDs.isEmpty else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id) media.holdGeometry must own at least one logical hold"
+                    )
+                }
                 guard presentationHoldIDs.isSubset(of: holdIDs) else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
@@ -1073,11 +1079,16 @@ private enum BoardPackageRawJSONNumberKind: Equatable {
     case floating
 }
 
+private enum BoardPackageRawJSONNumberValue: Equatable {
+    case integer(String)
+    case floating(Double)
+}
+
 private indirect enum BoardPackageRawJSONValue: Equatable {
     case object([BoardPackageRawJSONMember])
     case array([BoardPackageRawJSONValue])
     case string(String)
-    case number(kind: BoardPackageRawJSONNumberKind, value: Decimal)
+    case number(kind: BoardPackageRawJSONNumberKind, value: BoardPackageRawJSONNumberValue)
     case boolean(Bool)
     case null
 
@@ -1225,13 +1236,16 @@ private struct BoardPackageRawJSONParser {
             try consumeDigits(firstMayBeZero: true)
         }
         let token = String(decoding: bytes[start..<index], as: UTF8.self)
-        guard let decimal = Decimal(
-            string: token,
-            locale: Locale(identifier: "en_US_POSIX")
-        ) else {
-            throw BoardPackageRawJSONError.invalid
+        switch kind {
+        case .integer:
+            let normalizedToken = token == "-0" ? "0" : token
+            return .number(kind: kind, value: .integer(normalizedToken))
+        case .floating:
+            guard let value = Double(token), value.isFinite else {
+                throw BoardPackageRawJSONError.invalid
+            }
+            return .number(kind: kind, value: .floating(value))
         }
-        return .number(kind: kind, value: decimal)
     }
 
     private mutating func consumeDigits(firstMayBeZero: Bool) throws {
