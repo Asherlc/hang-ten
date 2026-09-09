@@ -1,6 +1,6 @@
 # Task 8 routing-skill follow-up: local Luna pressure evidence
 
-**Date:** 2026-09-09  
+**Date:** 2026-09-09
 **Purpose:** Close P1 in [`task-8-skill-review.md`](task-8-skill-review.md) with a true local skill-loaded GREEN and the correct available Luna model.
 
 ## Matched method
