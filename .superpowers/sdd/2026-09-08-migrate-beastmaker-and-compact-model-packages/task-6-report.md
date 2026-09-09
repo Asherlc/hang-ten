@@ -44,3 +44,16 @@ directories were removed after each attempt.
 
 The existing staging implementation was not changed: its validated recursive
 copy behavior is covered by the new live-package characterization.
+
+## Fix round 1 — raster ownership coverage
+
+Review RED: the prior raster branch only asserted that the default typed
+`holdGeometry` mapping was non-empty, so a package missing one or more logical
+hold owners could pass the boundary test. The fix adds an exact single-owner
+partition check across all original raster presentations and requires every
+declared hold's piece list to be non-empty. Model-only assertions are unchanged.
+
+Fix GREEN: Swift syntax parse, focused staging/model Python tests, final package
+validation, source-boundary manifest, and `git diff --check` all pass after the
+change. The simulator build remains unavailable for the same dependency and
+CoreSimulator limitations recorded above.

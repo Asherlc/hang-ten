@@ -283,6 +283,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     "Migrated board \(board.id) must not retain raster media."
                 )
                 XCTAssertFalse(media.holdGeometry.isEmpty)
+                let logicalHoldIDs = Set(holds.compactMap { $0["id"] as? String })
+                var originalRasterHoldIDs = Set<String>()
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in
                         guard let media = presentation["media"] as? [String: Any] else {
@@ -290,6 +292,40 @@ final class BoardSourceBoundaryTests: XCTestCase {
                         }
                         return media["type"] as? String == "raster"
                     }
+                )
+                for presentation in presentations {
+                    guard let presentationMedia = presentation["media"] as? [String: Any],
+                          presentationMedia["type"] as? String == "raster",
+                          let holdGeometry = presentationMedia["holdGeometry"] as? [String: Any]
+                    else {
+                        continue
+                    }
+                    let derivationType =
+                        (presentation["derivation"] as? [String: Any])?["type"] as? String
+                    if derivationType == "original" {
+                        let presentationHoldIDs = Set(holdGeometry.keys)
+                        XCTAssertTrue(
+                            originalRasterHoldIDs.isDisjoint(with: presentationHoldIDs),
+                            "Original raster presentations must own each logical hold once."
+                        )
+                        originalRasterHoldIDs.formUnion(presentationHoldIDs)
+                    }
+                    for (holdID, rawPieces) in holdGeometry {
+                        XCTAssertTrue(logicalHoldIDs.contains(holdID))
+                        guard let pieces = rawPieces as? [[String: Any]] else {
+                            XCTFail("Raster holdGeometry for \(holdID) must be an array of pieces.")
+                            continue
+                        }
+                        XCTAssertFalse(
+                            pieces.isEmpty,
+                            "Raster holdGeometry for \(holdID) must contain a piece."
+                        )
+                    }
+                }
+                XCTAssertEqual(
+                    originalRasterHoldIDs,
+                    logicalHoldIDs,
+                    "Original raster media must cover every logical hold exactly once."
                 )
             case .model(let media):
                 XCTAssertTrue(
