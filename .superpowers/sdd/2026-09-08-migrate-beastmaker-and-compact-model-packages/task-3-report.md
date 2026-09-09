@@ -140,3 +140,82 @@ Task 3 added the owned Beastmaker compiler output path to the existing
 report, renders, and transport audit remain under that owner. The temporary
 read-only audit script and both exact compiler scratch directories were
 deleted and their absence was checked. No assets were promoted.
+
+## Completion addendum — compiler-input ruling and Compact II
+
+### Beastmaker literal-command ruling
+
+The Task 3 plan and tracked brief now explicitly authorize the
+generator-emitted, audited
+`.context/shaky-rat-beastmaker-1000/beastmaker-1000-compiler-input.blend` as
+the compiler input. This resolves the review's **SPEC FAIL / QUALITY PASS**:
+the literal editable-scene command had produced a 580 x 58 x 150 mm board-frame
+result and was correctly rejected, whereas the documented transport input
+produces the verified 580 x 150 x 58 mm export.
+
+The editable Blender scene uses X-width/Y-depth/Z-height; the package board
+frame is X-right/Y-up/Z-toward-climber. The accepted compiler input is only the
+audited rigid coordinate-frame transport. The retained audit proves that all
+23 mesh names, roles, hold IDs, materials, local vertices, and topology are
+unchanged; only the documented rigid transform differs. Neither Beastmaker
+geometry nor compiler behavior changed. The migration skill already permits
+the temporary export copies used by the compiler, so no reusable-rule change
+was warranted.
+
+### Compact compiler-source repair (non-geometry only)
+
+Starting from Astra's physical correction `b8596eae`, the Compact generator
+now assigns one explicit `role="body"` and every contact explicit
+`role="hold"` plus its exact stable `hold_id`. The generator's existing report
+continues to distinguish the 64 mm **estimated body depth** from the source
+limited 56 mm #2/#9 sloper callouts; no validation treats 56 mm as whole-board
+depth. Before writing the editable compiler source it removes only its
+review-only wall, camera, and lamps. That prevents render staging objects from
+becoming untagged compiler meshes. It does not change body/hold dimensions,
+sections, positions, radii, vertices, topology, or material appearance.
+
+RED/GREEN evidence is retained in the focused report suite:
+
+- RED: missing `tag_model_piece` failed `test_compact_source_tags_body_and_exact_hold_id`.
+- GREEN: the source tag regression passed after adding the explicit body/hold
+  properties.
+- RED: the first generic compile correctly rejected the saved `Studio wall —
+  render only` mesh because it had no role.
+- GREEN: `test_compact_compiler_source_discards_render_only_objects` passed
+  after restricting the saved `.blend` to the 20 model meshes.
+- RED: a synthetic `assets/primary.png` was accepted by the Compact package
+  path helper.
+- GREEN: the verifier now rejects any asset inventory other than
+  `assets/primary.usdz` and `assets/primary.model.json`.
+
+### Generated source and actual-export evidence
+
+The final source was regenerated from committed generator revision `fd67968a`
+under the owned durable path
+`.context/shaky-rat-metolius-wood-grips-compact-ii/task3-compiler-ready-source/`.
+The generic compiler produced only
+`task3-compiler-ready-package/assets/primary.usdz` and
+`assets/primary.model.json`; no live package resource was changed or promoted.
+
+The actual compiler USDZ verifier and the separate read-only physical checker
+agree on these results:
+
+- USDZ SHA-256: `220c68ea5519b0bed80cd2aac08b35f5f2c2a7d2200596f62c3a84996efb94a3`.
+- Descriptor SHA-256: `300a26886362dd0c510c729e1a9fd4e6a35f47497aed5e7f12d33a2fdb7068fe`;
+  it exactly describes the actual USDZ bytes in `hang-ten-board-v1`.
+- Exact inventory: 19 hold IDs, one body plus 19 hold meshes, 20 imported
+  textured meshes, no unbound/hardware mesh, 65,424 explicit triangles (under
+  the 150,000 ceiling), and imported 2048 x 2048 image material data on every
+  mesh.
+- Bounds: 610.000014 x 64.000003 x 157.000005 mm. The 64 mm depth remains the
+  Astra display/body estimate only; it is not promoted to a source claim.
+- Actual exported mesh rays: all 1,320 exterior-rim probes and all 1,952
+  bilateral-section probes pass, with zero failures.
+- The verifier clears source images before import, validates exact imported
+  tags and materials, and rejects raster or any other extra package asset.
+
+Focused fresh verification completed with 12 report tests, 33 descriptor
+tests, and the real-Blender compiler regression suite. No HTTP server, tunnel,
+simulator, live package promotion, or native SceneKit validation was created
+or claimed by this completion. Durable task output ownership is recorded in
+the Compact evidence packet's `ownership.json`.

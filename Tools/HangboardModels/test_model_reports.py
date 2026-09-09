@@ -102,6 +102,20 @@ class ModelReportTests(unittest.TestCase):
         self.assertEqual(model, assets / "primary.usdz")
         self.assertEqual(descriptor, assets / "primary.model.json")
 
+    def test_compact_verifier_rejects_raster_promotion(self):
+        paths = compact_package_paths()
+        with tempfile.TemporaryDirectory(
+            prefix=f"{ROOT.name}-compact-raster-promotion-", dir=ROOT / ".context"
+        ) as directory:
+            package = Path(directory)
+            assets = package / "assets"
+            assets.mkdir()
+            (assets / "primary.usdz").write_bytes(b"fixture USDZ")
+            (assets / "primary.model.json").write_text("{}", encoding="utf-8")
+            (assets / "primary.png").write_bytes(b"raster promotion")
+            with self.assertRaises(ValueError):
+                paths(package)
+
     def test_default_outputs_follow_checkout_name(self):
         for filename in ("wood_grips_compact_ii.py", "verify_wood_grips_compact_ii.py",
                          "render_hold_highlights.py"):

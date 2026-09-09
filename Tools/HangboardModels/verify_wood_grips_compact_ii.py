@@ -44,6 +44,14 @@ def package_paths(package: Path) -> tuple[Path, Path]:
         raise ValueError(f"package directory must be a regular directory: {root}")
     model_path = root / "assets" / "primary.usdz"
     descriptor_path = root / "assets" / "primary.model.json"
+    expected_assets = {"assets/primary.model.json", "assets/primary.usdz"}
+    actual_assets = {
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if path.is_file() and not path.is_symlink()
+    }
+    if actual_assets != expected_assets:
+        raise ValueError("compiler package must contain only its USDZ and descriptor assets")
     for path in (model_path, descriptor_path):
         if path.is_symlink() or not path.is_file():
             raise ValueError(f"compiler package is missing required asset: {path}")
