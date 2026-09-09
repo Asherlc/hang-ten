@@ -277,7 +277,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
         XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: hold.geometry)"))
+        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: pieces)"))
         XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
         XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
         XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))

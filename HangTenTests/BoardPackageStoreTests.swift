@@ -14,8 +14,6 @@ final class BoardPackageStoreTests: XCTestCase {
         let presentation = try XCTUnwrap(board.presentations.first)
 
         XCTAssertEqual(presentation.media.kind, .model)
-        XCTAssertTrue(board.holds[0].geometry.isEmpty)
-        XCTAssertTrue(board.holds[0].presentationID.isEmpty)
         XCTAssertEqual(
             board.holds[0].resolvedFrame(in: presentation),
             HoldFrame(x: 0.1, y: 0.2, width: 0.3, height: 0.4)
@@ -29,6 +27,100 @@ final class BoardPackageStoreTests: XCTestCase {
             fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")
         )
         XCTAssertNoThrow(try BoardPackageStore(bundle: legacyFixture.bundle))
+    }
+
+    func testModelPresentationContentUsesTypedMediaHoldInventory() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let content = BoardMapPresentationContent(
+            board: board,
+            selectedPresentationID: board.defaultPresentation.id
+        )
+
+        XCTAssertEqual(content.holds.map(\.id), ["hold-left"])
+    }
+
+    func testStoreAcceptsCanonicalTieToEvenDescriptorCenter() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(
+                at: packageURL.appendingPathComponent("assets/primary.model.json")
+            ) { descriptor in
+                var holds = try XCTUnwrap(descriptor["holds"] as? [String: [String: Any]])
+                var hold = try XCTUnwrap(holds["hold-left"])
+                hold["facePlaneAABB"] = [
+                    "min": [0.1, 0.2],
+                    "max": [0.100000023, 0.6]
+                ]
+                hold["center"] = [0.100000011, 0.4]
+                holds["hold-left"] = hold
+                descriptor["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreHandlesFiniteScaleOverflowAndRejectsNonFiniteDescriptorValues() throws {
+        let finite = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(
+                at: packageURL.appendingPathComponent("assets/primary.model.json")
+            ) { descriptor in
+                descriptor["modelBounds"] = [
+                    "min": [1.0e300, 0, 0],
+                    "max": [1.000000000000001e300, 1, 0.1]
+                ]
+            }
+        }
+        defer { finite.remove() }
+        XCTAssertNoThrow(try BoardPackageStore(bundle: finite.bundle))
+
+        let nonFinite = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            let descriptorURL = packageURL.appendingPathComponent("assets/primary.model.json")
+            try self.mutateJSONObject(at: descriptorURL) { descriptor in
+                descriptor["modelBounds"] = [
+                    "min": [0, 0, 0],
+                    "max": [1.25, 1, 0.1]
+                ]
+            }
+            let finiteJSON = try XCTUnwrap(
+                String(data: Data(contentsOf: descriptorURL), encoding: .utf8)
+            )
+            let nonFiniteJSON = finiteJSON.replacingOccurrences(of: "1.25", with: "1e999")
+            XCTAssertNotEqual(nonFiniteJSON, finiteJSON)
+            try Data(nonFiniteJSON.utf8).write(to: descriptorURL)
+        }
+        defer { nonFinite.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: nonFinite.bundle))
+    }
+
+    func testStoreRejectsUnsortedDescriptorHoldMembers() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds.append(["id": "hold-right", "name": "Right hold", "kind": "jug"])
+                board["holds"] = holds
+            }
+            let descriptorURL = packageURL.appendingPathComponent("assets/primary.model.json")
+            try self.mutateJSONObject(at: descriptorURL) { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes.append(["nodeID": "Right", "role": "hold", "holdID": "hold-right"])
+                descriptor["nodes"] = nodes
+                var holds = try XCTUnwrap(descriptor["holds"] as? [String: Any])
+                holds["hold-right"] = [
+                    "nodeIDs": ["Right"],
+                    "facePlaneAABB": ["min": [0.6, 0.2], "max": [0.9, 0.6]],
+                    "center": [0.75, 0.4]
+                ]
+                descriptor["holds"] = holds
+            }
+            try self.reverseDescriptorHoldMemberOrder(at: descriptorURL)
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
     }
 
     func testStoreLoadsV2RasterGeometryFromPresentationMedia() throws {
@@ -450,8 +542,8 @@ final class BoardPackageStoreTests: XCTestCase {
             productURL: URL(string: "https://example.com/two-sided")!,
             photoAssetName: nil,
             presentations: [
-                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
-                BoardPresentation(id: "back", name: "Back", aspectRatio: 2, isDefault: false)
+                boardDetailPresentation(id: "front", holdIDs: ["front-a", "front-b"], isDefault: true),
+                boardDetailPresentation(id: "back", holdIDs: ["back-a"], isDefault: false)
             ]
         )
 
@@ -687,28 +779,29 @@ final class BoardPackageStoreTests: XCTestCase {
         let firstHold = try XCTUnwrap(board.holds.first)
         XCTAssertEqual(board.manufacturer, "Alpha")
         XCTAssertEqual(board.name, "Alpha")
-        XCTAssertEqual(firstHold.geometry.count, 2)
+        let presentation = try XCTUnwrap(board.presentations.first)
+        guard case .raster(let raster) = presentation.media else {
+            return XCTFail("Expected legacy package to adapt into raster media")
+        }
+        let pieces = try XCTUnwrap(raster.holdGeometry[firstHold.id])
+        XCTAssertEqual(pieces.count, 2)
         let expectedFrame = CGRect(x: 0.05, y: 0.1, width: 0.4, height: 0.4)
-        XCTAssertEqual(firstHold.frame.rect.origin.x, expectedFrame.origin.x, accuracy: 1e-12)
-        XCTAssertEqual(firstHold.frame.rect.origin.y, expectedFrame.origin.y, accuracy: 1e-12)
-        XCTAssertEqual(firstHold.frame.rect.size.width, expectedFrame.size.width, accuracy: 1e-12)
-        XCTAssertEqual(firstHold.frame.rect.size.height, expectedFrame.size.height, accuracy: 1e-12)
+        let frame = try XCTUnwrap(firstHold.resolvedFrame(in: presentation))
+        XCTAssertEqual(frame.rect.origin.x, expectedFrame.origin.x, accuracy: 1e-12)
+        XCTAssertEqual(frame.rect.origin.y, expectedFrame.origin.y, accuracy: 1e-12)
+        XCTAssertEqual(frame.rect.size.width, expectedFrame.size.width, accuracy: 1e-12)
+        XCTAssertEqual(frame.rect.size.height, expectedFrame.size.height, accuracy: 1e-12)
         XCTAssertNil(firstHold.sizeMillimeters)
         XCTAssertNil(firstHold.depthRangeMillimeters)
         XCTAssertNil(firstHold.gripType)
         XCTAssertNil(firstHold.fingerCapacity)
         XCTAssertNil(firstHold.handCapacity)
         XCTAssertNil(firstHold.features)
-        XCTAssertEqual(firstHold.presentationID, "primary")
-        let presentation = try XCTUnwrap(board.presentations.first)
         XCTAssertEqual(board.presentations.count, 1)
         XCTAssertEqual(presentation.id, "primary")
         XCTAssertEqual(presentation.name, "Primary")
         XCTAssertEqual(presentation.aspectRatio, 2)
         XCTAssertTrue(presentation.isDefault)
-        guard case .raster(let raster) = presentation.media else {
-            return XCTFail("Expected legacy package to adapt into raster media")
-        }
         XCTAssertEqual(raster.assetPath, "assets/primary.png")
         XCTAssertEqual(raster.holdGeometry["hold-left"]?.count, 2)
         XCTAssertEqual(store.semantics(for: board.id), [:])
@@ -784,7 +877,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.presentations.map(\.aspectRatio), [2, 1])
         XCTAssertEqual(board.defaultPresentation.id, "front")
         XCTAssertEqual(board.holds.map(\.id), ["hold-left", "hold-back"])
-        XCTAssertEqual(board.holds.map(\.presentationID), ["front", "back"])
+        XCTAssertEqual(board.presentations.map { $0.holdIDs }, [Set(["hold-left"]), Set(["hold-back"])])
         let frontURL = try XCTUnwrap(
             store.presentationImageURL(for: board, presentationID: "front")
         )
@@ -1236,16 +1329,15 @@ final class BoardPackageStoreTests: XCTestCase {
             productURL: URL(string: "https://example.com/alias-fixture")!,
             photoAssetName: nil,
             presentations: [
-                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
-                BoardPresentation(
+                boardDetailPresentation(id: "front", holdIDs: ["front-hold"], isDefault: true),
+                boardDetailPresentation(
                     id: "front-inverted",
-                    name: "Front upside down",
-                    aspectRatio: 2,
+                    holdIDs: ["front-hold"],
                     isDefault: false,
                     sourcePresentationID: "front",
                     isInverted: true
                 ),
-                BoardPresentation(id: "back", name: "Back", aspectRatio: 2, isDefault: false)
+                boardDetailPresentation(id: "back", holdIDs: ["back-hold"], isDefault: false)
             ]
         )
         var selection = BoardMapPresentationSelection(
@@ -1343,7 +1435,10 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
-        let firstPiece = try XCTUnwrap(board.holds.first?.geometry.first)
+        guard case .raster(let media) = board.defaultPresentation.media else {
+            return XCTFail("Expected raster media")
+        }
+        let firstPiece = try XCTUnwrap(media.holdGeometry["hold-left"]?.first)
 
         XCTAssertEqual(
             firstPiece.shape,
@@ -1622,10 +1717,12 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
-        let hold = try XCTUnwrap(board.holds.first)
-
-        XCTAssertEqual(hold.geometry.count, 2)
-        XCTAssertEqual(hold.geometry[0].frame, CGRect(x: 0.05, y: 0.2, width: 0.1, height: 0.3))
+        guard case .raster(let media) = board.defaultPresentation.media else {
+            return XCTFail("Expected raster media")
+        }
+        let geometry = try XCTUnwrap(media.holdGeometry["hold-left"])
+        XCTAssertEqual(geometry.count, 2)
+        XCTAssertEqual(geometry[0].frame, CGRect(x: 0.05, y: 0.2, width: 0.1, height: 0.3))
     }
 
     func testBendableCurveMetadataDoesNotChangeEncodedRuntimeDocument() throws {
@@ -1802,7 +1899,10 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
-        let frame = try XCTUnwrap(board.holds.first?.geometry.first?.frame)
+        guard case .raster(let media) = board.defaultPresentation.media else {
+            return XCTFail("Expected raster media")
+        }
+        let frame = try XCTUnwrap(media.holdGeometry["hold-left"]?.first?.frame)
         XCTAssertEqual(frame.origin.x, -0.1, accuracy: 1e-12)
         XCTAssertEqual(frame.origin.y, 0.9, accuracy: 1e-12)
         XCTAssertEqual(frame.width, 1.2, accuracy: 1e-12)
@@ -2516,6 +2616,28 @@ final class BoardPackageStoreTests: XCTestCase {
         try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys]).write(to: url)
     }
 
+    private func reverseDescriptorHoldMemberOrder(at url: URL) throws {
+        let data = try Data(contentsOf: url)
+        let descriptor = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+        let holds = try XCTUnwrap(descriptor["holds"] as? [String: Any])
+        let sortedHolds = try JSONSerialization.data(withJSONObject: holds, options: [.sortedKeys])
+        let right = try XCTUnwrap(holds["hold-right"])
+        let left = try XCTUnwrap(holds["hold-left"])
+        let rightData = try JSONSerialization.data(withJSONObject: right, options: [.sortedKeys])
+        let leftData = try JSONSerialization.data(withJSONObject: left, options: [.sortedKeys])
+        var unsortedHolds = Data("{\"hold-right\":".utf8)
+        unsortedHolds.append(rightData)
+        unsortedHolds.append(Data(",\"hold-left\":".utf8))
+        unsortedHolds.append(leftData)
+        unsortedHolds.append(Data("}".utf8))
+        var unsortedDescriptor = data
+        let range = try XCTUnwrap(unsortedDescriptor.range(of: sortedHolds))
+        unsortedDescriptor.replaceSubrange(range, with: unsortedHolds)
+        try unsortedDescriptor.write(to: url)
+    }
+
     private func propertyListData() throws -> Data {
         try PropertyListSerialization.data(
             fromPropertyList: [
@@ -2584,27 +2706,47 @@ final class BoardPackageStoreTests: XCTestCase {
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
-        presentationID: String = BoardPresentation.primaryID
+        presentationID _: String = BoardPresentation.primaryID
     ) -> BoardHold {
         BoardHold(
             id: id,
             name: id,
             kind: kind,
-            geometry: [
-                BoardHoldPiece(
-                    id: "\(id)-piece",
-                    holdID: id,
-                    frame: CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.2),
-                    shape: .roundedRect(cornerRadiusFraction: 0),
-                    treatment: .surface
-                )
-            ],
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
             handCapacity: handCapacity,
-            depthRangeMillimeters: depthRangeMillimeters,
-            presentationID: presentationID
+            depthRangeMillimeters: depthRangeMillimeters
+        )
+    }
+
+    private func boardDetailPresentation(
+        id: String,
+        holdIDs: [String],
+        isDefault: Bool,
+        sourcePresentationID: String? = nil,
+        isInverted: Bool = false
+    ) -> BoardPresentation {
+        let geometry = Dictionary(uniqueKeysWithValues: holdIDs.map { holdID in
+            (
+                holdID,
+                [BoardHoldPiece(
+                    id: "\(holdID)-piece",
+                    holdID: holdID,
+                    frame: CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.2),
+                    shape: .roundedRect(cornerRadiusFraction: 0),
+                    treatment: .surface
+                )]
+            )
+        })
+        return BoardPresentation(
+            id: id,
+            name: id,
+            aspectRatio: 2,
+            isDefault: isDefault,
+            sourcePresentationID: sourcePresentationID,
+            isInverted: isInverted,
+            media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
         )
     }
 }

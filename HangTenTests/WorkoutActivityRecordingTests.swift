@@ -847,7 +847,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
             let leftHold = try XCTUnwrap(holds.first { $0.id.hasSuffix("-left") })
             let rightHold = try XCTUnwrap(holds.first { $0.id.hasSuffix("-right") })
-            XCTAssertLessThan(leftHold.frame.x, rightHold.frame.x)
+            let leftFrame = try XCTUnwrap(leftHold.resolvedFrame(in: board.defaultPresentation))
+            let rightFrame = try XCTUnwrap(rightHold.resolvedFrame(in: board.defaultPresentation))
+            XCTAssertLessThan(leftFrame.x, rightFrame.x)
             XCTAssertEqual(leftHold.kind, .edge)
             XCTAssertEqual(rightHold.kind, .edge)
             XCTAssertEqual(leftHold.sizeMillimeters, rightHold.sizeMillimeters)
@@ -860,9 +862,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let centeredFourFingerPocketIDs = Set(
             board.holds
                 .filter {
-                    $0.kind == .pocket &&
-                    $0.fingerCapacity == 4 &&
-                    abs(($0.frame.x + ($0.frame.width / 2)) - 0.5) < 0.0001
+                    guard $0.kind == .pocket,
+                          $0.fingerCapacity == 4,
+                          let frame = $0.resolvedFrame(in: board.defaultPresentation) else {
+                        return false
+                    }
+                    return abs((frame.x + (frame.width / 2)) - 0.5) < 0.0001
                 }
                 .map(\.id)
         )
@@ -1276,7 +1281,32 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 BoardHold(id: "left-b", equipmentObjectID: "left", name: "Left B", shortLabel: "LB", detail: "", kind: .pocket, frame: HoldFrame(x: 0.2, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity)
             ],
             productURL: URL(string: "https://example.com/portable")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "primary",
+                    name: "Primary",
+                    aspectRatio: 1,
+                    isDefault: true,
+                    media: .raster(BoardRasterMedia(
+                        assetPath: "",
+                        holdGeometry: [
+                            "left-a": [testPiece(id: "left-a", x: 0)],
+                            "left-b": [testPiece(id: "left-b", x: 0.2)]
+                        ]
+                    ))
+                )
+            ]
+        )
+    }
+
+    private func testPiece(id: String, x: CGFloat) -> BoardHoldPiece {
+        BoardHoldPiece(
+            id: "\(id)-piece",
+            holdID: id,
+            frame: CGRect(x: x, y: 0, width: 0.1, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0),
+            treatment: .surface
         )
     }
 

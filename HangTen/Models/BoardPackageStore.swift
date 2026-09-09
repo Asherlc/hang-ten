@@ -194,23 +194,23 @@ struct BoardPackageStore {
                     boardID: boardDocument.id
                 )
             }
-            let holds = try Self.validateHolds(
+            let legacyHolds = try Self.validateHolds(
                 in: boardDocument,
                 presentations: presentations
             )
             let trainingPresentations = presentations.map { presentation in
                 let canonicalID = presentation.sourcePresentationID ?? presentation.id
                 let holdGeometry = Dictionary(
-                    uniqueKeysWithValues: holds
+                    uniqueKeysWithValues: legacyHolds
                         .filter { $0.presentationID == canonicalID }
-                        .map { ($0.id, $0.geometry) }
+                        .map { ($0.hold.id, $0.geometry) }
                 )
                 return presentation.trainingPresentation(holdGeometry: holdGeometry)
             }
             let positions = try Self.validatePositions(
                 in: boardDocument,
                 presentations: trainingPresentations,
-                holds: holds
+                holds: legacyHolds
             )
             let positionTransitions = try Self.validatePositionTransitions(
                 in: boardDocument,
@@ -221,7 +221,7 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
             }
             let board = try boardDocument.trainingBoard(
-                holds: holds,
+                holds: legacyHolds.map(\.hold),
                 presentations: trainingPresentations,
                 positions: positions,
                 positionTransitions: positionTransitions
@@ -718,7 +718,7 @@ struct BoardPackageStore {
     private static func validatePositions(
         in document: BoardPackageBoardDocument,
         presentations: [BoardPresentation],
-        holds: [BoardHold]
+        holds: [BoardPackageLegacyHold]
     ) throws -> [BoardPosition] {
         let positions = document.positions?.map(\.boardPosition) ?? presentations.map {
             BoardPosition(id: $0.id, presentationID: $0.id)
@@ -837,7 +837,7 @@ struct BoardPackageStore {
     private static func validateHolds(
         in document: BoardPackageBoardDocument,
         presentations: [BoardPackagePresentationDocument]
-    ) throws -> [BoardHold] {
+    ) throws -> [BoardPackageLegacyHold] {
         let presentationIDs = Set(presentations.map(\.id))
         let equipmentObjectIDs = Set(document.equipmentObjects.map(\.id))
         let canonicalPresentationIDs = Set(
@@ -846,7 +846,7 @@ struct BoardPackageStore {
                 .map(\.id)
         )
         var holdIDs = Set<String>()
-        var holds: [BoardHold] = []
+        var holds: [BoardPackageLegacyHold] = []
         for hold in document.holds {
             guard hold.id.isBoardPackageIdentifier,
                   !hold.name.isEmpty else {
@@ -1142,7 +1142,7 @@ struct BoardPackageStore {
             }
             holds.append(
                 BoardHold(
-                    logicalID: hold.id,
+                    id: hold.id,
                     equipmentObjectID: hold.equipmentObjectID,
                     name: hold.name,
                     kind: hold.kind,
@@ -1469,9 +1469,12 @@ struct BoardPackageStore {
         let data: Data
         let modelData: Data
         let document: BoardPackageModelDescriptorDocument
+        let orderedHoldIDs: [String]
         do {
             data = try Data(contentsOf: url)
             modelData = try Data(contentsOf: modelURL)
+            var memberOrder = BoardPackageJSONMemberOrder(data: data)
+            orderedHoldIDs = try memberOrder.memberNames(inRootObjectNamed: "holds")
             document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
         } catch {
             throw BoardPackageStoreError.invalidPackage(
@@ -1529,6 +1532,12 @@ struct BoardPackageStore {
               Set(document.holds.keys) == logicalHoldIDs else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor inventory must equal logical holds")
         }
+        guard orderedHoldIDs == orderedHoldIDs.sorted() else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "model descriptor hold IDs must be sorted"
+            )
+        }
         var holds: [String: BoardModelHoldDescriptor] = [:]
         for holdID in logicalHoldIDs.sorted() {
             guard let hold = document.holds[holdID] else { continue }
@@ -1545,7 +1554,7 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor facePlaneAABB must be normalized")
             }
             let expectedCenter = zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).map {
-                roundedToNinePlaces($0 + ($1 - $0) / 2)
+                boardDescriptorRoundedToNinePlaces($0 + ($1 - $0) / 2)
             }
             guard hold.center == expectedCenter else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor center must derive from facePlaneAABB")
@@ -1578,7 +1587,7 @@ struct BoardPackageStore {
         boardID: String
     ) throws {
         guard vector.count == length,
-              vector.allSatisfy({ $0.isFinite && roundedToNinePlaces($0) == $0 }) else {
+              vector.allSatisfy({ $0.isFinite && boardDescriptorRoundedToNinePlaces($0) == $0 }) else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "model descriptor vectors must be finite, fixed-size, and rounded to nine decimals"
@@ -1586,10 +1595,103 @@ struct BoardPackageStore {
         }
     }
 
-    private static func roundedToNinePlaces(_ value: Double) -> Double {
-        (value * 1_000_000_000).rounded() / 1_000_000_000
+}
+
+/// Reads JSON object member order before `JSONDecoder` converts objects into
+/// dictionaries. JSON decoding intentionally does not preserve this order.
+private struct BoardPackageJSONMemberOrder {
+    private let bytes: [UInt8]
+    private var index = 0
+
+    init(data: Data) {
+        bytes = Array(data)
     }
 
+    mutating func memberNames(inRootObjectNamed target: String) throws -> [String] {
+        try consume(123)
+        skipWhitespace()
+        while peek != 125 {
+            let name = try string()
+            skipWhitespace()
+            try consume(58)
+            skipWhitespace()
+            if name == target { return try objectMemberNames() }
+            try skipValue()
+            skipWhitespace()
+            if peek == 44 { index += 1; skipWhitespace() } else { break }
+        }
+        throw ParseError.invalid
+    }
+
+    private mutating func objectMemberNames() throws -> [String] {
+        try consume(123)
+        skipWhitespace()
+        var result: [String] = []
+        while peek != 125 {
+            result.append(try string())
+            skipWhitespace()
+            try consume(58)
+            skipWhitespace()
+            try skipValue()
+            skipWhitespace()
+            if peek == 44 { index += 1; skipWhitespace() } else { break }
+        }
+        try consume(125)
+        return result
+    }
+
+    private mutating func skipValue() throws {
+        skipWhitespace()
+        switch peek {
+        case 34: _ = try string()
+        case 123:
+            try consume(123); skipWhitespace()
+            while peek != 125 {
+                _ = try string(); skipWhitespace(); try consume(58); try skipValue(); skipWhitespace()
+                if peek == 44 { index += 1; skipWhitespace() } else { break }
+            }
+            try consume(125)
+        case 91:
+            try consume(91); skipWhitespace()
+            while peek != 93 {
+                try skipValue(); skipWhitespace()
+                if peek == 44 { index += 1; skipWhitespace() } else { break }
+            }
+            try consume(93)
+        default:
+            let start = index
+            while let byte = peek, ![9, 10, 13, 32, 44, 93, 125].contains(byte) { index += 1 }
+            guard index > start else { throw ParseError.invalid }
+        }
+    }
+
+    private mutating func string() throws -> String {
+        let start = index
+        try consume(34)
+        var escaped = false
+        while let byte = peek {
+            index += 1
+            if escaped { escaped = false; continue }
+            if byte == 92 { escaped = true; continue }
+            if byte == 34 {
+                let data = Data(bytes[start..<index])
+                return try JSONDecoder().decode(String.self, from: data)
+            }
+        }
+        throw ParseError.invalid
+    }
+
+    private mutating func skipWhitespace() {
+        while let byte = peek, [9, 10, 13, 32].contains(byte) { index += 1 }
+    }
+
+    private mutating func consume(_ byte: UInt8) throws {
+        guard peek == byte else { throw ParseError.invalid }
+        index += 1
+    }
+
+    private var peek: UInt8? { index < bytes.count ? bytes[index] : nil }
+    private enum ParseError: Error { case invalid }
 }
 
 private struct BoardPackageV2BoardDocument: Decodable {
@@ -2186,31 +2288,41 @@ private struct BoardPackageHoldDocument: Decodable {
             : "primary"
     }
 
-    func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardHold {
+    func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardPackageLegacyHold {
         guard !geometryPieces.isEmpty else {
             throw BoardGeometryAdaptationError.invalid(
                 "hold \(id) geometry must include at least one piece"
             )
         }
-        return BoardHold(
-            id: id,
-            equipmentObjectID: equipmentObjectID,
-            name: name,
-            kind: kind,
+        return BoardPackageLegacyHold(
+            hold: BoardHold(
+                id: id,
+                equipmentObjectID: equipmentObjectID,
+                name: name,
+                kind: kind,
+                sloper: sloper,
+                sizeMillimeters: sizeMillimeters,
+                gripType: gripType,
+                fingerCapacity: fingerCapacity,
+                handCapacity: handCapacity,
+                depthRangeMillimeters: depthRangeMillimeters.map {
+                    $0.lowerBound...$0.upperBound
+                },
+                features: features.map(Set.init),
+                pairedHoldID: pairedHoldID
+            ),
             geometry: geometryPieces,
-            sloper: sloper,
-            sizeMillimeters: sizeMillimeters,
-            gripType: gripType,
-            fingerCapacity: fingerCapacity,
-            handCapacity: handCapacity,
-            depthRangeMillimeters: depthRangeMillimeters.map {
-                $0.lowerBound...$0.upperBound
-            },
-            features: features.map(Set.init),
-            pairedHoldID: pairedHoldID,
             presentationID: presentationID
         )
     }
+}
+
+/// Private migration adapter for schema-v1 packages. Spatial state lives only
+/// long enough to normalize legacy fields into typed presentation media.
+private struct BoardPackageLegacyHold {
+    let hold: BoardHold
+    let geometry: [BoardHoldPiece]
+    let presentationID: String
 }
 
 private struct BoardPackageGeometryDocument: Decodable {

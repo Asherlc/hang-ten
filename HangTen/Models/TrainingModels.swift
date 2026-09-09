@@ -1,6 +1,27 @@
 import Foundation
 import SwiftUI
 
+/// Python-compatible `round(value, 9)` for finite JSON numbers. The fused
+/// residual preserves which side of an exact scaled midpoint the binary input
+/// occupies; values too large to scale are already integral at this precision.
+func boardDescriptorRoundedToNinePlaces(_ value: Double) -> Double {
+    let scale = 1_000_000_000.0
+    guard value.isFinite,
+          abs(value) <= Double.greatestFiniteMagnitude / scale else {
+        return value
+    }
+    let scaled = value * scale
+    let lower = scaled.rounded(.down)
+    let upper = scaled.rounded(.up)
+    if scaled - lower == 0.5 {
+        let residual = (-scaled).addingProduct(value, scale)
+        if residual < 0 { return lower / scale }
+        if residual > 0 { return upper / scale }
+        return (lower.truncatingRemainder(dividingBy: 2) == 0 ? lower : upper) / scale
+    }
+    return scaled.rounded(.toNearestOrEven) / scale
+}
+
 struct HoldFrame: Hashable {
     let x: CGFloat
     let y: CGFloat
@@ -49,12 +70,11 @@ struct BoardModelFacePlaneAABB: Hashable {
     let maximum: [Double]
 
     var holdFrame: HoldFrame {
-        let scale = 1_000_000_000.0
         return HoldFrame(
             x: minimum[0],
             y: minimum[1],
-            width: ((maximum[0] - minimum[0]) * scale).rounded() / scale,
-            height: ((maximum[1] - minimum[1]) * scale).rounded() / scale
+            width: boardDescriptorRoundedToNinePlaces(maximum[0] - minimum[0]),
+            height: boardDescriptorRoundedToNinePlaces(maximum[1] - minimum[1])
         )
     }
 }
@@ -599,16 +619,13 @@ struct BoardHold: Identifiable, Hashable {
     let name: String
     let kind: HoldKind
     let sloper: SloperMetadata?
-    let geometry: [BoardHoldPiece]
     let gripType: GripType?
     let fingerCapacity: Int?
     let handCapacity: Int?
-    let frame: HoldFrame
     let sizeMillimeters: Double?
     let depthRangeMillimeters: ClosedRange<Double>?
     let features: Set<HoldFeature>?
     let pairedHoldID: String?
-    let presentationID: String
 
     static let validFingerCapacityRange = 1...4
     static let validHandCapacityRange = 1...2
@@ -640,7 +657,6 @@ struct BoardHold: Identifiable, Hashable {
         equipmentObjectID: String = "primary",
         name: String,
         kind: HoldKind,
-        geometry: [BoardHoldPiece],
         sloper: SloperMetadata? = nil,
         sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
@@ -648,10 +664,8 @@ struct BoardHold: Identifiable, Hashable {
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil,
-        pairedHoldID: String? = nil,
-        presentationID: String = BoardPresentation.primaryID
+        pairedHoldID: String? = nil
     ) {
-        precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
         guard let depthMeasurement = DepthMeasurement(
             sizeMillimeters: sizeMillimeters,
             depthRangeMillimeters: depthRangeMillimeters
@@ -676,18 +690,9 @@ struct BoardHold: Identifiable, Hashable {
         self.name = name
         self.kind = kind
         self.sloper = sloper
-        self.geometry = geometry
         self.gripType = gripType
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
-        let firstFrame = geometry[0].frame
-        let union = geometry.dropFirst().reduce(firstFrame) { $0.union($1.frame) }
-        self.frame = HoldFrame(
-            x: union.minX,
-            y: union.minY,
-            width: union.width,
-            height: union.height
-        )
         switch depthMeasurement {
         case .none:
             self.sizeMillimeters = nil
@@ -701,14 +706,16 @@ struct BoardHold: Identifiable, Hashable {
         }
         self.features = features
         self.pairedHoldID = pairedHoldID
-        self.presentationID = presentationID
     }
 
+    /// Source compatibility for hand-built fixtures while spatial data moves
+    /// to `BoardPresentation.media`; the arguments are intentionally not kept.
     init(
-        logicalID id: String,
+        id: String,
         equipmentObjectID: String = "primary",
         name: String,
         kind: HoldKind,
+        geometry _: [BoardHoldPiece],
         sloper: SloperMetadata? = nil,
         sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
@@ -716,28 +723,28 @@ struct BoardHold: Identifiable, Hashable {
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil,
-        pairedHoldID: String? = nil
+        pairedHoldID: String? = nil,
+        presentationID _: String = BoardPresentation.primaryID
     ) {
-        self.id = id
-        self.equipmentObjectID = equipmentObjectID
-        self.name = name
-        self.kind = kind
-        self.sloper = sloper
-        self.geometry = []
-        self.gripType = gripType
-        self.fingerCapacity = fingerCapacity
-        self.handCapacity = handCapacity
-        self.frame = HoldFrame(x: 0, y: 0, width: 0, height: 0)
-        self.sizeMillimeters = sizeMillimeters
-        self.depthRangeMillimeters = depthRangeMillimeters
-        self.features = features
-        self.pairedHoldID = pairedHoldID
-        self.presentationID = ""
+        self.init(
+            id: id,
+            equipmentObjectID: equipmentObjectID,
+            name: name,
+            kind: kind,
+            sloper: sloper,
+            sizeMillimeters: sizeMillimeters,
+            gripType: gripType,
+            fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
+            depthRangeMillimeters: depthRangeMillimeters,
+            features: features,
+            pairedHoldID: pairedHoldID
+        )
     }
 
-    /// Narrow source compatibility for hand-built workout and test fixtures.
-    /// Package decoding uses the geometry initializer above and never reaches
-    /// this frame-only path or its retired presentation arguments.
+    /// Narrow source compatibility for hand-built metadata fixtures. The
+    /// frame is intentionally discarded; spatial fixtures must provide typed
+    /// presentation media.
     init(
         id: String,
         equipmentObjectID: String = "primary",
@@ -759,22 +766,12 @@ struct BoardHold: Identifiable, Hashable {
             equipmentObjectID: equipmentObjectID,
             name: name,
             kind: kind,
-            geometry: [
-                BoardHoldPiece(
-                    id: "\(id)-geometry-0",
-                    holdID: id,
-                    frame: frame.rect,
-                    shape: .roundedRect(cornerRadiusFraction: 0),
-                    treatment: .surface
-                )
-            ],
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
             handCapacity: handCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
-            features: features,
-            presentationID: BoardPresentation.primaryID
+            features: features
         )
     }
 
@@ -793,12 +790,11 @@ struct BoardHold: Identifiable, Hashable {
             guard let pieces = media.holdGeometry[id],
                   let first = pieces.first else { return nil }
             let union = pieces.dropFirst().reduce(first.frame) { $0.union($1.frame) }
-            let scale = 1_000_000_000.0
             return HoldFrame(
                 x: union.minX,
                 y: union.minY,
-                width: (union.width * scale).rounded() / scale,
-                height: (union.height * scale).rounded() / scale
+                width: boardDescriptorRoundedToNinePlaces(union.width),
+                height: boardDescriptorRoundedToNinePlaces(union.height)
             )
         case .model(let media):
             return media.descriptor.holds[id]?.facePlaneAABB.holdFrame
@@ -837,6 +833,17 @@ struct BoardPresentation: Identifiable, Hashable {
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
         self.media = media
+    }
+
+    var holdIDs: Set<String> {
+        switch media {
+        case .raster(let media): Set(media.holdGeometry.keys)
+        case .model(let media): Set(media.descriptor.holds.keys)
+        }
+    }
+
+    func containsHold(id: String) -> Bool {
+        holdIDs.contains(id)
     }
 }
 
@@ -942,17 +949,12 @@ struct TrainingBoard: Identifiable, Hashable {
               let presentation = presentation(id: position.presentationID) else {
             return []
         }
+        let presentedIDs: Set<String>
         switch presentation.media {
-        case .model:
-            return holds.map(\.id)
-        case .raster(let media) where !media.holdGeometry.isEmpty:
-            return holds.compactMap { media.holdGeometry[$0.id] == nil ? nil : $0.id }
-        case .raster:
-            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
-            return holds.compactMap { hold in
-                hold.presentationID == canonicalPresentationID ? hold.id : nil
-            }
+        case .model(let media): presentedIDs = Set(media.descriptor.holds.keys)
+        case .raster(let media): presentedIDs = Set(media.holdGeometry.keys)
         }
+        return holds.compactMap { presentedIDs.contains($0.id) ? $0.id : nil }
     }
 
     func transitionKind(

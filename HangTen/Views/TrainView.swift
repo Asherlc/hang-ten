@@ -197,7 +197,7 @@ struct BoardDetailView: View {
     init(board: TrainingBoard) {
         self.board = board
         var initialHoldID = board.holds.first(where: {
-            $0.presentationID == board.defaultPresentation.id
+            board.defaultPresentation.containsHold(id: $0.id)
         })?.id
         #if DEBUG
         if let reviewHoldID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HOLD_ID"],
