@@ -21,7 +21,7 @@ TOOLS = Path(__file__).resolve().parent
 CANONICAL_TEXTURE_NAME = "canonical-neutral-wood.png"
 CANONICAL_TEXTURE_PATH = TOOLS / "assets" / CANONICAL_TEXTURE_NAME
 WIDTH = HEIGHT = 2048
-GENERATOR_VERSION = "2026-09-09-light-neutral-wood-v1"
+GENERATOR_VERSION = "2026-09-09-light-neutral-wood-v2"
 
 
 def _row(y: int) -> bytes:
@@ -31,15 +31,15 @@ def _row(y: int) -> bytes:
     for x in range(WIDTH):
         u = x / (WIDTH - 1)
         warp = u + 0.005 * math.sin(v * 13.0) + 0.002 * math.sin(v * 37.0 + u * 11.0)
-        broad = 4.5 * math.sin(warp * 58.0 + 1.4 * math.sin(v * 3.0))
-        fine = 1.7 * math.sin(warp * 710.0 + v * 14.0)
-        pores = -1.5 * max(0.0, math.sin(warp * 1480.0 + v * 5.0)) ** 14
+        broad = 8.0 * math.sin(warp * 58.0 + 1.4 * math.sin(v * 3.0))
+        fine = 3.2 * math.sin(warp * 710.0 + v * 14.0)
+        pores = -3.0 * max(0.0, math.sin(warp * 1480.0 + v * 5.0)) ** 14
         drift = 1.1 * math.sin(v * 7.0 + u * 2.0)
         shade = broad + fine + pores + drift
         offset = x * 3
         pixels[offset : offset + 3] = bytes(
             max(0, min(255, round(channel + shade)))
-            for channel in (210, 196, 173)
+            for channel in (120, 110, 94)
         )
     return bytes(pixels)
 
@@ -93,8 +93,8 @@ def attach_to_materials(materials) -> None:
             if node.type == "TEX_IMAGE":
                 nodes.remove(node)
         bsdf = nodes.get("Principled BSDF")
-        bsdf.inputs["Roughness"].default_value = 0.52
-        bsdf.inputs["Specular IOR Level"].default_value = 0.23
+        bsdf.inputs["Roughness"].default_value = 0.62
+        bsdf.inputs["Specular IOR Level"].default_value = 0.15
         texture = nodes.new("ShaderNodeTexImage")
         texture.name = CANONICAL_TEXTURE_NAME
         texture.image = image

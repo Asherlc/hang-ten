@@ -55,6 +55,23 @@ def png_dimensions(payload: bytes) -> tuple[int, int]:
     return width, height
 
 
+def canonical_color_evidence(canonical_path: Path) -> tuple[float, float, float, float]:
+    """Sample the actual source image in Blender's color-managed image buffer."""
+    image = bpy.data.images.load(str(canonical_path), check_existing=False)
+    width, height = image.size
+    samples = []
+    for y in range(16, height, max(1, height // 48)):
+        for x in range(16, width, max(1, width // 48)):
+            offset = (y * width + x) * 4
+            red, green, blue = image.pixels[offset : offset + 3]
+            samples.append((red, green, blue))
+    red = sum(pixel[0] for pixel in samples) / len(samples)
+    green = sum(pixel[1] for pixel in samples) / len(samples)
+    blue = sum(pixel[2] for pixel in samples) / len(samples)
+    luminance_range = max(sum(pixel) / 3 for pixel in samples) - min(sum(pixel) / 3 for pixel in samples)
+    return red, green, blue, luminance_range
+
+
 def assert_clean_import_has_usable_image_materials(model_path: Path) -> None:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     result = bpy.ops.wm.usd_import(filepath=str(model_path), merge_parent_xform=True)
@@ -100,6 +117,13 @@ canonical_path = ROOT / "Tools/HangboardModels/assets" / CANONICAL_NAME
 canonical_bytes = canonical_path.read_bytes()
 assert payloads[0] == canonical_bytes, "USDZ must embed the committed canonical source bytes"
 assert png_dimensions(canonical_bytes)[0] >= 1024
+red, green, blue, grain_range = canonical_color_evidence(canonical_path)
+assert 0.35 <= (red + green + blue) / 3 <= 0.48, (
+    "canonical wood source must remain visibly light beige/tan rather than white",
+    (red, green, blue),
+)
+assert red > green > blue and red - blue < 0.18, (red, green, blue)
+assert 0.012 <= grain_range <= 0.12, grain_range
 for _, model_path in packages:
     assert_clean_import_has_usable_image_materials(model_path)
 

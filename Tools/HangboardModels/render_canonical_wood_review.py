@@ -42,6 +42,12 @@ def render_board(slug: str):
     scene.render.resolution_x, scene.render.resolution_y = 1200, 700
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
+    # Match the exported model review transform.  The neutral background and
+    # broad area lights otherwise clip a pale diffuse texture toward white,
+    # obscuring the intentionally restrained wood grain at mobile scale.
+    scene.view_settings.view_transform = "AgX"
+    scene.view_settings.look = "AgX - Medium High Contrast"
+    scene.view_settings.exposure = -1.0
     if scene.world is None:
         scene.world = bpy.data.worlds.new("Canonical wood review world")
     scene.world.color = (0.055, 0.065, 0.08)
