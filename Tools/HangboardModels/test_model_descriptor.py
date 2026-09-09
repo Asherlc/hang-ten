@@ -148,7 +148,47 @@ def test_package_compiler_rejects_roundtrip_binding_piece_count_changes() -> Non
     imported = (body("ImportedBody"), hold("ImportedLeft", "left"))
 
     with pytest.raises(ValueError, match="bindings"):
-        model_compiler._require_bindings_unchanged(source, imported)
+        model_compiler._require_bindings_unchanged(
+            source,
+            imported,
+            {"ImportedBody": "Body", "ImportedLeft": "HoldLeftA"},
+        )
+
+
+def test_package_compiler_rejects_same_bounds_source_node_binding_swaps() -> None:
+    """Catches logical swaps hidden by equal piece counts and identical mesh bounds."""
+    source = (body("Body"), hold("Left", "left"), hold("Right", "right"))
+    imported = (
+        body("ImportedBody"),
+        hold("ImportedLeft", "right"),
+        hold("ImportedRight", "left"),
+    )
+    same_bounds = ((0, 0, 0), (1, 1, 1))
+    model_compiler._require_bounds_stable(
+        model_compiler._SceneSnapshot(
+            source,
+            {"Body": same_bounds, "Left": same_bounds, "Right": same_bounds},
+        ),
+        model_compiler._SceneSnapshot(
+            imported,
+            {
+                "ImportedBody": same_bounds,
+                "ImportedLeft": same_bounds,
+                "ImportedRight": same_bounds,
+            },
+        ),
+    )
+
+    with pytest.raises(ValueError, match="bindings"):
+        model_compiler._require_bindings_unchanged(
+            source,
+            imported,
+            {
+                "ImportedBody": "Body",
+                "ImportedLeft": "Left",
+                "ImportedRight": "Right",
+            },
+        )
 
 
 def test_package_compiler_rejects_roundtrip_hold_partition_swaps() -> None:

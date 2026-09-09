@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
+import runpy
 import shutil
 import sys
 import tempfile
@@ -19,8 +22,38 @@ except ModuleNotFoundError:
 
 
 TOOLS = Path(__file__).resolve().parent
+
+
+def assert_documented_cli_help_is_self_contained() -> None:
+    """Catches relying on a caller to add the compiler directory to sys.path."""
+    original_argv = sys.argv
+    original_path = list(sys.path)
+    output = io.StringIO()
+    try:
+        sys.path[:] = [entry for entry in sys.path if entry != str(TOOLS)]
+        sys.modules.pop("model_descriptor", None)
+        sys.argv = [str(TOOLS / "compile_model_package.py"), "--", "--help"]
+        with contextlib.redirect_stdout(output):
+            try:
+                runpy.run_path(
+                    str(TOOLS / "compile_model_package.py"), run_name="__main__"
+                )
+            except SystemExit as error:
+                assert error.code == 0, error.code
+            else:
+                raise AssertionError("documented compiler --help did not exit")
+    finally:
+        sys.argv = original_argv
+        sys.path[:] = original_path
+    assert "--blend" in output.getvalue()
+
+
+assert_documented_cli_help_is_self_contained()
+
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
+
+import compile_model_package as compiler
 
 from compile_model_package import compile_model_package, validate_tagged_scene
 
@@ -68,6 +101,25 @@ print("MODEL_COMPILER_BLENDER_TESTS passed")
 
 
 reset_scene()
+unusable_mesh = mesh("UnusableImageMesh")
+unusable_material = bpy.data.materials.new("Unusable image material")
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", DeprecationWarning)
+    unusable_material.use_nodes = True
+unusable_texture = unusable_material.node_tree.nodes.new("ShaderNodeTexImage")
+unusable_image = bpy.data.images.new("Unloaded image", width=1, height=1)
+unusable_image.source = "FILE"
+unusable_image.filepath_raw = "/definitely/missing/model-compiler-image.png"
+unusable_image.buffers_free()
+unusable_texture.image = unusable_image
+unusable_mesh.data.materials.append(unusable_material)
+expect_value_error(
+    "usable image data",
+    lambda: compiler._require_image_materials(unusable_mesh.data, unusable_mesh.name),
+)
+
+
+reset_scene()
 context_root = TOOLS.parents[1] / ".context"
 context_root.mkdir(exist_ok=True)
 temporary_root = Path(
@@ -103,6 +155,11 @@ try:
     compiled_hold["hold_id"] = "left"
     compiled_hold.data.materials.append(material)
     compiled_hold.location = (0.2, -0.1, 0.2)
+    compiled_hold_piece = mesh("HoldPiece")
+    compiled_hold_piece["role"] = "hold"
+    compiled_hold_piece["hold_id"] = "left"
+    compiled_hold_piece.data.materials.append(material)
+    compiled_hold_piece.location = (0.4, -0.1, 0.2)
 
     blend_path = temporary_root / "source.blend"
     bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
@@ -112,7 +169,7 @@ try:
 
     descriptor = compile_model_package(blend_path, board_json, output)
     assert set(descriptor.holds) == {"left"}
-    assert len(descriptor.holds["left"].node_ids) == 1
+    assert len(descriptor.holds["left"].node_ids) == 2
     assert {
         path.relative_to(output).as_posix()
         for path in output.rglob("*")

@@ -14,17 +14,21 @@ import os
 import shutil
 import sys
 import tempfile
-from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+_SCRIPT_DIRECTORY = Path(__file__).resolve().parent
+if str(_SCRIPT_DIRECTORY) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIRECTORY))
 
 from model_descriptor import ModelBounds, ModelDescriptorV1, NodeBinding, compile_descriptor
 
 
 _BOUNDS_TOLERANCE_METERS = 0.000001
 _IMPORTED_PROPERTY_PREFIX = "userProperties:"
+_SOURCE_NODE_ID_PROPERTY = "hang_ten_source_node_id"
 
 
 @dataclass(frozen=True)
@@ -163,7 +167,14 @@ def compile_model_package(
             require_imported_materials=True,
             require_triangles=True,
         )
-        _require_bindings_unchanged(source_snapshot.nodes, imported_snapshot.nodes)
+        imported_source_node_ids = _imported_source_node_ids(
+            imported_scene, imported_snapshot.nodes
+        )
+        _require_bindings_unchanged(
+            source_snapshot.nodes,
+            imported_snapshot.nodes,
+            imported_source_node_ids,
+        )
         _require_bounds_stable(source_snapshot, imported_snapshot)
         descriptor = compile_descriptor(
             model_bytes,
@@ -256,12 +267,32 @@ def _require_image_materials(mesh: object, node_id: str) -> None:
             raise ValueError(f"imported mesh {node_id} is materialless")
         material = materials[index]
         nodes = getattr(getattr(material, "node_tree", None), "nodes", ())
-        if not any(
-            getattr(node, "type", None) == "TEX_IMAGE"
-            and getattr(node, "image", None) is not None
-            for node in nodes
-        ):
+        image_nodes = [
+            node for node in nodes if getattr(node, "type", None) == "TEX_IMAGE"
+        ]
+        if not image_nodes:
             raise ValueError(f"imported mesh {node_id} has no image material")
+        if not any(
+            _image_has_usable_data(getattr(node, "image", None))
+            for node in image_nodes
+        ):
+            raise ValueError(f"imported mesh {node_id} has no usable image data")
+
+
+def _image_has_usable_data(image: object | None) -> bool:
+    if image is None:
+        return False
+    if not bool(getattr(image, "has_data", False)):
+        try:
+            getattr(image, "pixels")[0]
+        except (AttributeError, IndexError, RuntimeError, TypeError):
+            return False
+    size = getattr(image, "size", ())
+    return (
+        bool(getattr(image, "has_data", False))
+        and len(size) == 2
+        and all(int(dimension) > 0 for dimension in size)
+    )
 
 
 def _export_temporary_copies(
@@ -282,6 +313,7 @@ def _export_temporary_copies(
             )
             copied = bpy.data.objects.new(f"__export__{node.node_id}", mesh)
             copied["role"] = node.role
+            copied[_SOURCE_NODE_ID_PROPERTY] = node.node_id
             if node.role == "hold":
                 assert node.hold_id is not None
                 copied["hold_id"] = node.hold_id
@@ -350,16 +382,41 @@ def _board_axis_transform() -> object:
     )
 
 
-def _require_bindings_unchanged(
-    source_nodes: Sequence[NodeBinding], imported_nodes: Sequence[NodeBinding]
-) -> None:
-    source_bindings = Counter((node.role, node.hold_id) for node in source_nodes)
-    imported_bindings = Counter((node.role, node.hold_id) for node in imported_nodes)
-    if source_bindings != imported_bindings:
-        raise ValueError(
-            "USDZ reimport changed mesh-to-hold bindings: "
-            f"expected {source_bindings}, got {imported_bindings}"
+def _imported_source_node_ids(
+    scene: object, imported_nodes: Sequence[NodeBinding]
+) -> dict[str, str]:
+    by_name = {item.name: item for item in scene.objects}
+    correspondence: dict[str, str] = {}
+    for node in imported_nodes:
+        source_node_id = _object_property(
+            by_name[node.node_id], _SOURCE_NODE_ID_PROPERTY, imported=True
         )
+        if not isinstance(source_node_id, str) or not source_node_id:
+            raise ValueError(
+                f"USDZ reimport lost source-node correspondence for {node.node_id}"
+            )
+        correspondence[node.node_id] = source_node_id
+    if len(set(correspondence.values())) != len(correspondence):
+        raise ValueError("USDZ reimport duplicated source-node correspondence")
+    return correspondence
+
+
+def _require_bindings_unchanged(
+    source_nodes: Sequence[NodeBinding],
+    imported_nodes: Sequence[NodeBinding],
+    imported_source_node_ids: Mapping[str, str],
+) -> None:
+    source_by_id = {node.node_id: node for node in source_nodes}
+    imported_by_id = {node.node_id: node for node in imported_nodes}
+    if set(imported_source_node_ids) != set(imported_by_id) or set(
+        imported_source_node_ids.values()
+    ) != set(source_by_id):
+        raise ValueError("USDZ reimport changed mesh-to-hold bindings")
+    for imported_node_id, source_node_id in imported_source_node_ids.items():
+        source = source_by_id[source_node_id]
+        imported = imported_by_id[imported_node_id]
+        if (source.role, source.hold_id) != (imported.role, imported.hold_id):
+            raise ValueError("USDZ reimport changed mesh-to-hold bindings")
 
 
 def _require_bounds_stable(source: _SceneSnapshot, imported: _SceneSnapshot) -> None:
