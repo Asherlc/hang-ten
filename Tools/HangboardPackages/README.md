@@ -113,11 +113,10 @@ catalog. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH`
 pairs are accepted only in preflight or partial mode and only for declarations
 owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
 
-The current repository inventory contains 61 complete packages and zero drafts.
-All 61 live packages are raster v2 at this checkpoint; no package currently
-declares `media.type: "model"`. Model schema support and compiler tooling are
-available for a later explicitly scoped geometry migration, but this plan does
-not migrate a board or author geometry.
+The current repository inventory contains 61 complete packages and zero drafts:
+59 raster v2 packages and two model-only v2 packages (`beastmaker-1000` and
+`metolius-wood-grips-compact-ii`). Model packages declare only their USDZ and
+hash-bound descriptor assets; they do not carry raster fallbacks.
 
 ## Schema migration
 
