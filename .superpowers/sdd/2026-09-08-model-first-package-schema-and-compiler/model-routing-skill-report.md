@@ -33,6 +33,20 @@ The routing guidance now requires:
 The existing primary-source hierarchy, Astra-only geometry boundary, and
 human visual-review requirements remain intact.
 
+## Follow-up behavioral validation
+
+The review-requested matched pressure test is recorded in
+[`task-8-skill-pressure-report.md`](task-8-skill-pressure-report.md). It
+preserves the full common prompt, fresh-context identities, and essential
+baseline/guidance decisions. The no-guidance baseline allowed Astra to start
+before retained evidence and allowed fixture duplication under deadline
+pressure; the matched guidance control required the evidence gate and one
+shared declarative cross-parser matrix while retaining focused tests. The
+configured ChatGPT account rejected `gpt-6-luna` and `gpt-5`; both runs used
+the only accepted `gpt-6-astra` model. A private full-skill subprocess was
+blocked by the approval boundary, so the report explicitly labels the GREEN
+as an extracted-guidance control rather than overclaiming a full-file run.
+
 ## Validation
 
 ```text

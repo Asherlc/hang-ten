@@ -35,6 +35,8 @@ When canonical JSON member order is part of the descriptor contract, inspect an 
 
 Cross-language raw JSON equality preserves object/list order and scalar kind. Keep integers arbitrary and exact with Python-equivalent zero normalization; compare finite floating tokens by decoded binary64 value, including equivalent precision, exponent, and signed-zero forms, while keeping integer and floating kinds distinct.
 
+Malformed cross-parser contract cases use one declarative shared fixture matrix: common base board/descriptor documents and model bytes, ordered mutations, and language-specific expected rejection categories. Have every parser suite consume that matrix and retain focused single-rule tests; do not independently author equivalent malformed documents in each language.
+
 Derive spatial centers and bounds used by workout matching from the mesh in a defined board coordinate frame. A build-generated index bound to the model hash may provide these values without eagerly decoding every USDZ during catalog loading. Keep camera configuration separate from physical metadata, and never silently promote estimated model geometry to physical dimensions.
 
 Descriptor tooling exposes generated spatial values as read-only outputs, with no public construction path for hand-authored bounds or centers. Normalize from raw mesh extrema before rounding. Reject non-finite source coordinates and any non-finite derived span, normalized coordinate, center, or rounded value. Serialize stable, sorted output using one declared rounding precision; descriptor v1 uses nine decimal places.
