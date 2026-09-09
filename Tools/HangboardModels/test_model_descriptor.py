@@ -4,10 +4,18 @@ from __future__ import annotations
 
 import hashlib
 import math
+from dataclasses import FrozenInstanceError
 
 import pytest
 
-from model_descriptor import ModelDescriptorV1, NodeBinding, compile_descriptor
+from model_descriptor import (
+    FacePlaneAABB,
+    HoldDescriptorV1,
+    ModelBounds,
+    ModelDescriptorV1,
+    NodeBinding,
+    compile_descriptor,
+)
 
 
 def body(node_id: str) -> NodeBinding:
@@ -63,6 +71,51 @@ def test_compiler_normalizes_against_raw_vertices_before_rounding_model_bounds()
     assert descriptor.model_bounds.max == (0.000000001, 1.0, 1.0)
     assert descriptor.holds["one"].face_plane_aabb.min == (0.5, 0.0)
     assert descriptor.holds["one"].face_plane_aabb.max == (0.5, 1.0)
+
+
+def test_generated_descriptor_values_cannot_be_constructed_or_mutated_publicly() -> None:
+    """Catches callers bypassing model-derived factories with hand-authored spatial data."""
+    with pytest.raises(TypeError):
+        HoldDescriptorV1()
+    with pytest.raises(TypeError):
+        HoldDescriptorV1(
+            node_ids=("Hold",),
+            face_plane_aabb=FacePlaneAABB((0.0, 0.0), (1.0, 1.0)),
+            center=(0.5, 0.5),
+        )
+    with pytest.raises(TypeError):
+        ModelDescriptorV1()
+    with pytest.raises(TypeError):
+        ModelDescriptorV1(
+            model_sha256="0" * 64,
+            model_bounds=ModelBounds((0.0, 0.0, 0.0), (1.0, 1.0, 1.0)),
+            nodes=(body("Body"),),
+            holds={},
+        )
+
+    descriptor = compile_descriptor(
+        b"usdz",
+        [body("Body"), hold("Hold", "one")],
+        {"Body": [(0, 0, 0), (1, 1, 1)], "Hold": [(0.25, 0.5, 0)]},
+        frozenset({"one"}),
+    )
+    assert descriptor.holds["one"].center == (0.25, 0.5)
+    with pytest.raises(FrozenInstanceError):
+        descriptor.holds["one"].center = (0.0, 0.0)
+
+
+def test_compiler_rejects_finite_vertices_whose_derived_face_span_overflows() -> None:
+    """Catches finite input coordinates producing infinity or NaN during normalization."""
+    with pytest.raises(ValueError, match="finite"):
+        compile_descriptor(
+            b"usdz",
+            [body("Body"), hold("Hold", "one")],
+            {
+                "Body": [(-1e308, -1e308, 0), (1e308, 1e308, 1)],
+                "Hold": [(0, 0, 0)],
+            },
+            frozenset({"one"}),
+        )
 
 
 def test_compiler_unions_disconnected_hold_nodes_and_serializes_deterministically() -> None:
