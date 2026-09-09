@@ -41,6 +41,10 @@ When independent comparisons are requested, give candidates identical evidence a
 
 Reuse the [export verifier](../../../Tools/HangboardModels/verify_wood_grips_compact_ii.py), adapting board-specific expectations. Reimport actual exports in isolation with source materials/images removed; check dimensions, inventory, textures, triangle count, and visual continuity. Package validation or the build must require the model asset and reject missing, malformed, materialless, or wrong-inventory exports as defects.
 
+Run the documented Blender entrypoint without test-harness import-path injection to prove it bootstraps its own imports. Imported material images must resolve to usable loaded data with positive dimensions; a non-null image object alone is insufficient.
+
+USD importers may rename nodes. Carry stable source-piece correspondence on temporary export copies through export/import, then verify every body/hold piece's exact role and logical binding. Descriptor node IDs remain the actual importer-visible IDs. Counts and union bounds cannot prove correspondence when pieces share bounds. Never change source geometry, names, materials, or topology to pass validation.
+
 Explicitly triangulate Boolean cap n-gons for USDZ export without changing editable geometry. Blender roundtrips alone missed SceneKit's untextured body and faces occluding pockets. Inspect the bundled asset natively: body and every contact need materials; nearest triangle hits must resolve to the expected IDs. Handle normalized USD names and parent nodes. Orthographic tests use parallel rays; CPU-only SceneKit tests need `SCNTransaction.flush()` before picking.
 
 ## Integrate through the existing bridge
