@@ -36,11 +36,12 @@ def valid_packet(tmp_path: Path) -> Path:
         ],
         "commerceSources": [],
         "logicalInventory": [
-            {"id": "jug-left", "kind": "jug"},
-            {"id": "jug-right", "kind": "jug"},
+            {"id": "jug-left", "kind": "jug", "sourceLocalPath": local_path},
+            {"id": "jug-right", "kind": "jug", "sourceLocalPath": local_path},
         ],
         "sourcedClaims": [
             {
+                "claimID": "material-and-width",
                 "claim": "The board is made from wood and is 610 mm wide.",
                 "sourceLocalPath": local_path,
                 "sourceType": "manufacturer",
@@ -87,6 +88,26 @@ def test_rejects_stale_retained_source_hash(tmp_path: Path) -> None:
     source.write_bytes(b"changed source snapshot\n")
 
     with pytest.raises(ValueError, match="SHA-256"):
+        validate_evidence_packet(packet)
+
+
+def test_requires_each_logical_inventory_item_to_reference_retained_source(tmp_path: Path) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["logicalInventory"][0]["sourceLocalPath"]  # type: ignore[index]
+    _rewrite(packet, payload)
+
+    with pytest.raises(ValueError, match="logicalInventory.*sourceLocalPath"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_logical_inventory_reference_to_unknown_source(tmp_path: Path) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    payload["logicalInventory"][0]["sourceLocalPath"] = "sources/not-retained.html"  # type: ignore[index]
+    _rewrite(packet, payload)
+
+    with pytest.raises(ValueError, match="logicalInventory.*source"):
         validate_evidence_packet(packet)
 
 
@@ -140,7 +161,7 @@ def test_requires_authorized_retailer_identity_and_snapshot_hash_for_commerce_ga
     assert validate_evidence_packet(packet).commerce_sources[0].retailer == "Authorized Retailer"
 
 
-def test_rejects_commerce_override_without_conflict_ruling(tmp_path: Path) -> None:
+def test_rejects_same_claim_id_across_manufacturer_and_commerce_without_ruling(tmp_path: Path) -> None:
     packet = valid_packet(tmp_path)
     payload = _payload(packet)
     local_path, digest = _write_source(packet.parent, "sources/retailer.html")
@@ -152,12 +173,86 @@ def test_rejects_commerce_override_without_conflict_ruling(tmp_path: Path) -> No
             "sourceTier": "commerce",
             "url": "https://authorized.example/board",
             "retailer": "Authorized Retailer",
-            "overridesManufacturerConflict": True,
         }
+    ]
+    payload["sourcedClaims"].append(  # type: ignore[union-attr]
+        {
+            "claimID": "material-and-width",
+            "claim": "The board is made from a different material.",
+            "sourceLocalPath": local_path,
+            "sourceType": "commerce",
+        }
+    )
+    _rewrite(packet, payload)
+
+    with pytest.raises(ValueError, match="material-and-width.*ruling"):
+        validate_evidence_packet(packet)
+
+
+def test_accepts_same_claim_id_across_tiers_with_matching_ruling(tmp_path: Path) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    local_path, digest = _write_source(packet.parent, "sources/retailer.html")
+    payload["commerceSources"] = [
+        {
+            "localPath": local_path,
+            "sha256": digest,
+            "snapshotSHA256": digest,
+            "sourceTier": "commerce",
+            "url": "https://authorized.example/board",
+            "retailer": "Authorized Retailer",
+        }
+    ]
+    payload["sourcedClaims"].append(  # type: ignore[union-attr]
+        {
+            "claimID": "material-and-width",
+            "claim": "The board is made from a different material.",
+            "sourceLocalPath": local_path,
+            "sourceType": "commerce",
+        }
+    )
+    payload["conflictsAndRulings"] = [
+        {"claimID": "material-and-width", "ruling": "Retain the manufacturer claim."}
     ]
     _rewrite(packet, payload)
 
-    with pytest.raises(ValueError, match="ruling"):
+    assert validate_evidence_packet(packet).conflicts_and_rulings[0]["claimID"] == "material-and-width"
+
+
+def test_allows_commerce_only_gap_claim_with_unique_claim_id(tmp_path: Path) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    local_path, digest = _write_source(packet.parent, "sources/retailer.html")
+    payload["commerceSources"] = [
+        {
+            "localPath": local_path,
+            "sha256": digest,
+            "snapshotSHA256": digest,
+            "sourceTier": "commerce",
+            "url": "https://authorized.example/board",
+            "retailer": "Authorized Retailer",
+        }
+    ]
+    payload["sourcedClaims"].append(  # type: ignore[union-attr]
+        {
+            "claimID": "retailer-only-gap",
+            "claim": "Retailer-only packaging detail.",
+            "sourceLocalPath": local_path,
+            "sourceType": "commerce",
+        }
+    )
+    _rewrite(packet, payload)
+
+    assert validate_evidence_packet(packet).commerce_sources[0].source_tier == "commerce"
+
+
+def test_requires_stable_claim_id_and_retained_source_reference(tmp_path: Path) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["sourcedClaims"][0]["claimID"]  # type: ignore[index]
+    _rewrite(packet, payload)
+
+    with pytest.raises(ValueError, match="sourcedClaims.*claimID"):
         validate_evidence_packet(packet)
 
 

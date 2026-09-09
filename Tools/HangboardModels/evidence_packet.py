@@ -58,7 +58,6 @@ class EvidenceSource:
     url: str
     retailer: str | None = None
     snapshot_sha256: str | None = None
-    overrides_manufacturer_conflict: bool = False
 
 
 @dataclass(frozen=True)
@@ -118,7 +117,10 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     if not primary:
         raise ValueError("primarySources must contain at least one manufacturer source")
     commerce = _sources(payload["commerceSources"], path.parent, "commerce")
-    _validate_inventory(payload["logicalInventory"])
+    source_tiers = {
+        source.local_path: source.source_tier for source in (*primary, *commerce)
+    }
+    _validate_inventory(payload["logicalInventory"], set(source_tiers))
     claims = _dict_list(payload["sourcedClaims"], "sourcedClaims")
     conflicts = _list(payload["conflictsAndRulings"], "conflictsAndRulings")
     unknowns = _strings(payload["unknownsForAstra"], "unknownsForAstra")
@@ -134,9 +136,8 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     if not isinstance(payload["materialFidelity"], (dict, str)):
         raise ValueError("materialFidelity must be an object or string")
 
-    if any(source.overrides_manufacturer_conflict for source in commerce) and not _has_ruling(conflicts):
-        raise ValueError("commerce claim overrides a manufacturer conflict without a ruling")
-    _validate_claim_references(claims, {source.local_path for source in (*primary, *commerce)})
+    _validate_claim_references(claims, source_tiers)
+    _validate_cross_tier_claims(claims, source_tiers, conflicts)
 
     return EvidencePacket(
         board_revision=board_revision,
@@ -181,13 +182,18 @@ def _dict_list(value: Any, field: str) -> list[dict[str, Any]]:
     return values
 
 
-def _validate_inventory(value: Any) -> None:
+def _validate_inventory(value: Any, source_paths: set[str]) -> None:
     inventory = _dict_list(value, "logicalInventory")
     if not inventory:
         raise ValueError("logicalInventory must contain at least one logical contact")
     for item in inventory:
         if not isinstance(item.get("id"), str) or not item["id"].strip():
             raise ValueError("logicalInventory entries require a non-empty id")
+        source_path = item.get("sourceLocalPath")
+        if not isinstance(source_path, str) or not source_path.strip():
+            raise ValueError("logicalInventory entries require sourceLocalPath")
+        if source_path not in source_paths:
+            raise ValueError(f"logicalInventory sourceLocalPath is not retained: {source_path}")
 
 
 def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[EvidenceSource]:
@@ -196,7 +202,7 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
     for raw in objects:
         allowed = {"localPath", "sha256", "sourceTier", "url"}
         if expected_tier == "commerce":
-            allowed |= {"retailer", "snapshotSHA256", "overridesManufacturerConflict"}
+            allowed |= {"retailer", "snapshotSHA256"}
         unknown = set(raw) - allowed
         if unknown:
             raise ValueError(f"source contains unknown key: {sorted(unknown)[0]}")
@@ -222,7 +228,6 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
             raise ValueError("source url must be HTTPS")
         retailer: str | None = None
         snapshot_sha256: str | None = None
-        overrides = False
         if expected_tier == "commerce":
             retailer = raw.get("retailer")
             if not isinstance(retailer, str) or not retailer.strip():
@@ -231,9 +236,6 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
             _validate_sha256(snapshot_sha256, "snapshotSHA256")
             if snapshot_sha256.casefold() != actual_digest:
                 raise ValueError(f"commerce snapshotSHA256 does not match retained bytes: {local_path}")
-            overrides = raw.get("overridesManufacturerConflict", False)
-            if not isinstance(overrides, bool):
-                raise ValueError("overridesManufacturerConflict must be boolean")
         sources.append(
             EvidenceSource(
                 local_path=local_path,
@@ -242,7 +244,6 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
                 url=url,
                 retailer=retailer,
                 snapshot_sha256=snapshot_sha256,
-                overrides_manufacturer_conflict=overrides,
             )
         )
     return sources
@@ -272,18 +273,42 @@ def _validate_retained_path(source_path: Path, packet_dir: Path) -> None:
         raise ValueError(f"retained source must be an existing regular file: {relative}")
 
 
-def _validate_claim_references(claims: list[dict[str, Any]], source_paths: set[str]) -> None:
+def _validate_claim_references(
+    claims: list[dict[str, Any]], source_tiers: dict[str, SourceTier]
+) -> None:
     for claim in claims:
+        claim_id = claim.get("claimID")
+        if not isinstance(claim_id, str) or not claim_id.strip():
+            raise ValueError("sourcedClaims entries require claimID")
         reference = claim.get("sourceLocalPath")
-        if reference is not None and reference not in source_paths:
+        if not isinstance(reference, str) or not reference.strip():
+            raise ValueError(f"sourcedClaims entry {claim_id} requires sourceLocalPath")
+        if reference not in source_tiers:
             raise ValueError(f"sourcedClaim references an unknown source: {reference}")
 
 
-def _has_ruling(conflicts: list[Any]) -> bool:
-    return any(
-        isinstance(item, dict) and isinstance(item.get("ruling"), str) and bool(item["ruling"].strip())
+def _validate_cross_tier_claims(
+    claims: list[dict[str, Any]],
+    source_tiers: dict[str, SourceTier],
+    conflicts: list[Any],
+) -> None:
+    claim_tiers: dict[str, set[SourceTier]] = {}
+    for claim in claims:
+        claim_id = claim["claimID"]
+        claim_tiers.setdefault(claim_id, set()).add(source_tiers[claim["sourceLocalPath"]])
+    ruled_claims = {
+        item.get("claimID")
         for item in conflicts
-    )
+        if isinstance(item, dict)
+        and isinstance(item.get("claimID"), str)
+        and isinstance(item.get("ruling"), str)
+        and bool(item["ruling"].strip())
+    }
+    for claim_id, tiers in claim_tiers.items():
+        if {"manufacturer", "commerce"}.issubset(tiers) and claim_id not in ruled_claims:
+            raise ValueError(
+                f"claim {claim_id} is supported by manufacturer and commerce sources without a ruling"
+            )
 
 
 def _reject_proposal_keys(value: Any) -> None:
