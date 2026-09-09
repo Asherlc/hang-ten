@@ -1,5 +1,35 @@
 # Wood Grips Compact II display prototype
 
+## Stage 0 evidence packet contract
+
+Before any model or geometry work, retain the manufacturer page, manual, or
+media used as evidence under the packet directory and record its HTTPS URL and
+SHA-256 in `primarySources`. A primary source must be a regular, non-symlink
+file beneath the packet directory; validation hashes the retained bytes. Use
+`commerceSources` only for a documented gap, with an authorized retailer
+identity and `snapshotSHA256`. A commerce source cannot override a recorded
+manufacturer conflict without a ruling in `conflictsAndRulings`.
+
+Start from `evidence-packet-template.json` and replace every placeholder. The
+closed packet records the exact board revision/date and locale, source-backed
+logical inventory and claims, conflicts/rulings, qualitative unknowns for
+Astra, material fidelity, deliberate omissions, and the required `front`,
+`three-quarter`, and `clay-detail` review views. `screw holes` and `mounting
+hardware` are deliberate display omissions; they do not claim that the
+physical board lacks those features.
+
+Validate a packet with:
+
+```sh
+python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
+```
+
+This contract has no geometry, coordinates, contours, masks, vectors, trace,
+alignment, or numeric shape prescriptions. Measurements are allowed only when
+attached to cited source-backed claims/metadata. Unknowns may name qualitative
+topics such as `cavity sections`, `radii`, and `back profile`; shape authoring
+belongs to the later Astra stage.
+
 This is an editable 3D display asset with a second-pass curvature refinement for Hang Ten. It recreates the
 Metolius Wood Grips Compact II's two rows, tapered body, true carved recesses,
 outer shelves, and top contacts. Mounting holes are deliberately omitted at the
