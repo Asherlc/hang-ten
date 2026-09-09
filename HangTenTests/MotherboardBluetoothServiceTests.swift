@@ -153,6 +153,40 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         ])
     }
 
+    func testServiceSelectsWHC06TransportAndStreamsCapturedAdvertisement() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: nil)
+        defer { service.disconnect() }
+
+        service.connect(profile: .whC06)
+
+        XCTAssertGreaterThan(manager.scanCount, 0)
+        XCTAssertNil(manager.scannedServiceUUIDs)
+        XCTAssertEqual(
+            manager.scannedOptions?[CBCentralManagerScanOptionAllowDuplicatesKey] as? Bool,
+            true
+        )
+
+        // Captured WH-C06 advertisement: little-endian company ID, then its payload.
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
+                0x00, 0x01,
+                0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+            ])]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, peripheral.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0)
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)

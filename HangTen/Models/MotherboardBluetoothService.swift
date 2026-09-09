@@ -52,6 +52,7 @@ struct MotherboardServiceTimeouts {
 protocol MotherboardTransport: AnyObject {
     var eventHandler: ((MotherboardTransportEvent) -> Void)? { get set }
 
+    func configure(profile: ForceSensorProfile)
     func startScan()
     func stopScan()
     func connect(to device: MotherboardDiscoveredDevice)
