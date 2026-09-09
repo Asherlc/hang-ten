@@ -137,12 +137,17 @@ def body_section(x):
     top_start, top_end = 1, len(section)-1
     # The approved commerce-gap oblique shows a distinct step wall, with
     # rounded edges, rather than the first draft's broad S-shaped shoulder.
-    section += [(52, 58)]
-    section += [(52-4*math.sin(t), 54+4*math.cos(t))
+    # Human review found the outer middle cavities crowded by the rising end
+    # of this step. Lower the step edge and give it its own tighter end taper;
+    # the overall body's 65 mm end silhouette remains unchanged.
+    step_start = len(section)
+    section += [(47, 58)]
+    section += [(47-4*math.sin(t), 54+4*math.cos(t))
                 for t in (math.pi/2*i/10 for i in range(1, 11))]
-    section += [(48, 44)]
-    section += [(45+3*math.cos(t), 44-3*math.sin(t))
+    section += [(43, 44)]
+    section += [(40+3*math.cos(t), 44-3*math.sin(t))
                 for t in (math.pi/2*i/10 for i in range(1, 11))]
+    step_end = len(section)
     section += [(8, 41)]
     section += [(8-8*math.sin(t), 33+8*math.cos(t))
                 for t in (math.pi/2*i/12 for i in range(1, 13))]
@@ -152,8 +157,10 @@ def body_section(x):
     # Elliptical end silhouette and a narrow rounded side-depth edge.
     near = min(x, W-x)
     sy = math.sqrt(max(0.0, 1-((65-near)/65)**2)) if near < 65 else 1.0
+    step_sy = math.sqrt(max(0.0, 1-((30-near)/30)**2)) if near < 30 else 1.0
     sz = math.sqrt(max(0.0, 1-((6-near)/6)**2)) if near < 6 else 1.0
-    return [(x, 75+(y-75)*sy, 29+(z-29)*sz) for y, z in section], top_start, top_end
+    return [(x, 75+(y-75)*(step_sy if step_start <= i < step_end else sy), 29+(z-29)*sz)
+            for i, (y, z) in enumerate(section)], top_start, top_end
 
 
 def author_body(materials, material_indices):
@@ -198,7 +205,9 @@ def pocket_specs():
     pairs = [
         ("pocket-top-outer", 63, 105, 82, 22, 10, 58),
         ("pocket-top", 250, 105, 61, 22, 30, 58),
-        ("pocket-middle-outer", 57, 67, 86, 22, 45, 58),
+        # Preserve the inner end/neighbour gap; retract only the crowded outer
+        # mouth end by 4 mm on each side, symmetrically.
+        ("pocket-middle-outer", 59, 67, 82, 22, 45, 58),
         ("pocket-middle-mid", 135, 67, 43, 22, 50, 58),
         ("pocket-middle-inner", 201, 67, 62, 22, 45, 58),
         ("pocket-bottom-outer", 105, 22, 90, 22, 20, 41),
@@ -317,6 +326,35 @@ def split_and_tag(body, hold_ids):
     return objects
 
 
+def verify_outer_middle_wood_rims():
+    """Check real body hits in three bands outside both complete pocket mouths.
+
+    This is a display-geometry clearance regression, not a structural rating
+    or a measurement/claim about the physical manufactured board.
+    """
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    results = []
+    targets = {"pocket-middle-outer-left", "pocket-middle-outer-right"}
+    for spec in pocket_specs():
+        if spec["holdID"] not in targets:
+            continue
+        tested = 0
+        for band_mm in (2, 4, 6):
+            for x, y in capsule(*spec["centerMM"], spec["widthMM"], spec["heightMM"],
+                                spec["mouthRadiusMM"]+band_mm):
+                hit, location, _, _, nearest, _ = bpy.context.scene.ray_cast(
+                    depsgraph, Vector((x*.001, y*.001, .10)), Vector((0, 0, -1)), distance=.11)
+                assert hit and nearest.get("role") == "body" and abs(location.z-.058) < 1e-6, (
+                    "outer middle pocket rim lacks flat wood margin", spec["holdID"], band_mm,
+                    (x, y), nearest.name if nearest else None, tuple(location))
+                tested += 1
+        results.append(dict(holdID=spec["holdID"], verifiedOutsideMouthBandsMM=[2, 4, 6],
+                            nearestFlatBodyHits=tested, expectedFaceZMM=58,
+                            status="display geometry only; not a physical strength claim"))
+    assert len(results) == 2
+    return results
+
+
 def verify_model(objects, hold_ids):
     from collections import Counter
     found = Counter(o.get("hold_id") for o in objects if o.get("role") == "hold")
@@ -354,7 +392,8 @@ def verify_model(objects, hold_ids):
                 triangleCeiling=TRIANGLE_CEILING, hold_ids_preserved=len(found),
                 body_mesh_count=1, hardware_mesh_count=0, meshes=records,
                 authoredHeadOnNearestHits=head_on_hits,
-                authoredHeadOnNearestHitCount=len(head_on_hits))
+                authoredHeadOnNearestHitCount=len(head_on_hits),
+                outerMiddlePocketWoodRims=verify_outer_middle_wood_rims())
 
 
 def aim(obj, target):
@@ -456,7 +495,7 @@ def render_view(output, name, camera, location, target, scale, resolution, *, cl
 def source_report(output, report):
     rows = "\n".join(f"| {s['holdID']} | {s['centerMM']} | {s['widthMM']} × {s['heightMM']} | {s['displayDepthMM']} | {s['faceZMM']} |"
                      for s in pocket_specs())
-    (output/"source-versus-estimate.md").write_text(f"""# Beastmaker 1000 authored display model — Astra first pass
+    (output/"source-versus-estimate.md").write_text(f"""# Beastmaker 1000 authored display model — Astra correction round 2
 
 Human evidence approval: granted in the controlling session before authoring.
 Human visual fidelity approval: **pending**. This pass is not approved for package promotion.
@@ -471,7 +510,7 @@ The two human-approved shape references are retained manufacturer `references/be
 
 All exact positions, aperture dimensions, cavity depths and cross-sections, end silhouette, tier profile, back profile, transition widths, mouth/back fillets, and jug sections are **display estimates**, not manufacturer measurements. Nominal sloper angles follow the named families, while their placement and blending are estimated. No model measurement changes logical metadata or training content.
 
-The estimated lower front face is at Z=41 mm; upper face at Z=58 mm. After reviewing the added true three-quarter view, Astra replaced the first draft's broad S-shaped shoulder with a distinct step wall at Y=48 mm, bounded by an estimated 4 mm upper roll and 3 mm lower fillet. The upper flat ends at Y=52 mm and the lower flat begins at Y=45 mm. The end silhouette uses a 65 mm horizontal ellipse radius and 75 mm vertical half-height, with a 6 mm depth-edge roll. Jugs use continuous cubic sections with a 150 mm high crest; slopers use nominal angled sections with a 6 mm front roll. Mirroring is exact around X=290 mm.
+The estimated lower front face is at Z=41 mm; upper face at Z=58 mm. After reviewing the added true three-quarter view, Astra replaced the first draft's broad S-shaped shoulder with a distinct step wall. Human feedback on the rendered pass then identified crowded outer middle pocket rims. In correction round 2, Astra lowered the upper flat's step edge from Y=52 to 47 mm, with a wall at Y=43 mm, a 4 mm upper roll and 3 mm lower fillet; the lower flat begins at Y=40 mm. That step now uses its own 30 mm end taper instead of inheriting the body's 65 mm taper, preserving a flat wood band around the outer middle cavities. Both affected throat widths changed from 86 to 82 mm and their symmetric centres from X=57/523 to 59/521 mm, preserving each mouth's inner end and neighbour gap. The overall end silhouette still uses a 65 mm horizontal ellipse radius and 75 mm vertical half-height, with the same 6 mm depth-edge roll. Jugs use continuous cubic sections with a 150 mm high crest; slopers use nominal angled sections with a 6 mm front roll. Mirroring is exact around X=290 mm.
 
 Each pocket uses an explicitly authored capsule-like mouth, a 2.8 mm mouth fillet, a true wall, a back fillet up to 4 mm, and a planar back. The back remains closed; the narrowest estimated rear thickness is 8 mm. Geometry is split into material-bound pieces after carving, so the selectable mesh is the actual visible carved surface.
 
@@ -486,6 +525,8 @@ Original analytic pale-wood texture, shared UV field across all physical surface
 ## Geometry checkpoint
 
 Bounds in `{FRAME}`: `{report['boundsMeters']}` metres. `{report['triangles']}` triangles (ceiling {TRIANGLE_CEILING}); exactly one body mesh and 22 individually tagged hold meshes. No unbound mesh or hardware geometry is present. Source `.blend` contains model meshes only; review cameras/lights are created after saving and are not part of the compiler input. All 22 rays at mesh-derived face-bound centres hit their exact expected hold as the nearest authored Blender surface; this is not a substitute for later native SceneKit tests.
+
+The targeted outer-middle rim regression probes the actual model in 2, 4 and 6 mm bands outside each complete mouth (240 nearest flat-body hits per pocket). The prior exported pass failed even the 2 mm band at its rounded end. The corrected source must pass all 480 probes. These are authored display-clearance checks, not a physical strength rating or manufacturing measurement. Cameras, lights and wood material are unchanged from the human-reviewed pass. The prior sources/reports/renders are archived under `review-round-1/`; the prior USDZ remains under `package-first-pass/`.
 
 `beastmaker-1000.blend` remains in the canonical frame. `beastmaker-1000-compiler-input.blend` is a rigid +90° X-axis transport copy for the existing compiler's documented Blender-native storage convention; local vertex positions, topology, material assignments and physical shape are unchanged. The report records the exact matrix and both hashes. The compiler converts that copy back into the exact canonical USDZ frame. Neither source contains a camera, light, or other non-mesh object.
 
@@ -582,6 +623,9 @@ def main():
                   generatorSHA256=sha(Path(__file__)), compilerInput=compiler_input,
                   humanEvidenceApproval="granted in controlling session, including exact four-image multi-angle set",
                   humanVisualApproval="pending", deliberateOmissions=OMISSIONS,
+                  humanFeedbackRound=dict(number=2, defect="outer middle pockets crowded by rounded body ends",
+                                          correctedHoldIDs=["pocket-middle-outer-left", "pocket-middle-outer-right"],
+                                          scope="physical step/end transition and pocket mouths; unchanged camera/lights/material"),
                   sourceFacts=dict(faceMillimeters=[580, 150], qualifiedSharedLayoutDepthMillimeters=58),
                   estimateStatus="Every authored position, radius, section and cavity depth is a display estimate",
                   pocketEstimates=pocket_specs(), reviewViews=views, reviewLights=lights,
