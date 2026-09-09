@@ -36,13 +36,24 @@ Command:
 
 Result: `Skill is valid!`
 
-Command:
+The original working-tree check was run as:
 
 ```text
 rtk git diff --check
 ```
 
-Result: passed with no output.
+Result: exit 0 with no output. This wrapper did not surface the trailing
+whitespace later reported by the commit-scoped native check.
+
+The later commit-scoped check was:
+
+```text
+git diff --check fc76cba0^ fc76cba0
+```
+
+Result: failed at `SKILL.md:28` with a trailing-whitespace diagnostic. The
+trailing space has now been removed; the fixed commit-scoped result is recorded
+in `task-5-skill-fix-report.md`.
 
 ## Self-review
 
