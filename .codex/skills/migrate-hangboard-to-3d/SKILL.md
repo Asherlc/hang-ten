@@ -13,6 +13,8 @@ Identify the exact board revision and read its existing package and source audit
 
 Read relevant sections of the [working example](../../../Tools/HangboardModels/README.md), then inspect only the generator functions needed. Treat any dual 2D/3D structure in an older example as legacy, not as a requirement to preserve raster assets or paths. Follow `add-hangboard` for source-backed package metadata, while applying this skill's 3D-only migration contract.
 
+In the retained evidence packet, each source-backed logical inventory entry cites an exact retained source snapshot, and retained snapshot paths are unique across manufacturer and commerce tiers. Sourced claims carry stable claim identities and retained-source links. When one claim identity has both manufacturer and commerce evidence, record the conflict and a non-empty ruling; commerce-only gap evidence remains valid when clearly tiered and linked.
+
 ## Separate logical data from model geometry
 
 Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
