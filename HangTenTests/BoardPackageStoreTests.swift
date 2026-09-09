@@ -63,6 +63,27 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
     }
 
+    func testDescriptorRoundingMatchesPythonAcrossDoublePrecisionTransition() {
+        let transition = Double(1 << 22)
+        let cases: [(value: Double, expected: Double)] = [
+            (0.1000000115, 0.100000011),
+            (transition.nextDown, transition),
+            (transition.nextUp, transition.nextUp),
+            (Double(1 << 23).nextUp, Double(1 << 23).nextUp),
+            (1.0e20, 1.0e20),
+            (1.0e300, 1.0e300),
+            (Double.greatestFiniteMagnitude, Double.greatestFiniteMagnitude)
+        ]
+
+        for item in cases {
+            XCTAssertEqual(
+                boardDescriptorRoundedToNinePlaces(item.value),
+                item.expected,
+                "Python round(value, 9) parity failed for \(item.value)"
+            )
+        }
+    }
+
     func testStoreHandlesFiniteScaleOverflowAndRejectsNonFiniteDescriptorValues() throws {
         let finite = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
             try self.mutateJSONObject(
@@ -121,6 +142,36 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreAcceptsDescriptorWithLeadingAndTrailingJSONWhitespace() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            let descriptorURL = packageURL.appendingPathComponent("assets/primary.model.json")
+            let descriptor = try Data(contentsOf: descriptorURL)
+            var padded = Data(" \n\t".utf8)
+            padded.append(descriptor)
+            padded.append(Data("\r\n ".utf8))
+            try padded.write(to: descriptorURL)
+        }
+        defer { fixture.remove() }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testDescriptorMemberOrderScannerRejectsExcessiveNestingWithoutLosingEscapes() throws {
+        var escaped = BoardPackageJSONMemberOrder(
+            data: Data(#"{"ignored":"quote: \" and brace: }","holds":{"hold-a":{}}}"#.utf8)
+        )
+        XCTAssertEqual(try escaped.memberNames(inRootObjectNamed: "holds"), ["hold-a"])
+
+        let excessiveDepth = BoardPackageJSONMemberOrder.maximumNestingDepth + 1
+        let nestedValue = String(repeating: "[", count: excessiveDepth) + "0" +
+            String(repeating: "]", count: excessiveDepth)
+        var nested = BoardPackageJSONMemberOrder(
+            data: Data("{\"ignored\":\(nestedValue),\"holds\":{}}".utf8)
+        )
+
+        XCTAssertThrowsError(try nested.memberNames(inRootObjectNamed: "holds"))
     }
 
     func testStoreLoadsV2RasterGeometryFromPresentationMedia() throws {

@@ -141,16 +141,16 @@ final class PlanStorageTests: XCTestCase {
                 BoardHold(
                     id: "fixture.edge",
                     name: "Edge",
-                    shortLabel: "E",
-                    detail: "Fixture edge.",
                     kind: .edge,
-                    frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
                 ),
             ],
             productURL: URL(string: "https://example.com/fixture")!,
             photoAssetName: nil,
             presentations: [
-                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
+                rasterPresentation(
+                    id: "front",
+                    frames: ["fixture.edge": CGRect(x: 0, y: 0, width: 1, height: 1)]
+                ),
             ],
             positions: [BoardPosition(id: "front", presentationID: "front")]
         )
@@ -2216,10 +2216,7 @@ final class PlanStorageTests: XCTestCase {
                     BoardHold(
                         id: "fixture.large-edge",
                         name: "Large edge",
-                        shortLabel: "E",
-                        detail: "A fixture large edge.",
                         kind: .edge,
-                        frame: .init(x: 0.1, y: 0.1, width: 0.2, height: 0.1),
                         features: [.largeEdge]
                     )
                 ],
@@ -2314,20 +2311,14 @@ final class PlanStorageTests: XCTestCase {
                 BoardHold(
                     id: "fixture.edge",
                     name: "Fixture edge",
-                    kind: .edge,
-                    geometry: [
-                        BoardHoldPiece(
-                            id: "fixture.edge-piece",
-                            holdID: "fixture.edge",
-                            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
-                            shape: .roundedRect(cornerRadiusFraction: 0),
-                            treatment: .surface
-                        )
-                    ]
+                    kind: .edge
                 )
             ],
             productURL: URL(string: "https://example.com/untagged-edge")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [rasterPresentation(frames: [
+                "fixture.edge": CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
+            ])]
         )
         let target = HoldTarget.feature(.mediumEdge)
         let step = makeStep(
@@ -2363,20 +2354,14 @@ final class PlanStorageTests: XCTestCase {
                 BoardHold(
                     id: "fixture.jug",
                     name: "Fixture jug",
-                    kind: .jug,
-                    geometry: [
-                        BoardHoldPiece(
-                            id: "fixture.jug-piece",
-                            holdID: "fixture.jug",
-                            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
-                            shape: .roundedRect(cornerRadiusFraction: 0),
-                            treatment: .surface
-                        )
-                    ]
+                    kind: .jug
                 )
             ],
             productURL: URL(string: "https://example.com/jug-only")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [rasterPresentation(frames: [
+                "fixture.jug": CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
+            ])]
         )
         let step = makeStep(
             id: "feature-target",
@@ -2407,10 +2392,7 @@ final class PlanStorageTests: XCTestCase {
                 BoardHold(
                     id: "fixture.edge",
                     name: "Fixture edge",
-                    shortLabel: "E",
-                    detail: "A fixture edge.",
                     kind: .edge,
-                    frame: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
                 )
             ],
             semanticHolds: [
@@ -2451,20 +2433,11 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testPlanMappingsOverrideBoardLoadedSemanticMappings() throws {
-        func hold(id: String, name: String, kind: HoldKind, x: CGFloat) -> BoardHold {
+        func hold(id: String, name: String, kind: HoldKind) -> BoardHold {
             BoardHold(
                 id: id,
                 name: name,
-                kind: kind,
-                geometry: [
-                    BoardHoldPiece(
-                        id: "\(id)-piece",
-                        holdID: id,
-                        frame: CGRect(x: x, y: 0.2, width: 0.2, height: 0.4),
-                        shape: .roundedRect(cornerRadiusFraction: 0),
-                        treatment: .surface
-                    )
-                ]
+                kind: kind
             )
         }
         let board = TrainingBoard(
@@ -2475,16 +2448,21 @@ final class PlanStorageTests: XCTestCase {
             dimensions: "10 × 5",
             aspectRatio: 2,
             holds: [
-                hold(id: "fixture.edge", name: "Fixture edge", kind: .edge, x: 0.1),
-                hold(id: "fixture.pinch", name: "Fixture pinch", kind: .pinch, x: 0.4),
-                hold(id: "fixture.jug", name: "Fixture jug", kind: .jug, x: 0.7)
+                hold(id: "fixture.edge", name: "Fixture edge", kind: .edge),
+                hold(id: "fixture.pinch", name: "Fixture pinch", kind: .pinch),
+                hold(id: "fixture.jug", name: "Fixture jug", kind: .jug)
             ],
             semanticHolds: [
                 "fixture-target": SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"]),
                 "fixture-fallback": SemanticHoldMappingDefinition(kind: .pinch)
             ],
             productURL: URL(string: "https://example.com/fixture-board")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [rasterPresentation(frames: [
+                "fixture.edge": CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
+                "fixture.pinch": CGRect(x: 0.4, y: 0.2, width: 0.2, height: 0.4),
+                "fixture.jug": CGRect(x: 0.7, y: 0.2, width: 0.2, height: 0.4)
+            ])]
         )
         let step = makeStep(
             id: "semantic-target",
@@ -2540,6 +2518,28 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(
             BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[1], on: board),
             ["fixture.edge"]
+        )
+    }
+
+    private func rasterPresentation(
+        id: String = "primary",
+        frames: [String: CGRect]
+    ) -> BoardPresentation {
+        let geometry = Dictionary(uniqueKeysWithValues: frames.map { holdID, frame in
+            (holdID, [BoardHoldPiece(
+                id: "\(holdID)-piece",
+                holdID: holdID,
+                frame: frame,
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return BoardPresentation(
+            id: id,
+            name: id,
+            aspectRatio: 2,
+            isDefault: true,
+            media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
         )
     }
 

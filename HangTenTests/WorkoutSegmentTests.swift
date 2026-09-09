@@ -6,10 +6,7 @@ final class WorkoutSegmentTests: XCTestCase {
         let hold = BoardHold(
             id: "edge-21",
             name: "Left 21 mm edge",
-            shortLabel: "21E",
-            detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             sizeMillimeters: 21
         )
 

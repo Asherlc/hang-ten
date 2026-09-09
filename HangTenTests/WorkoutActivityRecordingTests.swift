@@ -22,56 +22,71 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         super.tearDown()
     }
 
-    private let board = TrainingBoard(
-        id: "fixture.board",
-        manufacturer: "Fixture",
-        name: "Board",
-        subtitle: "",
-        dimensions: "",
-        aspectRatio: 2,
-        holds: [
+    private let board: TrainingBoard = {
+        let holds = [
             BoardHold(
                 id: "edge-left",
                 name: "Left medium edge",
-                shortLabel: "L",
-                detail: "Medium edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2),
                 sizeMillimeters: 21,
                 features: [.mediumEdge]
             ),
             BoardHold(
                 id: "edge-right",
                 name: "Right medium edge",
-                shortLabel: "R",
-                detail: "Medium edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2),
                 sizeMillimeters: 21,
                 features: [.mediumEdge]
             ),
             BoardHold(
                 id: "edge-deep",
                 name: "Deep edge",
-                shortLabel: "D",
-                detail: "Large edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0.3, y: 0.3, width: 0.2, height: 0.2),
                 sizeMillimeters: 35,
                 features: [.largeEdge]
             ),
             BoardHold(
                 id: "jug-center",
                 name: "Center jug",
-                shortLabel: "J",
-                detail: "Jug",
-                kind: .jug,
-                frame: HoldFrame(x: 0.4, y: 0.7, width: 0.2, height: 0.2)
+                kind: .jug
             )
-        ],
-        productURL: URL(string: "https://example.com/board")!,
-        photoAssetName: nil
-    )
+        ]
+        let frames: [String: CGRect] = [
+            "edge-left": CGRect(x: 0, y: 0, width: 0.2, height: 0.2),
+            "edge-right": CGRect(x: 0.8, y: 0, width: 0.2, height: 0.2),
+            "edge-deep": CGRect(x: 0.3, y: 0.3, width: 0.2, height: 0.2),
+            "jug-center": CGRect(x: 0.4, y: 0.7, width: 0.2, height: 0.2)
+        ]
+        let geometry = Dictionary(uniqueKeysWithValues: frames.map { id, frame in
+            (id, [BoardHoldPiece(
+                id: "\(id)-piece",
+                holdID: id,
+                frame: frame,
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return TrainingBoard(
+            id: "fixture.board",
+            manufacturer: "Fixture",
+            name: "Board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 2,
+            holds: holds,
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "primary",
+                    name: "Primary",
+                    aspectRatio: 2,
+                    isDefault: true,
+                    media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
+                )
+            ]
+        )
+    }()
 
     private func makeDefaults() -> UserDefaults {
         let suiteName = "WorkoutActivityRecordingTests.\(UUID().uuidString)"
@@ -608,19 +623,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 BoardHold(
                     id: "range-edge",
                     name: "20.5 to 21 mm edge",
-                    shortLabel: "R",
-                    detail: "Untyped edge",
                     kind: .edge,
-                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2),
                     depthRangeMillimeters: 20.5...21
                 ),
                 BoardHold(
                     id: "scalar-edge",
                     name: "19.75 mm edge",
-                    shortLabel: "S",
-                    detail: "Untyped edge",
                     kind: .edge,
-                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2),
                     sizeMillimeters: 19.75
                 )
             ],
@@ -680,11 +689,26 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             aspectRatio: 1,
             equipmentObjects: [.init(id: "left"), .init(id: "right")],
             holds: [
-                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left", shortLabel: "L", detail: "", kind: .pocket, frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1), handCapacity: 1),
-                BoardHold(id: "right-a", equipmentObjectID: "right", name: "Right", shortLabel: "R", detail: "", kind: .pocket, frame: HoldFrame(x: 0.9, y: 0, width: 0.1, height: 0.1), handCapacity: 1)
+                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left", kind: .pocket, handCapacity: 1),
+                BoardHold(id: "right-a", equipmentObjectID: "right", name: "Right", kind: .pocket, handCapacity: 1)
             ],
             productURL: URL(string: "https://example.com/paired-portable")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "primary",
+                    name: "Primary",
+                    aspectRatio: 1,
+                    isDefault: true,
+                    media: .raster(BoardRasterMedia(
+                        assetPath: "",
+                        holdGeometry: [
+                            "left-a": [testPiece(id: "left-a", x: 0)],
+                            "right-a": [testPiece(id: "right-a", x: 0.9)]
+                        ]
+                    ))
+                )
+            ]
         )
         let workout = portablePlan(handUse: .single, side: .right, boardID: board.id)
 
@@ -1277,8 +1301,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 )
             ],
             holds: [
-                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left A", shortLabel: "LA", detail: "", kind: .pocket, frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity),
-                BoardHold(id: "left-b", equipmentObjectID: "left", name: "Left B", shortLabel: "LB", detail: "", kind: .pocket, frame: HoldFrame(x: 0.2, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity)
+                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left A", kind: .pocket, handCapacity: handCapacity),
+                BoardHold(id: "left-b", equipmentObjectID: "left", name: "Left B", kind: .pocket, handCapacity: handCapacity)
             ],
             productURL: URL(string: "https://example.com/portable")!,
             photoAssetName: nil,

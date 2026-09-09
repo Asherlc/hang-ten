@@ -1599,7 +1599,9 @@ struct BoardPackageStore {
 
 /// Reads JSON object member order before `JSONDecoder` converts objects into
 /// dictionaries. JSON decoding intentionally does not preserve this order.
-private struct BoardPackageJSONMemberOrder {
+struct BoardPackageJSONMemberOrder {
+    static let maximumNestingDepth = 128
+
     private let bytes: [UInt8]
     private var index = 0
 
@@ -1608,6 +1610,7 @@ private struct BoardPackageJSONMemberOrder {
     }
 
     mutating func memberNames(inRootObjectNamed target: String) throws -> [String] {
+        skipWhitespace()
         try consume(123)
         skipWhitespace()
         while peek != 125 {
@@ -1615,15 +1618,16 @@ private struct BoardPackageJSONMemberOrder {
             skipWhitespace()
             try consume(58)
             skipWhitespace()
-            if name == target { return try objectMemberNames() }
-            try skipValue()
+            if name == target { return try objectMemberNames(depth: 1) }
+            try skipValue(depth: 1)
             skipWhitespace()
             if peek == 44 { index += 1; skipWhitespace() } else { break }
         }
         throw ParseError.invalid
     }
 
-    private mutating func objectMemberNames() throws -> [String] {
+    private mutating func objectMemberNames(depth: Int) throws -> [String] {
+        guard depth < Self.maximumNestingDepth else { throw ParseError.invalid }
         try consume(123)
         skipWhitespace()
         var result: [String] = []
@@ -1632,7 +1636,7 @@ private struct BoardPackageJSONMemberOrder {
             skipWhitespace()
             try consume(58)
             skipWhitespace()
-            try skipValue()
+            try skipValue(depth: depth + 1)
             skipWhitespace()
             if peek == 44 { index += 1; skipWhitespace() } else { break }
         }
@@ -1640,21 +1644,24 @@ private struct BoardPackageJSONMemberOrder {
         return result
     }
 
-    private mutating func skipValue() throws {
+    private mutating func skipValue(depth: Int) throws {
         skipWhitespace()
         switch peek {
         case 34: _ = try string()
         case 123:
+            guard depth < Self.maximumNestingDepth else { throw ParseError.invalid }
             try consume(123); skipWhitespace()
             while peek != 125 {
-                _ = try string(); skipWhitespace(); try consume(58); try skipValue(); skipWhitespace()
+                _ = try string(); skipWhitespace(); try consume(58)
+                try skipValue(depth: depth + 1); skipWhitespace()
                 if peek == 44 { index += 1; skipWhitespace() } else { break }
             }
             try consume(125)
         case 91:
+            guard depth < Self.maximumNestingDepth else { throw ParseError.invalid }
             try consume(91); skipWhitespace()
             while peek != 93 {
-                try skipValue(); skipWhitespace()
+                try skipValue(depth: depth + 1); skipWhitespace()
                 if peek == 44 { index += 1; skipWhitespace() } else { break }
             }
             try consume(93)

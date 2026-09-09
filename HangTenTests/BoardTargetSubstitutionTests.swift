@@ -2,6 +2,11 @@ import XCTest
 @testable import HangTen
 
 final class BoardTargetSubstitutionTests: XCTestCase {
+    private struct FramedHold {
+        let hold: BoardHold
+        let piece: BoardHoldPiece
+    }
+
     func testBoardHoldDepthMeasurementRejectsFixedAndVariableDepths() {
         let measurement = BoardHold.DepthMeasurement(
             sizeMillimeters: 7.5,
@@ -24,37 +29,54 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         y: Double = 0,
         width: Double = 0.1,
         height: Double = 0.1
-    ) -> BoardHold {
-        BoardHold(
+    ) -> FramedHold {
+        let hold = BoardHold(
             id: id,
             equipmentObjectID: equipmentObjectID,
             name: id,
-            shortLabel: id,
-            detail: id,
             kind: kind,
-            frame: HoldFrame(x: x, y: y, width: width, height: height),
             sizeMillimeters: sizeMillimeters,
             fingerCapacity: fingerCapacity,
             handCapacity: handCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
             features: feature.map { [$0] }
         )
+        let piece = BoardHoldPiece(
+            id: "\(id)-piece",
+            holdID: id,
+            frame: CGRect(x: x, y: y, width: width, height: height),
+            shape: .roundedRect(cornerRadiusFraction: 0),
+            treatment: .surface
+        )
+        return FramedHold(hold: hold, piece: piece)
     }
 
     private func board(
         id: String = "test-board",
-        holds: [BoardHold]
+        holds: [FramedHold]
     ) -> TrainingBoard {
-        TrainingBoard(
+        let geometry = Dictionary(uniqueKeysWithValues: holds.map {
+            ($0.hold.id, [$0.piece])
+        })
+        return TrainingBoard(
             id: id,
             manufacturer: "Test",
             name: "Test Board",
             subtitle: "",
             dimensions: "30x60",
             aspectRatio: 0.5,
-            holds: holds,
+            holds: holds.map(\.hold),
             productURL: URL(string: "https://example.com")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "primary",
+                    name: "Primary",
+                    aspectRatio: 0.5,
+                    isDefault: true,
+                    media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
+                )
+            ]
         )
     }
 

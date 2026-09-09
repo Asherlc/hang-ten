@@ -6,10 +6,14 @@ import SwiftUI
 /// occupies; values too large to scale are already integral at this precision.
 func boardDescriptorRoundedToNinePlaces(_ value: Double) -> Double {
     let scale = 1_000_000_000.0
-    guard value.isFinite,
-          abs(value) <= Double.greatestFiniteMagnitude / scale else {
+    guard value.isFinite else {
         return value
     }
+    // Once adjacent Doubles are farther apart than the decimal quantum,
+    // rounding by at most half that quantum converts back to this same value.
+    // Avoid a multiply/divide round trip that can move an already-canonical
+    // large value to an adjacent Double.
+    if value.ulp > 1 / scale { return value }
     let scaled = value * scale
     let lower = scaled.rounded(.down)
     let upper = scaled.rounded(.up)
@@ -706,73 +710,6 @@ struct BoardHold: Identifiable, Hashable {
         }
         self.features = features
         self.pairedHoldID = pairedHoldID
-    }
-
-    /// Source compatibility for hand-built fixtures while spatial data moves
-    /// to `BoardPresentation.media`; the arguments are intentionally not kept.
-    init(
-        id: String,
-        equipmentObjectID: String = "primary",
-        name: String,
-        kind: HoldKind,
-        geometry _: [BoardHoldPiece],
-        sloper: SloperMetadata? = nil,
-        sizeMillimeters: Double? = nil,
-        gripType: GripType? = nil,
-        fingerCapacity: Int? = nil,
-        handCapacity: Int? = nil,
-        depthRangeMillimeters: ClosedRange<Double>? = nil,
-        features: Set<HoldFeature>? = nil,
-        pairedHoldID: String? = nil,
-        presentationID _: String = BoardPresentation.primaryID
-    ) {
-        self.init(
-            id: id,
-            equipmentObjectID: equipmentObjectID,
-            name: name,
-            kind: kind,
-            sloper: sloper,
-            sizeMillimeters: sizeMillimeters,
-            gripType: gripType,
-            fingerCapacity: fingerCapacity,
-            handCapacity: handCapacity,
-            depthRangeMillimeters: depthRangeMillimeters,
-            features: features,
-            pairedHoldID: pairedHoldID
-        )
-    }
-
-    /// Narrow source compatibility for hand-built metadata fixtures. The
-    /// frame is intentionally discarded; spatial fixtures must provide typed
-    /// presentation media.
-    init(
-        id: String,
-        equipmentObjectID: String = "primary",
-        name: String,
-        shortLabel _: String,
-        detail _: String,
-        kind: HoldKind,
-        frame: HoldFrame,
-        sizeMillimeters: Double? = nil,
-        gripType: GripType? = nil,
-        fingerCapacity: Int? = nil,
-        handCapacity: Int? = nil,
-        cueStyle _: HoldCueStyle? = nil,
-        depthRangeMillimeters: ClosedRange<Double>? = nil,
-        features: Set<HoldFeature>? = nil
-    ) {
-        self.init(
-            id: id,
-            equipmentObjectID: equipmentObjectID,
-            name: name,
-            kind: kind,
-            sizeMillimeters: sizeMillimeters,
-            gripType: gripType,
-            fingerCapacity: fingerCapacity,
-            handCapacity: handCapacity,
-            depthRangeMillimeters: depthRangeMillimeters,
-            features: features
-        )
     }
 
     /// True when this hold declares any of `features`, and (when specified)
