@@ -193,3 +193,35 @@ user-provided annotated 2000 diagram received on 2026-08-26 labels
 `front-lower-5` **21 mm**. The official [Beastmaker 2000 product page](https://www.beastmaker.co.uk/products/beastmaker-2000-series)
 specifies the lower-center edge as **22 mm**; the runtime value remains 22 mm.
 The ledger's manufacturer provenance explicitly records the 21-vs-22 conflict.
+
+## 2026-09-09 Stage 0 model-migration evidence ruling
+
+This entry records the approval-ready Stage 0 packets for the two-board model
+migration. The durable packet trees, retained source bytes, and packet SHA-256
+values are uncommitted workspace evidence under `.context/`.
+
+### Beastmaker 1000 current revision
+
+Primary retained sources are the current [1000 Series product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series), current [1000 Beech/shared-layout page](https://www.beastmaker.co.uk/products/beastmaker-1000-beech), and official [Tulip front media](https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068). Their retained snapshots and hashes are:
+
+| packet path | SHA-256 |
+| --- | --- |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-series.html` | `4c3dc54c7a16a03f29fbbd87fb3d725c8a547a81a7c694a2da462ea2efc43900` |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-beech.html` | `d1f5c20650a4c8572acea1fe804ca9831990c709f6f0e0fdca6a8575261dc1a2` |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-tulip.jpg` | `b97c4a0fc1c6f8971cb7610a2ec2a979415e6c9018398c18ab76ed90034fdfae` |
+
+The packet SHA-256 is `318bf1f6c155c094a953bdeddb63aa3734bb505e9fd315c66085498793d0302a`. The face is sourced as 580 × 150 mm. The Beech/shared-layout page supplies the qualified 58 mm display depth; the current Tulip page's final `5 mm` text is retained as a conflict and is not treated as a Tulipwood thickness fact. The stable 22-ID logical inventory is retained. Human review of the official front records 17 cavity contacts, 3 sloper surfaces, and 2 jugs; grouped marketing quantities do not delete visible contacts. Cavity sections, profiles, back profile, radii, and exact positions remain unknown for Astra. Generic original pale wood is the approved display material. Screw holes, mounting hardware, countersinks, and logos are deliberate display omissions.
+
+### Metolius Wood Grips Compact II current revision
+
+Primary retained sources are the current [Wood Grips II product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards), official [Compact front media](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000), and official [depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000). Their retained snapshots and hashes are:
+
+| packet path | SHA-256 |
+| --- | --- |
+| `.context/shaky-rat-metolius-wood-grips-compact-ii/references/metolius-wood-grips-ii.html` | `b782a4fb7dbde84fd0f96cf716807fca7943f2671de255103c0899a2c1a7b5fc` |
+| `.context/shaky-rat-metolius-wood-grips-compact-ii/references/compact-training-board.jpg` | `d72c7027d82980306e0e2a50d94394c174dce8ba0fd9bb239c704f099f05ed03` |
+| `.context/shaky-rat-metolius-wood-grips-compact-ii/references/woodgrips-boards-depths.jpg` | `56dde7dce6f82395a06793e7e3de4600465b5e97a108b963b03a6a5cccb898ce` |
+
+The packet SHA-256 is `3584001122d631be98cb122abc02c4033157c30250f17442cab6f8482940b240`. The Compact face is sourced as 610 × 157 mm (24 × 6.2 in). The lower Compact row of the official depth diagram supports a qualified 56 mm display thickness; the upper Deluxe row is excluded. All 19 stable logical IDs are retained. Apertures, cavity sections, profiles, back profile, radii, and exact positions remain unknown for the existing source review. Generic original pale wood is approved. Screw holes, mounting hardware, countersinks, and logos are deliberate display omissions.
+
+Both packets validate with `Tools/HangboardModels/validate_evidence_packet.py` and contain no geometry proposals, paths, contours, masks, coordinates, radii, or sections. Negative packet fixtures reject with the validator's retained-source error. The minimal Beastmaker `invalid-unknown-hold.blend` compiler fixture rejects with `unknown hold_id`, emits no descriptor, and its scratch directory is removed and verified absent. Astra geometry work remains gated on human approval of these packets and the matched retained official media.
