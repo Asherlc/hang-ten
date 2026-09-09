@@ -15,15 +15,25 @@ Read relevant sections of the [working example](../../../Tools/HangboardModels/R
 
 In the retained evidence packet, each source-backed logical inventory entry cites an exact retained source snapshot, and retained snapshot paths are unique across manufacturer and commerce tiers. Sourced claims carry stable claim identities and retained-source links. When one claim identity has both manufacturer and commerce evidence, record the conflict and a non-empty ruling; commerce-only gap evidence remains valid when clearly tiered and linked.
 
+Discover the live package inventory at execution time rather than trusting a stale plan or expected count. A bulk converter must be deterministic and idempotent: preserve every recognized field or reject the document, and reject duplicate or unknown legacy members instead of silently dropping them.
+
+Before and after schema migration, run a type- and order-sensitive semantic audit over every discovered package. Compare logical metadata and order, presentation ownership and derivation, every geometry piece/member/path command and scalar kind/value, and asset inventory; then run converter `--check`, exact schema-version counts, full package validation, and both language suites.
+
 ## Separate logical data from model geometry
 
 Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. A package containing model media is model-only: it must declare no raster presentation or PNG, whether original or derived; presentation derivation is supported only between raster presentations. Exact declared-versus-actual asset equality complements but does not replace this package-level media-isolation rule. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
 
+Raster original presentations must be nonempty and form an exact, single-owner partition of the logical hold inventory. Derived raster presentations may reference only originals, and their raw geometry must equal the declared source exactly, including ordering and scalar kinds/values. Reject redundant empty media, duplicate or missing owners, geometry drift, and derived-to-derived chains.
+
 Logical holds store metadata only. Never add empty or zero sentinel geometry, cached frames, or presentation IDs for compatibility: typed presentation media solely owns hold membership, geometry, and resolved frames, and consumers resolve through the selected presentation. During an intentionally temporary v1/v2 transition, keep v1 spatial fields in a loader-private adapter and normalize them immediately into typed raster media. Remove silent compatibility overloads so compiler failures expose callers that still need explicit typed-media migration; remove the adapter when catalog conversion completes.
+
+In closed schemas, an optional member means omission only: when present, decode its concrete type and reject explicit JSON `null` consistently in every language.
 
 Gate raster image decoding strictly on the raster discriminator. Model assets receive regular-file, descriptor, exact-byte hash, and inventory validation; never send model bytes through ImageIO or a raster fallback. Native descriptor validation must match the compiler's nine-decimal ties-to-even behavior for centers and derived extents. For finite values whose ULP is wider than the rounding quantum, avoid lossy decimal scale/unscale; reject non-finite derived arithmetic.
 
 When canonical JSON member order is part of the descriptor contract, inspect an order-preserving raw representation before keyed decoding. The scanner must accept valid JSON whitespace and escaped strings and enforce an explicit recursion/nesting bound; keyed-container iteration cannot recover source order.
+
+Cross-language raw JSON equality preserves object/list order and scalar kind. Keep integers arbitrary and exact with Python-equivalent zero normalization; compare finite floating tokens by decoded binary64 value, including equivalent precision, exponent, and signed-zero forms, while keeping integer and floating kinds distinct.
 
 Derive spatial centers and bounds used by workout matching from the mesh in a defined board coordinate frame. A build-generated index bound to the model hash may provide these values without eagerly decoding every USDZ during catalog loading. Keep camera configuration separate from physical metadata, and never silently promote estimated model geometry to physical dimensions.
 
@@ -62,6 +72,8 @@ Keep asynchronous cached loading, independent cloned materials, scene/camera reb
 ## Verify, retain, stop
 
 Copy the reviewed asset into app resources and compare SHA-256 hashes. Verify the migrated package no longer ships or references the target's raster presentation or canonical 2D hold paths. On the first migration, use `validate-hang-ten-ios` to inspect normal/highlighted portrait and landscape views, physically tap every hold, and check preview, active, clearing, reappearance, and the explicit unavailable/error state. Tests complement visual review.
+
+Native XCTest during migration follows `validate-hang-ten-ios`: create and record an exact owned UUID before use; keep cleanup protection alive across RED/GREEN and compilation failures; record and clean failed preliminary devices; use bounded polling and explicit xcresult summaries; and remove the simulator, workspace `DerivedData`, and result bundles before handoff.
 
 Keep source/export hashes, evidence mappings, screenshots, and results under workspace-owned output; clean owned resources. Completion means reviewed fidelity, complete selectable inventory, valid native materials/picking, matching bundle hash, and passing relevant checks.
 
