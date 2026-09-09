@@ -860,6 +860,23 @@ def _validate_v2_presentation_compatibility(
         raise ValueError("v2 packages may not mix model and raster presentations")
 
 
+def _json_values_are_exactly_equal(left: Any, right: Any) -> bool:
+    """Compare JSON values without erasing member order or numeric scalar type."""
+
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, dict):
+        return list(left) == list(right) and all(
+            _json_values_are_exactly_equal(left[key], right[key]) for key in left
+        )
+    if isinstance(left, list):
+        return len(left) == len(right) and all(
+            _json_values_are_exactly_equal(left_item, right_item)
+            for left_item, right_item in zip(left, right, strict=True)
+        )
+    return left == right
+
+
 def _load_positions(
     value: Any,
     source: str,
@@ -1027,9 +1044,19 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
             raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
     logical_hold_ids = {hold.id for hold in holds_tuple}
-    raster_hold_ids: set[str] = set()
-    for presentation in presentations:
+    raw_presentations = value["presentations"]
+    raw_presentations_by_id = {
+        presentation.id: raw_presentations[index]
+        for index, presentation in enumerate(presentations)
+    }
+    original_raster_ownership_counts = {
+        hold_id: 0 for hold_id in logical_hold_ids
+    }
+    derived_raster_presentations: list[tuple[int, BoardPresentation]] = []
+    has_raster = False
+    for index, presentation in enumerate(presentations):
         if isinstance(presentation.media, PresentationMediaRaster):
+            has_raster = True
             presentation_hold_ids = set(presentation.media.hold_geometry)
             if not presentation_hold_ids:
                 raise ValueError(
@@ -1041,11 +1068,31 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
                     f"presentation {presentation.id} media.holdGeometry must "
                     "only own logical holds"
                 )
-            raster_hold_ids.update(presentation_hold_ids)
-    if raster_hold_ids and raster_hold_ids != logical_hold_ids:
+            if presentation.source_presentation_id is None:
+                for hold_id in presentation_hold_ids:
+                    original_raster_ownership_counts[hold_id] += 1
+            else:
+                derived_raster_presentations.append((index, presentation))
+    if has_raster and any(
+        ownership_count != 1
+        for ownership_count in original_raster_ownership_counts.values()
+    ):
         raise ValueError(
-            "v2 raster media.holdGeometry must collectively own every logical hold"
+            "v2 original raster media.holdGeometry must own every logical hold "
+            "exactly once"
         )
+    for index, presentation in derived_raster_presentations:
+        raw_media = raw_presentations[index]["media"]
+        raw_source_media = raw_presentations_by_id[
+            presentation.source_presentation_id
+        ]["media"]
+        if not _json_values_are_exactly_equal(
+            raw_media["holdGeometry"], raw_source_media["holdGeometry"]
+        ):
+            raise ValueError(
+                f"derived presentation {presentation.id} media.holdGeometry "
+                "must exactly equal its source geometry"
+            )
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),

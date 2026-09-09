@@ -261,6 +261,35 @@ def test_migrate_v1_preserves_disjoint_multi_presentation_hold_ownership() -> No
     ] == [["hold-left"], ["hold-right"]]
 
 
+def test_migrate_v1_rejects_unknown_presentation_members() -> None:
+    document = {
+        "id": "fixture.board",
+        "manufacturer": "Fixture Maker",
+        "name": "Fixture Board",
+        "subtitle": "A parser fixture.",
+        "productURL": "https://example.com/fixture",
+        "aspectRatio": 2,
+        "presentations": [{
+            "id": "primary",
+            "name": "Primary",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2,
+            "default": True,
+        }],
+        "holds": [{
+            "id": "hold-left",
+            "name": "Left hold",
+            "kind": "jug",
+            "presentationID": "primary",
+            "geometry": [_raster_piece(0.1)],
+        }],
+    }
+    document["presentations"][0]["extensionScalar"] = "retain-or-reject"
+
+    with pytest.raises(ValueError, match="unknown keys.*extensionScalar"):
+        _load_migration_module().migrate_document(document)
+
+
 def test_catalog_rejects_unversioned_documents_after_migration() -> None:
     module = _load_migration_module()
     document = multi_presentation_board_document()
@@ -359,6 +388,50 @@ def test_v2_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
     board = json.loads(board_path.read_text(encoding="utf-8"))
+    derived = _raster_presentation(
+            "inverted",
+            "assets/inverted.png",
+            {
+                "type": "derived",
+                "sourcePresentationID": "primary",
+                "isInverted": True,
+            },
+        )
+    derived["media"]["holdGeometry"] = json.loads(
+        json.dumps(board["presentations"][0]["media"]["holdGeometry"])
+    )
+    board["presentations"].append(derived)
+    (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    package = module.load_board_package(package_root)
+
+    assert [presentation.id for presentation in package.board.presentations] == [
+        "primary",
+        "inverted",
+    ]
+
+
+def test_v2_raster_originals_exactly_partition_logical_holds(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_raster_package(tmp_path / "fixture-raster")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["presentations"].append(
+        _raster_presentation("other", "assets/other.png", {"type": "original"})
+    )
+    (package_root / "assets" / "other.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    with pytest.raises(ValueError, match="original.*exactly once"):
+        module.load_board_package(package_root)
+
+
+def test_v2_raster_rejects_hold_owned_only_by_derived_media(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_raster_package(tmp_path / "fixture-raster")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
     board["presentations"].append(
         _raster_presentation(
             "inverted",
@@ -370,15 +443,139 @@ def test_v2_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
             },
         )
     )
+    del board["presentations"][0]["media"]["holdGeometry"]["hold-left"]
     (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
     _rewrite(board_path, board)
 
-    package = module.load_board_package(package_root)
+    with pytest.raises(ValueError, match="original.*exactly once"):
+        module.load_board_package(package_root)
 
-    assert [presentation.id for presentation in package.board.presentations] == [
-        "primary",
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda geometry: geometry["hold-left"].reverse(),
+        lambda geometry: geometry.__setitem__(
+            "hold-left",
+            [
+                dict(reversed(list(geometry["hold-left"][0].items()))),
+                geometry["hold-left"][1],
+            ],
+        ),
+        lambda geometry: geometry.__setitem__(
+            "hold-left", [_raster_piece(0.2)]
+        ),
+    ],
+)
+def test_v2_derived_raster_geometry_must_exactly_equal_source(
+    tmp_path: Path, mutation
+) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_raster_package(tmp_path / "fixture-raster")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    source_geometry = board["presentations"][0]["media"]["holdGeometry"]
+    derived_geometry = json.loads(json.dumps(source_geometry))
+    mutation(derived_geometry)
+    board["presentations"].append(
+        {
+            **_raster_presentation(
+                "inverted",
+                "assets/inverted.png",
+                {
+                    "type": "derived",
+                    "sourcePresentationID": "primary",
+                    "isInverted": True,
+                },
+            ),
+            "media": {
+                "type": "raster",
+                "assetPath": "assets/inverted.png",
+                "holdGeometry": derived_geometry,
+            },
+        }
+    )
+    (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    with pytest.raises(ValueError, match="exactly equal its source geometry"):
+        module.load_board_package(package_root)
+
+
+def test_v2_derived_raster_geometry_preserves_numeric_scalar_types(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_raster_package(tmp_path / "fixture-raster")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    source_geometry = board["presentations"][0]["media"]["holdGeometry"]
+    source_geometry["hold-left"][0]["shape"]["cornerRadiusFraction"] = 0.0
+    derived_geometry = json.loads(json.dumps(source_geometry))
+    derived_geometry["hold-left"][0]["shape"]["cornerRadiusFraction"] = 0
+    derived = _raster_presentation(
         "inverted",
+        "assets/inverted.png",
+        {
+            "type": "derived",
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+        },
+    )
+    derived["media"]["holdGeometry"] = derived_geometry
+    board["presentations"].append(derived)
+    (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    with pytest.raises(ValueError, match="exactly equal its source geometry"):
+        module.load_board_package(package_root)
+
+
+def test_v2_derived_raster_geometry_preserves_path_command_order(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_raster_package(tmp_path / "fixture-raster")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    source_geometry = board["presentations"][0]["media"]["holdGeometry"]
+    source_geometry["hold-left"] = [{
+        "frame": {"x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4},
+        "shape": {
+            "type": "path",
+            "commands": [
+                {"command": "move", "to": [0, 0]},
+                {"command": "line", "to": [1, 0]},
+                {"command": "line", "to": [1, 1]},
+                {"command": "line", "to": [0, 1]},
+                {"command": "close"},
+            ],
+        },
+    }]
+    derived_geometry = json.loads(json.dumps(source_geometry))
+    derived_geometry["hold-left"][0]["shape"]["commands"] = [
+        {"command": "move", "to": [0, 0]},
+        {"command": "line", "to": [0, 1]},
+        {"command": "line", "to": [1, 1]},
+        {"command": "line", "to": [1, 0]},
+        {"command": "close"},
     ]
+    derived = _raster_presentation(
+        "inverted",
+        "assets/inverted.png",
+        {
+            "type": "derived",
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+        },
+    )
+    derived["media"]["holdGeometry"] = derived_geometry
+    board["presentations"].append(derived)
+    (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    with pytest.raises(ValueError, match="exactly equal its source geometry"):
+        module.load_board_package(package_root)
 
 
 @pytest.mark.parametrize(

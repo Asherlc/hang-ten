@@ -435,10 +435,19 @@ struct BoardPackageStore {
         presentationURLs: [String: URL],
         descriptorURLs: [String: URL]
     ) {
-        let document: BoardPackageV2BoardDocument = try decode(
-            from: packageURL.appendingPathComponent("board.json"),
-            resource: resource
-        )
+        let boardURL = packageURL.appendingPathComponent("board.json")
+        let document: BoardPackageV2BoardDocument
+        let rawRasterGeometryByPresentationID: [String: BoardPackageRawJSONValue]
+        do {
+            let data = try Data(contentsOf: boardURL)
+            document = try JSONDecoder().decode(BoardPackageV2BoardDocument.self, from: data)
+            var rawParser = BoardPackageRawJSONParser(data: data)
+            rawRasterGeometryByPresentationID = try rawParser
+                .parseDocument()
+                .rasterGeometryByPresentationID()
+        } catch {
+            throw BoardPackageStoreError.malformedJSON(resource: resource)
+        }
         guard document.schemaVersion == 2 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
@@ -661,6 +670,7 @@ struct BoardPackageStore {
         let documentsByPresentationID = Dictionary(
             uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
         )
+        var derivedRasterSources: [(derivedID: String, sourceID: String)] = []
         for presentation in document.presentations {
             guard case .derived(let sourceID, _) = presentation.derivation else { continue }
             guard sourceID != presentation.id,
@@ -674,6 +684,7 @@ struct BoardPackageStore {
                     reason: "derived presentation relationships must be raster to raster"
                 )
             }
+            derivedRasterSources.append((presentation.id, sourceID))
         }
 
         let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
@@ -698,20 +709,25 @@ struct BoardPackageStore {
         var presentations: [BoardPresentation] = []
         var presentationURLs: [String: URL] = [:]
         var descriptorURLs: [String: URL] = [:]
-        var rasterHoldIDs = Set<String>()
+        var originalRasterOwnershipCounts = Dictionary(
+            uniqueKeysWithValues: holdIDs.map { ($0, 0) }
+        )
         for presentation in document.presentations {
             let media: BoardPresentationMedia
             switch presentation.media {
             case .raster(let assetPath, let geometryDocuments):
                 let presentationHoldIDs = Set(geometryDocuments.keys)
-                guard !presentationHoldIDs.isEmpty,
-                      presentationHoldIDs.isSubset(of: holdIDs) else {
+                guard presentationHoldIDs.isSubset(of: holdIDs) else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "presentation \(presentation.id) media.holdGeometry must own only nonempty logical holds"
+                        reason: "presentation \(presentation.id) media.holdGeometry must own only logical holds"
                     )
                 }
-                rasterHoldIDs.formUnion(presentationHoldIDs)
+                if case .original = presentation.derivation {
+                    for holdID in presentationHoldIDs {
+                        originalRasterOwnershipCounts[holdID, default: 0] += 1
+                    }
+                }
                 var holdGeometry: [String: [BoardHoldPiece]] = [:]
                 for holdID in presentationHoldIDs.sorted() {
                     let geometry = geometryDocuments[holdID] ?? []
@@ -801,11 +817,20 @@ struct BoardPackageStore {
             presentationURLs[presentation.id] = packageURL.appendingPathComponent(presentation.media.assetPath)
         }
 
-        if !rasterHoldIDs.isEmpty && rasterHoldIDs != holdIDs {
+        if hasRaster && originalRasterOwnershipCounts.values.contains(where: { $0 != 1 }) {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "v2 raster media.holdGeometry must collectively own every logical hold"
+                reason: "v2 original raster media.holdGeometry must own every logical hold exactly once"
             )
+        }
+        for relationship in derivedRasterSources {
+            guard rawRasterGeometryByPresentationID[relationship.derivedID]
+                    == rawRasterGeometryByPresentationID[relationship.sourceID] else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "derived presentation \(relationship.derivedID) media.holdGeometry must exactly equal its source geometry"
+                )
+            }
         }
 
         let positions = document.positions?.map(\.boardPosition) ?? presentations.map {
@@ -1034,6 +1059,232 @@ struct BoardPackageStore {
 
 }
 
+private enum BoardPackageRawJSONError: Error {
+    case invalid
+}
+
+private struct BoardPackageRawJSONMember: Equatable {
+    let name: String
+    let value: BoardPackageRawJSONValue
+}
+
+private enum BoardPackageRawJSONNumberKind: Equatable {
+    case integer
+    case floating
+}
+
+private indirect enum BoardPackageRawJSONValue: Equatable {
+    case object([BoardPackageRawJSONMember])
+    case array([BoardPackageRawJSONValue])
+    case string(String)
+    case number(kind: BoardPackageRawJSONNumberKind, value: Decimal)
+    case boolean(Bool)
+    case null
+
+    func rasterGeometryByPresentationID() throws -> [String: BoardPackageRawJSONValue] {
+        guard case .object(let rootMembers) = self,
+              case .array(let presentations)? = rootMembers.value(named: "presentations") else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        var result: [String: BoardPackageRawJSONValue] = [:]
+        for presentation in presentations {
+            guard case .object(let presentationMembers) = presentation,
+                  case .string(let presentationID)? = presentationMembers.value(named: "id"),
+                  case .object(let mediaMembers)? = presentationMembers.value(named: "media"),
+                  case .string(let mediaType)? = mediaMembers.value(named: "type") else {
+                throw BoardPackageRawJSONError.invalid
+            }
+            guard mediaType == "raster" else { continue }
+            guard let geometry = mediaMembers.value(named: "holdGeometry"),
+                  result.updateValue(geometry, forKey: presentationID) == nil else {
+                throw BoardPackageRawJSONError.invalid
+            }
+        }
+        return result
+    }
+}
+
+private extension Array where Element == BoardPackageRawJSONMember {
+    func value(named name: String) -> BoardPackageRawJSONValue? {
+        first(where: { $0.name == name })?.value
+    }
+}
+
+private struct BoardPackageRawJSONParser {
+    private static let maximumNestingDepth = 128
+
+    private let bytes: [UInt8]
+    private var index = 0
+
+    init(data: Data) {
+        bytes = Array(data)
+    }
+
+    mutating func parseDocument() throws -> BoardPackageRawJSONValue {
+        skipWhitespace()
+        let result = try value(depth: 0)
+        skipWhitespace()
+        guard index == bytes.count else { throw BoardPackageRawJSONError.invalid }
+        return result
+    }
+
+    private mutating func value(depth: Int) throws -> BoardPackageRawJSONValue {
+        guard depth < Self.maximumNestingDepth, let byte = peek else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        switch byte {
+        case 123:
+            return try object(depth: depth + 1)
+        case 91:
+            return try array(depth: depth + 1)
+        case 34:
+            return .string(try string())
+        case 45, 48...57:
+            return try number()
+        case 116:
+            try consumeLiteral("true")
+            return .boolean(true)
+        case 102:
+            try consumeLiteral("false")
+            return .boolean(false)
+        case 110:
+            try consumeLiteral("null")
+            return .null
+        default:
+            throw BoardPackageRawJSONError.invalid
+        }
+    }
+
+    private mutating func object(depth: Int) throws -> BoardPackageRawJSONValue {
+        try consume(123)
+        skipWhitespace()
+        var members: [BoardPackageRawJSONMember] = []
+        var names = Set<String>()
+        if peek == 125 {
+            index += 1
+            return .object(members)
+        }
+        while true {
+            let name = try string()
+            guard names.insert(name).inserted else { throw BoardPackageRawJSONError.invalid }
+            skipWhitespace()
+            try consume(58)
+            skipWhitespace()
+            members.append(.init(name: name, value: try value(depth: depth)))
+            skipWhitespace()
+            if peek == 125 {
+                index += 1
+                return .object(members)
+            }
+            try consume(44)
+            skipWhitespace()
+        }
+    }
+
+    private mutating func array(depth: Int) throws -> BoardPackageRawJSONValue {
+        try consume(91)
+        skipWhitespace()
+        var values: [BoardPackageRawJSONValue] = []
+        if peek == 93 {
+            index += 1
+            return .array(values)
+        }
+        while true {
+            values.append(try value(depth: depth))
+            skipWhitespace()
+            if peek == 93 {
+                index += 1
+                return .array(values)
+            }
+            try consume(44)
+            skipWhitespace()
+        }
+    }
+
+    private mutating func number() throws -> BoardPackageRawJSONValue {
+        let start = index
+        if peek == 45 { index += 1 }
+        if peek == 48 {
+            index += 1
+            if let byte = peek, (48...57).contains(byte) {
+                throw BoardPackageRawJSONError.invalid
+            }
+        } else {
+            try consumeDigits(firstMayBeZero: false)
+        }
+        var kind = BoardPackageRawJSONNumberKind.integer
+        if peek == 46 {
+            kind = .floating
+            index += 1
+            try consumeDigits(firstMayBeZero: true)
+        }
+        if peek == 101 || peek == 69 {
+            kind = .floating
+            index += 1
+            if peek == 43 || peek == 45 { index += 1 }
+            try consumeDigits(firstMayBeZero: true)
+        }
+        let token = String(decoding: bytes[start..<index], as: UTF8.self)
+        guard let decimal = Decimal(
+            string: token,
+            locale: Locale(identifier: "en_US_POSIX")
+        ) else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        return .number(kind: kind, value: decimal)
+    }
+
+    private mutating func consumeDigits(firstMayBeZero: Bool) throws {
+        guard let first = peek,
+              (firstMayBeZero ? (48...57).contains(first) : (49...57).contains(first)) else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        repeat { index += 1 } while peek.map({ (48...57).contains($0) }) == true
+    }
+
+    private mutating func string() throws -> String {
+        let start = index
+        try consume(34)
+        var escaped = false
+        while let byte = peek {
+            index += 1
+            if escaped {
+                escaped = false
+            } else if byte == 92 {
+                escaped = true
+            } else if byte == 34 {
+                return try JSONDecoder().decode(
+                    String.self,
+                    from: Data(bytes[start..<index])
+                )
+            }
+        }
+        throw BoardPackageRawJSONError.invalid
+    }
+
+    private mutating func consumeLiteral(_ literal: String) throws {
+        let expected = Array(literal.utf8)
+        guard index + expected.count <= bytes.count,
+              Array(bytes[index..<(index + expected.count)]) == expected else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        index += expected.count
+    }
+
+    private mutating func skipWhitespace() {
+        while let byte = peek, [9, 10, 13, 32].contains(byte) { index += 1 }
+    }
+
+    private mutating func consume(_ byte: UInt8) throws {
+        guard peek == byte else { throw BoardPackageRawJSONError.invalid }
+        index += 1
+    }
+
+    private var peek: UInt8? {
+        index < bytes.count ? bytes[index] : nil
+    }
+}
+
 /// Reads JSON object member order before `JSONDecoder` converts objects into
 /// dictionaries. JSON decoding intentionally does not preserve this order.
 struct BoardPackageJSONMemberOrder {
@@ -1171,7 +1422,9 @@ private struct BoardPackageV2BoardDocument: Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
+        dimensions = container.contains(.dimensions)
+            ? try container.decode(String.self, forKey: .dimensions)
+            : nil
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         equipmentObjects = container.contains(.equipmentObjects)
             ? try container.decode([BoardPackageEquipmentObjectDocument].self, forKey: .equipmentObjects)
@@ -1347,16 +1600,30 @@ private struct BoardPackageV2HoldDocument: Decodable {
             : "primary"
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-        sloper = try container.decodeIfPresent(SloperMetadata.self, forKey: .sloper)
-        sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
-        depthRangeMillimeters = try container.decodeIfPresent(
-            BoardPackageMillimeterRangeDocument.self,
-            forKey: .depthRangeMillimeters
-        )
-        gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
-        fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
-        handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
-        features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+        sloper = container.contains(.sloper)
+            ? try container.decode(SloperMetadata.self, forKey: .sloper)
+            : nil
+        sizeMillimeters = container.contains(.sizeMillimeters)
+            ? try container.decode(Double.self, forKey: .sizeMillimeters)
+            : nil
+        depthRangeMillimeters = container.contains(.depthRangeMillimeters)
+            ? try container.decode(
+                BoardPackageMillimeterRangeDocument.self,
+                forKey: .depthRangeMillimeters
+            )
+            : nil
+        gripType = container.contains(.gripType)
+            ? try container.decode(GripType.self, forKey: .gripType)
+            : nil
+        fingerCapacity = container.contains(.fingerCapacity)
+            ? try container.decode(Int.self, forKey: .fingerCapacity)
+            : nil
+        handCapacity = container.contains(.handCapacity)
+            ? try container.decode(Int.self, forKey: .handCapacity)
+            : nil
+        features = container.contains(.features)
+            ? try container.decode([HoldFeature].self, forKey: .features)
+            : nil
         declaresPairedHoldID = container.contains(.pairedHoldID)
         pairedHoldID = try container.decodeIfPresent(String.self, forKey: .pairedHoldID)
     }

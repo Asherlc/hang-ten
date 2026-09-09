@@ -188,6 +188,129 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testStoreRejectsDuplicateOriginalRasterOwnership() throws {
+        let fixture = try makeMultiPresentationFixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            var media = try XCTUnwrap(presentations[1]["media"] as? [String: Any])
+            var holdGeometry = try XCTUnwrap(media["holdGeometry"] as? [String: Any])
+            holdGeometry["hold-left"] = self.fixtureHoldGeometry()["hold-left"]
+            media["holdGeometry"] = holdGeometry
+            presentations[1]["media"] = media
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly once")
+    }
+
+    func testStoreRejectsRasterHoldOwnedOnlyByDerivedPresentation() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+            media["holdGeometry"] = [:]
+            presentations[0]["media"] = media
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly once")
+    }
+
+    func testStoreRejectsDerivedRasterGeometryThatDiffersFromSource() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            var media = try XCTUnwrap(presentations[1]["media"] as? [String: Any])
+            var holdGeometry = try XCTUnwrap(
+                media["holdGeometry"] as? [String: [[String: Any]]]
+            )
+            var pieces = try XCTUnwrap(holdGeometry["hold-left"])
+            var frame = try XCTUnwrap(pieces[0]["frame"] as? [String: Any])
+            frame["x"] = 0.2
+            pieces[0]["frame"] = frame
+            holdGeometry["hold-left"] = pieces
+            media["holdGeometry"] = holdGeometry
+            presentations[1]["media"] = media
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
+    func testStoreRejectsDerivedRasterGeometryWithDifferentPieceOrder() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            var media = try XCTUnwrap(presentations[1]["media"] as? [String: Any])
+            var holdGeometry = try XCTUnwrap(
+                media["holdGeometry"] as? [String: [[String: Any]]]
+            )
+            holdGeometry["hold-left"]?.reverse()
+            media["holdGeometry"] = holdGeometry
+            presentations[1]["media"] = media
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
+    func testStoreRejectsDerivedRasterGeometryWithDifferentObjectMemberOrder() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        let geometry = try JSONSerialization.data(
+            withJSONObject: fixtureDerivedHoldGeometry(),
+            options: [.sortedKeys]
+        )
+        var reordered = geometry
+        let sortedFrame = Data(
+            #"{"height":0.29999999999999999,"width":0.10000000000000001,"x":0.050000000000000003,"y":0.20000000000000001}"#.utf8
+        )
+        let reorderedFrame = Data(
+            #"{"y":0.20000000000000001,"x":0.050000000000000003,"width":0.10000000000000001,"height":0.29999999999999999}"#.utf8
+        )
+        let frameRange = try XCTUnwrap(reordered.range(of: sortedFrame))
+        reordered.replaceSubrange(frameRange, with: reorderedFrame)
+        try replaceSecondOccurrence(of: geometry, with: reordered, in: boardURL)
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
+    func testStoreRejectsDerivedRasterGeometryWithDifferentNumericScalarType() throws {
+        let fixture = try makeDerivedRasterV2FixtureBundle()
+        defer { fixture.remove() }
+        let boardURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/board.json"
+        )
+        let geometry = try JSONSerialization.data(
+            withJSONObject: fixtureDerivedHoldGeometry(),
+            options: [.sortedKeys]
+        )
+        let sourceGeometry = Data(
+            String(decoding: geometry, as: UTF8.self)
+                .replacingOccurrences(
+                    of: #""cornerRadiusFraction":0.20000000000000001"#,
+                    with: #""cornerRadiusFraction":0.0"#
+                )
+                .utf8
+        )
+        let derivedGeometry = Data(
+            String(decoding: sourceGeometry, as: UTF8.self)
+                .replacingOccurrences(of: #""cornerRadiusFraction":0.0"#, with: #""cornerRadiusFraction":0"#)
+                .utf8
+        )
+        try replaceTwoOccurrences(
+            of: geometry,
+            firstReplacement: sourceGeometry,
+            secondReplacement: derivedGeometry,
+            in: boardURL
+        )
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "exactly equal its source geometry")
+    }
+
     func testStoreRejectsStaleModelHashAndMissingDescriptor() throws {
         let stale = try makeModelFixtureBundle(modelSHA256Matches: false)
         defer { stale.remove() }
@@ -441,6 +564,90 @@ final class BoardPackageStoreTests: XCTestCase {
                 )
             }
         }
+    }
+
+    func testStoreRejectsExplicitNullOptionalV2Metadata() throws {
+        let mutations: [(String, (inout [String: Any]) throws -> Void)] = [
+            ("dimensions", { board in
+                board["dimensions"] = NSNull()
+            }),
+            ("sloper", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["kind"] = "sloper"
+                holds[0]["sloper"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("size", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["sizeMillimeters"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("depth range", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["depthRangeMillimeters"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("grip type", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["gripType"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("finger capacity", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["fingerCapacity"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("hand capacity", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["handCapacity"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("features", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["features"] = NSNull()
+                board["holds"] = holds
+            }),
+            ("equipment object ID", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["equipmentObjectID"] = NSNull()
+                board["holds"] = holds
+            }),
+        ]
+
+        for (name, mutation) in mutations {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json"),
+                    mutation: mutation
+                )
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
+        }
+    }
+
+    func testStoreAcceptsOmittedOptionalV2Metadata() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board.removeValue(forKey: "dimensions")
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let hold = try XCTUnwrap(board.holds.first)
+        XCTAssertNil(board.dimensions)
+        XCTAssertNil(hold.sloper)
+        XCTAssertNil(hold.sizeMillimeters)
+        XCTAssertNil(hold.depthRangeMillimeters)
+        XCTAssertNil(hold.gripType)
+        XCTAssertNil(hold.fingerCapacity)
+        XCTAssertNil(hold.handCapacity)
+        XCTAssertNil(hold.features)
+        XCTAssertEqual(hold.equipmentObjectID, "primary")
     }
 
     func testStoreRejectsUnknownKeysInEquipmentObjects() throws {
@@ -2586,6 +2793,48 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    private func makeDerivedRasterV2FixtureBundle(
+        boardMutation: ((inout [String: Any]) throws -> Void)? = nil
+    ) throws -> FixtureBundle {
+        try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try self.presentationBytes().write(
+                to: assetsURL.appendingPathComponent("inverted.png")
+            )
+            try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                var originalMedia = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                originalMedia["holdGeometry"] = self.fixtureDerivedHoldGeometry()
+                presentations[0]["media"] = originalMedia
+                presentations.append([
+                    "id": "inverted",
+                    "name": "Inverted",
+                    "aspectRatio": 2,
+                    "isDefault": false,
+                    "derivation": [
+                        "type": "derived",
+                        "sourcePresentationID": "primary",
+                        "isInverted": true,
+                    ],
+                    "media": [
+                        "type": "raster",
+                        "assetPath": "assets/inverted.png",
+                        "holdGeometry": self.fixtureDerivedHoldGeometry(),
+                    ],
+                ])
+                board["presentations"] = presentations
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var rightHold = try XCTUnwrap(holds.first)
+                rightHold["id"] = "hold-right"
+                rightHold["name"] = "Right hold"
+                holds.append(rightHold)
+                board["holds"] = holds
+                try boardMutation?(&board)
+            }
+        }
+    }
+
     private func makeFixtureBundle(
         packages: [PackageSpec] = [PackageSpec(slug: "fixture-model", id: "fixture.board")],
         draftSlugs: [String] = [],
@@ -2847,6 +3096,12 @@ final class BoardPackageStoreTests: XCTestCase {
         ]
     }
 
+    private func fixtureDerivedHoldGeometry() -> [String: [[String: Any]]] {
+        var geometry = fixtureHoldGeometry()
+        geometry["hold-right"] = geometry["hold-left"]
+        return geometry
+    }
+
     private func mutateBoard(
         at url: URL,
         mutation: (inout [String: Any]) throws -> Void
@@ -2856,6 +3111,47 @@ final class BoardPackageStoreTests: XCTestCase {
         )
         try mutation(&document)
         try JSONSerialization.data(withJSONObject: document, options: [.sortedKeys]).write(to: url)
+    }
+
+    private func replaceSecondOccurrence(
+        of original: Data,
+        with replacement: Data,
+        in url: URL
+    ) throws {
+        var data = try Data(contentsOf: url)
+        let firstRange = try XCTUnwrap(data.range(of: original))
+        let searchStart = firstRange.upperBound
+        let secondRange = try XCTUnwrap(
+            data.range(of: original, in: searchStart..<data.endIndex)
+        )
+        data.replaceSubrange(secondRange, with: replacement)
+        try data.write(to: url)
+    }
+
+    private func replaceTwoOccurrences(
+        of original: Data,
+        firstReplacement: Data,
+        secondReplacement: Data,
+        in url: URL
+    ) throws {
+        var data = try Data(contentsOf: url)
+        let firstRange = try XCTUnwrap(data.range(of: original))
+        data.replaceSubrange(firstRange, with: firstReplacement)
+        let searchStart = firstRange.lowerBound + firstReplacement.count
+        let secondRange = try XCTUnwrap(
+            data.range(of: original, in: searchStart..<data.endIndex)
+        )
+        data.replaceSubrange(secondRange, with: secondReplacement)
+        try data.write(to: url)
+    }
+
+    private func assertStoreRejects(_ bundle: Bundle, reasonContaining expected: String) {
+        XCTAssertThrowsError(try BoardPackageStore(bundle: bundle)) { error in
+            guard case let BoardPackageStoreError.invalidPackage(_, reason) = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+            XCTAssertTrue(reason.contains(expected), "Unexpected reason: \(reason)")
+        }
     }
 
     private func boardDetailHold(

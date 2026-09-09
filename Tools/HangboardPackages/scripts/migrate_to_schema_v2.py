@@ -93,6 +93,26 @@ def _legacy_document(document: dict[str, Any]) -> dict[str, Any]:
     for index, value in enumerate(presentations):
         if not isinstance(value, dict):
             raise ValueError(f"presentations[{index}] must be an object")
+        allowed_keys = {
+            "id",
+            "name",
+            "assetPath",
+            "aspectRatio",
+            "default",
+            "sourcePresentationID",
+            "isInverted",
+        }
+        unknown_keys = set(value) - allowed_keys
+        if unknown_keys:
+            raise ValueError(
+                f"presentations[{index}] has unknown keys: {sorted(unknown_keys)}"
+            )
+        required_keys = {"id", "name", "assetPath", "aspectRatio", "default"}
+        missing_keys = required_keys - set(value)
+        if missing_keys:
+            raise ValueError(
+                f"presentations[{index}] is missing keys: {sorted(missing_keys)}"
+            )
         presentation_id = value.get("id")
         if not isinstance(presentation_id, str) or not presentation_id:
             raise ValueError(f"presentations[{index}].id must be a non-empty string")
@@ -213,22 +233,8 @@ def _convert_presentation(
         }
         geometry = geometry_by_presentation[source_id]
 
-    result: dict[str, Any] = {}
-    for key, item in value.items():
-        if key in {"assetPath", "default", "sourcePresentationID", "isInverted"}:
-            continue
-        result[key] = copy.deepcopy(item)
-        if key == "id":
-            result["name"] = copy.deepcopy(value["name"])
-    result["isDefault"] = value["default"]
-    result["derivation"] = derivation
-    result["media"] = {
-        "type": "raster",
-        "assetPath": value["assetPath"],
-        "holdGeometry": copy.deepcopy(geometry),
-    }
     # Rebuild the common presentation order expected by the schema, while
-    # preserving all scalar values and each geometry command exactly.
+    # preserving every accepted scalar value and geometry command exactly.
     return {
         "id": copy.deepcopy(value["id"]),
         "name": copy.deepcopy(value["name"]),
