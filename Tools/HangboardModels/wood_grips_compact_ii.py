@@ -352,6 +352,13 @@ def tag_model_piece(obj, known_hold_ids):
         obj["role"]="body"
 
 
+def discard_render_only_scene_objects(scene_objects, model_objects, remove_object):
+    """Keep review-only wall/camera/light objects out of editable compiler input."""
+    for obj in list(scene_objects):
+        if obj not in model_objects:
+            remove_object(obj)
+
+
 for obj in model:
     used=sorted({p.material_index for p in obj.data.polygons})
     mat=obj.data.materials[used[0]]
@@ -460,6 +467,11 @@ render("selected-holds.png",(.31,-1,.34))
 for obj,mats in selected:
     for i,mat in enumerate(mats):
         obj.data.materials[i]=mat
+discard_render_only_scene_objects(
+    bpy.context.scene.objects,
+    model,
+    lambda obj: bpy.data.objects.remove(obj, do_unlink=True),
+)
 select_model()
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/"wood-grips-compact-ii.blend"))
 print("MODEL_REPORT",json.dumps(report))

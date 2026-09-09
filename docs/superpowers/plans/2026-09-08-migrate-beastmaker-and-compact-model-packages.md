@@ -137,6 +137,14 @@ Review gate: fresh Sol reviewer checks only tags/outputs/metadata and sends any 
 - Consumes approved `.blend`, package logical inventory, and generic `compile_model_package.py`.
 - Produces exact package-ready `primary.usdz`, `primary.model.json`, `export-verification.json`, and actual-export roundtrip renders.
 
+**Beastmaker compiler-input ruling:** `beastmaker-1000-compiler-input.blend` is
+the generator-emitted, audited rigid coordinate-frame transport input for the
+generic compiler. The editable Blender scene uses X-width/Y-depth/Z-height;
+the package board frame uses X-right/Y-up/Z-toward-climber. The transport must
+preserve every mesh name, role, hold ID, material, local vertex, and topology,
+and may apply only the documented rigid transform. It is not alternate
+geometry, an editable-shape change, or a compiler behavior change.
+
 - [ ] **Step 1: Write failing Beastmaker verifier expectations**
 
 ```python
@@ -154,7 +162,7 @@ Expected: FAIL until the Beastmaker verifier/report family is registered.
 
 - [ ] **Step 3: Compile and verify Beastmaker actual export**
 
-Run: `rtk proxy blender --background --factory-startup --python-exit-code 1 --python Tools/HangboardModels/compile_model_package.py -- --blend .context/shaky-rat-beastmaker-1000/beastmaker-1000.blend --board-json Hangboards/beastmaker-1000/board.json --output-directory .context/shaky-rat-beastmaker-1000/package`
+Run: `rtk proxy blender --background --factory-startup --python-exit-code 1 --python Tools/HangboardModels/compile_model_package.py -- --blend .context/shaky-rat-beastmaker-1000/beastmaker-1000-compiler-input.blend --board-json Hangboards/beastmaker-1000/board.json --output-directory .context/shaky-rat-beastmaker-1000/package`
 
 Run: `rtk proxy blender --background --factory-startup --python-exit-code 1 --python Tools/HangboardModels/verify_beastmaker_1000.py -- --output .context/shaky-rat-beastmaker-1000/package`
 

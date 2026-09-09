@@ -162,6 +162,34 @@ class ModelReportTests(unittest.TestCase):
             {"role": "hold", "hold_id": "sloper-round-center"},
         )
 
+    def test_compact_compiler_source_discards_render_only_objects(self):
+        """Catches saving the review wall, camera, or lamps into compiler input."""
+        tree = ast.parse((TOOLS / "wood_grips_compact_ii.py").read_text())
+        function = next(
+            (
+                node
+                for node in tree.body
+                if isinstance(node, ast.FunctionDef)
+                and node.name == "discard_render_only_scene_objects"
+            ),
+            None,
+        )
+        self.assertIsNotNone(
+            function,
+            "Compact generator must remove review-only objects before saving compiler source",
+        )
+        namespace = {}
+        execute([function], namespace)
+        body, hold = object(), object()
+        review_wall, review_camera, review_lamp = object(), object(), object()
+        removed = []
+        namespace["discard_render_only_scene_objects"](
+            (body, hold, review_wall, review_camera, review_lamp),
+            (body, hold),
+            removed.append,
+        )
+        self.assertEqual(removed, [review_wall, review_camera, review_lamp])
+
     def overview_report(self, previous, missing=()):
         context = ROOT / ".context"
         context.mkdir(exist_ok=True)
