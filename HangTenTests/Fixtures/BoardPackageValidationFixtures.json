@@ -4,6 +4,61 @@
     "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB",
     "duplicatePaletteBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEUAAACnej3aAAAAA1BMVEX///+nxBvIAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg=="
   },
+  "model": {
+    "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
+    "board": {
+      "schemaVersion": 2,
+      "id": "fixture.board",
+      "manufacturer": "Fixture Maker",
+      "name": "Fixture Board",
+      "subtitle": "A physical fixture board.",
+      "productURL": "https://example.com/fixture.board",
+      "dimensions": "20 × 10 cm",
+      "aspectRatio": 2,
+      "presentations": [
+        {
+          "id": "primary",
+          "name": "Primary",
+          "aspectRatio": 2,
+          "isDefault": true,
+          "derivation": { "type": "original" },
+          "media": {
+            "type": "model",
+            "assetPath": "assets/primary.usdz",
+            "descriptorPath": "assets/primary.model.json",
+            "display": {
+              "camera": {
+                "type": "orthographic",
+                "viewDirection": [0, 0, -1],
+                "up": [0, 1, 0],
+                "fitPadding": 0.08
+              }
+            }
+          }
+        }
+      ],
+      "holds": [
+        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      ]
+    },
+    "descriptor": {
+      "schemaVersion": 1,
+      "coordinateFrame": "hang-ten-board-v1",
+      "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
+      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "nodes": [
+        { "nodeID": "Body", "role": "body" },
+        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }
+      ],
+      "holds": {
+        "hold-left": {
+          "nodeIDs": ["Left"],
+          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
+          "center": [0.25, 0.4]
+        }
+      }
+    }
+  },
   "ordering": {
     "packages": [
       {

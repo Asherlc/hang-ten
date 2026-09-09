@@ -3,6 +3,214 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testStoreLoadsV2ModelAndKeepsV1PackageReadableDuringTransition() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let legacyFixture = try legacyV1FixtureBundle()
+        defer { legacyFixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = try XCTUnwrap(board.presentations.first)
+
+        XCTAssertEqual(presentation.media.kind, .model)
+        XCTAssertTrue(board.holds[0].geometry.isEmpty)
+        XCTAssertTrue(board.holds[0].presentationID.isEmpty)
+        XCTAssertEqual(
+            board.holds[0].resolvedFrame(in: presentation),
+            HoldFrame(x: 0.1, y: 0.2, width: 0.3, height: 0.4)
+        )
+        XCTAssertEqual(
+            store.presentationAssetURL(for: board),
+            fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.usdz")
+        )
+        XCTAssertEqual(
+            store.presentationDescriptorURL(for: board),
+            fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")
+        )
+        XCTAssertNoThrow(try BoardPackageStore(bundle: legacyFixture.bundle))
+    }
+
+    func testStoreLoadsV2RasterGeometryFromPresentationMedia() throws {
+        let fixture = try makeRasterV2FixtureBundle()
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let presentation = try XCTUnwrap(board.presentations.first)
+
+        XCTAssertEqual(presentation.media.kind, .raster)
+        XCTAssertEqual(
+            board.holds[0].resolvedFrame(in: presentation),
+            HoldFrame(x: 0.1, y: 0.2, width: 0.55, height: 0.4)
+        )
+    }
+
+    func testStoreRejectsStaleModelHashAndMissingDescriptor() throws {
+        let stale = try makeModelFixtureBundle(modelSHA256Matches: false)
+        defer { stale.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: stale.bundle))
+
+        let missing = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try FileManager.default.removeItem(
+                at: packageURL.appendingPathComponent("assets/primary.model.json")
+            )
+        }
+        defer { missing.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: missing.bundle))
+    }
+
+    func testStoreRejectsDescriptorNodeAndHoldInventoryDrift() throws {
+        let extraNode = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(
+                at: packageURL.appendingPathComponent("assets/primary.model.json")
+            ) { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes.append(["nodeID": "Other", "role": "body"])
+                descriptor["nodes"] = nodes
+            }
+        }
+        defer { extraNode.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: extraNode.bundle))
+
+        let missingHold = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(
+                at: packageURL.appendingPathComponent("assets/primary.model.json")
+            ) { descriptor in
+                descriptor["holds"] = [:]
+            }
+        }
+        defer { missingHold.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: missingHold.bundle))
+    }
+
+    func testStoreRejectsMalformedDescriptorVectorsRolesAndUnknownFields() throws {
+        let mutations: [(String, (inout [String: Any]) throws -> Void)] = [
+            ("fixed vector length", { descriptor in
+                var bounds = try XCTUnwrap(descriptor["modelBounds"] as? [String: Any])
+                bounds["min"] = [0, 0]
+                descriptor["modelBounds"] = bounds
+            }),
+            ("duplicate node ID", { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes[1]["nodeID"] = "Body"
+                descriptor["nodes"] = nodes
+            }),
+            ("invalid role", { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes[1] = ["nodeID": "Left", "role": "decoration"]
+                descriptor["nodes"] = nodes
+            }),
+            ("unknown root field", { descriptor in
+                descriptor["unexpected"] = true
+            }),
+        ]
+
+        for (name, mutation) in mutations {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.mutateJSONObject(
+                    at: packageURL.appendingPathComponent("assets/primary.model.json"),
+                    mutation: mutation
+                )
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
+        }
+    }
+
+    func testStoreRejectsInvalidModelCamera() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                media["display"] = [
+                    "camera": [
+                        "type": "orthographic",
+                        "viewDirection": [0, 0, 0],
+                        "up": [0, 1, 0],
+                        "fitPadding": 0.08
+                    ]
+                ]
+                presentations[0]["media"] = media
+                board["presentations"] = presentations
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsIncompleteV2RasterHoldOwnership() throws {
+        let fixture = try makeRasterV2FixtureBundle { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+            media["holdGeometry"] = ["hold-left": []]
+            presentations[0]["media"] = media
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsUnknownMediaTagAndDerivedModel() throws {
+        let unknown = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                media["type"] = "video"
+                presentations[0]["media"] = media
+                board["presentations"] = presentations
+            }
+        }
+        defer { unknown.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: unknown.bundle))
+
+        let derived = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[0]["derivation"] = [
+                    "type": "derived",
+                    "sourcePresentationID": "primary",
+                    "isInverted": true
+                ]
+                board["presentations"] = presentations
+            }
+        }
+        defer { derived.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: derived.bundle))
+    }
+
+    func testStoreRejectsMixedModelAndRasterPackage() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try self.presentationBytes().write(to: assetsURL.appendingPathComponent("fallback.png"))
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "fallback",
+                    "name": "Fallback",
+                    "aspectRatio": 2,
+                    "isDefault": false,
+                    "derivation": ["type": "original"],
+                    "media": [
+                        "type": "raster",
+                        "assetPath": "assets/fallback.png",
+                        "holdGeometry": [
+                            "hold-left": [[
+                                "frame": ["x": 0.1, "y": 0.2, "width": 0.3, "height": 0.4],
+                                "shape": ["type": "roundedRect", "cornerRadiusFraction": 0.2]
+                            ]]
+                        ]
+                    ]
+                ])
+                board["presentations"] = presentations
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     func testStoreRejectsHoldWithUnknownEquipmentObject() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
@@ -492,17 +700,17 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(firstHold.handCapacity)
         XCTAssertNil(firstHold.features)
         XCTAssertEqual(firstHold.presentationID, "primary")
-        XCTAssertEqual(
-            board.presentations,
-            [
-                BoardPresentation(
-                    id: "primary",
-                    name: "Primary",
-                    aspectRatio: 2,
-                    isDefault: true
-                )
-            ]
-        )
+        let presentation = try XCTUnwrap(board.presentations.first)
+        XCTAssertEqual(board.presentations.count, 1)
+        XCTAssertEqual(presentation.id, "primary")
+        XCTAssertEqual(presentation.name, "Primary")
+        XCTAssertEqual(presentation.aspectRatio, 2)
+        XCTAssertTrue(presentation.isDefault)
+        guard case .raster(let raster) = presentation.media else {
+            return XCTFail("Expected legacy package to adapt into raster media")
+        }
+        XCTAssertEqual(raster.assetPath, "assets/primary.png")
+        XCTAssertEqual(raster.holdGeometry["hold-left"]?.count, 2)
         XCTAssertEqual(store.semantics(for: board.id), [:])
         let imageURL = try XCTUnwrap(store.presentationImageURL(for: board))
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
@@ -2236,6 +2444,76 @@ final class BoardPackageStoreTests: XCTestCase {
         try mutate?(hangboardsURL)
 
         return FixtureBundle(rootURL: bundleURL, bundle: try XCTUnwrap(Bundle(url: bundleURL)))
+    }
+
+    private func legacyV1FixtureBundle() throws -> FixtureBundle {
+        try makeFixtureBundle()
+    }
+
+    private func makeModelFixtureBundle(
+        modelSHA256Matches: Bool,
+        mutatePackage: ((URL) throws -> Void)? = nil
+    ) throws -> FixtureBundle {
+        let fixtures = try validationFixtures()
+        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
+        let board = try XCTUnwrap(model["board"] as? [String: Any])
+        var descriptor = try XCTUnwrap(model["descriptor"] as? [String: Any])
+        if !modelSHA256Matches {
+            descriptor["modelSHA256"] = String(repeating: "0", count: 64)
+        }
+        let modelBase64 = try XCTUnwrap(model["assetBase64"] as? String)
+        let modelBytes = try XCTUnwrap(Data(base64Encoded: modelBase64))
+
+        return try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
+            try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys])
+                .write(to: packageURL.appendingPathComponent("board.json"))
+            try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
+            try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
+                .write(to: assetsURL.appendingPathComponent("primary.model.json"))
+            try mutatePackage?(packageURL)
+        }
+    }
+
+    private func makeRasterV2FixtureBundle(
+        mutateBoard: ((inout [String: Any]) throws -> Void)? = nil
+    ) throws -> FixtureBundle {
+        let fixtures = try validationFixtures()
+        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
+        var board = try XCTUnwrap(model["board"] as? [String: Any])
+        var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+        presentations[0]["media"] = [
+            "type": "raster",
+            "assetPath": "assets/primary.png",
+            "holdGeometry": [
+                "hold-left": [[
+                    "frame": ["x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4],
+                    "shape": ["type": "roundedRect", "cornerRadiusFraction": 0.2]
+                ], [
+                    "frame": ["x": 0.45, "y": 0.3, "width": 0.2, "height": 0.2],
+                    "shape": ["type": "roundedRect", "cornerRadiusFraction": 0.2]
+                ]]
+            ]
+        ]
+        board["presentations"] = presentations
+        try mutateBoard?(&board)
+        return try makeFixtureBundle { hangboardsURL in
+            let boardURL = hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys]).write(to: boardURL)
+        }
+    }
+
+    private func mutateJSONObject(
+        at url: URL,
+        mutation: (inout [String: Any]) throws -> Void
+    ) throws {
+        var object = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+        )
+        try mutation(&object)
+        try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys]).write(to: url)
     }
 
     private func propertyListData() throws -> Data {

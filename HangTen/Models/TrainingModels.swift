@@ -34,6 +34,99 @@ struct BoardHoldPiece: Identifiable, Hashable {
     }
 }
 
+struct BoardRasterMedia: Hashable {
+    let assetPath: String
+    let holdGeometry: [String: [BoardHoldPiece]]
+}
+
+struct BoardModelBounds: Hashable {
+    let minimum: [Double]
+    let maximum: [Double]
+}
+
+struct BoardModelFacePlaneAABB: Hashable {
+    let minimum: [Double]
+    let maximum: [Double]
+
+    var holdFrame: HoldFrame {
+        let scale = 1_000_000_000.0
+        return HoldFrame(
+            x: minimum[0],
+            y: minimum[1],
+            width: ((maximum[0] - minimum[0]) * scale).rounded() / scale,
+            height: ((maximum[1] - minimum[1]) * scale).rounded() / scale
+        )
+    }
+}
+
+struct BoardModelNodeDescriptor: Hashable {
+    enum Role: String, Hashable {
+        case body
+        case hold
+    }
+
+    let nodeID: String
+    let role: Role
+    let holdID: String?
+}
+
+struct BoardModelHoldDescriptor: Hashable {
+    let nodeIDs: [String]
+    let facePlaneAABB: BoardModelFacePlaneAABB
+    let center: [Double]
+}
+
+struct BoardModelDescriptor: Hashable {
+    let schemaVersion: Int
+    let coordinateFrame: String
+    let modelSHA256: String
+    let modelBounds: BoardModelBounds
+    let nodes: [BoardModelNodeDescriptor]
+    let holds: [String: BoardModelHoldDescriptor]
+}
+
+struct BoardModelCamera: Hashable {
+    let type: String
+    let viewDirection: [Double]
+    let up: [Double]
+    let fitPadding: Double
+}
+
+struct BoardModelDisplay: Hashable {
+    let camera: BoardModelCamera
+}
+
+struct BoardModelMedia: Hashable {
+    let assetPath: String
+    let descriptorPath: String
+    let descriptor: BoardModelDescriptor
+    let display: BoardModelDisplay
+}
+
+enum BoardPresentationMedia: Hashable {
+    enum Kind: Hashable {
+        case raster
+        case model
+    }
+
+    case raster(BoardRasterMedia)
+    case model(BoardModelMedia)
+
+    var kind: Kind {
+        switch self {
+        case .raster: .raster
+        case .model: .model
+        }
+    }
+
+    var assetPath: String {
+        switch self {
+        case .raster(let media): media.assetPath
+        case .model(let media): media.assetPath
+        }
+    }
+}
+
 /// The one path source used for normal contact, highlighting, and hit testing.
 struct BoardHoldPathShape: Shape {
     let pieces: [BoardHoldPiece]
@@ -611,6 +704,37 @@ struct BoardHold: Identifiable, Hashable {
         self.presentationID = presentationID
     }
 
+    init(
+        logicalID id: String,
+        equipmentObjectID: String = "primary",
+        name: String,
+        kind: HoldKind,
+        sloper: SloperMetadata? = nil,
+        sizeMillimeters: Double? = nil,
+        gripType: GripType? = nil,
+        fingerCapacity: Int? = nil,
+        handCapacity: Int? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
+        features: Set<HoldFeature>? = nil,
+        pairedHoldID: String? = nil
+    ) {
+        self.id = id
+        self.equipmentObjectID = equipmentObjectID
+        self.name = name
+        self.kind = kind
+        self.sloper = sloper
+        self.geometry = []
+        self.gripType = gripType
+        self.fingerCapacity = fingerCapacity
+        self.handCapacity = handCapacity
+        self.frame = HoldFrame(x: 0, y: 0, width: 0, height: 0)
+        self.sizeMillimeters = sizeMillimeters
+        self.depthRangeMillimeters = depthRangeMillimeters
+        self.features = features
+        self.pairedHoldID = pairedHoldID
+        self.presentationID = ""
+    }
+
     /// Narrow source compatibility for hand-built workout and test fixtures.
     /// Package decoding uses the geometry initializer above and never reaches
     /// this frame-only path or its retired presentation arguments.
@@ -662,6 +786,24 @@ struct BoardHold: Identifiable, Hashable {
         guard let fingerCapacity else { return true }
         return self.fingerCapacity == fingerCapacity
     }
+
+    func resolvedFrame(in presentation: BoardPresentation) -> HoldFrame? {
+        switch presentation.media {
+        case .raster(let media):
+            guard let pieces = media.holdGeometry[id],
+                  let first = pieces.first else { return nil }
+            let union = pieces.dropFirst().reduce(first.frame) { $0.union($1.frame) }
+            let scale = 1_000_000_000.0
+            return HoldFrame(
+                x: union.minX,
+                y: union.minY,
+                width: (union.width * scale).rounded() / scale,
+                height: (union.height * scale).rounded() / scale
+            )
+        case .model(let media):
+            return media.descriptor.holds[id]?.facePlaneAABB.holdFrame
+        }
+    }
 }
 
 struct BoardPresentation: Identifiable, Hashable {
@@ -675,6 +817,7 @@ struct BoardPresentation: Identifiable, Hashable {
     /// mounting orientation, without duplicating the board's hold inventory.
     let sourcePresentationID: String?
     let isInverted: Bool
+    let media: BoardPresentationMedia
 
     init(
         id: String,
@@ -682,7 +825,10 @@ struct BoardPresentation: Identifiable, Hashable {
         aspectRatio: CGFloat,
         isDefault: Bool,
         sourcePresentationID: String? = nil,
-        isInverted: Bool = false
+        isInverted: Bool = false,
+        media: BoardPresentationMedia = .raster(
+            BoardRasterMedia(assetPath: "", holdGeometry: [:])
+        )
     ) {
         self.id = id
         self.name = name
@@ -690,6 +836,7 @@ struct BoardPresentation: Identifiable, Hashable {
         self.isDefault = isDefault
         self.sourcePresentationID = sourcePresentationID
         self.isInverted = isInverted
+        self.media = media
     }
 }
 
@@ -795,9 +942,16 @@ struct TrainingBoard: Identifiable, Hashable {
               let presentation = presentation(id: position.presentationID) else {
             return []
         }
-        let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
-        return holds.compactMap { hold in
-            hold.presentationID == canonicalPresentationID ? hold.id : nil
+        switch presentation.media {
+        case .model:
+            return holds.map(\.id)
+        case .raster(let media) where !media.holdGeometry.isEmpty:
+            return holds.compactMap { media.holdGeometry[$0.id] == nil ? nil : $0.id }
+        case .raster:
+            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
+            return holds.compactMap { hold in
+                hold.presentationID == canonicalPresentationID ? hold.id : nil
+            }
         }
     }
 
