@@ -194,6 +194,19 @@ citations; conflicts, rulings and confidence; explicit unknowns Astra must
 estimate; deliberate screw-hole/hardware omissions; approved material fidelity;
 and required review views.
 
+For each board, the packet must retain at least two exact-revision visual image
+snapshots before Astra resumes: one complete manufacturer-published image and
+one additional complete image from a materially different angle when available
+(front plus oblique/side/back/profile preferred). Record each image's local
+path, SHA-256, pixel dimensions, retrieval date/locale, exact view-angle label,
+source tier, and page linkage, plus the geometric facts that angle can and
+cannot support. Authorized retailer/distributor imagery is allowed only to fill
+a documented manufacturer gap, must be labeled commerce-gap evidence, and
+cannot override manufacturer claims. Crops, duplicates, search thumbnails,
+reviews/forums, generated renders, and ambiguous-revision media do not satisfy
+this gate. A diagram supplements the packet but is not a distinct-angle
+photograph unless it genuinely exposes side/profile geometry.
+
 Manufacturer product pages, manuals, dimension diagrams, and manufacturer media
 are authoritative first-party sources. Prefer the current exact board revision
 and record its revision, date, and locale. Authorized retailer/distributor
@@ -287,8 +300,8 @@ is allowed.
 ## Migration sequence and component boundaries
 
 0. Prepare and review the lower-cost evidence packet/brief before any Astra
-   geometry task; reject packets containing geometry proposals or image-derived
-   contours.
+   geometry task; require the retained multi-angle visual gate above and reject
+   packets containing geometry proposals or image-derived contours.
 1. Define parser/schema v2 and descriptor v1 with fixtures for raster and model
    packages.
 2. Rebuild both named packages as model media, retaining logical IDs/metadata

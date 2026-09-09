@@ -241,6 +241,18 @@ geometry migration. Validate a retained Stage 0 evidence packet with:
 python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
 ```
 
+Before Astra receives a geometry task, each Stage 0 packet must retain at
+least two complete exact-revision images per board: one manufacturer-published
+image and, when available, a materially different oblique/side/back/profile
+view. Record local paths, SHA-256 hashes, pixel dimensions, retrieval
+date/locale, angle labels, page linkage, provenance tier, and the geometric
+facts each view can and cannot support. Use authorized retailer/distributor
+images only for a documented manufacturer gap and label them commerce-gap
+evidence; crops, duplicates, search thumbnails, reviews/forums, generated
+renders, and ambiguous revisions do not count. Diagrams supplement the packet
+but do not count as a distinct-angle photograph unless they expose
+side/profile geometry.
+
 After geometry has been authored and reviewed in a later, explicitly scoped
 step, compile tagged Blender meshes into a model package with:
 

@@ -196,3 +196,18 @@ Sloper angles, radii, and other non-depth measurements stay source-backed in
 the names and are absent from `sizeMillimeters`; in particular, the continuous
 Project and Simulator slopers have multiple labelled sloper measurements and
 no single source-supported scalar contact depth.
+
+The packet SHA-256 was `3a6c2c63076fac70aeae5001bacda576038a766969eb8e01dced2a4bea96d91a` before the multi-angle correction; the current packet SHA-256 is `fe4a13559dfc8b734e349005444599407cb8cb7358350a095c0c3cdd451f62c3`. The Compact face is sourced as 610 × 157 mm (24 × 6.2 in). The lower Compact row of the official numbered diagram maps all 19 stable IDs: #1 outer jugs, #2 56 mm flat slopers, #3 29 mm edges, #4 29 mm three-finger pockets, #5 29 mm two-finger pockets, #6 19 mm edges, #7 19 mm three-finger pockets, #8 19 mm two-finger pockets, #9 56 mm round sloper, #10 29 mm four-finger pocket, and #11 19 mm four-finger pocket. The upper Deluxe row is excluded. The two 56 mm values are hold-depth callouts only; the diagram establishes no overall board/body/display thickness. Physical Compact body Z/depth remains source-unresolved, and any existing model depth is estimated authored geometry. Apertures, cavity sections, profiles, back profile, radii, and exact positions remain unknown for the existing source review. Generic original pale wood is approved. Screw holes, mounting hardware, countersinks, and logos are deliberate display omissions.
+
+## 2026-09-09 multi-angle Compact II Stage 0 correction
+
+The user requires at least two retained exact-revision visual sources per board before Astra resumes, with materially different angles where available. The current Metolius product page supplies one complete Compact image plus the numbered depth diagram, but no second full-board photograph. The packet therefore retains the following documented commerce-gap source from Bergfreunde, an established climbing retailer:
+
+Both visual snapshots were retrieved 2026-09-09 in locale `en-US`; exact page linkage, tier, angle, and geometric support limits are recorded below and in the packet.
+
+| tier | retained path | SHA-256 | dimensions | view | page linkage |
+| --- | --- | --- | --- | --- | --- |
+| manufacturer | `.context/shaky-rat-metolius-wood-grips-compact-ii/references/compact-training-board.jpg` | `d72c7027d82980306e0e2a50d94394c174dce8ba0fd9bb239c704f099f05ed03` | 2000 × 2000 | front product view / mild elevated perspective | [Metolius Wood Grips II](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) |
+| commerce gap | `.context/shaky-rat-metolius-wood-grips-compact-ii/references/bergfreunde-compact-ii-oblique.jpg` | `1729ecad6eec3df71c9e8e06341c10cc936631edf47948fd17235ed9a5bd991a` | 1500 × 1500 | elevated front oblique / top and side thickness reveal | [Bergfreunde Wood Grips Compact II](https://www.bergfreunde.eu/metolius-wood-grips-compact-ii-training-board/) |
+
+The Metolius page explicitly distinguishes Compact II (24 × 6.2 in / 610 × 157 mm) from Deluxe II. Bergfreunde’s page title and image show the same two-row Compact layout, not the taller Deluxe. The manufacturer view supports complete front inventory and relative placement. The oblique supports top-plane and outer-rollover continuity. Neither view establishes hidden back geometry or measured body depth. Crops, duplicate views, search thumbnails, and ambiguous revision media were rejected; the Bergfreunde image is commerce-gap evidence only and cannot override manufacturer claims.

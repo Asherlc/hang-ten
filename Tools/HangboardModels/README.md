@@ -31,8 +31,18 @@ resource.
 
 ## Stage 0 evidence packets
 
-Before any future geometry work, retain exact manufacturer evidence (and only
-documented commerce gap evidence where necessary) under the packet directory.
+Before any future geometry work, retain at least two complete exact-revision
+visual images per board under the packet directory: one manufacturer-published
+image and, where available, a materially different oblique/side/back/profile
+view. Record each image's pixel dimensions, retrieval date/locale, exact angle,
+page linkage, source tier, SHA-256, and the geometric facts that view can and
+cannot support. Authorized retailer/distributor images fill only a documented
+manufacturer gap and are labeled commerce-gap evidence. Crops, duplicates,
+search thumbnails, reviews/forums, generated renders, and ambiguous revision
+media do not satisfy the gate; diagrams supplement but do not count as a
+distinct-angle photograph unless they expose side/profile geometry. Retain
+exact manufacturer evidence (and only documented commerce gap evidence where
+necessary) under the packet directory.
 The packet validator requires HTTPS source URLs, retained regular files beneath
 the packet directory, matching SHA-256 values, a board revision/date and
 locale, source-backed logical inventory, conflicts and rulings, qualitative
