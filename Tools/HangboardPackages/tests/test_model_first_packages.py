@@ -122,6 +122,26 @@ def _write_raster_package(root: Path) -> Path:
     return root
 
 
+def _raster_presentation(
+    presentation_id: str, asset_path: str, derivation: dict[str, object]
+) -> dict[str, object]:
+    return {
+        "id": presentation_id,
+        "name": presentation_id.title(),
+        "aspectRatio": 2,
+        "isDefault": False,
+        "derivation": derivation,
+        "media": {
+            "type": "raster",
+            "assetPath": asset_path,
+            "holdGeometry": {
+                "hold-left": [_raster_piece(0.1)],
+                "hold-right": [_raster_piece(0.7)],
+            },
+        },
+    }
+
+
 def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = _write_model_package(tmp_path / "fixture-model")
@@ -162,6 +182,75 @@ def test_v2_raster_owns_geometry_and_unions_hold_frame(tmp_path: Path) -> None:
     assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.45, 0.4
     )
+
+
+def test_v2_rejects_original_model_plus_original_raster_fallback(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_model_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["presentations"].append(
+        _raster_presentation("fallback", "assets/fallback.png", {"type": "original"})
+    )
+    (package_root / "assets" / "fallback.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    with pytest.raises(ValueError, match="model and raster"):
+        module.load_board_package(package_root)
+
+
+def test_v2_rejects_raster_derivation_from_model_presentation(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_model_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["presentations"].append(
+        _raster_presentation(
+            "fallback",
+            "assets/fallback.png",
+            {
+                "type": "derived",
+                "sourcePresentationID": "primary",
+                "isInverted": True,
+            },
+        )
+    )
+    (package_root / "assets" / "fallback.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    with pytest.raises(ValueError, match="derived.*raster.*raster"):
+        module.load_board_package(package_root)
+
+
+def test_v2_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = _write_raster_package(tmp_path / "fixture-raster")
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["presentations"].append(
+        _raster_presentation(
+            "inverted",
+            "assets/inverted.png",
+            {
+                "type": "derived",
+                "sourcePresentationID": "primary",
+                "isInverted": True,
+            },
+        )
+    )
+    (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
+    _rewrite(board_path, board)
+
+    package = module.load_board_package(package_root)
+
+    assert [presentation.id for presentation in package.board.presentations] == [
+        "primary",
+        "inverted",
+    ]
 
 
 @pytest.mark.parametrize(

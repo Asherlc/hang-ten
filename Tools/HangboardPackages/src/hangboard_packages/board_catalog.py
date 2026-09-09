@@ -916,6 +916,34 @@ def _load_presentations(
     return presentations
 
 
+def _validate_v2_presentation_compatibility(
+    presentations: tuple[BoardPresentation, ...],
+) -> None:
+    presentations_by_id = {
+        presentation.id: presentation for presentation in presentations
+    }
+    for presentation in presentations:
+        if presentation.source_presentation_id is None:
+            continue
+        source = presentations_by_id[presentation.source_presentation_id]
+        if not isinstance(
+            presentation.media, PresentationMediaRaster
+        ) or not isinstance(source.media, PresentationMediaRaster):
+            raise ValueError(
+                "v2 derived presentation relationships must be raster to raster"
+            )
+    has_model = any(
+        isinstance(presentation.media, PresentationMediaModel)
+        for presentation in presentations
+    )
+    has_raster = any(
+        isinstance(presentation.media, PresentationMediaRaster)
+        for presentation in presentations
+    )
+    if has_model and has_raster:
+        raise ValueError("v2 packages may not mix model and raster presentations")
+
+
 def _load_positions(
     value: Any,
     source: str,
@@ -1036,6 +1064,8 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     presentations = _load_presentations(
         value["presentations"], "board.json.presentations", version=version
     )
+    if version == 2:
+        _validate_v2_presentation_compatibility(presentations)
     positions = (
         _load_positions(
             value["positions"],
