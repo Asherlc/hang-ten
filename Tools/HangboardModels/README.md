@@ -16,8 +16,8 @@ Each presentation owns one tagged media payload:
 
 - `raster` has `assetPath` beneath `assets/` and a non-empty
   `holdGeometry` map of normalized path pieces. Only raster presentations may
-  be derived or inverted, and canonical raster presentations collectively
-  must form an exact, single-owner partition of all logical hold IDs.
+  be derived or inverted, and canonical raster presentations collectively own
+  every logical hold ID exactly once, forming an exact, single-owner partition.
 - `model` has a `.usdz` `assetPath`, a generated `.model.json` `descriptorPath`,
   and `display.camera` with an orthographic type, finite non-zero
   `viewDirection` and `up` vectors, and positive `fitPadding`.
