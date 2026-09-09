@@ -68,13 +68,17 @@ def package_tree(package: Path) -> frozenset[str]:
     return frozenset(
         item.relative_to(package).as_posix()
         for item in package.rglob("*")
-        if item.is_file() and not item.is_symlink()
+        if item.is_symlink() or item.is_file()
     )
 
 
 def require_exact_package_tree(package: Path, expected: frozenset[str], *, label: str) -> None:
     actual = package_tree(package)
-    if actual != expected:
+    expected_are_regular_files = all(
+        not (package / relative).is_symlink() and (package / relative).is_file()
+        for relative in expected
+    )
+    if actual != expected or not expected_are_regular_files:
         raise ValueError(f"{label} package tree is not exact: actual={sorted(actual)} expected={sorted(expected)}")
 
 
