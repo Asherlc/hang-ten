@@ -190,6 +190,10 @@ final class BoardModelScene {
 
         let descriptorsByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
         guard descriptorsByNodeID.count == descriptor.nodes.count else { return nil }
+        // USD import may preserve exporter Xforms above meshes. Descriptors
+        // with bare IDs bind exact unique mesh names; path descriptors retain
+        // exact hierarchy-path matching.
+        let usesBareImporterNodeIDs = descriptorIDs.allSatisfy { !$0.contains("/") }
 
         // The cloned imported root is rendered with the scene. It therefore
         // cannot carry a mesh that lies outside the descriptor node inventory.
@@ -200,7 +204,10 @@ final class BoardModelScene {
         var invalidGeometry = false
         modelRoot.enumerateChildNodes { node, _ in
             guard let geometry = node.geometry else { return }
-            guard let nodeID = Self.nodeID(for: node, beneath: modelRoot),
+            let nodeID = usesBareImporterNodeIDs
+                ? Self.bareImporterNodeID(for: node)
+                : Self.nodeID(for: node, beneath: modelRoot)
+            guard let nodeID,
                   geometryByNodeID[nodeID] == nil,
                   !geometry.materials.isEmpty,
                   geometry.sources(for: .vertex).contains(where: { $0.vectorCount > 0 }),
@@ -315,6 +322,11 @@ final class BoardModelScene {
         }
         guard candidate === root else { return nil }
         return names.reversed().joined(separator: "/")
+    }
+
+    private static func bareImporterNodeID(for node: SCNNode) -> String? {
+        guard let name = node.name, !name.isEmpty, !name.contains("/") else { return nil }
+        return name
     }
 
     private struct Framing {

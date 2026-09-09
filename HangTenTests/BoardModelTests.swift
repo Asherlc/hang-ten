@@ -6,6 +6,41 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    func testMigratedPackageModelsBindExactInventoriesMaterialsAndNearestHits() async throws {
+        for expectation in migratedModelExpectations {
+            let (board, media, model) = try await loadMigratedModel(expectation.boardID)
+
+            SCNTransaction.flush()
+
+            XCTAssertEqual(Set(board.holds.map(\.id)), expectation.holdIDs, expectation.boardID)
+            XCTAssertEqual(Set(media.descriptor.holds.keys), expectation.holdIDs, expectation.boardID)
+            XCTAssertEqual(Set(model.holdNodes.keys), expectation.holdIDs, expectation.boardID)
+            XCTAssertEqual(
+                model.holdNodes.values.reduce(0) { $0 + $1.count },
+                expectation.holdIDs.count,
+                expectation.boardID
+            )
+            XCTAssertEqual(model.geometryNodes.count, expectation.holdIDs.count + 1, expectation.boardID)
+
+            for node in model.geometryNodes {
+                let materials = try XCTUnwrap(node.geometry?.materials, expectation.boardID)
+                XCTAssertFalse(materials.isEmpty, "\(expectation.boardID): \(node.name ?? "unnamed")")
+                XCTAssertTrue(
+                    materials.allSatisfy { $0.diffuse.contents != nil },
+                    "\(expectation.boardID): \(node.name ?? "unnamed")"
+                )
+            }
+
+            try assertNearestHeadOnHitForEveryHold(model, media: media, boardID: expectation.boardID)
+            try assertBodyHitIsNotSelectable(
+                model,
+                media: media,
+                normalizedPoint: expectation.bodyProbe,
+                boardID: expectation.boardID
+            )
+        }
+    }
+
     func testModelSurfaceUnavailableStateNeverPermitsHoldSelection() {
         XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
             for: .unavailable,
@@ -124,6 +159,10 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(secondNode.geometry?.firstMaterial === otherOriginal)
         first.highlight([], mode: .active)
         XCTAssertTrue(firstNode.geometry?.firstMaterial === original)
+        first.highlight(["left"], mode: .preview)
+        XCTAssertEqual(firstNode.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.restBlue))
+        first.highlight([], mode: .preview)
+        XCTAssertTrue(firstNode.geometry?.firstMaterial === original)
     }
 
     func testExistingViewRebindsDescriptorFramedReplacementSceneAndCamera() throws {
@@ -183,6 +222,140 @@ final class BoardModelTests: XCTestCase {
 
         XCTAssertEqual(model.holdID(for: closest.node), "left")
         XCTAssertNil(model.holdID(for: try XCTUnwrap(model.geometryNodes.first { $0.name == "Body" })))
+    }
+
+    private struct MigratedModelExpectation {
+        let boardID: String
+        let holdIDs: Set<String>
+        let bodyProbe: [Double]
+    }
+
+    private var migratedModelExpectations: [MigratedModelExpectation] {
+        [
+            MigratedModelExpectation(
+                boardID: "beastmaker-1000",
+                holdIDs: [
+                    "jug-left", "jug-right", "sloper-35-left", "sloper-35-right", "sloper-center",
+                    "pocket-top-outer-left", "pocket-top-outer-right", "pocket-top-left", "pocket-top-right",
+                    "pocket-middle-outer-left", "pocket-middle-mid-left", "pocket-middle-inner-left",
+                    "pocket-middle-center", "pocket-middle-inner-right", "pocket-middle-mid-right",
+                    "pocket-middle-outer-right", "pocket-bottom-outer-left", "pocket-bottom-mid-left",
+                    "pocket-bottom-inner-left", "pocket-bottom-inner-right", "pocket-bottom-mid-right",
+                    "pocket-bottom-outer-right"
+                ],
+                bodyProbe: [0.5, 0.02]
+            ),
+            MigratedModelExpectation(
+                boardID: "metolius.wood-grips-compact-ii",
+                holdIDs: [
+                    "jug-left", "sloper-flat-left", "sloper-round-center", "sloper-flat-right", "jug-right",
+                    "edge-29-left", "pocket-29-three-left", "pocket-29-two-left", "pocket-29-four-center",
+                    "pocket-29-two-right", "pocket-29-three-right", "edge-29-right", "edge-19-left",
+                    "pocket-19-three-left", "pocket-19-three-right", "pocket-19-two-left",
+                    "pocket-19-two-right", "pocket-19-four-center", "edge-19-right"
+                ],
+                bodyProbe: [0.5, 0.02]
+            )
+        ]
+    }
+
+    private func loadMigratedModel(
+        _ boardID: String
+    ) async throws -> (TrainingBoard, BoardModelMedia, BoardModelScene) {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID), boardID)
+        let presentation = board.defaultPresentation
+        let candidateMedia: BoardModelMedia? = if case .model(let media) = presentation.media {
+            media
+        } else {
+            nil
+        }
+        let media = try XCTUnwrap(candidateMedia, "\(boardID) is not a package model")
+        let packageURL = try XCTUnwrap(
+            BoardCatalog.packageStore.presentationAssetURL(
+                for: board,
+                presentationID: presentation.id
+            ),
+            boardID
+        )
+        XCTAssertEqual(packageURL.lastPathComponent, "primary.usdz", boardID)
+        let loaded = await BoardModelLoader.load(
+            board: board,
+            presentation: presentation,
+            store: BoardCatalog.packageStore
+        )
+        let model = try XCTUnwrap(loaded, boardID)
+        return (board, media, model)
+    }
+
+    private func assertNearestHeadOnHitForEveryHold(
+        _ model: BoardModelScene,
+        media: BoardModelMedia,
+        boardID: String
+    ) throws {
+        for holdID in media.descriptor.holds.keys.sorted() {
+            let hold = try XCTUnwrap(media.descriptor.holds[holdID], "\(boardID): \(holdID)")
+            let normalizedCenter = zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).map {
+                $0 + ($1 - $0) / 2
+            }
+            let ray = try headOnRay(
+                normalizedPoint: normalizedCenter,
+                bounds: media.descriptor.modelBounds,
+                context: "\(boardID): \(holdID)"
+            )
+            let closest = try XCTUnwrap(
+                model.scene.rootNode.hitTestWithSegment(
+                    from: ray.from,
+                    to: ray.to,
+                    options: [
+                        SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
+                    ]
+                ).first,
+                "\(boardID): \(holdID)"
+            )
+            XCTAssertEqual(model.holdID(for: closest.node), holdID, "\(boardID): \(holdID)")
+        }
+    }
+
+    private func assertBodyHitIsNotSelectable(
+        _ model: BoardModelScene,
+        media: BoardModelMedia,
+        normalizedPoint: [Double],
+        boardID: String
+    ) throws {
+        let ray = try headOnRay(
+            normalizedPoint: normalizedPoint,
+            bounds: media.descriptor.modelBounds,
+            context: "\(boardID): body"
+        )
+        let closest = try XCTUnwrap(
+            model.scene.rootNode.hitTestWithSegment(
+                from: ray.from,
+                to: ray.to,
+                options: [
+                    SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
+                ]
+            ).first,
+            "\(boardID): body"
+        )
+        XCTAssertNil(model.holdID(for: closest.node), boardID)
+    }
+
+    private func headOnRay(
+        normalizedPoint: [Double],
+        bounds: BoardModelBounds,
+        context: String
+    ) throws -> (from: SCNVector3, to: SCNVector3) {
+        XCTAssertEqual(normalizedPoint.count, 2, context)
+        XCTAssertEqual(bounds.minimum.count, 3, context)
+        XCTAssertEqual(bounds.maximum.count, 3, context)
+        let x = bounds.minimum[0] + normalizedPoint[0] * (bounds.maximum[0] - bounds.minimum[0])
+        let y = bounds.minimum[1] + normalizedPoint[1] * (bounds.maximum[1] - bounds.minimum[1])
+        let spans = zip(bounds.minimum, bounds.maximum).map { $1 - $0 }
+        let extensionDistance = try XCTUnwrap(spans.max(), context) * 2
+        return (
+            SCNVector3(Float(x), Float(y), Float(bounds.maximum[2] + extensionDistance)),
+            SCNVector3(Float(x), Float(y), Float(bounds.minimum[2] - extensionDistance))
+        )
     }
 
     private func modelDescriptor(

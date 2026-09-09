@@ -30,24 +30,37 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     @MainActor
-    func testModelLoaderFailsClosedWhenValidatedPackageModelDisappears() async throws {
-        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
-        defer { fixture.remove() }
-        let store = try BoardPackageStore(bundle: fixture.bundle)
-        let board = try XCTUnwrap(store.boards.first)
-        let presentation = try XCTUnwrap(board.presentations.first)
-        let assetURL = try XCTUnwrap(store.presentationAssetURL(for: board, presentationID: presentation.id))
+    func testModelLoaderFailsClosedWhenValidatedPackageModelIsMissingOrCorrupt() async throws {
+        let mutations: [(name: String, mutate: (URL) throws -> Void)] = [
+            ("missing", { try FileManager.default.removeItem(at: $0) }),
+            ("corrupt", { try Data("not a USDZ".utf8).write(to: $0) })
+        ]
 
-        XCTAssertNil(store.presentationImageURL(for: board, presentationID: presentation.id))
-        try FileManager.default.removeItem(at: assetURL)
+        for mutation in mutations {
+            let uniqueBoardID = "fixture.model-loader-\(mutation.name)-\(UUID().uuidString.lowercased())"
+            let fixture = try makeModelFixtureBundle(
+                modelSHA256Matches: true,
+                boardID: uniqueBoardID
+            )
+            defer { fixture.remove() }
+            let store = try BoardPackageStore(bundle: fixture.bundle)
+            let board = try XCTUnwrap(store.board(id: uniqueBoardID))
+            let presentation = board.defaultPresentation
+            let assetURL = try XCTUnwrap(
+                store.presentationAssetURL(for: board, presentationID: presentation.id)
+            )
 
-        let loaded = await BoardModelLoader.load(
-            board: board,
-            presentation: presentation,
-            store: store
-        )
+            XCTAssertNil(store.presentationImageURL(for: board, presentationID: presentation.id))
+            try mutation.mutate(assetURL)
 
-        XCTAssertNil(loaded)
+            let loaded = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: store
+            )
+
+            XCTAssertNil(loaded, mutation.name)
+        }
     }
 
     func testModelCacheKeySeparatesDistinctDescriptorHashes() {
@@ -3152,11 +3165,13 @@ final class BoardPackageStoreTests: XCTestCase {
 
     private func makeModelFixtureBundle(
         modelSHA256Matches: Bool,
+        boardID: String = "fixture.board",
         mutatePackage: ((URL) throws -> Void)? = nil
     ) throws -> FixtureBundle {
         let fixtures = try validationFixtures()
         let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
-        let board = try XCTUnwrap(model["board"] as? [String: Any])
+        var board = try XCTUnwrap(model["board"] as? [String: Any])
+        board["id"] = boardID
         var descriptor = try XCTUnwrap(model["descriptor"] as? [String: Any])
         if !modelSHA256Matches {
             descriptor["modelSHA256"] = String(repeating: "0", count: 64)
