@@ -28,7 +28,12 @@ import sys
 import bpy
 import bmesh
 from mathutils import Matrix, Vector
-import numpy as np
+
+TOOLS = Path(__file__).resolve().parent
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+import canonical_neutral_wood
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKET_SHA = "510def2516477dedb248ea85e3ec858129d0f298014b28c3e7ef9b19bd41cce0"
@@ -261,39 +266,14 @@ def subtract_pocket(body, spec, materials, material_indices):
 
 
 def wood_materials(hold_ids, output):
-    """Original analytic grain texture, independent of every reference bitmap."""
-    width, height = 2048, 1024
-    u, v = np.meshgrid(np.linspace(0, 1, width), np.linspace(0, 1, height))
-    warp = v+.006*np.sin(u*14)+.002*np.sin(u*37+v*12)
-    warp += .007*np.sin(v*17)+.004*np.sin(v*41+.8*np.sin(u*2))
-    broad = .030*np.sin(warp*55+1.8*np.sin(u*4))
-    fine = .005*np.sin(warp*850+.8*np.sin(u*19))
-    pores = -.010*np.maximum(0, np.sin(warp*1750+u*4))**16
-    rng = np.random.default_rng(1000)
-    variation = broad+fine+pores+rng.normal(0, .002, (height, width))
-    pixels = np.empty((height, width, 4), dtype=np.float32)
-    for channel, base in enumerate((.58, .45, .30)):
-        pixels[:, :, channel] = np.clip(base+variation*(1.0 if channel == 0 else 1.15), 0, 1)
-    pixels[:, :, 3] = 1
-    atlas = bpy.data.images.new("BeastmakerOriginalPaleWood", width=width, height=height, alpha=False)
-    atlas.pixels.foreach_set(pixels.ravel())
-    atlas.filepath_raw = str(output/"original-pale-wood.png")
-    atlas.file_format = "PNG"
-    atlas.save()
-    atlas.pack()
+    """Use the single shared original light-neutral wood source."""
     materials = []
     for name in ["wood-body"]+hold_ids:
         mat = bpy.data.materials.new(name)
         mat.use_nodes = True
-        mat.diffuse_color = (.64, .53, .37, 1)
-        bsdf = mat.node_tree.nodes.get("Principled BSDF")
-        bsdf.inputs["Roughness"].default_value = .51
-        bsdf.inputs["Specular IOR Level"].default_value = .25
-        tex = mat.node_tree.nodes.new("ShaderNodeTexImage")
-        tex.image = atlas
-        tex.interpolation = "Linear"
-        mat.node_tree.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+        mat.diffuse_color = (.78, .73, .65, 1)
         materials.append(mat)
+    canonical_neutral_wood.attach_to_materials(materials)
     return materials
 
 
@@ -631,8 +611,9 @@ def main():
                   pocketEstimates=pocket_specs(), reviewViews=views, reviewLights=lights,
                   renderer=dict(production="CYCLES", diagnostic="BLENDER_WORKBENCH", samples=args.samples,
                                 device="CPU", denoising=True, viewTransform="AgX", look="AgX - Medium High Contrast", exposure=-1.0),
-                  material=dict(type="original generic pale wood", image="original-pale-wood.png",
-                                imageSHA256=sha(output/"original-pale-wood.png"), speciesMatch=False), **checks)
+                  material=dict(type="original generic light-neutral wood", image=canonical_neutral_wood.CANONICAL_TEXTURE_NAME,
+                                imageSHA256=sha(canonical_neutral_wood.CANONICAL_TEXTURE_PATH), speciesMatch=False,
+                                generatorVersion=canonical_neutral_wood.GENERATOR_VERSION), **checks)
     (output/"model-report.json").write_text(json.dumps(report, indent=2)+"\n")
     source_report(output, report)
     print(json.dumps({k: report[k] for k in ["boundsMeters", "triangles", "hold_ids_preserved", "body_mesh_count", "hardware_mesh_count", "sourceSHA256"]}), flush=True)

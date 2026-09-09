@@ -12,6 +12,12 @@ import sys
 import bpy
 from mathutils import Vector
 
+TOOLS = Path(__file__).resolve().parent
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+import canonical_neutral_wood
+
 
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
@@ -267,8 +273,8 @@ for poly in body.data.polygons:
               "sloper-round-center" if x<414 else "sloper-flat-right" if x<504 else "jug-right")
         poly.material_index=list(hold_mats).index(name)+1
 
-# Bake the same continuous procedural timber onto a shared UV atlas; exported
-# GLB/USDZ use standard image-textured PBR, not Blender-only procedural nodes.
+# Preserve the authored UVs while binding the shared source image. Exported
+# USDZs remain self-contained because the exact committed PNG is packed.
 if not body.data.uv_layers:
     body.data.uv_layers.new(name="UVMap")
 active(body)
@@ -276,51 +282,8 @@ bpy.ops.object.mode_set(mode="EDIT")
 bpy.ops.mesh.select_all(action="SELECT")
 bpy.ops.uv.smart_project(angle_limit=1.15,island_margin=.008)
 bpy.ops.object.mode_set(mode="OBJECT")
-atlas=bpy.data.images.new("Compact II pale timber",width=2048,height=2048)
-atlas.filepath_raw=str(OUT/"wood-basecolor.png")
-atlas.file_format="PNG"
-for mat in body.data.materials:
-    nodes=mat.node_tree.nodes
-    links=mat.node_tree.links
-    tex=nodes.new("ShaderNodeTexCoord")
-    stretch=nodes.new("ShaderNodeVectorMath")
-    stretch.operation="MULTIPLY"
-    stretch.inputs[1].default_value=(5,100,75)
-    links.new(tex.outputs["Position"] if "Position" in tex.outputs else tex.outputs["Generated"],stretch.inputs[0])
-    noise=nodes.new("ShaderNodeTexNoise")
-    noise.inputs["Scale"].default_value=1
-    noise.inputs["Detail"].default_value=3
-    noise.inputs["Roughness"].default_value=.66
-    links.new(stretch.outputs[0],noise.inputs["Vector"])
-    ramp=nodes.new("ShaderNodeValToRGB")
-    ramp.color_ramp.elements[0].position=.18
-    ramp.color_ramp.elements[0].color=(.45,.30,.155,1)
-    ramp.color_ramp.elements[1].position=.83
-    ramp.color_ramp.elements[1].color=(.79,.64,.42,1)
-    links.new(noise.outputs["Fac"],ramp.inputs[0])
-    links.new(ramp.outputs[0],nodes.get("Principled BSDF").inputs["Base Color"])
-    target=nodes.new("ShaderNodeTexImage")
-    target.image=atlas
-    nodes.active=target
-
+canonical_neutral_wood.attach_to_materials(body.data.materials)
 scene=bpy.context.scene
-scene.render.engine="CYCLES"
-scene.cycles.samples=16
-scene.render.bake.use_pass_direct=False
-scene.render.bake.use_pass_indirect=False
-scene.render.bake.use_pass_color=True
-scene.render.bake.margin=12
-bpy.ops.object.bake(type="DIFFUSE")
-atlas.save()
-atlas.pack()
-for mat in body.data.materials:
-    nodes=mat.node_tree.nodes
-    target=next(n for n in nodes if n.type=="TEX_IMAGE")
-    bsdf=nodes.get("Principled BSDF")
-    mat.node_tree.links.new(target.outputs["Color"],bsdf.inputs["Base Color"])
-    for n in list(nodes):
-        if n not in (target,bsdf,nodes.get("Material Output")):
-            nodes.remove(n)
 
 # Large Boolean cap faces remain mathematically flat, avoiding pinched shading
 # around recesses. Dense curved strips use ordinary interpolated normals;
@@ -396,7 +359,9 @@ report={"owner":ROOT.name,"model":"metolius.wood-grips-compact-ii","units":"mete
     "hold_ids":sorted(o.name for o in model if o.name in hold_ids),
     "hold_count":sum(o.name in hold_ids for o in model),
     "mesh_count":len(model),"triangles":sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in model),
-    "texture_resolution":[2048,2048],"estimated_geometry":True,
+    "texture_resolution":[canonical_neutral_wood.WIDTH,canonical_neutral_wood.HEIGHT],"estimated_geometry":True,
+    "canonical_texture":canonical_neutral_wood.CANONICAL_TEXTURE_NAME,
+    "canonical_texture_sha256":canonical_neutral_wood.hashlib.sha256(canonical_neutral_wood.CANONICAL_TEXTURE_PATH.read_bytes()).hexdigest(),
     "geometry_revision":4,"body_depth_rings":len(depth_rings),
     "mounting_holes_omitted":True,"mounting_hole_count":0,
     "pocket_fillet_segments":12,"silhouette_cubic_spans":24,
