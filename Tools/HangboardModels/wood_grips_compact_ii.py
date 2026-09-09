@@ -341,13 +341,23 @@ bpy.ops.mesh.select_all(action="SELECT")
 bpy.ops.mesh.separate(type="MATERIAL")
 bpy.ops.object.mode_set(mode="OBJECT")
 model=list(bpy.context.selected_objects)
+
+
+def tag_model_piece(obj, known_hold_ids):
+    """Attach the closed compiler contract without deriving any geometry."""
+    if obj.name in known_hold_ids:
+        obj["role"]="hold"
+        obj["hold_id"]=obj.name
+    else:
+        obj["role"]="body"
+
+
 for obj in model:
     used=sorted({p.material_index for p in obj.data.polygons})
     mat=obj.data.materials[used[0]]
     obj.name=mat.name if mat.name in hold_ids else "wood-body"
     obj["display_estimate"]=True
-    if obj.name in hold_ids:
-        obj["hold_id"]=obj.name
+    tag_model_piece(obj, hold_ids)
 
 def select_model():
     bpy.ops.object.select_all(action="DESELECT")

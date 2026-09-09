@@ -129,6 +129,39 @@ class ModelReportTests(unittest.TestCase):
                      {"expected": {"left", "right"}, "ids": {"left", "right", "body"}})
         self.assertEqual(count, 2)
 
+    def test_compact_source_tags_body_and_exact_hold_id(self):
+        """The compiler input must carry roles, never infer them from node names."""
+        tree = ast.parse((TOOLS / "wood_grips_compact_ii.py").read_text())
+        function = next(
+            (
+                node
+                for node in tree.body
+                if isinstance(node, ast.FunctionDef)
+                and node.name == "tag_model_piece"
+            ),
+            None,
+        )
+        self.assertIsNotNone(function, "Compact generator must tag every compiler source mesh")
+        namespace = {}
+        execute([function], namespace)
+
+        class Piece(dict):
+            def __init__(self, name):
+                super().__init__()
+                self.name = name
+
+        tag = namespace["tag_model_piece"]
+        body = Piece("wood-body")
+        hold = Piece("sloper-round-center")
+        tag(body, frozenset({"sloper-round-center"}))
+        tag(hold, frozenset({"sloper-round-center"}))
+
+        self.assertEqual(body, {"role": "body"})
+        self.assertEqual(
+            hold,
+            {"role": "hold", "hold_id": "sloper-round-center"},
+        )
+
     def overview_report(self, previous, missing=()):
         context = ROOT / ".context"
         context.mkdir(exist_ok=True)
