@@ -5,11 +5,12 @@ athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
 Each supported board is a complete schema-v2 package with typed presentation
-media. A raster-only package owns a PNG and `media.holdGeometry`; a model-only
-package owns a USDZ and generated hash-bound `.model.json` descriptor. Logical
-holds retain identity and metadata without spatial fields, while the selected
-presentation's raster paths or model mesh/descriptor supplies rendering,
-highlighting, and interaction data.
+media. The package contract supports raster-only presentations, which own a PNG
+and `media.holdGeometry`, and model-only presentations, which own a USDZ and a
+generated hash-bound `.model.json` descriptor. Logical holds retain identity and
+metadata without spatial fields; the selected presentation supplies rendering,
+highlighting, and interaction data. At this checkpoint every live package is a
+raster v2 package; no board has been migrated to model media.
 
 ## Included
 
@@ -222,15 +223,41 @@ rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository currently has 61 directly discovered, complete packages.
-Each package contains `board.json` plus its exact declared typed assets: a
-raster presentation owns PNG media, while a model presentation owns its USDZ
-and hash-bound `.model.json` descriptor. The Xcode build phase runs
+The repository currently has 61 directly discovered, complete packages and
+zero drafts. Every live package currently declares raster media: `board.json`
+plus its exact declared PNG assets. The model branch is implemented in the
+schema and tooling, but no live package currently declares `media.type: model`.
+The Xcode build phase runs
 `scripts/stage-board-packages.py` after parser-approved discovery. It
 recursively copies each regular, non-symlinked package tree into app resources,
-so staged PNGs, USDZs, and descriptors remain byte-identical to their package
-sources; it does not substitute separately bundled model resources or rewrite
-geometry or presentation bytes.
+so staged declared assets remain byte-identical to their package sources; it
+does not substitute separately bundled model resources or rewrite geometry or
+presentation bytes.
+
+The model-first package plan adds tooling and parser support without doing a
+geometry migration. Validate a retained Stage 0 evidence packet with:
+
+```sh
+python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
+```
+
+After geometry has been authored and reviewed in a later, explicitly scoped
+step, compile tagged Blender meshes into a model package with:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/compile_model_package.py -- \
+  --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
+  --output-directory PATH/compiled-package
+```
+
+The compiler reimports the exact USDZ export and generates the read-only,
+hash-bound descriptor; it does not repair or redesign geometry. A model package
+must contain only its declared USDZ and descriptor media, with no raster
+fallback. See [model tooling](Tools/HangboardModels/README.md) and the
+[package contract](Tools/HangboardPackages/README.md) for the v2 fields and
+validation rules. No geometry task appears in the current model-first schema
+and compiler plan.
 
 Use the packaged macOS Hangboard Workbench for direct local visual editing.
 Browser-hosted Workbench deployments must use the GitHub-backed
