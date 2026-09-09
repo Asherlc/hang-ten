@@ -8,6 +8,10 @@ import json
 from pathlib import Path
 import sys
 
+_SCRIPT_DIRECTORY = Path(__file__).resolve().parent
+if str(_SCRIPT_DIRECTORY) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIRECTORY))
+
 import bpy
 from mathutils import Vector
 
