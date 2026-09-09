@@ -59,19 +59,21 @@ final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
         search.tap()
         search.typeText("Beastmaker 1000")
 
+        let picker = app.navigationBars["Choose board"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+
         let board = app.buttons["boardPicker.board.beastmaker-1000"]
         XCTAssertTrue(board.waitForExistence(timeout: 10))
 
-        let model = app.otherElements["boardModel.3d"]
-        XCTAssertTrue(
-            model.waitForExistence(timeout: 30),
-            "The Beastmaker picker card must expose its loaded 3D model surface."
-        )
-        model.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        // The model is display-only and intentionally collapsed from the
+        // accessibility tree. The card button frame still covers its visible
+        // model region: y=0.35 is the model center before the title row.
+        board.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35)).tap()
 
         XCTAssertTrue(
             app.buttons["train.changeBoard"].waitForExistence(timeout: 10),
             "Tapping the model center must select the board and dismiss the picker."
         )
+        XCTAssertFalse(board.exists, "The picker card must disappear after selection.")
     }
 }
