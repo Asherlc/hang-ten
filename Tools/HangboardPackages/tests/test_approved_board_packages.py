@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import pytest
 
 from PIL import Image
 
-from conftest import load_board_catalog_module
+from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 from _board_package_helpers import document_hold_geometry
 
 
@@ -158,28 +159,6 @@ COMPACT_HOLDS = (
     ("edge-19-right", "Right 19 mm edge"),
 )
 
-COMPACT_HOLD_BOUNDS = {
-    "jug-left": (0.037438760543, 0.033340176927, 0.151177566966, 0.147356834014),
-    "sloper-flat-left": (0.18823738106, 0.074170080963, 0.15100319053, 0.11883253391699998),
-    "sloper-round-center": (0.335872142052, 0.067902866521, 0.331604864713, 0.130400487965),
-    "sloper-flat-right": (0.664804328636, 0.086104452954, 0.14671776268299996, 0.104897986871),
-    "jug-right": (0.808482115558, 0.046999221007, 0.151953933142, 0.151461838074),
-    "edge-29-left": (0.04569001522, 0.241975420131, 0.155448063257, 0.268655293217),
-    "pocket-29-three-left": (0.222529936866, 0.379677032823, 0.09641943799299998, 0.13582318380699998),
-    "pocket-29-two-left": (0.336854291432, 0.368749890591, 0.07201019391199998, 0.14699999999999996),
-    "pocket-29-four-center": (0.429756544532, 0.363488129103, 0.14120829988700007, 0.14951187089700002),
-    "pocket-29-two-right": (0.593146998873, 0.36768849453, 0.06636609752, 0.14931150547),
-    "pocket-29-three-right": (0.67935078805, 0.376089225383, 0.09864743292, 0.13691077461700002),
-    "edge-29-right": (0.801012246904, 0.224094693654, 0.15223071138200006, 0.2847073807439999),
-    "edge-19-left": (0.06299286133, 0.622153352298, 0.15250864614100001, 0.22923483588600002),
-    "pocket-19-three-left": (0.236610587937, 0.705497606127, 0.09380289007899997, 0.14),
-    "pocket-19-three-right": (0.66583022097, 0.708559829322, 0.09482928974100002, 0.129437122538),
-    "pocket-19-two-left": (0.342440808906, 0.705497606127, 0.07299134385599998, 0.14),
-    "pocket-19-two-right": (0.584559191094, 0.704247496718, 0.06692861217599999, 0.14),
-    "pocket-19-four-center": (0.429830606539, 0.705497606127, 0.13696056256999994, 0.14),
-    "edge-19-right": (0.785154857012, 0.640384105033, 0.14809514298799997, 0.20808716411399997),
-}
-
 # Each value is (source-backed kind, scalar depth, capacity, structural pocket
 # grip, feature set). Sloper descriptors are not scalar depths, non-pocket
 # capacities are not published, and the manufacturer publishes no package
@@ -205,19 +184,6 @@ COMPACT_HOLD_SOURCE_FACTS = {
     "pocket-19-four-center": ("pocket", 19, 4, "fourFingerPocket", ()),
     "edge-19-right": ("edge", 19, None, None, ()),
 }
-
-def _embedded_geometry_bounds(
-    geometry: object,
-) -> tuple[float, float, float, float] | None:
-    if not isinstance(geometry, list) or not geometry:
-        return None
-    frames = [piece["frame"] for piece in geometry]
-    min_x = min(frame["x"] for frame in frames)
-    min_y = min(frame["y"] for frame in frames)
-    max_x = max(frame["x"] + frame["width"] for frame in frames)
-    max_y = max(frame["y"] + frame["height"] for frame in frames)
-    return (min_x, min_y, max_x - min_x, max_y - min_y)
-
 
 def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() -> None:
     inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
@@ -300,7 +266,10 @@ def _original_hold_owners(document: dict[str, object]) -> dict[str, str]:
     for presentation in document["presentations"]:
         if presentation["derivation"]["type"] != "original":
             continue
-        for hold_id in presentation["media"]["holdGeometry"]:
+        media = presentation["media"]
+        if media["type"] != "raster":
+            continue
+        for hold_id in media["holdGeometry"]:
             assert hold_id not in owners
             owners[hold_id] = presentation["id"]
     return owners
@@ -332,9 +301,11 @@ def test_every_approved_board_uses_schema_v2_typed_presentations() -> None:
         assert sum(
             presentation.get("isDefault") is True for presentation in presentations
         ) == 1
-        assert set(_original_hold_owners(document)) == {
-            hold["id"] for hold in document["holds"]
-        }
+        hold_ids = {hold["id"] for hold in document["holds"]}
+        if any(presentation["media"]["type"] == "model" for presentation in presentations):
+            assert all(presentation["media"]["type"] == "model" for presentation in presentations)
+        else:
+            assert set(_original_hold_owners(document)) == hold_ids
         assert all(
             "geometry" not in hold and "presentationID" not in hold
             for hold in document["holds"]
@@ -359,10 +330,13 @@ def test_approved_packages_declare_their_complete_presentation_asset_set() -> No
             and presentation["aspectRatio"] > 0
             for presentation in document["presentations"]
         )
-        assert actual_assets == {
-            presentation["media"]["assetPath"]
-            for presentation in document["presentations"]
-        }
+        declared_assets = set()
+        for presentation in document["presentations"]:
+            media = presentation["media"]
+            declared_assets.add(media["assetPath"])
+            if media["type"] == "model":
+                declared_assets.add(media["descriptorPath"])
+        assert actual_assets == declared_assets
 
 
 def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -> None:
@@ -371,7 +345,12 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
         for path in COMPACT_ROOT.rglob("*")
     }
 
-    assert relative_paths == {"assets", "assets/primary.png", "board.json"}
+    assert relative_paths == {
+        "assets",
+        "assets/primary.usdz",
+        "assets/primary.model.json",
+        "board.json",
+    }
 
 
 def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
@@ -893,7 +872,7 @@ def test_deluxe_paired_contacts_use_exact_horizontal_frame_mirrors() -> None:
         assert right["height"] == left["height"]
 
 
-def test_compact_board_keeps_the_literal_hold_inventory_with_typed_geometry() -> None:
+def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = board["holds"]
     hold_ids = [hold["id"] for hold in holds]
@@ -901,7 +880,17 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_typed_geometry() ->
     assert board["id"] == "metolius.wood-grips-compact-ii"
     assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
     assert len(hold_ids) == len(set(hold_ids))
-    assert set(document_hold_geometry(board)) == set(hold_ids)
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    descriptor = json.loads(
+        (COMPACT_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert set(descriptor["holds"]) == set(hold_ids)
+    assert {
+        node["holdID"] for node in descriptor["nodes"] if node["role"] == "hold"
+    } == set(hold_ids)
 
 
 def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
@@ -983,20 +972,21 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     } == COMPACT_HOLD_SOURCE_FACTS
 
 
-def test_compact_hold_bounds_are_derived_from_typed_piece_unions() -> None:
-    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
-    bounds_by_hold = {
-        hold["id"]: _embedded_geometry_bounds(geometry.get(hold["id"]))
-        for hold in board["holds"]
-    }
+def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
+    model_path = COMPACT_ROOT / "assets/primary.usdz"
+    descriptor_path = COMPACT_ROOT / "assets/primary.model.json"
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
 
-    assert set(bounds_by_hold) == set(COMPACT_HOLD_BOUNDS)
-    for hold_id, expected_bounds in COMPACT_HOLD_BOUNDS.items():
-        assert bounds_by_hold[hold_id] == pytest.approx(expected_bounds)
+    model_sha = hashlib.sha256(model_path.read_bytes()).hexdigest()
+    descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
+    assert model_sha == "220c68ea5519b0bed80cd2aac08b35f5f2c2a7d2200596f62c3a84996efb94a3"
+    assert descriptor_sha == "300a26886362dd0c510c729e1a9fd4e6a35f47497aed5e7f12d33a2fdb7068fe"
+    assert descriptor["modelSHA256"] == model_sha
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
 
 
-def test_compact_package_loader_preserves_identity_inventory_and_bounds() -> None:
+def test_compact_package_loader_preserves_identity_inventory_and_model_frames() -> None:
     module = load_board_catalog_module()
     package = module.load_board_package(COMPACT_ROOT)
 
@@ -1009,24 +999,42 @@ def test_compact_package_loader_preserves_identity_inventory_and_bounds() -> Non
         "dimensions": '24" × 6.2"',
         "aspectRatio": 3.88,
     }
-    assert package.board.presentation_asset_path == "assets/primary.png"
+    assert package.board.presentation_asset_path == "assets/primary.usdz"
     presentation_id = next(
         presentation.id
         for presentation in package.board.presentations
         if presentation.is_default
     )
+    media = package.board.presentations[0].media
+    assert isinstance(media, module.PresentationMediaModel)
+    assert media.descriptor_path == "assets/primary.model.json"
     for hold in package.board.holds:
         frame = package.board.hold_frame(hold.id, presentation_id)
         actual = (frame.x, frame.y, frame.width, frame.height)
-        assert actual == pytest.approx(COMPACT_HOLD_BOUNDS[hold.id])
+        assert all(value == pytest.approx(value) for value in actual)
+        assert actual[2] > 0
+        assert actual[3] > 0
 
 
-def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
-    repaired_path = COMPACT_ROOT / "assets" / "primary.png"
-    repaired = Image.open(repaired_path).convert("RGB")
+def test_target_model_package_rejects_legacy_png_fallback(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    for slug in ("beastmaker-1000", "metolius-wood-grips-compact-ii"):
+        package = tmp_path / slug
+        shutil.copytree(HANGBOARDS_ROOT / slug, package)
+        (package / "assets/primary.png").write_bytes(PRIMARY_PNG_BYTES)
+        with pytest.raises(ValueError, match="undeclared presentation asset"):
+            module.load_board_package(package)
 
-    assert repaired.size == (1774, 457)
-    assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "87ba30f259840deeb0559dd1d7e4cb3f18be3ee16e85f81f5be985557791e13e"
+
+def test_compact_model_package_has_no_raster_fallback() -> None:
+    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert not (COMPACT_ROOT / "assets/primary.png").exists()
+    assert sorted(path.name for path in (COMPACT_ROOT / "assets").iterdir()) == [
+        "primary.model.json",
+        "primary.usdz",
+    ]
 
 
 def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:

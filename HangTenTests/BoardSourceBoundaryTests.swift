@@ -78,6 +78,27 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
+    func testCompactUsesPackageModelNotStandaloneResource() throws {
+        XCTAssertNil(
+            Bundle.main.url(
+                forResource: "wood-grips-compact-ii",
+                withExtension: "usdz",
+                subdirectory: "BoardModels"
+            )
+        )
+
+        let compact = try XCTUnwrap(
+            BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
+        )
+        guard case .model(let model) = compact.defaultPresentation.media else {
+            return XCTFail("Compact II must use model media")
+        }
+        XCTAssertEqual(model.assetPath, "assets/primary.usdz")
+        XCTAssertEqual(model.descriptorPath, "assets/primary.model.json")
+        XCTAssertNotNil(BoardCatalog.packageStore.presentationAssetURL(for: compact))
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: compact))
+    }
+
     func testEveryCatalogBoardUsesItsDefaultPackagePresentationPNG() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)

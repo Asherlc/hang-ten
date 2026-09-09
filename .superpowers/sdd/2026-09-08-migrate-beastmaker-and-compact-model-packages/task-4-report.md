@@ -74,10 +74,20 @@ inventory. No unrelated resources were removed.
   removal is reflected in the index.
 - `git diff --check` — PASS before commit.
 
-The pre-existing `test_approved_board_packages.py` suite still contains
-seven raster-only assertions for the Compact package; those expected legacy
-failures are not used as the model migration gate. The model-aware validator,
-model-first suite, descriptor suite, and report suite all pass.
+Task 4 fix-round RED verification reproduced 7 failures and 21 passes in the
+pre-existing `test_approved_board_packages.py` suite: its generic owner and
+asset checks plus Compact-specific cases assumed raster-only media. The suite
+was updated to preserve raster coverage for unrelated boards while asserting
+the model-only contract for both targets, including PNG-fallback rejection.
+GREEN verification now passes all 29 tests. The model-aware validator,
+model-first suite, descriptor suite, report suite, and the new Compact
+package-vs-standalone-resource XCTest coverage are also included in this fix.
+
+`xcodebuild -project HangTen.xcodeproj -scheme HangTen -sdk iphonesimulator
+-configuration Debug -derivedDataPath .context/shaky-rat-task4-fix-deriveddata
+CODE_SIGNING_ALLOWED=NO build-for-testing` — PASS; both app and test bundles
+were produced. The workspace-owned DerivedData and build log were removed and
+their exact path was verified absent after the build.
 
 This task does not claim native SceneKit, simulator, or app interaction
 validation.
