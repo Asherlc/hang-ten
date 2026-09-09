@@ -24,6 +24,7 @@ OWNER = Path(os.environ.get("PASEO_WORKTREE_PATH", ROOT)).name
 CONTEXT = ROOT / ".context"
 RECORD_PATH = CONTEXT / f"{OWNER}-canonical-wood-review" / "rebuild-manifest.json"
 PACKAGE_FILES = frozenset({"assets/primary.model.json", "assets/primary.usdz"})
+SHIPPED_PACKAGE_FILES = PACKAGE_FILES | frozenset({"board.json"})
 BUILDERS = {
     "beastmaker-1000": {
         "generator": ROOT / "Tools/HangboardModels/beastmaker_1000.py",
@@ -71,6 +72,12 @@ def package_tree(package: Path) -> frozenset[str]:
     )
 
 
+def require_exact_package_tree(package: Path, expected: frozenset[str], *, label: str) -> None:
+    actual = package_tree(package)
+    if actual != expected:
+        raise ValueError(f"{label} package tree is not exact: actual={sorted(actual)} expected={sorted(expected)}")
+
+
 def descriptor_geometry(path: Path) -> dict[str, object]:
     descriptor = json.loads(path.read_text(encoding="utf-8"))
     descriptor.pop("modelSHA256")
@@ -94,6 +101,8 @@ def run(command: list[str]) -> None:
 
 def rebuild() -> dict[str, object]:
     packages = discover_model_packages()
+    for slug, package in packages.items():
+        require_exact_package_tree(package, SHIPPED_PACKAGE_FILES, label=f"shipped {slug} before rebuild")
     before = {
         slug: {
             "modelSHA256": sha256(package / "assets/primary.usdz"),
@@ -128,8 +137,7 @@ def rebuild() -> dict[str, object]:
         after: dict[str, object] = {}
         for slug, package in packages.items():
             compiled = work / slug
-            if package_tree(compiled) != PACKAGE_FILES:
-                raise ValueError(f"compiler package tree is not exact for {slug}")
+            require_exact_package_tree(compiled, PACKAGE_FILES, label=f"compiler {slug}")
             descriptor = compiled / "assets/primary.model.json"
             if descriptor_geometry(descriptor) != before[slug]["descriptorGeometry"]:
                 raise ValueError(f"geometry or inventory changed while rebuilding {slug}")
@@ -145,6 +153,8 @@ def rebuild() -> dict[str, object]:
                 "descriptorGeometryUnchanged": True,
                 "packageTree": sorted(package_tree(package)),
             }
+        for slug, package in packages.items():
+            require_exact_package_tree(package, SHIPPED_PACKAGE_FILES, label=f"shipped {slug} after rebuild")
         record = {
             "owner": OWNER,
             "command": "rtk python3 -B Tools/HangboardModels/rebuild_all_wood_models.py",
