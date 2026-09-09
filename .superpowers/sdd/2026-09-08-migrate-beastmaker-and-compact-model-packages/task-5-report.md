@@ -82,7 +82,10 @@ materials and diffuse contents. The normalized `[0.5, 0.02]` body probe hit
 unbound body geometry for both boards. This establishes that the export
 geometry supports the test's picking contract and isolates the observed runtime
 defect to node binding; it does not substitute for the pending iOS Simulator
-XCTest run.
+XCTest run. The exact diagnostic script, command/options, outputs, and the
+corrected front-to-back versus reversed-span reconciliation are retained in
+`.context/shaky-rat-task5-diagnostic-reconciliation.md` and the linked
+`.context/shaky-rat-native-occlusion/` packet.
 
 ## Verification
 
