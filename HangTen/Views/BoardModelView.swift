@@ -1,80 +1,88 @@
 import SceneKit
 import SwiftUI
 
-/// Display-only models are app resources, separate from the canonical board packages.
-/// SceneKit supplies exact triangle picking and on-demand rendering on iOS 17.
-/// Keep this bridge isolated so its deprecated rendering API can be replaced independently.
-enum BoardModelIdentity {
-    static let boardID = "metolius.wood-grips-compact-ii"
+/// Identity for a decoded package model. The hash makes replacement assets a
+/// distinct cached source even when a board keeps the same presentation ID.
+struct BoardModelKey: Hashable {
+    let boardID: String
+    let presentationID: String
+    let modelSHA256: String
 }
 
 enum BoardModelAsset {
-    static let boardID = BoardModelIdentity.boardID
-    static var holdIDs: Set<String> {
-        Set(BoardCatalog.packageStore.board(id: boardID)?.holds.map(\.id) ?? [])
-    }
-
-    static func supports(_ board: TrainingBoard, presentation: BoardPresentation) -> Bool {
-        board.id == boardID
-            && board == BoardCatalog.packageStore.board(id: boardID)
-            && presentation == board.defaultPresentation
-            && presentation.id == BoardPresentation.primaryID
-            && presentation.sourcePresentationID == nil
-            && !presentation.isInverted
-            && Set(board.holds.map(\.id)) == holdIDs
-    }
-
-    static func url(in bundle: Bundle = .main) -> URL? {
-        bundle.url(forResource: "wood-grips-compact-ii", withExtension: "usdz", subdirectory: "BoardModels")
-    }
-
-    static func load(url: URL?) -> SCNScene? {
-        // Some SceneKit versions return an empty scene for a missing file.
-        guard let url, url.isFileURL,
-              let values = try? url.resourceValues(forKeys: [.isRegularFileKey]),
-              values.isRegularFile == true else { return nil }
-        return try? SCNScene(url: url, options: [.convertToYUp: true])
-    }
-
-    static func holdID(for node: SCNNode) -> String? {
-        var candidate: SCNNode? = node
-        while let current = candidate {
-            // USD identifiers replace hyphens with underscores. Only the explicitly
-            // registered inventory can map back into a logical app hold.
-            let id = (current.name ?? "").replacingOccurrences(of: "_", with: "-")
-            if holdIDs.contains(id) { return id }
-            candidate = current.parent
+    static func load(media _: BoardModelMedia, packageURL: URL) -> SCNScene? {
+        guard packageURL.isFileURL,
+              let values = try? packageURL.resourceValues(forKeys: [.isRegularFileKey]),
+              values.isRegularFile == true else {
+            return nil
         }
-        return nil
+        // SceneKit can otherwise return an empty scene for a missing asset.
+        return try? SCNScene(url: packageURL, options: [.convertToYUp: true])
     }
 }
 
 @MainActor
 private enum BoardModelCache {
-    // Share the decode across simultaneous cards, but give every view independent
-    // nodes/materials. A failed load is cached too; the package image stays usable.
-    static var loading: Task<SCNScene?, Never>?
+    static var loading: [BoardModelKey: Task<SCNScene?, Never>] = [:]
 
-    static func source() async -> SCNScene? {
-        if let loading { return await loading.value }
-        let url = BoardModelAsset.url()
+    static func source(
+        for key: BoardModelKey,
+        media: BoardModelMedia,
+        packageURL: URL
+    ) async -> SCNScene? {
+        if let task = loading[key] { return await task.value }
         let task = Task.detached(priority: .userInitiated) { () -> SCNScene? in
-            BoardModelAsset.load(url: url)
+            BoardModelAsset.load(media: media, packageURL: packageURL)
         }
-        loading = task
+        loading[key] = task
         return await task.value
     }
 }
 
-/// The fallback stays visible while the USDZ decodes and if its inventory is invalid.
+@MainActor
+enum BoardModelLoader {
+    static func load(
+        board: TrainingBoard,
+        presentation: BoardPresentation,
+        store: BoardPackageStore
+    ) async -> BoardModelScene? {
+        guard case .model(let media) = presentation.media,
+              let packageURL = store.presentationAssetURL(for: board, presentationID: presentation.id) else {
+            return nil
+        }
+        let key = BoardModelKey(
+            boardID: board.id,
+            presentationID: presentation.id,
+            modelSHA256: media.descriptor.modelSHA256
+        )
+        guard let source = await BoardModelCache.source(
+            for: key,
+            media: media,
+            packageURL: packageURL
+        ), !Task.isCancelled else {
+            return nil
+        }
+        return BoardModelScene(source: source, descriptor: media.descriptor)
+    }
+}
+
+/// Task 3 owns the exhaustive raster/model presentation switch. This bridge
+/// keeps its current raster caller compiling while a model is decoded, but its
+/// model path has no board registry or resource fallback.
 struct BoardModelSurface<Fallback: View>: View {
+    enum ResultState {
+        case loading
+        case ready(BoardModelScene)
+        case unavailable
+    }
+
     let board: TrainingBoard
     let presentation: BoardPresentation
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
     let onHoldTap: ((BoardHold) -> Void)?
     @ViewBuilder let fallback: () -> Fallback
-    @State private var model: BoardModelScene?
+    @State private var result: ResultState = .loading
 
     static func hitTestingEnabled(onHoldTap: ((BoardHold) -> Void)?) -> Bool {
         onHoldTap != nil
@@ -82,10 +90,13 @@ struct BoardModelSurface<Fallback: View>: View {
 
     var body: some View {
         Group {
-            if BoardModelAsset.supports(board, presentation: presentation), let model {
+            if case .ready(let model) = result {
                 BoardModelView(
-                    model: model, holds: board.holds,
-                    highlightedHoldIDs: highlightedHoldIDs, highlightMode: highlightMode,
+                    model: model,
+                    boardName: board.name,
+                    holds: board.holds(in: presentation),
+                    highlightedHoldIDs: highlightedHoldIDs,
+                    highlightMode: highlightMode,
                     onHoldTap: onHoldTap
                 )
                 .accessibilityIdentifier("boardModel.3d")
@@ -94,12 +105,31 @@ struct BoardModelSurface<Fallback: View>: View {
                 fallback()
             }
         }
-        .task(id: BoardModelAsset.supports(board, presentation: presentation)) {
-            guard model == nil,
-                  BoardModelAsset.supports(board, presentation: presentation),
-                  let source = await BoardModelCache.source(), !Task.isCancelled else { return }
-            model = BoardModelScene(source: source)
+        .task(id: loadIdentity) {
+            guard case .model = presentation.media else {
+                result = .unavailable
+                return
+            }
+            result = .loading
+            guard let model = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: BoardCatalog.packageStore
+            ), !Task.isCancelled else {
+                if !Task.isCancelled { result = .unavailable }
+                return
+            }
+            result = .ready(model)
         }
+    }
+
+    private var loadIdentity: BoardModelKey? {
+        guard case .model(let media) = presentation.media else { return nil }
+        return BoardModelKey(
+            boardID: board.id,
+            presentationID: presentation.id,
+            modelSHA256: media.descriptor.modelSHA256
+        )
     }
 }
 
@@ -107,25 +137,141 @@ struct BoardModelSurface<Fallback: View>: View {
 final class BoardModelScene {
     let scene = SCNScene()
     let camera = SCNNode()
+    let geometryNodes: [SCNNode]
     private(set) var holdNodes: [String: [SCNNode]] = [:]
+    private var holdIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
     private var lastHighlights: Set<String> = []
     private var lastMode: BoardHighlightMode?
 
-    init?(source: SCNScene) {
-        let model = source.rootNode.clone()
-        var hasUnboundGeometry = false
-        model.enumerateChildNodes { node, _ in
-            guard let geometry = node.geometry else { return }
-            if geometry.materials.isEmpty { hasUnboundGeometry = true }
-            node.geometry = geometry.copy() as? SCNGeometry
-            node.geometry?.materials = geometry.materials.compactMap { $0.copy() as? SCNMaterial }
-            guard let id = BoardModelAsset.holdID(for: node) else { return }
-            holdNodes[id, default: []].append(node)
-            originalMaterials[ObjectIdentifier(node)] = node.geometry?.materials
+    init?(source: SCNScene, descriptor: BoardModelDescriptor) {
+        let modelRoot = source.rootNode.clone()
+        let descriptorIDs = descriptor.nodes.map(\.nodeID)
+        guard !descriptorIDs.isEmpty,
+              Set(descriptorIDs).count == descriptorIDs.count,
+              Set(descriptorIDs).count == descriptor.nodes.count else {
+            return nil
         }
-        guard !hasUnboundGeometry, Set(holdNodes.keys) == BoardModelAsset.holdIDs else { return nil }
-        scene.rootNode.addChildNode(model)
+
+        let descriptorsByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
+        guard descriptorsByNodeID.count == descriptor.nodes.count else { return nil }
+
+        var geometryByNodeID: [String: SCNNode] = [:]
+        var clonedGeometryNodes: [SCNNode] = []
+        var invalidGeometry = false
+        modelRoot.enumerateChildNodes { node, _ in
+            guard let geometry = node.geometry else { return }
+            guard let nodeID = Self.nodeID(for: node, beneath: modelRoot),
+                  geometryByNodeID[nodeID] == nil,
+                  !geometry.materials.isEmpty,
+                  geometry.sources(for: .vertex).contains(where: { $0.vectorCount > 0 }),
+                  let copiedGeometry = geometry.copy() as? SCNGeometry else {
+                invalidGeometry = true
+                return
+            }
+            let copiedMaterials = geometry.materials.compactMap { $0.copy() as? SCNMaterial }
+            guard copiedMaterials.count == geometry.materials.count else {
+                invalidGeometry = true
+                return
+            }
+            copiedGeometry.materials = copiedMaterials
+            node.geometry = copiedGeometry
+            geometryByNodeID[nodeID] = node
+            clonedGeometryNodes.append(node)
+        }
+
+        guard !invalidGeometry,
+              Set(geometryByNodeID.keys) == Set(descriptorIDs) else {
+            return nil
+        }
+
+        var boundHoldNodes: [String: [SCNNode]] = [:]
+        var boundHoldIDsByNode: [ObjectIdentifier: String] = [:]
+        var originals: [ObjectIdentifier: [SCNMaterial]] = [:]
+        for (nodeID, node) in geometryByNodeID {
+            guard let binding = descriptorsByNodeID[nodeID] else { return nil }
+            switch binding.role {
+            case .body:
+                guard binding.holdID == nil else { return nil }
+            case .hold:
+                guard let holdID = binding.holdID, !holdID.isEmpty else { return nil }
+                boundHoldNodes[holdID, default: []].append(node)
+                boundHoldIDsByNode[ObjectIdentifier(node)] = holdID
+                originals[ObjectIdentifier(node)] = node.geometry?.materials
+            }
+        }
+
+        guard Set(boundHoldNodes.keys) == Set(descriptor.holds.keys),
+              descriptor.holds.allSatisfy({ holdID, hold in
+                  Set(hold.nodeIDs) == Set(
+                      descriptor.nodes.compactMap { node in
+                          node.role == .hold && node.holdID == holdID ? node.nodeID : nil
+                      }
+                  )
+              }) else {
+            return nil
+        }
+
+        geometryNodes = clonedGeometryNodes
+        holdNodes = boundHoldNodes
+        holdIDsByNode = boundHoldIDsByNode
+        originalMaterials = originals
+        scene.rootNode.addChildNode(modelRoot)
+        configureCameraAndLighting()
+    }
+
+    func holdID(for node: SCNNode) -> String? {
+        var candidate: SCNNode? = node
+        while let current = candidate {
+            if let holdID = holdIDsByNode[ObjectIdentifier(current)] { return holdID }
+            candidate = current.parent
+        }
+        return nil
+    }
+
+    func frame(in size: CGSize) {
+        guard size.width > 0, size.height > 0 else { return }
+        camera.camera?.orthographicScale = max(0.085, 0.335 * size.height / size.width)
+    }
+
+    func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
+        let validIDs = ids.intersection(Set(holdNodes.keys))
+        guard validIDs != lastHighlights || mode != lastMode else { return }
+        let color = UIColor(mode == .active ? Color.holdActive : Color.restBlue)
+        for (id, nodes) in holdNodes {
+            for node in nodes {
+                let originals = originalMaterials[ObjectIdentifier(node)] ?? []
+                if validIDs.contains(id) {
+                    node.geometry?.materials = originals.compactMap { original in
+                        guard let material = original.copy() as? SCNMaterial else { return nil }
+                        material.diffuse.contents = color
+                        material.emission.contents = color.withAlphaComponent(0.18)
+                        material.emission.intensity = 0.18
+                        material.roughness.contents = 0.8
+                        return material
+                    }
+                } else {
+                    node.geometry?.materials = originals
+                }
+            }
+        }
+        lastHighlights = validIDs
+        lastMode = mode
+    }
+
+    private static func nodeID(for node: SCNNode, beneath root: SCNNode) -> String? {
+        var names: [String] = []
+        var candidate: SCNNode? = node
+        while let current = candidate, current !== root {
+            guard let name = current.name, !name.isEmpty, !name.contains("/") else { return nil }
+            names.append(name)
+            candidate = current.parent
+        }
+        guard candidate === root else { return nil }
+        return names.reversed().joined(separator: "/")
+    }
+
+    private func configureCameraAndLighting() {
         camera.camera = SCNCamera()
         camera.camera?.usesOrthographicProjection = true
         camera.camera?.zNear = 0.01
@@ -160,40 +306,11 @@ final class BoardModelScene {
         key.look(at: SCNVector3(0, 0.08, 0))
         scene.rootNode.addChildNode(key)
     }
-
-    func frame(in size: CGSize) {
-        guard size.width > 0, size.height > 0 else { return }
-        camera.camera?.orthographicScale = max(0.085, 0.335 * size.height / size.width)
-    }
-
-    func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
-        let validIDs = ids.intersection(BoardModelAsset.holdIDs)
-        guard validIDs != lastHighlights || mode != lastMode else { return }
-        let color = UIColor(mode == .active ? Color.holdActive : Color.restBlue)
-        for (id, nodes) in holdNodes {
-            for node in nodes {
-                let originals = originalMaterials[ObjectIdentifier(node)] ?? []
-                if validIDs.contains(id) {
-                    node.geometry?.materials = originals.compactMap { original in
-                        guard let material = original.copy() as? SCNMaterial else { return nil }
-                        material.diffuse.contents = color
-                        material.emission.contents = color.withAlphaComponent(0.18)
-                        material.emission.intensity = 0.18
-                        material.roughness.contents = 0.8
-                        return material
-                    }
-                } else {
-                    node.geometry?.materials = originals
-                }
-            }
-        }
-        lastHighlights = validIDs
-        lastMode = mode
-    }
 }
 
 private struct BoardModelView: UIViewRepresentable {
     let model: BoardModelScene
+    let boardName: String
     let holds: [BoardHold]
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
@@ -215,6 +332,7 @@ private struct BoardModelView: UIViewRepresentable {
 
     func updateUIView(_ view: BoardModelSCNView, context: Context) {
         view.display(model)
+        view.boardName = boardName
         view.holds = holds
         view.onHoldTap = onHoldTap
         view.highlightedHoldIDs = highlightedHoldIDs
@@ -244,6 +362,7 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
 
 final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var model: BoardModelScene?
+    var boardName = "hangboard"
     var holds: [BoardHold] = []
     var highlightedHoldIDs: Set<String> = []
     var onHoldTap: ((BoardHold) -> Void)?
@@ -268,8 +387,6 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     }
 
     nonisolated func renderer(_ renderer: any SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        // projectPoint uses the renderer's committed camera projection, which can
-        // still be the previous layout's projection during layoutSubviews.
         DispatchQueue.main.async { [weak self] in
             guard let self, self.needsAccessibilityProjection else { return }
             self.needsAccessibilityProjection = false
@@ -278,8 +395,12 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     }
 
     @objc func selectHold(_ recognizer: UITapGestureRecognizer) {
-        guard let hit = hitTest(recognizer.location(in: self), options: [.searchMode: SCNHitTestSearchMode.closest.rawValue]).first,
-              let id = BoardModelAsset.holdID(for: hit.node),
+        // CPU-only nearest-hit regressions require this commit before SceneKit
+        // traverses newly cloned geometry.
+        SCNTransaction.flush()
+        guard let model,
+              let hit = hitTest(recognizer.location(in: self), options: [.searchMode: SCNHitTestSearchMode.closest.rawValue]).first,
+              let id = model.holdID(for: hit.node),
               let hold = holds.first(where: { $0.id == id }) else { return }
         onHoldTap?(hold)
     }
@@ -287,7 +408,7 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     func updateAccessibility() {
         guard let onHoldTap, let model else {
             isAccessibilityElement = true
-            accessibilityLabel = "Wood Grips Compact II hangboard"
+            accessibilityLabel = "\(boardName) hangboard"
             accessibilityValue = holds.filter { highlightedHoldIDs.contains($0.id) }.map(\.name).joined(separator: ", ")
             accessibilityElements = nil
             holdAccessibilityElements.removeAll()
