@@ -1,0 +1,553 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "jug-left": {
+      "center": [
+        0.121551725,
+        0.878868043
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.2,
+          1.0
+        ],
+        "min": [
+          0.04310345,
+          0.757736086
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_024"
+      ]
+    },
+    "jug-right": {
+      "center": [
+        0.878448296,
+        0.878868043
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.956896592,
+          1.0
+        ],
+        "min": [
+          0.8,
+          0.757736086
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_025"
+      ]
+    },
+    "pocket-bottom-inner-left": {
+      "center": [
+        0.431034508,
+        0.146666678
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.488448311,
+          0.238666673
+        ],
+        "min": [
+          0.373620705,
+          0.054666682
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_026"
+      ]
+    },
+    "pocket-bottom-inner-right": {
+      "center": [
+        0.568965531,
+        0.146666678
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.626379321,
+          0.238666673
+        ],
+        "min": [
+          0.51155174,
+          0.054666682
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_027"
+      ]
+    },
+    "pocket-bottom-mid-left": {
+      "center": [
+        0.317241389,
+        0.146666678
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.360000015,
+          0.238666673
+        ],
+        "min": [
+          0.274482763,
+          0.054666682
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_028"
+      ]
+    },
+    "pocket-bottom-mid-right": {
+      "center": [
+        0.682758637,
+        0.146666678
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.725517263,
+          0.238666673
+        ],
+        "min": [
+          0.64000001,
+          0.054666682
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_029"
+      ]
+    },
+    "pocket-bottom-outer-left": {
+      "center": [
+        0.181034482,
+        0.146666678
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.263448273,
+          0.238666673
+        ],
+        "min": [
+          0.098620692,
+          0.054666682
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_030"
+      ]
+    },
+    "pocket-bottom-outer-right": {
+      "center": [
+        0.818965556,
+        0.146666678
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.901379385,
+          0.238666673
+        ],
+        "min": [
+          0.736551727,
+          0.054666682
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_031"
+      ]
+    },
+    "pocket-middle-center": {
+      "center": [
+        0.500000026,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.580689687,
+          0.538666673
+        ],
+        "min": [
+          0.419310364,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_032"
+      ]
+    },
+    "pocket-middle-inner-left": {
+      "center": [
+        0.34655173,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.404827591,
+          0.538666673
+        ],
+        "min": [
+          0.288275869,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_033"
+      ]
+    },
+    "pocket-middle-inner-right": {
+      "center": [
+        0.653448309,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.711724183,
+          0.538666673
+        ],
+        "min": [
+          0.595172435,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_034"
+      ]
+    },
+    "pocket-middle-mid-left": {
+      "center": [
+        0.232758624,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.274655179,
+          0.538666673
+        ],
+        "min": [
+          0.190862068,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_035"
+      ]
+    },
+    "pocket-middle-mid-right": {
+      "center": [
+        0.767241415,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.809137958,
+          0.538666673
+        ],
+        "min": [
+          0.725344872,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_036"
+      ]
+    },
+    "pocket-middle-outer-left": {
+      "center": [
+        0.101724139,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.177241379,
+          0.538666673
+        ],
+        "min": [
+          0.026206898,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_037"
+      ]
+    },
+    "pocket-middle-outer-right": {
+      "center": [
+        0.89827591,
+        0.446666672
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.973793173,
+          0.538666673
+        ],
+        "min": [
+          0.822758647,
+          0.35466667
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_038"
+      ]
+    },
+    "pocket-top-left": {
+      "center": [
+        0.431034508,
+        0.700000024
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.488448311,
+          0.792000014
+        ],
+        "min": [
+          0.373620705,
+          0.608000035
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_039"
+      ]
+    },
+    "pocket-top-outer-left": {
+      "center": [
+        0.108620692,
+        0.699993394
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.184137932,
+          0.791986752
+        ],
+        "min": [
+          0.033103451,
+          0.608000035
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_040"
+      ]
+    },
+    "pocket-top-outer-right": {
+      "center": [
+        0.891379344,
+        0.700000024
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.966896607,
+          0.792000014
+        ],
+        "min": [
+          0.815862081,
+          0.608000035
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_041"
+      ]
+    },
+    "pocket-top-right": {
+      "center": [
+        0.568965531,
+        0.700000024
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.626379321,
+          0.792000014
+        ],
+        "min": [
+          0.51155174,
+          0.608000035
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_042"
+      ]
+    },
+    "sloper-35-left": {
+      "center": [
+        0.285775865,
+        0.854215216
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.37155173,
+          1.0
+        ],
+        "min": [
+          0.2,
+          0.708430431
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_043"
+      ]
+    },
+    "sloper-35-right": {
+      "center": [
+        0.714224135,
+        0.854215216
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.8,
+          1.0
+        ],
+        "min": [
+          0.62844827,
+          0.708430431
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_044"
+      ]
+    },
+    "sloper-center": {
+      "center": [
+        0.5,
+        0.884921739
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.62844827,
+          1.0
+        ],
+        "min": [
+          0.37155173,
+          0.769843478
+        ]
+      },
+      "nodeIDs": [
+        "BeastmakerBody_045"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.579999983,
+      0.150000006,
+      0.057999995
+    ],
+    "min": [
+      0.0,
+      0.0,
+      -1.1e-08
+    ]
+  },
+  "modelSHA256": "e15bae1d9664b834ee68853cecba47076617bdd382458b26700d18e321e146e3",
+  "nodes": [
+    {
+      "nodeID": "BeastmakerBody_023",
+      "role": "body"
+    },
+    {
+      "holdID": "jug-left",
+      "nodeID": "BeastmakerBody_024",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-right",
+      "nodeID": "BeastmakerBody_025",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-bottom-inner-left",
+      "nodeID": "BeastmakerBody_026",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-bottom-inner-right",
+      "nodeID": "BeastmakerBody_027",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-bottom-mid-left",
+      "nodeID": "BeastmakerBody_028",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-bottom-mid-right",
+      "nodeID": "BeastmakerBody_029",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-bottom-outer-left",
+      "nodeID": "BeastmakerBody_030",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-bottom-outer-right",
+      "nodeID": "BeastmakerBody_031",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-center",
+      "nodeID": "BeastmakerBody_032",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-inner-left",
+      "nodeID": "BeastmakerBody_033",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-inner-right",
+      "nodeID": "BeastmakerBody_034",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-mid-left",
+      "nodeID": "BeastmakerBody_035",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-mid-right",
+      "nodeID": "BeastmakerBody_036",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-outer-left",
+      "nodeID": "BeastmakerBody_037",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-middle-outer-right",
+      "nodeID": "BeastmakerBody_038",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-top-left",
+      "nodeID": "BeastmakerBody_039",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-top-outer-left",
+      "nodeID": "BeastmakerBody_040",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-top-outer-right",
+      "nodeID": "BeastmakerBody_041",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-top-right",
+      "nodeID": "BeastmakerBody_042",
+      "role": "hold"
+    },
+    {
+      "holdID": "sloper-35-left",
+      "nodeID": "BeastmakerBody_043",
+      "role": "hold"
+    },
+    {
+      "holdID": "sloper-35-right",
+      "nodeID": "BeastmakerBody_044",
+      "role": "hold"
+    },
+    {
+      "holdID": "sloper-center",
+      "nodeID": "BeastmakerBody_045",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}
