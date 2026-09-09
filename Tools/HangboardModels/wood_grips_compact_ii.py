@@ -63,6 +63,13 @@ wood = material("wood_body_material", (.69, .49, .28))
 hold_ids = [h["id"] for h in json.loads((ROOT / "Hangboards/metolius-wood-grips-compact-ii/board.json").read_text())["holds"]]
 hold_mats = {name: material(name, (.69, .49, .28)) for name in hold_ids}
 
+# Only the 610 × 157 mm face and contact-specific depth labels are sourced.
+# The approved Bergfreunde oblique supports a substantial rounded top section,
+# not a measured overall thickness. 64 mm is an independent display estimate.
+BODY_DEPTH_MM = 64.0
+SLOPER_CONTACT_DEPTH_MM = 56.0  # Official Compact diagram #2 and #9 only.
+SLOPER_BACK_START_MM = BODY_DEPTH_MM - SLOPER_CONTACT_DEPTH_MM
+
 # Cubic silhouette spans are deliberately drawn from the manufacturer photograph.
 # Their control points, roundover radius and all unseen sections are estimates.
 def cubic(p0, p1, p2, p3, steps=8):
@@ -104,10 +111,14 @@ def top_profile(x,h,d):
     if h<=132:
         return h
     mirrored_x=min(x,610-x)
-    jug_t=max(0,(d-10)/46)
-    jug_drop=14*(h-132)/25*(1-math.sqrt(max(0,1-jug_t*jug_t)))
-    flat_drop=5*(h-132)/14*d/56
-    center_drop=18*(h-132)/19*(1-math.sqrt(max(0,1-(d/56)**2)))
+    # The outer jugs have a broad plateau followed by a continuous front roll.
+    # Flat slopers have a shallow pitched plane; the central sloper has a
+    # continuous convex section. Heights, pitch and roll radii are estimates.
+    jug_t=max(0,min(1,(d-(BODY_DEPTH_MM-34))/34))
+    sloper_t=max(0,min(1,(d-SLOPER_BACK_START_MM)/SLOPER_CONTACT_DEPTH_MM))
+    jug_drop=18*(h-132)/25*(1-math.sqrt(max(0,1-jug_t*jug_t)))
+    flat_drop=8*(h-132)/14*sloper_t
+    center_drop=16*(h-132)/19*(1-math.sqrt(max(0,1-sloper_t*sloper_t)))
     jug_mix=smoothstep(99,113,mirrored_x)
     center_mix=smoothstep(185,204,mirrored_x)
     drop=(jug_drop*(1-jug_mix)+flat_drop*jug_mix)*(1-center_mix)+center_drop*center_mix
@@ -115,8 +126,8 @@ def top_profile(x,h,d):
 
 # Angular sampling resolves the near-vertical ends of circular rolls. Front
 # and back roundovers are actual geometry, not shading or a global bevel.
-depth_rings=sorted(set([0,.25,.6,1.2,2,3,5,7,10,14,20,26,32,38,42,46,49]
-                     + [56*math.sin(i*math.pi/2/40) for i in range(1,41)]))
+depth_rings=sorted(set([0,.25,.6,1.2,2,3,5,7,8,10,14,20,26,30,34,40,46,52]
+                     + [BODY_DEPTH_MM*math.sin(i*math.pi/2/48) for i in range(1,49)]))
 verts=[]
 for d in depth_rings:
     for (x,h),(nx,nh) in zip(outline,inward):
@@ -124,12 +135,21 @@ for d in depth_rings:
         # 2 mm so their inward offset does not cross the shoulder curvature.
         radius=7-5*smoothstep(15,40,h)
         inset=(2-math.sqrt(max(0,4-(d-2)**2)) if d<2 else
-               radius-math.sqrt(max(0,radius**2-(d-(56-radius))**2))
-               if d>56-radius else 0)
+               radius-math.sqrt(max(0,radius**2-(d-(BODY_DEPTH_MM-radius))**2))
+               if d>BODY_DEPTH_MM-radius else 0)
         verts.append(xyz(x+nx*inset,top_profile(x,h,d)+nh*inset,d))
 faces=[tuple(reversed(range(n))),tuple(range((len(depth_rings)-1)*n,len(depth_rings)*n))]
-faces += [(j*n+i,j*n+(i+1)%n,(j+1)*n+(i+1)%n,(j+1)*n+i)
-          for j in range(len(depth_rings)-1) for i in range(n)]
+# Choose matching reflected diagonals for the authored curved body strips.
+# Across sloper/jug blends these quads are not planar. Letting a renderer pick
+# the same winding-relative diagonal on both sides makes different physical
+# facets despite identical mirrored control points.
+for j in range(len(depth_rings)-1):
+    for i in range(n):
+        a,b,c,d = j*n+i,j*n+(i+1)%n,(j+1)*n+(i+1)%n,(j+1)*n+i
+        if outline[i][0]+outline[(i+1)%n][0] <= 610:
+            faces += [(a,b,c),(a,c,d)]
+        else:
+            faces += [(a,b,d),(b,c,d)]
 body=mesh("Wood Grips Compact II",verts,faces)
 active(body)
 bpy.ops.object.mode_set(mode="EDIT")
@@ -180,13 +200,13 @@ def capsule(cx, cy, width, height, radius=None):
 def recess(name, cx, cy, width, height, depth, radius=None):
     # Two tangent quarter-circle fillets: back-to-wall and wall-to-front.
     # Shelves get the visibly fuller rolled rail radius seen in the photograph.
-    back_r=6.0
+    back_r=6.0 if name.startswith("edge-") else 4.5
     mouth_r=6.0 if name.startswith("edge-") else 3.5
-    rings=[(56-depth+back_r*(1-math.cos(i*math.pi/2/12)),
+    rings=[(BODY_DEPTH_MM-depth+back_r*(1-math.cos(i*math.pi/2/12)),
             back_r*(1-math.sin(i*math.pi/2/12))) for i in range(13)]
-    rings += [(56-mouth_r+mouth_r*math.sin(i*math.pi/2/12),
+    rings += [(BODY_DEPTH_MM-mouth_r+mouth_r*math.sin(i*math.pi/2/12),
                -mouth_r*(1-math.cos(i*math.pi/2/12))) for i in range(13)]
-    rings += [(76,-mouth_r)]
+    rings += [(BODY_DEPTH_MM+20,-mouth_r)]
     profiles = [capsule(cx,cy,width-inset*2,height-inset*2,
                         max(1,(radius if radius else min(width,height)/2)-inset))
                 for _,inset in rings]
@@ -205,8 +225,12 @@ def recess(name, cx, cy, width, height, depth, radius=None):
 
 
 # Explicit pocket layouts read visually from the official Compact photograph.
-# The lower row is slightly inset to follow the board's tapered ends.
-for depth, cy, outer, inner, outer_w, inner_w in [(29,88,151,221,66,46),(19,29,161,227,66,46)]:
+# The lower row is slightly inset to follow the board's tapered ends. Its
+# narrower mouths leave continuous wood between every adjacent pair, including
+# both two-finger pockets and the centre pocket. All aperture sizes/positions
+# are authored estimates; the 29/19 mm contact depth labels remain source facts.
+POCKET_LAYOUT = [(29,88,151,221,66,46),(19,29,161,224.5,62,39)]
+for depth, cy, outer, inner, outer_w, inner_w in POCKET_LAYOUT:
     for side, sign in [("left",1),("right",-1)]:
         x=lambda v: v if sign==1 else 610-v
         recess(f"pocket-{depth}-three-{side}",x(outer),cy,outer_w,25,depth)
@@ -214,7 +238,9 @@ for depth, cy, outer, inner, outer_w, inner_w in [(29,88,151,221,66,46),(19,29,1
     recess(f"pocket-{depth}-four-center",305,cy,96,25,depth)
 
 # Outer edges open through the side of the board, as shown in both references.
-for depth,cy,w,h,cx in [(29,98,131,48,39),(19,34,139,43,43)]:
+# Their inner ends leave at least 10 mm of wood before the outer pocket mouths;
+# both approved views show a complete ligament at this stepped transition.
+for depth,cy,w,h,cx in [(29,98,119,48,39),(19,34,131,43,43)]:
     for side,x in [("left",cx),("right",610-cx)]:
         recess(f"edge-{depth}-{side}",x,cy,w,h,depth,8)
 
@@ -347,12 +373,14 @@ for obj,modifier in usd_triangulators:
     obj.modifiers.remove(modifier)
 
 report={"owner":ROOT.name,"model":"metolius.wood-grips-compact-ii","units":"meters",
-    "source_dimensions_mm":{"width":610,"height":157},"display_estimate_depth_mm":56,
+    "source_dimensions_mm":{"width":610,"height":157},
+    "display_estimate_body_depth_mm":BODY_DEPTH_MM,
+    "source_sloper_contact_depth_mm":SLOPER_CONTACT_DEPTH_MM,
     "hold_ids":sorted(o.name for o in model if o.name in hold_ids),
     "hold_count":sum(o.name in hold_ids for o in model),
     "mesh_count":len(model),"triangles":sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in model),
     "texture_resolution":[2048,2048],"estimated_geometry":True,
-    "geometry_revision":3,"body_depth_rings":len(depth_rings),
+    "geometry_revision":4,"body_depth_rings":len(depth_rings),
     "mounting_holes_omitted":True,"mounting_hole_count":0,
     "pocket_fillet_segments":12,"silhouette_cubic_spans":24,
     "limitations":["Display only, not manufacturing geometry","Widths, placement, radii, side and back profiles estimated from manufacturer images","Six physical mounting holes deliberately omitted at user request for app display","Generated exports require validation and an explicit app bundle refresh; canonical 2D paths remain in use for editor and fallback"]}
