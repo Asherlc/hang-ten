@@ -1,8 +1,9 @@
 # Task 2 — Astra Beastmaker geometry, human-feedback correction round 2
 
 Status: human-rejected first pass corrected in physical geometry and verified
-through actual USDZ export; **renewed human visual approval and native
-SceneKit/app validation remain pending**. No live package was promoted. This
+through actual USDZ export; **corrected actual-USDZ fidelity was reviewed and
+explicitly approved by the human after correction commit `c3a15af5`; native
+SceneKit/app validation remains pending**. No live package was promoted. This
 report covers Beastmaker only.
 
 ## Evidence received and inspected
@@ -106,7 +107,12 @@ Clay diagnostic detail exposes tessellated rim edges more strongly than the
 material views; no camera-based concealment or source-to-export shape repair
 was used. A direct comparison of the archived/current JSON confirmed identical
 camera definitions, render engines/settings, lights and wood image/material.
-The remaining fidelity judgment belongs to the human gate.
+
+After correction commit `c3a15af5`, the human reviewed the corrected actual-
+USDZ front, three-quarter and clay-detail renders in chat and explicitly
+approved their fidelity. This approval records the corrected display geometry
+and actual-export appearance; it does not substitute for native
+SceneKit/app validation or package promotion.
 
 Only the generator and this report were edited in this round. The existing
 standalone verifier was invoked without modification; no test file was
@@ -187,7 +193,9 @@ and the complete repeat passes. None of these corrections changes shape.
 
 ## Remaining gate and resource cleanup
 
-Human visual fidelity approval is still required before package promotion.
+Human visual fidelity approval is recorded for the corrected actual-USDZ
+renders after commit `c3a15af5`; native SceneKit/app validation is still
+required before package promotion.
 The shape is display geometry, not manufacturing CAD. Exact cavity sections,
 rear profile, radii and physical per-ID depth mapping remain estimates; the
 generic material does not claim species/grain fidelity. SceneKit/importer
