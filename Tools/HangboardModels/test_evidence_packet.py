@@ -132,6 +132,16 @@ def test_requires_manufacturer_primary_sources(tmp_path: Path) -> None:
         validate_evidence_packet(packet)
 
 
+def test_rejects_search_snippet_url_labeled_as_manufacturer_source(tmp_path: Path) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    payload["primarySources"][0]["url"] = "https://www.google.com/search?q=wood+grips"  # type: ignore[index]
+    _rewrite(packet, payload)
+
+    with pytest.raises(ValueError, match="manufacturer source URL must not be a search result"):
+        validate_evidence_packet(packet)
+
+
 def test_rejects_duplicate_retained_path_across_manufacturer_and_commerce_sources(
     tmp_path: Path,
 ) -> None:

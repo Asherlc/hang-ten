@@ -64,19 +64,19 @@ Before Task 5’s first XCTest command, create one simulator named `Hang Ten Pas
 
 - [ ] **Step 1: Create packet validation failure fixtures**
 
-Create a Beastmaker packet with only a search snippet for `580 × 150` and a Compact packet with an unsnapshotted retailer image. Each must be rejected by the existing packet CLI; write the rejected packet paths and errors in the evidence brief’s audit log rather than preserving them as approved data.
+Create a Beastmaker packet whose retained search-result snippet and matching hash are labeled as a manufacturer source for `580 × 150`, and a Compact packet with an unsnapshotted retailer image. Each must be rejected by the packet CLI; write the rejected packet paths and errors in the evidence brief’s audit log rather than preserving them as approved data.
 
 - [ ] **Step 2: Run packet validation and confirm failure**
 
 Run: `rtk proxy python3 -B Tools/HangboardModels/validate_evidence_packet.py .context/shaky-rat-beastmaker-1000/rejected-snippet-packet.json`
 
-Expected: exit 1 stating a manufacturer source snapshot is required.
+Expected: exit 2 stating that a manufacturer source URL must not be a search result. The Compact unsnapshotted-retailer fixture also exits 2 with the retained-source error.
 
 - [ ] **Step 3: Gather first-party packets, then authorized-commerce gaps**
 
 For Beastmaker retain snapshots/hashes of the current exact manufacturer product page `https://www.beastmaker.co.uk/products/beastmaker-1000-series`, manufacturer Beech/shared-layout page `https://www.beastmaker.co.uk/products/beastmaker-1000-beech`, and official front media `https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068`. Record `en-GB`, retrieval/revision date, face `580 × 150 mm`, 22-ID inventory ruling, 58 mm qualified depth ruling, current Tulip `5 mm` conflict, generic pale wood, 17 cavity/three sloper/two jug visual inventory, unknown cavity sections/radii/back profile, and omitted hardware.
 
-For Compact retain snapshots/hashes of the current Metolius product page `https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards`, official product photo `https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000`, and official depth diagram `https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000`. Record 610 × 157 mm, the lower Compact diagram (not upper Deluxe), 19 logical IDs, qualified 56 mm display thickness, unknown apertures/profiles/back, and omitted hardware. Add authorized retailer/distributor entries only when they fill a cited missing manufacturer fact; no reviewer/forum/AI claim becomes a sourced fact.
+For Compact retain snapshots/hashes of the current Metolius product page `https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards`, official product photo `https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000`, and official depth diagram `https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000`. Record 610 × 157 mm; the lower Compact diagram (not upper Deluxe); its #2 56 mm flat-sloper and #9 56 mm round-sloper callouts; and the exact 19-ID numbered mapping. Do not treat 56 mm as overall board/body/display thickness: physical Compact body Z/depth is source-unresolved, and any existing model depth is estimated authored geometry. Record unknown apertures/profiles/back and omitted hardware. Add authorized retailer/distributor entries only when they fill a cited missing manufacturer fact; no reviewer/forum/AI claim becomes a sourced fact.
 
 - [ ] **Step 4: Validate packets and request human evidence approval**
 

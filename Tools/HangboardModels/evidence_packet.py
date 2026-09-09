@@ -40,6 +40,14 @@ _PROPOSAL_KEYS = frozenset(
 )
 _HEX_SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 _LOCALE = re.compile(r"^[a-z]{2}(?:-[A-Z]{2})?$")
+_SEARCH_RESULT_HOSTS = frozenset(
+    {
+        "google.com",
+        "bing.com",
+        "duckduckgo.com",
+        "search.yahoo.com",
+    }
+)
 _NUMERIC_SHAPE_PRESCRIPTION = re.compile(
     r"(?:\b(?:radius|radii|section|profile|contour|depth|width|height)\b[^\n]{0,32}"
     r"\d+(?:\.\d+)?\s*(?:mm|cm|in)?|"
@@ -227,8 +235,11 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
                 raise ValueError("primarySources may contain only manufacturer sources")
             raise ValueError("commerceSources may contain only commerce sources")
         url = raw.get("url")
-        if not isinstance(url, str) or urlparse(url).scheme != "https" or not urlparse(url).netloc:
+        parsed_url = urlparse(url) if isinstance(url, str) else None
+        if not isinstance(url, str) or parsed_url is None or parsed_url.scheme != "https" or not parsed_url.netloc:
             raise ValueError("source url must be HTTPS")
+        if expected_tier == "manufacturer" and _is_search_result_url(parsed_url):
+            raise ValueError("manufacturer source URL must not be a search result")
         retailer: str | None = None
         snapshot_sha256: str | None = None
         if expected_tier == "commerce":
@@ -250,6 +261,14 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
             )
         )
     return sources
+
+
+def _is_search_result_url(parsed_url: Any) -> bool:
+    host = parsed_url.hostname.casefold() if parsed_url.hostname else ""
+    return (
+        host in _SEARCH_RESULT_HOSTS
+        or any(host.endswith(f".{search_host}") for search_host in _SEARCH_RESULT_HOSTS)
+    )
 
 
 def _validate_sha256(value: Any, field: str) -> None:
