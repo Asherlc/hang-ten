@@ -1,5 +1,6 @@
 import SceneKit
 import SwiftUI
+import UIKit
 import XCTest
 @testable import HangTen
 
@@ -18,6 +19,30 @@ final class BoardModelTests: XCTestCase {
             for: .ready,
             onHoldTap: { _ in }
         ))
+    }
+
+    func testModelAccessibilityEnumeratesOnlyDescriptorBoundHolds() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display()
+        ))
+        let boundHold = BoardHold(id: "left", name: "Bound left", kind: .edge)
+        let unboundHold = BoardHold(id: "not-in-descriptor", name: "Unbound", kind: .edge)
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+
+        view.display(model)
+        view.holds = [boundHold, unboundHold]
+        view.onHoldTap = { _ in }
+        view.updateAccessibility()
+
+        let elements = try XCTUnwrap(view.accessibilityElements as? [UIAccessibilityElement])
+        XCTAssertEqual(elements.compactMap(\.accessibilityIdentifier), ["boardModel.hold.left"])
+        XCTAssertEqual(elements.compactMap(\.accessibilityLabel), ["Bound left"])
     }
 
     // This catches a renderer that accepts names by suffix, normalization, or
