@@ -77,6 +77,8 @@ Inspect [BoardModelView](../../../HangTen/Views/BoardModelView.swift), package l
 
 Keep asynchronous cached loading, independent cloned materials, scene/camera rebinding on identity changes, stable accessibility elements, and on-demand rendering. Use head-on orthographic app framing with lighting that reveals recess depth. Match preview/rest and active highlight semantics; restore wood when cleared.
 
+For a display-only 3D model (`onHoldTap == nil`, or the equivalent non-interactive configuration) embedded in an enclosing tappable SwiftUI card or plain `Button`, disabling model hit testing alone does not establish the parent’s tappable shape. Give the enclosing label/content an explicit hit shape covering the rendered model, and physically verify that a tap on the model surface triggers the parent. Keep detail-screen interactive model picking unchanged and verify it separately; nested overlay controls, such as favorite buttons, retain priority and receive a focused interaction check.
+
 ## Verify, retain, stop
 
 Copy the reviewed asset into app resources and compare SHA-256 hashes. Verify the migrated package no longer ships or references the target's raster presentation or canonical 2D hold paths. On the first migration, use `validate-hang-ten-ios` to inspect normal/highlighted portrait and landscape views, physically tap every hold, and check preview, active, clearing, reappearance, and the explicit unavailable/error state. Tests complement visual review.
