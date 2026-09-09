@@ -30,6 +30,32 @@ attached to cited source-backed claims/metadata. Unknowns may name qualitative
 topics such as `cavity sections`, `radii`, and `back profile`; shape authoring
 belongs to the later Astra stage.
 
+## Deterministic package compiler
+
+After geometry has been authored and reviewed, compile any tagged board model
+with Blender 5.2:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/compile_model_package.py -- \
+  --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
+  --output-directory PATH/compiled-package
+```
+
+Every authored object must be a mesh with `role` set to `body` or `hold`;
+hold meshes also carry a `hold_id` present in `board.json`'s logical inventory.
+The compiler reads only `holds[].id`, so it does not depend on legacy raster
+geometry. It rejects incomplete tags, non-mesh objects, inventory mismatches,
+empty geometry, changed round-trip bindings, missing imported image materials,
+non-triangular imported faces, and physical-bounds drift above one micrometre.
+
+The compiler does not repair or redesign geometry. It makes disposable export
+copies, triangulates only those copies, exports a Y-up USDZ, reimports that
+actual artifact, and derives the `hang-ten-board-v1` descriptor from imported
+vertices. A successful new output directory contains exactly
+`assets/primary.usdz` and `assets/primary.model.json`; generated bounds and
+centers are sorted, hash-bound, and read-only.
+
 This is an editable 3D display asset with a second-pass curvature refinement for Hang Ten. It recreates the
 Metolius Wood Grips Compact II's two rows, tapered body, true carved recesses,
 outer shelves, and top contacts. Mounting holes are deliberately omitted at the

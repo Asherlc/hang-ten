@@ -8,6 +8,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
+import compile_model_package as model_compiler
 from model_descriptor import (
     FacePlaneAABB,
     HoldDescriptorV1,
@@ -18,12 +19,163 @@ from model_descriptor import (
 )
 
 
+class FakeSceneObject(dict[str, object]):
+    def __init__(
+        self,
+        name: str,
+        *,
+        object_type: str = "MESH",
+        role: str | None = None,
+        hold_id: str | None = None,
+    ) -> None:
+        super().__init__()
+        self.name = name
+        self.type = object_type
+        if role is not None:
+            self["role"] = role
+        if hold_id is not None:
+            self["hold_id"] = hold_id
+
+
+class FakeScene:
+    def __init__(self, *objects: FakeSceneObject) -> None:
+        self.objects = objects
+
+
 def body(node_id: str) -> NodeBinding:
     return NodeBinding(node_id, "body")
 
 
 def hold(node_id: str, hold_id: str) -> NodeBinding:
     return NodeBinding(node_id, "hold", hold_id)
+
+
+def test_package_compiler_reads_logical_inventory_without_legacy_geometry(tmp_path) -> None:
+    """Catches coupling the model compiler to raster hold paths or geometry fields."""
+    board_json = tmp_path / "board.json"
+    board_json.write_text(
+        '{"holds":[{"id":"right"},{"id":"left"}]}', encoding="utf-8"
+    )
+
+    assert model_compiler.load_logical_hold_ids(board_json) == frozenset(
+        {"left", "right"}
+    )
+
+
+def test_package_compiler_validates_and_sorts_authored_mesh_tags() -> None:
+    """Catches accepting ambiguous roles or preserving nondeterministic scene order."""
+    scene = FakeScene(
+        FakeSceneObject("HoldB", role="hold", hold_id="left"),
+        FakeSceneObject("Body", role="body"),
+        FakeSceneObject("HoldA", role="hold", hold_id="left"),
+    )
+
+    assert model_compiler.validate_tagged_scene(scene, frozenset({"left"})) == (
+        body("Body"),
+        hold("HoldA", "left"),
+        hold("HoldB", "left"),
+    )
+
+
+def test_package_compiler_ignores_importer_created_non_mesh_parent_nodes() -> None:
+    """Catches rejecting a valid USDZ solely because Blender materialized an Xform parent."""
+    scene = FakeScene(
+        FakeSceneObject("ImportedRoot", object_type="EMPTY"),
+        FakeSceneObject("Body", role="body"),
+        FakeSceneObject("Hold", role="hold", hold_id="left"),
+    )
+
+    assert model_compiler.validate_tagged_scene(
+        scene, frozenset({"left"}), imported=True
+    ) == (body("Body"), hold("Hold", "left"))
+
+
+@pytest.mark.parametrize(
+    ("scene", "inventory", "message"),
+    [
+        (FakeScene(FakeSceneObject("Body")), frozenset(), "role"),
+        (
+            FakeScene(FakeSceneObject("Curve", object_type="CURVE", role="body")),
+            frozenset(),
+            "non-mesh",
+        ),
+        (
+            FakeScene(FakeSceneObject("Body", role="decoration")),
+            frozenset(),
+            "role",
+        ),
+        (
+            FakeScene(FakeSceneObject("Body", role="body", hold_id="left")),
+            frozenset(),
+            "body.*hold_id",
+        ),
+        (
+            FakeScene(FakeSceneObject("Body", role="body"), FakeSceneObject("Hold", role="hold")),
+            frozenset({"left"}),
+            "hold_id",
+        ),
+        (
+            FakeScene(
+                FakeSceneObject("Body", role="body"),
+                FakeSceneObject("Hold", role="hold", hold_id="unknown"),
+            ),
+            frozenset({"left"}),
+            "unknown hold_id",
+        ),
+        (
+            FakeScene(FakeSceneObject("Hold", role="hold", hold_id="left")),
+            frozenset({"left"}),
+            "body",
+        ),
+        (FakeScene(FakeSceneObject("Body", role="body")), frozenset({"left"}), "inventory"),
+    ],
+)
+def test_package_compiler_rejects_malformed_authored_scene_before_export(
+    scene: FakeScene, inventory: frozenset[str], message: str
+) -> None:
+    """Catches exporting authored geometry whose mesh-role contract is incomplete."""
+    with pytest.raises(ValueError, match=message):
+        model_compiler.validate_tagged_scene(scene, inventory)
+
+
+def test_package_compiler_rejects_roundtrip_binding_piece_count_changes() -> None:
+    """Catches a disconnected hold piece disappearing despite inventory coverage."""
+    source = (
+        body("Body"),
+        hold("HoldLeftA", "left"),
+        hold("HoldLeftB", "left"),
+    )
+    imported = (body("ImportedBody"), hold("ImportedLeft", "left"))
+
+    with pytest.raises(ValueError, match="bindings"):
+        model_compiler._require_bindings_unchanged(source, imported)
+
+
+def test_package_compiler_rejects_roundtrip_hold_partition_swaps() -> None:
+    """Catches preserved counts whose imported geometry is bound to the wrong logical hold."""
+    source = model_compiler._SceneSnapshot(
+        (body("Body"), hold("Left", "left"), hold("Right", "right")),
+        {
+            "Body": ((0, 0, 0), (10, 10, 1)),
+            "Left": ((1, 1, 0), (2, 2, 1)),
+            "Right": ((8, 1, 0), (9, 2, 1)),
+        },
+    )
+    swapped = model_compiler._SceneSnapshot(
+        (
+            body("ImportedBody"),
+            hold("ImportedLeft", "right"),
+            hold("ImportedRight", "left"),
+        ),
+        {
+            "ImportedBody": ((0, 0, 0), (10, 10, 1)),
+            "ImportedLeft": ((1, 1, 0), (2, 2, 1)),
+            "ImportedRight": ((8, 1, 0), (9, 2, 1)),
+        },
+    )
+
+    with pytest.raises(ValueError, match="bounds drift"):
+        model_compiler._require_bounds_stable(source, swapped)
 
 
 def test_compiler_rounds_normalized_face_bounds_and_requires_exact_inventory() -> None:
