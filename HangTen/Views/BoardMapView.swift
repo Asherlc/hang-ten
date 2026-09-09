@@ -288,38 +288,43 @@ struct BoardDetailMapView: View {
             .accessibilityIdentifier("boardDetail.presentationSelector")
         }
 
-        BoardModelSurface(
-            board: board,
-            presentation: map.presentation,
-            highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
-            highlightMode: .active,
-            onHoldTap: { select($0.id) }
-        ) {
-            GeometryReader { proxy in
-                let boardBounds = proxy.size
-                ZStack {
-                    BoardPresentationImage(board: board, presentationID: map.presentation.id)
+        Group {
+            switch map.presentation.media {
+            case .raster:
+                GeometryReader { proxy in
+                    let boardBounds = proxy.size
+                    ZStack {
+                        BoardPresentationImage(board: board, presentationID: map.presentation.id)
 
-                    ForEach(map.entries) { entry in
-                        PhysicalHoldVisual(
-                            hold: entry.hold,
-                            pieces: entry.pieces,
-                            isHighlighted: selectedHoldID == entry.hold.id,
-                            highlightMode: .active,
-                            isInverted: map.presentation.isInverted,
-                            onTap: { select($0.id) }
-                        )
-                        .frame(width: boardBounds.width, height: boardBounds.height)
+                        ForEach(map.entries) { entry in
+                            PhysicalHoldVisual(
+                                hold: entry.hold,
+                                pieces: entry.pieces,
+                                isHighlighted: selectedHoldID == entry.hold.id,
+                                highlightMode: .active,
+                                isInverted: map.presentation.isInverted,
+                                onTap: { select($0.id) }
+                            )
+                            .frame(width: boardBounds.width, height: boardBounds.height)
 
-                        BoardHoldNumberMarker(
-                            entry: entry,
-                            isSelected: selectedHoldID == entry.hold.id
-                        ) {
-                            select(entry.hold.id)
+                            BoardHoldNumberMarker(
+                                entry: entry,
+                                isSelected: selectedHoldID == entry.hold.id
+                            ) {
+                                select(entry.hold.id)
+                            }
+                            .position(markerPosition(for: entry.frame, in: boardBounds, isInverted: map.presentation.isInverted))
                         }
-                        .position(markerPosition(for: entry.frame, in: boardBounds, isInverted: map.presentation.isInverted))
                     }
                 }
+            case .model:
+                BoardModelSurface(
+                    board: board,
+                    presentation: map.presentation,
+                    highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
+                    highlightMode: .active,
+                    onHoldTap: { select($0.id) }
+                )
             }
         }
         .aspectRatio(map.presentation.aspectRatio, contentMode: .fit)
@@ -480,34 +485,39 @@ struct BoardMapView: View {
                 .accessibilityIdentifier("boardMap.presentationSelector")
             }
 
-            BoardModelSurface(
-                board: board,
-                presentation: content.presentation,
-                highlightedHoldIDs: highlightedHoldIDs,
-                highlightMode: highlightMode,
-                onHoldTap: onHoldTap
-            ) {
-                GeometryReader { proxy in
-                    let boardBounds = proxy.size
-                    ZStack {
-                        BoardPresentationImage(
-                            board: board,
-                            presentationID: content.presentation.id
-                        )
-
-                        ForEach(content.holds) { hold in
-                            PhysicalHoldVisual(
-                                hold: hold,
-                                pieces: content.pieces(for: hold.id),
-                                isHighlighted: highlightedHoldIDs.contains(hold.id),
-                                highlightMode: highlightMode,
-                                isInverted: content.presentation.isInverted,
-                                onTap: onHoldTap
+            Group {
+                switch content.presentation.media {
+                case .raster:
+                    GeometryReader { proxy in
+                        let boardBounds = proxy.size
+                        ZStack {
+                            BoardPresentationImage(
+                                board: board,
+                                presentationID: content.presentation.id
                             )
-                            .frame(width: boardBounds.width, height: boardBounds.height)
+
+                            ForEach(content.holds) { hold in
+                                PhysicalHoldVisual(
+                                    hold: hold,
+                                    pieces: content.pieces(for: hold.id),
+                                    isHighlighted: highlightedHoldIDs.contains(hold.id),
+                                    highlightMode: highlightMode,
+                                    isInverted: content.presentation.isInverted,
+                                    onTap: onHoldTap
+                                )
+                                .frame(width: boardBounds.width, height: boardBounds.height)
+                            }
                         }
+                        .frame(width: boardBounds.width, height: boardBounds.height)
                     }
-                    .frame(width: boardBounds.width, height: boardBounds.height)
+                case .model:
+                    BoardModelSurface(
+                        board: board,
+                        presentation: content.presentation,
+                        highlightedHoldIDs: highlightedHoldIDs,
+                        highlightMode: highlightMode,
+                        onHoldTap: onHoldTap
+                    )
                 }
             }
             .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)

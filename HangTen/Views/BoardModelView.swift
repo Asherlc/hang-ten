@@ -62,14 +62,17 @@ enum BoardModelLoader {
         ), !Task.isCancelled else {
             return nil
         }
-        return BoardModelScene(source: source, descriptor: media.descriptor)
+        return BoardModelScene(
+            source: source,
+            descriptor: media.descriptor,
+            display: media.display
+        )
     }
 }
 
-/// Task 3 owns the exhaustive raster/model presentation switch. This bridge
-/// keeps its current raster caller compiling while a model is decoded, but its
-/// model path has no board registry or resource fallback.
-struct BoardModelSurface<Fallback: View>: View {
+/// A model media surface never receives a raster view. Callers must route
+/// raster and model presentations exhaustively before constructing this view.
+struct BoardModelSurface: View {
     enum ResultState {
         case loading
         case ready(BoardModelScene)
@@ -81,11 +84,19 @@ struct BoardModelSurface<Fallback: View>: View {
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
     let onHoldTap: ((BoardHold) -> Void)?
-    @ViewBuilder let fallback: () -> Fallback
     @State private var result: ResultState = .loading
 
-    static func hitTestingEnabled(onHoldTap: ((BoardHold) -> Void)?) -> Bool {
-        onHoldTap != nil
+    enum DisplayState: Equatable {
+        case loading
+        case ready
+        case unavailable
+    }
+
+    static func permitsHoldSelection(
+        for state: DisplayState,
+        onHoldTap: ((BoardHold) -> Void)?
+    ) -> Bool {
+        state == .ready && onHoldTap != nil
     }
 
     var body: some View {
@@ -100,9 +111,13 @@ struct BoardModelSurface<Fallback: View>: View {
                     onHoldTap: onHoldTap
                 )
                 .accessibilityIdentifier("boardModel.3d")
-                .allowsHitTesting(Self.hitTestingEnabled(onHoldTap: onHoldTap))
+                .allowsHitTesting(Self.permitsHoldSelection(for: .ready, onHoldTap: onHoldTap))
+            } else if case .loading = result {
+                ProgressView()
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
             } else {
-                fallback()
+                BoardModelUnavailableView()
             }
         }
         .task(id: loadIdentity) {
@@ -133,18 +148,38 @@ struct BoardModelSurface<Fallback: View>: View {
     }
 }
 
+struct BoardModelUnavailableView: View {
+    var body: some View {
+        ContentUnavailableView(
+            "3D model unavailable",
+            systemImage: "cube.transparent",
+            description: Text("This board model could not be loaded.")
+        )
+        .accessibilityIdentifier("boardModel.unavailable")
+        .accessibilityElement(children: .ignore)
+        .allowsHitTesting(false)
+    }
+}
+
 @MainActor
 final class BoardModelScene {
     let scene = SCNScene()
     let camera = SCNNode()
     let geometryNodes: [SCNNode]
+    private let projectedWidth: Float
+    private let projectedHeight: Float
+    private let fitPadding: Float
     private(set) var holdNodes: [String: [SCNNode]] = [:]
     private var holdIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
     private var lastHighlights: Set<String> = []
     private var lastMode: BoardHighlightMode?
 
-    init?(source: SCNScene, descriptor: BoardModelDescriptor) {
+    init?(
+        source: SCNScene,
+        descriptor: BoardModelDescriptor,
+        display: BoardModelDisplay
+    ) {
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -155,6 +190,10 @@ final class BoardModelScene {
 
         let descriptorsByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
         guard descriptorsByNodeID.count == descriptor.nodes.count else { return nil }
+
+        // The cloned imported root is rendered with the scene. It therefore
+        // cannot carry a mesh that lies outside the descriptor node inventory.
+        guard modelRoot.geometry == nil else { return nil }
 
         var geometryByNodeID: [String: SCNNode] = [:]
         var clonedGeometryNodes: [SCNNode] = []
@@ -216,8 +255,14 @@ final class BoardModelScene {
         holdNodes = boundHoldNodes
         holdIDsByNode = boundHoldIDsByNode
         originalMaterials = originals
+        guard let framing = Self.framing(descriptor: descriptor, display: display) else {
+            return nil
+        }
+        projectedWidth = framing.width
+        projectedHeight = framing.height
+        fitPadding = framing.padding
         scene.rootNode.addChildNode(modelRoot)
-        configureCameraAndLighting()
+        configureCameraAndLighting(framing: framing)
     }
 
     func holdID(for node: SCNNode) -> String? {
@@ -231,7 +276,8 @@ final class BoardModelScene {
 
     func frame(in size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
-        camera.camera?.orthographicScale = max(0.085, 0.335 * size.height / size.width)
+        let aspect = Float(size.width / size.height)
+        camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) * fitPadding)
     }
 
     func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
@@ -271,7 +317,74 @@ final class BoardModelScene {
         return names.reversed().joined(separator: "/")
     }
 
-    private func configureCameraAndLighting() {
+    private struct Framing {
+        let target: SCNVector3
+        let direction: SCNVector3
+        let up: SCNVector3
+        let distance: Float
+        let width: Float
+        let height: Float
+        let padding: Float
+    }
+
+    private static func framing(
+        descriptor: BoardModelDescriptor,
+        display: BoardModelDisplay
+    ) -> Framing? {
+        let minimum = descriptor.modelBounds.minimum
+        let maximum = descriptor.modelBounds.maximum
+        let camera = display.camera
+        guard minimum.count == 3,
+              maximum.count == 3,
+              camera.type == "orthographic",
+              camera.viewDirection.count == 3,
+              camera.up.count == 3,
+              camera.fitPadding.isFinite,
+              camera.fitPadding > 0,
+              minimum.allSatisfy(\.isFinite),
+              maximum.allSatisfy(\.isFinite),
+              camera.viewDirection.allSatisfy(\.isFinite),
+              camera.up.allSatisfy(\.isFinite) else {
+            return nil
+        }
+        let minimumVector = SCNVector3(minimum[0], minimum[1], minimum[2])
+        let maximumVector = SCNVector3(maximum[0], maximum[1], maximum[2])
+        let target = (minimumVector + maximumVector) / 2
+        guard let direction = SCNVector3(camera.viewDirection).normalized(),
+              let requestedUp = SCNVector3(camera.up).normalized(),
+              let right = direction.cross(requestedUp).normalized() else {
+            return nil
+        }
+        let up = right.cross(direction)
+        let corners = [minimumVector.x, maximumVector.x].flatMap { x in
+            [minimumVector.y, maximumVector.y].flatMap { y in
+                [minimumVector.z, maximumVector.z].map { z in SCNVector3(x, y, z) }
+            }
+        }
+        let horizontal = corners.map { ($0 - target).dot(right) }
+        let vertical = corners.map { ($0 - target).dot(up) }
+        let depth = corners.map { ($0 - target).dot(direction) }
+        guard let width = horizontal.max().flatMap({ maximum in horizontal.min().map { maximum - $0 } }),
+              let height = vertical.max().flatMap({ maximum in vertical.min().map { maximum - $0 } }),
+              let depthSpan = depth.max().flatMap({ maximum in depth.min().map { maximum - $0 } }),
+              width.isFinite, height.isFinite, depthSpan.isFinite,
+              width > 0, height > 0 else {
+            return nil
+        }
+        let fitPadding = Float(1 + camera.fitPadding * 2)
+        let distance = max(width, height, depthSpan) * fitPadding
+        return Framing(
+            target: target,
+            direction: direction,
+            up: up,
+            distance: distance,
+            width: width,
+            height: height,
+            padding: fitPadding
+        )
+    }
+
+    private func configureCameraAndLighting(framing: Framing) {
         camera.camera = SCNCamera()
         camera.camera?.usesOrthographicProjection = true
         camera.camera?.zNear = 0.01
@@ -281,8 +394,8 @@ final class BoardModelScene {
         camera.camera?.screenSpaceAmbientOcclusionRadius = 0.018
         camera.camera?.screenSpaceAmbientOcclusionBias = 0.001
         camera.camera?.screenSpaceAmbientOcclusionDepthThreshold = 0.03
-        camera.position = SCNVector3(0, 0.0785, 1)
-        camera.look(at: SCNVector3(0, 0.0785, 0.028))
+        camera.position = framing.target - framing.direction * framing.distance
+        camera.look(at: framing.target, up: framing.up, localFront: SCNVector3(0, 0, -1))
         scene.rootNode.addChildNode(camera)
 
         let ambient = SCNNode()
@@ -302,9 +415,49 @@ final class BoardModelScene {
         key.light?.zNear = 0.01
         key.light?.zFar = 3
         key.light?.maximumShadowDistance = 3
-        key.position = SCNVector3(-0.4, 0.8, 1)
-        key.look(at: SCNVector3(0, 0.08, 0))
+        key.position = camera.position + framing.up * framing.height + framing.direction * framing.distance
+        key.look(at: framing.target, up: framing.up, localFront: SCNVector3(0, 0, -1))
         scene.rootNode.addChildNode(key)
+    }
+}
+
+private extension SCNVector3 {
+    init(_ values: [Double]) {
+        self.init(Float(values[0]), Float(values[1]), Float(values[2]))
+    }
+
+    static func + (lhs: SCNVector3, rhs: SCNVector3) -> SCNVector3 {
+        SCNVector3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z)
+    }
+
+    static func - (lhs: SCNVector3, rhs: SCNVector3) -> SCNVector3 {
+        SCNVector3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z)
+    }
+
+    static func * (lhs: SCNVector3, rhs: Float) -> SCNVector3 {
+        SCNVector3(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs)
+    }
+
+    static func / (lhs: SCNVector3, rhs: Float) -> SCNVector3 {
+        SCNVector3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs)
+    }
+
+    func dot(_ other: SCNVector3) -> Float {
+        x * other.x + y * other.y + z * other.z
+    }
+
+    func cross(_ other: SCNVector3) -> SCNVector3 {
+        SCNVector3(
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x
+        )
+    }
+
+    func normalized() -> SCNVector3? {
+        let length = sqrt(dot(self))
+        guard length.isFinite, length > 0 else { return nil }
+        return self / length
     }
 }
 

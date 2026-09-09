@@ -29,6 +29,43 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: legacyFixture.bundle))
     }
 
+    @MainActor
+    func testModelLoaderFailsClosedWhenValidatedPackageModelDisappears() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = try XCTUnwrap(board.presentations.first)
+        let assetURL = try XCTUnwrap(store.presentationAssetURL(for: board, presentationID: presentation.id))
+
+        XCTAssertNil(store.presentationImageURL(for: board, presentationID: presentation.id))
+        try FileManager.default.removeItem(at: assetURL)
+
+        let loaded = await BoardModelLoader.load(
+            board: board,
+            presentation: presentation,
+            store: store
+        )
+
+        XCTAssertNil(loaded)
+    }
+
+    func testModelCacheKeySeparatesDistinctDescriptorHashes() {
+        let first = BoardModelKey(
+            boardID: "fixture.board",
+            presentationID: "primary",
+            modelSHA256: String(repeating: "a", count: 64)
+        )
+        let replacement = BoardModelKey(
+            boardID: "fixture.board",
+            presentationID: "primary",
+            modelSHA256: String(repeating: "b", count: 64)
+        )
+
+        XCTAssertNotEqual(first, replacement)
+        XCTAssertEqual(Set([first, replacement]).count, 2)
+    }
+
     func testStoreRejectsSharedCrossParserMalformedModelFixtureMatrix() throws {
         let fixtures = try validationFixtures()
         let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
