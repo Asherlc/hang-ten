@@ -42,3 +42,20 @@ passed with no output
 The final approved Task 6 review artifacts supplied the migration countercases
 and cross-language parity evidence used to make these rules explicit. No new
 simulator or runtime validation was needed for this documentation-only change.
+
+## Behavioral verification
+
+An independent Luna saw only repository `AGENTS.md` and the complete migration
+skill. Under pressure from a stale 53-package plan versus 61 discovered
+packages, the scenario proposed partial conversion, silent unknown-member
+loss, duplicate and empty raster originals, derived path drift, explicit-null
+omission, lexical and scalar-kind-insensitive number equality, a PNG fallback
+inside the model package, and XCTest on any booted simulator with cleanup
+deferred after compilation failure. The operator rejected all proposals and
+required the skill's exact alternatives: live-inventory conversion,
+preserve-or-reject parsing, exact nonempty ownership partitions, raw-equal
+original-to-derived geometry, omission-only optionals, binary64 float
+comparison with distinct scalar kinds, model-only media isolation, and
+owned-UUID lifecycle cleanup across failures. It also correctly required
+before/after semantic evidence and associated checks, judging post-conversion
+package validation alone insufficient.
