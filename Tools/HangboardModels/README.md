@@ -103,9 +103,10 @@ rounded to nine decimal places. The coordinate frame is
 right, `+Y` up, and `+Z` toward the climber.
 
 The compiler is package/tooling support, not a geometry authoring workflow.
-Human visual review was completed before the two model packages entered the
-live inventory. Package-local descriptors are generated from actual exports
-and remain read-only.
+Human visual review of the display geometry was completed before the two model
+packages entered the live inventory. The newly shared canonical wood material
+has separate human visual approval **pending**. Package-local descriptors are
+generated from actual exports and remain read-only.
 
 ## Canonical wood display material
 
@@ -122,8 +123,11 @@ rtk python3 -B Tools/HangboardModels/canonical_neutral_wood.py
 Each exporter loads and packs those exact bytes, so its USDZ remains
 self-contained/offline while both packages embed the same stable
 `textures/canonical-neutral-wood.png` member. After changing that source, run
-the complete discovered-model rebuild; it refuses incomplete builder coverage
-and rejects descriptor geometry/inventory drift before promotion:
+the complete discovered-model rebuild. It provisions disposable compiler
+sources from the checked-in board generators in an owned temporary directory;
+it never reads or mutates durable `.context` `.blend` files. It refuses
+incomplete builder coverage and rejects descriptor geometry/inventory drift
+before promotion:
 
 ```sh
 rtk python3 -B Tools/HangboardModels/rebuild_all_wood_models.py

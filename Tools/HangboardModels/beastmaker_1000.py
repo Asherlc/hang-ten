@@ -48,6 +48,8 @@ def arguments():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--clay-only", action="store_true")
     parser.add_argument("--render-source", action="store_true")
+    parser.add_argument("--compiler-only", action="store_true",
+                        help="create only a temporary compiler input from committed source code")
     parser.add_argument("--samples", type=int, default=48)
     return parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
 
@@ -524,9 +526,21 @@ def main():
     args = arguments()
     output = args.output.resolve()
     owner = Path(os.environ.get("PASEO_WORKTREE_PATH", ROOT)).name
-    assert output.parent == ROOT/".context" and output.name == owner+"-beastmaker-1000"
-    assert sha(output/"evidence-packet.json") == PACKET_SHA
-    assert json.loads((output/"ownership.json").read_text())["workspaceOwner"] == owner
+    if args.compiler_only:
+        # The package rebuild provisions this source from committed generator
+        # inputs in its owned temporary directory.  It deliberately neither
+        # reads nor overwrites the durable review source under .context.
+        assert output.is_relative_to(ROOT / ".context")
+        assert not args.render_source
+        output.mkdir(parents=True, exist_ok=True)
+        (output / "ownership.json").write_text(
+            json.dumps({"owner": owner, "resources": [str(output)], "external_resources": []}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    else:
+        assert output.parent == ROOT/".context" and output.name == owner+"-beastmaker-1000"
+        assert sha(output/"evidence-packet.json") == PACKET_SHA
+        assert json.loads((output/"ownership.json").read_text())["workspaceOwner"] == owner
     # Read only logical inventory; presentation paths are never interpreted.
     document = json.loads((ROOT/"Hangboards/beastmaker-1000/board.json").read_text())
     hold_ids = [hold["id"] for hold in document["holds"]]
@@ -555,6 +569,9 @@ def main():
     if not args.render_source:
         bpy.ops.wm.save_as_mainfile(filepath=str(source))
     compiler_input = save_compiler_input(objects, output)
+    if args.compiler_only:
+        print(json.dumps({"compilerInput": compiler_input, **checks}), flush=True)
+        return
     camera, lights = review_rig(args.samples)
     views = []
     front = dict(location=(.29, .075, 1.05), target=(.29, .075, .029), scale=.65, resolution=(1950, 630))

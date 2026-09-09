@@ -22,6 +22,8 @@ import canonical_neutral_wood
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", type=Path, default=ROOT / ".context" / f"{ROOT.name}-wood-grips-compact-ii")
+parser.add_argument("--compiler-only", action="store_true",
+                    help="create only a temporary compiler source from committed generator code")
 args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
 OUT = args.output.resolve()
 OUT.mkdir(parents=True, exist_ok=True)
@@ -336,6 +338,12 @@ def select_model():
     bpy.context.view_layer.objects.active=model[0]
 
 select_model()
+if args.compiler_only:
+    # Rebuild-all owns and removes this output.  Do not depend on or overwrite
+    # the older durable review .blend under .context.
+    bpy.ops.wm.save_as_mainfile(filepath=str(OUT/"wood-grips-compact-ii.blend"))
+    print("COMPILER_SOURCE", OUT/"wood-grips-compact-ii.blend")
+    raise SystemExit(0)
 bpy.ops.export_scene.gltf(filepath=str(OUT/"wood-grips-compact-ii.glb"),export_format="GLB",
     use_selection=True,export_extras=True,export_cameras=False,export_lights=False)
 # SceneKit misimports complex Boolean cap n-gons: explicit export triangles

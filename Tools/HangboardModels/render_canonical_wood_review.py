@@ -11,6 +11,8 @@ import sys
 import bpy
 from mathutils import Vector
 
+from rebuild_all_wood_models import discover_model_packages
+
 
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser(description=__doc__)
@@ -78,6 +80,6 @@ def render_board(slug: str):
         bpy.ops.render.render(write_still=True)
 
 
-for board_slug in ("beastmaker-1000", "metolius-wood-grips-compact-ii"):
+for board_slug in discover_model_packages():
     render_board(board_slug)
 print("CANONICAL_WOOD_REVIEW_RENDERS", out)

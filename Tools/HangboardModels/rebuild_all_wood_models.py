@@ -26,10 +26,12 @@ RECORD_PATH = CONTEXT / f"{OWNER}-canonical-wood-review" / "rebuild-manifest.jso
 PACKAGE_FILES = frozenset({"assets/primary.model.json", "assets/primary.usdz"})
 BUILDERS = {
     "beastmaker-1000": {
-        "blend": CONTEXT / f"{OWNER}-beastmaker-1000/beastmaker-1000-compiler-input.blend",
+        "generator": ROOT / "Tools/HangboardModels/beastmaker_1000.py",
+        "source": "beastmaker-1000-compiler-input.blend",
     },
     "metolius-wood-grips-compact-ii": {
-        "blend": CONTEXT / f"{OWNER}-metolius-wood-grips-compact-ii/wood-grips-compact-ii.blend",
+        "generator": ROOT / "Tools/HangboardModels/wood_grips_compact_ii.py",
+        "source": "wood-grips-compact-ii.blend",
     },
 }
 
@@ -107,15 +109,19 @@ def rebuild() -> dict[str, object]:
     )
     try:
         for slug, builder in BUILDERS.items():
+            source_directory = work / "generated-sources" / slug
             run([
                 "blender", "--background", "--factory-startup", "--python-exit-code", "1",
-                "--python", str(ROOT / "Tools/HangboardModels/bind_canonical_wood_to_source.py"), "--",
-                "--blend", str(builder["blend"]),
+                "--python", str(builder["generator"]), "--",
+                "--output", str(source_directory), "--compiler-only",
             ])
+            blend = source_directory / builder["source"]
+            if blend.is_symlink() or not blend.is_file():
+                raise ValueError(f"generator did not create regular compiler source: {slug}")
             run([
                 "blender", "--background", "--factory-startup", "--python-exit-code", "1",
                 "--python", str(ROOT / "Tools/HangboardModels/compile_model_package.py"), "--",
-                "--blend", str(builder["blend"]),
+                "--blend", str(blend),
                 "--board-json", str(packages[slug] / "board.json"),
                 "--output-directory", str(work / slug),
             ])
@@ -147,6 +153,7 @@ def rebuild() -> dict[str, object]:
             "before": before,
             "after": after,
             "temporaryBuildDirectory": str(work),
+            "sourceProvisioning": "checked-in generators into the owned temporary build directory; no persistent .context blend inputs",
             "temporaryBuildDirectoryCleaned": True,
         }
         RECORD_PATH.parent.mkdir(parents=True, exist_ok=True)
