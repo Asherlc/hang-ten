@@ -70,9 +70,9 @@ enum ForceSensorProfile: String, CaseIterable, Codable, Identifiable {
         switch self {
         case .automatic:
             .automatic
-        case .whC06, .genericProgressor, .genericWHC06:
+        case .genericProgressor, .genericWHC06:
             .generic
-        case .motherboard, .progressor, .pitchSix, .entralpi, .climbro:
+        case .motherboard, .progressor, .pitchSix, .whC06, .entralpi, .climbro:
             .named
         }
     }
@@ -194,7 +194,7 @@ enum ForceSensorAdapter {
 }
 
 enum ForceSensorAdapterRegistry {
-    static let automaticProfiles: [ForceSensorProfile] = [.motherboard, .progressor, .pitchSix]
+    static let automaticProfiles: [ForceSensorProfile] = [.motherboard, .progressor, .pitchSix, .whC06]
 
     static func adapter(for profile: ForceSensorProfile) -> ForceSensorAdapter? {
         switch profile {

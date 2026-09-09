@@ -5,14 +5,30 @@ import XCTest
 final class WHC06ProtocolTests: XCTestCase {
     private let receivedAt = Date(timeIntervalSince1970: 3_579)
 
-    func testBothWHC06ProfilesAreExplicitSelectionOnlyAndMatchCompanyIdentifier() throws {
+    func testNamedWHC06MatchesOnlyTheCapturedPacketSignatureWhileGenericRemainsManual() throws {
         let named = try XCTUnwrap(WHC06ProtocolAdapter(profile: .whC06))
         let generic = try XCTUnwrap(WHC06ProtocolAdapter(profile: .genericWHC06))
-        let advertisement = ForceSensorAdvertisement(
+        let capturedWHC06 = ForceSensorAdvertisement(
             name: "Scale",
             serviceUUIDs: [],
             manufacturerData: [
-                ForceSensorManufacturerData(companyIdentifier: 0x0100, payload: Data(repeating: 0, count: 12))
+                ForceSensorManufacturerData(
+                    companyIdentifier: 0x0100,
+                    payload: Data([
+                        0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                        0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                    ])
+                )
+            ]
+        )
+        let presenceRadar = ForceSensorAdvertisement(
+            name: "HLK-LD2410B",
+            serviceUUIDs: [],
+            manufacturerData: [
+                ForceSensorManufacturerData(
+                    companyIdentifier: 0x0100,
+                    payload: Data([0x07, 0x01, 0x16, 0x15, 0x09, 0x22, 0x00, 0xBE, 0x8D, 0xED, 0xEE, 0x56, 0x00])
+                )
             ]
         )
         let unrelatedCompany = ForceSensorAdvertisement(
@@ -23,12 +39,14 @@ final class WHC06ProtocolTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(named.profile.matchingPolicy, .generic)
+        XCTAssertEqual(named.profile.matchingPolicy, .named)
         XCTAssertEqual(generic.profile.matchingPolicy, .generic)
-        XCTAssertFalse(named.profile.matchingPolicy.permitsAutomaticSelection)
+        XCTAssertTrue(named.profile.matchingPolicy.permitsAutomaticSelection)
         XCTAssertFalse(generic.profile.matchingPolicy.permitsAutomaticSelection)
-        XCTAssertTrue(named.matches(advertisement))
-        XCTAssertTrue(generic.matches(advertisement))
+        XCTAssertTrue(named.matches(capturedWHC06))
+        XCTAssertTrue(generic.matches(capturedWHC06))
+        XCTAssertFalse(named.matches(presenceRadar))
+        XCTAssertTrue(generic.matches(presenceRadar))
         XCTAssertFalse(named.matches(unrelatedCompany))
         XCTAssertFalse(generic.matches(unrelatedCompany))
         XCTAssertNil(WHC06ProtocolAdapter(profile: .automatic))
@@ -43,7 +61,10 @@ final class WHC06ProtocolTests: XCTestCase {
             manufacturerData: [
                 ForceSensorManufacturerData(
                     companyIdentifier: 0x0100,
-                    payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x04, 0xD2])
+                    payload: Data([
+                        0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                        0x01, 0x04, 0xD2, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                    ])
                 )
             ]
         )
@@ -68,6 +89,23 @@ final class WHC06ProtocolTests: XCTestCase {
             ]
         )
 
+        XCTAssertNil(adapter.decode(advertisement, receivedAt: receivedAt))
+    }
+
+    func testNamedDecoderRejectsThePublishedLD2410BPresenceRadarPacket() throws {
+        let adapter = try XCTUnwrap(WHC06ProtocolAdapter(profile: .whC06))
+        let advertisement = ForceSensorAdvertisement(
+            name: "HLK-LD2410B",
+            serviceUUIDs: [],
+            manufacturerData: [
+                ForceSensorManufacturerData(
+                    companyIdentifier: 0x0100,
+                    payload: Data([0x07, 0x01, 0x16, 0x15, 0x09, 0x22, 0x00, 0xBE, 0x8D, 0xED, 0xEE, 0x56, 0x00])
+                )
+            ]
+        )
+
+        XCTAssertFalse(adapter.matches(advertisement))
         XCTAssertNil(adapter.decode(advertisement, receivedAt: receivedAt))
     }
 

@@ -405,7 +405,7 @@ final class MotherboardBluetoothService: ObservableObject {
         receivedAt: Date
     ) {
         guard wantsConnection,
-              device.profile == requestedProfile,
+              (requestedProfile == .automatic || device.profile == requestedProfile),
               let adapter = WHC06ProtocolAdapter(profile: device.profile),
               let samples = adapter.decode(advertisement, receivedAt: receivedAt) else {
             return
@@ -782,10 +782,14 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     private func beginScanIfPossible() {
         guard let centralManager, centralManager.state == .poweredOn else { return }
-        let serviceUUIDs = serviceUUIDs(for: requestedProfile).map(CBUUID.init(nsuuid:))
-        let options: [String: Any]? = WHC06ProtocolAdapter(profile: requestedProfile) == nil
-            ? nil
-            : [CBCentralManagerScanOptionAllowDuplicatesKey: true]
+        let scansAdvertisementOnlyProfiles = requestedProfile == .automatic ||
+            WHC06ProtocolAdapter(profile: requestedProfile) != nil
+        let serviceUUIDs = scansAdvertisementOnlyProfiles
+            ? []
+            : serviceUUIDs(for: requestedProfile).map(CBUUID.init(nsuuid:))
+        let options: [String: Any]? = scansAdvertisementOnlyProfiles
+            ? [CBCentralManagerScanOptionAllowDuplicatesKey: true]
+            : nil
         centralManager.scanForPeripherals(
             withServices: serviceUUIDs.isEmpty ? nil : serviceUUIDs,
             options: options
@@ -825,7 +829,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
             return ForceSensorAdapterRegistry.automaticProfiles
                 .filter { $0 != .motherboard }
                 .first { profile in
-                    ForceSensorAdapterRegistry.adapter(for: profile)?.matches(advertisement) == true
+                    matches(profile, advertisement: advertisement)
                 }
         case .motherboard:
             return isExpectedMotherboard(peripheralName: peripheralName, advertisedLocalName: advertisedLocalName)

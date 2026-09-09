@@ -89,7 +89,7 @@ final class ForceSensorModelsTests: XCTestCase {
         )
     }
 
-    func testRegistryResolvesGATTAdaptersAndKeepsAdvertisementOnlyProfilesOutOfAutomaticSelection() throws {
+    func testRegistryResolvesGATTAdaptersAndIncludesOnlyNamedWHC06InAutomaticSelection() throws {
         let progressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .progressor))
         let pitchSix = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .pitchSix))
         let genericProgressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .genericProgressor))
@@ -101,23 +101,24 @@ final class ForceSensorModelsTests: XCTestCase {
         XCTAssertNil(ForceSensorAdapterRegistry.adapter(for: .genericWHC06))
         XCTAssertEqual(
             ForceSensorAdapterRegistry.automaticProfiles,
-            [.motherboard, .progressor, .pitchSix]
+            [.motherboard, .progressor, .pitchSix, .whC06]
         )
     }
-    func testMatchingPolicyKeepsGenericAndAdvertisementOnlyProfilesOutOfAutomaticSelection() {
+    func testMatchingPolicyKeepsGenericProfilesOutOfAutomaticSelection() {
         XCTAssertEqual(ForceSensorProfile.automatic.matchingPolicy, .automatic)
 
         let namedProfiles: [ForceSensorProfile] = [
             .motherboard,
             .progressor,
             .pitchSix,
+            .whC06,
             .entralpi,
             .climbro
         ]
         XCTAssertTrue(namedProfiles.allSatisfy { $0.matchingPolicy == .named })
         XCTAssertTrue(namedProfiles.allSatisfy { $0.matchingPolicy.permitsAutomaticSelection })
 
-        let genericProfiles: [ForceSensorProfile] = [.whC06, .genericProgressor, .genericWHC06]
+        let genericProfiles: [ForceSensorProfile] = [.genericProgressor, .genericWHC06]
         XCTAssertTrue(genericProfiles.allSatisfy { $0.matchingPolicy == .generic })
         XCTAssertTrue(genericProfiles.allSatisfy { !$0.matchingPolicy.permitsAutomaticSelection })
     }

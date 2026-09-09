@@ -24,9 +24,7 @@ struct WHC06ProtocolAdapter {
     }
 
     func matches(_ advertisement: ForceSensorAdvertisement) -> Bool {
-        advertisement.manufacturerData.contains { manufacturerData in
-            manufacturerData.companyIdentifier == Self.companyIdentifier
-        }
+        advertisement.manufacturerData.contains(where: accepts)
     }
 
     func payload(for command: ForceSensorCommand) -> Data? {
@@ -34,9 +32,7 @@ struct WHC06ProtocolAdapter {
     }
 
     func decode(_ advertisement: ForceSensorAdvertisement, receivedAt: Date) -> [ForceSensorSample]? {
-        guard let manufacturerData = advertisement.manufacturerData.first(where: { manufacturerData in
-            manufacturerData.companyIdentifier == Self.companyIdentifier
-        }) else {
+        guard let manufacturerData = advertisement.manufacturerData.first(where: accepts) else {
             return nil
         }
 
@@ -61,5 +57,18 @@ struct WHC06ProtocolAdapter {
         }
 
         return [sample]
+    }
+
+    private func accepts(_ manufacturerData: ForceSensorManufacturerData) -> Bool {
+        guard manufacturerData.companyIdentifier == Self.companyIdentifier else { return false }
+        guard profile == .whC06 else { return true }
+        return Self.isNamedWHC06Payload(manufacturerData.payload)
+    }
+
+    private static func isNamedWHC06Payload(_ payload: Data) -> Bool {
+        guard payload.count == 17 else { return false }
+        let firstByteIndex = payload.startIndex
+        let secondByteIndex = payload.index(after: firstByteIndex)
+        return payload[firstByteIndex] == 0x02 && payload[secondByteIndex] == 0x03
     }
 }
