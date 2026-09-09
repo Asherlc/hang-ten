@@ -117,6 +117,9 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     if not primary:
         raise ValueError("primarySources must contain at least one manufacturer source")
     commerce = _sources(payload["commerceSources"], path.parent, "commerce")
+    source_paths = [source.local_path for source in (*primary, *commerce)]
+    if len(source_paths) != len(set(source_paths)):
+        raise ValueError("duplicate retained localPath across evidence sources")
     source_tiers = {
         source.local_path: source.source_tier for source in (*primary, *commerce)
     }

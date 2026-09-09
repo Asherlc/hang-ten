@@ -132,6 +132,28 @@ def test_requires_manufacturer_primary_sources(tmp_path: Path) -> None:
         validate_evidence_packet(packet)
 
 
+def test_rejects_duplicate_retained_path_across_manufacturer_and_commerce_sources(
+    tmp_path: Path,
+) -> None:
+    packet = valid_packet(tmp_path)
+    payload = _payload(packet)
+    manufacturer_source = payload["primarySources"][0]  # type: ignore[index]
+    payload["commerceSources"] = [
+        {
+            "localPath": manufacturer_source["localPath"],
+            "sha256": manufacturer_source["sha256"],
+            "snapshotSHA256": manufacturer_source["sha256"],
+            "sourceTier": "commerce",
+            "url": "https://authorized.example/board",
+            "retailer": "Authorized Retailer",
+        }
+    ]
+    _rewrite(packet, payload)
+
+    with pytest.raises(ValueError, match="duplicate retained localPath"):
+        validate_evidence_packet(packet)
+
+
 def test_requires_authorized_retailer_identity_and_snapshot_hash_for_commerce_gap(
     tmp_path: Path,
 ) -> None:
