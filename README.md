@@ -9,8 +9,10 @@ media. The package contract supports raster-only presentations, which own a PNG
 and `media.holdGeometry`, and model-only presentations, which own a USDZ and a
 generated hash-bound `.model.json` descriptor. Logical holds retain identity and
 metadata without spatial fields; the selected presentation supplies rendering,
-highlighting, and interaction data. At this checkpoint every live package is a
-raster v2 package; no board has been migrated to model media.
+highlighting, and interaction data. The live inventory contains 59 raster
+packages and two model-only packages: Beastmaker 1000 and Metolius Wood Grips
+Compact II. Both migrated packages own package-local model trees (`board.json`,
+`assets/primary.usdz`, and `assets/primary.model.json`).
 
 ## Included
 
@@ -223,10 +225,10 @@ rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository currently has 61 directly discovered, complete packages and
-zero drafts. Every live package currently declares raster media: `board.json`
-plus its exact declared PNG assets. The model branch is implemented in the
-schema and tooling, but no live package currently declares `media.type: model`.
+The repository has 61 directly discovered, complete packages and zero drafts:
+59 raster packages plus the Beastmaker 1000 and Compact II model-only
+packages. Model packages declare no PNG or raster presentation and keep their
+USDZ and generated descriptor beside `board.json` in the package tree.
 The Xcode build phase runs
 `scripts/stage-board-packages.py` after parser-approved discovery. It
 recursively copies each regular, non-symlinked package tree into app resources,
@@ -234,8 +236,7 @@ so staged declared assets remain byte-identical to their package sources; it
 does not substitute separately bundled model resources or rewrite geometry or
 presentation bytes.
 
-The model-first package plan adds tooling and parser support without doing a
-geometry migration. Validate a retained Stage 0 evidence packet with:
+Validate a retained Stage 0 evidence packet with:
 
 ```sh
 python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
@@ -253,8 +254,8 @@ renders, and ambiguous revisions do not count. Diagrams supplement the packet
 but do not count as a distinct-angle photograph unless they expose
 side/profile geometry.
 
-After geometry has been authored and reviewed in a later, explicitly scoped
-step, compile tagged Blender meshes into a model package with:
+For a new model package, after geometry has been authored and reviewed, compile
+tagged Blender meshes with:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
@@ -268,8 +269,10 @@ hash-bound descriptor; it does not repair or redesign geometry. A model package
 must contain only its declared USDZ and descriptor media, with no raster
 fallback. See [model tooling](Tools/HangboardModels/README.md) and the
 [package contract](Tools/HangboardPackages/README.md) for the v2 fields and
-validation rules. No geometry task appears in the current model-first schema
-and compiler plan.
+validation rules. Remote GitHub model-package sync remains deferred and
+unsupported by the current PNG/default-oriented GitHub sync. iOS model editing
+and Workbench model editing remain deferred/read-only/unavailable; raster
+Workbench editing continues to be supported.
 
 Use the packaged macOS Hangboard Workbench for direct local visual editing.
 Browser-hosted Workbench deployments must use the GitHub-backed

@@ -2,10 +2,12 @@
 
 This directory contains the evidence-packet validator and the deterministic
 USDZ-to-descriptor compiler for the schema-v2 board package contract. The
-tooling is ready for a later, explicitly scoped model migration. At the
-current checkpoint all 61 live `Hangboards/*/board.json` packages are raster
-v2 packages; none declares `media.type: "model"`. The current model-first
-schema/compiler plan does not author or migrate board geometry.
+completed inventory contains 59 raster v2 packages and two model-only
+packages: Beastmaker 1000 and Metolius Wood Grips Compact II. Both promoted
+package trees contain `board.json`, `assets/primary.usdz`, and
+`assets/primary.model.json`; model media is read-only. This tooling documents
+demonstrated package validation and staging, not remote model sync or model
+editing.
 
 ## v2 logical and presentation contract
 
@@ -25,13 +27,15 @@ Each presentation owns one tagged media payload:
 Model media is model-only: a package may not mix model and raster
 presentations, and a model presentation may not be derived or inverted. Its
 descriptor hash must match the exact USDZ bytes and its node/hold inventory
-must equal the logical inventory. Staging and sync copy declared package files
-byte-for-byte; they do not synthesize a raster fallback or substitute a model
-resource.
+must equal the logical inventory. Staging copies declared package files
+byte-for-byte; it does not synthesize a raster fallback or substitute a model
+resource. Remote GitHub model-package sync is deferred/unsupported by the
+current PNG/default-oriented GitHub sync. Workbench model editing is
+read-only/unavailable; raster Workbench editing remains supported.
 
 ## Stage 0 evidence packets
 
-Before any future geometry work, retain at least two complete exact-revision
+For any future model migration, retain at least two complete exact-revision
 visual images per board under the packet directory: one manufacturer-published
 image and, where available, a materially different oblique/side/back/profile
 view. Record each image's pixel dimensions, retrieval date/locale, exact angle,
@@ -99,8 +103,9 @@ rounded to nine decimal places. The coordinate frame is
 right, `+Y` up, and `+Z` toward the climber.
 
 The compiler is package/tooling support, not a geometry authoring workflow.
-Human visual review remains required before a future model package enters the
-live inventory.
+Human visual review was completed before the two model packages entered the
+live inventory. Package-local descriptors are generated from actual exports
+and remain read-only.
 
 ## Actual-export verifiers
 
@@ -147,10 +152,12 @@ rtk proxy blender --background --factory-startup --python-exit-code 1 \
 
 Compact II's evidence does not establish a whole-board depth. Its verifier
 therefore compares the actual imported USDZ to the generated descriptor and
-does not assert a 56 mm overall-body dimension. Running its compiler/export
-sequence remains pending until an Astra-reviewed source `.blend` has explicit
-`role` and `hold_id` tags. Do not infer those tags from imported names or add
-them during verification.
+does not assert a 56 mm overall-body dimension. The promoted Compact II
+package uses the approved tagged source and actual export. Do not infer tags
+from imported names or add them during verification.
+
+Remote GitHub model sync and model editing remain outside this tooling's
+demonstrated contract.
 
 The Blender-free report checks are available with:
 
