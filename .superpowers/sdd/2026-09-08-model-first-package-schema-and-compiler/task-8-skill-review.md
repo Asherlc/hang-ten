@@ -1,5 +1,7 @@
 # Independent review: cross-parser fixture skill update
 
+**Follow-up evidence:** [`task-8-skill-routing-follow-up-report.md`](task-8-skill-routing-follow-up-report.md) records the corrected local `gpt-5.6-luna` full-skill GREEN and matched pressure samples requested by P1.
+
 **Range:** `766174ef^..766174ef` (`docs: codify cross-parser fixture parity`)
 
 **Verdict:** **REQUEST CHANGES — one Important process finding.** The

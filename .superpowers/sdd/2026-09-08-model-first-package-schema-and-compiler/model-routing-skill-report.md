@@ -1,5 +1,7 @@
 # Model-routing skill update
 
+**Behavioral follow-up:** [`task-8-skill-routing-follow-up-report.md`](task-8-skill-routing-follow-up-report.md) records the full-skill `gpt-5.6-luna` verification and matched RED/GREEN pressure campaign.
+
 ## Scope
 
 Updated only `.codex/skills/migrate-hangboard-to-3d/SKILL.md` and this report.

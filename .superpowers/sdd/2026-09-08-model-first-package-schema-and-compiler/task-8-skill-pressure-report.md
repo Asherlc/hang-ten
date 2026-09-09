@@ -1,5 +1,7 @@
 # Task 8 skill follow-up pressure test
 
+**Superseded approval evidence:** [`task-8-skill-routing-follow-up-report.md`](task-8-skill-routing-follow-up-report.md) contains the later full-skill local Luna run; this earlier report remains the extracted-guidance limitation record.
+
 ## Scope and matched setup
 
 This is the follow-up requested by

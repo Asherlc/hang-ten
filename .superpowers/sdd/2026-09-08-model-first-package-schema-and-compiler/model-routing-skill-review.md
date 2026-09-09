@@ -1,5 +1,7 @@
 # Independent review: low-cost model routing
 
+**P1 follow-up:** [`task-8-skill-routing-follow-up-report.md`](task-8-skill-routing-follow-up-report.md) closes the missing local full-skill/model-tier evidence with fresh matched Luna contexts.
+
 **Range:** `7f89109a^..7f89109a`
 
 **Verdict:** **REQUEST CHANGES** for the validation record. The routing text
