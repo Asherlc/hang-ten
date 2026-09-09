@@ -39,7 +39,7 @@ Derive spatial centers and bounds used by workout matching from the mesh in a de
 
 Descriptor tooling exposes generated spatial values as read-only outputs, with no public construction path for hand-authored bounds or centers. Normalize from raw mesh extrema before rounding. Reject non-finite source coordinates and any non-finite derived span, normalized coordinate, center, or rounded value. Serialize stable, sorted output using one declared rounding precision; descriptor v1 uses nine decimal places.
 
-Carry model media through package validation, staging, and sync. Workbench must explicitly disable model geometry editing it does not support; do not reconstruct raster geometry to enable it. A missing or malformed USDZ is a package validation/build defect, with an explicit unavailable state if encountered at runtime.
+Carry model media through package validation, staging, and sync. Inspect existing staging before changing it; if it already recursively copies the parser-approved regular-file package tree, leave production staging unchanged and add a characterization fixture/test. For a v2 model fixture, prove staged USDZ and generated descriptor bytes equal their source bytes and staged assets exactly equal the parser-declared inventory. Staging must not synthesize, rename, replace, or app-side substitute model resources. Record and clean generated staging directories/resources. Workbench must explicitly disable model geometry editing it does not support; do not reconstruct raster geometry to enable it. A missing or malformed USDZ is a package validation/build defect, with an explicit unavailable state if encountered at runtime.
 
 ## Build shape before finish
 
