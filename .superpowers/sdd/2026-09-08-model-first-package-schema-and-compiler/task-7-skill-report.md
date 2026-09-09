@@ -47,6 +47,29 @@ No runtime suite was needed for this documentation-only update; the focused
 staging/model-first suites and final inventory remain covered by the reviewed
 Task 7 characterization evidence.
 
+## Behavioral RED/GREEN
+
+Both operators saw the identical migration-and-release-pressure scenario.
+The baseline operator read only repository `AGENTS.md`; the WITH-skill operator
+read repository `AGENTS.md` plus the complete
+`.codex/skills/migrate-hangboard-to-3d/SKILL.md`. Neither inspected task
+reports or implementation diffs.
+
+Without the skill, Luna proposed a failing integration test expected to show a
+missing or incorrect model and proposed production changes to parser discovery
+and staging, despite the scenario already specifying recursive regular-file
+staging. It did still require byte, inventory, no-substitution, and cleanup
+checks.
+
+With the skill, the operator left staging unchanged and added a parser-valid v2
+model characterization fixture/test. Its first run was GREEN: the existing
+parser-approved recursive copy already satisfied the behavior, so no artificial
+RED was manufactured. The test requires exact staged/source USDZ and
+descriptor byte equality and exact equality with the parser-declared inventory.
+It forbids synthesizing, renaming, replacing, app-side substitution, or a
+raster fallback, and uses owned `.context` staging output with trap-protected,
+verified cleanup.
+
 ## Resource lifecycle
 
 This update created no persistent resource, HTTP server, tunnel, simulator, or
