@@ -217,11 +217,15 @@ rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository currently has eight directly discovered, complete packages.
-Each package contains exactly `board.json` and
-`assets/primary.png`. The Xcode build phase runs
-`scripts/stage-board-packages.py`, which bundles the validated packages without
-rewriting their geometry or presentation bytes.
+The repository currently has 61 directly discovered, complete packages.
+Each package contains `board.json` plus its exact declared typed assets: a
+raster presentation owns PNG media, while a model presentation owns its USDZ
+and hash-bound `.model.json` descriptor. The Xcode build phase runs
+`scripts/stage-board-packages.py` after parser-approved discovery. It
+recursively copies each regular, non-symlinked package tree into app resources,
+so staged PNGs, USDZs, and descriptors remain byte-identical to their package
+sources; it does not substitute separately bundled model resources or rewrite
+geometry or presentation bytes.
 
 Use the packaged macOS Hangboard Workbench for direct local visual editing.
 Browser-hosted Workbench deployments must use the GitHub-backed

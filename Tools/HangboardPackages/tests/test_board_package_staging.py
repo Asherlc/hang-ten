@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -21,6 +22,7 @@ from conftest import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+MODEL_BYTES = b"staging fixture model bytes\x00\xff"
 
 
 def load_staging_module():
@@ -63,6 +65,93 @@ def build_repository(tmp_path: Path) -> tuple[Path, list[Path], Path]:
 def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Path) -> None:
     monkeypatch.setenv("TARGET_BUILD_DIR", str(destination.parent.parent))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
+
+
+def make_v2_model_package(root: Path) -> Path:
+    """Write a complete, parser-valid v2 model package without shared fixtures."""
+    assets = root / "assets"
+    assets.mkdir(parents=True)
+    (assets / "primary.usdz").write_bytes(MODEL_BYTES)
+    descriptor = {
+        "schemaVersion": 1,
+        "coordinateFrame": "hang-ten-board-v1",
+        "modelSHA256": hashlib.sha256(MODEL_BYTES).hexdigest(),
+        "modelBounds": {"min": [0, 0, 0], "max": [1, 1, 0.1]},
+        "nodes": [
+            {"nodeID": "Body", "role": "body"},
+            {"nodeID": "Left", "role": "hold", "holdID": "hold-left"},
+            {"nodeID": "Right", "role": "hold", "holdID": "hold-right"},
+        ],
+        "holds": {
+            "hold-left": {
+                "nodeIDs": ["Left"],
+                "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]},
+                "center": [0.25, 0.4],
+            },
+            "hold-right": {
+                "nodeIDs": ["Right"],
+                "facePlaneAABB": {"min": [0.6, 0.2], "max": [0.9, 0.6]},
+                "center": [0.75, 0.4],
+            },
+        },
+    }
+    board = {
+        "schemaVersion": 2,
+        "id": "fixture.model",
+        "manufacturer": "Fixture Maker",
+        "name": "Model fixture",
+        "subtitle": "A typed-media staging fixture.",
+        "productURL": "https://example.com/fixture-model",
+        "aspectRatio": 2,
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "aspectRatio": 2,
+                "isDefault": True,
+                "derivation": {"type": "original"},
+                "media": {
+                    "type": "model",
+                    "assetPath": "assets/primary.usdz",
+                    "descriptorPath": "assets/primary.model.json",
+                    "display": {
+                        "camera": {
+                            "type": "orthographic",
+                            "viewDirection": [0, 0, -1],
+                            "up": [0, 1, 0],
+                            "fitPadding": 0.08,
+                        }
+                    },
+                },
+            }
+        ],
+        "holds": [
+            {"id": "hold-left", "name": "Left hold", "kind": "jug"},
+            {"id": "hold-right", "name": "Right hold", "kind": "jug"},
+        ],
+    }
+    (assets / "primary.model.json").write_text(
+        json.dumps(descriptor), encoding="utf-8"
+    )
+    (root / "board.json").write_text(json.dumps(board), encoding="utf-8")
+    return root
+
+
+def stage_with_xcode_environment(
+    source: Path, monkeypatch: pytest.MonkeyPatch
+) -> Path:
+    """Stage the fixture's repository and return its staged package root."""
+    repository_root = source.parents[1]
+    package_source = REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
+    package_destination = (
+        repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
+    )
+    shutil.copytree(package_source, package_destination)
+    destination = source.parents[2] / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    staged = load_staging_module().stage_board_packages(repository_root, destination)
+    assert staged == (destination / source.name,)
+    return staged[0]
 
 
 def test_staging_copies_discovered_packages_without_a_registry_and_replaces_stale_output(
@@ -144,6 +233,28 @@ def test_staging_copies_the_exact_declared_asset_set(
     assert {path.name for path in staged_assets.iterdir()} == {"primary.png", "back.png"}
     assert (staged_assets / "primary.png").read_bytes() == PRIMARY_PNG_BYTES
     assert (staged_assets / "back.png").read_bytes() == SECONDARY_PNG_BYTES
+
+
+def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = make_v2_model_package(
+        tmp_path / "repository" / "Hangboards" / "fixture-model"
+    )
+
+    staged = stage_with_xcode_environment(source, monkeypatch)
+
+    assert (staged / "assets" / "primary.usdz").read_bytes() == (
+        source / "assets" / "primary.usdz"
+    ).read_bytes()
+    assert (staged / "assets" / "primary.model.json").read_bytes() == (
+        source / "assets" / "primary.model.json"
+    ).read_bytes()
+    assert {
+        path.relative_to(staged).as_posix()
+        for path in staged.rglob("*")
+        if path.is_file()
+    } == {"assets/primary.usdz", "assets/primary.model.json", "board.json"}
 
 
 def test_staging_fails_closed_for_a_malformed_completed_package(
