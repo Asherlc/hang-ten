@@ -40,17 +40,26 @@ struct WHC06ProtocolAdapter {
     }
 
     private func decode(_ payload: Data, receivedAt: Date) -> [ForceSensorSample]? {
-        guard payload.count >= 12 else { return nil }
+        guard payload.count >= 15 else { return nil }
 
         let highByteIndex = payload.index(payload.startIndex, offsetBy: 10)
         let lowByteIndex = payload.index(after: highByteIndex)
-        let hundredthsOfKilogram = UInt16(payload[highByteIndex]) << 8
+        let hundredthsOfSourceUnit = UInt16(payload[highByteIndex]) << 8
             | UInt16(payload[lowByteIndex])
+        let unitByteIndex = payload.index(payload.startIndex, offsetBy: 14)
+        let sourceUnit: ForceSensorSourceUnit
+        switch payload[unitByteIndex] & 0x0F {
+        case 1:
+            sourceUnit = .kilogramsForce
+        case 2:
+            sourceUnit = .poundsForce
+        default:
+            return nil
+        }
 
-        // Adaptation: upstream exposes kg; Hang Ten stores this as kgf pending vendor confirmation.
         guard let sample = ForceSensorSample(
-            value: Double(hundredthsOfKilogram) / 100,
-            unit: .kilogramsForce,
+            value: Double(hundredthsOfSourceUnit) / 100,
+            unit: sourceUnit,
             receivedAt: receivedAt
         ) else {
             return nil

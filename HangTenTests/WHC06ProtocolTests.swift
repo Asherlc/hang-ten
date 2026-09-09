@@ -53,7 +53,7 @@ final class WHC06ProtocolTests: XCTestCase {
         XCTAssertNil(WHC06ProtocolAdapter(profile: .progressor))
     }
 
-    func testDecoderReadsBigEndianHundredthsOfKilogramForce() throws {
+    func testDecoderReadsBigEndianHundredthsOfKilogramForceWhenUnitNibbleIsOne() throws {
         let adapter = try XCTUnwrap(WHC06ProtocolAdapter(profile: .whC06))
         let advertisement = ForceSensorAdvertisement(
             name: nil,
@@ -76,6 +76,32 @@ final class WHC06ProtocolTests: XCTestCase {
         XCTAssertEqual(decoded[0].receivedAt, receivedAt)
     }
 
+    func testDecoderConvertsPoundsFromUnitNibbleToCanonicalKilogramsForce() throws {
+        let adapter = try XCTUnwrap(WHC06ProtocolAdapter(profile: .whC06))
+        let advertisement = ForceSensorAdvertisement(
+            name: nil,
+            serviceUUIDs: [],
+            manufacturerData: [
+                ForceSensorManufacturerData(
+                    companyIdentifier: 0x0100,
+                    payload: Data([
+                        0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                        0x01, 0x07, 0xD0, 0x01, 0xF4, 0xA2, 0x9B, 0x92
+                    ])
+                )
+            ]
+        )
+
+        let decoded = try XCTUnwrap(adapter.decode(advertisement, receivedAt: receivedAt))
+
+        XCTAssertEqual(decoded[0].kilogramsForce, 9.07184740068, accuracy: 0.000_000_001)
+        XCTAssertEqual(
+            MotherboardForceUnit.lbf.value(fromKilogramsForce: decoded[0].kilogramsForce),
+            20,
+            accuracy: 0.000_001
+        )
+    }
+
     func testDecoderRejectsShortManufacturerPayloads() throws {
         let adapter = try XCTUnwrap(WHC06ProtocolAdapter(profile: .whC06))
         let advertisement = ForceSensorAdvertisement(
@@ -84,7 +110,7 @@ final class WHC06ProtocolTests: XCTestCase {
             manufacturerData: [
                 ForceSensorManufacturerData(
                     companyIdentifier: 0x0100,
-                    payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x04])
+                    payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x04, 0xD2, 0, 0])
                 )
             ]
         )
@@ -111,7 +137,10 @@ final class WHC06ProtocolTests: XCTestCase {
 
     func testDecoderReadsPayloadBytesFromANonzeroIndexDataSlice() throws {
         let adapter = try XCTUnwrap(WHC06ProtocolAdapter(profile: .genericWHC06))
-        let fullPayload = Data([0xFF, 0xFF, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x00, 0x7B])
+        let fullPayload = Data([
+            0xFF, 0xFF,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x00, 0x7B, 0, 0, 0x01
+        ])
         let payload = fullPayload[fullPayload.index(fullPayload.startIndex, offsetBy: 2)...]
         let advertisement = ForceSensorAdvertisement(
             name: nil,
@@ -125,6 +154,25 @@ final class WHC06ProtocolTests: XCTestCase {
 
         XCTAssertEqual(decoded.count, 1)
         XCTAssertEqual(decoded[0].kilogramsForce, 1.23, accuracy: 0.000_001)
+    }
+
+    func testDecoderRejectsUnsupportedUnitNibble() throws {
+        let adapter = try XCTUnwrap(WHC06ProtocolAdapter(profile: .whC06))
+        let advertisement = ForceSensorAdvertisement(
+            name: nil,
+            serviceUUIDs: [],
+            manufacturerData: [
+                ForceSensorManufacturerData(
+                    companyIdentifier: 0x0100,
+                    payload: Data([
+                        0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                        0x01, 0x04, 0xD2, 0x01, 0xF4, 0x03, 0x9B, 0x92
+                    ])
+                )
+            ]
+        )
+
+        XCTAssertNil(adapter.decode(advertisement, receivedAt: receivedAt))
     }
 
     func testAdvertisementOnlyAdapterHasNoBLEContractCommandsOrCapabilities() throws {

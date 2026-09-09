@@ -277,12 +277,17 @@ struct MotherboardMeterView: View {
             }
             .font(.system(size: 11, weight: .bold, design: .rounded))
 
-            MotherboardForceRockerView(
-                state: MotherboardForceRocker.state(
-                    loadKGF: measurement?.aggregateLoadKGF,
-                    thresholdKGF: thresholdKGF
+            VStack(alignment: .leading, spacing: 2) {
+                Text("FORCE VS THRESHOLD")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                MotherboardForceRockerView(
+                    state: MotherboardForceRocker.state(
+                        loadKGF: measurement?.aggregateLoadKGF,
+                        thresholdKGF: thresholdKGF
+                    )
                 )
-            )
+            }
 
             balanceContent
 
@@ -326,7 +331,8 @@ struct MotherboardMeterView: View {
 
     @ViewBuilder
     private var balanceContent: some View {
-        if let balance = balancePercentages {
+        if MotherboardBalancePresentation(for: measurement) == .available,
+           let balance = balancePercentages {
             HStack {
                 balanceValue(title: "LEFT", value: balance.left)
                 Spacer()
@@ -335,7 +341,7 @@ struct MotherboardMeterView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Balance: left \(balance.left), right \(balance.right)")
         } else {
-            Text("Balance unavailable — waiting for a measured load.")
+            Text(MotherboardBalancePresentation(for: measurement).unavailableCopy ?? "Balance unavailable — waiting for a measured load.")
                 .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
         }
@@ -414,7 +420,7 @@ private struct MotherboardForceRockerView: View {
         .frame(maxWidth: .infinity, minHeight: 46)
         .animation(.spring(response: 0.2, dampingFraction: 0.72), value: state)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Force rocker")
+        .accessibilityLabel(MotherboardForceRocker.accessibilityLabel)
         .accessibilityValue(state.accessibilityValue)
         .accessibilityIdentifier("motherboard.forceRocker")
     }
