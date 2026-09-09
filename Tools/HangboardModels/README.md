@@ -112,9 +112,12 @@ generated from actual exports and remain read-only.
 
 Every shipped wood display model uses the one committed original source
 `assets/canonical-neutral-wood.png`: light neutral, low-to-moderate fine grain,
-and no species-match, logo, knot, stain, or board-color claim. The deterministic
-generator and its version are in `canonical_neutral_wood.py`; regenerate the
-asset only with:
+and no species-match, logo, knot, stain, or board-color claim. The PNG declares
+its encoded color explicitly with standard-sRGB `sRGB`, `gAMA`, and `cHRM`
+chunks so the source and self-contained USDZ payload do not depend on a
+decoder's unprofiled-image default. The deterministic v3 generator and its
+color-profile intent are in `canonical_neutral_wood.py`; regenerate the asset
+only with:
 
 ```sh
 rtk python3 -B Tools/HangboardModels/canonical_neutral_wood.py
@@ -135,7 +138,11 @@ rtk python3 -B Tools/HangboardModels/rebuild_all_wood_models.py
 
 Then run the actual-package material regression. It cleanly reimports every
 shipped model USDZ and requires the byte-identical embedded canonical PNG plus
-positive loaded image dimensions and image material bindings on every mesh:
+the exact standard-sRGB metadata, positive loaded image dimensions, and image
+material bindings on every mesh. Blender reimport/render verifies the Blender
+side only; a controlled app-renderer comparison remains required after a
+texture or exported-material change because USD color-space tags do not by
+themselves establish bridge decoding behavior:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \

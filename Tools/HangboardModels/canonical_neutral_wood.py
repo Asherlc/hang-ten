@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Deterministic source and Blender binding helpers for shipped wood models.
+"""Deterministic v3 source and Blender binding helpers for shipped wood models.
 
 The committed PNG is intentionally generic: a light neutral wood field with
 fine, low-contrast directional grain. It does not claim a wood species or copy
-manufacturer imagery. Regenerate only with:
+manufacturer imagery. Its encoded pixels are explicitly declared as standard
+sRGB with the matching transfer and chromaticity PNG chunks so every consumer
+receives the same color semantics. Regenerate only with:
 
   rtk python3 -B Tools/HangboardModels/canonical_neutral_wood.py
 """
@@ -21,7 +23,19 @@ TOOLS = Path(__file__).resolve().parent
 CANONICAL_TEXTURE_NAME = "canonical-neutral-wood.png"
 CANONICAL_TEXTURE_PATH = TOOLS / "assets" / CANONICAL_TEXTURE_NAME
 WIDTH = HEIGHT = 2048
-GENERATOR_VERSION = "2026-09-09-light-neutral-wood-v2"
+GENERATOR_VERSION = "2026-09-09-light-neutral-wood-v3-srgb-profile"
+SRGB_RENDERING_INTENT = 0
+SRGB_GAMMA = 45455
+SRGB_CHROMATICITIES = (
+    31270,
+    32900,
+    64000,
+    33000,
+    30000,
+    60000,
+    15000,
+    6000,
+)
 
 
 def _row(y: int) -> bytes:
@@ -56,6 +70,9 @@ def generate(path: Path = CANONICAL_TEXTURE_PATH) -> str:
         (
             b"\x89PNG\r\n\x1a\n",
             _chunk(b"IHDR", struct.pack(">IIBBBBB", WIDTH, HEIGHT, 8, 2, 0, 0, 0)),
+            _chunk(b"sRGB", bytes((SRGB_RENDERING_INTENT,))),
+            _chunk(b"gAMA", struct.pack(">I", SRGB_GAMMA)),
+            _chunk(b"cHRM", struct.pack(">8I", *SRGB_CHROMATICITIES)),
             _chunk(b"IDAT", bytes(compressed)),
             _chunk(b"IEND", b""),
         )
@@ -77,6 +94,17 @@ def load_packed_image():
     image = bpy.data.images.load(str(CANONICAL_TEXTURE_PATH), check_existing=False)
     if tuple(image.size) != (WIDTH, HEIGHT):
         raise ValueError(f"canonical wood source has unexpected dimensions: {image.size}")
+    colorspace = getattr(image, "colorspace_settings", None)
+    if colorspace is None:
+        raise RuntimeError("Blender image has no color-space settings; cannot bind canonical sRGB texture")
+    try:
+        colorspace.name = "sRGB"
+    except (AttributeError, TypeError, ValueError) as error:
+        raise RuntimeError("Blender does not provide the required sRGB image color space") from error
+    if colorspace.name != "sRGB":
+        raise RuntimeError(
+            f"Blender did not retain the canonical image sRGB color space: {colorspace.name!r}"
+        )
     image.name = CANONICAL_TEXTURE_NAME
     image.pack()
     return image

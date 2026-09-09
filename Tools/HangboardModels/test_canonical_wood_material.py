@@ -18,6 +18,7 @@ import bpy
 
 from canonical_wood_color import (
     assert_light_neutral_wood_srgb,
+    assert_standard_srgb_png_profile,
     png_dimensions,
     srgb_color_evidence,
 )
@@ -95,6 +96,9 @@ assert names == {CANONICAL_NAME}, names
 canonical_path = ROOT / "Tools/HangboardModels/assets" / CANONICAL_NAME
 canonical_bytes = canonical_path.read_bytes()
 assert payloads[0] == canonical_bytes, "USDZ must embed the committed canonical source bytes"
+assert_standard_srgb_png_profile(canonical_bytes)
+for payload in payloads:
+    assert_standard_srgb_png_profile(payload)
 assert png_dimensions(canonical_bytes)[0] >= 1024
 assert_light_neutral_wood_srgb(srgb_color_evidence(canonical_bytes))
 for _, model_path in packages:
