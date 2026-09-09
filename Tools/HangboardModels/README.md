@@ -101,3 +101,59 @@ right, `+Y` up, and `+Z` toward the climber.
 The compiler is package/tooling support, not a geometry authoring workflow.
 Human visual review remains required before a future model package enters the
 live inventory.
+
+## Actual-export verifiers
+
+Board-specific verifiers are a second check of the compiler's actual USDZ
+bytes. They start with an empty Blender scene, reimport only
+`assets/primary.usdz`, verify image materials, explicit triangles, tagged
+body/hold bindings, and the generated descriptor's exact hash-bound contents.
+They do not open, save, repair, or triangulate an authored `.blend`.
+
+For Beastmaker 1000, run the verifier against an already compiler-produced
+directory after the approved source and package compilation have completed:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_beastmaker_1000.py -- \
+  --output .context/OWNER-beastmaker-1000/package
+```
+
+The Beastmaker report requires its fixed 22-ID logical inventory and zero
+hardware meshes, as well as the runtime reimport checks. Its review renders
+and `export-verification.json` are evidence beside the compiler output, not
+additional files inside the compiler package directory.
+
+The checked Beastmaker source also retains a documented compiler-input
+transport copy. A read-only audit verifies all 23 mesh names, roles, hold IDs,
+material slots, local vertex hashes, and topology hashes are identical to the
+approved editable source; every scene matrix is only the fixed rigid axis
+transport. Compile that emitted input for the current generic compiler. A
+direct compile of the editable source produces a 580 × 58 × 150 mm axis order
+and is rejected by the verifier, whereas the audited transport output is
+580 × 150 × 58 mm in `hang-ten-board-v1`. Reconciling the brief's editable
+source command with the compiler's Blender-native axis expectation remains a
+separate specification decision; do not repair geometry to work around it.
+
+The Compact II verifier similarly accepts only the compiler package layout;
+it no longer reads legacy root-level GLB/USDZ files or derives identities from
+mesh names:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_wood_grips_compact_ii.py -- \
+  --format usdz --skip-renders .context/OWNER-wood-grips-compact-ii/package
+```
+
+Compact II's evidence does not establish a whole-board depth. Its verifier
+therefore compares the actual imported USDZ to the generated descriptor and
+does not assert a 56 mm overall-body dimension. Running its compiler/export
+sequence remains pending until an Astra-reviewed source `.blend` has explicit
+`role` and `hold_id` tags. Do not infer those tags from imported names or add
+them during verification.
+
+The Blender-free report checks are available with:
+
+```sh
+rtk proxy python3 -B Tools/HangboardModels/test_model_reports.py
+```

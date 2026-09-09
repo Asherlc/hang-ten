@@ -3,7 +3,7 @@
 
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
   --python Tools/HangboardModels/verify_beastmaker_1000.py -- \
-  --output .context/shaky-rat-beastmaker-1000/package-first-pass
+  --output .context/shaky-rat-beastmaker-1000/package
 
 This verifier does not compile/promote a package or repair shape. Imported
 objects receive only the known native-Blender-to-board rigid axis transform
@@ -13,6 +13,7 @@ for matched review cameras; their vertices/topology/materials stay unchanged.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 import json
 from pathlib import Path
 import sys
@@ -28,6 +29,32 @@ import beastmaker_1000 as authored
 import compile_model_package as compiler
 
 
+def load_report(path: Path) -> dict[str, object]:
+    """Read one JSON report without importing Blender state into the check."""
+    try:
+        report = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"report is not readable valid JSON: {path}") from error
+    if not isinstance(report, Mapping):
+        raise ValueError("report must be a JSON object")
+    return dict(report)
+
+
+def verify_report(
+    report: Mapping[str, object], *, expected_ids: frozenset[str]
+) -> dict[str, object]:
+    """Enforce the Beastmaker report's fixed logical inventory and omissions."""
+    if not isinstance(report, Mapping):
+        raise ValueError("report must be an object")
+    if len(expected_ids) != 22:
+        raise ValueError("Beastmaker logical inventory must contain exactly 22 hold IDs")
+    if report.get("hold_ids_preserved") != len(expected_ids):
+        raise ValueError("report must preserve all 22 Beastmaker hold IDs")
+    if report.get("hardware_mesh_count") != 0:
+        raise ValueError("report must contain no hardware meshes")
+    return dict(report)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -37,11 +64,11 @@ def main():
     out = package.parent
     assert out.parent == authored.ROOT/".context"
     assert out.name == authored.ROOT.name+"-beastmaker-1000"
-    source = json.loads((out/"model-report.json").read_text())
+    source = load_report(out/"model-report.json")
     expected = compiler.load_logical_hold_ids(authored.ROOT/"Hangboards/beastmaker-1000/board.json")
     model_path = package/"assets/primary.usdz"
     descriptor_path = package/"assets/primary.model.json"
-    descriptor = json.loads(descriptor_path.read_text())
+    descriptor = load_report(descriptor_path)
     assert descriptor["coordinateFrame"] == authored.FRAME
     assert descriptor["modelSHA256"] == authored.sha(model_path)
     assert set(descriptor["holds"]) == set(expected)
@@ -115,6 +142,7 @@ def main():
                   nativeSceneKitVerification="pending subsequent app integration task",
                   humanVisualApproval="pending", **checks)
     assert report["texturedMeshCount"] == 23
+    report = verify_report(report, expected_ids=expected)
     (out/"export-verification.json").write_text(json.dumps(report, indent=2)+"\n")
     print("BEASTMAKER_EXPORT_VERIFIED", json.dumps({key: report[key] for key in (
         "modelSHA256", "descriptorSHA256", "boundsMeters", "triangles", "hold_ids_preserved",
