@@ -71,7 +71,7 @@ final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
         board.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35)).tap()
 
         XCTAssertTrue(
-            app.buttons["train.changeBoard"].waitForExistence(timeout: 10),
+            app.buttons["Change board"].waitForExistence(timeout: 10),
             "Tapping the model center must select the board and dismiss the picker."
         )
         XCTAssertFalse(board.exists, "The picker card must disappear after selection.")
