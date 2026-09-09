@@ -91,7 +91,11 @@ Final full generator output is `astra-reviewed/`. The documented entrypoint
 completed with exit 0 without injected import paths. Astra inspected its
 `front.png`, `three-quarter.png`, and `clay-detail.png` at original detail:
 complete rim wood is visible, the lower mouths remain distinct, and the top
-rolls/pitched sections are continuous. Human approval remains pending.
+rolls/pitched sections are continuous. After commit `b8596eae`, the human
+reviewer approved the displayed final front, three-quarter, clay-detail, and
+selectable-hold renders. This approval covers visual fidelity of the reviewed
+geometry only; the lower-cost compiler/package, native materials/picking,
+bundle-hash, and simulator gates remain pending.
 
 The actual exported USDZ was reimported after clearing source objects,
 materials and images. `astra-reviewed/export-physical-check.json` exits 0:
@@ -128,11 +132,13 @@ only as audit evidence and must not be promoted.
 
 ## Handoff gates and resources
 
-Human visual approval of the final `astra-reviewed/` front, three-quarter and
-clay-detail set remains mandatory before live package promotion. Source role
-tags, remaining legacy report language, verifier contracts, deterministic
-compiler/package output, coordinate-frame integration, native materials/picking,
-bundle hashes and simulator validation remain assigned to Terra/controller.
+Human visual approval of the final `astra-reviewed/` front, three-quarter,
+clay-detail, and selectable-hold set was recorded after commit `b8596eae`.
+Live package promotion still requires the lower-cost and native gates: source
+role tags, remaining legacy report language, verifier contracts, deterministic
+compiler/package output, coordinate-frame integration, native
+materials/picking, bundle hashes, and simulator validation remain assigned to
+Terra/controller.
 All 19 logical IDs/source-backed metadata remain unchanged.
 
 No HTTP server, tunnel, simulator or other persistent external resource was
