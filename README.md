@@ -4,16 +4,19 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-Each supported board is a complete flat package containing its presentation PNG
-and directly authored canonical hold paths. The same saved path renders the
-normal contact, active highlight, and interaction area, so a highlight cannot
-drift away from its physical hold.
+Each supported board is a complete schema-v2 package with typed presentation
+media. A raster-only package owns a PNG and `media.holdGeometry`; a model-only
+package owns a USDZ and generated hash-bound `.model.json` descriptor. Logical
+holds retain identity and metadata without spatial fields, while the selected
+presentation's raster paths or model mesh/descriptor supplies rendering,
+highlighting, and interaction data.
 
 ## Included
 
-- Audited flat board packages with normalized, manually authored geometry,
-  exact mirroring where the physical product is symmetric, and exact-path
-  highlights.
+- Audited board packages with source-backed logical inventories and
+  presentation-specific media; raster packages use normalized, manually
+  authored geometry, exact mirroring where the physical product is symmetric,
+  and exact-path highlights.
 - Source-backed physical inventories that omit unsupported optional metadata.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
   Intermediate, and Advanced, represented as faithful task-order expansions
@@ -38,10 +41,12 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-identity, conservative hold metadata, and canonical geometry live in directly
-discovered `Hangboards/<board-folder>/board.json` packages alongside
-`assets/primary.png`. The app loads validated package bytes without rewriting
-geometry or maintaining another geometry source.
+identity and conservative hold metadata, plus each presentation's typed media,
+live in directly discovered `Hangboards/<board-folder>/board.json` packages.
+Raster packages store canonical geometry in `media.holdGeometry`; model
+packages store their USDZ and generated descriptor. Logical hold records do not
+carry spatial geometry. The app loads validated package bytes without
+rewriting geometry or maintaining another geometry source.
 
 ## Run
 
@@ -231,8 +236,10 @@ Use the packaged macOS Hangboard Workbench for direct local visual editing.
 Browser-hosted Workbench deployments must use the GitHub-backed
 `--allow-remote` server mode.
 
-Workbench edits are explicit operator changes to canonical package geometry;
-the saved paths remain the exact rendering and hit-testing source of truth.
+For raster packages, Workbench edits are explicit operator changes to canonical
+package geometry; the saved paths remain the exact rendering and hit-testing
+source of truth. Model packages are read-only for geometry editing and use
+their mesh and descriptor as the presentation source.
 
 Regenerate the bundled routine document after an audited plan change:
 
