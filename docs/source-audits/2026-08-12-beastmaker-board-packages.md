@@ -272,8 +272,17 @@ countersinks, hardware, and logos are deliberate display simplifications.
 
 | package | model SHA-256 | descriptor SHA-256 | inventory |
 | --- | --- | --- | --- |
-| Beastmaker 1000 | `e15bae1d9664b834ee68853cecba47076617bdd382458b26700d18e321e146e3` | `2c392869087b6729870010d7606dd3a500eb659d48f80fe851115ff62b71984b` | 22 holds / 23 nodes |
-| Compact II | `220c68ea5519b0bed80cd2aac08b35f5f2c2a7d2200596f62c3a84996efb94a3` | `300a26886362dd0c510c729e1a9fd4e6a35f47497aed5e7f12d33a2fdb7068fe` | 19 holds / 20 nodes |
+| Beastmaker 1000 | `0225f851b8d9ce0796933e5c299a08e881517f5fbb24137c18d6df77b48a624a` | `5ce191bbb231f86e44964e3732bd23b43523ebfbd2795c0724950ca291e2a39c` | 22 holds / 23 nodes |
+| Compact II | `bec787f78083dba8087814d61eb6205b88b54825942ebfd54c9421efa64d7fb6` | `1192f9803cd9ac8ed814466e7f078b8e350284301077da3fb4eeb747bb18cdf0` | 19 holds / 20 nodes |
+
+The shared canonical PNG SHA-256 is
+`e275a778fffd17e05f26ed8feca74588274fce53c4a7fafcc3c35591175f8a2f`.
+Its encoded RGB pixels are unchanged from the prior accepted source; generator
+v3 adds explicit standard-sRGB `sRGB` intent 0, `gAMA` 45455, and standard
+`cHRM` metadata, and both USDZs embed those exact bytes. The package rebuild
+preserved descriptor geometry and inventories. Blender renders establish only
+the Blender-side appearance; controlled SceneKit app comparison remains
+pending and no further albedo decision is recorded here.
 
 The packet hashes are Beastmaker `510def2516477dedb248ea85e3ec858129d0f298014b28c3e7ef9b19bd41cce0` and Compact `fe4a13559dfc8b734e349005444599407cb8cb7358350a095c0c3cdd451f62c3`; the earlier Beastmaker handoff hash was `444dc99cacf1e68fc8b564667a22b965d5e9a624b3e38953a6f98ab07edea5ea`. Beastmaker is 580 × 150 mm with a qualified Beech/shared-layout 58 mm depth; the Tulip page's 5 mm is retained as a conflicting non-thickness claim. Compact is 610 × 157 mm; its #2/#9 56 mm callouts are slopers only, while 64 mm body Z is an authored estimate.
 
