@@ -416,8 +416,9 @@ internal enum BoardTargetResolver {
     }
 
     private static func compatibleHolds(on board: TrainingBoard, gripType: GripType?) -> [BoardHold] {
-        guard gripType == .halfCrimp || gripType == .fullCrimp else { return board.holds }
-        return board.holds.filter {
+        let holds = board.holds(in: board.defaultPresentation)
+        guard gripType == .halfCrimp || gripType == .fullCrimp else { return holds }
+        return holds.filter {
             $0.kind == .edge
                 && $0.gripType != .openHand
                 && $0.features?.contains(.largeOpenHandRail) != true
@@ -762,8 +763,7 @@ internal enum BoardTargetResolver {
     }
 
     private static func frame(of hold: BoardHold, on board: TrainingBoard) -> HoldFrame? {
-        if let frame = hold.resolvedFrame(in: board.defaultPresentation) { return frame }
-        return board.presentations.lazy.compactMap { hold.resolvedFrame(in: $0) }.first
+        hold.resolvedFrame(in: board.defaultPresentation)
     }
 }
 

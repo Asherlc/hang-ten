@@ -94,7 +94,7 @@ struct BoardMapPresentationContent {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        holds = board.holds.filter { resolvedPresentation.containsHold(id: $0.id) }
+        holds = board.holds(in: resolvedPresentation)
     }
 
     func pieces(for holdID: String) -> [BoardHoldPiece] {

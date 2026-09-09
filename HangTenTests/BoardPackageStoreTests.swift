@@ -76,6 +76,38 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(content.holds.map(\.id), ["hold-left"])
     }
 
+    func testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame() {
+        let hold = BoardHold(id: "left", name: "Left", kind: .edge)
+        let presentation = BoardPresentation(
+            id: "primary",
+            name: "Primary",
+            aspectRatio: 1,
+            isDefault: true,
+            media: .raster(
+                BoardRasterMedia(assetPath: "assets/primary.png", holdGeometry: ["left": []])
+            )
+        )
+        let board = TrainingBoard(
+            id: "fixture-missing-geometry",
+            manufacturer: "Fixture",
+            name: "Missing geometry",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            holds: [hold],
+            productURL: URL(string: "https://example.com/fixture-missing-geometry")!,
+            photoAssetName: nil,
+            presentations: [presentation]
+        )
+
+        let content = BoardMapPresentationContent(
+            board: board,
+            selectedPresentationID: presentation.id
+        )
+
+        XCTAssertTrue(content.holds.isEmpty)
+    }
+
     func testStoreAcceptsCanonicalTieToEvenDescriptorCenter() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
             try self.mutateJSONObject(
