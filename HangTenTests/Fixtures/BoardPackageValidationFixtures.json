@@ -59,6 +59,97 @@
       }
     }
   },
+  "modelParserParity": [
+    {
+      "name": "wrong-schema-version",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["schemaVersion"], "value": 1}
+      ]
+    },
+    {
+      "name": "unknown-media-type",
+      "pythonException": "ValueError",
+      "swiftError": "malformedJSON",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "type"], "value": "video"}
+      ]
+    },
+    {
+      "name": "escaped-typed-path",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "assetPath"], "value": "assets/../primary.usdz"}
+      ]
+    },
+    {
+      "name": "extra-asset",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "extraAssets": [
+        {"path": "assets/extra.usdz", "base64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw=="}
+      ],
+      "mutations": []
+    },
+    {
+      "name": "stale-sha",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "replace", "path": ["modelSHA256"], "value": "0000000000000000000000000000000000000000000000000000000000000000"}
+      ]
+    },
+    {
+      "name": "omitted-node",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "remove", "path": ["nodes", 1]}
+      ]
+    },
+    {
+      "name": "extra-node",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Spare", "role": "hold", "holdID": "hold-spare"}}
+      ]
+    },
+    {
+      "name": "body-with-hold-id",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "replace", "path": ["nodes", 0], "value": {"nodeID": "Body", "role": "body", "holdID": "hold-left"}}
+      ]
+    },
+    {
+      "name": "unbound-geometry",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "replace", "path": ["holds", "hold-left", "nodeIDs"], "value": ["Unbound"]}
+      ]
+    },
+    {
+      "name": "invalid-camera",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "display", "camera", "viewDirection"], "value": [0, 0, 0]}
+      ]
+    },
+    {
+      "name": "model-inversion",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "derivation"], "value": {"type": "derived", "sourcePresentationID": "primary", "isInverted": true}}
+      ]
+    }
+  ],
   "ordering": {
     "packages": [
       {

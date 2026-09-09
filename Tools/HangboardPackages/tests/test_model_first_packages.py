@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -25,6 +27,76 @@ def _load_migration_module():
 
 
 MODEL_BYTES = b"fixed model package bytes"
+_SHARED_VALIDATION_FIXTURES = (
+    Path(__file__).resolve().parents[3]
+    / "HangTenTests"
+    / "Fixtures"
+    / "BoardPackageValidationFixtures.json"
+)
+
+
+def _shared_model_parser_parity_fixtures() -> tuple[dict[str, object], ...]:
+    fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
+    matrix = fixtures["modelParserParity"]
+    assert isinstance(matrix, list)
+    return tuple(matrix)
+
+
+def _apply_shared_json_mutation(document: object, mutation: dict[str, object]) -> None:
+    path = mutation["path"]
+    assert isinstance(path, list) and path
+    parent = document
+    for component in path[:-1]:
+        assert isinstance(parent, (dict, list))
+        parent = parent[component]
+    final_component = path[-1]
+    operation = mutation["op"]
+    if operation == "replace":
+        assert isinstance(parent, (dict, list))
+        parent[final_component] = copy.deepcopy(mutation["value"])
+    elif operation == "remove":
+        assert isinstance(parent, list) and isinstance(final_component, int)
+        parent.pop(final_component)
+    elif operation == "append":
+        assert isinstance(parent, (dict, list))
+        target = parent[final_component]
+        assert isinstance(target, list)
+        target.append(copy.deepcopy(mutation["value"]))
+    else:
+        raise AssertionError(f"unsupported shared fixture operation: {operation}")
+
+
+def _write_shared_model_parser_parity_package(
+    root: Path, fixture: dict[str, object]
+) -> Path:
+    fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
+    model = fixtures["model"]
+    assert isinstance(model, dict)
+    board = copy.deepcopy(model["board"])
+    descriptor = copy.deepcopy(model["descriptor"])
+    assert isinstance(board, dict) and isinstance(descriptor, dict)
+    mutations = fixture["mutations"]
+    assert isinstance(mutations, list)
+    for mutation in mutations:
+        assert isinstance(mutation, dict)
+        target = mutation["target"]
+        assert target in {"board", "descriptor"}
+        _apply_shared_json_mutation(board if target == "board" else descriptor, mutation)
+
+    assets = root / "assets"
+    assets.mkdir(parents=True)
+    model_bytes = base64.b64decode(model["assetBase64"])
+    (assets / "primary.usdz").write_bytes(model_bytes)
+    for extra_asset in fixture.get("extraAssets", []):
+        assert isinstance(extra_asset, dict)
+        relative_path = extra_asset["path"]
+        assert isinstance(relative_path, str)
+        asset_path = root / relative_path
+        asset_path.parent.mkdir(parents=True, exist_ok=True)
+        asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
+    _rewrite(root / "board.json", board)
+    _rewrite(assets / "primary.model.json", descriptor)
+    return root
 
 
 def _logical_hold(hold_id: str, name: str) -> dict[str, object]:
@@ -324,6 +396,27 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
     descriptor["modelSHA256"] = "0" * 64
     _rewrite(descriptor_path, descriptor)
     with pytest.raises(ValueError, match="SHA-256"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    "fixture",
+    _shared_model_parser_parity_fixtures(),
+    ids=lambda fixture: str(fixture["name"]),
+)
+def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
+    tmp_path: Path, fixture: dict[str, object]
+) -> None:
+    """Catches a parser accepting a model document rejected by the shared matrix."""
+
+    assert fixture["pythonException"] == "ValueError"
+    assert fixture["swiftError"] in {"invalidPackage", "malformedJSON"}
+    module = load_board_catalog_module()
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / str(fixture["name"]), fixture
+    )
+
+    with pytest.raises(ValueError):
         module.load_board_package(package_root)
 
 

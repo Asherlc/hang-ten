@@ -29,6 +29,40 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: legacyFixture.bundle))
     }
 
+    func testStoreRejectsSharedCrossParserMalformedModelFixtureMatrix() throws {
+        let fixtures = try validationFixtures()
+        let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
+        XCTAssertEqual(
+            matrix.compactMap { $0["name"] as? String },
+            [
+                "wrong-schema-version", "unknown-media-type", "escaped-typed-path",
+                "extra-asset", "stale-sha", "omitted-node", "extra-node",
+                "body-with-hold-id", "unbound-geometry", "invalid-camera",
+                "model-inversion"
+            ]
+        )
+
+        for specification in matrix {
+            let name = try XCTUnwrap(specification["name"] as? String)
+            XCTAssertEqual(specification["pythonException"] as? String, "ValueError", name)
+            let expectedCategory = try XCTUnwrap(specification["swiftError"] as? String)
+            let fixture = try makeSharedModelParserParityFixtureBundle(specification)
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name) { error in
+                guard let packageError = error as? BoardPackageStoreError else {
+                    return XCTFail("Expected BoardPackageStoreError for \(name), got \(error)")
+                }
+                switch (expectedCategory, packageError) {
+                case ("invalidPackage", .invalidPackage), ("malformedJSON", .malformedJSON):
+                    break
+                default:
+                    XCTFail("Expected \(expectedCategory) for \(name), got \(packageError)")
+                }
+            }
+        }
+    }
+
     func testModelPresentationContentUsesTypedMediaHoldInventory() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
@@ -3072,6 +3106,156 @@ final class BoardPackageStoreTests: XCTestCase {
                 .write(to: assetsURL.appendingPathComponent("primary.model.json"))
             try mutatePackage?(packageURL)
         }
+    }
+
+    private func makeSharedModelParserParityFixtureBundle(
+        _ specification: [String: Any]
+    ) throws -> FixtureBundle {
+        let fixtures = try validationFixtures()
+        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
+        var board = try copiedJSONObject(try XCTUnwrap(model["board"]))
+        var descriptor = try copiedJSONObject(try XCTUnwrap(model["descriptor"]))
+        let mutations = try XCTUnwrap(specification["mutations"] as? [[String: Any]])
+        for mutation in mutations {
+            let target = try XCTUnwrap(mutation["target"] as? String)
+            switch target {
+            case "board":
+                try applySharedModelParserParityMutation(mutation, to: &board)
+            case "descriptor":
+                try applySharedModelParserParityMutation(mutation, to: &descriptor)
+            default:
+                throw NSError(
+                    domain: "BoardPackageStoreTests",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "unknown shared fixture target \(target)"]
+                )
+            }
+        }
+        let modelBase64 = try XCTUnwrap(model["assetBase64"] as? String)
+        let modelBytes = try XCTUnwrap(Data(base64Encoded: modelBase64))
+        let extraAssets = specification["extraAssets"] as? [[String: Any]] ?? []
+
+        return try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
+            try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys])
+                .write(to: packageURL.appendingPathComponent("board.json"))
+            try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
+                .write(to: assetsURL.appendingPathComponent("primary.model.json"))
+            try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
+            for extraAsset in extraAssets {
+                let path = try XCTUnwrap(extraAsset["path"] as? String)
+                let base64 = try XCTUnwrap(extraAsset["base64"] as? String)
+                let bytes = try XCTUnwrap(Data(base64Encoded: base64))
+                let url = packageURL.appendingPathComponent(path)
+                try FileManager.default.createDirectory(
+                    at: url.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
+                try bytes.write(to: url)
+            }
+        }
+    }
+
+    private func copiedJSONObject(_ value: Any) throws -> Any {
+        try JSONSerialization.jsonObject(
+            with: JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
+        )
+    }
+
+    private func applySharedModelParserParityMutation(
+        _ mutation: [String: Any],
+        to document: inout Any
+    ) throws {
+        let operation = try XCTUnwrap(mutation["op"] as? String)
+        let path = try XCTUnwrap(mutation["path"] as? [Any])
+        try mutateSharedJSONObject(
+            &document,
+            path: ArraySlice(path),
+            operation: operation,
+            replacement: mutation["value"]
+        )
+    }
+
+    private func mutateSharedJSONObject(
+        _ document: inout Any,
+        path: ArraySlice<Any>,
+        operation: String,
+        replacement: Any?
+    ) throws {
+        let component = try XCTUnwrap(path.first)
+        if path.count == 1 {
+            if let key = component as? String, var object = document as? [String: Any] {
+                switch operation {
+                case "replace":
+                    object[key] = try XCTUnwrap(replacement)
+                case "append":
+                    var values = try XCTUnwrap(object[key] as? [Any])
+                    values.append(try XCTUnwrap(replacement))
+                    object[key] = values
+                default:
+                    throw NSError(
+                        domain: "BoardPackageStoreTests",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "unsupported object mutation \(operation)"]
+                    )
+                }
+                document = object
+                return
+            }
+            if let index = component as? Int, var values = document as? [Any] {
+                switch operation {
+                case "replace":
+                    values[index] = try XCTUnwrap(replacement)
+                case "remove":
+                    values.remove(at: index)
+                default:
+                    throw NSError(
+                        domain: "BoardPackageStoreTests",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "unsupported array mutation \(operation)"]
+                    )
+                }
+                document = values
+                return
+            }
+            throw NSError(
+                domain: "BoardPackageStoreTests",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "invalid shared fixture terminal path"]
+            )
+        }
+
+        if let key = component as? String, var object = document as? [String: Any] {
+            var child = try XCTUnwrap(object[key])
+            try mutateSharedJSONObject(
+                &child,
+                path: path.dropFirst(),
+                operation: operation,
+                replacement: replacement
+            )
+            object[key] = child
+            document = object
+            return
+        }
+        if let index = component as? Int, var values = document as? [Any] {
+            var child = values[index]
+            try mutateSharedJSONObject(
+                &child,
+                path: path.dropFirst(),
+                operation: operation,
+                replacement: replacement
+            )
+            values[index] = child
+            document = values
+            return
+        }
+        throw NSError(
+            domain: "BoardPackageStoreTests",
+            code: 1,
+            userInfo: [NSLocalizedDescriptionKey: "invalid shared fixture path"]
+        )
     }
 
     private func makeRasterV2FixtureBundle(
