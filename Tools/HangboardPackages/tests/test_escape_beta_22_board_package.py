@@ -7,7 +7,11 @@ import pytest
 from PIL import Image
 
 from hangboard_packages.board_catalog import load_board_package
-from _board_package_helpers import presentation_frame, serialize_geometry
+from _board_package_helpers import (
+    board_hold_geometry,
+    presentation_frame,
+    serialize_geometry,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -402,6 +406,10 @@ def _frame_seam_x(left: object, right: object) -> float:
 def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    geometry = board_hold_geometry(board)
+    presentation_id = next(
+        presentation.id for presentation in board.presentations if presentation.is_default
+    )
     with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
         presentation_size = image.size
 
@@ -413,11 +421,11 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         "edge": 8,
         "sloper": 6,
     }
-    assert sum(len(hold.geometry) for hold in board.holds) == 22
+    assert sum(len(pieces) for pieces in geometry.values()) == 22
 
     for hold in board.holds:
-        assert len(hold.geometry) == 1
-        for piece in hold.geometry:
+        assert len(geometry[hold.id]) == 1
+        for piece in geometry[hold.id]:
             assert piece.shape.type == "path"
             assert piece.shape.commands[0].command == "move"
             assert piece.shape.commands[-1].command == "close"
@@ -425,7 +433,9 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
             assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
             assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
-    actual_geometry = {hold.id: serialize_geometry(hold) for hold in board.holds}
+    actual_geometry = {
+        hold_id: serialize_geometry(pieces) for hold_id, pieces in geometry.items()
+    }
     assert {
         hold_id: geometry
         for hold_id, geometry in actual_geometry.items()
@@ -441,14 +451,18 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         right = holds[f"hold-{family:02d}-right"]
         assert left.kind == right.kind
         assert left.size_millimeters == right.size_millimeters
-        left_x, _, left_width, _ = presentation_frame(left.frame, presentation_size)
-        right_x, _, _, _ = presentation_frame(right.frame, presentation_size)
+        left_x, _, left_width, _ = presentation_frame(
+            board.hold_frame(left.id, presentation_id), presentation_size
+        )
+        right_x, _, _, _ = presentation_frame(
+            board.hold_frame(right.id, presentation_id), presentation_size
+        )
         assert left_x + left_width <= right_x
 
     seam_x: float | None = None
     for left_id, right_id in CENTER_MIRRORED_PAIRS:
-        left = holds[left_id].geometry[0]
-        right = holds[right_id].geometry[0]
+        left = geometry[left_id][0]
+        right = geometry[right_id][0]
         pair_seam_x = _frame_seam_x(left, right)
         if seam_x is None:
             seam_x = pair_seam_x

@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
+from _board_package_helpers import document_hold_geometry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
-def _frame(hold: dict[str, object]) -> dict[str, float]:
-    geometry = hold["geometry"]
+def _frame(geometry: object) -> dict[str, float]:
     assert isinstance(geometry, list)
     assert len(geometry) == 1
     frame = geometry[0]["frame"]
@@ -33,9 +33,9 @@ def test_moon_armstrong_right_layout_is_source_reviewed_and_collision_free() -> 
             encoding="utf-8"
         )
     )
-    holds = {hold["id"]: hold for hold in board["holds"]}
+    geometry = document_hold_geometry(board)
 
-    assert len(holds) == 21
+    assert len(geometry) == 21
     expected_right_frames = {
         "jug-right": (0.789, 0.365, 0.15, 0.066289039482),
         "edge-25-right": (0.617, 0.374, 0.15, 0.053031231585),
@@ -47,7 +47,7 @@ def test_moon_armstrong_right_layout_is_source_reviewed_and_collision_free() -> 
         "two-finger-pocket-right": (0.84, 0.586, 0.09, 0.045),
     }
     for hold_id, expected in expected_right_frames.items():
-        frame = _frame(holds[hold_id])
+        frame = _frame(geometry[hold_id])
         assert (
             frame["x"],
             frame["y"],
@@ -58,18 +58,20 @@ def test_moon_armstrong_right_layout_is_source_reviewed_and_collision_free() -> 
     # Moon's official front is deliberately staggered: it is not a mirrored
     # coordinate layout. Keep the outer jug/15/mono/pocket group apart from
     # the inner 25/20/10/8 stack.
-    assert _frame(holds["jug-right"])["x"] != pytest.approx(
-        1 - _frame(holds["jug-left"])["x"] - _frame(holds["jug-left"])["width"]
-    )
-    assert _frame(holds["edge-20-right"])["x"] != pytest.approx(
+    assert _frame(geometry["jug-right"])["x"] != pytest.approx(
         1
-        - _frame(holds["edge-20-left"])["x"]
-        - _frame(holds["edge-20-left"])["width"]
+        - _frame(geometry["jug-left"])["x"]
+        - _frame(geometry["jug-left"])["width"]
+    )
+    assert _frame(geometry["edge-20-right"])["x"] != pytest.approx(
+        1
+        - _frame(geometry["edge-20-left"])["x"]
+        - _frame(geometry["edge-20-left"])["width"]
     )
 
-    edge_8 = _frame(holds["edge-8-right"])
-    mono = _frame(holds["mono-right"])
-    two_finger = _frame(holds["two-finger-pocket-right"])
+    edge_8 = _frame(geometry["edge-8-right"])
+    mono = _frame(geometry["mono-right"])
+    two_finger = _frame(geometry["two-finger-pocket-right"])
     assert not _overlaps(edge_8, mono)
     assert not _overlaps(edge_8, two_finger)
     assert not _overlaps(mono, two_finger)

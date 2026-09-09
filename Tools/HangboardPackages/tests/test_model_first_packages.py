@@ -6,7 +6,22 @@ from pathlib import Path
 
 import pytest
 
-from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
+from conftest import (
+    PRIMARY_PNG_BYTES,
+    load_board_catalog_module,
+    multi_presentation_board_document,
+)
+
+
+def _load_migration_module():
+    import importlib.util
+
+    path = Path(__file__).parents[1] / "scripts" / "migrate_to_schema_v2.py"
+    spec = importlib.util.spec_from_file_location("migrate_to_schema_v2", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 MODEL_BYTES = b"fixed model package bytes"
@@ -140,6 +155,119 @@ def _raster_presentation(
             },
         },
     }
+
+
+def test_migrate_v1_raster_moves_only_geometry_and_presentation_ownership() -> None:
+    before = {
+        "id": "fixture.board",
+        "manufacturer": "Fixture Maker",
+        "name": "Fixture Board",
+        "subtitle": "A parser fixture.",
+        "productURL": "https://example.com/fixture",
+        "aspectRatio": 2,
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 2,
+                "default": True,
+            },
+            {
+                "id": "inverted",
+                "name": "Inverted",
+                "assetPath": "assets/inverted.png",
+                "aspectRatio": 2,
+                "default": False,
+                "sourcePresentationID": "primary",
+                "isInverted": True,
+            },
+        ],
+        "holds": [
+            {
+                "id": "hold-left",
+                "name": "Left hold",
+                "kind": "jug",
+                "presentationID": "primary",
+                "geometry": [_raster_piece(0.1)],
+            }
+        ],
+    }
+
+    after = _load_migration_module().migrate_document(before)
+
+    assert after["schemaVersion"] == 2
+    assert after["presentations"][0]["isDefault"] is True
+    assert "default" not in after["presentations"][0]
+    assert "geometry" not in after["holds"][0]
+    assert "presentationID" not in after["holds"][0]
+    assert (
+        after["presentations"][0]["media"]["holdGeometry"]["hold-left"]
+        == before["holds"][0]["geometry"]
+    )
+    assert after["presentations"][0]["derivation"] == {"type": "original"}
+    assert after["presentations"][1]["derivation"] == {
+        "type": "derived",
+        "sourcePresentationID": "primary",
+        "isInverted": True,
+    }
+    assert after["presentations"][1]["media"]["holdGeometry"] == {
+        "hold-left": before["holds"][0]["geometry"]
+    }
+    assert _load_migration_module().migrate_document(after) == after
+
+
+def test_migrate_v1_rejects_unknown_ownership_and_non_raster_media() -> None:
+    module = _load_migration_module()
+    document = {
+        "id": "fixture.board",
+        "manufacturer": "Fixture Maker",
+        "name": "Fixture Board",
+        "subtitle": "A parser fixture.",
+        "productURL": "https://example.com/fixture",
+        "aspectRatio": 2,
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.usdz",
+                "aspectRatio": 2,
+                "default": True,
+            }
+        ],
+        "holds": [
+            {
+                "id": "hold-left",
+                "name": "Left hold",
+                "kind": "jug",
+                "presentationID": "primary",
+                "geometry": [_raster_piece(0.1)],
+            }
+        ],
+    }
+
+    with pytest.raises(ValueError, match="PNG"):
+        module.migrate_document(document)
+
+
+def test_migrate_v1_preserves_disjoint_multi_presentation_hold_ownership() -> None:
+    after = _load_migration_module().migrate_document(
+        multi_presentation_board_document()
+    )
+
+    assert [
+        sorted(presentation["media"]["holdGeometry"])
+        for presentation in after["presentations"]
+    ] == [["hold-left"], ["hold-right"]]
+
+
+def test_catalog_rejects_unversioned_documents_after_migration() -> None:
+    module = _load_migration_module()
+    document = multi_presentation_board_document()
+    document.pop("schemaVersion")
+
+    with pytest.raises(ValueError, match="schemaVersion"):
+        module.board_catalog._load_board(document)
 
 
 def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> None:

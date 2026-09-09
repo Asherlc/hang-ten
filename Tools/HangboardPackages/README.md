@@ -16,8 +16,11 @@ Hangboards/<package>/
     primary.png
 ```
 
-`board.json` contains the board identity, sourced physical facts, and exact
-normalized hold geometry. The validator rejects unknown package entries,
+`board.json` uses schema version 2: board identity and sourced physical facts
+remain logical, while each presentation owns typed raster or model media. A
+raster presentation stores exact normalized hold geometry in
+`media.holdGeometry`; logical hold records contain no presentation ownership or
+spatial fields. The validator rejects unknown package entries,
 symlinks, malformed JSON or PNG data, duplicate identifiers, unsupported hold
 metadata, and invalid frames or shapes. Primary PNGs may use either transparent
 or fully opaque backgrounds; the validator checks decoded primary image data
@@ -99,3 +102,20 @@ owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail close
 
 The current repository inventory contains 61 complete packages and zero
 drafts.
+
+## Schema migration
+
+The one-way migration utility discovers direct-child packages at execution
+time. It preserves legacy raster scalars, hold ordering, and path command
+ordering while moving geometry into typed raster media. Run a write followed by
+the idempotent check before committing package changes:
+
+```sh
+python3 Tools/HangboardPackages/scripts/migrate_to_schema_v2.py \
+  --root Hangboards --write
+python3 Tools/HangboardPackages/scripts/migrate_to_schema_v2.py \
+  --root Hangboards --check
+```
+
+After migration, both the Python catalog parser and the iOS loader require
+`schemaVersion: 2`; unversioned v1 documents are intentionally rejected.

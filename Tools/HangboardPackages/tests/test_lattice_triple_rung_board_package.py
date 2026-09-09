@@ -6,6 +6,7 @@ import pytest
 from PIL import Image
 
 from hangboard_packages.board_catalog import load_board_package
+from _board_package_helpers import board_hold_geometry
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -19,6 +20,7 @@ EXPECTED_HOLDS = (
 
 def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
     board = load_board_package(PACKAGE_ROOT).board
+    geometry = board_hold_geometry(board)
 
     assert board.id == "lattice-triple-rung"
     assert board.manufacturer == "Lattice Training"
@@ -38,8 +40,8 @@ def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
 
     edge_frames = []
     for hold in board.holds:
-        assert len(hold.geometry) == 1
-        piece = hold.geometry[0]
+        assert len(geometry[hold.id]) == 1
+        piece = geometry[hold.id][0]
         assert piece.shape.type == "path"
         assert piece.shape.commands[0].command == "move"
         assert piece.shape.commands[-1].command == "close"

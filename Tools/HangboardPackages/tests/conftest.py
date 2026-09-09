@@ -58,6 +58,7 @@ def board_document(
     name: str = "Fixture Board",
 ) -> dict[str, Any]:
     return {
+        "schemaVersion": 2,
         "id": board_id,
         "manufacturer": manufacturer,
         "name": name,
@@ -69,9 +70,29 @@ def board_document(
             {
                 "id": "primary",
                 "name": "Primary",
-                "assetPath": "assets/primary.png",
                 "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
-                "default": True,
+                "isDefault": True,
+                "derivation": {"type": "original"},
+                "media": {
+                    "type": "raster",
+                    "assetPath": "assets/primary.png",
+                    "holdGeometry": {
+                        "hold-left": [
+                            {
+                                "frame": {
+                                    "x": 0.1,
+                                    "y": 0.1,
+                                    "width": 0.1,
+                                    "height": 0.4,
+                                },
+                                "shape": {
+                                    "type": "roundedRect",
+                                    "cornerRadiusFraction": 0.2,
+                                },
+                            }
+                        ]
+                    },
+                },
             }
         ],
         "holds": [
@@ -79,13 +100,6 @@ def board_document(
                 "id": "hold-left",
                 "name": "Left hold",
                 "kind": "jug",
-                "presentationID": "primary",
-                "geometry": [
-                    {
-                        "frame": {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.4},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
-                    }
-                ],
             }
         ],
     }
@@ -103,31 +117,52 @@ def multi_presentation_board_document(
         {
             "id": "front",
             "name": "Front",
-            "assetPath": "assets/primary.png",
             "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
-            "default": True,
+            "isDefault": True,
+            "derivation": {"type": "original"},
+            "media": {
+                "type": "raster",
+                "assetPath": "assets/primary.png",
+                "holdGeometry": {
+                    "hold-left": document["presentations"][0]["media"][
+                        "holdGeometry"
+                    ]["hold-left"]
+                },
+            },
         },
         {
             "id": "back",
             "name": "Back",
-            "assetPath": "assets/back.png",
             "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
-            "default": False,
+            "isDefault": False,
+            "derivation": {"type": "original"},
+            "media": {
+                "type": "raster",
+                "assetPath": "assets/back.png",
+                "holdGeometry": {
+                    "hold-right": [
+                        {
+                            "frame": {
+                                "x": 0.8,
+                                "y": 0.1,
+                                "width": 0.1,
+                                "height": 0.4,
+                            },
+                            "shape": {
+                                "type": "roundedRect",
+                                "cornerRadiusFraction": 0.2,
+                            },
+                        }
+                    ]
+                },
+            },
         },
     ]
-    document["holds"][0]["presentationID"] = "front"
     document["holds"].append(
         {
             "id": "hold-right",
             "name": "Right hold",
             "kind": "jug",
-            "presentationID": "back",
-            "geometry": [
-                {
-                    "frame": {"x": 0.8, "y": 0.1, "width": 0.1, "height": 0.4},
-                    "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
-                }
-            ],
         }
     )
     return document

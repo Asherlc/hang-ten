@@ -400,36 +400,6 @@ class BoardPresentation:
     is_inverted: bool = False
     media: PresentationMedia | None = None
 
-    @classmethod
-    def from_json(cls, value: Any, source: str) -> "BoardPresentation":
-        payload = _mapping(value, source)
-        _closed(
-            payload,
-            {"id", "name", "assetPath", "aspectRatio", "default"},
-            source,
-            optional={"sourcePresentationID", "isInverted"},
-        )
-        aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
-        if aspect_ratio <= 0:
-            raise ValueError(f"{source}.aspectRatio must be positive")
-        return cls(
-            _identifier(payload["id"], f"{source}.id"),
-            _string(payload["name"], f"{source}.name"),
-            _asset_path(payload["assetPath"], f"{source}.assetPath"),
-            aspect_ratio,
-            _boolean(payload["default"], f"{source}.default"),
-            (
-                _identifier(payload["sourcePresentationID"], f"{source}.sourcePresentationID")
-                if "sourcePresentationID" in payload
-                else None
-            ),
-            _boolean(payload["isInverted"], f"{source}.isInverted")
-            if "isInverted" in payload
-            else False,
-            None,
-        )
-
-
 def _load_v2_derivation(
     value: Any, source: str
 ) -> tuple[str | None, bool]:
@@ -600,20 +570,6 @@ class BoardHold:
 
 
 @dataclass(frozen=True)
-class _LegacyBoardHold(BoardHold):
-    geometry: tuple[BoardGeometryPiece, ...]
-    presentation_id: str
-
-    @property
-    def frame(self) -> NormalizedFrame:
-        min_x = min(piece.frame.x for piece in self.geometry)
-        min_y = min(piece.frame.y for piece in self.geometry)
-        max_x = max(piece.frame.x + piece.frame.width for piece in self.geometry)
-        max_y = max(piece.frame.y + piece.frame.height for piece in self.geometry)
-        return NormalizedFrame(min_x, min_y, max_x - min_x, max_y - min_y)
-
-
-@dataclass(frozen=True)
 class BoardDocument:
     id: str
     facts: Mapping[str, Any]
@@ -666,21 +622,7 @@ class BoardDocument:
                 raise ValueError(
                     f"presentation {presentation_id} has no descriptor frame for hold {hold_id}"
                 ) from error
-        hold = next(
-            (
-                candidate
-                for candidate in self.holds
-                if candidate.id == hold_id
-                and candidate.presentation_id
-                == (presentation.source_presentation_id or presentation.id)
-            ),
-            None,
-        )
-        if hold is None:
-            raise ValueError(
-                f"presentation {presentation_id} has no geometry for hold {hold_id}"
-            )
-        return hold.frame
+        raise ValueError(f"presentation {presentation_id} has no typed media")
 
     def hold_ids_for_position(self, position_id: str) -> tuple[str, ...]:
         position = next(
@@ -694,16 +636,12 @@ class BoardDocument:
             for candidate in self.presentations
             if candidate.id == position.presentation_id
         )
-        canonical_presentation_id = (
-            presentation.source_presentation_id or presentation.id
-        )
-        if presentation.media is not None:
+        if isinstance(presentation.media, PresentationMediaRaster):
+            owned = set(presentation.media.hold_geometry)
+            return tuple(hold.id for hold in self.holds if hold.id in owned)
+        if isinstance(presentation.media, PresentationMediaModel):
             return tuple(hold.id for hold in self.holds)
-        return tuple(
-            hold.id
-            for hold in self.holds
-            if hold.presentation_id == canonical_presentation_id
-        )
+        raise ValueError(f"presentation {presentation.id} has no typed media")
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
         position_ids = {position.id for position in self.positions}
@@ -762,20 +700,11 @@ def _load_geometry(value: Any, source: str) -> tuple[BoardGeometryPiece, ...]:
     )
 
 
-def _load_hold(
-    value: Any,
-    source: str,
-    *,
-    presentation_id: str = "",
-    logical_only: bool = False,
-) -> BoardHold:
+def _load_hold(value: Any, source: str) -> BoardHold:
     payload = _mapping(value, source)
-    required = {"id", "name", "kind"}
-    if not logical_only:
-        required.add("geometry")
     _closed(
         payload,
-        required,
+        {"id", "name", "kind"},
         source,
         optional={
             "equipmentObjectID",
@@ -787,8 +716,7 @@ def _load_hold(
             "features",
             "sloper",
             "pairedHoldID",
-        }
-        | ({"presentationID"} if not logical_only else set()),
+        },
     )
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
@@ -868,26 +796,14 @@ def _load_hold(
         "features": features,
         "paired_hold_id": paired_hold_id,
     }
-    if logical_only:
-        return BoardHold(**common)
-    return _LegacyBoardHold(
-        **common,
-        geometry=_load_geometry(payload["geometry"], f"{source}.geometry"),
-        presentation_id=presentation_id,
-    )
+    return BoardHold(**common)
 
 
-def _load_presentations(
-    value: Any, source: str, *, version: int = 1
-) -> tuple[BoardPresentation, ...]:
+def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError(f"{source} must be a non-empty array")
     presentations = tuple(
-        (
-            _load_v2_presentation(item, f"{source}[{index}]")
-            if version == 2
-            else BoardPresentation.from_json(item, f"{source}[{index}]")
-        )
+        _load_v2_presentation(item, f"{source}[{index}]")
         for index, item in enumerate(value)
     )
     if len({presentation.id for presentation in presentations}) != len(presentations):
@@ -999,11 +915,7 @@ def _load_position_transitions(
 
 def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     schema_version = value.get("schemaVersion")
-    if schema_version is None:
-        version = 1
-    elif schema_version == 2 and not isinstance(schema_version, bool):
-        version = 2
-    else:
+    if schema_version != 2 or isinstance(schema_version, bool):
         raise ValueError("board.json.schemaVersion must be 2 when present")
     required = {
         "id",
@@ -1015,8 +927,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "presentations",
         "holds",
     }
-    if version == 2:
-        required.add("schemaVersion")
+    required.add("schemaVersion")
     _closed(
         value,
         required,
@@ -1061,11 +972,8 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
                 )
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
-    presentations = _load_presentations(
-        value["presentations"], "board.json.presentations", version=version
-    )
-    if version == 2:
-        _validate_v2_presentation_compatibility(presentations)
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+    _validate_v2_presentation_compatibility(presentations)
     positions = (
         _load_positions(
             value["positions"],
@@ -1093,32 +1001,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds: list[BoardHold] = []
     for index, item in enumerate(raw_holds):
         source = f"board.json.holds[{index}]"
-        payload = _mapping(item, source)
-        if version == 2:
-            holds.append(_load_hold(payload, source, logical_only=True))
-            continue
-        presentation_ids = {presentation.id for presentation in presentations}
-        canonical_presentation_ids = {
-            presentation.id
-            for presentation in presentations
-            if presentation.source_presentation_id is None
-        }
-        presentation_id = _identifier(
-            payload.get("presentationID"), f"{source}.presentationID"
-        )
-        if presentation_id not in presentation_ids:
-            raise ValueError(f"{source}.presentationID is an unknown presentationID")
-        if presentation_id not in canonical_presentation_ids:
-            raise ValueError(
-                f"{source}.presentationID must be owned by a canonical presentation"
-            )
-        holds.append(
-            _load_hold(
-                payload,
-                source,
-                presentation_id=presentation_id,
-            )
-        )
+        holds.append(_load_hold(item, source))
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
@@ -1143,32 +1026,26 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         paired_hold = holds_by_id[hold.paired_hold_id]
         if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
             raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
-    if version == 1:
-        presentations_by_id = {
-            presentation.id: presentation for presentation in presentations
-        }
-        canonical_presentation_ids_with_holds = {
-            hold.presentation_id for hold in holds_tuple
-        }
-        for position in positions:
-            presentation = presentations_by_id[position.presentation_id]
-            canonical_presentation_id = (
-                presentation.source_presentation_id or presentation.id
-            )
-            if canonical_presentation_id not in canonical_presentation_ids_with_holds:
+    logical_hold_ids = {hold.id for hold in holds_tuple}
+    raster_hold_ids: set[str] = set()
+    for presentation in presentations:
+        if isinstance(presentation.media, PresentationMediaRaster):
+            presentation_hold_ids = set(presentation.media.hold_geometry)
+            if not presentation_hold_ids:
                 raise ValueError(
-                    f"position {position.id} canonical presentation "
-                    f"{canonical_presentation_id} must own at least one hold"
+                    f"presentation {presentation.id} media.holdGeometry must "
+                    "own at least one logical hold"
                 )
-    else:
-        logical_hold_ids = {hold.id for hold in holds_tuple}
-        for presentation in presentations:
-            if isinstance(presentation.media, PresentationMediaRaster):
-                if set(presentation.media.hold_geometry) != logical_hold_ids:
-                    raise ValueError(
-                        f"presentation {presentation.id} media.holdGeometry must "
-                        "exactly own every logical hold"
-                    )
+            if not presentation_hold_ids <= logical_hold_ids:
+                raise ValueError(
+                    f"presentation {presentation.id} media.holdGeometry must "
+                    "only own logical holds"
+                )
+            raster_hold_ids.update(presentation_hold_ids)
+    if raster_hold_ids and raster_hold_ids != logical_hold_ids:
+        raise ValueError(
+            "v2 raster media.holdGeometry must collectively own every logical hold"
+        )
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),

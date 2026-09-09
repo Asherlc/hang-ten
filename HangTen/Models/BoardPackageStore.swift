@@ -140,99 +140,16 @@ struct BoardPackageStore {
             }
             try Self.validatePackageContainer(packageURL, boardID: slug)
             let resourcePrefix = "Hangboards/\(slug)"
-            if try Self.boardSchemaVersion(
-                at: boardURL,
-                resource: "\(resourcePrefix)/board.json"
-            ) == 2 {
-                let loaded = try Self.loadV2Package(
-                    at: packageURL,
-                    resource: "\(resourcePrefix)/board.json"
-                )
-                guard seenBoardIDs.insert(loaded.board.id).inserted else {
-                    throw BoardPackageStoreError.duplicateBoardID(loaded.board.id)
-                }
-                loadedBoards.append(loaded.board)
-                loadedPresentationURLs[loaded.board.id] = loaded.presentationURLs
-                loadedDescriptorURLs[loaded.board.id] = loaded.descriptorURLs
-                continue
-            }
-            let boardDocument: BoardPackageBoardDocument = try Self.decode(
-                from: boardURL,
+            let loaded = try Self.loadV2Package(
+                at: packageURL,
                 resource: "\(resourcePrefix)/board.json"
             )
-            try Self.validateMetadata(boardDocument: boardDocument)
-            try Self.validateEquipmentObjects(in: boardDocument)
-            let presentations = try Self.validatePresentations(
-                in: boardDocument,
-                packageURL: packageURL
-            )
-            let presentationSizes = try Self.validateFinishedPackage(
-                packageURL,
-                boardID: boardDocument.id,
-                declaredAssetPaths: Set(presentations.map(\.assetPath))
-            )
-            for presentation in presentations {
-                guard let imageSize = presentationSizes[presentation.assetPath] else {
-                    throw BoardPackageStoreError.missingPresentationAsset(
-                        boardID: boardDocument.id,
-                        path: presentation.assetPath
-                    )
-                }
-                try Self.validatePresentationAspectRatio(
-                    presentation.aspectRatio,
-                    imageWidth: imageSize.width,
-                    imageHeight: imageSize.height,
-                    boardID: boardDocument.id
-                )
+            guard seenBoardIDs.insert(loaded.board.id).inserted else {
+                throw BoardPackageStoreError.duplicateBoardID(loaded.board.id)
             }
-            if let defaultPresentation = presentations.first(where: \.isDefault),
-               let defaultImageSize = presentationSizes[defaultPresentation.assetPath] {
-                try Self.validatePresentationAspectRatio(
-                    boardDocument.aspectRatio,
-                    imageWidth: defaultImageSize.width,
-                    imageHeight: defaultImageSize.height,
-                    boardID: boardDocument.id
-                )
-            }
-            let legacyHolds = try Self.validateHolds(
-                in: boardDocument,
-                presentations: presentations
-            )
-            let trainingPresentations = presentations.map { presentation in
-                let canonicalID = presentation.sourcePresentationID ?? presentation.id
-                let holdGeometry = Dictionary(
-                    uniqueKeysWithValues: legacyHolds
-                        .filter { $0.presentationID == canonicalID }
-                        .map { ($0.hold.id, $0.geometry) }
-                )
-                return presentation.trainingPresentation(holdGeometry: holdGeometry)
-            }
-            let positions = try Self.validatePositions(
-                in: boardDocument,
-                presentations: trainingPresentations,
-                holds: legacyHolds
-            )
-            let positionTransitions = try Self.validatePositionTransitions(
-                in: boardDocument,
-                positions: positions
-            )
-            try Self.validateEquipmentObjectOwnership(in: boardDocument)
-            guard seenBoardIDs.insert(boardDocument.id).inserted else {
-                throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
-            }
-            let board = try boardDocument.trainingBoard(
-                holds: legacyHolds.map(\.hold),
-                presentations: trainingPresentations,
-                positions: positions,
-                positionTransitions: positionTransitions
-            )
-            loadedBoards.append(board)
-            loadedPresentationURLs[board.id] = Dictionary(
-                uniqueKeysWithValues: presentations.map {
-                    ($0.id, packageURL.appendingPathComponent($0.assetPath))
-                }
-            )
-            loadedDescriptorURLs[board.id] = [:]
+            loadedBoards.append(loaded.board)
+            loadedPresentationURLs[loaded.board.id] = loaded.presentationURLs
+            loadedDescriptorURLs[loaded.board.id] = loaded.descriptorURLs
         }
 
         loadedBoards.sort(by: Self.boardComesBefore)
@@ -273,27 +190,6 @@ struct BoardPackageStore {
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
         return descriptorURLsByBoardID[board.id]?[resolvedID]
-    }
-
-    private static func boardSchemaVersion(at url: URL, resource: String) throws -> Int? {
-        do {
-            let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
-            guard let payload = object as? [String: Any] else {
-                throw BoardPackageStoreError.malformedJSON(resource: resource)
-            }
-            guard let value = payload["schemaVersion"] else { return nil }
-            guard let number = value as? NSNumber,
-                  CFGetTypeID(number) != CFBooleanGetTypeID(),
-                  number.intValue == 2,
-                  number.doubleValue == 2 else {
-                throw BoardPackageStoreError.malformedJSON(resource: resource)
-            }
-            return 2
-        } catch let error as BoardPackageStoreError {
-            throw error
-        } catch {
-            throw BoardPackageStoreError.malformedJSON(resource: resource)
-        }
     }
 
     private static func decode<Value: Decodable>(
@@ -340,50 +236,6 @@ struct BoardPackageStore {
             }
         }
         return directories.sorted { $0.lastPathComponent < $1.lastPathComponent }
-    }
-
-    private static func validateFinishedPackage(
-        _ packageURL: URL,
-        boardID: String,
-        declaredAssetPaths: Set<String>
-    ) throws -> [String: (width: Int, height: Int)] {
-        try validatePackageContainer(packageURL, boardID: boardID)
-        let boardURL = packageURL.appendingPathComponent("board.json")
-        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
-        guard try isRegularFile(boardURL), try isRegularDirectory(assetsURL) else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "board.json and assets must be regular non-symlink paths"
-            )
-        }
-        let actualAssetPaths = try regularFilePaths(
-            below: assetsURL,
-            relativeTo: packageURL,
-            boardID: boardID
-        )
-        guard actualAssetPaths == declaredAssetPaths else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "assets must contain exactly the declared presentation assets"
-            )
-        }
-        var sizes: [String: (width: Int, height: Int)] = [:]
-        for assetPath in declaredAssetPaths.sorted() {
-            let assetURL = packageURL.appendingPathComponent(assetPath)
-            guard try isRegularFile(assetURL),
-                  FileManager.default.isReadableFile(atPath: assetURL.path) else {
-                throw BoardPackageStoreError.missingPresentationAsset(
-                    boardID: boardID,
-                    path: assetPath
-                )
-            }
-            sizes[assetPath] = try validatePNG(
-                at: assetURL,
-                boardID: boardID,
-                label: assetPath
-            )
-        }
-        return sizes
     }
 
     private static func validatePackageContainer(
@@ -573,433 +425,6 @@ struct BoardPackageStore {
             return left < right
         }
         return false
-    }
-
-    private static func validateMetadata(
-        boardDocument: BoardPackageBoardDocument
-    ) throws {
-        let requiredStrings = [
-            boardDocument.id,
-            boardDocument.manufacturer,
-            boardDocument.name,
-            boardDocument.subtitle,
-            boardDocument.productURL.absoluteString
-        ]
-        guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardDocument.id,
-                reason: "required metadata must not be empty"
-            )
-        }
-        if let dimensions = boardDocument.dimensions, dimensions.isEmpty {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardDocument.id,
-                reason: "dimensions must not be empty when present"
-            )
-        }
-        guard boardDocument.id.isBoardPackageIdentifier else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardDocument.id,
-                reason: "board ID must be identifier-shaped"
-            )
-        }
-        guard boardDocument.productURL.scheme == "https",
-              boardDocument.productURL.host != nil else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardDocument.id,
-                reason: "product URL must be absolute HTTPS"
-            )
-        }
-    }
-
-    private static func validatePresentations(
-        in document: BoardPackageBoardDocument,
-        packageURL: URL
-    ) throws -> [BoardPackagePresentationDocument] {
-        let presentations = document.presentations
-        guard !presentations.isEmpty else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "presentations must not be empty"
-            )
-        }
-        var ids = Set<String>()
-        var defaultCount = 0
-        for presentation in presentations {
-            guard presentation.id.isBoardPackageIdentifier,
-                  !presentation.name.isEmpty else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "presentation metadata must be non-empty and identifier-shaped"
-                )
-            }
-            guard ids.insert(presentation.id).inserted else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "duplicate presentation ID \(presentation.id)"
-                )
-            }
-            guard presentation.aspectRatio.isFinite,
-                  presentation.aspectRatio > 0 else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "presentation aspect ratio must be positive"
-                )
-            }
-            if presentation.isDefault { defaultCount += 1 }
-            try validatePresentationAssetPath(
-                presentation.assetPath,
-                boardID: document.id,
-                in: packageURL
-            )
-        }
-        let presentationsByID = Dictionary(
-            uniqueKeysWithValues: presentations.map { ($0.id, $0) }
-        )
-        for presentation in presentations {
-            if let sourcePresentationID = presentation.sourcePresentationID {
-                guard sourcePresentationID != presentation.id,
-                      let sourcePresentation = presentationsByID[sourcePresentationID],
-                      sourcePresentation.sourcePresentationID == nil else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "presentation \(presentation.id) must reference a canonical presentation"
-                    )
-                }
-            }
-        }
-        guard defaultCount == 1 else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "presentations must contain exactly one default"
-            )
-        }
-        return presentations
-    }
-
-    private static func validateEquipmentObjects(
-        in document: BoardPackageBoardDocument
-    ) throws {
-        guard !document.equipmentObjects.isEmpty else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "equipmentObjects must not be empty"
-            )
-        }
-        var objectIDs = Set<String>()
-        for object in document.equipmentObjects {
-            guard object.id.isBoardPackageIdentifier else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "equipment object ID must be identifier-shaped"
-                )
-            }
-            guard objectIDs.insert(object.id).inserted else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "equipment object ID \(object.id) is duplicated"
-                )
-            }
-        }
-    }
-
-    private static func validateEquipmentObjectOwnership(
-        in document: BoardPackageBoardDocument
-    ) throws {
-        let ownedObjectIDs = Set(document.holds.map(\.equipmentObjectID))
-        for object in document.equipmentObjects where !ownedObjectIDs.contains(object.id) {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "equipment object \(object.id) must own at least one hold"
-            )
-        }
-    }
-
-    private static func validatePositions(
-        in document: BoardPackageBoardDocument,
-        presentations: [BoardPresentation],
-        holds: [BoardPackageLegacyHold]
-    ) throws -> [BoardPosition] {
-        let positions = document.positions?.map(\.boardPosition) ?? presentations.map {
-            BoardPosition(id: $0.id, presentationID: $0.id)
-        }
-        guard !positions.isEmpty else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "positions must not be empty"
-            )
-        }
-        var positionIDs = Set<String>()
-        let presentationsByID = Dictionary(uniqueKeysWithValues: presentations.map { ($0.id, $0) })
-        for position in positions {
-            guard position.id.isBoardPackageIdentifier else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "position ID must be identifier-shaped"
-                )
-            }
-            guard positionIDs.insert(position.id).inserted else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "duplicate position id"
-                )
-            }
-            guard let presentation = presentationsByID[position.presentationID] else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "position \(position.id) references unknown presentationID"
-                )
-            }
-            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
-            guard holds.contains(where: { $0.presentationID == canonicalPresentationID }) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "position \(position.id) must own at least one hold"
-                )
-            }
-        }
-        return positions
-    }
-
-    private static func validatePositionTransitions(
-        in document: BoardPackageBoardDocument,
-        positions: [BoardPosition]
-    ) throws -> [BoardPositionTransition] {
-        let transitions = document.positionTransitions?.map(\.boardPositionTransition) ?? []
-        let positionIDs = Set(positions.map(\.id))
-        var transitionPairs = Set<[String]>()
-        for transition in transitions {
-            guard positionIDs.contains(transition.fromPositionID) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "position transition references unknown fromPositionID"
-                )
-            }
-            guard positionIDs.contains(transition.toPositionID) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "position transition references unknown toPositionID"
-                )
-            }
-            guard transition.fromPositionID != transition.toPositionID else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "position transition must not be self-edge"
-                )
-            }
-            let pair = [transition.fromPositionID, transition.toPositionID]
-            guard transitionPairs.insert(pair).inserted else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "duplicate position transition"
-                )
-            }
-        }
-        return transitions
-    }
-
-    private static func validatePresentationAssetPath(
-        _ assetPath: String,
-        boardID: String,
-        in packageURL: URL
-    ) throws {
-        let components = assetPath.split(separator: "/", omittingEmptySubsequences: false)
-        let isCanonicalPNG = components.count >= 2 &&
-            components.first == "assets" &&
-            !assetPath.hasPrefix("/") &&
-            !assetPath.contains("\\") &&
-            !components.contains(where: { $0.isEmpty || $0 == "." || $0 == ".." }) &&
-            assetPath.hasSuffix(".png")
-        guard isCanonicalPNG else {
-            let resolvedPath = packageURL.appendingPathComponent(assetPath).standardizedFileURL
-            let packageBase = packageURL.standardizedFileURL.path
-            if !resolvedPath.path.hasPrefix("\(packageBase)/") {
-                throw BoardPackageStoreError.presentationAssetPathEscape(
-                    boardID: boardID,
-                    path: assetPath
-                )
-            }
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "presentation asset path must name a PNG beneath assets"
-            )
-        }
-        let resolvedPath = packageURL.appendingPathComponent(assetPath).standardizedFileURL
-        let packageBase = packageURL.standardizedFileURL.path
-        guard resolvedPath.path.hasPrefix("\(packageBase)/") else {
-            throw BoardPackageStoreError.presentationAssetPathEscape(
-                boardID: boardID,
-                path: assetPath
-            )
-        }
-    }
-
-    private static func validateHolds(
-        in document: BoardPackageBoardDocument,
-        presentations: [BoardPackagePresentationDocument]
-    ) throws -> [BoardPackageLegacyHold] {
-        let presentationIDs = Set(presentations.map(\.id))
-        let equipmentObjectIDs = Set(document.equipmentObjects.map(\.id))
-        let canonicalPresentationIDs = Set(
-            presentations
-                .filter { $0.sourcePresentationID == nil }
-                .map(\.id)
-        )
-        var holdIDs = Set<String>()
-        var holds: [BoardPackageLegacyHold] = []
-        for hold in document.holds {
-            guard hold.id.isBoardPackageIdentifier,
-                  !hold.name.isEmpty else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold metadata must be non-empty and identifier-shaped"
-                )
-            }
-            guard holdIDs.insert(hold.id).inserted else {
-                throw BoardPackageStoreError.duplicateHoldID(
-                    boardID: document.id,
-                    holdID: hold.id
-                )
-            }
-            guard equipmentObjectIDs.contains(hold.equipmentObjectID) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)"
-                )
-            }
-            guard presentationIDs.contains(hold.presentationID) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an unknown presentationID"
-                )
-            }
-            guard canonicalPresentationIDs.contains(hold.presentationID) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) must be owned by a canonical presentation"
-                )
-            }
-            if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) must not specify both a size and depth range"
-                )
-            }
-            if hold.sloper != nil && hold.kind != .sloper {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has sloper metadata but is not a sloper"
-                )
-            }
-            if hold.kind == .gaston {
-                guard let pairedHoldID = hold.pairedHoldID,
-                      pairedHoldID.isBoardPackageIdentifier else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "gaston hold \(hold.id) must declare an identifier-shaped pairedHoldID"
-                    )
-                }
-            } else if hold.declaresPairedHoldID {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "non-gaston hold \(hold.id) must not declare pairedHoldID"
-                )
-            }
-            if let fingerCapacity = hold.fingerCapacity,
-               !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid finger capacity"
-                )
-            }
-            if let handCapacity = hold.handCapacity,
-               !BoardHold.validHandCapacityRange.contains(handCapacity) {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid hand capacity"
-                )
-            }
-            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has a non-positive size"
-                )
-            }
-            if let depthRange = hold.depthRangeMillimeters,
-               !depthRange.lowerBound.isFinite ||
-               !depthRange.upperBound.isFinite ||
-               depthRange.lowerBound <= 0 ||
-               depthRange.upperBound <= 0 ||
-               depthRange.lowerBound > depthRange.upperBound {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid depth range"
-                )
-            }
-            let geometryValidation = BoardHoldGeometryValidator.validate(
-                hold.geometry.map(\.holdPieceDocument),
-                holdID: hold.id,
-                pieceID: { "\(hold.id)-piece-\($0)" }
-            )
-            guard !geometryValidation.isEmpty else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) geometry must include at least one piece"
-                )
-            }
-            for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
-                if let failureReason = pieceValidation.packageFailureReason {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "hold \(hold.id) geometry[\(pieceIndex)] \(failureReason)"
-                    )
-                }
-            }
-            let geometryPieces = geometryValidation.pieces.compactMap(\.piece)
-            guard geometryPieces.count == geometryValidation.pieces.count else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid geometry"
-                )
-            }
-            holds.append(
-                try hold.trainingBoardHold(geometryPieces: geometryPieces)
-            )
-            if let features = hold.features,
-               Set(features).count != features.count {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has duplicate features"
-                )
-            }
-        }
-        guard !holdIDs.isEmpty else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: document.id,
-                reason: "holds must not be empty"
-            )
-        }
-        let documentsByHoldID = Dictionary(
-            uniqueKeysWithValues: document.holds.map { ($0.id, $0) }
-        )
-        for hold in document.holds where hold.kind == .gaston {
-            let pairedHoldID = hold.pairedHoldID!
-            guard pairedHoldID != hold.id,
-                  let pairedHold = documentsByHoldID[pairedHoldID] else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "gaston hold \(hold.id) must pair with a distinct existing hold"
-                )
-            }
-            guard pairedHold.kind == .gaston,
-                  pairedHold.pairedHoldID == hold.id else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "gaston hold \(hold.id) must have a reciprocal gaston pair"
-                )
-            }
-        }
-        return holds
     }
 
     private static func loadV2Package(
@@ -1273,18 +698,22 @@ struct BoardPackageStore {
         var presentations: [BoardPresentation] = []
         var presentationURLs: [String: URL] = [:]
         var descriptorURLs: [String: URL] = [:]
+        var rasterHoldIDs = Set<String>()
         for presentation in document.presentations {
             let media: BoardPresentationMedia
             switch presentation.media {
             case .raster(let assetPath, let geometryDocuments):
-                guard Set(geometryDocuments.keys) == holdIDs else {
+                let presentationHoldIDs = Set(geometryDocuments.keys)
+                guard !presentationHoldIDs.isEmpty,
+                      presentationHoldIDs.isSubset(of: holdIDs) else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "presentation \(presentation.id) media.holdGeometry must exactly own every logical hold"
+                        reason: "presentation \(presentation.id) media.holdGeometry must own only nonempty logical holds"
                     )
                 }
+                rasterHoldIDs.formUnion(presentationHoldIDs)
                 var holdGeometry: [String: [BoardHoldPiece]] = [:]
-                for holdID in holdIDs.sorted() {
+                for holdID in presentationHoldIDs.sorted() {
                     let geometry = geometryDocuments[holdID] ?? []
                     let validation = BoardHoldGeometryValidator.validate(
                         geometry.map(\.holdPieceDocument),
@@ -1294,9 +723,10 @@ struct BoardPackageStore {
                     guard !validation.isEmpty,
                           validation.pieces.allSatisfy({ $0.packageFailureReason == nil }),
                           validation.pieces.compactMap(\.piece).count == validation.pieces.count else {
+                        let failures = validation.pieces.compactMap(\.packageFailureReason).joined(separator: "; ")
                         throw BoardPackageStoreError.invalidPackage(
                             boardID: document.id,
-                            reason: "presentation \(presentation.id) has invalid holdGeometry for \(holdID)"
+                            reason: "presentation \(presentation.id) has invalid holdGeometry for \(holdID): \(failures)"
                         )
                     }
                     holdGeometry[holdID] = validation.pieces.compactMap(\.piece)
@@ -1369,6 +799,13 @@ struct BoardPackageStore {
                 )
             )
             presentationURLs[presentation.id] = packageURL.appendingPathComponent(presentation.media.assetPath)
+        }
+
+        if !rasterHoldIDs.isEmpty && rasterHoldIDs != holdIDs {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "v2 raster media.holdGeometry must collectively own every logical hold"
+            )
         }
 
         let positions = document.positions?.map(\.boardPosition) ?? presentations.map {
@@ -1905,7 +1342,9 @@ private struct BoardPackageV2HoldDocument: Decodable {
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        equipmentObjectID = try container.decodeIfPresent(String.self, forKey: .equipmentObjectID) ?? "primary"
+        equipmentObjectID = container.contains(.equipmentObjectID)
+            ? try container.decode(String.self, forKey: .equipmentObjectID)
+            : "primary"
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
         sloper = try container.decodeIfPresent(SloperMetadata.self, forKey: .sloper)
@@ -1994,102 +1433,6 @@ private struct BoardPackageModelHoldDocument: Decodable {
     }
 }
 
-private struct BoardPackageBoardDocument: Decodable {
-    let id: String
-    let manufacturer: String
-    let name: String
-    let subtitle: String
-    let productURL: URL
-    let dimensions: String?
-    let aspectRatio: Double
-    let equipmentObjects: [BoardPackageEquipmentObjectDocument]
-    let presentations: [BoardPackagePresentationDocument]
-    let positions: [BoardPackagePositionDocument]?
-    let positionTransitions: [BoardPackagePositionTransitionDocument]?
-    let holds: [BoardPackageHoldDocument]
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case manufacturer
-        case name
-        case subtitle
-        case productURL
-        case dimensions
-        case aspectRatio
-        case equipmentObjects
-        case presentations
-        case positions
-        case positionTransitions
-        case holds
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys([
-            "id", "manufacturer", "name", "subtitle", "productURL", "dimensions",
-            "aspectRatio", "equipmentObjects", "presentations", "positions", "positionTransitions", "holds"
-        ])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        manufacturer = try container.decode(String.self, forKey: .manufacturer)
-        name = try container.decode(String.self, forKey: .name)
-        subtitle = try container.decode(String.self, forKey: .subtitle)
-        productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
-        aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        equipmentObjects = container.contains(.equipmentObjects)
-            ? try container.decode(
-                [BoardPackageEquipmentObjectDocument].self,
-                forKey: .equipmentObjects
-            )
-            : [.init(id: "primary")]
-        presentations = try container.decode(
-            [BoardPackagePresentationDocument].self,
-            forKey: .presentations
-        )
-        positions = container.contains(.positions)
-            ? try container.decode([BoardPackagePositionDocument].self, forKey: .positions)
-            : nil
-        positionTransitions = container.contains(.positionTransitions)
-            ? try container.decode(
-                [BoardPackagePositionTransitionDocument].self,
-                forKey: .positionTransitions
-            )
-            : nil
-        holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
-    }
-
-    func trainingBoard(
-        holds: [BoardHold],
-        presentations: [BoardPresentation],
-        positions: [BoardPosition],
-        positionTransitions: [BoardPositionTransition]
-    ) throws -> TrainingBoard {
-        guard aspectRatio.isFinite, aspectRatio > 0 else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: id,
-                reason: "aspect ratio must be positive"
-            )
-        }
-
-        return TrainingBoard(
-            id: id,
-            manufacturer: manufacturer,
-            name: name,
-            subtitle: subtitle,
-            dimensions: dimensions,
-            aspectRatio: CGFloat(aspectRatio),
-            equipmentObjects: equipmentObjects.map(\.equipmentObject),
-            holds: holds,
-            semanticHolds: [:],
-            productURL: productURL,
-            photoAssetName: nil,
-            presentations: presentations,
-            positions: positions,
-            positionTransitions: positionTransitions
-        )
-    }
-}
-
 private struct BoardPackagePositionDocument: Decodable {
     let id: String
     let presentationID: String
@@ -2172,164 +1515,6 @@ private struct BoardPackageEquipmentObjectDocument: Decodable {
             missingHandCapacityPolicy: missingHandCapacityPolicy
         )
     }
-}
-
-private struct BoardPackagePresentationDocument: Decodable {
-    let id: String
-    let name: String
-    let assetPath: String
-    let aspectRatio: Double
-    let isDefault: Bool
-    let sourcePresentationID: String?
-    let isInverted: Bool
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case assetPath
-        case aspectRatio
-        case isDefault = "default"
-        case sourcePresentationID
-        case isInverted
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys([
-            "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted"
-        ])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        assetPath = try container.decode(String.self, forKey: .assetPath)
-        aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        isDefault = try container.decode(Bool.self, forKey: .isDefault)
-        sourcePresentationID = try container.decodeIfPresent(
-            String.self,
-            forKey: .sourcePresentationID
-        )
-        isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
-    }
-
-    func trainingPresentation(
-        holdGeometry: [String: [BoardHoldPiece]] = [:]
-    ) -> BoardPresentation {
-        BoardPresentation(
-            id: id,
-            name: name,
-            aspectRatio: CGFloat(aspectRatio),
-            isDefault: isDefault,
-            sourcePresentationID: sourcePresentationID,
-            isInverted: isInverted,
-            media: .raster(
-                BoardRasterMedia(assetPath: assetPath, holdGeometry: holdGeometry)
-            )
-        )
-    }
-}
-
-private struct BoardPackageHoldDocument: Decodable {
-    let id: String
-    let name: String
-    let kind: HoldKind
-    let sloper: SloperMetadata?
-    let geometry: [BoardPackageGeometryDocument]
-    let sizeMillimeters: Double?
-    let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
-    let gripType: GripType?
-    let fingerCapacity: Int?
-    let handCapacity: Int?
-    let features: [HoldFeature]?
-    let pairedHoldID: String?
-    let declaresPairedHoldID: Bool
-    let presentationID: String
-    let equipmentObjectID: String
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case kind
-        case sloper
-        case geometry
-        case sizeMillimeters
-        case depthRangeMillimeters
-        case gripType
-        case fingerCapacity
-        case handCapacity
-        case features
-        case pairedHoldID
-        case presentationID
-        case equipmentObjectID
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys([
-            "id", "name", "kind", "geometry", "sizeMillimeters",
-            "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "pairedHoldID", "presentationID", "equipmentObjectID", "sloper"
-        ])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        name = try container.decode(String.self, forKey: .name)
-        kind = try container.decode(HoldKind.self, forKey: .kind)
-        sloper = container.contains(.sloper)
-            ? try container.decode(SloperMetadata.self, forKey: .sloper)
-            : nil
-        geometry = try container.decode([BoardPackageGeometryDocument].self, forKey: .geometry)
-        sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
-        depthRangeMillimeters = try container.decodeIfPresent(
-            BoardPackageMillimeterRangeDocument.self,
-            forKey: .depthRangeMillimeters
-        )
-        gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
-        fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
-        handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
-        features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
-        declaresPairedHoldID = container.contains(.pairedHoldID)
-        pairedHoldID = declaresPairedHoldID
-            ? try container.decode(String.self, forKey: .pairedHoldID)
-            : nil
-        presentationID = try container.decode(String.self, forKey: .presentationID)
-        equipmentObjectID = container.contains(.equipmentObjectID)
-            ? try container.decode(String.self, forKey: .equipmentObjectID)
-            : "primary"
-    }
-
-    func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardPackageLegacyHold {
-        guard !geometryPieces.isEmpty else {
-            throw BoardGeometryAdaptationError.invalid(
-                "hold \(id) geometry must include at least one piece"
-            )
-        }
-        return BoardPackageLegacyHold(
-            hold: BoardHold(
-                id: id,
-                equipmentObjectID: equipmentObjectID,
-                name: name,
-                kind: kind,
-                sloper: sloper,
-                sizeMillimeters: sizeMillimeters,
-                gripType: gripType,
-                fingerCapacity: fingerCapacity,
-                handCapacity: handCapacity,
-                depthRangeMillimeters: depthRangeMillimeters.map {
-                    $0.lowerBound...$0.upperBound
-                },
-                features: features.map(Set.init),
-                pairedHoldID: pairedHoldID
-            ),
-            geometry: geometryPieces,
-            presentationID: presentationID
-        )
-    }
-}
-
-/// Private migration adapter for schema-v1 packages. Spatial state lives only
-/// long enough to normalize legacy fields into typed presentation media.
-private struct BoardPackageLegacyHold {
-    let hold: BoardHold
-    let geometry: [BoardHoldPiece]
-    let presentationID: String
 }
 
 private struct BoardPackageGeometryDocument: Decodable {
