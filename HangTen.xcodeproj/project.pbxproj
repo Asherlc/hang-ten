@@ -10,7 +10,9 @@
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
         E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
+        E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* SuspendedBoardPresentation.swift */; };
         E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
+        E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */; };
 		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
@@ -142,7 +144,9 @@
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
         E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
+        E32000000000000000000002 /* SuspendedBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentation.swift; sourceTree = "<group>"; };
         E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
+        E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentationTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000010 /* HangTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
@@ -398,6 +402,7 @@
 				BB0000000000000000000004 /* DesignSystem.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
                 E32000000000000000000001 /* BoardModelView.swift */,
+                E32000000000000000000002 /* SuspendedBoardPresentation.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
 				BB0000000000000000000094 /* BoardEditorSession.swift */,
@@ -481,6 +486,7 @@
 				BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
                 E32000000000000000000003 /* BoardModelTests.swift */,
+                E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -709,6 +715,7 @@
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
                 E31000000000000000000001 /* BoardModelView.swift in Sources */,
+                E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
 				AA0000000000000000000092 /* AppSettingsView.swift in Sources */,
@@ -817,6 +824,7 @@
 				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
                 E31000000000000000000003 /* BoardModelTests.swift in Sources */,
+                E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
