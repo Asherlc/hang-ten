@@ -104,9 +104,10 @@ right, `+Y` up, and `+Z` toward the climber.
 
 The compiler is package/tooling support, not a geometry authoring workflow.
 Human visual review of the display geometry was completed before the two model
-packages entered the live inventory. The newly shared canonical wood material
-has separate human visual approval **pending**. Package-local descriptors are
-generated from actual exports and remain read-only.
+packages entered the live inventory. The shared warm-white/light-neutral
+fallback and final front lighting were subsequently reviewed in the actual app
+renderer and human-approved. Package-local descriptors are generated from
+actual exports and remain read-only.
 
 ## Canonical wood display material
 
@@ -123,6 +124,15 @@ only with:
 ```sh
 rtk python3 -B Tools/HangboardModels/canonical_neutral_wood.py
 ```
+
+The approved canonical PNG SHA-256 is
+`fdab3b78ce575a0dbf90b300db4d52438cb94f7e71cd6d589d56a044de97ec0a`.
+The final packages and generated descriptors are:
+
+| package | USDZ SHA-256 | descriptor SHA-256 | inventory |
+| --- | --- | --- | --- |
+| Beastmaker 1000 | `19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d` | `ee095c463804312cbd6ed08f5113019793b934ab6806a6fb343be939ff8a68d3` | 22 holds / 23 nodes |
+| Compact II | `addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a` | `a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f` | 19 holds / 20 nodes |
 
 Each exporter loads and packs those exact bytes, so its USDZ remains
 self-contained/offline while both packages embed the same stable
@@ -155,6 +165,18 @@ fixed and capture at least two source-albedo samples through the actual app
 renderer. Compare matched board pixels, solve the observed response toward a
 declared exposed-face target, and validate the chosen source in the app again.
 Do not tune from Blender's color-managed review alone.
+
+The retained final actual-app review is
+`.context/shaky-rat-warm-white-lighting-review/review-report.md`; its approved
+normal-state renders are
+`.context/shaky-rat-warm-white-lighting-review/beastmaker-1000-normal-portrait.png`
+and
+`.context/shaky-rat-warm-white-lighting-review/compact-ii-normal-portrait.png`.
+The focused SceneKit key-direction and complete migrated-package model checks
+passed on the exact owned Simulator used by that report. This is Simulator
+integration evidence, not a claim of physical-device PBR pixel parity:
+SceneKit can fall back from physically based shading where Metal is
+unavailable.
 
 ## Actual-export verifiers
 

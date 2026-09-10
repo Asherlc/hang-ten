@@ -236,6 +236,17 @@ so staged declared assets remain byte-identical to their package sources; it
 does not substitute separately bundled model resources or rewrite geometry or
 presentation bytes.
 
+The two model packages share one self-contained warm-white/light-neutral
+display material and were human-approved in the actual app renderer after the
+final front-lighting correction. Focused SceneKit checks cover both shipped
+inventories, material binding, nearest-hit selection, body nonselection, and
+the key-light direction. The complete migration review also covered all 41
+physical hold taps, normal/preview/active/restored states, both orientations,
+the picker interaction, and the explicit unavailable state on an isolated iOS
+Simulator. These captures establish Simulator integration only; SceneKit may
+fall back from physically based shading where Metal is unavailable, so they do
+not claim physical-device PBR pixel parity.
+
 Validate a retained Stage 0 evidence packet with:
 
 ```sh

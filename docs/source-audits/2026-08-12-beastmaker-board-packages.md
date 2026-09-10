@@ -225,7 +225,7 @@ Primary retained sources are the current [Wood Grips II product page](https://ww
 | `.context/shaky-rat-metolius-wood-grips-compact-ii/references/woodgrips-boards-depths.jpg` | `56dde7dce6f82395a06793e7e3de4600465b5e97a108b963b03a6a5cccb898ce` |
 
 
-Both packets validate with `Tools/HangboardModels/validate_evidence_packet.py` and contain no geometry proposals, paths, contours, masks, coordinates, radii, or sections. The Beastmaker negative fixture retains valid search-snippet bytes and hash, then rejects at the validator's manufacturer-search-result URL rule with exit 2; the Compact missing-commerce-snapshot fixture rejects with the retained-source error and exit 2. The minimal Beastmaker `invalid-unknown-hold.blend` compiler fixture rejects with `unknown hold_id`, emits no descriptor, and its scratch directory is removed and verified absent. Astra geometry work remains gated on human approval of these packets and the matched retained official media.
+Both packets validate with `Tools/HangboardModels/validate_evidence_packet.py` and contain no geometry proposals, paths, contours, masks, coordinates, radii, or sections. The Beastmaker negative fixture retains valid search-snippet bytes and hash, then rejects at the validator's manufacturer-search-result URL rule with exit 2; the Compact missing-commerce-snapshot fixture rejects with the retained-source error and exit 2. The minimal Beastmaker `invalid-unknown-hold.blend` compiler fixture rejects with `unknown hold_id`, emits no descriptor, and its scratch directory is removed and verified absent. At this Stage 0 checkpoint, Astra geometry work remained gated on human approval of these packets and the matched retained official media; the final promotion below records completion of that gate.
 
 ### 2026-09-09 multi-angle Stage 0 correction
 
@@ -267,7 +267,8 @@ after the final export recorded approval `e4130730` (after `b8596eae`). Each
 package contains exactly `board.json`, `assets/primary.usdz`, and
 `assets/primary.model.json`; target `primary.png` files are absent. The
 standalone `HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz` is also
-absent. Both use generic pale/original wood; omitted screws, mounting holes,
+absent. Both use the same shared, self-contained warm-white/light-neutral
+fallback with no wood-species claim. Omitted screws, mounting holes,
 countersinks, hardware, and logos are deliberate display simplifications.
 
 | package | model SHA-256 | descriptor SHA-256 | inventory |
@@ -285,15 +286,35 @@ geometry and inventories. Two controlled actual-app albedo samples established
 the SceneKit response before v5: matched Beastmaker 90th/95th luminance
 percentiles moved from `139.70/144.12` to `183.43/186.93`, and final v5 moved
 them to `204.69/208.31`. The v5 actual-app captures show light beige/tan
-exposed faces with shaded recesses. Separate human material approval remains
-pending; Blender renders are not a substitute for that app-renderer decision.
+exposed faces with shaded recesses. After the final front-lighting correction
+at `521da008`, the user reviewed the actual-app renders, approved them as
+“Good enough,” and directed continuation. The retained final report is
+`.context/shaky-rat-warm-white-lighting-review/review-report.md` (SHA-256
+`766ab157eb417d6ea76b670c5a5d460a3319b681631c9bfaf965b077aea05b73`).
+Its approved normal-state captures are
+`.context/shaky-rat-warm-white-lighting-review/beastmaker-1000-normal-portrait.png`
+(`b3ef5ddb53f2fa843c31c0fa3bc8f8e6a8ebf199acaf8e3d58a00cbcd608a253`)
+and
+`.context/shaky-rat-warm-white-lighting-review/compact-ii-normal-portrait.png`
+(`ba5cb48df7242081af7faf1823b81bbfb81fc4ef832dfd83f298d152d79473b1`).
 
 The packet hashes are Beastmaker `510def2516477dedb248ea85e3ec858129d0f298014b28c3e7ef9b19bd41cce0` and Compact `fe4a13559dfc8b734e349005444599407cb8cb7358350a095c0c3cdd451f62c3`; the earlier Beastmaker handoff hash was `444dc99cacf1e68fc8b564667a22b965d5e9a624b3e38953a6f98ab07edea5ea`. Beastmaker is 580 × 150 mm with a qualified Beech/shared-layout 58 mm depth; the Tulip page's 5 mm is retained as a conflicting non-thickness claim. Compact is 610 × 157 mm; its #2/#9 56 mm callouts are slopers only, while 64 mm body Z is an authored estimate.
 
 Host-native SceneKit proof passes all 41 nearest face-center rays and body nil
-probes. Simulator XCTest/app visual validation remains pending because
-CoreSimulatorService has been unavailable; no simulator screenshots, taps, or
-app visual review are claimed. Stale references found in historical plans,
-manifests, or generator/tooling output are non-production; production package,
-source, and app references are absent. Remote GitHub model sync, iOS model
-editing, and Workbench model editing remain deferred/read-only/unavailable.
+probes. The full isolated-Simulator migration review passed 119 focused
+`BoardModelTests` and `BoardPackageStoreTests`, one focused picker UI test, all
+41 physical hold taps, normal/preview/active/restored portrait and landscape
+states, picker/favorite behavior, and the malformed-model unavailable state.
+Its retained report is `.context/shaky-rat-task7-simulator-validation.md`
+(SHA-256
+`7f36fd1f235d9e79c68015b1da2b4da37ba7dde0de55f7c2fe3cbad5e940f40f`).
+After the final lighting change, the narrower key-direction and shipped-model
+inventory/material/nearest-hit SceneKit regressions also passed on the exact
+owned Simulator recorded in the warm-white report. All owned simulators and
+build scratch were cleaned. This is Simulator integration evidence only:
+SceneKit reported physically based materials but may fall back to Blinn where
+Metal is unavailable, and no physical-device PBR validation is claimed. Stale
+references found in historical plans, manifests, or generator/tooling output
+are non-production; production package, source, and app references are absent.
+Remote GitHub model sync, iOS model editing, and Workbench model editing remain
+deferred/read-only/unavailable.
