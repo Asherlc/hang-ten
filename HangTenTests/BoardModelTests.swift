@@ -298,19 +298,84 @@ final class BoardModelTests: XCTestCase {
             suspension: suspension
         ))
         XCTAssertTrue(model.select(positionID: "primary"))
-        try XCTUnwrap(model.holdNodes["left"]?.first).position = SCNVector3(0, 1, 0)
+        model.resetCamera(animated: false)
+        let holdNode = try XCTUnwrap(model.holdNodes["left"]?.first)
+        holdNode.position = SCNVector3(0, 1, 0)
+        XCTAssertEqual(holdNode.categoryBitMask, BoardModelScene.modelPickCategory)
+        SCNTransaction.flush()
 
-        let hits = model.scene.rootNode.hitTestWithSegment(
-            from: SCNVector3(0, 3, 0),
-            to: SCNVector3(0, -1, 0),
+        let view = SCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        view.scene = model.scene
+        view.pointOfView = model.camera
+        let projected = view.projectPoint(holdNode.worldPosition)
+        let hits = view.hitTest(
+            CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y)),
             options: [
-                SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
-                SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
+                .categoryBitMask: BoardModelScene.modelPickCategory,
+                .searchMode: SCNHitTestSearchMode.closest.rawValue
             ]
         )
         let closest = try XCTUnwrap(hits.first)
         XCTAssertEqual(model.holdID(for: closest.node), "left")
         XCTAssertNotEqual(closest.node.categoryBitMask, BoardModelScene.cordCategory)
+    }
+
+    func testSuspendedCordRejectsMeshInsideTubeAndClearanceRadiusWithoutCenterlineHit() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ])
+        let suspension = suspendedModelSuspension(
+            attachment: [0, 0, 0],
+            anchor: [0, 2, 0],
+            restLength: 2
+        )
+        let source = suspendedScene()
+        // The box's nearest face remains off the x == 0 centerline, but is
+        // closer than the cord's physical radius plus clearance allowance.
+        let body = try XCTUnwrap(node(at: "Board/Body", in: source))
+        let obstacle = SCNBox(width: 0.01, height: 0.01, length: 0.01, chamferRadius: 0)
+        obstacle.firstMaterial = SCNMaterial()
+        obstacle.firstMaterial?.diffuse.contents = UIColor.brown
+        body.geometry = obstacle
+        body.position = SCNVector3(0.035, 1, 0)
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source,
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspension
+        ))
+
+        XCTAssertFalse(model.select(positionID: "primary"))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.transientCordNode)
+    }
+
+    func testSuspendedCordRejectsAttachmentMeshAwayFromDeclaredEndpointInterface() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ])
+        let suspension = suspendedModelSuspension(
+            attachment: [0, 0, 0],
+            anchor: [0, 2, 0],
+            restLength: 2
+        )
+        let source = suspendedScene()
+        // This attachment mesh overlaps the final cord segment before its
+        // declared endpoint, so it is not an endpoint-interface contact.
+        try XCTUnwrap(node(at: "Board/Attachment", in: source)).position = SCNVector3(0, 0.03, 0)
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source,
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspension
+        ))
+
+        XCTAssertFalse(model.select(positionID: "primary"))
+        XCTAssertTrue(model.isUnavailable)
     }
 
     func testSuspendedCameraOrbitDoesNotMoveBoardAndResetReturnsCanonicalCamera() throws {
@@ -332,7 +397,7 @@ final class BoardModelTests: XCTestCase {
         ))
         XCTAssertTrue(model.select(positionID: "primary"))
         let transform = model.boardTransform
-        let initialCamera = model.camera.presentation.position
+        let initialCamera = model.camera.position
 
         model.orbit(azimuth: 0.4, elevation: 0.2, zoomScale: 1.1)
         for column in 0..<4 {
@@ -340,12 +405,41 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertEqual(model.boardTransform[column][row], transform[column][row], accuracy: 1e-6)
             }
         }
-        XCTAssertNotEqual(model.camera.presentation.position.x, initialCamera.x)
+        XCTAssertNotEqual(model.camera.position.x, initialCamera.x)
 
         model.resetCamera(animated: false)
-        XCTAssertEqual(model.camera.presentation.position.x, initialCamera.x, accuracy: 1e-5)
-        XCTAssertEqual(model.camera.presentation.position.y, initialCamera.y, accuracy: 1e-5)
-        XCTAssertEqual(model.camera.presentation.position.z, initialCamera.z, accuracy: 1e-5)
+        XCTAssertEqual(model.camera.position.x, initialCamera.x, accuracy: 1e-5)
+        XCTAssertEqual(model.camera.position.y, initialCamera.y, accuracy: 1e-5)
+        XCTAssertEqual(model.camera.position.z, initialCamera.z, accuracy: 1e-5)
+    }
+
+    func testReselectingUnchangedSuspendedPositionResetsTheCanonicalView() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ], minimum: [-1, -1, -1], maximum: [1, 1, 1])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: suspendedScene(),
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(
+                attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2
+            )
+        ))
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+
+        view.display(model)
+        view.positionID = "primary"
+        view.selectPositionIfNeeded()
+        let canonicalCamera = model.camera.position
+        model.orbit(azimuth: 0.4, elevation: 0.2, zoomScale: 1.1)
+
+        view.selectPositionIfNeeded()
+
+        XCTAssertEqual(model.camera.position.x, canonicalCamera.x, accuracy: 1e-5)
+        XCTAssertEqual(model.camera.position.y, canonicalCamera.y, accuracy: 1e-5)
+        XCTAssertEqual(model.camera.position.z, canonicalCamera.z, accuracy: 1e-5)
     }
 
     func testSuspendedInvalidSelectionReportsUnavailableWithoutRescueGeometry() throws {
@@ -606,6 +700,9 @@ final class BoardModelTests: XCTestCase {
         let source = scene(nodes: ["Board/Body", "Board/Hold/Left", "Board/Attachment"])
         node(at: "Board/Body", in: source)?.position = SCNVector3(-0.8, -0.8, -0.8)
         node(at: "Board/Hold/Left", in: source)?.position = SCNVector3(0.8, -0.8, -0.8)
+        // Keep the descriptor-bound attachment mesh outside this neutral
+        // fixture's cord path. Collision-specific tests place it deliberately.
+        node(at: "Board/Attachment", in: source)?.position = SCNVector3(0.8, -0.8, -0.8)
         return source
     }
 
