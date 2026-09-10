@@ -1,0 +1,481 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-19-left": {
+      "center": [
+        0.110875568,
+        0.217245604
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.187704915,
+          0.391719743
+        ],
+        "min": [
+          0.034046221,
+          0.042771465
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_020"
+      ]
+    },
+    "edge-19-right": {
+      "center": [
+        0.889124432,
+        0.217245604
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.965953779,
+          0.391719743
+        ],
+        "min": [
+          0.812295085,
+          0.042771465
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_021"
+      ]
+    },
+    "edge-29-left": {
+      "center": [
+        0.089324972,
+        0.624203832
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.171311489,
+          0.815286636
+        ],
+        "min": [
+          0.007338455,
+          0.433121028
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_022"
+      ]
+    },
+    "edge-29-right": {
+      "center": [
+        0.910675028,
+        0.624203832
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.992661545,
+          0.815286636
+        ],
+        "min": [
+          0.828688511,
+          0.433121028
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_023"
+      ]
+    },
+    "jug-left": {
+      "center": [
+        0.087077364,
+        0.92743894
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.174154728,
+          1.0
+        ],
+        "min": [
+          0.0,
+          0.854877881
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_024"
+      ]
+    },
+    "jug-right": {
+      "center": [
+        0.912922636,
+        0.92743894
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          1.0
+        ],
+        "min": [
+          0.825845272,
+          0.854877881
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_025"
+      ]
+    },
+    "pocket-19-four-center": {
+      "center": [
+        0.5,
+        0.184713376
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.584426228,
+          0.286624206
+        ],
+        "min": [
+          0.415573772,
+          0.082802547
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_026"
+      ]
+    },
+    "pocket-19-three-left": {
+      "center": [
+        0.263934436,
+        0.184713376
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.32049181,
+          0.286624206
+        ],
+        "min": [
+          0.207377062,
+          0.082802547
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_027"
+      ]
+    },
+    "pocket-19-three-right": {
+      "center": [
+        0.736065564,
+        0.184713376
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.792622938,
+          0.286624206
+        ],
+        "min": [
+          0.67950819,
+          0.082802547
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_028"
+      ]
+    },
+    "pocket-19-two-left": {
+      "center": [
+        0.368032788,
+        0.184713376
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.405737705,
+          0.286624206
+        ],
+        "min": [
+          0.330327871,
+          0.082802547
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_029"
+      ]
+    },
+    "pocket-19-two-right": {
+      "center": [
+        0.631967212,
+        0.184713376
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.669672129,
+          0.286624206
+        ],
+        "min": [
+          0.594262295,
+          0.082802547
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_030"
+      ]
+    },
+    "pocket-29-four-center": {
+      "center": [
+        0.5,
+        0.560509533
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.584426228,
+          0.662420374
+        ],
+        "min": [
+          0.415573772,
+          0.458598691
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_031"
+      ]
+    },
+    "pocket-29-three-left": {
+      "center": [
+        0.247540985,
+        0.560509533
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.307377054,
+          0.662420374
+        ],
+        "min": [
+          0.187704915,
+          0.458598691
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_032"
+      ]
+    },
+    "pocket-29-three-right": {
+      "center": [
+        0.752459015,
+        0.560509533
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.812295085,
+          0.662420374
+        ],
+        "min": [
+          0.692622946,
+          0.458598691
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_033"
+      ]
+    },
+    "pocket-29-two-left": {
+      "center": [
+        0.362295084,
+        0.560509533
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.405737705,
+          0.662420374
+        ],
+        "min": [
+          0.318852463,
+          0.458598691
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_034"
+      ]
+    },
+    "pocket-29-two-right": {
+      "center": [
+        0.637704916,
+        0.560509533
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.681147537,
+          0.662420374
+        ],
+        "min": [
+          0.594262295,
+          0.458598691
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_035"
+      ]
+    },
+    "sloper-flat-left": {
+      "center": [
+        0.247665959,
+        0.900421902
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.323191387,
+          0.940883774
+        ],
+        "min": [
+          0.172140531,
+          0.859960031
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_036"
+      ]
+    },
+    "sloper-flat-right": {
+      "center": [
+        0.752334041,
+        0.900421902
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.827859469,
+          0.940883774
+        ],
+        "min": [
+          0.676808613,
+          0.859960031
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_037"
+      ]
+    },
+    "sloper-round-center": {
+      "center": [
+        0.5,
+        0.909000795
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.68040226,
+          0.961783363
+        ],
+        "min": [
+          0.31959774,
+          0.856218226
+        ]
+      },
+      "nodeIDs": [
+        "Wood_Grips_Compact_II_038"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.305000007,
+      0.157000005,
+      0.064000003
+    ],
+    "min": [
+      -0.305000007,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
+  "nodes": [
+    {
+      "holdID": "edge-19-left",
+      "nodeID": "Wood_Grips_Compact_II_020",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-19-right",
+      "nodeID": "Wood_Grips_Compact_II_021",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-29-left",
+      "nodeID": "Wood_Grips_Compact_II_022",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-29-right",
+      "nodeID": "Wood_Grips_Compact_II_023",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-left",
+      "nodeID": "Wood_Grips_Compact_II_024",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-right",
+      "nodeID": "Wood_Grips_Compact_II_025",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-19-four-center",
+      "nodeID": "Wood_Grips_Compact_II_026",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-19-three-left",
+      "nodeID": "Wood_Grips_Compact_II_027",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-19-three-right",
+      "nodeID": "Wood_Grips_Compact_II_028",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-19-two-left",
+      "nodeID": "Wood_Grips_Compact_II_029",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-19-two-right",
+      "nodeID": "Wood_Grips_Compact_II_030",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-29-four-center",
+      "nodeID": "Wood_Grips_Compact_II_031",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-29-three-left",
+      "nodeID": "Wood_Grips_Compact_II_032",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-29-three-right",
+      "nodeID": "Wood_Grips_Compact_II_033",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-29-two-left",
+      "nodeID": "Wood_Grips_Compact_II_034",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-29-two-right",
+      "nodeID": "Wood_Grips_Compact_II_035",
+      "role": "hold"
+    },
+    {
+      "holdID": "sloper-flat-left",
+      "nodeID": "Wood_Grips_Compact_II_036",
+      "role": "hold"
+    },
+    {
+      "holdID": "sloper-flat-right",
+      "nodeID": "Wood_Grips_Compact_II_037",
+      "role": "hold"
+    },
+    {
+      "holdID": "sloper-round-center",
+      "nodeID": "Wood_Grips_Compact_II_038",
+      "role": "hold"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_039",
+      "role": "body"
+    }
+  ],
+  "schemaVersion": 1
+}

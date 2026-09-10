@@ -207,7 +207,7 @@ def test_staging_copies_discovered_packages_without_a_registry_and_replaces_stal
         relative_files = {
             path.relative_to(source_package).as_posix(): path.read_bytes()
             for path in source_package.rglob("*")
-            if path.is_file()
+            if path.is_file() and not path.is_symlink()
         }
         assert relative_files == {
             "assets/primary.png": PRIMARY_PNG_BYTES,
@@ -347,7 +347,7 @@ def test_staging_preserves_every_live_model_package_file_byte_for_byte(
         source_files = {
             path.relative_to(source_package).as_posix(): path.read_bytes()
             for path in source_package.rglob("*")
-            if path.is_file()
+            if path.is_file() and not path.is_symlink()
         }
         staged_files = {
             path.relative_to(staged_package).as_posix(): path.read_bytes()
