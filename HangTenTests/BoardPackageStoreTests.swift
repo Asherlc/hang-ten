@@ -95,7 +95,16 @@ final class BoardPackageStoreTests: XCTestCase {
                 "missing-attachment-node", "hold-attachment-node",
                 "attachment-point-outside-bounds", "shorter-than-endpoint-distance",
                 "raster-sibling", "second-model", "baked-cord-role", "baked-anchor-role",
-                "model-inversion"
+                "model-inversion", "two-branch-unknown-member", "two-branch-wrong-discriminator",
+                "two-branch-missing-passage", "two-branch-extra-passage", "two-branch-duplicate-passage-id",
+                "two-branch-unknown-passage-node", "two-branch-hold-passage-node",
+                "two-branch-nonfinite-passage-point", "two-branch-passage-point-out-of-bounds",
+                "two-branch-missing-branch", "two-branch-duplicate-branch-id", "two-branch-wrong-branch-pair",
+                "two-branch-branch-pair-order", "two-branch-distinct-branch-anchors",
+                "two-branch-invalid-rest-length", "two-branch-invalid-radius", "two-branch-invalid-material",
+                "two-branch-missing-pose", "two-branch-unknown-pose", "two-branch-duplicate-pose",
+                "two-branch-explicit-null", "two-branch-scalar-kind-mismatch",
+                "two-branch-duplicate-raw-json-key", "two-branch-order-violation"
             ]
         )
 
@@ -118,6 +127,24 @@ final class BoardPackageStoreTests: XCTestCase {
                 }
             }
         }
+    }
+
+    func testStoreLoadsValidTwoBranchSuspensionFixture() throws {
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "twoBranchModel",
+            "mutations": []
+        ])
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("expected twoBranchCord model suspension")
+        }
+        XCTAssertEqual(suspension.passages.left.count, 2)
+        XCTAssertEqual(suspension.passages.right.count, 2)
+        XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
     }
 
     func testModelPresentationContentUsesTypedMediaHoldInventory() throws {
@@ -3176,7 +3203,8 @@ final class BoardPackageStoreTests: XCTestCase {
         mutatePackage: ((URL) throws -> Void)? = nil
     ) throws -> FixtureBundle {
         let fixtures = try validationFixtures()
-        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
+        let base = specification["base"] as? String ?? "model"
+        let model = try XCTUnwrap(fixtures[base] as? [String: Any])
         var board = try XCTUnwrap(model["board"] as? [String: Any])
         board["id"] = boardID
         var descriptor = try XCTUnwrap(model["descriptor"] as? [String: Any])
@@ -3248,13 +3276,19 @@ final class BoardPackageStoreTests: XCTestCase {
                 let boardJSON = String(decoding: boardData, as: UTF8.self)
                 let needle = "\"canonicalPoses\":{\"primary\":\(poseJSON)}"
                 let replacement = "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON)}"
-                XCTAssertTrue(boardJSON.contains(needle))
-                let duplicateBoardJSON = boardJSON.replacingOccurrences(
-                    of: needle,
-                    with: replacement,
-                    options: [],
-                    range: nil
-                )
+                let duplicateBoardJSON: String
+                if boardJSON.contains(needle) {
+                    duplicateBoardJSON = boardJSON.replacingOccurrences(of: needle, with: replacement, options: [], range: nil)
+                } else {
+                    let prefix = "\"canonicalPoses\":{\"primary\":\(poseJSON),\""
+                    XCTAssertTrue(boardJSON.contains(prefix))
+                    duplicateBoardJSON = boardJSON.replacingOccurrences(
+                        of: prefix,
+                        with: "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON),\"",
+                        options: [],
+                        range: nil
+                    )
+                }
                 try duplicateBoardJSON.data(using: .utf8)!
                     .write(to: packageURL.appendingPathComponent("board.json"))
             }

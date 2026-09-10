@@ -70,7 +70,7 @@ def _write_shared_model_parser_parity_package(
     root: Path, fixture: dict[str, object]
 ) -> Path:
     fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
-    model = fixtures["model"]
+    model = fixtures[fixture.get("base", "model")]
     assert isinstance(model, dict)
     board = copy.deepcopy(model["board"])
     descriptor = copy.deepcopy(model["descriptor"])
@@ -105,8 +105,17 @@ def _write_shared_model_parser_parity_package(
         )
         needle = '"canonicalPoses":{"primary":' + pose + "}"
         replacement = '"canonicalPoses":{"primary":' + pose + ',"primary":' + pose + "}"
-        assert needle in raw
-        board_path.write_text(raw.replace(needle, replacement, 1), encoding="utf-8")
+        if needle in raw:
+            raw = raw.replace(needle, replacement, 1)
+        else:
+            prefix = '"canonicalPoses":{"primary":' + pose + ',"'
+            assert prefix in raw
+            raw = raw.replace(
+                prefix,
+                '"canonicalPoses":{"primary":' + pose + ',"primary":' + pose + ',"',
+                1,
+            )
+        board_path.write_text(raw, encoding="utf-8")
     return root
 
 
@@ -413,6 +422,24 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
         module.load_board_package(package_root)
 
 
+def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
+    fixture = {"base": "twoBranchModel", "mutations": []}
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "valid-two-branch", fixture
+    )
+
+    package = load_board_catalog_module().load_board_package(package_root)
+    suspension = package.board.presentations[0].media.suspension
+    assert suspension is not None
+    assert suspension.__class__.__name__ == "BoardModelTwoBranchSuspension"
+    assert len(suspension.passages.left) == 2
+    assert len(suspension.passages.right) == 2
+    assert len(suspension.branches) == 2
+    assert set(suspension.canonical_poses) == {
+        "primary", "secondary", "tertiary", "quaternary"
+    }
+
+
 @pytest.mark.parametrize(
     "fixture",
     _shared_model_parser_parity_fixtures(),
@@ -430,7 +457,7 @@ def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
         tmp_path / str(fixture["name"]), fixture
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=str(fixture.get("pythonError", ".*"))):
         module.load_board_package(package_root)
 
 
