@@ -1400,7 +1400,7 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                 continue
             }
             guard suspensionType == "twoBranchCord" else { continue }
-            try suspensionMembers.requireCanonicalOrder(["anchor", "branches", "canonicalPoses", "passages", "type"])
+            try suspensionMembers.requireCanonicalOrder(["type", "passages", "branches", "anchor", "canonicalPoses"])
             guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
                   case .array(let leftPassages)? = passagesMembers.value(named: "left"),
                   case .array(let rightPassages)? = passagesMembers.value(named: "right"),
@@ -1416,17 +1416,16 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
             }
             for branch in branches {
                 guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
-                try members.requireCanonicalOrder(["id", "material", "passageIDs", "provenance", "radius", "restLength"])
+                try members.requireCanonicalOrder(["id", "passageIDs", "restLength", "radius", "material", "provenance"])
             }
-            try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "provenance", "visibility"])
-            guard poseMembers.names == poseMembers.names.sorted() else { throw BoardPackageRawJSONError.invalid }
+            try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
             for pose in poseMembers.mapValues() {
                 guard case .object(let poseObject) = pose,
                       case .object(let camera)? = poseObject.value(named: "camera") else {
                     throw BoardPackageRawJSONError.invalid
                 }
-                try poseObject.requireCanonicalOrder(["camera", "rotation", "translation"])
-                try camera.requireCanonicalOrder(["fitPadding", "viewDirection"])
+                try poseObject.requireCanonicalOrder(["rotation", "translation", "camera"])
+                try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
             }
         }
     }

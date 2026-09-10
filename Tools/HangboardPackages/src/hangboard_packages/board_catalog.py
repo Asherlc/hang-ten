@@ -553,8 +553,6 @@ def _load_model_poses(
     poses_payload = _mapping(value, source)
     if not poses_payload:
         raise ValueError(f"{source} must not be empty")
-    if canonical_order and tuple(poses_payload) != tuple(sorted(poses_payload)):
-        raise ValueError(f"{source} must use canonical member order")
     poses: dict[str, BoardModelCanonicalPose] = {}
     for position_id, raw_pose in poses_payload.items():
         position_source = f"{source}[{position_id}]"
@@ -563,7 +561,7 @@ def _load_model_poses(
         _closed(pose_payload, {"rotation", "translation", "camera"}, position_source)
         if canonical_order:
             _canonical_member_order(
-                pose_payload, ("camera", "rotation", "translation"), position_source
+                pose_payload, ("rotation", "translation", "camera"), position_source
             )
         rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
         if len(rotation) != 4:
@@ -577,7 +575,7 @@ def _load_model_poses(
         _closed(camera_payload, {"viewDirection", "fitPadding"}, camera_source)
         if canonical_order:
             _canonical_member_order(
-                camera_payload, ("fitPadding", "viewDirection"), camera_source
+                camera_payload, ("viewDirection", "fitPadding"), camera_source
             )
         view_direction = _vector3(camera_payload["viewDirection"], f"{camera_source}.viewDirection")
         fit_padding = _positive_number(camera_payload["fitPadding"], f"{camera_source}.fitPadding")
@@ -595,7 +593,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     if suspension_type == "twoBranchCord":
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source)
         _canonical_member_order(
-            payload, ("anchor", "branches", "canonicalPoses", "passages", "type"), source
+            payload, ("type", "passages", "branches", "anchor", "canonicalPoses"), source
         )
         passages_source = f"{source}.passages"
         passages_payload = _mapping(payload["passages"], passages_source)
@@ -650,7 +648,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             _closed(branch_payload, {"id", "passageIDs", "restLength", "radius", "material", "provenance"}, branch_source)
             _canonical_member_order(
                 branch_payload,
-                ("id", "material", "passageIDs", "provenance", "radius", "restLength"),
+                ("id", "passageIDs", "restLength", "radius", "material", "provenance"),
                 branch_source,
             )
             branch_id = _identifier(branch_payload["id"], f"{branch_source}.id")
@@ -675,7 +673,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         anchor_payload = _mapping(payload["anchor"], anchor_source)
         _closed(anchor_payload, {"offsetFromBoardBounds", "visibility", "provenance"}, anchor_source)
         _canonical_member_order(
-            anchor_payload, ("offsetFromBoardBounds", "provenance", "visibility"), anchor_source
+            anchor_payload, ("offsetFromBoardBounds", "visibility", "provenance"), anchor_source
         )
         return BoardModelTwoBranchSuspension(
             passage_pairs,

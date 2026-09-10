@@ -98,14 +98,14 @@ def _write_shared_model_parser_parity_package(
     board_json = json.dumps(
         board,
         separators=(",", ":"),
-        sort_keys=fixture.get("base", "model") == "twoBranchModel",
+        sort_keys=False,
     )
     if fixture.get("reorderTwoBranchSuspensionMembers"):
         suspension = board["presentations"][0]["media"]["suspension"]
-        canonical = json.dumps(suspension, separators=(",", ":"), sort_keys=True)
+        canonical = json.dumps(suspension, separators=(",", ":"))
         reordered = {
             key: suspension[key]
-            for key in ("type", "passages", "branches", "anchor", "canonicalPoses")
+            for key in ("anchor", "branches", "canonicalPoses", "passages", "type")
         }
         board_json = board_json.replace(
             '"suspension":' + canonical,
@@ -120,7 +120,7 @@ def _write_shared_model_parser_parity_package(
         pose = json.dumps(
             board["presentations"][0]["media"]["suspension"]["canonicalPoses"]["primary"],
             separators=(",", ":"),
-            sort_keys=fixture.get("base", "model") == "twoBranchModel",
+            sort_keys=False,
         )
         needle = '"canonicalPoses":{"primary":' + pose + "}"
         replacement = '"canonicalPoses":{"primary":' + pose + ',"primary":' + pose + "}"
@@ -489,6 +489,19 @@ def test_two_branch_order_and_segment_regressions_are_specific(tmp_path: Path) -
         )
         with pytest.raises(ValueError, match=fixture["pythonError"]):
             module.load_board_package(package_root)
+
+
+def test_two_branch_declared_member_order_loads_without_sorting(tmp_path: Path) -> None:
+    fixture: dict[str, object] = {
+        "base": "twoBranchModel",
+        "mutations": [],
+    }
+    package_root = _write_shared_model_parser_parity_package(tmp_path, fixture)
+    board_json = (package_root / "board.json").read_text(encoding="utf-8")
+    assert '"suspension":{"type":"twoBranchCord","passages":' in board_json
+
+    package = load_board_catalog_module().load_board_package(package_root)
+    assert package.board.presentations[0].media.suspension.__class__.__name__ == "BoardModelTwoBranchSuspension"
 
 
 @pytest.mark.parametrize(
