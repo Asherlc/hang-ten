@@ -2205,6 +2205,9 @@ final class PlanStorageTests: XCTestCase {
                 try XCTUnwrap(audit.planSources.first { $0.planID == expected.planID }).sourceURL
             )
 
+            let presentation = rasterPresentation(frames: [
+                "fixture.large-edge": CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.1)
+            ])
             let edgeOnlyBoard = TrainingBoard(
                 id: "fixture.edge-only.\(expected.fingerCapacity)",
                 manufacturer: "Fixture Maker",
@@ -2221,7 +2224,8 @@ final class PlanStorageTests: XCTestCase {
                     )
                 ],
                 productURL: URL(string: "https://example.com/edge-only")!,
-                photoAssetName: nil
+                photoAssetName: nil,
+                presentations: [presentation]
             )
             XCTAssertEqual(
                 BoardTargetResolver.substituteHoldIDs(for: target, on: edgeOnlyBoard),
