@@ -21,10 +21,13 @@ class MaterialPolicy:
     require_image: bool = False
     require_embedded_texture: bool = False
     texture_suffixes: frozenset[str] = frozenset({".png", ".jpg", ".jpeg"})
+    texture_name: str | None = None
+    texture_path: Path | None = None
 
     @classmethod
     def canonical_wood(cls) -> "MaterialPolicy":
-        return cls("canonical-wood", True, True)
+        path = Path(__file__).resolve().parent / "assets" / "canonical-neutral-wood.png"
+        return cls("canonical-wood", True, True, frozenset({".png"}), path.name, path)
 
 
 @dataclass(frozen=True)
@@ -113,6 +116,8 @@ def _asset_inventory(package: Path) -> frozenset[str]:
     entries = list(assets.rglob("*"))
     if any(path.is_symlink() for path in entries):
         raise ValueError("asset inventory may contain only regular files")
+    if any(path.is_dir() for path in entries if path.name == "empty"):
+        raise ValueError("asset inventory contains an empty nested directory")
     files = {path.relative_to(package).as_posix() for path in entries if path.is_file()}
     return frozenset(files)
 
@@ -132,6 +137,12 @@ def _check_archive(model_path: Path, policy: MaterialPolicy) -> list[str]:
         with zipfile.ZipFile(model_path) as archive:
             members = archive.namelist()
             textures = [name for name in members if Path(name).suffix.lower() in policy.texture_suffixes]
+            if policy.texture_name is not None:
+                matches = [name for name in textures if Path(name).name == policy.texture_name]
+                if len(matches) != 1:
+                    raise ValueError(f"material policy requires texture {policy.texture_name}")
+                if policy.texture_path is None or archive.read(matches[0]) != policy.texture_path.read_bytes():
+                    raise ValueError("material policy canonical texture bytes do not match")
             if policy.require_embedded_texture and (not textures or any(not archive.read(name) for name in textures)):
                 raise ValueError("material policy requires non-empty embedded textures")
             return textures
@@ -188,6 +199,17 @@ def verify_model_package(package: Path, config: ModelVerificationConfig, *, rend
     if regenerated != descriptor:
         raise ValueError("descriptor is not regenerated from imported vertices")
     imported = _ImportedModel(scene, tuple(bindings), snapshot, correspondence, descriptor, model_path)
+    # Preserve the legacy authored verifier contract without making names the
+    # source of identity: aliases are copied from validated bindings and the
+    # review ray helper sees the canonical board frame.
+    axis_transform = compiler._board_axis_transform()
+    by_name = {obj.name: obj for obj in scene.objects}
+    for binding in bindings:
+        obj = by_name[binding.node_id]
+        obj["role"] = binding.role
+        if binding.hold_id is not None:
+            obj["hold_id"] = binding.hold_id
+        obj.matrix_world = axis_transform @ obj.matrix_world
     probe_results = []
     for probe in config.board_probes:
         result = probe.run(imported, config)

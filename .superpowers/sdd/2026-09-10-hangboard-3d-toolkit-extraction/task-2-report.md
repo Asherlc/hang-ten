@@ -45,6 +45,27 @@ canonical wood material policy. Existing model report tests remain green.
 The Blender verifier was not run because Blender is unavailable in this
 environment.
 
+## Review fix round 1 evidence
+
+The Beastmaker CLI now invokes `verify_model_package(beastmaker_config())`
+before its legacy report path, then compares the package using
+`capture_model_baseline`/`assert_baseline_matches` against the checked-in Task
+1 descriptor baseline. The shared core now rejects empty nested asset
+directories, requires the canonical texture filename and exact PNG bytes for
+canonical wood, counts triangles/enforces the configured ceiling, rejects all
+unbound or forbidden meshes, and sets validated legacy role/hold aliases plus
+the board-axis transform before additive probes run.
+
+Fix-round verification:
+
+    rtk env PYTHONPATH=Tools/HangboardModels python3 -m unittest -q test_model_verification test_model_reports
+    rtk python3 -m py_compile Tools/HangboardModels/model_verification.py Tools/HangboardModels/verify_beastmaker_1000.py
+    rtk git diff --check
+
+Output: `Ran 20 tests in 0.055s` / `OK`; compilation succeeded and diff check
+was clean. Blender execution remains unavailable, so the integrated USDZ
+adapter path is pending the Blender validation gate.
+
 ## Self-review and concerns
 
 The adapter keeps the existing Beastmaker CLI/report path intact and exposes a

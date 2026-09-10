@@ -63,6 +63,15 @@ class ModelVerificationTests(unittest.TestCase):
         policy = MaterialPolicy.canonical_wood()
         self.assertTrue(policy.require_image)
         self.assertTrue(policy.require_embedded_texture)
+        self.assertEqual(policy.texture_name, "canonical-neutral-wood.png")
+
+    def test_empty_nested_asset_directory_is_rejected(self):
+        with tempfile.TemporaryDirectory() as raw:
+            package = Path(raw)
+            self.package(package)
+            (package / "assets" / "empty").mkdir()
+            with self.assertRaisesRegex(ValueError, "asset inventory"):
+                verify_model_package(package, self.config(package / "board.json"))
 
 
 if __name__ == "__main__":
