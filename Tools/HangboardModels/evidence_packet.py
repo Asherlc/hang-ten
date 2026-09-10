@@ -57,17 +57,27 @@ _NUMERIC_SHAPE_PRESCRIPTION = re.compile(
     r"\d+(?:\.\d+)?\s*(?:mm|cm|in)\s*\b(?:radius|radii|section|profile|contour|depth)\b)",
     re.IGNORECASE,
 )
-_FLASH_APPROVED_LOGICAL_IDS = frozenset(
-    {
-        "three-edge-left",
-        "three-edge-center",
-        "three-edge-right",
-        "two-edge-left",
-        "two-edge-right",
-        "small-crimp-left",
-        "small-crimp-right",
-    }
+_FLASH_APPROVED_LOGICAL_ID_ORDER = (
+    "three-edge-left",
+    "three-edge-center",
+    "three-edge-right",
+    "two-edge-left",
+    "two-edge-right",
+    "small-crimp-left",
+    "small-crimp-right",
 )
+_FLASH_APPROVED_POSITION_ORDER = (
+    "three-edge-upright",
+    "three-edge-inverted",
+    "two-edge-upright",
+    "two-edge-inverted",
+)
+_FLASH_APPROVED_POSITION_HOLD_ORDER = {
+    "three-edge-upright": ("three-edge-left", "three-edge-center", "three-edge-right"),
+    "three-edge-inverted": ("three-edge-left", "three-edge-center", "three-edge-right"),
+    "two-edge-upright": ("two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"),
+    "two-edge-inverted": ("two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"),
+}
 
 
 @dataclass(frozen=True)
@@ -226,10 +236,15 @@ def _validate_suspended_presentation(
     position_ids = _strings(value["positionIDs"], "suspendedPresentation.positionIDs")
     if len(position_ids) != len(set(position_ids)):
         raise ValueError("suspendedPresentation.positionIDs contains duplicate position")
+    if board_revision == "tension-flash-board-2" and tuple(position_ids) != _FLASH_APPROVED_POSITION_ORDER:
+        raise ValueError("Flash Board suspended presentation must declare the four approved positions in order")
     mappings = _dict_list(value["positionMappings"], "suspendedPresentation.positionMappings")
     if not mappings:
         raise ValueError("suspendedPresentation.positionMappings must be non-empty")
     inventory_ids = {item.get("id") for item in inventory}
+    inventory_id_order = tuple(item.get("id") for item in inventory)
+    if board_revision == "tension-flash-board-2" and inventory_id_order != _FLASH_APPROVED_LOGICAL_ID_ORDER:
+        raise ValueError("approved logical inventory for the Flash Board must preserve the seven IDs")
     seen: set[str] = set()
     for mapping in mappings:
         if set(mapping) - {"positionID", "holdIDs", "sourceLocalPath"}:
@@ -249,9 +264,16 @@ def _validate_suspended_presentation(
     if seen != set(position_ids):
         raise ValueError("positionMappings must provide a mapping for every declared position")
 
-    inventory_ids = {item.get("id") for item in inventory}
-    if board_revision == "tension-flash-board-2" and inventory_ids != _FLASH_APPROVED_LOGICAL_IDS:
-        raise ValueError("approved logical inventory for the Flash Board must preserve the seven IDs")
+    if board_revision == "tension-flash-board-2":
+        mapping_order = tuple(mapping["positionID"] for mapping in mappings)
+        if mapping_order != _FLASH_APPROVED_POSITION_ORDER:
+            raise ValueError("Flash Board position mappings must cover the four approved positions in order")
+        for mapping in mappings:
+            expected_holds = _FLASH_APPROVED_POSITION_HOLD_ORDER[mapping["positionID"]]
+            if tuple(mapping["holdIDs"]) != expected_holds:
+                raise ValueError(
+                    f"Flash Board position {mapping['positionID']} does not preserve its approved hold order"
+                )
 
     face_notes = _dict_list(value["faceInventoryNotes"], "suspendedPresentation.faceInventoryNotes")
     if not face_notes:

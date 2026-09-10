@@ -160,28 +160,74 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
     return path
 
 
+def valid_flash_suspended_packet(tmp_path: Path) -> Path:
+    path = valid_suspended_packet(tmp_path)
+    payload = _payload(path)
+    for name, view in (
+        ("user-closeup-front-cord-and-wells.png", "front-face-and-cord-closeup"),
+        ("user-closeup-two-well-face.png", "two-well-face-closeup"),
+        ("user-closeup-two-well-face-wide.png", "two-well-face-wide"),
+    ):
+        source = path.parent / "sources" / name
+        source.write_bytes(name.encode("ascii"))
+        payload["userEvidenceSources"].append(  # type: ignore[union-attr]
+            {
+                "localPath": f"sources/{name}",
+                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "sourceTier": "user",
+                "view": view,
+                "supports": "User-supplied visual context only.",
+                "limitations": "User evidence, not manufacturer authority; does not establish new logical IDs.",
+            }
+        )
+    payload["boardRevision"] = "tension-flash-board-2"
+    payload["primarySources"][0]["url"] = "https://tensionclimbing.com/products/flash-board-2"  # type: ignore[index]
+    payload["commerceSources"][0]["retailer"] = "Backcountry"  # type: ignore[index]
+    payload["commerceSources"][0]["url"] = "https://www.backcountry.com/tension-flash-board"  # type: ignore[index]
+    payload["commerceSources"][1]["retailer"] = "Amazon"  # type: ignore[index]
+    payload["commerceSources"][1]["url"] = "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"  # type: ignore[index]
+    payload["logicalInventory"] = [  # type: ignore[assignment]
+        {"id": "three-edge-left", "kind": "edge", "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"id": "three-edge-center", "kind": "edge", "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"id": "three-edge-right", "kind": "edge", "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"id": "two-edge-left", "kind": "edge", "sourceLocalPath": "sources/front.png"},
+        {"id": "two-edge-right", "kind": "edge", "sourceLocalPath": "sources/front.png"},
+        {"id": "small-crimp-left", "kind": "edge", "sourceLocalPath": "sources/front.png"},
+        {"id": "small-crimp-right", "kind": "edge", "sourceLocalPath": "sources/front.png"},
+    ]
+    payload["suspendedPresentation"]["positionMappings"] = [  # type: ignore[index]
+        {"positionID": "three-edge-upright", "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"], "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"positionID": "three-edge-inverted", "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"], "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"positionID": "two-edge-upright", "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"], "sourceLocalPath": "sources/front.png"},
+        {"positionID": "two-edge-inverted", "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"], "sourceLocalPath": "sources/front.png"},
+    ]
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return path
+
+
 def test_accepts_valid_suspended_presentation(tmp_path: Path) -> None:
     packet = valid_suspended_packet(tmp_path)
     assert validate_evidence_packet(packet).suspended_presentation["positionIDs"]
 
 
 def test_accepts_amazon_face_map_only_as_commerce(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     parsed = validate_evidence_packet(packet)
-    amazon = next(source for source in parsed.commerce_sources if source.retailer == "Authorized Retailer")
+    amazon = next(source for source in parsed.commerce_sources if source.retailer == "Amazon")
     assert amazon.source_tier == "commerce"
-    assert all(source.source_tier != "manufacturer" for source in parsed.commerce_sources)
+    assert amazon.url == "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"
+    assert amazon.local_path == "sources/labelled-faces.jpg"
 
 
 def test_accepts_user_closeups_with_explicit_limitations(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     parsed = validate_evidence_packet(packet)
-    assert len(parsed.user_evidence_sources) == 3
+    assert len(parsed.user_evidence_sources) == 6
     assert all(source["limitations"] for source in parsed.user_evidence_sources)
 
 
 def test_rejects_user_closeup_without_evidence_limitations(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     payload = _payload(packet)
     del payload["userEvidenceSources"][0]["limitations"]  # type: ignore[index]
     _rewrite(packet, payload)
@@ -190,18 +236,19 @@ def test_rejects_user_closeup_without_evidence_limitations(tmp_path: Path) -> No
 
 
 def test_rejects_commerce_source_adding_logical_hold_id(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     payload = _payload(packet)
     payload["logicalInventory"].append(  # type: ignore[union-attr]
         {"id": "commerce-only-lower-groove", "kind": "edge", "sourceLocalPath": "sources/hanging.jpg"}
     )
+    payload["suspendedPresentation"]["positionMappings"][0]["holdIDs"].append("commerce-only-lower-groove")  # type: ignore[index]
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="approved logical inventory|logical hold"):
         validate_evidence_packet(packet)
 
 
 def test_rejects_lower_groove_mapped_as_new_id(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     payload = _payload(packet)
     payload["suspendedPresentation"]["positionMappings"][0]["holdIDs"].append("lower-groove")  # type: ignore[index]
     _rewrite(packet, payload)
@@ -215,6 +262,40 @@ def test_requires_lower_ledge_conflict_ruling(tmp_path: Path) -> None:
     payload["conflictsAndRulings"] = []
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="lower-ledge-interpretation"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_flash_duplicate_or_reordered_inventory(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["logicalInventory"][0]["id"] = "three-edge-center"  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="seven IDs"):
+        validate_evidence_packet(packet)
+
+    payload = _payload(packet)
+    payload["logicalInventory"][0], payload["logicalInventory"][1] = payload["logicalInventory"][1], payload["logicalInventory"][0]  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="seven IDs"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_flash_missing_or_arbitrary_position(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["positionIDs"] = ["three-edge-upright"]  # type: ignore[index]
+    payload["suspendedPresentation"]["positionMappings"] = [payload["suspendedPresentation"]["positionMappings"][0]]  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="four approved positions"):
+        validate_evidence_packet(packet)
+
+    arbitrary_root = tmp_path / "arbitrary-position"
+    arbitrary_root.mkdir()
+    packet = valid_flash_suspended_packet(arbitrary_root)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["positionIDs"][0] = "arbitrary"  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="four approved positions"):
         validate_evidence_packet(packet)
 
 
