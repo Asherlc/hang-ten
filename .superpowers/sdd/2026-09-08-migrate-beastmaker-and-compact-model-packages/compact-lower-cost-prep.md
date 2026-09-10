@@ -1,6 +1,6 @@
 # Compact II lower-cost follow-up prep
 
-Date: 2026-09-09  
+Date: 2026-09-09
 Scope: static audit only; no Blender startup and no edits to geometry, packages,
 evidence, or `Tools/HangboardModels/beastmaker_1000.py`.
 

@@ -45,8 +45,6 @@ def test_manually_transparent_trango_pivot_is_not_reprocessed_by_legacy_seed_fil
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
-        ("beastmaker-1000", (215, 10), (500, 20)),
-        ("beastmaker-1000", (785, 10), (500, 20)),
         ("soill-training-tiles", (500, 450), (500, 350)),
         ("tension-grindstone", (887, 443), (887, 360)),
         ("yy-travelboard", (190, 625), (768, 512)),
@@ -75,6 +73,17 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
 
     assert corrected.getpixel(hole) == 0
     assert corrected.getpixel(preserved) == 255
+
+
+@pytest.mark.parametrize(
+    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii")
+)
+def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
+    assets = HANGBOARDS_ROOT / package / "assets"
+
+    assert (assets / "primary.usdz").is_file()
+    assert (assets / "primary.model.json").is_file()
+    assert not (assets / "primary.png").exists()
 
 
 def test_enclosed_background_fill_enqueues_each_coordinate_once(monkeypatch) -> None:

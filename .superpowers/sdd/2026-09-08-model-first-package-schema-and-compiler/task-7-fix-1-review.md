@@ -1,6 +1,6 @@
 # Task 7 fix round 1 independent review
 
-**Range:** `cc70618b..ebfffd03`  
+**Range:** `cc70618b..ebfffd03`
 **Verdict:** **APPROVED**
 
 The prior P1 README contradiction is resolved. The full README no longer says

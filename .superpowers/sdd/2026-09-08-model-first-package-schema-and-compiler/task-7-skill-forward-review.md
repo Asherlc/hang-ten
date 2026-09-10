@@ -1,6 +1,6 @@
 # Task 7 skill process forward review
 
-**Range:** `732351c2..d52491ab`  
+**Range:** `732351c2..d52491ab`
 **Verdict:** **APPROVED**
 
 The sole prior finding is resolved.

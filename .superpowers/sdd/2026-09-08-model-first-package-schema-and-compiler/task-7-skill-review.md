@@ -1,6 +1,6 @@
 # Task 7 skill update independent review
 
-**Range:** `4b0532d7..1ead9138`  
+**Range:** `4b0532d7..1ead9138`
 **Verdict:** **REQUEST CHANGES**
 
 ## Finding

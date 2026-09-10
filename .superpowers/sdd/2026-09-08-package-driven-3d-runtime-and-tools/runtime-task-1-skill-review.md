@@ -105,4 +105,3 @@ new RED/GREEN cycle, no further technical rewrite is required.
 - `git diff --check 5bf3a1aa^ 5bf3a1aa` → clean.
 - Current worktree `git diff --check` → clean; the pre-existing
   `HangTenTests/BoardModelTests.swift` modification was not touched.
-

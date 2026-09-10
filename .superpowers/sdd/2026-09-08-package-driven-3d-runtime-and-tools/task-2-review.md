@@ -37,4 +37,3 @@ Reject root geometry explicitly (a root has no valid descriptor path under this 
 - No active production reference to the old standalone Compact model remains in this commit, and no board-specific branch or name normalization survives in `BoardModelView.swift`.
 - The 5.6 MiB `HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz` remains tracked and compiled by `HangTen.xcodeproj`. The lean plan assigns its deletion to M1 once package promotion removes every tracked member, so this is an outstanding final-boundary obligation rather than an R2 source-routing defect.
 - `git diff --check ac7b10a^ ac7b10a` is clean. Retained test summaries confirm 5/5 and 108/108 on the prescribed simulator. Both Task 2 manifests are empty and the named task-local ephemeral directories are absent; current `simctl` re-query was unavailable because CoreSimulatorService was disconnected.
-

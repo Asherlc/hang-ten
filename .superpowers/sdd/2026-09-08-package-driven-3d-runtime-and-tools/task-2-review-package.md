@@ -32,4 +32,3 @@ Scope: original runtime Task 2, lean delta R2, the approved 3D model specificati
 ## Review disposition
 
 **Not approved.** The implementation has a sound generic-binding core, but the findings in the companion report leave the mandated unavailable/no-fallback behavior, descriptor-driven camera behavior, and R2 test contract unproven or violated. The 5/5 and 108/108 result bundles are valid PASS evidence for the tests that ran, not evidence that the missing R2 behaviors work.
-

@@ -1,6 +1,6 @@
 # Task 7 independent review
 
-**Range:** `dc17f79b..ea1587ef`  
+**Range:** `dc17f79b..ea1587ef`
 **Verdict:** **REQUEST CHANGES**
 
 ## Finding

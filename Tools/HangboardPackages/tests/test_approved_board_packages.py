@@ -979,8 +979,8 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
 
     model_sha = hashlib.sha256(model_path.read_bytes()).hexdigest()
     descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
-    assert model_sha == "220c68ea5519b0bed80cd2aac08b35f5f2c2a7d2200596f62c3a84996efb94a3"
-    assert descriptor_sha == "300a26886362dd0c510c729e1a9fd4e6a35f47497aed5e7f12d33a2fdb7068fe"
+    assert model_sha == "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a"
+    assert descriptor_sha == "a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f"
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"

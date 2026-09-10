@@ -96,4 +96,3 @@ note is a non-runtime historical lifecycle naming variance documented below.
 - `SRCROOT=$PWD scripts/verify-board-source-boundary-manifest.sh` — exit 0.
 - `git diff --check e1e53c19^..8a99889c` — exit 0.
 - `git diff --check` — exit 0 before this review artifact.
-

@@ -1,7 +1,7 @@
 # Task 3 review — media-aware board map and unavailable UI
 
-Reviewer: `shaky-rat` runtime review lane  
-Reviewed commit: `6464451b` (`feat: surface unavailable package models`)  
+Reviewer: `shaky-rat` runtime review lane
+Reviewed commit: `6464451b` (`feat: surface unavailable package models`)
 Baseline: Task 2 fix `175ecc9f`; original runtime plan and lean parallel delivery plan
 
 ## Approval status
@@ -65,4 +65,3 @@ Pending:
   exact `Hang Ten Paseo shaky-rat Review` lifecycle, native
   `BoardModelTests`, and `OwlClimbPokerBoardMapInteractionUITests` remain
   pending and must be rerun when CoreSimulator recovers.
-
