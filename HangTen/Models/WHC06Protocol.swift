@@ -24,9 +24,7 @@ struct WHC06ProtocolAdapter {
     }
 
     func matches(_ advertisement: ForceSensorAdvertisement) -> Bool {
-        advertisement.manufacturerData.contains { manufacturerData in
-            manufacturerData.companyIdentifier == Self.companyIdentifier
-        }
+        advertisement.manufacturerData.contains(where: accepts)
     }
 
     func payload(for command: ForceSensorCommand) -> Data? {
@@ -34,9 +32,7 @@ struct WHC06ProtocolAdapter {
     }
 
     func decode(_ advertisement: ForceSensorAdvertisement, receivedAt: Date) -> [ForceSensorSample]? {
-        guard let manufacturerData = advertisement.manufacturerData.first(where: { manufacturerData in
-            manufacturerData.companyIdentifier == Self.companyIdentifier
-        }) else {
+        guard let manufacturerData = advertisement.manufacturerData.first(where: accepts) else {
             return nil
         }
 
@@ -44,22 +40,44 @@ struct WHC06ProtocolAdapter {
     }
 
     private func decode(_ payload: Data, receivedAt: Date) -> [ForceSensorSample]? {
-        guard payload.count >= 12 else { return nil }
+        guard payload.count >= 15 else { return nil }
 
         let highByteIndex = payload.index(payload.startIndex, offsetBy: 10)
         let lowByteIndex = payload.index(after: highByteIndex)
-        let hundredthsOfKilogram = UInt16(payload[highByteIndex]) << 8
+        let hundredthsOfSourceUnit = UInt16(payload[highByteIndex]) << 8
             | UInt16(payload[lowByteIndex])
+        let unitByteIndex = payload.index(payload.startIndex, offsetBy: 14)
+        let sourceUnit: ForceSensorSourceUnit
+        switch payload[unitByteIndex] & 0x0F {
+        case 1:
+            sourceUnit = .kilogramsForce
+        case 2:
+            sourceUnit = .poundsForce
+        default:
+            return nil
+        }
 
-        // Adaptation: upstream exposes kg; Hang Ten stores this as kgf pending vendor confirmation.
         guard let sample = ForceSensorSample(
-            value: Double(hundredthsOfKilogram) / 100,
-            unit: .kilogramsForce,
+            value: Double(hundredthsOfSourceUnit) / 100,
+            unit: sourceUnit,
             receivedAt: receivedAt
         ) else {
             return nil
         }
 
         return [sample]
+    }
+
+    private func accepts(_ manufacturerData: ForceSensorManufacturerData) -> Bool {
+        guard manufacturerData.companyIdentifier == Self.companyIdentifier else { return false }
+        guard profile == .whC06 else { return true }
+        return Self.isNamedWHC06Payload(manufacturerData.payload)
+    }
+
+    private static func isNamedWHC06Payload(_ payload: Data) -> Bool {
+        guard payload.count == 17 else { return false }
+        let firstByteIndex = payload.startIndex
+        let secondByteIndex = payload.index(after: firstByteIndex)
+        return payload[firstByteIndex] == 0x02 && payload[secondByteIndex] == 0x03
     }
 }

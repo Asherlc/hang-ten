@@ -136,7 +136,11 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             peripheral,
             to: transport,
             advertisementData: [
-                CBAdvertisementDataManufacturerDataKey: Data([0x00, 0x01, 0, 1, 2, 3])
+                CBAdvertisementDataManufacturerDataKey: Data([
+                    0x00, 0x01,
+                    0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                    0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                ])
             ]
         )
 
@@ -149,8 +153,93 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(capturedAdvertisement.device.id, peripheral.deviceID)
         XCTAssertEqual(capturedAdvertisement.device.profile, .whC06)
         XCTAssertEqual(capturedAdvertisement.advertisement.manufacturerData, [
-            ForceSensorManufacturerData(companyIdentifier: 0x0100, payload: Data([0, 1, 2, 3]))
+            ForceSensorManufacturerData(
+                companyIdentifier: 0x0100,
+                payload: Data([
+                    0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                    0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                ])
+            )
         ])
+    }
+
+    func testServiceSelectsWHC06TransportAndStreamsCapturedAdvertisement() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: nil)
+        defer { service.disconnect() }
+
+        service.connect(profile: .whC06)
+
+        XCTAssertGreaterThan(manager.scanCount, 0)
+        XCTAssertNil(manager.scannedServiceUUIDs)
+        XCTAssertEqual(
+            manager.scannedOptions?[CBCentralManagerScanOptionAllowDuplicatesKey] as? Bool,
+            true
+        )
+
+        // Captured WH-C06 advertisement: little-endian company ID, then its payload.
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
+                0x00, 0x01,
+                0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+            ])]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, peripheral.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0)
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testAutomaticScanIgnoresLD2410BThenStreamsTheResolvedWHC06Advertisement() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let radar = FakeMotherboardPeripheral(name: "HLK-LD2410B")
+        let scale = FakeMotherboardPeripheral(name: "Scale")
+        defer { service.disconnect() }
+
+        service.connect(profile: .automatic)
+
+        XCTAssertNil(manager.scannedServiceUUIDs)
+        XCTAssertEqual(
+            manager.scannedOptions?[CBCentralManagerScanOptionAllowDuplicatesKey] as? Bool,
+            true
+        )
+
+        deliverDiscovery(
+            radar,
+            to: transport,
+            advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
+                0x00, 0x01,
+                0x07, 0x01, 0x16, 0x15, 0x09, 0x22, 0x00, 0xBE, 0x8D, 0xED, 0xEE, 0x56, 0x00
+            ])]
+        )
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.connectedProfile)
+
+        deliverDiscovery(
+            scale,
+            to: transport,
+            advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
+                0x00, 0x01,
+                0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+            ])]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, scale.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0)
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
     }
 
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
@@ -222,7 +311,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
                 manufacturerData: [
                     ForceSensorManufacturerData(
                         companyIdentifier: 0x0100,
-                        payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x04, 0xD2])
+                        payload: whC06Payload(loadHundredthsKGF: 0x04D2)
                     )
                 ]
             ),
@@ -246,7 +335,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
                 manufacturerData: [
                     ForceSensorManufacturerData(
                         companyIdentifier: 0x0100,
-                        payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0x01, 0xC8])
+                        payload: whC06Payload(loadHundredthsKGF: 0x01C8)
                     )
                 ]
             ),
@@ -320,7 +409,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
                 manufacturerData: [
                     ForceSensorManufacturerData(
                         companyIdentifier: 0x0100,
-                        payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1])
+                        payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 0, 0, 1])
                     )
                 ]
             ),
@@ -1235,16 +1324,20 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
                 manufacturerData: [
                     ForceSensorManufacturerData(
                         companyIdentifier: WHC06ProtocolAdapter.companyIdentifier,
-                        payload: Data([
-                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                            UInt8(loadHundredthsKGF >> 8),
-                            UInt8(loadHundredthsKGF & 0x00FF)
-                        ])
+                        payload: whC06Payload(loadHundredthsKGF: loadHundredthsKGF)
                     )
                 ]
             ),
             Date()
         ))
+    }
+
+    private func whC06Payload(loadHundredthsKGF: UInt16) -> Data {
+        Data([
+            0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A, 0x01,
+            UInt8(loadHundredthsKGF >> 8), UInt8(loadHundredthsKGF & 0x00FF),
+            0x01, 0xF4, 0x01, 0x9B, 0x92
+        ])
     }
 
     private func emitCompleteCalibration(

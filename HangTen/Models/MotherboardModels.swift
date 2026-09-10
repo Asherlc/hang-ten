@@ -168,6 +168,8 @@ enum MotherboardConnectionState: Equatable {
 }
 
 enum MotherboardForceRocker {
+    static let accessibilityLabel = "Force versus threshold rocker"
+
     enum State: Equatable {
         case unavailable
         case underTarget(tiltFraction: Double)
@@ -224,6 +226,31 @@ enum MotherboardForceRocker {
             return .overTarget(tiltFraction: 1)
         }
         return .overTarget(tiltFraction: 1 / thresholdRatio - 1)
+    }
+}
+
+enum MotherboardBalancePresentation: Equatable {
+    case available
+    case aggregateOnly
+    case unavailable
+
+    init(for measurement: MotherboardMeasurement?) {
+        guard let measurement else {
+            self = .unavailable
+            return
+        }
+        self = measurement.sensorLoadsKGF.isEmpty ? .aggregateOnly : .available
+    }
+
+    var unavailableCopy: String? {
+        switch self {
+        case .available:
+            nil
+        case .aggregateOnly:
+            "Balance unavailable — this sensor provides total force only."
+        case .unavailable:
+            "Balance unavailable — waiting for a measured load."
+        }
     }
 }
 

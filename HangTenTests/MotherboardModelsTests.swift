@@ -33,6 +33,19 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: .infinity), .unavailable)
     }
 
+    func testBalancePresentationExplainsWhenOnlyAggregateForceIsAvailable() {
+        let aggregateOnly = measurement(sensorLoads: [], aggregate: 10)
+        let multiChannel = measurement(sensorLoads: [3, 4, 5], aggregate: 12)
+
+        XCTAssertEqual(MotherboardBalancePresentation(for: aggregateOnly), .aggregateOnly)
+        XCTAssertEqual(
+            MotherboardBalancePresentation(for: aggregateOnly).unavailableCopy,
+            "Balance unavailable — this sensor provides total force only."
+        )
+        XCTAssertEqual(MotherboardBalancePresentation(for: multiChannel), .available)
+        XCTAssertEqual(MotherboardBalancePresentation(for: nil), .unavailable)
+    }
+
     func testConnectionStateShowsWorkoutMeterOnlyWhileStreaming() {
         XCTAssertTrue(MotherboardConnectionState.streaming.showsWorkoutMeter)
 
