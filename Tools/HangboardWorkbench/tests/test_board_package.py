@@ -136,6 +136,19 @@ def _write_finished_package(
     return package
 
 
+def _write_model_only_package(library: Path, slug: str, board_id: str) -> Path:
+    source = REPOSITORY_ROOT / "Hangboards" / "beastmaker-1000"
+    board = json.loads((source / "board.json").read_text(encoding="utf-8"))
+    board["id"] = board_id
+    package = library / slug
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    (assets / "primary.usdz").write_bytes(b"invalid-usdz-sentinel")
+    (assets / "primary.model.json").write_bytes(b"invalid-descriptor-sentinel")
+    _write_json(package / "board.json", board)
+    return package
+
+
 def _write_draft(library: Path, slug: str) -> Path:
     assets = library / slug / "assets"
     assets.mkdir(parents=True)
@@ -649,6 +662,42 @@ def test_model_only_package_has_the_exact_read_only_inventory() -> None:
     assert package.board_id == "metolius.wood-grips-compact-ii"
     assert len(package.hold_ids) == 19
     assert package.editor_available is False
+
+
+def test_save_editor_document_rejects_model_only_before_loading_media(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _library(tmp_path)
+    _write_model_only_package(library, "fixture-model", "fixture.model")
+
+    def fail_if_full_loader_runs(_package_root: Path) -> object:
+        raise AssertionError("model media must not be loaded for editor save")
+
+    monkeypatch.setattr(board_package, "load_board_package", fail_if_full_loader_runs)
+
+    with pytest.raises(
+        board_package.BoardEditorUnavailableError,
+        match="3D model editing is not supported",
+    ):
+        board_package.save_editor_document(library, "fixture-model", {})
+
+
+def test_delete_presentation_rejects_model_only_before_loading_media(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _library(tmp_path)
+    _write_model_only_package(library, "fixture-model", "fixture.model")
+
+    def fail_if_full_loader_runs(_package_root: Path) -> object:
+        raise AssertionError("model media must not be loaded for editor delete")
+
+    monkeypatch.setattr(board_package, "load_board_package", fail_if_full_loader_runs)
+
+    with pytest.raises(
+        board_package.BoardEditorUnavailableError,
+        match="3D model editing is not supported",
+    ):
+        board_package.delete_presentation(library, "fixture-model", "primary")
 
 
 def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:

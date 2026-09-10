@@ -680,6 +680,8 @@ def save_editor_document(
         )
         if live is None:
             raise BoardPackageError("board package is not available")
+        if not live.editor_available:
+            raise BoardEditorUnavailableError("3D model editing is not supported")
         live = load_board_package(live.root)
         requested_presentation_id = document.get("presentationID")
         presentation = live.presentation(
@@ -793,6 +795,8 @@ def delete_presentation(
         )
         if live is None:
             raise BoardPackageError("board package is not available")
+        if not live.editor_available:
+            raise BoardEditorUnavailableError("3D model editing is not supported")
         live = load_board_package(live.root)
         board, removed_assets = _delete_presentation_from_board(
             live.board, presentation_id

@@ -172,6 +172,10 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
+            if not selected.editor_available:
+                raise board_package.BoardEditorUnavailableError(
+                    "3D model editing is not supported"
+                )
             package = _load_selected_package(
                 snapshot.with_blob_cache(),
                 token,
@@ -942,6 +946,11 @@ def open_package(
 ) -> GitHubBoardPackage:
     """Open one board by ID after fully decoding the current primary PNG."""
     board_id = board_package._identifier(board_id, "board ID")
+    selected = _selected_package(discover_packages(client, token, branch), board_id)
+    if not selected.editor_available:
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
     package = _load_by_board_id(client, token, branch, board_id)
     return package
 

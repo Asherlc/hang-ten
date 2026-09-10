@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package
@@ -40,6 +41,17 @@ def _complete_package(slug: str, board: dict[str, object]) -> dict[str, bytes]:
     return {
         f"Hangboards/{slug}/board.json": _encoded_board(board),
         f"Hangboards/{slug}/assets/primary.png": PRIMARY_IMAGE.read_bytes(),
+    }
+
+
+def _model_only_package(slug: str, board_id: str) -> dict[str, bytes]:
+    source = REPOSITORY_ROOT / "Hangboards" / "beastmaker-1000"
+    board = json.loads((source / "board.json").read_text(encoding="utf-8"))
+    board["id"] = board_id
+    return {
+        f"Hangboards/{slug}/board.json": _encoded_board(board),
+        f"Hangboards/{slug}/assets/primary.usdz": b"invalid-usdz-sentinel",
+        f"Hangboards/{slug}/assets/primary.model.json": b"invalid-descriptor-sentinel",
     }
 
 
@@ -367,6 +379,27 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
         "width": 1774,
         "height": 887,
     }
+
+
+def test_hosted_store_open_rejects_model_only_before_fetching_model_blobs() -> None:
+    files = _model_only_package("fixture-model", "fixture.model")
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    model_shas = {
+        FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.endswith(".usdz") or path.endswith(".model.json")
+    }
+
+    with pytest.raises(
+        board_package.BoardEditorUnavailableError,
+        match="3D model editing is not supported",
+    ):
+        store.open_package(TOKEN, BRANCH, "fixture.model")
+
+    assert model_shas.isdisjoint(
+        {call.args[1] for call in client.calls_named("get_blob")}
+    )
 
 
 def test_remote_package_preserves_orientation_alias_presentations() -> None:
