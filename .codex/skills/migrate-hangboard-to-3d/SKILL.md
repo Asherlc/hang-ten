@@ -113,6 +113,38 @@ Inspect [BoardModelView](../../../HangTen/Views/BoardModelView.swift), package l
 
 Keep asynchronous cached loading, independent cloned materials, scene/camera rebinding on identity changes, stable accessibility elements, and on-demand rendering. Use head-on orthographic app framing with lighting that reveals recess depth. Match preview/rest and active highlight semantics; restore wood when cleared.
 
+For a model carrying the Task 1 `singleCord` contract, integrate the
+suspension presentation as one deterministic transient layer above the
+validated USDZ. Transform the descriptor's local attachment point with the
+selected canonical board pose, keep the anchor fixed and invisible, and solve
+a uniform-cord catenary in the gravity plane whenever slack exists. Use a
+straight segment only when rest length equals the physical minimum-length
+tolerance. The curve must be continuous at both endpoints, sampled with
+finite values and fixed sample/material parameters, and remain non-pickable
+and absent from the accessibility tree. Verify mesh/ray clearance away from
+the approved attachment interface and camera-space framing of the active hold,
+attachment, and visible cord segment. Do not add a visible nail, hook, anchor,
+stand, ceiling, or surrounding mounting environment.
+
+The following are required failure outcomes for validators and
+`BoardModelView`: rest length shorter than anchor-to-attachment separation;
+nonfinite or nonpositive cord length/radius or other cord parameters;
+nonfinite, nonunit, or otherwise invalid pose transforms; a missing
+attachment node; an unsolved or nonfinite curve; cord collision with the board
+away from the attachment; and the cord becoming a selectable or nearer pick.
+Each case must enter the current explicit model-unavailable/error state. None
+may fall back to a straight line, another orientation model, raster rendering,
+or a visible anchor/stand-in.
+
+Selecting a hold or resolving a workout position must smoothly restore that
+position's canonical board pose and canonical camera framing, then recompute
+the deterministic cord. Manual gestures may change camera azimuth, elevation,
+and allowed zoom only; they must never independently rotate the suspended
+board or anchor. Verify camera orbit separately from interactive detail
+picking. On the first migration, review selection snap, orbit, reset after
+orbit, every supported position, cord/board continuity, clear-and-reappear
+highlighting, workout-driven positions, and the explicit unavailable state.
+
 Derive a front-above key from the camera position without algebraically cancelling its camera-depth component. After `SCNTransaction.flush()`, verify the directional light's presentation-space forward vector points substantially along the declared camera view direction. Log the actual imported `SCNMaterial.lightingModel` when comparing renderers. SceneKit's physically based model requires Metal and can fall back to Blinn where Metal is unavailable, including affected Simulator configurations; treat Simulator captures as app-integration evidence, not guaranteed physical-device PBR parity.
 
 After a canonical texture or exported material changes, validate its actual appearance through the app renderer as a separate boundary check; a Blender reimport/render establishes only Blender-side behavior. Compare controlled app and Blender captures before diagnosing any remaining mismatch as albedo or lighting, and do not make a second visual correction while app-renderer validation is pending. For albedo correction, hold camera, lighting, geometry, and material settings fixed; capture at least two controlled source-albedo samples through the actual app renderer, compare matched board-region pixels, solve the observed response toward a declared exposed-face target, and revalidate the chosen source in the app. Do not tune from Blender's color-managed appearance alone.
@@ -122,6 +154,15 @@ For a display-only 3D model (`onHoldTap == nil`, or the equivalent non-interacti
 ## Verify, retain, stop
 
 Copy the reviewed asset into app resources and compare SHA-256 hashes. Verify the migrated package no longer ships or references the target's raster presentation or canonical 2D hold paths. On the first migration, use `validate-hang-ten-ios` to inspect normal/highlighted portrait and landscape views, physically tap every hold, and check preview, active, clearing, reappearance, and the explicit unavailable/error state. Tests complement visual review.
+
+For every canonical suspended pose, retain front, oblique, and active-hold
+captures. Retain native-picking proof that the active board contact is the
+nearest descriptor-bound triangle mesh while the cord is ignored and cannot
+become a nearer hit. On the first migration, the iOS review must cover
+selection snap, camera orbit, reset after orbit, every position, board/cord
+continuity, clear-and-reappear highlighting, workout-driven positions, and the
+explicit unavailable state. Camera-orbit verification is a separate check
+from interactive detail picking; passing one does not establish the other.
 
 Native XCTest during migration follows `validate-hang-ten-ios`: create and record an exact owned UUID before use; keep cleanup protection alive across RED/GREEN and compilation failures; record and clean failed preliminary devices; use bounded polling and explicit xcresult summaries; and remove the simulator, workspace `DerivedData`, and result bundles before handoff.
 
