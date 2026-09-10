@@ -26,6 +26,7 @@ import json
 import math
 from pathlib import Path
 import sys
+import struct
 import zipfile
 
 try:  # Keep pure report helpers importable by the host Python test runner.
@@ -88,6 +89,8 @@ POSITION_FACE_SIGN = {
 ATTACHMENT_SOURCE_NODE_ID = "flash-board-body"
 CORD_RADIUS_METERS = 0.002
 CORD_CLEARANCE_METERS = 0.001
+CANONICAL_TEXTURE_MEMBER = "textures/canonical-neutral-wood.png"
+CENTERLINE_SUBDIVISIONS = 8
 
 
 def package_paths(package: Path) -> tuple[Path, Path]:
@@ -151,6 +154,16 @@ def verify_report(
     ceiling = _integer(report, "triangleCeiling")
     if triangles <= 0 or ceiling != TRIANGLE_CEILING or triangles >= ceiling:
         raise ValueError("actual export triangles must be positive and below the recorded ceiling")
+    texture = report.get("canonicalTexture")
+    if not isinstance(texture, Mapping):
+        raise ValueError("report must prove the canonical embedded texture")
+    if texture.get("member") != CANONICAL_TEXTURE_MEMBER:
+        raise ValueError("report must identify the canonical texture member")
+    if texture.get("sha256") != hashlib.sha256(_canonical_texture_bytes()).hexdigest():
+        raise ValueError("report canonical texture hash does not match the source")
+    profile = texture.get("profile")
+    if not isinstance(profile, Mapping) or set(profile) != {"sRGB", "gAMA", "cHRM"}:
+        raise ValueError("report must retain the canonical PNG color profile")
 
     attachment = report.get("attachment")
     if not isinstance(attachment, Mapping):
@@ -175,7 +188,7 @@ def verify_report(
             raise ValueError(f"position probe hold inventory changed: {position_id}")
         if result.get("allRayProbesPassed") is not True:
             raise ValueError(f"ray probes failed for position {position_id}")
-        if result.get("allClearanceProbesPassed") is not True:
+        if result.get("allClearanceProbesPassed") is not True or result.get("actualMeshClearance") is not True:
             raise ValueError(f"clearance probes failed for position {position_id}")
         if _integer(result, "rayProbeCount") != len(expected_hold_ids):
             raise ValueError(f"ray probe count is incomplete: {position_id}")
@@ -235,6 +248,201 @@ def _material_checks(bindings: Sequence[object], objects: Mapping[str, object]) 
                 }
             )
     return checks
+
+
+def _canonical_texture_bytes() -> bytes:
+    import canonical_neutral_wood
+
+    return canonical_neutral_wood.CANONICAL_TEXTURE_PATH.read_bytes()
+
+
+def _png_profile_metadata(payload: bytes) -> dict[str, bytes]:
+    """Read the canonical PNG profile chunks without decoding pixels."""
+    if not payload.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise ValueError("canonical texture must be a PNG")
+    metadata: dict[str, bytes] = {}
+    offset = 8
+    while offset < len(payload):
+        if offset + 12 > len(payload):
+            raise ValueError("canonical texture has a truncated PNG chunk")
+        length = struct.unpack(">I", payload[offset : offset + 4])[0]
+        kind = payload[offset + 4 : offset + 8]
+        end = offset + 12 + length
+        if end > len(payload):
+            raise ValueError("canonical texture has a truncated PNG payload")
+        if kind in {b"sRGB", b"gAMA", b"cHRM"}:
+            metadata[kind.decode("ascii")] = payload[offset + 8 : offset + 8 + length]
+        offset = end
+        if kind == b"IEND":
+            break
+    required = {"sRGB", "gAMA", "cHRM"}
+    if set(metadata) != required:
+        raise ValueError("canonical texture must declare sRGB, gAMA, and cHRM metadata")
+    return metadata
+
+
+def _verify_canonical_texture_archive(archive: zipfile.ZipFile) -> dict[str, object]:
+    """Require the exact canonical wood bytes and explicit profile metadata."""
+    names = [name for name in archive.namelist() if name.lower().endswith((".png", ".jpg", ".jpeg"))]
+    if names != [CANONICAL_TEXTURE_MEMBER]:
+        raise ValueError("USDZ must contain exactly the canonical wood texture member")
+    expected = _canonical_texture_bytes()
+    embedded = archive.read(CANONICAL_TEXTURE_MEMBER)
+    if not embedded:
+        raise ValueError("USDZ canonical texture must be non-empty")
+    if hashlib.sha256(embedded).digest() != hashlib.sha256(expected).digest() or embedded != expected:
+        raise ValueError("USDZ canonical texture must be byte-identical to the source")
+    expected_profile = _png_profile_metadata(expected)
+    embedded_profile = _png_profile_metadata(embedded)
+    if embedded_profile != expected_profile:
+        raise ValueError("USDZ canonical texture profile metadata does not match the source")
+    return {
+        "member": CANONICAL_TEXTURE_MEMBER,
+        "sha256": hashlib.sha256(embedded).hexdigest(),
+        "profile": {key: value.hex() for key, value in expected_profile.items()},
+    }
+
+
+def _transform_point(point: Sequence[float], pose: Mapping[str, object]) -> tuple[float, float, float]:
+    rotation = pose["rotation"]
+    translation = pose["translation"]
+    x, y, z, w = (float(value) for value in rotation)
+    px, py, pz = (float(value) for value in point)
+    tx = 2 * (y * pz - z * py)
+    ty = 2 * (z * px - x * pz)
+    tz = 2 * (x * py - y * px)
+    return (
+        px + w * tx + (y * tz - z * ty) + float(translation[0]),
+        py + w * ty + (z * tx - x * tz) + float(translation[1]),
+        pz + w * tz + (x * ty - y * tx) + float(translation[2]),
+    )
+
+
+def _suspension_samples(
+    bounds: Mapping[str, object],
+    suspension: Mapping[str, object],
+    pose: Mapping[str, object],
+) -> list[tuple[float, float, float]]:
+    """Reproduce the app's fixed-sample catenary for one canonical pose."""
+    minimum = tuple(float(value) for value in bounds["min"])
+    maximum = tuple(float(value) for value in bounds["max"])
+    offset = tuple(float(value) for value in suspension["anchor"]["offsetFromBoardBounds"])
+    anchor = (
+        (minimum[0] + maximum[0]) / 2 + offset[0],
+        maximum[1] + offset[1],
+        (minimum[2] + maximum[2]) / 2 + offset[2],
+    )
+    attachment = _transform_point(suspension["attachment"]["pointInModel"], pose)
+    rest_length = float(suspension["cord"]["restLength"])
+    delta = tuple(attachment[index] - anchor[index] for index in range(3))
+    endpoint_distance = math.sqrt(sum(value * value for value in delta))
+    if rest_length < endpoint_distance - 1e-5:
+        raise ValueError("canonical pose cord is shorter than its endpoints")
+    if abs(rest_length - endpoint_distance) <= 1e-5:
+        return [
+            tuple(anchor[axis] + delta[axis] * index / 31 for axis in range(3))
+            for index in range(32)
+        ]
+
+    vertical = -delta[1]
+    horizontal_vector = (delta[0], 0.0, delta[2])
+    horizontal = math.sqrt(horizontal_vector[0] ** 2 + horizontal_vector[2] ** 2)
+    horizontal_arc = math.sqrt(rest_length * rest_length - vertical * vertical)
+    if horizontal <= 1e-7 or horizontal_arc <= horizontal:
+        raise ValueError("canonical pose has no finite catenary solution")
+
+    def residual(parameter: float) -> float:
+        argument = horizontal / (2 * parameter)
+        if argument >= 80:
+            return math.inf
+        return 2 * parameter * math.sinh(argument) - horizontal_arc
+
+    lower = min(horizontal, horizontal_arc) * 1e-6
+    upper = max(horizontal, horizontal_arc) / 2
+    for _ in range(64):
+        if residual(lower) >= 0:
+            break
+        lower /= 2
+    for _ in range(64):
+        if residual(upper) <= 0:
+            break
+        upper *= 2
+    if residual(lower) < 0 or residual(upper) > 0:
+        raise ValueError("canonical pose catenary is unbracketed")
+    for _ in range(128):
+        midpoint = (lower + upper) / 2
+        if residual(midpoint) > 0:
+            lower = midpoint
+        else:
+            upper = midpoint
+        if upper - lower <= 1e-6:
+            break
+    parameter = (lower + upper) / 2
+    horizontal_axis = (horizontal_vector[0] / horizontal, 0.0, horizontal_vector[2] / horizontal)
+    shift = horizontal / 2 + parameter * math.asinh(vertical / horizontal_arc)
+    crest = parameter * math.cosh(shift / parameter)
+    samples: list[tuple[float, float, float]] = []
+    for index in range(32):
+        x = horizontal * index / 31
+        sag = crest - parameter * math.cosh((x - shift) / parameter)
+        samples.append(
+            tuple(
+                anchor[axis] + horizontal_axis[axis] * x + (sag if axis == 1 else 0.0) * (-1 if axis == 1 else 1)
+                for axis in range(3)
+            )
+        )
+    samples[0] = anchor
+    samples[-1] = attachment
+    return samples
+
+
+def _check_centerline_clearance(
+    samples: Sequence[tuple[float, float, float]],
+    *,
+    required_clearance: float,
+    attachment_node_id: str,
+    nearest,
+) -> dict[str, object]:
+    """Apply the runtime segment/tube clearance rule to a nearest-mesh query."""
+    if len(samples) < 2:
+        raise ValueError("suspension catenary must contain at least two samples")
+    minimum = math.inf
+    checked = 0
+    last_segment = len(samples) - 2
+    endpoint = samples[-1]
+    node_ids = tuple(getattr(nearest, "node_ids", (attachment_node_id,)))
+    for segment_index, (start, end) in enumerate(zip(samples, samples[1:])):
+        for subdivision in range(CENTERLINE_SUBDIVISIONS + 1):
+            fraction = subdivision / CENTERLINE_SUBDIVISIONS
+            point = tuple(start[axis] + (end[axis] - start[axis]) * fraction for axis in range(3))
+            for node_id in node_ids:
+                distance, nearest_point = nearest(node_id, point)
+                minimum = min(minimum, distance)
+                checked += 1
+                if distance >= required_clearance:
+                    continue
+                interface = (
+                    node_id == attachment_node_id
+                    and segment_index == last_segment
+                    and fraction >= 1 - 1e-5
+                    and math.dist(nearest_point, endpoint) <= 1e-5
+                )
+                if not interface:
+                    return {
+                        "passed": False,
+                        "minimumDistanceMeters": minimum,
+                        "requiredClearanceMeters": required_clearance,
+                        "sampleCount": checked,
+                        "failedNodeID": node_id,
+                        "failedSegmentIndex": segment_index,
+                        "failedSegmentFraction": fraction,
+                    }
+    return {
+        "passed": True,
+        "minimumDistanceMeters": minimum,
+        "requiredClearanceMeters": required_clearance,
+        "sampleCount": checked,
+    }
 
 
 def _ray_probes(
@@ -299,43 +507,75 @@ def _attachment_point(bounds: Mapping[str, object]) -> tuple[float, float, float
     )
 
 
-def _clearance_probes(descriptor: Mapping[str, object]) -> dict[str, dict[str, object]]:
-    """Record deterministic cord-interface clearance samples per position.
+def _clearance_probes(
+    objects: Mapping[str, object],
+    descriptor: Mapping[str, object],
+    suspension: Mapping[str, object],
+) -> dict[str, dict[str, object]]:
+    """Check every posed catenary against the reimported mesh triangles.
 
-    The transient cord is intentionally absent from the USDZ.  Samples stop
-    before the approved integral passage interface and are checked by the
-    iOS renderer again when it constructs the cord tube.
+    The temporary cord is absent from the USDZ.  This verifier builds a BVH
+    from each actual imported mesh after applying the same canonical pose used
+    by the renderer, then probes fixed subdivisions of every catenary segment.
+    Only the exact final endpoint on the declared attachment node receives the
+    runtime's integral-passage interface exception.
     """
+    if bpy is None:
+        raise RuntimeError("mesh clearance probes require Blender")
+    from mathutils.bvhtree import BVHTree
+
     bounds = descriptor["modelBounds"]
-    minimum = tuple(float(v) for v in bounds["min"])
-    maximum = tuple(float(v) for v in bounds["max"])
-    point = _attachment_point(bounds)
+    trees: dict[str, object] = {}
+    for node_id, item in objects.items():
+        vertices = [tuple(item.matrix_world @ vertex.co) for vertex in item.data.vertices]
+        polygons = [tuple(polygon.vertices) for polygon in item.data.polygons]
+        if not vertices or not polygons:
+            raise ValueError(f"actual imported mesh has no triangles: {node_id}")
+        trees[node_id] = (vertices, polygons)
     result: dict[str, dict[str, object]] = {}
+    required = float(suspension["cord"]["radius"]) + CORD_CLEARANCE_METERS
+    attachment_node_id = str(suspension["attachment"]["nodeID"])
     for position_id in POSITION_HOLD_IDS:
-        sign = POSITION_FACE_SIGN[position_id]
-        anchor = (
-            (minimum[0] + maximum[0]) / 2,
-            maximum[1] + 0.24,
-            maximum[2] + 0.05 if sign > 0 else minimum[2] - 0.05,
+        pose = suspension["canonicalPoses"][position_id]
+        samples = _suspension_samples(bounds, suspension, pose)
+        posed_trees: dict[str, object] = {}
+        for node_id, (vertices, polygons) in trees.items():
+            posed_vertices = [_transform_point(vertex, pose) for vertex in vertices]
+            posed_trees[node_id] = BVHTree.FromPolygons(
+                posed_vertices, polygons, all_triangles=True
+            )
+
+        class Query:
+            node_ids = tuple(posed_trees)
+
+            def __call__(self, node_id, point):
+                nearest = posed_trees[node_id].find_nearest(point)
+                if nearest[0] is None or nearest[3] is None:
+                    return math.inf, point
+                return float(nearest[3]), tuple(nearest[0])
+
+        check = _check_centerline_clearance(
+            samples,
+            required_clearance=required,
+            attachment_node_id=attachment_node_id,
+            nearest=Query(),
         )
-        interface = (point[0], point[1], maximum[2] if sign > 0 else minimum[2])
-        samples = []
-        # Leave the final 10% to the declared integral interface.  The
-        # renderer's native mesh test owns the tube-vs-interface exception.
-        for index in range(19):
-            fraction = index / 20.0
-            sample = tuple(anchor[axis] * (1 - fraction) + interface[axis] * fraction for axis in range(3))
-            clearance = abs(sample[2] - (maximum[2] if sign > 0 else minimum[2]))
-            passed = clearance >= CORD_RADIUS_METERS + CORD_CLEARANCE_METERS
-            samples.append({"fraction": fraction, "clearanceMeters": clearance, "passed": passed})
-        if not all(sample["passed"] for sample in samples):
-            raise ValueError(f"cord clearance probe failed for {position_id}")
+        if not check["passed"]:
+            raise ValueError(
+                f"actual mesh cord clearance probe failed for {position_id}: "
+                f"{check['minimumDistanceMeters']:.9f} < {required:.9f}; "
+                f"node={check.get('failedNodeID')} segment={check.get('failedSegmentIndex')} "
+                f"fraction={check.get('failedSegmentFraction')}"
+            )
         result[position_id] = {
-            "clearanceProbeCount": len(samples),
-            "clearanceMetersMinimum": min(sample["clearanceMeters"] for sample in samples),
-            "clearanceRequiredMeters": CORD_RADIUS_METERS + CORD_CLEARANCE_METERS,
-            "clearanceProbes": samples,
+            "clearanceProbeCount": check["sampleCount"],
+            "clearanceMetersMinimum": check["minimumDistanceMeters"],
+            "clearanceRequiredMeters": required,
+            "clearanceProbes": {"centerlineSamples": len(samples), "segmentSubdivisions": CENTERLINE_SUBDIVISIONS},
             "allClearanceProbesPassed": True,
+            "actualMeshClearance": True,
+            "canonicalPoseTested": True,
+            "transformedAttachment": list(samples[-1]),
         }
     return result
 
@@ -355,12 +595,7 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
     if descriptor.get("modelSHA256") != hashlib.sha256(model_bytes).hexdigest():
         raise ValueError("descriptor hash does not match actual USDZ bytes")
     with zipfile.ZipFile(model_path) as archive:
-        texture_members = [
-            name for name in archive.namelist()
-            if name.lower().endswith((".png", ".jpg", ".jpeg"))
-        ]
-        if not texture_members or any(not archive.read(name) for name in texture_members):
-            raise ValueError("USDZ must contain non-empty embedded image bytes")
+        canonical_texture = _verify_canonical_texture_archive(archive)
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for material in list(bpy.data.materials):
@@ -432,7 +667,11 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         raise ValueError("attachment point is outside actual descriptor bounds")
 
     position_probes = _ray_probes(objects, descriptor)
-    clearance = _clearance_probes(descriptor)
+    board_document = load_json_object(BOARD_JSON)
+    suspension = board_document["presentations"][0]["media"]["suspension"]
+    if not isinstance(suspension, Mapping):
+        raise ValueError("Flash Board package suspension metadata is missing")
+    clearance = _clearance_probes(objects, descriptor, suspension)
     for position_id in POSITION_HOLD_IDS:
         position_probes[position_id].update(clearance[position_id])
     report = {
@@ -454,6 +693,7 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         "baked_anchor_mesh_count": 0,
         "texturedMeshCount": len({record["nodeID"] for record in material_checks}),
         "materialChecks": material_checks,
+        "canonicalTexture": canonical_texture,
         "triangles": triangles,
         "triangleCeiling": TRIANGLE_CEILING,
         "explicitTriangles": True,
