@@ -3237,9 +3237,11 @@ final class BoardPackageStoreTests: XCTestCase {
             try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
             if specification["duplicateCanonicalPoseKey"] as? Bool == true {
                 let boardObject = try XCTUnwrap(board as? [String: Any])
-                let pose = try XCTUnwrap(
-                    (((boardObject["presentations"] as? [[String: Any]])?[0]["media"] as? [String: Any])?["suspension"] as? [String: Any])?["canonicalPoses"] as? [String: Any])?["primary"]
-                )
+                let presentations = try XCTUnwrap(boardObject["presentations"] as? [[String: Any]])
+                let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
+                let canonicalPoses = try XCTUnwrap(suspension["canonicalPoses"] as? [String: Any])
+                let pose = try XCTUnwrap(canonicalPoses["primary"])
                 let poseData = try JSONSerialization.data(withJSONObject: pose, options: [.sortedKeys])
                 let poseJSON = String(decoding: poseData, as: UTF8.self)
                 let boardData = try JSONSerialization.data(withJSONObject: boardObject, options: [.sortedKeys])
@@ -3247,8 +3249,13 @@ final class BoardPackageStoreTests: XCTestCase {
                 let needle = "\"canonicalPoses\":{\"primary\":\(poseJSON)}"
                 let replacement = "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON)}"
                 XCTAssertTrue(boardJSON.contains(needle))
-                boardJSON.replacingOccurrences(of: needle, with: replacement, options: [], range: nil)
-                    .data(using: .utf8)!
+                let duplicateBoardJSON = boardJSON.replacingOccurrences(
+                    of: needle,
+                    with: replacement,
+                    options: [],
+                    range: nil
+                )
+                try duplicateBoardJSON.data(using: .utf8)!
                     .write(to: packageURL.appendingPathComponent("board.json"))
             }
             for extraAsset in extraAssets {
