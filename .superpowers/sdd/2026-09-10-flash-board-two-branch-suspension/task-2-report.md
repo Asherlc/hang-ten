@@ -94,3 +94,23 @@ syntax/JSON validation, Swift syntax parsing, and `git diff --check` passed.
 blocked by unrelated pre-existing missing project symbols and unavailable
 global SDK/cache state; the prior full XCTest command remains blocked before
 compilation by CoreSimulator and offline package resolution.
+
+## Round 3 repair
+
+The second rereview's remaining contract gaps are repaired. Two-branch board
+JSON is now checked against a canonical raw member order in Python and by the
+Swift raw JSON parser, including nested passage, branch, anchor, pose, camera,
+and pose-key ordering. A shared reorder fixture and focused consumers prove
+that identical decoded values with a different member order are rejected.
+Both validators now also measure each ordered passage-to-passage segment for
+every canonical pose and reject a branch whose rest length cannot span it. A
+shared short-segment fixture and focused tests cover that failure category.
+
+Round-3 checks: valid two-branch loading and all 54 malformed fixture cases
+matched in the dependency-free Python harness; Python syntax/JSON validation,
+Swift syntax parsing, and `git diff --check` passed. Full pytest/XCTest remain
+blocked by the environment limitations recorded above.
+
+The focused compatibility check also exposed and repaired a pre-existing
+single-cord endpoint tuple-shape regression in the Python feasibility loop;
+the valid single-cord base now loads again, with a dedicated regression test.

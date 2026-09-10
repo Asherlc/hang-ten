@@ -92,6 +92,13 @@ def _closed(
         raise ValueError(f"{source} is missing keys: {sorted(missing)}")
 
 
+def _canonical_member_order(
+    payload: Mapping[str, Any], expected: tuple[str, ...], source: str
+) -> None:
+    if tuple(payload) != expected:
+        raise ValueError(f"{source} must use canonical member order")
+
+
 def _mapping(value: Any, source: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError(f"{source} must be an object")
@@ -540,16 +547,24 @@ def _load_model_anchor(value: Any, source: str) -> BoardModelInvisibleAnchor:
     )
 
 
-def _load_model_poses(value: Any, source: str) -> Mapping[str, BoardModelCanonicalPose]:
+def _load_model_poses(
+    value: Any, source: str, *, canonical_order: bool = False
+) -> Mapping[str, BoardModelCanonicalPose]:
     poses_payload = _mapping(value, source)
     if not poses_payload:
         raise ValueError(f"{source} must not be empty")
+    if canonical_order and tuple(poses_payload) != tuple(sorted(poses_payload)):
+        raise ValueError(f"{source} must use canonical member order")
     poses: dict[str, BoardModelCanonicalPose] = {}
     for position_id, raw_pose in poses_payload.items():
         position_source = f"{source}[{position_id}]"
         position_id = _identifier(position_id, f"{position_source} positionID")
         pose_payload = _mapping(raw_pose, position_source)
         _closed(pose_payload, {"rotation", "translation", "camera"}, position_source)
+        if canonical_order:
+            _canonical_member_order(
+                pose_payload, ("camera", "rotation", "translation"), position_source
+            )
         rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
         if len(rotation) != 4:
             raise ValueError(f"{position_source}.rotation must contain exactly four coordinates")
@@ -560,6 +575,10 @@ def _load_model_poses(value: Any, source: str) -> Mapping[str, BoardModelCanonic
         camera_source = f"{position_source}.camera"
         camera_payload = _mapping(pose_payload["camera"], camera_source)
         _closed(camera_payload, {"viewDirection", "fitPadding"}, camera_source)
+        if canonical_order:
+            _canonical_member_order(
+                camera_payload, ("fitPadding", "viewDirection"), camera_source
+            )
         view_direction = _vector3(camera_payload["viewDirection"], f"{camera_source}.viewDirection")
         fit_padding = _positive_number(camera_payload["fitPadding"], f"{camera_source}.fitPadding")
         poses[position_id] = BoardModelCanonicalPose(
@@ -575,9 +594,13 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     suspension_type = _string(payload.get("type"), f"{source}.type")
     if suspension_type == "twoBranchCord":
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source)
+        _canonical_member_order(
+            payload, ("anchor", "branches", "canonicalPoses", "passages", "type"), source
+        )
         passages_source = f"{source}.passages"
         passages_payload = _mapping(payload["passages"], passages_source)
         _closed(passages_payload, {"left", "right"}, passages_source)
+        _canonical_member_order(passages_payload, ("left", "right"), passages_source)
         parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
         all_passage_ids: set[str] = set()
         all_passage_node_ids: set[str] = set()
@@ -591,6 +614,9 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 passage_source = f"{side_source}[{index}]"
                 passage_payload = _mapping(raw_passage, passage_source)
                 _closed(passage_payload, {"id", "nodeID", "pointInModel", "provenance"}, passage_source)
+                _canonical_member_order(
+                    passage_payload, ("id", "nodeID", "pointInModel", "provenance"), passage_source
+                )
                 passage_id = _identifier(passage_payload["id"], f"{passage_source}.id")
                 if passage_id in all_passage_ids:
                     raise ValueError(f"duplicate suspension passage ID: {passage_id}")
@@ -622,6 +648,11 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             branch_source = f"{branches_source}[{index}]"
             branch_payload = _mapping(raw_branch, branch_source)
             _closed(branch_payload, {"id", "passageIDs", "restLength", "radius", "material", "provenance"}, branch_source)
+            _canonical_member_order(
+                branch_payload,
+                ("id", "material", "passageIDs", "provenance", "radius", "restLength"),
+                branch_source,
+            )
             branch_id = _identifier(branch_payload["id"], f"{branch_source}.id")
             if branch_id in branch_ids:
                 raise ValueError(f"duplicate suspension branch ID: {branch_id}")
@@ -640,11 +671,19 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 _string(branch_payload["material"], f"{branch_source}.material"),
                 _string(branch_payload["provenance"], f"{branch_source}.provenance"),
             ))
+        anchor_source = f"{source}.anchor"
+        anchor_payload = _mapping(payload["anchor"], anchor_source)
+        _closed(anchor_payload, {"offsetFromBoardBounds", "visibility", "provenance"}, anchor_source)
+        _canonical_member_order(
+            anchor_payload, ("offsetFromBoardBounds", "provenance", "visibility"), anchor_source
+        )
         return BoardModelTwoBranchSuspension(
             passage_pairs,
             (branches[0], branches[1]),
-            _load_model_anchor(payload["anchor"], f"{source}.anchor"),
-            _load_model_poses(payload["canonicalPoses"], f"{source}.canonicalPoses"),
+            _load_model_anchor(anchor_payload, anchor_source),
+            _load_model_poses(
+                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
+            ),
         )
 
     if suspension_type != "singleCord":
@@ -1426,7 +1465,7 @@ def _validate_model_suspension(
     for position_id, pose in suspension.canonical_poses.items():
         qx, qy, qz, qw = pose.rotation
         endpoints_by_branch = (
-            ((suspension.attachment,), (suspension.cord.rest_length,))
+            (((suspension.attachment,), (suspension.cord.rest_length,)),)
             if isinstance(suspension, BoardModelSingleCordSuspension)
             else (
                 (suspension.passages.left, (suspension.branches[0].rest_length,)),
@@ -1434,6 +1473,7 @@ def _validate_model_suspension(
             )
         )
         for branch_endpoints, branch_lengths in endpoints_by_branch:
+            transformed_endpoints: list[tuple[float, float, float]] = []
             for endpoint in branch_endpoints:
                 px, py, pz = endpoint.point_in_model
                 # Quaternion rotation followed by canonical translation.
@@ -1445,12 +1485,24 @@ def _validate_model_suspension(
                     py + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
                     pz + qw * tz + (qx * ty - qy * tx) + pose.translation[2],
                 )
+                transformed_endpoints.append(transformed)
                 distance = math.sqrt(sum((transformed[index] - anchor[index]) ** 2 for index in range(3)))
                 if not math.isfinite(distance):
                     raise ValueError(f"suspension pose {position_id} endpoint distance must be finite")
                 rest_length = branch_lengths[0]
                 if rest_length < distance - 1e-5:
                     raise ValueError(f"suspension pose {position_id} restLength is shorter than endpoint distance")
+            if len(transformed_endpoints) == 2:
+                passage_distance = math.sqrt(
+                    sum(
+                        (transformed_endpoints[0][index] - transformed_endpoints[1][index]) ** 2
+                        for index in range(3)
+                    )
+                )
+                if not math.isfinite(passage_distance):
+                    raise ValueError(f"suspension pose {position_id} passage-to-passage distance must be finite")
+                if branch_lengths[0] < passage_distance - 1e-5:
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than passage-to-passage segment")
 
 
 def _load_model_descriptor(

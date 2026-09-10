@@ -442,9 +442,9 @@ struct BoardPackageStore {
             let data = try Data(contentsOf: boardURL)
             document = try JSONDecoder().decode(BoardPackageV2BoardDocument.self, from: data)
             var rawParser = BoardPackageRawJSONParser(data: data)
-            rawRasterGeometryByPresentationID = try rawParser
-                .parseDocument()
-                .rasterGeometryByPresentationID()
+            let rawDocument = try rawParser.parseDocument()
+            try rawDocument.validateTwoBranchSuspensionMemberOrder()
+            rawRasterGeometryByPresentationID = try rawDocument.rasterGeometryByPresentationID()
         } catch {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
@@ -1292,6 +1292,7 @@ struct BoardPackageStore {
             }
             for (branchIndex, branch) in document.branches.enumerated() {
                 let side = branchIndex == 0 ? document.passages.left : document.passages.right
+                var transformedEndpoints: [[Double]] = []
                 for passage in side {
                     let p = passage.pointInModel
                     let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
@@ -1303,10 +1304,17 @@ struct BoardPackageStore {
                         p[1] + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
                         p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
                     ]
+                    transformedEndpoints.append(transformed)
                     let distance = zip(transformed, anchorPosition).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
                     guard distance.isFinite, branch.restLength >= distance - 1e-5 else {
                         throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) restLength is shorter than endpoint distance")
                     }
+                }
+                let passageDistance = zip(transformedEndpoints[0], transformedEndpoints[1])
+                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }
+                    .squareRoot()
+                guard passageDistance.isFinite, branch.restLength >= passageDistance - 1e-5 else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) restLength is shorter than passage-to-passage segment")
                 }
             }
         }
@@ -1374,11 +1382,67 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
         }
         return result
     }
+
+    func validateTwoBranchSuspensionMemberOrder() throws {
+        guard case .object(let rootMembers) = self,
+              case .array(let presentations)? = rootMembers.value(named: "presentations") else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        for presentation in presentations {
+            guard case .object(let presentationMembers) = presentation,
+                  case .object(let mediaMembers)? = presentationMembers.value(named: "media"),
+                  case .string(let mediaType)? = mediaMembers.value(named: "type") else {
+                throw BoardPackageRawJSONError.invalid
+            }
+            guard mediaType == "model",
+                  case .object(let suspensionMembers)? = mediaMembers.value(named: "suspension"),
+                  case .string(let suspensionType)? = suspensionMembers.value(named: "type") else {
+                continue
+            }
+            guard suspensionType == "twoBranchCord" else { continue }
+            try suspensionMembers.requireCanonicalOrder(["anchor", "branches", "canonicalPoses", "passages", "type"])
+            guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+                  case .array(let leftPassages)? = passagesMembers.value(named: "left"),
+                  case .array(let rightPassages)? = passagesMembers.value(named: "right"),
+                  case .array(let branches)? = suspensionMembers.value(named: "branches"),
+                  case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
+                  case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
+                throw BoardPackageRawJSONError.invalid
+            }
+            try passagesMembers.requireCanonicalOrder(["left", "right"])
+            for passage in leftPassages + rightPassages {
+                guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
+                try members.requireCanonicalOrder(["id", "nodeID", "pointInModel", "provenance"])
+            }
+            for branch in branches {
+                guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
+                try members.requireCanonicalOrder(["id", "material", "passageIDs", "provenance", "radius", "restLength"])
+            }
+            try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "provenance", "visibility"])
+            guard poseMembers.names == poseMembers.names.sorted() else { throw BoardPackageRawJSONError.invalid }
+            for pose in poseMembers.mapValues() {
+                guard case .object(let poseObject) = pose,
+                      case .object(let camera)? = poseObject.value(named: "camera") else {
+                    throw BoardPackageRawJSONError.invalid
+                }
+                try poseObject.requireCanonicalOrder(["camera", "rotation", "translation"])
+                try camera.requireCanonicalOrder(["fitPadding", "viewDirection"])
+            }
+        }
+    }
 }
 
 private extension Array where Element == BoardPackageRawJSONMember {
     func value(named name: String) -> BoardPackageRawJSONValue? {
         first(where: { $0.name == name })?.value
+    }
+
+    var names: [String] { map(\.name) }
+
+    func mapValues() -> [BoardPackageRawJSONValue] { map(\.value) }
+
+    func requireCanonicalOrder(_ expected: [String]) throws {
+        guard names == expected else { throw BoardPackageRawJSONError.invalid }
     }
 }
 

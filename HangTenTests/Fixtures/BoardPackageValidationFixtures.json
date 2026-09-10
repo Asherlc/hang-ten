@@ -387,7 +387,7 @@
     {
       "name": "shorter-than-endpoint-distance",
       "pythonException": "ValueError",
-      "pythonError": "not enough values",
+      "pythonError": "shorter than endpoint distance",
       "swiftError": "invalidPackage",
       "mutations": [
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0.01}
@@ -626,6 +626,27 @@
       "swiftError": "malformedJSON",
       "duplicateCanonicalPoseKey": true,
       "mutations": []
+    },
+    {
+      "name": "two-branch-suspension-member-order",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderTwoBranchSuspensionMembers": true,
+      "mutations": []
+    },
+    {
+      "name": "two-branch-passage-segment-too-short",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "passage-to-passage",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.1, 0.9, 0.05]},
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 1, "pointInModel"], "value": [0.9, 0.9, 0.05]},
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "restLength"], "value": 0.55}
+      ]
     },
     {
       "name": "two-branch-order-violation",

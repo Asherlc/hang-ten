@@ -104,7 +104,8 @@ final class BoardPackageStoreTests: XCTestCase {
                 "two-branch-invalid-rest-length", "two-branch-invalid-radius", "two-branch-invalid-material",
                 "two-branch-missing-pose", "two-branch-unknown-pose", "two-branch-duplicate-pose",
                 "two-branch-explicit-null", "two-branch-scalar-kind-mismatch",
-                "two-branch-duplicate-raw-json-key", "two-branch-order-violation"
+                "two-branch-duplicate-raw-json-key", "two-branch-suspension-member-order",
+                "two-branch-passage-segment-too-short", "two-branch-order-violation"
             ]
         )
 
@@ -178,6 +179,24 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             guard case .invalidPackage = error as? BoardPackageStoreError else {
                 return XCTFail("expected invalidPackage shape mismatch, got \(error)")
+            }
+        }
+    }
+
+    func testTwoBranchOrderAndPassageSegmentRegressionsUseDeclaredCategories() throws {
+        let fixtures = try validationFixtures()
+        let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
+        for name in ["two-branch-suspension-member-order", "two-branch-passage-segment-too-short"] {
+            let specification = try XCTUnwrap(matrix.first(where: { $0["name"] as? String == name }))
+            let fixture = try makeSharedModelParserParityFixtureBundle(specification)
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name) { error in
+                let expected = specification["swiftError"] as? String
+                switch (expected, error as? BoardPackageStoreError) {
+                case ("malformedJSON", .malformedJSON): break
+                case ("invalidPackage", .invalidPackage): break
+                default: XCTFail("unexpected category for \(name): \(error)")
+                }
             }
         }
     }
