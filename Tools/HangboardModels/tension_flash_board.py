@@ -114,7 +114,8 @@ def carve(body, cutter, material_index=0):
 
 
 def recess(body, name, cx, cy, width, height, floor, mouth, radius,
-           back_fillet, mouth_fillet, face_sign=1, hold_id=None, inner_step=0):
+           back_fillet, mouth_fillet, face_sign=1, hold_id=None, inner_step=0,
+           top_face=False):
     """Explicit tangent mouth/back rounds and straight intervening walls.
 
     Depth is measured inward from each face's local 76 mm extremum. Flipping
@@ -135,7 +136,8 @@ def recess(body, name, cx, cy, width, height, floor, mouth, radius,
                                   radius-inset) for _, inset in rings]
     n = len(profiles[0])
     assert all(len(profile) == n for profile in profiles)
-    vertices = [xyz(x, y, d if face_sign == 1 else DIAMETER_MM-d)
+    vertices = [xyz(x, d, DIAMETER_MM-y) if top_face else
+                xyz(x, y, d if face_sign == 1 else DIAMETER_MM-d)
                 for (d, _), profile in zip(rings, profiles) for x, y in profile]
     faces = [tuple(reversed(range(n))),
              tuple(range((len(rings)-1)*n, len(rings)*n))]
@@ -145,6 +147,61 @@ def recess(body, name, cx, cy, width, height, floor, mouth, radius,
           0 if hold_id is None else HOLD_IDS.index(hold_id)+1)
 
 
+def stepped_edge(body, hold_id, cx, *, face_sign=1, center=False):
+    """A single well with an asymmetric lower shelf and a tapered upper wall.
+
+    Direct visual construction from the labelled three-well photograph and
+    both oblique two-well photographs. The old concentric inset made a bowl;
+    the visible section has one broad lower shelf, rounded end walls, and a
+    substantially taller mouth. All section values remain display estimates.
+    """
+    width, height, cy, radius = 110.0, 40.0, 38.0, 8.0
+    floor = 47.0 if center else 49.0
+    shelf_depth, mouth = 58.0, 66.0
+    shelf_height, back_round, lip_round = 7.0, 2.5, 2.0
+    # (depth, inset around the inner profile, lower-shelf intrusion).
+    # The upper back edge is tapered into the deep wall; the lower edge has a
+    # horizontal bearing shelf. These are unequal profiles, not nested bowls.
+    sections = [(floor + back_round*(1-math.cos(i*math.pi/2/10)),
+                 back_round*(1-math.sin(i*math.pi/2/10)), shelf_height)
+                for i in range(11)]
+    sections += [(shelf_depth-1.2, 0, shelf_height)]
+    sections += [(shelf_depth-1.2+1.2*math.sin(i*math.pi/2/8),
+                  0, shelf_height-1.2*(1-math.cos(i*math.pi/2/8)))
+                 for i in range(1,9)]
+    sections += [(shelf_depth, 0, 1.2)]
+    sections += [(shelf_depth+1.2*(1-math.cos(i*math.pi/2/8)),
+                  0, 1.2*(1-math.sin(i*math.pi/2/8))) for i in range(1,9)]
+    sections += [(mouth-lip_round+lip_round*math.sin(i*math.pi/2/10),
+                  -lip_round*(1-math.cos(i*math.pi/2/10)), 0)
+                 for i in range(11)]
+    sections += [(100, -lip_round, 0)]
+    profiles = []
+    for depth, inset, intrusion in sections:
+        # A small taper of the top wall, visibly different from the flat
+        # lower shelf. Keep the same analytically authored end-wall curve.
+        top_taper = max(0, (shelf_depth-depth)/(shelf_depth-floor))*2.0
+        profiles.append(rounded_rectangle(
+            cx, cy+(intrusion-top_taper)/2,
+            width-2*inset, height-intrusion-top_taper-2*inset,
+            radius-inset))
+    count = len(profiles[0])
+    assert all(len(profile) == count for profile in profiles)
+    # The rear reference is shown with the board inverted: its shelf is on
+    # the small-crimp side of the barrel. A rigid half-turn around the long
+    # axis preserves that relationship; reflecting only depth reverses it.
+    vertices = [xyz(x, y, depth) if face_sign == 1 else
+                xyz(x, DIAMETER_MM-y, DIAMETER_MM-depth)
+                for (depth, _, _), profile in zip(sections, profiles)
+                for x, y in profile]
+    faces = [tuple(reversed(range(count))),
+             tuple(range((len(sections)-1)*count, len(sections)*count))]
+    faces += [(j*count+i, j*count+(i+1)%count,
+               (j+1)*count+(i+1)%count, (j+1)*count+i)
+              for j in range(len(sections)-1) for i in range(count)]
+    carve(body, mesh(hold_id, vertices, faces), HOLD_IDS.index(hold_id)+1)
+
+
 def build():
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)
@@ -152,7 +209,12 @@ def build():
     ring_sections = [(END_ROUND_MM*(1-math.cos(i*math.pi/2/12)),
                       RADIUS_MM-END_ROUND_MM+END_ROUND_MM*math.sin(i*math.pi/2/12))
                      for i in range(13)]
-    ring_sections += [(WIDTH_MM-x, radius) for x, radius in reversed(ring_sections)]
+    end_sections = [(WIDTH_MM-x, radius) for x, radius in reversed(ring_sections)]
+    # Split the identical barrel surface through each top-groove center.
+    # Otherwise two enclosed Boolean holes fall in the same long angular
+    # quad, and its n-gon tessellation can cover the recessed contact floors.
+    ring_sections += [(x, RADIUS_MM) for x in (115, 250, 385)]
+    ring_sections += end_sections
     samples = 192
     vertices = [xyz(x, RADIUS_MM+radius*math.sin(i*2*math.pi/samples),
                        RADIUS_MM+radius*math.cos(i*2*math.pi/samples))
@@ -169,22 +231,23 @@ def build():
     # Three-edge face: broad shallow machined face and three independent wells.
     # The labelled photograph supports rounded rectangular mouths and rolled
     # edges; exact widths, locations, and all recess depths remain estimates.
-    recess(body, "three-face-flat", 250, 38, 416, 70, 72, 76, 10, 1, 1)
-    for hold_id, x in zip(HOLD_IDS[:3], (112, 250, 388)):
-        recess(body, hold_id, x, 36, 108, 31, 54, 72, 11, 3.5, 3.2,
-               hold_id=hold_id, inner_step=2.2)
+    recess(body, "three-face-flat", 250, 38, 416, 76, 66, 76, 10, 1, 1)
+    for hold_id, x in zip(HOLD_IDS[:3], (115, 250, 385)):
+        stepped_edge(body, hold_id, x, center=hold_id == "three-edge-center")
 
     # Manufacturer and hanging views show two separated saddle-like milled
     # panels on the opposite side, with a continuous untouched central barrel.
-    for hold_id, x in (("two-edge-left", 127), ("two-edge-right", 373)):
-        recess(body, "two-face-saddle", x, 36, 150, 72, 71, 76, 12, 1.5, 1.5, -1)
-        recess(body, hold_id, x, 32, 115, 31, 52, 71, 11, 3.5, 3.2, -1, hold_id,
-               inner_step=2.2)
+    for hold_id, x in (("two-edge-left", 121), ("two-edge-right", 379)):
+        recess(body, "two-face-saddle", x, 38, 144, 76, 66, 76, 12, 1.5, 1.5, -1)
+        stepped_edge(body, hold_id, x, face_sign=-1)
 
-    # Small upper shallow crimps: two unique physical contacts belonging to
-    # the two-edge configuration. Their precise unseen section is estimated.
-    for hold_id, x in (("small-crimp-left", 164), ("small-crimp-right", 336)):
-        recess(body, hold_id, x, 62, 62, 5, 60, 67.5, 2, .6, .8, -1, hold_id)
+    # The labelled view places the small crimps on the upper barrel, between
+    # the two large faces. They are not an extra row in either flat face.
+    # They align along the barrel with the outer three-edge wells. Rotate
+    # the authored shallow groove onto the top; its section is estimated.
+    for hold_id, x in (("small-crimp-left", 115), ("small-crimp-right", 385)):
+        recess(body, hold_id, x, 38, 61, 9, 72, 75.4, 2.5, .6, .6,
+               hold_id=hold_id, top_face=True)
 
     # Evidence-supported paired transverse cord passages at both ends. These
     # are suspension apertures integral to the cylinder, not added hardware.
@@ -262,6 +325,7 @@ def render_review(output, model):
         ("three-quarter", (.49,-.8,.28), (250,38,38), .57, False),
         ("opposite-face", (.25,.8,.038), (250,38,38), .57, False),
         ("opposite-three-quarter", (.02,.8,.28), (250,38,38), .57, False),
+        ("upper-barrel", (.25,-.16,.65), (250,38,38), .57, True),
         ("clay-detail", (.11,-.35,.14), (112,36,65), .19, True),
         ("attachment-region", (-.12,-.32,.22), (24,44,38), .13, True),
     )
@@ -299,7 +363,7 @@ def main():
     bpy.context.scene.unit_settings.scale_length = 1
     bpy.ops.wm.save_as_mainfile(filepath=str(output / "flash-board.blend"))
     (output / "geometry-report.json").write_text(json.dumps({
-        "owner": ROOT.name, "board": "tension.flash-board", "geometryRevision": 2,
+        "owner": ROOT.name, "board": "tension.flash-board", "geometryRevision": 6,
         "coordinateFrame": "hang-ten-board-v1 after standard compiler axis transport",
         "estimatedDimensionsMM": {"width": WIDTH_MM, "diameter": DIAMETER_MM},
         "sourcedDimensionsMM": {}, "numericGeometryIsEstimated": True,
