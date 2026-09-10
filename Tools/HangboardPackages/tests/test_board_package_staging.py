@@ -283,7 +283,7 @@ def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
     assert {
         path.relative_to(staged).as_posix()
         for path in staged.rglob("*")
-        if path.is_file()
+        if path.is_file() and not path.is_symlink()
     } == {"assets/primary.usdz", "assets/primary.model.json", "board.json"}
 
 
@@ -315,12 +315,12 @@ def test_staging_preserves_live_model_package_assets_and_hash_bindings(
         source_assets = {
             path.relative_to(source_package).as_posix()
             for path in source_package.rglob("*")
-            if path.is_file() and path.relative_to(source_package).parts[:1] == ("assets",)
+            if path.is_file() and not path.is_symlink() and path.relative_to(source_package).parts[:1] == ("assets",)
         }
         staged_assets = {
             path.relative_to(staged_package).as_posix()
             for path in staged_package.rglob("*")
-            if path.is_file() and path.relative_to(staged_package).parts[:1] == ("assets",)
+            if path.is_file() and not path.is_symlink() and path.relative_to(staged_package).parts[:1] == ("assets",)
         }
         assert source_assets == declared_assets
         assert staged_assets == declared_assets
@@ -352,7 +352,7 @@ def test_staging_preserves_every_live_model_package_file_byte_for_byte(
         staged_files = {
             path.relative_to(staged_package).as_posix(): path.read_bytes()
             for path in staged_package.rglob("*")
-            if path.is_file()
+            if path.is_file() and not path.is_symlink()
         }
         assert staged_files == source_files
 

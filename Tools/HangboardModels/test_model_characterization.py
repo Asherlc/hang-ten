@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-import pytest
+import unittest
 
 from model_characterization import assert_baseline_matches, capture_model_baseline
 
@@ -53,14 +53,24 @@ def test_capture_model_baseline_records_exact_two_asset_tree_and_hashes(tmp_path
 
 
 def test_baseline_comparison_rejects_reordered_inventory():
-    with pytest.raises(ValueError, match="logicalHoldIDs"):
+    with unittest.TestCase().assertRaisesRegex(ValueError, "logicalHoldIDs"):
         assert_baseline_matches({"logicalHoldIDs": ["b", "a"]}, {"logicalHoldIDs": ["a", "b"]})
 
 
-@pytest.mark.parametrize("slug", BASELINES)
-def test_shipped_packages_match_fixed_baseline(slug):
-    package = ROOT / "Hangboards" / slug
-    baseline = capture_model_baseline(package, package / "board.json")
-    expected = dict(BASELINES[slug], assets=["assets/primary.model.json", "assets/primary.usdz"],
-                    descriptor=json.loads((ROOT / "Tools/HangboardModels/baselines" / f"{slug}.model.json").read_text()))
-    assert_baseline_matches(baseline, expected)
+def test_shipped_packages_match_fixed_baseline():
+    for slug in BASELINES:
+        package = ROOT / "Hangboards" / slug
+        baseline = capture_model_baseline(package, package / "board.json")
+        expected = dict(BASELINES[slug], assets=["assets/primary.model.json", "assets/primary.usdz"],
+                        descriptor=json.loads((ROOT / "Tools/HangboardModels/baselines" / f"{slug}.model.json").read_text()))
+        assert_baseline_matches(baseline, expected)
+
+
+class ModelCharacterizationStdlibTests(unittest.TestCase):
+    """Keep substantive characterization runnable without pytest installed."""
+
+    def test_baseline_inventory_negative(self):
+        test_baseline_comparison_rejects_reordered_inventory()
+
+    def test_shipped_fixed_baselines(self):
+        test_shipped_packages_match_fixed_baseline()

@@ -64,6 +64,26 @@ def compact_package_paths():
 
 
 class ModelReportTests(unittest.TestCase):
+    def test_all_verifier_sources_retain_report_contract_fields(self):
+        contracts = {
+            "verify_beastmaker_1000.py": {
+                "hold_ids_preserved", "hardware_mesh_count", "modelSHA256", "descriptorSHA256"
+            },
+            "verify_wood_grips_compact_ii.py": {
+                "hold_ids_preserved", "texturedMeshCount", "modelSHA256", "descriptorSHA256",
+                "triangleCeiling", "explicitTriangles"
+            },
+            "verify_tension_flash_board.py": {
+                "boardID", "holdIDs", "hold_ids_preserved", "body_mesh_count",
+                "hardware_mesh_count", "explicitTriangles", "triangles", "triangleCeiling"
+            },
+        }
+        for filename, fields in contracts.items():
+            source = (TOOLS / filename).read_text(encoding="utf-8")
+            for field in fields:
+                with self.subTest(verifier=filename, field=field):
+                    self.assertIn(f'"{field}"', source)
+
     def test_shipped_model_baselines_are_self_consistent(self):
         for slug in ("beastmaker-1000", "metolius-wood-grips-compact-ii", "tension-flash-board"):
             package = ROOT / "Hangboards" / slug
