@@ -30,6 +30,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 import github_board_store
 from board_package import (
+    BoardEditorUnavailableError,
     BoardNotAvailableError,
     BoardPackage,
     BoardPackageError,
@@ -186,8 +187,14 @@ def _board_payload(
             _hold_needs_attention(hold) for hold in package.board["holds"]
         ),
         "href": f"/api/boards/{board_id}",
-        "imageUrl": f"/api/boards/{board_id}/image",
     }
+    if getattr(package, "editor_available", True):
+        payload["imageUrl"] = f"/api/boards/{board_id}/image"
+    else:
+        payload.update(
+            editorAvailable=False,
+            unavailableReason="3D model editing is not supported",
+        )
     if include_document:
         presentation = package.presentation(presentation_id)
         payload.update(
@@ -502,6 +509,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         except BoardNotAvailableError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board is not available"})
             return
+        except BoardEditorUnavailableError as error:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
+            return
         except BoardPackageError:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "could not load board"})
             return
@@ -711,6 +721,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 package = open_package(self.server.library_root, board_id)
                 image = presentation_image_path(package, presentation_id)
                 self._send_file(image)
+        except BoardEditorUnavailableError as error:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
         except BoardPackageError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board image is unavailable"})
         except OSError:
@@ -761,6 +773,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             )
         except BoardNotAvailableError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board is not available"})
+        except BoardEditorUnavailableError as error:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
         except BoardPackageError as error:
             self._send_json(
                 HTTPStatus.BAD_REQUEST,

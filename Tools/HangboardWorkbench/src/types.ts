@@ -125,7 +125,9 @@ export interface BoardSummary {
   holdCount: number;
   needsAttention: boolean;
   href?: string;
-  imageUrl: string;
+  imageUrl?: string;
+  editorAvailable?: boolean;
+  unavailableReason?: string;
 }
 
 export interface Board {

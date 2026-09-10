@@ -9,10 +9,14 @@ from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_PACKAGE = (
-    REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
+PRIMARY_IMAGE = (
+    REPOSITORY_ROOT
+    / "Tools"
+    / "HangboardPackages"
+    / "tests"
+    / "fixtures"
+    / "metolius-contact-boundary.png"
 )
-PRIMARY_IMAGE = CANONICAL_PACKAGE / "assets" / "primary.png"
 
 
 def board_document(
@@ -28,13 +32,13 @@ def board_document(
         "subtitle": "A physical fixture board.",
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 × 10 cm",
-        "aspectRatio": 1774 / 457,
+        "aspectRatio": 1774 / 887,
         "presentations": [
             {
                 "id": "primary",
                 "name": "Primary",
                 "assetPath": "assets/primary.png",
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": True,
             }
         ],

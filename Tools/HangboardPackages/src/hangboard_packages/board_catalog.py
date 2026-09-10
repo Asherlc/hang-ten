@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from enum import StrEnum
+import hashlib
 import importlib.util
 import json
 import math
@@ -152,6 +153,10 @@ def _boolean(value: Any, source: str) -> bool:
 
 
 def _asset_path(value: Any, source: str) -> str:
+    return _typed_asset_path(value, source, ".png", "a PNG")
+
+
+def _typed_asset_path(value: Any, source: str, suffix: str, label: str) -> str:
     asset_path = _string(value, source)
     path = PurePosixPath(asset_path)
     if (
@@ -160,9 +165,9 @@ def _asset_path(value: Any, source: str) -> str:
         or len(path.parts) < 2
         or any(part in {".", ".."} for part in path.parts)
         or path.as_posix() != asset_path
-        or path.suffix != ".png"
+        or not asset_path.endswith(suffix)
     ):
-        raise ValueError(f"{source} must name a PNG beneath assets/")
+        raise ValueError(f"{source} must name {label} beneath assets/")
     return asset_path
 
 
@@ -369,6 +374,22 @@ class BoardGeometryPiece:
 
 
 @dataclass(frozen=True)
+class PresentationMediaRaster:
+    asset_path: str
+    hold_geometry: Mapping[str, tuple[BoardGeometryPiece, ...]]
+
+
+@dataclass(frozen=True)
+class PresentationMediaModel:
+    asset_path: str
+    descriptor_path: str
+    display: Mapping[str, Any]
+
+
+PresentationMedia = PresentationMediaRaster | PresentationMediaModel
+
+
+@dataclass(frozen=True)
 class BoardPresentation:
     id: str
     name: str
@@ -377,34 +398,116 @@ class BoardPresentation:
     is_default: bool
     source_presentation_id: str | None = None
     is_inverted: bool = False
+    media: PresentationMedia | None = None
 
-    @classmethod
-    def from_json(cls, value: Any, source: str) -> "BoardPresentation":
-        payload = _mapping(value, source)
-        _closed(
-            payload,
-            {"id", "name", "assetPath", "aspectRatio", "default"},
-            source,
-            optional={"sourcePresentationID", "isInverted"},
-        )
-        aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
-        if aspect_ratio <= 0:
-            raise ValueError(f"{source}.aspectRatio must be positive")
-        return cls(
-            _identifier(payload["id"], f"{source}.id"),
-            _string(payload["name"], f"{source}.name"),
+def _load_v2_derivation(
+    value: Any, source: str
+) -> tuple[str | None, bool]:
+    payload = _mapping(value, source)
+    derivation_type = _string(payload.get("type"), f"{source}.type")
+    if derivation_type == "original":
+        _closed(payload, {"type"}, source)
+        return None, False
+    if derivation_type != "derived":
+        raise ValueError(f"{source}.type must be original or derived")
+    _closed(payload, {"type", "sourcePresentationID", "isInverted"}, source)
+    return (
+        _identifier(payload["sourcePresentationID"], f"{source}.sourcePresentationID"),
+        _boolean(payload["isInverted"], f"{source}.isInverted"),
+    )
+
+
+def _vector3(value: Any, source: str) -> tuple[float, float, float]:
+    if not isinstance(value, list) or len(value) != 3:
+        raise ValueError(f"{source} must contain exactly three coordinates")
+    result = tuple(_number(item, f"{source}[{index}]") for index, item in enumerate(value))
+    if result == (0.0, 0.0, 0.0):
+        raise ValueError(f"{source} must be non-zero")
+    return result  # type: ignore[return-value]
+
+
+def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
+    payload = _mapping(value, source)
+    _closed(payload, {"camera"}, source)
+    camera_source = f"{source}.camera"
+    camera = _mapping(payload["camera"], camera_source)
+    _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
+    if camera["type"] != "orthographic":
+        raise ValueError(f"{camera_source}.type must be orthographic")
+    view_direction = _vector3(camera["viewDirection"], f"{camera_source}.viewDirection")
+    up = _vector3(camera["up"], f"{camera_source}.up")
+    fit_padding = _positive_number(camera["fitPadding"], f"{camera_source}.fitPadding")
+    return MappingProxyType(
+        {
+            "camera": MappingProxyType(
+                {
+                    "type": "orthographic",
+                    "viewDirection": view_direction,
+                    "up": up,
+                    "fitPadding": fit_padding,
+                }
+            )
+        }
+    )
+
+
+def _load_v2_media(value: Any, source: str) -> PresentationMedia:
+    payload = _mapping(value, source)
+    media_type = _string(payload.get("type"), f"{source}.type")
+    if media_type == "raster":
+        _closed(payload, {"type", "assetPath", "holdGeometry"}, source)
+        raw_geometry = _mapping(payload["holdGeometry"], f"{source}.holdGeometry")
+        hold_geometry = {
+            _identifier(hold_id, f"{source}.holdGeometry hold ID"): _load_geometry(
+                pieces, f"{source}.holdGeometry[{hold_id}]"
+            )
+            for hold_id, pieces in raw_geometry.items()
+        }
+        return PresentationMediaRaster(
             _asset_path(payload["assetPath"], f"{source}.assetPath"),
-            aspect_ratio,
-            _boolean(payload["default"], f"{source}.default"),
-            (
-                _identifier(payload["sourcePresentationID"], f"{source}.sourcePresentationID")
-                if "sourcePresentationID" in payload
-                else None
-            ),
-            _boolean(payload["isInverted"], f"{source}.isInverted")
-            if "isInverted" in payload
-            else False,
+            MappingProxyType(hold_geometry),
         )
+    if media_type == "model":
+        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source)
+        return PresentationMediaModel(
+            _typed_asset_path(
+                payload["assetPath"], f"{source}.assetPath", ".usdz", "a USDZ"
+            ),
+            _typed_asset_path(
+                payload["descriptorPath"],
+                f"{source}.descriptorPath",
+                ".model.json",
+                "a .model.json descriptor",
+            ),
+            _load_model_display(payload["display"], f"{source}.display"),
+        )
+    raise ValueError(f"{source}.type must be raster or model")
+
+
+def _load_v2_presentation(value: Any, source: str) -> BoardPresentation:
+    payload = _mapping(value, source)
+    _closed(
+        payload,
+        {"id", "name", "aspectRatio", "isDefault", "derivation", "media"},
+        source,
+    )
+    aspect_ratio = _positive_number(payload["aspectRatio"], f"{source}.aspectRatio")
+    source_presentation_id, is_inverted = _load_v2_derivation(
+        payload["derivation"], f"{source}.derivation"
+    )
+    media = _load_v2_media(payload["media"], f"{source}.media")
+    if isinstance(media, PresentationMediaModel) and source_presentation_id is not None:
+        raise ValueError(f"{source} model media may not be derived or inverted")
+    return BoardPresentation(
+        _identifier(payload["id"], f"{source}.id"),
+        _string(payload["name"], f"{source}.name"),
+        media.asset_path,
+        aspect_ratio,
+        _boolean(payload["isDefault"], f"{source}.isDefault"),
+        source_presentation_id,
+        is_inverted,
+        media,
+    )
 
 
 @dataclass(frozen=True)
@@ -457,7 +560,6 @@ class BoardHold:
     name: str
     kind: str
     sloper: SloperMetadata | None
-    geometry: tuple[BoardGeometryPiece, ...]
     size_millimeters: float | None
     depth_range_millimeters: MillimeterRange | None
     grip_type: str | None
@@ -465,15 +567,6 @@ class BoardHold:
     hand_capacity: int | None
     features: tuple[str, ...] | None
     paired_hold_id: str | None
-    presentation_id: str
-
-    @property
-    def frame(self) -> NormalizedFrame:
-        min_x = min(piece.frame.x for piece in self.geometry)
-        min_y = min(piece.frame.y for piece in self.geometry)
-        max_x = max(piece.frame.x + piece.frame.width for piece in self.geometry)
-        max_y = max(piece.frame.y + piece.frame.height for piece in self.geometry)
-        return NormalizedFrame(min_x, min_y, max_x - min_x, max_y - min_y)
 
 
 @dataclass(frozen=True)
@@ -485,6 +578,9 @@ class BoardDocument:
     presentations: tuple[BoardPresentation, ...]
     positions: tuple[BoardPosition, ...]
     position_transitions: tuple[BoardPositionTransition, ...]
+    model_hold_frames: Mapping[tuple[str, str], NormalizedFrame] = field(
+        default_factory=lambda: MappingProxyType({}), repr=False
+    )
 
     @property
     def manufacturer(self) -> str:
@@ -503,6 +599,31 @@ class BoardDocument:
             if presentation.is_default
         )
 
+    def hold_frame(self, hold_id: str, presentation_id: str) -> NormalizedFrame:
+        if hold_id not in {hold.id for hold in self.holds}:
+            raise ValueError(f"unknown hold id: {hold_id}")
+        presentation = next(
+            (candidate for candidate in self.presentations if candidate.id == presentation_id),
+            None,
+        )
+        if presentation is None:
+            raise ValueError(f"unknown presentation id: {presentation_id}")
+        if isinstance(presentation.media, PresentationMediaRaster):
+            pieces = presentation.media.hold_geometry.get(hold_id)
+            if not pieces:
+                raise ValueError(
+                    f"presentation {presentation_id} has no geometry for hold {hold_id}"
+                )
+            return _union_frames(piece.frame for piece in pieces)
+        if isinstance(presentation.media, PresentationMediaModel):
+            try:
+                return self.model_hold_frames[(presentation_id, hold_id)]
+            except KeyError as error:
+                raise ValueError(
+                    f"presentation {presentation_id} has no descriptor frame for hold {hold_id}"
+                ) from error
+        raise ValueError(f"presentation {presentation_id} has no typed media")
+
     def hold_ids_for_position(self, position_id: str) -> tuple[str, ...]:
         position = next(
             (candidate for candidate in self.positions if candidate.id == position_id),
@@ -515,14 +636,12 @@ class BoardDocument:
             for candidate in self.presentations
             if candidate.id == position.presentation_id
         )
-        canonical_presentation_id = (
-            presentation.source_presentation_id or presentation.id
-        )
-        return tuple(
-            hold.id
-            for hold in self.holds
-            if hold.presentation_id == canonical_presentation_id
-        )
+        if isinstance(presentation.media, PresentationMediaRaster):
+            owned = set(presentation.media.hold_geometry)
+            return tuple(hold.id for hold in self.holds if hold.id in owned)
+        if isinstance(presentation.media, PresentationMediaModel):
+            return tuple(hold.id for hold in self.holds)
+        raise ValueError(f"presentation {presentation.id} has no typed media")
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
         position_ids = {position.id for position in self.positions}
@@ -558,6 +677,20 @@ class BoardInventory:
     drafts: tuple[Path, ...]
 
 
+def _union_frames(frames: Any) -> NormalizedFrame:
+    values = tuple(frames)
+    min_x = min(frame.x for frame in values)
+    min_y = min(frame.y for frame in values)
+    max_x = max(frame.x + frame.width for frame in values)
+    max_y = max(frame.y + frame.height for frame in values)
+    return NormalizedFrame(
+        min_x,
+        min_y,
+        round(max_x - min_x, 9),
+        round(max_y - min_y, 9),
+    )
+
+
 def _load_geometry(value: Any, source: str) -> tuple[BoardGeometryPiece, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError(f"{source} must be a non-empty array")
@@ -567,16 +700,11 @@ def _load_geometry(value: Any, source: str) -> tuple[BoardGeometryPiece, ...]:
     )
 
 
-def _load_hold(
-    value: Any,
-    source: str,
-    *,
-    presentation_id: str,
-) -> BoardHold:
+def _load_hold(value: Any, source: str) -> BoardHold:
     payload = _mapping(value, source)
     _closed(
         payload,
-        {"id", "name", "kind", "geometry"},
+        {"id", "name", "kind"},
         source,
         optional={
             "equipmentObjectID",
@@ -588,8 +716,7 @@ def _load_hold(
             "features",
             "sloper",
             "pairedHoldID",
-        }
-        | {"presentationID"},
+        },
     )
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
@@ -652,32 +779,31 @@ def _load_hold(
             raise ValueError(f"{source}.features contains an unsupported feature")
         if len(features) != len(set(features)):
             raise ValueError(f"{source}.features must be unique")
-    return BoardHold(
-        _identifier(payload["id"], f"{source}.id"),
-        _identifier(
+    common = {
+        "id": _identifier(payload["id"], f"{source}.id"),
+        "equipment_object_id": _identifier(
             payload.get("equipmentObjectID", "primary"),
             f"{source}.equipmentObjectID",
         ),
-        _string(payload["name"], f"{source}.name"),
-        kind,
-        sloper,
-        _load_geometry(payload["geometry"], f"{source}.geometry"),
-        size,
-        depth_range,
-        grip_type,
-        finger_capacity,
-        hand_capacity,
-        features,
-        paired_hold_id,
-        presentation_id,
-    )
+        "name": _string(payload["name"], f"{source}.name"),
+        "kind": kind,
+        "sloper": sloper,
+        "size_millimeters": size,
+        "depth_range_millimeters": depth_range,
+        "grip_type": grip_type,
+        "finger_capacity": finger_capacity,
+        "hand_capacity": hand_capacity,
+        "features": features,
+        "paired_hold_id": paired_hold_id,
+    }
+    return BoardHold(**common)
 
 
 def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError(f"{source} must be a non-empty array")
     presentations = tuple(
-        BoardPresentation.from_json(item, f"{source}[{index}]")
+        _load_v2_presentation(item, f"{source}[{index}]")
         for index, item in enumerate(value)
     )
     if len({presentation.id for presentation in presentations}) != len(presentations):
@@ -704,6 +830,51 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
                     f"presentation {presentation.id} must reference a canonical presentation"
                 )
     return presentations
+
+
+def _validate_v2_presentation_compatibility(
+    presentations: tuple[BoardPresentation, ...],
+) -> None:
+    presentations_by_id = {
+        presentation.id: presentation for presentation in presentations
+    }
+    for presentation in presentations:
+        if presentation.source_presentation_id is None:
+            continue
+        source = presentations_by_id[presentation.source_presentation_id]
+        if not isinstance(
+            presentation.media, PresentationMediaRaster
+        ) or not isinstance(source.media, PresentationMediaRaster):
+            raise ValueError(
+                "v2 derived presentation relationships must be raster to raster"
+            )
+    has_model = any(
+        isinstance(presentation.media, PresentationMediaModel)
+        for presentation in presentations
+    )
+    has_raster = any(
+        isinstance(presentation.media, PresentationMediaRaster)
+        for presentation in presentations
+    )
+    if has_model and has_raster:
+        raise ValueError("v2 packages may not mix model and raster presentations")
+
+
+def _json_values_are_exactly_equal(left: Any, right: Any) -> bool:
+    """Compare JSON values without erasing member order or numeric scalar type."""
+
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, dict):
+        return list(left) == list(right) and all(
+            _json_values_are_exactly_equal(left[key], right[key]) for key in left
+        )
+    if isinstance(left, list):
+        return len(left) == len(right) and all(
+            _json_values_are_exactly_equal(left_item, right_item)
+            for left_item, right_item in zip(left, right, strict=True)
+        )
+    return left == right
 
 
 def _load_positions(
@@ -760,6 +931,9 @@ def _load_position_transitions(
 
 
 def _load_board(value: Mapping[str, Any]) -> BoardDocument:
+    schema_version = value.get("schemaVersion")
+    if schema_version != 2 or isinstance(schema_version, bool):
+        raise ValueError("board.json.schemaVersion must be 2 when present")
     required = {
         "id",
         "manufacturer",
@@ -770,6 +944,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "presentations",
         "holds",
     }
+    required.add("schemaVersion")
     _closed(
         value,
         required,
@@ -815,6 +990,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")
+    _validate_v2_presentation_compatibility(presentations)
     positions = (
         _load_positions(
             value["positions"],
@@ -839,32 +1015,10 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
-    presentation_ids = {presentation.id for presentation in presentations}
-    canonical_presentation_ids = {
-        presentation.id
-        for presentation in presentations
-        if presentation.source_presentation_id is None
-    }
     holds: list[BoardHold] = []
     for index, item in enumerate(raw_holds):
         source = f"board.json.holds[{index}]"
-        payload = _mapping(item, source)
-        presentation_id = _identifier(
-            payload.get("presentationID"), f"{source}.presentationID"
-        )
-        if presentation_id not in presentation_ids:
-            raise ValueError(f"{source}.presentationID is an unknown presentationID")
-        if presentation_id not in canonical_presentation_ids:
-            raise ValueError(
-                f"{source}.presentationID must be owned by a canonical presentation"
-            )
-        holds.append(
-            _load_hold(
-                payload,
-                source,
-                presentation_id=presentation_id,
-            )
-        )
+        holds.append(_load_hold(item, source))
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
@@ -889,15 +1043,55 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         paired_hold = holds_by_id[hold.paired_hold_id]
         if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
             raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
-    presentations_by_id = {presentation.id: presentation for presentation in presentations}
-    canonical_presentation_ids_with_holds = {hold.presentation_id for hold in holds_tuple}
-    for position in positions:
-        presentation = presentations_by_id[position.presentation_id]
-        canonical_presentation_id = presentation.source_presentation_id or presentation.id
-        if canonical_presentation_id not in canonical_presentation_ids_with_holds:
+    logical_hold_ids = {hold.id for hold in holds_tuple}
+    raw_presentations = value["presentations"]
+    raw_presentations_by_id = {
+        presentation.id: raw_presentations[index]
+        for index, presentation in enumerate(presentations)
+    }
+    original_raster_ownership_counts = {
+        hold_id: 0 for hold_id in logical_hold_ids
+    }
+    derived_raster_presentations: list[tuple[int, BoardPresentation]] = []
+    has_raster = False
+    for index, presentation in enumerate(presentations):
+        if isinstance(presentation.media, PresentationMediaRaster):
+            has_raster = True
+            presentation_hold_ids = set(presentation.media.hold_geometry)
+            if not presentation_hold_ids:
+                raise ValueError(
+                    f"presentation {presentation.id} media.holdGeometry must "
+                    "own at least one logical hold"
+                )
+            if not presentation_hold_ids <= logical_hold_ids:
+                raise ValueError(
+                    f"presentation {presentation.id} media.holdGeometry must "
+                    "only own logical holds"
+                )
+            if presentation.source_presentation_id is None:
+                for hold_id in presentation_hold_ids:
+                    original_raster_ownership_counts[hold_id] += 1
+            else:
+                derived_raster_presentations.append((index, presentation))
+    if has_raster and any(
+        ownership_count != 1
+        for ownership_count in original_raster_ownership_counts.values()
+    ):
+        raise ValueError(
+            "v2 original raster media.holdGeometry must own every logical hold "
+            "exactly once"
+        )
+    for index, presentation in derived_raster_presentations:
+        raw_media = raw_presentations[index]["media"]
+        raw_source_media = raw_presentations_by_id[
+            presentation.source_presentation_id
+        ]["media"]
+        if not _json_values_are_exactly_equal(
+            raw_media["holdGeometry"], raw_source_media["holdGeometry"]
+        ):
             raise ValueError(
-                f"position {position.id} canonical presentation "
-                f"{canonical_presentation_id} must own at least one hold"
+                f"derived presentation {presentation.id} media.holdGeometry "
+                "must exactly equal its source geometry"
             )
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
@@ -910,7 +1104,150 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     )
 
 
-def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
+def _descriptor_vector(
+    value: Any, length: int, source: str
+) -> tuple[float, ...]:
+    if not isinstance(value, list) or len(value) != length:
+        raise ValueError(f"{source} must contain exactly {length} coordinates")
+    coordinates = tuple(
+        _number(item, f"{source}[{index}]") for index, item in enumerate(value)
+    )
+    if any(round(coordinate, 9) != coordinate for coordinate in coordinates):
+        raise ValueError(f"{source} must be rounded to nine decimals")
+    return coordinates
+
+
+def _load_model_descriptor(
+    path: Path,
+    asset_path: Path,
+    logical_hold_ids: set[str],
+) -> Mapping[str, NormalizedFrame]:
+    descriptor = _load_json(path, "model descriptor")
+    _closed(
+        descriptor,
+        {
+            "schemaVersion",
+            "coordinateFrame",
+            "modelSHA256",
+            "modelBounds",
+            "nodes",
+            "holds",
+        },
+        "model descriptor",
+    )
+    if descriptor["schemaVersion"] != 1 or isinstance(
+        descriptor["schemaVersion"], bool
+    ):
+        raise ValueError("model descriptor schemaVersion must be 1")
+    if descriptor["coordinateFrame"] != "hang-ten-board-v1":
+        raise ValueError(
+            "model descriptor coordinateFrame must be hang-ten-board-v1"
+        )
+    declared_hash = _string(descriptor["modelSHA256"], "model descriptor modelSHA256")
+    if not re.fullmatch(r"[0-9a-f]{64}", declared_hash):
+        raise ValueError("model descriptor modelSHA256 must be a lowercase SHA-256")
+    try:
+        actual_hash = hashlib.sha256(asset_path.read_bytes()).hexdigest()
+    except OSError as error:
+        raise ValueError("model asset must be readable for SHA-256 validation") from error
+    if declared_hash != actual_hash:
+        raise ValueError("model descriptor SHA-256 does not match USDZ bytes")
+
+    bounds = _mapping(descriptor["modelBounds"], "model descriptor modelBounds")
+    _closed(bounds, {"min", "max"}, "model descriptor modelBounds")
+    minimum = _descriptor_vector(bounds["min"], 3, "model descriptor modelBounds.min")
+    maximum = _descriptor_vector(bounds["max"], 3, "model descriptor modelBounds.max")
+    if any(minimum[index] > maximum[index] for index in range(3)):
+        raise ValueError("model descriptor modelBounds minimum exceeds maximum")
+    face_spans = tuple(maximum[index] - minimum[index] for index in range(2))
+    if any(not math.isfinite(span) for span in face_spans):
+        raise ValueError("model descriptor modelBounds face span must be finite")
+    if any(span <= 0 for span in face_spans):
+        raise ValueError("model descriptor modelBounds face span must be positive")
+
+    raw_nodes = descriptor["nodes"]
+    if not isinstance(raw_nodes, list) or not raw_nodes:
+        raise ValueError("model descriptor nodes must be a non-empty array")
+    node_ids: set[str] = set()
+    node_ids_by_hold: dict[str, list[str]] = {}
+    body_count = 0
+    ordered_node_ids: list[str] = []
+    for index, raw_node in enumerate(raw_nodes):
+        source = f"model descriptor nodes[{index}]"
+        node = _mapping(raw_node, source)
+        role = node.get("role")
+        expected = {"nodeID", "role", "holdID"} if role == "hold" else {"nodeID", "role"}
+        _closed(node, expected, source)
+        node_id = _string(node["nodeID"], f"{source}.nodeID")
+        if node_id in node_ids:
+            raise ValueError(f"model descriptor has duplicate nodeID: {node_id}")
+        node_ids.add(node_id)
+        ordered_node_ids.append(node_id)
+        if role == "body":
+            body_count += 1
+        elif role == "hold":
+            hold_id = _identifier(node["holdID"], f"{source}.holdID")
+            node_ids_by_hold.setdefault(hold_id, []).append(node_id)
+        else:
+            raise ValueError(f"{source}.role must be body or hold")
+    if body_count != 1:
+        raise ValueError("model descriptor requires exactly one body node")
+    if ordered_node_ids != sorted(ordered_node_ids):
+        raise ValueError("model descriptor nodes must be sorted by nodeID")
+    if set(node_ids_by_hold) != logical_hold_ids:
+        raise ValueError("model descriptor node hold IDs must equal logical holds")
+
+    raw_holds = _mapping(descriptor["holds"], "model descriptor holds")
+    if list(raw_holds) != sorted(raw_holds):
+        raise ValueError("model descriptor holds must be sorted by holdID")
+    if set(raw_holds) != logical_hold_ids:
+        raise ValueError("model descriptor holds must equal logical holds")
+    frames: dict[str, NormalizedFrame] = {}
+    for hold_id, raw_hold in raw_holds.items():
+        source = f"model descriptor holds[{hold_id}]"
+        hold = _mapping(raw_hold, source)
+        _closed(hold, {"nodeIDs", "facePlaneAABB", "center"}, source)
+        hold_node_ids = hold["nodeIDs"]
+        if (
+            not isinstance(hold_node_ids, list)
+            or any(not isinstance(node_id, str) or not node_id for node_id in hold_node_ids)
+            or hold_node_ids != sorted(node_ids_by_hold[hold_id])
+        ):
+            raise ValueError(f"{source}.nodeIDs must exactly match bound nodes")
+        face_bounds = _mapping(hold["facePlaneAABB"], f"{source}.facePlaneAABB")
+        _closed(face_bounds, {"min", "max"}, f"{source}.facePlaneAABB")
+        face_min = _descriptor_vector(
+            face_bounds["min"], 2, f"{source}.facePlaneAABB.min"
+        )
+        face_max = _descriptor_vector(
+            face_bounds["max"], 2, f"{source}.facePlaneAABB.max"
+        )
+        if any(
+            face_min[index] > face_max[index]
+            or face_min[index] < 0
+            or face_max[index] > 1
+            for index in range(2)
+        ):
+            raise ValueError(f"{source}.facePlaneAABB must be normalized")
+        center = _descriptor_vector(hold["center"], 2, f"{source}.center")
+        expected_center = tuple(
+            round(face_min[index] + (face_max[index] - face_min[index]) / 2, 9)
+            for index in range(2)
+        )
+        if center != expected_center:
+            raise ValueError(f"{source}.center must derive from facePlaneAABB")
+        frames[hold_id] = NormalizedFrame(
+            face_min[0],
+            face_min[1],
+            round(face_max[0] - face_min[0], 9),
+            round(face_max[1] - face_min[1], 9),
+        )
+    return MappingProxyType(frames)
+
+
+def _validate_finished_shape(
+    root: Path, board: BoardDocument
+) -> Mapping[tuple[str, str], NormalizedFrame]:
     _require_no_symlinks(root)
     entries = {item.name for item in root.iterdir()}
     unknown = entries - _PACKAGE_ENTRIES
@@ -925,7 +1262,11 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
         raise ValueError("board.json must be a regular non-symlink file")
     if assets.is_symlink() or not assets.is_dir():
         raise ValueError("assets must be a regular non-symlink directory")
-    expected_assets = {presentation.asset_path for presentation in board.presentations}
+    expected_assets: set[str] = set()
+    for presentation in board.presentations:
+        expected_assets.add(presentation.asset_path)
+        if isinstance(presentation.media, PresentationMediaModel):
+            expected_assets.add(presentation.media.descriptor_path)
     actual_assets = {
         item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
     }
@@ -937,13 +1278,21 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
         raise ValueError(
             f"missing declared presentation asset: {sorted(missing_assets)[0]}"
         )
+    raster_asset_paths = {
+        presentation.asset_path
+        for presentation in board.presentations
+        if presentation.media is None
+        or isinstance(presentation.media, PresentationMediaRaster)
+    }
     image_dimensions: dict[str, tuple[int, int]] = {}
-    for asset_path in sorted(expected_assets):
+    for asset_path in sorted(raster_asset_paths):
         asset = root / asset_path
         if asset.is_symlink() or not asset.is_file():
             raise ValueError(f"{asset_path} must be a regular non-symlink file")
         image_dimensions[asset_path] = _validate_png_structure(asset, asset_path)
     for presentation in board.presentations:
+        if presentation.asset_path not in image_dimensions:
+            continue
         width, height = image_dimensions[presentation.asset_path]
         image_aspect_ratio = width / height
         relative_error = (
@@ -954,6 +1303,20 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
                 f"board.json.presentations[{presentation.id}].aspectRatio must match "
                 "its image width/height within 0.1%"
             )
+    model_frames: dict[tuple[str, str], NormalizedFrame] = {}
+    logical_hold_ids = {hold.id for hold in board.holds}
+    for presentation in board.presentations:
+        if not isinstance(presentation.media, PresentationMediaModel):
+            continue
+        frames = _load_model_descriptor(
+            root / presentation.media.descriptor_path,
+            root / presentation.media.asset_path,
+            logical_hold_ids,
+        )
+        model_frames.update(
+            ((presentation.id, hold_id), frame) for hold_id, frame in frames.items()
+        )
+    return MappingProxyType(model_frames)
 
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -1248,7 +1611,10 @@ def load_board_package(package_root: Path) -> BoardPackage:
         raise ValueError(f"board package does not exist as a regular directory: {root}")
     _require_no_symlinks(root)
     board = _load_board(_load_json(root / "board.json", "board.json"))
-    _validate_finished_shape(root, board)
+    board = replace(
+        board,
+        model_hold_frames=_validate_finished_shape(root, board),
+    )
     return BoardPackage(root.resolve(), board)
 
 

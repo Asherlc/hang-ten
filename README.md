@@ -4,16 +4,22 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-Each supported board is a complete flat package containing its presentation PNG
-and directly authored canonical hold paths. The same saved path renders the
-normal contact, active highlight, and interaction area, so a highlight cannot
-drift away from its physical hold.
+Each supported board is a complete schema-v2 package with typed presentation
+media. The package contract supports raster-only presentations, which own a PNG
+and `media.holdGeometry`, and model-only presentations, which own a USDZ and a
+generated hash-bound `.model.json` descriptor. Logical holds retain identity and
+metadata without spatial fields; the selected presentation supplies rendering,
+highlighting, and interaction data. The live inventory contains 59 raster
+packages and two model-only packages: Beastmaker 1000 and Metolius Wood Grips
+Compact II. Both migrated packages own package-local model trees (`board.json`,
+`assets/primary.usdz`, and `assets/primary.model.json`).
 
 ## Included
 
-- Audited flat board packages with normalized, manually authored geometry,
-  exact mirroring where the physical product is symmetric, and exact-path
-  highlights.
+- Audited board packages with source-backed logical inventories and
+  presentation-specific media; raster packages use normalized, manually
+  authored geometry, exact mirroring where the physical product is symmetric,
+  and exact-path highlights.
 - Source-backed physical inventories that omit unsupported optional metadata.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
   Intermediate, and Advanced, represented as faithful task-order expansions
@@ -38,10 +44,12 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-identity, conservative hold metadata, and canonical geometry live in directly
-discovered `Hangboards/<board-folder>/board.json` packages alongside
-`assets/primary.png`. The app loads validated package bytes without rewriting
-geometry or maintaining another geometry source.
+identity and conservative hold metadata, plus each presentation's typed media,
+live in directly discovered `Hangboards/<board-folder>/board.json` packages.
+Raster packages store canonical geometry in `media.holdGeometry`; model
+packages store their USDZ and generated descriptor. Logical hold records do not
+carry spatial geometry. The app loads validated package bytes without
+rewriting geometry or maintaining another geometry source.
 
 ## Run
 
@@ -217,18 +225,74 @@ rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository currently has eight directly discovered, complete packages.
-Each package contains exactly `board.json` and
-`assets/primary.png`. The Xcode build phase runs
-`scripts/stage-board-packages.py`, which bundles the validated packages without
-rewriting their geometry or presentation bytes.
+The repository has 61 directly discovered, complete packages and zero drafts:
+59 raster packages plus the Beastmaker 1000 and Compact II model-only
+packages. Model packages declare no PNG or raster presentation and keep their
+USDZ and generated descriptor beside `board.json` in the package tree.
+The Xcode build phase runs
+`scripts/stage-board-packages.py` after parser-approved discovery. It
+recursively copies each regular, non-symlinked package tree into app resources,
+so staged declared assets remain byte-identical to their package sources; it
+does not substitute separately bundled model resources or rewrite geometry or
+presentation bytes.
+
+The two model packages share one self-contained warm-white/light-neutral
+display material and were human-approved in the actual app renderer after the
+final front-lighting correction. Focused SceneKit checks cover both shipped
+inventories, material binding, nearest-hit selection, body nonselection, and
+the key-light direction. The complete migration review also covered all 41
+physical hold taps, normal/preview/active/restored states, both orientations,
+the picker interaction, and the explicit unavailable state on an isolated iOS
+Simulator. These captures establish Simulator integration only; SceneKit may
+fall back from physically based shading where Metal is unavailable, so they do
+not claim physical-device PBR pixel parity.
+
+Validate a retained Stage 0 evidence packet with:
+
+```sh
+python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
+```
+
+Before Astra receives a geometry task, each Stage 0 packet must retain at
+least two complete exact-revision images per board: one manufacturer-published
+image and, when available, a materially different oblique/side/back/profile
+view. Record local paths, SHA-256 hashes, pixel dimensions, retrieval
+date/locale, angle labels, page linkage, provenance tier, and the geometric
+facts each view can and cannot support. Use authorized retailer/distributor
+images only for a documented manufacturer gap and label them commerce-gap
+evidence; crops, duplicates, search thumbnails, reviews/forums, generated
+renders, and ambiguous revisions do not count. Diagrams supplement the packet
+but do not count as a distinct-angle photograph unless they expose
+side/profile geometry.
+
+For a new model package, after geometry has been authored and reviewed, compile
+tagged Blender meshes with:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/compile_model_package.py -- \
+  --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
+  --output-directory PATH/compiled-package
+```
+
+The compiler reimports the exact USDZ export and generates the read-only,
+hash-bound descriptor; it does not repair or redesign geometry. A model package
+must contain only its declared USDZ and descriptor media, with no raster
+fallback. See [model tooling](Tools/HangboardModels/README.md) and the
+[package contract](Tools/HangboardPackages/README.md) for the v2 fields and
+validation rules. Remote GitHub model-package sync remains deferred and
+unsupported by the current PNG/default-oriented GitHub sync. iOS model editing
+and Workbench model editing remain deferred/read-only/unavailable; raster
+Workbench editing continues to be supported.
 
 Use the packaged macOS Hangboard Workbench for direct local visual editing.
 Browser-hosted Workbench deployments must use the GitHub-backed
 `--allow-remote` server mode.
 
-Workbench edits are explicit operator changes to canonical package geometry;
-the saved paths remain the exact rendering and hit-testing source of truth.
+For raster packages, Workbench edits are explicit operator changes to canonical
+package geometry; the saved paths remain the exact rendering and hit-testing
+source of truth. Model packages are read-only for geometry editing and use
+their mesh and descriptor as the presentation source.
 
 Regenerate the bundled routine document after an audited plan change:
 

@@ -49,7 +49,9 @@ enum BoardSourceBoundaryAudit {
             "BoardDesignLanguage"
         ]
         let semanticMappingPattern = #"semanticHolds\s*:\s*\[\s*\""#
-        let presentationMappingPattern = #"(?:assetPath|photoAssetName)\s*:\s*\""#
+        // A generic empty fixture is not a delivered presentation mapping.
+        // Retain the audit for every nonempty source literal.
+        let presentationMappingPattern = #"(?:assetPath|photoAssetName)\s*:\s*\"(?!\")"#
         let boardSpecificGeometryConstructs = [
             "TrainingBoard(",
             "BoardHold(",

@@ -184,8 +184,8 @@ fun BoardCanvas(
 ) {
     val presentation = board.presentations.firstOrNull { it.isDefault }
     val context = LocalContext.current
-    val bundledImage = remember(board.id, presentation?.assetPath) {
-        presentation?.let { loadBoardImage(context, board.id, it) }
+    val bundledImage = remember(board.packageSlug, presentation?.assetPath) {
+        presentation?.let { loadBoardImage(context, board, it) }
     }
     val boardImage = imageOverride ?: bundledImage
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
@@ -262,9 +262,12 @@ private fun boardBounds(width: Float, height: Float, aspectRatio: Float): BoardB
     }
 }
 
-private fun loadBoardImage(context: android.content.Context, boardID: String, presentation: BoardPresentation): ImageBitmap? =
+internal fun boardAssetPath(board: Board, presentation: BoardPresentation): String =
+    "Hangboards/${board.packageSlug}/${presentation.assetPath}"
+
+private fun loadBoardImage(context: android.content.Context, board: Board, presentation: BoardPresentation): ImageBitmap? =
     runCatching {
-        context.assets.open("Hangboards/$boardID/${presentation.assetPath}").use { stream ->
+        context.assets.open(boardAssetPath(board, presentation)).use { stream ->
             requireNotNull(BitmapFactory.decodeStream(stream)).asImageBitmap()
         }
     }.getOrNull()

@@ -7,7 +7,7 @@ import pytest
 from PIL import Image
 
 from hangboard_packages.board_catalog import load_board_package
-from _board_package_helpers import presentation_frame
+from _board_package_helpers import board_hold_geometry, presentation_frame
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -39,6 +39,10 @@ def _assert_commands_close(left: object, right: object) -> None:
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    geometry = board_hold_geometry(board)
+    presentation_id = next(
+        presentation.id for presentation in board.presentations if presentation.is_default
+    )
     with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
         presentation_size = image.size
 
@@ -48,9 +52,9 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert holds["top-rim"].sloper is None
     assert all(holds[hold_id].kind == "pocket" for hold_id in EXPECTED_HOLDS[1:])
 
-    for hold in holds.values():
-        assert len(hold.geometry) == 1
-        piece = hold.geometry[0]
+    for hold_id in holds:
+        assert len(geometry[hold_id]) == 1
+        piece = geometry[hold_id][0]
         assert piece.shape.type == "path"
         assert piece.shape.commands[0].command == "move"
         assert piece.shape.commands[-1].command == "close"
@@ -63,17 +67,17 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         left = holds[left_id]
         right = holds[right_id]
         left_x, left_y, left_width, left_height = presentation_frame(
-            left.frame, presentation_size
+            board.hold_frame(left_id, presentation_id), presentation_size
         )
         right_x, right_y, right_width, right_height = presentation_frame(
-            right.frame, presentation_size
+            board.hold_frame(right_id, presentation_id), presentation_size
         )
         assert right_y == pytest.approx(left_y, abs=1e-6)
         assert right_width == pytest.approx(left_width, abs=1e-6)
         assert right_height == pytest.approx(left_height, abs=1e-6)
         for left_command, right_command in zip(
-            left.geometry[0].shape.commands,
-            right.geometry[0].shape.commands,
+            geometry[left_id][0].shape.commands,
+            geometry[right_id][0].shape.commands,
             strict=True,
         ):
             _assert_commands_close(left_command, right_command)

@@ -371,28 +371,13 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
-    func testRoundTripEveryBundledPackageIsSemanticallyIdentical() throws {
-        for slug in try bundledSlugs() {
-            let originalData = try Data(
-                contentsOf: repositoryHangboardsURL().appendingPathComponent("\(slug)/board.json")
-            )
-            let decoded = try BoardEditableDocument(data: originalData)
-            let encoded = try BoardPackageWriter.data(for: decoded)
-            let redecoded = try BoardEditableDocument(data: encoded)
+    func testSupportedEditorDocumentRoundTripIsSemanticallyIdentical() throws {
+        let document = makeDocument()
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
 
-            if redecoded != decoded {
-                let difference = Self.describeFirstDifference(decoded, redecoded)
-                    ?? "documents compare unequal at an unknown field"
-                XCTFail("round-trip \(slug): redecoded document differs; first difference: \(difference)")
-                continue
-            }
-
-            let reencoded = try BoardPackageWriter.data(for: redecoded)
-            XCTAssertEqual(
-                encoded, reencoded,
-                "encoding must be a deterministic fixpoint for \(slug)"
-            )
-        }
+        assertSemanticallyEqual(document, redecoded)
+        XCTAssertEqual(encoded, try BoardPackageWriter.data(for: redecoded))
     }
 
     func testEveryBundledPackageExplicitlyAssignsEveryHoldToAnEquipmentObject() throws {
@@ -452,12 +437,30 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
-    func testEditorDocumentRoundTripsFlashBoardOrientationAliases() throws {
-        let originalData = try Data(
-            contentsOf: repositoryHangboardsURL()
-                .appendingPathComponent("tension-flash-board/board.json")
+    func testEditorDocumentRoundTripsOrientationAliases() throws {
+        var decoded = makeDocument()
+        decoded.presentations.append(
+            BoardEditablePresentation(
+                id: "front-inverted",
+                name: "Front inverted",
+                assetPath: "assets/front-inverted.png",
+                aspectRatio: 2,
+                isDefault: false,
+                sourcePresentationID: "front",
+                isInverted: true
+            )
         )
-        let decoded = try BoardEditableDocument(data: originalData)
+        decoded.positions = [
+            BoardPosition(id: "front", presentationID: "front"),
+            BoardPosition(id: "front-inverted", presentationID: "front-inverted")
+        ]
+        decoded.positionTransitions = [
+            BoardPositionTransition(
+                fromPositionID: "front",
+                toPositionID: "front-inverted",
+                kind: .seamless
+            )
+        ]
 
         let encoded = try BoardPackageWriter.data(for: decoded)
         let redecoded = try BoardEditableDocument(data: encoded)
@@ -674,13 +677,12 @@ final class BoardPackageWriterTests: XCTestCase {
         assertSemanticallyEqual(document, redecoded)
     }
 
-    func testReencodedRealPackageKeepsTopLevelOrderEscapesAndTrailingNewline() throws {
-        let slug = "zlagboard-pro"
-        let originalData = try Data(
-            contentsOf: repositoryHangboardsURL().appendingPathComponent("\(slug)/board.json")
+    func testReencodedEditorDocumentKeepsTopLevelOrderEscapesAndTrailingNewline() throws {
+        let document = makeDocument(
+            id: "zlagboard.pro",
+            manufacturer: "Zlagboard"
         )
-        let decoded = try BoardEditableDocument(data: originalData)
-        let encoded = try BoardPackageWriter.data(for: decoded)
+        let encoded = try BoardPackageWriter.data(for: document)
         let output = String(decoding: encoded, as: UTF8.self)
 
         XCTAssertEqual(

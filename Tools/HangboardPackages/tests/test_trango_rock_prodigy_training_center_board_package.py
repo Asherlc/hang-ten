@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
+from _board_package_helpers import document_hold_geometry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BOARD_PATH = (
@@ -29,14 +30,14 @@ def _geometry_digest(geometry: object) -> str:
 
 def test_training_center_preserves_audited_compound_contact_geometry() -> None:
     board = json.loads(BOARD_PATH.read_text(encoding="utf-8"))
-    holds = {hold["id"]: hold for hold in board["holds"]}
+    geometry = document_hold_geometry(board)
 
     assert len(board["holds"]) == 24
-    assert sum(len(hold["geometry"]) for hold in board["holds"]) == 28
+    assert sum(len(pieces) for pieces in geometry.values()) == 28
     assert {
-        hold_id: len(hold["geometry"])
-        for hold_id, hold in holds.items()
-        if len(hold["geometry"]) > 1
+        hold_id: len(pieces)
+        for hold_id, pieces in geometry.items()
+        if len(pieces) > 1
     } == {
         "pinch-medium-left": 2,
         "pinch-medium-right": 2,
@@ -44,6 +45,6 @@ def test_training_center_preserves_audited_compound_contact_geometry() -> None:
         "pinch-wide-right": 2,
     }
     assert {
-        hold_id: _geometry_digest(holds[hold_id]["geometry"])
+        hold_id: _geometry_digest(geometry[hold_id])
         for hold_id in EXPECTED_WIDE_GEOMETRY_SHA256
     } == EXPECTED_WIDE_GEOMETRY_SHA256

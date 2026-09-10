@@ -5,6 +5,8 @@ struct BoardDetailHoldMap {
     struct Entry: Identifiable, Hashable {
         let number: Int
         let hold: BoardHold
+        let frame: HoldFrame
+        let pieces: [BoardHoldPiece]
 
         var id: String { hold.id }
     }
@@ -18,8 +20,14 @@ struct BoardDetailHoldMap {
             selectedPresentationID: presentationID
         )
         presentation = content.presentation
-        entries = content.holds.enumerated().map { index, hold in
-            Entry(number: index + 1, hold: hold)
+        entries = content.holds.enumerated().compactMap { index, hold in
+            guard let frame = hold.resolvedFrame(in: content.presentation) else { return nil }
+            return Entry(
+                number: index + 1,
+                hold: hold,
+                frame: frame,
+                pieces: content.pieces(for: hold.id)
+            )
         }
     }
 }
@@ -86,9 +94,12 @@ struct BoardMapPresentationContent {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        let sourcePresentationID = resolvedPresentation.sourcePresentationID
-            ?? resolvedPresentation.id
-        holds = board.holds.filter { $0.presentationID == sourcePresentationID }
+        holds = board.holds(in: resolvedPresentation)
+    }
+
+    func pieces(for holdID: String) -> [BoardHoldPiece] {
+        guard case .raster(let media) = presentation.media else { return [] }
+        return media.holdGeometry[holdID] ?? []
     }
 }
 
@@ -201,17 +212,14 @@ struct BoardMapPresentationSelection: Equatable {
         on board: TrainingBoard
     ) -> String? {
         guard let holdID else { return nil }
-        guard let hold = board.holds.first(where: { $0.id == holdID }) else {
+        guard board.holds.contains(where: { $0.id == holdID }) else {
             return nil
         }
         guard let preferredPresentation = board.presentation(id: preferredPresentationID) else {
-            return hold.presentationID
+            return board.presentations.first(where: { $0.containsHold(id: holdID) })?.id
         }
-        let preferredSourceID = preferredPresentation.sourcePresentationID
-            ?? preferredPresentation.id
-        return preferredSourceID == hold.presentationID
-            ? preferredPresentation.id
-            : hold.presentationID
+        if preferredPresentation.containsHold(id: holdID) { return preferredPresentation.id }
+        return board.presentations.first(where: { $0.containsHold(id: holdID) })?.id
     }
 }
 
@@ -280,37 +288,43 @@ struct BoardDetailMapView: View {
             .accessibilityIdentifier("boardDetail.presentationSelector")
         }
 
-        BoardModelSurface(
-            board: board,
-            presentation: map.presentation,
-            highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
-            highlightMode: .active,
-            onHoldTap: { select($0.id) }
-        ) {
-            GeometryReader { proxy in
-                let boardBounds = proxy.size
-                ZStack {
-                    BoardPresentationImage(board: board, presentationID: map.presentation.id)
+        Group {
+            switch map.presentation.media {
+            case .raster:
+                GeometryReader { proxy in
+                    let boardBounds = proxy.size
+                    ZStack {
+                        BoardPresentationImage(board: board, presentationID: map.presentation.id)
 
-                    ForEach(map.entries) { entry in
-                        PhysicalHoldVisual(
-                            hold: entry.hold,
-                            isHighlighted: selectedHoldID == entry.hold.id,
-                            highlightMode: .active,
-                            isInverted: map.presentation.isInverted,
-                            onTap: { select($0.id) }
-                        )
-                        .frame(width: boardBounds.width, height: boardBounds.height)
+                        ForEach(map.entries) { entry in
+                            PhysicalHoldVisual(
+                                hold: entry.hold,
+                                pieces: entry.pieces,
+                                isHighlighted: selectedHoldID == entry.hold.id,
+                                highlightMode: .active,
+                                isInverted: map.presentation.isInverted,
+                                onTap: { select($0.id) }
+                            )
+                            .frame(width: boardBounds.width, height: boardBounds.height)
 
-                        BoardHoldNumberMarker(
-                            entry: entry,
-                            isSelected: selectedHoldID == entry.hold.id
-                        ) {
-                            select(entry.hold.id)
+                            BoardHoldNumberMarker(
+                                entry: entry,
+                                isSelected: selectedHoldID == entry.hold.id
+                            ) {
+                                select(entry.hold.id)
+                            }
+                            .position(markerPosition(for: entry.frame, in: boardBounds, isInverted: map.presentation.isInverted))
                         }
-                        .position(markerPosition(for: entry.hold, in: boardBounds, isInverted: map.presentation.isInverted))
                     }
                 }
+            case .model:
+                BoardModelSurface(
+                    board: board,
+                    presentation: map.presentation,
+                    highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
+                    highlightMode: .active,
+                    onHoldTap: { select($0.id) }
+                )
             }
         }
         .aspectRatio(map.presentation.aspectRatio, contentMode: .fit)
@@ -377,13 +391,13 @@ struct BoardDetailMapView: View {
     }
 
     private func markerPosition(
-        for hold: BoardHold,
+        for frame: HoldFrame,
         in bounds: CGSize,
         isInverted: Bool
     ) -> CGPoint {
         let center = CGPoint(
-            x: hold.frame.x * bounds.width + hold.frame.width * bounds.width / 2,
-            y: hold.frame.y * bounds.height + hold.frame.height * bounds.height / 2
+            x: frame.x * bounds.width + frame.width * bounds.width / 2,
+            y: frame.y * bounds.height + frame.height * bounds.height / 2
         )
         guard isInverted else { return center }
         return CGPoint(x: bounds.width - center.x, y: bounds.height - center.y)
@@ -471,33 +485,39 @@ struct BoardMapView: View {
                 .accessibilityIdentifier("boardMap.presentationSelector")
             }
 
-            BoardModelSurface(
-                board: board,
-                presentation: content.presentation,
-                highlightedHoldIDs: highlightedHoldIDs,
-                highlightMode: highlightMode,
-                onHoldTap: onHoldTap
-            ) {
-                GeometryReader { proxy in
-                    let boardBounds = proxy.size
-                    ZStack {
-                        BoardPresentationImage(
-                            board: board,
-                            presentationID: content.presentation.id
-                        )
-
-                        ForEach(content.holds) { hold in
-                            PhysicalHoldVisual(
-                                hold: hold,
-                                isHighlighted: highlightedHoldIDs.contains(hold.id),
-                                highlightMode: highlightMode,
-                                isInverted: content.presentation.isInverted,
-                                onTap: onHoldTap
+            Group {
+                switch content.presentation.media {
+                case .raster:
+                    GeometryReader { proxy in
+                        let boardBounds = proxy.size
+                        ZStack {
+                            BoardPresentationImage(
+                                board: board,
+                                presentationID: content.presentation.id
                             )
-                            .frame(width: boardBounds.width, height: boardBounds.height)
+
+                            ForEach(content.holds) { hold in
+                                PhysicalHoldVisual(
+                                    hold: hold,
+                                    pieces: content.pieces(for: hold.id),
+                                    isHighlighted: highlightedHoldIDs.contains(hold.id),
+                                    highlightMode: highlightMode,
+                                    isInverted: content.presentation.isInverted,
+                                    onTap: onHoldTap
+                                )
+                                .frame(width: boardBounds.width, height: boardBounds.height)
+                            }
                         }
+                        .frame(width: boardBounds.width, height: boardBounds.height)
                     }
-                    .frame(width: boardBounds.width, height: boardBounds.height)
+                case .model:
+                    BoardModelSurface(
+                        board: board,
+                        presentation: content.presentation,
+                        highlightedHoldIDs: highlightedHoldIDs,
+                        highlightMode: highlightMode,
+                        onHoldTap: onHoldTap
+                    )
                 }
             }
             .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
@@ -559,6 +579,7 @@ struct BoardPresentationImage: View {
 
 private struct PhysicalHoldVisual: View {
     let hold: BoardHold
+    let pieces: [BoardHoldPiece]
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
     let isInverted: Bool
@@ -566,7 +587,7 @@ private struct PhysicalHoldVisual: View {
 
     @ViewBuilder
     var body: some View {
-        let shape = BoardHoldPathShape(pieces: hold.geometry)
+        let shape = BoardHoldPathShape(pieces: pieces)
         let visual = ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)

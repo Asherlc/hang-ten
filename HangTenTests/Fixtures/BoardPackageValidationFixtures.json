@@ -4,6 +4,152 @@
     "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB",
     "duplicatePaletteBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEUAAACnej3aAAAAA1BMVEX///+nxBvIAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg=="
   },
+  "model": {
+    "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
+    "board": {
+      "schemaVersion": 2,
+      "id": "fixture.board",
+      "manufacturer": "Fixture Maker",
+      "name": "Fixture Board",
+      "subtitle": "A physical fixture board.",
+      "productURL": "https://example.com/fixture.board",
+      "dimensions": "20 × 10 cm",
+      "aspectRatio": 2,
+      "presentations": [
+        {
+          "id": "primary",
+          "name": "Primary",
+          "aspectRatio": 2,
+          "isDefault": true,
+          "derivation": { "type": "original" },
+          "media": {
+            "type": "model",
+            "assetPath": "assets/primary.usdz",
+            "descriptorPath": "assets/primary.model.json",
+            "display": {
+              "camera": {
+                "type": "orthographic",
+                "viewDirection": [0, 0, -1],
+                "up": [0, 1, 0],
+                "fitPadding": 0.08
+              }
+            }
+          }
+        }
+      ],
+      "holds": [
+        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      ]
+    },
+    "descriptor": {
+      "schemaVersion": 1,
+      "coordinateFrame": "hang-ten-board-v1",
+      "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
+      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "nodes": [
+        { "nodeID": "Body", "role": "body" },
+        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }
+      ],
+      "holds": {
+        "hold-left": {
+          "nodeIDs": ["Left"],
+          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
+          "center": [0.25, 0.4]
+        }
+      }
+    }
+  },
+  "modelParserParity": [
+    {
+      "name": "wrong-schema-version",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["schemaVersion"], "value": 1}
+      ]
+    },
+    {
+      "name": "unknown-media-type",
+      "pythonException": "ValueError",
+      "swiftError": "malformedJSON",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "type"], "value": "video"}
+      ]
+    },
+    {
+      "name": "escaped-typed-path",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "assetPath"], "value": "assets/../primary.usdz"}
+      ]
+    },
+    {
+      "name": "extra-asset",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "extraAssets": [
+        {"path": "assets/extra.usdz", "base64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw=="}
+      ],
+      "mutations": []
+    },
+    {
+      "name": "stale-sha",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "replace", "path": ["modelSHA256"], "value": "0000000000000000000000000000000000000000000000000000000000000000"}
+      ]
+    },
+    {
+      "name": "omitted-node",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "remove", "path": ["nodes", 1]}
+      ]
+    },
+    {
+      "name": "extra-node",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Spare", "role": "hold", "holdID": "hold-spare"}}
+      ]
+    },
+    {
+      "name": "body-with-hold-id",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "replace", "path": ["nodes", 0], "value": {"nodeID": "Body", "role": "body", "holdID": "hold-left"}}
+      ]
+    },
+    {
+      "name": "unbound-geometry",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "replace", "path": ["holds", "hold-left", "nodeIDs"], "value": ["Unbound"]}
+      ]
+    },
+    {
+      "name": "invalid-camera",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "display", "camera", "viewDirection"], "value": [0, 0, 0]}
+      ]
+    },
+    {
+      "name": "model-inversion",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "derivation"], "value": {"type": "derived", "sourcePresentationID": "primary", "isInverted": true}}
+      ]
+    }
+  ],
   "ordering": {
     "packages": [
       {

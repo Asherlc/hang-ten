@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from _board_package_helpers import document_hold_geometry
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -108,9 +109,9 @@ def test_whetstone_discrete_steps_are_individual_scalar_depth_holds() -> None:
 
 
 def test_whetstone_source_side_shelves_have_independently_authored_paths() -> None:
-    holds = {hold["id"]: hold for hold in _board("tension-whetstone")["holds"]}
+    geometry = document_hold_geometry(_board("tension-whetstone"))
     source_side_shapes = {
-        json.dumps(holds[hold_id]["geometry"][0]["shape"], sort_keys=True)
+        json.dumps(geometry[hold_id][0]["shape"], sort_keys=True)
         for hold_id in (
             "edge-40-left",
             "edge-30-left",

@@ -43,6 +43,14 @@ def _validate_source_layout(repository_root: Path) -> Path:
         )
     ] + [
         editor_root / asset for asset in workbench_assets.STATIC_ASSETS
+    ] + [
+        repository_root
+        / "Tools"
+        / "HangboardPackages"
+        / "src"
+        / "hangboard_packages"
+        / filename
+        for filename in ("board_catalog.py", "board_geometry_schema.py")
     ]
     missing = [path for path in required_files if not path.is_file()]
     if missing:
@@ -87,6 +95,7 @@ def _pyinstaller_arguments(
         raise BuildError("codesign identity must be non-empty when supplied")
 
     editor_root = _validate_source_layout(repository_root)
+    package_source_root = repository_root / "Tools" / "HangboardPackages" / "src"
     metadata_path = metadata_root / "build-commit.txt"
     if not metadata_path.is_file():
         raise BuildError("build metadata is missing")
@@ -108,12 +117,18 @@ def _pyinstaller_arguments(
         str(work_dir / "spec"),
         "--paths",
         str(editor_root),
+        "--paths",
+        str(package_source_root),
         "--hidden-import",
         "server",
         "--hidden-import",
         "board_package",
         "--hidden-import",
         "board_geometry",
+        "--hidden-import",
+        "hangboard_packages.board_catalog",
+        "--hidden-import",
+        "hangboard_packages.board_geometry_schema",
     ]
     if codesign_identity is not None:
         arguments.extend(["--codesign-identity", codesign_identity])

@@ -193,3 +193,128 @@ user-provided annotated 2000 diagram received on 2026-08-26 labels
 `front-lower-5` **21 mm**. The official [Beastmaker 2000 product page](https://www.beastmaker.co.uk/products/beastmaker-2000-series)
 specifies the lower-center edge as **22 mm**; the runtime value remains 22 mm.
 The ledger's manufacturer provenance explicitly records the 21-vs-22 conflict.
+
+## 2026-09-09 Stage 0 model-migration evidence ruling
+
+This entry records the approval-ready Stage 0 packets for the two-board model
+migration. The durable packet trees, retained source bytes, and packet SHA-256
+values are uncommitted workspace evidence under `.context/`.
+
+### Beastmaker 1000 current revision
+
+Primary retained sources are the current [1000 Series product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series), current [1000 Beech/shared-layout page](https://www.beastmaker.co.uk/products/beastmaker-1000-beech), official [Tulip front media](https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068), the official [downloads page](https://www.beastmaker.co.uk/pages/downloads), and official [mounting guide](https://www.beastmaker.co.uk/pages/how-to-mount-your-beastmaker). Their retained snapshots and hashes are:
+
+| packet path | SHA-256 |
+| --- | --- |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-series.html` | `4c3dc54c7a16a03f29fbbd87fb3d725c8a547a81a7c694a2da462ea2efc43900` |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-beech.html` | `d1f5c20650a4c8572acea1fe804ca9831990c709f6f0e0fdca6a8575261dc1a2` |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-tulip.jpg` | `b97c4a0fc1c6f8971cb7610a2ec2a979415e6c9018398c18ab76ed90034fdfae` |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-downloads.html` | `c2a646971be96829371814e21d8a6f44feb820dce22907ce07a99feb64822c7f` |
+| `.context/shaky-rat-beastmaker-1000/references/beastmaker-mounting-guide.html` | `7dc0ad212297ddeb535d69ee3ac10d642da3805f1927ce92e6bd4ac957734d4e` |
+
+The packet SHA-256 was `1f5a57be0c32ee1fffa4b10c5d494d0540e4d7c7e03ecec78edb25837450b0cf` before the multi-angle corrections; the current packet SHA-256 is `510def2516477dedb248ea85e3ec858129d0f298014b28c3e7ef9b19bd41cce0`. Its earlier Astra handoff SHA-256 was `34a91d0b0d799a31c232691ba29e270899c063f49305337860f363f240f5d3a6`; the handoff content now carries the updated packet hash. The face is sourced as 580 × 150 mm. The Beech/shared-layout page supplies the qualified 58 mm display depth; the current Tulip page's final `5 mm` text is retained as a conflict and is not treated as a Tulipwood thickness fact. The stable 22-ID logical inventory is retained as existing-package identity. Human review of the official front records 17 cavity contacts, 3 sloper surfaces, and 2 jugs; grouped marketing quantities do not delete visible contacts. Neither source assigns individual stable IDs, positions, or edge-versus-pocket kinds, so those mappings remain inherited package metadata rather than manufacturer per-ID facts. The packet preserves the source's literal “FCS certified Beech” wording. Cavity sections, profiles, back profile, radii, and exact positions remain unknown for Astra. Generic original pale wood is the approved display material. Screw holes, mounting hardware, countersinks, and logos are deliberate display omissions.
+
+### Metolius Wood Grips Compact II current revision
+
+Primary retained sources are the current [Wood Grips II product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards), official [Compact front media](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000), and official [depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000). Their retained snapshots and hashes are:
+
+| packet path | SHA-256 |
+| --- | --- |
+| `.context/shaky-rat-metolius-wood-grips-compact-ii/references/metolius-wood-grips-ii.html` | `b782a4fb7dbde84fd0f96cf716807fca7943f2671de255103c0899a2c1a7b5fc` |
+| `.context/shaky-rat-metolius-wood-grips-compact-ii/references/compact-training-board.jpg` | `d72c7027d82980306e0e2a50d94394c174dce8ba0fd9bb239c704f099f05ed03` |
+| `.context/shaky-rat-metolius-wood-grips-compact-ii/references/woodgrips-boards-depths.jpg` | `56dde7dce6f82395a06793e7e3de4600465b5e97a108b963b03a6a5cccb898ce` |
+
+
+Both packets validate with `Tools/HangboardModels/validate_evidence_packet.py` and contain no geometry proposals, paths, contours, masks, coordinates, radii, or sections. The Beastmaker negative fixture retains valid search-snippet bytes and hash, then rejects at the validator's manufacturer-search-result URL rule with exit 2; the Compact missing-commerce-snapshot fixture rejects with the retained-source error and exit 2. The minimal Beastmaker `invalid-unknown-hold.blend` compiler fixture rejects with `unknown hold_id`, emits no descriptor, and its scratch directory is removed and verified absent. At this Stage 0 checkpoint, Astra geometry work remained gated on human approval of these packets and the matched retained official media; the final promotion below records completion of that gate.
+
+### 2026-09-09 multi-angle Stage 0 correction
+
+The user requires at least two retained exact-revision visual sources per board before Astra resumes, with materially different angles where available. The manufacturer 1000 Series page supplies one complete straight-on front image. The manufacturer downloads and mounting-guide pages were also checked; their old Vimeo embeds and user setup photographs do not provide a complete exact-1000 profile/side/back source. A complete replacement angle was found on FluxPerfect, an established Austrian outdoor retailer (FluxPerfect GmbH & Co OG), and is retained explicitly as commerce-gap evidence.
+
+All candidates were retrieved 2026-09-09 in locale `en-GB`; exact page linkage, tier, original pixels/hash, angle verdict, and geometric support limits are recorded below and in the packet. Only the first two rows are the approval-ready set.
+
+| tier | retained path | SHA-256 | dimensions | view / verdict | page linkage |
+| --- | --- | --- | --- | --- | --- |
+| manufacturer | `.context/shaky-rat-beastmaker-1000/references/beastmaker-1000-tulip.jpg` | `b97c4a0fc1c6f8971cb7610a2ec2a979415e6c9018398c18ab76ed90034fdfae` | 2500 × 735 | straight-on front | [Beastmaker 1000 Series](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series) |
+| commerce gap | `.context/shaky-rat-beastmaker-1000/references/fluxperfect-beastmaker-1000-ansicht-1.jpg` | `959801633efd53b10dba145a659988290d5189ea2bcc171329fedd1e6d52a3ff` | 1080 × 1080 | **qualifies** — complete elevated three-quarter/top-and-side reveal; visible top plane, outer side/depth, rounded end | [FluxPerfect Beastmaker 1000 Series](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) |
+| commerce gap | `.context/shaky-rat-beastmaker-1000/references/9c-beastmaker-1000-03.jpg` | `db2bdac139d56951a04d674020e1ab50d2f36c1cb40aed158838da4bce195356` | 1800 × 513 | **rejected** — near-front variant; no usable top/side/profile depth | [9c Climbing 1000 Series](https://9cclimbing.com/fr/products/1000-series-hangboard) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/fluxperfect-beastmaker-1000-ansicht-2.jpg` | `7fe065025f73a90b91515ff5450f2e845586200f48b5343b707842b80cc31a6f` | 1080 × 1080 | rejected close oblique crop; local cavity-wall/side-edge only | [FluxPerfect 1000 Series](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/fluxperfect-beastmaker-1000-ansicht-3.jpg` | `aa85e5d3740dcb13b27cf25236def2edb066bed25a84a80e1dd6ccf6cb139d69` | 1080 × 1080 | rejected partial front crop; front-layout corroboration only | [FluxPerfect 1000 Series](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/fluxperfect-beastmaker-1000-ansicht-4.jpg` | `52205774377c9e4c1da46f54c9d5459ce5fe2312777eb610db4252d53c068125` | 1080 × 1080 | rejected close oblique crop; local pocket-wall only | [FluxPerfect 1000 Series](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/fluxperfect-beastmaker-1000-ansicht-5.jpg` | `cd861578405510dc71594d5bb9e55005850f2b717ace3ccdcb497d66dfd9695a` | 1080 × 1080 | rejected partial rotated crop; local cavity-wall only | [FluxPerfect 1000 Series](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/fluxperfect-beastmaker-1000-ansicht-6.jpg` | `80279060397953363b4ef1b21ee384d1bb7db0e4148cb956e30fae4f06d1a03f` | 1080 × 1080 | rejected partial rotated crop; local cavity-wall only | [FluxPerfect 1000 Series](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/ellis-brigham-1000-01.jpg` | `600387f9c7335e674b2791804e3b01aaff77607fb11ad3761fefd7b2ca960da9` | 2000 × 2800 | rejected near-front; minor elevation only | [Ellis Brigham 1000 Series](https://www.ellis-brigham.com/beastmaker-1000-series-fingerboard-131800900) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/ellis-brigham-1000-02.jpg` | `a911c61d306f18cbcdcf4e8c7d573973903145ea389b7fd8ceed350a426f6777` | 2000 × 2800 | rejected oblique detail crop; local top/side-depth only | [Ellis Brigham 1000 Series](https://www.ellis-brigham.com/beastmaker-1000-series-fingerboard-131800900) |
+| commerce candidate | `.context/shaky-rat-beastmaker-1000/references/ellis-brigham-1000-03.jpg` | `5fddaa72271807b690d3fd5f58e3a47de1b96a18c8df7b83c9dfee10960c792e` | 2000 × 2800 | rejected oblique detail crop; local top/side-depth only | [Ellis Brigham 1000 Series](https://www.ellis-brigham.com/beastmaker-1000-series-fingerboard-131800900) |
+
+The FluxPerfect page's retained JSON identifies vendor Beastmaker, product
+“Beastmaker 1000 Series Hangboard”, and its linked `Ansicht_1` asset; the
+image visibly carries the “1000 SERIES” mark and matching 22-contact layout.
+The Ellis Brigham page identifies the 1000 Series and SKU `131800900`, but its
+02/03 candidates crop the board. The 9c page title and image mark identify the
+same layout, but original-resolution review rejects it as near-front. No
+commerce candidate overrides dimensions, inventory, material, or other
+manufacturer claims. The qualifying front/three-quarter set exposes no hidden
+back geometry, measured depth, cavity sections, or radii. Crops, duplicate
+views, search thumbnails, and ambiguous revision media were rejected.
+
+## 2026-09-09 final model-package promotion
+
+The earlier Stage 0 and Astra-gate language above is historical. Both target
+packages are now promoted and human-approved: Beastmaker 1000 after the
+corrected export recorded approval `8ebbdb78` (after `c3a15af5`), and Compact II
+after the final export recorded approval `e4130730` (after `b8596eae`). Each
+package contains exactly `board.json`, `assets/primary.usdz`, and
+`assets/primary.model.json`; target `primary.png` files are absent. The
+standalone `HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz` is also
+absent. Both use the same shared, self-contained warm-white/light-neutral
+fallback with no wood-species claim. Omitted screws, mounting holes,
+countersinks, hardware, and logos are deliberate display simplifications.
+
+| package | model SHA-256 | descriptor SHA-256 | inventory |
+| --- | --- | --- | --- |
+| Beastmaker 1000 | `19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d` | `ee095c463804312cbd6ed08f5113019793b934ab6806a6fb343be939ff8a68d3` | 22 holds / 23 nodes |
+| Compact II | `addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a` | `a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f` | 19 holds / 20 nodes |
+
+The shared canonical PNG SHA-256 is
+`fdab3b78ce575a0dbf90b300db4d52438cb94f7e71cd6d589d56a044de97ec0a`.
+Generator v5 retains explicit standard-sRGB `sRGB` intent 0, `gAMA` 45455,
+and standard `cHRM` metadata while changing only the deterministic texture
+albedo to the SceneKit-calibrated encoded-sRGB base `(210, 196, 173)`; both
+USDZs embed those exact bytes. The package rebuild preserved descriptor
+geometry and inventories. Two controlled actual-app albedo samples established
+the SceneKit response before v5: matched Beastmaker 90th/95th luminance
+percentiles moved from `139.70/144.12` to `183.43/186.93`, and final v5 moved
+them to `204.69/208.31`. The v5 actual-app captures show light beige/tan
+exposed faces with shaded recesses. After the final front-lighting correction
+at `521da008`, the user reviewed the actual-app renders, approved them as
+“Good enough,” and directed continuation. The retained final report is
+`.context/shaky-rat-warm-white-lighting-review/review-report.md` (SHA-256
+`766ab157eb417d6ea76b670c5a5d460a3319b681631c9bfaf965b077aea05b73`).
+Its approved normal-state captures are
+`.context/shaky-rat-warm-white-lighting-review/beastmaker-1000-normal-portrait.png`
+(`b3ef5ddb53f2fa843c31c0fa3bc8f8e6a8ebf199acaf8e3d58a00cbcd608a253`)
+and
+`.context/shaky-rat-warm-white-lighting-review/compact-ii-normal-portrait.png`
+(`ba5cb48df7242081af7faf1823b81bbfb81fc4ef832dfd83f298d152d79473b1`).
+
+The packet hashes are Beastmaker `510def2516477dedb248ea85e3ec858129d0f298014b28c3e7ef9b19bd41cce0` and Compact `fe4a13559dfc8b734e349005444599407cb8cb7358350a095c0c3cdd451f62c3`; the earlier Beastmaker handoff hash was `444dc99cacf1e68fc8b564667a22b965d5e9a624b3e38953a6f98ab07edea5ea`. Beastmaker is 580 × 150 mm with a qualified Beech/shared-layout 58 mm depth; the Tulip page's 5 mm is retained as a conflicting non-thickness claim. Compact is 610 × 157 mm; its #2/#9 56 mm callouts are slopers only, while 64 mm body Z is an authored estimate.
+
+Host-native SceneKit proof passes all 41 nearest face-center rays and body nil
+probes. The full isolated-Simulator migration review passed 119 focused
+`BoardModelTests` and `BoardPackageStoreTests`, one focused picker UI test, all
+41 physical hold taps, normal/preview/active/restored portrait and landscape
+states, picker/favorite behavior, and the malformed-model unavailable state.
+Its retained report is `.context/shaky-rat-task7-simulator-validation.md`
+(SHA-256
+`7f36fd1f235d9e79c68015b1da2b4da37ba7dde0de55f7c2fe3cbad5e940f40f`).
+After the final lighting change, the narrower key-direction and shipped-model
+inventory/material/nearest-hit SceneKit regressions also passed on the exact
+owned Simulator recorded in the warm-white report. All owned simulators and
+build scratch were cleaned. This is Simulator integration evidence only:
+SceneKit reported physically based materials but may fall back to Blinn where
+Metal is unavailable, and no physical-device PBR validation is claimed. Stale
+references found in historical plans, manifests, or generator/tooling output
+are non-production; production package, source, and app references are absent.
+Remote GitHub model sync, iOS model editing, and Workbench model editing remain
+deferred/read-only/unavailable.

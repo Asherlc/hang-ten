@@ -78,7 +78,28 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testEveryCatalogBoardUsesItsDefaultPackagePresentationPNG() throws {
+    func testCompactUsesPackageModelNotStandaloneResource() throws {
+        XCTAssertNil(
+            Bundle.main.url(
+                forResource: "wood-grips-compact-ii",
+                withExtension: "usdz",
+                subdirectory: "BoardModels"
+            )
+        )
+
+        let compact = try XCTUnwrap(
+            BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
+        )
+        guard case .model(let model) = compact.defaultPresentation.media else {
+            return XCTFail("Compact II must use model media")
+        }
+        XCTAssertEqual(model.assetPath, "assets/primary.usdz")
+        XCTAssertEqual(model.descriptorPath, "assets/primary.model.json")
+        XCTAssertNotNil(BoardCatalog.packageStore.presentationAssetURL(for: compact))
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: compact))
+    }
+
+    func testEveryCatalogBoardUsesItsDefaultPackagePresentationAsset() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
 
@@ -93,27 +114,33 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
             let defaultPresentation = try XCTUnwrap(
-                presentations.first { ($0["default"] as? Bool) == true }
+                presentations.first { ($0["isDefault"] as? Bool) == true }
             )
-            let defaultAssetPath = try XCTUnwrap(defaultPresentation["assetPath"] as? String)
-            let imageURL = try XCTUnwrap(
-                BoardCatalog.packageStore.presentationImageURL(for: board)
-            )
-            let expectedImageURL = Bundle.main.resourceURL!
+            let media = try XCTUnwrap(defaultPresentation["media"] as? [String: Any])
+            let defaultAssetPath = try XCTUnwrap(media["assetPath"] as? String)
+            let expectedAssetURL = Bundle.main.resourceURL!
                 .appendingPathComponent("Hangboards", isDirectory: true)
                 .appendingPathComponent(packagePath, isDirectory: true)
                 .appendingPathComponent(defaultAssetPath)
                 .standardizedFileURL
 
-            XCTAssertEqual(
-                imageURL.standardizedFileURL,
-                expectedImageURL,
-                "Expected \(board.id) to use its declared default presentation asset."
-            )
+            switch board.defaultPresentation.media {
+            case .raster:
+                let imageURL = try XCTUnwrap(
+                    BoardCatalog.packageStore.presentationImageURL(for: board)
+                )
+                XCTAssertEqual(imageURL.standardizedFileURL, expectedAssetURL)
+            case .model:
+                let assetURL = try XCTUnwrap(
+                    BoardCatalog.packageStore.presentationAssetURL(for: board)
+                )
+                XCTAssertEqual(assetURL.standardizedFileURL, expectedAssetURL)
+                XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+            }
         }
     }
 
-    func testBundledContentDoesNotContainSchemaVersion() throws {
+    func testBundledBoardContentUsesSchemaVersionTwo() throws {
         let repositoryRoot = repositoryRootURL()
         let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
             at: repositoryRoot
@@ -124,9 +151,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let boardDocument = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
             )
-            XCTAssertNil(
-                boardDocument["schemaVersion"],
-                "Remove schemaVersion from \(boardURL.path)."
+            XCTAssertEqual(
+                boardDocument["schemaVersion"] as? Int,
+                2,
+                "Every bundled board package must use schema version 2: \(boardURL.path)."
             )
         }
 
@@ -196,10 +224,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
-    func testEveryCatalogPackageEmbedsPhysicalGeometryInBoardJSON() throws {
+    func testEveryCatalogPackageMatchesTypedMediaBoundary() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        let migratedModelBoardIDs: Set<String> = [
+            "beastmaker-1000",
+            "metolius.wood-grips-compact-ii"
+        ]
 
         XCTAssertFalse(
             FileManager.default.fileExists(
@@ -223,27 +255,100 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            XCTAssertNil(boardDocument["schemaVersion"])
+            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 2)
             XCTAssertNil(boardDocument["presentation"])
             let presentations = try XCTUnwrap(
                 boardDocument["presentations"] as? [[String: Any]]
             )
-            let declaredAssets = Set(
-                presentations.compactMap { presentation in
-                    presentation["assetPath"] as? String
+            let declaredAssets = Set(presentations.flatMap { presentation -> [String] in
+                guard let media = presentation["media"] as? [String: Any],
+                      let assetPath = media["assetPath"] as? String else {
+                    return []
                 }
-            )
-            XCTAssertEqual(assetPaths, declaredAssets)
-            let presentationIDs = Set(
-                presentations.compactMap { $0["id"] as? String }
-            )
-            XCTAssertTrue(holds.allSatisfy {
-                ($0["presentationID"] as? String).map(presentationIDs.contains) == true
+                var paths = [assetPath]
+                if let descriptorPath = media["descriptorPath"] as? String {
+                    paths.append(descriptorPath)
+                }
+                return paths
             })
+            XCTAssertEqual(assetPaths, declaredAssets)
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
-            XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
             XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
+
+            switch board.defaultPresentation.media {
+            case .raster(let media):
+                XCTAssertFalse(
+                    migratedModelBoardIDs.contains(board.id),
+                    "Migrated board \(board.id) must not retain raster media."
+                )
+                XCTAssertFalse(media.holdGeometry.isEmpty)
+                let logicalHoldIDs = Set(holds.compactMap { $0["id"] as? String })
+                var originalRasterHoldIDs = Set<String>()
+                XCTAssertTrue(
+                    presentations.allSatisfy { presentation in
+                        guard let media = presentation["media"] as? [String: Any] else {
+                            return false
+                        }
+                        return media["type"] as? String == "raster"
+                    }
+                )
+                for presentation in presentations {
+                    guard let presentationMedia = presentation["media"] as? [String: Any],
+                          presentationMedia["type"] as? String == "raster",
+                          let holdGeometry = presentationMedia["holdGeometry"] as? [String: Any]
+                    else {
+                        continue
+                    }
+                    let derivationType =
+                        (presentation["derivation"] as? [String: Any])?["type"] as? String
+                    if derivationType == "original" {
+                        let presentationHoldIDs = Set(holdGeometry.keys)
+                        XCTAssertTrue(
+                            originalRasterHoldIDs.isDisjoint(with: presentationHoldIDs),
+                            "Original raster presentations must own each logical hold once."
+                        )
+                        originalRasterHoldIDs.formUnion(presentationHoldIDs)
+                    }
+                    for (holdID, rawPieces) in holdGeometry {
+                        XCTAssertTrue(logicalHoldIDs.contains(holdID))
+                        guard let pieces = rawPieces as? [[String: Any]] else {
+                            XCTFail("Raster holdGeometry for \(holdID) must be an array of pieces.")
+                            continue
+                        }
+                        XCTAssertFalse(
+                            pieces.isEmpty,
+                            "Raster holdGeometry for \(holdID) must contain a piece."
+                        )
+                    }
+                }
+                XCTAssertEqual(
+                    originalRasterHoldIDs,
+                    logicalHoldIDs,
+                    "Original raster media must cover every logical hold exactly once."
+                )
+            case .model(let media):
+                XCTAssertTrue(
+                    migratedModelBoardIDs.contains(board.id),
+                    "Only migrated boards may use model media."
+                )
+                XCTAssertEqual(assetPaths, Set([media.assetPath, media.descriptorPath]))
+                XCTAssertTrue(
+                    presentations.allSatisfy { presentation in
+                        guard let media = presentation["media"] as? [String: Any] else {
+                            return false
+                        }
+                        return media["type"] as? String == "model"
+                    }
+                )
+                XCTAssertFalse(assetPaths.contains { $0.hasSuffix(".png") })
+                XCTAssertTrue(holds.allSatisfy {
+                    $0["geometry"] == nil && $0["presentationID"] == nil
+                })
+                XCTAssertEqual(Set(media.descriptor.holds.keys), Set(holds.compactMap {
+                    $0["id"] as? String
+                }))
+            }
         }
     }
 
@@ -277,7 +382,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
         XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: hold.geometry)"))
+        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: pieces)"))
         XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
         XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
         XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
@@ -294,20 +399,20 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
         let physicalHoldVisualFrame =
-            "                            )\n" +
-            "                            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                                )\n" +
+            "                                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                            }\n" +
             "                        }\n" +
-            "                    }"
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)"
         XCTAssertTrue(
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
         let outerZStackFrame =
+            "                        }\n" +
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "                    }\n" +
-            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                }\n" +
-            "            }\n" +
-            "            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)"
+            "                case .model:"
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."
@@ -607,17 +712,21 @@ final class BoardSourceBoundaryTests: XCTestCase {
             identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
 
             for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {
-                guard let assetPath = presentation["assetPath"] as? String else { continue }
-                let assetURL = URL(fileURLWithPath: assetPath)
-                identifiers.insert(assetPath)
-                identifiers.insert(assetURL.lastPathComponent)
-                let stem = assetURL.deletingPathExtension().lastPathComponent
-                // Very short presentation stems such as `top` and `end` are
-                // ordinary source vocabulary and create path-name collisions
-                // (for example, WorkoutStopwatch.swift). The full package
-                // asset path and filename remain protected by the audit.
-                if stem.count >= 5 {
-                    identifiers.insert(stem)
+                guard let media = presentation["media"] as? [String: Any] else { continue }
+                let assetPaths = [media["assetPath"], media["descriptorPath"]]
+                    .compactMap { $0 as? String }
+                for assetPath in assetPaths {
+                    let assetURL = URL(fileURLWithPath: assetPath)
+                    identifiers.insert(assetPath)
+                    identifiers.insert(assetURL.lastPathComponent)
+                    let stem = assetURL.deletingPathExtension().lastPathComponent
+                    // Very short presentation stems such as `top` and `end` are
+                    // ordinary source vocabulary and create path-name collisions
+                    // (for example, WorkoutStopwatch.swift). The full package
+                    // asset path and filename remain protected by the audit.
+                    if stem.count >= 5 {
+                        identifiers.insert(stem)
+                    }
                 }
             }
 

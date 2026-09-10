@@ -20,7 +20,7 @@ from conftest import (
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
-from _board_package_helpers import board_positions_document
+from _board_package_helpers import board_hold_geometry, board_positions_document
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
@@ -191,14 +191,19 @@ def test_board_schema_rejects_position_without_canonical_presentation_holds() ->
         {
             "id": "unused",
             "name": "Unused",
-            "assetPath": "assets/unused.png",
             "aspectRatio": 2,
-            "default": False,
+            "isDefault": False,
+            "derivation": {"type": "original"},
+            "media": {
+                "type": "raster",
+                "assetPath": "assets/unused.png",
+                "holdGeometry": {},
+            },
         }
     )
     document["positions"].append({"id": "unused", "presentationID": "unused"})
 
-    with pytest.raises(ValueError, match="must own at least one hold"):
+    with pytest.raises(ValueError, match="must own at least one logical hold"):
         module._load_board(document)
 
 
@@ -327,6 +332,13 @@ def test_board_schema_accepts_reciprocal_gaston_pairs() -> None:
     left = {**template, "id": "gaston-left", "name": "Left gaston", "kind": "gaston", "pairedHoldID": "gaston-right"}
     right = {**template, "id": "gaston-right", "name": "Right gaston", "kind": "gaston", "pairedHoldID": "gaston-left"}
     document["holds"] = [left, right]
+    geometry = document["presentations"][0]["media"]["holdGeometry"].pop(
+        "hold-left"
+    )
+    document["presentations"][0]["media"]["holdGeometry"] = {
+        "gaston-left": geometry,
+        "gaston-right": geometry,
+    }
 
     board = module._load_board(document)
 
@@ -641,7 +653,7 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["holds"][0]["geometry"].append(
+    document["presentations"][0]["media"]["holdGeometry"]["hold-left"].append(
         {
             "frame": {"x": 0.4, "y": 0.1, "width": 0.1, "height": 0.2},
             "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
@@ -650,34 +662,35 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     package = module.load_board_package(package_root)
-    hold = package.board.holds[0]
+    geometry = board_hold_geometry(package.board)["hold-left"]
 
-    assert len(hold.geometry) == 2
-    assert (hold.frame.x, hold.frame.y, hold.frame.width, hold.frame.height) == pytest.approx(
+    assert len(geometry) == 2
+    frame = package.board.hold_frame("hold-left", "primary")
+    assert (frame.x, frame.y, frame.width, frame.height) == pytest.approx(
         (0.1, 0.1, 0.4, 0.4)
     )
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_unversioned_board_loads_its_declared_primary_presentation(tmp_path: Path) -> None:
+def test_v2_board_loads_its_declared_primary_presentation(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_board_package(tmp_path / "fixture-model")
-    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
     package = module.load_board_package(package_root)
 
-    assert package.board.presentations == (
-        module.BoardPresentation(
-            id="primary",
-            name="Primary",
-            asset_path="assets/primary.png",
-            aspect_ratio=2,
-            is_default=True,
-        ),
-    )
-    assert {hold.presentation_id for hold in package.board.holds} == {"primary"}
+    assert len(package.board.presentations) == 1
+    presentation = package.board.presentations[0]
+    assert (
+        presentation.id,
+        presentation.name,
+        presentation.asset_path,
+        presentation.aspect_ratio,
+        presentation.is_default,
+        presentation.source_presentation_id,
+    ) == ("primary", "Primary", "assets/primary.png", 2, True, None)
+    assert set(presentation.media.hold_geometry) == {"hold-left"}
 
 
-def test_unversioned_board_loads_declared_presentations_and_scoped_holds(
+def test_v2_board_loads_declared_presentations_and_scoped_holds(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -685,18 +698,16 @@ def test_unversioned_board_loads_declared_presentations_and_scoped_holds(
         write_multi_presentation_board_package(tmp_path / "fixture-model")
     )
 
-    assert package.board.presentations == (
-        module.BoardPresentation("front", "Front", "assets/primary.png", 2, True),
-        module.BoardPresentation("back", "Back", "assets/back.png", 2, False),
-    )
-    assert [(hold.id, hold.presentation_id) for hold in package.board.holds] == [
-        ("hold-left", "front"),
-        ("hold-right", "back"),
+    assert [presentation.id for presentation in package.board.presentations] == [
+        "front",
+        "back",
     ]
+    assert package.board.hold_ids_for_position("front") == ("hold-left",)
+    assert package.board.hold_ids_for_position("back") == ("hold-right",)
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_unversioned_board_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
+def test_v2_board_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -740,7 +751,7 @@ def test_package_loader_reports_missing_required_top_level_fields_as_value_error
         ),
         (
             lambda document: [
-                presentation.__setitem__("default", False)
+                presentation.__setitem__("isDefault", False)
                 for presentation in document["presentations"]
             ],
             "exactly one default presentation",
@@ -750,14 +761,14 @@ def test_package_loader_reports_missing_required_top_level_fields_as_value_error
                 1,
                 {
                     **document["presentations"][1],
-                    "default": True,
+                    "isDefault": True,
                 },
             ),
             "exactly one default presentation",
         ),
     ],
 )
-def test_unversioned_board_rejects_invalid_presentation_identifiers_and_defaults(
+def test_v2_board_rejects_invalid_presentation_identifiers_and_defaults(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -770,18 +781,21 @@ def test_unversioned_board_rejects_invalid_presentation_identifiers_and_defaults
         module.load_board_package(package_root)
 
 
-def test_unversioned_board_rejects_hold_with_an_unknown_presentation_id(tmp_path: Path) -> None:
+def test_v2_board_rejects_geometry_with_an_unknown_hold_id(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
     document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0]["presentationID"] = "missing"
+    geometry = document["presentations"][0]["media"]["holdGeometry"].pop(
+        "hold-left"
+    )
+    document["presentations"][0]["media"]["holdGeometry"]["missing"] = geometry
     (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="unknown presentationID"):
+    with pytest.raises(ValueError, match="only own logical holds"):
         module.load_board_package(package_root)
 
 
-def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
+def test_v2_board_rejects_derived_presentation_chains(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -792,36 +806,46 @@ def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
         {
             "id": "front-inverted",
             "name": "Front upside down",
-            "assetPath": "assets/front-inverted.png",
             "aspectRatio": 2,
-            "default": False,
-            "sourcePresentationID": "front",
-            "isInverted": True,
+            "isDefault": False,
+            "derivation": {
+                "type": "derived",
+                "sourcePresentationID": "front",
+                "isInverted": True,
+            },
+            "media": {
+                "type": "raster",
+                "assetPath": "assets/front-inverted.png",
+                "holdGeometry": document["presentations"][0]["media"][
+                    "holdGeometry"
+                ],
+            },
         }
     )
     document["presentations"].append(
         {
             "id": "front-inverted-twice",
             "name": "Front twice inverted",
-            "assetPath": "assets/front-inverted.png",
             "aspectRatio": 2,
-            "default": False,
-            "sourcePresentationID": "front-inverted",
-            "isInverted": False,
+            "isDefault": False,
+            "derivation": {
+                "type": "derived",
+                "sourcePresentationID": "front-inverted",
+                "isInverted": False,
+            },
+            "media": {
+                "type": "raster",
+                "assetPath": "assets/front-inverted.png",
+                "holdGeometry": document["presentations"][0]["media"][
+                    "holdGeometry"
+                ],
+            },
         }
     )
     (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
     with pytest.raises(ValueError, match="must reference a canonical presentation"):
         module.load_board_package(package_root)
-
-    document["presentations"].pop()
-    document["holds"][0]["presentationID"] = "front-inverted"
-    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
-
-    with pytest.raises(ValueError, match="must be owned by a canonical presentation"):
-        module.load_board_package(package_root)
-
 
 @pytest.mark.parametrize(
     ("mutation", "message"),
@@ -838,13 +862,17 @@ def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
         ),
         (
             lambda package, document: document["presentations"][1].__setitem__(
-                "assetPath", "assets/../outside.png"
+                "media",
+                {
+                    **document["presentations"][1]["media"],
+                    "assetPath": "assets/../outside.png",
+                },
             ),
             "assetPath must name a PNG beneath assets/",
         ),
     ],
 )
-def test_unversioned_board_rejects_undeclared_missing_and_escaping_assets(
+def test_v2_board_rejects_undeclared_missing_and_escaping_assets(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -862,7 +890,9 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["holds"][0]["geometry"][0]["shapeConstraint"] = {
+    document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+        "shapeConstraint"
+    ] = {
         "shape": "roundedRectangle",
         "rotationDegrees": -17.5,
     }
@@ -870,7 +900,7 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
 
     package = module.load_board_package(package_root)
 
-    constraint = package.board.holds[0].geometry[0].shape_constraint
+    constraint = board_hold_geometry(package.board)["hold-left"][0].shape_constraint
     assert constraint is not None
     assert constraint.shape == "roundedRectangle"
     assert constraint.rotation_degrees == -17.5
@@ -903,7 +933,9 @@ def test_package_loader_rejects_path_that_does_not_fill_its_declared_frame(
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["holds"][0]["geometry"][0]["shape"] = {
+    document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+        "shape"
+    ] = {
         "type": "path",
         "commands": [
             {"command": "move", "to": [0.1, 0.1]},
@@ -940,7 +972,9 @@ def test_package_loader_rejects_invalid_shape_constraints(
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["holds"][0]["geometry"][0]["shapeConstraint"] = constraint
+    document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+        "shapeConstraint"
+    ] = constraint
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     with pytest.raises(ValueError, match="shapeConstraint"):
@@ -960,7 +994,9 @@ def test_package_loader_rejects_unknown_board_hold_and_geometry_keys(
         elif location == "hold":
             document["holds"][0]["unexpected"] = True
         else:
-            document["holds"][0]["geometry"][0]["unexpected"] = True
+            document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+                "unexpected"
+            ] = True
         board_path.write_text(json.dumps(document), encoding="utf-8")
 
         with pytest.raises(ValueError, match="unknown keys"):

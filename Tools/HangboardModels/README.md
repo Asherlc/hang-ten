@@ -1,212 +1,237 @@
-# Wood Grips Compact II display prototype
+# Hang Ten model package tooling
 
-This is an editable 3D display asset with a second-pass curvature refinement for Hang Ten. It recreates the
-Metolius Wood Grips Compact II's two rows, tapered body, true carved recesses,
-outer shelves, and top contacts. Mounting holes are deliberately omitted at the
-user's request for app display. It is not manufacturing CAD.
-The validated USDZ is bundled in Hang Ten for the original bundled Compact II
-primary board. SceneKit `BoardModelView` maps its 19 logical hold IDs to picking
-and highlighting. The canonical selection paths, 2D fallback, editor, and
-presentation PNG remain in use for their existing workflows.
+This directory contains the evidence-packet validator and the deterministic
+USDZ-to-descriptor compiler for the schema-v2 board package contract. The
+completed inventory contains 59 raster v2 packages and two model-only
+packages: Beastmaker 1000 and Metolius Wood Grips Compact II. Both promoted
+package trees contain `board.json`, `assets/primary.usdz`, and
+`assets/primary.model.json`; model media is read-only. This tooling documents
+demonstrated package validation and staging, not remote model sync or model
+editing.
 
-## Build and review
+## v2 logical and presentation contract
 
-From the repository root, with Blender 5.2 installed:
+`board.json` has `schemaVersion: 2`. Board identity, sourced physical facts,
+equipment, positions, transitions, and logical hold metadata remain in the
+document. Hold records contain no spatial geometry or presentation ownership.
+Each presentation owns one tagged media payload:
+
+- `raster` has `assetPath` beneath `assets/` and a non-empty
+  `holdGeometry` map of normalized path pieces. Only raster presentations may
+  be derived or inverted, and canonical raster presentations collectively own
+  every logical hold ID exactly once, forming an exact, single-owner partition.
+- `model` has a `.usdz` `assetPath`, a generated `.model.json` `descriptorPath`,
+  and `display.camera` with an orthographic type, finite non-zero
+  `viewDirection` and `up` vectors, and positive `fitPadding`.
+
+Model media is model-only: a package may not mix model and raster
+presentations, and a model presentation may not be derived or inverted. Its
+descriptor hash must match the exact USDZ bytes and its node/hold inventory
+must equal the logical inventory. Staging copies declared package files
+byte-for-byte; it does not synthesize a raster fallback or substitute a model
+resource. Remote GitHub model-package sync is deferred/unsupported by the
+current PNG/default-oriented GitHub sync. Workbench model editing is
+read-only/unavailable; raster Workbench editing remains supported.
+
+## Stage 0 evidence packets
+
+For any future model migration, retain at least two complete exact-revision
+visual images per board under the packet directory: one manufacturer-published
+image and, where available, a materially different oblique/side/back/profile
+view. Record each image's pixel dimensions, retrieval date/locale, exact angle,
+page linkage, source tier, SHA-256, and the geometric facts that view can and
+cannot support. Authorized retailer/distributor images fill only a documented
+manufacturer gap and are labeled commerce-gap evidence. Crops, duplicates,
+search thumbnails, reviews/forums, generated renders, and ambiguous revision
+media do not satisfy the gate; diagrams supplement but do not count as a
+distinct-angle photograph unless they expose side/profile geometry. Retain
+exact manufacturer evidence (and only documented commerce gap evidence where
+necessary) under the packet directory.
+The packet validator requires HTTPS source URLs, retained regular files beneath
+the packet directory, matching SHA-256 values, a board revision/date and
+locale, source-backed logical inventory, conflicts and rulings, qualitative
+unknowns, material fidelity, deliberate omissions, and the required `front`,
+`three-quarter`, and `clay-detail` review views. It requires `screw holes` and
+`mounting hardware` as deliberate display omissions.
+
+Start from `evidence-packet-template.json`, fill its placeholders, then run:
+
+```sh
+python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
+```
+
+This contract rejects geometry proposals and image-derived geometry fields:
+coordinates, contours, masks, vectors, tracing, alignment, and numeric shape
+prescriptions. Measurements are allowed only as cited source-backed claims or
+metadata. The packet prepares evidence and logical identity; it does not
+decide, generate, or refine geometry.
+
+## Deterministic compiler and generated descriptor
+
+After a separate geometry-authoring and review step, compile a tagged Blender
+scene with Blender 5.2:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
-  --python Tools/HangboardModels/wood_grips_compact_ii.py
-rtk proxy blender --background --factory-startup --python-exit-code 1 \
-  --python Tools/HangboardModels/verify_wood_grips_compact_ii.py
+  --python Tools/HangboardModels/compile_model_package.py -- \
+  --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
+  --output-directory PATH/compiled-package
 ```
 
-The verifier accepts `-- /path/to/output`; `-- --format usdz --skip-renders`
-checks only a changed USDZ, preserves the other format's report, and marks new
-render fields as skipped. The model build accepts
-`-- --output /path/to/output`. All three tools derive the default output from
-the repository directory name: `.context/<workspace-name>-wood-grips-compact-ii/`
-(for example, `.context/epic-whale-wood-grips-compact-ii/`). The highlight tool
-uses its `highlights/` subdirectory. These defaults follow a renamed checkout
-without editing the scripts. No server, simulator, or external
-resource is created. `ownership.json` records the generated directory owner.
+Every authored mesh must carry `role` equal to `body` or `hold`; hold meshes
+also carry a `hold_id` present in the board's logical inventory. The compiler
+rejects missing or unknown tags, non-mesh authored objects, empty or unbound
+geometry, inventory mismatches, missing materials/images after reimport,
+changed node bindings, and physical-bounds drift. It makes disposable export
+copies and triangulates only those copies. It then reimports the actual USDZ
+and fails rather than repairing or redesigning a shape.
 
-Outputs include editable `.blend`, image-textured `.glb`, iOS-friendly `.usdz`,
-`front.png`, `three-quarter.png`, `selected-holds.png`, `clay-three-quarter.png`,
-`clay-detail.png`, a 2048-pixel wood atlas,
-and machine-readable `model-report.json`. Verification reimports both actual
-exports with the source materials and images removed, checks dimensions within
-one micrometer, all 19 hold IDs, 20 meshes, and loaded image textures, then
-writes `glb-roundtrip.png`, `usdz-roundtrip.png`, close oblique `glb-clay-detail.png` /
-`usdz-clay-detail.png`, and
-`export-verification.json`. Inspect those rendered exports as well as the
-source scene before refreshing the app bundle. The selected-holds view changes the actual
-upper three-finger pocket meshes to amber.
+A successful output directory contains exactly:
 
-The build operates solely on directly authored coordinates and analytic
-profiles. It does not read, trace, segment, vectorize, crop, or align images.
-Reference downloads are research evidence only. The mathematical grain is an
-original material, baked to standard PBR base color for export compatibility.
-The model uses meters, X across the board, Z up, and front facing negative Y in
-Blender. glTF exports use the format's normal Y-up conversion. Each physical
-hold is a mesh named with its existing `board.json` hold ID and carries a
-`hold_id` custom property. USD prim paths may normalize hyphens to underscores;
-the custom property retains the original identity. These mesh partitions are
-experimental display surfaces, not replacements for canonical 2D hit paths.
+```text
+assets/primary.usdz
+assets/primary.model.json
+```
 
-## Refreshing the app bundle
+There is no hand-authored or standalone descriptor CLI. The compiler generates
+the descriptor only after validating the actual reimported USDZ. Descriptor v1
+contains `schemaVersion`, `coordinateFrame`, `modelSHA256`, `modelBounds`,
+sorted `nodes`, and sorted logical `holds`; model bounds and each hold's
+normalized face-plane AABB and center are derived from imported vertices and
+rounded to nine decimal places. The coordinate frame is
+`hang-ten-board-v1`: metres, right-handed, origin at back-bottom-left, `+X`
+right, `+Y` up, and `+Z` toward the climber.
 
-The generator writes only to the workspace-owned `.context` output. It does
-not automatically replace the app resource. After regenerating, run the
-roundtrip verifier above, inspect the source/export clay views and all 19 hold
-highlights, and copy the validated asset selected for app use:
+The compiler is package/tooling support, not a geometry authoring workflow.
+Human visual review of the display geometry was completed before the two model
+packages entered the live inventory. The shared warm-white/light-neutral
+fallback and final front lighting were subsequently reviewed in the actual app
+renderer and human-approved. Package-local descriptors are generated from
+actual exports and remain read-only.
+
+## Canonical wood display material
+
+Every shipped wood display model uses the one committed original source
+`assets/canonical-neutral-wood.png`: light neutral, low-to-moderate fine grain,
+and no species-match, logo, knot, stain, or board-color claim. The PNG declares
+its encoded color explicitly with standard-sRGB `sRGB`, `gAMA`, and `cHRM`
+chunks so the source and self-contained USDZ payload do not depend on a
+decoder's unprofiled-image default. The deterministic v5 generator, its
+color-profile intent, and the SceneKit-calibrated light-tan albedo are in
+`canonical_neutral_wood.py`; regenerate the asset
+only with:
 
 ```sh
-model_output=".context/${PWD##*/}-wood-grips-compact-ii"
-rtk proxy cp "$model_output/wood-grips-compact-ii.usdz" \
-  HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz
-rtk proxy shasum -a 256 \
-  "$model_output/wood-grips-compact-ii.usdz" \
-  HangTen/Resources/BoardModels/wood-grips-compact-ii.usdz
+rtk python3 -B Tools/HangboardModels/canonical_neutral_wood.py
 ```
 
-The two SHA-256 values must match. The current revision 3 asset, with mounting
-holes omitted, is
-`063dabb454817ad611d5f10f4f5fed7f2826b4c0cbcdb58286974f21912db1c6`.
-After a refresh, rebuild and validate the app's 3D display and hold selection;
-update this recorded checksum to the newly reviewed asset. The runtime uses
-this resource for the original bundled primary board only. Other board
-variants and the editor retain their 2D presentation and canonical paths.
-The generated `.blend` and its highlight report remain linked by the report's
-source SHA; copying the USDZ does not require modifying either artifact.
+The approved canonical PNG SHA-256 is
+`fdab3b78ce575a0dbf90b300db4d52438cb94f7e71cd6d589d56a044de97ec0a`.
+The final packages and generated descriptors are:
 
-## Primary source audit — reviewed September 8, 2026
+| package | USDZ SHA-256 | descriptor SHA-256 | inventory |
+| --- | --- | --- | --- |
+| Beastmaker 1000 | `19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d` | `ee095c463804312cbd6ed08f5113019793b934ab6806a6fb343be939ff8a68d3` | 22 holds / 23 nodes |
+| Compact II | `addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a` | `a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f` | 19 holds / 20 nodes |
 
-| Evidence | Fields justified |
-| --- | --- |
-| [Manufacturer product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) | Compact identity, published 610 × 157 mm size, wood material. |
-| [Official Compact product photograph](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000) | Visually reviewed tapered outline, two-row arrangement, five enclosed pockets and two open end shelves per row, top shoulders/channels, pale wood, six visible mounting holes. |
-| [Official depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000) | The **lower Compact diagram**, not the upper Deluxe: outer jugs, 56 mm flat slopers, 56 mm center round sloper; upper 29 mm edges and 3/2/4-finger pockets; lower 19 mm equivalents. |
+Each exporter loads and packs those exact bytes, so its USDZ remains
+self-contained/offline while both packages embed the same stable
+`textures/canonical-neutral-wood.png` member. After changing that source, run
+the complete discovered-model rebuild. It provisions disposable compiler
+sources from the checked-in board generators in an owned temporary directory;
+it never reads or mutates durable `.context` `.blend` files. It refuses
+incomplete builder coverage and rejects descriptor geometry/inventory drift
+before promotion:
 
-The photograph and diagram were downloaded and visually inspected before
-authoring. Optional local copies belong under the output's `references/`
-directory and are not redistributed in the repository.
+```sh
+rtk python3 -B Tools/HangboardModels/rebuild_all_wood_models.py
+```
 
-| Existing hold IDs | Diagram labels / adaptation |
-| --- | --- |
-| `jug-left`, `jug-right` | Compact 1, outer jugs; rounded depth profile is an estimate. |
-| `sloper-flat-left`, `sloper-flat-right` | Compact 2, 56 mm flat slopers; planar channel slope is an estimate. |
-| `sloper-round-center` | Compact 9, 56 mm round sloper; curved profile radius is an estimate. |
-| `edge-29-left`, `edge-29-right` | Compact 3, 29 mm edges. |
-| `pocket-29-three-left`, `pocket-29-three-right` | Compact 4, 29 mm three-finger pockets. |
-| `pocket-29-two-left`, `pocket-29-two-right` | Compact 5, 29 mm two-finger pockets. |
-| `pocket-29-four-center` | Compact 10, 29 mm four-finger pocket. |
-| `edge-19-left`, `edge-19-right` | Compact 6, 19 mm edges. |
-| `pocket-19-three-left`, `pocket-19-three-right` | Compact 7, 19 mm three-finger pockets. |
-| `pocket-19-two-left`, `pocket-19-two-right` | Compact 8, 19 mm two-finger pockets. |
-| `pocket-19-four-center` | Compact 11, 19 mm four-finger pocket. |
-
-There are 19 physical contacts; the diagram's 11 numbers denote **types** with
-left/right repeats, not the physical hold count. No hold metadata is altered.
-
-## Explicit display estimates
-
-Only the overall width/height and labeled contact dimensions above are sourced
-measurements. Front-to-back thickness is set to **56 mm as a display estimate**
-from the top-contact annotation; the manufacturer does not specify that as a
-full-body thickness. The 29/19 mm annotations are represented as perpendicular
-front-to-back pocket recess depths, an explicitly labeled modeling adaptation
-because the diagram does not define a measurement datum or section.
-
-All aperture widths/heights, exact positions, taper, lip radii, top curves,
-channel slopes, back surface, and texture are
-manually selected visual estimates. Bilateral hold symmetry is idealized.
-The six mounting holes visible in the photograph are intentionally absent from
-the display model, following the user's September 8 request to remove screw
-holes; this is a display simplification, not a claim about the physical product.
-No hardware is included. The back and internal pocket sections were not available as measured
-evidence. Wood grain/knots vary between manufactured boards; this shader does
-not reproduce a particular photographed specimen. Logos are omitted rather than approximating brand artwork.
-
-## Curvature refinement (revision 2)
-
-The first pass represented the silhouette with straight polygon spans, the top
-rolls with 11 depth rings, and pocket transitions with only a few straight
-segments. A final global bevel was limited by small Boolean intersection edges;
-weighted normals could not supply the missing shape. Revision 2 replaces those
-features with deliberately authored geometry:
-
-| Feature | Geometry / explicitly estimated section |
-| --- | --- |
-| Outer silhouette | 24 mirrored cubic Bézier spans sampled at eight intervals each; hand-selected control points follow the official front photograph. |
-| Body edge rollover | 57 depth rings; 7 mm bottom-front, 2 mm upper-front and 2 mm back circular roundovers, independent of Boolean edge lengths. |
-| Jugs | Fuller elliptical roll with 46 mm depth run and 14 mm drop; angular depth sampling resolves the steep front end. |
-| Center round sloper | Continuous elliptical depth profile with 18 mm drop; side sloper channels retain their estimated planar 5 mm slope. Smooth width blends join the three profile types. |
-| Pocket backs | 6 mm quarter-circle transition, 12 segments, tangent to the back and sidewalls. |
-| Pocket mouths | 3.5 mm quarter-circle rim, 12 segments, tangent to the sidewall and front. Capsule corners use 16 segments per quadrant. |
-| Open outer shelves | 6 mm mouth and back fillets give the shelf rails fuller rounded fronts. The upper aperture ends at 122 mm before its mouth fillet, retaining a substantial jug nose above it. |
-
-These radii and cross sections are **display estimates**, not manufacturer
-measurements. The official product photograph remains the visual authoring
-source. A [2019 Compact II review](https://squamishclimbingmagazine.ca/metolius-wood-grips-ii-compact-hangboard-gear-review/)
-also describes rounded pocket backs, corroborating the shape but supplying no
-radius or measured section. No image analysis or automatic contour extraction
-is used.
-
-The revision keeps all 19 physical contact IDs and one body mesh. The export
-ceiling is 150,000 triangles to permit real curvature for mobile display;
-`model-report.json` records the actual count and sampling parameters. Curved strips use interpolated normals, and planar Boolean cap faces
-are shaded flat to avoid pinched normals around recesses. The texture-free
-clay views expose silhouette and surface continuity without wood grain. During
-this refinement the original `.blend` and previews were preserved in `v1/`;
-`v1/clay-detail.png` and `v1/clay-three-quarter.png` use exactly the same camera,
-material, lighting and resolution as the revised clay views.
-
-Revision 3 removes the six mounting-hole and countersink Boolean subtractions
-without changing the authored hold curves, dimensions, or 19 contact IDs.
-Its editable source, both exports, review renders, and highlight proofs are
-regenerated together; the app continues to render the model head-on.
-
-## Individual hold highlight review
-
-After building, render every independently selectable physical hold:
+Then run the actual-package material regression. It cleanly reimports every
+shipped model USDZ and requires the byte-identical embedded canonical PNG plus
+the exact standard-sRGB metadata, positive loaded image dimensions, and image
+material bindings on every mesh. Blender reimport/render verifies the Blender
+side only; a controlled app-renderer comparison remains required after a
+texture or exported-material change because USD color-space tags do not by
+themselves establish bridge decoding behavior:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
-  --python Tools/HangboardModels/render_hold_highlights.py
+  --python Tools/HangboardModels/test_canonical_wood_material.py
 ```
 
-The renderer accepts `-- --blend PATH --output DIR` and optional
-`--overview-only`. The `highlights/` output includes a numbered overview,
-contact sheet, 19 individual views, `index.html`, and a report recording the
-source blend SHA. Use these to review contact partitions alongside the clay
-geometry views. `--overview-only` refreshes the overview and preserves previous
-individual-image and contact-sheet report entries only when the source SHA
-matches and their referenced files still exist. A changed source invalidates
-those report entries. `--contact-sheet-only` rebuilds the sheet from a complete
-set of individual renders tied to the same source SHA.
+For albedo calibration, keep camera, lighting, geometry, and material settings
+fixed and capture at least two source-albedo samples through the actual app
+renderer. Compare matched board pixels, solve the observed response toward a
+declared exposed-face target, and validate the chosen source in the app again.
+Do not tune from Blender's color-managed review alone.
 
-Run the inexpensive output-path and report regressions without Blender:
+The retained final actual-app review is
+`.context/shaky-rat-warm-white-lighting-review/review-report.md`; its approved
+normal-state renders are
+`.context/shaky-rat-warm-white-lighting-review/beastmaker-1000-normal-portrait.png`
+and
+`.context/shaky-rat-warm-white-lighting-review/compact-ii-normal-portrait.png`.
+The focused SceneKit key-direction and complete migrated-package model checks
+passed on the exact owned Simulator used by that report. This is Simulator
+integration evidence, not a claim of physical-device PBR pixel parity:
+SceneKit can fall back from physically based shading where Metal is
+unavailable.
+
+## Actual-export verifiers
+
+Board-specific verifiers are a second check of the compiler's actual USDZ
+bytes. They start with an empty Blender scene, reimport only
+`assets/primary.usdz`, verify image materials, explicit triangles, tagged
+body/hold bindings, and the generated descriptor's exact hash-bound contents.
+They do not open, save, repair, or triangulate an authored `.blend`.
+
+For Beastmaker 1000, run the verifier against an already compiler-produced
+directory after the approved source and package compilation have completed:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_beastmaker_1000.py -- \
+  --output .context/OWNER-beastmaker-1000/package
+```
+
+The Beastmaker report requires its fixed 22-ID logical inventory and zero
+hardware meshes, as well as the runtime reimport checks. Its review renders
+and `export-verification.json` are evidence beside the compiler output, not
+additional files inside the compiler package directory.
+
+The checked Beastmaker source also retains a documented compiler-input
+transport copy. A read-only audit verifies all 23 mesh names, roles, hold IDs,
+material slots, local vertex hashes, and topology hashes are identical to the
+approved editable source; every scene matrix is only the fixed rigid axis
+transport. Compile that emitted input for the current generic compiler. A
+direct compile of the editable source produces a 580 × 58 × 150 mm axis order
+and is rejected by the verifier, whereas the audited transport output is
+580 × 150 × 58 mm in `hang-ten-board-v1`. Reconciling the brief's editable
+source command with the compiler's Blender-native axis expectation remains a
+separate specification decision; do not repair geometry to work around it.
+
+The Compact II verifier similarly accepts only the compiler package layout;
+it no longer reads legacy root-level GLB/USDZ files or derives identities from
+mesh names:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_wood_grips_compact_ii.py -- \
+  --format usdz --skip-renders .context/OWNER-wood-grips-compact-ii/package
+```
+
+Compact II's evidence does not establish a whole-board depth. Its verifier
+therefore compares the actual imported USDZ to the generated descriptor and
+does not assert a 56 mm overall-body dimension. The promoted Compact II
+package uses the approved tagged source and actual export. Do not infer tags
+from imported names or add them during verification.
+
+Remote GitHub model sync and model editing remain outside this tooling's
+demonstrated contract.
+
+The Blender-free report checks are available with:
 
 ```sh
 rtk proxy python3 -B Tools/HangboardModels/test_model_reports.py
 ```
-
-## Native SceneKit export compatibility
-
-Blender can roundtrip Boolean cap n-gons that SceneKit imports incorrectly.
-The untriangulated USDZ exposed a filled front cap over the pockets, caused
-camera-to-hold rays to hit the body, and left the body without a material.
-Renaming the body material to ASCII alone did not fix these symptoms. Explicit
-export triangles fixed both: native SceneKit inspection finds one image-backed
-PBR material on each of 20 meshes, and the first ray hit matches each of the 19
-expected hold IDs. The generator adds temporary triangulation modifiers only
-for USDZ export, then removes them; editable geometry and vertex positions are
-preserved. The body material now also uses the stable ASCII name
-`wood_body_material`.
-
-The screw-hole omission rebuild preserves this triangulation fix. Both exports
-receive fresh texture/ID/dimension/triangle roundtrips and review renders; the
-verification report records the new asset SHA. Native SceneKit material and
-picking checks are recorded separately beside the generated output. Future bundle
-refreshes should include native SceneKit checks and app selection validation,
-because Blender-only import checks did not catch this platform-specific defect.

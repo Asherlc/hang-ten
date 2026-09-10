@@ -10,7 +10,6 @@
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
         E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
-        E31000000000000000000002 /* BoardModels in Resources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* BoardModels */; };
         E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
 		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
@@ -143,7 +142,6 @@
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
         E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
-        E32000000000000000000002 /* BoardModels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BoardModels; sourceTree = "<group>"; };
         E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000010 /* HangTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
@@ -429,7 +427,6 @@
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
 				C20000000000000000000001 /* CountdownAudio */,
-                E32000000000000000000002 /* BoardModels */,
 				BF0000000000000000000007 /* HangTen.storekit */,
 			);
 			path = Resources;
@@ -651,7 +648,6 @@
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,
 				C10000000000000000000001 /* CountdownAudio in Resources */,
-                E31000000000000000000002 /* BoardModels in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

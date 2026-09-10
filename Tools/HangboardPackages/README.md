@@ -7,7 +7,7 @@ package bytes and reports inventory metadata without changing any package.
 ## Package contract
 
 Each direct child of `Hangboards/` is either a complete package or an exact
-primary-only draft. A complete package has this shape:
+primary-only draft. A complete raster package has this shape:
 
 ```text
 Hangboards/<package>/
@@ -16,8 +16,24 @@ Hangboards/<package>/
     primary.png
 ```
 
-`board.json` contains the board identity, sourced physical facts, and exact
-normalized hold geometry. The validator rejects unknown package entries,
+A complete model package has the same `board.json` root and instead declares:
+
+```text
+Hangboards/<package>/
+  board.json
+  assets/
+    primary.usdz
+    primary.model.json
+```
+
+`board.json` uses schema version 2: board identity and sourced physical facts
+remain logical, while each presentation owns typed raster or model media. A
+raster presentation stores exact normalized hold geometry in
+`media.holdGeometry`; a model presentation stores a confined USDZ,
+`descriptorPath`, and orthographic display configuration. Logical hold records
+contain no presentation ownership or spatial fields. Derived presentations are
+raster-only; model media cannot be derived or inverted, and a model package may
+not carry a raster fallback. The validator rejects unknown package entries,
 symlinks, malformed JSON or PNG data, duplicate identifiers, unsupported hold
 metadata, and invalid frames or shapes. Primary PNGs may use either transparent
 or fully opaque backgrounds; the validator checks decoded primary image data
@@ -97,5 +113,51 @@ catalog. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH`
 pairs are accepted only in preflight or partial mode and only for declarations
 owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
 
-The current repository inventory contains 61 complete packages and zero
-drafts.
+The current repository inventory contains 61 complete packages and zero drafts:
+59 raster v2 packages and two model-only v2 packages (`beastmaker-1000` and
+`metolius-wood-grips-compact-ii`). Model packages declare only their USDZ and
+hash-bound descriptor assets; they do not carry raster fallbacks.
+
+## Schema migration
+
+The one-way migration utility discovers direct-child packages at execution
+time. It preserves legacy raster scalars, hold ordering, and path command
+ordering while moving geometry into typed raster media. Run a write followed by
+the idempotent check before committing package changes:
+
+```sh
+python3 Tools/HangboardPackages/scripts/migrate_to_schema_v2.py \
+  --root Hangboards --write
+python3 Tools/HangboardPackages/scripts/migrate_to_schema_v2.py \
+  --root Hangboards --check
+```
+
+After migration, both the Python catalog parser and the iOS loader require
+`schemaVersion: 2`; unversioned v1 documents are intentionally rejected.
+
+## Model tooling boundary
+
+The Stage 0 evidence packet is validated before any future model work. The
+packet contains source provenance and logical inventory only; it contains no
+coordinates, contours, masks, vectors, alignment, or numeric shape
+prescriptions:
+
+```sh
+python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
+```
+
+The later compiler consumes a reviewed Blender file and the logical inventory,
+then emits exactly `assets/primary.usdz` and
+`assets/primary.model.json`:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/compile_model_package.py -- \
+  --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
+  --output-directory PATH/compiled-package
+```
+
+The descriptor is generated from the actual reimported USDZ, rounded to nine
+decimal places, and hash-bound to its exact bytes. The compiler never repairs
+or redesigns shape. See `Tools/HangboardModels/README.md` for the descriptor
+fields and model-only package rules.

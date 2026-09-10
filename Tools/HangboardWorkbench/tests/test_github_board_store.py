@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package
@@ -40,6 +41,17 @@ def _complete_package(slug: str, board: dict[str, object]) -> dict[str, bytes]:
     return {
         f"Hangboards/{slug}/board.json": _encoded_board(board),
         f"Hangboards/{slug}/assets/primary.png": PRIMARY_IMAGE.read_bytes(),
+    }
+
+
+def _model_only_package(slug: str, board_id: str) -> dict[str, bytes]:
+    source = REPOSITORY_ROOT / "Hangboards" / "beastmaker-1000"
+    board = json.loads((source / "board.json").read_text(encoding="utf-8"))
+    board["id"] = board_id
+    return {
+        f"Hangboards/{slug}/board.json": _encoded_board(board),
+        f"Hangboards/{slug}/assets/primary.usdz": b"invalid-usdz-sentinel",
+        f"Hangboards/{slug}/assets/primary.model.json": b"invalid-descriptor-sentinel",
     }
 
 
@@ -362,11 +374,54 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
     assert [
         (package.slug, package.board_id, package.hold_ids) for package in discovered
     ] == [("fixture-board", "fixture.board", ("hold-left",))]
-    assert (opened.image_width, opened.image_height) == (1774, 457)
+    assert (opened.image_width, opened.image_height) == (1774, 887)
     assert board_package.editor_document(opened)["canvas"] == {
         "width": 1774,
-        "height": 457,
+        "height": 887,
     }
+
+
+def test_hosted_store_open_rejects_model_only_before_fetching_model_blobs() -> None:
+    files = _model_only_package("fixture-model", "fixture.model")
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    model_shas = {
+        FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.endswith(".usdz") or path.endswith(".model.json")
+    }
+
+    with pytest.raises(
+        board_package.BoardEditorUnavailableError,
+        match="3D model editing is not supported",
+    ):
+        store.open_package(TOKEN, BRANCH, "fixture.model")
+
+    assert model_shas.isdisjoint(
+        {call.args[1] for call in client.calls_named("get_blob")}
+    )
+
+
+def test_module_presentation_image_rejects_model_only_before_fetching_media() -> None:
+    files = _model_only_package("fixture-model", "fixture.model")
+    client = FakeGitHubClient({BRANCH: files})
+    model_shas = {
+        FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.endswith(".usdz") or path.endswith(".model.json")
+    }
+
+    with pytest.raises(
+        board_package.BoardEditorUnavailableError,
+        match="3D model editing is not supported",
+    ):
+        github_board_store.presentation_image_bytes(
+            client, TOKEN, BRANCH, "fixture.model", None
+        )
+
+    assert model_shas.isdisjoint(
+        {call.args[1] for call in client.calls_named("get_blob")}
+    )
 
 
 def test_remote_package_preserves_orientation_alias_presentations() -> None:
@@ -378,7 +433,7 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
             "id": "primary-inverted",
             "name": "Primary inverted",
             "assetPath": "assets/primary.png",
-            "aspectRatio": 1774 / 457,
+            "aspectRatio": 1774 / 887,
             "default": False,
             "sourcePresentationID": "primary",
             "isInverted": True,
@@ -458,7 +513,10 @@ def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (
+            lambda board: board.__setitem__("schemaVersion", 1),
+            "schemaVersion must be 2",
+        ),
         (
             lambda board: board.__setitem__(
                 "presentation", {"assetPath": "assets/primary.png"}
@@ -534,7 +592,7 @@ def test_cold_discovery_bounds_nested_presentation_blob_concurrency() -> None:
                     "id": presentation_id,
                     "name": presentation_id.title(),
                     "assetPath": f"assets/{presentation_id}.png",
-                    "aspectRatio": 1774 / 457,
+                    "aspectRatio": 1774 / 887,
                     "default": False,
                 }
             )
@@ -737,7 +795,7 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
     """Four reads prove LRU eviction with one blob slot; no eviction needs only two."""
     client = _client(("fixture-board", board_document("fixture.board")))
     store = github_board_store.GitHubBoardStore(
-        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+        client, max_cached_blobs=1, max_cached_blob_bytes=2 * 1024 * 1024
     )
 
     store.discover_packages(TOKEN, BRANCH)
@@ -756,7 +814,7 @@ def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open(
     )
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(
-        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+        client, max_cached_blobs=1, max_cached_blob_bytes=2 * 1024 * 1024
     )
 
     store.open_package(TOKEN, BRANCH, "fixture.multi")

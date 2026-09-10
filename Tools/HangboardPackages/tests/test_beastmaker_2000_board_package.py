@@ -7,7 +7,12 @@ import pytest
 from PIL import Image
 
 from hangboard_packages.board_catalog import load_board_package
-from _board_package_helpers import presentation_frame, serialize_command, serialize_geometry
+from _board_package_helpers import (
+    board_hold_geometry,
+    presentation_frame,
+    serialize_command,
+    serialize_geometry,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -570,9 +575,10 @@ def _contains_point(
 def test_compound_pocket_parent_does_not_cover_nested_mono(
     parent_id: str, nested_id: str
 ) -> None:
-    holds = {hold.id: hold for hold in load_board_package(PACKAGE_ROOT).board.holds}
-    parent_contour = _flatten_global_contour(holds[parent_id].geometry[0])
-    nested = holds[nested_id].geometry[0]
+    board = load_board_package(PACKAGE_ROOT).board
+    geometry = board_hold_geometry(board)
+    parent_contour = _flatten_global_contour(geometry[parent_id][0])
+    nested = geometry[nested_id][0]
     nested_contour = _flatten_global_contour(nested)
 
     interior_samples = 0
@@ -591,6 +597,10 @@ def test_compound_pocket_parent_does_not_cover_nested_mono(
 def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    geometry = board_hold_geometry(board)
+    presentation_id = next(
+        presentation.id for presentation in board.presentations if presentation.is_default
+    )
     with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
         presentation_size = image.size
 
@@ -602,9 +612,9 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         "pocket": 16,
     }
 
-    for hold in holds.values():
-        assert len(hold.geometry) == 1
-        piece = hold.geometry[0]
+    for hold_id in holds:
+        assert len(geometry[hold_id]) == 1
+        piece = geometry[hold_id][0]
         assert piece.shape.type == "path"
         assert piece.shape.commands[0].command == "move"
         assert piece.shape.commands[-1].command == "close"
@@ -612,7 +622,9 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
-    actual_geometry = {hold.id: serialize_geometry(hold) for hold in board.holds}
+    actual_geometry = {
+        hold_id: serialize_geometry(pieces) for hold_id, pieces in geometry.items()
+    }
     assert {
         hold_id: geometry
         for hold_id, geometry in actual_geometry.items()
@@ -626,16 +638,16 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     symmetry_axis_x: float | None = None
     for left_id, right_id in MIRRORED_PAIRS:
         left_x, left_y, left_width, left_height = presentation_frame(
-            holds[left_id].frame, presentation_size
+            board.hold_frame(left_id, presentation_id), presentation_size
         )
         right_x, right_y, right_width, right_height = presentation_frame(
-            holds[right_id].frame, presentation_size
+            board.hold_frame(right_id, presentation_id), presentation_size
         )
         assert right_y == pytest.approx(left_y, abs=1e-6)
         assert right_width == pytest.approx(left_width, abs=1e-6)
         assert right_height == pytest.approx(left_height, abs=1e-6)
-        assert _serialize_shape(holds[left_id].geometry[0]) == _serialize_shape(
-            holds[right_id].geometry[0]
+        assert _serialize_shape(geometry[left_id][0]) == _serialize_shape(
+            geometry[right_id][0]
         )
         pair_axis_x = (left_x + left_width + right_x) / 2
         if symmetry_axis_x is None:
@@ -645,7 +657,9 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
 
     assert symmetry_axis_x is not None
     for hold_id in EXPECTED_CENTERED_HOLDS:
-        hold_x, _, hold_width, _ = presentation_frame(holds[hold_id].frame, presentation_size)
+        hold_x, _, hold_width, _ = presentation_frame(
+            board.hold_frame(hold_id, presentation_id), presentation_size
+        )
         hold_axis_x = hold_x + hold_width / 2
         assert hold_axis_x == pytest.approx(symmetry_axis_x, abs=2e-3)
     assert 0 < symmetry_axis_x < presentation_size[0]

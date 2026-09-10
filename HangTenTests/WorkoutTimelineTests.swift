@@ -169,32 +169,30 @@ final class WorkoutTimelineTests: XCTestCase {
                     id: "left-pocket",
                     equipmentObjectID: "left-ring",
                     name: "Left pocket",
-                    shortLabel: "L",
-                    detail: "",
                     kind: .pocket,
-                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2)
                 ),
                 BoardHold(
                     id: "left-edge",
                     equipmentObjectID: "left-ring",
                     name: "Left edge",
-                    shortLabel: "LE",
-                    detail: "",
                     kind: .edge,
-                    frame: HoldFrame(x: 0.2, y: 0, width: 0.2, height: 0.2)
                 ),
                 BoardHold(
                     id: "right-pocket",
                     equipmentObjectID: "right-ring",
                     name: "Right pocket",
-                    shortLabel: "R",
-                    detail: "",
                     kind: .pocket,
-                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2)
                 )
             ],
             productURL: URL(string: "https://example.com/portable")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [
+                rasterPresentation(frames: [
+                    "left-pocket": CGRect(x: 0, y: 0, width: 0.2, height: 0.2),
+                    "left-edge": CGRect(x: 0.2, y: 0, width: 0.2, height: 0.2),
+                    "right-pocket": CGRect(x: 0.8, y: 0, width: 0.2, height: 0.2)
+                ])
+            ]
         )
         let step = WorkoutStep(
             id: "left",
@@ -250,23 +248,23 @@ final class WorkoutTimelineTests: XCTestCase {
                     id: "left-edge",
                     equipmentObjectID: "left",
                     name: "Left edge",
-                    shortLabel: "L",
-                    detail: "",
                     kind: .edge,
-                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2)
                 ),
                 BoardHold(
                     id: "right-edge",
                     equipmentObjectID: "right",
                     name: "Right edge",
-                    shortLabel: "R",
-                    detail: "",
                     kind: .edge,
-                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2)
                 )
             ],
             productURL: URL(string: "https://example.com/portable-fallback")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [
+                rasterPresentation(frames: [
+                    "left-edge": CGRect(x: 0, y: 0, width: 0.2, height: 0.2),
+                    "right-edge": CGRect(x: 0.8, y: 0, width: 0.2, height: 0.2)
+                ])
+            ]
         )
         let step = WorkoutStep(
             id: "fallback",
@@ -291,10 +289,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let hold = BoardHold(
             id: "cue-edge",
             name: "Cue edge",
-            shortLabel: "E",
-            detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             gripType: nil
         )
         let step = WorkoutStep(
@@ -321,10 +316,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let hold = BoardHold(
             id: "cue-pocket",
             name: "Cue pocket",
-            shortLabel: "P",
-            detail: "Pocket",
             kind: .pocket,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             gripType: .openHand,
             fingerCapacity: 3
         )
@@ -348,10 +340,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let hold = BoardHold(
             id: "fallback-edge",
             name: "Fallback edge",
-            shortLabel: "F",
-            detail: "Fallback edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             features: [.largeEdge]
         )
         let step = WorkoutStep(
@@ -375,10 +364,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let hold = BoardHold(
             id: "cue-edge",
             name: "Cue edge",
-            shortLabel: "E",
-            detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -398,10 +384,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let hold = BoardHold(
             id: "cue-edge",
             name: "Cue edge",
-            shortLabel: "E",
-            detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -424,10 +407,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let hold = BoardHold(
             id: "cue-edge",
             name: "Cue edge",
-            shortLabel: "E",
-            detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             handCapacity: 2
         )
         let step = WorkoutStep(
@@ -458,10 +438,7 @@ final class WorkoutTimelineTests: XCTestCase {
             hold: BoardHold(
                 id: "cue-edge",
                 name: "Cue edge",
-                shortLabel: "E",
-                detail: "Edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
             ),
             gripType: .openHand,
             fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
@@ -482,10 +459,7 @@ final class WorkoutTimelineTests: XCTestCase {
             hold: BoardHold(
                 id: "cue-edge",
                 name: "Cue edge",
-                shortLabel: "E",
-                detail: "Edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
             ),
             gripType: .openHand
         )
@@ -517,18 +491,12 @@ final class WorkoutTimelineTests: XCTestCase {
         let targetHold = BoardHold(
             id: "target-edge",
             name: "Target edge",
-            shortLabel: "T",
-            detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
         )
         let highlightedHold = BoardHold(
             id: "highlighted-jug",
             name: "Highlighted jug",
-            shortLabel: "J",
-            detail: "Jug",
             kind: .jug,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -551,7 +519,10 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     private func board(containing holds: [BoardHold]) -> TrainingBoard {
-        TrainingBoard(
+        let frames = Dictionary(uniqueKeysWithValues: holds.enumerated().map { index, hold in
+            (hold.id, CGRect(x: Double(index) * 0.1, y: 0, width: 0.1, height: 0.1))
+        })
+        return TrainingBoard(
             id: "cue-board",
             manufacturer: "Test",
             name: "Cue board",
@@ -560,7 +531,27 @@ final class WorkoutTimelineTests: XCTestCase {
             aspectRatio: 1,
             holds: holds,
             productURL: URL(string: "https://example.com/cue-board")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [rasterPresentation(frames: frames)]
+        )
+    }
+
+    private func rasterPresentation(frames: [String: CGRect]) -> BoardPresentation {
+        let geometry = Dictionary(uniqueKeysWithValues: frames.map { id, frame in
+            (id, [BoardHoldPiece(
+                id: "\(id)-piece",
+                holdID: id,
+                frame: frame,
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return BoardPresentation(
+            id: "primary",
+            name: "Primary",
+            aspectRatio: 1,
+            isDefault: true,
+            media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
         )
     }
 

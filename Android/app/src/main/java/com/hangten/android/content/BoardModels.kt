@@ -63,6 +63,8 @@ data class Board(
     val presentations: List<BoardPresentation>,
     val holds: List<BoardHold>,
     val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
+    /** Asset package identity; deliberately separate from the public logical board ID. */
+    val packageSlug: String = id,
 )
 
 internal class ContentDecodingException(message: String) : IllegalArgumentException(message)

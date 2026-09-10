@@ -1,0 +1,46 @@
+{
+  "boardRevision": "REPLACE_WITH_EXACT_BOARD_REVISION",
+  "boardRevisionDate": "2026-09-08",
+  "locale": "en-US",
+  "primarySources": [
+    {
+      "localPath": "sources/RETAINED-MANUFACTURER-SNAPSHOT",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sourceTier": "manufacturer",
+      "url": "https://REPLACE_WITH_MANUFACTURER_PAGE"
+    }
+  ],
+  "commerceSources": [],
+  "logicalInventory": [
+    {
+      "id": "REPLACE_WITH_CANONICAL_LOGICAL_CONTACT_ID",
+      "kind": "REPLACE_WITH_SOURCE_BACKED_CONTACT_KIND"
+    }
+  ],
+  "sourcedClaims": [
+    {
+      "claim": "REPLACE_WITH_SOURCE_BACKED_FACT",
+      "sourceLocalPath": "sources/RETAINED-MANUFACTURER-SNAPSHOT",
+      "sourceType": "manufacturer"
+    }
+  ],
+  "conflictsAndRulings": [],
+  "unknownsForAstra": [
+    "back profile",
+    "cavity sections",
+    "radii"
+  ],
+  "deliberateOmissions": [
+    "screw holes",
+    "mounting hardware"
+  ],
+  "materialFidelity": {
+    "status": "REPLACE_WITH_SOURCE_BACKED_OR_EXPLICITLY_UNKNOWN_STATUS",
+    "notes": "REPLACE_WITH_SOURCE_BACKED_MATERIAL_NOTES"
+  },
+  "requiredReviewViews": [
+    "front",
+    "three-quarter",
+    "clay-detail"
+  ]
+}

@@ -172,6 +172,10 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
+            if not selected.editor_available:
+                raise board_package.BoardEditorUnavailableError(
+                    "3D model editing is not supported"
+                )
             package = _load_selected_package(
                 snapshot.with_blob_cache(),
                 token,
@@ -197,6 +201,10 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
+            if not selected.editor_available:
+                raise board_package.BoardEditorUnavailableError(
+                    "3D model editing is not supported"
+                )
             package, _image = _load_selected_presentation(
                 snapshot.with_blob_cache(),
                 token,
@@ -224,6 +232,10 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
+            if not selected.editor_available:
+                raise board_package.BoardEditorUnavailableError(
+                    "3D model editing is not supported"
+                )
             _package, image = _load_selected_presentation(
                 snapshot.with_blob_cache(),
                 token,
@@ -279,6 +291,10 @@ class GitHubBoardStore:
                 selected = _selected_package(
                     self._catalog(snapshot, token, branch), board_id
                 )
+                if not selected.editor_available:
+                    raise board_package.BoardEditorUnavailableError(
+                        "3D model editing is not supported"
+                    )
                 live = _load_selected_package(
                     snapshot,
                     token,
@@ -314,6 +330,10 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
+            if not selected.editor_available:
+                raise board_package.BoardEditorUnavailableError(
+                    "3D model editing is not supported"
+                )
             live = _load_selected_package(
                 snapshot,
                 token,
@@ -784,6 +804,10 @@ class GitHubBoardListing:
     def hold_ids(self) -> tuple[str, ...]:
         return tuple(hold["id"] for hold in self.board["holds"])
 
+    @property
+    def editor_available(self) -> bool:
+        return board_package._board_editor_available(self.board)
+
 
 @dataclass(frozen=True, slots=True)
 class GitHubBoardPackage:
@@ -793,6 +817,7 @@ class GitHubBoardPackage:
     image_height: int
     board_json_sha: str
     presentations: tuple[board_package.BoardPresentation, ...] = ()
+    schema_version: int | None = None
 
     @property
     def board_id(self) -> str:
@@ -801,6 +826,10 @@ class GitHubBoardPackage:
     @property
     def hold_ids(self) -> tuple[str, ...]:
         return tuple(hold["id"] for hold in self.board["holds"])
+
+    @property
+    def editor_available(self) -> bool:
+        return all(item.media_type == "raster" for item in self.presentations)
 
     def presentation(
         self, presentation_id: str | None = None
@@ -917,6 +946,11 @@ def open_package(
 ) -> GitHubBoardPackage:
     """Open one board by ID after fully decoding the current primary PNG."""
     board_id = board_package._identifier(board_id, "board ID")
+    selected = _selected_package(discover_packages(client, token, branch), board_id)
+    if not selected.editor_available:
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
     package = _load_by_board_id(client, token, branch, board_id)
     return package
 
@@ -938,6 +972,10 @@ def presentation_image_bytes(
     """Return one authenticated board presentation's validated image bytes."""
     board_id = board_package._identifier(board_id, "board ID")
     selected = _selected_package(discover_packages(client, token, branch), board_id)
+    if not selected.editor_available:
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
     package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id == board_id:
         return images[package.presentation(presentation_id).asset_path]
@@ -981,6 +1019,10 @@ def _delete_loaded_presentation(
     *,
     expected_head_sha: str,
 ) -> tuple[GitHubBoardPackage, str]:
+    if not live.editor_available:
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
     board, removed_assets = board_package._delete_presentation_from_board(
         live.board, presentation_id
     )
@@ -1003,7 +1045,12 @@ def _delete_loaded_presentation(
         presentations=remaining_presentations,
         allow_missing_kind=True,
     )
-    content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
+    saved_board = (
+        board_package._schema_v2_board_from_legacy(board)
+        if live.schema_version == 2
+        else board
+    )
+    content = (json.dumps(saved_board, indent=2) + "\n").encode("utf-8")
     changes: dict[str, bytes | None] = {
         f"{_BOARD_LIBRARY_PATH}/{live.slug}/board.json": content,
     }
@@ -1030,6 +1077,7 @@ def _delete_loaded_presentation(
             default.image_height,
             _git_blob_sha(content),
             remaining_presentations,
+            schema_version=live.schema_version,
         ),
         commit_sha,
     )
@@ -1046,6 +1094,10 @@ def _save_loaded_editor_document(
     expected_board_id: str | None = None,
 ) -> tuple[GitHubBoardPackage, str]:
     """Validate and conditionally commit against a previously opened package."""
+    if not live.editor_available:
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
     if expected_board_id is not None:
         expected_board_id = board_package._identifier(expected_board_id, "board ID")
         if live.board_id != expected_board_id:
@@ -1140,7 +1192,12 @@ def _save_loaded_editor_document(
         presentations=live.presentations,
         allow_missing_kind=True,
     )
-    content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
+    saved_board = (
+        board_package._schema_v2_board_from_legacy(board)
+        if live.schema_version == 2
+        else board
+    )
+    content = (json.dumps(saved_board, indent=2) + "\n").encode("utf-8")
     try:
         commit_sha = client.put_file(
             token,
@@ -1159,6 +1216,7 @@ def _save_loaded_editor_document(
         live.image_height,
         _git_blob_sha(content),
         live.presentations,
+        schema_version=live.schema_version,
     ), commit_sha
 
 
@@ -1269,17 +1327,30 @@ def _load_selected_presentation(
         raise board_package.BoardPackageError("board.json changed during loading")
     if board.get("id") != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
+    if not board_package._board_editor_available(board):
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
 
     asset_entries = {
         path: entry
         for path, entry in entries.items()
         if path.startswith("assets/") and entry.type == "blob"
     }
-    presentation_values = board_package._parse_board_presentations(board)
-    if set(asset_entries) != {item[2] for item in presentation_values}:
+    expected_assets = {
+        presentation["media"]["assetPath"]
+        for presentation in board["presentations"]
+    } if "schemaVersion" in board else {
+        presentation["assetPath"] for presentation in board["presentations"]
+    }
+    if set(asset_entries) != expected_assets:
         raise board_package.BoardPackageError(
             "board package assets must exactly match its presentations"
         )
+    schema_version = board.get("schemaVersion")
+    if schema_version == 2:
+        board = board_package._legacy_editor_board_from_v2(board)
+    presentation_values = board_package._parse_board_presentations(board)
     selected_value = (
         next(item for item in presentation_values if item[4])
         if presentation_id is None
@@ -1331,7 +1402,15 @@ def _load_selected_presentation(
         for item in presentation_values
     )
     return (
-        GitHubBoardPackage(slug, board, width, height, board_entry.sha, presentations),
+        GitHubBoardPackage(
+            slug,
+            board,
+            width,
+            height,
+            board_entry.sha,
+            presentations,
+            schema_version=schema_version,
+        ),
         image,
     )
 
@@ -1473,7 +1552,14 @@ def _load_package_from_entries(
     blob_slots: threading.BoundedSemaphore | None = None,
 ) -> GitHubBoardPackage | tuple[GitHubBoardPackage, dict[str, bytes]]:
     if prevalidated_board is not None and len(
-        {item[2] for item in board_package._parse_board_presentations(prevalidated_board)}
+        {
+            (
+                item["media"]["assetPath"]
+                if "schemaVersion" in prevalidated_board
+                else item["assetPath"]
+            )
+            for item in prevalidated_board["presentations"]
+        }
     ) == 1:
         prevalidated_board = None
     asset_entries = {
@@ -1513,12 +1599,63 @@ def _load_package_from_entries(
     else:
         board = deepcopy(prevalidated_board)
         concurrent_assets = asset_entries
-    presentation_values = board_package._parse_board_presentations(board)
-    expected_assets = {item[2] for item in presentation_values}
+    schema_version = board.get("schemaVersion")
+    if schema_version == 2:
+        parsed_v2 = board_package._parse_schema_v2_board(board)
+        model_only = not board_package._board_editor_available(board)
+        expected_assets = {
+            path
+            for presentation in board["presentations"]
+            for path in (
+                presentation["media"]["assetPath"],
+                *(
+                    (presentation["media"]["descriptorPath"],)
+                    if presentation["media"]["type"] == "model"
+                    else ()
+                ),
+            )
+        }
+    else:
+        parsed_v2 = None
+        model_only = False
+        expected_assets = {
+            presentation["assetPath"] for presentation in board["presentations"]
+        }
     if set(asset_entries) != expected_assets:
         raise board_package.BoardPackageError(
             "board package assets must exactly match its presentations"
         )
+    if model_only:
+        assert parsed_v2 is not None
+        presentations = tuple(
+            board_package.BoardPresentation(
+                id=item.id,
+                name=item.name,
+                asset_path=item.asset_path,
+                aspect_ratio=item.aspect_ratio,
+                is_default=item.is_default,
+                image_width=0,
+                image_height=0,
+                source_presentation_id=item.source_presentation_id,
+                is_inverted=item.is_inverted,
+                media_type="model",
+                descriptor_path=item.media.descriptor_path,
+            )
+            for item in parsed_v2.presentations
+        )
+        package = GitHubBoardPackage(
+            slug,
+            board,
+            0,
+            0,
+            board_entry.sha,
+            presentations,
+            schema_version=2,
+        )
+        return (package, {}) if include_image else package
+    if schema_version == 2:
+        board = board_package._legacy_editor_board_from_v2(board)
+    presentation_values = board_package._parse_board_presentations(board)
     with ThreadPoolExecutor(
         max_workers=min(
             _MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(concurrent_assets) + 1)
@@ -1611,6 +1748,7 @@ def _load_package_from_entries(
         default.image_height,
         board_entry.sha,
         presentations,
+        schema_version=schema_version,
     )
     return (package, images) if include_image else package
 

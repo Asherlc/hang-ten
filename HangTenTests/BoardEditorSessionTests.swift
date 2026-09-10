@@ -3,27 +3,38 @@ import XCTest
 
 @MainActor
 final class BoardEditorSessionTests: XCTestCase {
+    private let fixtureSlug = "editor-session-fixture"
     private var temporaryDirectory: URL!
+    private var sourceLibraryURL: URL!
     private var store: BoardEditorStore!
 
     override func setUp() async throws {
         try await super.setUp()
         temporaryDirectory = FileManager.default.temporaryDirectory
             .appendingPathComponent("board-editor-session-\(UUID().uuidString)", isDirectory: true)
-        let sourceLibrary = repositoryHangboardsURL()
-        store = BoardEditorStore(baseDirectory: temporaryDirectory, sourceLibraryURL: sourceLibrary)
+        sourceLibraryURL = try BoardEditorTestFixtures.makeSourceLibrary(
+            slug: fixtureSlug,
+            document: BoardEditorTestFixtures.sessionDocument()
+        )
+        store = BoardEditorStore(
+            baseDirectory: temporaryDirectory,
+            sourceLibraryURL: sourceLibraryURL
+        )
     }
 
     override func tearDown() async throws {
         if let temporaryDirectory {
             try? FileManager.default.removeItem(at: temporaryDirectory)
         }
+        if let sourceLibraryURL {
+            try? FileManager.default.removeItem(at: sourceLibraryURL)
+        }
         try await super.tearDown()
     }
 
-    private func makeSession(slug: String = "zlagboard-pro") throws -> BoardEditorSession {
-        _ = try store.startEditing(slug: slug)
-        let package = try store.loadDocument(slug: slug)
+    private func makeSession() throws -> BoardEditorSession {
+        _ = try store.startEditing(slug: fixtureSlug)
+        let package = try store.loadDocument(slug: fixtureSlug)
         return BoardEditorSession(package: package, store: store)
     }
 
@@ -66,8 +77,8 @@ final class BoardEditorSessionTests: XCTestCase {
     private func makeSelectedSloperSession(
         metadata: SloperMetadata? = nil
     ) throws -> BoardEditorSession {
-        _ = try store.startEditing(slug: "zlagboard-pro")
-        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        _ = try store.startEditing(slug: fixtureSlug)
+        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
         var document = loadedPackage.document
         document.holds[0].kind = .sloper
         document.holds[0].sloper = metadata
@@ -165,8 +176,8 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testCanvasExposesAggregateAndPerHoldWarningsForIncompleteMetadata() throws {
-        _ = try store.startEditing(slug: "zlagboard-pro")
-        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        _ = try store.startEditing(slug: fixtureSlug)
+        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
         var document = loadedPackage.document
         XCTAssertGreaterThanOrEqual(document.holds.count, 2)
         for index in document.holds.indices {
@@ -201,8 +212,8 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testCanvasHighlightsOnlyEdgesAndPocketsMissingDepthMetadata() throws {
-        _ = try store.startEditing(slug: "zlagboard-pro")
-        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        _ = try store.startEditing(slug: fixtureSlug)
+        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
         var document = loadedPackage.document
         document.holds = Array(document.holds.prefix(7))
         XCTAssertEqual(document.holds.count, 7)
@@ -261,8 +272,8 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testViewportOperationsRefreshIncompleteHoldAccessibilityFrame() throws {
-        _ = try store.startEditing(slug: "zlagboard-pro")
-        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        _ = try store.startEditing(slug: fixtureSlug)
+        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
         var document = loadedPackage.document
         document.holds = [document.holds[0]]
         document.holds[0].fingerCapacity = nil
@@ -300,8 +311,8 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testIncompleteMetadataRequiresKindFingerDepthAndHandForEdgesButNotSizeOrFeatures() throws {
-        _ = try store.startEditing(slug: "zlagboard-pro")
-        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        _ = try store.startEditing(slug: fixtureSlug)
+        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
         var document = loadedPackage.document
         let holdID = document.holds[0].id
         document.holds = [document.holds[0]]
@@ -365,8 +376,8 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testIncompleteMetadataRequiresDepthOnlyForEdgesAndPockets() throws {
-        _ = try store.startEditing(slug: "zlagboard-pro")
-        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        _ = try store.startEditing(slug: fixtureSlug)
+        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
         var document = loadedPackage.document
         document.holds = Array(document.holds.prefix(5))
         XCTAssertEqual(document.holds.count, 5)
@@ -405,7 +416,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testTranslateMovesFrameAndKeepsCommandsNormalized() throws {
-        var session = try makeSession(slug: "lattice-triple-rung")
+        var session = try makeSession()
         let target = try selectFirstPathPiece(&session)
         let before = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         let beforeBounds = try HoldPathEngine.bounds(of: session.boardCommands(for: before))
@@ -428,7 +439,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testAnchorDragRewritesTightFrame() throws {
-        var session = try makeSession(slug: "zlagboard-pro")
+        var session = try makeSession()
         let target = try selectFirstPathPiece(&session)
         let pieceBefore = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         let commandsBefore = try session.boardCommands(for: pieceBefore)
@@ -462,7 +473,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testUndoRedoRoundTripRestoresDocument() throws {
-        let session = try makeSession(slug: "lattice-triple-rung")
+        let session = try makeSession()
         var working = session
         let target = try selectFirstPathPiece(&working)
         let original = working.document
@@ -482,7 +493,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testSavePersistsEditsThroughStore() throws {
-        var session = try makeSession(slug: "zlagboard-pro")
+        var session = try makeSession()
         let target = try selectFirstPathPiece(&session)
         session.beginInteractiveEdit()
         try session.translateSelectedPiece(deltaX: 0.005, deltaY: 0.002, recordsHistory: false)
@@ -497,7 +508,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testConstrainedResizeRespectsPixelDerivedMinimums() throws {
-        var session = try makeSession(slug: "metolius-simulator-3d")
+        var session = try makeSession()
         let holds = session.document.holds
         let constrainedTarget = holds.enumerated().compactMap { _, hold -> (String, Int)? in
             for (index, piece) in hold.geometry.enumerated()
@@ -535,7 +546,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testRoundedRectConversionProducesEquivalentOutline() throws {
-        var session = try makeSession(slug: "evolv-kilter-basic-long")
+        var session = try makeSession()
         let roundedTarget = session.document.holds.compactMap { hold -> (String, Int)? in
             for (index, piece) in hold.geometry.enumerated()
             where piece.shape.type == "roundedRect" {
@@ -563,7 +574,7 @@ final class BoardEditorSessionTests: XCTestCase {
     }
 
     func testPresetApplicationRegeneratesConstrainedPrimitive() throws {
-        var session = try makeSession(slug: "zlagboard-pro")
+        var session = try makeSession()
         let target = try selectFirstPathPiece(&session)
         let before = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         let beforeBounds = HoldPathEngine.bounds(of: try session.boardCommands(for: before))
@@ -588,15 +599,4 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertEqual(BoardEditorSession.normalizedConstraintDegrees(359.5), -0.5)
     }
 
-    private func repositoryHangboardsURL() -> URL {
-        let environment = ProcessInfo.processInfo.environment
-        if let configured = environment["HANGTEN_TEST_HANGBOARDS_ROOT"] {
-            return URL(fileURLWithPath: configured, isDirectory: true)
-        }
-        let fallback = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Hangboards", isDirectory: true)
-        return fallback
-    }
 }

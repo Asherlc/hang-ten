@@ -98,19 +98,13 @@ final class CustomRoutineStoreTests: XCTestCase {
         let oneFingerPocket = BoardHold(
             id: "one-finger",
             name: "One finger",
-            shortLabel: "1",
-            detail: "One-finger pocket",
             kind: .pocket,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             fingerCapacity: 1
         )
         let fourFingerPocket = BoardHold(
             id: "four-finger",
             name: "Four finger",
-            shortLabel: "4",
-            detail: "Four-finger pocket",
             kind: .pocket,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
             fingerCapacity: 4
         )
 
@@ -487,10 +481,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                 BoardHold(
                     id: "fixture.jug",
                     name: "Fixture jug",
-                    shortLabel: "J",
-                    detail: "Jug",
-                    kind: .jug,
-                    frame: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
+                    kind: .jug
                 )
             ],
             productURL: URL(string: "https://example.com/jug-only")!,

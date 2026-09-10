@@ -27,6 +27,19 @@ _FIELDS = (
 )
 
 
+def _rename_fixture_geometry(document: dict[str, Any], hold_id: str) -> list[dict[str, Any]]:
+    geometry = document["presentations"][0]["media"]["holdGeometry"]
+    pieces = geometry.pop("hold-left")
+    geometry[hold_id] = pieces
+    return pieces
+
+
+def _copy_fixture_geometry(
+    document: dict[str, Any], hold_id: str, pieces: list[dict[str, Any]]
+) -> None:
+    document["presentations"][0]["media"]["holdGeometry"][hold_id] = pieces
+
+
 def _record(
     board_id: str,
     hold_id: str,
@@ -71,6 +84,7 @@ def test_adapted_record_matches_board_value(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     document["holds"][0].update({"id": "edge-left", "kind": "edge"})
+    _rename_fixture_geometry(document, "edge-left")
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     records = _complete_records("fixture.board", "edge-left")
     records[0] = _record(
@@ -141,6 +155,7 @@ def test_validator_rejects_mismatched_adapted_value(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     document["holds"][0].update({"id": "edge-left", "kind": "edge"})
+    _rename_fixture_geometry(document, "edge-left")
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     records = _complete_records("fixture.board", "edge-left")
     records[0] = _record(
@@ -209,9 +224,11 @@ def _supplemental_sloper_package(tmp_path: Path) -> None:
     )
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     document["holds"][0].update({"id": "sloper-left", "kind": "sloper"})
+    pieces = _rename_fixture_geometry(document, "sloper-left")
     non_sloper = dict(document["holds"][0])
     non_sloper.update({"id": "edge-right", "kind": "edge"})
     document["holds"].append(non_sloper)
+    _copy_fixture_geometry(document, "edge-right", pieces)
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
 
@@ -355,9 +372,11 @@ def test_reviewed_scope_rejects_sloper_outcomes_swapped_with_hold_kind(
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     document["holds"][0].update({"id": "sloper-left", "kind": "sloper"})
+    pieces = _rename_fixture_geometry(document, "sloper-left")
     edge = dict(document["holds"][0])
     edge.update({"id": "edge-right", "kind": "edge"})
     document["holds"].append(edge)
+    _copy_fixture_geometry(document, "edge-right", pieces)
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
     records = [
@@ -453,6 +472,11 @@ def _package_with_metadata(tmp_path: Path) -> Path:
     )
     range_hold.pop("sizeMillimeters")
     document["holds"].append(range_hold)
+    _copy_fixture_geometry(
+        document,
+        "hold-range",
+        document["presentations"][0]["media"]["holdGeometry"]["hold-left"],
+    )
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return package
 
