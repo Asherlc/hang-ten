@@ -8,6 +8,7 @@ from model_verification import (
     BoardProbe, MaterialPolicy, ModelVerificationConfig, VerificationReport,
     verify_model_package,
 )
+from model_verification import _asset_inventory
 
 
 class ModelVerificationTests(unittest.TestCase):
@@ -72,6 +73,18 @@ class ModelVerificationTests(unittest.TestCase):
             (package / "assets" / "empty").mkdir()
             with self.assertRaisesRegex(ValueError, "asset inventory"):
                 verify_model_package(package, self.config(package / "board.json"))
+
+    def test_nonempty_directory_named_empty_is_allowed(self):
+        with tempfile.TemporaryDirectory() as raw:
+            package = Path(raw)
+            self.package(package)
+            nested = package / "assets" / "empty"
+            nested.mkdir()
+            (nested / "extra.bin").write_bytes(b"x")
+            self.assertEqual(
+                _asset_inventory(package),
+                frozenset({"assets/primary.usdz", "assets/primary.model.json", "assets/empty/extra.bin"}),
+            )
 
 
 if __name__ == "__main__":

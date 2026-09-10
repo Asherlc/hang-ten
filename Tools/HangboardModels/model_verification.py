@@ -116,7 +116,7 @@ def _asset_inventory(package: Path) -> frozenset[str]:
     entries = list(assets.rglob("*"))
     if any(path.is_symlink() for path in entries):
         raise ValueError("asset inventory may contain only regular files")
-    if any(path.is_dir() for path in entries if path.name == "empty"):
+    if any(path.is_dir() and not any(path.iterdir()) for path in entries):
         raise ValueError("asset inventory contains an empty nested directory")
     files = {path.relative_to(package).as_posix() for path in entries if path.is_file()}
     return frozenset(files)

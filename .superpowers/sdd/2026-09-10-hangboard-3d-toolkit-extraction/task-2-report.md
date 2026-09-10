@@ -73,3 +73,10 @@ fixed 22-ID `beastmaker_config()` with canonical material policy, hardware
 name prohibitions, and the authored nearest-hit/rim probe. Full imported-scene
 execution still requires Blender and should be run in the Blender validation
 gate. No package assets or Flash baseline files were modified.
+
+## Review fix round 2 evidence
+
+Replaced the mistaken directory-name check with actual empty-directory
+inspection. An empty nested directory is rejected, while a nonempty directory
+named `empty` is accepted. The covering suite reports 21 passing tests;
+py_compile and `git diff --check` also pass.
