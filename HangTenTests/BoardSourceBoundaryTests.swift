@@ -399,20 +399,20 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
         let physicalHoldVisualFrame =
-            "                            )\n" +
-            "                            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                                )\n" +
+            "                                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                            }\n" +
             "                        }\n" +
-            "                    }"
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)"
         XCTAssertTrue(
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
         let outerZStackFrame =
+            "                        }\n" +
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "                    }\n" +
-            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                }\n" +
-            "            }\n" +
-            "            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)"
+            "                case .model:"
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."

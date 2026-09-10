@@ -619,7 +619,7 @@ internal enum BoardTargetResolver {
             let leftDistance = depthDistance(of: $0.0, from: feature)
             let rightDistance = depthDistance(of: $1.0, from: feature)
             if leftDistance != rightDistance { return leftDistance < rightDistance }
-            return symmetryScore(of: $0, on: board) < symmetryScore(of: $1, on: board)
+            return prefersSymmetry(of: $0, over: $1, on: board)
         }) else {
             return nil
         }
@@ -701,7 +701,7 @@ internal enum BoardTargetResolver {
                 return isMatchingPocketPair(pair, on: board) ? pair : nil
             }
         }
-        guard let pair = pairs.min(by: { symmetryScore(of: $0, on: board) < symmetryScore(of: $1, on: board) }) else {
+        guard let pair = pairs.min(by: { prefersSymmetry(of: $0, over: $1, on: board) }) else {
             return nil
         }
         return [pair.0, pair.1]
@@ -730,6 +730,21 @@ internal enum BoardTargetResolver {
             + differences.verticalAlignment / referenceHeight
             + differences.width / referenceWidth
             + differences.height / referenceHeight
+    }
+
+    /// Descriptor bounds are serialized to nine decimal places. Treat
+    /// smaller score differences as equal so import-floating-point residue
+    /// cannot reorder physically indistinguishable candidates; `min` then
+    /// retains the package's source-backed hold order as the tie-breaker.
+    private static func prefersSymmetry(
+        of lhs: (BoardHold, BoardHold),
+        over rhs: (BoardHold, BoardHold),
+        on board: TrainingBoard
+    ) -> Bool {
+        let lhsScore = symmetryScore(of: lhs, on: board)
+        let rhsScore = symmetryScore(of: rhs, on: board)
+        guard abs(lhsScore - rhsScore) > 1e-9 else { return false }
+        return lhsScore < rhsScore
     }
 
     private static func symmetryDifferences(of pair: (BoardHold, BoardHold), on board: TrainingBoard) -> (
