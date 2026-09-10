@@ -202,6 +202,31 @@ final class BoardModelTests: XCTestCase {
         view.model = nil
     }
 
+    // This catches cancellation of the camera-depth term in the key-light
+    // position, which turns the intended front-above key into a top-only key.
+    func testDirectionalKeyLightIlluminatesTheCameraFacingSurface() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(viewDirection: [0, 0, -1], up: [0, 1, 0])
+        ))
+        let key = try XCTUnwrap(model.scene.rootNode.childNodes.first {
+            $0.light?.type == .directional
+        })
+        SCNTransaction.flush()
+        let keyDirection = key.presentation.worldFront
+
+        XCTAssertLessThan(
+            keyDirection.z,
+            -0.5,
+            "the key must point substantially along the camera view direction, not only down from above"
+        )
+    }
+
     func testClosestNativeHitResolvesOnlyTheFrontDescriptorBoundHold() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),

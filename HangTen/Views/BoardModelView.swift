@@ -427,7 +427,7 @@ final class BoardModelScene {
         key.light?.zNear = 0.01
         key.light?.zFar = 3
         key.light?.maximumShadowDistance = 3
-        key.position = camera.position + framing.up * framing.height + framing.direction * framing.distance
+        key.position = camera.position + framing.up * framing.height
         key.look(at: framing.target, up: framing.up, localFront: SCNVector3(0, 0, -1))
         scene.rootNode.addChildNode(key)
     }
