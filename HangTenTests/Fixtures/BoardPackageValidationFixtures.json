@@ -238,6 +238,14 @@
       ]
     },
     {
+      "name": "nonpositive-rest-length",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0}
+      ]
+    },
+    {
       "name": "missing-attachment-node",
       "pythonException": "ValueError",
       "swiftError": "invalidPackage",
@@ -294,6 +302,14 @@
       "swiftError": "invalidPackage",
       "mutations": [
         {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Rope", "role": "rope"}}
+      ]
+    },
+    {
+      "name": "baked-anchor-role",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Anchor", "role": "anchor"}}
       ]
     },
     {

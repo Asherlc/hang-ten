@@ -32,6 +32,13 @@ Passed:
   descriptor/compiler attachment checks pass.
 - `git diff --check`.
 
+Round 1 review fix: extended the shared parity matrix with independent
+`nonpositive-rest-length` and `baked-anchor-role` fixtures (alongside the
+existing radius and rope-role cases), and updated the Swift matrix-name
+assertion. The direct Python mutation harness now rejects all 27 ordinary
+malformed cases; Swift syntax parsing and Python byte compilation remain
+green.
+
 Unavailable in this environment:
 
 - Focused pytest: `pytest` is not installed; a disposable venv install was
@@ -40,4 +47,3 @@ Unavailable in this environment:
 - Focused `xcodebuild test`: simulator services were unavailable and Swift
   package resolution could not clone the network dependencies. Disposable
   derived-data/source-package directories were removed.
-

@@ -91,9 +91,11 @@ final class BoardPackageStoreTests: XCTestCase {
                 "unknown-suspension-field", "wrong-suspension-type",
                 "missing-canonical-pose", "extra-canonical-pose",
                 "duplicate-position-key", "nonunit-quaternion", "nonfinite-quaternion",
-                "nonpositive-cord-values", "missing-attachment-node", "hold-attachment-node",
+                "nonpositive-cord-values", "nonpositive-rest-length",
+                "missing-attachment-node", "hold-attachment-node",
                 "attachment-point-outside-bounds", "shorter-than-endpoint-distance",
-                "raster-sibling", "second-model", "baked-cord-role", "model-inversion"
+                "raster-sibling", "second-model", "baked-cord-role", "baked-anchor-role",
+                "model-inversion"
             ]
         )
 
