@@ -33,9 +33,41 @@
                 "up": [0, 1, 0],
                 "fitPadding": 0.08
               }
+            },
+            "suspension": {
+              "type": "singleCord",
+              "attachment": {
+                "nodeID": "ZZAttachment",
+                "pointInModel": [0.5, 1, 0.05],
+                "provenance": "estimatedFromApprovedModel"
+              },
+              "anchor": {
+                "offsetFromBoardBounds": [0, 0.22, 0],
+                "visibility": "invisible",
+                "provenance": "displayEstimate"
+              },
+              "cord": {
+                "restLength": 0.3,
+                "radius": 0.002,
+                "material": "matteCord",
+                "provenance": "displayEstimate"
+              },
+              "canonicalPoses": {
+                "primary": {
+                  "rotation": [0, 0, 0, 1],
+                  "translation": [0, 0, 0],
+                  "camera": {
+                    "viewDirection": [0, 0, -1],
+                    "fitPadding": 0.1
+                  }
+                }
+              }
             }
           }
         }
+      ],
+      "positions": [
+        {"id": "primary", "presentationID": "primary"}
       ],
       "holds": [
         { "id": "hold-left", "name": "Left hold", "kind": "jug" }
@@ -48,7 +80,8 @@
       "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
       "nodes": [
         { "nodeID": "Body", "role": "body" },
-        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }
+        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" },
+        { "nodeID": "ZZAttachment", "role": "attachment" }
       ],
       "holds": {
         "hold-left": {
@@ -139,6 +172,128 @@
       "swiftError": "invalidPackage",
       "mutations": [
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "display", "camera", "viewDirection"], "value": [0, 0, 0]}
+      ]
+    },
+    {
+      "name": "unknown-suspension-field",
+      "pythonException": "ValueError",
+      "swiftError": "malformedJSON",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "unexpected"], "value": true}
+      ]
+    },
+    {
+      "name": "wrong-suspension-type",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "type"], "value": "doubleCord"}
+      ]
+    },
+    {
+      "name": "missing-canonical-pose",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses"], "value": {}}
+      ]
+    },
+    {
+      "name": "extra-canonical-pose",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses"], "value": {"primary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}, "unknown": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}}
+      ]
+    },
+    {
+      "name": "duplicate-position-key",
+      "pythonException": "ValueError",
+      "swiftError": "malformedJSON",
+      "duplicateCanonicalPoseKey": true,
+      "mutations": []
+    },
+    {
+      "name": "nonunit-quaternion",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, 2]}
+      ]
+    },
+    {
+      "name": "nonfinite-quaternion",
+      "pythonException": "ValueError",
+      "swiftError": "malformedJSON",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, 1e999]}
+      ]
+    },
+    {
+      "name": "nonpositive-cord-values",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "radius"], "value": 0}
+      ]
+    },
+    {
+      "name": "missing-attachment-node",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachment", "nodeID"], "value": "Missing"}
+      ]
+    },
+    {
+      "name": "hold-attachment-node",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachment", "nodeID"], "value": "Left"}
+      ]
+    },
+    {
+      "name": "attachment-point-outside-bounds",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachment", "pointInModel"], "value": [1.1, 1, 0.05]}
+      ]
+    },
+    {
+      "name": "shorter-than-endpoint-distance",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0.01}
+      ]
+    },
+    {
+      "name": "raster-sibling",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "extraAssets": [
+        {"path": "assets/fallback.png", "base64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGNgYGD4//8/AAYBAv4CsjmuAAAAAElFTkSuQmCC"}
+      ],
+      "mutations": [
+        {"target": "board", "op": "append", "path": ["presentations"], "value": {"id": "fallback", "name": "Fallback", "aspectRatio": 2, "isDefault": false, "derivation": {"type": "original"}, "media": {"type": "raster", "assetPath": "assets/fallback.png", "holdGeometry": {"hold-left": [{"frame": {"x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2}}]}}}}
+      ]
+    },
+    {
+      "name": "second-model",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "append", "path": ["presentations"], "value": {"id": "secondary", "name": "Secondary", "aspectRatio": 2, "isDefault": false, "derivation": {"type": "original"}, "media": {"type": "model", "assetPath": "assets/primary.usdz", "descriptorPath": "assets/primary.model.json", "display": {"camera": {"type": "orthographic", "viewDirection": [0, 0, -1], "up": [0, 1, 0], "fitPadding": 0.08}}, "suspension": {"type": "singleCord", "attachment": {"nodeID": "ZZAttachment", "pointInModel": [0.5, 1, 0.05], "provenance": "estimatedFromApprovedModel"}, "anchor": {"offsetFromBoardBounds": [0, 0.22, 0], "visibility": "invisible", "provenance": "displayEstimate"}, "cord": {"restLength": 0.3, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate"}, "canonicalPoses": {"primary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}}}}}
+      ]
+    },
+    {
+      "name": "baked-cord-role",
+      "pythonException": "ValueError",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Rope", "role": "rope"}}
       ]
     },
     {

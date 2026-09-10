@@ -96,6 +96,17 @@ def _write_shared_model_parser_parity_package(
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     _rewrite(root / "board.json", board)
     _rewrite(assets / "primary.model.json", descriptor)
+    if fixture.get("duplicateCanonicalPoseKey"):
+        board_path = root / "board.json"
+        raw = json.dumps(board, separators=(",", ":"))
+        pose = json.dumps(
+            board["presentations"][0]["media"]["suspension"]["canonicalPoses"]["primary"],
+            separators=(",", ":"),
+        )
+        needle = '"canonicalPoses":{"primary":' + pose + "}"
+        replacement = '"canonicalPoses":{"primary":' + pose + ',"primary":' + pose + "}"
+        assert needle in raw
+        board_path.write_text(raw.replace(needle, replacement, 1), encoding="utf-8")
     return root
 
 
@@ -383,6 +394,9 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
     assert not hasattr(package.board.holds[0], "presentation_id")
     assert presentation.media.asset_path == "assets/primary.usdz"
     assert presentation.media.descriptor_path == "assets/primary.model.json"
+    assert presentation.media.suspension is not None
+    assert presentation.media.suspension.attachment.node_id == "ZZAttachment"
+    assert set(presentation.media.suspension.canonical_poses) == {"primary"}
     assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.3, 0.4
     )

@@ -86,13 +86,18 @@ def validate_tagged_scene(
                 continue
             raise ValueError(f"non-mesh authored geometry is not permitted: {name}")
         role = _object_property(item, "role", imported=imported)
-        if role not in {"body", "hold"}:
-            raise ValueError(f"mesh {name} role must be body or hold")
+        if role not in {"body", "hold", "attachment"}:
+            raise ValueError(f"mesh {name} role must be body, hold, or attachment")
         hold_id = _object_property(item, "hold_id", imported=imported)
         if role == "body":
             if hold_id is not None:
                 raise ValueError(f"body mesh {name} may not declare hold_id")
             nodes.append(NodeBinding(name, "body"))
+            continue
+        if role == "attachment":
+            if hold_id is not None:
+                raise ValueError(f"attachment mesh {name} may not declare hold_id")
+            nodes.append(NodeBinding(name, "attachment"))
             continue
         if not isinstance(hold_id, str) or not hold_id:
             raise ValueError(f"hold mesh {name} requires hold_id")
@@ -109,6 +114,8 @@ def validate_tagged_scene(
     bound_hold_ids = {node.hold_id for node in nodes if node.role == "hold"}
     if bound_hold_ids != set(logical_hold_ids):
         raise ValueError("scene hold bindings must exactly match logical inventory")
+    if sum(node.role == "attachment" for node in nodes) > 1:
+        raise ValueError("scene permits at most one attachment mesh")
     return tuple(sorted(nodes, key=lambda node: node.node_id))
 
 

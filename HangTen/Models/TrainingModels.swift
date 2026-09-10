@@ -87,11 +87,50 @@ struct BoardModelNodeDescriptor: Hashable {
     enum Role: String, Hashable {
         case body
         case hold
+        case attachment
     }
 
     let nodeID: String
     let role: Role
     let holdID: String?
+}
+
+struct BoardModelAttachment: Hashable {
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+}
+
+struct BoardModelInvisibleAnchor: Hashable {
+    let offsetFromBoardBounds: [Double]
+    let visibility: String
+    let provenance: String
+    let position: [Double]
+}
+
+struct BoardModelCord: Hashable {
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+}
+
+struct BoardModelCanonicalCamera: Hashable {
+    let viewDirection: [Double]
+    let fitPadding: Double
+}
+
+struct BoardModelCanonicalPose: Hashable {
+    let rotation: [Double]
+    let translation: [Double]
+    let camera: BoardModelCanonicalCamera
+}
+
+struct BoardModelSuspension: Hashable {
+    let attachment: BoardModelAttachment
+    let anchor: BoardModelInvisibleAnchor
+    let cord: BoardModelCord
+    let canonicalPoses: [String: BoardModelCanonicalPose]
 }
 
 struct BoardModelHoldDescriptor: Hashable {
@@ -125,6 +164,21 @@ struct BoardModelMedia: Hashable {
     let descriptorPath: String
     let descriptor: BoardModelDescriptor
     let display: BoardModelDisplay
+    let suspension: BoardModelSuspension?
+
+    init(
+        assetPath: String,
+        descriptorPath: String,
+        descriptor: BoardModelDescriptor,
+        display: BoardModelDisplay,
+        suspension: BoardModelSuspension? = nil
+    ) {
+        self.assetPath = assetPath
+        self.descriptorPath = descriptorPath
+        self.descriptor = descriptor
+        self.display = display
+        self.suspension = suspension
+    }
 }
 
 enum BoardPresentationMedia: Hashable {

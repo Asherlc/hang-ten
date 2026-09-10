@@ -175,9 +175,24 @@ def _load_json(path: Path, label: str) -> Mapping[str, Any]:
     if path.is_symlink() or not path.is_file():
         raise ValueError(f"{label} does not exist as a regular file: {path}")
     try:
-        return _mapping(json.loads(path.read_text(encoding="utf-8")), label)
-    except json.JSONDecodeError as error:
+        return _mapping(
+            json.loads(
+                path.read_text(encoding="utf-8"),
+                object_pairs_hook=_reject_duplicate_json_keys,
+            ),
+            label,
+        )
+    except (json.JSONDecodeError, ValueError) as error:
         raise ValueError(f"{label} is invalid JSON: {path}") from error
+
+
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key: {key}")
+        result[key] = value
+    return result
 
 
 def _require_no_symlinks(root: Path) -> None:
@@ -384,9 +399,47 @@ class PresentationMediaModel:
     asset_path: str
     descriptor_path: str
     display: Mapping[str, Any]
+    suspension: "BoardModelSuspension | None" = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
+
+
+@dataclass(frozen=True)
+class BoardModelAttachment:
+    node_id: str
+    point_in_model: tuple[float, float, float]
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelInvisibleAnchor:
+    offset_from_board_bounds: tuple[float, float, float]
+    visibility: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelCord:
+    rest_length: float
+    radius: float
+    material: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelCanonicalPose:
+    rotation: tuple[float, float, float, float]
+    translation: tuple[float, float, float]
+    camera: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
+class BoardModelSuspension:
+    attachment: BoardModelAttachment
+    anchor: BoardModelInvisibleAnchor
+    cord: BoardModelCord
+    canonical_poses: Mapping[str, BoardModelCanonicalPose]
 
 
 @dataclass(frozen=True)
@@ -424,6 +477,86 @@ def _vector3(value: Any, source: str) -> tuple[float, float, float]:
     if result == (0.0, 0.0, 0.0):
         raise ValueError(f"{source} must be non-zero")
     return result  # type: ignore[return-value]
+
+
+def _unit_vector(value: Any, source: str) -> tuple[float, ...]:
+    if not isinstance(value, list):
+        raise ValueError(f"{source} must be an array")
+    return tuple(_number(item, f"{source}[{index}]") for index, item in enumerate(value))
+
+
+def _finite_vector3(value: Any, source: str) -> tuple[float, float, float]:
+    if not isinstance(value, list) or len(value) != 3:
+        raise ValueError(f"{source} must contain exactly three coordinates")
+    result = tuple(_number(item, f"{source}[{index}]") for index, item in enumerate(value))
+    return result  # type: ignore[return-value]
+
+
+def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
+    payload = _mapping(value, source)
+    _closed(payload, {"type", "attachment", "anchor", "cord", "canonicalPoses"}, source)
+    if payload["type"] != "singleCord":
+        raise ValueError(f"{source}.type must be singleCord")
+
+    attachment_source = f"{source}.attachment"
+    attachment_payload = _mapping(payload["attachment"], attachment_source)
+    _closed(attachment_payload, {"nodeID", "pointInModel", "provenance"}, attachment_source)
+    attachment = BoardModelAttachment(
+        _string(attachment_payload["nodeID"], f"{attachment_source}.nodeID"),
+        _finite_vector3(attachment_payload["pointInModel"], f"{attachment_source}.pointInModel"),
+        _string(attachment_payload["provenance"], f"{attachment_source}.provenance"),
+    )
+
+    anchor_source = f"{source}.anchor"
+    anchor_payload = _mapping(payload["anchor"], anchor_source)
+    _closed(anchor_payload, {"offsetFromBoardBounds", "visibility", "provenance"}, anchor_source)
+    visibility = _string(anchor_payload["visibility"], f"{anchor_source}.visibility")
+    if visibility != "invisible":
+        raise ValueError(f"{anchor_source}.visibility must be invisible")
+    anchor = BoardModelInvisibleAnchor(
+        _finite_vector3(anchor_payload["offsetFromBoardBounds"], f"{anchor_source}.offsetFromBoardBounds"),
+        visibility,
+        _string(anchor_payload["provenance"], f"{anchor_source}.provenance"),
+    )
+
+    cord_source = f"{source}.cord"
+    cord_payload = _mapping(payload["cord"], cord_source)
+    _closed(cord_payload, {"restLength", "radius", "material", "provenance"}, cord_source)
+    cord = BoardModelCord(
+        _positive_number(cord_payload["restLength"], f"{cord_source}.restLength"),
+        _positive_number(cord_payload["radius"], f"{cord_source}.radius"),
+        _string(cord_payload["material"], f"{cord_source}.material"),
+        _string(cord_payload["provenance"], f"{cord_source}.provenance"),
+    )
+
+    poses_source = f"{source}.canonicalPoses"
+    poses_payload = _mapping(payload["canonicalPoses"], poses_source)
+    if not poses_payload:
+        raise ValueError(f"{poses_source} must not be empty")
+    poses: dict[str, BoardModelCanonicalPose] = {}
+    for position_id, raw_pose in poses_payload.items():
+        position_source = f"{poses_source}[{position_id}]"
+        position_id = _identifier(position_id, f"{position_source} positionID")
+        pose_payload = _mapping(raw_pose, position_source)
+        _closed(pose_payload, {"rotation", "translation", "camera"}, position_source)
+        rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
+        if len(rotation) != 4:
+            raise ValueError(f"{position_source}.rotation must contain exactly four coordinates")
+        norm = math.sqrt(sum(value * value for value in rotation))
+        if not math.isfinite(norm) or abs(norm - 1.0) > 1e-6:
+            raise ValueError(f"{position_source}.rotation must be normalized")
+        translation = _finite_vector3(pose_payload["translation"], f"{position_source}.translation")
+        camera_source = f"{position_source}.camera"
+        camera_payload = _mapping(pose_payload["camera"], camera_source)
+        _closed(camera_payload, {"viewDirection", "fitPadding"}, camera_source)
+        view_direction = _vector3(camera_payload["viewDirection"], f"{camera_source}.viewDirection")
+        fit_padding = _positive_number(camera_payload["fitPadding"], f"{camera_source}.fitPadding")
+        poses[position_id] = BoardModelCanonicalPose(
+            tuple(rotation),
+            translation,
+            MappingProxyType({"viewDirection": view_direction, "fitPadding": fit_padding}),
+        )
+    return BoardModelSuspension(attachment, anchor, cord, MappingProxyType(poses))
 
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
@@ -468,7 +601,7 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
             MappingProxyType(hold_geometry),
         )
     if media_type == "model":
-        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source)
+        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension"})
         return PresentationMediaModel(
             _typed_asset_path(
                 payload["assetPath"], f"{source}.assetPath", ".usdz", "a USDZ"
@@ -480,6 +613,9 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
                 "a .model.json descriptor",
             ),
             _load_model_display(payload["display"], f"{source}.display"),
+            _load_model_suspension(payload["suspension"], f"{source}.suspension")
+            if "suspension" in payload
+            else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -852,6 +988,8 @@ def _validate_v2_presentation_compatibility(
         isinstance(presentation.media, PresentationMediaModel)
         for presentation in presentations
     )
+    if sum(isinstance(presentation.media, PresentationMediaModel) for presentation in presentations) > 1:
+        raise ValueError("v2 packages may contain only one model presentation")
     has_raster = any(
         isinstance(presentation.media, PresentationMediaRaster)
         for presentation in presentations
@@ -1117,10 +1255,63 @@ def _descriptor_vector(
     return coordinates
 
 
+def _validate_model_suspension(
+    suspension: BoardModelSuspension,
+    *,
+    model_bounds: tuple[tuple[float, ...], tuple[float, ...]],
+    nodes: Mapping[str, str],
+    position_ids: set[str],
+) -> None:
+    attachment = suspension.attachment
+    role = nodes.get(attachment.node_id)
+    if role not in {"body", "attachment"}:
+        raise ValueError("suspension attachment node must be a body or attachment node")
+    minimum, maximum = model_bounds
+    if any(
+        coordinate < minimum[index] or coordinate > maximum[index]
+        for index, coordinate in enumerate(attachment.point_in_model)
+    ):
+        raise ValueError("suspension attachment point must be inside model bounds")
+    if set(suspension.canonical_poses) != position_ids:
+        raise ValueError("suspension canonical poses must exactly match position IDs")
+
+    # The anchor is evaluated once from the unposed model: the center of the
+    # top (+Y) bounds face plus the authored display offset. It never follows
+    # a canonical pose.
+    offset = suspension.anchor.offset_from_board_bounds
+    anchor = (
+        (minimum[0] + maximum[0]) / 2 + offset[0],
+        maximum[1] + offset[1],
+        (minimum[2] + maximum[2]) / 2 + offset[2],
+    )
+    if not all(math.isfinite(value) for value in anchor):
+        raise ValueError("suspension anchor must be finite")
+    for position_id, pose in suspension.canonical_poses.items():
+        qx, qy, qz, qw = pose.rotation
+        px, py, pz = attachment.point_in_model
+        # Quaternion rotation followed by canonical translation.
+        tx = 2 * (qy * pz - qz * py)
+        ty = 2 * (qz * px - qx * pz)
+        tz = 2 * (qx * py - qy * px)
+        transformed = (
+            px + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
+            py + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
+            pz + qw * tz + (qx * ty - qy * tx) + pose.translation[2],
+        )
+        distance = math.sqrt(sum((transformed[index] - anchor[index]) ** 2 for index in range(3)))
+        if not math.isfinite(distance):
+            raise ValueError(f"suspension pose {position_id} endpoint distance must be finite")
+        if suspension.cord.rest_length < distance - 1e-5:
+            raise ValueError(f"suspension pose {position_id} restLength is shorter than endpoint distance")
+
+
 def _load_model_descriptor(
     path: Path,
     asset_path: Path,
     logical_hold_ids: set[str],
+    *,
+    suspension: BoardModelSuspension | None = None,
+    position_ids: set[str] | None = None,
 ) -> Mapping[str, NormalizedFrame]:
     descriptor = _load_json(path, "model descriptor")
     _closed(
@@ -1171,6 +1362,7 @@ def _load_model_descriptor(
     node_ids: set[str] = set()
     node_ids_by_hold: dict[str, list[str]] = {}
     body_count = 0
+    attachment_count = 0
     ordered_node_ids: list[str] = []
     for index, raw_node in enumerate(raw_nodes):
         source = f"model descriptor nodes[{index}]"
@@ -1188,8 +1380,12 @@ def _load_model_descriptor(
         elif role == "hold":
             hold_id = _identifier(node["holdID"], f"{source}.holdID")
             node_ids_by_hold.setdefault(hold_id, []).append(node_id)
+        elif role == "attachment":
+            attachment_count += 1
+            if attachment_count > 1:
+                raise ValueError("model descriptor permits at most one attachment node")
         else:
-            raise ValueError(f"{source}.role must be body or hold")
+            raise ValueError(f"{source}.role must be body, hold, or attachment")
     if body_count != 1:
         raise ValueError("model descriptor requires exactly one body node")
     if ordered_node_ids != sorted(ordered_node_ids):
@@ -1241,6 +1437,17 @@ def _load_model_descriptor(
             face_min[1],
             round(face_max[0] - face_min[0], 9),
             round(face_max[1] - face_min[1], 9),
+        )
+    if suspension is not None:
+        _validate_model_suspension(
+            suspension,
+            model_bounds=(minimum, maximum),
+            nodes={
+                node["nodeID"]: node["role"]
+                for node in raw_nodes
+                if isinstance(node, Mapping)
+            },
+            position_ids=position_ids or set(),
         )
     return MappingProxyType(frames)
 
@@ -1312,6 +1519,9 @@ def _validate_finished_shape(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,
             logical_hold_ids,
+            suspension=presentation.media.suspension,
+            position_ids={position.id for position in board.positions
+                          if position.presentation_id == presentation.id},
         )
         model_frames.update(
             ((presentation.id, hold_id), frame) for hold_id, frame in frames.items()

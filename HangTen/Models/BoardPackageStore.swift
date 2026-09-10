@@ -641,7 +641,7 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateV2AssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display):
+            case .model(let assetPath, let descriptorPath, let display, _):
                 hasModel = true
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
@@ -665,6 +665,15 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
                 reason: "v2 packages may not mix model and raster presentations"
+            )
+        }
+        guard document.presentations.filter({
+            if case .model = $0.media { return true }
+            return false
+        }).count <= 1 else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "v2 packages may contain only one model presentation"
             )
         }
         let documentsByPresentationID = Dictionary(
@@ -711,6 +720,9 @@ struct BoardPackageStore {
         var descriptorURLs: [String: URL] = [:]
         var originalRasterOwnershipCounts = Dictionary(
             uniqueKeysWithValues: holdIDs.map { ($0, 0) }
+        )
+        let declaredPositionIDs = Set(
+            (document.positions?.map(\.id) ?? document.presentations.map(\.id))
         )
         for presentation in document.presentations {
             let media: BoardPresentationMedia
@@ -773,7 +785,7 @@ struct BoardPackageStore {
                     )
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, holdGeometry: holdGeometry))
-            case .model(let assetPath, let descriptorPath, let displayDocument):
+            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument):
                 let descriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: packageURL.appendingPathComponent(assetPath),
@@ -781,6 +793,14 @@ struct BoardPackageStore {
                     boardID: document.id,
                     resource: descriptorPath
                 )
+                let suspension = try suspensionDocument.map {
+                    try makeModelSuspension(
+                        $0,
+                        descriptor: descriptor,
+                        positionIDs: declaredPositionIDs,
+                        boardID: document.id
+                    )
+                }
                 let camera = displayDocument.camera
                 media = .model(
                     BoardModelMedia(
@@ -794,7 +814,8 @@ struct BoardPackageStore {
                                 up: camera.up,
                                 fitPadding: camera.fitPadding
                             )
-                        )
+                        ),
+                        suspension: suspension
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
@@ -941,6 +962,8 @@ struct BoardPackageStore {
         do {
             data = try Data(contentsOf: url)
             modelData = try Data(contentsOf: modelURL)
+            var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
+            _ = try rawDescriptorParser.parseDocument()
             var memberOrder = BoardPackageJSONMemberOrder(data: data)
             orderedHoldIDs = try memberOrder.memberNames(inRootObjectNamed: "holds")
             document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
@@ -992,8 +1015,16 @@ struct BoardPackageStore {
                 }
                 nodeIDsByHold[holdID, default: []].append(node.nodeID)
                 nodes.append(.init(nodeID: node.nodeID, role: .hold, holdID: holdID))
+            case "attachment":
+                guard node.holdID == nil else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare holdID")
+                }
+                guard !nodes.contains(where: { $0.role == .attachment }) else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor permits at most one attachment node")
+                }
+                nodes.append(.init(nodeID: node.nodeID, role: .attachment, holdID: nil))
             default:
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body or hold")
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, hold, or attachment")
             }
         }
         guard bodyCount == 1, Set(nodeIDsByHold.keys) == logicalHoldIDs,
@@ -1063,6 +1094,110 @@ struct BoardPackageStore {
         }
     }
 
+    private static func makeModelSuspension(
+        _ document: BoardPackageSuspensionDocument,
+        descriptor: BoardModelDescriptor,
+        positionIDs: Set<String>,
+        boardID: String
+    ) throws -> BoardModelSuspension {
+        guard document.type == "singleCord" else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension type must be singleCord")
+        }
+        guard document.attachment.nodeID.isEmpty == false,
+              document.attachment.pointInModel.count == 3,
+              document.attachment.pointInModel.allSatisfy(\.isFinite),
+              zip(document.attachment.pointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+              zip(document.attachment.pointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension attachment point must be finite and inside model bounds")
+        }
+        let nodeRole = descriptor.nodes.first(where: { $0.nodeID == document.attachment.nodeID })?.role
+        guard nodeRole == .body || nodeRole == .attachment else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension attachment node must be a body or attachment node")
+        }
+        guard document.anchor.offsetFromBoardBounds.count == 3,
+              document.anchor.offsetFromBoardBounds.allSatisfy(\.isFinite),
+              document.anchor.visibility == "invisible",
+              document.cord.restLength.isFinite, document.cord.restLength > 0,
+              document.cord.radius.isFinite, document.cord.radius > 0,
+              document.canonicalPoses.count == positionIDs.count,
+              Set(document.canonicalPoses.keys) == positionIDs else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "invalid suspension anchor, cord, or canonical pose set")
+        }
+        let bounds = descriptor.modelBounds
+        let offset = document.anchor.offsetFromBoardBounds
+        let anchorPosition = [
+            (bounds.minimum[0] + bounds.maximum[0]) / 2 + offset[0],
+            bounds.maximum[1] + offset[1],
+            (bounds.minimum[2] + bounds.maximum[2]) / 2 + offset[2]
+        ]
+        guard anchorPosition.allSatisfy(\.isFinite) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension anchor must be finite")
+        }
+        var poses: [String: BoardModelCanonicalPose] = [:]
+        for (positionID, pose) in document.canonicalPoses {
+            guard pose.rotation.count == 4,
+                  pose.rotation.allSatisfy(\.isFinite),
+                  pose.translation.count == 3,
+                  pose.translation.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.count == 3,
+                  pose.camera.viewDirection.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.contains(where: { $0 != 0 }),
+                  pose.camera.fitPadding.isFinite,
+                  pose.camera.fitPadding > 0 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) is not finite")
+            }
+            let norm = sqrt(pose.rotation.reduce(0) { $0 + $1 * $1 })
+            guard abs(norm - 1) <= 1e-6 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) rotation must be normalized")
+            }
+            let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
+            let p = document.attachment.pointInModel
+            let tx = 2 * (qy * p[2] - qz * p[1])
+            let ty = 2 * (qz * p[0] - qx * p[2])
+            let tz = 2 * (qx * p[1] - qy * p[0])
+            let transformed = [
+                p[0] + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
+                p[1] + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
+                p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
+            ]
+            let endpointDistance = zip(transformed, anchorPosition).reduce(0) { partial, pair in
+                partial + (pair.0 - pair.1) * (pair.0 - pair.1)
+            }.squareRoot()
+            guard endpointDistance.isFinite,
+                  document.cord.restLength >= endpointDistance - 1e-5 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension pose \(positionID) restLength is shorter than endpoint distance")
+            }
+            poses[positionID] = BoardModelCanonicalPose(
+                rotation: pose.rotation,
+                translation: pose.translation,
+                camera: BoardModelCanonicalCamera(
+                    viewDirection: pose.camera.viewDirection,
+                    fitPadding: pose.camera.fitPadding
+                )
+            )
+        }
+        return BoardModelSuspension(
+            attachment: BoardModelAttachment(
+                nodeID: document.attachment.nodeID,
+                pointInModel: document.attachment.pointInModel,
+                provenance: document.attachment.provenance
+            ),
+            anchor: BoardModelInvisibleAnchor(
+                offsetFromBoardBounds: document.anchor.offsetFromBoardBounds,
+                visibility: document.anchor.visibility,
+                provenance: document.anchor.provenance,
+                position: anchorPosition
+            ),
+            cord: BoardModelCord(
+                restLength: document.cord.restLength,
+                radius: document.cord.radius,
+                material: document.cord.material,
+                provenance: document.cord.provenance
+            ),
+            canonicalPoses: poses
+        )
+
+}
 }
 
 private enum BoardPackageRawJSONError: Error {
@@ -1509,10 +1644,10 @@ private enum BoardPackageV2DerivationDocument: Decodable {
 
 private enum BoardPackageV2MediaDocument: Decodable {
     case raster(assetPath: String, holdGeometry: [String: [BoardPackageGeometryDocument]])
-    case model(assetPath: String, descriptorPath: String, display: BoardPackageModelDisplayDocument)
+    case model(assetPath: String, descriptorPath: String, display: BoardPackageModelDisplayDocument, suspension: BoardPackageSuspensionDocument?)
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, holdGeometry, descriptorPath, display
+        case type, assetPath, holdGeometry, descriptorPath, display, suspension
     }
 
     init(from decoder: Decoder) throws {
@@ -1529,11 +1664,14 @@ private enum BoardPackageV2MediaDocument: Decodable {
                 )
             )
         case "model":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension"])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
-                display: try container.decode(BoardPackageModelDisplayDocument.self, forKey: .display)
+                display: try container.decode(BoardPackageModelDisplayDocument.self, forKey: .display),
+                suspension: container.contains(.suspension)
+                    ? try container.decode(BoardPackageSuspensionDocument.self, forKey: .suspension)
+                    : nil
             )
         default:
             throw DecodingError.dataCorruptedError(
@@ -1546,8 +1684,105 @@ private enum BoardPackageV2MediaDocument: Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _): assetPath
         }
+    }
+}
+
+private struct BoardPackageSuspensionDocument: Decodable {
+    let type: String
+    let attachment: BoardPackageAttachmentDocument
+    let anchor: BoardPackageAnchorDocument
+    let cord: BoardPackageCordDocument
+    let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
+
+    private enum CodingKeys: String, CodingKey {
+        case type, attachment, anchor, cord, canonicalPoses
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["type", "attachment", "anchor", "cord", "canonicalPoses"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(String.self, forKey: .type)
+        attachment = try container.decode(BoardPackageAttachmentDocument.self, forKey: .attachment)
+        anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
+        cord = try container.decode(BoardPackageCordDocument.self, forKey: .cord)
+        canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)
+    }
+}
+
+private struct BoardPackageAttachmentDocument: Decodable {
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case nodeID, pointInModel, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["nodeID", "pointInModel", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        nodeID = try container.decode(String.self, forKey: .nodeID)
+        pointInModel = try container.decode([Double].self, forKey: .pointInModel)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageAnchorDocument: Decodable {
+    let offsetFromBoardBounds: [Double]
+    let visibility: String
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case offsetFromBoardBounds, visibility, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["offsetFromBoardBounds", "visibility", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        offsetFromBoardBounds = try container.decode([Double].self, forKey: .offsetFromBoardBounds)
+        visibility = try container.decode(String.self, forKey: .visibility)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageCordDocument: Decodable {
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case restLength, radius, material, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["restLength", "radius", "material", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        restLength = try container.decode(Double.self, forKey: .restLength)
+        radius = try container.decode(Double.self, forKey: .radius)
+        material = try container.decode(String.self, forKey: .material)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageCanonicalPoseDocument: Decodable {
+    let rotation: [Double]
+    let translation: [Double]
+    let camera: BoardPackageCanonicalCameraDocument
+
+    private enum CodingKeys: String, CodingKey { case rotation, translation, camera }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["rotation", "translation", "camera"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        rotation = try container.decode([Double].self, forKey: .rotation)
+        translation = try container.decode([Double].self, forKey: .translation)
+        camera = try container.decode(BoardPackageCanonicalCameraDocument.self, forKey: .camera)
+    }
+}
+
+private struct BoardPackageCanonicalCameraDocument: Decodable {
+    let viewDirection: [Double]
+    let fitPadding: Double
+
+    private enum CodingKeys: String, CodingKey { case viewDirection, fitPadding }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["viewDirection", "fitPadding"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        viewDirection = try container.decode([Double].self, forKey: .viewDirection)
+        fitPadding = try container.decode(Double.self, forKey: .fitPadding)
     }
 }
 

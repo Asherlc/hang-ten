@@ -88,7 +88,12 @@ final class BoardPackageStoreTests: XCTestCase {
                 "wrong-schema-version", "unknown-media-type", "escaped-typed-path",
                 "extra-asset", "stale-sha", "omitted-node", "extra-node",
                 "body-with-hold-id", "unbound-geometry", "invalid-camera",
-                "model-inversion"
+                "unknown-suspension-field", "wrong-suspension-type",
+                "missing-canonical-pose", "extra-canonical-pose",
+                "duplicate-position-key", "nonunit-quaternion", "nonfinite-quaternion",
+                "nonpositive-cord-values", "missing-attachment-node", "hold-attachment-node",
+                "attachment-point-outside-bounds", "shorter-than-endpoint-distance",
+                "raster-sibling", "second-model", "baked-cord-role", "model-inversion"
             ]
         )
 
@@ -3228,6 +3233,22 @@ final class BoardPackageStoreTests: XCTestCase {
             try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
                 .write(to: assetsURL.appendingPathComponent("primary.model.json"))
             try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
+            if specification["duplicateCanonicalPoseKey"] as? Bool == true {
+                let boardObject = try XCTUnwrap(board as? [String: Any])
+                let pose = try XCTUnwrap(
+                    (((boardObject["presentations"] as? [[String: Any]])?[0]["media"] as? [String: Any])?["suspension"] as? [String: Any])?["canonicalPoses"] as? [String: Any])?["primary"]
+                )
+                let poseData = try JSONSerialization.data(withJSONObject: pose, options: [.sortedKeys])
+                let poseJSON = String(decoding: poseData, as: UTF8.self)
+                let boardData = try JSONSerialization.data(withJSONObject: boardObject, options: [.sortedKeys])
+                let boardJSON = String(decoding: boardData, as: UTF8.self)
+                let needle = "\"canonicalPoses\":{\"primary\":\(poseJSON)}"
+                let replacement = "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON)}"
+                XCTAssertTrue(boardJSON.contains(needle))
+                boardJSON.replacingOccurrences(of: needle, with: replacement, options: [], range: nil)
+                    .data(using: .utf8)!
+                    .write(to: packageURL.appendingPathComponent("board.json"))
+            }
             for extraAsset in extraAssets {
                 let path = try XCTUnwrap(extraAsset["path"] as? String)
                 let base64 = try XCTUnwrap(extraAsset["base64"] as? String)
