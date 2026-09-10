@@ -69,3 +69,16 @@ the fix: exact-taut branches completed with 32-sample straight free spans,
 and the interior-route/free-span crossing was rejected as
 `.selfIntersection`. The probe and its compiler cache were removed after
 execution.
+
+## Round-2 review remediation
+
+The closed-route validator now exempts only the exact shared anchor endpoint
+between the first and final segments. It still checks those two segments for
+interior crossings, endpoint contacts, and collinear overlap away from the
+anchor. A direct policy regression covers an initial/final segment contact
+away from the anchor.
+
+The exact-taut regression now compares every free-span sample with its
+ordered endpoint interpolation, verifies the complete centerline concatenation
+at both passage joins and the shared anchor, and independently measures the
+composite centerline length.

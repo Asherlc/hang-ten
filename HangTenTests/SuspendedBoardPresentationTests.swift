@@ -437,11 +437,43 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             XCTAssertEqual(branch.arcLength, routeLength, accuracy: 1e-5)
             for span in branch.spans {
                 let start = span.first!
-                let direction = span.last! - start
-                XCTAssertTrue(span.allSatisfy {
-                    simd_length(simd_cross($0 - start, direction)) < 1e-4
-                })
+                let end = span.last!
+                let direction = end - start
+                for (index, sample) in span.enumerated() {
+                    let t = Float(index) / Float(SuspendedCordSolver.sampleCount - 1)
+                    XCTAssertEqual(sample, start + direction * t)
+                    XCTAssertLessThan(simd_length(simd_cross(sample - start, direction)), 1e-4)
+                }
             }
+            let expectedCenterline = branch.spans[0]
+                + [branch.spans[1].first!]
+                + Array(branch.spans[1].dropFirst())
+            XCTAssertEqual(branch.centerlineSamples, expectedCenterline)
+            XCTAssertEqual(branch.centerlineSamples.first!, anchor)
+            XCTAssertEqual(branch.centerlineSamples[31], branch.spans[0].last!)
+            XCTAssertEqual(branch.centerlineSamples[32], branch.spans[1].first!)
+            XCTAssertEqual(branch.centerlineSamples.last!, anchor)
+            let measuredLength = zip(branch.centerlineSamples, branch.centerlineSamples.dropFirst()).reduce(Float.zero) {
+                $0 + simd_length($1.1 - $1.0)
+            }
+            XCTAssertEqual(measuredLength, routeLength, accuracy: 1e-5)
+        }
+    }
+
+    func testClosedBranchPolicyRejectsInitialAndFinalSegmentContactAwayFromAnchor() {
+        let anchor = SIMD3<Float>(0, 0, 0)
+        let samples = [
+            anchor,
+            SIMD3<Float>(2, 0, 0),
+            SIMD3<Float>(2, 1, 0),
+            SIMD3<Float>(2, 2, 0),
+            SIMD3<Float>(1, 1, 0),
+            SIMD3<Float>(1, 0, 0),
+            anchor,
+        ]
+
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(samples)) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
         }
     }
 }

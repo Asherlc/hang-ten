@@ -261,13 +261,18 @@ enum SuspendedCordSolver {
         guard samples.count >= 4 else { return }
         for first in 0..<(samples.count - 2) {
             for second in (first + 2)..<(samples.count - 1) {
-                // The first and final segments intentionally meet at the
-                // single shared mathematical anchor.
-                if first == 0 && second == samples.count - 2 { continue }
-                if samples[first] == samples[second]
-                    || samples[first] == samples[second + 1]
-                    || samples[first + 1] == samples[second]
-                    || samples[first + 1] == samples[second + 1] {
+                let isAnchorClosure = first == 0 && second == samples.count - 2
+                let sharesOnlyAnchor = isAnchorClosure
+                    && samples[first] == samples[second + 1]
+                    && samples[first] != samples[second]
+                    && samples[first + 1] != samples[second]
+                    && samples[first + 1] != samples[second + 1]
+                if !sharesOnlyAnchor && (
+                    samples[first] == samples[second]
+                        || samples[first] == samples[second + 1]
+                        || samples[first + 1] == samples[second]
+                        || samples[first + 1] == samples[second + 1]
+                ) {
                     throw SuspendedPresentationError.selfIntersection
                 }
                 let approach = segmentClosestApproach(
@@ -278,8 +283,25 @@ enum SuspendedCordSolver {
                     && approach.s < 1 - 1e-4
                     && approach.t > 1e-4
                     && approach.t < 1 - 1e-4
-                if hasInteriorCrossing && approach.distanceSquared <= tolerance * tolerance {
+                let touchesAwayFromAnchor = isAnchorClosure
+                    && approach.distanceSquared <= tolerance * tolerance
+                    && !(approach.s <= 1e-4 && approach.t >= 1 - 1e-4)
+                if (hasInteriorCrossing || touchesAwayFromAnchor)
+                    && approach.distanceSquared <= tolerance * tolerance {
                     throw SuspendedPresentationError.selfIntersection
+                }
+                if isAnchorClosure {
+                    let toleranceSquared = tolerance * tolerance
+                    let finalStartDistance = pointSegmentDistanceSquared(
+                        samples[second], samples[first], samples[first + 1]
+                    )
+                    let firstEndDistance = pointSegmentDistanceSquared(
+                        samples[first + 1], samples[second], samples[second + 1]
+                    )
+                    if (finalStartDistance <= toleranceSquared && samples[second] != samples[first])
+                        || (firstEndDistance <= toleranceSquared && samples[first + 1] != samples[first]) {
+                        throw SuspendedPresentationError.selfIntersection
+                    }
                 }
             }
         }
@@ -430,6 +452,22 @@ enum SuspendedCordSolver {
         let t = abs(tN) < 1e-12 ? 0 : tN / tD
         let difference = w + u * s - v * t
         return (simd_dot(difference, difference), s, t)
+    }
+
+    private static func pointSegmentDistanceSquared(
+        _ point: SIMD3<Float>,
+        _ start: SIMD3<Float>,
+        _ end: SIMD3<Float>
+    ) -> Float {
+        let direction = end - start
+        let lengthSquared = simd_dot(direction, direction)
+        guard lengthSquared.isFinite, lengthSquared > 1e-12 else {
+            let difference = point - start
+            return simd_dot(difference, difference)
+        }
+        let parameter = min(max(simd_dot(point - start, direction) / lengthSquared, 0), 1)
+        let difference = point - (start + direction * parameter)
+        return simd_dot(difference, difference)
     }
 }
 
