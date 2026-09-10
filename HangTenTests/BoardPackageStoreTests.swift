@@ -167,6 +167,24 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension["type"] as? String, "twoBranchCord")
     }
 
+    func testSharedFixtureBuilderAppliesDeclaredTwoBranchSuspensionMemberOrder() throws {
+        let fixtures = try validationFixtures()
+        let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
+        let specification = try XCTUnwrap(
+            matrix.first(where: { $0["name"] as? String == "two-branch-suspension-member-order" })
+        )
+        let fixture = try makeSharedModelParserParityFixtureBundle(specification)
+        defer { fixture.remove() }
+
+        let boardData = try Data(contentsOf: fixture.rootURL
+            .appendingPathComponent("Hangboards/fixture-model/board.json"))
+        let boardJSON = String(decoding: boardData, as: UTF8.self)
+        XCTAssertTrue(
+            boardJSON.contains(#""suspension":{"type":"twoBranchCord","passages":"#),
+            "shared order fixture must preserve its deliberate raw suspension member order"
+        )
+    }
+
     func testWrongTwoBranchDiscriminatorUsesInvalidPackageCategory() throws {
         let fixtures = try validationFixtures()
         let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
@@ -3307,18 +3325,49 @@ final class BoardPackageStoreTests: XCTestCase {
         let modelBase64 = try XCTUnwrap(model["assetBase64"] as? String)
         let modelBytes = try XCTUnwrap(Data(base64Encoded: modelBase64))
         let extraAssets = specification["extraAssets"] as? [[String: Any]] ?? []
+        let boardObject = try XCTUnwrap(board as? [String: Any])
+        var boardData = try JSONSerialization.data(withJSONObject: boardObject, options: [.sortedKeys])
+        if specification["reorderTwoBranchSuspensionMembers"] as? Bool == true {
+            let presentations = try XCTUnwrap(boardObject["presentations"] as? [[String: Any]])
+            let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+            let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
+            let orderedKeys = ["type", "passages", "branches", "anchor", "canonicalPoses"]
+            guard Set(suspension.keys) == Set(orderedKeys) else {
+                throw NSError(
+                    domain: "BoardPackageStoreTests",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "unexpected two-branch suspension members"]
+                )
+            }
+
+            let canonicalSuspension = try JSONSerialization.data(
+                withJSONObject: suspension,
+                options: [.sortedKeys]
+            )
+            let reorderedSuspension = try orderedKeys.map { key in
+                let value = try XCTUnwrap(suspension[key])
+                let valueData = try JSONSerialization.data(
+                    withJSONObject: value,
+                    options: [.sortedKeys, .fragmentsAllowed]
+                )
+                return "\"\(key)\":" + String(decoding: valueData, as: UTF8.self)
+            }.joined(separator: ",")
+            var canonicalNeedle = Data(#""suspension":"#.utf8)
+            canonicalNeedle.append(canonicalSuspension)
+            let replacement = Data(#""suspension":{#(reorderedSuspension)}"#.utf8)
+            let range = try XCTUnwrap(boardData.range(of: canonicalNeedle))
+            boardData.replaceSubrange(range, with: replacement)
+        }
 
         return try makeFixtureBundle { hangboardsURL in
             let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
             let assetsURL = packageURL.appendingPathComponent("assets")
             try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
-            try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys])
-                .write(to: packageURL.appendingPathComponent("board.json"))
+            try boardData.write(to: packageURL.appendingPathComponent("board.json"))
             try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
                 .write(to: assetsURL.appendingPathComponent("primary.model.json"))
             try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
             if specification["duplicateCanonicalPoseKey"] as? Bool == true {
-                let boardObject = try XCTUnwrap(board as? [String: Any])
                 let presentations = try XCTUnwrap(boardObject["presentations"] as? [[String: Any]])
                 let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
                 let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
@@ -3326,7 +3375,6 @@ final class BoardPackageStoreTests: XCTestCase {
                 let pose = try XCTUnwrap(canonicalPoses["primary"])
                 let poseData = try JSONSerialization.data(withJSONObject: pose, options: [.sortedKeys])
                 let poseJSON = String(decoding: poseData, as: UTF8.self)
-                let boardData = try JSONSerialization.data(withJSONObject: boardObject, options: [.sortedKeys])
                 let boardJSON = String(decoding: boardData, as: UTF8.self)
                 let needle = "\"canonicalPoses\":{\"primary\":\(poseJSON)}"
                 let replacement = "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON)}"
