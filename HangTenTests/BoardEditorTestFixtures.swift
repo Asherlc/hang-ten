@@ -3,6 +3,13 @@ import XCTest
 
 enum BoardEditorTestFixtures {
     static func makeSourceLibrary(slug: String = "fixture-board") throws -> URL {
+        try makeSourceLibrary(slug: slug, document: sampleDocument())
+    }
+
+    static func makeSourceLibrary(
+        slug: String,
+        document: BoardEditableDocument
+    ) throws -> URL {
         let libraryURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("BoardEditorStoreSource-\(UUID().uuidString)", isDirectory: true)
         let packageURL = libraryURL.appendingPathComponent(slug, isDirectory: true)
@@ -10,7 +17,7 @@ enum BoardEditorTestFixtures {
             at: packageURL.appendingPathComponent("assets", isDirectory: true),
             withIntermediateDirectories: true
         )
-        try BoardPackageWriter.data(for: sampleDocument())
+        try BoardPackageWriter.data(for: document)
             .write(to: packageURL.appendingPathComponent("board.json"))
         try pngBytes().write(to: packageURL.appendingPathComponent("assets/primary.png"))
         return libraryURL
@@ -72,5 +79,36 @@ enum BoardEditorTestFixtures {
                 ),
             ]
         )
+    }
+
+    static func sessionDocument() -> BoardEditableDocument {
+        var document = sampleDocument()
+        document.name = "Editor session fixture"
+        document.holds[0].geometry[0].shapeConstraint = ShapeConstraint(
+            shape: .rectangle,
+            rotationDegrees: 0
+        )
+
+        for index in 2...7 {
+            var hold = document.holds[0]
+            hold.id = "hold-\(index)"
+            hold.name = "Hold \(index)"
+            hold.geometry[0].frame = BoardPackageFrameDocument(
+                x: 0.05 + Double(index - 2) * 0.12,
+                y: 0.65,
+                width: 0.08,
+                height: 0.16
+            )
+            if index == 2 {
+                hold.geometry[0].shape = BoardGeometryShapeDocument(
+                    type: "roundedRect",
+                    commands: nil,
+                    cornerRadiusFraction: 0.2
+                )
+                hold.geometry[0].shapeConstraint = nil
+            }
+            document.holds.append(hold)
+        }
+        return document
     }
 }
