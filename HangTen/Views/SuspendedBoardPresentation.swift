@@ -189,10 +189,19 @@ enum SuspendedCordSolver {
         guard samples.count >= 4 else { return false }
         for first in 0..<(samples.count - 2) {
             for second in (first + 2)..<(samples.count - 1) {
-                if segmentDistanceSquared(
+                if samples[first] == samples[second]
+                    || samples[first + 1] == samples[second + 1] {
+                    return true
+                }
+                let approach = segmentClosestApproach(
                     samples[first], samples[first + 1],
                     samples[second], samples[second + 1]
-                ) <= tolerance * tolerance {
+                )
+                let hasInteriorCrossing = approach.s > 1e-4
+                    && approach.s < 1 - 1e-4
+                    && approach.t > 1e-4
+                    && approach.t < 1 - 1e-4
+                if hasInteriorCrossing && approach.distanceSquared <= tolerance * tolerance {
                     return true
                 }
             }
@@ -297,10 +306,10 @@ enum SuspendedCordSolver {
         return vector / length
     }
 
-    private static func segmentDistanceSquared(
+    private static func segmentClosestApproach(
         _ p0: SIMD3<Float>, _ p1: SIMD3<Float>,
         _ q0: SIMD3<Float>, _ q1: SIMD3<Float>
-    ) -> Float {
+    ) -> (distanceSquared: Float, s: Float, t: Float) {
         let u = p1 - p0
         let v = q1 - q0
         let w = p0 - q0
@@ -356,7 +365,7 @@ enum SuspendedCordSolver {
         let s = abs(sN) < 1e-12 ? 0 : sN / sD
         let t = abs(tN) < 1e-12 ? 0 : tN / tD
         let difference = w + u * s - v * t
-        return simd_dot(difference, difference)
+        return (simd_dot(difference, difference), s, t)
     }
 }
 

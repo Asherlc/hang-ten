@@ -112,8 +112,25 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertTrue(zip(solution.tangents, solution.tangents.dropFirst()).allSatisfy {
             simd_length($0.0 - $0.1) < 0.2
         })
-        XCTAssertEqual(solution.arcLength, 1.6, accuracy: 1e-5)
+        let measuredPolylineLength = zip(solution.samples, solution.samples.dropFirst()).reduce(Float.zero) {
+            $0 + simd_length($1.1 - $1.0)
+        }
+        XCTAssertEqual(solution.polylineArcLength, measuredPolylineLength, accuracy: 1e-6)
+        XCTAssertEqual(measuredPolylineLength, 1.6, accuracy: 0.01)
         XCTAssertLessThan(solution.samples.map(\.y).min()!, 1)
+    }
+
+    func testVeryShortTautCordDoesNotLookSelfIntersecting() throws {
+        let length: Float = 8e-6
+        let solution = try SuspendedCordSolver.solve(
+            start: SIMD3<Float>(0, 0, 0),
+            end: SIMD3<Float>(length, 0, 0),
+            restLength: length
+        )
+
+        XCTAssertTrue(solution.isTaut)
+        XCTAssertEqual(solution.samples.count, 32)
+        XCTAssertEqual(solution.polylineArcLength, length, accuracy: 1e-9)
     }
 
     func testRepeatedSolveIsBitwiseDeterministic() throws {

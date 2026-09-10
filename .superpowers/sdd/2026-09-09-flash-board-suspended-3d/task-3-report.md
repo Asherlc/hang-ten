@@ -33,6 +33,13 @@ Passed:
   transform.
 - `git diff --check`.
 
+Round 1 review fix: self-intersection validation now requires a genuine
+interior segment crossing (or an exact repeated non-adjacent vertex), so
+valid very short taut cords are not rejected merely because their samples are
+within the numerical proximity tolerance. The regression suite also measures
+the returned sampled polyline length directly for slack cords and covers an
+8e-6 m taut segment.
+
 Unavailable in this environment:
 
 - Focused `xcodebuild test ... -only-testing:HangTenTests/SuspendedBoardPresentationTests`.
