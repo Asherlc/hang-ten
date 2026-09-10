@@ -320,7 +320,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNotEqual(closest.node.categoryBitMask, BoardModelScene.cordCategory)
     }
 
-    func testSuspendedCordRejectsMeshInsideTubeAndClearanceRadiusWithoutCenterlineHit() throws {
+    func testSuspendedCordRejectsMeshInsideRequiredClearanceWithoutCenterlineHit() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),
             .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
@@ -333,7 +333,39 @@ final class BoardModelTests: XCTestCase {
         )
         let source = suspendedScene()
         // The box's nearest face remains off the x == 0 centerline, but is
-        // closer than the cord's physical radius plus clearance allowance.
+        // closer than the solver's centreline-to-mesh clearance allowance.
+        let body = try XCTUnwrap(node(at: "Board/Body", in: source))
+        let obstacle = SCNBox(width: 0.01, height: 0.01, length: 0.01, chamferRadius: 0)
+        obstacle.firstMaterial = SCNMaterial()
+        obstacle.firstMaterial?.diffuse.contents = UIColor.brown
+        body.geometry = obstacle
+        body.position = SCNVector3(0.02, 1, 0)
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source,
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspension
+        ))
+
+        XCTAssertFalse(model.select(positionID: "primary"))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.transientCordNode)
+    }
+
+    func testSuspendedCordAllowsMeshBeyondRequiredClearanceWithoutCenterlineHit() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ])
+        let suspension = suspendedModelSuspension(
+            attachment: [0, 0, 0],
+            anchor: [0, 2, 0],
+            restLength: 2
+        )
+        let source = suspendedScene()
+        // The nearest face is 0.03 from the centreline: greater than the
+        // 0.021 required clearance, but below the old double-counted 0.041.
         let body = try XCTUnwrap(node(at: "Board/Body", in: source))
         let obstacle = SCNBox(width: 0.01, height: 0.01, length: 0.01, chamferRadius: 0)
         obstacle.firstMaterial = SCNMaterial()
@@ -347,9 +379,9 @@ final class BoardModelTests: XCTestCase {
             suspension: suspension
         ))
 
-        XCTAssertFalse(model.select(positionID: "primary"))
-        XCTAssertTrue(model.isUnavailable)
-        XCTAssertNil(model.transientCordNode)
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertNotNil(model.transientCordNode)
     }
 
     func testSuspendedCordRejectsAttachmentMeshAwayFromDeclaredEndpointInterface() throws {
@@ -376,6 +408,32 @@ final class BoardModelTests: XCTestCase {
 
         XCTAssertFalse(model.select(positionID: "primary"))
         XCTAssertTrue(model.isUnavailable)
+    }
+
+    func testSuspendedCordAcceptsAttachmentAtDeclaredEndpointInterface() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ])
+        let source = suspendedScene()
+        let attachment = try XCTUnwrap(node(at: "Board/Attachment", in: source))
+        let interface = SCNBox(width: 0.1, height: 0.000001, length: 0.1, chamferRadius: 0)
+        interface.firstMaterial = SCNMaterial()
+        interface.firstMaterial?.diffuse.contents = UIColor.brown
+        attachment.geometry = interface
+        attachment.position = SCNVector3(0, 0, 0)
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source,
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(
+                attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2
+            )
+        ))
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertFalse(model.isUnavailable)
     }
 
     func testSuspendedCameraOrbitDoesNotMoveBoardAndResetReturnsCanonicalCamera() throws {

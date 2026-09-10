@@ -525,10 +525,10 @@ final class BoardModelScene {
               solved.requiredClearance > 0 else {
             return false
         }
-        // `requiredClearance` is the board separation contract from the
-        // solver. The physical tube also occupies space, so mesh distance is
-        // measured from the centreline through both terms, never as a ray.
-        let clearanceRadius = solved.tubeRadius + solved.requiredClearance
+        // The solver's required clearance already includes the cord radius
+        // plus its additional separation. Measure mesh distance from the
+        // centreline through that single contract, never as a ray.
+        let clearanceRadius = solved.requiredClearance
         guard clearanceRadius.isFinite, clearanceRadius > 0 else { return false }
         let endpoint = solved.transformedAttachment
         let lastSegment = solved.centerlineSamples.count - 2
