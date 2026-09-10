@@ -87,9 +87,28 @@ struct SuspendedSolvedPresentation {
     var cordSamples: [SIMD3<Float>] { centerlineSamples }
 }
 
+struct SuspendedBranchSolution {
+    let id: String
+    let passageIDs: [String]
+    let spans: [[SIMD3<Float>]]
+    let centerlineSamples: [SIMD3<Float>]
+    let tangentSamples: [SIMD3<Float>]
+    let arcLength: Float
+}
+
+struct SuspendedTwoBranchSolvedPresentation {
+    let boardTransform: simd_float4x4
+    let fixedAnchor: SIMD3<Float>
+    let branches: [SuspendedBranchSolution]
+    let cameraFraming: SuspendedCameraFraming
+    let tubeRadius: Float
+    let requiredClearance: Float
+}
+
 enum SuspendedCordSolver {
     static let sampleCount = 32
     static let bisectionTolerance: Float = 1e-6
+    static let tautTolerance: Float = 1e-5
     static let gravity = SIMD3<Float>(0, -1, 0)
 
     static func solve(
@@ -106,11 +125,11 @@ enum SuspendedCordSolver {
         guard endpointDistance.isFinite else {
             throw SuspendedPresentationError.invalidCord
         }
-        guard restLength >= endpointDistance - 1e-5 else {
+        guard restLength >= endpointDistance - tautTolerance else {
             throw SuspendedPresentationError.cordTooShort
         }
 
-        let isTaut = abs(restLength - endpointDistance) <= 1e-5
+        let isTaut = abs(restLength - endpointDistance) <= tautTolerance
         if isTaut {
             let tangent = endpointDistance > 1e-7 ? delta / endpointDistance : SIMD3<Float>(0, 1, 0)
             let samples = (0..<sampleCount).map { index in
@@ -435,6 +454,183 @@ enum SuspendedBoardPresentation {
             centerlineSamples: cord.samples,
             tangentSamples: cord.tangents,
             cordArcLength: cord.arcLength,
+            cameraFraming: framing,
+            tubeRadius: tubeRadius,
+            requiredClearance: tubeRadius + additionalClearance
+        )
+    }
+
+    static func solve(
+        pose: BoardModelCanonicalPose,
+        suspension: BoardModelTwoBranchSuspension,
+        bounds: BoardModelBounds
+    ) throws -> SuspendedTwoBranchSolvedPresentation {
+        let transform = try boardTransform(for: pose)
+        let (minimum, maximum) = try validatedBounds(bounds)
+
+        guard suspension.branches.count == 2,
+              suspension.anchor.visibility == "invisible",
+              suspension.anchor.position.count == 3,
+              suspension.anchor.position.allSatisfy(\.isFinite) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let fixedAnchor = SIMD3<Float>(
+            Float(suspension.anchor.position[0]),
+            Float(suspension.anchor.position[1]),
+            Float(suspension.anchor.position[2])
+        )
+        guard fixedAnchor.allFinite else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+
+        let allPassages = suspension.passages.left + suspension.passages.right
+        guard allPassages.count == 4,
+              Set(allPassages.map(\.id)).count == allPassages.count,
+              allPassages.allSatisfy({
+                  $0.pointInModel.count == 3 &&
+                  $0.pointInModel.allSatisfy(\.isFinite) &&
+                  zip($0.pointInModel, bounds.minimum).allSatisfy({ $0 >= $1 }) &&
+                  zip($0.pointInModel, bounds.maximum).allSatisfy({ $0 <= $1 })
+              }) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let passagesByID = Dictionary(uniqueKeysWithValues: allPassages.map { passage in
+            (passage.id, SIMD3<Float>(
+                Float(passage.pointInModel[0]),
+                Float(passage.pointInModel[1]),
+                Float(passage.pointInModel[2])
+            ))
+        })
+        guard passagesByID.values.allSatisfy(\.allFinite) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+
+        var branches: [SuspendedBranchSolution] = []
+        var radii: [Float] = []
+        let declaredPassageIDs = suspension.branches.flatMap(\.passageIDs)
+        guard declaredPassageIDs.count == 4,
+              Set(declaredPassageIDs).count == declaredPassageIDs.count,
+              Set(suspension.branches.map(\.id)).count == suspension.branches.count else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        var framingPoints = transformedBoundsCorners(
+            minimum: minimum,
+            maximum: maximum,
+            transform: transform
+        ) + [fixedAnchor]
+        for branch in suspension.branches {
+            guard branch.passageIDs.count == 2,
+                  Set(branch.passageIDs).count == branch.passageIDs.count,
+                  branch.restLength.isFinite,
+                  branch.restLength > 0,
+                  branch.radius.isFinite,
+                  branch.radius > 0,
+                  branch.passageIDs.allSatisfy({ passagesByID[$0] != nil }) else {
+                throw SuspendedPresentationError.invalidCord
+            }
+            guard let firstModelPoint = passagesByID[branch.passageIDs[0]],
+                  let secondModelPoint = passagesByID[branch.passageIDs[1]] else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            let first = transformPoint(transform, firstModelPoint)
+            let second = transformPoint(transform, secondModelPoint)
+            guard first.allFinite, second.allFinite else {
+                throw SuspendedPresentationError.invalidPose
+            }
+            let interiorVector = second - first
+            let interiorLength = simd_length(interiorVector)
+            guard interiorLength.isFinite, interiorLength > 1e-7,
+                  let interiorTangent = normalized(interiorVector) else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+
+            let firstDistance = simd_length(first - fixedAnchor)
+            let secondDistance = simd_length(fixedAnchor - second)
+            guard firstDistance.isFinite, secondDistance.isFinite,
+                  firstDistance > 1e-7, secondDistance > 1e-7 else {
+                throw SuspendedPresentationError.invalidCord
+            }
+            let minimumRouteLength = firstDistance + interiorLength + secondDistance
+            let declaredLength = Float(branch.restLength)
+            guard declaredLength.isFinite,
+                  declaredLength >= minimumRouteLength - SuspendedCordSolver.tautTolerance else {
+                throw SuspendedPresentationError.cordTooShort
+            }
+
+            // Reserve the exact modeled passage route, then distribute the
+            // remaining free-cord length in proportion to the two endpoint
+            // separations. This is deterministic and preserves the declared
+            // total branch length without inventing knot geometry.
+            let freeLength = declaredLength - interiorLength
+            let endpointDistanceSum = firstDistance + secondDistance
+            guard freeLength.isFinite, endpointDistanceSum.isFinite,
+                  freeLength >= endpointDistanceSum - SuspendedCordSolver.tautTolerance else {
+                throw SuspendedPresentationError.cordTooShort
+            }
+            let firstFreeLength = freeLength * (firstDistance / endpointDistanceSum)
+            let secondFreeLength = freeLength - firstFreeLength
+            guard firstFreeLength.isFinite, secondFreeLength.isFinite else {
+                throw SuspendedPresentationError.invalidCord
+            }
+
+            let firstSpan = try SuspendedCordSolver.solve(
+                start: fixedAnchor,
+                end: first,
+                restLength: firstFreeLength
+            )
+            let secondSpan = try SuspendedCordSolver.solve(
+                start: second,
+                end: fixedAnchor,
+                restLength: secondFreeLength
+            )
+            guard firstSpan.samples.last == first,
+                  secondSpan.samples.first == second,
+                  firstSpan.samples.allSatisfy(\.allFinite),
+                  secondSpan.samples.allSatisfy(\.allFinite),
+                  firstSpan.tangents.allSatisfy(\.allFinite),
+                  secondSpan.tangents.allSatisfy(\.allFinite) else {
+                throw SuspendedPresentationError.nonFiniteCurve
+            }
+
+            let centerline = firstSpan.samples + [second] + Array(secondSpan.samples.dropFirst())
+            let tangents = firstSpan.tangents + [interiorTangent] + Array(secondSpan.tangents.dropFirst())
+            guard centerline.count == tangents.count,
+                  centerline.count == SuspendedCordSolver.sampleCount * 2,
+                  centerline.allSatisfy(\.allFinite),
+                  tangents.allSatisfy(\.allFinite) else {
+                throw SuspendedPresentationError.nonFiniteCurve
+            }
+            let measuredLength = zip(centerline, centerline.dropFirst()).reduce(Float.zero) {
+                $0 + simd_length($1.1 - $1.0)
+            }
+            let arcLength = firstSpan.arcLength + interiorLength + secondSpan.arcLength
+            guard measuredLength.isFinite, arcLength.isFinite,
+                  abs(arcLength - declaredLength) <= 1e-4,
+                  abs(measuredLength - declaredLength) <= 0.02 else {
+                throw SuspendedPresentationError.nonFiniteCurve
+            }
+            branches.append(SuspendedBranchSolution(
+                id: branch.id,
+                passageIDs: branch.passageIDs,
+                spans: [firstSpan.samples, secondSpan.samples],
+                centerlineSamples: centerline,
+                tangentSamples: tangents,
+                arcLength: arcLength
+            ))
+            radii.append(Float(branch.radius))
+            framingPoints.append(contentsOf: [first, second])
+            framingPoints.append(contentsOf: centerline)
+        }
+        guard Set(branches.map(\.id)).count == branches.count,
+              let tubeRadius = radii.max(),
+              tubeRadius.isFinite, tubeRadius > 0 else {
+            throw SuspendedPresentationError.invalidCord
+        }
+        let framing = try makeCameraFraming(pose: pose, points: framingPoints)
+        return SuspendedTwoBranchSolvedPresentation(
+            boardTransform: transform,
+            fixedAnchor: fixedAnchor,
+            branches: branches,
             cameraFraming: framing,
             tubeRadius: tubeRadius,
             requiredClearance: tubeRadius + additionalClearance

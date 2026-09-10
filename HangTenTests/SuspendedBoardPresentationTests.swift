@@ -53,6 +53,30 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
     }
 
+    private func twoBranchSuspension(
+        left: [[Double]] = [[-0.6, 0.4, 0], [-0.4, 0.4, 0]],
+        right: [[Double]] = [[0.4, 0.4, 0], [0.6, 0.4, 0]],
+        anchor: [Double] = [0, 2, 0],
+        restLength: Double = 4,
+        radius: Double = 0.01
+    ) -> BoardModelTwoBranchSuspension {
+        func passage(_ id: String, _ point: [Double]) -> BoardModelPassage {
+            BoardModelPassage(id: id, nodeID: id, pointInModel: point, provenance: "test")
+        }
+        return BoardModelTwoBranchSuspension(
+            passages: BoardModelPassagePairs(
+                left: [passage("left-0", left[0]), passage("left-1", left[1])],
+                right: [passage("right-0", right[0]), passage("right-1", right[1])]
+            ),
+            branches: [
+                BoardModelCordBranch(id: "left", passageIDs: ["left-0", "left-1"], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
+                BoardModelCordBranch(id: "right", passageIDs: ["right-0", "right-1"], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
+            ],
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: anchor),
+            canonicalPoses: [:]
+        )
+    }
+
     func testIdentityPoseKeepsAttachmentAtModelPoint() throws {
         let result = try SuspendedBoardPresentation.solve(
             pose: pose(),
@@ -250,5 +274,130 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             XCTAssertTrue(result.cameraFraming.contains(result.fixedAnchor))
             XCTAssertTrue(result.centerlineSamples.allSatisfy { result.cameraFraming.contains($0) })
         }
+    }
+
+    func testTwoBranchIdentityTransformsAllPassagesAndSharesFixedAnchor() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(result.branches.count, 2)
+        XCTAssertEqual(result.fixedAnchor, SIMD3<Float>(0, 2, 0))
+        XCTAssertEqual(result.branches[0].passageIDs, ["left-0", "left-1"])
+        XCTAssertEqual(result.branches[1].passageIDs, ["right-0", "right-1"])
+        XCTAssertEqual(result.branches[0].spans.count, 2)
+        XCTAssertEqual(result.branches[1].spans.count, 2)
+        XCTAssertEqual(result.branches[0].spans[0].first!, SIMD3<Float>(-0.6, 0.4, 0))
+        XCTAssertEqual(result.branches[0].spans[1].first!, SIMD3<Float>(-0.4, 0.4, 0))
+        XCTAssertEqual(result.branches[1].spans[0].first!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[1].spans[0].last!, SIMD3<Float>(0.4, 0.4, 0))
+        XCTAssertEqual(result.branches[0].centerlineSamples.first!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[0].centerlineSamples.last!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[1].centerlineSamples.first!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[1].centerlineSamples.last!, result.fixedAnchor)
+    }
+
+    func testTwoBranchQuarterTurnTransformsAllFourPassagesButNotAnchor() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(rotation: [0, sin(Double.pi / 4), 0, cos(Double.pi / 4)]),
+            suspension: twoBranchSuspension(),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(result.fixedAnchor, SIMD3<Float>(0, 2, 0))
+        XCTAssertEqual(result.branches[0].spans[0].first!.x, 0, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[0].spans[0].first!.z, 0.6, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[0].spans[1].first!.x, 0, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[0].spans[1].first!.z, 0.4, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[1].spans[0].last!.z, -0.4, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[1].spans[1].first!.z, -0.6, accuracy: 1e-5)
+    }
+
+    func testTwoBranchSolveIsBitwiseDeterministicAndPreservesDeclaredOrder() throws {
+        let first = try SuspendedBoardPresentation.solve(
+            pose: pose(translation: [0.2, -0.1, 0.3]),
+            suspension: twoBranchSuspension(restLength: 4.2),
+            bounds: bounds
+        )
+        let second = try SuspendedBoardPresentation.solve(
+            pose: pose(translation: [0.2, -0.1, 0.3]),
+            suspension: twoBranchSuspension(restLength: 4.2),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(first.branches.map(\.id), ["left", "right"])
+        XCTAssertEqual(first.branches.map(\.passageIDs), [["left-0", "left-1"], ["right-0", "right-1"]])
+        XCTAssertEqual(first.branches.map(\.centerlineSamples), second.branches.map(\.centerlineSamples))
+        XCTAssertEqual(first.branches.map(\.tangentSamples), second.branches.map(\.tangentSamples))
+        XCTAssertEqual(first.branches.map(\.arcLength), second.branches.map(\.arcLength))
+    }
+
+    func testTwoBranchPreservesInteriorPassageSpanAndContinuousJoins() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(restLength: 4.2),
+            bounds: bounds
+        )
+
+        for branch in result.branches {
+            XCTAssertEqual(branch.centerlineSamples.first!, result.fixedAnchor)
+            XCTAssertEqual(branch.centerlineSamples.last!, result.fixedAnchor)
+            XCTAssertEqual(branch.spans[0].last!, branch.centerlineSamples[31])
+            let passageDistance = simd_length(branch.centerlineSamples[32] - branch.centerlineSamples[31])
+            XCTAssertEqual(passageDistance, branch.spans[0].last!.x < 0 ? 0.2 : 0.2, accuracy: 1e-6)
+            XCTAssertEqual(branch.arcLength, 4.2, accuracy: 1e-3)
+        }
+    }
+
+    func testTwoBranchRejectsShortRestLength() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(restLength: 1),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .cordTooShort)
+        }
+    }
+
+    func testTwoBranchRejectsZeroHorizontalSlackAndNonfiniteInputs() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(
+                left: [[0, 0.4, 0], [0.1, 0.4, 0]],
+                right: [[0.4, 0.4, 0], [0.6, 0.4, 0]],
+                anchor: [0, 2, 0],
+                restLength: 4
+            ),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .zeroHorizontalSlack)
+        }
+
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(left: [[.infinity, 0.4, 0], [-0.4, 0.4, 0]]),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .invalidSuspension)
+        }
+    }
+
+    func testTwoBranchCameraIncludesBoardCornersPassagesBranchesAndAnchor() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(rotation: [0, sin(Double.pi / 4), 0, cos(Double.pi / 4)]),
+            suspension: twoBranchSuspension(restLength: 4.2),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(result.cameraFraming.includedPoints.count, 8 + 1 + 4 + result.branches.reduce(0) { $0 + $1.centerlineSamples.count })
+        XCTAssertTrue(result.cameraFraming.contains(result.fixedAnchor))
+        for branch in result.branches {
+            XCTAssertTrue(branch.centerlineSamples.allSatisfy { result.cameraFraming.contains($0) })
+            XCTAssertTrue(branch.spans.flatMap { $0 }.allSatisfy { result.cameraFraming.contains($0) })
+        }
+        XCTAssertEqual(result.tubeRadius, 0.01, accuracy: 1e-6)
+        XCTAssertEqual(result.requiredClearance, 0.011, accuracy: 1e-6)
     }
 }
