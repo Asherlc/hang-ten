@@ -190,6 +190,8 @@ enum SuspendedCordSolver {
         for first in 0..<(samples.count - 2) {
             for second in (first + 2)..<(samples.count - 1) {
                 if samples[first] == samples[second]
+                    || samples[first] == samples[second + 1]
+                    || samples[first + 1] == samples[second]
                     || samples[first + 1] == samples[second + 1] {
                     return true
                 }

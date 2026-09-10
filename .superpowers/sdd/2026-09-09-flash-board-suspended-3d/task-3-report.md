@@ -40,6 +40,10 @@ within the numerical proximity tolerance. The regression suite also measures
 the returned sampled polyline length directly for slack cords and covers an
 8e-6 m taut segment.
 
+Round 2 review fix: all four endpoint pairings are checked for exact repeated
+non-adjacent vertices, including cross-paired endpoints such as `[A, B, C, A]`.
+The short-taut and genuine interior-crossing smoke checks remain green.
+
 Unavailable in this environment:
 
 - Focused `xcodebuild test ... -only-testing:HangTenTests/SuspendedBoardPresentationTests`.

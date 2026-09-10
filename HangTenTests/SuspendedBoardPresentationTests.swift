@@ -193,6 +193,21 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testCrossPairedRepeatedEndpointIsRejectedByValidationHook() {
+        let a = SIMD3<Float>(0, 0, 0)
+        let repeatedEndpoint = [
+            a,
+            SIMD3<Float>(1, 0, 0),
+            SIMD3<Float>(1, 1, 0),
+            a,
+        ]
+
+        XCTAssertTrue(SuspendedCordSolver.hasSelfIntersection(repeatedEndpoint))
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNoSelfIntersection(repeatedEndpoint)) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
     func testPresentationExposesClearanceAndFramingThatContainCord() throws {
         let result = try SuspendedBoardPresentation.solve(
             pose: pose(),
