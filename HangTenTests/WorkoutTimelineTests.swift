@@ -519,7 +519,10 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     private func board(containing holds: [BoardHold]) -> TrainingBoard {
-        TrainingBoard(
+        let frames = Dictionary(uniqueKeysWithValues: holds.enumerated().map { index, hold in
+            (hold.id, CGRect(x: Double(index) * 0.1, y: 0, width: 0.1, height: 0.1))
+        })
+        return TrainingBoard(
             id: "cue-board",
             manufacturer: "Test",
             name: "Cue board",
@@ -528,7 +531,8 @@ final class WorkoutTimelineTests: XCTestCase {
             aspectRatio: 1,
             holds: holds,
             productURL: URL(string: "https://example.com/cue-board")!,
-            photoAssetName: nil
+            photoAssetName: nil,
+            presentations: [rasterPresentation(frames: frames)]
         )
     }
 
