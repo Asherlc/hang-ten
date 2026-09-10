@@ -71,13 +71,23 @@ final class SuspendedBoardPresentationTests: XCTestCase {
     func testQuarterTurnPoseTransformsAttachment() throws {
         let result = try SuspendedBoardPresentation.solve(
             pose: pose(rotation: [0, sin(Double.pi / 4), 0, cos(Double.pi / 4)]),
-            suspension: suspension(attachment: [1, 0, 0]),
+            suspension: suspension(attachment: [1, 0, 0], restLength: 2.5),
             bounds: bounds
         )
 
         XCTAssertEqual(result.transformedAttachment.x, 0, accuracy: 1e-5)
         XCTAssertEqual(result.transformedAttachment.y, 0, accuracy: 1e-5)
         XCTAssertEqual(result.transformedAttachment.z, -1, accuracy: 1e-5)
+    }
+
+    func testQuarterTurnRejectsItsActuallyShortCord() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(rotation: [0, sin(Double.pi / 4), 0, cos(Double.pi / 4)]),
+            suspension: suspension(attachment: [1, 0, 0], restLength: 2),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .cordTooShort)
+        }
     }
 
     func testExactTautCordIsAThirtyTwoSampleStraightSegment() throws {

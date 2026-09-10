@@ -44,6 +44,12 @@ Round 2 review fix: all four endpoint pairings are checked for exact repeated
 non-adjacent vertices, including cross-paired endpoints such as `[A, B, C, A]`.
 The short-taut and genuine interior-crossing smoke checks remain green.
 
+Round 3 review fix: the quarter-turn attachment test now uses an explicitly
+feasible `2.5 m` display cord after its transformed endpoint separation was
+measured at about `2.33 m`. A paired regression confirms that the original
+`2.0 m` fixture still rejects as `cordTooShort`; the solver’s short-cord rule
+was not relaxed.
+
 Unavailable in this environment:
 
 - Focused `xcodebuild test ... -only-testing:HangTenTests/SuspendedBoardPresentationTests`.
