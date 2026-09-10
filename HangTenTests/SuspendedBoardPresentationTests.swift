@@ -400,4 +400,48 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(result.tubeRadius, 0.01, accuracy: 1e-6)
         XCTAssertEqual(result.requiredClearance, 0.011, accuracy: 1e-6)
     }
+
+    func testTwoBranchRejectsSelfIntersectionAcrossInteriorRouteAndFreeSpan() {
+        let crossingBounds = BoardModelBounds(
+            minimum: [-1.2, 0, -0.2],
+            maximum: [1.2, 2.2, 0.2]
+        )
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(
+                left: [[-1, 0, 0], [-0.9, 0.9, 0]],
+                restLength: 5.5628735
+            ),
+            bounds: crossingBounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testTwoBranchExactTautRouteReturnsStraightThirtyTwoSampleFreeSpans() throws {
+        let anchor = SIMD3<Float>(0, 2, 0)
+        let leftFirst = SIMD3<Float>(-0.6, 0.4, 0)
+        let leftSecond = SIMD3<Float>(-0.4, 0.4, 0)
+        let routeLength = simd_length(anchor - leftFirst)
+            + simd_length(leftSecond - leftFirst)
+            + simd_length(anchor - leftSecond)
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: twoBranchSuspension(restLength: Double(routeLength)),
+            bounds: bounds
+        )
+
+        for branch in result.branches {
+            XCTAssertEqual(branch.spans.count, 2)
+            XCTAssertTrue(branch.spans.allSatisfy { $0.count == SuspendedCordSolver.sampleCount })
+            XCTAssertEqual(branch.arcLength, routeLength, accuracy: 1e-5)
+            for span in branch.spans {
+                let start = span.first!
+                let direction = span.last! - start
+                XCTAssertTrue(span.allSatisfy {
+                    simd_length(simd_cross($0 - start, direction)) < 1e-4
+                })
+            }
+        }
+    }
 }

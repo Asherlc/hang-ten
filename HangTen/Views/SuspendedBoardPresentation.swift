@@ -132,10 +132,12 @@ enum SuspendedCordSolver {
         let isTaut = abs(restLength - endpointDistance) <= tautTolerance
         if isTaut {
             let tangent = endpointDistance > 1e-7 ? delta / endpointDistance : SIMD3<Float>(0, 1, 0)
-            let samples = (0..<sampleCount).map { index in
+            var samples = (0..<sampleCount).map { index in
                 let t = Float(index) / Float(sampleCount - 1)
                 return start + delta * t
             }
+            samples[0] = start
+            samples[sampleCount - 1] = end
             let tangents = Array(repeating: tangent, count: sampleCount)
             return try makeSolution(
                 samples: samples,
@@ -239,6 +241,47 @@ enum SuspendedCordSolver {
         }
         guard !hasSelfIntersection(samples, tolerance: tolerance) else {
             throw SuspendedPresentationError.selfIntersection
+        }
+    }
+
+    /// Validates a closed branch path while allowing only its intentional
+    /// anchor closure. Adjacent segments are allowed to share their passage
+    /// endpoint; every other endpoint touch or segment crossing is rejected.
+    static func validateNoSelfIntersectionAllowingClosedEndpoint(
+        _ samples: [SIMD3<Float>],
+        tolerance: Float = 1e-6
+    ) throws {
+        guard samples.count >= 2, samples.allSatisfy(\.allFinite) else {
+            throw SuspendedPresentationError.nonFiniteCurve
+        }
+        guard samples.first == samples.last else {
+            try validateNoSelfIntersection(samples, tolerance: tolerance)
+            return
+        }
+        guard samples.count >= 4 else { return }
+        for first in 0..<(samples.count - 2) {
+            for second in (first + 2)..<(samples.count - 1) {
+                // The first and final segments intentionally meet at the
+                // single shared mathematical anchor.
+                if first == 0 && second == samples.count - 2 { continue }
+                if samples[first] == samples[second]
+                    || samples[first] == samples[second + 1]
+                    || samples[first + 1] == samples[second]
+                    || samples[first + 1] == samples[second + 1] {
+                    throw SuspendedPresentationError.selfIntersection
+                }
+                let approach = segmentClosestApproach(
+                    samples[first], samples[first + 1],
+                    samples[second], samples[second + 1]
+                )
+                let hasInteriorCrossing = approach.s > 1e-4
+                    && approach.s < 1 - 1e-4
+                    && approach.t > 1e-4
+                    && approach.t < 1 - 1e-4
+                if hasInteriorCrossing && approach.distanceSquared <= tolerance * tolerance {
+                    throw SuspendedPresentationError.selfIntersection
+                }
+            }
         }
     }
 
@@ -600,6 +643,7 @@ enum SuspendedBoardPresentation {
                   tangents.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.nonFiniteCurve
             }
+            try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(centerline)
             let measuredLength = zip(centerline, centerline.dropFirst()).reduce(Float.zero) {
                 $0 + simd_length($1.1 - $1.0)
             }
