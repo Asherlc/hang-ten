@@ -113,17 +113,20 @@ Inspect [BoardModelView](../../../HangTen/Views/BoardModelView.swift), package l
 
 Keep asynchronous cached loading, independent cloned materials, scene/camera rebinding on identity changes, stable accessibility elements, and on-demand rendering. Use head-on orthographic app framing with lighting that reveals recess depth. Match preview/rest and active highlight semantics; restore wood when cleared.
 
-For a model carrying the Task 1 `singleCord` contract, integrate the
+For a model satisfying the `Suspended portable presentations` contract,
+integrate the
 suspension presentation as one deterministic transient layer above the
 validated USDZ. Transform the descriptor's local attachment point with the
 selected canonical board pose, keep the anchor fixed and invisible, and solve
 a uniform-cord catenary in the gravity plane whenever slack exists. Use a
-straight segment only when rest length equals the physical minimum-length
-tolerance. The curve must be continuous at both endpoints, sampled with
-finite values and fixed sample/material parameters, and remain non-pickable
-and absent from the accessibility tree. Verify mesh/ray clearance away from
-the approved attachment interface and camera-space framing of the active hold,
-attachment, and visible cord segment. Do not add a visible nail, hook, anchor,
+straight segment only when rest length equals endpoint separation within the
+declared numerical tolerance. The curve must be continuous at both endpoints,
+sampled with finite values and fixed sample/material parameters, and remain
+non-pickable and absent from the accessibility tree. Validate sampled-curve
+length and self-intersection, and verify cord-tube clearance of at least the
+cord radius plus declared clearance from the board mesh/rays away from the
+approved attachment interface. Also verify camera-space framing of the active
+hold, attachment, and visible cord segment. Do not add a visible nail, hook, anchor,
 stand, ceiling, or surrounding mounting environment.
 
 The following are required failure outcomes for validators and
