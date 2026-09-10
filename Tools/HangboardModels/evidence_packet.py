@@ -205,6 +205,8 @@ def _validate_suspended_presentation(
             raise ValueError(f"duplicate position mapping: {position}")
         seen.add(position)
         holds = _strings(mapping.get("holdIDs"), "position mapping holdIDs")
+        if not holds:
+            raise ValueError("position mapping holdIDs must be non-empty")
         if any(hold not in inventory_ids for hold in holds):
             raise ValueError("position mapping references unknown hold ID")
         _require_retained_reference(mapping.get("sourceLocalPath"), source_tiers, "position mapping")

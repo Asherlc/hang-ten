@@ -147,6 +147,15 @@ def test_rejects_unlabelled_suspended_estimate(tmp_path: Path) -> None:
         validate_evidence_packet(packet)
 
 
+def test_rejects_empty_position_mapping_hold_ids(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["positionMappings"][0]["holdIDs"] = []  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="holdIDs must be non-empty"):
+        validate_evidence_packet(packet)
+
+
 def test_rejects_missing_visual_approval_and_geometry_proposal(tmp_path: Path) -> None:
     packet = valid_suspended_packet(tmp_path)
     payload = _payload(packet)
