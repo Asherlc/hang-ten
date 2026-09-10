@@ -69,6 +69,24 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
         source = packet_dir / "sources" / name
         source.write_bytes(name.encode("ascii"))
         retained.append((f"sources/{name}", hashlib.sha256(source.read_bytes()).hexdigest()))
+    user_evidence = []
+    for name, view in (
+        ("user-closeup-three-well-face.png", "three-well-face-closeup"),
+        ("user-closeup-opposite-face.png", "opposite-face-closeup"),
+        ("user-closeup-end-attachment.png", "end-attachment-closeup"),
+    ):
+        source = packet_dir / "sources" / name
+        source.write_bytes(name.encode("ascii"))
+        user_evidence.append(
+            {
+                "localPath": f"sources/{name}",
+                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "sourceTier": "user",
+                "view": view,
+                "supports": "user-supplied visual context only",
+                "limitations": "Not manufacturer authority; does not establish new logical holds or dimensions.",
+            }
+        )
     payload = _payload(path)
     payload["primarySources"][0]["localPath"] = retained[0][0]  # type: ignore[index]
     payload["primarySources"][0]["sha256"] = retained[0][1]  # type: ignore[index]
@@ -83,6 +101,7 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
         }
         for local_path, digest in retained[1:]
     ]
+    payload["userEvidenceSources"] = user_evidence
     for item in payload["logicalInventory"]:  # type: ignore[index]
         item["sourceLocalPath"] = retained[0][0]
     for claim in payload["sourcedClaims"]:  # type: ignore[index]
@@ -96,6 +115,28 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
             {"positionID": "two-edge-inverted", "holdIDs": ["jug-right"], "sourceLocalPath": retained[1][0]},
         ],
         "attachmentEvidence": {"sourceLocalPath": retained[1][0], "view": "attachment-region", "supports": "paired cord passages"},
+        "faceInventoryNotes": [
+            {
+                "faceID": "three-well",
+                "sourceLocalPaths": [retained[2][0], user_evidence[0]["localPath"]],
+                "notes": "Three wells are visible; retailer labels are commerce-gap evidence only.",
+            },
+            {
+                "faceID": "two-well",
+                "sourceLocalPaths": [retained[0][0], user_evidence[1]["localPath"]],
+                "notes": "Two wells and end features are visible in the retained views.",
+            },
+        ],
+        "nonSelectableFeatures": [
+            {
+                "featureID": "lower-ledges",
+                "faceID": "three-well",
+                "sourceLocalPaths": [user_evidence[0]["localPath"]],
+                "description": "Shallow lower grooves adjacent to the wells.",
+                "reason": "Unresolved from imagery; retain as nonselectable display geometry.",
+            }
+        ],
+        "logicalRuling": "no-new-logical-ids",
         "visualApproval": {
             "approvedSnapshotPaths": [retained[0][0], retained[1][0]],
             "materiallyDistinct": True,
@@ -108,6 +149,13 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
             {"name": "camera", "value": "canonical camera", "provenance": "displayEstimate"},
         ],
     }
+    payload["conflictsAndRulings"] = [
+        {
+            "claimID": "lower-ledge-interpretation",
+            "conflict": "Supplied closeups show shallow lower grooves, but do not establish separate logical contacts.",
+            "ruling": "Keep the grooves as nonselectable geometry and preserve the approved logical inventory.",
+        }
+    ]
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
 
@@ -115,6 +163,59 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
 def test_accepts_valid_suspended_presentation(tmp_path: Path) -> None:
     packet = valid_suspended_packet(tmp_path)
     assert validate_evidence_packet(packet).suspended_presentation["positionIDs"]
+
+
+def test_accepts_amazon_face_map_only_as_commerce(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    parsed = validate_evidence_packet(packet)
+    amazon = next(source for source in parsed.commerce_sources if source.retailer == "Authorized Retailer")
+    assert amazon.source_tier == "commerce"
+    assert all(source.source_tier != "manufacturer" for source in parsed.commerce_sources)
+
+
+def test_accepts_user_closeups_with_explicit_limitations(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    parsed = validate_evidence_packet(packet)
+    assert len(parsed.user_evidence_sources) == 3
+    assert all(source["limitations"] for source in parsed.user_evidence_sources)
+
+
+def test_rejects_user_closeup_without_evidence_limitations(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["userEvidenceSources"][0]["limitations"]  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="limitations"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_commerce_source_adding_logical_hold_id(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["logicalInventory"].append(  # type: ignore[union-attr]
+        {"id": "commerce-only-lower-groove", "kind": "edge", "sourceLocalPath": "sources/hanging.jpg"}
+    )
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="approved logical inventory|logical hold"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_lower_groove_mapped_as_new_id(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["positionMappings"][0]["holdIDs"].append("lower-groove")  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="unknown hold ID"):
+        validate_evidence_packet(packet)
+
+
+def test_requires_lower_ledge_conflict_ruling(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["conflictsAndRulings"] = []
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="lower-ledge-interpretation"):
+        validate_evidence_packet(packet)
 
 
 def test_rejects_suspended_presentation_without_distinct_snapshots(tmp_path: Path) -> None:

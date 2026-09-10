@@ -17,7 +17,7 @@ from typing import Any, Literal
 from urllib.parse import urlparse
 
 
-SourceTier = Literal["manufacturer", "commerce"]
+SourceTier = Literal["manufacturer", "commerce", "user"]
 
 _PACKET_KEYS = frozenset(
     {
@@ -26,6 +26,7 @@ _PACKET_KEYS = frozenset(
         "locale",
         "primarySources",
         "commerceSources",
+        "userEvidenceSources",
         "logicalInventory",
         "sourcedClaims",
         "conflictsAndRulings",
@@ -36,7 +37,7 @@ _PACKET_KEYS = frozenset(
         "suspendedPresentation",
     }
 )
-_REQUIRED_PACKET_KEYS = _PACKET_KEYS - {"suspendedPresentation"}
+_REQUIRED_PACKET_KEYS = _PACKET_KEYS - {"suspendedPresentation", "userEvidenceSources"}
 _PROPOSAL_KEYS = frozenset(
     {"geometry", "coordinates", "contours", "masks", "vectors", "trace", "alignment"}
 )
@@ -55,6 +56,17 @@ _NUMERIC_SHAPE_PRESCRIPTION = re.compile(
     r"\d+(?:\.\d+)?\s*(?:mm|cm|in)?|"
     r"\d+(?:\.\d+)?\s*(?:mm|cm|in)\s*\b(?:radius|radii|section|profile|contour|depth)\b)",
     re.IGNORECASE,
+)
+_FLASH_APPROVED_LOGICAL_IDS = frozenset(
+    {
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right",
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right",
+    }
 )
 
 
@@ -79,6 +91,7 @@ class EvidencePacket:
     locale: str
     primary_sources: tuple[EvidenceSource, ...]
     commerce_sources: tuple[EvidenceSource, ...]
+    user_evidence_sources: tuple[dict[str, Any], ...]
     logical_inventory: tuple[dict[str, Any], ...]
     sourced_claims: tuple[dict[str, Any], ...]
     conflicts_and_rulings: tuple[Any, ...]
@@ -128,12 +141,15 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     if not primary:
         raise ValueError("primarySources must contain at least one manufacturer source")
     commerce = _sources(payload["commerceSources"], path.parent, "commerce")
+    user_evidence = _user_sources(payload.get("userEvidenceSources", []), path.parent)
     source_paths = [source.local_path for source in (*primary, *commerce)]
+    source_paths.extend(item["localPath"] for item in user_evidence)
     if len(source_paths) != len(set(source_paths)):
         raise ValueError("duplicate retained localPath across evidence sources")
     source_tiers = {
         source.local_path: source.source_tier for source in (*primary, *commerce)
     }
+    source_tiers.update({item["localPath"]: "user" for item in user_evidence})
     _validate_inventory(payload["logicalInventory"], set(source_tiers))
     claims = _dict_list(payload["sourcedClaims"], "sourcedClaims")
     conflicts = _list(payload["conflictsAndRulings"], "conflictsAndRulings")
@@ -155,7 +171,13 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
 
     suspended = payload.get("suspendedPresentation")
     if suspended is not None:
-        _validate_suspended_presentation(suspended, source_tiers, payload["logicalInventory"])
+        _validate_suspended_presentation(
+            suspended,
+            source_tiers,
+            payload["logicalInventory"],
+            board_revision,
+            conflicts,
+        )
 
     return EvidencePacket(
         board_revision=board_revision,
@@ -163,6 +185,7 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
         locale=locale,
         primary_sources=tuple(primary),
         commerce_sources=tuple(commerce),
+        user_evidence_sources=tuple(user_evidence),
         logical_inventory=tuple(payload["logicalInventory"]),
         sourced_claims=tuple(claims),
         conflicts_and_rulings=tuple(conflicts),
@@ -175,11 +198,24 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
 
 
 def _validate_suspended_presentation(
-    value: Any, source_tiers: dict[str, SourceTier], inventory: list[dict[str, Any]]
+    value: Any,
+    source_tiers: dict[str, SourceTier],
+    inventory: list[dict[str, Any]],
+    board_revision: str,
+    conflicts: list[Any],
 ) -> None:
     if not isinstance(value, dict):
         raise ValueError("suspendedPresentation must be an object")
-    allowed = {"positionIDs", "positionMappings", "attachmentEvidence", "visualApproval", "displayEstimates"}
+    allowed = {
+        "positionIDs",
+        "positionMappings",
+        "attachmentEvidence",
+        "faceInventoryNotes",
+        "nonSelectableFeatures",
+        "logicalRuling",
+        "visualApproval",
+        "displayEstimates",
+    }
     unknown = set(value) - allowed
     if unknown:
         raise ValueError(f"suspendedPresentation contains unknown key: {sorted(unknown)[0]}")
@@ -212,6 +248,59 @@ def _validate_suspended_presentation(
         _require_retained_reference(mapping.get("sourceLocalPath"), source_tiers, "position mapping")
     if seen != set(position_ids):
         raise ValueError("positionMappings must provide a mapping for every declared position")
+
+    inventory_ids = {item.get("id") for item in inventory}
+    if board_revision == "tension-flash-board-2" and inventory_ids != _FLASH_APPROVED_LOGICAL_IDS:
+        raise ValueError("approved logical inventory for the Flash Board must preserve the seven IDs")
+
+    face_notes = _dict_list(value["faceInventoryNotes"], "suspendedPresentation.faceInventoryNotes")
+    if not face_notes:
+        raise ValueError("faceInventoryNotes must be non-empty")
+    for note in face_notes:
+        if set(note) - {"faceID", "sourceLocalPaths", "notes"}:
+            raise ValueError("face inventory note contains unknown key")
+        _required_string(note, "faceID")
+        references = _strings(note.get("sourceLocalPaths"), "face inventory note sourceLocalPaths")
+        if not references:
+            raise ValueError("face inventory note sourceLocalPaths must be non-empty")
+        for reference in references:
+            _require_retained_reference(reference, source_tiers, "face inventory note")
+        _required_string(note, "notes")
+
+    features = _dict_list(value["nonSelectableFeatures"], "suspendedPresentation.nonSelectableFeatures")
+    if not features:
+        raise ValueError("nonSelectableFeatures must be non-empty")
+    for feature in features:
+        if set(feature) - {"featureID", "faceID", "sourceLocalPaths", "description", "reason"}:
+            raise ValueError("non-selectable feature contains unknown or logical-hold key")
+        for key in ("featureID", "faceID", "description", "reason"):
+            _required_string(feature, key)
+        references = _strings(feature.get("sourceLocalPaths"), "non-selectable feature sourceLocalPaths")
+        if not references:
+            raise ValueError("non-selectable feature sourceLocalPaths must be non-empty")
+        for reference in references:
+            _require_retained_reference(reference, source_tiers, "non-selectable feature")
+
+    if value.get("logicalRuling") != "no-new-logical-ids":
+        raise ValueError("suspendedPresentation.logicalRuling must be no-new-logical-ids")
+    mapped_ids = {hold for mapping in mappings for hold in mapping["holdIDs"]}
+    if mapped_ids != inventory_ids:
+        raise ValueError("suspended presentation logical hold inventory does not match position mappings")
+    lower_ruling = next(
+        (
+            item
+            for item in conflicts
+            if isinstance(item, dict)
+            and item.get("claimID") == "lower-ledge-interpretation"
+            and isinstance(item.get("conflict"), str)
+            and item["conflict"].strip()
+            and isinstance(item.get("ruling"), str)
+            and item["ruling"].strip()
+        ),
+        None,
+    )
+    if lower_ruling is None:
+        raise ValueError("conflictsAndRulings requires lower-ledge-interpretation conflict and ruling")
 
     attachment = value["attachmentEvidence"]
     if not isinstance(attachment, dict):
@@ -259,7 +348,7 @@ def _require_retained_reference(reference: Any, source_tiers: dict[str, SourceTi
 
 
 def _required_string(payload: dict[str, Any], key: str) -> str:
-    value = payload[key]
+    value = payload.get(key)
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{key} must be a non-empty string")
     return value
@@ -352,6 +441,34 @@ def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[Ev
                 snapshot_sha256=snapshot_sha256,
             )
         )
+    return sources
+
+
+def _user_sources(value: Any, packet_dir: Path) -> list[dict[str, Any]]:
+    objects = _dict_list(value, "userEvidenceSources")
+    sources: list[dict[str, Any]] = []
+    for raw in objects:
+        allowed = {"localPath", "sha256", "sourceTier", "view", "supports", "limitations"}
+        unknown = set(raw) - allowed
+        if unknown:
+            raise ValueError(f"user evidence source contains unknown key: {sorted(unknown)[0]}")
+        local_path = raw.get("localPath")
+        if not isinstance(local_path, str) or not local_path or Path(local_path).is_absolute():
+            raise ValueError("user evidence localPath must be a relative retained path")
+        if any(part == ".." for part in Path(local_path).parts):
+            raise ValueError("user evidence localPath must stay beneath the packet directory")
+        source_path = packet_dir / local_path
+        _validate_retained_path(source_path, packet_dir)
+        digest = raw.get("sha256")
+        _validate_sha256(digest, "sha256")
+        actual_digest = hashlib.sha256(source_path.read_bytes()).hexdigest()
+        if digest.casefold() != actual_digest:
+            raise ValueError(f"user evidence SHA-256 does not match retained bytes: {local_path}")
+        if raw.get("sourceTier") != "user":
+            raise ValueError("user evidence sourceTier must be user")
+        for key in ("view", "supports", "limitations"):
+            _required_string(raw, key)
+        sources.append(dict(raw))
     return sources
 
 
