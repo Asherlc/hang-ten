@@ -145,6 +145,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.passages.right.count, 2)
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
+        XCTAssertEqual(media.suspension?.cord.restLength, 0.5)
     }
 
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
@@ -163,6 +164,22 @@ final class BoardPackageStoreTests: XCTestCase {
         let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
         let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
         XCTAssertEqual(suspension["type"] as? String, "twoBranchCord")
+    }
+
+    func testWrongTwoBranchDiscriminatorUsesInvalidPackageCategory() throws {
+        let fixtures = try validationFixtures()
+        let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
+        let specification = try XCTUnwrap(
+            matrix.first(where: { $0["name"] as? String == "two-branch-wrong-discriminator" })
+        )
+        let fixture = try makeSharedModelParserParityFixtureBundle(specification)
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage = error as? BoardPackageStoreError else {
+                return XCTFail("expected invalidPackage shape mismatch, got \(error)")
+            }
+        }
     }
 
     func testModelPresentationContentUsesTypedMediaHoldInventory() throws {
@@ -3221,8 +3238,7 @@ final class BoardPackageStoreTests: XCTestCase {
         mutatePackage: ((URL) throws -> Void)? = nil
     ) throws -> FixtureBundle {
         let fixtures = try validationFixtures()
-        let base = specification["base"] as? String ?? "model"
-        let model = try XCTUnwrap(fixtures[base] as? [String: Any])
+        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
         var board = try XCTUnwrap(model["board"] as? [String: Any])
         board["id"] = boardID
         var descriptor = try XCTUnwrap(model["descriptor"] as? [String: Any])

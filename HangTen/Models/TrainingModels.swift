@@ -198,10 +198,10 @@ enum BoardModelSuspension: Hashable {
 
     var cord: BoardModelCord {
         switch self {
-        case .singleCord(let suspension): suspension.cord
+        case .singleCord(let suspension): return suspension.cord
         case .twoBranchCord(let suspension):
             let branch = suspension.branches[0]
-            BoardModelCord(
+            return BoardModelCord(
                 restLength: branch.restLength,
                 radius: branch.radius,
                 material: branch.material,

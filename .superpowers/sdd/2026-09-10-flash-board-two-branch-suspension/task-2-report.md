@@ -76,3 +76,21 @@ Round-1 repair checks passed: all 52 matrix cases matched their declared
 Python error regexes, Python syntax/JSON validation passed, Swift syntax parse
 passed, and `git diff --check` passed. Full pytest/XCTest remain subject to
 the environment limitations above.
+
+## Round 2 repair
+
+The rereview's compile and routing findings are repaired. Both branches of
+the Swift `BoardModelSuspension.cord` compatibility projection now return a
+`BoardModelCord`; the ordinary model-fixture helper no longer references the
+parity function's `specification` variable; and discriminator inspection uses
+a coding-key enum containing all suspension member names, making conflicting
+single/two-branch shapes reach the explicit `shapeMismatch` invalid-package
+path. Focused Swift tests cover the cord projection and the expected
+`invalidPackage` category for the wrong discriminator.
+
+Round-2 checks: Python fixture-specific matching remained 52/52, Python
+syntax/JSON validation, Swift syntax parsing, and `git diff --check` passed.
+`swiftc -typecheck` was attempted with a workspace-owned module cache but is
+blocked by unrelated pre-existing missing project symbols and unavailable
+global SDK/cache state; the prior full XCTest command remains blocked before
+compilation by CoreSimulator and offline package resolution.

@@ -1822,7 +1822,7 @@ private enum BoardPackageSuspensionDocument: Decodable {
     case shapeMismatch(String)
 
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: TypeCodingKey.self)
+        let container = try decoder.container(keyedBy: SuspensionCodingKey.self)
         let type = try container.decode(String.self, forKey: .type)
         switch type {
         case "singleCord":
@@ -1842,7 +1842,9 @@ private enum BoardPackageSuspensionDocument: Decodable {
         }
     }
 
-    private enum TypeCodingKey: String, CodingKey { case type }
+    private enum SuspensionCodingKey: String, CodingKey {
+        case type, attachment, anchor, cord, canonicalPoses, passages, branches
+    }
 }
 
 private struct BoardPackageSingleCordSuspensionDocument: Decodable {
