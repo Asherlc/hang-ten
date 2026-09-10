@@ -1,5 +1,6 @@
 package com.hangten.android.content
 
+import com.hangten.android.board.boardAssetPath
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -19,6 +20,7 @@ class BoardRepositoryTest {
 
         val board = result.getOrThrow().single()
         assertEquals("demo.board", board.id)
+        assertEquals("demo", board.packageSlug)
         assertEquals("path-hold", board.holds[0].id)
         assertEquals(setOf("mediumEdge"), board.holds[0].features)
         assertTrue(board.holds[0].geometry.single().shape is HoldShape.Path)
@@ -124,6 +126,26 @@ class BoardRepositoryTest {
         assertEquals("path-hold", board.holds.single().id)
         assertEquals("primary", board.holds.single().presentationId)
         assertTrue(board.holds.single().geometry.single().shape is HoldShape.Path)
+    }
+
+    @Test
+    fun preservesPackageSlugForTheCanvasAssetLookupWhenItDiffersFromTheLogicalBoardId() {
+        val board = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/asset-package-slug/board.json" to schemaV2RasterBoardJson()
+                        .replace("\"id\": \"demo.board\"", "\"id\": \"canonical.board-id\""),
+                    "Hangboards/asset-package-slug/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards().getOrThrow().single()
+
+        assertEquals("canonical.board-id", board.id)
+        assertEquals("asset-package-slug", board.packageSlug)
+        assertEquals(
+            "Hangboards/asset-package-slug/assets/primary.png",
+            boardAssetPath(board, board.presentations.single()),
+        )
     }
 
     @Test

@@ -84,6 +84,7 @@ class AssetBoardRepository(
             aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio"),
             presentations = presentations,
             holds = holds,
+            packageSlug = packageName,
         )
     }
 
@@ -177,6 +178,7 @@ class AssetBoardRepository(
             aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio"),
             presentations = presentations,
             holds = holds,
+            packageSlug = packageName,
         )
     }
 
