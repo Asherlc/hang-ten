@@ -180,6 +180,8 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     _validate_cross_tier_claims(claims, source_tiers, conflicts)
 
     suspended = payload.get("suspendedPresentation")
+    if board_revision == "tension-flash-board-2" and suspended is None:
+        raise ValueError("Flash Board evidence requires suspendedPresentation")
     if suspended is not None:
         _validate_suspended_presentation(
             suspended,
@@ -187,6 +189,7 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
             payload["logicalInventory"],
             board_revision,
             conflicts,
+            commerce,
         )
 
     return EvidencePacket(
@@ -213,6 +216,7 @@ def _validate_suspended_presentation(
     inventory: list[dict[str, Any]],
     board_revision: str,
     conflicts: list[Any],
+    commerce: list[EvidenceSource],
 ) -> None:
     if not isinstance(value, dict):
         raise ValueError("suspendedPresentation must be an object")
@@ -265,6 +269,14 @@ def _validate_suspended_presentation(
         raise ValueError("positionMappings must provide a mapping for every declared position")
 
     if board_revision == "tension-flash-board-2":
+        amazon_paths = {
+            source.local_path
+            for source in commerce
+            if source.retailer == "Amazon"
+            and source.url == "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"
+        }
+        if not amazon_paths:
+            raise ValueError("Flash Board requires the retained Amazon face-map commerce source")
         mapping_order = tuple(mapping["positionID"] for mapping in mappings)
         if mapping_order != _FLASH_APPROVED_POSITION_ORDER:
             raise ValueError("Flash Board position mappings must cover the four approved positions in order")
@@ -274,6 +286,8 @@ def _validate_suspended_presentation(
                 raise ValueError(
                     f"Flash Board position {mapping['positionID']} does not preserve its approved hold order"
                 )
+            if mapping["positionID"].startswith("three-edge-") and mapping["sourceLocalPath"] not in amazon_paths:
+                raise ValueError("Flash Board three-edge mapping must use the Amazon commerce face map")
 
     face_notes = _dict_list(value["faceInventoryNotes"], "suspendedPresentation.faceInventoryNotes")
     if not face_notes:

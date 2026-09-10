@@ -217,6 +217,21 @@ def test_accepts_amazon_face_map_only_as_commerce(tmp_path: Path) -> None:
     assert amazon.source_tier == "commerce"
     assert amazon.url == "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"
     assert amazon.local_path == "sources/labelled-faces.jpg"
+    assert {
+        mapping["sourceLocalPath"]
+        for mapping in parsed.suspended_presentation["positionMappings"]
+        if mapping["positionID"].startswith("three-edge-")
+    } == {amazon.local_path}
+
+
+def test_rejects_flash_three_edge_mapping_without_amazon_provenance(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    for mapping in payload["suspendedPresentation"]["positionMappings"][:2]:  # type: ignore[index]
+        mapping["sourceLocalPath"] = "sources/front.png"
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="three-edge mapping.*Amazon"):
+        validate_evidence_packet(packet)
 
 
 def test_accepts_user_closeups_with_explicit_limitations(tmp_path: Path) -> None:
@@ -268,11 +283,14 @@ def test_requires_lower_ledge_conflict_ruling(tmp_path: Path) -> None:
 def test_rejects_flash_duplicate_or_reordered_inventory(tmp_path: Path) -> None:
     packet = valid_flash_suspended_packet(tmp_path)
     payload = _payload(packet)
-    payload["logicalInventory"][0]["id"] = "three-edge-center"  # type: ignore[index]
+    payload["logicalInventory"].append(dict(payload["logicalInventory"][0]))  # type: ignore[index]
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="seven IDs"):
         validate_evidence_packet(packet)
 
+    reordered_root = tmp_path / "reordered"
+    reordered_root.mkdir()
+    packet = valid_flash_suspended_packet(reordered_root)
     payload = _payload(packet)
     payload["logicalInventory"][0], payload["logicalInventory"][1] = payload["logicalInventory"][1], payload["logicalInventory"][0]  # type: ignore[index]
     _rewrite(packet, payload)
@@ -287,6 +305,15 @@ def test_rejects_flash_missing_or_arbitrary_position(tmp_path: Path) -> None:
     payload["suspendedPresentation"]["positionMappings"] = [payload["suspendedPresentation"]["positionMappings"][0]]  # type: ignore[index]
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="four approved positions"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_flash_without_suspended_presentation(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["suspendedPresentation"]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="requires suspendedPresentation"):
         validate_evidence_packet(packet)
 
     arbitrary_root = tmp_path / "arbitrary-position"
