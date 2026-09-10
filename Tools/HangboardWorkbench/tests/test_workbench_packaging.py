@@ -98,7 +98,13 @@ def test_pyinstaller_arguments_embed_only_direct_workbench_runtime_inputs(tmp_pa
         for index, value in enumerate(arguments)
         if value == "--hidden-import"
     ]
-    assert hidden_imports == ["server", "board_package", "board_geometry"]
+    assert hidden_imports == [
+        "server",
+        "board_package",
+        "board_geometry",
+        "hangboard_packages.board_catalog",
+        "hangboard_packages.board_geometry_schema",
+    ]
 
     embedded_operands = [
         arguments[index + 1]
@@ -163,7 +169,7 @@ def test_pyinstaller_rejects_empty_codesign_identity(identity, tmp_path):
         )
 
 
-def test_pyinstaller_arguments_accept_a_workbench_and_board_library_without_other_tool_sources(
+def test_pyinstaller_arguments_require_the_shared_board_schema_parser(
     tmp_path, monkeypatch
 ):
     repository = tmp_path / "repository"
@@ -176,6 +182,12 @@ def test_pyinstaller_arguments_accept_a_workbench_and_board_library_without_othe
     (editor_root / "board_geometry.py").write_text("", encoding="utf-8")
     (editor_root / "workbench_assets.py").write_text("", encoding="utf-8")
     (editor_root / "manifest-only.js").write_text("", encoding="utf-8")
+    package_source = (
+        repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
+    )
+    package_source.mkdir(parents=True)
+    (package_source / "board_catalog.py").write_text("", encoding="utf-8")
+    (package_source / "board_geometry_schema.py").write_text("", encoding="utf-8")
     metadata = tmp_path / "metadata"
     metadata.mkdir()
     (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
@@ -193,7 +205,7 @@ def test_pyinstaller_arguments_accept_a_workbench_and_board_library_without_othe
     assert "index.html" not in joined
 
 
-def test_pyinstaller_arguments_include_only_direct_workbench_imports(tmp_path):
+def test_pyinstaller_arguments_include_the_shared_board_schema_parser(tmp_path):
     metadata = tmp_path / "metadata"
     metadata.mkdir()
     (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
@@ -209,7 +221,13 @@ def test_pyinstaller_arguments_include_only_direct_workbench_imports(tmp_path):
         arguments[index + 1]
         for index, value in enumerate(arguments)
         if value == "--hidden-import"
-    ] == ["server", "board_package", "board_geometry"]
+    ] == [
+        "server",
+        "board_package",
+        "board_geometry",
+        "hangboard_packages.board_catalog",
+        "hangboard_packages.board_geometry_schema",
+    ]
 
 
 @pytest.mark.parametrize("commit", ["A" * 40, "a" * 39, "a" * 41, "not-a-sha"])

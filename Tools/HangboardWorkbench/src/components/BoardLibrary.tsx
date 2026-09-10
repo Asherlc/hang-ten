@@ -24,12 +24,17 @@ export function BoardLibrary({ boards, selectedBoardId, busy, error, onSelectBoa
             key={board.boardId}
             type="button"
             className={`region-item${selectedBoardId === board.boardId ? " selected" : ""}`}
-            disabled={busy}
+            disabled={busy || board.editorAvailable === false}
             onClick={() => onSelectBoard(board.boardId)}
           >
             <span className="region-key">{board.displayName}</span>
             <small className="region-type">{board.holdCount} holds</small>
             {board.needsAttention && <small className="region-type">Needs attention</small>}
+            {board.editorAvailable === false && (
+              <small className="region-type">
+                {board.unavailableReason ?? "Editing is unavailable"}
+              </small>
+            )}
           </button>
         ))}
       </div>

@@ -304,6 +304,38 @@ test("the board list shows an accessible attention status only for flagged board
   });
 });
 
+test("the board list marks model-only packages read-only and cannot open them", async () => {
+  let opened = false;
+  await withApp(dependenciesFixture({
+    client: {
+      async listBoards() {
+        return [{
+          boardId: "model-only",
+          displayName: "Model Only",
+          holdCount: 19,
+          needsAttention: false,
+          editorAvailable: false,
+          unavailableReason: "3D model editing is not supported",
+        }];
+      },
+      async getBoard() {
+        opened = true;
+        throw new Error("must not open a model-only package");
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+
+    assert.equal(app.disabled("#board-list button"), true);
+    assert.equal(
+      app.text("#board-list button"),
+      "Model Only19 holds3D model editing is not supported",
+    );
+    await app.click("#board-list button");
+    assert.equal(opened, false);
+  });
+});
+
 test("mobile canvas controls open the board drawer, repository sheet, and hold inspector explicitly", async () => {
   const image = imageFixture();
   let saves = 0;

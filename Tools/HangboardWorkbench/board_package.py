@@ -12,11 +12,21 @@ from pathlib import Path, PurePosixPath
 import re
 import shutil
 import stat
+import sys
 import tempfile
 from typing import Any, Iterator, Mapping, Protocol
 from urllib.parse import urlparse
 import uuid
 import zlib
+
+_PACKAGES_SOURCE_ROOT = Path(__file__).resolve().parents[1] / "HangboardPackages" / "src"
+if _PACKAGES_SOURCE_ROOT.is_dir() and str(_PACKAGES_SOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PACKAGES_SOURCE_ROOT))
+
+try:
+    from hangboard_packages import board_catalog as _schema_v2_catalog
+except ImportError:  # PyInstaller resolves this through its explicit hidden import.
+    _schema_v2_catalog = None
 
 from board_geometry import (
     ClosedPath,
@@ -119,6 +129,10 @@ class BoardNotAvailableError(BoardPackageError):
     """Raised when a valid board ID is not present in the library."""
 
 
+class BoardEditorUnavailableError(BoardPackageError):
+    """Raised when a package has valid media that Workbench cannot edit."""
+
+
 @dataclass(frozen=True, slots=True)
 class BoardPresentation:
     id: str
@@ -130,6 +144,8 @@ class BoardPresentation:
     image_height: int
     source_presentation_id: str | None = None
     is_inverted: bool = False
+    media_type: str = "raster"
+    descriptor_path: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,6 +155,7 @@ class BoardPackage:
     image_width: int
     image_height: int
     presentations: tuple[BoardPresentation, ...]
+    schema_version: int | None = None
 
     @property
     def board_id(self) -> str:
@@ -147,6 +164,10 @@ class BoardPackage:
     @property
     def hold_ids(self) -> tuple[str, ...]:
         return tuple(hold["id"] for hold in self.board["holds"])
+
+    @property
+    def editor_available(self) -> bool:
+        return all(item.media_type == "raster" for item in self.presentations)
 
     def presentation(self, presentation_id: str | None = None) -> BoardPresentation:
         selected = (
@@ -242,12 +263,133 @@ def open_package(library_root: Path, board_id: str) -> BoardPackage:
         )
         if package is None:
             raise BoardNotAvailableError("board is not available")
+        if not package.editor_available:
+            raise BoardEditorUnavailableError("3D model editing is not supported")
         return load_board_package(package.root)
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
     """Load one completed package without accepting links or extra files."""
     return _load_board_package(package_root, inspect_png_header_only=False)
+
+
+def _parse_schema_v2_board(board: Mapping[str, Any]) -> Any:
+    if _schema_v2_catalog is None:
+        raise BoardPackageError("schema-v2 package support is unavailable")
+    try:
+        return _schema_v2_catalog._load_board(board)
+    except (KeyError, TypeError, ValueError) as error:
+        raise BoardPackageError(str(error)) from error
+
+
+def _board_editor_available(board: Mapping[str, Any]) -> bool:
+    return "schemaVersion" not in board or all(
+        presentation["media"]["type"] == "raster"
+        for presentation in board["presentations"]
+    )
+
+
+def _legacy_editor_board_from_v2(board: Mapping[str, Any]) -> dict[str, Any]:
+    """Build a loader-private raster editor view without changing saved v2 JSON."""
+    parsed = _parse_schema_v2_board(board)
+    if any(item["media"]["type"] != "raster" for item in board["presentations"]):
+        raise BoardEditorUnavailableError("3D model editing is not supported")
+
+    converted = {
+        key: json.loads(json.dumps(value))
+        for key, value in board.items()
+        if key not in {"schemaVersion", "presentations", "holds"}
+    }
+    converted["presentations"] = []
+    canonical_geometry: dict[str, tuple[str, Any]] = {}
+    for presentation in board["presentations"]:
+        derivation = presentation["derivation"]
+        legacy_presentation: dict[str, Any] = {
+            "id": presentation["id"],
+            "name": presentation["name"],
+            "assetPath": presentation["media"]["assetPath"],
+            "aspectRatio": presentation["aspectRatio"],
+            "default": presentation["isDefault"],
+        }
+        if derivation["type"] == "derived":
+            legacy_presentation["sourcePresentationID"] = derivation[
+                "sourcePresentationID"
+            ]
+            legacy_presentation["isInverted"] = derivation["isInverted"]
+        else:
+            for hold_id, geometry in presentation["media"]["holdGeometry"].items():
+                canonical_geometry[hold_id] = (presentation["id"], geometry)
+        converted["presentations"].append(legacy_presentation)
+
+    converted_holds: list[dict[str, Any]] = []
+    for hold in board["holds"]:
+        presentation_id, geometry = canonical_geometry[hold["id"]]
+        converted_hold = json.loads(json.dumps(hold))
+        converted_hold["presentationID"] = presentation_id
+        converted_hold["geometry"] = json.loads(json.dumps(geometry))
+        converted_holds.append(converted_hold)
+    converted["holds"] = converted_holds
+    assert parsed.id == converted["id"]
+    return converted
+
+
+def _schema_v2_board_from_legacy(board: Mapping[str, Any]) -> dict[str, Any]:
+    """Restore the canonical typed raster document after an editor mutation."""
+    geometry_by_presentation: dict[str, dict[str, Any]] = {}
+    for presentation in board["presentations"]:
+        if "sourcePresentationID" not in presentation:
+            geometry_by_presentation[presentation["id"]] = {}
+    for hold in board["holds"]:
+        geometry_by_presentation[hold["presentationID"]][hold["id"]] = json.loads(
+            json.dumps(hold["geometry"])
+        )
+
+    converted: dict[str, Any] = {"schemaVersion": 2}
+    for key, value in board.items():
+        if key == "presentations":
+            presentations: list[dict[str, Any]] = []
+            for presentation in value:
+                source_id = presentation.get("sourcePresentationID")
+                geometry_owner = source_id or presentation["id"]
+                derivation = (
+                    {
+                        "type": "derived",
+                        "sourcePresentationID": source_id,
+                        "isInverted": presentation["isInverted"],
+                    }
+                    if source_id is not None
+                    else {"type": "original"}
+                )
+                presentations.append(
+                    {
+                        "id": presentation["id"],
+                        "name": presentation["name"],
+                        "aspectRatio": presentation["aspectRatio"],
+                        "isDefault": presentation["default"],
+                        "derivation": derivation,
+                        "media": {
+                            "type": "raster",
+                            "assetPath": presentation["assetPath"],
+                            "holdGeometry": json.loads(
+                                json.dumps(geometry_by_presentation[geometry_owner])
+                            ),
+                        },
+                    }
+                )
+            converted[key] = presentations
+        elif key == "holds":
+            converted[key] = [
+                {
+                    member: json.loads(json.dumps(item))
+                    for member, item in hold.items()
+                    if member not in {"presentationID", "geometry"}
+                }
+                for hold in value
+            ]
+        else:
+            converted[key] = json.loads(json.dumps(value))
+    _parse_schema_v2_board(converted)
+    return converted
 
 
 def _load_board_package(
@@ -278,7 +420,67 @@ def _load_board_package(
             if inspect_png_header_only
             else _png_dimensions(primary)
         )
-    board = _load_json(root / "board.json", "board.json")
+    source_board = _load_json(root / "board.json", "board.json")
+    schema_version = source_board.get("schemaVersion")
+    if schema_version is not None:
+        if schema_version != 2 or isinstance(schema_version, bool):
+            raise BoardPackageError("board.json.schemaVersion must be 2 when present")
+        parsed_v2 = _parse_schema_v2_board(source_board)
+        raw_presentations = source_board["presentations"]
+        model_only = all(
+            item["media"]["type"] == "model" for item in raw_presentations
+        )
+        if model_only:
+            expected_assets = {
+                path
+                for item in raw_presentations
+                for path in (
+                    item["media"]["assetPath"],
+                    item["media"]["descriptorPath"],
+                )
+            }
+            actual_assets = {
+                item.relative_to(root).as_posix()
+                for item in assets.rglob("*")
+                if item.is_file()
+            }
+            if actual_assets != expected_assets:
+                raise BoardPackageError(
+                    "board package assets must exactly match its presentations"
+                )
+            if not inspect_png_header_only:
+                try:
+                    assert _schema_v2_catalog is not None
+                    _schema_v2_catalog.load_board_package(root)
+                except (AssertionError, OSError, ValueError) as error:
+                    raise BoardPackageError(str(error)) from error
+            presentations = tuple(
+                BoardPresentation(
+                    id=item.id,
+                    name=item.name,
+                    asset_path=item.asset_path,
+                    aspect_ratio=item.aspect_ratio,
+                    is_default=item.is_default,
+                    image_width=0,
+                    image_height=0,
+                    source_presentation_id=item.source_presentation_id,
+                    is_inverted=item.is_inverted,
+                    media_type="model",
+                    descriptor_path=item.media.descriptor_path,
+                )
+                for item in parsed_v2.presentations
+            )
+            return BoardPackage(
+                root,
+                source_board,
+                0,
+                0,
+                presentations,
+                schema_version=2,
+            )
+        board = _legacy_editor_board_from_v2(source_board)
+    else:
+        board = source_board
     presentation_values = _parse_board_presentations(board)
     expected_assets = {item[2] for item in presentation_values}
     actual_assets = {
@@ -341,6 +543,7 @@ def _load_board_package(
         default.image_width,
         default.image_height,
         presentations,
+        schema_version=schema_version,
     )
 
 
@@ -358,6 +561,8 @@ def presentation_image_path(
 ) -> Path:
     """Return one validated presentation image confined to its package."""
     presentation = package.presentation(presentation_id)
+    if presentation.media_type != "raster":
+        raise BoardEditorUnavailableError("3D model editing is not supported")
     image = package.root / presentation.asset_path
     if not image.is_file() or image.is_symlink():
         raise BoardPackageError("package presentation image is missing")
@@ -370,6 +575,8 @@ def editor_document(
 ) -> dict[str, object]:
     """Expose every geometry piece as an independently keyed editable region."""
     presentation = package.presentation(presentation_id)
+    if presentation.media_type != "raster":
+        raise BoardEditorUnavailableError("3D model editing is not supported")
     source_presentation_id = presentation.source_presentation_id or presentation.id
     width, height = presentation.image_width, presentation.image_height
     regions: list[dict[str, object]] = []
@@ -552,6 +759,8 @@ def save_editor_document(
             shutil.copytree(live.root, candidate)
             board_path = candidate / "board.json"
             board = _load_json(board_path, "board.json")
+            if live.schema_version == 2:
+                board = _legacy_editor_board_from_v2(board)
             board = _apply_editor_document(
                 board,
                 _EditorPiecesByHold(pieces_by_hold, current_paths),
@@ -559,6 +768,8 @@ def save_editor_document(
                 height,
                 presentation_id=presentation.id,
             )
+            if live.schema_version == 2:
+                board = _schema_v2_board_from_legacy(board)
             _write_json(board_path, board)
             # _replace_package_locked already fully validates `candidate` (the
             # PNG included) before installing it, and returns that validated
@@ -586,6 +797,8 @@ def delete_presentation(
         board, removed_assets = _delete_presentation_from_board(
             live.board, presentation_id
         )
+        if live.schema_version == 2:
+            board = _schema_v2_board_from_legacy(board)
         candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-delete-", dir=root))
         candidate = candidate_parent / slug
         try:
@@ -1247,6 +1460,9 @@ def validate_catalog_board(
     board: Mapping[str, Any], *, allow_missing_kind: bool = False
 ) -> None:
     """Validate board metadata that does not depend on decoding its primary image."""
+    if "schemaVersion" in board:
+        _parse_schema_v2_board(board)
+        return
     parsed_presentations = _parse_board_presentations(board)
     equipment_object_ids = _validate_equipment_objects(board)
     _identifier(board.get("id"), "board.json.id")

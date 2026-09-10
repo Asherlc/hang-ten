@@ -429,6 +429,64 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
             assert response.read(8) == b"\x89PNG\r\n\x1a\n"
 
 
+def test_model_only_package_is_listed_as_unavailable_without_reading_model_blobs(
+    tmp_path: Path,
+) -> None:
+    library = _write_library(tmp_path)
+    source = REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
+    package = library / "model-only"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(source / "board.json", package / "board.json")
+    (assets / "primary.usdz").write_bytes(b"catalog must not read this model")
+    (assets / "primary.model.json").write_bytes(b"catalog must not read this descriptor")
+
+    with running_server(library) as base:
+        status, listed = request_json(base, "GET", "/api/boards")
+        assert status == 200
+        model = next(
+            board
+            for board in listed["boards"]
+            if board["boardId"] == "metolius.wood-grips-compact-ii"
+        )
+        assert model == {
+            "boardId": "metolius.wood-grips-compact-ii",
+            "displayName": "Metolius Wood Grips Compact II",
+            "holdCount": 19,
+            "needsAttention": False,
+            "href": "/api/boards/metolius.wood-grips-compact-ii",
+            "editorAvailable": False,
+            "unavailableReason": "3D model editing is not supported",
+        }
+
+        status, opened = request_json(
+            base, "GET", "/api/boards/metolius.wood-grips-compact-ii"
+        )
+        assert status == 409
+        assert opened == {
+            "ok": False,
+            "error": "3D model editing is not supported",
+        }
+
+        status, image = request_json(
+            base, "GET", "/api/boards/metolius.wood-grips-compact-ii/image"
+        )
+        assert status == 409
+        assert image == {
+            "ok": False,
+            "error": "3D model editing is not supported",
+        }
+
+        status, saved = request_json(
+            base, "PUT", "/api/boards/metolius.wood-grips-compact-ii", {}
+        )
+        assert status == 409
+        assert saved == {
+            "ok": False,
+            "error": "3D model editing is not supported",
+        }
+
+
 def test_opening_a_board_exposes_fractional_fixed_depth_on_every_piece(
     tmp_path: Path,
 ) -> None:
@@ -452,16 +510,16 @@ def test_opening_a_board_exposes_fractional_fixed_depth_on_every_piece(
 def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
     tmp_path: Path,
 ) -> None:
-    library = tmp_path / "Hangboards"
-    library.mkdir()
-    shutil.copytree(
-        REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii",
-        library / "metolius-wood-grips-compact-ii",
-    )
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    board["holds"][0]["kind"] = "sloper"
+    board["holds"][0]["sloper"] = {"type": "flat"}
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
     with running_server(library) as base:
         status, opened = request_json(
-            base, "GET", "/api/boards/metolius.wood-grips-compact-ii"
+            base, "GET", "/api/boards/fixture.board"
         )
         assert status == 200
         document = opened["board"]["document"]
@@ -470,17 +528,14 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
             for region in document["regions"]
             if "sloper" in region
         }
-        assert slopers == {
-            "sloper-flat-left": {"type": "flat"},
-            "sloper-round-center": {"type": "round"},
-            "sloper-flat-right": {"type": "flat"},
-        }
-        document["regions"][0]["handCapacity"] = 1
+        assert slopers == {"hold-left": {"type": "flat"}}
+        for region in document["regions"]:
+            region["handCapacity"] = 1
 
         status, saved = request_json(
             base,
             "PUT",
-            "/api/boards/metolius.wood-grips-compact-ii",
+            "/api/boards/fixture.board",
             document,
         )
 
@@ -493,7 +548,7 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
     stored = json.loads(
         (
             library
-            / "metolius-wood-grips-compact-ii"
+            / "fixture-board"
             / "board.json"
         ).read_text(encoding="utf-8")
     )
@@ -727,7 +782,7 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
             "id": "front-inverted",
             "name": "Front Inverted",
             "assetPath": "assets/primary.png",
-            "aspectRatio": 1774 / 457,
+            "aspectRatio": 1774 / 887,
             "default": False,
             "sourcePresentationID": "front",
             "isInverted": True,
@@ -809,7 +864,7 @@ def test_delete_nondefault_surface_keeps_the_existing_default(tmp_path: Path) ->
             "id": "alternate",
             "name": "Alternate",
             "assetPath": "assets/back.png",
-            "aspectRatio": 1774 / 457,
+            "aspectRatio": 1774 / 887,
             "default": False,
         },
     ]
@@ -840,7 +895,7 @@ def test_save_keeps_geometry_inside_board_json_and_creates_no_registry_or_sideca
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+            "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
         )
 
         status, saved = request_json(
@@ -987,11 +1042,16 @@ def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(
         editor_root,
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "tests"),
     )
+    shutil.copytree(
+        REPOSITORY_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+        checkout / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+    )
     code = """
 import json
 import sys
 import threading
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import urlopen
 
 root = Path(sys.argv[1])
@@ -1019,8 +1079,19 @@ try:
         for board in listed['boards']
         if board['boardId'] == 'metolius.wood-grips-compact-ii'
     )
-    opened = json.loads(urlopen(base + compact_ii['href']).read())
-    assert len(opened['board']['document']['regions']) == 19
+    assert compact_ii['editorAvailable'] is False
+    assert compact_ii['unavailableReason'] == '3D model editing is not supported'
+    assert 'imageUrl' not in compact_ii
+    try:
+        urlopen(base + compact_ii['href'])
+    except HTTPError as error:
+        assert error.code == 409
+        assert json.loads(error.read()) == {
+            'ok': False,
+            'error': '3D model editing is not supported',
+        }
+    else:
+        raise AssertionError('model-only board unexpectedly opened in Workbench')
 finally:
     httpd.shutdown()
     thread.join(timeout=5)
@@ -1611,7 +1682,7 @@ def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
                 "id": presentation_id,
                 "name": name,
                 "assetPath": asset_path,
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": False,
             }
         )
@@ -1705,7 +1776,7 @@ def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
             "default": False,
         },
     ]
-    assert opened_board["document"]["canvas"] == {"width": 1774, "height": 457}
+    assert opened_board["document"]["canvas"] == {"width": 1774, "height": 887}
     assert {
         region["metadata"]["presentationID"]
         for region in opened_board["document"]["regions"]
@@ -1998,7 +2069,7 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
         )
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+            "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
         )
 
         status, saved, _headers = hosted_request_json(
@@ -2102,7 +2173,7 @@ def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:
         )
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+            "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
         )
 
         def auth_failing_put_file(*_args: object, **_kwargs: object) -> str:
@@ -2133,7 +2204,7 @@ def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> N
         )
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+            "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
         )
 
         status, payload, _headers = hosted_request_json(
@@ -2351,7 +2422,7 @@ def test_hosted_save_conflict_maps_to_conflict_status() -> None:
         )
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+            "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
         )
         original_put_file = client.put_file
 

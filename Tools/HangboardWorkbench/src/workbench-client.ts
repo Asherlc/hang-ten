@@ -115,7 +115,10 @@ function isBoardSummary(value: unknown): value is BoardSummary {
     && typeof value.holdCount === "number"
     && typeof value.needsAttention === "boolean"
     && isOptionalString(value.href)
-    && typeof value.imageUrl === "string";
+    && isOptionalString(value.imageUrl)
+    && (value.editorAvailable === undefined || typeof value.editorAvailable === "boolean")
+    && isOptionalString(value.unavailableReason)
+    && (value.editorAvailable !== false || value.imageUrl === undefined);
 }
 
 function isEditorDocumentPayload(value: unknown): value is EditorDocument {

@@ -388,7 +388,7 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
                 "id": "front-inverted",
                 "name": "Front upside down",
                 "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": False,
                 "sourcePresentationID": "front",
                 "isInverted": True,
@@ -416,7 +416,7 @@ def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
                 "id": "front-inverted",
                 "name": "Front upside down",
                 "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": False,
                 "sourcePresentationID": "front",
                 "isInverted": True,
@@ -437,15 +437,15 @@ def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
         "front-inverted"
     }
     source_path = board_package.parse_closed_path(
-        source["regions"][0]["displayPath"], 1774, 457
+        source["regions"][0]["displayPath"], 1774, 887
     )
     inverted_path = board_package.parse_closed_path(
-        inverted["regions"][0]["displayPath"], 1774, 457
+        inverted["regions"][0]["displayPath"], 1774, 887
     )
     source_xs, source_ys = zip(*source_path.contour)
     inverted_xs, inverted_ys = zip(*inverted_path.contour)
     assert min(inverted_xs) == pytest.approx(1774 - max(source_xs))
-    assert min(inverted_ys) == pytest.approx(457 - max(source_ys))
+    assert min(inverted_ys) == pytest.approx(887 - max(source_ys))
     assert max(inverted_xs) - min(inverted_xs) == pytest.approx(
         max(source_xs) - min(source_xs)
     )
@@ -465,7 +465,7 @@ def test_save_rejects_edits_to_an_alias_presentation(tmp_path: Path) -> None:
                 "id": "front-inverted",
                 "name": "Front upside down",
                 "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": False,
                 "sourcePresentationID": "front",
                 "isInverted": True,
@@ -518,7 +518,7 @@ def test_rejects_alias_chains_and_alias_owned_holds(tmp_path: Path) -> None:
                 "id": "front-inverted",
                 "name": "Front upside down",
                 "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": False,
                 "sourcePresentationID": "front",
                 "isInverted": True,
@@ -533,7 +533,7 @@ def test_rejects_alias_chains_and_alias_owned_holds(tmp_path: Path) -> None:
                 "id": "front-inverted-twice",
                 "name": "Front twice inverted",
                 "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 457,
+                "aspectRatio": 1774 / 887,
                 "default": False,
                 "sourcePresentationID": "front-inverted",
                 "isInverted": False,
@@ -559,7 +559,10 @@ def test_rejects_alias_chains_and_alias_owned_holds(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (
+            lambda board: board.__setitem__("schemaVersion", 1),
+            "schemaVersion must be 2",
+        ),
         (lambda board: board.__setitem__("presentation", {"assetPath": "assets/primary.png"}), "unknown keys"),
         (lambda board: board.pop("presentations"), "missing keys"),
         (lambda board: board["holds"][0].pop("presentationID"), "presentationID"),
@@ -631,36 +634,28 @@ def test_save_rejects_the_removed_editor_document_schema_version(tmp_path: Path)
         board_package.save_editor_document(library, "fixture-board", document)
 
 
-def test_canonical_package_has_the_exact_single_file_inventory() -> None:
-    assert {path.name for path in CANONICAL_PACKAGE.iterdir()} == {"board.json", "assets"}
-    assert {path.name for path in (CANONICAL_PACKAGE / "assets").iterdir()} == {
-        "primary.png"
+def test_model_only_package_has_the_exact_read_only_inventory() -> None:
+    package_root = (
+        REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
+    )
+    assert {path.name for path in package_root.iterdir()} == {"board.json", "assets"}
+    assert {path.name for path in (package_root / "assets").iterdir()} == {
+        "primary.usdz",
+        "primary.model.json",
     }
 
-    package = board_package.load_board_package(CANONICAL_PACKAGE)
+    package = board_package.load_board_package(package_root)
 
     assert package.board_id == "metolius.wood-grips-compact-ii"
     assert len(package.hold_ids) == 19
-    assert all(hold["geometry"] for hold in package.board["holds"])
-    assert all("cueStyle" not in hold for hold in package.board["holds"])
-    for hold in package.board["holds"]:
-        for piece in hold["geometry"]:
-            if piece["shape"]["type"] != "path":
-                continue
-            min_x, max_x, min_y, max_y = board_package.flattened_shape_bounds(
-                piece["shape"]["commands"]
-            )
-            assert min_x == pytest.approx(0, abs=5e-7)
-            assert min_y == pytest.approx(0, abs=5e-7)
-            assert max_x == pytest.approx(1, abs=5e-7)
-            assert max_y == pytest.approx(1, abs=5e-7)
+    assert package.editor_available is False
 
 
 def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
     image = PRIMARY_IMAGE.read_bytes()
 
-    assert board_package._png_header_dimensions_from_bytes(image[:33]) == (1774, 457)
-    assert board_package._png_dimensions_from_bytes(image) == (1774, 457)
+    assert board_package._png_header_dimensions_from_bytes(image[:33]) == (1774, 887)
+    assert board_package._png_dimensions_from_bytes(image) == (1774, 887)
 
 
 def _presentation_aspect_ratio_mismatches(library: Path) -> list[str]:
@@ -671,8 +666,14 @@ def _presentation_aspect_ratio_mismatches(library: Path) -> list[str]:
             continue
         board = json.loads(board_path.read_text(encoding="utf-8"))
         for presentation in board["presentations"]:
+            media = presentation.get("media")
+            if isinstance(media, dict) and media.get("type") == "model":
+                continue
+            asset_path = (
+                media["assetPath"] if isinstance(media, dict) else presentation["assetPath"]
+            )
             width, height = board_package._png_dimensions(
-                package / presentation["assetPath"]
+                package / asset_path
             )
             image_aspect_ratio = width / height
             declared_aspect_ratio = presentation["aspectRatio"]
@@ -684,17 +685,25 @@ def _presentation_aspect_ratio_mismatches(library: Path) -> list[str]:
         default_presentation = next(
             presentation
             for presentation in board["presentations"]
-            if presentation["default"]
+            if presentation.get("default", presentation.get("isDefault"))
+        )
+        default_media = default_presentation.get("media")
+        if isinstance(default_media, dict) and default_media.get("type") == "model":
+            continue
+        default_asset_path = (
+            default_media["assetPath"]
+            if isinstance(default_media, dict)
+            else default_presentation["assetPath"]
         )
         width, height = board_package._png_dimensions(
-            package / default_presentation["assetPath"]
+            package / default_asset_path
         )
         image_aspect_ratio = width / height
         declared_aspect_ratio = board["aspectRatio"]
         if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
             mismatches.append(
                 f"{package.name}: board declared {declared_aspect_ratio}, default "
-                f"{default_presentation['id']} image {width}/{height}"
+                    f"{default_presentation['id']} image {width}/{height}"
             )
     return mismatches
 
@@ -711,11 +720,11 @@ def test_completed_package_board_aspect_ratio_matches_its_default_presentation_i
 ) -> None:
     library = _library(tmp_path)
     package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: board.update(aspectRatio=2))
+    _mutate_board(package, lambda board: board.update(aspectRatio=3))
 
     mismatches = _presentation_aspect_ratio_mismatches(library)
 
-    assert mismatches == ["fixture-board: board declared 2, default primary image 1774/457"]
+    assert mismatches == ["fixture-board: board declared 3, default primary image 1774/887"]
 
 
 def test_loads_completed_flash_board_without_unpublished_dimensions() -> None:
@@ -1079,11 +1088,11 @@ def test_accepts_a_rounded_aspect_ratio_matching_the_primary_canvas(
 ) -> None:
     library = _library(tmp_path)
     package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: board.update(aspectRatio=3.88))
+    _mutate_board(package, lambda board: board.update(aspectRatio=2.001))
 
     loaded = board_package.load_board_package(package)
 
-    assert loaded.board["aspectRatio"] == 3.88
+    assert loaded.board["aspectRatio"] == 2.001
 
 
 def test_rejects_an_aspect_ratio_that_does_not_match_the_primary_canvas(
@@ -1520,7 +1529,7 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
 
     document = board_package.editor_document(package)
 
-    assert document["canvas"] == {"width": 1774, "height": 457}
+    assert document["canvas"] == {"width": 1774, "height": 887}
     assert document["equipmentObjects"] == ["primary"]
     assert {region["equipmentObjectID"] for region in document["regions"]} == {
         "primary"
@@ -1808,7 +1817,7 @@ def test_save_rejects_bendable_curve_indexes_for_a_constrained_piece(tmp_path: P
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     document = board_package.editor_document(board_package.load_board_package(package_root))
     document["regions"][0]["displayPath"] = (
-        "M 177.4 45.7 C 221.75 45.7 310.45 45.7 354.8 45.7 L 354.8 228.5 L 177.4 228.5 Z"
+        "M 177.4 88.7 C 221.75 88.7 310.45 88.7 354.8 88.7 L 354.8 443.5 L 177.4 443.5 Z"
     )
     document["regions"][0]["shapeConstraint"] = {
         "shape": "rectangle",
@@ -1929,7 +1938,7 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
     document = board_package.editor_document(package)
     second_piece_before = _read_board(package_root)["holds"][0]["geometry"][1]
     document["regions"][0]["displayPath"] = (
-        "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+        "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
     )
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
@@ -1957,7 +1966,7 @@ def test_save_and_reopen_preserves_off_canvas_hold_geometry(tmp_path: Path) -> N
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
     document["regions"][0]["displayPath"] = (
-        "M -88.7 45.7 L 177.4 45.7 L 177.4 137.1 L -88.7 137.1 Z"
+        "M -88.7 88.7 L 177.4 88.7 L 177.4 266.1 L -88.7 266.1 Z"
     )
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
@@ -1970,7 +1979,7 @@ def test_save_and_reopen_preserves_off_canvas_hold_geometry(tmp_path: Path) -> N
         "height": 0.2,
     }
     assert board_package.editor_document(reopened)["regions"][0]["displayPath"] == (
-        "M -88.7 45.7 L 177.4 45.7 L 177.4 137.1 L -88.7 137.1 Z"
+        "M -88.7 88.7 L 177.4 88.7 L 177.4 266.1 L -88.7 266.1 Z"
     )
 
 
@@ -1985,7 +1994,7 @@ def test_save_persists_a_quadratic_display_path_as_a_canonical_path_shape(
         board_package.load_board_package(package_root)
     )
     document["regions"][0]["displayPath"] = (
-        "M 177.4 91.4 Q 266.1 45.7 354.8 91.4 L 354.8 228.5 L 177.4 228.5 Z"
+        "M 177.4 177.4 Q 266.1 88.7 354.8 177.4 L 354.8 443.5 L 177.4 443.5 Z"
     )
 
     board_package.save_editor_document(library, "fixture-board", document)
@@ -2005,7 +2014,7 @@ def test_save_persists_a_quadratic_display_path_as_a_canonical_path_shape(
     ]
     reopened = board_package.open_package(library, "fixture.board")
     assert board_package.editor_document(reopened)["regions"][0]["displayPath"] == (
-        "M 177.4 91.4 Q 266.1 45.7 354.8 91.4 L 354.8 228.5 L 177.4 228.5 Z"
+        "M 177.4 177.4 Q 266.1 88.7 354.8 177.4 L 354.8 443.5 L 177.4 443.5 Z"
     )
 
 
@@ -2017,7 +2026,7 @@ def test_changed_save_derives_current_display_paths_once_per_piece(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
     document["regions"][0]["displayPath"] = (
-        "M 177.4 45.7 L 354.8 137.1 L 200 150 L 330 60 Z"
+        "M 177.4 88.7 L 354.8 266.1 L 200 150 L 330 60 Z"
     )
     original_display_path_for_shape = board_package.display_path_for_shape
     calls = 0
@@ -2583,6 +2592,10 @@ def test_staging_ignores_primary_only_drafts_when_staging_packages(
     library.mkdir(parents=True)
     finished = _write_finished_package(library, "finished-board", "finished.board")
     _mutate_board(finished, _replace_holds_with_supported_kinds)
+    _write_json(
+        finished / "board.json",
+        board_package._schema_v2_board_from_legacy(_read_board(finished)),
+    )
     _write_draft(library, "draft-board")
     package_module = (
         repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
@@ -2611,7 +2624,11 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     repository = tmp_path / "repository"
     library = repository / "Hangboards"
     library.mkdir(parents=True)
-    _write_finished_package(library, "finished-board", "finished.board")
+    finished = _write_finished_package(library, "finished-board", "finished.board")
+    _write_json(
+        finished / "board.json",
+        board_package._schema_v2_board_from_legacy(_read_board(finished)),
+    )
     package_module = (
         repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
     )

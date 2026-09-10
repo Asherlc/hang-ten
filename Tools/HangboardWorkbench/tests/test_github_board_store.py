@@ -362,10 +362,10 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
     assert [
         (package.slug, package.board_id, package.hold_ids) for package in discovered
     ] == [("fixture-board", "fixture.board", ("hold-left",))]
-    assert (opened.image_width, opened.image_height) == (1774, 457)
+    assert (opened.image_width, opened.image_height) == (1774, 887)
     assert board_package.editor_document(opened)["canvas"] == {
         "width": 1774,
-        "height": 457,
+        "height": 887,
     }
 
 
@@ -378,7 +378,7 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
             "id": "primary-inverted",
             "name": "Primary inverted",
             "assetPath": "assets/primary.png",
-            "aspectRatio": 1774 / 457,
+            "aspectRatio": 1774 / 887,
             "default": False,
             "sourcePresentationID": "primary",
             "isInverted": True,
@@ -458,7 +458,10 @@ def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (
+            lambda board: board.__setitem__("schemaVersion", 1),
+            "schemaVersion must be 2",
+        ),
         (
             lambda board: board.__setitem__(
                 "presentation", {"assetPath": "assets/primary.png"}
@@ -534,7 +537,7 @@ def test_cold_discovery_bounds_nested_presentation_blob_concurrency() -> None:
                     "id": presentation_id,
                     "name": presentation_id.title(),
                     "assetPath": f"assets/{presentation_id}.png",
-                    "aspectRatio": 1774 / 457,
+                    "aspectRatio": 1774 / 887,
                     "default": False,
                 }
             )
@@ -737,7 +740,7 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
     """Four reads prove LRU eviction with one blob slot; no eviction needs only two."""
     client = _client(("fixture-board", board_document("fixture.board")))
     store = github_board_store.GitHubBoardStore(
-        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+        client, max_cached_blobs=1, max_cached_blob_bytes=2 * 1024 * 1024
     )
 
     store.discover_packages(TOKEN, BRANCH)
@@ -756,7 +759,7 @@ def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open(
     )
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(
-        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+        client, max_cached_blobs=1, max_cached_blob_bytes=2 * 1024 * 1024
     )
 
     store.open_package(TOKEN, BRANCH, "fixture.multi")
