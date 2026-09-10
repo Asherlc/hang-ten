@@ -513,84 +513,49 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert "dimensions" not in board
     assert _presentation_summary(board) == [
         (
-            "three-edge-upright",
-            "Three-edge surface — right side up",
-            "assets/primary.png",
+            "primary",
+            "Primary suspended model",
+            "assets/primary.usdz",
             1.5,
             True,
             None,
             False,
-        ),
-        (
-            "three-edge-inverted",
-            "Three-edge surface — upside down",
-            "assets/three-edge-inverted.png",
-            1.5,
-            False,
-            "three-edge-upright",
-            True,
-        ),
-        (
-            "two-edge-upright",
-            "Two-edge surface — right side up",
-            "assets/two-edge-surface.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "two-edge-inverted",
-            "Two-edge surface — upside down",
-            "assets/two-edge-inverted.png",
-            2.0,
-            False,
-            "two-edge-upright",
-            True,
         ),
     ]
 
-    owners = _original_hold_owners(board)
-    holds_by_presentation = {
-        presentation_id: tuple(
-            hold["id"]
-            for hold in board["holds"]
-            if owners[hold["id"]] == presentation_id
-        )
-        for presentation_id in ("three-edge-upright", "two-edge-upright")
-    }
-    assert holds_by_presentation == {
-        "three-edge-upright": (
-            "three-edge-left",
-            "three-edge-center",
-            "three-edge-right",
-        ),
-        "two-edge-upright": (
-            "two-edge-left",
-            "two-edge-right",
-            "small-crimp-left",
-            "small-crimp-right",
-        ),
-    }
+    assert [hold["id"] for hold in board["holds"]] == [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right",
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right",
+    ]
     assert all(hold["kind"] == "edge" for hold in board["holds"])
     assert all("sizeMillimeters" not in hold for hold in board["holds"])
-    geometry = document_hold_geometry(board)
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
-    assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
-    )
-
-    expected_sizes = {
-        "assets/primary.png": (1536, 1024),
-        "assets/three-edge-inverted.png": (1536, 1024),
-        "assets/two-edge-surface.png": (1774, 887),
-        "assets/two-edge-inverted.png": (1774, 887),
+    assert all("presentationID" not in hold and "geometry" not in hold for hold in board["holds"])
+    assert [position["id"] for position in board["positions"]] == [
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    ]
+    assert {position["presentationID"] for position in board["positions"]} == {"primary"}
+    assert set(board["presentations"][0]["media"]) == {
+        "type", "assetPath", "descriptorPath", "display", "suspension"
     }
-    for asset_path, expected_size in expected_sizes.items():
-        with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
-            assert image.format == "PNG"
-            assert image.size == expected_size
+    suspension = board["presentations"][0]["media"]["suspension"]
+    assert suspension["attachment"]["nodeID"] == "flash_board_body_008"
+    assert set(suspension["canonicalPoses"]) == {
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    }
+    assert {path.relative_to(FLASH_BOARD_ROOT).as_posix() for path in FLASH_BOARD_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:

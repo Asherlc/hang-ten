@@ -258,9 +258,15 @@ def _validate_v2_document(document: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(presentation, dict):
             raise ValueError(f"presentations[{index}] must be an object")
         media = presentation.get("media")
-        if not isinstance(media, dict) or media.get("type") != "raster":
-            raise ValueError("migration accepts raster presentations only")
-        _asset_is_raster(media.get("assetPath"), f"presentations[{index}].media.assetPath")
+        if not isinstance(media, dict):
+            raise ValueError(f"presentations[{index}].media must be an object")
+        if media.get("type") == "raster":
+            _asset_is_raster(
+                media.get("assetPath"),
+                f"presentations[{index}].media.assetPath",
+            )
+        elif media.get("type") != "model":
+            raise ValueError("v2 migration accepts raster or model presentations")
     # This independently checks the closed v2 package contract, including all
     # geometry path commands and scoped ownership.  Assets are intentionally
     # not needed to validate a document-level idempotence call.

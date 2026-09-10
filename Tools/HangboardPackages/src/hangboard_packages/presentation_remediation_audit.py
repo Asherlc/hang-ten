@@ -18,6 +18,7 @@ from urllib.parse import unquote, urlsplit
 
 from .board_catalog import (
     BoardInventory,
+    PresentationMediaModel,
     is_board_identifier,
 )
 
@@ -132,7 +133,14 @@ _PHASE2_CHECK_STATUSES = frozenset(
     {"pending", "passed", "failed", "blocked", "notRequired"}
 )
 _ACTION_STATES = frozenset(
-    {"notRequired", "pending", "inProgress", "completed", "blocked"}
+    {
+        "notRequired",
+        "pending",
+        "inProgress",
+        "completed",
+        "blocked",
+        "supersededByModelMigration",
+    }
 )
 _EVIDENCE_RESULTS = frozenset({"notRequired", "pending", "confirmed", "blocked"})
 _INPUT_TYPES = frozenset(
@@ -2432,6 +2440,22 @@ def _record_key(record: PresentationRemediationRecord) -> str:
     return f"{record.package_id}/{record.presentation_id}"
 
 
+def _is_valid_model_migration_package(package: Any) -> bool:
+    """Return whether a package is eligible to retire historical raster records.
+
+    Supersession is deliberately narrow: only a complete package with exactly
+    one model presentation and no raster presentation may use the terminal
+    audit state.  Package parsing has already validated the declared model
+    assets, descriptor hash, and model-only asset partition.
+    """
+
+    presentations = package.board.presentations
+    return (
+        len(presentations) == 1
+        and isinstance(presentations[0].media, PresentationMediaModel)
+    )
+
+
 def _is_real_phase2_catalog(
     manifest: PresentationRemediationManifest,
     inventory: BoardInventory,
@@ -2566,6 +2590,33 @@ def _validate_phase2_evidence_review(record: PresentationRemediationRecord) -> N
         raise PresentationRemediationAuditError(
             "repair action cannot be notRequired"
         )
+    if action.state == "supersededByModelMigration":
+        if review.result != "confirmed":
+            raise PresentationRemediationAuditError(
+                "model migration supersession requires confirmed evidence review"
+            )
+        if review.reviewed_at is None:
+            raise PresentationRemediationAuditError(
+                "model migration supersession requires reviewedAt"
+            )
+        official = tuple(source.url for source in record.evidence.official)
+        independent = tuple(source.url for source in record.evidence.independent)
+        if review.official_urls_reopened != official or review.independent_urls_reopened != independent:
+            raise PresentationRemediationAuditError(
+                "reopened evidence URLs must exactly preserve historical URL order"
+            )
+        gap_count = sum(
+            item is not None
+            for item in (
+                record.evidence.official_evidence_gap,
+                record.evidence.independent_evidence_gap,
+            )
+        )
+        if len(review.evidence_gap_searches_repeated) != gap_count:
+            raise PresentationRemediationAuditError(
+                "evidence gap searches must be repeated once per historical gap"
+            )
+        return
     if action.state == "pending":
         if (
             review.result != "pending"
@@ -3660,11 +3711,11 @@ def _validate_batches(
                 )
             if any(
                 record.phase2_action is None
-                or record.phase2_action.state != "pending"
+                or record.phase2_action.state not in {"pending", "supersededByModelMigration"}
                 for record in owned_records
             ):
                 raise PresentationRemediationAuditError(
-                    "pending batch owns only pending actions"
+                    "pending batch owns only pending or model-migration-superseded actions"
                 )
         elif batch.status == "inProgress":
             if any(
@@ -3813,6 +3864,29 @@ def _validate_phase2_manifest(
     records_by_key = {_record_key(record): record for record in manifest.records}
     if len(records_by_key) != len(manifest.records):
         raise PresentationRemediationAuditError("duplicate presentation record")
+    superseded_package_ids = {
+        record.package_id
+        for record in manifest.records
+        if record.phase2_action is not None
+        and record.phase2_action.state == "supersededByModelMigration"
+    }
+    for package_id in superseded_package_ids:
+        package = packages.get(package_id)
+        if package is None or not _is_valid_model_migration_package(package):
+            raise PresentationRemediationAuditError(
+                "supersededByModelMigration requires one complete model-only package"
+            )
+        package_records = [
+            record for record in manifest.records if record.package_id == package_id
+        ]
+        if any(
+            record.phase2_action is None
+            or record.phase2_action.state != "supersededByModelMigration"
+            for record in package_records
+        ):
+            raise PresentationRemediationAuditError(
+                "model migration supersession must cover every historical record for its package"
+            )
     for index, record in enumerate(manifest.records):
         key = _record_key(record)
         package = packages.get(record.package_id)
@@ -3823,9 +3897,17 @@ def _validate_phase2_manifest(
         if record.manufacturer != package.board.manufacturer:
             raise PresentationRemediationAuditError(f"manufacturer does not match for {key}")
         expected_entry = expected.get(key)
+        superseded = (
+            record.phase2_action is not None
+            and record.phase2_action.state == "supersededByModelMigration"
+        )
         completed_removal = record.decision == "removeUnsupportedPresentation" and record.phase2_action is not None and record.phase2_action.state == "completed"
-        if expected_entry is None and not completed_removal:
+        if expected_entry is None and not completed_removal and not superseded:
             raise PresentationRemediationAuditError(f"unknown presentation record: {key}")
+        if expected_entry is not None and superseded:
+            raise PresentationRemediationAuditError(
+                "model migration supersession records must refer to retired presentations"
+            )
         if expected_entry is not None:
             _, presentation = expected_entry
             expected_asset = f"{Path(hangboards_root).name}/{package.root.name}/{presentation.asset_path}"
@@ -3835,13 +3917,31 @@ def _validate_phase2_manifest(
         facts = _current_png_facts(asset_path) if asset_path.is_file() else None
         if completed_removal and facts is not None:
             raise PresentationRemediationAuditError("completed removal asset still exists")
-        if not completed_removal and facts is None:
+        if not completed_removal and not superseded and facts is None:
             raise PresentationRemediationAuditError(f"presentation asset is missing for {key}")
         assert record.phase2_action is not None and record.phase2_evidence_review is not None and record.phase2_comparator is not None
         _validate_phase2_evidence_review(record)
+        if superseded:
+            if record.decision not in {"edit", "regenerate"}:
+                raise PresentationRemediationAuditError(
+                    "model migration supersession must preserve a historical repair decision"
+                )
+            if record.final.accepted_asset_sha256 is not None or record.final.final_dimensions is not None:
+                raise PresentationRemediationAuditError(
+                    "model migration supersession must not claim a raster final asset"
+                )
+            continue
         _validate_generation_and_final(record, index, facts, validation_mode)
     expected_keys = set(expected)
     missing = expected_keys - set(records_by_key)
+    exempted_model_packages = {
+        package_id
+        for package_id in superseded_package_ids
+        if package_id in packages and _is_valid_model_migration_package(packages[package_id])
+    }
+    missing = {
+        key for key in missing if key.split("/", 1)[0] not in exempted_model_packages
+    }
     if missing:
         raise PresentationRemediationAuditError(f"missing presentation record: {sorted(missing)[0]}")
     if len(manifest.records) == 85:

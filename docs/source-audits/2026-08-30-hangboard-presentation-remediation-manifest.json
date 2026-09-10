@@ -8425,16 +8425,21 @@
       },
       "repairBatchID": "multi-orientation",
       "phase2Action": {
-        "state": "pending",
+        "state": "supersededByModelMigration",
         "blockedReason": null
       },
       "phase2EvidenceReview": {
-        "result": "pending",
-        "reviewedAt": null,
-        "officialURLsReopened": [],
-        "independentURLsReopened": [],
+        "result": "confirmed",
+        "reviewedAt": "2026-09-10T00:00:00+00:00",
+        "officialURLsReopened": [
+          "https://tensionclimbing.com/products/flash-board-2",
+          "https://www.youtube.com/watch?v=dQRX0RNL9EE"
+        ],
+        "independentURLsReopened": [
+          "https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing"
+        ],
         "evidenceGapSearchesRepeated": [],
-        "notes": "Phase 2 evidence review pending."
+        "notes": "Superseded by verified model-only migration; historical raster provenance retained and former PNG bytes intentionally retired."
       },
       "phase2Comparator": {
         "generationTime": null,
@@ -8593,16 +8598,21 @@
       },
       "repairBatchID": "multi-orientation",
       "phase2Action": {
-        "state": "pending",
+        "state": "supersededByModelMigration",
         "blockedReason": null
       },
       "phase2EvidenceReview": {
-        "result": "pending",
-        "reviewedAt": null,
-        "officialURLsReopened": [],
-        "independentURLsReopened": [],
+        "result": "confirmed",
+        "reviewedAt": "2026-09-10T00:00:00+00:00",
+        "officialURLsReopened": [
+          "https://tensionclimbing.com/products/flash-board-2",
+          "https://www.youtube.com/watch?v=dQRX0RNL9EE"
+        ],
+        "independentURLsReopened": [
+          "https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing"
+        ],
         "evidenceGapSearchesRepeated": [],
-        "notes": "Phase 2 evidence review pending."
+        "notes": "Superseded by verified model-only migration; historical raster provenance retained and former PNG bytes intentionally retired."
       },
       "phase2Comparator": {
         "generationTime": null,
@@ -8761,16 +8771,21 @@
       },
       "repairBatchID": "multi-orientation",
       "phase2Action": {
-        "state": "pending",
+        "state": "supersededByModelMigration",
         "blockedReason": null
       },
       "phase2EvidenceReview": {
-        "result": "pending",
-        "reviewedAt": null,
-        "officialURLsReopened": [],
-        "independentURLsReopened": [],
+        "result": "confirmed",
+        "reviewedAt": "2026-09-10T00:00:00+00:00",
+        "officialURLsReopened": [
+          "https://tensionclimbing.com/products/flash-board-2",
+          "https://www.youtube.com/watch?v=dQRX0RNL9EE"
+        ],
+        "independentURLsReopened": [
+          "https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing"
+        ],
         "evidenceGapSearchesRepeated": [],
-        "notes": "Phase 2 evidence review pending."
+        "notes": "Superseded by verified model-only migration; historical raster provenance retained and former PNG bytes intentionally retired."
       },
       "phase2Comparator": {
         "generationTime": null,
@@ -8929,16 +8944,21 @@
       },
       "repairBatchID": "multi-orientation",
       "phase2Action": {
-        "state": "pending",
+        "state": "supersededByModelMigration",
         "blockedReason": null
       },
       "phase2EvidenceReview": {
-        "result": "pending",
-        "reviewedAt": null,
-        "officialURLsReopened": [],
-        "independentURLsReopened": [],
+        "result": "confirmed",
+        "reviewedAt": "2026-09-10T00:00:00+00:00",
+        "officialURLsReopened": [
+          "https://tensionclimbing.com/products/flash-board-2",
+          "https://www.youtube.com/watch?v=dQRX0RNL9EE"
+        ],
+        "independentURLsReopened": [
+          "https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing"
+        ],
         "evidenceGapSearchesRepeated": [],
-        "notes": "Phase 2 evidence review pending."
+        "notes": "Superseded by verified model-only migration; historical raster provenance retained and former PNG bytes intentionally retired."
       },
       "phase2Comparator": {
         "generationTime": null,
