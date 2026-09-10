@@ -65,7 +65,7 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
     path = valid_packet(tmp_path)
     packet_dir = path.parent
     retained = []
-    for name in ("front.png", "hanging.jpg", "labelled-faces.jpg"):
+    for name in ("front.png", "hanging.jpg", "commerce-labelled-faces.jpg"):
         source = packet_dir / "sources" / name
         source.write_bytes(name.encode("ascii"))
         retained.append((f"sources/{name}", hashlib.sha256(source.read_bytes()).hexdigest()))
@@ -187,17 +187,17 @@ def valid_flash_suspended_packet(tmp_path: Path) -> Path:
     payload["commerceSources"][1]["retailer"] = "Amazon"  # type: ignore[index]
     payload["commerceSources"][1]["url"] = "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"  # type: ignore[index]
     payload["logicalInventory"] = [  # type: ignore[assignment]
-        {"id": "three-edge-left", "kind": "edge", "sourceLocalPath": "sources/labelled-faces.jpg"},
-        {"id": "three-edge-center", "kind": "edge", "sourceLocalPath": "sources/labelled-faces.jpg"},
-        {"id": "three-edge-right", "kind": "edge", "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"id": "three-edge-left", "kind": "edge", "sourceLocalPath": "sources/commerce-labelled-faces.jpg"},
+        {"id": "three-edge-center", "kind": "edge", "sourceLocalPath": "sources/commerce-labelled-faces.jpg"},
+        {"id": "three-edge-right", "kind": "edge", "sourceLocalPath": "sources/commerce-labelled-faces.jpg"},
         {"id": "two-edge-left", "kind": "edge", "sourceLocalPath": "sources/front.png"},
         {"id": "two-edge-right", "kind": "edge", "sourceLocalPath": "sources/front.png"},
         {"id": "small-crimp-left", "kind": "edge", "sourceLocalPath": "sources/front.png"},
         {"id": "small-crimp-right", "kind": "edge", "sourceLocalPath": "sources/front.png"},
     ]
     payload["suspendedPresentation"]["positionMappings"] = [  # type: ignore[index]
-        {"positionID": "three-edge-upright", "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"], "sourceLocalPath": "sources/labelled-faces.jpg"},
-        {"positionID": "three-edge-inverted", "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"], "sourceLocalPath": "sources/labelled-faces.jpg"},
+        {"positionID": "three-edge-upright", "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"], "sourceLocalPath": "sources/commerce-labelled-faces.jpg"},
+        {"positionID": "three-edge-inverted", "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"], "sourceLocalPath": "sources/commerce-labelled-faces.jpg"},
         {"positionID": "two-edge-upright", "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"], "sourceLocalPath": "sources/front.png"},
         {"positionID": "two-edge-inverted", "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"], "sourceLocalPath": "sources/front.png"},
     ]
@@ -216,7 +216,7 @@ def test_accepts_amazon_face_map_only_as_commerce(tmp_path: Path) -> None:
     amazon = next(source for source in parsed.commerce_sources if source.retailer == "Amazon")
     assert amazon.source_tier == "commerce"
     assert amazon.url == "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"
-    assert amazon.local_path == "sources/labelled-faces.jpg"
+    assert amazon.local_path == "sources/commerce-labelled-faces.jpg"
     assert {
         mapping["sourceLocalPath"]
         for mapping in parsed.suspended_presentation["positionMappings"]
@@ -247,6 +247,63 @@ def test_rejects_user_closeup_without_evidence_limitations(tmp_path: Path) -> No
     del payload["userEvidenceSources"][0]["limitations"]  # type: ignore[index]
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="limitations"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_flash_missing_or_empty_user_evidence_block(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["userEvidenceSources"]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="six retained user closeups"):
+        validate_evidence_packet(packet)
+
+    empty_root = tmp_path / "empty-user"
+    empty_root.mkdir()
+    packet = valid_flash_suspended_packet(empty_root)
+    payload = _payload(packet)
+    payload["userEvidenceSources"] = []
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="six retained user closeups"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_user_photo_as_selectable_inventory_provenance(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    for item in payload["logicalInventory"]:
+        item["sourceLocalPath"] = "sources/user-closeup-two-well-face.png"
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="cannot use user-evidence photos"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_claim_source_type_mismatch(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["sourcedClaims"][0]["sourceLocalPath"] = "sources/commerce-labelled-faces.jpg"  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="sourceType must match"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_flash_amazon_face_map_path_alias(tmp_path: Path) -> None:
+    packet = valid_flash_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    original = packet.parent / "sources" / "commerce-labelled-faces.jpg"
+    alias = packet.parent / "sources" / "amazon-face-map-copy.jpg"
+    alias.write_bytes(original.read_bytes())
+    alias_path = "sources/amazon-face-map-copy.jpg"
+    digest = hashlib.sha256(alias.read_bytes()).hexdigest()
+    payload["commerceSources"][1]["localPath"] = alias_path  # type: ignore[index]
+    payload["commerceSources"][1]["sha256"] = digest  # type: ignore[index]
+    payload["commerceSources"][1]["snapshotSHA256"] = digest  # type: ignore[index]
+    for item in payload["logicalInventory"][:3]:
+        item["sourceLocalPath"] = alias_path
+    for mapping in payload["suspendedPresentation"]["positionMappings"][:2]:  # type: ignore[index]
+        mapping["sourceLocalPath"] = alias_path
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="retained Amazon face-map"):
         validate_evidence_packet(packet)
 
 

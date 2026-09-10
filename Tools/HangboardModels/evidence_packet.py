@@ -78,6 +78,17 @@ _FLASH_APPROVED_POSITION_HOLD_ORDER = {
     "two-edge-upright": ("two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"),
     "two-edge-inverted": ("two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"),
 }
+_FLASH_AMAZON_FACE_MAP_PATH = "sources/commerce-labelled-faces.jpg"
+_FLASH_REQUIRED_USER_EVIDENCE_PATHS = frozenset(
+    {
+        "sources/user-closeup-front-cord-and-wells.png",
+        "sources/user-closeup-end-attachment.png",
+        "sources/user-closeup-opposite-face.png",
+        "sources/user-closeup-three-well-face.png",
+        "sources/user-closeup-two-well-face.png",
+        "sources/user-closeup-two-well-face-wide.png",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -160,7 +171,7 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
         source.local_path: source.source_tier for source in (*primary, *commerce)
     }
     source_tiers.update({item["localPath"]: "user" for item in user_evidence})
-    _validate_inventory(payload["logicalInventory"], set(source_tiers))
+    _validate_inventory(payload["logicalInventory"], source_tiers)
     claims = _dict_list(payload["sourcedClaims"], "sourcedClaims")
     conflicts = _list(payload["conflictsAndRulings"], "conflictsAndRulings")
     unknowns = _strings(payload["unknownsForAstra"], "unknownsForAstra")
@@ -182,6 +193,10 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     suspended = payload.get("suspendedPresentation")
     if board_revision == "tension-flash-board-2" and suspended is None:
         raise ValueError("Flash Board evidence requires suspendedPresentation")
+    if board_revision == "tension-flash-board-2":
+        user_paths = {item["localPath"] for item in user_evidence}
+        if user_paths != _FLASH_REQUIRED_USER_EVIDENCE_PATHS:
+            raise ValueError("Flash Board requires all six retained user closeups")
     if suspended is not None:
         _validate_suspended_presentation(
             suspended,
@@ -275,7 +290,7 @@ def _validate_suspended_presentation(
             if source.retailer == "Amazon"
             and source.url == "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"
         }
-        if not amazon_paths:
+        if amazon_paths != {_FLASH_AMAZON_FACE_MAP_PATH}:
             raise ValueError("Flash Board requires the retained Amazon face-map commerce source")
         mapping_order = tuple(mapping["positionID"] for mapping in mappings)
         if mapping_order != _FLASH_APPROVED_POSITION_ORDER:
@@ -286,7 +301,7 @@ def _validate_suspended_presentation(
                 raise ValueError(
                     f"Flash Board position {mapping['positionID']} does not preserve its approved hold order"
                 )
-            if mapping["positionID"].startswith("three-edge-") and mapping["sourceLocalPath"] not in amazon_paths:
+            if mapping["positionID"].startswith("three-edge-") and mapping["sourceLocalPath"] != _FLASH_AMAZON_FACE_MAP_PATH:
                 raise ValueError("Flash Board three-edge mapping must use the Amazon commerce face map")
 
     face_notes = _dict_list(value["faceInventoryNotes"], "suspendedPresentation.faceInventoryNotes")
@@ -410,7 +425,7 @@ def _dict_list(value: Any, field: str) -> list[dict[str, Any]]:
     return values
 
 
-def _validate_inventory(value: Any, source_paths: set[str]) -> None:
+def _validate_inventory(value: Any, source_tiers: dict[str, SourceTier]) -> None:
     inventory = _dict_list(value, "logicalInventory")
     if not inventory:
         raise ValueError("logicalInventory must contain at least one logical contact")
@@ -420,8 +435,10 @@ def _validate_inventory(value: Any, source_paths: set[str]) -> None:
         source_path = item.get("sourceLocalPath")
         if not isinstance(source_path, str) or not source_path.strip():
             raise ValueError("logicalInventory entries require sourceLocalPath")
-        if source_path not in source_paths:
+        if source_path not in source_tiers:
             raise ValueError(f"logicalInventory sourceLocalPath is not retained: {source_path}")
+        if source_tiers[source_path] == "user":
+            raise ValueError("logicalInventory entries cannot use user-evidence photos as selectable provenance")
 
 
 def _sources(value: Any, packet_dir: Path, expected_tier: SourceTier) -> list[EvidenceSource]:
@@ -552,6 +569,11 @@ def _validate_claim_references(
             raise ValueError(f"sourcedClaims entry {claim_id} requires sourceLocalPath")
         if reference not in source_tiers:
             raise ValueError(f"sourcedClaim references an unknown source: {reference}")
+        source_type = claim.get("sourceType")
+        if source_type != source_tiers[reference]:
+            raise ValueError(
+                f"sourcedClaim {claim_id} sourceType must match retained source tier {source_tiers[reference]}"
+            )
 
 
 def _validate_cross_tier_claims(
