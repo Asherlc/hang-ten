@@ -972,6 +972,10 @@ def presentation_image_bytes(
     """Return one authenticated board presentation's validated image bytes."""
     board_id = board_package._identifier(board_id, "board ID")
     selected = _selected_package(discover_packages(client, token, branch), board_id)
+    if not selected.editor_available:
+        raise board_package.BoardEditorUnavailableError(
+            "3D model editing is not supported"
+        )
     package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id == board_id:
         return images[package.presentation(presentation_id).asset_path]

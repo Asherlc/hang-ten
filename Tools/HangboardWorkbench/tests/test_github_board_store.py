@@ -402,6 +402,28 @@ def test_hosted_store_open_rejects_model_only_before_fetching_model_blobs() -> N
     )
 
 
+def test_module_presentation_image_rejects_model_only_before_fetching_media() -> None:
+    files = _model_only_package("fixture-model", "fixture.model")
+    client = FakeGitHubClient({BRANCH: files})
+    model_shas = {
+        FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.endswith(".usdz") or path.endswith(".model.json")
+    }
+
+    with pytest.raises(
+        board_package.BoardEditorUnavailableError,
+        match="3D model editing is not supported",
+    ):
+        github_board_store.presentation_image_bytes(
+            client, TOKEN, BRANCH, "fixture.model", None
+        )
+
+    assert model_shas.isdisjoint(
+        {call.args[1] for call in client.calls_named("get_blob")}
+    )
+
+
 def test_remote_package_preserves_orientation_alias_presentations() -> None:
     board = board_document("fixture.board")
     presentations = board["presentations"]
