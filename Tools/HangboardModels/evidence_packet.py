@@ -33,8 +33,10 @@ _PACKET_KEYS = frozenset(
         "deliberateOmissions",
         "materialFidelity",
         "requiredReviewViews",
+        "suspendedPresentation",
     }
 )
+_REQUIRED_PACKET_KEYS = _PACKET_KEYS - {"suspendedPresentation"}
 _PROPOSAL_KEYS = frozenset(
     {"geometry", "coordinates", "contours", "masks", "vectors", "trace", "alignment"}
 )
@@ -84,6 +86,7 @@ class EvidencePacket:
     deliberate_omissions: tuple[str, ...]
     material_fidelity: Any
     required_review_views: tuple[str, ...]
+    suspended_presentation: dict[str, Any] | None = None
 
 
 def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
@@ -108,7 +111,7 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     if unknown_keys:
         raise ValueError(f"closed packet contains unknown key: {sorted(unknown_keys)[0]}")
 
-    for required in _PACKET_KEYS:
+    for required in _REQUIRED_PACKET_KEYS:
         if required not in payload:
             raise ValueError(f"evidence packet is missing {required}")
     board_revision = _required_string(payload, "boardRevision")
@@ -150,6 +153,10 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
     _validate_claim_references(claims, source_tiers)
     _validate_cross_tier_claims(claims, source_tiers, conflicts)
 
+    suspended = payload.get("suspendedPresentation")
+    if suspended is not None:
+        _validate_suspended_presentation(suspended, source_tiers, payload["logicalInventory"])
+
     return EvidencePacket(
         board_revision=board_revision,
         board_revision_date=board_revision_date,
@@ -163,7 +170,90 @@ def validate_evidence_packet(packet_path: Path) -> EvidencePacket:
         deliberate_omissions=tuple(omissions),
         material_fidelity=payload["materialFidelity"],
         required_review_views=tuple(review_views),
+        suspended_presentation=suspended,
     )
+
+
+def _validate_suspended_presentation(
+    value: Any, source_tiers: dict[str, SourceTier], inventory: list[dict[str, Any]]
+) -> None:
+    if not isinstance(value, dict):
+        raise ValueError("suspendedPresentation must be an object")
+    allowed = {"positionIDs", "positionMappings", "attachmentEvidence", "visualApproval", "displayEstimates"}
+    unknown = set(value) - allowed
+    if unknown:
+        raise ValueError(f"suspendedPresentation contains unknown key: {sorted(unknown)[0]}")
+    for key in allowed:
+        if key not in value:
+            raise ValueError(f"suspendedPresentation is missing {key}")
+
+    position_ids = _strings(value["positionIDs"], "suspendedPresentation.positionIDs")
+    if len(position_ids) != len(set(position_ids)):
+        raise ValueError("suspendedPresentation.positionIDs contains duplicate position")
+    mappings = _dict_list(value["positionMappings"], "suspendedPresentation.positionMappings")
+    if not mappings:
+        raise ValueError("suspendedPresentation.positionMappings must be non-empty")
+    inventory_ids = {item.get("id") for item in inventory}
+    seen: set[str] = set()
+    for mapping in mappings:
+        if set(mapping) - {"positionID", "holdIDs", "sourceLocalPath"}:
+            raise ValueError("position mapping contains unknown key")
+        position = mapping.get("positionID")
+        if not isinstance(position, str) or position not in position_ids:
+            raise ValueError(f"unknown position ID in suspendedPresentation: {position}")
+        if position in seen:
+            raise ValueError(f"duplicate position mapping: {position}")
+        seen.add(position)
+        holds = _strings(mapping.get("holdIDs"), "position mapping holdIDs")
+        if any(hold not in inventory_ids for hold in holds):
+            raise ValueError("position mapping references unknown hold ID")
+        _require_retained_reference(mapping.get("sourceLocalPath"), source_tiers, "position mapping")
+    if seen != set(position_ids):
+        raise ValueError("positionMappings must provide a mapping for every declared position")
+
+    attachment = value["attachmentEvidence"]
+    if not isinstance(attachment, dict):
+        raise ValueError("attachmentEvidence must be an object")
+    if set(attachment) - {"sourceLocalPath", "view", "supports"}:
+        raise ValueError("attachmentEvidence contains unknown key")
+    _require_retained_reference(attachment.get("sourceLocalPath"), source_tiers, "attachmentEvidence")
+    for key in ("view", "supports"):
+        _required_string(attachment, key)
+
+    approval = value["visualApproval"]
+    if not isinstance(approval, dict):
+        raise ValueError("visualApproval must be an object")
+    if set(approval) - {"approvedSnapshotPaths", "materiallyDistinct", "decisionDate"}:
+        raise ValueError("visualApproval contains unknown key")
+    snapshots = _strings(approval.get("approvedSnapshotPaths"), "visualApproval.approvedSnapshotPaths")
+    if len(snapshots) < 2 or len(snapshots) != len(set(snapshots)) or not approval.get("materiallyDistinct"):
+        raise ValueError("visualApproval requires two or more materially distinct snapshots")
+    for snapshot in snapshots:
+        _require_retained_reference(snapshot, source_tiers, "visualApproval snapshot")
+    decision_date = approval.get("decisionDate")
+    if not isinstance(decision_date, str) or not decision_date.strip():
+        raise ValueError("visualApproval requires decisionDate")
+    try:
+        date.fromisoformat(decision_date)
+    except ValueError as exc:
+        raise ValueError("visualApproval decisionDate must be an ISO-8601 date") from exc
+
+    estimates = _dict_list(value["displayEstimates"], "suspendedPresentation.displayEstimates")
+    if not estimates:
+        raise ValueError("displayEstimates must be non-empty")
+    for estimate in estimates:
+        if set(estimate) - {"name", "value", "provenance"}:
+            raise ValueError("display estimate contains unknown key")
+        _required_string(estimate, "name")
+        _required_string(estimate, "value")
+        provenance = estimate.get("provenance")
+        if provenance not in {"displayEstimate", "estimatedFromApprovedModel"}:
+            raise ValueError("display estimate provenance must be displayEstimate or estimatedFromApprovedModel")
+
+
+def _require_retained_reference(reference: Any, source_tiers: dict[str, SourceTier], field: str) -> None:
+    if not isinstance(reference, str) or not reference.strip() or reference not in source_tiers:
+        raise ValueError(f"{field} sourceLocalPath must reference a retained source")
 
 
 def _required_string(payload: dict[str, Any], key: str) -> str:

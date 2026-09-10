@@ -61,6 +61,106 @@ def valid_packet(tmp_path: Path) -> Path:
     return path
 
 
+def valid_suspended_packet(tmp_path: Path) -> Path:
+    path = valid_packet(tmp_path)
+    packet_dir = path.parent
+    retained = []
+    for name in ("front.png", "hanging.jpg", "labelled-faces.jpg"):
+        source = packet_dir / "sources" / name
+        source.write_bytes(name.encode("ascii"))
+        retained.append((f"sources/{name}", hashlib.sha256(source.read_bytes()).hexdigest()))
+    payload = _payload(path)
+    payload["primarySources"][0]["localPath"] = retained[0][0]  # type: ignore[index]
+    payload["primarySources"][0]["sha256"] = retained[0][1]  # type: ignore[index]
+    for item in payload["logicalInventory"]:  # type: ignore[index]
+        item["sourceLocalPath"] = retained[0][0]
+    for claim in payload["sourcedClaims"]:  # type: ignore[index]
+        claim["sourceLocalPath"] = retained[0][0]
+    payload["suspendedPresentation"] = {
+        "positionIDs": ["three-edge-upright", "three-edge-inverted", "two-edge-upright", "two-edge-inverted"],
+        "positionMappings": [
+            {"positionID": "three-edge-upright", "holdIDs": ["jug-left"], "sourceLocalPath": retained[0][0]},
+            {"positionID": "three-edge-inverted", "holdIDs": ["jug-left"], "sourceLocalPath": retained[0][0]},
+            {"positionID": "two-edge-upright", "holdIDs": ["jug-right"], "sourceLocalPath": retained[1][0]},
+            {"positionID": "two-edge-inverted", "holdIDs": ["jug-right"], "sourceLocalPath": retained[1][0]},
+        ],
+        "attachmentEvidence": {"sourceLocalPath": retained[1][0], "view": "attachment-region", "supports": "paired cord passages"},
+        "visualApproval": {
+            "approvedSnapshotPaths": [retained[0][0], retained[1][0]],
+            "materiallyDistinct": True,
+            "decisionDate": "2026-09-09",
+        },
+        "displayEstimates": [
+            {"name": "anchor", "value": "fixed invisible anchor", "provenance": "displayEstimate"},
+            {"name": "cord", "value": "rest length and radius", "provenance": "displayEstimate"},
+            {"name": "pose", "value": "canonical pose", "provenance": "estimatedFromApprovedModel"},
+            {"name": "camera", "value": "canonical camera", "provenance": "displayEstimate"},
+        ],
+    }
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return path
+
+
+def test_accepts_valid_suspended_presentation(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    assert validate_evidence_packet(packet).suspended_presentation["positionIDs"]
+
+
+def test_rejects_suspended_presentation_without_distinct_snapshots(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["visualApproval"]["approvedSnapshotPaths"] = ["sources/front.png"]  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="two.*distinct"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_unretained_attachment_view(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["attachmentEvidence"]["sourceLocalPath"] = "sources/missing.jpg"  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="retained"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_unknown_or_duplicate_position_mapping(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["positionMappings"][0]["positionID"] = "unknown"  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="unknown position"):
+        validate_evidence_packet(packet)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["positionMappings"][1]["positionID"] = "three-edge-upright"  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="duplicate position"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_unlabelled_suspended_estimate(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["suspendedPresentation"]["displayEstimates"][0]["provenance"]  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="provenance"):
+        validate_evidence_packet(packet)
+
+
+def test_rejects_missing_visual_approval_and_geometry_proposal(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    del payload["suspendedPresentation"]["visualApproval"]  # type: ignore[index]
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="visualApproval"):
+        validate_evidence_packet(packet)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["geometry"] = "proposal"
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="proposal field"):
+        validate_evidence_packet(packet)
+
+
 def _payload(packet: Path) -> dict[str, object]:
     return json.loads(packet.read_text(encoding="utf-8"))
 
