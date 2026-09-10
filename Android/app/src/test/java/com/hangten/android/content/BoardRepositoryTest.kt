@@ -106,6 +106,51 @@ class BoardRepositoryTest {
         assertTrueFailureContaining(result, "fingerCapacity")
     }
 
+    @Test
+    fun decodesSchemaV2RasterMediaIntoTheExistingCanvasModel() {
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to schemaV2RasterBoardJson(),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+
+        val board = result.getOrThrow().single()
+        assertEquals("demo.board", board.id)
+        assertEquals("assets/primary.png", board.presentations.single().assetPath)
+        assertTrue(board.presentations.single().isDefault)
+        assertEquals("path-hold", board.holds.single().id)
+        assertEquals("primary", board.holds.single().presentationId)
+        assertTrue(board.holds.single().geometry.single().shape is HoldShape.Path)
+    }
+
+    @Test
+    fun omitsSchemaV2ModelOnlyPackagesWithoutTryingToLoadARasterFallback() {
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/raster/board.json" to schemaV2RasterBoardJson(),
+                    "Hangboards/raster/assets/primary.png" to "png",
+                    "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(),
+                    "PlanLibrary.json" to
+                        """
+                        {
+                          "boardMappings": [
+                            { "boardID": "model.only", "semanticHolds": { "jugs": { "kind": "jug" } } }
+                          ]
+                        }
+                        """.trimIndent(),
+                ),
+            ),
+        ).loadBoards()
+
+        val boards = result.getOrThrow()
+        assertEquals(listOf("demo.board"), boards.map { it.id })
+        assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
+    }
+
     private fun boardJson(): String =
         """
         {
@@ -162,6 +207,89 @@ class BoardRepositoryTest {
                   "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0.0 }
                 }
               ]
+            }
+          ]
+        }
+        """.trimIndent()
+
+    private fun schemaV2RasterBoardJson(): String =
+        """
+        {
+          "schemaVersion": 2,
+          "id": "demo.board",
+          "manufacturer": "Demo",
+          "name": "Demo Board",
+          "subtitle": "A test board.",
+          "productURL": "https://example.com/demo",
+          "aspectRatio": 2.0,
+          "equipmentObjects": [{ "id": "primary" }],
+          "holds": [
+            {
+              "id": "path-hold",
+              "equipmentObjectID": "primary",
+              "name": "Path hold",
+              "kind": "edge",
+              "features": ["mediumEdge"]
+            }
+          ],
+          "presentations": [
+            {
+              "id": "primary",
+              "name": "Primary",
+              "aspectRatio": 2.0,
+              "isDefault": true,
+              "derivation": { "type": "original" },
+              "media": {
+                "type": "raster",
+                "assetPath": "assets/primary.png",
+                "holdGeometry": {
+                  "path-hold": [
+                    {
+                      "frame": { "x": 0.1, "y": 0.2, "width": 0.3, "height": 0.4 },
+                      "shape": {
+                        "type": "path",
+                        "commands": [
+                          { "command": "move", "to": [0.0, 0.0] },
+                          { "command": "line", "to": [1.0, 0.0] },
+                          { "command": "line", "to": [1.0, 1.0] },
+                          { "command": "close" }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+        """.trimIndent()
+
+    private fun schemaV2ModelOnlyBoardJson(): String =
+        """
+        {
+          "schemaVersion": 2,
+          "id": "model.only",
+          "manufacturer": "Demo",
+          "name": "Model only",
+          "subtitle": "A model-only board.",
+          "productURL": "https://example.com/model",
+          "aspectRatio": 2.0,
+          "equipmentObjects": [{ "id": "primary" }],
+          "holds": [
+            { "id": "jug", "equipmentObjectID": "primary", "name": "Jug", "kind": "jug" }
+          ],
+          "presentations": [
+            {
+              "id": "primary",
+              "name": "Primary",
+              "aspectRatio": 2.0,
+              "isDefault": true,
+              "derivation": { "type": "original" },
+              "media": {
+                "type": "model",
+                "assetPath": "assets/primary.usdz",
+                "descriptorPath": "assets/primary.model.json"
+              }
             }
           ]
         }
