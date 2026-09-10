@@ -72,6 +72,17 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
     payload = _payload(path)
     payload["primarySources"][0]["localPath"] = retained[0][0]  # type: ignore[index]
     payload["primarySources"][0]["sha256"] = retained[0][1]  # type: ignore[index]
+    payload["commerceSources"] = [
+        {
+            "localPath": local_path,
+            "sha256": digest,
+            "snapshotSHA256": digest,
+            "sourceTier": "commerce",
+            "url": f"https://retailer.example/{Path(local_path).stem}",
+            "retailer": "Authorized Retailer",
+        }
+        for local_path, digest in retained[1:]
+    ]
     for item in payload["logicalInventory"]:  # type: ignore[index]
         item["sourceLocalPath"] = retained[0][0]
     for claim in payload["sourcedClaims"]:  # type: ignore[index]
@@ -131,7 +142,9 @@ def test_rejects_unknown_or_duplicate_position_mapping(tmp_path: Path) -> None:
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="unknown position"):
         validate_evidence_packet(packet)
-    payload = _payload(packet)
+    # Restore the first mapping before introducing the independent duplicate
+    # mutation; do not let the prior unknown-position failure mask this case.
+    payload["suspendedPresentation"]["positionMappings"][0]["positionID"] = "three-edge-upright"  # type: ignore[index]
     payload["suspendedPresentation"]["positionMappings"][1]["positionID"] = "three-edge-upright"  # type: ignore[index]
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="duplicate position"):
