@@ -476,4 +476,19 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
         }
     }
+
+    func testClosedBranchPolicyRejectsNonClosureEndpointToInteriorContact() {
+        let samples = [
+            SIMD3<Float>(0, 0, 0),
+            SIMD3<Float>(0, 2, 0),
+            SIMD3<Float>(2, 2, 0),
+            SIMD3<Float>(3, 3, 0),
+            SIMD3<Float>(1, 1, 0),
+            SIMD3<Float>(0, 0, 0),
+        ]
+
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(samples)) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
 }

@@ -220,11 +220,12 @@ enum SuspendedCordSolver {
                     samples[first], samples[first + 1],
                     samples[second], samples[second + 1]
                 )
-                let hasInteriorCrossing = approach.s > 1e-4
-                    && approach.s < 1 - 1e-4
-                    && approach.t > 1e-4
-                    && approach.t < 1 - 1e-4
-                if hasInteriorCrossing && approach.distanceSquared <= tolerance * tolerance {
+                let firstParameterIsEndpoint = approach.s <= 1e-4 || approach.s >= 1 - 1e-4
+                let secondParameterIsEndpoint = approach.t <= 1e-4 || approach.t >= 1 - 1e-4
+                let isCrossingOrEndpointInterior = firstParameterIsEndpoint != secondParameterIsEndpoint
+                    || (!firstParameterIsEndpoint && !secondParameterIsEndpoint)
+                if isCrossingOrEndpointInterior
+                    && approach.distanceSquared <= tolerance * tolerance {
                     return true
                 }
             }
@@ -283,10 +284,16 @@ enum SuspendedCordSolver {
                     && approach.s < 1 - 1e-4
                     && approach.t > 1e-4
                     && approach.t < 1 - 1e-4
+                let firstParameterIsEndpoint = approach.s <= 1e-4 || approach.s >= 1 - 1e-4
+                let secondParameterIsEndpoint = approach.t <= 1e-4 || approach.t >= 1 - 1e-4
+                let isEndpointInteriorContact = firstParameterIsEndpoint != secondParameterIsEndpoint
                 let touchesAwayFromAnchor = isAnchorClosure
                     && approach.distanceSquared <= tolerance * tolerance
                     && !(approach.s <= 1e-4 && approach.t >= 1 - 1e-4)
-                if (hasInteriorCrossing || touchesAwayFromAnchor)
+                let nonClosureContact = !isAnchorClosure
+                    && approach.distanceSquared <= tolerance * tolerance
+                    && (isEndpointInteriorContact || (!firstParameterIsEndpoint && !secondParameterIsEndpoint))
+                if (hasInteriorCrossing || touchesAwayFromAnchor || nonClosureContact)
                     && approach.distanceSquared <= tolerance * tolerance {
                     throw SuspendedPresentationError.selfIntersection
                 }

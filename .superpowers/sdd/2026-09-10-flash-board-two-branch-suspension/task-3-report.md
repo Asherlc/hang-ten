@@ -82,3 +82,18 @@ The exact-taut regression now compares every free-span sample with its
 ordered endpoint interpolation, verifies the complete centerline concatenation
 at both passage joins and the shared anchor, and independently measures the
 composite centerline length.
+
+## Round-3 review remediation
+
+All non-adjacent segment pairs now classify closest approaches by endpoint
+versus interior parameters and reject both proper crossings and
+endpoint-to-interior contacts. The intentional first/final anchor closure
+remains the only permitted contact; adjacent joins remain excluded by the
+pair iteration. The generic individual-span validator uses the same policy,
+while preserving the existing very-short taut segment behavior by not treating
+nearby endpoint-to-endpoint samples as intersections.
+
+Added a closed-path endpoint-to-interior regression and verified it, together
+with the short taut regression, using an owned standalone Swift probe. The
+focused XCTest remains blocked before compilation by unavailable
+CoreSimulatorService and inaccessible global Swift/SwiftPM caches.
