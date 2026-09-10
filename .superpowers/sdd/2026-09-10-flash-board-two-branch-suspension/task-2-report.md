@@ -60,3 +60,19 @@ has no installed pytest, no network access for dependencies, and no available
 simulator service. Existing renderer call sites use compatibility projections
 on the new Swift enum; a later renderer task should switch explicitly on the
 discriminator before rendering two branches.
+
+## Round 1 repair
+
+The review identified two test-harness defects. The Swift shared fixture
+builder now selects `specification["base"]` (defaulting to `model`), so the
+valid and malformed two-branch cases actually exercise `twoBranchModel`.
+Every matrix entry now carries a non-empty fixture-specific `pythonError`,
+and the Python consumer requires and matches that field. A dedicated Python
+proof test rejects missing or `.*` expectations, and a dedicated Swift proof
+test inspects the generated fixture discriminator; both would fail with the
+reviewed implementation.
+
+Round-1 repair checks passed: all 52 matrix cases matched their declared
+Python error regexes, Python syntax/JSON validation passed, Swift syntax parse
+passed, and `git diff --check` passed. Full pytest/XCTest remain subject to
+the environment limitations above.

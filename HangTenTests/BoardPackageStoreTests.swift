@@ -147,6 +147,24 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
     }
 
+    func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "twoBranchModel",
+            "mutations": []
+        ])
+        defer { fixture.remove() }
+
+        let boardData = try Data(contentsOf: fixture.rootURL
+            .appendingPathComponent("Hangboards/fixture-model/board.json"))
+        let board = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: boardData) as? [String: Any]
+        )
+        let presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+        let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+        let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
+        XCTAssertEqual(suspension["type"] as? String, "twoBranchCord")
+    }
+
     func testModelPresentationContentUsesTypedMediaHoldInventory() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
@@ -3231,7 +3249,8 @@ final class BoardPackageStoreTests: XCTestCase {
         _ specification: [String: Any]
     ) throws -> FixtureBundle {
         let fixtures = try validationFixtures()
-        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
+        let base = specification["base"] as? String ?? "model"
+        let model = try XCTUnwrap(fixtures[base] as? [String: Any])
         var board = try copiedJSONObject(try XCTUnwrap(model["board"]))
         var descriptor = try copiedJSONObject(try XCTUnwrap(model["descriptor"]))
         let mutations = try XCTUnwrap(specification["mutations"] as? [[String: Any]])

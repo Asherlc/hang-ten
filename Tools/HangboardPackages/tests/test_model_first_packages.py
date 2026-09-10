@@ -440,6 +440,12 @@ def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
     }
 
 
+def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
+    for fixture in _shared_model_parser_parity_fixtures():
+        expected = fixture.get("pythonError")
+        assert isinstance(expected, str) and expected and expected != ".*", fixture["name"]
+
+
 @pytest.mark.parametrize(
     "fixture",
     _shared_model_parser_parity_fixtures(),
@@ -457,7 +463,7 @@ def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
         tmp_path / str(fixture["name"]), fixture
     )
 
-    with pytest.raises(ValueError, match=str(fixture.get("pythonError", ".*"))):
+    with pytest.raises(ValueError, match=str(fixture["pythonError"])):
         module.load_board_package(package_root)
 
 
