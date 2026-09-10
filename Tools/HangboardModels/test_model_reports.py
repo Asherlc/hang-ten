@@ -8,6 +8,8 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 
+from model_characterization import assert_baseline_matches, capture_model_baseline
+
 
 TOOLS = Path(__file__).resolve().parent
 ROOT = TOOLS.parents[1]
@@ -62,6 +64,12 @@ def compact_package_paths():
 
 
 class ModelReportTests(unittest.TestCase):
+    def test_shipped_model_baselines_are_self_consistent(self):
+        for slug in ("beastmaker-1000", "metolius-wood-grips-compact-ii", "tension-flash-board"):
+            package = ROOT / "Hangboards" / slug
+            baseline = capture_model_baseline(package, package / "board.json")
+            assert_baseline_matches(baseline, baseline)
+
     def test_beastmaker_report_requires_22_hold_ids_and_no_hardware(self):
         load_report, verify_report = beastmaker_report_functions()
         fixture = {

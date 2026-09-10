@@ -337,6 +337,26 @@ def test_staging_preserves_live_model_package_assets_and_hash_bindings(
         ).hexdigest()
 
 
+def test_staging_preserves_every_live_model_package_file_byte_for_byte(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository_root, destination, _ = stage_live_model_packages(tmp_path, monkeypatch)
+    for slug in LIVE_MODEL_PACKAGE_SLUGS:
+        source_package = repository_root / "Hangboards" / slug
+        staged_package = destination / slug
+        source_files = {
+            path.relative_to(source_package).as_posix(): path.read_bytes()
+            for path in source_package.rglob("*")
+            if path.is_file()
+        }
+        staged_files = {
+            path.relative_to(staged_package).as_posix(): path.read_bytes()
+            for path in staged_package.rglob("*")
+            if path.is_file()
+        }
+        assert staged_files == source_files
+
+
 def test_staging_fails_closed_for_a_malformed_completed_package(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
