@@ -25,6 +25,38 @@ Before and after schema migration, run a type- and order-sensitive semantic audi
 
 Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. A package containing model media is model-only: it must declare no raster presentation or PNG, whether original or derived; presentation derivation is supported only between raster presentations. Exact declared-versus-actual asset equality complements but does not replace this package-level media-isolation rule. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
 
+## Suspended portable presentations
+
+For a future portable-suspension parser/runtime, reject a migration unless all
+of the following are decidable from package data:
+
+- exactly one model USDZ and descriptor;
+- an optional, explicitly tagged `singleCord` suspension declaration;
+- one physical attachment point bound to an importer-visible descriptor node;
+- exactly one finite canonical pose for every supported position, and no pose for an unknown position;
+- a display-only invisible anchor plus positive cord length and radius; and
+- no baked cord/anchor mesh, second face model, raster fallback, hand-authored hold bounds, or hold-node attachment shortcut.
+
+When `suspension` is present on model media, author `attachment.nodeID` against
+the hash-bound, importer-visible model descriptor and record its model-frame
+`pointInModel`; the attachment must not be a logical hold node. Record the
+invisible-anchor display estimate, cord rest length, radius, and material
+estimates separately from source-backed physical facts. Author normalized,
+finite canonical pose transforms keyed by the existing `positionID` values.
+Logical holds remain metadata-only, and positions select faces/configurations
+and their canonical poses rather than creating duplicate contacts or copying
+model geometry. Unsupported cord dimensions or knot details remain explicitly
+labeled estimates.
+
+The retained evidence packet must record the exact board revision, every usable
+face/position, attachment evidence, a position-to-logical-hold mapping with
+supporting evidence, two approved materially distinct visual snapshots (adding
+an attachment-region view when available), and every deliberate display
+simplification, including the invisible anchor and omitted mounting
+environment. Preserve the current multi-angle human approval gate before
+Astra; no geometry-generation pass proceeds until that exact approved set is
+retained.
+
 Raster original presentations must be nonempty and form an exact, single-owner partition of the logical hold inventory. Derived raster presentations may reference only originals, and their raw geometry must equal the declared source exactly, including ordering and scalar kinds/values. Reject redundant empty media, duplicate or missing owners, geometry drift, and derived-to-derived chains.
 
 Logical holds store metadata only. Never add empty or zero sentinel geometry, cached frames, or presentation IDs for compatibility: typed presentation media solely owns hold membership, geometry, and resolved frames, and consumers resolve through the selected presentation. During an intentionally temporary v1/v2 transition, keep v1 spatial fields in a loader-private adapter and normalize them immediately into typed raster media. Remove silent compatibility overloads so compiler failures expose callers that still need explicit typed-media migration; remove the adapter when catalog conversion completes.
