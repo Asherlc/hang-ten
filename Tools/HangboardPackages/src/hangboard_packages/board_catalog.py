@@ -1492,15 +1492,20 @@ def _validate_model_orientation(
                 f"{source}.rotations must exactly match model position IDs"
             )
     seen: set[str] = set()
-    model_authored = [
-        position for position in positions
-        if position.id in model_position_ids and position.hold_ids_authored
+    model_positions = [
+        (index, position)
+        for index, position in enumerate(positions)
+        if position.id in model_position_ids
     ]
-    if orientation is None and len(model_authored) != len(model_position_ids):
+    model_authored = [
+        position for _, position in model_positions if position.hold_ids_authored
+    ]
+    if model_authored and len(model_authored) != len(model_positions):
+        missing_index = next(index for index, position in model_positions if not position.hold_ids_authored)
+        raise ValueError(f"positions[{missing_index}].holdIDs must be explicitly provided for every model position")
+    if not model_authored:
         return
-    for index, position in enumerate(positions):
-        if position.id not in model_position_ids:
-            continue
+    for index, position in model_positions:
         hold_source = f"positions[{index}].holdIDs"
         unknown = set(position.hold_ids) - descriptor_hold_ids
         if unknown:

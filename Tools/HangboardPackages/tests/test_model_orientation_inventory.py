@@ -61,6 +61,15 @@ def test_model_orientation_rejects_invalid_rotation_inventory(
         )
 
 
+def test_model_orientation_rejects_unknown_keys_inside_orientation(tmp_path: Path) -> None:
+    orientation = _orientation()
+    orientation["unexpected"] = True
+    with pytest.raises(ValueError, match="orientation has unknown keys"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(tmp_path, orientation=orientation, positions=_positions())
+        )
+
+
 @pytest.mark.parametrize("quaternion", [[0, 0, 0, 0], [0, 0, 0, 2], [math.inf, 0, 0, 1], [0.1234567891, 0, 0, 1]])
 def test_model_orientation_rejects_non_unit_or_noncanonical_quaternion(
     tmp_path: Path, quaternion: list[float]
@@ -81,6 +90,34 @@ def test_model_orientation_rejects_overlapping_or_incomplete_hold_membership(tmp
     with pytest.raises(ValueError, match=r"positions\[1\]\.holdIDs"):
         load_board_catalog_module().load_board_package(
             write_model_package(tmp_path, orientation=_orientation(), positions=positions)
+        )
+
+
+def test_model_positions_reject_duplicate_hold_ids_in_one_position(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match=r"positions\[0\]\.holdIDs.*duplicates"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(tmp_path, positions=[
+                {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left", "hold-left"]},
+            ])
+        )
+
+
+def test_model_positions_reject_nonempty_incomplete_partition(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="partition"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(tmp_path, positions=[
+                {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
+            ])
+        )
+
+
+def test_model_positions_reject_mixed_legacy_and_explicit_membership(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match=r"positions\[0\]\.holdIDs"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(tmp_path, positions=[
+                {"id": "front", "presentationID": "primary"},
+                {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-left"]},
+            ])
         )
 
 
