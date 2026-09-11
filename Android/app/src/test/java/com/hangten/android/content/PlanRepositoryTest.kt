@@ -97,13 +97,15 @@ class PlanRepositoryTest {
             .flatMap { it.steps }
         val maxHang = steps.first { it.id == "max-hangs-1" }
 
-        assertEquals(59, boards.size)
+        assertEquals(58, boards.size)
         assertTrue(boards.all { board ->
             board.presentations.all { presentation -> presentation.assetPath.endsWith(".png") } &&
                 board.holds.all { it.geometry.isNotEmpty() }
         })
         assertFalse(boards.any { it.id == "beastmaker-1000" })
         assertFalse(boards.any { it.id == "metolius.wood-grips-compact-ii" })
+        assertFalse(boards.any { it.id == "yy.baguette-evo" })
+        assertFalse(boards.any { it.id == "nature.stone-hanger" })
         assertEquals(
             "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
             maxHang.instruction,
