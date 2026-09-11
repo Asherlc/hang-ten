@@ -402,7 +402,9 @@ def test_rejects_suspended_presentation_without_distinct_snapshots(tmp_path: Pat
 
 def test_requires_visual_approval_materially_distinct_to_be_a_true_boolean(tmp_path: Path) -> None:
     for value in (False, 1, "true"):
-        packet = valid_suspended_packet(tmp_path / repr(value))
+        case_root = tmp_path / repr(value)
+        case_root.mkdir()
+        packet = valid_suspended_packet(case_root)
         payload = _payload(packet)
         payload["suspendedPresentation"]["visualApproval"]["materiallyDistinct"] = value  # type: ignore[index]
         _rewrite(packet, payload)
