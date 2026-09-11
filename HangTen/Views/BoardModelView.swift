@@ -440,19 +440,22 @@ final class BoardModelScene {
     ) {
         // Build the replacement cord at its deterministic destination before
         // the transaction. It is never bound to descriptor geometry and the
-        // existing transient node is removed as one replacement operation.
+        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
+        // existing transient node is removed and replaced in one SceneKit
+        // transaction. The replacement itself has no implicit action; the
+        // board/camera transition below keeps its established animation.
+        SCNTransaction.begin()
+        SCNTransaction.disableActions = true
         transientCordNode?.removeFromParentNode()
         transientCordNode = cord
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
-
-        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
         if boardMoves {
             cord.opacity = 0
         } else {
             boardContainer.simdTransform = solved.boardTransform
         }
-        SCNTransaction.begin()
+        SCNTransaction.disableActions = false
         SCNTransaction.animationDuration = Self.canonicalTransitionDuration
         if boardMoves {
             boardContainer.simdTransform = solved.boardTransform

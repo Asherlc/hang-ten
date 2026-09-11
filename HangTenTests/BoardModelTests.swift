@@ -552,6 +552,23 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(model.transientCordNode)
     }
 
+    func testSuspendedSelectionReportsUnavailableWhenTheDeclaredAttachmentNodeIsMissing() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2)
+        ))
+
+        XCTAssertFalse(model.select(positionID: "primary"))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.transientCordNode)
+    }
+
     private struct MigratedModelExpectation {
         let boardID: String
         let holdIDs: Set<String>

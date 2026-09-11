@@ -102,3 +102,41 @@ were not used. No visual simulator review was performed.
 Repeat focused and full XCTest execution plus the isolated visual review once
 CoreSimulator exposes a valid device type and produces result bundles. No push
 was performed, per the task instruction.
+
+## Review-fix round 1
+
+- Corrected the zero-horizontal-slack fixture: its endpoint distance is now
+  compatible with the 2.1 rest length, so it reaches the intended
+  `zeroHorizontalSlack` branch rather than failing early as `cordTooShort`.
+- Added a literal, independent pre-extraction numerical baseline captured from
+  `f29f1255`: five interior samples and tangents, measured polyline length,
+  framing axes/target/extents/distance, and the 42 included framing points.
+  The baseline calls `SuspensionProfileSolver` directly and does not compare it
+  with the facade or reuse solver helpers to construct expected values.
+- Added a dedicated declared-attachment-node-missing fixture. It verifies the
+  existing unavailable state has no rescue cord.
+- Made transient cord replacement an explicit `SCNTransaction`: removal and
+  addition execute with implicit actions disabled, then the established board
+  and camera transition animation resumes in that same transaction. The
+  existing replacement test now provides the observable evidence: the prior
+  cord is detached, exactly one distinct root-owned replacement remains,
+  segments retain the cord (non-pickable) category, accessibility remains off,
+  and highlighted wood material identity is preserved.
+
+Round-1 focused XCTest command:
+
+```sh
+rtk proxy xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
+  -destination 'platform=iOS Simulator,id=8C3E2871-65AD-406D-AE11-ED90CAC2FC4F' \
+  -derivedDataPath .context/hangboard-3d-toolkit-extraction-derived \
+  -clonedSourcePackagesDirPath /private/tmp/hangboard-3d-toolkit-extraction-sourcepackages \
+  -only-testing:HangTenTests/SuspendedBoardPresentationTests/testSingleProfileSolverMatchesPreExtractionNumericalBaseline \
+  -only-testing:HangTenTests/SuspendedBoardPresentationTests/testSingleProfileSolverCharacterizesTautSlackAndInvalidInputs \
+  -only-testing:HangTenTests/BoardModelTests/testSuspendedSelectionReportsUnavailableWhenTheDeclaredAttachmentNodeIsMissing \
+  -only-testing:HangTenTests/BoardModelTests/testReselectingSuspendedPositionAtomicallyReplacesTransientCordWithoutChangingHoldHighlights
+```
+
+The Xcode process again stopped after resolving packages with
+`DVTDeviceOperation: Encountered a build number ""`; it produced neither build
+nor test execution output. `rtk swiftc -parse` passed for the changed Swift
+files, `git diff --check` passed, and CodeGraph remained synchronized.

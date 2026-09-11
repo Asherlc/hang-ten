@@ -153,6 +153,52 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(facade.cordArcLength, solved.cord.arcLength)
     }
 
+    // Literal values captured from the pre-extraction solver at f29f1255.
+    // They intentionally do not use the compatibility facade or any solver
+    // helper to derive expectations, so changes to catenary arithmetic,
+    // sampling, or framing policy remain observable.
+    func testSingleProfileSolverMatchesPreExtractionNumericalBaseline() throws {
+        let solved = try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(),
+            bounds: bounds
+        )
+
+        let expectedSamples: [(index: Int, point: SIMD3<Float>)] = [
+            (1, SIMD3<Float>(0.3870968, 1.6978989, 0)),
+            (8, SIMD3<Float>(0.2967742, 0.6134734, 0)),
+            (16, SIMD3<Float>(0.1935484, 0.30244565, 0)),
+            (24, SIMD3<Float>(0.090322584, 0.27111173, 0)),
+            (30, SIMD3<Float>(0.012903243, 0.3676641, 0))
+        ]
+        let expectedTangents: [(index: Int, tangent: SIMD3<Float>)] = [
+            (1, SIMD3<Float>(-0.046825305, -0.9989031, 0)),
+            (8, SIMD3<Float>(-0.16762841, -0.9858503, 0)),
+            (16, SIMD3<Float>(-0.6445774, -0.76453906, 0)),
+            (24, SIMD3<Float>(-0.9035824, 0.42841431, 0)),
+            (30, SIMD3<Float>(-0.40371457, 0.914885, 0))
+        ]
+        for expected in expectedSamples {
+            XCTAssertEqual(solved.cord.samples[expected.index].x, expected.point.x, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.samples[expected.index].y, expected.point.y, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.samples[expected.index].z, expected.point.z, accuracy: 1e-6)
+        }
+        for expected in expectedTangents {
+            XCTAssertEqual(solved.cord.tangents[expected.index].x, expected.tangent.x, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.tangents[expected.index].y, expected.tangent.y, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.tangents[expected.index].z, expected.tangent.z, accuracy: 1e-6)
+        }
+        XCTAssertEqual(solved.cord.polylineArcLength, 1.9997214, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.target, SIMD3<Float>(0, 0.75, 0))
+        XCTAssertEqual(solved.cameraFraming.right, SIMD3<Float>(-1, 0, 0))
+        XCTAssertEqual(solved.cameraFraming.up, SIMD3<Float>(0, 1, 0))
+        XCTAssertEqual(solved.cameraFraming.width, 2, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.height, 2.5, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.depth, 0.4, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.distance, 3, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.includedPoints.count, 42)
+    }
+
     func testSingleProfileSolverCharacterizesTautSlackAndInvalidInputs() throws {
         let taut = try SuspensionProfileSolver.solveSingle(
             pose: pose(),
@@ -173,7 +219,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
         XCTAssertThrowsError(try SuspensionProfileSolver.solveSingle(
             pose: pose(),
-            profile: singleProfile(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 1.1),
+            profile: singleProfile(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2.1),
             bounds: bounds
         )) { error in
             XCTAssertEqual(error as? SuspendedPresentationError, .zeroHorizontalSlack)
