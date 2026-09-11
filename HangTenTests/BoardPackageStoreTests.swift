@@ -30,7 +30,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testStorePreservesSingleCordProfileForThePureSuspensionSolver() throws {
-        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true, base: "singleCordModel")
         defer { fixture.remove() }
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
@@ -142,7 +142,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 let from = try XCTUnwrap(rawReplacement["from"] as? String)
                 let to = try XCTUnwrap(rawReplacement["to"] as? String)
                 let boardJSON = String(decoding: try Data(contentsOf: fixture.rootURL
-                    .appendingPathComponent("board.json")), as: UTF8.self)
+                    .appendingPathComponent("Hangboards/fixture-model/board.json")), as: UTF8.self)
                 XCTAssertFalse(boardJSON.contains(from), name)
                 XCTAssertEqual(boardJSON.components(separatedBy: to).count - 1, 1, name)
             }
@@ -1914,51 +1914,27 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
-    func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
+    func testFlashBoardModelPreservesBothFacesAndUprightAndInvertedPositions() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
-
-        XCTAssertEqual(
-            board.presentations.map(\.id),
-            [
-                "three-edge-upright",
-                "three-edge-inverted",
-                "two-edge-upright",
-                "two-edge-inverted",
-            ]
-        )
-
-        let expectedHoldIDsByConfiguration = [
-            "three-edge-upright": [
-                "three-edge-left",
-                "three-edge-center",
-                "three-edge-right",
-            ],
-            "three-edge-inverted": [
-                "three-edge-left",
-                "three-edge-center",
-                "three-edge-right",
-            ],
-            "two-edge-upright": [
-                "two-edge-left",
-                "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
-            ],
-            "two-edge-inverted": [
-                "two-edge-left",
-                "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
-            ],
+        let positionIDs = [
+            "three-edge-upright", "three-edge-inverted",
+            "two-edge-upright", "two-edge-inverted",
         ]
-
-        for (configurationID, expectedHoldIDs) in expectedHoldIDsByConfiguration {
-            let content = BoardMapPresentationContent(
-                board: board,
-                selectedPresentationID: configurationID
-            )
-            XCTAssertEqual(content.presentation.id, configurationID)
-            XCTAssertEqual(content.holds.map(\.id), expectedHoldIDs)
+        XCTAssertEqual(board.presentations.map(\.id), ["primary"])
+        XCTAssertEqual(board.positions.map(\.id), positionIDs)
+        XCTAssertEqual(Set(board.positions.map(\.presentationID)), ["primary"])
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .singleCord(let suspension) = media.suspension else {
+            return XCTFail("expected Flash's promoted single-cord model presentation")
+        }
+        XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(positionIDs))
+        let expectedHoldIDs = [
+            "three-edge-left", "three-edge-center", "three-edge-right",
+            "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right",
+        ]
+        XCTAssertEqual(Set(media.descriptor.holds.keys), Set(expectedHoldIDs))
+        for positionID in positionIDs {
+            XCTAssertEqual(board.holdIDs(inPosition: positionID), expectedHoldIDs, positionID)
         }
     }
 
@@ -3337,10 +3313,11 @@ final class BoardPackageStoreTests: XCTestCase {
     private func makeModelFixtureBundle(
         modelSHA256Matches: Bool,
         boardID: String = "fixture.board",
+        base: String = "model",
         mutatePackage: ((URL) throws -> Void)? = nil
     ) throws -> FixtureBundle {
         let fixtures = try validationFixtures()
-        let model = try XCTUnwrap(fixtures["model"] as? [String: Any])
+        let model = try XCTUnwrap(fixtures[base] as? [String: Any])
         var board = try XCTUnwrap(model["board"] as? [String: Any])
         board["id"] = boardID
         var descriptor = try XCTUnwrap(model["descriptor"] as? [String: Any])
@@ -3490,24 +3467,19 @@ final class BoardPackageStoreTests: XCTestCase {
                 let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
                 let canonicalPoses = try XCTUnwrap(suspension["canonicalPoses"] as? [String: Any])
                 let pose = try XCTUnwrap(canonicalPoses["primary"])
-                let poseData = try self.serializedTwoBranchPose(try XCTUnwrap(pose as? [String: Any]))
+                let poseData: Data
+                if suspension["type"] as? String == "twoBranchCord" {
+                    poseData = try self.serializedTwoBranchPose(try XCTUnwrap(pose as? [String: Any]))
+                } else {
+                    poseData = try JSONSerialization.data(withJSONObject: pose, options: [.sortedKeys])
+                }
                 let poseJSON = String(decoding: poseData, as: UTF8.self)
                 let boardJSON = String(decoding: boardData, as: UTF8.self)
-                let needle = "\"canonicalPoses\":{\"primary\":\(poseJSON)}"
-                let replacement = "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON)}"
-                let duplicateBoardJSON: String
-                if boardJSON.contains(needle) {
-                    duplicateBoardJSON = boardJSON.replacingOccurrences(of: needle, with: replacement, options: [], range: nil)
-                } else {
-                    let prefix = "\"canonicalPoses\":{\"primary\":\(poseJSON),\""
-                    XCTAssertTrue(boardJSON.contains(prefix))
-                    duplicateBoardJSON = boardJSON.replacingOccurrences(
-                        of: prefix,
-                        with: "\"canonicalPoses\":{\"primary\":\(poseJSON),\"primary\":\(poseJSON),\"",
-                        options: [],
-                        range: nil
-                    )
-                }
+                let needle = "\"canonicalPoses\":{\"primary\":\(poseJSON)"
+                let replacement = "\(needle),\"primary\":\(poseJSON)"
+                XCTAssertEqual(boardJSON.components(separatedBy: needle).count - 1, 1)
+                let duplicateBoardJSON = boardJSON.replacingOccurrences(of: needle, with: replacement)
+                XCTAssertEqual(duplicateBoardJSON.components(separatedBy: replacement).count - 1, 1)
                 try duplicateBoardJSON.data(using: .utf8)!
                     .write(to: packageURL.appendingPathComponent("board.json"))
             }
@@ -3545,38 +3517,45 @@ final class BoardPackageStoreTests: XCTestCase {
         branchMemberOrder: [String]? = nil,
         poseMemberOrder: [String]? = nil
     ) throws -> Data {
-        let passages = try XCTUnwrap(suspension["passages"] as? [String: Any])
-        let branches = try XCTUnwrap(suspension["branches"] as? [Any])
-        let anchor = try XCTUnwrap(suspension["anchor"] as? [String: Any])
-        let poses = try XCTUnwrap(suspension["canonicalPoses"] as? [String: Any])
+        var serializedValues: [String: Data] = [:]
+        if let passages = suspension["passages"] as? [String: Any] {
+            serializedValues["passages"] = try serializedTwoBranchPassages(passages, memberOrder: passageMemberOrder)
+        }
+        if let branches = suspension["branches"] as? [Any] {
+            serializedValues["branches"] = try serializedJSONArray(branches.map {
+                try self.serializedObjectOrValue($0) {
+                    try self.serializedTwoBranchBranch($0, memberOrder: branchMemberOrder)
+                }
+            })
+        }
+        if let anchor = suspension["anchor"] as? [String: Any] {
+            serializedValues["anchor"] = try serializedTwoBranchAnchor(anchor)
+        }
+        if let poses = suspension["canonicalPoses"] as? [String: Any] {
+            serializedValues["canonicalPoses"] = try serializedTwoBranchCanonicalPoses(poses, memberOrder: poseMemberOrder)
+        }
         return try orderedJSONObjectData(
             suspension,
             keys: memberOrder,
-            serializedValues: [
-                "passages": try serializedTwoBranchPassages(passages, memberOrder: passageMemberOrder),
-                "branches": try serializedJSONArray(branches.map {
-                    try self.serializedTwoBranchBranch(try XCTUnwrap($0 as? [String: Any]), memberOrder: branchMemberOrder)
-                }),
-                "anchor": try serializedTwoBranchAnchor(anchor),
-                "canonicalPoses": try serializedTwoBranchCanonicalPoses(poses, memberOrder: poseMemberOrder),
-            ]
+            serializedValues: serializedValues
         )
     }
 
     private func serializedTwoBranchPassages(_ passages: [String: Any], memberOrder: [String]? = nil) throws -> Data {
-        let left = try XCTUnwrap(passages["left"] as? [Any])
-        let right = try XCTUnwrap(passages["right"] as? [Any])
+        var serializedValues: [String: Data] = [:]
+        for side in ["left", "right"] {
+            if let entries = passages[side] as? [Any] {
+                serializedValues[side] = try serializedJSONArray(entries.map {
+                    try self.serializedObjectOrValue($0) {
+                        try self.serializedTwoBranchPassage($0, memberOrder: memberOrder)
+                    }
+                })
+            }
+        }
         return try orderedJSONObjectData(
             passages,
             keys: ["left", "right"],
-            serializedValues: [
-                "left": try serializedJSONArray(left.map {
-                    try self.serializedTwoBranchPassage(try XCTUnwrap($0 as? [String: Any]), memberOrder: memberOrder)
-                }),
-                "right": try serializedJSONArray(right.map {
-                    try self.serializedTwoBranchPassage(try XCTUnwrap($0 as? [String: Any]), memberOrder: memberOrder)
-                }),
-            ]
+            serializedValues: serializedValues
         )
     }
 
@@ -3607,23 +3586,33 @@ final class BoardPackageStoreTests: XCTestCase {
             + poses.keys.filter { !preferredOrder.contains($0) }.sorted()
         var serializedPoses: [String: Data] = [:]
         for key in poseKeys {
-            serializedPoses[key] = try serializedTwoBranchPose(
-                try XCTUnwrap(poses[key] as? [String: Any]), memberOrder: memberOrder
-            )
+            serializedPoses[key] = try serializedObjectOrValue(try XCTUnwrap(poses[key])) {
+                try self.serializedTwoBranchPose($0, memberOrder: memberOrder)
+            }
         }
         return try orderedJSONObjectData(poses, keys: poseKeys, serializedValues: serializedPoses)
     }
 
     private func serializedTwoBranchPose(_ pose: [String: Any], memberOrder: [String]? = nil) throws -> Data {
-        let camera = try XCTUnwrap(pose["camera"] as? [String: Any])
+        var serializedValues: [String: Data] = [:]
+        if let camera = pose["camera"] as? [String: Any] {
+            serializedValues["camera"] = try orderedJSONObjectData(camera, keys: ["viewDirection", "fitPadding"])
+        }
         return try orderedJSONObjectData(
             pose,
             keys: memberOrder ?? ["rotation", "translation", "camera"],
-            serializedValues: ["camera": try orderedJSONObjectData(
-                camera,
-                keys: ["viewDirection", "fitPadding"]
-            )]
+            serializedValues: serializedValues
         )
+    }
+
+    private func serializedObjectOrValue(
+        _ value: Any,
+        serializeObject: ([String: Any]) throws -> Data
+    ) throws -> Data {
+        if let object = value as? [String: Any] {
+            return try serializeObject(object)
+        }
+        return try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys, .fragmentsAllowed])
     }
 
     private func orderedJSONObjectData(
@@ -3631,14 +3620,10 @@ final class BoardPackageStoreTests: XCTestCase {
         keys: [String],
         serializedValues: [String: Data] = [:]
     ) throws -> Data {
-        guard Set(object.keys) == Set(keys) else {
-            throw NSError(
-                domain: "BoardPackageStoreTests",
-                code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "unexpected two-branch object members"]
-            )
-        }
-        let members = try keys.map { key -> String in
+        // Keep malformed fixture members intact so the production parser rejects them.
+        let presentKeys = keys.filter { object[$0] != nil }
+            + object.keys.filter { !keys.contains($0) }.sorted()
+        let members = try presentKeys.map { key -> String in
             let keyData = try JSONSerialization.data(withJSONObject: key, options: [.fragmentsAllowed])
             let valueData = try serializedValues[key] ?? JSONSerialization.data(
                 withJSONObject: try XCTUnwrap(object[key]),
