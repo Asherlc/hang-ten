@@ -2,9 +2,9 @@
 
 This directory contains the evidence-packet validator and the deterministic
 USDZ-to-descriptor compiler for the schema-v2 board package contract. The
-completed inventory contains 59 raster v2 packages and two model-only
-packages: Beastmaker 1000 and Metolius Wood Grips Compact II. Both promoted
-package trees contain `board.json`, `assets/primary.usdz`, and
+completed inventory contains 58 raster v2 packages and three model-only
+packages: Beastmaker 1000, Metolius Wood Grips Compact II, and Tension Flash
+Board. The three promoted model package trees contain `board.json`, `assets/primary.usdz`, and
 `assets/primary.model.json`; model media is read-only. This tooling documents
 demonstrated package validation and staging, not remote model sync or model
 editing.
