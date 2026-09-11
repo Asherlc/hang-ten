@@ -8,6 +8,7 @@ images are never opened by the gallery.
 from __future__ import annotations
 
 import hashlib
+import math
 import os
 import re
 import shutil
@@ -27,6 +28,50 @@ class ReviewArtifact:
     path: Path
     sha256: str
     provenance: str = "verified-package; fixed-view"
+
+
+@dataclass(frozen=True)
+class OrthographicFrame:
+    target: tuple[float, float, float]
+    location: tuple[float, float, float]
+    ortho_scale: float
+    clip_start: float
+    clip_end: float
+    camera_type: str = "ORTHO"
+    sensor_fit: str = "VERTICAL"
+
+
+def _orthographic_frame(points, direction, *, aspect_ratio: float, margin: float = 1.1) -> OrthographicFrame:
+    """Fit world-space imported mesh bounds with fixed direction and Z-up.
+
+    With vertical sensor fit, ``ortho_scale`` is the image's world-space height.
+    Projecting every bound corner also accounts for depth in oblique views.
+    """
+    points = tuple(tuple(point) for point in points)
+    if not points or any(len(point) != 3 or not all(math.isfinite(v) for v in point) for point in points):
+        raise ValueError("gallery requires finite imported mesh bounds")
+    if not math.isfinite(aspect_ratio) or aspect_ratio <= 0 or not math.isfinite(margin) or margin < 1:
+        raise ValueError("gallery aspect ratio must be positive and margin at least one")
+    if len(direction) != 3 or not all(math.isfinite(v) for v in direction) or math.hypot(*direction[:2]) == 0:
+        raise ValueError("gallery direction must be finite and nonvertical")
+    target = tuple((min(p[i] for p in points) + max(p[i] for p in points)) / 2 for i in range(3))
+    offsets = [tuple(p[i] - target[i] for i in range(3)) for p in points]
+    radius = max(math.hypot(*offset) for offset in offsets)
+    if radius <= 0:
+        raise ValueError("gallery requires nondegenerate imported mesh bounds")
+    back = tuple(v / math.hypot(*direction) for v in direction)
+    horizontal = math.hypot(*back[:2])
+    right = (-back[1] / horizontal, back[0] / horizontal, 0.0)
+    up = (-back[2] * right[1], back[2] * right[0], back[0] * right[1] - back[1] * right[0])
+    width = 2 * max(abs(sum(v * axis for v, axis in zip(offset, right))) for offset in offsets)
+    height = 2 * max(abs(sum(v * axis for v, axis in zip(offset, up))) for offset in offsets)
+    return OrthographicFrame(
+        target=target,
+        location=tuple(target[i] + 3 * radius * back[i] for i in range(3)),
+        ortho_scale=max(height, width / aspect_ratio) * margin,
+        clip_start=radius / 100,
+        clip_end=5 * radius,
+    )
 
 
 def _owner() -> str:
@@ -122,25 +167,30 @@ def _render_fixed_views(package: Path, manifest: "MigrationManifest", output: Pa
     scene.render.resolution_y = 700
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
-    # These positions are intentionally fixed and independent of source images.
+    from mathutils import Vector
+    bounds = [tuple(obj.matrix_world @ Vector(corner))
+              for obj in scene.objects if obj.type == "MESH" for corner in obj.bound_box]
+    # Directions are fixed; imported package bounds determine center and scale.
     views = {
-        "front": ((0.0, -1.0, 0.18), (0.0, 0.0, 0.0)),
-        "three-quarter": ((0.42, -0.92, 0.32), (0.0, 0.0, 0.0)),
-        "clay-detail": ((0.28, -0.72, 0.18), (0.0, 0.0, 0.0)),
-        "active-hold": ((0.0, -1.0, 0.18), (0.0, 0.0, 0.0)),
+        "front": (0.0, -1.0, 0.18),
+        "three-quarter": (0.42, -0.92, 0.32),
+        "clay-detail": (0.28, -0.72, 0.18),
+        "active-hold": (0.0, -1.0, 0.18),
     }
     camera = bpy.data.cameras.new("gallery-camera")
     camera_object = bpy.data.objects.new("gallery-camera", camera)
     scene.collection.objects.link(camera_object)
     scene.camera = camera_object
-    from mathutils import Vector
     paths: list[Path] = []
     for view in _fixed_view_names(manifest):
-        location, target = views[view]
-        camera_object.location = location
-        camera_object.rotation_euler = (Vector(target) - Vector(location)).to_track_quat("-Z", "Y").to_euler()
-        # Fixed view identity is recorded even on Blender versions where the
-        # optional camera aiming helper is unavailable.
+        frame = _orthographic_frame(bounds, views[view], aspect_ratio=scene.render.resolution_x / scene.render.resolution_y)
+        camera.type = frame.camera_type
+        camera.sensor_fit = frame.sensor_fit
+        camera.ortho_scale = frame.ortho_scale
+        camera.clip_start = frame.clip_start
+        camera.clip_end = frame.clip_end
+        camera_object.location = frame.location
+        camera_object.rotation_euler = (Vector(frame.target) - Vector(frame.location)).to_track_quat("-Z", "Y").to_euler()
         scene.render.filepath = str(output / f"{view}.png")
         bpy.ops.render.render(write_still=True)
         paths.append(output / f"{view}.png")
