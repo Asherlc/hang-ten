@@ -202,6 +202,26 @@ final class BoardModelTests: XCTestCase {
         view.model = nil
     }
 
+    func testCameraFramingFillsTheDeclaredPresentationAspect() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ],
+            minimum: [0, 0, 0],
+            maximum: [3.86, 1, 0.1]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(padding: 0.08)
+        ))
+
+        model.frame(in: CGSize(width: 386, height: 100))
+
+        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), 1, accuracy: 0.000_001)
+    }
+
     // This catches cancellation of the camera-depth term in the key-light
     // position, which turns the intended front-above key into a top-only key.
     func testDirectionalKeyLightIlluminatesTheCameraFacingSurface() throws {

@@ -198,7 +198,6 @@ final class BoardModelScene {
     private let attachmentNodeIDs: Set<String>
     private let projectedWidth: Float
     private let projectedHeight: Float
-    private let fitPadding: Float
     private(set) var holdNodes: [String: [SCNNode]] = [:]
     private var holdIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
@@ -317,7 +316,6 @@ final class BoardModelScene {
         }
         projectedWidth = framing.width
         projectedHeight = framing.height
-        fitPadding = framing.padding
         boardTransform = matrix_identity_float4x4
         let modelContainer = SCNNode()
         modelContainer.name = "board.model"
@@ -834,7 +832,7 @@ final class BoardModelScene {
         if let framing = currentFraming {
             camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding)
         } else {
-            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) * fitPadding)
+            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect))
         }
     }
 
