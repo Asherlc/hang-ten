@@ -405,7 +405,7 @@ final class BoardModelTests: XCTestCase {
 
         model.frame(in: CGSize(width: 386, height: 100))
 
-        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), 1, accuracy: 0.000_001)
+        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), 0.5, accuracy: 0.000_001)
     }
 
     // This catches cancellation of the camera-depth term in the key-light
@@ -698,6 +698,16 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(model.select(positionID: "primary"))
         let transform = model.boardTransform
         let initialCamera = model.camera.position
+        // The fixture spans three world units vertically (board plus anchor)
+        // and uses a 1.2 fit factor from the canonical 0.1 padding. SceneKit's
+        // orthographicScale is the visible half-span, so the camera scale must
+        // be half that projected span.
+        let expectedCanonicalScale = 1.8
+        XCTAssertEqual(
+            try XCTUnwrap(model.camera.camera?.orthographicScale),
+            expectedCanonicalScale,
+            accuracy: 0.000_001
+        )
 
         model.orbit(azimuth: 0.4, elevation: 0.2, zoomScale: 1.1)
         for column in 0..<4 {
@@ -708,10 +718,16 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNotEqual(model.camera.position.x, initialCamera.x)
 
         let zoomedScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        XCTAssertEqual(zoomedScale, expectedCanonicalScale / 1.1, accuracy: 0.000_001)
         model.frame(in: CGSize(width: 320, height: 320))
         XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), zoomedScale, accuracy: 1e-5)
 
         model.resetCamera(animated: false)
+        XCTAssertEqual(
+            try XCTUnwrap(model.camera.camera?.orthographicScale),
+            expectedCanonicalScale,
+            accuracy: 0.000_001
+        )
         XCTAssertEqual(model.camera.position.x, initialCamera.x, accuracy: 1e-5)
         XCTAssertEqual(model.camera.position.y, initialCamera.y, accuracy: 1e-5)
         XCTAssertEqual(model.camera.position.z, initialCamera.z, accuracy: 1e-5)

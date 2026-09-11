@@ -458,7 +458,7 @@ final class BoardModelScene {
         let aspect = viewportSize.width > 0 && viewportSize.height > 0
             ? Float(viewportSize.width / viewportSize.height)
             : 1
-        return max(framing.height, framing.width / aspect) * framing.fitPadding
+        return max(framing.height, framing.width / aspect) * framing.fitPadding / 2
     }
 
     private func enterUnavailable() {
@@ -939,9 +939,9 @@ final class BoardModelScene {
         viewportSize = size
         let aspect = Float(size.width / size.height)
         if let framing = currentFraming {
-            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom)
+            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom / 2)
         } else {
-            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect))
+            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) / 2)
         }
     }
 
