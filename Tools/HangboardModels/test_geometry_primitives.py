@@ -13,6 +13,8 @@ the model set.
 from __future__ import annotations
 
 import json
+import hashlib
+from collections import Counter
 import runpy
 import shutil
 import sys
@@ -40,6 +42,25 @@ if bpy is not None:
         split_contact_surface,
         tag_piece,
     )
+
+
+# Approved semantic fingerprints captured from the exact pre-migration
+# generators at commit 70ba028a. Each projection includes every exported
+# object and the complete snapshot fields relevant to that audit category.
+PRE_MIGRATION_BASELINES = {
+    "beastmaker": {
+        "topology": "31d0bd8362301289e3fce021045ece72720a58f090d207955c4c5390c2af6ac4",
+        "transforms": "69fb4bd022831d85032415bab41b24960c8e3d5bbd2a8e568f18b9444a5ab824",
+        "bindings": "26279998308a9e735e96a4259473a4d86a7a1c71e5380671ef42443871b45efe",
+        "materialNodes": "05910bc195086c458bfde95b9cd4b434b5353747452399e5333a5e0e43121267",
+    },
+    "compact": {
+        "topology": "86f29969101a72c3fa52e18b274620a725212fb14c76a87d82f1251cf1c78d08",
+        "transforms": "7e30a29f490e28560adcc8dcf4ea2fae4510044e9fa107c675962cd5d5c5d2a9",
+        "bindings": "c5acc203f7de83a61d9776067c1fb8013606fda22a3506dc0290e6caf35ad6cb",
+        "materialNodes": "03f59de336e25ae2388e4125870cd4d76cf7388304a6d157cf3cabb8f1ca3047",
+    },
+}
 
 
 def _reset() -> None:
@@ -72,6 +93,24 @@ def _records(snapshot):
     return {item["name"]: item for item in snapshot["objects"]}
 
 
+def _semantic_fingerprints(snapshot):
+    groups = {
+        "topology": ("name", "vertexCount", "topologyCount", "vertexHash", "topologyHash"),
+        "transforms": ("name", "transform"),
+        "bindings": ("name", "role", "holdID", "materials", "polygonMaterialIndices", "polygonMaterials"),
+        "materialNodes": ("name", "materialNodes"),
+    }
+    result = {}
+    for group, keys in groups.items():
+        payload = {"objects": [{key: item[key] for key in keys}
+                                for item in snapshot["objects"] if item["export"]]}
+        if group == "materialNodes":
+            payload["materialImageBytes"] = snapshot["materialImageBytes"]
+        result[group] = hashlib.sha256(json.dumps(
+            payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return result
+
+
 def _assert_preserved(before, after, name):
     left, right = _records(before)[name], _records(after)[name]
     for key in ("transform", "vertexCount", "topologyCount", "vertexHash",
@@ -94,7 +133,7 @@ def _run_generator_snapshot(script, output, extra_args=()):
         sys.argv = original_argv
 
 
-def _assert_generator_snapshot(script, output, expected_hold_count, extra_args=()):
+def _assert_generator_snapshot(script, output, expected_hold_count, baseline_key, extra_args=()):
     snapshot = _run_generator_snapshot(script, output, extra_args)
     exported = [item for item in snapshot["objects"] if item["export"]]
     holds = [item for item in exported if item["role"] == "hold"]
@@ -103,6 +142,8 @@ def _assert_generator_snapshot(script, output, expected_hold_count, extra_args=(
     assert snapshot["reviewObjectNames"] == []
     assert all(item["polygonMaterialIndices"] for item in exported)
     assert all(item["materialNodes"] for item in exported)
+    assert _semantic_fingerprints(snapshot) == PRE_MIGRATION_BASELINES[baseline_key], (
+        baseline_key, _semantic_fingerprints(snapshot), PRE_MIGRATION_BASELINES[baseline_key])
     return snapshot
 
 
@@ -159,6 +200,20 @@ def main() -> None:
     assert sum(item["vertexCount"] for item in split_records) == before_record["vertexCount"]
     assert sum(item["topologyCount"] for item in split_records) == before_record["topologyCount"]
     assert sum(len(item["polygonMaterialIndices"]) for item in split_records) == len(before_record["polygonMaterialIndices"])
+    before_bindings = list(zip(before_record["polygonMaterialIndices"], before_record["polygonMaterials"]))
+    after_bindings = [
+        (index, material)
+        for item in split_records
+        for index, material in zip(item["polygonMaterialIndices"], item["polygonMaterials"])
+    ]
+    assert sorted(material for _, material in after_bindings) == sorted(material for _, material in before_bindings)
+    assert Counter(material for _, material in after_bindings) == Counter(
+        material for _, material in before_bindings)
+    assert all(isinstance(index, int) for index, _ in after_bindings)
+    for item in split_records:
+        assert all(index == item["materials"].index(material)
+                   for index, material in zip(item["polygonMaterialIndices"], item["polygonMaterials"]))
+    assert {material for _, material in after_bindings} == set(before_record["materials"])
 
     _reset()
     wood = _image_material("review wood")
@@ -182,9 +237,9 @@ def main() -> None:
     try:
         (owner_dir / "ownership.json").write_text(json.dumps({"owner": repo.name, "resources": [str(owner_dir)], "external_resources": []}) + "\n")
         beast_snapshot = _assert_generator_snapshot(
-            TOOLS / "beastmaker_1000.py", owner_dir / "beastmaker", 22, ("--compiler-only",))
+            TOOLS / "beastmaker_1000.py", owner_dir / "beastmaker", 22, "beastmaker", ("--compiler-only",))
         compact_snapshot = _assert_generator_snapshot(
-            TOOLS / "wood_grips_compact_ii.py", owner_dir / "compact", 19, ("--compiler-only",))
+            TOOLS / "wood_grips_compact_ii.py", owner_dir / "compact", 19, "compact", ("--compiler-only",))
         assert beast_snapshot["materialImageBytes"]
         assert compact_snapshot["materialImageBytes"]
     finally:
