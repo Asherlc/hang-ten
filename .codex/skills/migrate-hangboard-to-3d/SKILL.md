@@ -84,13 +84,14 @@ For a portable-suspension parser/runtime, reject a migration unless all
 of the following are decidable from package data:
 
 - exactly one model USDZ and descriptor;
-- an optional, explicitly tagged `singleCord` suspension declaration;
-- one physical attachment point bound to an importer-visible descriptor node;
+- an optional, explicitly tagged `singleCord` or `twoBranchCord` declaration;
+- for `singleCord`, one physical attachment point bound to an importer-visible body or attachment node;
+- for `twoBranchCord`, four uniquely identified passages in two ordered pairs, two branches referencing their respective pairs exactly once, and one shared invisible anchor;
 - exactly one finite canonical pose for every supported position, and no pose for an unknown position;
-- a display-only invisible anchor plus positive cord length and radius; and
+- a display-only invisible anchor plus finite positive cord rest length and radius for each branch; and
 - no baked cord/anchor mesh, second face model, raster fallback, hand-authored hold bounds, or hold-node attachment shortcut.
 
-When `suspension` is present on model media, author `attachment.nodeID` against
+For `singleCord` model media, author `attachment.nodeID` against
 the hash-bound, importer-visible model descriptor and record its model-frame
 `pointInModel`; the attachment must not be a logical hold node. Record the
 invisible-anchor display estimate, cord rest length, radius, and material
@@ -100,6 +101,28 @@ Logical holds remain metadata-only, and positions select faces/configurations
 and their canonical poses rather than creating duplicate contacts or copying
 model geometry. Unsupported cord dimensions or knot details remain explicitly
 labeled estimates.
+
+For `twoBranchCord`, bind every passage to a hash-bound importer-visible body
+or attachment node. Keep point-passage and directed through-bore representations
+distinct; never fabricate a hidden bore from a visible mouth alone. Where
+through-bores are evidenced, record entry and exit mouths plus the ordered
+exterior bearing route between them. Cord-guide coordinates are display
+estimates, separate from physical board geometry. Dispatch the suspension
+discriminator explicitly in the renderer and test the shipped package through
+native selection for every position, with both branches present.
+
+Mesh clearance and cord self-intersection are separate gates. Verify both in
+the exporter and native solver before promotion: distinct free legs must not
+coincide, exterior routes must not backtrack, and only the shared anchor endpoint
+may close a branch. Use conservative triangle/cylinder intersection for bore
+aperture clearance; sparse radial rays alone can miss narrow obstructions.
+SceneKit USDZ imports may use separate position, normal, and UV index channels.
+Mesh-clearance readers must honor `geometrySourceChannels`, `indicesChannelCount`,
+and `hasInterleavedIndicesChannels`, including a nonzero position channel and
+both interleaved and planar layouts. Do not interpret UV/normal indices as
+positions or bypass malformed geometry to make selection pass. Keep a native
+all-poses test against the bundled asset in addition to synthetic fixtures.
+Retain the actual export report matching the promoted route and model hashes.
 
 The retained evidence packet must record the exact board revision, every usable
 face/position, attachment evidence, a position-to-logical-hold mapping with

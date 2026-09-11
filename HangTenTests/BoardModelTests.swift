@@ -6,6 +6,18 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    func testFlashBoardNativeSceneSelectsEveryVerifiedSuspendedPosition() async throws {
+        let (board, _, model) = try await loadMigratedModel("tension.flash-board")
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            XCTAssertFalse(model.isUnavailable, position.id)
+            let cord = try XCTUnwrap(model.transientCordNode, position.id)
+            XCTAssertTrue(cord.childNodes.contains { $0.name?.contains("branch.0.segment") == true })
+            XCTAssertTrue(cord.childNodes.contains { $0.name?.contains("branch.1.segment") == true })
+            XCTAssertTrue(cord.childNodes.allSatisfy { model.holdID(for: $0) == nil })
+        }
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
@@ -680,6 +692,42 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNotNil(model.transientCordNode)
     }
 
+    func testSuspendedClearanceReadsTheVertexIndexChannelInBothLayouts() throws {
+        for interleaved in [true, false] {
+            for distance: Float in [0.03, 0.01] {
+                let source = suspendedScene()
+                let body = try XCTUnwrap(node(at: "Board/Body", in: source))
+                let vertices = SCNGeometrySource(vertices: [
+                    SCNVector3(distance, 0.9, -0.1),
+                    SCNVector3(distance, 1.1, -0.1),
+                    SCNVector3(distance, 1, 0.1),
+                ])
+                let normals = SCNGeometrySource(normals: Array(repeating: SCNVector3(1, 0, 0), count: 6))
+                let indices: [UInt32] = interleaved ? [3, 0, 4, 1, 5, 2] : [3, 4, 5, 0, 1, 2]
+                let element = SCNGeometryElement(
+                    data: indices.withUnsafeBytes { Data($0) },
+                    primitiveType: .triangles, primitiveCount: 1,
+                    indicesChannelCount: 2, interleavedIndicesChannels: interleaved,
+                    bytesPerIndex: MemoryLayout<UInt32>.size
+                )
+                body.geometry = SCNGeometry(sources: [normals, vertices], elements: [element], sourceChannels: [0, 1])
+                body.geometry?.firstMaterial = SCNMaterial()
+                body.position = SCNVector3Zero
+                let descriptor = modelDescriptor(nodes: [
+                    .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                    .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+                    .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil),
+                ])
+                let model = try XCTUnwrap(BoardModelScene(
+                    source: source, descriptor: descriptor, display: display(),
+                    suspension: suspendedModelSuspension(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2)
+                ))
+                XCTAssertEqual(model.select(positionID: "primary"), distance > 0.021,
+                               "interleaved=\(interleaved), distance=\(distance)")
+            }
+        }
+    }
+
     func testSuspendedCordRejectsAttachmentMeshAwayFromDeclaredEndpointInterface() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),
@@ -761,6 +809,10 @@ final class BoardModelTests: XCTestCase {
         }
         XCTAssertNotEqual(model.camera.position.x, initialCamera.x)
 
+        let zoomedScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        model.frame(in: CGSize(width: 320, height: 320))
+        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), zoomedScale, accuracy: 1e-5)
+
         model.resetCamera(animated: false)
         XCTAssertEqual(model.camera.position.x, initialCamera.x, accuracy: 1e-5)
         XCTAssertEqual(model.camera.position.y, initialCamera.y, accuracy: 1e-5)
@@ -787,10 +839,12 @@ final class BoardModelTests: XCTestCase {
         view.positionID = "primary"
         view.selectPositionIfNeeded()
         let canonicalCamera = model.camera.position
+        let canonicalCord = try XCTUnwrap(model.transientCordNode)
         model.orbit(azimuth: 0.4, elevation: 0.2, zoomScale: 1.1)
 
         view.selectPositionIfNeeded()
 
+        XCTAssertTrue(model.transientCordNode === canonicalCord)
         XCTAssertEqual(model.camera.position.x, canonicalCamera.x, accuracy: 1e-5)
         XCTAssertEqual(model.camera.position.y, canonicalCamera.y, accuracy: 1e-5)
         XCTAssertEqual(model.camera.position.z, canonicalCamera.z, accuracy: 1e-5)

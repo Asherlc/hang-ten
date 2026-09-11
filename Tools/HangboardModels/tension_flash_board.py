@@ -1,7 +1,8 @@
 """Directly authored Flash Board display geometry, not manufacturing CAD.
 
 Evidence: docs/source-audits/2026-09-09-tension-flash-board-suspended-3d.md
-and the three exact approved snapshots in the workspace evidence packet.
+and the approved manufacturer/commerce snapshots plus all six user closeups
+in the workspace evidence packet. Filenames are not face-identification data.
 No source image, old raster path, detection, tracing, or fitted contour is used
 by this generator. Every numeric dimension below is an authored estimate;
 published global edge depths are deliberately not assigned to specific holds.
@@ -97,11 +98,11 @@ def rounded_rectangle(cx, cy, width, height, radius):
     return points
 
 
-def carve(body, cutter, material_index=0):
+def carve(body, cutter, material_index=0, body_face_indices=()):
     for mat in body.data.materials:
         cutter.data.materials.append(mat)
     for face in cutter.data.polygons:
-        face.material_index = material_index
+        face.material_index = 0 if face.index in body_face_indices else material_index
     active(body)
     modifier = body.modifiers.new("Authored recess", "BOOLEAN")
     modifier.operation = "DIFFERENCE"
@@ -115,7 +116,7 @@ def carve(body, cutter, material_index=0):
 
 def recess(body, name, cx, cy, width, height, floor, mouth, radius,
            back_fillet, mouth_fillet, face_sign=1, hold_id=None, inner_step=0,
-           top_face=False):
+           top_face=False, radial_angle=None):
     """Explicit tangent mouth/back rounds and straight intervening walls.
 
     Depth is measured inward from each face's local 76 mm extremum. Flipping
@@ -136,8 +137,15 @@ def recess(body, name, cx, cy, width, height, floor, mouth, radius,
                                   radius-inset) for _, inset in rings]
     n = len(profiles[0])
     assert all(len(profile) == n for profile in profiles)
-    vertices = [xyz(x, d, DIAMETER_MM-y) if top_face else
-                xyz(x, y, d if face_sign == 1 else DIAMETER_MM-d)
+    def point(x, y, d):
+        if radial_angle is not None:
+            angle = math.radians(radial_angle)
+            tangent, radial = y-RADIUS_MM, d-RADIUS_MM
+            return xyz(x, RADIUS_MM+radial*math.sin(angle)+tangent*math.cos(angle),
+                       RADIUS_MM+radial*math.cos(angle)-tangent*math.sin(angle))
+        return (xyz(x, d, DIAMETER_MM-y) if top_face else
+                xyz(x, y, d if face_sign == 1 else DIAMETER_MM-d))
+    vertices = [point(x, y, d)
                 for (d, _), profile in zip(rings, profiles) for x, y in profile]
     faces = [tuple(reversed(range(n))),
              tuple(range((len(rings)-1)*n, len(rings)*n))]
@@ -199,7 +207,18 @@ def stepped_edge(body, hold_id, cx, *, face_sign=1, center=False):
     faces += [(j*count+i, j*count+(i+1)%count,
                (j+1)*count+(i+1)%count, (j+1)*count+i)
               for j in range(len(sections)-1) for i in range(count)]
-    carve(body, mesh(hold_id, vertices, faces), HOLD_IDS.index(hold_id)+1)
+    # Keep the existing well ID on its back and rounded end walls. The upper
+    # and lower bearing ledges remain actual wood, but have body material/role
+    # because the approved inventory does not give each ledge a separate ID.
+    # This selects authored surface strips, never image-derived masks/bounds.
+    body_faces = set()
+    for j in range(len(sections)-1):
+        for i in range(count):
+            a, b = profiles[j][i], profiles[j][(i+1) % count]
+            if abs(a[1]-b[1]) < 1e-8 and abs(a[0]-b[0]) > 1e-8:
+                body_faces.add(2+j*count+i)
+    carve(body, mesh(hold_id, vertices, faces), HOLD_IDS.index(hold_id)+1,
+          body_face_indices=body_faces)
 
 
 def build():
@@ -210,10 +229,14 @@ def build():
                       RADIUS_MM-END_ROUND_MM+END_ROUND_MM*math.sin(i*math.pi/2/12))
                      for i in range(13)]
     end_sections = [(WIDTH_MM-x, radius) for x, radius in reversed(ring_sections)]
-    # Split the identical barrel surface through each top-groove center.
-    # Otherwise two enclosed Boolean holes fall in the same long angular
-    # quad, and its n-gon tessellation can cover the recessed contact floors.
-    ring_sections += [(x, RADIUS_MM) for x in (115, 250, 385)]
+    # Split the identical barrel surface through each transverse opening.
+    # Otherwise multiple enclosed Boolean holes fall in one long angular
+    # quad, and n-gon tessellation can cover a floor or cord passage.
+    # Preserve the previous pending split through all four passage axes.
+    # Additional uniform analytic sections bound each Boolean face locally;
+    # they do not change the circular billet's intended surface.
+    sections = sorted(set(range(5, 500, 5)) | {17, 31, 469, 483})
+    ring_sections += [(x, RADIUS_MM) for x in sections]
     ring_sections += end_sections
     samples = 192
     vertices = [xyz(x, RADIUS_MM+radius*math.sin(i*2*math.pi/samples),
@@ -250,10 +273,11 @@ def build():
         )
         stepped_edge(body, hold_id, x, face_sign=-1)
 
-    # The labelled view places the small crimps on the upper barrel, between
-    # the two large faces. They are not an extra row in either flat face.
-    # They align along the barrel with the outer three-edge wells. Rotate
-    # the authored shallow groove onto the top; its section is estimated.
+    # The two outboard small contacts keep their existing IDs. Their long
+    # shallow mouths lie on the shoulder above the outer three-well contacts,
+    # rather than at the silhouette on the very top of the billet. The label
+    # arrows and closeups support that physical placement; all values remain
+    # estimates. This does not create additional lower-groove logical IDs.
     for hold_id, x in (("small-crimp-left", 115), ("small-crimp-right", 385)):
         recess(
             body,
@@ -261,6 +285,12 @@ def build():
             floor=72, mouth=75.4, radius=2.5, back_fillet=.6, mouth_fillet=.6,
             hold_id=hold_id, top_face=True,
         )
+
+    # The two-well/central-logo photographs also show one long central notch
+    # on the opposite shoulder. It was absent from the previous model. This
+    # is nonselectable body geometry, with no new contact or depth claim.
+    recess(body, "two-face-central-notch", 250, 38, 98, 9, 72, 75.4,
+           2.5, .6, .6, radial_angle=242)
 
     # Evidence-supported paired transverse cord passages at both ends. These
     # are suspension apertures integral to the cylinder, not added hardware.
@@ -282,8 +312,11 @@ def build():
     canonical_neutral_wood.attach_to_materials(body.data.materials)
     for poly in body.data.polygons:
         # Boolean cap n-gons are planar. Their smooth interpolation would
-        # falsely bend a flat machined surface; the actual rounds stay smooth.
-        poly.use_smooth = len(poly.vertices) <= 4
+        # falsely bend a flat machined surface; short planar cap fragments
+        # need the same rule. Polygon vertex count alone left a dark square
+        # on a coplanar face beside a well. The actual rounds stay smooth.
+        axis_planar = max(abs(value) for value in poly.normal) > 1-1e-7
+        poly.use_smooth = len(poly.vertices) <= 4 and not axis_planar
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
     bpy.ops.mesh.separate(type="MATERIAL")
@@ -325,7 +358,8 @@ def render_review(output, model):
     bpy.context.collection.objects.link(camera)
     scene.camera = camera
     for name, position, energy in (("Front review light", (.08,-.4,.4), 12),
-                                    ("Rear review light", (.42,.3,.3), 9)):
+                                    ("Rear review light", (.42,.3,.3), 9),
+                                    ("Reverse pose review light", (.42,.3,-.3), 9)):
         data = bpy.data.lights.new(name, "AREA")
         data.energy = energy
         data.shape = "DISK"
@@ -340,15 +374,18 @@ def render_review(output, model):
         ("front", (.25,-.8,.038), (250,38,38), .57, False),
         ("three-quarter", (.49,-.8,.28), (250,38,38), .57, False),
         ("opposite-face", (.25,.8,.038), (250,38,38), .57, False),
-        ("opposite-three-quarter", (.02,.8,.28), (250,38,38), .57, False),
+        ("opposite-three-quarter", (.02,.8,-.204), (250,38,38), .57, False),
         ("upper-barrel", (.25,-.16,.65), (250,38,38), .57, True),
         ("clay-detail", (.11,-.35,.14), (112,36,65), .19, True),
         ("attachment-region", (-.12,-.32,.22), (24,44,38), .13, True),
+        ("opposite-notch-detail", (.25,.34,-.18), (250,8,24), .16, True),
     )
     output.mkdir(exist_ok=True)
     for name, location, target, scale, is_clay in views:
         camera.location = location
         camera.rotation_euler = (Vector(xyz(*target))-camera.location).to_track_quat("-Z", "Y").to_euler()
+        if name.startswith("opposite"):
+            camera.rotation_euler.rotate_axis("Z", math.pi)
         camera_data.ortho_scale = scale
         scene.view_layers[0].material_override = clay if is_clay else None
         scene.render.filepath = str(output / f"{name}.png")
@@ -379,13 +416,15 @@ def main():
     bpy.context.scene.unit_settings.scale_length = 1
     bpy.ops.wm.save_as_mainfile(filepath=str(output / "flash-board.blend"))
     (output / "geometry-report.json").write_text(json.dumps({
-        "owner": ROOT.name, "board": "tension.flash-board", "geometryRevision": 6,
+        "owner": ROOT.name, "board": "tension.flash-board", "geometryRevision": 9,
         "coordinateFrame": "hang-ten-board-v1 after standard compiler axis transport",
         "estimatedDimensionsMM": {"width": WIDTH_MM, "diameter": DIAMETER_MM},
         "sourcedDimensionsMM": {}, "numericGeometryIsEstimated": True,
         "holdIDs": list(HOLD_IDS), "bodyMeshes": 1, "holdMeshes": 7,
         "attachmentMeshes": 0, "cordPassages": 4,
         "attachmentEligibleSourceNode": "flash-board-body",
+        "nonSelectableFeatures": ["upper and lower well ledge strips", "two-face-central-notch",
+                                  "four integral cord passage surfaces", "machined face panels"],
         "estimatedPassageAxesInBoardMM": [
             {"x": x, "y": 48, "axis": "+Z", "radius": 3.25}
             for x in (17,31,469,483)],
@@ -393,6 +432,16 @@ def main():
         "evidenceAudit": "docs/source-audits/2026-09-09-tension-flash-board-suspended-3d.md",
         "approvedSnapshots": ["sources/manufacturer-front.png", "sources/commerce-hanging.jpg",
                               "sources/commerce-labelled-faces.jpg"],
+        "userCloseupsReviewed": [
+            "sources/user-closeup-front-cord-and-wells.png",
+            "sources/user-closeup-end-attachment.png",
+            "sources/user-closeup-opposite-face.png",
+            "sources/user-closeup-three-well-face.png",
+            "sources/user-closeup-two-well-face.png",
+            "sources/user-closeup-two-well-face-wide.png"],
+        "visualEvidenceCorrections": [
+            "user-closeup-two-well-face-wide.png visibly shows three wells in an inverted orientation",
+            "user-closeup-opposite-face.png shows three wells; opposite is a viewpoint label only"],
         "limitations": [
             "Not manufacturing CAD: every dimension, recess depth, radius and placement is estimated",
             "Published global edge sizes are not assigned to particular contact IDs",

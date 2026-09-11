@@ -45,3 +45,40 @@ mounting environment, mounting hardware, or geometry proposal is included in
 the evidence packet. The packet validator checks all references against exact
 retained bytes and enforces the two-or-more materially distinct approved view
 gate before Astra.
+
+## 2026-09-11 review corrections and verification
+
+The earlier two-branch display route reused each branch's first/last shoulder
+point and backtracked over its rear bearing segment. Native self-intersection
+rejection exposed that defect. The revised display-only route separates the
+free-span shoulders and traverses each rear bearing once. Cord radius (2 mm),
+rest length (1.56 m per branch), all four bores, seven logical holds, canonical
+poses, and the board USDZ/descriptor remain unchanged. These route coordinates
+remain estimates, not manufacturer measurements or structural certification.
+
+The durable input is
+`Tools/HangboardModels/fixtures/tension_flash_board_two_branch_review_candidate.json`.
+Fresh Blender export/reimport evidence is retained separately in
+`Tools/HangboardModels/fixtures/tension_flash_board_export_verification.json`.
+Its model SHA-256 is
+`4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524`;
+descriptor SHA-256 is
+`fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c`.
+The verifier now independently rejects centerline crossings/backtracking and
+uses clipped-triangle solid-cylinder tests for the full 3 mm aperture envelope;
+radial rays are diagnostic only. Free spans and hold meshes retain 3 mm
+clearance; only authored body bearing spans use the 2 mm physical cord radius.
+The retained report is checked against production route, passage and asset bytes.
+
+Native USDZ imports contain three interleaved index channels. The mesh-distance
+reader now uses SceneKit's declared position channel instead of misreading
+normal/UV indices. Native tests cover interleaved and planar layouts, including
+a nonzero position channel, and select every Flash Board pose from the bundled
+asset. Verified on an isolated iPhone 17 Pro / iOS 26.5 Simulator:
+176 tests passed, zero failures. Python package/model validation passed
+693 tests and 14 subtests; the focused export-verifier suite passed 31 tests.
+Actual Blender compiler export/reimport/determinism and material-import checks
+also passed. Commands and native summary are retained under the workspace-owned
+`.context/pretty-crocodile-merge-ci`; temporary simulator/config/cache resources
+were deleted after verification. Android execution remains unverified locally
+because this host lacks an Android SDK and the required Java toolchain.

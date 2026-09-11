@@ -20,6 +20,13 @@ DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
+FLASH_TWO_BRANCH_CANDIDATE = (
+    REPO_ROOT
+    / "Tools"
+    / "HangboardModels"
+    / "fixtures"
+    / "tension_flash_board_two_branch_review_candidate.json"
+)
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
 YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"

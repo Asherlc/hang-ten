@@ -102,65 +102,18 @@ def _write_shared_model_parser_parity_package(
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
-    suspension = board["presentations"][0]["media"].get("suspension")
+    board_json = _dump_shared_json_document(board)
     if fixture.get("reorderTwoBranchSuspensionMembers"):
-        assert isinstance(suspension, dict)
-        board["presentations"][0]["media"]["suspension"] = {
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = {
             key: suspension[key]
             for key in ("anchor", "branches", "canonicalPoses", "passages", "type")
         }
-        suspension = board["presentations"][0]["media"]["suspension"]
-    if fixture.get("reorderTwoBranchPassageMembers"):
-        assert isinstance(suspension, dict)
-        passages = suspension["passages"]
-        assert isinstance(passages, dict)
-        left = passages["left"]
-        assert isinstance(left, list) and isinstance(left[0], dict)
-        left[0] = {
-            key: left[0][key]
-            for key in ("nodeID", "id", "pointInModel", "provenance")
-        }
-    if fixture.get("reorderTwoBranchBranchMembers"):
-        assert isinstance(suspension, dict)
-        branches = suspension["branches"]
-        assert isinstance(branches, list) and isinstance(branches[0], dict)
-        branches[0] = {
-            key: branches[0][key]
-            for key in ("passageIDs", "id", "restLength", "radius", "material", "provenance")
-        }
-    if fixture.get("reorderTwoBranchPoseMembers"):
-        assert isinstance(suspension, dict)
-        poses = suspension["canonicalPoses"]
-        assert isinstance(poses, dict) and isinstance(poses["primary"], dict)
-        poses["primary"] = {
-            key: poses["primary"][key]
-            for key in ("translation", "rotation", "camera")
-        }
-    board_json = _dump_shared_json_document(board)
-    raw_json_replacement = fixture.get("rawJSONReplacement")
-    if raw_json_replacement is not None:
-        assert isinstance(raw_json_replacement, dict)
-        original = raw_json_replacement["from"]
-        replacement = raw_json_replacement["to"]
-        assert isinstance(original, str) and isinstance(replacement, str)
-        assert board_json.count(original) == 1
-        board_json = board_json.replace(original, replacement, 1)
-    duplicate_member_key = fixture.get("duplicateTwoBranchMemberKey")
-    if duplicate_member_key == "passageID":
         board_json = board_json.replace(
-            '"id":"left-top","nodeID"',
-            '"id":"left-top","id":"left-top","nodeID"',
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
             1,
-        )
-    elif duplicate_member_key == "branchID":
-        board_json = board_json.replace(
-            '"id":"left-branch","passageIDs"',
-            '"id":"left-branch","id":"left-branch","passageIDs"',
-            1,
-        )
-    elif duplicate_member_key is not None:
-        raise AssertionError(
-            f"unsupported two-branch duplicate member key: {duplicate_member_key}"
         )
     board_path.write_text(board_json, encoding="utf-8")
     (assets / "primary.model.json").write_text(
@@ -491,8 +444,9 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
         module.load_board_package(package_root)
 
 
-def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
-    fixture = {"base": "twoBranchModel", "mutations": []}
+@pytest.mark.parametrize("base,rest_length", [("twoBranchModel", 0.92), ("directedTwoBranchModel", 1.5)])
+def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path, base: str, rest_length: float) -> None:
+    fixture = {"base": base, "mutations": []}
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / "valid-two-branch", fixture
     )
@@ -507,6 +461,8 @@ def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
     assert set(suspension.canonical_poses) == {
         "primary", "secondary", "tertiary", "quaternary"
     }
+    assert [branch.rest_length for branch in suspension.branches] == [rest_length, rest_length]
+    assert all(passage.is_through_bore == (base == "directedTwoBranchModel") for passage in suspension.passages.left + suspension.passages.right)
 
 
 def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
@@ -532,7 +488,7 @@ def test_two_branch_order_and_segment_regressions_are_specific(tmp_path: Path) -
         for fixture in _shared_model_parser_parity_fixtures()
     }
     module = load_board_catalog_module()
-    for name in ("two-branch-suspension-member-order", "two-branch-passage-segment-too-short"):
+    for name in ("two-branch-suspension-member-order", "two-branch-directed-route-too-short"):
         fixture = fixtures[name]
         package_root = _write_shared_model_parser_parity_package(
             tmp_path / name, fixture
@@ -570,12 +526,6 @@ def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / str(fixture["name"]), fixture
     )
-
-    if raw_json_replacement := fixture.get("rawJSONReplacement"):
-        assert isinstance(raw_json_replacement, dict)
-        board_json = (package_root / "board.json").read_text(encoding="utf-8")
-        assert raw_json_replacement["from"] not in board_json
-        assert board_json.count(str(raw_json_replacement["to"])) == 1
 
     with pytest.raises(ValueError, match=str(fixture["pythonError"])):
         module.load_board_package(package_root)

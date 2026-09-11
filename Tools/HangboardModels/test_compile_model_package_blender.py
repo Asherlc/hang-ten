@@ -12,6 +12,7 @@ import sys
 import tempfile
 import unittest
 import warnings
+import zipfile
 from pathlib import Path
 
 try:
@@ -58,6 +59,85 @@ import compile_model_package as compiler
 from geometry_primitives import semantic_snapshot
 
 from compile_model_package import compile_model_package, validate_tagged_scene
+
+
+def write_unordered_usdz(path: Path, layer_text: str, member_order: tuple[str, ...]) -> None:
+    payloads = {
+        "root.usda": layer_text.encode("utf-8"),
+        "textures/a.bin": b"a",
+        "textures/z.bin": b"z",
+    }
+    with zipfile.ZipFile(path, "w") as archive:
+        for member in member_order:
+            archive.writestr(member, payloads[member])
+
+
+canonical_layer_a = '''#usda 1.0
+(
+    upAxis = "Y"
+)
+def Xform "Zeta" {}
+def Xform "Alpha" {}
+'''
+canonical_layer_b = '''#usda 1.0
+(
+    upAxis = "Y"
+)
+def Xform "Alpha" {}
+def Xform "Zeta" {}
+'''
+canonical_context_directory = TOOLS.parents[1] / ".context"
+canonical_context_directory.mkdir(exist_ok=True)
+canonical_fixture_directory = Path(
+    tempfile.mkdtemp(
+        prefix=f"{TOOLS.parents[1].name}-model-compiler-canonical-",
+        dir=canonical_context_directory,
+    )
+)
+try:
+    (canonical_fixture_directory / "ownership.json").write_text(
+        json.dumps(
+            {
+                "owner": TOOLS.parents[1].name,
+                "resources": [str(canonical_fixture_directory)],
+                "external_resources": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    first_usdz = canonical_fixture_directory / "first.usdz"
+    second_usdz = canonical_fixture_directory / "second.usdz"
+    write_unordered_usdz(
+        first_usdz,
+        canonical_layer_a,
+        ("textures/z.bin", "root.usda", "textures/a.bin"),
+    )
+    write_unordered_usdz(
+        second_usdz,
+        canonical_layer_b,
+        ("textures/a.bin", "root.usda", "textures/z.bin"),
+    )
+    compiler._canonicalize_usdz(first_usdz)
+    compiler._canonicalize_usdz(second_usdz)
+    assert first_usdz.read_bytes() == second_usdz.read_bytes()
+    with zipfile.ZipFile(first_usdz) as archive:
+        assert archive.namelist() == sorted(archive.namelist())
+        assert all(info.date_time == (1980, 1, 1, 0, 0, 0) for info in archive.infolist())
+        assert all(
+            (
+                info.header_offset
+                + 30
+                + len(info.filename.encode("utf-8"))
+                + len(info.extra)
+            )
+            % 64
+            == 0
+            for info in archive.infolist()
+        )
+finally:
+    shutil.rmtree(canonical_fixture_directory)
+
+print("MODEL_COMPILER_CANONICALIZATION_TEST passed")
 
 
 def reset_scene() -> None:
