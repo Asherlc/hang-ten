@@ -110,7 +110,6 @@ class ModelVerificationConfig:
     material_policy: MaterialPolicy = MaterialPolicy.canonical_wood()
     suspension_policy: SuspensionVerificationPolicy | None = None
     board_probes: tuple[BoardProbe, ...] = ()
-    review_policy: ReviewPolicy = ReviewPolicy()
 
 def verify_model_package(
     package: Path,
@@ -142,7 +141,7 @@ The verifier pipeline is fixed and ordered:
    run actual triangle nearest-hit probes for every configured position/hold.
 7. If configured, solve and probe suspension clearance against actual imported
    triangles, allowing only the declared attachment/passage interface.
-8. Run review renders/gallery hooks, then write a stable JSON report containing
+8. Run the requested review-render/gallery tooling, then write a stable JSON report containing
    command/options, hashes, imported bindings, material checks, triangle count,
    probes, review artifacts, and cleanup verification.
 
@@ -153,9 +152,6 @@ that can bypass invariants:
 class BoardProbe(Protocol):
     id: str
     def run(self, imported: ImportedModel, config: ModelVerificationConfig) -> ProbeResult: ...
-
-class ReviewPolicy(Protocol):
-    def render(self, imported: ImportedModel, output: Path) -> tuple[ReviewArtifact, ...]: ...
 ```
 
 Board-specific checks may add assertions (for example Compact II's absence
@@ -278,13 +274,19 @@ finite/self-intersection rules. A taut span is straight only when rest length
 equals endpoint separation within the declared tolerance.
 
 The two-branch route is explicitly `anchor -> passage[0] -> passage[1] ->
-anchor`: free anchor spans use the catenary solver and the modeled passage
-interior is preserved as a continuous ordered segment. Both branches share one
-fixed world-space anchor. The cord renderer creates transient, independent
-SceneKit tube nodes with a non-pickable category and no accessibility element;
-the anchor has no node or visible stand-in. `BoardModelScene` remains
-responsible for replacing the transient layer atomically and restoring wood
-highlight state.
+anchor`: each declared branch `restLength` is the total route length. Reserve
+the exact modeled passage-interior span, then distribute the remaining free
+length between the anchor-to-first and second-to-anchor catenary spans in
+proportion to their endpoint separations. Reject a branch when its declared
+length is shorter than the two endpoint separations plus the interior span.
+The solver and package verifier must assert this decomposition and the
+resulting measured route length within the existing tolerances; neither may
+replace the interior span with a direct shortcut or invent knot geometry.
+Both branches share one fixed world-space anchor. The cord renderer creates
+transient, independent SceneKit tube nodes with a non-pickable category and no
+accessibility element; the anchor has no node or visible stand-in.
+`BoardModelScene` remains responsible for replacing the transient layer
+atomically and restoring wood highlight state.
 
 All invalid conditions route to the existing explicit model-unavailable/error
 state: missing node/pose, invalid/nonfinite pose or cord values, too-short
@@ -438,8 +440,9 @@ camera, or package data to make a shared check pass.
 ## Compatibility contract
 
 - **Package schema:** retain model-only v2 packages, exactly one USDZ and
-  descriptor, hash-bound descriptor v1, `hang-ten-board-v1`, sorted IDs, and no
-  raster fallback or hand-authored bounds.
+  descriptor, hash-bound descriptor v1, `hang-ten-board-v1`, board-defined
+  logical hold order, and descriptor keys/nodes sorted only where their schema
+  requires it; there is no raster fallback or hand-authored bounds.
 - **Existing commands:** preserve compiler and verifier entrypoints and flags;
   wrappers may emit the shared report internally during a deprecation window.
 - **Python/Swift parity:** retain closed-schema member order, duplicate-key
@@ -501,4 +504,3 @@ The extraction is complete only when all of the following are true:
 - The migration skill and model tooling README describe this workflow without
   reintroducing image-driven geometry or unsupported remote/model-editing
   claims.
-

@@ -221,10 +221,13 @@ that would pass through the board.
 
 The solver uses fixed sample count, material parameters, gravity direction,
 numeric tolerance, and arc-length procedure across platforms. It verifies
-finite samples, endpoint coincidence, tangent continuity at passage joins,
-sampled length, tube radius, and self-intersection. It checks cord clearance
-against actual board triangles/rays, requiring at least cord radius plus the
-declared clearance everywhere except the approved physical passage interface.
+finite samples, positional continuity at passage joins, sampled length, tube
+radius, and self-intersection. Tangent discontinuity between an independently
+solved catenary and the modeled interior passage span is permitted at a
+passage interface; tangent matching is not a contract for this piecewise
+route. It checks cord clearance against actual board triangles/rays, requiring
+at least cord radius plus the declared clearance everywhere except the
+approved physical passage interface.
 
 Any of these conditions enters the existing explicit model-unavailable/error
 state for the affected presentation. There is no straight-line fallback,

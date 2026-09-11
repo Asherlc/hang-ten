@@ -80,7 +80,7 @@ human-review gate.
 
 ## Suspended portable presentations
 
-For a future portable-suspension parser/runtime, reject a migration unless all
+For a portable-suspension parser/runtime, reject a migration unless all
 of the following are decidable from package data:
 
 - exactly one model USDZ and descriptor;
