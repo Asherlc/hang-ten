@@ -34,12 +34,14 @@ The migration audit covers every model package currently in `Hangboards`:
 | `beastmaker-1000` | `primary.usdz` | fixed/front-only; retain the canonical front path |
 | `nature-stone-hanger` | `primary.usdz` | orientation metadata for the documented front and reverse usable faces |
 | `metolius-wood-grips-compact-ii` | `primary.usdz` | fixed/front-only; retain the canonical front path |
-| `yy-baguette-evo` | `primary.usdz` | backfill all five retained physical surfaces |
+| `yy-baguette-evo` | `primary.usdz` | perform a deliberate contact-orientation audit and backfill every reviewed orientation grouping |
 
 The inventory test discovers model media rather than maintaining this list in
 runtime code. A package with multiple physical usable orientations must have a
-position for each such orientation and a rotation for each position. A genuinely
-fixed/front-only model has one canonical position and no rotation object. The
+position for each such orientation and a rotation for each position. Contacts
+that the audit proves share the same reviewed quaternion may be grouped in one
+position; the five old raster surfaces must not be treated as five positions
+without that review. A genuinely fixed/front-only model has one canonical position and no rotation object. The
 audit records the evidence URL or retained manufacturer artifact, model bounds,
 the position-to-hold mapping, and the author of every display estimate.
 
@@ -56,9 +58,14 @@ struct BoardPosition: Identifiable, Codable, Hashable {
 }
 ```
 
-`holdIDs` is the complete logical inventory usable in that physical position,
-not a hint for rendering. IDs are unique, non-empty board identifiers and are
-ordered in canonical board hold order. Existing decoded positions without the
+`holdIDs` is the complete logical inventory preferred for that physical
+position, not a hint for rendering. For a model presentation, the position
+arrays form an exact partition of the descriptor hold inventory: every model
+hold ID occurs in exactly one position, no position contains an unknown or
+duplicate ID, and the union equals the descriptor's hold IDs. This makes a
+position selection deterministic while still recording which contacts belong
+to each reviewed orientation. IDs are unique, non-empty board identifiers and
+are ordered in canonical board hold order. Existing decoded positions without the
 field receive the presentation's complete logical hold inventory, preserving
 old behavior. New authored model positions must provide the field and must not
 be empty; a position with no usable logical holds is rejected by package
@@ -125,9 +132,9 @@ Strict validation must reject:
 * an orientation on raster media, a missing/incorrect pivot, unknown keys,
   unknown or duplicate position IDs, or a rotation map with missing or extra
   position IDs;
-* a position with duplicate/unknown hold IDs, a presentation mismatch, or an
-  orientation position whose `holdIDs` do not describe that model's usable
-  inventory;
+* a position with duplicate/unknown hold IDs, a presentation mismatch, or a
+  model position whose `holdIDs` partition is not exact (missing, repeated, or
+  extra model hold IDs);
 * non-finite or non-nine-decimal quaternion components, a zero quaternion, or
   a quaternion whose norm differs from one beyond the existing descriptor
   tolerance;
@@ -184,8 +191,10 @@ The migration updates only board JSON metadata and, if required, the shared
 decoders/models. It does not change USDZ bytes or descriptor geometry. For every
 current 3D package, the audit classifies it as fixed/front-only or multi-
 orientation and records the exact position order, hold IDs, pivot, quaternion,
-and provenance. Baguette's five surfaces are represented by five logical
-positions sharing the one model; each position names only its usable hold IDs.
+and provenance. Baguette's legacy surfaces are represented by reviewed logical
+positions sharing the one model; each reviewed orientation grouping names its
+preferred hold IDs. The number of positions is determined by the reviewed
+quaternion grouping, not by the number of legacy raster surfaces.
 
 ## Alternatives considered
 
@@ -207,8 +216,9 @@ smallest change:
 
 1. Swift package decoder tests cover legacy positions, valid orientation JSON,
    sorted canonical output, pivot/quaternion validation, unknown and incomplete
-   rotation maps, duplicate/unknown hold IDs, and orientation+suspension
-   rejection. Assert the exact `invalidPackage` reason category.
+   rotation maps, duplicate/unknown hold IDs, non-partitioned hold IDs, and
+   orientation+suspension rejection. Assert the exact `invalidPackage` reason
+   category.
 2. Swift model-scene tests use a non-centered descriptor and prove a canonical
    quaternion rotates around model-bounds center, recomputes framing, preserves
    hold node bindings, and leaves manual orbit functional after selection.
@@ -235,8 +245,9 @@ already used for each board, including the YY Vertical Baguette Evo product
 evidence (`https://www.yyvertical.com/en/products/baguette-evo`) and the existing
 model-package audit at `docs/source-audits/2026-09-10-imported-model-packages.md`.
 Every hold association is traceable to that evidence or to the model descriptor
-inventory; every Baguette angle is explicitly labeled an authored display
-estimate. Unsupported claims are omitted.
+inventory; every Baguette quaternion is explicitly labeled an authored display
+estimate, and the audit records why contacts were grouped or separated.
+Unsupported claims are omitted.
 
 Use the Hang Ten iOS simulator validation route in landscape for each current
 3D package. Capture front and every canonical position, verify every expected
@@ -254,7 +265,8 @@ and leave shared or unknown resources untouched.
 
 The change is complete when the strict cross-language schema and real package
 inventory tests pass; all current model packages have an audited disposition;
-Baguette renders its five metadata-selected surfaces from one unchanged model;
+Baguette renders all logical holds through reviewed metadata-selected positions
+from one unchanged model;
 fixed boards remain on the legacy path; suspension behavior is unchanged;
 manual orbit works on every interactive 3D surface; malformed or conflicting
 metadata fails closed; provenance contains no invented source claims; and iOS
