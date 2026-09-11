@@ -168,7 +168,6 @@ final class BoardModelScene {
     let geometryNodes: [SCNNode]
     private let projectedWidth: Float
     private let projectedHeight: Float
-    private let fitPadding: Float
     private(set) var holdNodes: [String: [SCNNode]] = [:]
     private var holdIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
@@ -267,7 +266,6 @@ final class BoardModelScene {
         }
         projectedWidth = framing.width
         projectedHeight = framing.height
-        fitPadding = framing.padding
         scene.rootNode.addChildNode(modelRoot)
         configureCameraAndLighting(framing: framing)
     }
@@ -284,7 +282,7 @@ final class BoardModelScene {
     func frame(in size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
         let aspect = Float(size.width / size.height)
-        camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) * fitPadding)
+        camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect))
     }
 
     func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
