@@ -131,3 +131,52 @@ rtk .context/import-hangboard-model-packages/gray-horse-hangboard-packages-venv/
 The exact command results are recorded in the Task 3 handoff report. Byte
 comparison against the committed converted outputs is required in addition to
 descriptor hash and logical-inventory validation.
+
+## Task 5 final validation
+
+Fresh validation at `70771baabb3e9bf38ab3af8c512c6883dacb2070`
+confirmed the 63-package final inventory with no drafts. The focused checks
+passed: importer tests 19/19, model-report tests 12/12, and model-first package
+tests 93/93. Clean Blender reimports of both shipped USDZ files reproduced the
+retained reports byte-for-byte. Those reports verify the exact descriptor
+hashes and hold inventories above, bounds and centers, positive triangle
+counts, native materials, nearest-triangle picking, and source-node
+correspondence. Both promoted roots contain only `board.json`,
+`assets/primary.usdz`, and `assets/primary.model.json`; neither has a raster or
+2D hold-geometry fallback.
+
+Nature's two nonselectable markers were reproduced in exact order: marker 1 is
+`cord-passage-1` at `[-0.05249999836087227, 0, -0.002400000113993883]` with
+axis `[-1, 0, 0]`, and marker 2 is `cord-passage-2` at
+`[0.05249999836087227, 0, -0.002400000113993883]` with axis `[1, 0, 0]`.
+Runtime suspension remains intentionally unavailable because this evidence is
+not a complete closed-route profile.
+
+Metolius and Training Tiles are unchanged from their pre-promotion baseline.
+Their retained rejection reports remain reproducible: Metolius has a body mesh
+without an image material, and Training Tiles has four unmapped logical hold
+IDs. The retained Baguette determinism reproduction still records byte-identical
+descriptor and USDZ output with cleanup verified.
+
+The first focused iOS run passed `BoardModelTests` 16/16 and
+`SuspendedBoardPresentationTests` 29/29. `BoardPackageStoreTests` passed 114/115;
+its sole failure is the known Task 1 fixture-order mismatch in
+`testStoreRejectsSharedCrossParserMalformedModelFixtureMatrix`, not a model
+package runtime failure. The excluded Task 1 fixture/test files were not
+changed. A second bounded run reported 45 selected tests with zero failures
+before it was interrupted at the user's request; its result-bundle summary and
+screenshot phase therefore did not run.
+
+Six fresh package renders are retained under
+`.context/import-hangboard-model-packages/final-visual-review`, but the generic
+review renderer overexposes and clips/crops several Nature and detail views.
+They establish renderability, not physical fidelity. No fresh app screenshot
+was captured; the retained Task 4 report provides textual app-review evidence
+but no retained screenshot was found. No physical-fidelity claim is made.
+
+Exact simulator UUIDs, command logs, hashes, the interrupted-run status, and
+cleanup checks are recorded in
+`.context/import-hangboard-model-packages/final-report.json`. Both owned
+simulators, their manifest entries, the stale validation process, DerivedData,
+and the result bundle were verified absent. No HTTP server or network action
+was used. No verifier defect was found, so the verifier was unchanged.
