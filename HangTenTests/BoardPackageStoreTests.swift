@@ -231,6 +231,25 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testSharedFixtureBuilderSerializesDeclaredNonfiniteSentinelsAsRawNumbers() throws {
+        let fixtures = try validationFixtures()
+        let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
+        let names = ["nonfinite-quaternion", "two-branch-nonfinite-passage-point"]
+
+        for name in names {
+            let specification = try XCTUnwrap(matrix.first(where: { $0["name"] as? String == name }))
+            let fixture = try makeSharedModelParserParityFixtureBundle(specification)
+            defer { fixture.remove() }
+
+            let boardData = try Data(contentsOf: fixture.rootURL
+                .appendingPathComponent("Hangboards/fixture-model/board.json"))
+            let boardJSON = String(decoding: boardData, as: UTF8.self)
+            XCTAssertEqual(boardJSON.components(separatedBy: "1e999").count - 1, 1, name)
+            XCTAssertFalse(boardJSON.contains(#""1e999""#), name)
+            XCTAssertFalse(boardJSON.contains("__raw_nonfinite_number_1e999__"), name)
+        }
+    }
+
     func testWrongTwoBranchDiscriminatorUsesInvalidPackageCategory() throws {
         let fixtures = try validationFixtures()
         let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
@@ -3395,6 +3414,13 @@ final class BoardPackageStoreTests: XCTestCase {
                 )
             )
         }
+        let serializedBoardJSON = String(decoding: boardData, as: UTF8.self)
+        boardData = Data(
+            serializedBoardJSON.replacingOccurrences(
+                of: #""__raw_nonfinite_number_1e999__""#,
+                with: "1e999"
+            ).utf8
+        )
         if let rawReplacement = specification["rawJSONReplacement"] as? [String: Any] {
             let from = try XCTUnwrap(rawReplacement["from"] as? String)
             let to = try XCTUnwrap(rawReplacement["to"] as? String)
@@ -3415,7 +3441,14 @@ final class BoardPackageStoreTests: XCTestCase {
             let assetsURL = packageURL.appendingPathComponent("assets")
             try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
             try boardData.write(to: packageURL.appendingPathComponent("board.json"))
-            try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
+            let descriptorData = try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
+            let serializedDescriptorJSON = String(decoding: descriptorData, as: UTF8.self)
+            try Data(
+                serializedDescriptorJSON.replacingOccurrences(
+                    of: #""__raw_nonfinite_number_1e999__""#,
+                    with: "1e999"
+                ).utf8
+            )
                 .write(to: assetsURL.appendingPathComponent("primary.model.json"))
             try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
             if let duplicateKey = specification["duplicateTwoBranchMemberKey"] as? String {
