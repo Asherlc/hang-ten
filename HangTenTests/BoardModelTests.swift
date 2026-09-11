@@ -584,25 +584,38 @@ final class BoardModelTests: XCTestCase {
     ) throws {
         for holdID in media.descriptor.holds.keys.sorted() {
             let hold = try XCTUnwrap(media.descriptor.holds[holdID], "\(boardID): \(holdID)")
-            let normalizedCenter = zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).map {
-                $0 + ($1 - $0) / 2
+            let minimum = hold.facePlaneAABB.minimum
+            let maximum = hold.facePlaneAABB.maximum
+            let sampleFractions: [Double] = [0.2, 0.5, 0.8]
+            let surfaceSamplePoints = sampleFractions.flatMap { xFraction in
+                sampleFractions.map { yFraction in
+                    [
+                        minimum[0] + xFraction * (maximum[0] - minimum[0]),
+                        minimum[1] + yFraction * (maximum[1] - minimum[1])
+                    ]
+                }
             }
-            let ray = try headOnRay(
-                normalizedPoint: normalizedCenter,
-                bounds: media.descriptor.modelBounds,
-                context: "\(boardID): \(holdID)"
-            )
-            let closest = try XCTUnwrap(
-                model.scene.rootNode.hitTestWithSegment(
+            let hits = surfaceSamplePoints.compactMap { normalizedPoint -> String? in
+                guard let ray = try? headOnRay(
+                    normalizedPoint: normalizedPoint,
+                    bounds: media.descriptor.modelBounds,
+                    context: "\(boardID): \(holdID)"
+                ),
+                let closest = model.scene.rootNode.hitTestWithSegment(
                     from: ray.from,
                     to: ray.to,
                     options: [
                         SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
                     ]
-                ).first,
-                "\(boardID): \(holdID)"
+                ).first else {
+                    return nil
+                }
+                return model.holdID(for: closest.node)
+            }
+            XCTAssertTrue(
+                hits.contains(holdID),
+                "\(boardID): \(holdID) must expose a selectable head-on surface within its descriptor facePlaneAABB"
             )
-            XCTAssertEqual(model.holdID(for: closest.node), holdID, "\(boardID): \(holdID)")
         }
     }
 

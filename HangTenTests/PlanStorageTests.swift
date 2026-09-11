@@ -1864,10 +1864,22 @@ final class PlanStorageTests: XCTestCase {
             let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
             let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
             let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
+            let expectedHoldIDs: Set<String>
+            if plan.boardID == "metolius.simulator-3d" {
+                // The manufacturer routines predate the supplied model's two
+                // additional source-backed flat slopers. Preserve the
+                // routine's original 29-hold target set rather than inventing
+                // new training-plan content for those later-mapped holds.
+                expectedHoldIDs = Set(board.holds.map(\.id)).subtracting([
+                    "flat-sloper-2-left", "flat-sloper-2-right"
+                ])
+            } else {
+                expectedHoldIDs = Set(board.holds.map(\.id))
+            }
 
             XCTAssertEqual(
                 Set(step.targets.flatMap(\.holdIDs)),
-                Set(board.holds.map(\.id)),
+                expectedHoldIDs,
                 "\(stepID) must keep the source's any-hold option unconstrained."
             )
         }
