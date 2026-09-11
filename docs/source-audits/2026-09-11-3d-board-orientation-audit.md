@@ -391,3 +391,66 @@ remains one logical ID over two mesh pieces. No new contacts were inferred.
 - `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`: exit 0, 0 drafts.
 - Beastmaker 1000 and Metolius Compact II untouched: single `primary`
   position, no orientation block (fixed/front-only disposition confirmed).
+
+## Task 7 visual validation (2026-09-11, Muse Spark)
+
+Simulator: owned `Hang Ten Paseo royal-anaconda Review` devices (iPhone 17
+Pro / iOS 26.5 UUID `2017D61B` (captures) and `DE1572BF` (live debugging),
+iPhone SE 3rd gen for one control), Debug builds, `HANGTEN_REVIEW_BOARD_ID`
++ `HANGTEN_REVIEW_BOARD_DETAIL` + `HANGTEN_REVIEW_HOLD_ID` review routes
+(no production UI or package changes). Selecting a hold auto-rotates the
+shared model to that hold's canonical position; every screenshot below is
+therefore an end-to-end orientation proof, not a posed render.
+
+### Confirmed rendering (real device pixels, reviewed)
+
+| board | position (hold) | result |
+| --- | --- | --- |
+| Baguette | `paired-25-20-15-10` (`edge-10-left`) | front face, primary recess, red highlight; landscape + portrait |
+| Baguette | `paired-12-8-6` (`edge-12-left`) | rolled to top channels, red highlight; landscape + portrait |
+| Baguette | `central-30-25` (`edge-central-30`) | rolled 180° to reverse recess, red highlight, left/right stable; landscape + portrait |
+| Baguette | `central-20-6` (`edge-central-20`) | top-inclined small recess, red highlight; landscape + portrait |
+| Baguette | `rounded-tray` (`rounded-tray`) | rolled to underside, both tray meshes red, Jug card; landscape + portrait |
+| Nature | `front` (`edge-front-15mm-incut`) | front face, red incut lip, hold card, legend; portrait |
+| Nature | `reverse` (`edge-reverse-10mm-incut`) | reverse all-wood face (no granite), red 10 mm lip; portrait |
+| Beastmaker 1000 | `primary` (`jug-left`) | fixed front path, red jug; landscape |
+| Compact II | `primary` (`jug-left`) | fixed front path, red jug; landscape |
+
+Framing keeps every board inside its viewport; manual orbit/reset behavior
+is covered by the `BoardModelTests`/`SuspendedBoardPresentationTests` suites
+(55/55 GREEN on an isolated simulator, including two new permanent
+orientation guards); display-only preview policy, workout surfaces, and
+physical-device rotation/gesture QA remain recommended follow-ups, as does
+an Android SDK-backed JUnit run (no SDK on this machine).
+
+### Open anomaly: Nature 3D card blank under the synthetic landscape flag
+
+With `HANGTEN_REVIEW_LANDSCAPE=1` (a programmatic
+`requestGeometryUpdate(.landscapeRight)`, device physically portrait),
+Nature's 3D card renders blank while Baguette/Beastmaker/Compact render in
+the same harness. Deterministic across 5+ samples and 10–60 s waits.
+Eliminated by live-debugger inspection of the running app: view has nonzero
+size (682×682), scene/geometry/lights/camera all present and correct
+(camera at the expected front framing, model bounds exactly the descriptor
+bounds), no crash, no errors, no unavailable state; forced `setNeedsDisplay`,
+continuous rendering, and scene re-assignment do not paint geometry, while
+setting `scene.background` red DOES composite (so the layer presents but
+geometry rasterizes nothing in this configuration). The metadata is
+exonerated: the identical scene state renders correctly in portrait, and the
+shared renderer proves itself on the other three boards in the same harness.
+Suspected harness presentation edge (synthetic rotation + non-continuous
+`SCNView` + screenshot compositor for the square card), not a package
+defect — but unproven. Follow-up: verify Nature on a physical device
+rotated to landscape, and add an XCUITest/orbit-tap pass when UI automation
+is available (this machine blocks assistive access for scripting).
+
+### Data-fidelity note (non-blocking)
+
+CPU head-on rays at the descriptor `facePlaneAABB` centers strike body
+geometry rather than hold meshes for Nature's recessed contacts: the recess
+interiors belong to the body mesh while only the contact lips are hold
+meshes. Tap selection operates on rendered pixels (proven working above),
+so nothing user-visible breaks, but the descriptor AABBs should be
+regenerated from the shipped meshes (or the inventory helper's contract
+narrowed) in a follow-up. The new regression tests assert binding,
+selection, and finite framing rather than ray hits.

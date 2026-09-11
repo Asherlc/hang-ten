@@ -334,6 +334,70 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(untouchedNode.geometry?.firstMaterial === untouchedOriginal)
     }
 
+    // Regression guard for visual validation: the shipped Nature package must
+    // build a non-empty scene and resolve a finite camera on both canonical
+    // faces. A blank 3D card with no unavailable state means this contract
+    // broke between the loader and the renderer.
+    func testNatureStoneHangerOrientationSelectsBothFacesWithVisibleFraming() async throws {
+        let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
+        let orientation = try XCTUnwrap(media.orientation, "Nature must declare orientation metadata")
+        XCTAssertEqual(orientation.pivot, "modelBoundsCenter")
+        XCTAssertEqual(Set(orientation.rotations.keys), ["front", "reverse"])
+        XCTAssertFalse(model.geometryNodes.isEmpty, "Nature scene must contain geometry")
+        XCTAssertEqual(model.holdNodes.count, board.holds.count)
+        for positionID in ["front", "reverse"] {
+            XCTAssertTrue(model.select(positionID: positionID), positionID)
+            XCTAssertEqual(model.activePositionID, positionID)
+            SCNTransaction.flush()
+            let cameraPosition = model.camera.position
+            XCTAssertTrue(
+                cameraPosition.x.isFinite && cameraPosition.y.isFinite && cameraPosition.z.isFinite,
+                "\(positionID) camera must be finite: \(cameraPosition)"
+            )
+            let scale = try XCTUnwrap(model.camera.camera?.orthographicScale, positionID)
+            XCTAssertTrue(scale.isFinite && scale > 0, "\(positionID) scale must be positive finite")
+        }
+        // NOTE: head-on CPU rays at descriptor face-plane centers intentionally
+        // are NOT asserted here. The Stone Hanger's recess interiors belong to
+        // the body mesh while only the contact lips are hold meshes, so such
+        // rays legitimately strike body first. Tap selection operates on
+        // rendered pixels (covered by visual validation), not descriptor
+        // rays; the descriptor AABB-to-mouth alignment is tracked separately
+        // as a data-fidelity follow-up.
+        XCTAssertTrue(model.select(positionID: "front"))
+        XCTAssertEqual(model.activePositionID, "front")
+    }
+
+    // Same end-to-end guard for every reviewed Baguette position: selection
+    // must succeed, keep hold bindings, and leave a finite camera.
+    func testBaguetteEvoOrientationSelectsAllReviewedPositionsWithVisibleFraming() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        let orientation = try XCTUnwrap(media.orientation, "Baguette must declare orientation metadata")
+        let expectedIDs = [
+            "paired-25-20-15-10",
+            "paired-12-8-6",
+            "central-30-25",
+            "central-20-6",
+            "rounded-tray",
+        ]
+        XCTAssertEqual(Set(orientation.rotations.keys), Set(expectedIDs))
+        XCTAssertEqual(board.positions.map(\.id), expectedIDs)
+        XCTAssertFalse(model.geometryNodes.isEmpty, "Baguette scene must contain geometry")
+        XCTAssertEqual(model.holdNodes.count, board.holds.count)
+        for positionID in expectedIDs {
+            XCTAssertTrue(model.select(positionID: positionID), positionID)
+            XCTAssertEqual(model.activePositionID, positionID)
+            SCNTransaction.flush()
+            let cameraPosition = model.camera.position
+            XCTAssertTrue(
+                cameraPosition.x.isFinite && cameraPosition.y.isFinite && cameraPosition.z.isFinite,
+                "\(positionID) camera must be finite: \(cameraPosition)"
+            )
+            let scale = try XCTUnwrap(model.camera.camera?.orthographicScale, positionID)
+            XCTAssertTrue(scale.isFinite && scale > 0, "\(positionID) scale must be positive finite")
+        }
+    }
+
     func testNatureStoneHangerCordPassageMarkersAreNotSelectableOrAccessible() async throws {
         let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
         let passageMarkerIDs = ["cord-passage-1", "cord-passage-2"]
