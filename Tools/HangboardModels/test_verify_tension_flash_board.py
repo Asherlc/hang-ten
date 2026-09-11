@@ -66,6 +66,24 @@ def valid_report() -> dict[str, object]:
         }
         for passage_id in verifier.REVIEW_PASSAGE_IDS
     ]
+    def clear_aperture_ray(origin, direction):
+        return {
+            "origin": list(origin),
+            "direction": list(direction),
+            "hit": False,
+            "nearestRole": None,
+            "nearestNodeID": None,
+            "nearestTriangleIndex": None,
+            "location": None,
+            "passed": True,
+        }
+
+    swept_tube_probe = verifier._swept_passage_probe(
+        (0.0, 0.0, 0.0),
+        minimum_z=0.0,
+        maximum_z=0.075999998,
+        aperture_ray=clear_aperture_ray,
+    )
     return {
         "boardID": "tension.flash-board",
         "candidateID": verifier.REVIEW_CANDIDATE_ID,
@@ -90,16 +108,7 @@ def valid_report() -> dict[str, object]:
                 "nearestTriangleIndex": 0,
                 "surfaceDepthMeters": 0.001,
                 "behavior": "through-passage",
-                "frontApertureRay": {"hit": False, "nearestRole": None, "nearestNodeID": None, "passed": True},
-                "rearApertureRay": {"hit": False, "nearestRole": None, "nearestNodeID": None, "passed": True},
-                "frontBoundaryRays": [
-                    {"sampleIndex": index, "hit": True, "nearestRole": "body", "nearestNodeID": "flash-board-body", "passed": True}
-                    for index in range(4)
-                ],
-                "rearBoundaryRays": [
-                    {"sampleIndex": index, "hit": True, "nearestRole": "body", "nearestNodeID": "flash-board-body", "passed": True}
-                    for index in range(4)
-                ],
+                "sweptTubeProbe": swept_tube_probe,
                 "passed": True,
             }
             for passage_id in verifier.REVIEW_PASSAGE_IDS
@@ -284,12 +293,12 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
 
     def test_verify_report_requires_through_aperture_evidence_on_the_bound_body(self):
         report = valid_report()
-        report["passageRayResults"][0]["frontApertureRay"]["passed"] = False
+        report["passageRayResults"][0]["sweptTubeProbe"]["samples"][0]["frontToRear"]["passed"] = False
         with self.assertRaisesRegex(ValueError, "passage"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
         report = valid_report()
-        report["passageRayResults"][0]["rearBoundaryRays"][3]["passed"] = False
+        del report["passageRayResults"][0]["sweptTubeProbe"]["samples"][-1]
         with self.assertRaisesRegex(ValueError, "passage"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
@@ -317,6 +326,36 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             ray[mutation] = "wrong" if mutation == "nearestID" else False
             with self.subTest(mutation=mutation), self.assertRaisesRegex(ValueError, "surface ray"):
                 verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_swept_passage_probe_rejects_centerline_open_but_tube_blocked_aperture(self):
+        point = (0.25, 0.5, 0.0)
+        blocked_offset = verifier.PASSAGE_TUBE_RADIUS_METERS, 0.0
+
+        def aperture_ray(origin, direction):
+            offset = (origin[0] - point[0], origin[1] - point[1])
+            blocked = abs(offset[0] - blocked_offset[0]) <= 1e-9 and abs(offset[1]) <= 1e-9
+            return {
+                "origin": list(origin),
+                "direction": list(direction),
+                "hit": blocked,
+                "nearestRole": "body" if blocked else None,
+                "nearestNodeID": "flash-board-body" if blocked else None,
+                "nearestTriangleIndex": 7 if blocked else None,
+                "location": list(origin) if blocked else None,
+                "passed": not blocked,
+            }
+
+        probe = verifier._swept_passage_probe(
+            point,
+            minimum_z=0.0,
+            maximum_z=0.076,
+            aperture_ray=aperture_ray,
+        )
+        self.assertFalse(probe["passed"])
+        self.assertTrue(probe["samples"][0]["passed"])
+        blocked = [sample for sample in probe["samples"] if not sample["passed"]]
+        self.assertEqual(len(blocked), 1)
+        self.assertEqual(blocked[0]["offsetMeters"], [verifier.PASSAGE_TUBE_RADIUS_METERS, 0.0])
 
     def test_verify_report_rejects_repeated_surface_sample_indices(self):
         report = valid_report()
@@ -432,6 +471,23 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             samples,
             required_clearance=0.003,
             attachment_node_id="flash_board_body_008",
+            nearest=nearest,
+        )
+        self.assertFalse(result["passed"])
+
+    def test_interface_exception_does_not_mask_body_collision_beyond_interface_point(self):
+        samples = [(0.0, 0.0, 0.0), (1.0, 0.0, 0.0)]
+
+        def nearest(node_id, point):
+            if point == samples[-1]:
+                return 0.0005, (1.0005, 0.0, 0.0)
+            return 1.0, point
+
+        result = verifier._check_centerline_clearance(
+            samples,
+            required_clearance=0.003,
+            attachment_node_id="flash-board-body",
+            interface_points=(("flash-board-body", samples[-1]),),
             nearest=nearest,
         )
         self.assertFalse(result["passed"])

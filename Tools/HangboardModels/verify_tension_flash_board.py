@@ -119,7 +119,14 @@ CORD_RADIUS_METERS = 0.002
 CORD_CLEARANCE_METERS = 0.001
 CANONICAL_TEXTURE_MEMBER = "textures/canonical-neutral-wood.png"
 CENTERLINE_SUBDIVISIONS = 8
-PASSAGE_BOUNDARY_OFFSET_METERS = 0.004
+PASSAGE_TUBE_RADIUS_METERS = CORD_RADIUS_METERS + CORD_CLEARANCE_METERS
+PASSAGE_INTERFACE_TOLERANCE_METERS = 1e-7
+PASSAGE_CROSS_SECTION_RINGS = (
+    (0.0, 1),
+    (0.5, 8),
+    (0.75, 8),
+    (1.0, 16),
+)
 REVIEW_CANDIDATE_PATH = TOOLS / "fixtures/tension_flash_board_two_branch_review_candidate.json"
 REVIEW_CANDIDATE_ID = "tension.flash-board.two-branch-review-v1"
 REVIEW_PASSAGE_IDS = (
@@ -584,41 +591,74 @@ def _validate_passage_correspondence(
         and item.get("behavior") == "through-passage"
         and item.get("nodeID") == correspondence_by_id[item["passageID"]]["nodeID"]
         and item.get("sourceNodeID") == correspondence_by_id[item["passageID"]]["sourceNodeID"]
-        and _is_open_aperture_ray(item.get("frontApertureRay"))
-        and _is_open_aperture_ray(item.get("rearApertureRay"))
-        and _is_body_boundary_rays(item.get("frontBoundaryRays"), correspondence_by_id[item["passageID"]]["nodeID"])
-        and _is_body_boundary_rays(item.get("rearBoundaryRays"), correspondence_by_id[item["passageID"]]["nodeID"])
+        and _is_swept_tube_probe(item.get("sweptTubeProbe"))
         and item.get("passed") is True
         for item in ray_results
     ):
         raise ValueError("passage ray proof does not establish all four physical openings")
 
 
-def _is_open_aperture_ray(value: object) -> bool:
-    """A through-passage has no nearest mesh hit along its centerline."""
+def _is_clear_aperture_ray(value: object) -> bool:
+    """A swept-tube sample must be continuously clear along the full axis."""
     return (
         isinstance(value, Mapping)
         and value.get("hit") is False
         and value.get("nearestRole") is None
         and value.get("nearestNodeID") is None
+        and value.get("nearestTriangleIndex") is None
         and value.get("passed") is True
     )
 
 
-def _is_body_boundary_rays(value: object, body_node_id: object) -> bool:
-    """Require a complete aperture ring instead of treating empty space as a hole."""
+def _passage_cross_section_offsets(radius: float) -> list[tuple[float, float]]:
+    """Return the deterministic radial samples for the swept passage tube."""
+    if not math.isfinite(radius) or radius <= 0:
+        raise ValueError("passage tube radius must be finite and positive")
+    offsets: list[tuple[float, float]] = []
+    for fraction, count in PASSAGE_CROSS_SECTION_RINGS:
+        if count == 1:
+            offsets.append((0.0, 0.0))
+            continue
+        ring_radius = radius * fraction
+        for index in range(count):
+            angle = 2 * math.pi * index / count
+            offsets.append((ring_radius * math.cos(angle), ring_radius * math.sin(angle)))
+    return offsets
+
+
+def _is_swept_tube_probe(value: object) -> bool:
+    """Require the exact cord-sized cross-section at every full-depth ray."""
+    expected = _passage_cross_section_offsets(PASSAGE_TUBE_RADIUS_METERS)
     return (
-        isinstance(body_node_id, str)
-        and isinstance(value, list)
-        and [item.get("sampleIndex") for item in value if isinstance(item, Mapping)] == [0, 1, 2, 3]
+        isinstance(value, Mapping)
+        and value.get("cordRadiusMeters") == CORD_RADIUS_METERS
+        and value.get("clearanceToleranceMeters") == CORD_CLEARANCE_METERS
+        and value.get("requiredRadiusMeters") == PASSAGE_TUBE_RADIUS_METERS
+        and value.get("axis") == "model-z"
+        and value.get("sampleCount") == len(expected)
+        and value.get("axisContinuouslyTested") is True
+        and isinstance(value.get("samples"), list)
+        and len(value["samples"]) == len(expected)
+        and [item.get("sampleIndex") for item in value["samples"] if isinstance(item, Mapping)] == list(range(len(expected)))
         and all(
             isinstance(item, Mapping)
-            and item.get("hit") is True
-            and item.get("nearestRole") == "body"
-            and item.get("nearestNodeID") == body_node_id
+            and isinstance(item.get("sampleIndex"), int)
+            and not isinstance(item.get("sampleIndex"), bool)
+            and 0 <= item["sampleIndex"] < len(expected)
+            and isinstance(item.get("offsetMeters"), list)
+            and len(item["offsetMeters"]) == 2
+            and all(
+                isinstance(item["offsetMeters"][axis], (int, float))
+                and math.isfinite(float(item["offsetMeters"][axis]))
+                and abs(float(item["offsetMeters"][axis]) - expected[item["sampleIndex"]][axis]) <= 1e-9
+                for axis in range(2)
+            )
+            and _is_clear_aperture_ray(item.get("frontToRear"))
+            and _is_clear_aperture_ray(item.get("rearToFront"))
             and item.get("passed") is True
-            for item in value
+            for item in value["samples"]
         )
+        and value.get("passed") is True
     )
 
 
@@ -935,14 +975,16 @@ def _check_centerline_clearance(
                 interface = (
                     any(
                         interface_node == node_id
-                        and math.dist(point, interface_point) <= 1e-5
+                        and math.dist(point, interface_point) <= PASSAGE_INTERFACE_TOLERANCE_METERS
+                        and math.dist(nearest_point, interface_point) <= PASSAGE_INTERFACE_TOLERANCE_METERS
                         for interface_node, interface_point in interface_points
                     )
                     if interface_points
                     else node_id == attachment_node_id
                     and segment_index == len(samples) - 2
-                    and fraction >= 1 - 1e-5
-                    and math.dist(nearest_point, samples[-1]) <= 1e-5
+                    and fraction >= 1 - PASSAGE_INTERFACE_TOLERANCE_METERS
+                    and math.dist(point, samples[-1]) <= PASSAGE_INTERFACE_TOLERANCE_METERS
+                    and math.dist(nearest_point, samples[-1]) <= PASSAGE_INTERFACE_TOLERANCE_METERS
                 )
                 if not interface:
                     return {
@@ -1365,7 +1407,14 @@ def _passage_ray_probes(
     descriptor: Mapping[str, object],
     passages: Sequence[Mapping[str, object]],
 ) -> list[dict[str, object]]:
-    """Prove each declared passage is open through the imported body mesh."""
+    """Prove each declared passage fits the cord tube through the imported mesh.
+
+    Every cross-section sample casts a full-depth ray in both directions.  The
+    sample disk is the declared cord radius plus the verifier's clearance
+    tolerance; this is a swept tube probe, not a centerline or boundary proxy.
+    No attachment/interface exception is applied here: a body hit anywhere on
+    these rays is a passage failure, including at the named interface point.
+    """
     minimum = tuple(float(value) for value in descriptor["modelBounds"]["min"])
     maximum = tuple(float(value) for value in descriptor["modelBounds"]["max"])
 
@@ -1385,63 +1434,70 @@ def _passage_ray_probes(
             "passed": not bool(hit),
         }
 
-    def boundary_rays(
-        z: float, direction: tuple[float, float, float], point: tuple[float, float, float], body_node_id: str
-    ) -> list[dict[str, object]]:
-        results: list[dict[str, object]] = []
-        for sample_index, (x_offset, y_offset) in enumerate((
-            (PASSAGE_BOUNDARY_OFFSET_METERS, 0.0),
-            (-PASSAGE_BOUNDARY_OFFSET_METERS, 0.0),
-            (0.0, PASSAGE_BOUNDARY_OFFSET_METERS),
-            (0.0, -PASSAGE_BOUNDARY_OFFSET_METERS),
-        )):
-            origin = (point[0] + x_offset, point[1] + y_offset, z)
-            hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
-                depsgraph, origin, direction, distance=0.2
-            )
-            nearest_role = _property(nearest, "role") if nearest else None
-            results.append({
-                "sampleIndex": sample_index,
-                "origin": list(origin),
-                "direction": list(direction),
-                "hit": bool(hit),
-                "nearestRole": nearest_role,
-                "nearestNodeID": nearest.name if nearest else None,
-                "nearestTriangleIndex": int(triangle_index) if hit else None,
-                "location": [float(value) for value in location] if hit else None,
-                "passed": bool(
-                    hit and nearest_role == "body" and nearest is not None and nearest.name == body_node_id
-                ),
-            })
-        return results
-
     results: list[dict[str, object]] = []
     for passage in passages:
         point = tuple(float(value) for value in passage["pointInModel"])
-        front = aperture_ray((point[0], point[1], maximum[2] + 0.02), (0.0, 0.0, -1.0))
-        rear = aperture_ray((point[0], point[1], minimum[2] - 0.02), (0.0, 0.0, 1.0))
-        front_boundary = boundary_rays(maximum[2] + 0.02, (0.0, 0.0, -1.0), point, str(passage["nodeID"]))
-        rear_boundary = boundary_rays(minimum[2] - 0.02, (0.0, 0.0, 1.0), point, str(passage["nodeID"]))
-        passed = bool(
-            front["passed"]
-            and rear["passed"]
-            and all(result["passed"] for result in front_boundary)
-            and all(result["passed"] for result in rear_boundary)
+        swept_probe = _swept_passage_probe(
+            point,
+            minimum_z=minimum[2],
+            maximum_z=maximum[2],
+            aperture_ray=aperture_ray,
         )
         results.append({
             "passageID": passage["passageID"],
             "nodeID": passage["nodeID"],
             "sourceNodeID": passage["sourceNodeID"],
             "behavior": "through-passage",
-            "frontApertureRay": front,
-            "rearApertureRay": rear,
-            "frontBoundaryRays": front_boundary,
-            "rearBoundaryRays": rear_boundary,
+            "sweptTubeProbe": swept_probe,
+            "passed": swept_probe["passed"],
+        })
+        if not swept_probe["passed"]:
+            raise ValueError(f"actual mesh passage cannot fit the cord tube: {passage['passageID']}")
+    return results
+
+
+def _swept_passage_probe(
+    point: tuple[float, float, float],
+    *,
+    minimum_z: float,
+    maximum_z: float,
+    aperture_ray,
+) -> dict[str, object]:
+    """Sweep the required tube cross-section through the complete passage.
+
+    ``aperture_ray`` is deliberately a full-depth mesh-intersection query.
+    This pure helper keeps the sample contract testable without Blender and
+    makes a centerline-open, tube-blocked aperture fail deterministically.
+    """
+    offsets = _passage_cross_section_offsets(PASSAGE_TUBE_RADIUS_METERS)
+    samples: list[dict[str, object]] = []
+    for sample_index, (x_offset, y_offset) in enumerate(offsets):
+        front_to_rear = aperture_ray(
+            (point[0] + x_offset, point[1] + y_offset, maximum_z + 0.02),
+            (0.0, 0.0, -1.0),
+        )
+        rear_to_front = aperture_ray(
+            (point[0] + x_offset, point[1] + y_offset, minimum_z - 0.02),
+            (0.0, 0.0, 1.0),
+        )
+        passed = bool(_is_clear_aperture_ray(front_to_rear) and _is_clear_aperture_ray(rear_to_front))
+        samples.append({
+            "sampleIndex": sample_index,
+            "offsetMeters": [x_offset, y_offset],
+            "frontToRear": front_to_rear,
+            "rearToFront": rear_to_front,
             "passed": passed,
         })
-        if not passed:
-            raise ValueError(f"actual mesh passage is not open through the body: {passage['passageID']}")
-    return results
+    return {
+        "cordRadiusMeters": CORD_RADIUS_METERS,
+        "clearanceToleranceMeters": CORD_CLEARANCE_METERS,
+        "requiredRadiusMeters": PASSAGE_TUBE_RADIUS_METERS,
+        "axis": "model-z",
+        "axisContinuouslyTested": True,
+        "sampleCount": len(samples),
+        "samples": samples,
+        "passed": all(sample["passed"] for sample in samples),
+    }
 
 
 def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
