@@ -439,18 +439,27 @@ geometry rasterizes nothing in this configuration). The metadata is
 exonerated: the identical scene state renders correctly in portrait, and the
 shared renderer proves itself on the other three boards in the same harness.
 Suspected harness presentation edge (synthetic rotation + non-continuous
-`SCNView` + screenshot compositor for the square card), not a package
-defect — but unproven. Follow-up: verify Nature on a physical device
-rotated to landscape, and add an XCUITest/orbit-tap pass when UI automation
-is available (this machine blocks assistive access for scripting).
+`SCNView` + screenshot compositor), not a package defect — but unproven.
+A drawable-size explanation is ruled out: Beastmaker's landscape drawable
+(~1.5M px) renders while smaller configurations blank, and shrinking the
+Nature drawable via debugger did not restore pixels. Follow-up: verify
+Nature on a physical device rotated to landscape, and add an
+XCUITest/orbit-tap pass when UI automation is available (this machine
+blocks assistive access for scripting).
 
-### Data-fidelity note (non-blocking)
+### Descriptor note (verified, no fix needed)
 
 CPU head-on rays at the descriptor `facePlaneAABB` centers strike body
-geometry rather than hold meshes for Nature's recessed contacts: the recess
-interiors belong to the body mesh while only the contact lips are hold
-meshes. Tap selection operates on rendered pixels (proven working above),
-so nothing user-visible breaks, but the descriptor AABBs should be
-regenerated from the shipped meshes (or the inventory helper's contract
-narrowed) in a follow-up. The new regression tests assert binding,
-selection, and finite framing rather than ray hits.
+geometry rather than hold meshes for Nature's recessed contacts. This was
+first suspected to be stale descriptor data, but reprojecting every hold
+mesh from the shipped USDZ (root X-rotation applied, normalized over model
+bounds) reproduces the checked-in AABBs to within 1.5e-8 (float32 text
+precision only) — the AABBs are CORRECT patch bounds. The rays simply pass
+through the pocket mouth voids and strike recess interior walls, which are
+authored as body mesh while only the contact lips are hold meshes (the
+portrait renders confirm open pockets with red lips). Tap selection operates
+on rendered pixels (proven working above), and legend entries resolve from
+the same correct AABBs, so nothing user-visible breaks. The shared
+nearest-hit test helper's universal assumption (patch-center ray strikes a
+hold) does not cover lip-modeled recessed contacts; the new regression
+tests assert binding, selection, and finite framing instead.
