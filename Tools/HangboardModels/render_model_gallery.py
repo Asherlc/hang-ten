@@ -137,7 +137,7 @@ def _render_fixed_views(package: Path, manifest: "MigrationManifest", output: Pa
     from mathutils import Vector
     paths: list[Path] = []
     for view in _fixed_view_names(manifest):
-        location, target = views.get(view, views["front"])
+        location, target = views[view]
         camera_object.location = location
         camera_object.rotation_euler = (Vector(target) - Vector(location)).to_track_quat("-Z", "Y").to_euler()
         # Fixed view identity is recorded even on Blender versions where the
