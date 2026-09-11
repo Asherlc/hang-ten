@@ -88,7 +88,6 @@ def _verification_config(package: Path, manifest: "MigrationManifest") -> ModelV
         board_json=board_json,
         package_relative_assets=frozenset({manifest.presentation.asset_path, manifest.presentation.descriptor_path}),
         expected_hold_ids=manifest.logical_hold_ids,
-        expected_position_ids=tuple(position.id for position in manifest.positions),
         triangle_ceiling=manifest.verification.triangle_ceiling,
     )
 

@@ -30,7 +30,6 @@ class MaterialPolicy:
         return cls("canonical-wood", True, True, frozenset({".png"}), path.name, path)
 
 
-@dataclass(frozen=True)
 class BoardProbe(Protocol):
     id: str
 
@@ -50,7 +49,6 @@ class ModelVerificationConfig:
     board_json: Path
     package_relative_assets: frozenset[str]
     expected_hold_ids: tuple[str, ...]
-    expected_position_ids: tuple[str, ...] = ()
     triangle_ceiling: int | None = None
     required_roles: frozenset[str] = frozenset({"body", "hold"})
     forbidden_name_tokens: tuple[str, ...] = ()
@@ -160,7 +158,7 @@ def verify_model_package(package: Path, config: ModelVerificationConfig, *, rend
     actual_ids = _ordered_hold_ids(config.board_json)
     if actual_ids != tuple(config.expected_hold_ids) or len(set(config.expected_hold_ids)) != len(config.expected_hold_ids):
         raise ValueError("logical inventory IDs are missing, unknown, or reordered")
-    model_path = package / "assets/primary.usdz"
+    model_path = _regular(package / "assets/primary.usdz", "model")
     descriptor_path = package / "assets/primary.model.json"
     textures = _check_archive(model_path, config.material_policy)
     descriptor = _descriptor(descriptor_path)

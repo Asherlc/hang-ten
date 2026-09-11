@@ -1,8 +1,10 @@
 """Blender-free contract tests for the shared model verifier."""
 from pathlib import Path
+import dataclasses
 import json
 import tempfile
 import unittest
+import zipfile
 
 from model_verification import (
     BoardProbe, MaterialPolicy, ModelVerificationConfig, VerificationReport,
@@ -33,6 +35,13 @@ class ModelVerificationTests(unittest.TestCase):
 
     def test_compact_adapter_routes_through_shared_verifier(self):
         self.assertIs(compact.verify_model_package, verify_model_package)
+
+    def test_board_probe_protocol_is_not_a_dataclass(self):
+        self.assertFalse(dataclasses.is_dataclass(BoardProbe))
+
+    def test_verification_config_does_not_expose_unused_position_ids(self):
+        self.assertNotIn("expected_position_ids", ModelVerificationConfig.__dataclass_fields__)
+
     def config(self, board_json: Path) -> ModelVerificationConfig:
         return ModelVerificationConfig(
             board_id="fixture", board_json=board_json,
@@ -48,6 +57,21 @@ class ModelVerificationTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b"fixture" if path.suffix == ".usdz" else b"{}")
 
+    def archive_package(self, directory: Path, *, descriptor_hash: str) -> None:
+        self.package(directory)
+        with zipfile.ZipFile(directory / "assets" / "primary.usdz", "w") as archive:
+            archive.writestr("model.usdc", b"fixture model")
+        (directory / "assets" / "primary.model.json").write_text(
+            json.dumps({"modelSHA256": descriptor_hash}), encoding="utf-8"
+        )
+
+    def archive_config(self, board_json: Path) -> ModelVerificationConfig:
+        return ModelVerificationConfig(
+            board_id="fixture", board_json=board_json,
+            package_relative_assets=frozenset({"assets/primary.usdz", "assets/primary.model.json"}),
+            expected_hold_ids=("left", "right"), material_policy=MaterialPolicy(),
+        )
+
     def test_verify_model_package_rejects_an_unconfigured_regular_asset(self):
         with tempfile.TemporaryDirectory() as raw:
             package = Path(raw)
@@ -62,6 +86,25 @@ class ModelVerificationTests(unittest.TestCase):
             (package / "board.json").write_text(json.dumps({"holds": [{"id": "right"}, {"id": "left"}]}))
             with self.assertRaisesRegex(ValueError, "logical inventory"):
                 verify_model_package(package, self.config(package / "board.json"))
+
+    def test_valid_usdz_with_stale_descriptor_hash_fails_before_blender(self):
+        with tempfile.TemporaryDirectory() as raw:
+            package = Path(raw)
+            self.archive_package(package, descriptor_hash="stale")
+            with self.assertRaisesRegex(ValueError, "model hash"):
+                verify_model_package(package, self.archive_config(package / "board.json"))
+
+    def test_model_archive_path_must_be_a_regular_file(self):
+        with tempfile.TemporaryDirectory() as raw:
+            package = Path(raw)
+            self.package(package, assets=("assets/primary.model.json", "assets/primary.usdz/inside"))
+            config = ModelVerificationConfig(
+                board_id="fixture", board_json=package / "board.json",
+                package_relative_assets=frozenset({"assets/primary.model.json", "assets/primary.usdz/inside"}),
+                expected_hold_ids=("left", "right"), material_policy=MaterialPolicy(),
+            )
+            with self.assertRaisesRegex(ValueError, "model must be a regular file"):
+                verify_model_package(package, config)
 
     def test_probe_cannot_turn_off_core_inventory_failure(self):
         class PassingProbe:
