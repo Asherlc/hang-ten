@@ -293,6 +293,44 @@ def main() -> None:
     assert _semantic_fingerprints(canonical_before)["topology"] == (
         _semantic_fingerprints(canonical_after)["topology"])
 
+    # Material bindings belong to positioned canonical faces, not raw polygon
+    # slots. Face ordering and loop rotation remain tolerated, but exchanging
+    # two materials on those faces must invalidate the topology audit.
+    _reset()
+    material_a = _material("canonical material A")
+    material_b = _material("canonical material B")
+    face_vertices = [
+        (0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0),
+        (2, 0, 0), (3, 0, 0), (3, 1, 0), (2, 1, 0),
+    ]
+    bound_first = create_rounded_body(
+        "canonical-materials", face_vertices, [(0, 1, 2, 3), (4, 5, 6, 7)],
+        materials=(material_a, material_b),
+    )
+    bound_first.data.polygons[1].material_index = 1
+    tag_piece(bound_first, "body")
+    bound_snapshot = semantic_snapshot(bpy.context.scene)
+    _reset()
+    bound_reordered = create_rounded_body(
+        "canonical-materials", face_vertices, [(6, 7, 4, 5), (2, 3, 0, 1)],
+        materials=(material_a, material_b),
+    )
+    bound_reordered.data.polygons[0].material_index = 1
+    tag_piece(bound_reordered, "body")
+    reordered_snapshot = semantic_snapshot(bpy.context.scene)
+    assert _semantic_fingerprints(bound_snapshot)["topology"] == (
+        _semantic_fingerprints(reordered_snapshot)["topology"])
+    _reset()
+    bound_swapped = create_rounded_body(
+        "canonical-materials", face_vertices, [(0, 1, 2, 3), (4, 5, 6, 7)],
+        materials=(material_a, material_b),
+    )
+    bound_swapped.data.polygons[0].material_index = 1
+    tag_piece(bound_swapped, "body")
+    swapped_snapshot = semantic_snapshot(bpy.context.scene)
+    assert _semantic_fingerprints(bound_snapshot)["topology"] != (
+        _semantic_fingerprints(swapped_snapshot)["topology"])
+
     # Split changes object partitioning but must preserve the total authored
     # vertex/topology/material binding payload. Start a fresh scene so this
     # family has no unrelated meshes in its before/after audit.

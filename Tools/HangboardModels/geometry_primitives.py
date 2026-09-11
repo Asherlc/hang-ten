@@ -256,6 +256,7 @@ def _rotate_loop_to_minimum(loop: tuple[tuple[float, float, float], ...]) -> tup
 def _canonical_mesh_hashes(
     vertices: list[tuple[float, float, float]],
     topology: list[tuple[int, ...]],
+    material_bindings: Sequence[tuple[int, str | None]] = (),
 ) -> tuple[str, str]:
     """Hash mesh geometry/topology independently of Blender storage indices.
 
@@ -269,13 +270,21 @@ def _canonical_mesh_hashes(
     """
     if len(set(vertices)) != len(vertices):
         raise ValueError("semantic topology requires unique world-space vertex coordinates")
-    coordinate_faces = [
-        _rotate_loop_to_minimum(tuple(vertices[index] for index in face))
-        for face in topology
+    if material_bindings and len(material_bindings) != len(topology):
+        raise ValueError("semantic topology material bindings must match polygon count")
+    if not material_bindings:
+        material_bindings = tuple((0, None) for _ in topology)
+    canonical_faces = [
+        (
+            _rotate_loop_to_minimum(tuple(vertices[index] for index in face)),
+            int(material_index),
+            material_name,
+        )
+        for face, (material_index, material_name) in zip(topology, material_bindings)
     ]
     return (
         _digest(repr(sorted(vertices)).encode()),
-        _digest(repr(sorted(coordinate_faces)).encode()),
+        _digest(repr(sorted(canonical_faces)).encode()),
     )
 
 
@@ -360,7 +369,6 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
                         for vertex in obj.data.vertices]
             topology = [tuple(int(index) for index in polygon.vertices)
                         for polygon in obj.data.polygons]
-            vertex_hash, topology_hash = _canonical_mesh_hashes(vertices, topology)
             materials = [material.name for material in obj.data.materials]
             material_nodes = [_material_snapshot(material, image_bytes)
                               for material in obj.data.materials]
@@ -370,6 +378,10 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
                 materials[index] if 0 <= index < len(materials) else None
                 for index in polygon_material_indices
             ]
+            vertex_hash, topology_hash = _canonical_mesh_hashes(
+                vertices, topology,
+                tuple(zip(polygon_material_indices, polygon_materials)),
+            )
             objects.append({
                 "name": obj.name,
                 "role": obj.get("role"),
