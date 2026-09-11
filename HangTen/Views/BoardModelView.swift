@@ -396,7 +396,10 @@ final class BoardModelScene {
             guard nodeIDs.count == 4 else { return false }
         }
         return nodeIDs.allSatisfy { nodeID in
-            descriptor.nodes.contains { $0.nodeID == nodeID && $0.role == .attachment }
+            guard let binding = descriptor.nodes.first(where: { $0.nodeID == nodeID }) else {
+                return false
+            }
+            return (binding.role == .body || binding.role == .attachment)
                 && geometryByNodeID[nodeID] != nil
         }
     }
@@ -479,30 +482,17 @@ final class BoardModelScene {
         _ solved: BoardModelSolvedSuspension,
         cord: SCNNode
     ) {
-        // Build the replacement cord at its deterministic destination before
-        // the transaction. It is never bound to descriptor geometry and the
-        // existing transient node is removed without implicit actions. Board
-        // and camera animation begins in its own transaction below.
+        // The board, destination-solved cord, and camera are committed in one
+        // action-free transaction. This keeps the rendered cord coincident
+        // with its board attachment for every visible frame; the solver never
+        // interpolates cord samples independently of the board pose.
         SCNTransaction.begin()
         SCNTransaction.disableActions = true
         transientCordNode?.removeFromParentNode()
         transientCordNode = cord
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
-
-        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
-        if boardMoves {
-            cord.opacity = 0
-        } else {
-            boardContainer.simdTransform = solved.boardTransform
-        }
-        SCNTransaction.commit()
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = Self.canonicalTransitionDuration
-        if boardMoves {
-            boardContainer.simdTransform = solved.boardTransform
-            cord.opacity = 1
-        }
+        boardContainer.simdTransform = solved.boardTransform
         applyCanonicalCamera(solved.cameraFraming)
         SCNTransaction.commit()
 
@@ -511,19 +501,6 @@ final class BoardModelScene {
             transformedAttachment = single.transformedAttachment
         }
         currentFraming = solved.cameraFraming
-    }
-
-    private static func transformsMatch(
-        _ lhs: simd_float4x4,
-        _ rhs: simd_float4x4,
-        tolerance: Float = 1e-6
-    ) -> Bool {
-        for column in 0..<4 {
-            for row in 0..<4 where abs(lhs[column][row] - rhs[column][row]) > tolerance {
-                return false
-            }
-        }
-        return true
     }
 
     private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {

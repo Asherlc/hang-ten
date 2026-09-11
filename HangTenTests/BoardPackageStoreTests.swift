@@ -3387,7 +3387,7 @@ final class BoardPackageStoreTests: XCTestCase {
                     branchMemberOrder: specification["reorderTwoBranchBranchMembers"] as? Bool == true
                         ? ["passageIDs", "id", "restLength", "radius", "material", "provenance"] : nil,
                     poseMemberOrder: specification["reorderTwoBranchPoseMembers"] as? Bool == true
-                        ? ["camera", "translation", "rotation"] : nil
+                        ? ["translation", "rotation", "camera"] : nil
                 )
             )
         }

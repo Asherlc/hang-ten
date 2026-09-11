@@ -215,6 +215,39 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testFlashBodyAttachmentSolvesCordForEveryCanonicalPosition() async throws {
+        let (board, media, model) = try await loadMigratedModel("tension.flash-board")
+        let positionIDs = [
+            "three-edge-upright", "three-edge-inverted",
+            "two-edge-upright", "two-edge-inverted",
+        ]
+
+        guard case .singleCord(let suspension) = media.suspension else {
+            return XCTFail("Flash must provide its shipped single-cord suspension")
+        }
+        XCTAssertEqual(suspension.attachment.nodeID, "flash_board_body_008")
+        XCTAssertEqual(
+            media.descriptor.nodes.first(where: { $0.nodeID == suspension.attachment.nodeID })?.role,
+            .body
+        )
+        XCTAssertTrue(model.geometryNodes.contains { $0.name == suspension.attachment.nodeID })
+
+        for positionID in positionIDs {
+            let solved = try BoardModelScene.solveSuspension(
+                pose: try XCTUnwrap(suspension.canonicalPoses[positionID]),
+                suspension: media.suspension!,
+                bounds: media.descriptor.modelBounds
+            )
+            guard case .single(let presentation) = solved else {
+                return XCTFail("Flash must solve as a single-cord presentation")
+            }
+            XCTAssertEqual(presentation.cord.samples.first, presentation.fixedAnchor, positionID)
+            XCTAssertEqual(presentation.cord.samples.last, presentation.transformedAttachment, positionID)
+            XCTAssertEqual(presentation.cord.arcLength, 0.4, accuracy: 1e-6, positionID)
+        }
+        XCTAssertEqual(board.positions.map(\.id), positionIDs)
+    }
+
     func testModelSurfaceUnavailableStateNeverPermitsHoldSelection() {
         XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
             for: .unavailable,
@@ -503,6 +536,46 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(hold.geometry?.firstMaterial === highlightedMaterial)
     }
 
+    func testSuspendedCanonicalTransitionCommitsBoardAndCordTogether() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ], minimum: [-1, -1, -1], maximum: [1, 1, 1])
+        let secondary = BoardModelCanonicalPose(
+            rotation: [0, 0, 0, 1],
+            translation: [0.3, 0.2, 0.1],
+            camera: .init(viewDirection: [0, 0, -1], fitPadding: 0.1)
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: suspendedScene(),
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(
+                attachment: [0, 0, 0],
+                anchor: [0, 2, 0],
+                restLength: 2,
+                canonicalPoses: [
+                    "primary": .init(
+                        rotation: [0, 0, 0, 1],
+                        translation: [0, 0, 0],
+                        camera: .init(viewDirection: [0, 0, -1], fitPadding: 0.1)
+                    ),
+                    "secondary": secondary,
+                ]
+            )
+        ))
+        XCTAssertTrue(model.select(positionID: "primary"))
+
+        XCTAssertTrue(model.select(positionID: "secondary"))
+        let boardContainer = try XCTUnwrap(model.scene.rootNode.childNodes.first { $0.name == "board.model" })
+        let cord = try XCTUnwrap(model.transientCordNode)
+
+        XCTAssertEqual(boardContainer.presentation.simdTransform, boardContainer.simdTransform)
+        XCTAssertEqual(cord.presentation.opacity, cord.opacity)
+        XCTAssertEqual(model.boardTransform.columns.3, SIMD4<Float>(0.3, 0.2, 0.1, 1))
+    }
+
     func testSuspendedCordIsExcludedFromClosestHoldHit() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),
@@ -763,6 +836,51 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(model.transientCordNode)
     }
 
+    func testSuspendedSelectionAcceptsDeclaredBodyAttachmentBinding() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+        ])
+        let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
+        let body = try XCTUnwrap(node(at: "Board/Body", in: source))
+        let hold = try XCTUnwrap(node(at: "Board/Hold/Left", in: source))
+        body.position = SCNVector3(0.8, -0.8, -0.8)
+        hold.position = SCNVector3(0.8, -0.8, -0.8)
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source,
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(
+                attachment: [0, 0, 0],
+                anchor: [0, 2, 0],
+                restLength: 2,
+                attachmentNodeID: "Board/Body"
+            )
+        ))
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertNotNil(model.transientCordNode)
+    }
+
+    func testSuspendedSelectionRejectsDeclaredHoldAsAttachmentBinding() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .hold, holdID: "attachment")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: suspendedScene(),
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2)
+        ))
+
+        XCTAssertFalse(model.select(positionID: "primary"))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.transientCordNode)
+    }
+
     private struct MigratedModelExpectation {
         let boardID: String
         let holdIDs: Set<String>
@@ -938,11 +1056,13 @@ final class BoardModelTests: XCTestCase {
     private func suspendedModelSuspension(
         attachment: [Double],
         anchor: [Double],
-        restLength: Double
+        restLength: Double,
+        canonicalPoses: [String: BoardModelCanonicalPose]? = nil,
+        attachmentNodeID: String = "Board/Attachment"
     ) -> BoardModelSuspension {
         BoardModelSuspension(
             attachment: .init(
-                nodeID: "Board/Attachment",
+                nodeID: attachmentNodeID,
                 pointInModel: attachment,
                 provenance: "test"
             ),
@@ -958,7 +1078,7 @@ final class BoardModelTests: XCTestCase {
                 material: "matteCord",
                 provenance: "test"
             ),
-            canonicalPoses: [
+            canonicalPoses: canonicalPoses ?? [
                 "primary": .init(
                     rotation: [0, 0, 0, 1],
                     translation: [0, 0, 0],

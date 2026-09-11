@@ -146,11 +146,10 @@ the descriptor-bound USDZ meshes.
 ## Runtime interaction
 
 Hold selection and workout resolution select a `positionID` before presenting
-the model. The renderer interpolates the board from its current canonical pose
-to the newly selected pose over a short, fixed presentation transition, then
-recomputes the cord at the destination pose. It may animate the cord along the
-same deterministic samples during that transition, but must end exactly at the
-destination solve. Selecting another hold always restores that hold's
+the model. The renderer commits the board, destination-solved cord, and
+canonical camera as one atomic presentation change. It does not interpolate
+the board while retaining an old cord, and it does not independently
+interpolate cord samples. Selecting another hold always restores that hold's
 position's canonical pose, even after manual inspection.
 
 Manual gestures alter only orbit camera azimuth, elevation, and allowed zoom
