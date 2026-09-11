@@ -89,20 +89,35 @@ fixture, board document, model source, geometry, and truthful
 
 ## Actual Blender verification boundary
 
-The requested compile command was attempted exactly through the managed RTK
-Blender entrypoint. Blender 5.2.0 terminated with SIGSEGV before Python ran in
-the Metal backend (`gpu::MTLBackend::metal_is_supported`); the retained
-diagnostic is:
+The reviewed deterministic compiler was run in host context after one fresh
+owned sandbox repro again terminated before Python with SIGSEGV. Two identical
+host-context compiles of the retained
+`.context/pretty-crocodile-tension-flash-board/flash-board.blend` produced
+byte-identical assets:
 
-`.context/pretty-crocodile-tension-flash-board/task5-blender-fresh-config/tmp/blender.crash.txt`
+```text
+primary.usdz          4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524
+primary.model.json    fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c
+```
 
-Per the brief, one owned fresh-config minimal repro was then run and reproduced
-the same pre-Python SIGSEGV. One identical host-context minimal repro reached
-Python and exited successfully. This isolates an environment/runtime boundary;
-it is not evidence of a geometry defect. Consequently no new actual-export
-`export-verification.json` could be produced from this branch's current
-single-cord board metadata. The prior owned package was retained at
-`package-prior-task5/` and was not treated as a two-branch pass.
+The tracked review fixture now pins those exact hashes, and its focused
+candidate regression was updated accordingly. The actual verifier was rerun
+against the canonical package after hash binding. It passed hash validation,
+isolated USDZ reimport, material/image checks, explicit-triangle checks,
+surface rays, ligaments, and the four 33-sample cord-sized passage sweeps,
+then failed closed on the first actual posed branch-clearance collision:
 
-No compiler, descriptor, board JSON, geometry, or package-promotion files were
-changed.
+```text
+actual mesh cord clearance probe failed for three-edge-upright branch left-branch:
+0.002642211 < 0.003000000; node=flash_board_body_008 segment=17 fraction=0.5
+```
+
+An owned diagnostic scan found imported-body clearance violations in all
+eight branch/pose paths. The required threshold remains 0.003 m (0.002 m cord
+radius plus 0.001 m clearance); no verifier threshold, pose, cord estimate,
+or geometry was relaxed or changed. The canonical package is retained at
+`.context/pretty-crocodile-tension-flash-board/package/`, with the prior
+package preserved at `package-before-task5-rerun/`. The durable diagnostic is
+`export-verification.json`; it records commands, hashes, and the exact failure.
+
+No board JSON or production package promotion was performed.

@@ -9,8 +9,8 @@
   "expectedModel": {
     "identity": "tension.flash-board.reviewed-usdz-v1",
     "sourceBodyNodeID": "flash-board-body",
-    "modelSHA256": "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b",
-    "descriptorSHA256": "b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58",
+    "modelSHA256": "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524",
+    "descriptorSHA256": "fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c",
     "coordinateFrame": "hang-ten-board-v1"
   },
   "passages": {
