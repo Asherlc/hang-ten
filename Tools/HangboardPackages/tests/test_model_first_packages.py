@@ -800,9 +800,7 @@ def test_v2_derived_raster_geometry_preserves_path_command_order(
             "holds",
         ),
         (
-            lambda root, board, descriptor: descriptor["nodes"].append(
-                {"nodeID": "Extra", "role": "body"}
-            ),
+            lambda root, board, descriptor: descriptor["nodes"].pop(0),
             "body",
         ),
         (

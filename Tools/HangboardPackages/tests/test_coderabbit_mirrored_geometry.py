@@ -30,20 +30,6 @@ MIRRORED_PAIRS = {
         ("pocket-6-left", "pocket-6-right"),
         ("pocket-7-left", "pocket-7-right"),
     ),
-    "metolius-simulator-3d": (
-        ("jug-1-left", "jug-1-right"),
-        ("round-sloper-3-left", "round-sloper-3-right"),
-        ("pocket-4-left", "pocket-4-right"),
-        ("edge-5-left", "edge-5-right"),
-        ("edge-6-left", "edge-6-right"),
-        ("edge-7-left", "edge-7-right"),
-        ("pocket-8-left", "pocket-8-right"),
-        ("pocket-9-left", "pocket-9-right"),
-        ("pocket-10-left", "pocket-10-right"),
-        ("edge-11-left", "edge-11-right"),
-        ("pocket-12-left", "pocket-12-right"),
-        ("pocket-13-left", "pocket-13-right"),
-    ),
     "beastmaker-2000": (
         ("front-middle-2", "front-middle-8"),
         ("front-middle-3", "front-middle-7"),
@@ -102,6 +88,16 @@ def _assert_mirrored_piece(left: dict[str, object], right: dict[str, object]) ->
                 assert tuple(right_command[field]) == pytest.approx(_mirrored_point(left_command[field]))
             else:
                 assert field not in right_command
+
+
+def test_document_hold_geometry_ignores_model_only_presentations() -> None:
+    board = json.loads(
+        (REPO_ROOT / "Hangboards" / "metolius-simulator-3d" / "board.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert document_hold_geometry(board) == {}
 
 
 @pytest.mark.parametrize("board_id", MIRRORED_PAIRS)
