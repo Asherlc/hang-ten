@@ -233,6 +233,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "beastmaker-1000",
             "metolius.wood-grips-compact-ii",
             "nature.stone-hanger",
+            "tension.flash-board",
             "yy.baguette-evo"
         ]
 
