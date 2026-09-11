@@ -85,7 +85,10 @@ enum BoardModelLoader {
             source: source,
             descriptor: media.descriptor,
             display: media.display,
-            suspension: media.suspension
+            suspension: media.suspension,
+            allowedPositionIDs: Set(board.positions.filter {
+                $0.presentationID == presentation.id
+            }.map(\.id))
         )
     }
 }
@@ -232,12 +235,14 @@ final class BoardModelScene {
     private(set) var transientCordNode: SCNNode?
     private(set) var isUnavailable = false
     private(set) var isTransientCordAccessible = false
+    private let allowedPositionIDs: Set<String>
 
     init?(
         source: SCNScene,
         descriptor: BoardModelDescriptor,
         display: BoardModelDisplay,
-        suspension: BoardModelSuspension? = nil
+        suspension: BoardModelSuspension? = nil,
+        allowedPositionIDs: Set<String>? = nil
     ) {
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
@@ -322,6 +327,9 @@ final class BoardModelScene {
         geometryNodes = clonedGeometryNodes
         self.descriptor = descriptor
         self.suspension = suspension
+        self.allowedPositionIDs = allowedPositionIDs
+            ?? suspension.map { Set($0.canonicalPoses.keys) }
+            ?? []
         self.geometryByNodeID = geometryByNodeID
         holdNodes = boundHoldNodes
         holdIDsByNode = boundHoldIDsByNode
@@ -354,13 +362,16 @@ final class BoardModelScene {
 
     @discardableResult
     func select(positionID: String?) -> Bool {
+        guard let positionID, allowedPositionIDs.contains(positionID) else {
+            enterUnavailable()
+            return false
+        }
         guard let suspension else {
             activePositionID = positionID
             isUnavailable = false
             return true
         }
-        guard let positionID,
-              let pose = suspension.canonicalPoses[positionID] else {
+        guard let pose = suspension.canonicalPoses[positionID] else {
             enterUnavailable()
             return false
         }

@@ -321,13 +321,11 @@ struct BoardDetailMapView: View {
                 BoardModelSurface(
                     board: board,
                     presentation: map.presentation,
-                    positionID: selectedHoldID.flatMap { holdID in
-                        board.positions.first {
-                            board.holdIDs(inPosition: $0.id).contains(holdID)
-                        }?.id
-                    } ?? board.positions.first(where: {
-                        $0.presentationID == map.presentation.id
-                    })?.id,
+                    positionID: BoardMapView.resolvePositionID(
+                        board: board,
+                        presentationID: map.presentation.id,
+                        activeHoldID: selectedHoldID
+                    ),
                     highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
                     highlightMode: .active,
                     onHoldTap: { select($0.id) }
@@ -596,24 +594,21 @@ struct BoardMapView: View {
         )
     }
 
-    private static func resolvePositionID(
+    static func resolvePositionID(
         board: TrainingBoard,
         presentationID: String?,
         activeHoldID: String?
     ) -> String? {
+        let resolvedPresentationID = presentationID ?? board.defaultPresentation.id
         if let activeHoldID,
-           let activePosition = board.positions.first(where: {
-               board.holdIDs(inPosition: $0.id).contains(activeHoldID)
-           }) {
+           let activePosition = board.position(
+               presentationID: resolvedPresentationID,
+               containingHoldID: activeHoldID
+           ) {
             return activePosition.id
         }
-        if let presentationID,
-           let presentationPosition = board.positions.first(where: {
-               $0.presentationID == presentationID
-           }) {
-            return presentationPosition.id
-        }
-        return board.positions.first?.id
+        guard activeHoldID == nil else { return nil }
+        return board.position(presentationID: resolvedPresentationID)?.id
     }
 }
 

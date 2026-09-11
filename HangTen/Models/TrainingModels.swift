@@ -1082,6 +1082,14 @@ struct TrainingBoard: Identifiable, Hashable {
         return positions.first { $0.id == id }
     }
 
+    func position(presentationID: String, containingHoldID holdID: String? = nil) -> BoardPosition? {
+        positions.first { position in
+            guard position.presentationID == presentationID else { return false }
+            guard let holdID else { return true }
+            return holdIDs(inPosition: position.id).contains(holdID)
+        }
+    }
+
     /// Logical holds that have display-derived matching geometry in this
     /// exact presentation. A missing media mapping is unavailable, rather
     /// than a reason to borrow geometry from another presentation.

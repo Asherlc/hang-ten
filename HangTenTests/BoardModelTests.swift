@@ -79,6 +79,50 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(board.holdIDs(inPosition: "unavailable"), [])
     }
 
+    func testBoardMapPositionResolverDoesNotFallbackAcrossPresentationOrHold() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let modelPresentation = try XCTUnwrap(board.presentations.first(where: {
+            if case .model = $0.media { return true }
+            return false
+        }))
+        XCTAssertNil(BoardMapView.resolvePositionID(
+            board: board,
+            presentationID: modelPresentation.id,
+            activeHoldID: "not-on-model"
+        ))
+        XCTAssertEqual(
+            BoardMapView.resolvePositionID(
+                board: board,
+                presentationID: modelPresentation.id,
+                activeHoldID: nil
+            ),
+            board.position(id: board.positions.first {
+                $0.presentationID == modelPresentation.id
+            }?.id)?.id
+        )
+    }
+
+    func testModelSceneRejectsUnknownPositionWithoutFallback() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+
+        XCTAssertTrue(model.select(positionID: "front"))
+        XCTAssertEqual(model.activePositionID, "front")
+        XCTAssertFalse(model.select(positionID: nil))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.activePositionID)
+        XCTAssertFalse(model.select(positionID: "reverse"))
+        XCTAssertTrue(model.isUnavailable)
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
