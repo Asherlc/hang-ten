@@ -72,8 +72,11 @@ through the existing `SuspendedBoardPresentation` facade. The solver's
 `SolvedSuspension`/`SolvedCordBranch` results and failure mapping are part of
 the compatibility contract; retain the invisible anchor, transient
 non-pickable cord layer, finite canonical poses, and explicit unavailable
-state. `solveTwoBranch` is not a supported extraction route yet and must not
-be documented or implemented until the separate Flash gate passes.
+state. The compatibility API may already expose `solveTwoBranch`, but it is not
+a supported extraction route. Do not route or adopt Flash through it, or change
+Flash's verifier, generator, package, geometry, or presentation behavior, until
+Flash passes its separate evidence, geometry, package, native-picking, and
+human-review gate.
 
 ## Suspended portable presentations
 
