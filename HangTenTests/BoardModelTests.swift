@@ -700,8 +700,8 @@ final class BoardModelTests: XCTestCase {
         let initialCamera = model.camera.position
         // The fixture spans three world units vertically (board plus anchor)
         // and uses a 1.2 fit factor from the canonical 0.1 padding. SceneKit's
-        // orthographicScale is the visible full height, so the camera scale
-        // must be half that projected span.
+        // orthographicScale is the visible half-span, so the camera scale must
+        // be half that projected span.
         let expectedCanonicalScale = 1.8
         XCTAssertEqual(
             try XCTUnwrap(model.camera.camera?.orthographicScale),
