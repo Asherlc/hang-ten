@@ -293,8 +293,21 @@ def main() -> None:
     assert _semantic_fingerprints(canonical_before)["topology"] == (
         _semantic_fingerprints(canonical_after)["topology"])
 
-    # A factory-scene reset removes its material datablocks. Build fixtures
-    # only after the reset that owns their scene.
+    # A factory-scene reset removes its material datablocks. The real mesh
+    # helper must reject the stale RNA object instead of accepting an ordering
+    # that the following fresh-scene fixture avoids.
+    _reset()
+    stale_material = _material("stale fixture lifetime material")
+    _reset()
+    try:
+        create_rounded_body(
+            "stale-fixture-lifetime", [(0, 0, 0), (1, 0, 0), (0, 1, 0)], [(0, 1, 2)],
+            materials=(stale_material,))
+    except ReferenceError as error:
+        assert "Material" in str(error) and "removed" in str(error), error
+    else:
+        raise AssertionError("expected stale material to be rejected after _reset()")
+
     _reset()
     fixture_material = _material("fixture lifetime material")
     fixture_body = create_rounded_body(
