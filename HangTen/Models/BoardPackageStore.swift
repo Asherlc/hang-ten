@@ -441,10 +441,19 @@ struct BoardPackageStore {
         do {
             let data = try Data(contentsOf: boardURL)
             document = try JSONDecoder().decode(BoardPackageV2BoardDocument.self, from: data)
+        } catch {
+            throw BoardPackageStoreError.malformedJSON(resource: resource)
+        }
+        do {
+            let data = try Data(contentsOf: boardURL)
             var rawParser = BoardPackageRawJSONParser(data: data)
             let rawDocument = try rawParser.parseDocument()
+            try rawDocument.validateDuplicateKeysOutsideOrientations()
+            try rawDocument.validateModelOrientationMemberOrder()
             try rawDocument.validateTwoBranchSuspensionMemberOrder()
             rawRasterGeometryByPresentationID = try rawDocument.rasterGeometryByPresentationID()
+        } catch BoardPackageRawJSONError.orientation(let reason) {
+            throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: reason)
         } catch {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
@@ -641,8 +650,14 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateV2AssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display, _, _):
+            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation):
                 hasModel = true
+                guard !(suspension != nil && orientation != nil) else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "orientation and suspension are mutually exclusive"
+                    )
+                }
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
@@ -908,6 +923,7 @@ struct BoardPackageStore {
             try validateModelPositionInventories(
                 positions,
                 descriptorHoldIDs: descriptorHoldIDs,
+                canonicalHoldIDs: holds.map(\.id),
                 orientation: modelMedia.orientation,
                 requiresExactPartition: hasAuthoredInventory || modelMedia.orientation != nil,
                 boardID: document.id
@@ -1178,6 +1194,7 @@ struct BoardPackageStore {
     private static func validateModelPositionInventories(
         _ positions: [BoardPosition],
         descriptorHoldIDs: Set<String>,
+        canonicalHoldIDs: [String],
         orientation: BoardModelOrientation?,
         requiresExactPartition: Bool,
         boardID: String
@@ -1195,6 +1212,9 @@ struct BoardPackageStore {
                   Set(position.holdIDs).count == position.holdIDs.count,
                   Set(position.holdIDs).isSubset(of: descriptorHoldIDs) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs must be non-empty, unique, and reference descriptor holds")
+            }
+            guard position.holdIDs == canonicalHoldIDs.filter({ position.holdIDs.contains($0) }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs must follow canonical board hold order")
             }
             guard seen.intersection(position.holdIDs).isEmpty else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs overlap another model position")
@@ -1446,6 +1466,7 @@ struct BoardPackageStore {
 
 private enum BoardPackageRawJSONError: Error {
     case invalid
+    case orientation(String)
 }
 
 private struct BoardPackageRawJSONMember: Equatable {
@@ -1470,6 +1491,49 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
     case number(kind: BoardPackageRawJSONNumberKind, value: BoardPackageRawJSONNumberValue)
     case boolean(Bool)
     case null
+
+    func validateDuplicateKeysOutsideOrientations() throws {
+        func visit(_ value: BoardPackageRawJSONValue, isOrientation: Bool) throws {
+            switch value {
+            case .object(let members):
+                if !isOrientation, Set(members.map(\.name)).count != members.count {
+                    throw BoardPackageRawJSONError.invalid
+                }
+                for member in members {
+                    try visit(member.value, isOrientation: isOrientation || member.name == "orientation")
+                }
+            case .array(let values):
+                for value in values { try visit(value, isOrientation: isOrientation) }
+            default: break
+            }
+        }
+        try visit(self, isOrientation: false)
+    }
+
+    func validateModelOrientationMemberOrder() throws {
+        guard case .object(let root) = self else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        guard let presentationsValue = root.value(named: "presentations") else { return }
+        guard case .array(let presentations) = presentationsValue else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        for presentation in presentations {
+            guard case .object(let presentationMembers) = presentation,
+                  case .object(let media)? = presentationMembers.value(named: "media"),
+                  case .object(let orientation)? = media.value(named: "orientation") else { continue }
+            guard orientation.names == ["pivot", "rotations"],
+                  case .object(let rotations)? = orientation.value(named: "rotations") else {
+                throw BoardPackageRawJSONError.orientation("orientation must contain canonical pivot and rotations members")
+            }
+            guard Set(rotations.names).count == rotations.names.count else {
+                throw BoardPackageRawJSONError.orientation("orientation rotations must not contain duplicate position IDs")
+            }
+            guard rotations.names == rotations.names.sorted() else {
+                throw BoardPackageRawJSONError.orientation("orientation rotations must be sorted by position ID")
+            }
+        }
+    }
 
     func rasterGeometryByPresentationID() throws -> [String: BoardPackageRawJSONValue] {
         guard case .object(let rootMembers) = self,
@@ -1604,14 +1668,12 @@ private struct BoardPackageRawJSONParser {
         try consume(123)
         skipWhitespace()
         var members: [BoardPackageRawJSONMember] = []
-        var names = Set<String>()
         if peek == 125 {
             index += 1
             return .object(members)
         }
         while true {
             let name = try string()
-            guard names.insert(name).inserted else { throw BoardPackageRawJSONError.invalid }
             skipWhitespace()
             try consume(58)
             skipWhitespace()
@@ -1964,13 +2026,6 @@ private enum BoardPackageV2MediaDocument: Decodable {
             )
         case "model":
             try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation"])
-            guard !(container.contains(.suspension) && container.contains(.orientation)) else {
-                throw DecodingError.dataCorruptedError(
-                    forKey: .orientation,
-                    in: container,
-                    debugDescription: "orientation and suspension are mutually exclusive"
-                )
-            }
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
@@ -2005,7 +2060,6 @@ private struct BoardPackageModelOrientationDocument: Decodable {
     private enum CodingKeys: String, CodingKey { case pivot, rotations }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["pivot", "rotations"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         pivot = try container.decode(String.self, forKey: .pivot)
         rotations = try container.decode([String: [Double]].self, forKey: .rotations)

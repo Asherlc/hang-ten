@@ -3036,7 +3036,13 @@ final class BoardPackageStoreTests: XCTestCase {
                 var positions = board["positions"] as! [[String: Any]]
                 positions[1]["holdIDs"] = ["hold-left"]
                 board["positions"] = positions
-            }, "positions[1].holdIDs")
+            }, "positions[1].holdIDs"),
+            ("noncanonical membership order", { board in
+                var positions = board["positions"] as! [[String: Any]]
+                positions[0]["holdIDs"] = ["hold-right", "hold-left"]
+                positions[1]["holdIDs"] = []
+                board["positions"] = positions
+            }, "canonical board hold order")
         ]
 
         for (name, mutation, reason) in mutations {
@@ -3052,30 +3058,20 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
-        }
+        assertStoreRejects(fixture.bundle, reasonContaining: "orientation must contain")
     }
 
     func testStoreRejectsOrientationAndSuspensionTogether() throws {
         let fixture = try makeOrientableModelFixtureBundle { board in
             var presentations = board["presentations"] as! [[String: Any]]
             var media = presentations[0]["media"] as! [String: Any]
-            media["suspension"] = [:]
+            media["suspension"] = ["type": "unsupported"]
             presentations[0]["media"] = media
             board["presentations"] = presentations
         }
         defer { fixture.remove() }
 
-        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
-        }
+        assertStoreRejects(fixture.bundle, reasonContaining: "orientation and suspension")
     }
 
     // The editable raster document remains a legacy boundary: constructing a
