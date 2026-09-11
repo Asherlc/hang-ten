@@ -23,9 +23,26 @@
         "viewDirection": [0, 0, -1],
         "up": [0, 1, 0],
         "fitPadding": 0.08
-      }}
+      }},
+      "orientation": {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+          "central-20-6": [0.5, 0, 0, 0.866025404],
+          "central-30-25": [1, 0, 0, 0],
+          "paired-12-8-6": [0.707106781, 0, 0, 0.707106781],
+          "paired-25-20-15-10": [0, 0, 0, 1],
+          "rounded-tray": [-0.707106781, 0, 0, 0.707106781]
+        }
+      }
     }
   }],
+  "positions": [
+    {"id": "paired-25-20-15-10", "presentationID": "primary", "holdIDs": ["edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left", "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right"]},
+    {"id": "paired-12-8-6", "presentationID": "primary", "holdIDs": ["edge-12-left", "edge-12-right", "edge-8-left", "edge-8-right", "edge-6-upper", "edge-6-lower"]},
+    {"id": "central-30-25", "presentationID": "primary", "holdIDs": ["edge-central-30", "edge-central-25"]},
+    {"id": "central-20-6", "presentationID": "primary", "holdIDs": ["edge-central-20", "edge-central-6"]},
+    {"id": "rounded-tray", "presentationID": "primary", "holdIDs": ["rounded-tray"]}
+  ],
   "holds": [
     {"id": "edge-20-left", "equipmentObjectID": "primary", "name": "Left 20 mm edge", "kind": "edge", "sizeMillimeters": 20},
     {"id": "edge-10-left", "equipmentObjectID": "primary", "name": "Left 10 mm edge", "kind": "edge", "sizeMillimeters": 10},

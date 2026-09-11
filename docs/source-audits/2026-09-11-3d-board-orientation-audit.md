@@ -337,4 +337,57 @@ Before any metadata promotion, Astra/human review must:
 5. rerun descriptor/package validation and refresh the four model/descriptor
    baseline hashes if any model bytes change.
 
-No final orientation metadata is present in this draft.
+## Promotion record (orientation metadata authored)
+
+The Astra review below promoted the two pending packages. No USDZ or
+descriptor bytes changed; only `board.json` `positions` and
+`media.orientation` were added. Quaternions are `[x, y, z, w]` unit values in
+the descriptor `hang-ten-board-v1` frame, applied about `modelBoundsCenter`.
+Every angle is an authored display estimate: it was deliberately chosen from
+the retained manufacturer evidence and model geometry so that selecting a hold
+rotates the shared model to expose that hold's usable face. No angle is a
+manufacturer-published training prescription. Author: Muse Spark (Astra-class
+review), 2026-09-11.
+
+### Nature Stone Hanger — `front` / `reverse`
+
+Grouping is source-backed: the manufacturer technical drawing and retained
+README map the four `edge-front-*` contacts to the front face and the four
+`edge-reverse-*` contacts to the reverse face (upper contacts on each face are
+used with the block inverted; the position is the face, not the inversion).
+
+| position | hold IDs (canonical board order) | quaternion | basis |
+| --- | --- | --- | --- |
+| `front` | `edge-front-15mm-incut`, `edge-front-15mm-flat`, `edge-front-20mm-wood-flat`, `edge-front-20mm-granite` | `[0, 0, 0, 1]` | identity = delivered base pose; source-backed front face |
+| `reverse` | `edge-reverse-10mm-incut`, `edge-reverse-10mm-flat`, `edge-reverse-06mm-flat`, `edge-reverse-06mm-incut` | `[0, 1, 0, 0]` | authored display estimate: 180° about vertical exposes the reverse face |
+
+### Baguette Evo — five reviewed groupings
+
+Position IDs restore the five pre-migration legacy surfaces
+(`e09aa982`), whose contact families match the retained README
+`source_feature` mapping (`front_outer`/`front_inner`,
+`small_inner`/`small_outer`, `central_reverse`, `central_small`,
+`rounded_warmup`). The bar's long axis is X with left/right stable under
+X-axis roll, so all non-identity quaternions roll about X. Each angle is an
+authored display estimate reviewed against the manufacturer front/reverse/use
+gallery and the local Blender review renders
+(`.context/royal-anaconda/task6-astra-evidence/`).
+
+| position | hold IDs (canonical board order) | quaternion | basis |
+| --- | --- | --- | --- |
+| `paired-25-20-15-10` | `edge-20-left`, `edge-10-left`, `edge-25-left`, `edge-15-left`, `edge-15-right`, `edge-25-right`, `edge-10-right`, `edge-20-right` | `[0, 0, 0, 1]` | identity = delivered base pose showing the primary stepped recess (photos 04/06) |
+| `paired-12-8-6` | `edge-12-left`, `edge-12-right`, `edge-8-left`, `edge-8-right`, `edge-6-upper`, `edge-6-lower` | `[0.707106781, 0, 0, 0.707106781]` | authored display estimate: +90° about X looks down into the top small channels (12 front-facing, 8 rear-facing walls of one channel family) |
+| `central-30-25` | `edge-central-30`, `edge-central-25` | `[1, 0, 0, 0]` | authored display estimate: 180° about X exposes the reverse central recess (photo 05), left/right stable |
+| `central-20-6` | `edge-central-20`, `edge-central-6` | `[0.5, 0, 0, 0.866025404]` | authored display estimate: +60° about X, top-inclined view into the small top recess showing its front (20) and rear (6) walls |
+| `rounded-tray` | `rounded-tray` | `[-0.707106781, 0, 0, 0.707106781]` | authored display estimate: −90° about X brings the rounded lower cylinder contact to the front |
+
+The 19 logical IDs partition exactly once (8+6+2+2+1); `rounded-tray`
+remains one logical ID over two mesh pieces. No new contacts were inferred.
+
+### Verification
+
+- `test_model_orientation_inventory.py`: 26 passed (was 23 passed + 3 RED).
+- `test_model_first_packages.py` + `test_approved_board_packages.py`: all pass.
+- `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`: exit 0, 0 drafts.
+- Beastmaker 1000 and Metolius Compact II untouched: single `primary`
+  position, no orientation block (fixed/front-only disposition confirmed).

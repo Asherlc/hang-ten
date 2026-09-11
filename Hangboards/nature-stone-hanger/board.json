@@ -33,7 +33,18 @@
         "viewDirection": [0, 0, -1],
         "up": [0, 1, 0],
         "fitPadding": 0.08
-      }}
+      }},
+      "orientation": {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+          "front": [0, 0, 0, 1],
+          "reverse": [0, 1, 0, 0]
+        }
+      }
     }
-  }]
+  }],
+  "positions": [
+    {"id": "front", "presentationID": "primary", "holdIDs": ["edge-front-15mm-incut", "edge-front-15mm-flat", "edge-front-20mm-wood-flat", "edge-front-20mm-granite"]},
+    {"id": "reverse", "presentationID": "primary", "holdIDs": ["edge-reverse-10mm-incut", "edge-reverse-10mm-flat", "edge-reverse-06mm-flat", "edge-reverse-06mm-incut"]}
+  ]
 }
