@@ -10,6 +10,12 @@ make implementation changes directly in the controller session.
 When you are the subagent assigned by a controller, implement the assigned
 task directly; do not spawn nested subagents or delegate it again.
 
+## Merging
+
+When the user asks to merge, substantively address every outstanding code
+review comment and resolve it only after the requested change is complete. Do
+not dismiss or resolve comments merely to allow the merge.
+
 ## Resource lifecycle
 
 Put generated output under `.context` or another explicitly workspace-owned
