@@ -250,25 +250,34 @@ struct BoardModelDisplay: Hashable {
     let camera: BoardModelCamera
 }
 
+struct BoardModelOrientation: Hashable {
+    /// Quaternions use the package's explicit `[x, y, z, w]` component order.
+    let pivot: String
+    let rotations: [String: SIMD4<Double>]
+}
+
 struct BoardModelMedia: Hashable {
     let assetPath: String
     let descriptorPath: String
     let descriptor: BoardModelDescriptor
     let display: BoardModelDisplay
     let suspension: BoardModelSuspension?
+    let orientation: BoardModelOrientation?
 
     init(
         assetPath: String,
         descriptorPath: String,
         descriptor: BoardModelDescriptor,
         display: BoardModelDisplay,
-        suspension: BoardModelSuspension? = nil
+        suspension: BoardModelSuspension? = nil,
+        orientation: BoardModelOrientation? = nil
     ) {
         self.assetPath = assetPath
         self.descriptorPath = descriptorPath
         self.descriptor = descriptor
         self.display = display
         self.suspension = suspension
+        self.orientation = orientation
     }
 }
 
@@ -945,6 +954,45 @@ enum ResolvedBoardPositionTransitionKind: Hashable {
 struct BoardPosition: Identifiable, Codable, Hashable {
     let id: String
     let presentationID: String
+    let holdIDs: [String]
+    /// Retained internally so model packages can distinguish omitted legacy
+    /// membership (which materializes) from an authored empty array (invalid).
+    let holdIDsWereExplicitlyAuthored: Bool
+
+    init(id: String, presentationID: String, holdIDs: [String]) {
+        self.id = id
+        self.presentationID = presentationID
+        self.holdIDs = holdIDs
+        self.holdIDsWereExplicitlyAuthored = true
+    }
+
+    init(id: String, presentationID: String) {
+        self.id = id
+        self.presentationID = presentationID
+        self.holdIDs = []
+        self.holdIDsWereExplicitlyAuthored = false
+    }
+
+    private enum CodingKeys: String, CodingKey { case id, presentationID, holdIDs }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        presentationID = try container.decode(String.self, forKey: .presentationID)
+        holdIDsWereExplicitlyAuthored = container.contains(.holdIDs)
+        holdIDs = holdIDsWereExplicitlyAuthored
+            ? try container.decode([String].self, forKey: .holdIDs)
+            : []
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(presentationID, forKey: .presentationID)
+        if holdIDsWereExplicitlyAuthored {
+            try container.encode(holdIDs, forKey: .holdIDs)
+        }
+    }
 }
 
 struct BoardPositionTransition: Codable, Hashable {
@@ -1040,7 +1088,7 @@ struct TrainingBoard: Identifiable, Hashable {
         }
         let presentedIDs: Set<String>
         switch presentation.media {
-        case .model(let media): presentedIDs = Set(media.descriptor.holds.keys)
+        case .model: presentedIDs = Set(position.holdIDs)
         case .raster(let media): presentedIDs = Set(media.holdGeometry.keys)
         }
         return holds.compactMap { presentedIDs.contains($0.id) ? $0.id : nil }
