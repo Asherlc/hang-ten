@@ -10,6 +10,7 @@ coordinates need a board-specific unit conversion.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import struct
 from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
@@ -46,18 +47,20 @@ def _create_mesh(
     mesh_factory: MeshFactory | None = None,
 ) -> object:
     """Call an existing board factory, preserving its coordinate contract."""
+    material_values = tuple(materials)
     if mesh_factory is None:
-        return _new_mesh(name, vertices, faces, materials)
-    if materials:
+        return _new_mesh(name, vertices, faces, material_values)
+    if material_values:
         try:
-            return mesh_factory(name, vertices, faces, materials)
+            inspect.signature(mesh_factory).bind(name, vertices, faces, material_values)
         except TypeError:
             # Compact II's existing factory takes no material argument; its
             # caller appends slots immediately after construction.
             obj = mesh_factory(name, vertices, faces)
-            for material in materials:
+            for material in material_values:
                 obj.data.materials.append(material)
             return obj
+        return mesh_factory(name, vertices, faces, material_values)
     return mesh_factory(name, vertices, faces)
 
 
@@ -280,7 +283,9 @@ def _canonical_mesh_hashes(
             int(material_index),
             material_name,
         )
-        for face, (material_index, material_name) in zip(topology, material_bindings)
+        for face, (material_index, material_name) in zip(
+            topology, material_bindings, strict=True
+        )
     ]
     return (
         _digest(repr(sorted(vertices)).encode()),
@@ -380,7 +385,7 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
             ]
             vertex_hash, topology_hash = _canonical_mesh_hashes(
                 vertices, topology,
-                tuple(zip(polygon_material_indices, polygon_materials)),
+                tuple(zip(polygon_material_indices, polygon_materials, strict=True)),
             )
             objects.append({
                 "name": obj.name,

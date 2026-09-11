@@ -240,7 +240,8 @@ def _assert_generator_snapshot(script, output, expected_hold_count, baseline_sna
 
 def main() -> None:
     if bpy is None:
-        raise unittest.SkipTest("requires Blender's bpy module")
+        print("GEOMETRY_PRIMITIVES_TEST skipped: requires Blender's bpy module")
+        return
     _reset()
     wood = _image_material("semantic wood")
     baseline = create_rounded_body(

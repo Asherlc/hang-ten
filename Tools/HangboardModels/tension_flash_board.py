@@ -231,14 +231,23 @@ def build():
     # Three-edge face: broad shallow machined face and three independent wells.
     # The labelled photograph supports rounded rectangular mouths and rolled
     # edges; exact widths, locations, and all recess depths remain estimates.
-    recess(body, "three-face-flat", 250, 38, 416, 76, 66, 76, 10, 1, 1)
+    recess(
+        body,
+        name="three-face-flat", cx=250, cy=38, width=416, height=76,
+        floor=66, mouth=76, radius=10, back_fillet=1, mouth_fillet=1,
+    )
     for hold_id, x in zip(HOLD_IDS[:3], (115, 250, 385)):
         stepped_edge(body, hold_id, x, center=hold_id == "three-edge-center")
 
     # Manufacturer and hanging views show two separated saddle-like milled
     # panels on the opposite side, with a continuous untouched central barrel.
     for hold_id, x in (("two-edge-left", 121), ("two-edge-right", 379)):
-        recess(body, "two-face-saddle", x, 38, 144, 76, 66, 76, 12, 1.5, 1.5, -1)
+        recess(
+            body,
+            name="two-face-saddle", cx=x, cy=38, width=144, height=76,
+            floor=66, mouth=76, radius=12, back_fillet=1.5, mouth_fillet=1.5,
+            face_sign=-1,
+        )
         stepped_edge(body, hold_id, x, face_sign=-1)
 
     # The labelled view places the small crimps on the upper barrel, between
@@ -246,15 +255,22 @@ def build():
     # They align along the barrel with the outer three-edge wells. Rotate
     # the authored shallow groove onto the top; its section is estimated.
     for hold_id, x in (("small-crimp-left", 115), ("small-crimp-right", 385)):
-        recess(body, hold_id, x, 38, 61, 9, 72, 75.4, 2.5, .6, .6,
-               hold_id=hold_id, top_face=True)
+        recess(
+            body,
+            name=hold_id, cx=x, cy=38, width=61, height=9,
+            floor=72, mouth=75.4, radius=2.5, back_fillet=.6, mouth_fillet=.6,
+            hold_id=hold_id, top_face=True,
+        )
 
     # Evidence-supported paired transverse cord passages at both ends. These
     # are suspension apertures integral to the cylinder, not added hardware.
     # Diameter, drill axis, spacing, and entrance round are display estimates.
     for x in (17, 31, WIDTH_MM-31, WIDTH_MM-17):
-        recess(body, "integral-cord-passage", x, 48, 6.5, 6.5,
-               -8, 74.66, 3.25, .5, .6)
+        recess(
+            body,
+            name="integral-cord-passage", cx=x, cy=48, width=6.5, height=6.5,
+            floor=-8, mouth=74.66, radius=3.25, back_fillet=.5, mouth_fillet=.6,
+        )
 
     active(body)
     bpy.ops.object.mode_set(mode="EDIT")
