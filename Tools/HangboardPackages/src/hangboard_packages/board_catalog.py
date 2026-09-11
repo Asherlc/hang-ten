@@ -845,6 +845,7 @@ class BoardPosition:
     id: str
     presentation_id: str
     hold_ids: tuple[str, ...] = ()
+    hold_ids_authored: bool = False
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPosition":
@@ -865,6 +866,7 @@ class BoardPosition:
             _identifier(payload["id"], f"{source}.id"),
             _identifier(payload["presentationID"], f"{source}.presentationID"),
             hold_ids,
+            "holdIDs" in payload,
         )
 
 
@@ -1481,14 +1483,21 @@ def _validate_model_orientation(
     model_position_ids: set[str],
     source: str,
 ) -> None:
-    if orientation is None:
-        return
-    rotation_ids = set(orientation.rotations)
-    if rotation_ids != model_position_ids:
-        raise ValueError(
-            f"{source}.rotations must exactly match model position IDs"
-        )
+    if orientation is not None:
+        if len(model_position_ids) <= 1:
+            raise ValueError(f"{source} is not allowed for a fixed model")
+        rotation_ids = set(orientation.rotations)
+        if rotation_ids != model_position_ids:
+            raise ValueError(
+                f"{source}.rotations must exactly match model position IDs"
+            )
     seen: set[str] = set()
+    model_authored = [
+        position for position in positions
+        if position.id in model_position_ids and position.hold_ids_authored
+    ]
+    if orientation is None and len(model_authored) != len(model_position_ids):
+        return
     for index, position in enumerate(positions):
         if position.id not in model_position_ids:
             continue
@@ -1831,18 +1840,17 @@ def _validate_finished_shape(
             position_ids={position.id for position in board.positions
                           if position.presentation_id == presentation.id},
         )
-        if presentation.media.orientation is not None:
-            _validate_model_orientation(
-                presentation.media.orientation,
-                board.positions,
-                set(frames),
-                {
-                    position.id
-                    for position in board.positions
-                    if position.presentation_id == presentation.id
-                },
-                "board.json.presentations[].media.orientation",
-            )
+        _validate_model_orientation(
+            presentation.media.orientation,
+            board.positions,
+            set(frames),
+            {
+                position.id
+                for position in board.positions
+                if position.presentation_id == presentation.id
+            },
+            "board.json.presentations[].media.orientation",
+        )
         model_frames.update(
             ((presentation.id, hold_id), frame) for hold_id, frame in frames.items()
         )

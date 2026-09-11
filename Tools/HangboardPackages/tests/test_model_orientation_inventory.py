@@ -35,9 +35,7 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path: Path)
 
 
 def test_legacy_model_positions_materialize_complete_inventory(tmp_path: Path) -> None:
-    package = write_model_package(tmp_path, orientation={
-        "pivot": "modelBoundsCenter", "rotations": {"front": [0, 0, 0, 1]}
-    }, positions=[
+    package = write_model_package(tmp_path, positions=[
         {"id": "front", "presentationID": "primary"},
     ])
     board = load_board_catalog_module().load_board_package(package).board
@@ -87,10 +85,52 @@ def test_model_orientation_rejects_overlapping_or_incomplete_hold_membership(tmp
 
 
 def test_model_orientation_and_suspension_are_mutually_exclusive(tmp_path: Path) -> None:
-    fixture = {"base": "singleCordModel", "mutations": []}
     # The shared fixture is intentionally not copied here; this checks the closed
     # model-media contract using a minimal orientation-bearing package.
     with pytest.raises(ValueError, match="orientation and suspension are mutually exclusive"):
         load_board_catalog_module().load_board_package(
             write_model_package(tmp_path, orientation=_orientation(), media_overrides={"suspension": {}})
+        )
+
+
+def test_fixed_model_rejects_orientation_metadata(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="orientation.*fixed"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(
+                tmp_path,
+                orientation={"pivot": "modelBoundsCenter", "rotations": {"primary": [0, 0, 0, 1]}},
+            )
+        )
+
+
+@pytest.mark.parametrize(
+    "positions",
+    [
+        [
+            {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
+            {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-left"]},
+        ],
+        [
+            {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
+            {"id": "reverse", "presentationID": "primary", "holdIDs": []},
+        ],
+        [
+            {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left", "unknown"]},
+            {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-right"]},
+        ],
+    ],
+)
+def test_model_positions_require_exact_partition_without_orientation(
+    tmp_path: Path, positions: list[dict[str, object]]
+) -> None:
+    with pytest.raises(ValueError, match=r"positions\[|partition"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(tmp_path, positions=positions)
+        )
+
+
+def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="unknown keys.*orientation"):
+        load_board_catalog_module().load_board_package(
+            write_model_package(tmp_path, media_overrides={"type": "raster", "orientation": _orientation()})
         )
