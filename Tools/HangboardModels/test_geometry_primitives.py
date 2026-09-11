@@ -44,9 +44,10 @@ if bpy is not None:
     )
 
 
-# Approved semantic fingerprints captured from the exact pre-migration
-# generators at commit 70ba028a. Each projection includes every exported
+# Approved semantic fingerprints captured from the exact pre-task generators
+# at commit cbcee285. Each projection includes every exported
 # object and the complete snapshot fields relevant to that audit category.
+PRE_MIGRATION_BASELINE_COMMIT = "cbcee285"
 PRE_MIGRATION_BASELINES = {
     "beastmaker": {
         "topology": "31d0bd8362301289e3fce021045ece72720a58f090d207955c4c5390c2af6ac4",
@@ -66,7 +67,8 @@ PRE_MIGRATION_BASELINES = {
 def _reset() -> None:
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete(use_global=False)
-    for datablocks in (bpy.data.meshes, bpy.data.materials, bpy.data.cameras, bpy.data.lights):
+    for datablocks in (bpy.data.meshes, bpy.data.materials, bpy.data.cameras,
+                       bpy.data.lights, bpy.data.images):
         for item in list(datablocks):
             if item.users == 0:
                 datablocks.remove(item)
