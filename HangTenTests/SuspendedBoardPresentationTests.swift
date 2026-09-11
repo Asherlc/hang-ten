@@ -289,10 +289,14 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(result.branches[1].passageIDs, ["right-0", "right-1"])
         XCTAssertEqual(result.branches[0].spans.count, 2)
         XCTAssertEqual(result.branches[1].spans.count, 2)
-        XCTAssertEqual(result.branches[0].spans[0].first!, SIMD3<Float>(-0.6, 0.4, 0))
+        XCTAssertEqual(result.branches[0].spans[0].first!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[0].spans[0].last!, SIMD3<Float>(-0.6, 0.4, 0))
         XCTAssertEqual(result.branches[0].spans[1].first!, SIMD3<Float>(-0.4, 0.4, 0))
+        XCTAssertEqual(result.branches[0].spans[1].last!, result.fixedAnchor)
         XCTAssertEqual(result.branches[1].spans[0].first!, result.fixedAnchor)
         XCTAssertEqual(result.branches[1].spans[0].last!, SIMD3<Float>(0.4, 0.4, 0))
+        XCTAssertEqual(result.branches[1].spans[1].first!, SIMD3<Float>(0.6, 0.4, 0))
+        XCTAssertEqual(result.branches[1].spans[1].last!, result.fixedAnchor)
         XCTAssertEqual(result.branches[0].centerlineSamples.first!, result.fixedAnchor)
         XCTAssertEqual(result.branches[0].centerlineSamples.last!, result.fixedAnchor)
         XCTAssertEqual(result.branches[1].centerlineSamples.first!, result.fixedAnchor)
@@ -307,12 +311,16 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(result.fixedAnchor, SIMD3<Float>(0, 2, 0))
-        XCTAssertEqual(result.branches[0].spans[0].first!.x, 0, accuracy: 1e-5)
-        XCTAssertEqual(result.branches[0].spans[0].first!.z, 0.6, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[0].spans[0].first!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[0].spans[0].last!.x, 0, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[0].spans[0].last!.z, 0.6, accuracy: 1e-5)
         XCTAssertEqual(result.branches[0].spans[1].first!.x, 0, accuracy: 1e-5)
         XCTAssertEqual(result.branches[0].spans[1].first!.z, 0.4, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[0].spans[1].last!, result.fixedAnchor)
+        XCTAssertEqual(result.branches[1].spans[0].first!, result.fixedAnchor)
         XCTAssertEqual(result.branches[1].spans[0].last!.z, -0.4, accuracy: 1e-5)
         XCTAssertEqual(result.branches[1].spans[1].first!.z, -0.6, accuracy: 1e-5)
+        XCTAssertEqual(result.branches[1].spans[1].last!, result.fixedAnchor)
     }
 
     func testTwoBranchSolveIsBitwiseDeterministicAndPreservesDeclaredOrder() throws {
@@ -484,6 +492,37 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             SIMD3<Float>(2, 2, 0),
             SIMD3<Float>(3, 3, 0),
             SIMD3<Float>(1, 1, 0),
+            SIMD3<Float>(0, 0, 0),
+        ]
+
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(samples)) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testSelfIntersectionRejectsEndpointTouchNearAnotherSegmentEndpoint() {
+        let samples = [
+            SIMD3<Float>(0, 0, 0),
+            SIMD3<Float>(1, 0, 0),
+            SIMD3<Float>(1, 1, 0),
+            SIMD3<Float>(0.00005, 1, 0),
+            SIMD3<Float>(0.00005, 0, 0),
+        ]
+
+        XCTAssertTrue(SuspendedCordSolver.hasSelfIntersection(samples))
+        XCTAssertThrowsError(try SuspendedCordSolver.validateNoSelfIntersection(samples)) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testClosedBranchPolicyRejectsEndpointTouchNearAnotherSegmentEndpoint() {
+        let samples = [
+            SIMD3<Float>(0, 0, 0),
+            SIMD3<Float>(1, 0, 0),
+            SIMD3<Float>(1, 1, 0),
+            SIMD3<Float>(0.00005, 1, 0),
+            SIMD3<Float>(0.00005, 0, 0),
+            SIMD3<Float>(0, 2, 0),
             SIMD3<Float>(0, 0, 0),
         ]
 

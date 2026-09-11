@@ -220,12 +220,15 @@ enum SuspendedCordSolver {
                     samples[first], samples[first + 1],
                     samples[second], samples[second + 1]
                 )
-                let firstParameterIsEndpoint = approach.s <= 1e-4 || approach.s >= 1 - 1e-4
-                let secondParameterIsEndpoint = approach.t <= 1e-4 || approach.t >= 1 - 1e-4
-                let isCrossingOrEndpointInterior = firstParameterIsEndpoint != secondParameterIsEndpoint
-                    || (!firstParameterIsEndpoint && !secondParameterIsEndpoint)
-                if isCrossingOrEndpointInterior
-                    && approach.distanceSquared <= tolerance * tolerance {
+                if approach.distanceSquared <= tolerance * tolerance,
+                   !closestApproachTouchesOnlySegmentEndpoints(
+                    approach,
+                    firstStart: samples[first],
+                    firstEnd: samples[first + 1],
+                    secondStart: samples[second],
+                    secondEnd: samples[second + 1],
+                    tolerance: tolerance
+                   ) {
                     return true
                 }
             }
@@ -280,21 +283,35 @@ enum SuspendedCordSolver {
                     samples[first], samples[first + 1],
                     samples[second], samples[second + 1]
                 )
-                let hasInteriorCrossing = approach.s > 1e-4
-                    && approach.s < 1 - 1e-4
-                    && approach.t > 1e-4
-                    && approach.t < 1 - 1e-4
-                let firstParameterIsEndpoint = approach.s <= 1e-4 || approach.s >= 1 - 1e-4
-                let secondParameterIsEndpoint = approach.t <= 1e-4 || approach.t >= 1 - 1e-4
-                let isEndpointInteriorContact = firstParameterIsEndpoint != secondParameterIsEndpoint
-                let touchesAwayFromAnchor = isAnchorClosure
-                    && approach.distanceSquared <= tolerance * tolerance
-                    && !(approach.s <= 1e-4 && approach.t >= 1 - 1e-4)
-                let nonClosureContact = !isAnchorClosure
-                    && approach.distanceSquared <= tolerance * tolerance
-                    && (isEndpointInteriorContact || (!firstParameterIsEndpoint && !secondParameterIsEndpoint))
-                if (hasInteriorCrossing || touchesAwayFromAnchor || nonClosureContact)
-                    && approach.distanceSquared <= tolerance * tolerance {
+                let isEndpointToEndpoint = closestApproachTouchesOnlySegmentEndpoints(
+                    approach,
+                    firstStart: samples[first],
+                    firstEnd: samples[first + 1],
+                    secondStart: samples[second],
+                    secondEnd: samples[second + 1],
+                    tolerance: tolerance
+                )
+                let firstClosestPoint = pointAtSegmentParameter(
+                    approach.s,
+                    start: samples[first],
+                    end: samples[first + 1]
+                )
+                let secondClosestPoint = pointAtSegmentParameter(
+                    approach.t,
+                    start: samples[second],
+                    end: samples[second + 1]
+                )
+                let touchesOnlyAnchor = isAnchorClosure
+                    && simd_dot(
+                        firstClosestPoint - samples[first],
+                        firstClosestPoint - samples[first]
+                    ) <= tolerance * tolerance
+                    && simd_dot(
+                        secondClosestPoint - samples[second + 1],
+                        secondClosestPoint - samples[second + 1]
+                    ) <= tolerance * tolerance
+                if approach.distanceSquared <= tolerance * tolerance,
+                   (!isEndpointToEndpoint || (isAnchorClosure && !touchesOnlyAnchor)) {
                     throw SuspendedPresentationError.selfIntersection
                 }
                 if isAnchorClosure {
@@ -475,6 +492,43 @@ enum SuspendedCordSolver {
         let parameter = min(max(simd_dot(point - start, direction) / lengthSquared, 0), 1)
         let difference = point - (start + direction * parameter)
         return simd_dot(difference, difference)
+    }
+
+    /// Parameter thresholds are not a safe proxy for an endpoint: a real
+    /// endpoint-to-interior touch can occur arbitrarily close to an endpoint.
+    /// Classify the closest points geometrically instead, so only two segment
+    /// endpoints may receive the very-short-taut non-intersection allowance.
+    private static func closestApproachTouchesOnlySegmentEndpoints(
+        _ approach: (distanceSquared: Float, s: Float, t: Float),
+        firstStart: SIMD3<Float>,
+        firstEnd: SIMD3<Float>,
+        secondStart: SIMD3<Float>,
+        secondEnd: SIMD3<Float>,
+        tolerance: Float
+    ) -> Bool {
+        let firstPoint = pointAtSegmentParameter(approach.s, start: firstStart, end: firstEnd)
+        let secondPoint = pointAtSegmentParameter(approach.t, start: secondStart, end: secondEnd)
+        return pointIsAtSegmentEndpoint(firstPoint, start: firstStart, end: firstEnd, tolerance: tolerance)
+            && pointIsAtSegmentEndpoint(secondPoint, start: secondStart, end: secondEnd, tolerance: tolerance)
+    }
+
+    private static func pointAtSegmentParameter(
+        _ parameter: Float,
+        start: SIMD3<Float>,
+        end: SIMD3<Float>
+    ) -> SIMD3<Float> {
+        start + (end - start) * min(max(parameter, 0), 1)
+    }
+
+    private static func pointIsAtSegmentEndpoint(
+        _ point: SIMD3<Float>,
+        start: SIMD3<Float>,
+        end: SIMD3<Float>,
+        tolerance: Float
+    ) -> Bool {
+        let toleranceSquared = tolerance * tolerance
+        return simd_dot(point - start, point - start) <= toleranceSquared
+            || simd_dot(point - end, point - end) <= toleranceSquared
     }
 }
 
