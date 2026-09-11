@@ -31,6 +31,12 @@ def execute(nodes, namespace):
     exec(compile(ast.Module(body=nodes, type_ignores=[]), "<model-tool>", "exec"), namespace)
 
 
+def semantic_tag(piece, role, hold_id=None):
+    piece["role"] = role
+    if hold_id is not None:
+        piece["hold_id"] = hold_id
+
+
 def beastmaker_report_functions():
     tree = ast.parse((TOOLS / "verify_beastmaker_1000.py").read_text())
     nodes = [
@@ -203,7 +209,7 @@ class ModelReportTests(unittest.TestCase):
             None,
         )
         self.assertIsNotNone(function, "Compact generator must tag every compiler source mesh")
-        namespace = {}
+        namespace = {"tag_piece": semantic_tag}
         execute([function], namespace)
 
         class Piece(dict):

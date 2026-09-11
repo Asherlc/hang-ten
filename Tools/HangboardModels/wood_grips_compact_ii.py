@@ -309,17 +309,9 @@ model=split_contact_surface(body, hold_ids)
 def tag_model_piece(obj, known_hold_ids):
     """Attach the closed compiler contract without deriving any geometry."""
     if obj.name in known_hold_ids:
-        if "tag_piece" in globals():
-            tag_piece(obj, "hold", obj.name)
-        else:
-            # Kept self-contained for the source-audit AST harness.
-            obj["role"]="hold"
-            obj["hold_id"]=obj.name
+        tag_piece(obj, "hold", obj.name)
     else:
-        if "tag_piece" in globals():
-            tag_piece(obj, "body")
-        else:
-            obj["role"]="body"
+        tag_piece(obj, "body")
 
 
 def discard_render_only_scene_objects(scene_objects, model_objects, remove_object):

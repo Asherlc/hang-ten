@@ -262,6 +262,59 @@ def _image_digest(image: object) -> str:
     return _digest(payload)
 
 
+def _stable_value(value: object) -> object:
+    """Convert Blender scalar/vector socket values to deterministic JSON data."""
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    try:
+        return [_stable_value(item) for item in value]  # mathutils vectors/arrays
+    except TypeError:
+        return repr(value)
+
+
+def _material_snapshot(material: object, image_bytes: dict[str, str]) -> dict[str, object]:
+    nodes = []
+    links = []
+    if getattr(material, "use_nodes", False):
+        for node in sorted(material.node_tree.nodes, key=lambda item: item.name):
+            image = getattr(node, "image", None)
+            image_name = getattr(image, "name", None)
+            if image is not None:
+                image_bytes[image_name] = _image_digest(image)
+            inputs = []
+            for socket in node.inputs:
+                inputs.append({
+                    "name": socket.name,
+                    "default": _stable_value(getattr(socket, "default_value", None)),
+                    "enabled": bool(getattr(socket, "enabled", True)),
+                })
+            nodes.append({
+                "name": node.name,
+                "type": node.type,
+                "label": node.label,
+                "mute": bool(node.mute),
+                "image": image_name,
+                "inputs": inputs,
+            })
+        links = [
+            {
+                "fromNode": link.from_node.name,
+                "fromSocket": link.from_socket.name,
+                "toNode": link.to_node.name,
+                "toSocket": link.to_socket.name,
+            }
+            for link in material.node_tree.links
+        ]
+        links.sort(key=lambda item: tuple(item.values()))
+    return {
+        "name": material.name,
+        "useNodes": bool(getattr(material, "use_nodes", False)),
+        "diffuseColor": _stable_value(getattr(material, "diffuse_color", None)),
+        "nodes": nodes,
+        "links": links,
+    }
+
+
 def semantic_snapshot(scene: object) -> dict[str, object]:
     """Capture names, tags, transforms, topology, and image payload identity."""
     objects = []
@@ -276,11 +329,14 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
             vertex_payload = repr(vertices).encode()
             topology_payload = repr(topology).encode()
             materials = [material.name for material in obj.data.materials]
-            for material in obj.data.materials:
-                for node in material.node_tree.nodes if material.use_nodes else ():
-                    image = getattr(node, "image", None)
-                    if image is not None:
-                        image_bytes[image.name] = _image_digest(image)
+            material_nodes = [_material_snapshot(material, image_bytes)
+                              for material in obj.data.materials]
+            polygon_material_indices = [int(polygon.material_index)
+                                        for polygon in obj.data.polygons]
+            polygon_materials = [
+                materials[index] if 0 <= index < len(materials) else None
+                for index in polygon_material_indices
+            ]
             objects.append({
                 "name": obj.name,
                 "role": obj.get("role"),
@@ -292,6 +348,9 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
                 "vertexHash": _digest(vertex_payload),
                 "topologyHash": _digest(topology_payload),
                 "materials": materials,
+                "polygonMaterialIndices": polygon_material_indices,
+                "polygonMaterials": polygon_materials,
+                "materialNodes": material_nodes,
             })
         elif not export:
             objects.append({"name": obj.name, "role": obj.get("role"), "holdID": obj.get("hold_id"), "export": False})
