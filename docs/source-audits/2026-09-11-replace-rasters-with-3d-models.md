@@ -114,6 +114,8 @@ the material change for an untextured Principled material, then passed.
 | `rtk python3 -m pytest Tools/HangboardPackages/tests/test_approved_board_packages.py -q` | unavailable: `No module named pytest` |
 | `xcrun swiftc -parse HangTen/Models/BoardPackageStore.swift HangTenTests/BoardModelTests.swift HangTenTests/BoardPackageStoreTests.swift` | pass |
 | saved-data scan for the four excluded IDs in `HangTen` and `HangTenTests` | pass: no references |
+| semantic `jq`/`diff` comparison against `HEAD` | pass: all former Metolius holds unchanged, only the two approved additions; Training Tiles retains exactly its former 16 supported records |
+| `git diff --check` | pass |
 
 The focused simulator XCTest invocation resolved packages but then left both
 its `xcodebuild` client and private `SWBBuildService` idle in Mach-message waits
