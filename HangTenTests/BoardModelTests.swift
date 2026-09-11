@@ -123,6 +123,137 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(model.isUnavailable)
     }
 
+    func testOrientationRotatesSharedContainerAboutBoundsCenterAndReframesAllCorners() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ],
+            minimum: [1, 2, 3],
+            maximum: [5, 8, 11]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: [
+                "front": SIMD4<Double>(0, 0, 0, 1),
+                "reverse": SIMD4<Double>(0, 1, 0, 0)
+            ]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front", "reverse"]
+        ))
+        let hold = try XCTUnwrap(model.holdNodes["left"]?.first)
+
+        XCTAssertTrue(model.select(positionID: "reverse"))
+        SCNTransaction.flush()
+
+        XCTAssertEqual(model.holdID(for: hold), "left")
+        XCTAssertNil(model.transientCordNode)
+        XCTAssertFalse(model.isTransientCordAccessible)
+        let pivot = SIMD3<Float>(3, 5, 7)
+        let transformedPivot = model.boardContainer.simdTransform * SIMD4<Float>(pivot.x, pivot.y, pivot.z, 1)
+        XCTAssertEqual(SIMD3<Float>(transformedPivot.x, transformedPivot.y, transformedPivot.z), pivot)
+        let transformedCorner = model.boardContainer.simdTransform * SIMD4<Float>(1, 2, 3, 1)
+        XCTAssertEqual(SIMD3<Float>(transformedCorner.x, transformedCorner.y, transformedCorner.z), SIMD3<Float>(5, 2, 11))
+        XCTAssertEqual(model.camera.position.x, 3, accuracy: 0.000_01)
+        XCTAssertEqual(model.camera.position.y, 5, accuracy: 0.000_01)
+        XCTAssertEqual(model.camera.position.z, 16.28, accuracy: 0.000_01)
+
+        let quarterTurn = simd_quatf(angle: .pi / 2, axis: SIMD3<Float>(0, 1, 0))
+        let rotated = BoardModelScene.rotatedBounds(descriptor.modelBounds, by: quarterTurn, pivot: pivot)
+        let framing = try XCTUnwrap(BoardModelScene.framing(bounds: rotated, display: display()))
+        XCTAssertEqual(rotated.minimum[0], -1, accuracy: 0.000_01)
+        XCTAssertEqual(rotated.minimum[1], 2, accuracy: 0.000_01)
+        XCTAssertEqual(rotated.minimum[2], 5, accuracy: 0.000_01)
+        XCTAssertEqual(rotated.maximum[0], 7, accuracy: 0.000_01)
+        XCTAssertEqual(rotated.maximum[1], 8, accuracy: 0.000_01)
+        XCTAssertEqual(rotated.maximum[2], 9, accuracy: 0.000_01)
+        XCTAssertEqual(framing.target, pivot)
+        XCTAssertEqual(framing.width, 8, accuracy: 0.000_001)
+        XCTAssertEqual(framing.height, 6, accuracy: 0.000_001)
+    }
+
+    func testOrientationSelectionResetsOrbitAndRejectsSuspensionAtRuntime() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ],
+            minimum: [1, 2, 3],
+            maximum: [5, 8, 11]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: ["reverse": SIMD4<Double>(0, 1, 0, 0)]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["reverse"]
+        ))
+
+        XCTAssertTrue(model.select(positionID: "reverse"))
+        let canonicalPosition = model.camera.position
+        let canonicalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        model.orbit(azimuth: 0.3, elevation: -0.2, zoomScale: 1.2)
+        XCTAssertNotEqual(model.camera.position.x, canonicalPosition.x)
+        XCTAssertNotEqual(model.camera.camera?.orthographicScale, canonicalScale)
+        model.resetCamera(animated: false)
+        XCTAssertEqual(model.camera.position.x, canonicalPosition.x, accuracy: 0.000_001)
+        XCTAssertEqual(model.camera.position.y, canonicalPosition.y, accuracy: 0.000_001)
+        XCTAssertEqual(model.camera.position.z, canonicalPosition.z, accuracy: 0.000_001)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, canonicalScale)
+
+        let suspension = BoardModelSuspension(
+            attachment: .init(nodeID: "Board/Body", pointInModel: [1, 2, 3], provenance: "test"),
+            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "hidden", provenance: "test", position: [1, 10, 3]),
+            cord: .init(restLength: 10, radius: 0.01, material: "test", provenance: "test"),
+            canonicalPoses: [
+                "reverse": .init(
+                    rotation: [0, 0, 0, 1],
+                    translation: [0, 0, 0],
+                    camera: .init(viewDirection: [0, 0, -1], fitPadding: 0.08)
+                )
+            ]
+        )
+        XCTAssertNil(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspension,
+            orientation: orientation,
+            allowedPositionIDs: ["reverse"]
+        ))
+    }
+
+    func testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms() throws {
+        let bounds = BoardModelBounds(
+            minimum: [1, 2, 3],
+            maximum: [5, 8, 11]
+        )
+        let pivot = SIMD3<Float>(3, 5, 7)
+        let quaternion = simd_quatf(angle: .pi / 4, axis: SIMD3<Float>(0, 1, 0))
+        let display = display(viewDirection: [1, 0, -1], up: [0, 1, 0])
+
+        let transformedCorners = BoardModelScene.rotatedCorners(
+            bounds,
+            by: quaternion,
+            pivot: pivot
+        )
+        let exact = try XCTUnwrap(BoardModelScene.framing(points: transformedCorners, display: display))
+        let aabb = BoardModelScene.rotatedBounds(bounds, by: quaternion, pivot: pivot)
+        let aabbFraming = try XCTUnwrap(BoardModelScene.framing(bounds: aabb, display: display))
+
+        XCTAssertEqual(exact.width, 8, accuracy: 0.000_01)
+        XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
