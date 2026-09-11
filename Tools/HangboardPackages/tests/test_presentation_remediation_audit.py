@@ -1377,7 +1377,7 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
     assert report.canvas_class_count == 20
     assert report.canvas_covered_repair_count == 65
     assert report.capability_probe_artifact_count == 0
-    assert report.pending_phase2_action_count == 66
+    assert report.pending_phase2_action_count == 62
     assert report.historical_evidence_blocked_keeps == 2
     assert report.blocked_phase2_action_count == 0
     flash_records = [

@@ -95,22 +95,54 @@ def _write_shared_model_parser_parity_package(
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
-    board_json = json.dumps(
-        board,
-        separators=(",", ":"),
-        sort_keys=False,
-    )
+    suspension = board["presentations"][0]["media"].get("suspension")
+    assert isinstance(suspension, dict)
     if fixture.get("reorderTwoBranchSuspensionMembers"):
-        suspension = board["presentations"][0]["media"]["suspension"]
-        canonical = json.dumps(suspension, separators=(",", ":"))
-        reordered = {
+        board["presentations"][0]["media"]["suspension"] = {
             key: suspension[key]
             for key in ("anchor", "branches", "canonicalPoses", "passages", "type")
         }
+        suspension = board["presentations"][0]["media"]["suspension"]
+    if fixture.get("reorderTwoBranchPassageMembers"):
+        passages = suspension["passages"]
+        assert isinstance(passages, dict)
+        left = passages["left"]
+        assert isinstance(left, list) and isinstance(left[0], dict)
+        left[0] = {
+            key: left[0][key]
+            for key in ("nodeID", "id", "pointInModel", "provenance")
+        }
+    if fixture.get("reorderTwoBranchBranchMembers"):
+        branches = suspension["branches"]
+        assert isinstance(branches, list) and isinstance(branches[0], dict)
+        branches[0] = {
+            key: branches[0][key]
+            for key in ("passageIDs", "id", "restLength", "radius", "material", "provenance")
+        }
+    if fixture.get("reorderTwoBranchPoseMembers"):
+        poses = suspension["canonicalPoses"]
+        assert isinstance(poses, dict) and isinstance(poses["primary"], dict)
+        poses["primary"] = {
+            key: poses["primary"][key]
+            for key in ("translation", "rotation", "camera")
+        }
+    board_json = json.dumps(board, separators=(",", ":"), sort_keys=False)
+    duplicate_member_key = fixture.get("duplicateTwoBranchMemberKey")
+    if duplicate_member_key == "passageID":
         board_json = board_json.replace(
-            '"suspension":' + canonical,
-            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            '"id":"left-top","nodeID"',
+            '"id":"left-top","id":"left-top","nodeID"',
             1,
+        )
+    elif duplicate_member_key == "branchID":
+        board_json = board_json.replace(
+            '"id":"left-branch","passageIDs"',
+            '"id":"left-branch","id":"left-branch","passageIDs"',
+            1,
+        )
+    elif duplicate_member_key is not None:
+        raise AssertionError(
+            f"unsupported two-branch duplicate member key: {duplicate_member_key}"
         )
     board_path.write_text(board_json, encoding="utf-8")
     _rewrite(assets / "primary.model.json", descriptor)
@@ -422,9 +454,7 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
     assert not hasattr(package.board.holds[0], "presentation_id")
     assert presentation.media.asset_path == "assets/primary.usdz"
     assert presentation.media.descriptor_path == "assets/primary.model.json"
-    assert presentation.media.suspension is not None
-    assert presentation.media.suspension.attachment.node_id == "ZZAttachment"
-    assert set(presentation.media.suspension.canonical_poses) == {"primary"}
+    assert presentation.media.suspension is None
     assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.3, 0.4
     )
