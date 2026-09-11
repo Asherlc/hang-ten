@@ -192,14 +192,17 @@ Each case must enter the current explicit model-unavailable/error state. None
 may fall back to a straight line, another orientation model, raster rendering,
 or a visible anchor/stand-in.
 
-Selecting a hold or resolving a workout position must smoothly restore that
-position's canonical board pose and canonical camera framing, then recompute
-the deterministic cord. Manual gestures may change camera azimuth, elevation,
-and allowed zoom only; they must never independently rotate the suspended
-board or anchor. Verify camera orbit separately from interactive detail
-picking. On the first migration, review selection snap, orbit, reset after
-orbit, every supported position, cord/board continuity, clear-and-reappear
-highlighting, workout-driven positions, and the explicit unavailable state.
+Selecting a hold or resolving a workout position must restore that position's
+canonical board pose, destination-solved cord, and canonical camera framing
+atomically in one action-free transaction. Build the deterministic cord before
+committing the destination state; never independently animate or interpolate
+cord samples away from the board pose. Manual gestures may change camera
+azimuth, elevation, and allowed zoom only; they must never independently
+rotate the suspended board or anchor. Verify camera orbit separately from
+interactive detail picking. On the first migration, review selection snap,
+orbit, reset after orbit, every supported position, cord/board continuity,
+clear-and-reappear highlighting, workout-driven positions, and the explicit
+unavailable state.
 
 Derive a front-above key from the camera position without algebraically cancelling its camera-depth component. After `SCNTransaction.flush()`, verify the directional light's presentation-space forward vector points substantially along the declared camera view direction. Log the actual imported `SCNMaterial.lightingModel` when comparing renderers. SceneKit's physically based model requires Metal and can fall back to Blinn where Metal is unavailable, including affected Simulator configurations; treat Simulator captures as app-integration evidence, not guaranteed physical-device PBR parity.
 
