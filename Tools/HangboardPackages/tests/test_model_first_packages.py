@@ -460,6 +460,7 @@ def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
     assert set(suspension.canonical_poses) == {
         "primary", "secondary", "tertiary", "quaternary"
     }
+    assert [branch.rest_length for branch in suspension.branches] == [0.92, 0.92]
 
 
 def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:

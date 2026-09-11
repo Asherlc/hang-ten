@@ -190,8 +190,8 @@
                 ]
               },
               "branches": [
-                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 0.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
-                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 0.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
+                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 0.92, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
+                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 0.92, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
               ],
               "anchor": {
                 "offsetFromBoardBounds": [0, 0.22, 0],
@@ -708,12 +708,39 @@
       "name": "two-branch-passage-segment-too-short",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
-      "pythonError": "passage-to-passage",
+      "pythonError": "closed route",
       "swiftError": "invalidPackage",
       "mutations": [
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.1, 0.9, 0.05]},
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 1, "pointInModel"], "value": [0.9, 0.9, 0.05]},
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "restLength"], "value": 0.55}
+      ]
+    },
+    {
+      "name": "two-branch-excess-attachment-nodes",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "too many attachment nodes",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "ZZExtraAttachment", "role": "attachment"}}]
+    },
+    {
+      "name": "two-branch-coincident-passage-endpoints",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "distinct passage endpoints",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 1, "pointInModel"], "value": [0.2, 0.9, 0.05]}]
+    },
+    {
+      "name": "two-branch-passage-anchor-coincidence",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "must not coincide with the anchor",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.5, 1, 0.05]},
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "translation"], "value": [0, 0.22, 0]}
       ]
     },
     {

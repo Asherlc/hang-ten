@@ -1001,6 +1001,7 @@ struct BoardPackageStore {
         }
         var nodes: [BoardModelNodeDescriptor] = []
         var bodyCount = 0
+        var attachmentCount = 0
         var nodeIDsByHold: [String: [String]] = [:]
         for node in document.nodes {
             guard !node.nodeID.isEmpty else {
@@ -1021,13 +1022,14 @@ struct BoardPackageStore {
                 guard node.holdID == nil else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare holdID")
                 }
-                let allowsPassageAttachments: Bool = {
-                    guard let suspension = suspensionDocument else { return false }
-                    if case .twoBranchCord = suspension { return true }
-                    return false
+                let maximumAttachmentCount: Int = {
+                    guard let suspension = suspensionDocument else { return 1 }
+                    if case .twoBranchCord = suspension { return 4 }
+                    return 1
                 }()
-                guard allowsPassageAttachments || !nodes.contains(where: { $0.role == .attachment }) else {
-                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor permits at most one attachment node")
+                attachmentCount += 1
+                guard attachmentCount <= maximumAttachmentCount else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor has too many attachment nodes")
                 }
                 nodes.append(.init(nodeID: node.nodeID, role: .attachment, holdID: nil))
             default:
@@ -1305,16 +1307,21 @@ struct BoardPackageStore {
                         p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
                     ]
                     transformedEndpoints.append(transformed)
-                    let distance = zip(transformed, anchorPosition).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
-                    guard distance.isFinite, branch.restLength >= distance - 1e-5 else {
-                        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) restLength is shorter than endpoint distance")
-                    }
                 }
+                let firstEndpointDistance = zip(transformedEndpoints[0], anchorPosition)
+                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                let secondEndpointDistance = zip(transformedEndpoints[1], anchorPosition)
+                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
                 let passageDistance = zip(transformedEndpoints[0], transformedEndpoints[1])
                     .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }
                     .squareRoot()
-                guard passageDistance.isFinite, branch.restLength >= passageDistance - 1e-5 else {
-                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) restLength is shorter than passage-to-passage segment")
+                let minimumRouteLength = firstEndpointDistance + passageDistance + secondEndpointDistance
+                guard firstEndpointDistance.isFinite, secondEndpointDistance.isFinite,
+                      passageDistance.isFinite, minimumRouteLength.isFinite,
+                      firstEndpointDistance > 1e-7, secondEndpointDistance > 1e-7,
+                      passageDistance > 1e-7,
+                      branch.restLength >= minimumRouteLength - 1e-5 else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) must have distinct passage and anchor endpoints with a feasible closed route")
                 }
             }
         }

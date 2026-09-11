@@ -1,4 +1,5 @@
 import XCTest
+import SceneKit
 import simd
 @testable import HangTen
 
@@ -58,7 +59,8 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         right: [[Double]] = [[0.4, 0.4, -0.05], [0.6, 0.4, 0.05]],
         anchor: [Double] = [0, 2, 0],
         restLength: Double = 4,
-        radius: Double = 0.01
+        radius: Double = 0.01,
+        canonicalPoses: [String: BoardModelCanonicalPose] = [:]
     ) -> BoardModelTwoBranchSuspension {
         func passage(_ id: String, _ point: [Double]) -> BoardModelPassage {
             BoardModelPassage(id: id, nodeID: id, pointInModel: point, provenance: "test")
@@ -73,7 +75,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 BoardModelCordBranch(id: "right", passageIDs: ["right-0", "right-1"], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
             ],
             anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: anchor),
-            canonicalPoses: [:]
+            canonicalPoses: canonicalPoses
         )
     }
 
@@ -301,6 +303,59 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(result.branches[0].centerlineSamples.last!, result.fixedAnchor)
         XCTAssertEqual(result.branches[1].centerlineSamples.first!, result.fixedAnchor)
         XCTAssertEqual(result.branches[1].centerlineSamples.last!, result.fixedAnchor)
+    }
+
+    @MainActor
+    func testSceneRuntimeDispatchesTwoBranchSuspensionToTwoBranchSolver() throws {
+        let suspension = twoBranchSuspension(restLength: 4.2)
+        let solved = try BoardModelScene.solveSuspension(
+            pose: pose(),
+            suspension: .twoBranchCord(suspension),
+            bounds: bounds
+        )
+
+        guard case .twoBranch(let result) = solved else {
+            return XCTFail("scene runtime must preserve the two-branch solved result")
+        }
+        XCTAssertEqual(result.branches.map(\.id), ["left", "right"])
+        XCTAssertEqual(result.cameraFraming.includedPoints.count, 8 + 1 + 4 + 128)
+    }
+
+    @MainActor
+    func testSceneSelectionRendersBothBranchesAndRejectsUnrelatedInteriorContact() throws {
+        let selectedPose = pose()
+        let suspension = twoBranchSuspension(
+            restLength: 4.2,
+            canonicalPoses: ["primary": selectedPose]
+        )
+        let solved = try SuspendedBoardPresentation.solve(
+            pose: selectedPose,
+            suspension: suspension,
+            bounds: bounds
+        )
+        let descriptor = sceneDescriptor(for: suspension)
+
+        let clearScene = try XCTUnwrap(BoardModelScene(
+            source: modelScene(descriptor: descriptor),
+            descriptor: descriptor,
+            display: sceneDisplay(),
+            suspension: .twoBranchCord(suspension)
+        ))
+        XCTAssertTrue(clearScene.select(positionID: "primary"))
+        let renderedSegments = try XCTUnwrap(clearScene.transientCordNode?.childNodes)
+        XCTAssertTrue(renderedSegments.contains { $0.name?.contains("branch.0.segment") == true })
+        XCTAssertTrue(renderedSegments.contains { $0.name?.contains("branch.1.segment") == true })
+
+        let interiorPoint = solved.branches[0].centerlineSamples[10]
+        let blockedScene = try XCTUnwrap(BoardModelScene(
+            source: modelScene(descriptor: descriptor, bodyPosition: interiorPoint),
+            descriptor: descriptor,
+            display: sceneDisplay(),
+            suspension: .twoBranchCord(suspension)
+        ))
+        XCTAssertFalse(blockedScene.select(positionID: "primary"))
+        XCTAssertTrue(blockedScene.isUnavailable)
+        XCTAssertNil(blockedScene.transientCordNode)
     }
 
     func testTwoBranchQuarterTurnTransformsAllFourPassagesButNotAnchor() throws {
@@ -539,5 +594,55 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertThrowsError(try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(samples)) { error in
             XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
         }
+    }
+
+    private func sceneDescriptor(for suspension: BoardModelTwoBranchSuspension) -> BoardModelDescriptor {
+        let passageNodes = (suspension.passages.left + suspension.passages.right).map {
+            BoardModelNodeDescriptor(nodeID: $0.nodeID, role: .attachment, holdID: nil)
+        }
+        return BoardModelDescriptor(
+            schemaVersion: 1,
+            coordinateFrame: "hang-ten-board-v1",
+            modelSHA256: String(repeating: "0", count: 64),
+            modelBounds: bounds,
+            nodes: [
+                BoardModelNodeDescriptor(nodeID: "Body", role: .body, holdID: nil),
+                BoardModelNodeDescriptor(nodeID: "Hold", role: .hold, holdID: "hold"),
+            ] + passageNodes,
+            holds: [
+                "hold": BoardModelHoldDescriptor(
+                    nodeIDs: ["Hold"],
+                    facePlaneAABB: BoardModelFacePlaneAABB(minimum: [0, 0], maximum: [1, 1]),
+                    center: [0.5, 0.5]
+                )
+            ]
+        )
+    }
+
+    private func sceneDisplay() -> BoardModelDisplay {
+        BoardModelDisplay(camera: BoardModelCamera(
+            type: "orthographic",
+            viewDirection: [0, 0, -1],
+            up: [0, 1, 0],
+            fitPadding: 0.08
+        ))
+    }
+
+    private func modelScene(
+        descriptor: BoardModelDescriptor,
+        bodyPosition: SIMD3<Float>? = nil
+    ) -> SCNScene {
+        let scene = SCNScene()
+        for (index, binding) in descriptor.nodes.enumerated() {
+            let geometry = SCNBox(width: 0.02, height: 0.02, length: 0.02, chamferRadius: 0)
+            geometry.firstMaterial = SCNMaterial()
+            let node = SCNNode(geometry: geometry)
+            node.name = binding.nodeID
+            node.simdPosition = binding.role == .body && bodyPosition != nil
+                ? bodyPosition!
+                : SIMD3<Float>(10 + Float(index), 10, 10)
+            scene.rootNode.addChildNode(node)
+        }
+        return scene
     }
 }
