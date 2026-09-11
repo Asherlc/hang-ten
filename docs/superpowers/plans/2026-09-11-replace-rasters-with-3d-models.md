@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the raster presentations for the two supplied catalog boards with the matching downloaded 3D models.
+**Goal:** Replace the raster presentations for the supplied Metolius Simulator 3-D and So iLL Training Tiles catalog boards with their matching downloaded 3D models, using the manufacturer-supported 31- and 16-contact inventories respectively.
 
-**Architecture:** Preserve each board’s existing ID, logical hold inventory, metadata, and workout target identities. Convert the supplied Blender source into the repository’s model-only package contract (`primary.usdz` plus generated `primary.model.json`), bind every mesh explicitly to the existing logical hold IDs, and make the model presentation the sole rendering, highlighting, picking, and matching geometry.
+**Architecture:** Preserve both boards’ IDs, source-backed active logical metadata, and workout target identities. Metolius gains only the two source-backed #2 flat-sloper IDs needed by its supplied model; Training Tiles uses only the 16 manufacturer-supported contacts, while the four previously subdivided IDs are excluded from active metadata and recorded as deprecated/unverified because no saved data references them. Convert each supplied Blender source into the repository’s model-only package contract (`primary.usdz` plus generated `primary.model.json`), bind every mesh explicitly to logical hold IDs, and make each model presentation the sole rendering, highlighting, picking, and matching geometry.
 
 **Tech Stack:** Blender/USDZ, the existing model-package compiler and validators, schema-v2 board packages, Swift/SceneKit runtime, and Python/XCTest package tests.
 
@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Migrate only `metolius.simulator-3d` and `soill.training-tiles`; no other board is in scope.
-- Preserve existing board IDs, existing logical hold IDs and order, metadata, equipment, positions, transitions, and training behavior; add only the two source-backed Metolius #2 flat-sloper IDs required to represent supplied selectable contacts.
+- Preserve both board IDs, existing active logical hold order and metadata, equipment, positions, transitions, and training behavior; add only Metolius `flat-sloper-2-left` and `flat-sloper-2-right`, and remove Training Tiles `top-pocket-inner-left/right` and `top-jug-left/right` from active metadata because the supplied manufacturer-supported inventory is 16 contacts.
 - Each migrated package contains exactly `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; no PNG, raster presentation, canonical 2D `holdGeometry`, duplicate model resource, or undeclared asset remains.
 - The downloaded Blender files are source inputs; the shipped USDZ and descriptor must be generated and hash-bound in the repository’s `hang-ten-board-v1` coordinate frame.
 - Mesh-to-hold mappings are explicit and identity-based. Do not infer tags from pixels, positions, contours, or the old raster paths.
@@ -28,7 +28,7 @@
 | --- | --- |
 | `Hangboards/metolius-simulator-3d/board.json` | Existing Metolius logical metadata plus one model-only presentation. |
 | `Hangboards/metolius-simulator-3d/assets/` | Exact shipped Metolius USDZ and generated descriptor. |
-| `Hangboards/soill-training-tiles/board.json` | Existing Training Tiles logical metadata plus one model-only presentation. |
+| `Hangboards/soill-training-tiles/board.json` | Existing logical metadata reduced to the 16 source-supported contacts plus one model-only presentation. |
 | `Hangboards/soill-training-tiles/assets/` | Exact shipped Training Tiles USDZ and generated descriptor. |
 | `Tools/HangboardPackages/tests/test_approved_board_packages.py` | Package-level regression coverage for the two promoted model packages, if existing assertions need extension. |
 | `HangTenTests/BoardModelTests.swift` | Runtime routing/identity regression coverage for the two migrated boards, if existing assertions need extension. |
@@ -40,7 +40,7 @@
 **Files:**
 - Modify: `Hangboards/metolius-simulator-3d/board.json`
 - Modify: `Hangboards/soill-training-tiles/board.json`
-- Modify if needed: `Tools/HangboardModels/compile_model_package.py`, `Tools/HangboardModels/model_descriptor.py`, `HangTen/Models/BoardPackageStore.swift`, `HangTen/Models/TrainingModels.swift`, and focused model tests to support multiple body meshes without making them selectable
+- Modify if needed: `Tools/HangboardModels/compile_model_package.py`, `Tools/HangboardModels/model_descriptor.py`, `HangTen/Models/BoardPackageStore.swift`, `HangTen/Models/TrainingModels.swift`, and focused model tests to support multiple explicit body meshes without making them selectable
 - Create: `Hangboards/metolius-simulator-3d/assets/primary.usdz`, `Hangboards/metolius-simulator-3d/assets/primary.model.json`
 - Create: `Hangboards/soill-training-tiles/assets/primary.usdz`, `Hangboards/soill-training-tiles/assets/primary.model.json`
 - Delete: `Hangboards/metolius-simulator-3d/assets/primary.png`, `Hangboards/soill-training-tiles/assets/primary.png`
@@ -48,18 +48,18 @@
 - Create: `docs/source-audits/2026-09-11-replace-rasters-with-3d-models.md`
 - Create: owned temporary artifacts below `.context/replace-rasters-with-3d-models/`
 
-**Interfaces:** Consume `/Users/asherlc/Downloads/models/Metolius-Simulator-3D/Metolius-Simulator-3D.blend` and `/Users/asherlc/Downloads/models/Training-Tiles/Training-Tiles.blend`, their README/hold-map/validation evidence, the existing board JSON logical inventories, and the repository’s compiler/parser/runtime model contract. Produce model-only schema-v2 packages with exact `assets/primary.usdz` and generated `assets/primary.model.json` paths.
+**Interfaces:** Consume `/Users/asherlc/Downloads/models/Metolius-Simulator-3D/Metolius-Simulator-3D.blend` and `/Users/asherlc/Downloads/models/Training-Tiles/Training-Tiles.blend`, their README/hold-map/validation evidence, the existing board JSON logical inventories, and the repository’s compiler/parser/runtime model contract. Produce two model-only schema-v2 packages with exact `assets/primary.usdz` and generated `assets/primary.model.json` paths.
 
-- [ ] Record source file SHA-256 values, source README/hold-map/validation hashes, source coordinate frames, and the explicit source-object-to-logical-ID mappings in the audit. The Metolius mapping must cover `hold_01_left`, `hold_01_right`, through `hold_18_center`, including new source-backed `flat-sloper-2-left` and `flat-sloper-2-right` IDs for #2; Training Tiles must cover every `hold-L-*` and `hold-R-*` mesh using the existing left/right logical IDs.
-- [ ] Validate the source scene inventories and apply only explicit semantic tags in an in-memory or owned temporary copy. Reject unknown, duplicate, missing, non-mesh hold mappings, and unmapped source objects rather than guessing. Extend the compiler/descriptor/parser only as needed to retain multiple explicitly tagged body meshes; add a focused regression proving body meshes remain nonselectable.
+- [ ] Record source file SHA-256 values, source README/hold-map/validation hashes, source coordinate frames, and explicit source-object-to-logical-ID mappings in the audit. Metolius must cover `hold_01_left`, `hold_01_right`, through `hold_18_center`, including new source-backed `flat-sloper-2-left` and `flat-sloper-2-right` IDs for #2. Training Tiles must cover all sixteen `hold-L-*` and `hold-R-*` contacts and explicitly record the four excluded IDs as deprecated/unverified, with no saved-data references found.
+- [ ] Validate both source inventories and apply only explicit semantic tags in in-memory or owned temporary copies. Reject unknown, duplicate, missing, non-mesh hold mappings, and unmapped source objects rather than guessing. Extend the compiler/descriptor/parser only as needed to retain multiple explicitly tagged Training Tiles body meshes; add focused tests proving all body meshes remain nonselectable.
 - [ ] Compile each tagged Blender source through the documented model compiler into the exact package layout. Preserve source object names, produce descriptors from actual imported USDZ vertices, and ensure descriptor hashes match the shipped USDZ bytes.
-- [ ] Update each `board.json` presentation to `media.type: "model"` with `assetPath: "assets/primary.usdz"`, `descriptorPath: "assets/primary.model.json"`, an orthographic camera, and no raster geometry or derivation. Preserve all existing logical holds and append only `flat-sloper-2-left` and `flat-sloper-2-right` with the supplied 55 mm flat-sloper metadata.
-- [ ] Remove only the two migrated PNG assets after descriptor bindings cover every logical hold. Ensure each migrated package root has exactly the declared three files.
-- [ ] Add or update focused package/runtime assertions for model routing, stable hold IDs/order, no PNG/image URL, descriptor/model URL resolution, complete descriptor inventory, and no regression to unrelated raster/model boards.
+- [ ] Update both `board.json` presentations to `media.type: "model"` with `assetPath: "assets/primary.usdz"`, `descriptorPath: "assets/primary.model.json"`, an orthographic camera, and no raster geometry or derivation. Preserve Metolius’s existing logical holds and append only `flat-sloper-2-left` and `flat-sloper-2-right` with supplied 55 mm flat-sloper metadata. Keep only Training Tiles’ 16 source-supported logical holds active.
+- [ ] Remove both migrated PNG assets after descriptor bindings cover every active logical hold. Ensure each migrated package root has exactly the declared three files.
+- [ ] Add or update focused package/runtime assertions for both model routes, stable active hold IDs/order, excluded Training Tiles IDs, no PNG/image URLs, descriptor/model URL resolution, complete descriptor inventories, nonselectable multiple bodies, and no regression to unrelated raster/model boards.
 - [ ] Run the relevant Python package tests, the package validator with final inventory, `git diff --check`, and the focused Swift model tests/build if available. Record exact commands and results in the source audit and owned report.
 - [ ] Commit the implementation and push the current branch to its remote.
 
-**Review gate:** An independent reviewer verifies the two package inventories, exact logical identity preservation, explicit mesh mappings, descriptor/USDZ hash binding, model-only media contract, absence of raster fallback, and the reported validation evidence.
+**Review gate:** An independent reviewer verifies both package inventories, exact active logical identity preservation plus the two Metolius source-backed IDs and 16-contact Training Tiles inventory, explicit mesh mappings, descriptor/USDZ hash binding, model-only media contracts, absence of raster fallbacks, and the reported validation evidence.
 
 ### Task 2: Final independent verification and handoff
 
@@ -68,11 +68,11 @@
 - Read: Task 1 source audit, package JSON/assets, test reports, and git diff.
 - Create: `.context/replace-rasters-with-3d-models/final-verification.json` (owned, untracked)
 
-**Interfaces:** Consume Task 1’s promoted packages and audit. Do not redesign geometry or alter logical metadata during verification.
+**Interfaces:** Consume Task 1’s promoted packages and audit. Do not redesign geometry or invent metadata during verification.
 
 - [ ] Re-run package discovery and assert both migrated packages contain exactly `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`, with no PNG or raster media.
 - [ ] Re-run model descriptor/hash/inventory validation and relevant Python tests; inspect the actual diff for unrelated board changes.
-- [ ] Run the focused Swift model/package tests or the narrowest available Xcode build check and record whether the two boards resolve through `BoardModelView` without raster fallback.
+- [ ] Run the focused Swift model/package tests or the narrowest available Xcode build check and record that both boards resolve through `BoardModelView` without raster fallback.
 - [ ] Dispatch the final whole-branch reviewer with the plan, source audit, verification report, and full branch diff; address any Critical/Important finding through a fresh implementation agent and scoped re-review.
 - [ ] Push any final reviewed commit and report the pushed commit SHA.
 
