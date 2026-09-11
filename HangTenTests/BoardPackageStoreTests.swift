@@ -153,7 +153,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.passages.right.count, 2)
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
-        XCTAssertEqual(media.suspension?.cord.restLength, 0.5)
+        XCTAssertEqual(media.suspension?.cord.restLength, 1.5)
     }
 
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
@@ -3469,14 +3469,14 @@ final class BoardPackageStoreTests: XCTestCase {
     private func serializedTwoBranchPassage(_ passage: [String: Any]) throws -> Data {
         try orderedJSONObjectData(
             passage,
-            keys: ["id", "nodeID", "pointInModel", "provenance"]
+            keys: ["id", "nodeID", "entryPointInModel", "exitPointInModel", "provenance"]
         )
     }
 
     private func serializedTwoBranchBranch(_ branch: [String: Any]) throws -> Data {
         try orderedJSONObjectData(
             branch,
-            keys: ["id", "passageIDs", "restLength", "radius", "material", "provenance"]
+            keys: ["id", "passageIDs", "entryContactPoints", "exteriorContactPoints", "exitContactPoints", "restLength", "radius", "material", "provenance"]
         )
     }
 

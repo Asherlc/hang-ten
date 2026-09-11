@@ -629,21 +629,35 @@ enum SuspendedBoardPresentation {
         guard allPassages.count == 4,
               Set(allPassages.map(\.id)).count == allPassages.count,
               allPassages.allSatisfy({
-                  $0.pointInModel.count == 3 &&
-                  $0.pointInModel.allSatisfy(\.isFinite) &&
-                  zip($0.pointInModel, bounds.minimum).allSatisfy({ $0 >= $1 }) &&
-                  zip($0.pointInModel, bounds.maximum).allSatisfy({ $0 <= $1 })
+                  $0.entryPointInModel.count == 3 &&
+                  $0.exitPointInModel.count == 3 &&
+                  $0.entryPointInModel.allSatisfy(\.isFinite) &&
+                  $0.exitPointInModel.allSatisfy(\.isFinite) &&
+                  zip($0.entryPointInModel, bounds.minimum).allSatisfy({ $0 >= $1 }) &&
+                  zip($0.entryPointInModel, bounds.maximum).allSatisfy({ $0 <= $1 }) &&
+                  zip($0.exitPointInModel, bounds.minimum).allSatisfy({ $0 >= $1 }) &&
+                  zip($0.exitPointInModel, bounds.maximum).allSatisfy({ $0 <= $1 })
               }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
         let passagesByID = Dictionary(uniqueKeysWithValues: allPassages.map { passage in
-            (passage.id, SIMD3<Float>(
-                Float(passage.pointInModel[0]),
-                Float(passage.pointInModel[1]),
-                Float(passage.pointInModel[2])
-            ))
+            (
+                passage.id,
+                (
+                    SIMD3<Float>(
+                        Float(passage.entryPointInModel[0]),
+                        Float(passage.entryPointInModel[1]),
+                        Float(passage.entryPointInModel[2])
+                    ),
+                    SIMD3<Float>(
+                        Float(passage.exitPointInModel[0]),
+                        Float(passage.exitPointInModel[1]),
+                        Float(passage.exitPointInModel[2])
+                    )
+                )
+            )
         })
-        guard passagesByID.values.allSatisfy(\.allFinite) else {
+        guard passagesByID.values.allSatisfy({ $0.0.allFinite && $0.1.allFinite && simd_length($0.1 - $0.0) > 1e-7 }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
 
@@ -667,32 +681,53 @@ enum SuspendedBoardPresentation {
                   branch.restLength > 0,
                   branch.radius.isFinite,
                   branch.radius > 0,
+                  branch.entryContactPoints.count >= 1,
+                  branch.exteriorContactPoints.count >= 2,
+                  branch.exitContactPoints.count >= 1,
+                  branch.entryContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
+                  branch.exteriorContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
+                  branch.exitContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
                   branch.passageIDs.allSatisfy({ passagesByID[$0] != nil }) else {
                 throw SuspendedPresentationError.invalidCord
             }
-            guard let firstModelPoint = passagesByID[branch.passageIDs[0]],
-                  let secondModelPoint = passagesByID[branch.passageIDs[1]] else {
+            guard let firstModelPassage = passagesByID[branch.passageIDs[0]],
+                  let secondModelPassage = passagesByID[branch.passageIDs[1]] else {
                 throw SuspendedPresentationError.invalidSuspension
             }
-            let first = transformPoint(transform, firstModelPoint)
-            let second = transformPoint(transform, secondModelPoint)
-            guard first.allFinite, second.allFinite else {
+            let firstEntry = transformPoint(transform, firstModelPassage.0)
+            let firstExit = transformPoint(transform, firstModelPassage.1)
+            let secondExit = transformPoint(transform, secondModelPassage.1)
+            let secondEntry = transformPoint(transform, secondModelPassage.0)
+            let entryContacts = branch.entryContactPoints.map {
+                transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
+            }
+            let contactPoints = branch.exteriorContactPoints.map {
+                transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
+            }
+            let exitContacts = branch.exitContactPoints.map {
+                transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
+            }
+            guard firstEntry.allFinite, firstExit.allFinite, secondExit.allFinite, secondEntry.allFinite,
+                  entryContacts.allSatisfy(\.allFinite), contactPoints.allSatisfy(\.allFinite),
+                  exitContacts.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.invalidPose
             }
-            let interiorVector = second - first
-            let interiorLength = simd_length(interiorVector)
-            guard interiorLength.isFinite, interiorLength > 1e-7,
-                  let interiorTangent = normalized(interiorVector) else {
+            let rigidRoute = entryContacts + [firstEntry, firstExit]
+                + contactPoints + [secondExit, secondEntry] + exitContacts
+            let rigidLength = zip(rigidRoute, rigidRoute.dropFirst()).reduce(Float.zero) {
+                $0 + simd_length($1.1 - $1.0)
+            }
+            guard rigidLength.isFinite, rigidLength > 1e-7 else {
                 throw SuspendedPresentationError.invalidSuspension
             }
 
-            let firstDistance = simd_length(first - fixedAnchor)
-            let secondDistance = simd_length(fixedAnchor - second)
+            let firstDistance = simd_length(entryContacts[0] - fixedAnchor)
+            let secondDistance = simd_length(fixedAnchor - exitContacts[exitContacts.count - 1])
             guard firstDistance.isFinite, secondDistance.isFinite,
                   firstDistance > 1e-7, secondDistance > 1e-7 else {
                 throw SuspendedPresentationError.invalidCord
             }
-            let minimumRouteLength = firstDistance + interiorLength + secondDistance
+            let minimumRouteLength = firstDistance + rigidLength + secondDistance
             let declaredLength = Float(branch.restLength)
             guard declaredLength.isFinite,
                   declaredLength >= minimumRouteLength - SuspendedCordSolver.tautTolerance else {
@@ -703,7 +738,7 @@ enum SuspendedBoardPresentation {
             // remaining free-cord length in proportion to the two endpoint
             // separations. This is deterministic and preserves the declared
             // total branch length without inventing knot geometry.
-            let freeLength = declaredLength - interiorLength
+            let freeLength = declaredLength - rigidLength
             let endpointDistanceSum = firstDistance + secondDistance
             guard freeLength.isFinite, endpointDistanceSum.isFinite,
                   freeLength >= endpointDistanceSum - SuspendedCordSolver.tautTolerance else {
@@ -717,16 +752,16 @@ enum SuspendedBoardPresentation {
 
             let firstSpan = try SuspendedCordSolver.solve(
                 start: fixedAnchor,
-                end: first,
+                end: entryContacts[0],
                 restLength: firstFreeLength
             )
             let secondSpan = try SuspendedCordSolver.solve(
-                start: second,
+                start: exitContacts[exitContacts.count - 1],
                 end: fixedAnchor,
                 restLength: secondFreeLength
             )
-            guard firstSpan.samples.last == first,
-                  secondSpan.samples.first == second,
+            guard firstSpan.samples.last == entryContacts[0],
+                  secondSpan.samples.first == exitContacts[exitContacts.count - 1],
                   firstSpan.samples.allSatisfy(\.allFinite),
                   secondSpan.samples.allSatisfy(\.allFinite),
                   firstSpan.tangents.allSatisfy(\.allFinite),
@@ -734,10 +769,12 @@ enum SuspendedBoardPresentation {
                 throw SuspendedPresentationError.nonFiniteCurve
             }
 
-            let centerline = firstSpan.samples + [second] + Array(secondSpan.samples.dropFirst())
-            let tangents = firstSpan.tangents + [interiorTangent] + Array(secondSpan.tangents.dropFirst())
+            let centerline = firstSpan.samples
+                + Array(rigidRoute.dropFirst())
+                + Array(secondSpan.samples.dropFirst())
+            let tangents = tangentSamples(for: centerline)
             guard centerline.count == tangents.count,
-                  centerline.count == SuspendedCordSolver.sampleCount * 2,
+                  centerline.count >= SuspendedCordSolver.sampleCount * 2,
                   centerline.allSatisfy(\.allFinite),
                   tangents.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.nonFiniteCurve
@@ -746,7 +783,7 @@ enum SuspendedBoardPresentation {
             let measuredLength = zip(centerline, centerline.dropFirst()).reduce(Float.zero) {
                 $0 + simd_length($1.1 - $1.0)
             }
-            let arcLength = firstSpan.arcLength + interiorLength + secondSpan.arcLength
+            let arcLength = firstSpan.arcLength + rigidLength + secondSpan.arcLength
             guard measuredLength.isFinite, arcLength.isFinite,
                   abs(arcLength - declaredLength) <= 1e-4,
                   abs(measuredLength - declaredLength) <= 0.02 else {
@@ -755,13 +792,13 @@ enum SuspendedBoardPresentation {
             branches.append(SuspendedBranchSolution(
                 id: branch.id,
                 passageIDs: branch.passageIDs,
-                spans: [firstSpan.samples, secondSpan.samples],
+                spans: [firstSpan.samples, rigidRoute, secondSpan.samples],
                 centerlineSamples: centerline,
                 tangentSamples: tangents,
                 arcLength: arcLength
             ))
             radii.append(Float(branch.radius))
-            framingPoints.append(contentsOf: [first, second])
+            framingPoints.append(contentsOf: rigidRoute)
             framingPoints.append(contentsOf: centerline)
         }
         guard Set(branches.map(\.id)).count == branches.count,
@@ -833,6 +870,14 @@ enum SuspendedBoardPresentation {
     ) -> SIMD3<Float> {
         let result = transform * SIMD4(point, 1)
         return SIMD3(result.x, result.y, result.z)
+    }
+
+    private static func tangentSamples(for points: [SIMD3<Float>]) -> [SIMD3<Float>] {
+        points.indices.map { index in
+            let previous = points[max(0, index - 1)]
+            let next = points[min(points.count - 1, index + 1)]
+            return normalized(next - previous) ?? SIMD3<Float>(0, 1, 0)
+        }
     }
 
     private static func transformedBoundsCorners(

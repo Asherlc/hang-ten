@@ -135,11 +135,11 @@ REVIEW_PASSAGE_IDS = (
     "right-inner-passage",
     "right-outer-passage",
 )
-REVIEW_PASSAGE_POINTS = {
-    "left-outer-passage": (0.017, 0.047999999, 0.075999998),
-    "left-inner-passage": (0.031, 0.047999999, 0.075999998),
-    "right-inner-passage": (0.469, 0.047999999, 0.075999998),
-    "right-outer-passage": (0.483, 0.047999999, 0.075999998),
+REVIEW_PASSAGE_MOUTHS = {
+    "left-outer-passage": ((0.017, 0.047999999, 0.075999998), (0.017, 0.047999999, 0.0013394)),
+    "left-inner-passage": ((0.031, 0.047999999, 0.075999998), (0.031, 0.047999999, 0.0013394)),
+    "right-inner-passage": ((0.469, 0.047999999, 0.075999998), (0.469, 0.047999999, 0.0013394)),
+    "right-outer-passage": ((0.483, 0.047999999, 0.075999998), (0.483, 0.047999999, 0.0013394)),
 }
 REVIEW_BRANCH_IDS = ("left-branch", "right-branch")
 
@@ -192,13 +192,17 @@ def validate_review_candidate(candidate: Mapping[str, object]) -> None:
         passage_id = record.get("id")
         if record.get("physicalFeature") is None or record.get("nodeID") != expected_model["sourceBodyNodeID"]:
             raise ValueError(f"review candidate passage binding is invalid: {passage_id}")
-        point = record.get("pointInModel")
-        expected_point = REVIEW_PASSAGE_POINTS[passage_id]
-        if not isinstance(point, list) or len(point) != 3 or any(
-            not isinstance(value, (int, float)) or abs(float(value) - expected_point[index]) > 1e-9
-            for index, value in enumerate(point)
+        expected_entry, expected_exit = REVIEW_PASSAGE_MOUTHS[passage_id]
+        for key, expected_point in (
+            ("entryPointInModel", expected_entry),
+            ("exitPointInModel", expected_exit),
         ):
-            raise ValueError(f"review candidate passage point is not canonical: {passage_id}")
+            point = record.get(key)
+            if not isinstance(point, list) or len(point) != 3 or any(
+                not isinstance(value, (int, float)) or abs(float(value) - expected_point[index]) > 1e-9
+                for index, value in enumerate(point)
+            ):
+                raise ValueError(f"review candidate passage {key} is not canonical: {passage_id}")
         passage_provenance = record.get("provenance")
         if not isinstance(passage_provenance, str) or "approved visual evidence" not in passage_provenance or "display estimate" not in passage_provenance:
             raise ValueError(f"review candidate passage lacks source-labeled provenance: {passage_id}")
@@ -212,6 +216,21 @@ def validate_review_candidate(candidate: Mapping[str, object]) -> None:
     for branch, expected_pair in zip(branches, expected_pairs):
         if branch.get("passageIDs") != list(expected_pair):
             raise ValueError(f"review candidate branch passage linkage is not canonical: {branch.get('id')}")
+        contact_sets = (
+            ("entryContactPoints", 1),
+            ("exteriorContactPoints", 2),
+            ("exitContactPoints", 1),
+        )
+        if any(
+            not isinstance(branch.get(key), list) or len(branch[key]) < minimum_count
+            for key, minimum_count in contact_sets
+        ) or any(
+            not isinstance(point, list) or len(point) != 3
+            or any(not isinstance(value, (int, float)) or not math.isfinite(float(value)) for value in point)
+            for key, _ in contact_sets
+            for point in branch[key]
+        ):
+            raise ValueError(f"review candidate branch must declare bounded contact points: {branch.get('id')}")
         if not isinstance(branch.get("restLength"), (int, float)) or float(branch["restLength"]) <= 0:
             raise ValueError(f"review candidate branch length is invalid: {branch.get('id')}")
         if not isinstance(branch.get("radius"), (int, float)) or float(branch["radius"]) <= 0:
@@ -221,7 +240,7 @@ def validate_review_candidate(candidate: Mapping[str, object]) -> None:
     anchor = candidate.get("anchor")
     if (
         not isinstance(anchor, Mapping)
-        or anchor.get("offsetFromBoardBounds") != [0, 0.22, 0]
+        or anchor.get("offsetFromBoardBounds") != [0, 0.5, 0]
         or anchor.get("visibility") != "invisible"
         or not isinstance(anchor.get("provenance"), str)
         or "display estimate" not in anchor["provenance"]
@@ -550,7 +569,8 @@ def _validate_passage_correspondence(
         node_id = passage.get("nodeID")
         source_node_id = passage.get("sourceNodeID")
         role = passage.get("role")
-        point = passage.get("pointInModel")
+        entry = passage.get("entryPointInModel")
+        exit = passage.get("exitPointInModel")
         if (
             not isinstance(passage_id, str)
             or not passage_id
@@ -560,9 +580,11 @@ def _validate_passage_correspondence(
             or not isinstance(source_node_id, str)
             or not source_node_id
             or role not in {"body", "attachment"}
-            or not isinstance(point, list)
-            or len(point) != 3
-            or not all(isinstance(coordinate, (int, float)) and math.isfinite(coordinate) for coordinate in point)
+            or any(
+                not isinstance(point, list) or len(point) != 3
+                or not all(isinstance(coordinate, (int, float)) and math.isfinite(coordinate) for coordinate in point)
+                for point in (entry, exit)
+            )
         ):
             raise ValueError("passage correspondence is incomplete or duplicated")
         expected = expected_records.get(passage_id)
@@ -573,9 +595,12 @@ def _validate_passage_correspondence(
             or role != "body"
         ):
             raise ValueError("passage correspondence does not match candidate/source mapping")
-        expected_point = expected["pointInModel"]
-        if any(abs(float(value) - float(expected_point[index])) > 1e-9 for index, value in enumerate(point)):
-            raise ValueError("passage correspondence point does not match the review candidate")
+        for actual_point, expected_point in (
+            (entry, expected["entryPointInModel"]),
+            (exit, expected["exitPointInModel"]),
+        ):
+            if any(abs(float(value) - float(expected_point[index])) > 1e-9 for index, value in enumerate(actual_point)):
+                raise ValueError("passage correspondence mouth does not match the review candidate")
         binding = by_node.get(node_id)
         if binding is None or binding.get("role") != role:
             raise ValueError("passage correspondence must target a body or attachment binding")
@@ -706,11 +731,11 @@ def _validate_branch_probe_evidence(
                 raise ValueError(f"branch interface IDs are incomplete: {branch_id}")
             pose = candidate["canonicalPoses"][position_id]
             expected_points = [
-                _transform_point(passages[passage_id]["pointInModel"], pose)
+                _transform_point(passages[passage_id]["entryPointInModel"], pose)
                 for passage_id in passage_ids
             ]
             for interface, expected_point in zip(interface_points, expected_points):
-                point = interface.get("pointInModel")
+                point = interface.get("entryPointInModel")
                 expected_node = report["passageCorrespondence"][
                     REVIEW_PASSAGE_IDS.index(interface["passageID"])
                 ]["nodeID"]
@@ -721,15 +746,36 @@ def _validate_branch_probe_evidence(
                     for index in range(3)
                 ):
                     raise ValueError(f"branch interface point is not posed candidate geometry: {branch_id}")
+            generated = next(
+                spec for spec in _branch_probe_specs(
+                    bounds,
+                    candidate,
+                    pose,
+                    {
+                        item["passageID"]: item["nodeID"]
+                        for item in report["passageCorrespondence"]
+                    },
+                ) if spec["branchID"] == branch_id
+            )
             samples = branch_result.get("centerlineSamples")
-            if not isinstance(samples, list) or len(samples) != 64:
+            if not isinstance(samples, list) or len(samples) != len(generated["samples"]):
                 raise ValueError(f"branch centerline samples are incomplete: {branch_id}")
+            if branch_result.get("contactSegments") != generated["contactSegments"]:
+                raise ValueError(f"branch exterior contact topology changed: {branch_id}")
             anchor = _suspension_anchor(bounds, candidate)
             if any(abs(float(samples[0][index]) - anchor[index]) > 1e-8 for index in range(3)):
                 raise ValueError(f"branch centerline anchor is inconsistent: {branch_id}")
             if any(abs(float(samples[-1][index]) - anchor[index]) > 1e-8 for index in range(3)):
                 raise ValueError(f"branch centerline closure is inconsistent: {branch_id}")
-            for sample, expected_point in zip((samples[31], samples[32]), expected_points):
+            # The two free catenaries terminate at the declared front-shoulder
+            # contacts.  The entry mouths remain independently recorded in
+            # interfacePoints, one contact segment later; treating their
+            # indices as the free-span endpoints would silently reintroduce
+            # the bore-centre departure defect this contract prevents.
+            for sample, expected_point in zip(
+                (samples[31], samples[-32]),
+                (generated["samples"][31], generated["samples"][-32]),
+            ):
                 if any(abs(float(sample[index]) - expected_point[index]) > 1e-8 for index in range(3)):
                     raise ValueError(f"branch centerline passage join is inconsistent: {branch_id}")
 
@@ -955,6 +1001,7 @@ def _check_centerline_clearance(
     attachment_node_id: str,
     nearest,
     interface_points: Sequence[tuple[str, tuple[float, float, float]]] = (),
+    segment_modes: Sequence[str] | None = None,
 ) -> dict[str, object]:
     """Apply the runtime segment/tube clearance rule to a nearest-mesh query."""
     if len(samples) < 2:
@@ -963,13 +1010,40 @@ def _check_centerline_clearance(
     checked = 0
     node_ids = tuple(getattr(nearest, "node_ids", (attachment_node_id,)))
     for segment_index, (start, end) in enumerate(zip(samples, samples[1:])):
+        mode = segment_modes[segment_index] if segment_modes is not None else "free"
+        if mode not in {"free", "through-bore", "exterior-contact"}:
+            raise ValueError(f"unknown cord route segment mode: {mode}")
+        if mode == "through-bore":
+            continue
         for subdivision in range(CENTERLINE_SUBDIVISIONS + 1):
             fraction = subdivision / CENTERLINE_SUBDIVISIONS
             point = tuple(start[axis] + (end[axis] - start[axis]) * fraction for axis in range(3))
             for node_id in node_ids:
                 distance, nearest_point = nearest(node_id, point)
-                minimum = min(minimum, distance)
+                # Report the minimum that is subject to the general 3 mm
+                # free-span rule. A declared body-only bearing has its own
+                # independently enforced cord-radius rule below.
+                if mode != "exterior-contact" or node_id != attachment_node_id:
+                    minimum = min(minimum, distance)
                 checked += 1
+                if mode == "exterior-contact":
+                    # A physical bearing is allowed only on the integral body,
+                    # while every selectable hold retains the full free-span
+                    # threshold. The body centreline must remain at least one
+                    # cord radius outside the imported mesh.
+                    contact_clearance = required_clearance - CORD_CLEARANCE_METERS
+                    threshold = contact_clearance if node_id == attachment_node_id else required_clearance
+                    if distance >= threshold:
+                        continue
+                    return {
+                        "passed": False,
+                        "minimumDistanceMeters": minimum,
+                        "requiredClearanceMeters": required_clearance,
+                        "sampleCount": checked,
+                        "failedNodeID": node_id,
+                        "failedSegmentIndex": segment_index,
+                        "failedSegmentFraction": fraction,
+                    }
                 if distance >= required_clearance:
                     continue
                 interface = (
@@ -1184,39 +1258,136 @@ def _branch_probe_specs(
     for branch in suspension["branches"]:
         first_record = passages[branch["passageIDs"][0]]
         second_record = passages[branch["passageIDs"][1]]
-        first = _transform_point(first_record["pointInModel"], pose)
-        second = _transform_point(second_record["pointInModel"], pose)
-        interior = math.dist(first, second)
-        first_distance = math.dist(anchor, first)
-        second_distance = math.dist(anchor, second)
+        first_entry = _transform_point(first_record["entryPointInModel"], pose)
+        first_exit = _transform_point(first_record["exitPointInModel"], pose)
+        second_exit = _transform_point(second_record["exitPointInModel"], pose)
+        second_entry = _transform_point(second_record["entryPointInModel"], pose)
+        entry_contacts = _pose_aware_shoulder_contacts(
+            branch["entryContactPoints"],
+            anchor=anchor,
+            bounds=bounds,
+            pose=pose,
+            is_entry=True,
+        )
+        contact_points = [
+            _transform_point(point, pose) for point in branch["exteriorContactPoints"]
+        ]
+        exit_contacts = _pose_aware_shoulder_contacts(
+            branch["exitContactPoints"],
+            anchor=anchor,
+            bounds=bounds,
+            pose=pose,
+            is_entry=False,
+        )
+        if len(entry_contacts) < 1 or len(contact_points) < 2 or len(exit_contacts) < 1:
+            raise ValueError(f"branch {branch['id']} must declare a bounded exterior contact route")
+        rigid_route = [
+            *entry_contacts,
+            first_entry,
+            first_exit,
+            *contact_points,
+            second_exit,
+            second_entry,
+            *exit_contacts,
+        ]
+        rigid_length = sum(math.dist(start, end) for start, end in zip(rigid_route, rigid_route[1:]))
+        bore_length = math.dist(first_entry, first_exit) + math.dist(second_exit, second_entry)
+        first_distance = math.dist(anchor, entry_contacts[0])
+        second_distance = math.dist(anchor, exit_contacts[-1])
         declared = float(branch["restLength"])
-        minimum_route = first_distance + interior + second_distance
+        minimum_route = first_distance + rigid_length + second_distance
         if declared < minimum_route - 1e-5:
             raise ValueError(f"branch {branch['id']} is shorter than its posed route")
-        free_length = declared - interior
+        free_length = declared - rigid_length
         endpoint_sum = first_distance + second_distance
         if endpoint_sum <= 1e-7 or free_length < endpoint_sum - 1e-5:
             raise ValueError(f"branch {branch['id']} has no valid free span")
         first_free = free_length * (first_distance / endpoint_sum)
         second_free = free_length - first_free
-        first_span = _catenary_samples(anchor, first, first_free)
-        second_span = list(reversed(_catenary_samples(anchor, second, second_free)))
-        samples = first_span + [second] + second_span[1:]
+        first_span = _catenary_samples(anchor, entry_contacts[0], first_free)
+        second_span = list(reversed(_catenary_samples(anchor, exit_contacts[-1], second_free)))
+        first_bore = _line_samples(first_entry, first_exit)
+        second_bore = _line_samples(second_exit, second_entry)
+        samples = (
+            first_span
+            + entry_contacts[1:]
+            + [first_entry]
+            + first_bore[1:]
+            + contact_points
+            + [second_exit]
+            + second_bore[1:]
+            + exit_contacts
+            + second_span[1:]
+        )
+        segment_modes = (
+            ["free"] * (len(first_span) - 1)
+            + ["exterior-contact"] * len(entry_contacts)
+            + ["through-bore"] * (len(first_bore) - 1)
+            + ["exterior-contact"] * (len(contact_points) + 1)
+            + ["through-bore"] * (len(second_bore) - 1)
+            + ["exterior-contact"] * len(exit_contacts)
+            + ["free"] * (len(second_span) - 1)
+        )
+        if len(segment_modes) != len(samples) - 1:
+            raise ValueError(f"branch {branch['id']} has a discontinuous directed route")
         specs.append({
             "branchID": str(branch["id"]),
             "samples": samples,
             "interfacePoints": [
-                (passage_node_ids[str(first_record["id"])], first),
-                (passage_node_ids[str(second_record["id"])], second),
+                (passage_node_ids[str(first_record["id"])], first_entry),
+                (passage_node_ids[str(second_record["id"])], second_entry),
             ],
             "passageIDs": list(branch["passageIDs"]),
             "radius": float(branch["radius"]),
             "declaredRestLengthMeters": declared,
-            "interiorPassageLengthMeters": interior,
+            "interiorPassageLengthMeters": bore_length,
+            "rigidRouteLengthMeters": rigid_length,
+            "segmentModes": segment_modes,
+            "contactSegments": [
+                {"kind": "exterior-contact", "pointCount": len(entry_contacts)},
+                {"kind": "through-bore", "passageID": str(first_record["id"])},
+                {"kind": "exterior-contact", "pointCount": len(contact_points)},
+                {"kind": "through-bore", "passageID": str(second_record["id"])},
+                {"kind": "exterior-contact", "pointCount": len(exit_contacts)},
+            ],
         })
     if len(specs) != 2 or len({spec["branchID"] for spec in specs}) != 2:
         raise ValueError("two-branch suspension must expose two distinct branches")
     return specs
+
+
+def _pose_aware_shoulder_contacts(
+    contacts: Sequence[Sequence[float]],
+    *,
+    anchor: tuple[float, float, float],
+    bounds: Mapping[str, object],
+    pose: Mapping[str, object],
+    is_entry: bool,
+) -> list[tuple[float, float, float]]:
+    """Let the free cord slide to the anchor-facing rounded end shoulder.
+
+    The first entry (or last exit) guide point is the documented outer
+    shoulder.  A static point is valid only for one board orientation; for a
+    rotated board the physical cord instead bears at the corresponding point
+    on that same rounded shoulder.  The generated arc stays at the existing
+    end exterior and is never an implied wood channel.
+    """
+    # The review contract records the one bounded exterior guide proven by the
+    # actual-mesh sweep for every canonical pose. Keeping it as authored route
+    # geometry, rather than generating a new arc, preserves Python/Swift
+    # parity and prevents an unreviewed wrap heuristic from crossing wood.
+    return [_transform_point(point, pose) for point in contacts]
+
+
+def _line_samples(
+    start: tuple[float, float, float], end: tuple[float, float, float], count: int = 9
+) -> list[tuple[float, float, float]]:
+    if count < 2 or math.dist(start, end) <= 1e-7:
+        raise ValueError("directed bore must have a finite non-zero axis")
+    return [
+        tuple(start[axis] + (end[axis] - start[axis]) * index / (count - 1) for axis in range(3))
+        for index in range(count)
+    ]
 
 
 def _attachment_point(bounds: Mapping[str, object]) -> tuple[float, float, float]:
@@ -1289,6 +1460,7 @@ def _clearance_probes(
                 required_clearance=required,
                 attachment_node_id=attachment_node_id,
                 interface_points=interface_points,
+                segment_modes=branch.get("segmentModes"),
                 nearest=Query(),
             )
             if not check["passed"]:
@@ -1305,7 +1477,7 @@ def _clearance_probes(
                     {
                         "passageID": passage_id,
                         "nodeID": node_id,
-                        "pointInModel": list(point),
+                        "entryPointInModel": list(point),
                     }
                     for passage_id, (node_id, point) in zip(
                         branch.get("passageIDs", []), interface_points
@@ -1319,6 +1491,8 @@ def _clearance_probes(
                 "segmentSubdivisions": CENTERLINE_SUBDIVISIONS,
                 "declaredRestLengthMeters": branch.get("declaredRestLengthMeters"),
                 "interiorPassageLengthMeters": branch.get("interiorPassageLengthMeters"),
+                "rigidRouteLengthMeters": branch.get("rigidRouteLengthMeters"),
+                "contactSegments": branch.get("contactSegments"),
                 "passed": True,
             })
         if not branch_results:
@@ -1376,14 +1550,19 @@ def _passage_correspondence(
         binding = by_id[imported_node]
         if binding.role not in {"body", "attachment"}:
             raise ValueError(f"suspension passage node is selectable: {requested_node}")
-        point = record.get("pointInModel")
-        if not isinstance(point, Sequence) or isinstance(point, (str, bytes)) or len(point) != 3:
-            raise ValueError(f"suspension passage {passage_id} point is invalid")
-        point_values = [float(value) for value in point]
-        if not all(math.isfinite(value) for value in point_values):
-            raise ValueError(f"suspension passage {passage_id} point is non-finite")
-        if not all(low <= value <= high for value, low, high in zip(point_values, minimum, maximum)):
-            raise ValueError(f"suspension passage {passage_id} point is outside actual descriptor bounds")
+        mouth_values: dict[str, list[float]] = {}
+        for key in ("entryPointInModel", "exitPointInModel"):
+            point = record.get(key)
+            if not isinstance(point, Sequence) or isinstance(point, (str, bytes)) or len(point) != 3:
+                raise ValueError(f"suspension passage {passage_id} {key} is invalid")
+            values = [float(value) for value in point]
+            if not all(math.isfinite(value) for value in values):
+                raise ValueError(f"suspension passage {passage_id} {key} is non-finite")
+            if not all(low <= value <= high for value, low, high in zip(values, minimum, maximum)):
+                raise ValueError(f"suspension passage {passage_id} {key} is outside actual descriptor bounds")
+            mouth_values[key] = values
+        if math.dist(mouth_values["entryPointInModel"], mouth_values["exitPointInModel"]) <= 1e-7:
+            raise ValueError(f"suspension passage {passage_id} must be a non-zero directed bore")
         if passage_id in seen_ids:
             raise ValueError(f"duplicate suspension passage ID: {passage_id}")
         seen_ids.add(passage_id)
@@ -1393,7 +1572,8 @@ def _passage_correspondence(
             "nodeID": imported_node,
             "sourceNodeID": source_correspondence[imported_node],
             "role": binding.role,
-            "pointInModel": point_values,
+            "entryPointInModel": mouth_values["entryPointInModel"],
+            "exitPointInModel": mouth_values["exitPointInModel"],
             "provenance": record.get("provenance"),
         })
     if suspension.get("type") == "twoBranchCord" and len(result) != 4:
@@ -1436,11 +1616,14 @@ def _passage_ray_probes(
 
     results: list[dict[str, object]] = []
     for passage in passages:
-        point = tuple(float(value) for value in passage["pointInModel"])
+        entry = tuple(float(value) for value in passage["entryPointInModel"])
+        exit = tuple(float(value) for value in passage["exitPointInModel"])
+        if abs(entry[0] - exit[0]) > 1e-7 or abs(entry[1] - exit[1]) > 1e-7:
+            raise ValueError("Flash Board physical passages must remain directed along their imported Z axis")
         swept_probe = _swept_passage_probe(
-            point,
-            minimum_z=minimum[2],
-            maximum_z=maximum[2],
+            entry,
+            minimum_z=min(entry[2], exit[2]),
+            maximum_z=max(entry[2], exit[2]),
             aperture_ray=aperture_ray,
         )
         results.append({

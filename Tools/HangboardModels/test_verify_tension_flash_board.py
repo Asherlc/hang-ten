@@ -62,7 +62,8 @@ def valid_report() -> dict[str, object]:
             "nodeID": "flash-board-body",
             "sourceNodeID": "flash-board-body",
             "role": "body",
-            "pointInModel": list(verifier.REVIEW_PASSAGE_POINTS[passage_id]),
+            "entryPointInModel": list(verifier.REVIEW_PASSAGE_MOUTHS[passage_id][0]),
+            "exitPointInModel": list(verifier.REVIEW_PASSAGE_MOUTHS[passage_id][1]),
         }
         for passage_id in verifier.REVIEW_PASSAGE_IDS
     ]
@@ -184,7 +185,7 @@ def valid_report() -> dict[str, object]:
                         "branchID": spec["branchID"],
                         "passageIDs": spec["passageIDs"],
                         "interfacePoints": [
-                            {"passageID": passage_id, "nodeID": node_id, "pointInModel": list(point)}
+                            {"passageID": passage_id, "nodeID": node_id, "entryPointInModel": list(point)}
                             for passage_id, (node_id, point) in zip(spec["passageIDs"], spec["interfacePoints"])
                         ],
                         "passed": True,
@@ -193,7 +194,8 @@ def valid_report() -> dict[str, object]:
                         "sampleCount": 99,
                         "centerlineSampleCount": len(spec["samples"]),
                         "centerlineSamples": [list(point) for point in spec["samples"]],
-                        "declaredRestLengthMeters": 0.75,
+                        "declaredRestLengthMeters": 1.56,
+                        "contactSegments": spec["contactSegments"],
                     }
                     for spec in branch_specs[position_id]
                 ],
@@ -231,10 +233,10 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
                 "coordinateFrame": "hang-ten-board-v1",
             },
         )
-        self.assertEqual(candidate["anchor"]["offsetFromBoardBounds"], [0, 0.22, 0])
+        self.assertEqual(candidate["anchor"]["offsetFromBoardBounds"], [0, 0.5, 0])
         self.assertEqual(
             [(branch["id"], branch["restLength"], branch["radius"]) for branch in candidate["branches"]],
-            [("left-branch", 0.75, 0.002), ("right-branch", 0.75, 0.002)],
+            [("left-branch", 1.56, 0.002), ("right-branch", 1.56, 0.002)],
         )
 
     def test_review_candidate_rejects_arbitrary_passage_identity_or_point(self):
@@ -244,8 +246,8 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             verifier.validate_review_candidate(candidate)
 
         candidate = verifier.load_review_candidate()
-        candidate["passages"]["right"][1]["pointInModel"][0] += 0.001
-        with self.assertRaisesRegex(ValueError, "point"):
+        candidate["passages"]["right"][1]["entryPointInModel"][0] += 0.001
+        with self.assertRaisesRegex(ValueError, "Point|point"):
             verifier.validate_review_candidate(candidate)
 
     def test_position_specs_cover_exact_four_positions_and_their_active_holds(self):
@@ -492,22 +494,43 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
         )
         self.assertFalse(result["passed"])
 
+    def test_exterior_contact_allows_only_documented_body_bearing_not_hold_contact(self):
+        """The bounded shoulder exception cannot turn a hold into a contact."""
+        samples = [(0.0, 0.0, 0.0), (1.0, 0.0, 0.0)]
+
+        class Nearest:
+            node_ids = ("flash-board-body", "selectable-hold")
+
+            def __call__(self, node_id, point):
+                if node_id == "flash-board-body":
+                    return 0.002, point
+                return 1.0, point
+
+        result = verifier._check_centerline_clearance(
+            samples,
+            required_clearance=0.003,
+            attachment_node_id="flash-board-body",
+            segment_modes=["exterior-contact"],
+            nearest=Nearest(),
+        )
+        self.assertTrue(result["passed"])
+
     def test_two_branch_probe_specs_cover_both_branches_and_their_passage_interfaces(self):
         suspension = {
             "type": "twoBranchCord",
             "passages": {
                 "left": [
-                    {"id": "left-top", "nodeID": "body", "pointInModel": [0.2, 0.9, 0.05]},
-                    {"id": "left-bottom", "nodeID": "body", "pointInModel": [0.3, 0.9, 0.05]},
+                    {"id": "left-top", "nodeID": "body", "entryPointInModel": [0.2, 0.9, 0.95], "exitPointInModel": [0.2, 0.9, 0.05]},
+                    {"id": "left-bottom", "nodeID": "body", "entryPointInModel": [0.3, 0.9, 0.95], "exitPointInModel": [0.3, 0.9, 0.05]},
                 ],
                 "right": [
-                    {"id": "right-top", "nodeID": "body", "pointInModel": [0.7, 0.9, 0.05]},
-                    {"id": "right-bottom", "nodeID": "body", "pointInModel": [0.8, 0.9, 0.05]},
+                    {"id": "right-top", "nodeID": "body", "entryPointInModel": [0.7, 0.9, 0.95], "exitPointInModel": [0.7, 0.9, 0.05]},
+                    {"id": "right-bottom", "nodeID": "body", "entryPointInModel": [0.8, 0.9, 0.95], "exitPointInModel": [0.8, 0.9, 0.05]},
                 ],
             },
             "branches": [
-                {"id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 1.5, "radius": 0.002},
-                {"id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 1.5, "radius": 0.002},
+                {"id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "entryContactPoints": [[0.2, 0.9, 1.0]], "exteriorContactPoints": [[0.15, 0.9, 0.0], [0.35, 0.9, 0.0]], "exitContactPoints": [[0.3, 0.9, 1.0]], "restLength": 6, "radius": 0.002},
+                {"id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "entryContactPoints": [[0.7, 0.9, 1.0]], "exteriorContactPoints": [[0.65, 0.9, 0.0], [0.85, 0.9, 0.0]], "exitContactPoints": [[0.8, 0.9, 1.0]], "restLength": 6, "radius": 0.002},
             ],
             "anchor": {"offsetFromBoardBounds": [0, 0.22, 0]},
         }
@@ -519,9 +542,152 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             {passage_id: "body" for passage_id in ("left-top", "left-bottom", "right-top", "right-bottom")},
         )
         self.assertEqual([spec["branchID"] for spec in specs], ["left-branch", "right-branch"])
-        self.assertTrue(all(len(spec["samples"]) == 64 for spec in specs))
+        self.assertTrue(all(len(spec["samples"]) > 64 for spec in specs))
         self.assertTrue(all(len(spec["interfacePoints"]) == 2 for spec in specs))
         self.assertEqual(specs[0]["passageIDs"], ["left-top", "left-bottom"])
+
+    def test_two_branch_probe_specs_route_through_directed_bores_then_exterior_contact(self):
+        """A branch cannot replace two through-bores with an in-wood mouth chord."""
+        suspension = {
+            "type": "twoBranchCord",
+            "passages": {
+                "left": [
+                    {
+                        "id": "left-outer",
+                        "nodeID": "body",
+                        "pointInModel": [0.2, 0.9, 0.95],
+                        "entryPointInModel": [0.2, 0.9, 0.95],
+                        "exitPointInModel": [0.2, 0.9, 0.05],
+                    },
+                    {
+                        "id": "left-inner",
+                        "nodeID": "body",
+                        "pointInModel": [0.3, 0.9, 0.95],
+                        "entryPointInModel": [0.3, 0.9, 0.95],
+                        "exitPointInModel": [0.3, 0.9, 0.05],
+                    },
+                ],
+                "right": [
+                    {
+                        "id": "right-inner",
+                        "nodeID": "body",
+                        "pointInModel": [0.7, 0.9, 0.95],
+                        "entryPointInModel": [0.7, 0.9, 0.95],
+                        "exitPointInModel": [0.7, 0.9, 0.05],
+                    },
+                    {
+                        "id": "right-outer",
+                        "nodeID": "body",
+                        "pointInModel": [0.8, 0.9, 0.95],
+                        "entryPointInModel": [0.8, 0.9, 0.95],
+                        "exitPointInModel": [0.8, 0.9, 0.05],
+                    },
+                ],
+            },
+            "branches": [
+                {
+                    "id": "left-branch",
+                    "passageIDs": ["left-outer", "left-inner"],
+                    "entryContactPoints": [[0.2, 0.9, 1.0]],
+                    "exteriorContactPoints": [[0.15, 0.9, 0.0], [0.35, 0.9, 0.0]],
+                    "exitContactPoints": [[0.3, 0.9, 1.0]],
+                    "restLength": 6.0,
+                    "radius": 0.002,
+                },
+                {
+                    "id": "right-branch",
+                    "passageIDs": ["right-inner", "right-outer"],
+                    "entryContactPoints": [[0.7, 0.9, 1.0]],
+                    "exteriorContactPoints": [[0.65, 0.9, 0.0], [0.85, 0.9, 0.0]],
+                    "exitContactPoints": [[0.8, 0.9, 1.0]],
+                    "restLength": 6.0,
+                    "radius": 0.002,
+                },
+            ],
+            "anchor": {"offsetFromBoardBounds": [0, 0.22, 0]},
+        }
+        pose = {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0]}
+        specs = verifier._branch_probe_specs(
+            {"min": [0, 0, 0], "max": [1, 1, 1]},
+            suspension,
+            pose,
+            {passage_id: "body" for passage_id in (
+                "left-outer", "left-inner", "right-inner", "right-outer"
+            )},
+        )
+
+        left = specs[0]
+        self.assertAlmostEqual(left["interiorPassageLengthMeters"], 1.8)
+        self.assertEqual(
+            left.get("contactSegments"),
+            [
+                {"kind": "exterior-contact", "pointCount": 1},
+                {"kind": "through-bore", "passageID": "left-outer"},
+                {"kind": "exterior-contact", "pointCount": 2},
+                {"kind": "through-bore", "passageID": "left-inner"},
+                {"kind": "exterior-contact", "pointCount": 1},
+            ],
+        )
+
+    def test_two_branch_free_span_ends_at_front_shoulder_contact_before_bore_entry(self):
+        """The free catenary must not aim directly at a bore-centre mouth."""
+        suspension = {
+            "type": "twoBranchCord",
+            "passages": {
+                "left": [
+                    {"id": "left-outer", "nodeID": "body", "entryPointInModel": [0.2, 0.9, 0.95], "exitPointInModel": [0.2, 0.9, 0.05]},
+                    {"id": "left-inner", "nodeID": "body", "entryPointInModel": [0.3, 0.9, 0.95], "exitPointInModel": [0.3, 0.9, 0.05]},
+                ],
+                "right": [
+                    {"id": "right-inner", "nodeID": "body", "entryPointInModel": [0.7, 0.9, 0.95], "exitPointInModel": [0.7, 0.9, 0.05]},
+                    {"id": "right-outer", "nodeID": "body", "entryPointInModel": [0.8, 0.9, 0.95], "exitPointInModel": [0.8, 0.9, 0.05]},
+                ],
+            },
+            "branches": [
+                {
+                    "id": "left-branch", "passageIDs": ["left-outer", "left-inner"],
+                    "entryContactPoints": [[0.18, 0.9, 1.0]],
+                    "exteriorContactPoints": [[0.15, 0.9, 0.0], [0.35, 0.9, 0.0]],
+                    "exitContactPoints": [[0.32, 0.9, 1.0]],
+                    "restLength": 6.0, "radius": 0.002,
+                },
+                {
+                    "id": "right-branch", "passageIDs": ["right-inner", "right-outer"],
+                    "entryContactPoints": [[0.68, 0.9, 1.0]],
+                    "exteriorContactPoints": [[0.65, 0.9, 0.0], [0.85, 0.9, 0.0]],
+                    "exitContactPoints": [[0.82, 0.9, 1.0]],
+                    "restLength": 6.0, "radius": 0.002,
+                },
+            ],
+            "anchor": {"offsetFromBoardBounds": [0, 0.22, 0]},
+        }
+        specs = verifier._branch_probe_specs(
+            {"min": [0, 0, 0], "max": [1, 1, 1]},
+            suspension,
+            {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0]},
+            {passage_id: "body" for passage_id in ("left-outer", "left-inner", "right-inner", "right-outer")},
+        )
+        self.assertEqual(specs[0]["samples"][31], (0.18, 0.9, 1.0))
+        self.assertEqual(specs[0]["contactSegments"][0], {"kind": "exterior-contact", "pointCount": 1})
+
+    def test_review_branch_keeps_its_actual_mesh_proven_exterior_guide_per_pose(self):
+        """Every pose uses the reviewed shoulder guide, never a bore centre."""
+        candidate = verifier.load_review_candidate()
+        pose = candidate["canonicalPoses"]["two-edge-inverted"]
+        spec = verifier._branch_probe_specs(
+            {"min": [0.0, 0.0, 0.0], "max": [0.5, 0.075999998, 0.075999998]},
+            candidate,
+            pose,
+            {passage_id: "flash-board-body" for passage_id in verifier.REVIEW_PASSAGE_IDS},
+        )[0]
+        static_outer = verifier._transform_point(
+            candidate["branches"][0]["entryContactPoints"][0], pose
+        )
+        self.assertEqual(spec["samples"][31], static_outer)
+        self.assertNotEqual(
+            spec["samples"][31],
+            verifier._transform_point(candidate["passages"]["left"][0]["entryPointInModel"], pose),
+        )
 
 
 if __name__ == "__main__":

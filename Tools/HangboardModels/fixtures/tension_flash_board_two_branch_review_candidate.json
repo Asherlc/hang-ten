@@ -15,19 +15,19 @@
   },
   "passages": {
     "left": [
-      {"id": "left-outer-passage", "physicalFeature": "left end outer transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.017, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"},
-      {"id": "left-inner-passage", "physicalFeature": "left end inner transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.031, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"}
+      {"id": "left-outer-passage", "physicalFeature": "left end outer transverse cord passage", "nodeID": "flash-board-body", "entryPointInModel": [0.017, 0.047999999, 0.075999998], "exitPointInModel": [0.017, 0.047999999, 0.0013394], "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"},
+      {"id": "left-inner-passage", "physicalFeature": "left end inner transverse cord passage", "nodeID": "flash-board-body", "entryPointInModel": [0.031, 0.047999999, 0.075999998], "exitPointInModel": [0.031, 0.047999999, 0.0013394], "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"}
     ],
     "right": [
-      {"id": "right-inner-passage", "physicalFeature": "right end inner transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.469, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"},
-      {"id": "right-outer-passage", "physicalFeature": "right end outer transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.483, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"}
+      {"id": "right-inner-passage", "physicalFeature": "right end inner transverse cord passage", "nodeID": "flash-board-body", "entryPointInModel": [0.469, 0.047999999, 0.075999998], "exitPointInModel": [0.469, 0.047999999, 0.0013394], "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"},
+      {"id": "right-outer-passage", "physicalFeature": "right end outer transverse cord passage", "nodeID": "flash-board-body", "entryPointInModel": [0.483, 0.047999999, 0.075999998], "exitPointInModel": [0.483, 0.047999999, 0.0013394], "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"}
     ]
   },
   "branches": [
-    {"id": "left-branch", "passageIDs": ["left-outer-passage", "left-inner-passage"], "restLength": 0.75, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; reserved for two-branch runtime contract"},
-    {"id": "right-branch", "passageIDs": ["right-inner-passage", "right-outer-passage"], "restLength": 0.75, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; reserved for two-branch runtime contract"}
+    {"id": "left-branch", "passageIDs": ["left-outer-passage", "left-inner-passage"], "entryContactPoints": [[-0.002, 0.054, 0.12], [0.017, 0.054, 0.07793]], "exteriorContactPoints": [[0.014, 0.048526, -0.001], [-0.002, 0.048526, -0.001], [0.034, 0.048526, -0.001]], "exitContactPoints": [[0.031, 0.054, 0.07793], [-0.002, 0.054, 0.12]], "restLength": 1.56, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; bounded exterior left-end guide selected by actual-mesh sweep for all canonical poses"},
+    {"id": "right-branch", "passageIDs": ["right-inner-passage", "right-outer-passage"], "entryContactPoints": [[0.502, 0.054, 0.12], [0.469, 0.054, 0.07793]], "exteriorContactPoints": [[0.466, 0.048526, -0.001], [0.502, 0.048526, -0.001], [0.486, 0.048526, -0.001]], "exitContactPoints": [[0.483, 0.054, 0.07793], [0.502, 0.054, 0.12]], "restLength": 1.56, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; bounded exterior right-end guide selected by actual-mesh sweep for all canonical poses"}
   ],
-  "anchor": {"offsetFromBoardBounds": [0, 0.22, 0], "visibility": "invisible", "provenance": "display estimate; reserved for two-branch runtime contract"},
+  "anchor": {"offsetFromBoardBounds": [0, 0.5, 0], "visibility": "invisible", "provenance": "display estimate; invisible overhead convergence selected for free-span clearance"},
   "canonicalPoses": {
     "three-edge-upright": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0]},
     "three-edge-inverted": {"rotation": [0, 0, 1, 0], "translation": [0.5, 0.075999998, 0]},

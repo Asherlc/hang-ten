@@ -136,7 +136,10 @@ struct BoardModelSingleCordSuspension: Hashable {
 struct BoardModelPassage: Hashable {
     let id: String
     let nodeID: String
-    let pointInModel: [Double]
+    /// Ordered physical mouths of one actual through-bore. The renderer uses
+    /// both points; a single mouth cannot stand in for the bore's route.
+    let entryPointInModel: [Double]
+    let exitPointInModel: [Double]
     let provenance: String
 }
 
@@ -148,6 +151,15 @@ struct BoardModelPassagePairs: Hashable {
 struct BoardModelCordBranch: Hashable {
     let id: String
     let passageIDs: [String]
+    /// Bounded front-shoulder guide from the incoming free span to the first
+    /// bore's entry mouth.
+    let entryContactPoints: [[Double]]
+    /// Centerline guide points for the bounded exterior bearing route between
+    /// the two bore exits. These are not free catenary samples.
+    let exteriorContactPoints: [[Double]]
+    /// Bounded front-shoulder guide from the second bore's entry mouth back
+    /// to the outgoing free span.
+    let exitContactPoints: [[Double]]
     let restLength: Double
     let radius: Double
     let material: String
@@ -220,7 +232,7 @@ enum BoardModelSuspension: Hashable {
 
 private extension BoardModelPassage {
     var asAttachment: BoardModelAttachment {
-        BoardModelAttachment(nodeID: nodeID, pointInModel: pointInModel, provenance: provenance)
+        BoardModelAttachment(nodeID: nodeID, pointInModel: entryPointInModel, provenance: provenance)
     }
 }
 
