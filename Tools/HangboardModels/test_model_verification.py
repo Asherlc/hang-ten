@@ -10,8 +10,29 @@ from model_verification import (
 )
 from model_verification import _asset_inventory
 
+TOOLS = Path(__file__).resolve().parent
+import sys
+sys.path.insert(0, str(TOOLS))
+import verify_wood_grips_compact_ii as compact
+
 
 class ModelVerificationTests(unittest.TestCase):
+    def test_compact_adapter_config_preserves_exact_ordered_inventory_and_ceiling(self):
+        config = compact.compact_ii_config()
+        expected = tuple(
+            item["id"] for item in json.loads(
+                (TOOLS.parents[1] / "Hangboards/metolius-wood-grips-compact-ii/board.json").read_text()
+            )["holds"]
+        )
+        self.assertEqual(config.expected_hold_ids, expected)
+        self.assertEqual(len(config.expected_hold_ids), 19)
+        self.assertEqual(config.package_relative_assets, frozenset({
+            "assets/primary.usdz", "assets/primary.model.json"
+        }))
+        self.assertEqual(config.triangle_ceiling, 150_000)
+
+    def test_compact_adapter_routes_through_shared_verifier(self):
+        self.assertIs(compact.verify_model_package, verify_model_package)
     def config(self, board_json: Path) -> ModelVerificationConfig:
         return ModelVerificationConfig(
             board_id="fixture", board_json=board_json,

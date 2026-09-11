@@ -9,6 +9,8 @@ from types import SimpleNamespace
 import unittest
 
 from model_characterization import assert_baseline_matches, capture_model_baseline
+from model_verification import VerificationReport
+import verify_wood_grips_compact_ii as compact
 
 
 TOOLS = Path(__file__).resolve().parent
@@ -64,6 +66,23 @@ def compact_package_paths():
 
 
 class ModelReportTests(unittest.TestCase):
+    def test_compact_adapter_retains_skip_render_report_compatibility(self):
+        checks = {
+            "logicalHoldIDs": [f"hold-{index}" for index in range(19)],
+            "sourcePieceCorrespondence": {f"mesh-{index}": f"source-{index}" for index in range(20)},
+            "modelSHA256": "model", "descriptorSHA256": "descriptor",
+            "triangleCeiling": 150_000,
+        }
+        report = compact.compact_report(VerificationReport("metolius-wood-grips-compact-ii", checks), renders_skipped=True)
+        self.assertTrue(report["rendersSkipped"])
+        self.assertEqual(report["triangleCeiling"], 150_000)
+        self.assertEqual(report["assets"], ["assets/primary.model.json", "assets/primary.usdz"])
+
+    def test_compact_adapter_has_no_body_depth_or_review_rig_claim(self):
+        source = (TOOLS / "verify_wood_grips_compact_ii.py").read_text(encoding="utf-8")
+        self.assertNotIn("BODY_DEPTH", source)
+        self.assertNotIn("review_rig", source)
+
     def test_all_verifier_sources_retain_report_contract_fields(self):
         contracts = {
             "verify_beastmaker_1000.py": {
