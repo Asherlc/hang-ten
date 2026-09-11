@@ -17,7 +17,7 @@ from typing import Literal, TypeAlias
 
 Vector2: TypeAlias = tuple[float, float]
 Vector3: TypeAlias = tuple[float, float, float]
-NodeRole: TypeAlias = Literal["body", "hold"]
+NodeRole: TypeAlias = Literal["body", "hold", "attachment"]
 
 _COORDINATE_FRAME = "hang-ten-board-v1"
 _SCHEMA_VERSION = 1
@@ -186,16 +186,21 @@ def _validate_bindings(nodes: Sequence[NodeBinding]) -> list[NodeBinding]:
         node_ids.add(binding.node_id)
         if binding.role == "decoration":
             raise ValueError("decoration nodes are not permitted")
-        if binding.role not in {"body", "hold"}:
+        if binding.role not in {"body", "hold", "attachment"}:
             raise ValueError(f"unknown node role: {binding.role}")
         if binding.role == "body":
             body_count += 1
             if binding.hold_id is not None:
                 raise ValueError("body node may not declare holdID")
+        elif binding.role == "attachment":
+            if binding.hold_id is not None:
+                raise ValueError("attachment node may not declare holdID")
         elif not isinstance(binding.hold_id, str) or not binding.hold_id:
             raise ValueError("hold node requires a non-empty holdID")
     if body_count == 0:
         raise ValueError("descriptor requires a body node")
+    if sum(binding.role == "attachment" for binding in bindings) > 1:
+        raise ValueError("descriptor permits at most one attachment node")
     return bindings
 
 
@@ -402,8 +407,8 @@ def _parse_nodes(value: object) -> tuple[NodeBinding, ...]:
         node_id = mapping["nodeID"]
         if not isinstance(node_id, str) or not node_id:
             raise ValueError("nodeID must be a non-empty string")
-        if role not in {"body", "hold"}:
-            raise ValueError("node role must be body or hold")
+        if role not in {"body", "hold", "attachment"}:
+            raise ValueError("node role must be body, hold, or attachment")
         hold_id = mapping.get("holdID")
         if role == "hold" and (not isinstance(hold_id, str) or not hold_id):
             raise ValueError("hold node requires a non-empty holdID")

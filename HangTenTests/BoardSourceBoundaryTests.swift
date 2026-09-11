@@ -235,6 +235,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "metolius.simulator-3d",
             "nature.stone-hanger",
             "soill.training-tiles",
+            "tension.flash-board",
             "yy.baguette-evo"
         ]
 

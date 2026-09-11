@@ -97,13 +97,16 @@ class PlanRepositoryTest {
             .flatMap { it.steps }
         val maxHang = steps.first { it.id == "max-hangs-1" }
 
-        assertEquals(56, boards.size)
+        // Seven model-only packages are omitted by the raster-only Android
+        // canvas. The 62-package catalog therefore exposes 55 boards here.
+        assertEquals(55, boards.size)
         assertTrue(boards.all { board ->
             board.presentations.all { presentation -> presentation.assetPath.endsWith(".png") } &&
                 board.holds.all { it.geometry.isNotEmpty() }
         })
         assertFalse(boards.any { it.id == "beastmaker-1000" })
         assertFalse(boards.any { it.id == "metolius.wood-grips-compact-ii" })
+        assertFalse(boards.any { it.id == "tension.flash-board" })
         assertFalse(boards.any { it.id == "yy.baguette-evo" })
         assertFalse(boards.any { it.id == "nature.stone-hanger" })
         assertEquals(

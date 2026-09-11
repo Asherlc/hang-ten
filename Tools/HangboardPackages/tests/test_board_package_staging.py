@@ -28,6 +28,7 @@ LIVE_MODEL_PACKAGE_SLUGS = (
     "metolius-simulator-3d",
     "metolius-wood-grips-compact-ii",
     "soill-training-tiles",
+    "tension-flash-board",
 )
 
 

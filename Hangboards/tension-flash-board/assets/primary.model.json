@@ -1,0 +1,193 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "small-crimp-left": {
+      "center": [
+        0.328000009,
+        0.810526313
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.391600013,
+          0.848684193
+        ],
+        "min": [
+          0.264400005,
+          0.772368433
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_009"
+      ]
+    },
+    "small-crimp-right": {
+      "center": [
+        0.671999991,
+        0.810526313
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.735599995,
+          0.848684193
+        ],
+        "min": [
+          0.608399987,
+          0.772368433
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_010"
+      ]
+    },
+    "three-edge-center": {
+      "center": [
+        0.500000015,
+        0.487840751
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.614400029,
+          0.719736844
+        ],
+        "min": [
+          0.385600001,
+          0.255944657
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_011"
+      ]
+    },
+    "three-edge-left": {
+      "center": [
+        0.224000003,
+        0.487840751
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.338400006,
+          0.719736844
+        ],
+        "min": [
+          0.1096,
+          0.255944657
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_012"
+      ]
+    },
+    "three-edge-right": {
+      "center": [
+        0.775999993,
+        0.487840738
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.890399992,
+          0.719736844
+        ],
+        "min": [
+          0.661599994,
+          0.255944632
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_013"
+      ]
+    },
+    "two-edge-left": {
+      "center": [
+        0.254000001,
+        0.44017887
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.375400007,
+          0.667105303
+        ],
+        "min": [
+          0.132599995,
+          0.213252436
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_014"
+      ]
+    },
+    "two-edge-right": {
+      "center": [
+        0.745999992,
+        0.44017887
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.867399991,
+          0.667105303
+        ],
+        "min": [
+          0.624599993,
+          0.213252436
+        ]
+      },
+      "nodeIDs": [
+        "flash_board_body_015"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.5,
+      0.075999998,
+      0.075999998
+    ],
+    "min": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524",
+  "nodes": [
+    {
+      "nodeID": "flash_board_body_008",
+      "role": "body"
+    },
+    {
+      "holdID": "small-crimp-left",
+      "nodeID": "flash_board_body_009",
+      "role": "hold"
+    },
+    {
+      "holdID": "small-crimp-right",
+      "nodeID": "flash_board_body_010",
+      "role": "hold"
+    },
+    {
+      "holdID": "three-edge-center",
+      "nodeID": "flash_board_body_011",
+      "role": "hold"
+    },
+    {
+      "holdID": "three-edge-left",
+      "nodeID": "flash_board_body_012",
+      "role": "hold"
+    },
+    {
+      "holdID": "three-edge-right",
+      "nodeID": "flash_board_body_013",
+      "role": "hold"
+    },
+    {
+      "holdID": "two-edge-left",
+      "nodeID": "flash_board_body_014",
+      "role": "hold"
+    },
+    {
+      "holdID": "two-edge-right",
+      "nodeID": "flash_board_body_015",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

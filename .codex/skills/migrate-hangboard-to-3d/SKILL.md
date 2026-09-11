@@ -15,7 +15,11 @@ Read relevant sections of the [working example](../../../Tools/HangboardModels/R
 
 In the retained evidence packet, each source-backed logical inventory entry cites an exact retained source snapshot, and retained snapshot paths are unique across manufacturer and commerce tiers. Sourced claims carry stable claim identities and retained-source links. When one claim identity has both manufacturer and commerce evidence, record the conflict and a non-empty ruling; commerce-only gap evidence remains valid when clearly tiered and linked.
 
+Visually verify each snapshot's depicted face before using its filename or label to map logical holds. If a filename or label conflicts with the visible inventory, record the correction and keep it confined to the evidence mapping; never pass that correction into geometry authoring.
+
 Before any Astra geometry task, pass a multi-angle visual evidence gate for every board. The retained packet must contain at least two actual visual source snapshots for the exact revision, each with its SHA-256 hash, source URL/publisher, and a view label, and the views must be materially distinct. Use a manufacturer-published front plus an oblique, side, back, or profile view when available; manufacturer evidence is first-tier and must be sought first. An authorized retailer or distributor may fill a documented missing angle only when clearly tiered as commerce evidence. Duplicate crops or variants, diagrams without profile information, search thumbnails, generated renders, legacy raster assets or paths, and ambiguous board revisions do not satisfy the two-view count. Record what each view supports and does not support. A human must approve the exact multi-angle set before Astra; lower-cost workers gather it, and Astra receives every approved image. If no trustworthy second angle exists, stop at this gate and ask the human rather than hiding the uncertainty.
+
+General web or image searches may be used for discovery and to locate candidate views of the exact revision, but search results and thumbnails cannot satisfy this gate. Before retaining a candidate, verify its publisher and source tier; retain only manufacturer evidence or documented commerce-gap evidence under the rules above.
 
 Discover the live package inventory at execution time rather than trusting a stale plan or expected count. A bulk converter must be deterministic and idempotent: preserve every recognized field or reject the document, and reject duplicate or unknown legacy members instead of silently dropping them.
 
@@ -24,6 +28,61 @@ Before and after schema migration, run a type- and order-sensitive semantic audi
 ## Separate logical data from model geometry
 
 Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. A package containing model media is model-only: it must declare no raster presentation or PNG, whether original or derived; presentation derivation is supported only between raster presentations. Exact declared-versus-actual asset equality complements but does not replace this package-level media-isolation rule. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
+
+## Suspended portable presentations
+
+For a portable-suspension parser/runtime, reject a migration unless all
+of the following are decidable from package data:
+
+- exactly one model USDZ and descriptor;
+- an optional, explicitly tagged `singleCord` or `twoBranchCord` declaration;
+- for `singleCord`, one physical attachment point bound to an importer-visible body or attachment node;
+- for `twoBranchCord`, four uniquely identified passages in two ordered pairs, two branches referencing their respective pairs exactly once, and one shared invisible anchor;
+- exactly one finite canonical pose for every supported position, and no pose for an unknown position;
+- a display-only invisible anchor plus finite positive cord rest length and radius for each branch; and
+- no baked cord/anchor mesh, second face model, raster fallback, hand-authored hold bounds, or hold-node attachment shortcut.
+
+For `singleCord` model media, author `attachment.nodeID` against
+the hash-bound, importer-visible model descriptor and record its model-frame
+`pointInModel`; the attachment must not be a logical hold node. Record the
+invisible-anchor display estimate, cord rest length, radius, and material
+estimates separately from source-backed physical facts. Author normalized,
+finite canonical pose transforms keyed by the existing `positionID` values.
+Logical holds remain metadata-only, and positions select faces/configurations
+and their canonical poses rather than creating duplicate contacts or copying
+model geometry. Unsupported cord dimensions or knot details remain explicitly
+labeled estimates.
+
+For `twoBranchCord`, bind every passage to a hash-bound importer-visible body
+or attachment node. Keep point-passage and directed through-bore representations
+distinct; never fabricate a hidden bore from a visible mouth alone. Where
+through-bores are evidenced, record entry and exit mouths plus the ordered
+exterior bearing route between them. Cord-guide coordinates are display
+estimates, separate from physical board geometry. Dispatch the suspension
+discriminator explicitly in the renderer and test the shipped package through
+native selection for every position, with both branches present.
+
+Mesh clearance and cord self-intersection are separate gates. Verify both in
+the exporter and native solver before promotion: distinct free legs must not
+coincide, exterior routes must not backtrack, and only the shared anchor endpoint
+may close a branch. Use conservative triangle/cylinder intersection for bore
+aperture clearance; sparse radial rays alone can miss narrow obstructions.
+SceneKit USDZ imports may use separate position, normal, and UV index channels.
+Mesh-clearance readers must honor `geometrySourceChannels`, `indicesChannelCount`,
+and `hasInterleavedIndicesChannels`, including a nonzero position channel and
+both interleaved and planar layouts. Do not interpret UV/normal indices as
+positions or bypass malformed geometry to make selection pass. Keep a native
+all-poses test against the bundled asset in addition to synthetic fixtures.
+Retain the actual export report matching the promoted route and model hashes.
+
+The retained evidence packet must record the exact board revision, every usable
+face/position, attachment evidence, a position-to-logical-hold mapping with
+supporting evidence, two approved materially distinct visual snapshots (adding
+an attachment-region view when available), and every deliberate display
+simplification, including the invisible anchor and omitted mounting
+environment. Preserve the current multi-angle human approval gate before
+Astra; no geometry-generation pass proceeds until that exact approved set is
+retained.
 
 Raster original presentations must be nonempty and form an exact, single-owner partition of the logical hold inventory. Derived raster presentations may reference only originals, and their raw geometry must equal the declared source exactly, including ordering and scalar kinds/values. Reject redundant empty media, duplicate or missing owners, geometry drift, and derived-to-derived chains.
 
@@ -49,7 +108,7 @@ Carry model media through demonstrated package validation and staging. Remote Gi
 
 Use Astra (`gpt-6-astra`) only for authoritative final 3D geometry generation, authored geometry refinement, difficult geometry judgment, and physical-shape corrections. A controller using another model must hand those tasks to Astra with the visual evidence and the defect to correct; only Astra owns the final geometry-generation pass. If Astra is unavailable, flag that limitation instead of silently substituting another model. Honor explicit user requests for another model or for comparison candidates.
 
-Route model cost by task complexity and verification results, never by preference. Luna is the default for routine bounded work, including primary-source research synthesis, straightforward tests, reviews, and documentation. Escalate to Terra for intricate schema, tooling, or integration work, or when Luna's bounded attempt fails verification and the unresolved issue is no longer routine. Before invoking Astra, lower-cost workers must gather and structure the primary-source manufacturer evidence (and clearly tiered retailer gap evidence where authorized) into the retained evidence packet. Lower-cost workers may also handle schemas and data models, reusable exporter and validator tooling, deterministic export and render execution, packaging, demonstrated staging, app integration, and visual or picking checks. Remote GitHub model sync remains deferred/unsupported; generic unavailable/read-only Workbench behavior remains the supported model-editor boundary. They must not redesign geometry to make a check pass: route geometry or fidelity defects back to Astra, while keeping tooling, schema, material-export, and integration defects with lower-cost workers. Hand off stable hold IDs, the coordinate frame, sourced-versus-estimated evidence, tagged editable geometry, and validation expectations. Inventory checks do not prove fidelity; retain human visual review.
+Route model cost by task complexity and verification results, never by preference. Luna is the default for routine bounded work, including primary-source research synthesis, suspended-presentation evidence collection and structuring, package/schema work, attachment and pose metadata, catenary math, deterministic validation, tests, documentation, renderer integration, routine integration, and review. Escalate to Terra only after a bounded Luna attempt exposes intricate non-geometry schema, tooling, renderer, or cross-platform integration work, or fails verification with an unresolved issue that is no longer routine. Before invoking Astra, lower-cost workers must gather and structure the primary-source manufacturer evidence (and clearly tiered retailer gap evidence where authorized) into the retained evidence packet, including the suspended presentation evidence gate. Astra is reserved exclusively for final physical board shape and fidelity judgment or corrections after that approved evidence gate; it does not own suspension evidence, cord estimates or catenary math, schema, tooling, package conversion, renderer integration, validation, or tests. Lower-cost workers may also handle schemas and data models, reusable exporter and validator tooling, deterministic export and render execution, packaging, demonstrated staging, app integration, and visual or picking checks. Remote GitHub model sync remains deferred/unsupported; generic unavailable/read-only Workbench behavior remains the supported model-editor boundary. No geometry worker may alter a board face, cord estimate, camera, or attachment solely to mask a validation failure: route geometry or fidelity defects back to Astra, while keeping tooling, schema, material-export, suspension, and integration defects with lower-cost workers. Hand off stable hold IDs, the coordinate frame, sourced-versus-estimated evidence, tagged editable geometry, and validation expectations. Inventory checks do not prove fidelity; retain human visual review.
 
 Directly author analytic silhouettes, sections, and recesses from visually reviewed evidence; do not trace or segment pixels. Author symmetric geometry once where the product is symmetric. Give every physical contact its canonical identity, preserving disconnected pieces when necessary.
 
@@ -81,6 +140,41 @@ Inspect [BoardModelView](../../../HangTen/Views/BoardModelView.swift), package l
 
 Keep asynchronous cached loading, independent cloned materials, scene/camera rebinding on identity changes, stable accessibility elements, and on-demand rendering. Use head-on orthographic app framing with lighting that reveals recess depth. Match preview/rest and active highlight semantics; restore wood when cleared.
 
+For a model satisfying the `Suspended portable presentations` contract,
+integrate the
+suspension presentation as one deterministic transient layer above the
+validated USDZ. Transform the descriptor's local attachment point with the
+selected canonical board pose, keep the anchor fixed and invisible, and solve
+a uniform-cord catenary in the gravity plane whenever slack exists. Use a
+straight segment only when rest length equals endpoint separation within the
+declared numerical tolerance. The curve must be continuous at both endpoints,
+sampled with finite values and fixed sample/material parameters, and remain
+non-pickable and absent from the accessibility tree. Validate sampled-curve
+length and self-intersection, and verify cord-tube clearance of at least the
+cord radius plus declared clearance from the board mesh/rays away from the
+approved attachment interface. Also verify camera-space framing of the active
+hold, attachment, and visible cord segment. Do not add a visible nail, hook, anchor,
+stand, ceiling, or surrounding mounting environment.
+
+The following are required failure outcomes for validators and
+`BoardModelView`: rest length shorter than anchor-to-attachment separation;
+nonfinite or nonpositive cord length/radius or other cord parameters;
+nonfinite, nonunit, or otherwise invalid pose transforms; a missing
+attachment node; an unsolved or nonfinite curve; cord collision with the board
+away from the attachment; and the cord becoming a selectable or nearer pick.
+Each case must enter the current explicit model-unavailable/error state. None
+may fall back to a straight line, another orientation model, raster rendering,
+or a visible anchor/stand-in.
+
+Selecting a hold or resolving a workout position must smoothly restore that
+position's canonical board pose and canonical camera framing, then recompute
+the deterministic cord. Manual gestures may change camera azimuth, elevation,
+and allowed zoom only; they must never independently rotate the suspended
+board or anchor. Verify camera orbit separately from interactive detail
+picking. On the first migration, review selection snap, orbit, reset after
+orbit, every supported position, cord/board continuity, clear-and-reappear
+highlighting, workout-driven positions, and the explicit unavailable state.
+
 Derive a front-above key from the camera position without algebraically cancelling its camera-depth component. After `SCNTransaction.flush()`, verify the directional light's presentation-space forward vector points substantially along the declared camera view direction. Log the actual imported `SCNMaterial.lightingModel` when comparing renderers. SceneKit's physically based model requires Metal and can fall back to Blinn where Metal is unavailable, including affected Simulator configurations; treat Simulator captures as app-integration evidence, not guaranteed physical-device PBR parity.
 
 After a canonical texture or exported material changes, validate its actual appearance through the app renderer as a separate boundary check; a Blender reimport/render establishes only Blender-side behavior. Compare controlled app and Blender captures before diagnosing any remaining mismatch as albedo or lighting, and do not make a second visual correction while app-renderer validation is pending. For albedo correction, hold camera, lighting, geometry, and material settings fixed; capture at least two controlled source-albedo samples through the actual app renderer, compare matched board-region pixels, solve the observed response toward a declared exposed-face target, and revalidate the chosen source in the app. Do not tune from Blender's color-managed appearance alone.
@@ -90,6 +184,15 @@ For a display-only 3D model (`onHoldTap == nil`, or the equivalent non-interacti
 ## Verify, retain, stop
 
 Copy the reviewed asset into app resources and compare SHA-256 hashes. Verify the migrated package no longer ships or references the target's raster presentation or canonical 2D hold paths. On the first migration, use `validate-hang-ten-ios` to inspect normal/highlighted portrait and landscape views, physically tap every hold, and check preview, active, clearing, reappearance, and the explicit unavailable/error state. Tests complement visual review.
+
+For every canonical suspended pose, retain front, oblique, and active-hold
+captures. Retain native-picking proof that the active board contact is the
+nearest descriptor-bound triangle mesh while the cord is ignored and cannot
+become a nearer hit. On the first migration, the iOS review must cover
+selection snap, camera orbit, reset after orbit, every position, board/cord
+continuity, clear-and-reappear highlighting, workout-driven positions, and the
+explicit unavailable state. Camera-orbit verification is a separate check
+from interactive detail picking; passing one does not establish the other.
 
 Native XCTest during migration follows `validate-hang-ten-ios`: create and record an exact owned UUID before use; keep cleanup protection alive across RED/GREEN and compilation failures; record and clean failed preliminary devices; use bounded polling and explicit xcresult summaries; and remove the simulator, workspace `DerivedData`, and result bundles before handoff.
 

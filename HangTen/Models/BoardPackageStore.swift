@@ -1233,32 +1233,51 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
         }
         let passages = document.passages.left + document.passages.right
-        guard Set(passages.map(\.id)).count == passages.count else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage IDs must be distinct")
+        let throughBore = passages[0].isThroughBore
+        guard passages.allSatisfy({ $0.isThroughBore == throughBore }),
+              throughBore || Set(passages.map(\.nodeID)).count == passages.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord requires one route representation and distinct point-passage node IDs")
         }
-        guard Set(passages.map(\.nodeID)).count == passages.count else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage node IDs must be distinct")
+        guard passages.allSatisfy({ $0.id.isBoardPackageIdentifier }),
+              Set(passages.map(\.id)).count == passages.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage IDs must be distinct and identifier-shaped")
         }
         let nodesByID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
         for passage in passages {
             guard let node = nodesByID[passage.nodeID], node.role == .body || node.role == .attachment else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage node must be a body or attachment node")
             }
-            guard passage.pointInModel.count == 3,
-                  passage.pointInModel.allSatisfy(\.isFinite),
-                  zip(passage.pointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
-                  zip(passage.pointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage point must be finite and inside model bounds")
+            guard passage.entryPointInModel.count == 3,
+                  passage.exitPointInModel.count == 3,
+                  passage.entryPointInModel.allSatisfy(\.isFinite),
+                  passage.exitPointInModel.allSatisfy(\.isFinite),
+                  zip(passage.entryPointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+                  zip(passage.entryPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }),
+                  zip(passage.exitPointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+                  zip(passage.exitPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage entry and exit points must be finite and inside model bounds")
+            }
+            let boreLength = zip(passage.entryPointInModel, passage.exitPointInModel)
+                .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+            guard boreLength.isFinite, !throughBore || boreLength > 1e-7 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage must declare a non-zero through-bore")
             }
         }
         guard document.branches.count == 2,
+              document.branches.allSatisfy({ $0.id.isBoardPackageIdentifier }),
               document.branches[0].passageIDs == document.passages.left.map(\.id),
               document.branches[1].passageIDs == document.passages.right.map(\.id),
               Set(document.branches.map(\.id)).count == document.branches.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches must be two distinct ordered passage pairs")
         }
         guard document.branches.allSatisfy({
-            $0.passageIDs.count == 2 && $0.restLength.isFinite && $0.restLength > 0 &&
+            $0.passageIDs.count == 2 && $0.hasContactRoute == throughBore &&
+            (!throughBore || ($0.entryContactPoints.count >= 1 &&
+            $0.exteriorContactPoints.count >= 2 && $0.exitContactPoints.count >= 1)) &&
+            $0.entryContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) &&
+            $0.exteriorContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) &&
+            $0.exitContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) &&
+            $0.restLength.isFinite && $0.restLength > 0 &&
             $0.radius.isFinite && $0.radius > 0 && !$0.material.isEmpty
         }) else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches have invalid cord parameters")
@@ -1294,9 +1313,15 @@ struct BoardPackageStore {
             }
             for (branchIndex, branch) in document.branches.enumerated() {
                 let side = branchIndex == 0 ? document.passages.left : document.passages.right
+                let modelRoute = !throughBore ? side.map(\.entryPointInModel) : branch.entryContactPoints + [
+                    side[0].entryPointInModel,
+                    side[0].exitPointInModel,
+                ] + branch.exteriorContactPoints + [
+                    side[1].exitPointInModel,
+                    side[1].entryPointInModel,
+                ] + branch.exitContactPoints
                 var transformedEndpoints: [[Double]] = []
-                for passage in side {
-                    let p = passage.pointInModel
+                for p in modelRoute {
                     let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
                     let tx = 2 * (qy * p[2] - qz * p[1])
                     let ty = 2 * (qz * p[0] - qx * p[2])
@@ -1307,21 +1332,23 @@ struct BoardPackageStore {
                         p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
                     ]
                     transformedEndpoints.append(transformed)
+                    let distance = zip(transformed, anchorPosition).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                    guard distance.isFinite else {
+                        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) endpoint distance must be finite")
+                    }
                 }
-                let firstEndpointDistance = zip(transformedEndpoints[0], anchorPosition)
+                let rigidLength = zip(transformedEndpoints, transformedEndpoints.dropFirst())
+                    .reduce(0) { partial, pair in
+                        partial + zip(pair.0, pair.1).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                    }
+                let firstDistance = zip(transformedEndpoints[0], anchorPosition)
                     .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
-                let secondEndpointDistance = zip(transformedEndpoints[1], anchorPosition)
+                let lastDistance = zip(transformedEndpoints.last!, anchorPosition)
                     .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
-                let passageDistance = zip(transformedEndpoints[0], transformedEndpoints[1])
-                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }
-                    .squareRoot()
-                let minimumRouteLength = firstEndpointDistance + passageDistance + secondEndpointDistance
-                guard firstEndpointDistance.isFinite, secondEndpointDistance.isFinite,
-                      passageDistance.isFinite, minimumRouteLength.isFinite,
-                      firstEndpointDistance > 1e-7, secondEndpointDistance > 1e-7,
-                      passageDistance > 1e-7,
-                      branch.restLength >= minimumRouteLength - 1e-5 else {
-                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) must have distinct passage and anchor endpoints with a feasible closed route")
+                guard rigidLength.isFinite, firstDistance.isFinite, lastDistance.isFinite,
+                      rigidLength > 1e-7, firstDistance > 1e-7, lastDistance > 1e-7,
+                      branch.restLength >= rigidLength + firstDistance + lastDistance - 1e-5 else {
+                        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) restLength is shorter than endpoint distance")
                 }
             }
         }
@@ -1330,10 +1357,10 @@ struct BoardPackageStore {
         }
         return .twoBranchCord(BoardModelTwoBranchSuspension(
             passages: BoardModelPassagePairs(
-                left: document.passages.left.map { BoardModelPassage(id: $0.id, nodeID: $0.nodeID, pointInModel: $0.pointInModel, provenance: $0.provenance) },
-                right: document.passages.right.map { BoardModelPassage(id: $0.id, nodeID: $0.nodeID, pointInModel: $0.pointInModel, provenance: $0.provenance) }
+                left: document.passages.left.map(\.modelValue),
+                right: document.passages.right.map(\.modelValue)
             ),
-            branches: document.branches.map { BoardModelCordBranch(id: $0.id, passageIDs: $0.passageIDs, restLength: $0.restLength, radius: $0.radius, material: $0.material, provenance: $0.provenance) },
+            branches: document.branches.map { BoardModelCordBranch(id: $0.id, passageIDs: $0.passageIDs, entryContactPoints: $0.entryContactPoints, exteriorContactPoints: $0.exteriorContactPoints, exitContactPoints: $0.exitContactPoints, restLength: $0.restLength, radius: $0.radius, material: $0.material, provenance: $0.provenance) },
             anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: document.anchor.offsetFromBoardBounds, visibility: document.anchor.visibility, provenance: document.anchor.provenance, position: anchorPosition),
             canonicalPoses: poseValues
         ))
@@ -1419,11 +1446,15 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
             try passagesMembers.requireCanonicalOrder(["left", "right"])
             for passage in leftPassages + rightPassages {
                 guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
-                try members.requireCanonicalOrder(["id", "nodeID", "pointInModel", "provenance"])
+                let pointKeys = members.contains(where: { $0.name == "pointInModel" })
+                    ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
+                try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
             }
             for branch in branches {
                 guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
-                try members.requireCanonicalOrder(["id", "passageIDs", "restLength", "radius", "material", "provenance"])
+                let contacts = members.contains(where: { $0.name == "entryContactPoints" })
+                    ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
+                try members.requireCanonicalOrder(["id", "passageIDs"] + contacts + ["restLength", "radius", "material", "provenance"])
             }
             try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
             for pose in poseMembers.mapValues() {
@@ -1942,16 +1973,25 @@ private struct BoardPackageSingleCordSuspensionDocument: Decodable {
 private struct BoardPackagePassageDocument: Decodable {
     let id: String
     let nodeID: String
-    let pointInModel: [Double]
+    let entryPointInModel: [Double]
+    let exitPointInModel: [Double]
     let provenance: String
+    let isThroughBore: Bool
+    var modelValue: BoardModelPassage {
+        isThroughBore
+            ? BoardModelPassage(id: id, nodeID: nodeID, entryPointInModel: entryPointInModel, exitPointInModel: exitPointInModel, provenance: provenance)
+            : BoardModelPassage(id: id, nodeID: nodeID, pointInModel: entryPointInModel, provenance: provenance)
+    }
 
-    private enum CodingKeys: String, CodingKey { case id, nodeID, pointInModel, provenance }
+    private enum CodingKeys: String, CodingKey { case id, nodeID, pointInModel, entryPointInModel, exitPointInModel, provenance }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "nodeID", "pointInModel", "provenance"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        isThroughBore = !container.contains(.pointInModel)
+        try decoder.rejectUnknownKeys(Set(["id", "nodeID", "provenance"] + (isThroughBore ? ["entryPointInModel", "exitPointInModel"] : ["pointInModel"])))
         id = try container.decode(String.self, forKey: .id)
         nodeID = try container.decode(String.self, forKey: .nodeID)
-        pointInModel = try container.decode([Double].self, forKey: .pointInModel)
+        entryPointInModel = try container.decode([Double].self, forKey: isThroughBore ? .entryPointInModel : .pointInModel)
+        exitPointInModel = try isThroughBore ? container.decode([Double].self, forKey: .exitPointInModel) : entryPointInModel
         provenance = try container.decode(String.self, forKey: .provenance)
     }
 }
@@ -1972,17 +2012,25 @@ private struct BoardPackagePassagePairsDocument: Decodable {
 private struct BoardPackageCordBranchDocument: Decodable {
     let id: String
     let passageIDs: [String]
+    let entryContactPoints: [[Double]]
+    let exteriorContactPoints: [[Double]]
+    let exitContactPoints: [[Double]]
     let restLength: Double
     let radius: Double
     let material: String
     let provenance: String
+    let hasContactRoute: Bool
 
-    private enum CodingKeys: String, CodingKey { case id, passageIDs, restLength, radius, material, provenance }
+    private enum CodingKeys: String, CodingKey { case id, passageIDs, entryContactPoints, exteriorContactPoints, exitContactPoints, restLength, radius, material, provenance }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "passageIDs", "restLength", "radius", "material", "provenance"])
+        try decoder.rejectUnknownKeys(["id", "passageIDs", "entryContactPoints", "exteriorContactPoints", "exitContactPoints", "restLength", "radius", "material", "provenance"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        hasContactRoute = container.contains(.entryContactPoints) || container.contains(.exteriorContactPoints) || container.contains(.exitContactPoints)
         id = try container.decode(String.self, forKey: .id)
         passageIDs = try container.decode([String].self, forKey: .passageIDs)
+        entryContactPoints = try hasContactRoute ? container.decode([[Double]].self, forKey: .entryContactPoints) : []
+        exteriorContactPoints = try hasContactRoute ? container.decode([[Double]].self, forKey: .exteriorContactPoints) : []
+        exitContactPoints = try hasContactRoute ? container.decode([[Double]].self, forKey: .exitContactPoints) : []
         restLength = try container.decode(Double.self, forKey: .restLength)
         radius = try container.decode(Double.self, forKey: .radius)
         material = try container.decode(String.self, forKey: .material)

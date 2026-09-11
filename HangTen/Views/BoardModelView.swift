@@ -223,6 +223,9 @@ final class BoardModelScene {
     private var lastMode: BoardHighlightMode?
     private var canonicalFraming: SuspendedCameraFraming?
     private var currentFraming: SuspendedCameraFraming?
+    // Descriptor, geometry and suspension are immutable for this scene instance.
+    // Keep successful pose/clearance results and cord nodes across highlight updates.
+    private var verifiedPresentations: [String: (BoardModelSolvedSuspension, SCNNode)] = [:]
     private var orbitAzimuth: Float = 0
     private var orbitElevation: Float = 0
     private var orbitZoom: Float = 1
@@ -366,14 +369,21 @@ final class BoardModelScene {
         }
 
         do {
-            let solved = try Self.solveSuspension(
-                pose: pose, suspension: suspension, bounds: descriptor.modelBounds
-            )
-            guard hasClearance(for: solved) else {
-                enterUnavailable()
-                return false
+            let solved: BoardModelSolvedSuspension
+            let cord: SCNNode
+            if let cached = verifiedPresentations[positionID] {
+                (solved, cord) = cached
+            } else {
+                solved = try Self.solveSuspension(
+                    pose: pose, suspension: suspension, bounds: descriptor.modelBounds
+                )
+                guard hasClearance(for: solved) else {
+                    enterUnavailable()
+                    return false
+                }
+                cord = makeCordNode(for: solved)
+                verifiedPresentations[positionID] = (solved, cord)
             }
-            let cord = makeCordNode(for: solved)
             transitionToCanonicalPresentation(solved, cord: cord)
             canonicalFraming = solved.cameraFraming
             activePositionID = positionID
@@ -564,6 +574,9 @@ final class BoardModelScene {
         let paths: [[SIMD3<Float>]]
         let clearanceRadius: Float
         let intentionalContacts: [IntentionalContact]
+        // Only the explicitly authored bearing/bore interval may touch its
+        // bound nonselectable body. Free spans and all holds keep full clearance.
+        var bearingIntervals: [(path: Int, segments: Range<Int>, nodes: Set<String>, radius: Float)] = []
         switch solved {
         case .single(let single):
             guard case .some(.singleCord(let singleSuspension)) = suspension else { return false }
@@ -582,8 +595,15 @@ final class BoardModelScene {
             guard case .some(.twoBranchCord(let twoBranchSuspension)) = suspension else { return false }
             let transform = twoBranch.boardTransform
             let passagePairs = [twoBranchSuspension.passages.left, twoBranchSuspension.passages.right]
+            for (index, passages) in passagePairs.enumerated() where passages.allSatisfy(\.isThroughBore) {
+                let branch = twoBranch.branches[index]
+                guard branch.spans.count == 3 else { return false }
+                let start = branch.spans[0].count - 1
+                bearingIntervals.append((index, start..<(start + branch.spans[1].count - 1), Set(passages.map(\.nodeID)), Float(twoBranchSuspension.branches[index].radius)))
+            }
             intentionalContacts = passagePairs.enumerated().flatMap { pathIndex, passages in
                 passages.enumerated().flatMap { passageIndex, passage -> [IntentionalContact] in
+                    guard !passage.isThroughBore else { return [] }
                     let point = SIMD3<Float>(Float(passage.pointInModel[0]), Float(passage.pointInModel[1]), Float(passage.pointInModel[2]))
                     let transformed = transform * SIMD4<Float>(point.x, point.y, point.z, 1)
                     let worldPoint = SIMD3<Float>(transformed.x, transformed.y, transformed.z)
@@ -620,6 +640,10 @@ final class BoardModelScene {
             }
             for (pathIndex, path) in paths.enumerated() {
                 for (segmentIndex, points) in zip(path, path.dropFirst()).enumerated() {
+                let bearing = bearingIntervals.first {
+                    $0.path == pathIndex && $0.segments.contains(segmentIndex) && $0.nodes.contains(nodeID)
+                }
+                let requiredDistance = bearing?.radius ?? clearanceRadius
                 for triangle in triangles {
                     let approach = Self.closestApproach(
                         from: points.0,
@@ -627,7 +651,7 @@ final class BoardModelScene {
                         triangle: triangle
                     )
                     guard approach.distanceSquared.isFinite else { return false }
-                    if approach.distanceSquared >= clearanceRadius * clearanceRadius { continue }
+                    if approach.distanceSquared >= requiredDistance * requiredDistance { continue }
                     if intentionalContacts.contains(where: {
                         $0.pathIndex == pathIndex &&
                         $0.segmentIndex == segmentIndex &&
@@ -658,7 +682,16 @@ final class BoardModelScene {
     }
 
     private static func worldTriangles(for geometry: SCNGeometry, node: SCNNode) -> [Triangle]? {
-        guard let source = geometry.sources(for: .vertex).first,
+        guard let sourceIndex = geometry.sources.firstIndex(where: { $0.semantic == .vertex }) else { return nil }
+        let source = geometry.sources[sourceIndex]
+        let vertexChannel: Int
+        if let channels = geometry.geometrySourceChannels {
+            guard channels.count == geometry.sources.count else { return nil }
+            vertexChannel = channels[sourceIndex].intValue
+        } else {
+            vertexChannel = 0
+        }
+        guard vertexChannel >= 0,
               source.usesFloatComponents,
               source.bytesPerComponent == MemoryLayout<Float>.size,
               source.componentsPerVector >= 3,
@@ -687,19 +720,20 @@ final class BoardModelScene {
         var result: [Triangle] = []
         for element in geometry.elements {
             guard element.primitiveType == .triangles,
+                  element.indicesChannelCount > vertexChannel,
                   element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4,
                   element.primitiveCount >= 0 else {
                 return nil
             }
             let indexCount = element.primitiveCount * 3
             guard indexCount >= 0,
-                  indexCount * element.bytesPerIndex <= element.data.count else {
+                  indexCount * element.indicesChannelCount * element.bytesPerIndex <= element.data.count else {
                 return nil
             }
             for offset in stride(from: 0, to: indexCount, by: 3) {
-                guard let first = index(in: element, at: offset),
-                      let second = index(in: element, at: offset + 1),
-                      let third = index(in: element, at: offset + 2),
+                guard let first = index(in: element, at: offset, channel: vertexChannel),
+                      let second = index(in: element, at: offset + 1, channel: vertexChannel),
+                      let third = index(in: element, at: offset + 2, channel: vertexChannel),
                       vertices.indices.contains(first),
                       vertices.indices.contains(second),
                       vertices.indices.contains(third) else {
@@ -719,8 +753,13 @@ final class BoardModelScene {
         return Float(bitPattern: bitPattern)
     }
 
-    private static func index(in element: SCNGeometryElement, at index: Int) -> Int? {
-        let offset = index * element.bytesPerIndex
+    private static func index(in element: SCNGeometryElement, at index: Int, channel: Int) -> Int? {
+        // Imported USDZs can index positions, normals and UVs independently.
+        // Read the geometry's declared position channel, in either layout.
+        let scalarIndex = element.hasInterleavedIndicesChannels
+            ? index * element.indicesChannelCount + channel
+            : channel * element.primitiveCount * 3 + index
+        let offset = scalarIndex * element.bytesPerIndex
         guard offset >= 0, offset + element.bytesPerIndex <= element.data.count else { return nil }
         let value = element.data[offset..<(offset + element.bytesPerIndex)].enumerated().reduce(UInt32.zero) {
             $0 | UInt32($1.element) << UInt32($1.offset * 8)
@@ -900,7 +939,7 @@ final class BoardModelScene {
         viewportSize = size
         let aspect = Float(size.width / size.height)
         if let framing = currentFraming {
-            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding)
+            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom)
         } else {
             camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect))
         }
