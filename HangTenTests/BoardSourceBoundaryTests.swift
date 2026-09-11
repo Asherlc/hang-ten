@@ -41,6 +41,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "metolius.wood-grips-deluxe-ii",
             "moon.armstrong",
             "nature.stoak-board-iii",
+            "nature.stone-hanger",
             "nature.stone-hanger-mini",
             "nature.stone-hanger-mini-karma8a",
             "owl-climb.poker",
@@ -230,7 +231,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let migratedModelBoardIDs: Set<String> = [
             "beastmaker-1000",
-            "metolius.wood-grips-compact-ii"
+            "metolius.wood-grips-compact-ii",
+            "nature.stone-hanger",
+            "yy.baguette-evo"
         ]
 
         XCTAssertFalse(

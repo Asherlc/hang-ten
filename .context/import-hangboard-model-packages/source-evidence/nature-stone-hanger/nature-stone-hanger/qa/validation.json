@@ -1,0 +1,94 @@
+{
+  "blender_version": "4.0.2",
+  "status": "passed",
+  "checks": [
+    "reopened saved file",
+    "9 mesh objects: 1 body + 8 selectable contacts",
+    "2 ordered Empty passage markers",
+    "only mesh/empty objects; no scene hardware or environment geometry",
+    "metric scale and exact published outer bounds",
+    "mesh transforms applied",
+    "zero live modifiers",
+    "one PBR material per physical surface family",
+    "packed 1K textures with matching external source files",
+    "finite UVs; zero collapsed UV triangles",
+    "eight stable hold IDs matching integration.json"
+  ],
+  "meshes": [
+    {
+      "name": "body-oak",
+      "triangles": 8838,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-front-15mm-incut",
+      "triangles": 1932,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-front-15mm-flat",
+      "triangles": 1932,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-front-20mm-wood-flat",
+      "triangles": 1886,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-reverse-10mm-incut",
+      "triangles": 1932,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-reverse-10mm-flat",
+      "triangles": 1932,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-reverse-06mm-flat",
+      "triangles": 1932,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-reverse-06mm-incut",
+      "triangles": 1932,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    },
+    {
+      "name": "edge-front-20mm-granite",
+      "triangles": 1004,
+      "degenerate_triangles": 0,
+      "degenerate_uv_triangles": 0
+    }
+  ],
+  "bounds_m_xyz": [
+    0.10499999672174454,
+    0.03500000014901161,
+    0.10499999672174454
+  ],
+  "embedded_textures": [
+    {
+      "name": "granite-neutral-basecolor.png",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "oak-neutral-basecolor.png",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

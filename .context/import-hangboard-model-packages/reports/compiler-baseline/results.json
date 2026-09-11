@@ -1,0 +1,19 @@
+{
+  "blenderVersion": "5.2.0 LTS fbe6228777e7",
+  "hostContextResults": [
+    {"error": "mesh board_body role must be body or hold", "packageID": "metolius", "status": "rejected"},
+    {"error": "mesh body-L role must be body or hold", "packageID": "training-tiles", "status": "rejected"},
+    {"error": "mesh body role must be body or hold", "packageID": "baguette-evo", "status": "rejected"},
+    {"error": "mesh body-oak role must be body or hold", "packageID": "nature-stone-hanger", "status": "rejected"}
+  ],
+  "sandboxStartup": {
+    "exitCode": 139,
+    "markerReached": false,
+    "result": "SIGSEGV before Python"
+  },
+  "hostStartupComparison": {
+    "exitCode": 0,
+    "markerReached": true,
+    "result": "GRAY_HORSE_BLENDER_MARKER"
+  }
+}

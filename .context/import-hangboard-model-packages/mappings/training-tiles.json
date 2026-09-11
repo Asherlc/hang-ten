@@ -1,0 +1,18 @@
+{
+  "logicalHoldIDs": ["upper-sloper-outer-left", "upper-sloper-outer-right", "upper-sloper-inner-left", "upper-sloper-inner-right", "middle-edge-outer-left", "middle-edge-outer-right", "middle-edge-inner-left", "middle-edge-inner-right", "bottom-edge-center-left", "bottom-edge-center-right", "top-pocket-outer-left", "top-pocket-outer-right", "bottom-edge-inner-left", "bottom-edge-inner-right", "bottom-edge-outer-left", "bottom-edge-outer-right", "top-pocket-inner-left", "top-pocket-inner-right", "top-jug-left", "top-jug-right"],
+  "objects": [
+    {"role": "body", "sourceNodeID": "body-L"}, {"role": "body", "sourceNodeID": "body-R"},
+    {"holdID": "top-pocket-outer-left", "role": "hold", "sourceNodeID": "hold-L-pocket"}, {"holdID": "top-pocket-outer-right", "role": "hold", "sourceNodeID": "hold-R-pocket"},
+    {"holdID": "upper-sloper-outer-left", "role": "hold", "sourceNodeID": "hold-L-sloper-outer"}, {"holdID": "upper-sloper-outer-right", "role": "hold", "sourceNodeID": "hold-R-sloper-outer"},
+    {"holdID": "upper-sloper-inner-left", "role": "hold", "sourceNodeID": "hold-L-sloper-inner"}, {"holdID": "upper-sloper-inner-right", "role": "hold", "sourceNodeID": "hold-R-sloper-inner"},
+    {"holdID": "middle-edge-outer-left", "role": "hold", "sourceNodeID": "hold-L-edge-middle-outer"}, {"holdID": "middle-edge-outer-right", "role": "hold", "sourceNodeID": "hold-R-edge-middle-outer"},
+    {"holdID": "middle-edge-inner-left", "role": "hold", "sourceNodeID": "hold-L-edge-middle-inner"}, {"holdID": "middle-edge-inner-right", "role": "hold", "sourceNodeID": "hold-R-edge-middle-inner"},
+    {"holdID": "bottom-edge-outer-left", "role": "hold", "sourceNodeID": "hold-L-edge-bottom-outer"}, {"holdID": "bottom-edge-outer-right", "role": "hold", "sourceNodeID": "hold-R-edge-bottom-outer"},
+    {"holdID": "bottom-edge-center-left", "role": "hold", "sourceNodeID": "hold-L-edge-bottom-center"}, {"holdID": "bottom-edge-center-right", "role": "hold", "sourceNodeID": "hold-R-edge-bottom-center"},
+    {"holdID": "bottom-edge-inner-left", "role": "hold", "sourceNodeID": "hold-L-edge-bottom-inner"}, {"holdID": "bottom-edge-inner-right", "role": "hold", "sourceNodeID": "hold-R-edge-bottom-inner"}
+  ],
+  "packageID": "training-tiles",
+  "promotionStatus": "rejected",
+  "expectedError": "unmapped logical hold IDs",
+  "schemaVersion": 1
+}

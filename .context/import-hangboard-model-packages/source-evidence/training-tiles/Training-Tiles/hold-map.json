@@ -1,0 +1,172 @@
+{
+  "coordinate_system": "meters, X right, Y back, Z up",
+  "cords": false,
+  "body_objects": [
+    "body-L",
+    "body-R"
+  ],
+  "selection": "Actual contact-surface triangles; never joined to body",
+  "depth_mapping_status": "inferred from relative projections in manufacturer oblique images; not spatially labeled by manufacturer",
+  "holds": [
+    {
+      "id": "hold-L-pocket",
+      "mesh": "hold-L-pocket",
+      "tile": "L",
+      "description": "Upper outer open pocket",
+      "kind": "pocket",
+      "published_depth_mm": 76.2,
+      "published_angle_degrees": null,
+      "triangle_count": 13727
+    },
+    {
+      "id": "hold-L-sloper-outer",
+      "mesh": "hold-L-sloper-outer",
+      "tile": "L",
+      "description": "Upper sloper next to the pocket",
+      "kind": "sloper",
+      "published_depth_mm": 54.0,
+      "published_angle_degrees": 25.0,
+      "triangle_count": 4469
+    },
+    {
+      "id": "hold-L-sloper-inner",
+      "mesh": "hold-L-sloper-inner",
+      "tile": "L",
+      "description": "Upper sloper closest to the central gap",
+      "kind": "sloper",
+      "published_depth_mm": 64.0,
+      "published_angle_degrees": 12.0,
+      "triangle_count": 5458
+    },
+    {
+      "id": "hold-L-edge-middle-outer",
+      "mesh": "hold-L-edge-middle-outer",
+      "tile": "L",
+      "description": "Middle positive edge next to the pocket-side rib",
+      "kind": "positive-edge",
+      "published_depth_mm": 44.0,
+      "published_angle_degrees": null,
+      "triangle_count": 3989
+    },
+    {
+      "id": "hold-L-edge-middle-inner",
+      "mesh": "hold-L-edge-middle-inner",
+      "tile": "L",
+      "description": "Middle positive edge closest to the central gap",
+      "kind": "positive-edge",
+      "published_depth_mm": 50.0,
+      "published_angle_degrees": null,
+      "triangle_count": 4768
+    },
+    {
+      "id": "hold-L-edge-bottom-outer",
+      "mesh": "hold-L-edge-bottom-outer",
+      "tile": "L",
+      "description": "Bottom outer flat edge",
+      "kind": "flat-edge",
+      "published_depth_mm": 36.0,
+      "published_angle_degrees": 0.0,
+      "triangle_count": 3028
+    },
+    {
+      "id": "hold-L-edge-bottom-center",
+      "mesh": "hold-L-edge-bottom-center",
+      "tile": "L",
+      "description": "Bottom center flat edge",
+      "kind": "flat-edge",
+      "published_depth_mm": 31.0,
+      "published_angle_degrees": 0.0,
+      "triangle_count": 1974
+    },
+    {
+      "id": "hold-L-edge-bottom-inner",
+      "mesh": "hold-L-edge-bottom-inner",
+      "tile": "L",
+      "description": "Bottom inner flat edge above the branding",
+      "kind": "flat-edge",
+      "published_depth_mm": 24.0,
+      "published_angle_degrees": 0.0,
+      "triangle_count": 1297
+    },
+    {
+      "id": "hold-R-pocket",
+      "mesh": "hold-R-pocket",
+      "tile": "R",
+      "description": "Upper outer open pocket",
+      "kind": "pocket",
+      "published_depth_mm": 76.2,
+      "published_angle_degrees": null,
+      "triangle_count": 13710
+    },
+    {
+      "id": "hold-R-sloper-outer",
+      "mesh": "hold-R-sloper-outer",
+      "tile": "R",
+      "description": "Upper sloper next to the pocket",
+      "kind": "sloper",
+      "published_depth_mm": 54.0,
+      "published_angle_degrees": 25.0,
+      "triangle_count": 4485
+    },
+    {
+      "id": "hold-R-sloper-inner",
+      "mesh": "hold-R-sloper-inner",
+      "tile": "R",
+      "description": "Upper sloper closest to the central gap",
+      "kind": "sloper",
+      "published_depth_mm": 64.0,
+      "published_angle_degrees": 12.0,
+      "triangle_count": 5450
+    },
+    {
+      "id": "hold-R-edge-middle-outer",
+      "mesh": "hold-R-edge-middle-outer",
+      "tile": "R",
+      "description": "Middle positive edge next to the pocket-side rib",
+      "kind": "positive-edge",
+      "published_depth_mm": 44.0,
+      "published_angle_degrees": null,
+      "triangle_count": 3994
+    },
+    {
+      "id": "hold-R-edge-middle-inner",
+      "mesh": "hold-R-edge-middle-inner",
+      "tile": "R",
+      "description": "Middle positive edge closest to the central gap",
+      "kind": "positive-edge",
+      "published_depth_mm": 50.0,
+      "published_angle_degrees": null,
+      "triangle_count": 4768
+    },
+    {
+      "id": "hold-R-edge-bottom-outer",
+      "mesh": "hold-R-edge-bottom-outer",
+      "tile": "R",
+      "description": "Bottom outer flat edge",
+      "kind": "flat-edge",
+      "published_depth_mm": 36.0,
+      "published_angle_degrees": 0.0,
+      "triangle_count": 3030
+    },
+    {
+      "id": "hold-R-edge-bottom-center",
+      "mesh": "hold-R-edge-bottom-center",
+      "tile": "R",
+      "description": "Bottom center flat edge",
+      "kind": "flat-edge",
+      "published_depth_mm": 31.0,
+      "published_angle_degrees": 0.0,
+      "triangle_count": 1974
+    },
+    {
+      "id": "hold-R-edge-bottom-inner",
+      "mesh": "hold-R-edge-bottom-inner",
+      "tile": "R",
+      "description": "Bottom inner flat edge above the branding",
+      "kind": "flat-edge",
+      "published_depth_mm": 24.0,
+      "published_angle_degrees": 0.0,
+      "triangle_count": 1298
+    }
+  ]
+}

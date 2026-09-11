@@ -9,6 +9,25 @@ struct BoardModelKey: Hashable {
     let modelSHA256: String
 }
 
+enum BoardModelSolvedSuspension {
+    case single(SuspendedSolvedPresentation)
+    case twoBranch(SuspendedTwoBranchSolvedPresentation)
+
+    var boardTransform: simd_float4x4 {
+        switch self {
+        case .single(let solved): solved.boardTransform
+        case .twoBranch(let solved): solved.boardTransform
+        }
+    }
+
+    var cameraFraming: SuspendedCameraFraming {
+        switch self {
+        case .single(let solved): solved.cameraFraming
+        case .twoBranch(let solved): solved.cameraFraming
+        }
+    }
+}
+
 enum BoardModelAsset {
     static func load(media _: BoardModelMedia, packageURL: URL) -> SCNScene? {
         guard packageURL.isFileURL,
@@ -195,7 +214,6 @@ final class BoardModelScene {
     private let descriptor: BoardModelDescriptor
     private let suspension: BoardModelSuspension?
     private let geometryByNodeID: [String: SCNNode]
-    private let attachmentNodeIDs: Set<String>
     private let projectedWidth: Float
     private let projectedHeight: Float
     private(set) var holdNodes: [String: [SCNNode]] = [:]
@@ -305,9 +323,6 @@ final class BoardModelScene {
         self.descriptor = descriptor
         self.suspension = suspension
         self.geometryByNodeID = geometryByNodeID
-        self.attachmentNodeIDs = Set(descriptor.nodes.compactMap {
-            $0.role == .attachment ? $0.nodeID : nil
-        })
         holdNodes = boundHoldNodes
         holdIDsByNode = boundHoldIDsByNode
         originalMaterials = originals
@@ -345,19 +360,14 @@ final class BoardModelScene {
             return true
         }
         guard let positionID,
-              let pose = suspension.canonicalPoses[positionID],
-              attachmentNodeIDs.contains(suspension.attachment.nodeID),
-              let binding = descriptor.nodes.first(where: { $0.nodeID == suspension.attachment.nodeID }),
-              binding.role == .attachment else {
+              let pose = suspension.canonicalPoses[positionID] else {
             enterUnavailable()
             return false
         }
 
         do {
-            let solved = try SuspendedBoardPresentation.solve(
-                pose: pose,
-                suspension: suspension,
-                bounds: descriptor.modelBounds
+            let solved = try Self.solveSuspension(
+                pose: pose, suspension: suspension, bounds: descriptor.modelBounds
             )
             guard hasClearance(for: solved) else {
                 enterUnavailable()
@@ -372,6 +382,23 @@ final class BoardModelScene {
         } catch {
             enterUnavailable()
             return false
+        }
+    }
+
+    static func solveSuspension(
+        pose: BoardModelCanonicalPose,
+        suspension: BoardModelSuspension,
+        bounds: BoardModelBounds
+    ) throws -> BoardModelSolvedSuspension {
+        switch suspension {
+        case .singleCord(let single):
+            return .single(try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: .singleCord(single), bounds: bounds
+            ))
+        case .twoBranchCord(let twoBranch):
+            return .twoBranch(try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: twoBranch, bounds: bounds
+            ))
         }
     }
 
@@ -433,27 +460,24 @@ final class BoardModelScene {
     }
 
     private func transitionToCanonicalPresentation(
-        _ solved: SolvedSuspension,
+        _ solved: BoardModelSolvedSuspension,
         cord: SCNNode
     ) {
         // Build the replacement cord at its deterministic destination before
         // the transaction. It is never bound to descriptor geometry and the
-        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
-        // existing transient node is removed and replaced in one SceneKit
-        // transaction. The replacement itself has no implicit action; the
-        // board/camera transition below keeps its established animation.
-        SCNTransaction.begin()
-        SCNTransaction.disableActions = true
+        // existing transient node is removed as one replacement operation.
         transientCordNode?.removeFromParentNode()
         transientCordNode = cord
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
+
+        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
         if boardMoves {
             cord.opacity = 0
         } else {
             boardContainer.simdTransform = solved.boardTransform
         }
-        SCNTransaction.disableActions = false
+        SCNTransaction.begin()
         SCNTransaction.animationDuration = Self.canonicalTransitionDuration
         if boardMoves {
             boardContainer.simdTransform = solved.boardTransform
@@ -463,7 +487,9 @@ final class BoardModelScene {
         SCNTransaction.commit()
 
         boardTransform = solved.boardTransform
-        transformedAttachment = solved.transformedAttachment
+        if case .single(let single) = solved {
+            transformedAttachment = single.transformedAttachment
+        }
         currentFraming = solved.cameraFraming
     }
 
@@ -490,50 +516,92 @@ final class BoardModelScene {
         currentFraming = framing
     }
 
-    private func makeCordNode(for solved: SolvedSuspension) -> SCNNode {
+    private func makeCordNode(for solved: BoardModelSolvedSuspension) -> SCNNode {
         let root = SCNNode()
         root.name = "suspended.cord"
         root.categoryBitMask = Self.cordCategory
-        for (index, points) in zip(solved.centerlineSamples, solved.centerlineSamples.dropFirst()).enumerated() {
-            let start = points.0
-            let end = points.1
-            let direction = end - start
-            let length = simd_length(direction)
-            guard length.isFinite, length > 1e-7 else { continue }
-            let geometry = SCNCylinder(radius: CGFloat(solved.tubeRadius), height: CGFloat(length))
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor(white: 0.08, alpha: 1)
-            material.roughness.contents = 0.8
-            geometry.firstMaterial = material
-            let segment = SCNNode(geometry: geometry)
-            segment.name = "suspended.cord.segment.\(index)"
-            segment.categoryBitMask = Self.cordCategory
-            segment.position = SCNVector3((start + end) / 2)
-            segment.simdOrientation = simd_quatf(
-                from: SIMD3<Float>(0, 1, 0),
-                to: simd_normalize(direction)
-            )
-            root.addChildNode(segment)
+        let paths: [([SIMD3<Float>], Float)]
+        switch solved {
+        case .single(let single):
+            paths = [(single.centerlineSamples, single.tubeRadius)]
+        case .twoBranch(let twoBranch):
+            paths = twoBranch.branches.map { ($0.centerlineSamples, twoBranch.tubeRadius) }
+        }
+        for (branchIndex, path) in paths.enumerated() {
+            for (index, points) in zip(path.0, path.0.dropFirst()).enumerated() {
+                let start = points.0
+                let end = points.1
+                let direction = end - start
+                let length = simd_length(direction)
+                guard length.isFinite, length > 1e-7 else { continue }
+                let geometry = SCNCylinder(radius: CGFloat(path.1), height: CGFloat(length))
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor(white: 0.08, alpha: 1)
+                material.roughness.contents = 0.8
+                geometry.firstMaterial = material
+                let segment = SCNNode(geometry: geometry)
+                segment.name = "suspended.cord.branch.\(branchIndex).segment.\(index)"
+                segment.categoryBitMask = Self.cordCategory
+                segment.position = SCNVector3((start + end) / 2)
+                segment.simdOrientation = simd_quatf(
+                    from: SIMD3<Float>(0, 1, 0),
+                    to: simd_normalize(direction)
+                )
+                root.addChildNode(segment)
+            }
         }
         return root
     }
 
-    private func hasClearance(for solved: SolvedSuspension) -> Bool {
-        guard solved.centerlineSamples.count >= 2,
-              solved.tubeRadius.isFinite,
-              solved.requiredClearance.isFinite,
-              solved.tubeRadius > 0,
-              solved.requiredClearance > 0 else {
+    private func hasClearance(for solved: BoardModelSolvedSuspension) -> Bool {
+        struct IntentionalContact {
+            let pathIndex: Int
+            let segmentIndex: Int
+            let segmentParameter: Float
+            let nodeID: String
+            let point: SIMD3<Float>
+        }
+        let paths: [[SIMD3<Float>]]
+        let clearanceRadius: Float
+        let intentionalContacts: [IntentionalContact]
+        switch solved {
+        case .single(let single):
+            guard case .some(.singleCord(let singleSuspension)) = suspension else { return false }
+            paths = [single.centerlineSamples]
+            clearanceRadius = single.requiredClearance
+            intentionalContacts = [IntentionalContact(
+                pathIndex: 0,
+                segmentIndex: single.centerlineSamples.count - 2,
+                segmentParameter: 1,
+                nodeID: singleSuspension.attachment.nodeID,
+                point: single.transformedAttachment
+            )]
+        case .twoBranch(let twoBranch):
+            paths = twoBranch.branches.map(\.centerlineSamples)
+            clearanceRadius = twoBranch.requiredClearance
+            guard case .some(.twoBranchCord(let twoBranchSuspension)) = suspension else { return false }
+            let transform = twoBranch.boardTransform
+            let passagePairs = [twoBranchSuspension.passages.left, twoBranchSuspension.passages.right]
+            intentionalContacts = passagePairs.enumerated().flatMap { pathIndex, passages in
+                passages.enumerated().flatMap { passageIndex, passage -> [IntentionalContact] in
+                    let point = SIMD3<Float>(Float(passage.pointInModel[0]), Float(passage.pointInModel[1]), Float(passage.pointInModel[2]))
+                    let transformed = transform * SIMD4<Float>(point.x, point.y, point.z, 1)
+                    let worldPoint = SIMD3<Float>(transformed.x, transformed.y, transformed.z)
+                    let joinIndex = SuspendedCordSolver.sampleCount - 1 + passageIndex
+                    return [
+                        IntentionalContact(pathIndex: pathIndex, segmentIndex: joinIndex - 1, segmentParameter: 1, nodeID: passage.nodeID, point: worldPoint),
+                        IntentionalContact(pathIndex: pathIndex, segmentIndex: joinIndex, segmentParameter: 0, nodeID: passage.nodeID, point: worldPoint),
+                    ]
+                }
+            }
+        }
+        guard paths.allSatisfy({ $0.count >= 2 }),
+              clearanceRadius.isFinite, clearanceRadius > 0 else {
             return false
         }
         // The solver's required clearance already includes the cord radius
         // plus its additional separation. Measure mesh distance from the
         // centreline through that single contract, never as a ray.
-        let clearanceRadius = solved.requiredClearance
-        guard clearanceRadius.isFinite, clearanceRadius > 0 else { return false }
-        let endpoint = solved.transformedAttachment
-        let lastSegment = solved.centerlineSamples.count - 2
-
         // Clearance is evaluated against the solved destination transform,
         // without committing that transform before the canonical transition.
         let previousTransform = boardContainer.simdTransform
@@ -550,10 +618,8 @@ final class BoardModelScene {
                   let triangles = Self.worldTriangles(for: geometry, node: node) else {
                 return false
             }
-            for (segmentIndex, points) in zip(
-                solved.centerlineSamples,
-                solved.centerlineSamples.dropFirst()
-            ).enumerated() {
+            for (pathIndex, path) in paths.enumerated() {
+                for (segmentIndex, points) in zip(path, path.dropFirst()).enumerated() {
                 for triangle in triangles {
                     let approach = Self.closestApproach(
                         from: points.0,
@@ -562,13 +628,17 @@ final class BoardModelScene {
                     )
                     guard approach.distanceSquared.isFinite else { return false }
                     if approach.distanceSquared >= clearanceRadius * clearanceRadius { continue }
-                    if nodeID == suspension?.attachment.nodeID,
-                       segmentIndex == lastSegment,
-                       approach.segmentParameter >= 1 - 1e-5,
-                       simd_length(approach.trianglePoint - endpoint) <= 1e-5 {
+                    if intentionalContacts.contains(where: {
+                        $0.pathIndex == pathIndex &&
+                        $0.segmentIndex == segmentIndex &&
+                        $0.nodeID == nodeID &&
+                        abs(approach.segmentParameter - $0.segmentParameter) <= 1e-5 &&
+                        simd_length(approach.trianglePoint - $0.point) <= 1e-5
+                    }) {
                         continue
                     }
                     return false
+                }
                 }
             }
         }

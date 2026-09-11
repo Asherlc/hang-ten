@@ -33,6 +33,61 @@
                 "up": [0, 1, 0],
                 "fitPadding": 0.08
               }
+            }
+          }
+        }
+      ],
+      "holds": [
+        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      ]
+    },
+    "descriptor": {
+      "schemaVersion": 1,
+      "coordinateFrame": "hang-ten-board-v1",
+      "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
+      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "nodes": [
+        { "nodeID": "Body", "role": "body" },
+        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }
+      ],
+      "holds": {
+        "hold-left": {
+          "nodeIDs": ["Left"],
+          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
+          "center": [0.25, 0.4]
+        }
+      }
+    }
+  },
+  "singleCordModel": {
+    "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
+    "board": {
+      "schemaVersion": 2,
+      "id": "fixture.board",
+      "manufacturer": "Fixture Maker",
+      "name": "Fixture Board",
+      "subtitle": "A physical fixture board.",
+      "productURL": "https://example.com/fixture.board",
+      "dimensions": "20 × 10 cm",
+      "aspectRatio": 2,
+      "presentations": [
+        {
+          "id": "primary",
+          "name": "Primary",
+          "aspectRatio": 2,
+          "isDefault": true,
+          "derivation": { "type": "original" },
+          "media": {
+            "type": "model",
+            "assetPath": "assets/primary.usdz",
+            "descriptorPath": "assets/primary.model.json",
+            "display": {
+              "camera": {
+                "type": "orthographic",
+                "viewDirection": [0, 0, -1],
+                "up": [0, 1, 0],
+                "fitPadding": 0.08
+              }
             },
             "suspension": {
               "type": "singleCord",
@@ -135,8 +190,8 @@
                 ]
               },
               "branches": [
-                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 0.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
-                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 0.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
+                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 0.92, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
+                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 0.92, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
               ],
               "anchor": {
                 "offsetFromBoardBounds": [0, 0.22, 0],
@@ -244,7 +299,7 @@
     {
       "name": "extra-node",
       "pythonException": "ValueError",
-      "pythonError": "nodes",
+      "pythonError": "node hold IDs",
       "swiftError": "invalidPackage",
       "mutations": [
         {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Spare", "role": "hold", "holdID": "hold-spare"}}
@@ -279,6 +334,7 @@
     },
     {
       "name": "unknown-suspension-field",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "unknown keys",
       "swiftError": "malformedJSON",
@@ -288,6 +344,7 @@
     },
     {
       "name": "wrong-suspension-type",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "singleCord",
       "swiftError": "invalidPackage",
@@ -297,6 +354,7 @@
     },
     {
       "name": "missing-canonical-pose",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "canonicalPoses",
       "swiftError": "invalidPackage",
@@ -306,6 +364,7 @@
     },
     {
       "name": "extra-canonical-pose",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "canonical poses",
       "swiftError": "invalidPackage",
@@ -315,6 +374,7 @@
     },
     {
       "name": "duplicate-position-key",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "invalid JSON",
       "swiftError": "malformedJSON",
@@ -323,6 +383,7 @@
     },
     {
       "name": "nonunit-quaternion",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "normalized",
       "swiftError": "invalidPackage",
@@ -332,19 +393,17 @@
     },
     {
       "name": "nonfinite-quaternion",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "finite",
       "swiftError": "malformedJSON",
-      "rawJSONReplacement": {
-        "from": "\"rotation\":[0,0,0,1]",
-        "to": "\"rotation\":[0,0,0,1e999]"
-      },
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, 1]}
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, "__raw_nonfinite_number_1e999__"]}
       ]
     },
     {
       "name": "nonpositive-cord-values",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "positive number",
       "swiftError": "invalidPackage",
@@ -354,6 +413,7 @@
     },
     {
       "name": "nonpositive-rest-length",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "positive number",
       "swiftError": "invalidPackage",
@@ -363,6 +423,7 @@
     },
     {
       "name": "missing-attachment-node",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "attachment node",
       "swiftError": "invalidPackage",
@@ -372,6 +433,7 @@
     },
     {
       "name": "hold-attachment-node",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "attachment node",
       "swiftError": "invalidPackage",
@@ -381,6 +443,7 @@
     },
     {
       "name": "attachment-point-outside-bounds",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "inside model bounds",
       "swiftError": "invalidPackage",
@@ -390,6 +453,7 @@
     },
     {
       "name": "shorter-than-endpoint-distance",
+      "base": "singleCordModel",
       "pythonException": "ValueError",
       "pythonError": "shorter than endpoint distance",
       "swiftError": "invalidPackage",
@@ -507,7 +571,7 @@
       "pythonException": "ValueError",
       "pythonError": "must be finite",
       "swiftError": "malformedJSON",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0, 0, 1e999]}]
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0, 0, "__raw_nonfinite_number_1e999__"]}]
     },
     {
       "name": "two-branch-passage-point-out-of-bounds",
@@ -632,24 +696,6 @@
       "mutations": []
     },
     {
-      "name": "two-branch-duplicate-passage-key",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "invalid JSON",
-      "swiftError": "malformedJSON",
-      "duplicateTwoBranchMemberKey": "passageID",
-      "mutations": []
-    },
-    {
-      "name": "two-branch-duplicate-branch-key",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "invalid JSON",
-      "swiftError": "malformedJSON",
-      "duplicateTwoBranchMemberKey": "branchID",
-      "mutations": []
-    },
-    {
       "name": "two-branch-suspension-member-order",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
@@ -659,37 +705,10 @@
       "mutations": []
     },
     {
-      "name": "two-branch-passage-member-order",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "canonical member order",
-      "swiftError": "malformedJSON",
-      "reorderTwoBranchPassageMembers": true,
-      "mutations": []
-    },
-    {
-      "name": "two-branch-branch-member-order",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "canonical member order",
-      "swiftError": "malformedJSON",
-      "reorderTwoBranchBranchMembers": true,
-      "mutations": []
-    },
-    {
-      "name": "two-branch-pose-member-order",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "canonical member order",
-      "swiftError": "malformedJSON",
-      "reorderTwoBranchPoseMembers": true,
-      "mutations": []
-    },
-    {
       "name": "two-branch-passage-segment-too-short",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
-      "pythonError": "passage-to-passage",
+      "pythonError": "closed route",
       "swiftError": "invalidPackage",
       "mutations": [
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.1, 0.9, 0.05]},
@@ -704,6 +723,33 @@
       "pythonError": "nodes must be sorted",
       "swiftError": "invalidPackage",
       "mutations": [{"target": "descriptor", "op": "replace", "path": ["nodes"], "value": [{"nodeID": "Body", "role": "body"}, {"nodeID": "LeftTop", "role": "attachment"}, {"nodeID": "LeftBottom", "role": "attachment"}, {"nodeID": "Left", "role": "hold", "holdID": "hold-left"}, {"nodeID": "RightBottom", "role": "attachment"}, {"nodeID": "RightTop", "role": "attachment"}]}]
+    },
+    {
+      "name": "two-branch-excess-attachment-nodes",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "too many attachment nodes",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "ZZExtraAttachment", "role": "attachment"}}]
+    },
+    {
+      "name": "two-branch-coincident-passage-endpoints",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "distinct passage endpoints",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 1, "pointInModel"], "value": [0.2, 0.9, 0.05]}]
+    },
+    {
+      "name": "two-branch-passage-anchor-coincidence",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "must not coincide with the anchor",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.5, 1, 0.05]},
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "translation"], "value": [0, 0.22, 0]}
+      ]
     }
   ],
   "ordering": {

@@ -125,7 +125,9 @@ final class BoardPackageStoreTests: XCTestCase {
                 "two-branch-duplicate-passage-key", "two-branch-duplicate-branch-key",
                 "two-branch-passage-member-order", "two-branch-branch-member-order",
                 "two-branch-pose-member-order",
-                "two-branch-passage-segment-too-short", "two-branch-order-violation"
+                "two-branch-passage-segment-too-short", "two-branch-order-violation",
+                "two-branch-excess-attachment-nodes", "two-branch-coincident-passage-endpoints",
+                "two-branch-passage-anchor-coincidence"
             ]
         )
 
@@ -182,7 +184,15 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.passages.right.count, 2)
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
-        XCTAssertEqual(media.suspension?.cord.restLength, 0.5)
+        XCTAssertEqual(media.suspension?.cord.restLength, 0.92)
+        let solved = try SuspendedBoardPresentation.solve(
+            pose: try XCTUnwrap(suspension.canonicalPoses["primary"]),
+            suspension: suspension,
+            bounds: media.descriptor.modelBounds
+        )
+        XCTAssertEqual(solved.branches.map(\.id), ["left-branch", "right-branch"])
+        XCTAssertEqual(solved.branches[0].arcLength, 0.92, accuracy: 1e-4)
+        XCTAssertEqual(solved.branches[1].arcLength, 0.92, accuracy: 1e-4)
     }
 
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {

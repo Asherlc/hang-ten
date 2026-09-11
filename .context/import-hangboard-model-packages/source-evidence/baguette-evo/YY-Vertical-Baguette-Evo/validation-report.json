@@ -1,0 +1,162 @@
+{
+  "blender_version": "4.2.0",
+  "result": "PASS",
+  "issues": [],
+  "scene_objects": 25,
+  "mesh_objects": 21,
+  "selectable_holds": 20,
+  "cord_markers": 4,
+  "dimensions_m": [
+    0.5199999809265137,
+    0.05000000447034836,
+    0.05000000260770321
+  ],
+  "combined_surface_nonmanifold_edges": 0,
+  "combined_surface_degenerate_faces": 0,
+  "combined_signed_volume_m3": 0.0007368247005437782,
+  "total_triangles": 17392,
+  "materials": 1,
+  "embedded_textures": [
+    {
+      "name": "neutral-rubberwood-basecolor-1k.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "color_space": "sRGB"
+    }
+  ],
+  "object_stats": [
+    {
+      "object": "body",
+      "vertices": 7297,
+      "faces": 6530,
+      "triangles": 13677
+    },
+    {
+      "object": "hold-central-06mm",
+      "vertices": 73,
+      "faces": 26,
+      "triangles": 95
+    },
+    {
+      "object": "hold-central-20mm",
+      "vertices": 93,
+      "faces": 42,
+      "triangles": 131
+    },
+    {
+      "object": "hold-central-25mm",
+      "vertices": 101,
+      "faces": 51,
+      "triangles": 147
+    },
+    {
+      "object": "hold-central-30mm",
+      "vertices": 101,
+      "faces": 51,
+      "triangles": 147
+    },
+    {
+      "object": "hold-edge-06mm-left",
+      "vertices": 137,
+      "faces": 52,
+      "triangles": 185
+    },
+    {
+      "object": "hold-edge-06mm-right",
+      "vertices": 137,
+      "faces": 52,
+      "triangles": 185
+    },
+    {
+      "object": "hold-edge-08mm-left",
+      "vertices": 72,
+      "faces": 26,
+      "triangles": 94
+    },
+    {
+      "object": "hold-edge-08mm-right",
+      "vertices": 73,
+      "faces": 27,
+      "triangles": 95
+    },
+    {
+      "object": "hold-edge-10mm-left",
+      "vertices": 45,
+      "faces": 27,
+      "triangles": 67
+    },
+    {
+      "object": "hold-edge-10mm-right",
+      "vertices": 44,
+      "faces": 27,
+      "triangles": 66
+    },
+    {
+      "object": "hold-edge-12mm-left",
+      "vertices": 72,
+      "faces": 26,
+      "triangles": 94
+    },
+    {
+      "object": "hold-edge-12mm-right",
+      "vertices": 72,
+      "faces": 26,
+      "triangles": 94
+    },
+    {
+      "object": "hold-edge-15mm-left",
+      "vertices": 119,
+      "faces": 78,
+      "triangles": 200
+    },
+    {
+      "object": "hold-edge-15mm-right",
+      "vertices": 121,
+      "faces": 79,
+      "triangles": 202
+    },
+    {
+      "object": "hold-edge-20mm-left",
+      "vertices": 55,
+      "faces": 37,
+      "triangles": 86
+    },
+    {
+      "object": "hold-edge-20mm-right",
+      "vertices": 56,
+      "faces": 37,
+      "triangles": 87
+    },
+    {
+      "object": "hold-edge-25mm-left",
+      "vertices": 135,
+      "faces": 91,
+      "triangles": 228
+    },
+    {
+      "object": "hold-edge-25mm-right",
+      "vertices": 132,
+      "faces": 90,
+      "triangles": 224
+    },
+    {
+      "object": "hold-rounded-left",
+      "vertices": 382,
+      "faces": 316,
+      "triangles": 644
+    },
+    {
+      "object": "hold-rounded-right",
+      "vertices": 382,
+      "faces": 316,
+      "triangles": 644
+    }
+  ],
+  "limitations": [
+    "Geometry verification is not verification of unmeasured product dimensions.",
+    "Photographic profile estimates and small-edge interpretations remain as documented.",
+    "The shell is closed when contact meshes are combined; individual contact patches are intentionally open."
+  ]
+}

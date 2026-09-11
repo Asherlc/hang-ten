@@ -33,6 +33,13 @@ _SHARED_VALIDATION_FIXTURES = (
     / "Fixtures"
     / "BoardPackageValidationFixtures.json"
 )
+_RAW_NONFINITE_SENTINEL = "__raw_nonfinite_number_1e999__"
+
+
+def _dump_shared_json_document(document: object) -> str:
+    return json.dumps(document, separators=(",", ":"), sort_keys=False).replace(
+        json.dumps(_RAW_NONFINITE_SENTINEL), "1e999"
+    )
 
 
 def _shared_model_parser_parity_fixtures() -> tuple[dict[str, object], ...]:
@@ -126,7 +133,7 @@ def _write_shared_model_parser_parity_package(
             key: poses["primary"][key]
             for key in ("translation", "rotation", "camera")
         }
-    board_json = json.dumps(board, separators=(",", ":"), sort_keys=False)
+    board_json = _dump_shared_json_document(board)
     raw_json_replacement = fixture.get("rawJSONReplacement")
     if raw_json_replacement is not None:
         assert isinstance(raw_json_replacement, dict)
@@ -153,7 +160,9 @@ def _write_shared_model_parser_parity_package(
             f"unsupported two-branch duplicate member key: {duplicate_member_key}"
         )
     board_path.write_text(board_json, encoding="utf-8")
-    _rewrite(assets / "primary.model.json", descriptor)
+    (assets / "primary.model.json").write_text(
+        _dump_shared_json_document(descriptor), encoding="utf-8"
+    )
     if fixture.get("duplicateCanonicalPoseKey"):
         board_path = root / "board.json"
         raw = board_json

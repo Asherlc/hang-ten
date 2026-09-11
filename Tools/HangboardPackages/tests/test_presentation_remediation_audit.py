@@ -1596,18 +1596,10 @@ def test_source_reclassification_rejects_schema2_manifest(tmp_path: Path) -> Non
 def test_phase2_matrix_freezes_every_record_decision_and_batch(
     tmp_path: Path,
 ) -> None:
-    inventory = discover_board_packages(
-        REPO_ROOT / "Hangboards",
-        require_complete_inventory=True,
-    )
-
+    # Replay the immutable audit's original packages and presentation facts.
+    # Boards imported later are outside this historical decision matrix.
     def validate(document: dict[str, object]) -> None:
-        validate_presentation_remediation_manifest(
-            load_presentation_remediation_manifest(_write_manifest(tmp_path, document)),
-            inventory,
-            hangboards_root=REPO_ROOT / "Hangboards",
-            validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
-        )
+        _validate_historical_phase2_document(tmp_path, document)
 
     baseline = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
     assert len(baseline["records"]) == 85

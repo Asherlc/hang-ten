@@ -105,6 +105,8 @@ class PlanRepositoryTest {
         assertFalse(boards.any { it.id == "beastmaker-1000" })
         assertFalse(boards.any { it.id == "metolius.wood-grips-compact-ii" })
         assertFalse(boards.any { it.id == "tension.flash-board" })
+        assertFalse(boards.any { it.id == "yy.baguette-evo" })
+        assertFalse(boards.any { it.id == "nature.stone-hanger" })
         assertEquals(
             "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
             maxHang.instruction,

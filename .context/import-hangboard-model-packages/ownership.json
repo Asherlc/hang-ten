@@ -1,0 +1,27 @@
+{
+  "workspaceOwner": "gray-horse",
+  "externalResources": [
+    {
+      "kind": "temporary-directory",
+      "name": "gray-horse-model-import.HaYLIU",
+      "path": "/private/tmp/gray-horse-model-import.HaYLIU",
+      "cleanup": "delete exact directory after import verification",
+      "status": "deleted-and-verified"
+    }
+  ],
+  "ownedOutputs": [
+    ".context/import-hangboard-model-packages/source-manifest.json",
+    ".context/import-hangboard-model-packages/mappings",
+    ".context/import-hangboard-model-packages/converted",
+    ".context/import-hangboard-model-packages/reports"
+  ],
+  "cleanupVerification": {
+    "deleted": [
+      "/private/tmp/gray-horse-model-import.HaYLIU",
+      ".context/import-hangboard-model-packages/gray-horse-blender-config",
+      ".context/import-hangboard-model-packages/gray-horse-blender-cache",
+      ".context/import-hangboard-model-packages/gray-horse-blender-temp"
+    ],
+    "verifiedAbsent": true
+  }
+}

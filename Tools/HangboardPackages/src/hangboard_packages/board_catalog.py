@@ -1487,7 +1487,11 @@ def _validate_model_suspension(
                 distance = math.sqrt(sum((transformed[index] - anchor[index]) ** 2 for index in range(3)))
                 if not math.isfinite(distance):
                     raise ValueError(f"suspension pose {position_id} endpoint distance must be finite")
+            if len(transformed_endpoints) == 1:
                 rest_length = branch_lengths[0]
+                distance = math.sqrt(
+                    sum((transformed_endpoints[0][index] - anchor[index]) ** 2 for index in range(3))
+                )
                 if rest_length < distance - 1e-5:
                     raise ValueError(f"suspension pose {position_id} restLength is shorter than endpoint distance")
             if len(transformed_endpoints) == 2:
@@ -1499,8 +1503,19 @@ def _validate_model_suspension(
                 )
                 if not math.isfinite(passage_distance):
                     raise ValueError(f"suspension pose {position_id} passage-to-passage distance must be finite")
-                if branch_lengths[0] < passage_distance - 1e-5:
-                    raise ValueError(f"suspension pose {position_id} restLength is shorter than passage-to-passage segment")
+                endpoint_distances = tuple(
+                    math.sqrt(sum((endpoint[index] - anchor[index]) ** 2 for index in range(3)))
+                    for endpoint in transformed_endpoints
+                )
+                minimum_route_length = sum(endpoint_distances) + passage_distance
+                if not all(math.isfinite(distance) for distance in endpoint_distances) or not math.isfinite(minimum_route_length):
+                    raise ValueError(f"suspension pose {position_id} closed route length must be finite")
+                if passage_distance <= 1e-7:
+                    raise ValueError(f"suspension pose {position_id} must have distinct passage endpoints")
+                if any(distance <= 1e-7 for distance in endpoint_distances):
+                    raise ValueError(f"suspension pose {position_id} passage endpoints must not coincide with the anchor")
+                if branch_lengths[0] < minimum_route_length - 1e-5:
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than the closed route")
 
 
 def _load_model_descriptor(
@@ -1582,7 +1597,7 @@ def _load_model_descriptor(
             attachment_count += 1
             max_attachments = 4 if isinstance(suspension, BoardModelTwoBranchSuspension) else 1
             if attachment_count > max_attachments:
-                raise ValueError("model descriptor permits at most one attachment node")
+                raise ValueError("model descriptor has too many attachment nodes")
         else:
             raise ValueError(f"{source}.role must be body, hold, or attachment")
     if body_count != 1:
