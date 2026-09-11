@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -355,6 +356,41 @@ def test_staging_preserves_every_live_model_package_file_byte_for_byte(
             if path.is_file() and not path.is_symlink()
         }
         assert staged_files == source_files
+
+
+def test_staging_preflights_recursive_file_types_before_creating_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, packages, _ = build_repository(tmp_path)
+    special_path = packages[0] / "assets" / "nested-special"
+    os.mkfifo(special_path)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    with pytest.raises(ValueError, match="regular and non-symlinked"):
+        module.stage_board_packages(repository_root, destination)
+
+    assert not destination.exists()
+    assert not destination.parent.exists()
+
+
+def test_staging_rejects_nested_symlink_before_copying_any_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, packages, _ = build_repository(tmp_path)
+    outside = tmp_path / "outside.txt"
+    outside.write_bytes(b"must not be copied")
+    (packages[0] / "assets" / "nested-link").symlink_to(outside)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.stage_board_packages(repository_root, destination)
+
+    assert not destination.exists()
+    assert not destination.parent.exists()
 
 
 def test_staging_fails_closed_for_a_malformed_completed_package(
