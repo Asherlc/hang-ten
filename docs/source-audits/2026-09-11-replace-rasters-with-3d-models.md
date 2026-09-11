@@ -13,11 +13,25 @@ pocket, two slopers, two middle edges, and three bottom edges per tile. The
 active package has only those sixteen logical holds. `top-pocket-inner-left`,
 `top-pocket-inner-right`, `top-jug-left`, and `top-jug-right` have no source
 mesh, are excluded from active metadata, and have no placeholder geometry.
+
+### Deprecated/unverified Training Tiles source identifiers
+
+The following are deprecated/unverified source identifiers retained in this
+audit only. They are not active `board.json` or descriptor records, and no
+runtime fields were added for them.
+
+| Identifier | Disposition | Persisted-data disposition |
+| --- | --- | --- |
+| `top-pocket-inner-left` | Deprecated/unverified: no supplied source mesh | no persisted references requiring migration |
+| `top-pocket-inner-right` | Deprecated/unverified: no supplied source mesh | no persisted references requiring migration |
+| `top-jug-left` | Deprecated/unverified: no supplied source mesh | no persisted references requiring migration |
+| `top-jug-right` | Deprecated/unverified: no supplied source mesh | no persisted references requiring migration |
+
 A repository scan of runtime and saved-data surfaces (`HangTen`, `HangTenTests`,
 and non-test/non-audit package data) found no workout/history record using
-them. They are not added as deprecated schema records. The historical 2026-08
-20-contact ledger remains historical; this source-backed audit supersedes it
-for the active model package.
+these identifiers. They are not added as deprecated schema records. The
+historical 2026-08 20-contact ledger remains historical; this source-backed
+audit supersedes it for the active model package.
 
 Metolius retains its old logical holds and appends only source-backed
 `flat-sloper-2-left` and `flat-sloper-2-right`: both are 55 mm flat slopers.
