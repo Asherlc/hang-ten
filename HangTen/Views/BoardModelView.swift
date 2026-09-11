@@ -223,6 +223,9 @@ final class BoardModelScene {
     private var lastMode: BoardHighlightMode?
     private var canonicalFraming: SuspendedCameraFraming?
     private var currentFraming: SuspendedCameraFraming?
+    // Descriptor, geometry and suspension are immutable for this scene instance.
+    // Keep successful pose/clearance results and cord nodes across highlight updates.
+    private var verifiedPresentations: [String: (BoardModelSolvedSuspension, SCNNode)] = [:]
     private var orbitAzimuth: Float = 0
     private var orbitElevation: Float = 0
     private var orbitZoom: Float = 1
@@ -367,14 +370,21 @@ final class BoardModelScene {
         }
 
         do {
-            let solved = try Self.solveSuspension(
-                pose: pose, suspension: suspension, bounds: descriptor.modelBounds
-            )
-            guard hasClearance(for: solved) else {
-                enterUnavailable()
-                return false
+            let solved: BoardModelSolvedSuspension
+            let cord: SCNNode
+            if let cached = verifiedPresentations[positionID] {
+                (solved, cord) = cached
+            } else {
+                solved = try Self.solveSuspension(
+                    pose: pose, suspension: suspension, bounds: descriptor.modelBounds
+                )
+                guard hasClearance(for: solved) else {
+                    enterUnavailable()
+                    return false
+                }
+                cord = makeCordNode(for: solved)
+                verifiedPresentations[positionID] = (solved, cord)
             }
-            let cord = makeCordNode(for: solved)
             transitionToCanonicalPresentation(solved, cord: cord)
             canonicalFraming = solved.cameraFraming
             activePositionID = positionID

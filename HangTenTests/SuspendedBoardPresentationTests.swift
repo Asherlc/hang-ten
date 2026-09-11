@@ -731,7 +731,32 @@ final class SuspendedBoardPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testSceneSelectionRejectsEachMissingOrNonAttachmentPassageBinding() throws {
+    func testSceneSelectionAcceptsEachBodyOrAttachmentPassageBinding() throws {
+        let suspension = twoBranchSuspension(
+            restLength: 4.2,
+            canonicalPoses: ["primary": pose()]
+        )
+        for passage in suspension.passages.left + suspension.passages.right {
+            for role in [BoardModelNodeDescriptor.Role.body, .attachment] {
+                let descriptor = sceneDescriptor(
+                    for: suspension,
+                    bodyNodeID: role == .body ? passage.nodeID : nil
+                )
+                let model = try XCTUnwrap(BoardModelScene(
+                    source: modelScene(descriptor: descriptor),
+                    descriptor: descriptor,
+                    display: sceneDisplay(),
+                    suspension: .twoBranchCord(suspension)
+                ))
+                XCTAssertTrue(model.select(positionID: "primary"), "\(passage.nodeID), role: \(role)")
+                XCTAssertFalse(model.isUnavailable)
+                XCTAssertNotNil(model.transientCordNode)
+            }
+        }
+    }
+
+    @MainActor
+    func testSceneSelectionRejectsEachMissingOrHoldPassageBinding() throws {
         let suspension = twoBranchSuspension(
             restLength: 4.2,
             canonicalPoses: ["primary": pose()]
@@ -741,7 +766,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 let descriptor = sceneDescriptor(
                     for: suspension,
                     omittedNodeID: omit ? passage.nodeID : nil,
-                    bodyNodeID: omit ? nil : passage.nodeID
+                    holdNodeID: omit ? nil : passage.nodeID
                 )
                 let model = try XCTUnwrap(BoardModelScene(
                     source: modelScene(descriptor: descriptor),
@@ -760,12 +785,17 @@ final class SuspendedBoardPresentationTests: XCTestCase {
     private func sceneDescriptor(
         for suspension: BoardModelTwoBranchSuspension,
         omittedNodeID: String? = nil,
-        bodyNodeID: String? = nil
+        bodyNodeID: String? = nil,
+        holdNodeID: String? = nil
     ) -> BoardModelDescriptor {
         let passageNodes = (suspension.passages.left + suspension.passages.right)
             .filter { $0.nodeID != omittedNodeID }
             .map {
-            BoardModelNodeDescriptor(nodeID: $0.nodeID, role: $0.nodeID == bodyNodeID ? .body : .attachment, holdID: nil)
+            BoardModelNodeDescriptor(
+                nodeID: $0.nodeID,
+                role: $0.nodeID == holdNodeID ? .hold : ($0.nodeID == bodyNodeID ? .body : .attachment),
+                holdID: $0.nodeID == holdNodeID ? "hold" : nil
+            )
         }
         return BoardModelDescriptor(
             schemaVersion: 1,
@@ -778,7 +808,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             ] + passageNodes,
             holds: [
                 "hold": BoardModelHoldDescriptor(
-                    nodeIDs: ["Hold"],
+                    nodeIDs: ["Hold"] + (holdNodeID.map { [$0] } ?? []),
                     facePlaneAABB: BoardModelFacePlaneAABB(minimum: [0, 0], maximum: [1, 1]),
                     center: [0.5, 0.5]
                 )

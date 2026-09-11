@@ -6,15 +6,19 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
-    func testFlashBoardNativeSceneSelectsEveryVerifiedSuspendedPosition() async throws {
-        let (board, _, model) = try await loadMigratedModel("tension.flash-board")
+    func testFlashBoardNativeSingleCordSceneFailsClosedWhenClearanceCannotBeVerified() async throws {
+        let (board, media, model) = try await loadMigratedModel("tension.flash-board")
+        guard case .singleCord = media.suspension else {
+            return XCTFail("Flash must retain its shipped single-cord suspension")
+        }
+        // The shipped native mesh currently cannot pass the runtime clearance
+        // gate. Solving its four poses is covered separately; successful solve
+        // alone must not manufacture a selectable native presentation.
         for position in board.positions {
-            XCTAssertTrue(model.select(positionID: position.id), position.id)
-            XCTAssertFalse(model.isUnavailable, position.id)
-            let cord = try XCTUnwrap(model.transientCordNode, position.id)
-            XCTAssertTrue(cord.childNodes.contains { $0.name?.contains("branch.0.segment") == true })
-            XCTAssertTrue(cord.childNodes.contains { $0.name?.contains("branch.1.segment") == true })
-            XCTAssertTrue(cord.childNodes.allSatisfy { model.holdID(for: $0) == nil })
+            XCTAssertFalse(model.select(positionID: position.id), position.id)
+            XCTAssertTrue(model.isUnavailable, position.id)
+            XCTAssertNil(model.activePositionID, position.id)
+            XCTAssertNil(model.transientCordNode, position.id)
         }
     }
 
@@ -519,7 +523,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.transformedAttachment, solved.transformedAttachment)
     }
 
-    func testReselectingSuspendedPositionAtomicallyReplacesTransientCordWithoutChangingHoldHighlights() throws {
+    func testReselectingSuspendedPositionReusesVerifiedCordWithoutChangingHoldHighlights() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),
             .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
@@ -538,12 +542,11 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(model.select(positionID: "primary"))
         let firstCord = try XCTUnwrap(model.transientCordNode)
         XCTAssertTrue(model.select(positionID: "primary"))
-        let replacement = try XCTUnwrap(model.transientCordNode)
+        let reused = try XCTUnwrap(model.transientCordNode)
 
-        XCTAssertFalse(firstCord === replacement)
-        XCTAssertNil(firstCord.parent)
-        XCTAssertTrue(replacement.parent === model.scene.rootNode)
-        XCTAssertTrue(replacement.childNodes.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
+        XCTAssertTrue(firstCord === reused)
+        XCTAssertTrue(reused.parent === model.scene.rootNode)
+        XCTAssertTrue(reused.childNodes.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
         XCTAssertFalse(model.isTransientCordAccessible)
         XCTAssertTrue(hold.geometry?.firstMaterial === highlightedMaterial)
     }
@@ -578,6 +581,7 @@ final class BoardModelTests: XCTestCase {
             )
         ))
         XCTAssertTrue(model.select(positionID: "primary"))
+        let primaryCord = try XCTUnwrap(model.transientCordNode)
 
         XCTAssertTrue(model.select(positionID: "secondary"))
         let boardContainer = try XCTUnwrap(model.scene.rootNode.childNodes.first { $0.name == "board.model" })
@@ -586,6 +590,13 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(boardContainer.presentation.simdTransform, boardContainer.simdTransform)
         XCTAssertEqual(cord.presentation.opacity, cord.opacity)
         XCTAssertEqual(model.boardTransform.columns.3, SIMD4<Float>(0.3, 0.2, 0.1, 1))
+        XCTAssertNil(primaryCord.parent)
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertTrue(model.transientCordNode === primaryCord)
+        XCTAssertNil(cord.parent)
+        XCTAssertEqual(boardContainer.presentation.simdTransform, boardContainer.simdTransform)
+        XCTAssertEqual(model.boardTransform, matrix_identity_float4x4)
     }
 
     func testSuspendedCordIsExcludedFromClosestHoldHit() throws {
