@@ -29,6 +29,55 @@ Before and after schema migration, run a type- and order-sensitive semantic audi
 
 Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. A package containing model media is model-only: it must declare no raster presentation or PNG, whether original or derived; presentation derivation is supported only between raster presentations. Exact declared-versus-actual asset equality complements but does not replace this package-level media-isolation rule. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
 
+## Use the extracted verification and review boundaries
+
+For the shipped Beastmaker 1000 and Compact II model packages, route the
+shared actual-export checks through
+`Tools/HangboardModels/model_verification.py`:
+`ModelVerificationConfig` describes the closed package contract and
+`verify_model_package(package, config, render=False)` performs the cheap
+filesystem, ordered-inventory, and descriptor-hash checks before importing
+Blender, then verifies imported materials and geometry. `verify_beastmaker_1000.py` and
+`verify_wood_grips_compact_ii.py` remain compatibility CLI adapters; use
+`beastmaker_config()` and `compact_ii_config()` for board-specific
+configuration and probes. Retain their existing report fields and
+`--skip-renders` behavior. Do not route Flash through this shared
+configuration: `verify_tension_flash_board.py` remains a separate baseline
+verifier until Flash's independently approved migration and two-branch gate
+is complete.
+
+Freeze behavior before an extraction with
+`model_characterization.capture_model_baseline(package, board_json)` and
+compare it using `assert_baseline_matches(actual, expected)`. The
+characterization includes the recursively discovered regular-file inventory,
+exact model/descriptor hashes, descriptor data, and ordered logical IDs; it is
+a preservation check, not a geometry source. Keep staging as the existing
+recursive regular-file copy and prove source-to-stage byte parity with its
+staging characterization rather than adding a second model-resource path.
+
+For a reviewed model package, load the closed bookkeeping document with
+`migration_manifest.load_migration_manifest(path)`. It rejects unknown,
+duplicate, explicit-null, escaping-path, and geometry/bounds members and
+requires the declared model assets, logical order, omissions, verification
+configuration, review views, and artifact hashes. After package verification,
+`render_model_gallery.render_model_gallery(package, manifest, output)` may
+produce fixed review artifacts only in the canonical workspace `.context`,
+under an owner-prefixed output directory. The gallery consumes the verified
+USDZ, never source images or a source blend, and its owned output must be
+cleaned after review.
+
+For portable single-cord presentations, keep pure solving in
+`SuspensionProfileSolver.solveSingle(pose:profile:bounds:) throws` and call it
+through the existing `SuspendedBoardPresentation` facade. The solver's
+`SolvedSuspension`/`SolvedCordBranch` results and failure mapping are part of
+the compatibility contract; retain the invisible anchor, transient
+non-pickable cord layer, finite canonical poses, and explicit unavailable
+state. The compatibility API may already expose a two-branch solve overload, but it is not
+a supported extraction route. Do not route or adopt Flash through it, or change
+Flash's verifier, generator, package, geometry, or presentation behavior, until
+Flash passes its separate evidence, geometry, package, native-picking, and
+human-review gate.
+
 ## Suspended portable presentations
 
 For a portable-suspension parser/runtime, reject a migration unless all
@@ -166,14 +215,17 @@ Each case must enter the current explicit model-unavailable/error state. None
 may fall back to a straight line, another orientation model, raster rendering,
 or a visible anchor/stand-in.
 
-Selecting a hold or resolving a workout position must smoothly restore that
-position's canonical board pose and canonical camera framing, then recompute
-the deterministic cord. Manual gestures may change camera azimuth, elevation,
-and allowed zoom only; they must never independently rotate the suspended
-board or anchor. Verify camera orbit separately from interactive detail
-picking. On the first migration, review selection snap, orbit, reset after
-orbit, every supported position, cord/board continuity, clear-and-reappear
-highlighting, workout-driven positions, and the explicit unavailable state.
+Selecting a hold or resolving a workout position must restore that position's
+canonical board pose, destination-solved cord, and canonical camera framing
+atomically in one action-free transaction. Build the deterministic cord before
+committing the destination state; never independently animate or interpolate
+cord samples away from the board pose. Manual gestures may change camera
+azimuth, elevation, and allowed zoom only; they must never independently
+rotate the suspended board or anchor. Verify camera orbit separately from
+interactive detail picking. On the first migration, review selection snap,
+orbit, reset after orbit, every supported position, cord/board continuity,
+clear-and-reappear highlighting, workout-driven positions, and the explicit
+unavailable state.
 
 Derive a front-above key from the camera position without algebraically cancelling its camera-depth component. After `SCNTransaction.flush()`, verify the directional light's presentation-space forward vector points substantially along the declared camera view direction. Log the actual imported `SCNMaterial.lightingModel` when comparing renderers. SceneKit's physically based model requires Metal and can fall back to Blinn where Metal is unavailable, including affected Simulator configurations; treat Simulator captures as app-integration evidence, not guaranteed physical-device PBR parity.
 

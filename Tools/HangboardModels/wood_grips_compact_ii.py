@@ -17,6 +17,8 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import canonical_neutral_wood
+from geometry_primitives import (create_recess, create_rounded_body,
+                                 split_contact_surface, tag_piece)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -158,7 +160,7 @@ for j in range(len(depth_rings)-1):
             faces += [(a,b,c),(a,c,d)]
         else:
             faces += [(a,b,d),(b,c,d)]
-body=mesh("Wood Grips Compact II",verts,faces)
+body=create_rounded_body("Wood Grips Compact II",verts,faces)
 active(body)
 bpy.ops.object.mode_set(mode="EDIT")
 bpy.ops.mesh.select_all(action="SELECT")
@@ -223,7 +225,7 @@ def recess(name, cx, cy, width, height, depth, radius=None):
     faces=[tuple(reversed(range(n))),tuple(range((len(rings)-1)*n,len(rings)*n))]
     faces += [(j*n+i,j*n+(i+1)%n,(j+1)*n+(i+1)%n,(j+1)*n+i)
               for j in range(len(rings)-1) for i in range(n)]
-    cut=mesh(name+" cutter",verts,faces)
+    cut=create_recess(name+" cutter",verts,faces)
     active(cut)
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
@@ -301,20 +303,15 @@ for poly in body.data.polygons:
 
 # Split by material so each true carved contact is independently selectable.
 active(body)
-bpy.ops.object.mode_set(mode="EDIT")
-bpy.ops.mesh.select_all(action="SELECT")
-bpy.ops.mesh.separate(type="MATERIAL")
-bpy.ops.object.mode_set(mode="OBJECT")
-model=list(bpy.context.selected_objects)
+model=split_contact_surface(body, hold_ids)
 
 
 def tag_model_piece(obj, known_hold_ids):
     """Attach the closed compiler contract without deriving any geometry."""
     if obj.name in known_hold_ids:
-        obj["role"]="hold"
-        obj["hold_id"]=obj.name
+        tag_piece(obj, "hold", obj.name)
     else:
-        obj["role"]="body"
+        tag_piece(obj, "body")
 
 
 def discard_render_only_scene_objects(scene_objects, model_objects, remove_object):

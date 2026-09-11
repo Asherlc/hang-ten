@@ -54,6 +54,34 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
     }
 
+    private func singleProfile(
+        attachment: [Double] = [0, 0.4, 0],
+        anchor: [Double] = [0.4, 2, 0],
+        restLength: Double = 2,
+        radius: Double = 0.01
+    ) -> BoardModelSingleCordSuspension {
+        BoardModelSingleCordSuspension(
+            attachment: BoardModelAttachment(
+                nodeID: "attachment",
+                pointInModel: attachment,
+                provenance: "test"
+            ),
+            anchor: BoardModelInvisibleAnchor(
+                offsetFromBoardBounds: [0, 0, 0],
+                visibility: "invisible",
+                provenance: "test",
+                position: anchor
+            ),
+            cord: BoardModelCord(
+                restLength: restLength,
+                radius: radius,
+                material: "test-cord",
+                provenance: "test"
+            ),
+            canonicalPoses: [:]
+        )
+    }
+
     private func twoBranchSuspension(
         left: [[Double]] = [[-0.6, 0.4, -0.05], [-0.4, 0.4, 0.05]],
         right: [[Double]] = [[0.4, 0.4, -0.05], [0.6, 0.4, 0.05]],
@@ -92,6 +120,112 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(result.boardTransform.columns.3.x, 0, accuracy: 1e-6)
         XCTAssertEqual(result.boardTransform.columns.3.y, 0, accuracy: 1e-6)
         XCTAssertEqual(result.boardTransform.columns.3.z, 0, accuracy: 1e-6)
+    }
+
+    // This catches the extracted profile solver drifting from the established
+    // facade contract: exact endpoints, sample count, tangents, arc lengths,
+    // transform, and framing all have to continue describing the same cord.
+    func testSingleProfileSolverCharacterizesSlackCordAndFacadeCompatibility() throws {
+        let profile = singleProfile()
+        let solved = try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: profile,
+            bounds: bounds
+        )
+        let facade = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: .singleCord(profile),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(solved.cord.samples.count, 32)
+        XCTAssertEqual(solved.cord.samples.first, SIMD3<Float>(0.4, 2, 0))
+        XCTAssertEqual(solved.cord.samples.last, SIMD3<Float>(0, 0.4, 0))
+        XCTAssertFalse(solved.cord.isTaut)
+        XCTAssertEqual(solved.cord.arcLength, 2, accuracy: 1e-6)
+        XCTAssertEqual(solved.cord.polylineArcLength, 2, accuracy: 0.01)
+        XCTAssertEqual(solved.cord.tangents.count, solved.cord.samples.count)
+        XCTAssertTrue(solved.cord.tangents.allSatisfy { simd_length($0) > 0.999 && simd_length($0) < 1.001 })
+        XCTAssertEqual(solved.boardTransform.columns.3, SIMD4<Float>(0, 0, 0, 1))
+        XCTAssertTrue(solved.cameraFraming.contains(solved.fixedAnchor))
+        XCTAssertTrue(solved.cameraFraming.contains(solved.transformedAttachment))
+        XCTAssertTrue(solved.cord.samples.allSatisfy { solved.cameraFraming.contains($0) })
+        XCTAssertEqual(facade.centerlineSamples, solved.cord.samples)
+        XCTAssertEqual(facade.tangentSamples, solved.cord.tangents)
+        XCTAssertEqual(facade.cordArcLength, solved.cord.arcLength)
+    }
+
+    // Literal values captured from the pre-extraction solver at f29f1255.
+    // They intentionally do not use the compatibility facade or any solver
+    // helper to derive expectations, so changes to catenary arithmetic,
+    // sampling, or framing policy remain observable.
+    func testSingleProfileSolverMatchesPreExtractionNumericalBaseline() throws {
+        let solved = try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(),
+            bounds: bounds
+        )
+
+        let expectedSamples: [(index: Int, point: SIMD3<Float>)] = [
+            (1, SIMD3<Float>(0.3870968, 1.6978989, 0)),
+            (8, SIMD3<Float>(0.2967742, 0.6134734, 0)),
+            (16, SIMD3<Float>(0.1935484, 0.30244565, 0)),
+            (24, SIMD3<Float>(0.090322584, 0.27111173, 0)),
+            (30, SIMD3<Float>(0.012903243, 0.3676641, 0))
+        ]
+        let expectedTangents: [(index: Int, tangent: SIMD3<Float>)] = [
+            (1, SIMD3<Float>(-0.046825305, -0.9989031, 0)),
+            (8, SIMD3<Float>(-0.16762841, -0.9858503, 0)),
+            (16, SIMD3<Float>(-0.6445774, -0.76453906, 0)),
+            (24, SIMD3<Float>(-0.9035824, 0.42841431, 0)),
+            (30, SIMD3<Float>(-0.40371457, 0.914885, 0))
+        ]
+        for expected in expectedSamples {
+            XCTAssertEqual(solved.cord.samples[expected.index].x, expected.point.x, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.samples[expected.index].y, expected.point.y, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.samples[expected.index].z, expected.point.z, accuracy: 1e-6)
+        }
+        for expected in expectedTangents {
+            XCTAssertEqual(solved.cord.tangents[expected.index].x, expected.tangent.x, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.tangents[expected.index].y, expected.tangent.y, accuracy: 1e-6)
+            XCTAssertEqual(solved.cord.tangents[expected.index].z, expected.tangent.z, accuracy: 1e-6)
+        }
+        XCTAssertEqual(solved.cord.polylineArcLength, 1.9997214, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.target, SIMD3<Float>(0, 0.75, 0))
+        XCTAssertEqual(solved.cameraFraming.right, SIMD3<Float>(-1, 0, 0))
+        XCTAssertEqual(solved.cameraFraming.up, SIMD3<Float>(0, 1, 0))
+        XCTAssertEqual(solved.cameraFraming.width, 2, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.height, 2.5, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.depth, 0.4, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.distance, 3, accuracy: 1e-6)
+        XCTAssertEqual(solved.cameraFraming.includedPoints.count, 42)
+    }
+
+    func testSingleProfileSolverCharacterizesTautSlackAndInvalidInputs() throws {
+        let taut = try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2),
+            bounds: bounds
+        )
+        XCTAssertTrue(taut.cord.isTaut)
+        XCTAssertEqual(taut.cord.samples.count, 32)
+        XCTAssertEqual(taut.cord.samples.first, SIMD3<Float>(0, 2, 0))
+        XCTAssertEqual(taut.cord.samples.last, SIMD3<Float>(0, 0, 0))
+
+        XCTAssertThrowsError(try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(attachment: [.infinity, 0, 0]),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .invalidSuspension)
+        }
+        XCTAssertThrowsError(try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2.1),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .zeroHorizontalSlack)
+        }
     }
 
     func testQuarterTurnPoseTransformsAttachment() throws {
@@ -596,9 +730,72 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
-    private func sceneDescriptor(for suspension: BoardModelTwoBranchSuspension) -> BoardModelDescriptor {
-        let passageNodes = (suspension.passages.left + suspension.passages.right).map {
-            BoardModelNodeDescriptor(nodeID: $0.nodeID, role: .attachment, holdID: nil)
+    @MainActor
+    func testSceneSelectionAcceptsEachBodyOrAttachmentPassageBinding() throws {
+        let suspension = twoBranchSuspension(
+            restLength: 4.2,
+            canonicalPoses: ["primary": pose()]
+        )
+        for passage in suspension.passages.left + suspension.passages.right {
+            for role in [BoardModelNodeDescriptor.Role.body, .attachment] {
+                let descriptor = sceneDescriptor(
+                    for: suspension,
+                    bodyNodeID: role == .body ? passage.nodeID : nil
+                )
+                let model = try XCTUnwrap(BoardModelScene(
+                    source: modelScene(descriptor: descriptor),
+                    descriptor: descriptor,
+                    display: sceneDisplay(),
+                    suspension: .twoBranchCord(suspension)
+                ))
+                XCTAssertTrue(model.select(positionID: "primary"), "\(passage.nodeID), role: \(role)")
+                XCTAssertFalse(model.isUnavailable)
+                XCTAssertNotNil(model.transientCordNode)
+            }
+        }
+    }
+
+    @MainActor
+    func testSceneSelectionRejectsEachMissingOrHoldPassageBinding() throws {
+        let suspension = twoBranchSuspension(
+            restLength: 4.2,
+            canonicalPoses: ["primary": pose()]
+        )
+        for passage in suspension.passages.left + suspension.passages.right {
+            for omit in [true, false] {
+                let descriptor = sceneDescriptor(
+                    for: suspension,
+                    omittedNodeID: omit ? passage.nodeID : nil,
+                    holdNodeID: omit ? nil : passage.nodeID
+                )
+                let model = try XCTUnwrap(BoardModelScene(
+                    source: modelScene(descriptor: descriptor),
+                    descriptor: descriptor,
+                    display: sceneDisplay(),
+                    suspension: .twoBranchCord(suspension)
+                ))
+                XCTAssertFalse(model.select(positionID: "primary"), "\(passage.nodeID), omitted: \(omit)")
+                XCTAssertTrue(model.isUnavailable)
+                XCTAssertNil(model.activePositionID)
+                XCTAssertNil(model.transientCordNode)
+            }
+        }
+    }
+
+    private func sceneDescriptor(
+        for suspension: BoardModelTwoBranchSuspension,
+        omittedNodeID: String? = nil,
+        bodyNodeID: String? = nil,
+        holdNodeID: String? = nil
+    ) -> BoardModelDescriptor {
+        let passageNodes = (suspension.passages.left + suspension.passages.right)
+            .filter { $0.nodeID != omittedNodeID }
+            .map {
+            BoardModelNodeDescriptor(
+                nodeID: $0.nodeID,
+                role: $0.nodeID == holdNodeID ? .hold : ($0.nodeID == bodyNodeID ? .body : .attachment),
+                holdID: $0.nodeID == holdNodeID ? "hold" : nil
+            )
         }
         return BoardModelDescriptor(
             schemaVersion: 1,
@@ -611,7 +808,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             ] + passageNodes,
             holds: [
                 "hold": BoardModelHoldDescriptor(
-                    nodeIDs: ["Hold"],
+                    nodeIDs: ["Hold"] + (holdNodeID.map { [$0] } ?? []),
                     facePlaneAABB: BoardModelFacePlaneAABB(minimum: [0, 0], maximum: [1, 1]),
                     center: [0.5, 0.5]
                 )
@@ -644,77 +841,5 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             scene.rootNode.addChildNode(node)
         }
         return scene
-    }
-
-    private func throughBoreSuspension(
-        left: [[Double]] = [[-0.6, 0.4, 0], [-0.4, 0.4, 0]],
-        right: [[Double]] = [[0.4, 0.4, 0], [0.6, 0.4, 0]],
-        anchor: [Double] = [0, 2, 0],
-        restLength: Double = 4,
-        radius: Double = 0.01
-    ) -> BoardModelTwoBranchSuspension {
-        func passage(_ id: String, _ point: [Double]) -> BoardModelPassage {
-            BoardModelPassage(
-                id: id,
-                nodeID: id,
-                entryPointInModel: point,
-                exitPointInModel: [point[0], point[1], point[2] - 0.1],
-                provenance: "test"
-            )
-        }
-        return BoardModelTwoBranchSuspension(
-            passages: BoardModelPassagePairs(
-                left: [passage("left-0", left[0]), passage("left-1", left[1])],
-                right: [passage("right-0", right[0]), passage("right-1", right[1])]
-            ),
-            branches: [
-                BoardModelCordBranch(id: "left", passageIDs: ["left-0", "left-1"], entryContactPoints: [[left[0][0], left[0][1], left[0][2] + 0.02]], exteriorContactPoints: [[left[0][0] - 0.05, left[0][1], left[0][2] - 0.12], [left[1][0] + 0.05, left[1][1], left[1][2] - 0.12]], exitContactPoints: [[left[1][0], left[1][1], left[1][2] + 0.02]], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
-                BoardModelCordBranch(id: "right", passageIDs: ["right-0", "right-1"], entryContactPoints: [[right[0][0], right[0][1], right[0][2] + 0.02]], exteriorContactPoints: [[right[0][0] - 0.05, right[0][1], right[0][2] - 0.12], [right[1][0] + 0.05, right[1][1], right[1][2] - 0.12]], exitContactPoints: [[right[1][0], right[1][1], right[1][2] + 0.02]], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
-            ],
-            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: anchor),
-            canonicalPoses: [:]
-        )
-    }
-
-    func testTwoBranchPreservesDirectedBoresAndExteriorContactJoins() throws {
-        let result = try SuspendedBoardPresentation.solve(
-            pose: pose(),
-            suspension: throughBoreSuspension(restLength: 4.2),
-            bounds: bounds
-        )
-
-        for branch in result.branches {
-            XCTAssertEqual(branch.centerlineSamples.first!, result.fixedAnchor)
-            XCTAssertEqual(branch.centerlineSamples.last!, result.fixedAnchor)
-            XCTAssertEqual(branch.spans[0].last!, branch.centerlineSamples[31])
-            XCTAssertEqual(branch.spans.count, 3)
-            XCTAssertEqual(branch.spans[1].first!, branch.spans[0].last!)
-            XCTAssertEqual(branch.spans[1].last!, branch.spans[2].first!)
-            XCTAssertEqual(simd_length(branch.spans[1][2] - branch.spans[1][1]), 0.1, accuracy: 1e-6)
-            XCTAssertEqual(simd_length(branch.spans[1][branch.spans[1].count - 2] - branch.spans[1][branch.spans[1].count - 3]), 0.1, accuracy: 1e-6)
-            XCTAssertEqual(branch.arcLength, 4.2, accuracy: 1e-3)
-        }
-    }
-
-    func testTwoBranchRouteAccountsForBothBoresAndExteriorContactLength() throws {
-        let result = try SuspendedBoardPresentation.solve(
-            pose: pose(),
-            suspension: throughBoreSuspension(restLength: 4.2),
-            bounds: bounds
-        )
-
-        for branch in result.branches {
-            XCTAssertEqual(branch.spans.count, 3)
-            XCTAssertEqual(branch.spans[0].count, SuspendedCordSolver.sampleCount)
-            XCTAssertEqual(branch.spans[2].count, SuspendedCordSolver.sampleCount)
-            XCTAssertGreaterThan(branch.spans[1].count, 4)
-            XCTAssertEqual(branch.centerlineSamples.first!, result.fixedAnchor)
-            XCTAssertEqual(branch.centerlineSamples[31], branch.spans[0].last!)
-            XCTAssertEqual(branch.centerlineSamples.last!, result.fixedAnchor)
-            let measuredLength = zip(branch.centerlineSamples, branch.centerlineSamples.dropFirst()).reduce(Float.zero) {
-                $0 + simd_length($1.1 - $1.0)
-            }
-            XCTAssertEqual(measuredLength, branch.arcLength, accuracy: 0.02)
-        }
     }
 }

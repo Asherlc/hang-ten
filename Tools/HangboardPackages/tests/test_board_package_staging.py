@@ -3,7 +3,9 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
+import stat
 import sys
 from pathlib import Path
 
@@ -207,7 +209,7 @@ def test_staging_copies_discovered_packages_without_a_registry_and_replaces_stal
         relative_files = {
             path.relative_to(source_package).as_posix(): path.read_bytes()
             for path in source_package.rglob("*")
-            if path.is_file()
+            if path.is_file() and not path.is_symlink()
         }
         assert relative_files == {
             "assets/primary.png": PRIMARY_PNG_BYTES,
@@ -283,7 +285,7 @@ def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
     assert {
         path.relative_to(staged).as_posix()
         for path in staged.rglob("*")
-        if path.is_file()
+        if path.is_file() and not path.is_symlink()
     } == {"assets/primary.usdz", "assets/primary.model.json", "board.json"}
 
 
@@ -315,12 +317,12 @@ def test_staging_preserves_live_model_package_assets_and_hash_bindings(
         source_assets = {
             path.relative_to(source_package).as_posix()
             for path in source_package.rglob("*")
-            if path.is_file() and path.relative_to(source_package).parts[:1] == ("assets",)
+            if path.is_file() and not path.is_symlink() and path.relative_to(source_package).parts[:1] == ("assets",)
         }
         staged_assets = {
             path.relative_to(staged_package).as_posix()
             for path in staged_package.rglob("*")
-            if path.is_file() and path.relative_to(staged_package).parts[:1] == ("assets",)
+            if path.is_file() and not path.is_symlink() and path.relative_to(staged_package).parts[:1] == ("assets",)
         }
         assert source_assets == declared_assets
         assert staged_assets == declared_assets
@@ -335,6 +337,78 @@ def test_staging_preserves_live_model_package_assets_and_hash_bindings(
         assert descriptor["modelSHA256"] == hashlib.sha256(
             (staged_package / media.asset_path).read_bytes()
         ).hexdigest()
+
+
+def test_staging_preserves_every_live_model_package_file_byte_for_byte(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository_root, destination, _ = stage_live_model_packages(tmp_path, monkeypatch)
+    for slug in LIVE_MODEL_PACKAGE_SLUGS:
+        source_package = repository_root / "Hangboards" / slug
+        staged_package = destination / slug
+        source_files = {
+            path.relative_to(source_package).as_posix(): path.read_bytes()
+            for path in source_package.rglob("*")
+            if path.is_file() and not path.is_symlink()
+        }
+        staged_files = {
+            path.relative_to(staged_package).as_posix(): path.read_bytes()
+            for path in staged_package.rglob("*")
+            if path.is_file() and not path.is_symlink()
+        }
+        assert staged_files == source_files
+
+
+def test_regular_tree_children_are_classified_in_name_order(
+    tmp_path: Path,
+) -> None:
+    module = load_staging_module()
+    source = tmp_path / "package"
+    source.mkdir()
+    (source / "z-file").write_bytes(b"z")
+    (source / "a-directory").mkdir()
+
+    children = list(module._iter_regular_children(source))
+
+    assert [(path.name, stat.S_IFMT(mode)) for path, mode in children] == [
+        ("a-directory", stat.S_IFDIR),
+        ("z-file", stat.S_IFREG),
+    ]
+
+
+def test_staging_preflights_recursive_file_types_before_creating_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, packages, _ = build_repository(tmp_path)
+    special_path = packages[0] / "assets" / "nested-special"
+    os.mkfifo(special_path)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    with pytest.raises(ValueError, match="regular and non-symlinked"):
+        module.stage_board_packages(repository_root, destination)
+
+    assert not destination.exists()
+    assert not destination.parent.exists()
+
+
+def test_staging_rejects_nested_symlink_before_copying_any_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, packages, _ = build_repository(tmp_path)
+    outside = tmp_path / "outside.txt"
+    outside.write_bytes(b"must not be copied")
+    (packages[0] / "assets" / "nested-link").symlink_to(outside)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.stage_board_packages(repository_root, destination)
+
+    assert not destination.exists()
+    assert not destination.parent.exists()
 
 
 def test_staging_fails_closed_for_a_malformed_completed_package(

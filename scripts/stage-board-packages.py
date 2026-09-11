@@ -108,12 +108,31 @@ def _copy_regular_file(source: Path, destination: Path) -> None:
     _regular_file(destination)
 
 
+def _iter_regular_children(source: Path):
+    """Yield direct children in staging order with one lstat classification."""
+    for source_child in sorted(source.iterdir(), key=lambda path: path.name):
+        yield source_child, source_child.lstat().st_mode
+
+
+def _validate_regular_tree(source: Path) -> None:
+    """Reject unsupported filesystem entries before creating staging output."""
+    _regular_directory(source)
+    for source_child, mode in _iter_regular_children(source):
+        if stat.S_ISDIR(mode):
+            _validate_regular_tree(source_child)
+        elif stat.S_ISREG(mode):
+            _regular_file(source_child)
+        else:
+            raise ValueError(
+                f"package paths must be regular and non-symlinked: {source_child}"
+            )
+
+
 def _copy_regular_tree(source: Path, destination: Path) -> None:
     _regular_directory(source)
     destination.mkdir()
-    for source_child in sorted(source.iterdir(), key=lambda path: path.name):
+    for source_child, mode in _iter_regular_children(source):
         destination_child = destination / source_child.name
-        mode = source_child.lstat().st_mode
         if stat.S_ISDIR(mode):
             _copy_regular_tree(source_child, destination_child)
         elif stat.S_ISREG(mode):
@@ -160,14 +179,18 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     inventory = load_board_package_module(repository_root).discover_board_packages(
         hangboards_root
     )
+    package_sources = tuple(package.root for package in inventory.packages)
+    for package_source in package_sources:
+        if not _is_within(package_source, hangboards_root):
+            raise ValueError(f"package must remain beneath Hangboards: {package_source}")
+        _validate_regular_tree(package_source)
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
     try:
         staging.mkdir()
         staged_paths: list[Path] = []
-        for package in inventory.packages:
-            package_source = package.root
+        for package, package_source in zip(inventory.packages, package_sources, strict=True):
             package_destination = staging / package.root.name
             _copy_regular_tree(package_source, package_destination)
             staged_paths.append(destination / package.root.name)

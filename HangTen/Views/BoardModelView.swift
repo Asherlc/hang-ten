@@ -363,7 +363,8 @@ final class BoardModelScene {
             return true
         }
         guard let positionID,
-              let pose = suspension.canonicalPoses[positionID] else {
+              let pose = suspension.canonicalPoses[positionID],
+              hasDeclaredAttachmentBindings(for: suspension) else {
             enterUnavailable()
             return false
         }
@@ -392,6 +393,24 @@ final class BoardModelScene {
         } catch {
             enterUnavailable()
             return false
+        }
+    }
+
+    private func hasDeclaredAttachmentBindings(for suspension: BoardModelSuspension) -> Bool {
+        let nodeIDs: [String]
+        switch suspension {
+        case .singleCord(let single):
+            nodeIDs = [single.attachment.nodeID]
+        case .twoBranchCord(let twoBranch):
+            nodeIDs = (twoBranch.passages.left + twoBranch.passages.right).map(\.nodeID)
+            guard nodeIDs.count == 4 else { return false }
+        }
+        return nodeIDs.allSatisfy { nodeID in
+            guard let binding = descriptor.nodes.first(where: { $0.nodeID == nodeID }) else {
+                return false
+            }
+            return (binding.role == .body || binding.role == .attachment)
+                && geometryByNodeID[nodeID] != nil
         }
     }
 
@@ -473,26 +492,16 @@ final class BoardModelScene {
         _ solved: BoardModelSolvedSuspension,
         cord: SCNNode
     ) {
-        // Build the replacement cord at its deterministic destination before
-        // the transaction. It is never bound to descriptor geometry and the
-        // existing transient node is removed as one replacement operation.
+        // Commit the board, destination-solved cord, and camera together.
+        // Cached cords are detached before reuse, so no visible frame can
+        // combine the destination cord with the previous board transform.
+        SCNTransaction.begin()
+        SCNTransaction.disableActions = true
         transientCordNode?.removeFromParentNode()
         transientCordNode = cord
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
-
-        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
-        if boardMoves {
-            cord.opacity = 0
-        } else {
-            boardContainer.simdTransform = solved.boardTransform
-        }
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = Self.canonicalTransitionDuration
-        if boardMoves {
-            boardContainer.simdTransform = solved.boardTransform
-            cord.opacity = 1
-        }
+        boardContainer.simdTransform = solved.boardTransform
         applyCanonicalCamera(solved.cameraFraming)
         SCNTransaction.commit()
 
@@ -501,19 +510,6 @@ final class BoardModelScene {
             transformedAttachment = single.transformedAttachment
         }
         currentFraming = solved.cameraFraming
-    }
-
-    private static func transformsMatch(
-        _ lhs: simd_float4x4,
-        _ rhs: simd_float4x4,
-        tolerance: Float = 1e-6
-    ) -> Bool {
-        for column in 0..<4 {
-            for row in 0..<4 where abs(lhs[column][row] - rhs[column][row]) > tolerance {
-                return false
-            }
-        }
-        return true
     }
 
     private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
@@ -640,10 +636,10 @@ final class BoardModelScene {
             }
             for (pathIndex, path) in paths.enumerated() {
                 for (segmentIndex, points) in zip(path, path.dropFirst()).enumerated() {
-                let bearing = bearingIntervals.first {
-                    $0.path == pathIndex && $0.segments.contains(segmentIndex) && $0.nodes.contains(nodeID)
-                }
-                let requiredDistance = bearing?.radius ?? clearanceRadius
+                    let bearing = bearingIntervals.first {
+                        $0.path == pathIndex && $0.segments.contains(segmentIndex) && $0.nodes.contains(nodeID)
+                    }
+                    let requiredDistance = bearing?.radius ?? clearanceRadius
                 for triangle in triangles {
                     let approach = Self.closestApproach(
                         from: points.0,

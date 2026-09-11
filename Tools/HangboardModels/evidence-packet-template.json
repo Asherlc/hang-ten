@@ -78,7 +78,7 @@
     "visualApproval": {
       "approvedSnapshotPaths": ["sources/RETAINED-FRONT-VIEW", "sources/RETAINED-DISTINCT-VIEW"],
       "materiallyDistinct": true,
-      "decisionDate": "2026-09-09"
+      "decisionDate": "REPLACE_WITH_APPROVAL_DATE"
     },
     "displayEstimates": [
       {

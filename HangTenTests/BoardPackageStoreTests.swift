@@ -264,26 +264,28 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(content.holds.map(\.id), ["hold-left"])
     }
 
-    func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
+    func testFlashBoardModelPreservesBothFacesAndUprightAndInvertedPositions() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+        let positionIDs = [
+            "three-edge-upright", "three-edge-inverted",
+            "two-edge-upright", "two-edge-inverted",
+        ]
         XCTAssertEqual(board.presentations.map(\.id), ["primary"])
-        let positionIDs = ["three-edge-upright", "three-edge-inverted", "two-edge-upright", "two-edge-inverted"]
         XCTAssertEqual(board.positions.map(\.id), positionIDs)
-        XCTAssertTrue(board.positions.allSatisfy { $0.presentationID == "primary" })
+        XCTAssertEqual(Set(board.positions.map(\.presentationID)), ["primary"])
         guard case .model(let media) = board.defaultPresentation.media,
-              case .twoBranchCord(let suspension) = media.suspension else {
-            return XCTFail("Flash Board must ship the verified two-branch suspension")
+              case .singleCord(let suspension) = media.suspension else {
+            return XCTFail("expected Flash's promoted single-cord model presentation")
         }
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(positionIDs))
-        XCTAssertTrue((suspension.passages.left + suspension.passages.right).allSatisfy(\.isThroughBore))
-        XCTAssertEqual(
-            suspension.passages.left.map(\.nodeID) + suspension.passages.right.map(\.nodeID),
-            Array(repeating: "flash_board_body_008", count: 4)
-        )
-        XCTAssertEqual(board.holds.map(\.id), [
+        let expectedHoldIDs = [
             "three-edge-left", "three-edge-center", "three-edge-right",
             "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"
-        ])
+        ]
+        XCTAssertEqual(Set(media.descriptor.holds.keys), Set(expectedHoldIDs))
+        for positionID in positionIDs {
+            XCTAssertEqual(board.holdIDs(inPosition: positionID), expectedHoldIDs, positionID)
+        }
     }
 
     func testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame() {

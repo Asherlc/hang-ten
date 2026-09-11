@@ -219,10 +219,25 @@ declared numerical tolerance. Interior passage routing is continuous and
 must preserve the declared order; it is not replaced with a direct shortcut
 that would pass through the board.
 
+The declared branch rest length is a complete-route length, not merely the
+sum of the two free spans. For each pose, let `d0` and `d1` be the distances
+from the fixed anchor to the transformed first and second passage points, and
+let `di` be the distance between those passage points along the modeled
+interior route. The solver and package verifier reject the branch unless
+`restLength >= d0 + di + d1` within the shared taut tolerance. The interior
+route consumes `di`; the remaining length is allocated deterministically
+between the two independently solved anchor-to-passage catenaries in
+proportion to `d0` and `d1`.
+
 The solver uses fixed sample count, material parameters, gravity direction,
 numeric tolerance, and arc-length procedure across platforms. It verifies
-finite samples, endpoint coincidence, tangent continuity at passage joins,
-sampled length, tube radius, and self-intersection. It checks cord clearance
+finite samples, positional continuity at passage joins, tube radius, and
+self-intersection. The analytic route length (the two solved catenary arc
+lengths plus `di`) must match the declared rest length within `1e-4`; the
+polyline length measured from the fixed samples must match it within `0.02`.
+Tangent discontinuity between an independently solved catenary and the
+modeled interior passage span is permitted at a passage interface; tangent
+matching is not a contract for this piecewise route. It checks cord clearance
 against actual board triangles/rays, requiring at least cord radius plus the
 declared clearance everywhere except the approved physical passage interface.
 

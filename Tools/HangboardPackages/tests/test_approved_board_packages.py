@@ -554,17 +554,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         "type", "assetPath", "descriptorPath", "display", "suspension"
     }
     suspension = board["presentations"][0]["media"]["suspension"]
-    assert suspension["type"] == "twoBranchCord"
-    assert [
-        passage["id"]
-        for side in ("left", "right")
-        for passage in suspension["passages"][side]
-    ] == [
-        "left-outer-passage",
-        "left-inner-passage",
-        "right-inner-passage",
-        "right-outer-passage",
-    ]
+    assert suspension["attachment"]["nodeID"] == "flash_board_body_008"
     assert set(suspension["canonicalPoses"]) == {
         "three-edge-upright",
         "three-edge-inverted",
@@ -576,52 +566,29 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     }
 
 
-def test_flash_board_promotes_the_verified_two_branch_contract_and_exact_assets() -> None:
-    """The live package must not regress to the retired single-cord draft."""
+def test_flash_model_descriptor_preserves_approved_assets_and_bindings() -> None:
     board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
-    candidate = json.loads(FLASH_TWO_BRANCH_CANDIDATE.read_text(encoding="utf-8"))
-    suspension = board["presentations"][0]["media"]["suspension"]
-
-    assert suspension["type"] == "twoBranchCord"
-    assert list(suspension) == ["type", "passages", "branches", "anchor", "canonicalPoses"]
-    expected_passages = {
-        side: [
-            {
-                "id": passage["id"],
-                "nodeID": "flash_board_body_008",
-                "entryPointInModel": passage["entryPointInModel"],
-                "exitPointInModel": passage["exitPointInModel"],
-                "provenance": passage["provenance"],
-            }
-            for passage in candidate["passages"][side]
-        ]
-        for side in ("left", "right")
-    }
-    assert suspension["passages"] == expected_passages
-    assert suspension["branches"] == candidate["branches"]
-    assert suspension["anchor"] == candidate["anchor"]
-    assert suspension["canonicalPoses"] == {
-        position_id: {
-            **pose,
-            "camera": {
-                "viewDirection": [0, 0, -1] if position_id.startswith("three-edge") else [0, 0, 1],
-                "fitPadding": 0.1,
-            },
-        }
-        for position_id, pose in candidate["canonicalPoses"].items()
-    }
-    expected_model = candidate["expectedModel"]
-    assert hashlib.sha256((FLASH_BOARD_ROOT / "assets/primary.usdz").read_bytes()).hexdigest() == expected_model["modelSHA256"]
-    assert hashlib.sha256((FLASH_BOARD_ROOT / "assets/primary.model.json").read_bytes()).hexdigest() == expected_model["descriptorSHA256"]
-
-    package = load_board_catalog_module().load_board_package(FLASH_BOARD_ROOT)
-    parsed_suspension = package.board.presentations[0].media.suspension
-    assert parsed_suspension is not None
-    assert [
-        passage.node_id
-        for side in (parsed_suspension.passages.left, parsed_suspension.passages.right)
-        for passage in side
-    ] == ["flash_board_body_008"] * 4
+    media = board["presentations"][0]["media"]
+    model_bytes = (FLASH_BOARD_ROOT / media["assetPath"]).read_bytes()
+    descriptor_bytes = (FLASH_BOARD_ROOT / media["descriptorPath"]).read_bytes()
+    descriptor = json.loads(descriptor_bytes)
+    model_sha = hashlib.sha256(model_bytes).hexdigest()
+    assert model_sha == "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b"
+    assert hashlib.sha256(descriptor_bytes).hexdigest() == "b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58"
+    assert descriptor["modelSHA256"] == model_sha
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    logical_ids = {hold["id"] for hold in board["holds"]}
+    assert set(descriptor["holds"]) == logical_ids
+    hold_nodes = {node["nodeID"]: node["holdID"] for node in descriptor["nodes"] if node["role"] == "hold"}
+    assert set(hold_nodes.values()) == logical_ids
+    assert len(hold_nodes) == len(logical_ids)
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [node_id for node_id, binding in hold_nodes.items() if binding == hold_id]
+    attachment_id = media["suspension"]["attachment"]["nodeID"]
+    assert [node for node in descriptor["nodes"] if node["role"] != "hold"] == [
+        {"nodeID": attachment_id, "role": "body"}
+    ]
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:

@@ -27,6 +27,52 @@ if str(TOOLS) not in sys.path:
 
 import beastmaker_1000 as authored
 import compile_model_package as compiler
+from model_verification import MaterialPolicy, ModelVerificationConfig, verify_model_package
+from model_characterization import assert_baseline_matches, capture_model_baseline
+
+
+class _BeastmakerProbe:
+    """Compatibility wrapper for the authored rim and nearest-hit checks."""
+
+    id = "beastmaker-authored-rim-and-nearest-hit"
+
+    def run(self, imported, config):
+        objects = [obj for obj in imported.scene.objects if obj.type == "MESH"]
+        return authored.verify_model(objects, list(config.expected_hold_ids))
+
+
+def beastmaker_config(board_json: Path | None = None) -> ModelVerificationConfig:
+    """Return the fixed Beastmaker adapter configuration.
+
+    The ordered IDs come from the checked-in board document; no node naming
+    convention is used to infer logical identity.
+    """
+    board = Path(board_json or (authored.ROOT / "Hangboards/beastmaker-1000/board.json"))
+    document = json.loads(board.read_text(encoding="utf-8"))
+    ids = tuple(item["id"] for item in document["holds"])
+    return ModelVerificationConfig(
+        board_id="beastmaker-1000", board_json=board,
+        package_relative_assets=frozenset({"assets/primary.usdz", "assets/primary.model.json"}),
+        expected_hold_ids=ids, triangle_ceiling=authored.TRIANGLE_CEILING,
+        required_roles=frozenset({"body", "hold"}),
+        forbidden_name_tokens=("hardware", "mount", "screw", "anchor", "cord"),
+        material_policy=MaterialPolicy.canonical_wood(),
+        board_probes=(_BeastmakerProbe(),),
+    )
+
+
+def assert_beastmaker_baseline(package: Path, board_json: Path) -> None:
+    """Compare the package against the immutable Task 1 characterization."""
+    baseline_path = TOOLS / "baselines" / "beastmaker-1000.model.json"
+    expected_descriptor = json.loads(baseline_path.read_text(encoding="utf-8"))
+    expected = {
+        "assets": ["assets/primary.model.json", "assets/primary.usdz"],
+        "logicalHoldIDs": [item["id"] for item in json.loads(Path(board_json).read_text())["holds"]],
+        "modelSHA256": expected_descriptor["modelSHA256"],
+        "descriptorSHA256": authored.sha(baseline_path),
+        "descriptor": expected_descriptor,
+    }
+    assert_baseline_matches(capture_model_baseline(package, board_json), expected)
 
 
 def load_report(path: Path) -> dict[str, object]:
@@ -64,6 +110,8 @@ def main():
     out = package.parent
     assert out.parent == authored.ROOT/".context"
     assert out.name == authored.ROOT.name+"-beastmaker-1000"
+    core_report = verify_model_package(package, beastmaker_config())
+    assert_beastmaker_baseline(package, authored.ROOT / "Hangboards/beastmaker-1000/board.json")
     source = load_report(out/"model-report.json")
     expected = compiler.load_logical_hold_ids(authored.ROOT/"Hangboards/beastmaker-1000/board.json")
     model_path = package/"assets/primary.usdz"
