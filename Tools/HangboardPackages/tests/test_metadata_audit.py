@@ -26,6 +26,32 @@ _FIELDS = (
     "sloper",
 )
 
+_TRAINING_TILES_ACTIVE_IDS = {
+    "upper-sloper-outer-left",
+    "upper-sloper-outer-right",
+    "upper-sloper-inner-left",
+    "upper-sloper-inner-right",
+    "middle-edge-outer-left",
+    "middle-edge-outer-right",
+    "middle-edge-inner-left",
+    "middle-edge-inner-right",
+    "bottom-edge-center-left",
+    "bottom-edge-center-right",
+    "top-pocket-outer-left",
+    "top-pocket-outer-right",
+    "bottom-edge-inner-left",
+    "bottom-edge-inner-right",
+    "bottom-edge-outer-left",
+    "bottom-edge-outer-right",
+}
+
+_TRAINING_TILES_DEPRECATED_UNVERIFIED_IDS = {
+    "top-pocket-inner-left",
+    "top-pocket-inner-right",
+    "top-jug-left",
+    "top-jug-right",
+}
+
 
 def _rename_fixture_geometry(document: dict[str, Any], hold_id: str) -> list[dict[str, Any]]:
     geometry = document["presentations"][0]["media"]["holdGeometry"]
@@ -747,19 +773,17 @@ def test_metolius_contract_verified_kind_must_match_package(tmp_path: Path) -> N
         )
 
 
-def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
+def test_historical_metadata_ledger_retains_its_august_review_scope() -> None:
     repository_root = Path(__file__).resolve().parents[3]
-    ledger_path = (
+    historical_ledger_path = (
         repository_root
         / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
     )
+    historical_ledger = load_metadata_ledger(historical_ledger_path)
 
-    report = validate_metadata_ledger(
-        load_metadata_ledger(ledger_path),
-        discover_board_packages(repository_root / "Hangboards"),
-    )
-
-    assert report.reviewed_board_ids == (
+    # The snapshot predates model-promotion inventory changes, so it is not
+    # cross-validated against active packages.
+    assert historical_ledger.reviewed_board_ids == (
         "beastmaker-1000",
         "beastmaker-2000",
         "dewoodstok-woodbord",
@@ -805,51 +829,26 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "zlagboard.evo",
         "zlagboard.pro",
     )
-    assert report.sloper_only_board_ids == ()
-    assert all(board.unaccounted_fields == 0 for board in report.boards)
-    assert next(
-        board for board in report.boards if board.board_id == "beastmaker-2000"
-    ).to_json() == {
-        "boardID": "beastmaker-2000",
-        "populated": 65,
-        "verified": 65,
-        "adapted": 0,
-        "unavailable": 118,
-        "notApplicable": 33,
-        "unaccountedFields": 0,
-    }
+    assert historical_ledger.sloper_only_board_ids == ()
+    assert all(
+        record.board_id in historical_ledger.reviewed_board_ids
+        for record in historical_ledger.records
+    )
 
 
-def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None:
+def test_historical_training_tile_kind_adaptations_remain_explicit_and_source_linked() -> None:
     repository_root = Path(__file__).resolve().parents[3]
-    ledger_path = (
+    historical_ledger_path = (
         repository_root
         / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
     )
-    records = json.loads(ledger_path.read_text(encoding="utf-8"))["records"]
+    records = json.loads(historical_ledger_path.read_text(encoding="utf-8"))["records"]
 
-    expected_training_tile_ids = {
-        "top-jug-left",
-        "top-jug-right",
-        "top-pocket-outer-left",
-        "top-pocket-inner-left",
-        "top-pocket-inner-right",
-        "top-pocket-outer-right",
-        "upper-sloper-outer-left",
-        "upper-sloper-inner-left",
-        "upper-sloper-inner-right",
-        "upper-sloper-outer-right",
-        "middle-edge-outer-left",
-        "middle-edge-inner-left",
-        "middle-edge-inner-right",
-        "middle-edge-outer-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-center-left",
-        "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-center-right",
-        "bottom-edge-outer-right",
-    }
+    # This 2026-08 ledger predates the source-backed model promotion. Its
+    # 20-contact mapping is retained as history, not active package truth.
+    historical_training_tile_ids = (
+        _TRAINING_TILES_ACTIVE_IDS | _TRAINING_TILES_DEPRECATED_UNVERIFIED_IDS
+    )
     training_tile_kind_records = [
         record
         for record in records
@@ -859,7 +858,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         hold_id
         for record in training_tile_kind_records
         for hold_id in record["holdIDs"]
-    } == expected_training_tile_ids
+    } == historical_training_tile_ids
     assert all(
         record["outcome"] == "adapted"
         and record["source"]["url"]
@@ -871,7 +870,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     )
 
     expected_adaptations = {
-        ("soill.training-tiles", hold_id) for hold_id in expected_training_tile_ids
+        ("soill.training-tiles", hold_id) for hold_id in historical_training_tile_ids
     } | {
         ("soill.split-palm", "lower-pinch-left"),
         ("soill.split-palm", "lower-pinch-right"),
@@ -1151,14 +1150,9 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
     }
 
 
-def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
+def test_training_tiles_active_contacts_keep_unsupported_measurements_absent() -> None:
     repository_root = Path(__file__).resolve().parents[3]
-    ledger_path = (
-        repository_root
-        / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
-    )
     inventory = discover_board_packages(repository_root / "Hangboards")
-    report = validate_metadata_ledger(load_metadata_ledger(ledger_path), inventory)
     package = next(
         package
         for package in inventory.packages
@@ -1174,10 +1168,20 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
         and hold.features is None
         for hold in package.board.holds
     )
-    assert len(package.board.holds) == 20
-    assert next(
-        board for board in report.boards if board.board_id == "soill.training-tiles"
-    ).adapted == 20
+    active_ids = {hold.id for hold in package.board.holds}
+    assert active_ids == _TRAINING_TILES_ACTIVE_IDS
+    assert active_ids.isdisjoint(_TRAINING_TILES_DEPRECATED_UNVERIFIED_IDS)
+
+
+def test_training_tiles_promotion_audit_records_deprecated_unverified_contacts() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    audit = (
+        repository_root / "docs/source-audits/2026-09-11-replace-rasters-with-3d-models.md"
+    ).read_text(encoding="utf-8")
+
+    assert "deprecated/unverified source identifiers" in audit
+    assert "no persisted references requiring migration" in audit
+    assert all(contact_id in audit for contact_id in _TRAINING_TILES_DEPRECATED_UNVERIFIED_IDS)
 
 
 def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:

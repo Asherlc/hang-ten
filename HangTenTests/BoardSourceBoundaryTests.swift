@@ -232,7 +232,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let migratedModelBoardIDs: Set<String> = [
             "beastmaker-1000",
             "metolius.wood-grips-compact-ii",
+            "metolius.simulator-3d",
             "nature.stone-hanger",
+            "soill.training-tiles",
             "tension.flash-board",
             "yy.baguette-evo"
         ]

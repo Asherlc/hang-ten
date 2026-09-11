@@ -1661,8 +1661,8 @@ def _load_model_descriptor(
                 raise ValueError("model descriptor has too many attachment nodes")
         else:
             raise ValueError(f"{source}.role must be body, hold, or attachment")
-    if body_count != 1:
-        raise ValueError("model descriptor requires exactly one body node")
+    if body_count < 1:
+        raise ValueError("model descriptor requires one or more body nodes")
     if ordered_node_ids != sorted(ordered_node_ids):
         raise ValueError("model descriptor nodes must be sorted by nodeID")
     if set(node_ids_by_hold) != logical_hold_ids:

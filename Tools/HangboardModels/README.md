@@ -2,9 +2,9 @@
 
 This directory contains the evidence-packet validator and the deterministic
 USDZ-to-descriptor compiler for the schema-v2 board package contract. The
-completed inventory contains 59 raster v2 packages and two model-only
-packages: Beastmaker 1000 and Metolius Wood Grips Compact II. Both promoted
-package trees contain `board.json`, `assets/primary.usdz`, and
+completed inventory contains 57 raster v2 packages and four model-only
+packages: Beastmaker 1000, Metolius Simulator 3D, Metolius Wood Grips Compact
+II, and So iLL Training Tiles. Each promoted package tree contains `board.json`, `assets/primary.usdz`, and
 `assets/primary.model.json`; model media is read-only. This tooling documents
 demonstrated package validation and staging, not remote model sync or model
 editing.
@@ -81,7 +81,9 @@ rtk proxy blender --background --factory-startup --python-exit-code 1 \
 Every authored mesh must carry `role` equal to `body` or `hold`; hold meshes
 also carry a `hold_id` present in the board's logical inventory. The compiler
 rejects missing or unknown tags, non-mesh authored objects, empty or unbound
-geometry, inventory mismatches, missing materials/images after reimport,
+geometry, inventory mismatches, missing renderer-visible materials after
+reimport, and unusable image data whenever an imported material declares an
+image node,
 changed node bindings, and physical-bounds drift. It makes disposable export
 copies and triangulates only those copies. It then reimports the actual USDZ
 and fails rather than repairing or redesigning a shape.
@@ -182,7 +184,8 @@ unavailable.
 
 Board-specific verifiers are a second check of the compiler's actual USDZ
 bytes. They start with an empty Blender scene, reimport only
-`assets/primary.usdz`, verify image materials, explicit triangles, tagged
+`assets/primary.usdz`, verify renderer-visible materials (and usable image
+data when images are declared), explicit triangles, tagged
 body/hold bindings, and the generated descriptor's exact hash-bound contents.
 They do not open, save, repair, or triangulate an authored `.blend`.
 

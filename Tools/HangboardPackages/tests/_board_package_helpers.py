@@ -24,7 +24,10 @@ def document_hold_geometry(document: dict[str, Any]) -> dict[str, list[dict[str,
     for presentation in document["presentations"]:
         if presentation["derivation"]["type"] != "original":
             continue
-        for hold_id, geometry in presentation["media"]["holdGeometry"].items():
+        media = presentation["media"]
+        if media["type"] != "raster":
+            continue
+        for hold_id, geometry in media["holdGeometry"].items():
             if hold_id in result:
                 raise AssertionError(f"duplicate original geometry for {hold_id}")
             result[hold_id] = geometry

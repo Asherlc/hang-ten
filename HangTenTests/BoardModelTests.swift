@@ -166,8 +166,10 @@ final class BoardModelTests: XCTestCase {
             "nature.stone-hanger",
             "yy.baguette-evo",
             "metolius.wood-grips-compact-ii",
+            "metolius.simulator-3d",
+            "soill.training-tiles",
         ]
-        let rasterBoardIDs = ["metolius.simulator-3d", "soill.training-tiles"]
+        let rasterBoardIDs = ["metolius.contact", "soill.split-palm"]
 
         for boardID in modelBoardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
@@ -206,7 +208,23 @@ final class BoardModelTests: XCTestCase {
                 expectation.holdIDs.count,
                 expectation.boardID
             )
-            XCTAssertEqual(model.geometryNodes.count, expectation.holdIDs.count + 1, expectation.boardID)
+            XCTAssertEqual(
+                model.geometryNodes.count,
+                expectation.holdIDs.count + expectation.bodyNodeIDs.count,
+                expectation.boardID
+            )
+            XCTAssertEqual(
+                Set(media.descriptor.nodes.compactMap { $0.role == .body ? $0.nodeID : nil }),
+                expectation.bodyNodeIDs,
+                expectation.boardID
+            )
+            for bodyNodeID in expectation.bodyNodeIDs {
+                let bodyNode = try XCTUnwrap(
+                    model.geometryNodes.first { $0.name == bodyNodeID },
+                    "\(expectation.boardID): \(bodyNodeID)"
+                )
+                XCTAssertNil(model.holdID(for: bodyNode), "\(expectation.boardID): \(bodyNodeID)")
+            }
 
             for node in model.geometryNodes {
                 let materials = try XCTUnwrap(node.geometry?.materials, expectation.boardID)
@@ -291,6 +309,26 @@ final class BoardModelTests: XCTestCase {
             .init(nodeID: "left", role: .hold, holdID: "left")
         ])
         XCTAssertNil(BoardModelScene(source: source, descriptor: mismatched, display: display()))
+    }
+
+    func testGenericModelBindingKeepsEveryExplicitBodyMeshNonselectable() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body-L", role: .body, holdID: nil),
+            .init(nodeID: "Board/Body-R", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Pocket", role: .hold, holdID: "pocket")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body-L", "Board/Body-R", "Board/Hold/Pocket"]),
+            descriptor: descriptor,
+            display: display()
+        ))
+
+        XCTAssertEqual(Set(model.holdNodes.keys), ["pocket"])
+        XCTAssertEqual(model.geometryNodes.count, 3)
+        for bodyNodeID in ["Body-L", "Body-R"] {
+            let bodyNode = try XCTUnwrap(model.geometryNodes.first { $0.name == bodyNodeID })
+            XCTAssertNil(model.holdID(for: bodyNode), bodyNodeID)
+        }
     }
 
     // This catches a renderer that silently renders nodes the descriptor did
@@ -790,6 +828,7 @@ final class BoardModelTests: XCTestCase {
     private struct MigratedModelExpectation {
         let boardID: String
         let holdIDs: Set<String>
+        let bodyNodeIDs: Set<String>
         let bodyProbe: [Double]
     }
 
@@ -806,6 +845,7 @@ final class BoardModelTests: XCTestCase {
                     "pocket-bottom-inner-left", "pocket-bottom-inner-right", "pocket-bottom-mid-right",
                     "pocket-bottom-outer-right"
                 ],
+                bodyNodeIDs: ["BeastmakerBody_023"],
                 bodyProbe: [0.5, 0.02]
             ),
             MigratedModelExpectation(
@@ -817,7 +857,41 @@ final class BoardModelTests: XCTestCase {
                     "pocket-19-three-left", "pocket-19-three-right", "pocket-19-two-left",
                     "pocket-19-two-right", "pocket-19-four-center", "edge-19-right"
                 ],
+                bodyNodeIDs: ["Wood_Grips_Compact_II_039"],
                 bodyProbe: [0.5, 0.02]
+            ),
+            MigratedModelExpectation(
+                boardID: "metolius.simulator-3d",
+                holdIDs: [
+                    "jug-1-left", "round-sloper-3-left", "jug-14-center", "round-sloper-3-right",
+                    "jug-1-right", "pocket-4-left", "edge-5-left", "edge-6-left", "edge-7-left",
+                    "pocket-8-left", "pocket-9-left", "pocket-10-left", "edge-11-left",
+                    "pocket-12-left", "pocket-13-left", "pocket-15-center", "pocket-16-center",
+                    "pocket-17-center", "pocket-18-center", "pocket-13-right", "pocket-12-right",
+                    "edge-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right",
+                    "edge-7-right", "edge-6-right", "edge-5-right", "pocket-4-right",
+                    "flat-sloper-2-left", "flat-sloper-2-right"
+                ],
+                bodyNodeIDs: ["board_body_001"],
+                // The lower-center projection falls in a recessed opening in
+                // the imported simulator body; use an evidenced body vertex
+                // projection near the upper-left edge instead.
+                bodyProbe: [0.05, 0.96]
+            ),
+            MigratedModelExpectation(
+                boardID: "soill.training-tiles",
+                holdIDs: [
+                    "upper-sloper-outer-left", "upper-sloper-outer-right",
+                    "upper-sloper-inner-left", "upper-sloper-inner-right",
+                    "middle-edge-outer-left", "middle-edge-outer-right",
+                    "middle-edge-inner-left", "middle-edge-inner-right",
+                    "bottom-edge-center-left", "bottom-edge-center-right",
+                    "top-pocket-outer-left", "top-pocket-outer-right",
+                    "bottom-edge-inner-left", "bottom-edge-inner-right",
+                    "bottom-edge-outer-left", "bottom-edge-outer-right"
+                ],
+                bodyNodeIDs: ["body_L_001", "body_R_001"],
+                bodyProbe: [0.05, 0.96]
             )
         ]
     }
@@ -857,25 +931,69 @@ final class BoardModelTests: XCTestCase {
     ) throws {
         for holdID in media.descriptor.holds.keys.sorted() {
             let hold = try XCTUnwrap(media.descriptor.holds[holdID], "\(boardID): \(holdID)")
-            let normalizedCenter = zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).map {
-                $0 + ($1 - $0) / 2
-            }
-            let ray = try headOnRay(
-                normalizedPoint: normalizedCenter,
-                bounds: media.descriptor.modelBounds,
-                context: "\(boardID): \(holdID)"
-            )
-            let closest = try XCTUnwrap(
-                model.scene.rootNode.hitTestWithSegment(
+            let minimum = hold.facePlaneAABB.minimum
+            let maximum = hold.facePlaneAABB.maximum
+            // A face-plane AABB is the projection of the selectable mesh, not
+            // a promise that a regular interior grid crosses every surface.
+            // Recessed pockets can have projected openings between their
+            // triangles, so use the imported, descriptor-bound mesh vertices
+            // as evidence-backed probe positions.
+            let surfaceSamplePoints = model.holdNodes[holdID, default: []]
+                .flatMap { node -> [[Double]] in
+                    node.geometry.map { geometry in
+                        geometry.sources(for: .vertex).flatMap { source -> [[Double]] in
+                            guard source.componentsPerVector >= 3, source.usesFloatComponents else {
+                                return []
+                            }
+                            return (0..<source.vectorCount).map { index in
+                                let vertex = source.data.withUnsafeBytes { rawBuffer in
+                                    let offset = source.dataOffset + index * source.dataStride
+                                    return SCNVector3(
+                                        rawBuffer.load(fromByteOffset: offset, as: Float.self),
+                                        rawBuffer.load(fromByteOffset: offset + source.bytesPerComponent, as: Float.self),
+                                        rawBuffer.load(fromByteOffset: offset + 2 * source.bytesPerComponent, as: Float.self)
+                                    )
+                                }
+                                let point = node.convertPosition(vertex, to: model.scene.rootNode)
+                                let pointX: Double = Double(point.x)
+                                let pointY: Double = Double(point.y)
+                                let minimumX: Double = media.descriptor.modelBounds.minimum[0]
+                                let minimumY: Double = media.descriptor.modelBounds.minimum[1]
+                                let width: Double = media.descriptor.modelBounds.maximum[0] - minimumX
+                                let height: Double = media.descriptor.modelBounds.maximum[1] - minimumY
+                                let x: Double = (pointX - minimumX) / width
+                                let y: Double = (pointY - minimumY) / height
+                                return [x, y]
+                            }
+                        }
+                    } ?? []
+                }
+                .filter { point in
+                    point.count == 2 &&
+                    point[0] >= minimum[0] && point[0] <= maximum[0] &&
+                    point[1] >= minimum[1] && point[1] <= maximum[1]
+                }
+            let hits = surfaceSamplePoints.lazy.compactMap { normalizedPoint -> String? in
+                guard let ray = try? self.headOnRay(
+                    normalizedPoint: normalizedPoint,
+                    bounds: media.descriptor.modelBounds,
+                    context: "\(boardID): \(holdID)"
+                ),
+                let closest = model.scene.rootNode.hitTestWithSegment(
                     from: ray.from,
                     to: ray.to,
                     options: [
                         SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
                     ]
-                ).first,
-                "\(boardID): \(holdID)"
+                ).first else {
+                    return nil
+                }
+                return model.holdID(for: closest.node)
+            }
+            XCTAssertTrue(
+                hits.contains(holdID),
+                "\(boardID): \(holdID) must expose a selectable head-on surface within its descriptor facePlaneAABB"
             )
-            XCTAssertEqual(model.holdID(for: closest.node), holdID, "\(boardID): \(holdID)")
         }
     }
 

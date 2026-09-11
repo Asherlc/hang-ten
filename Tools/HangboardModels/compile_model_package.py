@@ -112,8 +112,8 @@ def validate_tagged_scene(
     if len(node_ids) != len(set(node_ids)):
         raise ValueError("scene contains duplicate mesh node IDs")
     body_count = sum(node.role == "body" for node in nodes)
-    if body_count != 1:
-        raise ValueError("scene requires exactly one body mesh")
+    if body_count < 1:
+        raise ValueError("scene requires one or more body meshes")
     bound_hold_ids = {node.hold_id for node in nodes if node.role == "hold"}
     if bound_hold_ids != set(logical_hold_ids):
         raise ValueError("scene hold bindings must exactly match logical inventory")
@@ -261,7 +261,7 @@ def _snapshot_scene(
             if require_triangles and any(len(polygon.vertices) != 3 for polygon in mesh.polygons):
                 raise ValueError(f"imported mesh {node.node_id} is not triangulated")
             if require_imported_materials:
-                _require_image_materials(mesh, node.node_id)
+                _require_renderable_materials(mesh, node.node_id)
         finally:
             evaluated.to_mesh_clear()
     return _SceneSnapshot(tuple(nodes), vertices)
@@ -284,6 +284,42 @@ def _require_image_materials(mesh: object, node_id: str) -> None:
         if not image_nodes:
             raise ValueError(f"imported mesh {node_id} has no image material")
         if not any(
+            _image_has_usable_data(getattr(node, "image", None))
+            for node in image_nodes
+        ):
+            raise ValueError(f"imported mesh {node_id} has no usable image data")
+
+
+def _require_renderable_materials(mesh: object, node_id: str) -> None:
+    """Require a material on every imported face, without requiring a texture."""
+    materials = getattr(mesh, "materials", ())
+    polygons = getattr(mesh, "polygons", ())
+    used_indexes = {polygon.material_index for polygon in polygons}
+    if not used_indexes:
+        raise ValueError(f"imported mesh {node_id} has no material-bearing faces")
+    for index in used_indexes:
+        if index >= len(materials) or materials[index] is None:
+            raise ValueError(f"imported mesh {node_id} is materialless")
+        material = materials[index]
+        nodes = getattr(getattr(material, "node_tree", None), "nodes", ())
+        output = next(
+            (
+                node
+                for node in nodes
+                if getattr(node, "type", None) == "OUTPUT_MATERIAL"
+                and getattr(node, "is_active_output", False)
+            ),
+            None,
+        )
+        surface = output.inputs.get("Surface") if output is not None else None
+        if surface is None or not any(
+            link.from_node.type == "BSDF_PRINCIPLED" for link in surface.links
+        ):
+            raise ValueError(f"imported mesh {node_id} has no renderable material")
+        image_nodes = [
+            node for node in nodes if getattr(node, "type", None) == "TEX_IMAGE"
+        ]
+        if image_nodes and not all(
             _image_has_usable_data(getattr(node, "image", None))
             for node in image_nodes
         ):

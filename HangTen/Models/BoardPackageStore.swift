@@ -1036,7 +1036,7 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, hold, or attachment")
             }
         }
-        guard bodyCount == 1, Set(nodeIDsByHold.keys) == logicalHoldIDs,
+        guard bodyCount >= 1, Set(nodeIDsByHold.keys) == logicalHoldIDs,
               Set(document.holds.keys) == logicalHoldIDs else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor inventory must equal logical holds")
         }

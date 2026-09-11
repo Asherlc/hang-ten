@@ -1,0 +1,769 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-11-left": {
+      "center": [
+        0.22866926,
+        0.136096469
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.294714867,
+          0.232978953
+        ],
+        "min": [
+          0.162623654,
+          0.039213985
+        ]
+      },
+      "nodeIDs": [
+        "hold_11_left_001"
+      ]
+    },
+    "edge-11-right": {
+      "center": [
+        0.771636552,
+        0.136143455
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.837979546,
+          0.23299607
+        ],
+        "min": [
+          0.705293558,
+          0.039290839
+        ]
+      },
+      "nodeIDs": [
+        "hold_11_right_001"
+      ]
+    },
+    "edge-5-left": {
+      "center": [
+        0.122753608,
+        0.462148835
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.19051948,
+          0.58254909
+        ],
+        "min": [
+          0.054987735,
+          0.341748581
+        ]
+      },
+      "nodeIDs": [
+        "hold_05_left_001"
+      ]
+    },
+    "edge-5-right": {
+      "center": [
+        0.877060189,
+        0.462270482
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.944756113,
+          0.582825711
+        ],
+        "min": [
+          0.809364264,
+          0.341715253
+        ]
+      },
+      "nodeIDs": [
+        "hold_05_right_001"
+      ]
+    },
+    "edge-6-left": {
+      "center": [
+        0.249791162,
+        0.523196716
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.314394608,
+          0.627085441
+        ],
+        "min": [
+          0.185187715,
+          0.419307991
+        ]
+      },
+      "nodeIDs": [
+        "hold_06_left_001"
+      ]
+    },
+    "edge-6-right": {
+      "center": [
+        0.750301118,
+        0.523204754
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.814768985,
+          0.626975759
+        ],
+        "min": [
+          0.685833251,
+          0.419433749
+        ]
+      },
+      "nodeIDs": [
+        "hold_06_right_001"
+      ]
+    },
+    "edge-7-left": {
+      "center": [
+        0.372813205,
+        0.567151028
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.437210781,
+          0.664045206
+        ],
+        "min": [
+          0.30841563,
+          0.470256849
+        ]
+      },
+      "nodeIDs": [
+        "hold_07_left_001"
+      ]
+    },
+    "edge-7-right": {
+      "center": [
+        0.627058418,
+        0.567136713
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.691342219,
+          0.663972846
+        ],
+        "min": [
+          0.562774616,
+          0.470300581
+        ]
+      },
+      "nodeIDs": [
+        "hold_07_right_001"
+      ]
+    },
+    "flat-sloper-2-left": {
+      "center": [
+        0.217445001,
+        0.774137429
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.288286501,
+          0.840580757
+        ],
+        "min": [
+          0.146603501,
+          0.7076941
+        ]
+      },
+      "nodeIDs": [
+        "hold_02_left_001"
+      ]
+    },
+    "flat-sloper-2-right": {
+      "center": [
+        0.782864416,
+        0.773904975
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.85369922,
+          0.840675135
+        ],
+        "min": [
+          0.712029612,
+          0.707134815
+        ]
+      },
+      "nodeIDs": [
+        "hold_02_right_001"
+      ]
+    },
+    "jug-1-left": {
+      "center": [
+        0.079553815,
+        0.733732009
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.137673556,
+          0.789571687
+        ],
+        "min": [
+          0.021434074,
+          0.677892331
+        ]
+      },
+      "nodeIDs": [
+        "hold_01_left_001"
+      ]
+    },
+    "jug-1-right": {
+      "center": [
+        0.920348666,
+        0.733936304
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.978515877,
+          0.789569741
+        ],
+        "min": [
+          0.862181455,
+          0.678302867
+        ]
+      },
+      "nodeIDs": [
+        "hold_01_right_001"
+      ]
+    },
+    "jug-14-center": {
+      "center": [
+        0.500153409,
+        0.911279098
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.564667207,
+          1.0
+        ],
+        "min": [
+          0.435639612,
+          0.822558196
+        ]
+      },
+      "nodeIDs": [
+        "hold_14_center_001"
+      ]
+    },
+    "pocket-10-left": {
+      "center": [
+        0.387021585,
+        0.371881091
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.441459742,
+          0.453396556
+        ],
+        "min": [
+          0.332583429,
+          0.290365625
+        ]
+      },
+      "nodeIDs": [
+        "hold_10_left_001"
+      ]
+    },
+    "pocket-10-right": {
+      "center": [
+        0.61292003,
+        0.372013662
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.667299593,
+          0.45365794
+        ],
+        "min": [
+          0.558540468,
+          0.290369384
+        ]
+      },
+      "nodeIDs": [
+        "hold_10_right_001"
+      ]
+    },
+    "pocket-12-left": {
+      "center": [
+        0.331660646,
+        0.183607093
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.369891859,
+          0.263514817
+        ],
+        "min": [
+          0.293429433,
+          0.103699369
+        ]
+      },
+      "nodeIDs": [
+        "hold_12_left_001"
+      ]
+    },
+    "pocket-12-right": {
+      "center": [
+        0.66821198,
+        0.183800434
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.706347655,
+          0.263513172
+        ],
+        "min": [
+          0.630076305,
+          0.104087695
+        ]
+      },
+      "nodeIDs": [
+        "hold_12_right_001"
+      ]
+    },
+    "pocket-13-left": {
+      "center": [
+        0.413403486,
+        0.21744608
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.449049511,
+          0.291236302
+        ],
+        "min": [
+          0.37775746,
+          0.143655858
+        ]
+      },
+      "nodeIDs": [
+        "hold_13_left_001"
+      ]
+    },
+    "pocket-13-right": {
+      "center": [
+        0.586713517,
+        0.217149371
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.622597584,
+          0.29065933
+        ],
+        "min": [
+          0.55082945,
+          0.143639412
+        ]
+      },
+      "nodeIDs": [
+        "hold_13_right_001"
+      ]
+    },
+    "pocket-15-center": {
+      "center": [
+        0.4999771,
+        0.74002886
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.554976219,
+          0.821140653
+        ],
+        "min": [
+          0.444977982,
+          0.658917067
+        ]
+      },
+      "nodeIDs": [
+        "hold_15_center_001"
+      ]
+    },
+    "pocket-16-center": {
+      "center": [
+        0.4999264,
+        0.530173744
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.552130792,
+          0.613620459
+        ],
+        "min": [
+          0.447722008,
+          0.446727028
+        ]
+      },
+      "nodeIDs": [
+        "hold_16_center_001"
+      ]
+    },
+    "pocket-17-center": {
+      "center": [
+        0.499905869,
+        0.357377325
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.549038193,
+          0.435026758
+        ],
+        "min": [
+          0.450773544,
+          0.279727892
+        ]
+      },
+      "nodeIDs": [
+        "hold_17_center_001"
+      ]
+    },
+    "pocket-18-center": {
+      "center": [
+        0.499913942,
+        0.180342894
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.538613613,
+          0.256992158
+        ],
+        "min": [
+          0.46121427,
+          0.10369363
+        ]
+      },
+      "nodeIDs": [
+        "hold_18_center_001"
+      ]
+    },
+    "pocket-4-left": {
+      "center": [
+        0.080526971,
+        0.61067579
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.131403593,
+          0.708119
+        ],
+        "min": [
+          0.029650349,
+          0.513232581
+        ]
+      },
+      "nodeIDs": [
+        "hold_04_left_001"
+      ]
+    },
+    "pocket-4-right": {
+      "center": [
+        0.919620555,
+        0.610606871
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.970888111,
+          0.708075772
+        ],
+        "min": [
+          0.868352998,
+          0.513137969
+        ]
+      },
+      "nodeIDs": [
+        "hold_04_right_001"
+      ]
+    },
+    "pocket-8-left": {
+      "center": [
+        0.158565156,
+        0.280807605
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.212520371,
+          0.379539251
+        ],
+        "min": [
+          0.104609941,
+          0.182075958
+        ]
+      },
+      "nodeIDs": [
+        "hold_08_left_001"
+      ]
+    },
+    "pocket-8-right": {
+      "center": [
+        0.841194327,
+        0.28081383
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.895165721,
+          0.379552206
+        ],
+        "min": [
+          0.787222932,
+          0.182075454
+        ]
+      },
+      "nodeIDs": [
+        "hold_08_right_001"
+      ]
+    },
+    "pocket-9-left": {
+      "center": [
+        0.275183458,
+        0.346394185
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.329645612,
+          0.436096058
+        ],
+        "min": [
+          0.220721304,
+          0.256692311
+        ]
+      },
+      "nodeIDs": [
+        "hold_09_left_001"
+      ]
+    },
+    "pocket-9-right": {
+      "center": [
+        0.724632544,
+        0.34639499
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.779026023,
+          0.436070752
+        ],
+        "min": [
+          0.670239065,
+          0.256719228
+        ]
+      },
+      "nodeIDs": [
+        "hold_09_right_001"
+      ]
+    },
+    "round-sloper-3-left": {
+      "center": [
+        0.361577225,
+        0.831197839
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.428777934,
+          0.878216268
+        ],
+        "min": [
+          0.294376516,
+          0.784179411
+        ]
+      },
+      "nodeIDs": [
+        "hold_03_left_001"
+      ]
+    },
+    "round-sloper-3-right": {
+      "center": [
+        0.638506026,
+        0.831652275
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.706020769,
+          0.878230834
+        ],
+        "min": [
+          0.570991284,
+          0.785073716
+        ]
+      },
+      "nodeIDs": [
+        "hold_03_right_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.355496258,
+      0.222000003,
+      0.096268073
+    ],
+    "min": [
+      -0.355495363,
+      8.381e-06,
+      -9.885e-06
+    ]
+  },
+  "modelSHA256": "49582fb19be8c5b4c857e728bd2e669acd80925d1ecc3ea438cd099d74448c56",
+  "nodes": [
+    {
+      "nodeID": "board_body_001",
+      "role": "body"
+    },
+    {
+      "holdID": "jug-1-left",
+      "nodeID": "hold_01_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-1-right",
+      "nodeID": "hold_01_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "flat-sloper-2-left",
+      "nodeID": "hold_02_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "flat-sloper-2-right",
+      "nodeID": "hold_02_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "round-sloper-3-left",
+      "nodeID": "hold_03_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "round-sloper-3-right",
+      "nodeID": "hold_03_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-4-left",
+      "nodeID": "hold_04_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-4-right",
+      "nodeID": "hold_04_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-5-left",
+      "nodeID": "hold_05_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-5-right",
+      "nodeID": "hold_05_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-6-left",
+      "nodeID": "hold_06_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-6-right",
+      "nodeID": "hold_06_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-7-left",
+      "nodeID": "hold_07_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-7-right",
+      "nodeID": "hold_07_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-8-left",
+      "nodeID": "hold_08_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-8-right",
+      "nodeID": "hold_08_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-9-left",
+      "nodeID": "hold_09_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-9-right",
+      "nodeID": "hold_09_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-10-left",
+      "nodeID": "hold_10_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-10-right",
+      "nodeID": "hold_10_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-11-left",
+      "nodeID": "hold_11_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-11-right",
+      "nodeID": "hold_11_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-12-left",
+      "nodeID": "hold_12_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-12-right",
+      "nodeID": "hold_12_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-13-left",
+      "nodeID": "hold_13_left_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-13-right",
+      "nodeID": "hold_13_right_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-14-center",
+      "nodeID": "hold_14_center_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-15-center",
+      "nodeID": "hold_15_center_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-16-center",
+      "nodeID": "hold_16_center_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-17-center",
+      "nodeID": "hold_17_center_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-18-center",
+      "nodeID": "hold_18_center_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

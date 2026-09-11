@@ -199,6 +199,57 @@ expect_value_error(
     lambda: compiler._require_image_materials(unusable_mesh.data, unusable_mesh.name),
 )
 
+# A valid texture must not hide another declared texture's missing image data.
+usable_texture = unusable_material.node_tree.nodes.new("ShaderNodeTexImage")
+usable_texture.image = bpy.data.images.new("Usable image", width=1, height=1)
+assert compiler._image_has_usable_data(usable_texture.image)
+for missing_image in (unusable_image, None):
+    unusable_texture.image = missing_image
+    expect_value_error(
+        "usable image data",
+        lambda: compiler._require_renderable_materials(
+            unusable_mesh.data, unusable_mesh.name
+        ),
+    )
+
+
+reset_scene()
+shader_mesh = mesh("DisconnectedShaderMesh")
+shader_material = bpy.data.materials.new("Disconnected shader material")
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", DeprecationWarning)
+    shader_material.use_nodes = True
+shader_mesh.data.materials.append(shader_material)
+shader_nodes = shader_material.node_tree.nodes
+shader_links = shader_material.node_tree.links
+principled = shader_nodes.get("Principled BSDF")
+output = shader_nodes.get("Material Output")
+# Connected, untextured Principled materials remain valid.
+compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name)
+shader_links.clear()
+expect_value_error(
+    "renderable material",
+    lambda: compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name),
+)
+# A connected non-Principled shader does not make a disconnected Principled valid.
+diffuse = shader_nodes.new("ShaderNodeBsdfDiffuse")
+shader_links.new(diffuse.outputs["BSDF"], output.inputs["Surface"])
+expect_value_error(
+    "renderable material",
+    lambda: compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name),
+)
+# A Principled connection on an inactive output must not satisfy the contract.
+inactive_output = shader_nodes.new("ShaderNodeOutputMaterial")
+shader_links.new(principled.outputs["BSDF"], inactive_output.inputs["Surface"])
+output.is_active_output = True
+assert not inactive_output.is_active_output
+expect_value_error(
+    "renderable material",
+    lambda: compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name),
+)
+
+print("MODEL_COMPILER_MATERIAL_TESTS passed")
+
 
 reset_scene()
 context_root = TOOLS.parents[1] / ".context"
@@ -295,6 +346,37 @@ try:
         output_2 / "assets" / "primary.model.json"
     ).read_bytes()
     assert descriptor.to_json() == descriptor_2.to_json()
+
+    # The supplied model packages use a Principled material with no image
+    # texture. A renderer-visible material remains required, but image-backed
+    # wood is not the only valid model material contract.
+    reset_scene()
+    untextured_material = bpy.data.materials.new("Untextured compiler material")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        untextured_material.use_nodes = True
+    untextured_body = mesh("UntexturedBody")
+    untextured_body["role"] = "body"
+    untextured_body.data.materials.append(untextured_material)
+    untextured_hold = mesh("UntexturedHold")
+    untextured_hold["role"] = "hold"
+    untextured_hold["hold_id"] = "untextured-left"
+    untextured_hold.data.materials.append(untextured_material)
+    untextured_hold.location = (0.2, 0.1, 0.2)
+    untextured_blend = temporary_root / "untextured-source.blend"
+    bpy.ops.wm.save_as_mainfile(filepath=str(untextured_blend))
+    untextured_board = temporary_root / "untextured-board.json"
+    untextured_board.write_text('{"holds":[{"id":"untextured-left"}]}', encoding="utf-8")
+    untextured_output = temporary_root / "compiled-untextured"
+    untextured_descriptor = compile_model_package(
+        untextured_blend, untextured_board, untextured_output
+    )
+    assert set(untextured_descriptor.holds) == {"untextured-left"}
+    assert {
+        path.relative_to(untextured_output).as_posix()
+        for path in untextured_output.rglob("*")
+        if path.is_file()
+    } == {"assets/primary.model.json", "assets/primary.usdz"}
 finally:
     shutil.rmtree(temporary_root)
     assert not temporary_root.exists()
