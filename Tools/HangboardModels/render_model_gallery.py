@@ -30,15 +30,41 @@ class ReviewArtifact:
 
 
 def _owner() -> str:
-    return Path(os.environ.get("PASEO_WORKTREE_PATH", os.getcwd())).resolve().name
+    return _workspace_root().name
+
+
+def _workspace_root() -> Path:
+    """Return the configured, canonical workspace root.
+
+    Gallery output is intentionally restricted to this workspace's real
+    ``.context`` directory.  Resolving and then comparing the paths prevents
+    a symlinked workspace or context directory from escaping that boundary.
+    """
+    configured = Path(os.environ.get("PASEO_WORKTREE_PATH", os.getcwd())).absolute()
+    canonical = configured.resolve()
+    if not configured.is_dir() or configured.is_symlink() or canonical != configured:
+        raise ValueError("gallery workspace root must be canonical and existing")
+    return configured
+
+
+def _workspace_context() -> Path:
+    workspace = _workspace_root()
+    context = workspace / ".context"
+    canonical = context.resolve()
+    if not context.is_dir() or context.is_symlink() or canonical != context:
+        raise ValueError("gallery .context root must be canonical and existing")
+    return context
 
 
 def _owned_output(output: Path) -> Path:
-    output = Path(output)
+    output = Path(output).absolute()
     if output.name == "" or not output.name.startswith(_owner() + "-"):
         raise ValueError("gallery output must be owner-prefixed")
-    if output.parent.name != ".context":
-        raise ValueError("gallery output must be directly under .context")
+    context = _workspace_context()
+    if output.parent != context:
+        raise ValueError("gallery output must be workspace-owned and directly under .context")
+    if output.exists() and output.is_symlink():
+        raise ValueError("gallery output must not be a symlink")
     return output
 
 
@@ -71,6 +97,9 @@ def _fixed_view_names(manifest: "MigrationManifest") -> tuple[str, ...]:
     if not manifest.review_views:
         raise ValueError("gallery requires at least one reviewed view")
     names = tuple(manifest.review_views)
+    allowed = {"front", "three-quarter", "clay-detail", "active-hold"}
+    if any(value not in allowed for value in names):
+        raise ValueError("unsupported gallery review view name")
     if any(not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", value) for value in names):
         raise ValueError("review view names must be stable file-name tokens")
     return names
