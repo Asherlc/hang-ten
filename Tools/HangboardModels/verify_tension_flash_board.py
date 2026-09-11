@@ -87,11 +87,122 @@ POSITION_FACE_SIGN = {
     "two-edge-upright": -1,
     "two-edge-inverted": -1,
 }
+LIGAMENT_IDS_BY_POSITION = {
+    "three-edge-upright": (
+        "exterior-left",
+        "inter-pocket-three-edge-left-three-edge-center",
+        "inter-pocket-three-edge-center-three-edge-right",
+        "exterior-right",
+    ),
+    "three-edge-inverted": (
+        "exterior-left",
+        "inter-pocket-three-edge-left-three-edge-center",
+        "inter-pocket-three-edge-center-three-edge-right",
+        "exterior-right",
+    ),
+    "two-edge-upright": (
+        "exterior-left",
+        "inter-pocket-two-edge-left-two-edge-right",
+        "inter-pocket-small-crimp-left-small-crimp-right",
+        "exterior-right",
+    ),
+    "two-edge-inverted": (
+        "exterior-left",
+        "inter-pocket-two-edge-left-two-edge-right",
+        "inter-pocket-small-crimp-left-small-crimp-right",
+        "exterior-right",
+    ),
+}
 ATTACHMENT_SOURCE_NODE_ID = "flash-board-body"
 CORD_RADIUS_METERS = 0.002
 CORD_CLEARANCE_METERS = 0.001
 CANONICAL_TEXTURE_MEMBER = "textures/canonical-neutral-wood.png"
 CENTERLINE_SUBDIVISIONS = 8
+REVIEW_CANDIDATE_PATH = ROOT / ".context/pretty-crocodile-tension-flash-board/two-branch-review-candidate.json"
+REVIEW_CANDIDATE_ID = "tension.flash-board.two-branch-review-v1"
+REVIEW_PASSAGE_IDS = (
+    "left-outer-passage",
+    "left-inner-passage",
+    "right-inner-passage",
+    "right-outer-passage",
+)
+REVIEW_PASSAGE_POINTS = {
+    "left-outer-passage": (0.017, 0.047999999, 0.075999998),
+    "left-inner-passage": (0.031, 0.047999999, 0.075999998),
+    "right-inner-passage": (0.469, 0.047999999, 0.075999998),
+    "right-outer-passage": (0.483, 0.047999999, 0.075999998),
+}
+REVIEW_BRANCH_IDS = ("left-branch", "right-branch")
+
+
+def load_review_candidate() -> dict[str, object]:
+    candidate = load_json_object(REVIEW_CANDIDATE_PATH)
+    validate_review_candidate(candidate)
+    return candidate
+
+
+def validate_review_candidate(candidate: Mapping[str, object]) -> None:
+    """Validate the durable review-only two-branch candidate contract."""
+    if candidate.get("candidateID") != REVIEW_CANDIDATE_ID:
+        raise ValueError("review candidate ID is not the approved Flash Board candidate")
+    if candidate.get("boardID") != EXPECTED_BOARD_ID:
+        raise ValueError("review candidate board ID is not tension.flash-board")
+    if candidate.get("status") != "review-only; not promoted to product board metadata":
+        raise ValueError("review candidate must remain review-only")
+    if candidate.get("type") != "twoBranchCord":
+        raise ValueError("review candidate must declare twoBranchCord")
+    provenance = candidate.get("provenance")
+    if not isinstance(provenance, str) or "approved visual evidence" not in provenance or "display estimate" not in provenance:
+        raise ValueError("review candidate must carry source-labeled display-estimate provenance")
+    passages = candidate.get("passages")
+    if not isinstance(passages, Mapping) or set(passages) != {"left", "right"}:
+        raise ValueError("review candidate must declare left and right passage pairs")
+    records = [record for side in ("left", "right") for record in passages[side]]
+    if len(records) != 4 or [record.get("id") for record in records] != list(REVIEW_PASSAGE_IDS):
+        raise ValueError("review candidate passage IDs must match the four named physical passages")
+    for record in records:
+        passage_id = record.get("id")
+        if record.get("physicalFeature") is None or record.get("nodeID") != "flash-board-body":
+            raise ValueError(f"review candidate passage binding is invalid: {passage_id}")
+        point = record.get("pointInModel")
+        expected_point = REVIEW_PASSAGE_POINTS[passage_id]
+        if not isinstance(point, list) or len(point) != 3 or any(
+            not isinstance(value, (int, float)) or abs(float(value) - expected_point[index]) > 1e-9
+            for index, value in enumerate(point)
+        ):
+            raise ValueError(f"review candidate passage point is not canonical: {passage_id}")
+        passage_provenance = record.get("provenance")
+        if not isinstance(passage_provenance, str) or "approved visual evidence" not in passage_provenance or "display estimate" not in passage_provenance:
+            raise ValueError(f"review candidate passage lacks source-labeled provenance: {passage_id}")
+    branches = candidate.get("branches")
+    if not isinstance(branches, list) or len(branches) != 2 or [branch.get("id") for branch in branches] != list(REVIEW_BRANCH_IDS):
+        raise ValueError("review candidate branch IDs must be left-branch and right-branch")
+    expected_pairs = (
+        ("left-outer-passage", "left-inner-passage"),
+        ("right-inner-passage", "right-outer-passage"),
+    )
+    for branch, expected_pair in zip(branches, expected_pairs):
+        if branch.get("passageIDs") != list(expected_pair):
+            raise ValueError(f"review candidate branch passage linkage is not canonical: {branch.get('id')}")
+        if not isinstance(branch.get("restLength"), (int, float)) or float(branch["restLength"]) <= 0:
+            raise ValueError(f"review candidate branch length is invalid: {branch.get('id')}")
+        if not isinstance(branch.get("radius"), (int, float)) or float(branch["radius"]) <= 0:
+            raise ValueError(f"review candidate branch radius is invalid: {branch.get('id')}")
+        if not isinstance(branch.get("provenance"), str) or "display estimate" not in branch["provenance"]:
+            raise ValueError(f"review candidate branch lacks display-estimate provenance: {branch.get('id')}")
+    poses = candidate.get("canonicalPoses")
+    if not isinstance(poses, Mapping) or set(poses) != set(POSITION_HOLD_IDS):
+        raise ValueError("review candidate poses must cover the exact four canonical positions")
+    expected_poses = {
+        "three-edge-upright": ([0, 0, 0, 1], [0, 0, 0]),
+        "three-edge-inverted": ([0, 0, 1, 0], [0.5, 0.075999998, 0]),
+        "two-edge-upright": ([1, 0, 0, 0], [0, 0.075999998, 0.075999998]),
+        "two-edge-inverted": ([0, 1, 0, 0], [0.5, 0.075999998, 0.075999998]),
+    }
+    for position_id, (rotation, translation) in expected_poses.items():
+        pose = poses[position_id]
+        if pose.get("rotation") != rotation or pose.get("translation") != translation:
+            raise ValueError(f"review candidate pose is not canonical: {position_id}")
 
 
 def package_paths(package: Path) -> tuple[Path, Path]:
@@ -137,6 +248,12 @@ def verify_report(
         raise ValueError("report must be an object")
     if report.get("boardID") != EXPECTED_BOARD_ID:
         raise ValueError("report boardID must identify tension.flash-board")
+    candidate = load_review_candidate()
+    if report.get("candidateID") != candidate["candidateID"] or report.get("suspensionType") != "twoBranchCord":
+        raise ValueError("report must identify the review-only two-branch candidate")
+    model_bounds = report.get("modelBounds")
+    if not isinstance(model_bounds, Mapping) or set(model_bounds) != {"min", "max"}:
+        raise ValueError("report must include actual model bounds for probe correspondence")
     hold_ids = report.get("holdIDs")
     if (
         not isinstance(hold_ids, list)
@@ -155,7 +272,7 @@ def verify_report(
         if _integer(report, key) != 0:
             raise ValueError(f"report must contain no {key.removesuffix('_mesh_count')} meshes")
     _validate_logical_bindings(report, expected_ids)
-    _validate_passage_correspondence(report)
+    _validate_passage_correspondence(report, candidate)
     if (
         report.get("coordinateFrame") != "hang-ten-board-v1"
         or report.get("exactDescriptorForActualUSDZ") is not True
@@ -231,6 +348,7 @@ def verify_report(
     probes = report.get("positionProbes")
     if not isinstance(probes, Mapping) or set(probes) != set(POSITION_HOLD_IDS):
         raise ValueError("position ray/clearance probes must cover all four positions")
+    _validate_branch_probe_evidence(report, candidate)
     for position_id, expected_hold_ids in POSITION_HOLD_IDS.items():
         result = probes[position_id]
         if not isinstance(result, Mapping):
@@ -238,7 +356,10 @@ def verify_report(
         if result.get("expectedHoldIDs") != list(expected_hold_ids):
             raise ValueError(f"position probe hold inventory changed: {position_id}")
         ligaments = result.get("ligamentResults")
-        if not isinstance(ligaments, list) or not ligaments:
+        expected_ligament_ids = LIGAMENT_IDS_BY_POSITION[position_id]
+        if not isinstance(ligaments, list) or [
+            item.get("probeID") for item in ligaments if isinstance(item, Mapping)
+        ] != list(expected_ligament_ids):
             raise ValueError(f"ligament ray results are incomplete: {position_id}")
         if result.get("allLigamentProbesPassed") is not True or not all(
             isinstance(item, Mapping)
@@ -251,12 +372,20 @@ def verify_report(
         ):
             raise ValueError(f"ligament ray probe failed for position {position_id}")
         rays = result.get("surfaceRayResults")
-        if not isinstance(rays, list) or len(rays) != len(expected_hold_ids):
+        expected_ray_ids = [hold_id for hold_id in expected_hold_ids for _ in range(5)]
+        if not isinstance(rays, list) or len(rays) != len(expected_ray_ids):
             raise ValueError(f"surface ray results are incomplete: {position_id}")
-        if [item.get("expectedID") for item in rays if isinstance(item, Mapping)] != list(expected_hold_ids):
+        if [item.get("expectedID") for item in rays if isinstance(item, Mapping)] != expected_ray_ids:
             raise ValueError(f"surface ray hold order changed: {position_id}")
+        if any(
+            [ray.get("sampleIndex") for ray in rays[offset : offset + 5]] != list(range(5))
+            for offset in range(0, len(rays), 5)
+        ):
+            raise ValueError(f"surface ray sample coverage is incomplete: {position_id}")
         if not all(
             isinstance(item, Mapping)
+            and item.get("hit") is True
+            and item.get("nearestID") == item.get("expectedID")
             and item.get("passed") is True
             and isinstance(item.get("nearestTriangleIndex"), int)
             and item["nearestTriangleIndex"] >= 0
@@ -283,9 +412,11 @@ def verify_report(
             raise ValueError(f"branch clearance probe failed for position {position_id}")
         if result.get("allRayProbesPassed") is not True:
             raise ValueError(f"ray probes failed for position {position_id}")
+        if result.get("canonicalPoseTested") is not True:
+            raise ValueError(f"canonical pose was not tested for position {position_id}")
         if result.get("allClearanceProbesPassed") is not True or result.get("actualMeshClearance") is not True:
             raise ValueError(f"clearance probes failed for position {position_id}")
-        if _integer(result, "rayProbeCount") != len(expected_hold_ids):
+        if _integer(result, "rayProbeCount") != len(expected_ray_ids):
             raise ValueError(f"ray probe count is incomplete: {position_id}")
         if _integer(result, "clearanceProbeCount") <= 0:
             raise ValueError(f"clearance probe count is empty: {position_id}")
@@ -343,7 +474,9 @@ def _validate_logical_bindings(
         raise ValueError("meshCount must equal the imported logical binding inventory")
 
 
-def _validate_passage_correspondence(report: Mapping[str, object]) -> None:
+def _validate_passage_correspondence(
+    report: Mapping[str, object], candidate: Mapping[str, object]
+) -> None:
     passages = report.get("passageCorrespondence")
     if not isinstance(passages, list) or len(passages) != 4:
         raise ValueError("report must contain exactly four passage correspondences")
@@ -354,6 +487,14 @@ def _validate_passage_correspondence(report: Mapping[str, object]) -> None:
         if isinstance(binding, Mapping) and isinstance(binding.get("nodeID"), str)
     }
     passage_ids: list[str] = []
+    expected_records = {
+        record["id"]: record
+        for side in ("left", "right")
+        for record in candidate["passages"][side]
+    }
+    source_mapping = report.get("sourcePieceCorrespondence")
+    if not isinstance(source_mapping, Mapping):
+        raise ValueError("passage correspondence requires source-node mapping")
     for passage in passages:
         if not isinstance(passage, Mapping):
             raise ValueError("passage correspondence must be an object")
@@ -376,10 +517,103 @@ def _validate_passage_correspondence(report: Mapping[str, object]) -> None:
             or not all(isinstance(coordinate, (int, float)) and math.isfinite(coordinate) for coordinate in point)
         ):
             raise ValueError("passage correspondence is incomplete or duplicated")
+        expected = expected_records.get(passage_id)
+        if expected is None or passage.get("sourceNodeID") != source_mapping.get(node_id):
+            raise ValueError("passage correspondence does not match candidate/source mapping")
+        expected_point = expected["pointInModel"]
+        if any(abs(float(value) - float(expected_point[index])) > 1e-9 for index, value in enumerate(point)):
+            raise ValueError("passage correspondence point does not match the review candidate")
         binding = by_node.get(node_id)
         if binding is None or binding.get("role") != role:
             raise ValueError("passage correspondence must target a body or attachment binding")
         passage_ids.append(passage_id)
+    if passage_ids != list(REVIEW_PASSAGE_IDS):
+        raise ValueError("passage correspondence IDs are not the canonical physical passages")
+    ray_results = report.get("passageRayResults")
+    if not isinstance(ray_results, list) or [
+        item.get("passageID") for item in ray_results if isinstance(item, Mapping)
+    ] != list(REVIEW_PASSAGE_IDS) or not all(
+        isinstance(item, Mapping)
+        and item.get("hit") is True
+        and item.get("nearestRole") in {"body", "attachment"}
+        and item.get("passed") is True
+        and isinstance(item.get("surfaceDepthMeters"), (int, float))
+        and item["surfaceDepthMeters"] >= 0.0005
+        for item in ray_results
+    ):
+        raise ValueError("passage ray proof does not establish all four physical openings")
+
+
+def _validate_branch_probe_evidence(
+    report: Mapping[str, object], candidate: Mapping[str, object]
+) -> None:
+    bounds = report["modelBounds"]
+    branch_records = {branch["id"]: branch for branch in candidate["branches"]}
+    passages = {
+        record["id"]: record
+        for side in ("left", "right")
+        for record in candidate["passages"][side]
+    }
+    for position_id in POSITION_HOLD_IDS:
+        if position_id not in report["positionProbes"]:
+            raise ValueError(f"position probe is missing: {position_id}")
+        result = report["positionProbes"][position_id]
+        branch_results = result["branchClearanceResults"]
+        if [branch.get("branchID") for branch in branch_results] != list(REVIEW_BRANCH_IDS):
+            raise ValueError(f"branch clearance IDs are not canonical: {position_id}")
+        for branch_result in branch_results:
+            branch_id = branch_result["branchID"]
+            branch = branch_records[branch_id]
+            passage_ids = branch["passageIDs"]
+            if branch_result.get("passageIDs") != passage_ids:
+                raise ValueError(f"branch passage linkage changed: {branch_id}")
+            declared_length = branch_result.get("declaredRestLengthMeters")
+            if (
+                isinstance(declared_length, bool)
+                or not isinstance(declared_length, (int, float))
+                or abs(float(declared_length) - float(branch["restLength"])) > 1e-9
+            ):
+                raise ValueError(f"branch rest length changed: {branch_id}")
+            required_clearance = branch_result.get("requiredClearanceMeters")
+            if (
+                isinstance(required_clearance, bool)
+                or not isinstance(required_clearance, (int, float))
+                or abs(float(required_clearance) - (float(branch["radius"]) + CORD_CLEARANCE_METERS)) > 1e-9
+            ):
+                raise ValueError(f"branch clearance threshold changed: {branch_id}")
+            interface_points = branch_result.get("interfacePoints")
+            if not isinstance(interface_points, list) or [
+                point.get("passageID") for point in interface_points if isinstance(point, Mapping)
+            ] != passage_ids:
+                raise ValueError(f"branch interface IDs are incomplete: {branch_id}")
+            pose = candidate["canonicalPoses"][position_id]
+            expected_points = [
+                _transform_point(passages[passage_id]["pointInModel"], pose)
+                for passage_id in passage_ids
+            ]
+            for interface, expected_point in zip(interface_points, expected_points):
+                point = interface.get("pointInModel")
+                expected_node = report["passageCorrespondence"][
+                    REVIEW_PASSAGE_IDS.index(interface["passageID"])
+                ]["nodeID"]
+                if interface.get("nodeID") != expected_node:
+                    raise ValueError(f"branch interface node is not importer-visible: {branch_id}")
+                if not isinstance(point, list) or len(point) != 3 or any(
+                    abs(float(point[index]) - expected_point[index]) > 1e-8
+                    for index in range(3)
+                ):
+                    raise ValueError(f"branch interface point is not posed candidate geometry: {branch_id}")
+            samples = branch_result.get("centerlineSamples")
+            if not isinstance(samples, list) or len(samples) != 64:
+                raise ValueError(f"branch centerline samples are incomplete: {branch_id}")
+            anchor = _suspension_anchor(bounds, candidate)
+            if any(abs(float(samples[0][index]) - anchor[index]) > 1e-8 for index in range(3)):
+                raise ValueError(f"branch centerline anchor is inconsistent: {branch_id}")
+            if any(abs(float(samples[-1][index]) - anchor[index]) > 1e-8 for index in range(3)):
+                raise ValueError(f"branch centerline closure is inconsistent: {branch_id}")
+            for sample, expected_point in zip((samples[31], samples[32]), expected_points):
+                if any(abs(float(sample[index]) - expected_point[index]) > 1e-8 for index in range(3)):
+                    raise ValueError(f"branch centerline passage join is inconsistent: {branch_id}")
 
 
 def validate_attachment_node(attachment: Mapping[str, object], bindings: Sequence[object]) -> None:
@@ -667,34 +901,41 @@ def _ray_probes(
         sign = POSITION_FACE_SIGN[position_id]
         probes = []
         for hold_id in expected_hold_ids:
-            center = holds[hold_id]["center"]
-            origin = (
-                minimum[0] + (maximum[0] - minimum[0]) * float(center[0]),
-                minimum[1] + (maximum[1] - minimum[1]) * float(center[1]),
-                maximum[2] + 0.05 if sign > 0 else minimum[2] - 0.05,
-            )
-            direction = (0.0, 0.0, -1.0 if sign > 0 else 1.0)
-            hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
-                depsgraph, origin, direction, distance=0.2
-            )
-            nearest_hold_id = _property(nearest, "hold_id") if nearest else None
-            passed = bool(hit and nearest_hold_id == hold_id)
-            probes.append(
-                {
-                    "expectedID": hold_id,
-                    "nearestID": nearest_hold_id,
-                    "nearestTriangleIndex": int(triangle_index) if hit else None,
-                    "origin": [float(v) for v in origin],
-                    "direction": [float(v) for v in direction],
-                    "hit": bool(hit),
-                    "location": [float(v) for v in location] if hit else None,
-                    "passed": passed,
-                }
-            )
-            if not passed:
-                raise ValueError(
-                    f"ray probe missed {hold_id} for {position_id}; nearest={nearest_hold_id}"
+            aabb = holds[hold_id]["facePlaneAABB"]
+            x_min, y_min = (float(value) for value in aabb["min"])
+            x_max, y_max = (float(value) for value in aabb["max"])
+            # Center plus four interior samples proves the complete authored
+            # face-plane extent instead of trusting a single center proxy.
+            face_samples = ((0.5, 0.5), (0.25, 0.25), (0.75, 0.25), (0.25, 0.75), (0.75, 0.75))
+            for sample_index, (x_fraction, y_fraction) in enumerate(face_samples):
+                origin = (
+                    minimum[0] + (maximum[0] - minimum[0]) * (x_min + (x_max - x_min) * x_fraction),
+                    minimum[1] + (maximum[1] - minimum[1]) * (y_min + (y_max - y_min) * y_fraction),
+                    maximum[2] + 0.05 if sign > 0 else minimum[2] - 0.05,
                 )
+                direction = (0.0, 0.0, -1.0 if sign > 0 else 1.0)
+                hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
+                    depsgraph, origin, direction, distance=0.2
+                )
+                nearest_hold_id = _property(nearest, "hold_id") if nearest else None
+                passed = bool(hit and nearest_hold_id == hold_id)
+                probes.append(
+                    {
+                        "expectedID": hold_id,
+                        "sampleIndex": sample_index,
+                        "nearestID": nearest_hold_id,
+                        "nearestTriangleIndex": int(triangle_index) if hit else None,
+                        "origin": [float(v) for v in origin],
+                        "direction": [float(v) for v in direction],
+                        "hit": bool(hit),
+                        "location": [float(v) for v in location] if hit else None,
+                        "passed": passed,
+                    }
+                )
+                if not passed:
+                    raise ValueError(
+                        f"ray probe missed {hold_id} surface sample {sample_index} for {position_id}; nearest={nearest_hold_id}"
+                    )
         result[position_id] = {
             "expectedHoldIDs": list(expected_hold_ids),
             "rayProbeCount": len(probes),
@@ -723,27 +964,36 @@ def _ligament_probes(
     bounds = descriptor["modelBounds"]
     minimum = tuple(float(value) for value in bounds["min"])
     maximum = tuple(float(value) for value in bounds["max"])
-    x_samples: list[tuple[str, float, float]] = [
-        ("exterior-left", 0.02, 0.5),
-        ("exterior-right", 0.98, 0.5),
-    ]
+    x_samples: list[tuple[str, float, float]] = [("exterior-left", 0.02, 0.5)]
+    pair_ids = {
+        3: (
+            ("three-edge-left", "three-edge-center"),
+            ("three-edge-center", "three-edge-right"),
+        ),
+        4: (
+            ("two-edge-left", "two-edge-right"),
+            ("small-crimp-left", "small-crimp-right"),
+        ),
+    }.get(len(expected_hold_ids))
+    if pair_ids is None:
+        raise ValueError("unsupported Flash Board ligament inventory")
     intervals = []
-    for left_id, right_id in zip(expected_hold_ids, expected_hold_ids[1:]):
+    for left_id, right_id in pair_ids:
         left = descriptor["holds"][left_id]["facePlaneAABB"]
         right = descriptor["holds"][right_id]["facePlaneAABB"]
-        gap_min = max(float(left["max"][0]), float(right["min"][0]))
-        gap_max = min(float(right["max"][0]), float(left["min"][0]))
-        if gap_min >= gap_max:
-            left_max = float(left["max"][0])
-            right_min = float(right["min"][0])
-            if right_min - left_max > 0.005:
-                y_min = max(float(left["min"][1]), float(right["min"][1]))
-                y_max = min(float(left["max"][1]), float(right["max"][1]))
-                intervals.append((left_max + right_min) / 2, (y_min + y_max) / 2 if y_min < y_max else 0.5)
-    x_samples.extend(
-        (f"inter-pocket-{index}", x, y)
-        for index, (x, y) in enumerate(intervals)
-    )
+        left_max = float(left["max"][0])
+        right_min = float(right["min"][0])
+        y_min = max(float(left["min"][1]), float(right["min"][1]))
+        y_max = min(float(left["max"][1]), float(right["max"][1]))
+        if right_min - left_max <= 0.005 or y_min >= y_max:
+            raise ValueError(f"actual descriptor has no full ligament between {left_id} and {right_id}")
+        intervals.append((
+            f"inter-pocket-{left_id}-{right_id}",
+            (left_max + right_min) / 2,
+            (y_min + y_max) / 2,
+        ))
+    x_samples.extend(intervals)
+    x_samples.append(("exterior-right", 0.98, 0.5))
     results: list[dict[str, object]] = []
     for probe_id, normalized_x, normalized_y in x_samples:
         origin = (
@@ -916,6 +1166,16 @@ def _clearance_probes(
             branch_results.append({
                 "branchID": branch["branchID"],
                 "passageIDs": branch.get("passageIDs", []),
+                "interfacePoints": [
+                    {
+                        "passageID": passage_id,
+                        "nodeID": node_id,
+                        "pointInModel": list(point),
+                    }
+                    for passage_id, (node_id, point) in zip(
+                        branch.get("passageIDs", []), interface_points
+                    )
+                ],
                 "minimumDistanceMeters": check["minimumDistanceMeters"],
                 "requiredClearanceMeters": required,
                 "sampleCount": check["sampleCount"],
@@ -1006,6 +1266,50 @@ def _passage_correspondence(
     return result, passage_nodes
 
 
+def _passage_ray_probes(
+    scene: object,
+    depsgraph: object,
+    descriptor: Mapping[str, object],
+    passages: Sequence[Mapping[str, object]],
+) -> list[dict[str, object]]:
+    """Prove each candidate point reaches an imported interior passage surface."""
+    minimum = tuple(float(value) for value in descriptor["modelBounds"]["min"])
+    maximum = tuple(float(value) for value in descriptor["modelBounds"]["max"])
+    results: list[dict[str, object]] = []
+    for passage in passages:
+        point = tuple(float(value) for value in passage["pointInModel"])
+        origin = (point[0], point[1], maximum[2] + 0.02)
+        direction = (0.0, 0.0, -1.0)
+        hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
+            depsgraph, origin, direction, distance=0.2
+        )
+        nearest_role = _property(nearest, "role") if nearest else None
+        depth = point[2] - float(location[2]) if hit else 0.0
+        passed = bool(
+            hit
+            and nearest_role in {"body", "attachment"}
+            and depth >= 0.0005
+            and math.dist((float(location[0]), float(location[1])), point[:2]) <= 0.004
+        )
+        results.append({
+            "passageID": passage["passageID"],
+            "nodeID": passage["nodeID"],
+            "sourceNodeID": passage["sourceNodeID"],
+            "origin": list(origin),
+            "direction": list(direction),
+            "hit": bool(hit),
+            "nearestRole": nearest_role,
+            "nearestNodeID": nearest.name if nearest else None,
+            "nearestTriangleIndex": int(triangle_index) if hit else None,
+            "location": [float(value) for value in location] if hit else None,
+            "surfaceDepthMeters": depth,
+            "passed": passed,
+        })
+        if not passed:
+            raise ValueError(f"actual mesh passage ray failed: {passage['passageID']}")
+    return results
+
+
 def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
     """Reimport one compiler package and return actual-export evidence."""
     if not skip_renders:
@@ -1079,12 +1383,12 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         raise ValueError("actual USDZ exceeds the Flash Board triangle ceiling")
 
     source_correspondence = compiler._imported_source_node_ids(scene, bindings)
-    board_document = load_json_object(BOARD_JSON)
-    suspension = board_document["presentations"][0]["media"]["suspension"]
-    if not isinstance(suspension, Mapping):
-        raise ValueError("Flash Board package suspension metadata is missing")
+    suspension = load_review_candidate()
     passage_correspondence, passage_node_ids = _passage_correspondence(
         suspension, bindings, source_correspondence, descriptor["modelBounds"]
+    )
+    passage_rays = _passage_ray_probes(
+        scene, bpy.context.evaluated_depsgraph_get(), descriptor, passage_correspondence
     )
     position_probes = _ray_probes(objects, descriptor)
     clearance = _clearance_probes(objects, descriptor, suspension, passage_node_ids)
@@ -1114,7 +1418,8 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         "triangleCeiling": TRIANGLE_CEILING,
         "explicitTriangles": True,
         "sourcePieceCorrespondence": source_correspondence,
-        "suspensionType": suspension.get("type"),
+        "candidateID": suspension["candidateID"],
+        "suspensionType": "twoBranchCord",
         "logicalBindings": [
             {
                 "nodeID": binding.node_id,
@@ -1125,6 +1430,7 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
             for binding in bindings
         ],
         "passageCorrespondence": passage_correspondence,
+        "passageRayResults": passage_rays,
         "positionProbes": position_probes,
         "rendersSkipped": True,
     }

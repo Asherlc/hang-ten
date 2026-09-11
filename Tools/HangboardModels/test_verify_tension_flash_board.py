@@ -37,6 +37,17 @@ EXPECTED_IDS = frozenset(
 
 
 def valid_report() -> dict[str, object]:
+    candidate = verifier.load_review_candidate()
+    bounds = {"min": [0.0, 0.0, 0.0], "max": [0.5, 0.075999998, 0.075999998]}
+    branch_specs = {
+        position_id: verifier._branch_probe_specs(
+            bounds,
+            candidate,
+            candidate["canonicalPoses"][position_id],
+            {passage_id: "flash-board-body" for passage_id in verifier.REVIEW_PASSAGE_IDS},
+        )
+        for position_id in verifier.POSITION_HOLD_IDS
+    }
     logical_bindings = [
         {"nodeID": "flash-board-body", "role": "body"},
         *[
@@ -50,12 +61,14 @@ def valid_report() -> dict[str, object]:
             "nodeID": "flash-board-body",
             "sourceNodeID": "flash-board-body",
             "role": "body",
-            "pointInModel": [0.017, 0.048, 0.076],
+            "pointInModel": list(verifier.REVIEW_PASSAGE_POINTS[passage_id]),
         }
-        for passage_id in ("left-top", "left-bottom", "right-top", "right-bottom")
+        for passage_id in verifier.REVIEW_PASSAGE_IDS
     ]
     return {
         "boardID": "tension.flash-board",
+        "candidateID": verifier.REVIEW_CANDIDATE_ID,
+        "suspensionType": "twoBranchCord",
         "holdIDs": sorted(EXPECTED_IDS),
         "hold_ids_preserved": 7,
         "body_mesh_count": 1,
@@ -66,6 +79,19 @@ def valid_report() -> dict[str, object]:
             for binding in logical_bindings
         ],
         "passageCorrespondence": passage_correspondence,
+        "passageRayResults": [
+            {
+                "passageID": passage_id,
+                "nodeID": "flash-board-body",
+                "sourceNodeID": "flash-board-body",
+                "hit": True,
+                "nearestRole": "body",
+                "nearestTriangleIndex": 0,
+                "surfaceDepthMeters": 0.001,
+                "passed": True,
+            }
+            for passage_id in verifier.REVIEW_PASSAGE_IDS
+        ],
         "texturedMeshCount": 8,
         "materialChecks": [
             {"nodeID": binding["nodeID"], "material": "canonical-neutral-wood", "images": [{"name": "canonical", "width": 1, "height": 1}]}
@@ -74,6 +100,7 @@ def valid_report() -> dict[str, object]:
         "modelSHA256": "a" * 64,
         "descriptorSHA256": "b" * 64,
         "coordinateFrame": "hang-ten-board-v1",
+        "modelBounds": bounds,
         "exactDescriptorForActualUSDZ": True,
         "sourceImagesClearedBeforeImport": True,
         "sourcePieceCorrespondence": {
@@ -99,45 +126,47 @@ def valid_report() -> dict[str, object]:
         "positionProbes": {
             position_id: {
                 "expectedHoldIDs": list(verifier.POSITION_HOLD_IDS[position_id]),
-                "rayProbeCount": len(verifier.POSITION_HOLD_IDS[position_id]),
+                "rayProbeCount": len(verifier.POSITION_HOLD_IDS[position_id]) * 5,
                 "ligamentResults": [
                     {
-                        "probeID": "exterior-left",
+                        "probeID": probe_id,
                         "expectedRole": "body",
                         "nearestRole": "body",
-                        "nearestTriangleIndex": 0,
+                        "nearestTriangleIndex": index,
                         "passed": True,
-                    },
-                    {
-                        "probeID": "inter-pocket-0",
-                        "expectedRole": "body",
-                        "nearestRole": "body",
-                        "nearestTriangleIndex": 1,
-                        "passed": True,
-                    },
+                    }
+                    for index, probe_id in enumerate(verifier.LIGAMENT_IDS_BY_POSITION[position_id])
                 ],
                 "allLigamentProbesPassed": True,
                 "surfaceRayResults": [
                     {
                         "expectedID": hold_id,
+                        "sampleIndex": sample_index,
                         "nearestID": hold_id,
                         "nearestTriangleIndex": 0,
                         "hit": True,
                         "passed": True,
                     }
                     for hold_id in verifier.POSITION_HOLD_IDS[position_id]
+                    for sample_index in range(5)
                 ],
                 "branchClearanceResults": [
                     {
-                        "branchID": branch_id,
+                        "branchID": spec["branchID"],
+                        "passageIDs": spec["passageIDs"],
+                        "interfacePoints": [
+                            {"passageID": passage_id, "nodeID": node_id, "pointInModel": list(point)}
+                            for passage_id, (node_id, point) in zip(spec["passageIDs"], spec["interfacePoints"])
+                        ],
                         "passed": True,
                         "minimumDistanceMeters": 0.004,
                         "requiredClearanceMeters": 0.003,
                         "sampleCount": 99,
-                        "centerlineSampleCount": 64,
-                        "centerlineSamples": [[0.0, 0.0, 0.0]] * 64,
+                        "centerlineSampleCount": len(spec["samples"]),
+                        "centerlineSamples": [list(point) for point in spec["samples"]],
+                        "declaredRestLengthMeters": 0.75,
                     }
-                    for branch_id in ("left-branch", "right-branch")
+                    for spec in branch_specs[position_id]
                 ],
                 "clearanceProbeCount": 198,
                 "allRayProbesPassed": True,
@@ -151,6 +180,26 @@ def valid_report() -> dict[str, object]:
 
 
 class VerifyTensionFlashBoardTests(unittest.TestCase):
+    def test_review_candidate_binds_exact_named_passages_and_poses(self):
+        candidate = verifier.load_review_candidate()
+        self.assertEqual(candidate["candidateID"], verifier.REVIEW_CANDIDATE_ID)
+        self.assertEqual(
+            [item["id"] for item in candidate["passages"]["left"] + candidate["passages"]["right"]],
+            list(verifier.REVIEW_PASSAGE_IDS),
+        )
+        self.assertEqual(set(candidate["canonicalPoses"]), set(verifier.POSITION_HOLD_IDS))
+
+    def test_review_candidate_rejects_arbitrary_passage_identity_or_point(self):
+        candidate = verifier.load_review_candidate()
+        candidate["passages"]["left"][0]["id"] = "invented-hole"
+        with self.assertRaisesRegex(ValueError, "passage"):
+            verifier.validate_review_candidate(candidate)
+
+        candidate = verifier.load_review_candidate()
+        candidate["passages"]["right"][1]["pointInModel"][0] += 0.001
+        with self.assertRaisesRegex(ValueError, "point"):
+            verifier.validate_review_candidate(candidate)
+
     def test_position_specs_cover_exact_four_positions_and_their_active_holds(self):
         self.assertEqual(set(verifier.POSITION_HOLD_IDS), {
             "three-edge-upright",
@@ -204,6 +253,45 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
         report = valid_report()
         report["positionProbes"]["two-edge-inverted"]["branchClearanceResults"] = []
         with self.assertRaisesRegex(ValueError, "branch clearance"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_verify_report_rejects_fabricated_surface_ray_correspondence(self):
+        for mutation in ("nearestID", "hit"):
+            report = valid_report()
+            ray = report["positionProbes"]["three-edge-upright"]["surfaceRayResults"][0]
+            ray[mutation] = "wrong" if mutation == "nearestID" else False
+            with self.subTest(mutation=mutation), self.assertRaisesRegex(ValueError, "surface ray"):
+                verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_verify_report_rejects_repeated_surface_sample_indices(self):
+        report = valid_report()
+        rays = report["positionProbes"]["three-edge-upright"]["surfaceRayResults"]
+        rays[1]["sampleIndex"] = 0
+        with self.assertRaisesRegex(ValueError, "surface ray"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_verify_report_rejects_wrong_branch_linkage_or_pose_flag(self):
+        report = valid_report()
+        report["positionProbes"]["three-edge-upright"]["branchClearanceResults"][0]["passageIDs"] = [
+            "right-inner-passage", "right-outer-passage"
+        ]
+        with self.assertRaisesRegex(ValueError, "branch passage"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["positionProbes"]["three-edge-upright"]["canonicalPoseTested"] = False
+        with self.assertRaisesRegex(ValueError, "canonical"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_verify_report_requires_full_named_ligament_inventory(self):
+        report = valid_report()
+        report["positionProbes"]["two-edge-upright"]["ligamentResults"].pop()
+        with self.assertRaisesRegex(ValueError, "ligament"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["positionProbes"]["three-edge-inverted"]["ligamentResults"][1]["probeID"] = "invented-gap"
+        with self.assertRaisesRegex(ValueError, "ligament"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
 
