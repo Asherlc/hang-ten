@@ -110,18 +110,23 @@ class AssetBoardRepository(
                 .asObject("$path.presentations[$index].media")
                 .requiredString("type", "$path.presentations[$index].media")
         }
-        if (mediaTypes.any { it == "model" }) {
-            unavailableBoardIds += boardId
-            return null
+        if (mediaTypes.any { it != "raster" && it != "model" }) fail("$path.presentations contains unsupported media.")
+        if (mediaTypes.contains("model") && mediaTypes.contains("raster")) {
+            fail("$path.presentations may not mix model and raster media.")
         }
-        if (mediaTypes.any { it != "raster" }) fail("$path.presentations contains unsupported media.")
 
         val presentations = presentationObjects.mapIndexed { index, presentation ->
-            decodeSchemaV2RasterPresentation(presentation, "$path.presentations[$index]")
+            val presentationPath = "$path.presentations[$index]"
+            if (mediaTypes[index] == "model") {
+                decodeSchemaV2ModelPresentation(presentation, presentationPath)
+            } else {
+                decodeSchemaV2RasterPresentation(presentation, presentationPath)
+            }
         }
         if (presentations.count { it.isDefault } != 1) fail("$path.presentations must contain exactly one default presentation.")
         if (presentations.map { it.id }.toSet().size != presentations.size) fail("$path.presentations contains duplicate IDs.")
-        presentations.forEach { presentation ->
+        presentations.forEachIndexed { index, presentation ->
+            if (mediaTypes[index] == "model") return@forEachIndexed
             val assetPath = "$BOARDS_ROOT/$packageName/${presentation.assetPath}"
             if (!assets.exists(assetPath)) fail("Board $boardId is missing presentation asset ${presentation.assetPath}.")
         }
@@ -131,6 +136,39 @@ class AssetBoardRepository(
             .mapIndexed { index, value -> decodeSchemaV2LogicalHold(value.asObject("$path.holds[$index]"), "$path.holds[$index]") }
         if (logicalHolds.isEmpty()) fail("$path.holds must not be empty.")
         if (logicalHolds.map { it.id }.toSet().size != logicalHolds.size) fail("$path.holds contains duplicate IDs.")
+
+        val positions = decodePositions(
+            objectValue.optional("positions"),
+            "$path.positions",
+            presentations,
+            logicalHolds.map { it.id },
+        )
+        val hasModel = mediaTypes.any { it == "model" }
+        if (hasModel) {
+            if (mediaTypes.count { it == "model" } != 1) {
+                fail("$path.presentations must contain at most one model presentation.")
+            }
+            val modelPresentation = presentations.zip(mediaTypes).first { (_, mediaType) -> mediaType == "model" }.first
+            val orientation = modelPresentation.orientation
+            val positionIDs = positions.map { it.id }.toSet()
+            if (orientation != null) {
+                if (positionIDs.size < 2) fail("orientation is not allowed for a fixed model.")
+                if (orientation.rotations.keys != positionIDs) {
+                    fail("orientation rotation IDs must exactly match model position IDs.")
+                }
+            }
+            val explicitHoldInventory = objectValue.optional("positions")?.asArray("$path.positions")?.mapIndexed { index, value ->
+                value.asObject("$path.positions[$index]").optional("holdIDs") != null
+            } ?: emptyList()
+            if (explicitHoldInventory.any { it } && explicitHoldInventory.any { !it }) {
+                fail("positions holdIDs must be explicitly provided for every model position.")
+            }
+            if (orientation != null || explicitHoldInventory.any { it }) {
+                validateModelPositionInventories(positions, logicalHolds.map { it.id }, path)
+            }
+            unavailableBoardIds += boardId
+            return null
+        }
 
         val knownHoldIds = logicalHolds.mapTo(mutableSetOf()) { it.id }
         val geometryByHoldId = linkedMapOf<String, Pair<String, List<BoardGeometry>>>()
@@ -178,8 +216,115 @@ class AssetBoardRepository(
             aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio"),
             presentations = presentations,
             holds = holds,
+            positions = positions,
             packageSlug = packageName,
         )
+    }
+
+    private fun decodeSchemaV2ModelPresentation(
+        objectValue: JsonValue.Object,
+        path: String,
+    ): BoardPresentation {
+        val media = objectValue.required("media", path).asObject("$path.media")
+        media.rejectUnknownKeys(
+            "$path.media",
+            setOf("type", "assetPath", "descriptorPath", "display", "suspension", "orientation"),
+        )
+        if (media.requiredString("type", "$path.media") != "model") {
+            fail("$path.media.type must be model.")
+        }
+        val orientation = media.optional("orientation")?.let { decodeOrientation(it, "$path.media.orientation") }
+        if (orientation != null && media.optional("suspension") != null) {
+            fail("orientation and suspension are mutually exclusive.")
+        }
+        return BoardPresentation(
+            id = objectValue.requiredString("id", path),
+            name = objectValue.requiredString("name", path),
+            assetPath = media.requiredString("assetPath", "$path.media"),
+            aspectRatio = positiveFiniteFloat(objectValue.required("aspectRatio", path), "$path.aspectRatio"),
+            isDefault = (objectValue.required("isDefault", path) as? JsonValue.BooleanValue)?.value
+                ?: fail("$path.isDefault must be a boolean."),
+            orientation = orientation,
+        )
+    }
+
+    private fun decodeOrientation(value: JsonValue, path: String): BoardOrientation {
+        val objectValue = value.asObject(path)
+        objectValue.rejectUnknownKeys(path, setOf("pivot", "rotations"))
+        val pivot = objectValue.requiredText("pivot", path)
+        if (pivot != "modelBoundsCenter") fail("$path pivot must be modelBoundsCenter.")
+        val rotationsObject = objectValue.required("rotations", path).asObject("$path.rotations")
+        if (rotationsObject.fields.isEmpty()) fail("$path.rotations must not be empty.")
+        val rotations = linkedMapOf<String, List<Float>>()
+        rotationsObject.fields.forEach { (positionID, value) ->
+            requireContentId(positionID, "$path.rotations")
+            val components = value.asArray("$path.rotations.$positionID")
+            if (components.size != 4) fail("$path.rotations.$positionID must contain [x,y,z,w].")
+            val quaternion = components.mapIndexed { index, component ->
+                component.asFiniteFloat("$path.rotations.$positionID[$index]")
+            }
+            val norm = kotlin.math.sqrt(quaternion.sumOf { it.toDouble() * it.toDouble() })
+            if (!norm.isFinite() || kotlin.math.abs(norm - 1.0) > 1e-6) {
+                fail("$path.rotations.$positionID must be a unit quaternion in [x,y,z,w] order.")
+            }
+            rotations[positionID] = quaternion
+        }
+        return BoardOrientation(pivot = pivot, rotations = rotations)
+    }
+
+    private fun decodePositions(
+        value: JsonValue?,
+        path: String,
+        presentations: List<BoardPresentation>,
+        logicalHoldIDs: List<String>,
+    ): List<BoardPosition> {
+        val presentationIDs = presentations.mapTo(mutableSetOf()) { it.id }
+        val positions = value?.asArray(path)?.mapIndexed { index, positionValue ->
+            val positionPath = "$path[$index]"
+            val position = positionValue.asObject(positionPath)
+            position.rejectUnknownKeys(positionPath, setOf("id", "presentationID", "holdIDs"))
+            val holdIDs = position.optional("holdIDs")?.asArray("$positionPath.holdIDs")?.mapIndexed { holdIndex, holdValue ->
+                holdValue.asString("$positionPath.holdIDs[$holdIndex]").also {
+                    requireContentId(it, "$positionPath.holdIDs[$holdIndex]")
+                }
+            } ?: logicalHoldIDs
+            if (holdIDs.toSet().size != holdIDs.size) fail("$positionPath.holdIDs must not contain duplicates.")
+            BoardPosition(
+                id = position.requiredString("id", positionPath),
+                presentationId = position.requiredString("presentationID", positionPath),
+                holdIds = holdIDs,
+            )
+        } ?: presentations.map { presentation ->
+            BoardPosition(presentation.id, presentation.id, logicalHoldIDs)
+        }
+        if (positions.isEmpty() || positions.map { it.id }.toSet().size != positions.size) {
+            fail("$path must contain unique positions.")
+        }
+        positions.forEach { position ->
+            if (position.presentationId !in presentationIDs) {
+                fail("$path position ${position.id} references unknown presentation ${position.presentationId}.")
+            }
+            position.holdIds.firstOrNull { it !in logicalHoldIDs }?.let {
+                fail("$path position ${position.id} references unknown hold $it.")
+            }
+        }
+        return positions
+    }
+
+    private fun validateModelPositionInventories(
+        positions: List<BoardPosition>,
+        logicalHoldIDs: List<String>,
+        path: String,
+    ) {
+        val seen = mutableSetOf<String>()
+        positions.forEachIndexed { index, position ->
+            if (position.holdIds.isEmpty()) fail("$path[$index].holdIDs must not be empty.")
+            if (position.holdIds != logicalHoldIDs.filter { it in position.holdIds }) {
+                fail("$path[$index].holdIDs must follow canonical board hold order.")
+            }
+            if (!seen.addAll(position.holdIds)) fail("$path[$index].holdIDs overlap another model position.")
+        }
+        if (seen != logicalHoldIDs.toSet()) fail("model positions holdIDs must exactly partition descriptor holds.")
     }
 
     private fun decodePresentation(objectValue: JsonValue.Object, path: String): BoardPresentation {
