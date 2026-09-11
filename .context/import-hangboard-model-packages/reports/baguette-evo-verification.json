@@ -1,0 +1,603 @@
+{
+  "attachmentNodeIDs": [
+    "cord-passage-1",
+    "cord-passage-2",
+    "cord-passage-3",
+    "cord-passage-4"
+  ],
+  "cleanReimport": true,
+  "coordinateFrame": "hang-ten-board-v1",
+  "descriptorMatchesActualUSDZ": true,
+  "descriptorSHA256": "5bc614e355faf57df3c543d518b65501faf067bd111450e6bf4f5c490a4a94e0",
+  "holdCount": 19,
+  "holds": {
+    "edge-10-left": {
+      "center": [
+        0.161538451,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.240384596,
+          0.499999981
+        ],
+        "min": [
+          0.082692306,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_10mm_left_mesh_001"
+      ]
+    },
+    "edge-10-right": {
+      "center": [
+        0.838461563,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.917307722,
+          0.499999981
+        ],
+        "min": [
+          0.759615404,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_10mm_right_mesh_001"
+      ]
+    },
+    "edge-12-left": {
+      "center": [
+        0.314423067,
+        0.863238063
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          1.0
+        ],
+        "min": [
+          0.240384596,
+          0.726476125
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_12mm_left_mesh_001"
+      ]
+    },
+    "edge-12-right": {
+      "center": [
+        0.685576933,
+        0.863238044
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.999999963
+        ],
+        "min": [
+          0.611538462,
+          0.726476125
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_12mm_right_mesh_001"
+      ]
+    },
+    "edge-15-left": {
+      "center": [
+        0.314423067,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          0.499999981
+        ],
+        "min": [
+          0.240384596,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_15mm_left_mesh_001"
+      ]
+    },
+    "edge-15-right": {
+      "center": [
+        0.685576933,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.499999981
+        ],
+        "min": [
+          0.611538462,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_15mm_right_mesh_001"
+      ]
+    },
+    "edge-20-left": {
+      "center": [
+        0.161538451,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.240384596,
+          0.699999966
+        ],
+        "min": [
+          0.082692306,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_20mm_left_mesh_001"
+      ]
+    },
+    "edge-20-right": {
+      "center": [
+        0.838461563,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.917307722,
+          0.699999966
+        ],
+        "min": [
+          0.759615404,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_20mm_right_mesh_001"
+      ]
+    },
+    "edge-25-left": {
+      "center": [
+        0.314423067,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          0.699999966
+        ],
+        "min": [
+          0.240384596,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_25mm_left_mesh_001"
+      ]
+    },
+    "edge-25-right": {
+      "center": [
+        0.685576933,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.699999966
+        ],
+        "min": [
+          0.611538462,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_25mm_right_mesh_001"
+      ]
+    },
+    "edge-6-lower": {
+      "center": [
+        0.843269237,
+        0.923238032
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.917307694,
+          0.999999963
+        ],
+        "min": [
+          0.76923078,
+          0.846476101
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_06mm_right_mesh_001"
+      ]
+    },
+    "edge-6-upper": {
+      "center": [
+        0.156730749,
+        0.923238032
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.23076922,
+          0.999999963
+        ],
+        "min": [
+          0.082692278,
+          0.846476101
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_06mm_left_mesh_001"
+      ]
+    },
+    "edge-8-left": {
+      "center": [
+        0.314423067,
+        0.883238056
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          1.0
+        ],
+        "min": [
+          0.240384596,
+          0.766476111
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_08mm_left_mesh_001"
+      ]
+    },
+    "edge-8-right": {
+      "center": [
+        0.685576933,
+        0.883238037
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.999999963
+        ],
+        "min": [
+          0.611538462,
+          0.766476111
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_08mm_right_mesh_001"
+      ]
+    },
+    "edge-central-20": {
+      "center": [
+        0.5,
+        0.691557015
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.958152512
+        ],
+        "min": [
+          0.423076922,
+          0.424961519
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_20mm_mesh_001"
+      ]
+    },
+    "edge-central-25": {
+      "center": [
+        0.5,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.499999981
+        ],
+        "min": [
+          0.423076922,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_25mm_mesh_001"
+      ]
+    },
+    "edge-central-30": {
+      "center": [
+        0.5,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.699999966
+        ],
+        "min": [
+          0.423076922,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_30mm_mesh_001"
+      ]
+    },
+    "edge-central-6": {
+      "center": [
+        0.5,
+        0.825936649
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.99959264
+        ],
+        "min": [
+          0.423076922,
+          0.652280658
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_06mm_mesh_001"
+      ]
+    },
+    "rounded-tray": {
+      "center": [
+        0.5,
+        0.136502368
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.923076936,
+          0.273004737
+        ],
+        "min": [
+          0.076923064,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "hold_rounded_left_mesh_001",
+        "hold_rounded_right_mesh_001"
+      ]
+    }
+  },
+  "meshes": [
+    {
+      "holdID": null,
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "body_mesh_001",
+      "role": "body",
+      "sourceNodeID": "body",
+      "triangles": 13677
+    },
+    {
+      "holdID": "edge-central-6",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_central_06mm_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-central-06mm",
+      "triangles": 95
+    },
+    {
+      "holdID": "edge-central-20",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_central_20mm_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-central-20mm",
+      "triangles": 131
+    },
+    {
+      "holdID": "edge-central-25",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_central_25mm_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-central-25mm",
+      "triangles": 147
+    },
+    {
+      "holdID": "edge-central-30",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_central_30mm_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-central-30mm",
+      "triangles": 147
+    },
+    {
+      "holdID": "edge-6-upper",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_06mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-06mm-left",
+      "triangles": 185
+    },
+    {
+      "holdID": "edge-6-lower",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_06mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-06mm-right",
+      "triangles": 185
+    },
+    {
+      "holdID": "edge-8-left",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_08mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-08mm-left",
+      "triangles": 94
+    },
+    {
+      "holdID": "edge-8-right",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_08mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-08mm-right",
+      "triangles": 95
+    },
+    {
+      "holdID": "edge-10-left",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_10mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-10mm-left",
+      "triangles": 67
+    },
+    {
+      "holdID": "edge-10-right",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_10mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-10mm-right",
+      "triangles": 66
+    },
+    {
+      "holdID": "edge-12-left",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_12mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-12mm-left",
+      "triangles": 94
+    },
+    {
+      "holdID": "edge-12-right",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_12mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-12mm-right",
+      "triangles": 94
+    },
+    {
+      "holdID": "edge-15-left",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_15mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-15mm-left",
+      "triangles": 200
+    },
+    {
+      "holdID": "edge-15-right",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_15mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-15mm-right",
+      "triangles": 202
+    },
+    {
+      "holdID": "edge-20-left",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_20mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-20mm-left",
+      "triangles": 86
+    },
+    {
+      "holdID": "edge-20-right",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_20mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-20mm-right",
+      "triangles": 87
+    },
+    {
+      "holdID": "edge-25-left",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_25mm_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-25mm-left",
+      "triangles": 228
+    },
+    {
+      "holdID": "edge-25-right",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_edge_25mm_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-edge-25mm-right",
+      "triangles": 224
+    },
+    {
+      "holdID": "rounded-tray",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_rounded_left_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-rounded-left",
+      "triangles": 644
+    },
+    {
+      "holdID": "rounded-tray",
+      "materials": [
+        "Rubberwood_Neutral_Original"
+      ],
+      "nodeID": "hold_rounded_right_mesh_001",
+      "role": "hold",
+      "sourceNodeID": "hold-rounded-right",
+      "triangles": 644
+    }
+  ],
+  "modelBounds": {
+    "max": [
+      0.25999999,
+      0.025000002,
+      0.025000002
+    ],
+    "min": [
+      -0.25999999,
+      -0.025,
+      -0.025000002
+    ]
+  },
+  "modelSHA256": "df6d9fa0ef740d20368d52807af7fa8514cad559842875d38347af5077a2c75c",
+  "status": "verified"
+}

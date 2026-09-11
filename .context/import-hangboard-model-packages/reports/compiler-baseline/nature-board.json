@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 2,
+  "holds": [
+    {"id": "edge-front-15mm-incut"},
+    {"id": "edge-front-15mm-flat"},
+    {"id": "edge-front-20mm-wood-flat"},
+    {"id": "edge-front-20mm-granite"},
+    {"id": "edge-reverse-10mm-incut"},
+    {"id": "edge-reverse-10mm-flat"},
+    {"id": "edge-reverse-06mm-flat"},
+    {"id": "edge-reverse-06mm-incut"}
+  ]
+}

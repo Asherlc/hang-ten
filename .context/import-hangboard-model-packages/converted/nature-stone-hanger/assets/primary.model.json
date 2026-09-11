@@ -1,0 +1,217 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-front-15mm-flat": {
+      "center": [
+        0.5,
+        0.66739639
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.907619077,
+          0.735745158
+        ],
+        "min": [
+          0.092380923,
+          0.599047622
+        ]
+      },
+      "nodeIDs": [
+        "edge_front_15mm_flat_mesh_001"
+      ]
+    },
+    "edge-front-15mm-incut": {
+      "center": [
+        0.5,
+        0.793095241
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.907619077,
+          0.858095244
+        ],
+        "min": [
+          0.092380923,
+          0.728095239
+        ]
+      },
+      "nodeIDs": [
+        "edge_front_15mm_incut_mesh_001"
+      ]
+    },
+    "edge-front-20mm-granite": {
+      "center": [
+        0.5,
+        0.190476174
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.880952384,
+          0.25238094
+        ],
+        "min": [
+          0.119047616,
+          0.128571409
+        ]
+      },
+      "nodeIDs": [
+        "edge_front_20mm_granite_mesh_001"
+      ]
+    },
+    "edge-front-20mm-wood-flat": {
+      "center": [
+        0.5,
+        0.373571426
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.907619077,
+          0.463809522
+        ],
+        "min": [
+          0.092380923,
+          0.283333331
+        ]
+      },
+      "nodeIDs": [
+        "edge_front_20mm_wood_flat_mesh_001"
+      ]
+    },
+    "edge-reverse-06mm-flat": {
+      "center": [
+        0.5,
+        0.306182134
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.897142887,
+          0.36380952
+        ],
+        "min": [
+          0.102857113,
+          0.248554747
+        ]
+      },
+      "nodeIDs": [
+        "edge_reverse_06mm_flat_mesh_001"
+      ]
+    },
+    "edge-reverse-06mm-incut": {
+      "center": [
+        0.5,
+        0.196904749
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.897142887,
+          0.252857138
+        ],
+        "min": [
+          0.102857113,
+          0.140952359
+        ]
+      },
+      "nodeIDs": [
+        "edge_reverse_06mm_incut_mesh_001"
+      ]
+    },
+    "edge-reverse-10mm-flat": {
+      "center": [
+        0.5,
+        0.671207145
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.907619077,
+          0.735747624
+        ],
+        "min": [
+          0.092380923,
+          0.606666666
+        ]
+      },
+      "nodeIDs": [
+        "edge_reverse_10mm_flat_mesh_001"
+      ]
+    },
+    "edge-reverse-10mm-incut": {
+      "center": [
+        0.5,
+        0.789285724
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.907619077,
+          0.850476209
+        ],
+        "min": [
+          0.092380923,
+          0.728095239
+        ]
+      },
+      "nodeIDs": [
+        "edge_reverse_10mm_incut_mesh_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.052499998,
+      0.052499998,
+      0.0175
+    ],
+    "min": [
+      -0.052499998,
+      -0.052499998,
+      -0.0175
+    ]
+  },
+  "modelSHA256": "2c84e348eda27b117612d1d0e1d693dcb906a66cd31dfc8eec1c5228f9579fa1",
+  "nodes": [
+    {
+      "nodeID": "body_oak_mesh_001",
+      "role": "body"
+    },
+    {
+      "holdID": "edge-front-15mm-flat",
+      "nodeID": "edge_front_15mm_flat_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-front-15mm-incut",
+      "nodeID": "edge_front_15mm_incut_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-front-20mm-granite",
+      "nodeID": "edge_front_20mm_granite_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-front-20mm-wood-flat",
+      "nodeID": "edge_front_20mm_wood_flat_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-reverse-06mm-flat",
+      "nodeID": "edge_reverse_06mm_flat_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-reverse-06mm-incut",
+      "nodeID": "edge_reverse_06mm_incut_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-reverse-10mm-flat",
+      "nodeID": "edge_reverse_10mm_flat_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-reverse-10mm-incut",
+      "nodeID": "edge_reverse_10mm_incut_mesh_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

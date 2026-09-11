@@ -1,0 +1,18 @@
+{
+  "logicalHoldIDs": ["edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left", "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right", "edge-12-left", "edge-12-right", "edge-8-left", "edge-8-right", "edge-6-upper", "edge-6-lower", "edge-central-30", "edge-central-25", "edge-central-20", "edge-central-6", "rounded-tray"],
+  "objects": [
+    {"role": "body", "sourceNodeID": "body"},
+    {"holdID": "edge-central-6", "role": "hold", "sourceNodeID": "hold-central-06mm"}, {"holdID": "edge-central-20", "role": "hold", "sourceNodeID": "hold-central-20mm"}, {"holdID": "edge-central-25", "role": "hold", "sourceNodeID": "hold-central-25mm"}, {"holdID": "edge-central-30", "role": "hold", "sourceNodeID": "hold-central-30mm"},
+    {"holdID": "edge-6-upper", "role": "hold", "sourceNodeID": "hold-edge-06mm-left"}, {"holdID": "edge-6-lower", "role": "hold", "sourceNodeID": "hold-edge-06mm-right"},
+    {"holdID": "edge-8-left", "role": "hold", "sourceNodeID": "hold-edge-08mm-left"}, {"holdID": "edge-8-right", "role": "hold", "sourceNodeID": "hold-edge-08mm-right"},
+    {"holdID": "edge-10-left", "role": "hold", "sourceNodeID": "hold-edge-10mm-left"}, {"holdID": "edge-10-right", "role": "hold", "sourceNodeID": "hold-edge-10mm-right"},
+    {"holdID": "edge-12-left", "role": "hold", "sourceNodeID": "hold-edge-12mm-left"}, {"holdID": "edge-12-right", "role": "hold", "sourceNodeID": "hold-edge-12mm-right"},
+    {"holdID": "edge-15-left", "role": "hold", "sourceNodeID": "hold-edge-15mm-left"}, {"holdID": "edge-15-right", "role": "hold", "sourceNodeID": "hold-edge-15mm-right"},
+    {"holdID": "edge-20-left", "role": "hold", "sourceNodeID": "hold-edge-20mm-left"}, {"holdID": "edge-20-right", "role": "hold", "sourceNodeID": "hold-edge-20mm-right"},
+    {"holdID": "edge-25-left", "role": "hold", "sourceNodeID": "hold-edge-25mm-left"}, {"holdID": "edge-25-right", "role": "hold", "sourceNodeID": "hold-edge-25mm-right"},
+    {"holdID": "rounded-tray", "role": "hold", "sourceNodeID": "hold-rounded-left"}, {"holdID": "rounded-tray", "role": "hold", "sourceNodeID": "hold-rounded-right"},
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-1"}, {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-2"}, {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-3"}, {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-4"}
+  ],
+  "packageID": "baguette-evo",
+  "schemaVersion": 1
+}

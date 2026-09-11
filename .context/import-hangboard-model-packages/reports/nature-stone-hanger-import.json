@@ -1,0 +1,36 @@
+{
+  "attachmentNodeIDs": [
+    "cord-passage-1",
+    "cord-passage-2"
+  ],
+  "holdCount": 8,
+  "modelBounds": {
+    "max": [
+      0.052499998,
+      0.052499998,
+      0.0175
+    ],
+    "min": [
+      -0.052499998,
+      -0.052499998,
+      -0.0175
+    ]
+  },
+  "modelSHA256": "2c84e348eda27b117612d1d0e1d693dcb906a66cd31dfc8eec1c5228f9579fa1",
+  "nodeCount": 9,
+  "packageID": "nature-stone-hanger",
+  "sourceObjectIDs": [
+    "body-oak",
+    "cord-passage-1",
+    "cord-passage-2",
+    "edge-front-15mm-flat",
+    "edge-front-15mm-incut",
+    "edge-front-20mm-granite",
+    "edge-front-20mm-wood-flat",
+    "edge-reverse-06mm-flat",
+    "edge-reverse-06mm-incut",
+    "edge-reverse-10mm-flat",
+    "edge-reverse-10mm-incut"
+  ],
+  "status": "converted"
+}
