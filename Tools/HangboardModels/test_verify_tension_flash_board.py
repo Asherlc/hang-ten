@@ -92,6 +92,14 @@ def valid_report() -> dict[str, object]:
                 "behavior": "through-passage",
                 "frontApertureRay": {"hit": False, "nearestRole": None, "nearestNodeID": None, "passed": True},
                 "rearApertureRay": {"hit": False, "nearestRole": None, "nearestNodeID": None, "passed": True},
+                "frontBoundaryRays": [
+                    {"sampleIndex": index, "hit": True, "nearestRole": "body", "nearestNodeID": "flash-board-body", "passed": True}
+                    for index in range(4)
+                ],
+                "rearBoundaryRays": [
+                    {"sampleIndex": index, "hit": True, "nearestRole": "body", "nearestNodeID": "flash-board-body", "passed": True}
+                    for index in range(4)
+                ],
                 "passed": True,
             }
             for passage_id in verifier.REVIEW_PASSAGE_IDS
@@ -277,6 +285,11 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
     def test_verify_report_requires_through_aperture_evidence_on_the_bound_body(self):
         report = valid_report()
         report["passageRayResults"][0]["frontApertureRay"]["passed"] = False
+        with self.assertRaisesRegex(ValueError, "passage"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["passageRayResults"][0]["rearBoundaryRays"][3]["passed"] = False
         with self.assertRaisesRegex(ValueError, "passage"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 

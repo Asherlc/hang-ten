@@ -119,6 +119,7 @@ CORD_RADIUS_METERS = 0.002
 CORD_CLEARANCE_METERS = 0.001
 CANONICAL_TEXTURE_MEMBER = "textures/canonical-neutral-wood.png"
 CENTERLINE_SUBDIVISIONS = 8
+PASSAGE_BOUNDARY_OFFSET_METERS = 0.004
 REVIEW_CANDIDATE_PATH = TOOLS / "fixtures/tension_flash_board_two_branch_review_candidate.json"
 REVIEW_CANDIDATE_ID = "tension.flash-board.two-branch-review-v1"
 REVIEW_PASSAGE_IDS = (
@@ -585,6 +586,8 @@ def _validate_passage_correspondence(
         and item.get("sourceNodeID") == correspondence_by_id[item["passageID"]]["sourceNodeID"]
         and _is_open_aperture_ray(item.get("frontApertureRay"))
         and _is_open_aperture_ray(item.get("rearApertureRay"))
+        and _is_body_boundary_rays(item.get("frontBoundaryRays"), correspondence_by_id[item["passageID"]]["nodeID"])
+        and _is_body_boundary_rays(item.get("rearBoundaryRays"), correspondence_by_id[item["passageID"]]["nodeID"])
         and item.get("passed") is True
         for item in ray_results
     ):
@@ -599,6 +602,23 @@ def _is_open_aperture_ray(value: object) -> bool:
         and value.get("nearestRole") is None
         and value.get("nearestNodeID") is None
         and value.get("passed") is True
+    )
+
+
+def _is_body_boundary_rays(value: object, body_node_id: object) -> bool:
+    """Require a complete aperture ring instead of treating empty space as a hole."""
+    return (
+        isinstance(body_node_id, str)
+        and isinstance(value, list)
+        and [item.get("sampleIndex") for item in value if isinstance(item, Mapping)] == [0, 1, 2, 3]
+        and all(
+            isinstance(item, Mapping)
+            and item.get("hit") is True
+            and item.get("nearestRole") == "body"
+            and item.get("nearestNodeID") == body_node_id
+            and item.get("passed") is True
+            for item in value
+        )
     )
 
 
@@ -1365,12 +1385,49 @@ def _passage_ray_probes(
             "passed": not bool(hit),
         }
 
+    def boundary_rays(
+        z: float, direction: tuple[float, float, float], point: tuple[float, float, float], body_node_id: str
+    ) -> list[dict[str, object]]:
+        results: list[dict[str, object]] = []
+        for sample_index, (x_offset, y_offset) in enumerate((
+            (PASSAGE_BOUNDARY_OFFSET_METERS, 0.0),
+            (-PASSAGE_BOUNDARY_OFFSET_METERS, 0.0),
+            (0.0, PASSAGE_BOUNDARY_OFFSET_METERS),
+            (0.0, -PASSAGE_BOUNDARY_OFFSET_METERS),
+        )):
+            origin = (point[0] + x_offset, point[1] + y_offset, z)
+            hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
+                depsgraph, origin, direction, distance=0.2
+            )
+            nearest_role = _property(nearest, "role") if nearest else None
+            results.append({
+                "sampleIndex": sample_index,
+                "origin": list(origin),
+                "direction": list(direction),
+                "hit": bool(hit),
+                "nearestRole": nearest_role,
+                "nearestNodeID": nearest.name if nearest else None,
+                "nearestTriangleIndex": int(triangle_index) if hit else None,
+                "location": [float(value) for value in location] if hit else None,
+                "passed": bool(
+                    hit and nearest_role == "body" and nearest is not None and nearest.name == body_node_id
+                ),
+            })
+        return results
+
     results: list[dict[str, object]] = []
     for passage in passages:
         point = tuple(float(value) for value in passage["pointInModel"])
         front = aperture_ray((point[0], point[1], maximum[2] + 0.02), (0.0, 0.0, -1.0))
         rear = aperture_ray((point[0], point[1], minimum[2] - 0.02), (0.0, 0.0, 1.0))
-        passed = bool(front["passed"] and rear["passed"])
+        front_boundary = boundary_rays(maximum[2] + 0.02, (0.0, 0.0, -1.0), point, str(passage["nodeID"]))
+        rear_boundary = boundary_rays(minimum[2] - 0.02, (0.0, 0.0, 1.0), point, str(passage["nodeID"]))
+        passed = bool(
+            front["passed"]
+            and rear["passed"]
+            and all(result["passed"] for result in front_boundary)
+            and all(result["passed"] for result in rear_boundary)
+        )
         results.append({
             "passageID": passage["passageID"],
             "nodeID": passage["nodeID"],
@@ -1378,6 +1435,8 @@ def _passage_ray_probes(
             "behavior": "through-passage",
             "frontApertureRay": front,
             "rearApertureRay": rear,
+            "frontBoundaryRays": front_boundary,
+            "rearBoundaryRays": rear_boundary,
             "passed": passed,
         })
         if not passed:
