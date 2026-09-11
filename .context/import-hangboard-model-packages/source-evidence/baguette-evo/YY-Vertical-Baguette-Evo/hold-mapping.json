@@ -1,0 +1,142 @@
+[
+  {
+    "object": "hold-central-06mm",
+    "hold_id": "hold-central-06mm",
+    "side": "center",
+    "nominal_depth_mm": 6,
+    "source_feature": "central_small"
+  },
+  {
+    "object": "hold-central-20mm",
+    "hold_id": "hold-central-20mm",
+    "side": "center",
+    "nominal_depth_mm": 20,
+    "source_feature": "central_small"
+  },
+  {
+    "object": "hold-central-25mm",
+    "hold_id": "hold-central-25mm",
+    "side": "center",
+    "nominal_depth_mm": 25,
+    "source_feature": "central_reverse"
+  },
+  {
+    "object": "hold-central-30mm",
+    "hold_id": "hold-central-30mm",
+    "side": "center",
+    "nominal_depth_mm": 30,
+    "source_feature": "central_reverse"
+  },
+  {
+    "object": "hold-edge-06mm-left",
+    "hold_id": "hold-edge-06mm-left",
+    "side": "left",
+    "nominal_depth_mm": 6,
+    "source_feature": "small_outer_left"
+  },
+  {
+    "object": "hold-edge-06mm-right",
+    "hold_id": "hold-edge-06mm-right",
+    "side": "right",
+    "nominal_depth_mm": 6,
+    "source_feature": "small_outer_right"
+  },
+  {
+    "object": "hold-edge-08mm-left",
+    "hold_id": "hold-edge-08mm-left",
+    "side": "left",
+    "nominal_depth_mm": 8,
+    "source_feature": "small_inner_left"
+  },
+  {
+    "object": "hold-edge-08mm-right",
+    "hold_id": "hold-edge-08mm-right",
+    "side": "right",
+    "nominal_depth_mm": 8,
+    "source_feature": "small_inner_right"
+  },
+  {
+    "object": "hold-edge-10mm-left",
+    "hold_id": "hold-edge-10mm-left",
+    "side": "left",
+    "nominal_depth_mm": 10,
+    "source_feature": "front_outer_left"
+  },
+  {
+    "object": "hold-edge-10mm-right",
+    "hold_id": "hold-edge-10mm-right",
+    "side": "right",
+    "nominal_depth_mm": 10,
+    "source_feature": "front_outer_right"
+  },
+  {
+    "object": "hold-edge-12mm-left",
+    "hold_id": "hold-edge-12mm-left",
+    "side": "left",
+    "nominal_depth_mm": 12,
+    "source_feature": "small_inner_left"
+  },
+  {
+    "object": "hold-edge-12mm-right",
+    "hold_id": "hold-edge-12mm-right",
+    "side": "right",
+    "nominal_depth_mm": 12,
+    "source_feature": "small_inner_right"
+  },
+  {
+    "object": "hold-edge-15mm-left",
+    "hold_id": "hold-edge-15mm-left",
+    "side": "left",
+    "nominal_depth_mm": 15,
+    "source_feature": "front_inner_left"
+  },
+  {
+    "object": "hold-edge-15mm-right",
+    "hold_id": "hold-edge-15mm-right",
+    "side": "right",
+    "nominal_depth_mm": 15,
+    "source_feature": "front_inner_right"
+  },
+  {
+    "object": "hold-edge-20mm-left",
+    "hold_id": "hold-edge-20mm-left",
+    "side": "left",
+    "nominal_depth_mm": 20,
+    "source_feature": "front_outer_left"
+  },
+  {
+    "object": "hold-edge-20mm-right",
+    "hold_id": "hold-edge-20mm-right",
+    "side": "right",
+    "nominal_depth_mm": 20,
+    "source_feature": "front_outer_right"
+  },
+  {
+    "object": "hold-edge-25mm-left",
+    "hold_id": "hold-edge-25mm-left",
+    "side": "left",
+    "nominal_depth_mm": 25,
+    "source_feature": "front_inner_left"
+  },
+  {
+    "object": "hold-edge-25mm-right",
+    "hold_id": "hold-edge-25mm-right",
+    "side": "right",
+    "nominal_depth_mm": 25,
+    "source_feature": "front_inner_right"
+  },
+  {
+    "object": "hold-rounded-left",
+    "hold_id": "hold-rounded-left",
+    "side": "left",
+    "nominal_depth_mm": null,
+    "source_feature": "rounded_warmup"
+  },
+  {
+    "object": "hold-rounded-right",
+    "hold_id": "hold-rounded-right",
+    "side": "right",
+    "nominal_depth_mm": null,
+    "source_feature": "rounded_warmup"
+  }
+]

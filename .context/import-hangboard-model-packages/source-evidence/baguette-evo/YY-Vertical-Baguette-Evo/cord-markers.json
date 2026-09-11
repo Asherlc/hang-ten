@@ -1,0 +1,83 @@
+{
+  "topology": "One continuous supplied cord configured as four visible branches through four physical bores",
+  "ordering": "Left-to-right in the front view; marker at bore center, not a rope traversal order",
+  "coordinate_system": "Z up, X right, front -Y, meters",
+  "passages": [
+    {
+      "marker": "cord-passage-1",
+      "center_m": [
+        -0.246,
+        0,
+        0
+      ],
+      "front_mouth_m": [
+        -0.246,
+        -0.025,
+        0
+      ],
+      "reverse_mouth_m": [
+        -0.246,
+        0.025,
+        0
+      ],
+      "diameter_estimate_m": 0.0072
+    },
+    {
+      "marker": "cord-passage-2",
+      "center_m": [
+        -0.231,
+        0,
+        0
+      ],
+      "front_mouth_m": [
+        -0.231,
+        -0.025,
+        0
+      ],
+      "reverse_mouth_m": [
+        -0.231,
+        0.025,
+        0
+      ],
+      "diameter_estimate_m": 0.0072
+    },
+    {
+      "marker": "cord-passage-3",
+      "center_m": [
+        0.231,
+        0,
+        0
+      ],
+      "front_mouth_m": [
+        0.231,
+        -0.025,
+        0
+      ],
+      "reverse_mouth_m": [
+        0.231,
+        0.025,
+        0
+      ],
+      "diameter_estimate_m": 0.0072
+    },
+    {
+      "marker": "cord-passage-4",
+      "center_m": [
+        0.246,
+        0,
+        0
+      ],
+      "front_mouth_m": [
+        0.246,
+        -0.025,
+        0
+      ],
+      "reverse_mouth_m": [
+        0.246,
+        0.025,
+        0
+      ],
+      "diameter_estimate_m": 0.0072
+    }
+  ]
+}

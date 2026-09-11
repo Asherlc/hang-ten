@@ -456,6 +456,11 @@ class BoardModelPassage:
     entry_point_in_model: tuple[float, float, float]
     exit_point_in_model: tuple[float, float, float]
     provenance: str
+    is_through_bore: bool = True
+
+    @property
+    def point_in_model(self) -> tuple[float, float, float]:
+        return self.entry_point_in_model
 
 
 @dataclass(frozen=True)
@@ -614,14 +619,16 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             for index, raw_passage in enumerate(raw_passages):
                 passage_source = f"{side_source}[{index}]"
                 passage_payload = _mapping(raw_passage, passage_source)
+                through_bore = "pointInModel" not in passage_payload
+                point_keys = ("entryPointInModel", "exitPointInModel") if through_bore else ("pointInModel",)
                 _closed(
                     passage_payload,
-                    {"id", "nodeID", "entryPointInModel", "exitPointInModel", "provenance"},
+                    {"id", "nodeID", *point_keys, "provenance"},
                     passage_source,
                 )
                 _canonical_member_order(
                     passage_payload,
-                    ("id", "nodeID", "entryPointInModel", "exitPointInModel", "provenance"),
+                    ("id", "nodeID", *point_keys, "provenance"),
                     passage_source,
                 )
                 passage_id = _identifier(passage_payload["id"], f"{passage_source}.id")
@@ -633,17 +640,24 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                     passage_id,
                     node_id,
                     _finite_vector3(
-                        passage_payload["entryPointInModel"],
-                        f"{passage_source}.entryPointInModel",
+                        passage_payload[point_keys[0]],
+                        f"{passage_source}.{point_keys[0]}",
                     ),
                     _finite_vector3(
-                        passage_payload["exitPointInModel"],
-                        f"{passage_source}.exitPointInModel",
+                        passage_payload[point_keys[-1]],
+                        f"{passage_source}.{point_keys[-1]}",
                     ),
                     _string(passage_payload["provenance"], f"{passage_source}.provenance"),
+                    through_bore,
                 ))
             parsed_pairs[side] = (passages[0], passages[1])
         passage_pairs = BoardModelPassagePairs(parsed_pairs["left"], parsed_pairs["right"])
+        all_passages = passage_pairs.left + passage_pairs.right
+        if len({passage.is_through_bore for passage in all_passages}) != 1:
+            raise ValueError("twoBranchCord cannot mix point passages and through-bores")
+        through_bore = all_passages[0].is_through_bore
+        if not through_bore and len({passage.node_id for passage in all_passages}) != 4:
+            raise ValueError("duplicate suspension passage node ID")
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
@@ -658,14 +672,15 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         for index, raw_branch in enumerate(raw_branches):
             branch_source = f"{branches_source}[{index}]"
             branch_payload = _mapping(raw_branch, branch_source)
+            contact_keys = ("entryContactPoints", "exteriorContactPoints", "exitContactPoints") if through_bore else ()
             _closed(
                 branch_payload,
-                {"id", "passageIDs", "entryContactPoints", "exteriorContactPoints", "exitContactPoints", "restLength", "radius", "material", "provenance"},
+                {"id", "passageIDs", *contact_keys, "restLength", "radius", "material", "provenance"},
                 branch_source,
             )
             _canonical_member_order(
                 branch_payload,
-                ("id", "passageIDs", "entryContactPoints", "exteriorContactPoints", "exitContactPoints", "restLength", "radius", "material", "provenance"),
+                ("id", "passageIDs", *contact_keys, "restLength", "radius", "material", "provenance"),
                 branch_source,
             )
             branch_id = _identifier(branch_payload["id"], f"{branch_source}.id")
@@ -684,6 +699,9 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 ("exteriorContactPoints", 2),
                 ("exitContactPoints", 1),
             ):
+                if not through_bore:
+                    parsed_contacts[key] = ()
+                    continue
                 points_value = branch_payload[key]
                 if not isinstance(points_value, list) or len(points_value) < minimum_count:
                     raise ValueError(f"{branch_source}.{key} must contain at least {minimum_count} points")
@@ -1465,9 +1483,7 @@ def _validate_model_suspension(
     )
     if not all(math.isfinite(value) for value in anchor):
         raise ValueError("suspension anchor must be finite")
-    if isinstance(suspension, BoardModelSingleCordSuspension):
-        passages = (suspension.attachment,)
-    else:
+    if isinstance(suspension, BoardModelTwoBranchSuspension):
         passages = tuple(
             passage
             for side in (suspension.passages.left, suspension.passages.right)
@@ -1488,7 +1504,7 @@ def _validate_model_suspension(
                     for index, coordinate in enumerate(point)
                 ):
                     raise ValueError(f"suspension passage {mouth_name} point must be inside model bounds")
-            if math.dist(passage.entry_point_in_model, passage.exit_point_in_model) <= 1e-7:
+            if passage.is_through_bore and math.dist(passage.entry_point_in_model, passage.exit_point_in_model) <= 1e-7:
                 raise ValueError("suspension passage entry and exit must form a non-zero through-bore")
     if isinstance(suspension, BoardModelSingleCordSuspension):
         role = nodes.get(suspension.attachment.node_id)
@@ -1526,6 +1542,8 @@ def _validate_model_suspension(
                     *branch_data.exit_contact_points,
                 )
                 rest_length = branch_data.rest_length
+                if not branch_endpoints[0].is_through_bore:
+                    endpoints = tuple(passage.point_in_model for passage in branch_endpoints)
                 rigid_route_length = sum(
                     math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
                 ) + math.dist(endpoints[0], endpoints[1])
@@ -1552,8 +1570,13 @@ def _validate_model_suspension(
                 second_distance = math.dist(anchor, transformed_endpoints[-1])
                 if not math.isfinite(rigid_route_length):
                     raise ValueError(f"suspension pose {position_id} rigid route must be finite")
+                if rigid_route_length <= 1e-7:
+                    raise ValueError(f"suspension pose {position_id} must have distinct passage endpoints")
+                if min(first_distance, second_distance) <= 1e-7:
+                    raise ValueError(f"suspension pose {position_id} passage endpoints must not coincide with the anchor")
                 if rest_length < first_distance + rigid_route_length + second_distance - 1e-5:
-                    raise ValueError(f"suspension pose {position_id} restLength is shorter than directed route")
+                    route = "directed route" if branch_endpoints[0].is_through_bore else "the closed route"
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than {route}")
 
 
 def _load_model_descriptor(
@@ -1635,7 +1658,7 @@ def _load_model_descriptor(
             attachment_count += 1
             max_attachments = 4 if isinstance(suspension, BoardModelTwoBranchSuspension) else 1
             if attachment_count > max_attachments:
-                raise ValueError("model descriptor permits at most one attachment node")
+                raise ValueError("model descriptor has too many attachment nodes")
         else:
             raise ValueError(f"{source}.role must be body, hold, or attachment")
     if body_count != 1:

@@ -627,6 +627,7 @@ enum SuspendedBoardPresentation {
 
         let allPassages = suspension.passages.left + suspension.passages.right
         guard allPassages.count == 4,
+              Set(allPassages.map(\.isThroughBore)).count == 1,
               Set(allPassages.map(\.id)).count == allPassages.count,
               allPassages.allSatisfy({
                   $0.entryPointInModel.count == 3 &&
@@ -657,7 +658,8 @@ enum SuspendedBoardPresentation {
                 )
             )
         })
-        guard passagesByID.values.allSatisfy({ $0.0.allFinite && $0.1.allFinite && simd_length($0.1 - $0.0) > 1e-7 }) else {
+        let throughBore = allPassages[0].isThroughBore
+        guard passagesByID.values.allSatisfy({ $0.0.allFinite && $0.1.allFinite && (!throughBore || simd_length($0.1 - $0.0) > 1e-7) }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
 
@@ -681,9 +683,7 @@ enum SuspendedBoardPresentation {
                   branch.restLength > 0,
                   branch.radius.isFinite,
                   branch.radius > 0,
-                  branch.entryContactPoints.count >= 1,
-                  branch.exteriorContactPoints.count >= 2,
-                  branch.exitContactPoints.count >= 1,
+                  throughBore ? (branch.entryContactPoints.count >= 1 && branch.exteriorContactPoints.count >= 2 && branch.exitContactPoints.count >= 1) : (branch.entryContactPoints.isEmpty && branch.exteriorContactPoints.isEmpty && branch.exitContactPoints.isEmpty),
                   branch.entryContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
                   branch.exteriorContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
                   branch.exitContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }),
@@ -712,7 +712,7 @@ enum SuspendedBoardPresentation {
                   exitContacts.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.invalidPose
             }
-            let rigidRoute = entryContacts + [firstEntry, firstExit]
+            let rigidRoute = !throughBore ? [firstEntry, secondEntry] : entryContacts + [firstEntry, firstExit]
                 + contactPoints + [secondExit, secondEntry] + exitContacts
             let rigidLength = zip(rigidRoute, rigidRoute.dropFirst()).reduce(Float.zero) {
                 $0 + simd_length($1.1 - $1.0)
@@ -721,8 +721,10 @@ enum SuspendedBoardPresentation {
                 throw SuspendedPresentationError.invalidSuspension
             }
 
-            let firstDistance = simd_length(entryContacts[0] - fixedAnchor)
-            let secondDistance = simd_length(fixedAnchor - exitContacts[exitContacts.count - 1])
+            let routeStart = rigidRoute[0]
+            let routeEnd = rigidRoute[rigidRoute.count - 1]
+            let firstDistance = simd_length(routeStart - fixedAnchor)
+            let secondDistance = simd_length(fixedAnchor - routeEnd)
             guard firstDistance.isFinite, secondDistance.isFinite,
                   firstDistance > 1e-7, secondDistance > 1e-7 else {
                 throw SuspendedPresentationError.invalidCord
@@ -752,16 +754,16 @@ enum SuspendedBoardPresentation {
 
             let firstSpan = try SuspendedCordSolver.solve(
                 start: fixedAnchor,
-                end: entryContacts[0],
+                end: routeStart,
                 restLength: firstFreeLength
             )
             let secondSpan = try SuspendedCordSolver.solve(
-                start: exitContacts[exitContacts.count - 1],
+                start: routeEnd,
                 end: fixedAnchor,
                 restLength: secondFreeLength
             )
-            guard firstSpan.samples.last == entryContacts[0],
-                  secondSpan.samples.first == exitContacts[exitContacts.count - 1],
+            guard firstSpan.samples.last == routeStart,
+                  secondSpan.samples.first == routeEnd,
                   firstSpan.samples.allSatisfy(\.allFinite),
                   secondSpan.samples.allSatisfy(\.allFinite),
                   firstSpan.tangents.allSatisfy(\.allFinite),
@@ -792,7 +794,7 @@ enum SuspendedBoardPresentation {
             branches.append(SuspendedBranchSolution(
                 id: branch.id,
                 passageIDs: branch.passageIDs,
-                spans: [firstSpan.samples, rigidRoute, secondSpan.samples],
+                spans: throughBore ? [firstSpan.samples, rigidRoute, secondSpan.samples] : [firstSpan.samples, secondSpan.samples],
                 centerlineSamples: centerline,
                 tangentSamples: tangents,
                 arcLength: arcLength

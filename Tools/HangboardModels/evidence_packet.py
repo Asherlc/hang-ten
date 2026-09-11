@@ -350,7 +350,7 @@ def _validate_suspended_presentation(
         ),
         None,
     )
-    if lower_ruling is None:
+    if board_revision == "tension-flash-board-2" and lower_ruling is None:
         raise ValueError("conflictsAndRulings requires lower-ledge-interpretation conflict and ruling")
 
     attachment = value["attachmentEvidence"]
@@ -368,7 +368,7 @@ def _validate_suspended_presentation(
     if set(approval) - {"approvedSnapshotPaths", "materiallyDistinct", "decisionDate"}:
         raise ValueError("visualApproval contains unknown key")
     snapshots = _strings(approval.get("approvedSnapshotPaths"), "visualApproval.approvedSnapshotPaths")
-    if len(snapshots) < 2 or len(snapshots) != len(set(snapshots)) or not approval.get("materiallyDistinct"):
+    if len(snapshots) < 2 or len(snapshots) != len(set(snapshots)) or approval.get("materiallyDistinct") is not True:
         raise ValueError("visualApproval requires two or more materially distinct snapshots")
     for snapshot in snapshots:
         _require_retained_reference(snapshot, source_tiers, "visualApproval snapshot")

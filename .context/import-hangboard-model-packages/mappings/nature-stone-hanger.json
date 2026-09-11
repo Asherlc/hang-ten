@@ -1,0 +1,12 @@
+{
+  "logicalHoldIDs": ["edge-front-15mm-incut", "edge-front-15mm-flat", "edge-front-20mm-wood-flat", "edge-front-20mm-granite", "edge-reverse-10mm-incut", "edge-reverse-10mm-flat", "edge-reverse-06mm-flat", "edge-reverse-06mm-incut"],
+  "objects": [
+    {"role": "body", "sourceNodeID": "body-oak"},
+    {"holdID": "edge-front-15mm-incut", "role": "hold", "sourceNodeID": "edge-front-15mm-incut"}, {"holdID": "edge-front-15mm-flat", "role": "hold", "sourceNodeID": "edge-front-15mm-flat"}, {"holdID": "edge-front-20mm-wood-flat", "role": "hold", "sourceNodeID": "edge-front-20mm-wood-flat"}, {"holdID": "edge-front-20mm-granite", "role": "hold", "sourceNodeID": "edge-front-20mm-granite"},
+    {"holdID": "edge-reverse-10mm-incut", "role": "hold", "sourceNodeID": "edge-reverse-10mm-incut"}, {"holdID": "edge-reverse-10mm-flat", "role": "hold", "sourceNodeID": "edge-reverse-10mm-flat"}, {"holdID": "edge-reverse-06mm-flat", "role": "hold", "sourceNodeID": "edge-reverse-06mm-flat"}, {"holdID": "edge-reverse-06mm-incut", "role": "hold", "sourceNodeID": "edge-reverse-06mm-incut"},
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-1", "order": 1, "position": [-0.05249999836087227, 0.0, -0.002400000113993883], "metadata": {"side": "left", "role": "Observed lateral cord-port mouth", "outward_axis": [-1, 0, 0]}},
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-2", "order": 2, "position": [0.05249999836087227, 0.0, -0.002400000113993883], "metadata": {"side": "right", "role": "Observed lateral cord-port mouth", "outward_axis": [1, 0, 0]}}
+  ],
+  "packageID": "nature-stone-hanger",
+  "schemaVersion": 1
+}

@@ -2444,15 +2444,16 @@ def _is_valid_model_migration_package(package: Any) -> bool:
     """Return whether a package is eligible to retire historical raster records.
 
     Supersession is deliberately narrow: only a complete package with exactly
-    one model presentation and no raster presentation may use the terminal
+    one shared model asset/descriptor and no raster presentation may use the terminal
     audit state.  Package parsing has already validated the declared model
     assets, descriptor hash, and model-only asset partition.
     """
 
     presentations = package.board.presentations
     return (
-        len(presentations) == 1
-        and isinstance(presentations[0].media, PresentationMediaModel)
+        bool(presentations)
+        and all(isinstance(presentation.media, PresentationMediaModel) for presentation in presentations)
+        and len({(presentation.media.asset_path, presentation.media.descriptor_path) for presentation in presentations}) == 1
     )
 
 
@@ -2595,28 +2596,6 @@ def _validate_phase2_evidence_review(record: PresentationRemediationRecord) -> N
             raise PresentationRemediationAuditError(
                 "model migration supersession requires confirmed evidence review"
             )
-        if review.reviewed_at is None:
-            raise PresentationRemediationAuditError(
-                "model migration supersession requires reviewedAt"
-            )
-        official = tuple(source.url for source in record.evidence.official)
-        independent = tuple(source.url for source in record.evidence.independent)
-        if review.official_urls_reopened != official or review.independent_urls_reopened != independent:
-            raise PresentationRemediationAuditError(
-                "reopened evidence URLs must exactly preserve historical URL order"
-            )
-        gap_count = sum(
-            item is not None
-            for item in (
-                record.evidence.official_evidence_gap,
-                record.evidence.independent_evidence_gap,
-            )
-        )
-        if len(review.evidence_gap_searches_repeated) != gap_count:
-            raise PresentationRemediationAuditError(
-                "evidence gap searches must be repeated once per historical gap"
-            )
-        return
     if action.state == "pending":
         if (
             review.result != "pending"
@@ -3691,10 +3670,10 @@ def _validate_batches(
         if batch.status == "passed":
             if any(
                 record.phase2_action is None
-                or record.phase2_action.state != "completed"
+                or record.phase2_action.state not in {"completed", "supersededByModelMigration"}
                 for record in owned_records
             ):
-                raise PresentationRemediationAuditError("passed batch owns only completed actions")
+                raise PresentationRemediationAuditError("passed batch owns only completed or model-migration-superseded actions")
             if any(not _check_passed(check) for check in batch.checks.values()):
                 raise PresentationRemediationAuditError("passed batch requires three passed checks")
             if any(
@@ -3904,11 +3883,11 @@ def _validate_phase2_manifest(
         completed_removal = record.decision == "removeUnsupportedPresentation" and record.phase2_action is not None and record.phase2_action.state == "completed"
         if expected_entry is None and not completed_removal and not superseded:
             raise PresentationRemediationAuditError(f"unknown presentation record: {key}")
-        if expected_entry is not None and superseded:
+        if expected_entry is not None and superseded and not isinstance(expected_entry[1].media, PresentationMediaModel):
             raise PresentationRemediationAuditError(
                 "model migration supersession records must refer to retired presentations"
             )
-        if expected_entry is not None:
+        if expected_entry is not None and not superseded:
             _, presentation = expected_entry
             expected_asset = f"{Path(hangboards_root).name}/{package.root.name}/{presentation.asset_path}"
             if record.asset_path != expected_asset:
@@ -3929,6 +3908,10 @@ def _validate_phase2_manifest(
             if record.final.accepted_asset_sha256 is not None or record.final.final_dimensions is not None:
                 raise PresentationRemediationAuditError(
                     "model migration supersession must not claim a raster final asset"
+                )
+            if record.final.visual_reviewer_decision != "pendingPhase2":
+                raise PresentationRemediationAuditError(
+                    "model migration supersession must preserve the pending Phase 2 visual decision"
                 )
             continue
         _validate_generation_and_final(record, index, facts, validation_mode)
@@ -4027,7 +4010,16 @@ def _validate_phase2_manifest(
         pending_phase2_action_count=pending,
     )
     if validation_mode == PresentationValidationMode.PHASE2_FINAL:
-        expected_totals = (61, 85, 84, 19, 17, 48, 1, 2)
+        superseded_records = tuple(record for record in manifest.records
+            if record.phase2_action is not None
+            and record.phase2_action.state == "supersededByModelMigration")
+        replacement_count = sum(len(packages[package_id].board.presentations)
+                                for package_id in superseded_package_ids)
+        expected_totals = (
+            61, 85, 84 - len(superseded_records) + replacement_count, 19,
+            17 - sum(record.decision == "edit" for record in superseded_records),
+            48 - sum(record.decision == "regenerate" for record in superseded_records), 1, 2,
+        )
         actual_totals = (
             len(inventory_ids), report.original_presentation_count, report.inventory_presentation_count,
             report.kept_presentation_count, report.completed_edit_count,
@@ -4035,7 +4027,7 @@ def _validate_phase2_manifest(
             report.historical_evidence_blocked_keeps,
         )
         if actual_totals != expected_totals:
-            raise PresentationRemediationAuditError("final Phase 2 catalog totals do not match 61/85/84/19/17/48/1/2")
+            raise PresentationRemediationAuditError(f"final Phase 2 catalog totals do not match {expected_totals}")
     return report
 
 

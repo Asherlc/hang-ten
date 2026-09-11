@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "id": "nature.stone-hanger",
+  "manufacturer": "Nature Climbing",
+  "name": "Stone Hanger",
+  "subtitle": "Portable oak and granite edge block.",
+  "productURL": "https://natureclimbing.com/products/stone-hanger-1",
+  "dimensions": "105 × 105 × 35 mm",
+  "aspectRatio": 1.0,
+  "equipmentObjects": [{"id": "primary"}],
+  "holds": [
+    {"id": "edge-front-15mm-incut", "equipmentObjectID": "primary", "name": "Front 15 mm incut edge", "kind": "edge", "sizeMillimeters": 15},
+    {"id": "edge-front-15mm-flat", "equipmentObjectID": "primary", "name": "Front 15 mm flat edge", "kind": "edge", "sizeMillimeters": 15},
+    {"id": "edge-front-20mm-wood-flat", "equipmentObjectID": "primary", "name": "Front 20 mm wood flat edge", "kind": "edge", "sizeMillimeters": 20},
+    {"id": "edge-front-20mm-granite", "equipmentObjectID": "primary", "name": "Front 20 mm granite edge", "kind": "edge", "sizeMillimeters": 20},
+    {"id": "edge-reverse-10mm-incut", "equipmentObjectID": "primary", "name": "Reverse 10 mm incut edge", "kind": "edge", "sizeMillimeters": 10},
+    {"id": "edge-reverse-10mm-flat", "equipmentObjectID": "primary", "name": "Reverse 10 mm flat edge", "kind": "edge", "sizeMillimeters": 10},
+    {"id": "edge-reverse-06mm-flat", "equipmentObjectID": "primary", "name": "Reverse 6 mm flat edge", "kind": "edge", "sizeMillimeters": 6},
+    {"id": "edge-reverse-06mm-incut", "equipmentObjectID": "primary", "name": "Reverse 6 mm incut edge", "kind": "edge", "sizeMillimeters": 6}
+  ],
+  "presentations": [{
+    "id": "primary",
+    "name": "Primary",
+    "aspectRatio": 1.0,
+    "isDefault": true,
+    "derivation": {"type": "original"},
+    "media": {
+      "type": "model",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "display": {"camera": {
+        "type": "orthographic",
+        "viewDirection": [0, 0, -1],
+        "up": [0, 1, 0],
+        "fitPadding": 0.08
+      }}
+    }
+  }]
+}

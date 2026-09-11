@@ -30,6 +30,7 @@ from model_descriptor import ModelBounds, ModelDescriptorV1, NodeBinding, compil
 _BOUNDS_TOLERANCE_METERS = 0.000001
 _IMPORTED_PROPERTY_PREFIX = "userProperties:"
 _SOURCE_NODE_ID_PROPERTY = "hang_ten_source_node_id"
+_ATTACHMENTS_PROPERTY = "hang_ten_attachments_v1"
 _DETERMINISTIC_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
 
 
@@ -324,6 +325,13 @@ def _export_temporary_copies(
             copied = bpy.data.objects.new(f"__export__{node.node_id}", mesh)
             copied["role"] = node.role
             copied[_SOURCE_NODE_ID_PROPERTY] = node.node_id
+            for source_owner, copied_owner in (
+                (source, copied),
+                (source.data, mesh),
+            ):
+                attachment_payload = source_owner.get(_ATTACHMENTS_PROPERTY)
+                if attachment_payload is not None:
+                    copied_owner[_ATTACHMENTS_PROPERTY] = attachment_payload
             if node.role == "hold":
                 assert node.hold_id is not None
                 copied["hold_id"] = node.hold_id

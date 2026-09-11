@@ -222,6 +222,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("metolius.simulator-3d", "metolius-simulator-3d"),
         ("moon.armstrong", "moon-armstrong"),
         ("nature.stoak-board-iii", "nature-stoak-board-iii"),
+        ("nature.stone-hanger", "nature-stone-hanger"),
         ("soill.iron-palm-2", "soill-iron-palm-2"),
         ("soill.split-palm", "soill-split-palm"),
         ("soill.training-tiles", "soill-training-tiles"),
@@ -1152,51 +1153,36 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     assert board["id"] == "yy.baguette-evo"
     assert board["dimensions"] == "52 × 5 × 5 cm"
     assert _presentation_summary(board) == [
-        (
-            "paired-25-20-15-10",
-            "25 / 20 / 15 / 10 mm paired edges",
-            "assets/primary.png",
-            2.0,
-            True,
-            None,
-            False,
-        ),
-        (
-            "paired-12-8-6",
-            "12 / 8 / 6 mm paired edges",
-            "assets/shallow-pairs.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "central-30-25",
-            "30 / 25 mm central edges",
-            "assets/central-30-25.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "central-20-6",
-            "20 / 6 mm central edges",
-            "assets/central-20-6.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "rounded-tray",
-            "Rounded tray",
-            "assets/tray.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
+        ("primary", "Primary", "assets/primary.usdz", 10.4, True, None, False),
+    ]
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "holdGeometry" not in media
+    assert {path.relative_to(YY_BAGUETTE_EVO_ROOT).as_posix()
+            for path in YY_BAGUETTE_EVO_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
+    }
+    descriptor = json.loads(
+        (YY_BAGUETTE_EVO_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (YY_BAGUETTE_EVO_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "body_mesh_001", "role": "body"},
+    ]
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [
+            node["nodeID"] for node in descriptor["nodes"]
+            if node.get("holdID") == hold_id
+        ]
+        assert len(hold["nodeIDs"]) == (2 if hold_id == "rounded-tray" else 1)
+    assert descriptor["holds"]["rounded-tray"]["nodeIDs"] == [
+        "hold_rounded_left_mesh_001", "hold_rounded_right_mesh_001",
     ]
     assert len(board["holds"]) == 19
     assert sorted(
@@ -1217,56 +1203,68 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     assert [(hold["id"], hold["kind"]) for hold in board["holds"] if hold["kind"] == "jug"] == [
         ("rounded-tray", "jug")
     ]
-    owners = _original_hold_owners(board)
-    assert [(hold["id"], owners[hold["id"]]) for hold in board["holds"]] == [
-        ("edge-20-left", "paired-25-20-15-10"),
-        ("edge-10-left", "paired-25-20-15-10"),
-        ("edge-25-left", "paired-25-20-15-10"),
-        ("edge-15-left", "paired-25-20-15-10"),
-        ("edge-15-right", "paired-25-20-15-10"),
-        ("edge-25-right", "paired-25-20-15-10"),
-        ("edge-10-right", "paired-25-20-15-10"),
-        ("edge-20-right", "paired-25-20-15-10"),
-        ("edge-12-left", "paired-12-8-6"),
-        ("edge-12-right", "paired-12-8-6"),
-        ("edge-8-left", "paired-12-8-6"),
-        ("edge-8-right", "paired-12-8-6"),
-        ("edge-6-upper", "paired-12-8-6"),
-        ("edge-6-lower", "paired-12-8-6"),
-        ("edge-central-30", "central-30-25"),
-        ("edge-central-25", "central-30-25"),
-        ("edge-central-20", "central-20-6"),
-        ("edge-central-6", "central-20-6"),
-        ("rounded-tray", "rounded-tray"),
+    assert board["equipmentObjects"] == [{"id": "primary"}]
+    assert [(hold["id"], hold["equipmentObjectID"]) for hold in board["holds"]] == [
+        ("edge-20-left", "primary"),
+        ("edge-10-left", "primary"),
+        ("edge-25-left", "primary"),
+        ("edge-15-left", "primary"),
+        ("edge-15-right", "primary"),
+        ("edge-25-right", "primary"),
+        ("edge-10-right", "primary"),
+        ("edge-20-right", "primary"),
+        ("edge-12-left", "primary"),
+        ("edge-12-right", "primary"),
+        ("edge-8-left", "primary"),
+        ("edge-8-right", "primary"),
+        ("edge-6-upper", "primary"),
+        ("edge-6-lower", "primary"),
+        ("edge-central-30", "primary"),
+        ("edge-central-25", "primary"),
+        ("edge-central-20", "primary"),
+        ("edge-central-6", "primary"),
+        ("rounded-tray", "primary"),
     ]
 
 
-def test_yy_baguette_evo_central_30_25_paths_match_the_centered_recess() -> None:
-    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
-
-    assert geometry["edge-central-30"][0]["frame"] == {
-        "x": 0.423,
-        "y": 0.455,
-        "width": 0.154,
-        "height": 0.033,
-    }
-    assert geometry["edge-central-25"][0]["frame"] == {
-        "x": 0.423,
-        "y": 0.543,
-        "width": 0.154,
-        "height": 0.030,
-    }
+def test_yy_baguette_evo_model_central_30_25_contacts_are_centered_and_distinct() -> None:
+    descriptor = json.loads(
+        (YY_BAGUETTE_EVO_ROOT / "assets/primary.model.json").read_text(encoding="utf-8")
+    )
+    for size, y_min, y_max in ((30, 0.5, 0.7), (25, 0.3, 0.5)):
+        hold = descriptor["holds"][f"edge-central-{size}"]
+        assert hold["nodeIDs"] == [f"hold_central_{size}mm_mesh_001"]
+        assert hold["center"] == pytest.approx([0.5, (y_min + y_max) / 2], abs=1e-7)
+        assert hold["facePlaneAABB"]["min"] == pytest.approx(
+            [0.423076922, y_min], abs=1e-7
+        )
+        assert hold["facePlaneAABB"]["max"] == pytest.approx(
+            [0.576923078, y_max], abs=1e-7
+        )
 
 
-def test_yy_baguette_evo_explicit_pairs_use_exact_horizontal_path_mirrors() -> None:
-    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
-
-    for size in (25, 20, 15, 12, 10, 8):
-        left = geometry[f"edge-{size}-left"][0]
-        right = geometry[f"edge-{size}-right"][0]
-        _assert_global_paths_are_horizontal_mirrors(left, right)
+def test_yy_baguette_evo_model_pairs_preserve_mirrored_bounds_and_node_ownership() -> None:
+    descriptor = json.loads(
+        (YY_BAGUETTE_EVO_ROOT / "assets/primary.model.json").read_text(encoding="utf-8")
+    )
+    for size in (25, 20, 15, 12, 10, 8, 6):
+        left_id = f"edge-{size}-left" if size != 6 else "edge-6-upper"
+        right_id = f"edge-{size}-right" if size != 6 else "edge-6-lower"
+        left = descriptor["holds"][left_id]
+        right = descriptor["holds"][right_id]
+        assert left["nodeIDs"] == [f"hold_edge_{size:02d}mm_left_mesh_001"]
+        assert right["nodeIDs"] == [f"hold_edge_{size:02d}mm_right_mesh_001"]
+        # Imported float32 coordinates retain symmetry within export precision.
+        assert right["center"] == pytest.approx(
+            [1 - left["center"][0], left["center"][1]], abs=1e-7
+        )
+        left_bounds, right_bounds = left["facePlaneAABB"], right["facePlaneAABB"]
+        assert right_bounds["min"] == pytest.approx(
+            [1 - left_bounds["max"][0], left_bounds["min"][1]], abs=1e-7
+        )
+        assert right_bounds["max"] == pytest.approx(
+            [1 - left_bounds["min"][0], left_bounds["max"][1]], abs=1e-7
+        )
 
 
 def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:

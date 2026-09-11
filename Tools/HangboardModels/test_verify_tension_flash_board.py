@@ -84,6 +84,7 @@ def valid_report() -> dict[str, object]:
         minimum_z=0.0,
         maximum_z=0.075999998,
         aperture_ray=clear_aperture_ray,
+        triangles=[((.01, -.01, 0), (.01, .01, 0), (.01, 0, .076))],
     )
     return {
         "boardID": "tension.flash-board",
@@ -190,11 +191,11 @@ def valid_report() -> dict[str, object]:
                         ],
                         "passed": True,
                         "minimumDistanceMeters": 0.004,
-                        "requiredClearanceMeters": 0.003,
+                        "requiredClearanceMeters": spec["radius"] + verifier.CORD_CLEARANCE_METERS,
                         "sampleCount": 99,
                         "centerlineSampleCount": len(spec["samples"]),
                         "centerlineSamples": [list(point) for point in spec["samples"]],
-                        "declaredRestLengthMeters": 1.56,
+                        "declaredRestLengthMeters": spec["declaredRestLengthMeters"],
                         "contactSegments": spec["contactSegments"],
                     }
                     for spec in branch_specs[position_id]
@@ -211,6 +212,58 @@ def valid_report() -> dict[str, object]:
 
 
 class VerifyTensionFlashBoardTests(unittest.TestCase):
+    def test_promoted_suspension_matches_retained_actual_export_evidence(self):
+        report = json.loads((TOOLS / "fixtures/tension_flash_board_export_verification.json").read_text())
+        verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+        candidate = verifier.load_review_candidate()
+        board = json.loads(verifier.BOARD_JSON.read_text())
+        media = board["presentations"][0]["media"]
+        for hash_key, asset in (("modelSHA256", media["assetPath"]), ("descriptorSHA256", media["descriptorPath"])):
+            self.assertEqual(report[hash_key], hashlib.sha256((verifier.BOARD_JSON.parent / asset).read_bytes()).hexdigest())
+        suspension = media["suspension"]
+        for side in ("left", "right"):
+            self.assertEqual(len(suspension["passages"][side]), len(candidate["passages"][side]))
+            for actual, approved in zip(suspension["passages"][side], candidate["passages"][side]):
+                for key in ("id", "entryPointInModel", "exitPointInModel"):
+                    self.assertEqual(actual[key], approved[key], key)
+        self.assertEqual(len(suspension["branches"]), len(candidate["branches"]))
+        for actual, approved in zip(suspension["branches"], candidate["branches"]):
+            for key in ("id", "passageIDs", "entryContactPoints", "exteriorContactPoints", "exitContactPoints", "restLength", "radius"):
+                self.assertEqual(actual[key], approved[key], key)
+        self.assertEqual(suspension["anchor"]["offsetFromBoardBounds"], candidate["anchor"]["offsetFromBoardBounds"])
+        self.assertEqual(set(suspension["canonicalPoses"]), set(candidate["canonicalPoses"]))
+        for key, pose in suspension["canonicalPoses"].items():
+            self.assertEqual(pose["rotation"], candidate["canonicalPoses"][key]["rotation"])
+            self.assertEqual(pose["translation"], candidate["canonicalPoses"][key]["translation"])
+
+    def test_passage_solid_probe_catches_obstruction_between_radial_rays(self):
+        # Tiny fin inside the 3mm disk, between the retained diagnostic rays.
+        triangles = [((.0014, .0006, .02), (.0015, .0006, .02), (.00145, .0007, .03))]
+        result = verifier._solid_passage_probe((0, 0, 0), 0, .076, triangles)
+        self.assertFalse(result["passed"])
+
+    def test_passage_solid_probe_clips_depth_and_checks_triangle_interiors(self):
+        for triangles, expected in [
+            ([((-.01, -.01, .03), (.01, -.01, .03), (0, .01, .03))], False),
+            ([((-.01, -.01, .2), (.01, -.01, .2), (0, .01, .2))], True),
+            ([((.004, -.01, -.01), (.004, .01, -.01), (.004, 0, .09))], True),
+        ]:
+            self.assertEqual(verifier._solid_passage_probe((0, 0, 0), 0, .076, triangles)["passed"], expected)
+
+    def test_closed_route_rejects_crossing_backtracking_and_duplicate_free_legs(self):
+        for points in (
+            [(0, 0, 0), (1, 1, 0), (0, 1, 0), (1, 0, 0), (0, 0, 0)],
+            [(0, 0, 0), (1, 0, 0), (0.5, 0, 0), (0.5, 1, 0), (0, 0, 0)],
+            [(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 0, 0), (0, 0, 0)],
+        ):
+            with self.subTest(points=points), self.assertRaisesRegex(ValueError, "self-intersect"):
+                verifier._validate_closed_centerline(points)
+
+    def test_closed_route_allows_only_the_shared_anchor_endpoint(self):
+        verifier._validate_closed_centerline([
+            (0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0),
+        ])
+
     def test_review_candidate_binds_exact_named_passages_and_poses(self):
         candidate = verifier.load_review_candidate()
         self.assertEqual(candidate["candidateID"], verifier.REVIEW_CANDIDATE_ID)

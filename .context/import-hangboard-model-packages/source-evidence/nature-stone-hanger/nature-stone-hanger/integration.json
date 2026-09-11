@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "product": "Nature Climbing Stone Hanger / Granite",
+  "manufacturer_sku": "STONE_HANGER",
+  "revision_key": "current-gallery-2026-09-11",
+  "manufacturer_revision_number": null,
+  "units": "meter",
+  "up_axis": "+Z",
+  "front_axis": "-Y",
+  "mesh_inventory": [
+    {
+      "object": "body-oak",
+      "role": "body",
+      "vertices": 4798,
+      "triangles": 8838,
+      "material": "Oak | neutral matte",
+      "hold_id": null,
+      "depth_mm": null,
+      "face": null,
+      "contact_half": null,
+      "load_direction_z": null
+    },
+    {
+      "object": "edge-front-15mm-flat",
+      "role": "hold",
+      "vertices": 1032,
+      "triangles": 1932,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-front-15mm-flat",
+      "depth_mm": 15,
+      "face": "front",
+      "contact_half": "lower",
+      "load_direction_z": -1
+    },
+    {
+      "object": "edge-front-15mm-incut",
+      "role": "hold",
+      "vertices": 1032,
+      "triangles": 1932,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-front-15mm-incut",
+      "depth_mm": 15,
+      "face": "front",
+      "contact_half": "upper",
+      "load_direction_z": 1
+    },
+    {
+      "object": "edge-front-20mm-granite",
+      "role": "hold",
+      "vertices": 504,
+      "triangles": 1004,
+      "material": "Granite | neutral matte",
+      "hold_id": "edge-front-20mm-granite",
+      "depth_mm": 20,
+      "face": "front",
+      "contact_half": "lower",
+      "load_direction_z": -1
+    },
+    {
+      "object": "edge-front-20mm-wood-flat",
+      "role": "hold",
+      "vertices": 1008,
+      "triangles": 1886,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-front-20mm-wood-flat",
+      "depth_mm": 20,
+      "face": "front",
+      "contact_half": "upper",
+      "load_direction_z": 1
+    },
+    {
+      "object": "edge-reverse-06mm-flat",
+      "role": "hold",
+      "vertices": 1032,
+      "triangles": 1932,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-reverse-06mm-flat",
+      "depth_mm": 6,
+      "face": "reverse",
+      "contact_half": "upper",
+      "load_direction_z": 1
+    },
+    {
+      "object": "edge-reverse-06mm-incut",
+      "role": "hold",
+      "vertices": 1032,
+      "triangles": 1932,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-reverse-06mm-incut",
+      "depth_mm": 6,
+      "face": "reverse",
+      "contact_half": "lower",
+      "load_direction_z": -1
+    },
+    {
+      "object": "edge-reverse-10mm-flat",
+      "role": "hold",
+      "vertices": 1032,
+      "triangles": 1932,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-reverse-10mm-flat",
+      "depth_mm": 10,
+      "face": "reverse",
+      "contact_half": "lower",
+      "load_direction_z": -1
+    },
+    {
+      "object": "edge-reverse-10mm-incut",
+      "role": "hold",
+      "vertices": 1032,
+      "triangles": 1932,
+      "material": "Oak | neutral matte",
+      "hold_id": "edge-reverse-10mm-incut",
+      "depth_mm": 10,
+      "face": "reverse",
+      "contact_half": "upper",
+      "load_direction_z": 1
+    }
+  ],
+  "markers": [
+    {
+      "name": "cord-passage-1",
+      "position_m": [
+        -0.05249999836087227,
+        0.0,
+        -0.002400000113993883
+      ],
+      "side": "left",
+      "outward_axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "cord-passage-2",
+      "position_m": [
+        0.05249999836087227,
+        0.0,
+        -0.002400000113993883
+      ],
+      "side": "right",
+      "outward_axis": [
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "suspension": {
+    "physical_cord_count": 1,
+    "external_branches": 2,
+    "hidden_routing": "unknown; not modeled",
+    "marker_order": "front-view left then right",
+    "notch_z_m": [
+      0.024,
+      -0.0012,
+      -0.019
+    ],
+    "port_and_notch_coordinates": "visual approximations, not published measurements"
+  },
+  "materials_license": "CC0-1.0 original neutral texture maps; source photos excluded from runtime",
+  "glb_coordinates": "Standard glTF +Y up; exporter converts the Z-up Blender scene"
+}

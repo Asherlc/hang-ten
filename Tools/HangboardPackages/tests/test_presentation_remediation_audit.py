@@ -1279,10 +1279,14 @@ def _validate_historical_phase2_document(
         ]
         for package_id in pristine_document["packageIDs"]
     }
+    superseded_ids = {
+        record["packageID"] for record in pristine_document["records"]
+        if record.get("phase2Action", {}).get("state") == "supersededByModelMigration"
+    }
     inventory = replace(
         live_inventory,
         packages=tuple(
-            replace(
+            package if package.board.id in superseded_ids else replace(
                 package,
                 board=replace(
                     package.board,
@@ -1352,6 +1356,33 @@ def _validate_historical_phase2_document(
         )
 
 
+def test_model_supersession_rejects_claimed_raster_visual_acceptance(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    record = next(record for record in document["records"]
+                  if record.get("phase2Action", {}).get("state") == "supersededByModelMigration")
+    record["final"]["visualReviewerDecision"] = "accepted"
+    with pytest.raises(PresentationRemediationAuditError, match="pending Phase 2 visual decision"):
+        _validate_historical_phase2_document(tmp_path, document)
+
+
+def test_passed_batches_accept_verified_model_supersession() -> None:
+    manifest = load_presentation_remediation_manifest(REAL_PHASE2_MANIFEST)
+    evidence = {
+        "packageValidation": "scripts/hangboard-packages.sh validate",
+        "focusedTests": "python -m pytest test_presentation_remediation_audit.py",
+        "fullPackageSuite": "python -m pytest Tools/HangboardPackages/tests",
+    }
+    checks = {key: presentation_audit.PresentationCheck("passed", command) for key, command in evidence.items()}
+    records = tuple(replace(record,
+        phase2_action=replace(record.phase2_action, state=(
+            "supersededByModelMigration" if record.phase2_action.state == "supersededByModelMigration" else "completed")),
+        final=replace(record.final, validation={**record.final.validation, "fullPackageSuite": checks["fullPackageSuite"]}),
+    ) for record in manifest.records)
+    manifest = replace(manifest, records=records, phase2=replace(manifest.phase2,
+        batches=tuple(replace(batch, status="passed", checks=checks) for batch in manifest.phase2.batches)))
+    presentation_audit._validate_batches(manifest, None)
+
+
 def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
     tmp_path: Path,
 ) -> None:
@@ -1363,11 +1394,12 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
     assert document["phase"] == "assetRemediation"
     assert report.presentation_count == 85
     assert report.original_presentation_count == 85
-    assert report.inventory_presentation_count == 85
+    # Flash's four retired raster faces now share one model presentation.
+    assert report.inventory_presentation_count == 82
     assert report.canvas_class_count == 20
     assert report.canvas_covered_repair_count == 65
     assert report.capability_probe_artifact_count == 0
-    assert report.pending_phase2_action_count == 66
+    assert report.pending_phase2_action_count == 62
     assert report.historical_evidence_blocked_keeps == 2
     assert report.blocked_phase2_action_count == 0
     probes = [
@@ -1565,18 +1597,10 @@ def test_source_reclassification_rejects_schema2_manifest(tmp_path: Path) -> Non
 def test_phase2_matrix_freezes_every_record_decision_and_batch(
     tmp_path: Path,
 ) -> None:
-    inventory = discover_board_packages(
-        REPO_ROOT / "Hangboards",
-        require_complete_inventory=True,
-    )
-
+    # Replay the immutable audit's original packages and presentation facts.
+    # Boards imported later are outside this historical decision matrix.
     def validate(document: dict[str, object]) -> None:
-        validate_presentation_remediation_manifest(
-            load_presentation_remediation_manifest(_write_manifest(tmp_path, document)),
-            inventory,
-            hangboards_root=REPO_ROOT / "Hangboards",
-            validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
-        )
+        _validate_historical_phase2_document(tmp_path, document)
 
     baseline = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
     assert len(baseline["records"]) == 85

@@ -2,8 +2,8 @@
   "fixtureVersion": 1,
   "candidateID": "tension.flash-board.two-branch-review-v1",
   "boardID": "tension.flash-board",
-  "status": "review-only; not promoted to product board metadata",
-  "actualExportStatus": "fixture-only; no two-branch USDZ export has passed this contract",
+  "status": "reference fixture; production acceptance requires separate export and native verification",
+  "actualExportStatus": "retained separately in tension_flash_board_export_verification.json",
   "type": "twoBranchCord",
   "provenance": "approved visual evidence; authored display estimates; Task 5 verifier candidate",
   "expectedModel": {
@@ -24,8 +24,8 @@
     ]
   },
   "branches": [
-    {"id": "left-branch", "passageIDs": ["left-outer-passage", "left-inner-passage"], "entryContactPoints": [[-0.002, 0.054, 0.12], [0.017, 0.054, 0.07793]], "exteriorContactPoints": [[0.014, 0.048526, -0.001], [-0.002, 0.048526, -0.001], [0.034, 0.048526, -0.001]], "exitContactPoints": [[0.031, 0.054, 0.07793], [-0.002, 0.054, 0.12]], "restLength": 1.56, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; bounded exterior left-end guide selected by actual-mesh sweep for all canonical poses"},
-    {"id": "right-branch", "passageIDs": ["right-inner-passage", "right-outer-passage"], "entryContactPoints": [[0.502, 0.054, 0.12], [0.469, 0.054, 0.07793]], "exteriorContactPoints": [[0.466, 0.048526, -0.001], [0.502, 0.048526, -0.001], [0.486, 0.048526, -0.001]], "exitContactPoints": [[0.483, 0.054, 0.07793], [0.502, 0.054, 0.12]], "restLength": 1.56, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; bounded exterior right-end guide selected by actual-mesh sweep for all canonical poses"}
+    {"id": "left-branch", "passageIDs": ["left-outer-passage", "left-inner-passage"], "entryContactPoints": [[-0.002, 0.05, 0.12], [0.017, 0.054, 0.07793]], "exteriorContactPoints": [[0.014, 0.048526, -0.001], [0.034, 0.048526, -0.001]], "exitContactPoints": [[0.031, 0.054, 0.07793], [-0.008, 0.058, 0.12]], "restLength": 1.56, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; bounded exterior left-end guide selected by actual-mesh sweep for all canonical poses"},
+    {"id": "right-branch", "passageIDs": ["right-inner-passage", "right-outer-passage"], "entryContactPoints": [[0.508, 0.058, 0.12], [0.469, 0.054, 0.07793]], "exteriorContactPoints": [[0.466, 0.048526, -0.001], [0.486, 0.048526, -0.001]], "exitContactPoints": [[0.483, 0.054, 0.07793], [0.502, 0.05, 0.12]], "restLength": 1.56, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; bounded exterior right-end guide selected by actual-mesh sweep for all canonical poses"}
   ],
   "anchor": {"offsetFromBoardBounds": [0, 0.5, 0], "visibility": "invisible", "provenance": "display estimate; invisible overhead convergence selected for free-span clearance"},
   "canonicalPoses": {

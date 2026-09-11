@@ -33,6 +33,13 @@ _SHARED_VALIDATION_FIXTURES = (
     / "Fixtures"
     / "BoardPackageValidationFixtures.json"
 )
+_RAW_NONFINITE_SENTINEL = "__raw_nonfinite_number_1e999__"
+
+
+def _dump_shared_json_document(document: object) -> str:
+    return json.dumps(document, separators=(",", ":"), sort_keys=False).replace(
+        json.dumps(_RAW_NONFINITE_SENTINEL), "1e999"
+    )
 
 
 def _shared_model_parser_parity_fixtures() -> tuple[dict[str, object], ...]:
@@ -95,11 +102,7 @@ def _write_shared_model_parser_parity_package(
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
-    board_json = json.dumps(
-        board,
-        separators=(",", ":"),
-        sort_keys=False,
-    )
+    board_json = _dump_shared_json_document(board)
     if fixture.get("reorderTwoBranchSuspensionMembers"):
         suspension = board["presentations"][0]["media"]["suspension"]
         canonical = json.dumps(suspension, separators=(",", ":"))
@@ -113,7 +116,9 @@ def _write_shared_model_parser_parity_package(
             1,
         )
     board_path.write_text(board_json, encoding="utf-8")
-    _rewrite(assets / "primary.model.json", descriptor)
+    (assets / "primary.model.json").write_text(
+        _dump_shared_json_document(descriptor), encoding="utf-8"
+    )
     if fixture.get("duplicateCanonicalPoseKey"):
         board_path = root / "board.json"
         raw = board_json
@@ -439,8 +444,9 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
         module.load_board_package(package_root)
 
 
-def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
-    fixture = {"base": "twoBranchModel", "mutations": []}
+@pytest.mark.parametrize("base,rest_length", [("twoBranchModel", 0.92), ("directedTwoBranchModel", 1.5)])
+def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path, base: str, rest_length: float) -> None:
+    fixture = {"base": base, "mutations": []}
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / "valid-two-branch", fixture
     )
@@ -455,11 +461,13 @@ def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
     assert set(suspension.canonical_poses) == {
         "primary", "secondary", "tertiary", "quaternary"
     }
+    assert [branch.rest_length for branch in suspension.branches] == [rest_length, rest_length]
+    assert all(passage.is_through_bore == (base == "directedTwoBranchModel") for passage in suspension.passages.left + suspension.passages.right)
 
 
 def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
     package_root = _write_shared_model_parser_parity_package(
-        tmp_path / "valid-single-cord", {"base": "model", "mutations": []}
+        tmp_path / "valid-single-cord", {"base": "singleCordModel", "mutations": []}
     )
 
     package = load_board_catalog_module().load_board_package(package_root)
@@ -480,7 +488,7 @@ def test_two_branch_order_and_segment_regressions_are_specific(tmp_path: Path) -
         for fixture in _shared_model_parser_parity_fixtures()
     }
     module = load_board_catalog_module()
-    for name in ("two-branch-suspension-member-order", "two-branch-passage-segment-too-short"):
+    for name in ("two-branch-suspension-member-order", "two-branch-directed-route-too-short"):
         fixture = fixtures[name]
         package_root = _write_shared_model_parser_parity_package(
             tmp_path / name, fixture

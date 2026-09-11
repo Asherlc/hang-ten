@@ -1,0 +1,66 @@
+{
+  "owner": "gray-horse",
+  "packages": [
+    {
+      "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
+      "packageID": "metolius",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/metolius",
+      "packageValidationResult": "PASS (supplied validation.json)",
+      "retainedMembers": {
+        "Metolius-Simulator-3D/README.md": "c6b075666b6aa56480da5dba214de98b1a9ef7780f2158e453e8cbd3bfeb099a",
+        "Metolius-Simulator-3D/hold-map.json": "09296c63be94826443ea1ec81c853ad29ebbd0ffeaf9acbcb55f971a6b14adbe",
+        "Metolius-Simulator-3D/validation.json": "ef3bcf90d8a568525ef8540233446eb17496bc32a6effab9c1c7848643ce3cc6"
+      },
+      "sourceModel": "Metolius-Simulator-3D/Metolius-Simulator-3D.blend",
+      "zipPath": "/Users/asherlc/Downloads/models/Metolius-Simulator-3D-package.zip",
+      "zipSHA256": "a49df1d76caaad2aa1e5304866b8b8638b9fd048a89a456d6ef080d86bade409"
+    },
+    {
+      "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
+      "packageID": "training-tiles",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/training-tiles",
+      "packageValidationResult": "PASS (supplied qa/validation.json); conversion rejected by logical inventory audit",
+      "retainedMembers": {
+        "Training-Tiles/README.md": "10c6c6494a28a05f26b8539ffe35b91b46581439ff63ba75a12fd9911b49b20e",
+        "Training-Tiles/hold-map.json": "fe71fb8bf0046f7aea4dd14cadb532519cffa03f3733434913872fdcd4347fd0",
+        "Training-Tiles/manifest.json": "23c0500a8bc8ffc4f405f983ef3af1e6d7e3779eeb2cf59dd72a593671bc6432",
+        "Training-Tiles/qa/validation.json": "2c4ea08493c7e9119a376c03335bc7623194600bee1ecbf16b38b7cf58bf1866"
+      },
+      "sourceModel": "Training-Tiles/Training-Tiles.blend",
+      "zipPath": "/Users/asherlc/Downloads/models/Training-Tiles-package.zip",
+      "zipSHA256": "fb61690aebb3b2906ef444f84818893dca68d307a3eca85727cc818d719ef3ee"
+    },
+    {
+      "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
+      "packageID": "baguette-evo",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/baguette-evo",
+      "packageValidationResult": "PASS (supplied validation-report.json)",
+      "retainedMembers": {
+        "YY-Vertical-Baguette-Evo/README.md": "db31f96b3634ba39c5241b648feb0bc8e8485e4788ffb9ed288e4c9abfac7b73",
+        "YY-Vertical-Baguette-Evo/cord-markers.json": "2aa23b7204c1aece96a64553cd24a8aaf3405e0b486942d9bc1f61efc06f5e75",
+        "YY-Vertical-Baguette-Evo/hold-mapping.json": "5004a613a715bbfac910de7bf98df096ad43c56b88152772bdec1e91082e43fb",
+        "YY-Vertical-Baguette-Evo/texture-manifest.md": "6d5cf8030427abef25b0e72f4a73de3ed1452abe6c589b0d3a3b53aeae6b1c85",
+        "YY-Vertical-Baguette-Evo/validation-report.json": "b819a543d7d3a057f2a60c7e27999b1e9241308f44bb7d5f6f12e4b4c7f100f3"
+      },
+      "sourceModel": "YY-Vertical-Baguette-Evo/YY-Vertical-Baguette-Evo.blend",
+      "zipPath": "/Users/asherlc/Downloads/models/YY-Vertical-Baguette-Evo-Package.zip",
+      "zipSHA256": "e74609c64e65030c5a1011dee64e6cc6b4166d99821614929eaf391c97d5e92f"
+    },
+    {
+      "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
+      "packageID": "nature-stone-hanger",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/nature-stone-hanger",
+      "packageValidationResult": "PASS (supplied qa/validation.json)",
+      "retainedMembers": {
+        "nature-stone-hanger/README.md": "48b908a6eb80bea016c871563ff34d9f5199f59a25caca9170850a4e737f3fae",
+        "nature-stone-hanger/integration.json": "52302c27055262bc5fb09cfbd5d19010b565f699083e3966c22897fa4c2a721e",
+        "nature-stone-hanger/qa/validation.json": "7c6e88b1c4c69b078321c5c0076d15445dacd60f0301ce972a14bcf26748bb1a",
+        "nature-stone-hanger/texture-manifest.md": "d1e0499480c073307637ee829498399cc019f41ee0bfbd9a976279216ae5bb48"
+      },
+      "sourceModel": "nature-stone-hanger/Nature-Climbing-Stone-Hanger.blend",
+      "zipPath": "/Users/asherlc/Downloads/models/Nature-Climbing-Stone-Hanger-package.zip",
+      "zipSHA256": "6519f4881f5abadbaa8e86873aaedafece99774444f9c995a396230927b5afb0"
+    }
+  ],
+  "schemaVersion": 1
+}

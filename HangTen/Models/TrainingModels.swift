@@ -141,6 +141,26 @@ struct BoardModelPassage: Hashable {
     let entryPointInModel: [Double]
     let exitPointInModel: [Double]
     let provenance: String
+    let isThroughBore: Bool
+    var pointInModel: [Double] { entryPointInModel }
+
+    init(id: String, nodeID: String, entryPointInModel: [Double], exitPointInModel: [Double], provenance: String) {
+        self.id = id
+        self.nodeID = nodeID
+        self.entryPointInModel = entryPointInModel
+        self.exitPointInModel = exitPointInModel
+        self.provenance = provenance
+        self.isThroughBore = true
+    }
+
+    init(id: String, nodeID: String, pointInModel: [Double], provenance: String) {
+        self.id = id
+        self.nodeID = nodeID
+        self.entryPointInModel = pointInModel
+        self.exitPointInModel = pointInModel
+        self.provenance = provenance
+        self.isThroughBore = false
+    }
 }
 
 struct BoardModelPassagePairs: Hashable {
@@ -164,6 +184,18 @@ struct BoardModelCordBranch: Hashable {
     let radius: Double
     let material: String
     let provenance: String
+
+    init(id: String, passageIDs: [String], entryContactPoints: [[Double]] = [], exteriorContactPoints: [[Double]] = [], exitContactPoints: [[Double]] = [], restLength: Double, radius: Double, material: String, provenance: String) {
+        self.id = id
+        self.passageIDs = passageIDs
+        self.entryContactPoints = entryContactPoints
+        self.exteriorContactPoints = exteriorContactPoints
+        self.exitContactPoints = exitContactPoints
+        self.restLength = restLength
+        self.radius = radius
+        self.material = material
+        self.provenance = provenance
+    }
 }
 
 struct BoardModelTwoBranchSuspension: Hashable {

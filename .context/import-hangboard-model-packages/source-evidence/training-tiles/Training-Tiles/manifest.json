@@ -1,0 +1,106 @@
+{
+  "Training-Tiles.blend": {
+    "bytes": 11155225,
+    "sha256": "c7f252c8c1833c09a85b6d4f0164ecf1ab23d2e2783eaefafeffbcf6b4f014bf"
+  },
+  "README.md": {
+    "bytes": 5367,
+    "sha256": "10c6c6494a28a05f26b8539ffe35b91b46581439ff63ba75a12fd9911b49b20e"
+  },
+  "Training-Tiles-editable.blend": {
+    "bytes": 46842287,
+    "sha256": "3cd5f9e920076c872392cb7a68d26f9dadd12e43e534d654603314d864210a36"
+  },
+  "Training-Tiles.glb": {
+    "bytes": 10325248,
+    "sha256": "845fc0ea87ac328b983e4611f22c378726f4f89effed131ac8d1b9d0b25405c8"
+  },
+  "hold-map.json": {
+    "bytes": 5102,
+    "sha256": "fe71fb8bf0046f7aea4dd14cadb532519cffa03f3733434913872fdcd4347fd0"
+  },
+  "source/build_blender.py": {
+    "bytes": 11834,
+    "sha256": "53c6cc7f3020a3fb7e46a681fad036d083c45cf50d1ca65eea8b040d1700b87b"
+  },
+  "source/build_volume.py": {
+    "bytes": 10350,
+    "sha256": "2b9b81b5e7b4f5dc61179b1e5fd79d1c8670fc43575bf711e25a97e7ac2ca129"
+  },
+  "source/capture_outliner.py": {
+    "bytes": 3208,
+    "sha256": "0ecdd70f02d132c53cc0a56b89b13d4915de47171a4357c3ade8e43ac14b990e"
+  },
+  "source/clean_names.py": {
+    "bytes": 705,
+    "sha256": "b45410d655a99875f507b37e0860433f626639cb50bd86fd8fafed5cb4bf80af"
+  },
+  "source/font-license.txt": {
+    "bytes": 3859,
+    "sha256": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+  },
+  "source/geometry_config.json": {
+    "bytes": 7858,
+    "sha256": "28286adf342982cd1efa5d9e22c0aad619555290ddcc8d7fbb6fe529dc03db58"
+  },
+  "source/model-plan.md": {
+    "bytes": 1730,
+    "sha256": "e74e1d85a306298e51a81b04d2ba8824a378993a6e133b7d75f8e5142b84fc10"
+  },
+  "source/outliner_view.py": {
+    "bytes": 1218,
+    "sha256": "58b4905226a09e30f258db2383a5825bcbd6a8ebd8705992eca1694e43bbdcfb"
+  },
+  "source/reference-front.jpg": {
+    "bytes": 59404,
+    "sha256": "4d8036400a72128d18e106ca3d0042b7f8e5f08ec7858ae525656bc26e7a1674"
+  },
+  "source/references.md": {
+    "bytes": 4593,
+    "sha256": "c9021d925479b987b36d66148818a7658ad8ecd72ff7393f0c4a393d1cc33e06"
+  },
+  "source/verify_asset.py": {
+    "bytes": 3912,
+    "sha256": "35aa37dfa4493630b08a1f18f5997c874ef7a20c8f8371e01b02826b43e80b34"
+  },
+  "source/volume_mesh.npz": {
+    "bytes": 5983237,
+    "sha256": "f53ce0436870d743db3e766bf8dc0f5f93dce816ffd758f6622e1e822cba8748"
+  },
+  "source/volume_mesh_R.npz": {
+    "bytes": 5983265,
+    "sha256": "fb8716809769166997a70222eb667695db37e2427983b13a343dcba26d29d55b"
+  },
+  "renders/Blender-outliner.png": {
+    "bytes": 139156,
+    "sha256": "c7b3b5a3ca886a6febe0cc62ab19adf0a4d7cadcb9091911377faaf4b81edd35"
+  },
+  "renders/back.png": {
+    "bytes": 1047487,
+    "sha256": "a5b6e0aa505eb8913e97e53b5d1354e5f45b1e0923f55b944865cc85b75c70d0"
+  },
+  "renders/front.png": {
+    "bytes": 1076730,
+    "sha256": "b68f2f1b7a663fcda07926ec304367e4438c16b4301bc0836b72b911a070336c"
+  },
+  "renders/highlight-check.png": {
+    "bytes": 1134357,
+    "sha256": "2bf55c94c84162f0886831ff7c9170a56e269658977b2a89983e1a84a0db1ca9"
+  },
+  "renders/hold-detail.png": {
+    "bytes": 1514390,
+    "sha256": "5b704c16fed7306d19f6fd954ee9dd7c7288958bf941810e048d83eed7588384"
+  },
+  "renders/oblique.png": {
+    "bytes": 1133383,
+    "sha256": "1805d0ce1e36e356f85ce1708682de6db6a2ad2ed006e88302419bf17f15d280"
+  },
+  "qa/validation.json": {
+    "bytes": 7361,
+    "sha256": "2c4ea08493c7e9119a376c03335bc7623194600bee1ecbf16b38b7cf58bf1866"
+  },
+  "qa/validation-editable.json": {
+    "bytes": 7382,
+    "sha256": "0894a4f23f05f8231323a172bdf89c628dbc3dcdcb8af1c26759a0d4d0dfe4a8"
+  }
+}

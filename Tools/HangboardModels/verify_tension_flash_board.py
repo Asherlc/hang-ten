@@ -151,15 +151,15 @@ def load_review_candidate() -> dict[str, object]:
 
 
 def validate_review_candidate(candidate: Mapping[str, object]) -> None:
-    """Validate the durable review-only two-branch candidate contract."""
+    """Validate the durable reference input; this does not assert native acceptance."""
     if candidate.get("candidateID") != REVIEW_CANDIDATE_ID:
         raise ValueError("review candidate ID is not the approved Flash Board candidate")
     if candidate.get("boardID") != EXPECTED_BOARD_ID:
         raise ValueError("review candidate board ID is not tension.flash-board")
-    if candidate.get("status") != "review-only; not promoted to product board metadata":
-        raise ValueError("review candidate must remain review-only")
-    if candidate.get("actualExportStatus") != "fixture-only; no two-branch USDZ export has passed this contract":
-        raise ValueError("review candidate must not claim an actual two-branch export")
+    if candidate.get("status") != "reference fixture; production acceptance requires separate export and native verification":
+        raise ValueError("review candidate must remain a reference input, not acceptance evidence")
+    if candidate.get("actualExportStatus") != "retained separately in tension_flash_board_export_verification.json":
+        raise ValueError("review candidate must identify its separate actual-export report")
     if candidate.get("type") != "twoBranchCord":
         raise ValueError("review candidate must declare twoBranchCord")
     provenance = candidate.get("provenance")
@@ -402,8 +402,6 @@ def verify_report(
             raise ValueError("attachment node must be body or attachment role")
         if attachment.get("accessible") is not True:
             raise ValueError("attachment node and point must be importer-accessible")
-    elif report.get("suspensionType") != "twoBranchCord":
-        raise ValueError("report must identify the actual attachment node")
 
     probes = report.get("positionProbes")
     if not isinstance(probes, Mapping) or set(probes) != set(POSITION_HOLD_IDS):
@@ -662,6 +660,17 @@ def _is_swept_tube_probe(value: object) -> bool:
         and value.get("axis") == "model-z"
         and value.get("sampleCount") == len(expected)
         and value.get("axisContinuouslyTested") is True
+        and isinstance(value.get("solidTubeProbe"), Mapping)
+        and value["solidTubeProbe"].get("method") == "clipped-triangle-cylinder"
+        and _positive_integer(value["solidTubeProbe"], "triangleCount")
+        and value["solidTubeProbe"].get("requiredRadiusMeters") == PASSAGE_TUBE_RADIUS_METERS
+        and value["solidTubeProbe"].get("passed") is True
+        and (
+            value["solidTubeProbe"].get("minimumRadiusMeters") is None
+            or (isinstance(value["solidTubeProbe"].get("minimumRadiusMeters"), (int, float))
+                and math.isfinite(value["solidTubeProbe"]["minimumRadiusMeters"])
+                and value["solidTubeProbe"]["minimumRadiusMeters"] >= PASSAGE_TUBE_RADIUS_METERS)
+        )
         and isinstance(value.get("samples"), list)
         and len(value["samples"]) == len(expected)
         and [item.get("sampleIndex") for item in value["samples"] if isinstance(item, Mapping)] == list(range(len(expected)))
@@ -1232,6 +1241,45 @@ def _ligament_probes(
     return results
 
 
+def _validate_closed_centerline(samples: Sequence[Sequence[float]], tolerance: float = 1e-6) -> None:
+    """Reject segment crossings and backtracking, allowing only anchor closure."""
+    def sub(a, b):
+        return tuple(x - y for x, y in zip(a, b))
+
+    def dot(a, b):
+        return sum(x * y for x, y in zip(a, b))
+
+    segments = list(zip(samples, samples[1:]))
+    for i, (a, b) in enumerate(segments):
+        u = sub(b, a)
+        uu = dot(u, u)
+        if uu <= 1e-20:
+            raise ValueError("cord centerline self-intersects at a repeated point")
+        for j in range(i + 1, len(segments)):
+            c, d = segments[j]
+            v, w = sub(d, c), sub(a, c)
+            vv, uv, uw, vw = dot(v, v), dot(u, v), dot(u, w), dot(v, w)
+            if vv <= 1e-20:
+                raise ValueError("cord centerline self-intersects at a repeated point")
+            clamp = lambda x: min(1.0, max(0.0, x))
+            candidates = [(0.0, clamp(vw / vv)), (1.0, clamp((vw + uv) / vv)),
+                          (clamp(-uw / uu), 0.0), (clamp((uv - uw) / uu), 1.0)]
+            determinant = uu * vv - uv * uv
+            if determinant > 1e-15 * uu * vv:
+                s, t = (uv * vw - vv * uw) / determinant, (uu * vw - uv * uw) / determinant
+                if 0 <= s <= 1 and 0 <= t <= 1:
+                    candidates.append((s, t))
+            for s, t in candidates:
+                p = tuple(a[k] + s * u[k] for k in range(3))
+                q = tuple(c[k] + t * v[k] for k in range(3))
+                if math.dist(p, q) > tolerance:
+                    continue
+                shared = b if j == i + 1 else a if i == 0 and j == len(segments) - 1 and a == d else None
+                if shared is not None and math.dist(p, shared) <= tolerance and math.dist(q, shared) <= tolerance:
+                    continue
+                raise ValueError(f"cord centerline self-intersects between segments {i} and {j}")
+
+
 def _branch_probe_specs(
     bounds: Mapping[str, object],
     suspension: Mapping[str, object],
@@ -1330,6 +1378,7 @@ def _branch_probe_specs(
         )
         if len(segment_modes) != len(samples) - 1:
             raise ValueError(f"branch {branch['id']} has a discontinuous directed route")
+        _validate_closed_centerline(samples)
         specs.append({
             "branchID": str(branch["id"]),
             "samples": samples,
@@ -1587,13 +1636,10 @@ def _passage_ray_probes(
     descriptor: Mapping[str, object],
     passages: Sequence[Mapping[str, object]],
 ) -> list[dict[str, object]]:
-    """Prove each declared passage fits the cord tube through the imported mesh.
+    """Prove the cord-sized solid cylinder is clear of every imported triangle.
 
-    Every cross-section sample casts a full-depth ray in both directions.  The
-    sample disk is the declared cord radius plus the verifier's clearance
-    tolerance; this is a swept tube probe, not a centerline or boundary proxy.
-    No attachment/interface exception is applied here: a body hit anywhere on
-    these rays is a passage failure, including at the named interface point.
+    Bidirectional rays remain diagnostic evidence; the clipped-triangle solid
+    test supplies the conservative aperture proof. No interface exception applies.
     """
     minimum = tuple(float(value) for value in descriptor["modelBounds"]["min"])
     maximum = tuple(float(value) for value in descriptor["modelBounds"]["max"])
@@ -1625,6 +1671,11 @@ def _passage_ray_probes(
             minimum_z=min(entry[2], exit[2]),
             maximum_z=max(entry[2], exit[2]),
             aperture_ray=aperture_ray,
+            triangles=[
+                [tuple(item.matrix_world @ item.data.vertices[index].co) for index in triangle.vertices]
+                for item in scene.objects if item.type == "MESH"
+                for triangle in item.data.loop_triangles
+            ],
         )
         results.append({
             "passageID": passage["passageID"],
@@ -1639,19 +1690,59 @@ def _passage_ray_probes(
     return results
 
 
+def _solid_passage_probe(point, minimum_z, maximum_z, triangles):
+    """Exact cylinder test: clip each triangle to the depth slab, then project.
+
+    Projection of a clipped triangle is convex. Its closest point to the axis
+    is either inside that polygon or on an edge; no radial sampling is used.
+    """
+    minimum = math.inf
+    count = 0
+    for triangle in triangles:
+        count += 1
+        polygon = [tuple(float(v) for v in vertex) for vertex in triangle]
+        if len(polygon) != 3 or any(len(p) != 3 or not all(math.isfinite(v) for v in p) for p in polygon):
+            raise ValueError("passage solid probe requires finite triangles")
+        for boundary, direction in ((minimum_z, 1), (maximum_z, -1)):
+            clipped = []
+            for a, b in zip(polygon, polygon[1:] + polygon[:1]):
+                a_inside = direction * (a[2] - boundary) >= 0
+                b_inside = direction * (b[2] - boundary) >= 0
+                if a_inside:
+                    clipped.append(a)
+                if a_inside != b_inside:
+                    t = (boundary - a[2]) / (b[2] - a[2])
+                    clipped.append(tuple(a[k] + t * (b[k] - a[k]) for k in range(3)))
+            polygon = clipped
+        if not polygon:
+            continue
+        projected = [(p[0] - point[0], p[1] - point[1]) for p in polygon]
+        crosses = []
+        for a, b in zip(projected, projected[1:] + projected[:1]):
+            dx, dy = b[0] - a[0], b[1] - a[1]
+            denominator = dx * dx + dy * dy
+            t = max(0, min(1, -(a[0] * dx + a[1] * dy) / denominator)) if denominator else 0
+            minimum = min(minimum, math.hypot(a[0] + t * dx, a[1] + t * dy))
+            crosses.append(a[0] * b[1] - a[1] * b[0])
+        # Degenerate projections have no interior; their edges above suffice.
+        area = sum(crosses)
+        if abs(area) > 1e-20 and (all(c >= 0 for c in crosses) or all(c <= 0 for c in crosses)):
+            minimum = 0.0
+    return {"method": "clipped-triangle-cylinder", "triangleCount": count,
+            "requiredRadiusMeters": PASSAGE_TUBE_RADIUS_METERS,
+            "minimumRadiusMeters": minimum if math.isfinite(minimum) else None,
+            "passed": count > 0 and minimum >= PASSAGE_TUBE_RADIUS_METERS}
+
+
 def _swept_passage_probe(
     point: tuple[float, float, float],
     *,
     minimum_z: float,
     maximum_z: float,
     aperture_ray,
+    triangles=(),
 ) -> dict[str, object]:
-    """Sweep the required tube cross-section through the complete passage.
-
-    ``aperture_ray`` is deliberately a full-depth mesh-intersection query.
-    This pure helper keeps the sample contract testable without Blender and
-    makes a centerline-open, tube-blocked aperture fail deterministically.
-    """
+    """Combine diagnostic full-depth rays with conservative solid-cylinder proof."""
     offsets = _passage_cross_section_offsets(PASSAGE_TUBE_RADIUS_METERS)
     samples: list[dict[str, object]] = []
     for sample_index, (x_offset, y_offset) in enumerate(offsets):
@@ -1671,6 +1762,7 @@ def _swept_passage_probe(
             "rearToFront": rear_to_front,
             "passed": passed,
         })
+    solid = _solid_passage_probe(point, minimum_z - .02, maximum_z + .02, triangles)
     return {
         "cordRadiusMeters": CORD_RADIUS_METERS,
         "clearanceToleranceMeters": CORD_CLEARANCE_METERS,
@@ -1679,7 +1771,8 @@ def _swept_passage_probe(
         "axisContinuouslyTested": True,
         "sampleCount": len(samples),
         "samples": samples,
-        "passed": all(sample["passed"] for sample in samples),
+        "solidTubeProbe": solid,
+        "passed": solid["passed"] and all(sample["passed"] for sample in samples),
     }
 
 

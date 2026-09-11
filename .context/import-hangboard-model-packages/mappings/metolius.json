@@ -1,0 +1,25 @@
+{
+  "logicalHoldIDs": ["jug-1-left", "jug-1-right", "jug-14-center", "round-sloper-3-left", "round-sloper-3-right", "pocket-4-left", "pocket-4-right", "edge-5-left", "edge-5-right", "edge-6-left", "edge-6-right", "edge-7-left", "edge-7-right", "pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right", "pocket-10-left", "pocket-10-right", "edge-11-left", "edge-11-right", "pocket-12-left", "pocket-12-right", "pocket-13-left", "pocket-13-right", "pocket-15-center", "pocket-16-center", "pocket-17-center", "pocket-18-center"],
+  "objects": [
+    {"role": "body", "sourceNodeID": "board_body"},
+    {"holdID": "jug-1-left", "role": "hold", "sourceNodeID": "hold_01_left"}, {"holdID": "jug-1-right", "role": "hold", "sourceNodeID": "hold_01_right"},
+    {"holdID": "round-sloper-3-left", "role": "hold", "sourceNodeID": "hold_02_left"}, {"holdID": "round-sloper-3-right", "role": "hold", "sourceNodeID": "hold_02_right"},
+    {"holdID": "round-sloper-3-left", "role": "hold", "sourceNodeID": "hold_03_left"}, {"holdID": "round-sloper-3-right", "role": "hold", "sourceNodeID": "hold_03_right"},
+    {"holdID": "pocket-4-left", "role": "hold", "sourceNodeID": "hold_04_left"}, {"holdID": "pocket-4-right", "role": "hold", "sourceNodeID": "hold_04_right"},
+    {"holdID": "edge-5-left", "role": "hold", "sourceNodeID": "hold_05_left"}, {"holdID": "edge-5-right", "role": "hold", "sourceNodeID": "hold_05_right"},
+    {"holdID": "edge-6-left", "role": "hold", "sourceNodeID": "hold_06_left"}, {"holdID": "edge-6-right", "role": "hold", "sourceNodeID": "hold_06_right"},
+    {"holdID": "edge-7-left", "role": "hold", "sourceNodeID": "hold_07_left"}, {"holdID": "edge-7-right", "role": "hold", "sourceNodeID": "hold_07_right"},
+    {"holdID": "pocket-8-left", "role": "hold", "sourceNodeID": "hold_08_left"}, {"holdID": "pocket-8-right", "role": "hold", "sourceNodeID": "hold_08_right"},
+    {"holdID": "pocket-9-left", "role": "hold", "sourceNodeID": "hold_09_left"}, {"holdID": "pocket-9-right", "role": "hold", "sourceNodeID": "hold_09_right"},
+    {"holdID": "pocket-10-left", "role": "hold", "sourceNodeID": "hold_10_left"}, {"holdID": "pocket-10-right", "role": "hold", "sourceNodeID": "hold_10_right"},
+    {"holdID": "edge-11-left", "role": "hold", "sourceNodeID": "hold_11_left"}, {"holdID": "edge-11-right", "role": "hold", "sourceNodeID": "hold_11_right"},
+    {"holdID": "pocket-12-left", "role": "hold", "sourceNodeID": "hold_12_left"}, {"holdID": "pocket-12-right", "role": "hold", "sourceNodeID": "hold_12_right"},
+    {"holdID": "pocket-13-left", "role": "hold", "sourceNodeID": "hold_13_left"}, {"holdID": "pocket-13-right", "role": "hold", "sourceNodeID": "hold_13_right"},
+    {"holdID": "jug-14-center", "role": "hold", "sourceNodeID": "hold_14_center"},
+    {"holdID": "pocket-15-center", "role": "hold", "sourceNodeID": "hold_15_center"}, {"holdID": "pocket-16-center", "role": "hold", "sourceNodeID": "hold_16_center"}, {"holdID": "pocket-17-center", "role": "hold", "sourceNodeID": "hold_17_center"}, {"holdID": "pocket-18-center", "role": "hold", "sourceNodeID": "hold_18_center"}
+  ],
+  "packageID": "metolius",
+  "promotionStatus": "rejected",
+  "expectedError": "no image material",
+  "schemaVersion": 1
+}

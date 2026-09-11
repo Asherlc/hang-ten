@@ -329,11 +329,29 @@ def test_rejects_lower_groove_mapped_as_new_id(tmp_path: Path) -> None:
 
 
 def test_requires_lower_ledge_conflict_ruling(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     payload = _payload(packet)
     payload["conflictsAndRulings"] = []
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="lower-ledge-interpretation"):
+        validate_evidence_packet(packet)
+
+
+def test_generic_suspended_packet_needs_no_flash_ledge_ruling(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["conflictsAndRulings"] = []
+    _rewrite(packet, payload)
+    validate_evidence_packet(packet)
+
+
+@pytest.mark.parametrize("value", ["false", 1, False, None])
+def test_visual_approval_requires_boolean_true(tmp_path: Path, value: object) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    payload["suspendedPresentation"]["visualApproval"]["materiallyDistinct"] = value
+    _rewrite(packet, payload)
+    with pytest.raises(ValueError, match="materially distinct"):
         validate_evidence_packet(packet)
 
 

@@ -1,0 +1,52 @@
+{
+  "attachmentNodeIDs": [
+    "cord-passage-1",
+    "cord-passage-2",
+    "cord-passage-3",
+    "cord-passage-4"
+  ],
+  "holdCount": 19,
+  "modelBounds": {
+    "max": [
+      0.25999999,
+      0.025000002,
+      0.025000002
+    ],
+    "min": [
+      -0.25999999,
+      -0.025,
+      -0.025000002
+    ]
+  },
+  "modelSHA256": "e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b",
+  "nodeCount": 21,
+  "packageID": "baguette-evo",
+  "sourceObjectIDs": [
+    "body",
+    "cord-passage-1",
+    "cord-passage-2",
+    "cord-passage-3",
+    "cord-passage-4",
+    "hold-central-06mm",
+    "hold-central-20mm",
+    "hold-central-25mm",
+    "hold-central-30mm",
+    "hold-edge-06mm-left",
+    "hold-edge-06mm-right",
+    "hold-edge-08mm-left",
+    "hold-edge-08mm-right",
+    "hold-edge-10mm-left",
+    "hold-edge-10mm-right",
+    "hold-edge-12mm-left",
+    "hold-edge-12mm-right",
+    "hold-edge-15mm-left",
+    "hold-edge-15mm-right",
+    "hold-edge-20mm-left",
+    "hold-edge-20mm-right",
+    "hold-edge-25mm-left",
+    "hold-edge-25mm-right",
+    "hold-rounded-left",
+    "hold-rounded-right"
+  ],
+  "status": "converted"
+}

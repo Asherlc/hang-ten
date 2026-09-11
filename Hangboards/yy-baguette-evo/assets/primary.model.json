@@ -1,0 +1,487 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-10-left": {
+      "center": [
+        0.161538451,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.240384596,
+          0.499999981
+        ],
+        "min": [
+          0.082692306,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_10mm_left_mesh_001"
+      ]
+    },
+    "edge-10-right": {
+      "center": [
+        0.838461563,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.917307722,
+          0.499999981
+        ],
+        "min": [
+          0.759615404,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_10mm_right_mesh_001"
+      ]
+    },
+    "edge-12-left": {
+      "center": [
+        0.314423067,
+        0.863238063
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          1.0
+        ],
+        "min": [
+          0.240384596,
+          0.726476125
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_12mm_left_mesh_001"
+      ]
+    },
+    "edge-12-right": {
+      "center": [
+        0.685576933,
+        0.863238044
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.999999963
+        ],
+        "min": [
+          0.611538462,
+          0.726476125
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_12mm_right_mesh_001"
+      ]
+    },
+    "edge-15-left": {
+      "center": [
+        0.314423067,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          0.499999981
+        ],
+        "min": [
+          0.240384596,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_15mm_left_mesh_001"
+      ]
+    },
+    "edge-15-right": {
+      "center": [
+        0.685576933,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.499999981
+        ],
+        "min": [
+          0.611538462,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_15mm_right_mesh_001"
+      ]
+    },
+    "edge-20-left": {
+      "center": [
+        0.161538451,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.240384596,
+          0.699999966
+        ],
+        "min": [
+          0.082692306,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_20mm_left_mesh_001"
+      ]
+    },
+    "edge-20-right": {
+      "center": [
+        0.838461563,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.917307722,
+          0.699999966
+        ],
+        "min": [
+          0.759615404,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_20mm_right_mesh_001"
+      ]
+    },
+    "edge-25-left": {
+      "center": [
+        0.314423067,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          0.699999966
+        ],
+        "min": [
+          0.240384596,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_25mm_left_mesh_001"
+      ]
+    },
+    "edge-25-right": {
+      "center": [
+        0.685576933,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.699999966
+        ],
+        "min": [
+          0.611538462,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_25mm_right_mesh_001"
+      ]
+    },
+    "edge-6-lower": {
+      "center": [
+        0.843269237,
+        0.923238032
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.917307694,
+          0.999999963
+        ],
+        "min": [
+          0.76923078,
+          0.846476101
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_06mm_right_mesh_001"
+      ]
+    },
+    "edge-6-upper": {
+      "center": [
+        0.156730749,
+        0.923238032
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.23076922,
+          0.999999963
+        ],
+        "min": [
+          0.082692278,
+          0.846476101
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_06mm_left_mesh_001"
+      ]
+    },
+    "edge-8-left": {
+      "center": [
+        0.314423067,
+        0.883238056
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.388461538,
+          1.0
+        ],
+        "min": [
+          0.240384596,
+          0.766476111
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_08mm_left_mesh_001"
+      ]
+    },
+    "edge-8-right": {
+      "center": [
+        0.685576933,
+        0.883238037
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.759615404,
+          0.999999963
+        ],
+        "min": [
+          0.611538462,
+          0.766476111
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_08mm_right_mesh_001"
+      ]
+    },
+    "edge-central-20": {
+      "center": [
+        0.5,
+        0.691557015
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.958152512
+        ],
+        "min": [
+          0.423076922,
+          0.424961519
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_20mm_mesh_001"
+      ]
+    },
+    "edge-central-25": {
+      "center": [
+        0.5,
+        0.399999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.499999981
+        ],
+        "min": [
+          0.423076922,
+          0.299999996
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_25mm_mesh_001"
+      ]
+    },
+    "edge-central-30": {
+      "center": [
+        0.5,
+        0.599999974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.699999966
+        ],
+        "min": [
+          0.423076922,
+          0.499999981
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_30mm_mesh_001"
+      ]
+    },
+    "edge-central-6": {
+      "center": [
+        0.5,
+        0.825936649
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.576923078,
+          0.99959264
+        ],
+        "min": [
+          0.423076922,
+          0.652280658
+        ]
+      },
+      "nodeIDs": [
+        "hold_central_06mm_mesh_001"
+      ]
+    },
+    "rounded-tray": {
+      "center": [
+        0.5,
+        0.136502368
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.923076936,
+          0.273004737
+        ],
+        "min": [
+          0.076923064,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "hold_rounded_left_mesh_001",
+        "hold_rounded_right_mesh_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.25999999,
+      0.025000002,
+      0.025000002
+    ],
+    "min": [
+      -0.25999999,
+      -0.025,
+      -0.025000002
+    ]
+  },
+  "modelSHA256": "e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b",
+  "nodes": [
+    {
+      "nodeID": "body_mesh_001",
+      "role": "body"
+    },
+    {
+      "holdID": "edge-central-6",
+      "nodeID": "hold_central_06mm_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-central-20",
+      "nodeID": "hold_central_20mm_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-central-25",
+      "nodeID": "hold_central_25mm_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-central-30",
+      "nodeID": "hold_central_30mm_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-6-upper",
+      "nodeID": "hold_edge_06mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-6-lower",
+      "nodeID": "hold_edge_06mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-8-left",
+      "nodeID": "hold_edge_08mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-8-right",
+      "nodeID": "hold_edge_08mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-10-left",
+      "nodeID": "hold_edge_10mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-10-right",
+      "nodeID": "hold_edge_10mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-12-left",
+      "nodeID": "hold_edge_12mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-12-right",
+      "nodeID": "hold_edge_12mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-15-left",
+      "nodeID": "hold_edge_15mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-15-right",
+      "nodeID": "hold_edge_15mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-20-left",
+      "nodeID": "hold_edge_20mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-20-right",
+      "nodeID": "hold_edge_20mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-25-left",
+      "nodeID": "hold_edge_25mm_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-25-right",
+      "nodeID": "hold_edge_25mm_right_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "rounded-tray",
+      "nodeID": "hold_rounded_left_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "rounded-tray",
+      "nodeID": "hold_rounded_right_mesh_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}
