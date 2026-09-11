@@ -34,6 +34,7 @@ EXPECTED_IDS = frozenset(
         "small-crimp-right",
     }
 )
+LIGAMENT_GRID_SIZE = 3
 
 
 def valid_report() -> dict[str, object]:
@@ -88,6 +89,9 @@ def valid_report() -> dict[str, object]:
                 "nearestRole": "body",
                 "nearestTriangleIndex": 0,
                 "surfaceDepthMeters": 0.001,
+                "behavior": "through-passage",
+                "frontApertureRay": {"hit": False, "nearestRole": None, "nearestNodeID": None, "passed": True},
+                "rearApertureRay": {"hit": False, "nearestRole": None, "nearestNodeID": None, "passed": True},
                 "passed": True,
             }
             for passage_id in verifier.REVIEW_PASSAGE_IDS
@@ -97,8 +101,9 @@ def valid_report() -> dict[str, object]:
             {"nodeID": binding["nodeID"], "material": "canonical-neutral-wood", "images": [{"name": "canonical", "width": 1, "height": 1}]}
             for binding in logical_bindings
         ],
-        "modelSHA256": "a" * 64,
-        "descriptorSHA256": "b" * 64,
+        "modelSHA256": candidate["expectedModel"]["modelSHA256"],
+        "descriptorSHA256": candidate["expectedModel"]["descriptorSHA256"],
+        "modelIdentity": candidate["expectedModel"]["identity"],
         "coordinateFrame": "hang-ten-board-v1",
         "modelBounds": bounds,
         "exactDescriptorForActualUSDZ": True,
@@ -129,13 +134,20 @@ def valid_report() -> dict[str, object]:
                 "rayProbeCount": len(verifier.POSITION_HOLD_IDS[position_id]) * 5,
                 "ligamentResults": [
                     {
-                        "probeID": probe_id,
+                        "regionID": region_id,
+                        "sampleRow": row,
+                        "sampleColumn": column,
                         "expectedRole": "body",
                         "nearestRole": "body",
                         "nearestTriangleIndex": index,
                         "passed": True,
                     }
-                    for index, probe_id in enumerate(verifier.LIGAMENT_IDS_BY_POSITION[position_id])
+                    for index, (region_id, row, column) in enumerate(
+                        (region_id, row, column)
+                        for region_id in verifier.LIGAMENT_IDS_BY_POSITION[position_id]
+                        for row in range(LIGAMENT_GRID_SIZE)
+                        for column in range(LIGAMENT_GRID_SIZE)
+                    )
                 ],
                 "allLigamentProbesPassed": True,
                 "surfaceRayResults": [
@@ -188,6 +200,25 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             list(verifier.REVIEW_PASSAGE_IDS),
         )
         self.assertEqual(set(candidate["canonicalPoses"]), set(verifier.POSITION_HOLD_IDS))
+
+    def test_tracked_candidate_pins_model_anchor_and_branch_dimensions(self):
+        candidate = verifier.load_review_candidate()
+        self.assertTrue(verifier.REVIEW_CANDIDATE_PATH.is_file())
+        self.assertEqual(
+            candidate["expectedModel"],
+            {
+                "identity": "tension.flash-board.reviewed-usdz-v1",
+                "sourceBodyNodeID": "flash-board-body",
+                "modelSHA256": "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b",
+                "descriptorSHA256": "b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58",
+                "coordinateFrame": "hang-ten-board-v1",
+            },
+        )
+        self.assertEqual(candidate["anchor"]["offsetFromBoardBounds"], [0, 0.22, 0])
+        self.assertEqual(
+            [(branch["id"], branch["restLength"], branch["radius"]) for branch in candidate["branches"]],
+            [("left-branch", 0.75, 0.002), ("right-branch", 0.75, 0.002)],
+        )
 
     def test_review_candidate_rejects_arbitrary_passage_identity_or_point(self):
         candidate = verifier.load_review_candidate()
@@ -243,6 +274,17 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "passage"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
+    def test_verify_report_requires_through_aperture_evidence_on_the_bound_body(self):
+        report = valid_report()
+        report["passageRayResults"][0]["frontApertureRay"]["passed"] = False
+        with self.assertRaisesRegex(ValueError, "passage"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["passageCorrespondence"][0]["sourceNodeID"] = "wrong-body"
+        with self.assertRaisesRegex(ValueError, "passage"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
 
     def test_verify_report_requires_surface_rays_and_both_branch_clearance_results(self):
         report = valid_report()
@@ -290,8 +332,14 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
         report = valid_report()
-        report["positionProbes"]["three-edge-inverted"]["ligamentResults"][1]["probeID"] = "invented-gap"
+        report["positionProbes"]["three-edge-inverted"]["ligamentResults"][1]["sampleColumn"] = 0
         with self.assertRaisesRegex(ValueError, "ligament"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_verify_report_rejects_model_hash_not_bound_to_candidate_fixture(self):
+        report = valid_report()
+        report["modelSHA256"] = "f" * 64
+        with self.assertRaisesRegex(ValueError, "model"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
 

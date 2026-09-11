@@ -1,0 +1,37 @@
+{
+  "fixtureVersion": 1,
+  "candidateID": "tension.flash-board.two-branch-review-v1",
+  "boardID": "tension.flash-board",
+  "status": "review-only; not promoted to product board metadata",
+  "actualExportStatus": "fixture-only; no two-branch USDZ export has passed this contract",
+  "type": "twoBranchCord",
+  "provenance": "approved visual evidence; authored display estimates; Task 5 verifier candidate",
+  "expectedModel": {
+    "identity": "tension.flash-board.reviewed-usdz-v1",
+    "sourceBodyNodeID": "flash-board-body",
+    "modelSHA256": "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b",
+    "descriptorSHA256": "b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58",
+    "coordinateFrame": "hang-ten-board-v1"
+  },
+  "passages": {
+    "left": [
+      {"id": "left-outer-passage", "physicalFeature": "left end outer transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.017, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"},
+      {"id": "left-inner-passage", "physicalFeature": "left end inner transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.031, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"}
+    ],
+    "right": [
+      {"id": "right-inner-passage", "physicalFeature": "right end inner transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.469, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"},
+      {"id": "right-outer-passage", "physicalFeature": "right end outer transverse cord passage", "nodeID": "flash-board-body", "pointInModel": [0.483, 0.047999999, 0.075999998], "provenance": "approved visual evidence; display estimate; passage mouth center"}
+    ]
+  },
+  "branches": [
+    {"id": "left-branch", "passageIDs": ["left-outer-passage", "left-inner-passage"], "restLength": 0.75, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; reserved for two-branch runtime contract"},
+    {"id": "right-branch", "passageIDs": ["right-inner-passage", "right-outer-passage"], "restLength": 0.75, "radius": 0.002, "material": "matteCord", "provenance": "display estimate; reserved for two-branch runtime contract"}
+  ],
+  "anchor": {"offsetFromBoardBounds": [0, 0.22, 0], "visibility": "invisible", "provenance": "display estimate; reserved for two-branch runtime contract"},
+  "canonicalPoses": {
+    "three-edge-upright": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0]},
+    "three-edge-inverted": {"rotation": [0, 0, 1, 0], "translation": [0.5, 0.075999998, 0]},
+    "two-edge-upright": {"rotation": [1, 0, 0, 0], "translation": [0, 0.075999998, 0.075999998]},
+    "two-edge-inverted": {"rotation": [0, 1, 0, 0], "translation": [0.5, 0.075999998, 0.075999998]}
+  }
+}
