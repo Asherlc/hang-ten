@@ -26,6 +26,7 @@ MODEL_BYTES = b"staging fixture model bytes\x00\xff"
 LIVE_MODEL_PACKAGE_SLUGS = (
     "beastmaker-1000",
     "metolius-wood-grips-compact-ii",
+    "tension-flash-board",
 )
 
 

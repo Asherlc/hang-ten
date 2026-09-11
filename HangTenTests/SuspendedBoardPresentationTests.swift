@@ -645,4 +645,76 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
         return scene
     }
+
+    private func throughBoreSuspension(
+        left: [[Double]] = [[-0.6, 0.4, 0], [-0.4, 0.4, 0]],
+        right: [[Double]] = [[0.4, 0.4, 0], [0.6, 0.4, 0]],
+        anchor: [Double] = [0, 2, 0],
+        restLength: Double = 4,
+        radius: Double = 0.01
+    ) -> BoardModelTwoBranchSuspension {
+        func passage(_ id: String, _ point: [Double]) -> BoardModelPassage {
+            BoardModelPassage(
+                id: id,
+                nodeID: id,
+                entryPointInModel: point,
+                exitPointInModel: [point[0], point[1], point[2] - 0.1],
+                provenance: "test"
+            )
+        }
+        return BoardModelTwoBranchSuspension(
+            passages: BoardModelPassagePairs(
+                left: [passage("left-0", left[0]), passage("left-1", left[1])],
+                right: [passage("right-0", right[0]), passage("right-1", right[1])]
+            ),
+            branches: [
+                BoardModelCordBranch(id: "left", passageIDs: ["left-0", "left-1"], entryContactPoints: [[left[0][0], left[0][1], left[0][2] + 0.02]], exteriorContactPoints: [[left[0][0] - 0.05, left[0][1], left[0][2] - 0.12], [left[1][0] + 0.05, left[1][1], left[1][2] - 0.12]], exitContactPoints: [[left[1][0], left[1][1], left[1][2] + 0.02]], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
+                BoardModelCordBranch(id: "right", passageIDs: ["right-0", "right-1"], entryContactPoints: [[right[0][0], right[0][1], right[0][2] + 0.02]], exteriorContactPoints: [[right[0][0] - 0.05, right[0][1], right[0][2] - 0.12], [right[1][0] + 0.05, right[1][1], right[1][2] - 0.12]], exitContactPoints: [[right[1][0], right[1][1], right[1][2] + 0.02]], restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
+            ],
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: anchor),
+            canonicalPoses: [:]
+        )
+    }
+
+    func testTwoBranchPreservesDirectedBoresAndExteriorContactJoins() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: throughBoreSuspension(restLength: 4.2),
+            bounds: bounds
+        )
+
+        for branch in result.branches {
+            XCTAssertEqual(branch.centerlineSamples.first!, result.fixedAnchor)
+            XCTAssertEqual(branch.centerlineSamples.last!, result.fixedAnchor)
+            XCTAssertEqual(branch.spans[0].last!, branch.centerlineSamples[31])
+            XCTAssertEqual(branch.spans.count, 3)
+            XCTAssertEqual(branch.spans[1].first!, branch.spans[0].last!)
+            XCTAssertEqual(branch.spans[1].last!, branch.spans[2].first!)
+            XCTAssertEqual(simd_length(branch.spans[1][2] - branch.spans[1][1]), 0.1, accuracy: 1e-6)
+            XCTAssertEqual(simd_length(branch.spans[1][branch.spans[1].count - 2] - branch.spans[1][branch.spans[1].count - 3]), 0.1, accuracy: 1e-6)
+            XCTAssertEqual(branch.arcLength, 4.2, accuracy: 1e-3)
+        }
+    }
+
+    func testTwoBranchRouteAccountsForBothBoresAndExteriorContactLength() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: throughBoreSuspension(restLength: 4.2),
+            bounds: bounds
+        )
+
+        for branch in result.branches {
+            XCTAssertEqual(branch.spans.count, 3)
+            XCTAssertEqual(branch.spans[0].count, SuspendedCordSolver.sampleCount)
+            XCTAssertEqual(branch.spans[2].count, SuspendedCordSolver.sampleCount)
+            XCTAssertGreaterThan(branch.spans[1].count, 4)
+            XCTAssertEqual(branch.centerlineSamples.first!, result.fixedAnchor)
+            XCTAssertEqual(branch.centerlineSamples[31], branch.spans[0].last!)
+            XCTAssertEqual(branch.centerlineSamples.last!, result.fixedAnchor)
+            let measuredLength = zip(branch.centerlineSamples, branch.centerlineSamples.dropFirst()).reduce(Float.zero) {
+                $0 + simd_length($1.1 - $1.0)
+            }
+            XCTAssertEqual(measuredLength, branch.arcLength, accuracy: 0.02)
+        }
+    }
 }

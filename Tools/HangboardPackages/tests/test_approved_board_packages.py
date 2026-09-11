@@ -20,6 +20,13 @@ DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
+FLASH_TWO_BRANCH_CANDIDATE = (
+    REPO_ROOT
+    / "Tools"
+    / "HangboardModels"
+    / "fixtures"
+    / "tension_flash_board_two_branch_review_candidate.json"
+)
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
 YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
@@ -514,84 +521,107 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert "dimensions" not in board
     assert _presentation_summary(board) == [
         (
-            "three-edge-upright",
-            "Three-edge surface — right side up",
-            "assets/primary.png",
+            "primary",
+            "Primary suspended model",
+            "assets/primary.usdz",
             1.5,
             True,
             None,
             False,
-        ),
-        (
-            "three-edge-inverted",
-            "Three-edge surface — upside down",
-            "assets/three-edge-inverted.png",
-            1.5,
-            False,
-            "three-edge-upright",
-            True,
-        ),
-        (
-            "two-edge-upright",
-            "Two-edge surface — right side up",
-            "assets/two-edge-surface.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "two-edge-inverted",
-            "Two-edge surface — upside down",
-            "assets/two-edge-inverted.png",
-            2.0,
-            False,
-            "two-edge-upright",
-            True,
         ),
     ]
 
-    owners = _original_hold_owners(board)
-    holds_by_presentation = {
-        presentation_id: tuple(
-            hold["id"]
-            for hold in board["holds"]
-            if owners[hold["id"]] == presentation_id
-        )
-        for presentation_id in ("three-edge-upright", "two-edge-upright")
-    }
-    assert holds_by_presentation == {
-        "three-edge-upright": (
-            "three-edge-left",
-            "three-edge-center",
-            "three-edge-right",
-        ),
-        "two-edge-upright": (
-            "two-edge-left",
-            "two-edge-right",
-            "small-crimp-left",
-            "small-crimp-right",
-        ),
-    }
+    assert [hold["id"] for hold in board["holds"]] == [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right",
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right",
+    ]
     assert all(hold["kind"] == "edge" for hold in board["holds"])
     assert all("sizeMillimeters" not in hold for hold in board["holds"])
-    geometry = document_hold_geometry(board)
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
-    assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
-    )
-
-    expected_sizes = {
-        "assets/primary.png": (1536, 1024),
-        "assets/three-edge-inverted.png": (1536, 1024),
-        "assets/two-edge-surface.png": (1774, 887),
-        "assets/two-edge-inverted.png": (1774, 887),
+    assert all("presentationID" not in hold and "geometry" not in hold for hold in board["holds"])
+    assert [position["id"] for position in board["positions"]] == [
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    ]
+    assert {position["presentationID"] for position in board["positions"]} == {"primary"}
+    assert set(board["presentations"][0]["media"]) == {
+        "type", "assetPath", "descriptorPath", "display", "suspension"
     }
-    for asset_path, expected_size in expected_sizes.items():
-        with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
-            assert image.format == "PNG"
-            assert image.size == expected_size
+    suspension = board["presentations"][0]["media"]["suspension"]
+    assert suspension["type"] == "twoBranchCord"
+    assert [
+        passage["id"]
+        for side in ("left", "right")
+        for passage in suspension["passages"][side]
+    ] == [
+        "left-outer-passage",
+        "left-inner-passage",
+        "right-inner-passage",
+        "right-outer-passage",
+    ]
+    assert set(suspension["canonicalPoses"]) == {
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    }
+    assert {path.relative_to(FLASH_BOARD_ROOT).as_posix() for path in FLASH_BOARD_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+
+
+def test_flash_board_promotes_the_verified_two_branch_contract_and_exact_assets() -> None:
+    """The live package must not regress to the retired single-cord draft."""
+    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+    candidate = json.loads(FLASH_TWO_BRANCH_CANDIDATE.read_text(encoding="utf-8"))
+    suspension = board["presentations"][0]["media"]["suspension"]
+
+    assert suspension["type"] == "twoBranchCord"
+    assert list(suspension) == ["type", "passages", "branches", "anchor", "canonicalPoses"]
+    expected_passages = {
+        side: [
+            {
+                "id": passage["id"],
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": passage["entryPointInModel"],
+                "exitPointInModel": passage["exitPointInModel"],
+                "provenance": passage["provenance"],
+            }
+            for passage in candidate["passages"][side]
+        ]
+        for side in ("left", "right")
+    }
+    assert suspension["passages"] == expected_passages
+    assert suspension["branches"] == candidate["branches"]
+    assert suspension["anchor"] == candidate["anchor"]
+    assert suspension["canonicalPoses"] == {
+        position_id: {
+            **pose,
+            "camera": {
+                "viewDirection": [0, 0, -1] if position_id.startswith("three-edge") else [0, 0, 1],
+                "fitPadding": 0.1,
+            },
+        }
+        for position_id, pose in candidate["canonicalPoses"].items()
+    }
+    expected_model = candidate["expectedModel"]
+    assert hashlib.sha256((FLASH_BOARD_ROOT / "assets/primary.usdz").read_bytes()).hexdigest() == expected_model["modelSHA256"]
+    assert hashlib.sha256((FLASH_BOARD_ROOT / "assets/primary.model.json").read_bytes()).hexdigest() == expected_model["descriptorSHA256"]
+
+    package = load_board_catalog_module().load_board_package(FLASH_BOARD_ROOT)
+    parsed_suspension = package.board.presentations[0].media.suspension
+    assert parsed_suspension is not None
+    assert [
+        passage.node_id
+        for side in (parsed_suspension.passages.left, parsed_suspension.passages.right)
+        for passage in side
+    ] == ["flash_board_body_008"] * 4
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:

@@ -11,6 +11,7 @@
     }
   ],
   "commerceSources": [],
+  "userEvidenceSources": [],
   "logicalInventory": [
     {
       "id": "REPLACE_WITH_CANONICAL_LOGICAL_CONTACT_ID",
@@ -42,5 +43,49 @@
     "front",
     "three-quarter",
     "clay-detail"
-  ]
+  ],
+  "suspendedPresentation": {
+    "positionIDs": ["REPLACE_WITH_POSITION_ID"],
+    "positionMappings": [
+      {
+        "positionID": "REPLACE_WITH_POSITION_ID",
+        "holdIDs": ["REPLACE_WITH_CANONICAL_LOGICAL_CONTACT_ID"],
+        "sourceLocalPath": "sources/RETAINED-VIEW-SNAPSHOT"
+      }
+    ],
+    "attachmentEvidence": {
+      "sourceLocalPath": "sources/RETAINED-ATTACHMENT-VIEW",
+      "view": "attachment-region",
+      "supports": "REPLACE_WITH_SOURCE_BACKED_ATTACHMENT_FACT"
+    },
+    "faceInventoryNotes": [
+      {
+        "faceID": "REPLACE_WITH_FACE_ID",
+        "sourceLocalPaths": ["sources/RETAINED-VIEW-SNAPSHOT"],
+        "notes": "REPLACE_WITH_EVIDENCE-BACKED_FACE_NOTE_AND_LIMITATION"
+      }
+    ],
+    "nonSelectableFeatures": [
+      {
+        "featureID": "REPLACE_WITH_NONSELECTABLE_FEATURE_ID",
+        "faceID": "REPLACE_WITH_FACE_ID",
+        "sourceLocalPaths": ["sources/RETAINED-VIEW-SNAPSHOT"],
+        "description": "REPLACE_WITH_VISIBLE_FEATURE_DESCRIPTION",
+        "reason": "REPLACE_WITH_UNRESOLVED_OR_NONLOGICAL_FEATURE_RULING"
+      }
+    ],
+    "logicalRuling": "no-new-logical-ids",
+    "visualApproval": {
+      "approvedSnapshotPaths": ["sources/RETAINED-FRONT-VIEW", "sources/RETAINED-DISTINCT-VIEW"],
+      "materiallyDistinct": true,
+      "decisionDate": "2026-09-09"
+    },
+    "displayEstimates": [
+      {
+        "name": "REPLACE_WITH_ESTIMATE_NAME",
+        "value": "REPLACE_WITH_ESTIMATE_VALUE",
+        "provenance": "displayEstimate"
+      }
+    ]
+  }
 }
