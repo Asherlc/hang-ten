@@ -122,7 +122,7 @@ the material change for an untextured Principled material, then passed.
 | --- | --- |
 | `rtk python3 -m unittest Tools/HangboardModels/test_multiple_body_meshes_unittest.py` | pass: 2 tests |
 | `rtk python3 -m unittest discover -s Tools/HangboardModels -p 'test_*_unittest.py'` | pass: 2 tests |
-| `PYTHONPATH=Tools/HangboardPackages/src rtk python3 -m hangboard_packages.cli validate --root Hangboards --final-inventory` | pass: 61 complete packages, 0 drafts |
+| `PYTHONPATH=Tools/HangboardPackages/src rtk python3 -m hangboard_packages.cli validate --root Hangboards --final-inventory` | pass: 62 complete packages, 0 drafts |
 | `rtk proxy blender --background --factory-startup --python Tools/HangboardModels/test_compile_model_package_blender.py` | pass: tag, deterministic export/reimport, and untextured Principled-material regressions |
 | `rtk proxy blender … compile_model_package.py …` for each owned tagged source, then four `cmp` calls | pass: both regenerated USDZ and descriptors byte-match shipped assets |
 | `rtk python3 -m pytest Tools/HangboardPackages/tests/test_approved_board_packages.py -q` | unavailable: `No module named pytest` |

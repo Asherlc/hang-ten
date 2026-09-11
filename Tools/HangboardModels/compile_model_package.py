@@ -302,13 +302,24 @@ def _require_renderable_materials(mesh: object, node_id: str) -> None:
             raise ValueError(f"imported mesh {node_id} is materialless")
         material = materials[index]
         nodes = getattr(getattr(material, "node_tree", None), "nodes", ())
-        node_types = {getattr(node, "type", None) for node in nodes}
-        if not {"BSDF_PRINCIPLED", "OUTPUT_MATERIAL"} <= node_types:
+        output = next(
+            (
+                node
+                for node in nodes
+                if getattr(node, "type", None) == "OUTPUT_MATERIAL"
+                and getattr(node, "is_active_output", False)
+            ),
+            None,
+        )
+        surface = output.inputs.get("Surface") if output is not None else None
+        if surface is None or not any(
+            link.from_node.type == "BSDF_PRINCIPLED" for link in surface.links
+        ):
             raise ValueError(f"imported mesh {node_id} has no renderable material")
         image_nodes = [
             node for node in nodes if getattr(node, "type", None) == "TEX_IMAGE"
         ]
-        if image_nodes and not any(
+        if image_nodes and not all(
             _image_has_usable_data(getattr(node, "image", None))
             for node in image_nodes
         ):

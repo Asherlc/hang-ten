@@ -199,6 +199,57 @@ expect_value_error(
     lambda: compiler._require_image_materials(unusable_mesh.data, unusable_mesh.name),
 )
 
+# A valid texture must not hide another declared texture's missing image data.
+usable_texture = unusable_material.node_tree.nodes.new("ShaderNodeTexImage")
+usable_texture.image = bpy.data.images.new("Usable image", width=1, height=1)
+assert compiler._image_has_usable_data(usable_texture.image)
+for missing_image in (unusable_image, None):
+    unusable_texture.image = missing_image
+    expect_value_error(
+        "usable image data",
+        lambda: compiler._require_renderable_materials(
+            unusable_mesh.data, unusable_mesh.name
+        ),
+    )
+
+
+reset_scene()
+shader_mesh = mesh("DisconnectedShaderMesh")
+shader_material = bpy.data.materials.new("Disconnected shader material")
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", DeprecationWarning)
+    shader_material.use_nodes = True
+shader_mesh.data.materials.append(shader_material)
+shader_nodes = shader_material.node_tree.nodes
+shader_links = shader_material.node_tree.links
+principled = shader_nodes.get("Principled BSDF")
+output = shader_nodes.get("Material Output")
+# Connected, untextured Principled materials remain valid.
+compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name)
+shader_links.clear()
+expect_value_error(
+    "renderable material",
+    lambda: compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name),
+)
+# A connected non-Principled shader does not make a disconnected Principled valid.
+diffuse = shader_nodes.new("ShaderNodeBsdfDiffuse")
+shader_links.new(diffuse.outputs["BSDF"], output.inputs["Surface"])
+expect_value_error(
+    "renderable material",
+    lambda: compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name),
+)
+# A Principled connection on an inactive output must not satisfy the contract.
+inactive_output = shader_nodes.new("ShaderNodeOutputMaterial")
+shader_links.new(principled.outputs["BSDF"], inactive_output.inputs["Surface"])
+output.is_active_output = True
+assert not inactive_output.is_active_output
+expect_value_error(
+    "renderable material",
+    lambda: compiler._require_renderable_materials(shader_mesh.data, shader_mesh.name),
+)
+
+print("MODEL_COMPILER_MATERIAL_TESTS passed")
+
 
 reset_scene()
 context_root = TOOLS.parents[1] / ".context"
