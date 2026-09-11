@@ -37,12 +37,48 @@ EXPECTED_IDS = frozenset(
 
 
 def valid_report() -> dict[str, object]:
+    logical_bindings = [
+        {"nodeID": "flash-board-body", "role": "body"},
+        *[
+            {"nodeID": hold_id, "role": "hold", "holdID": hold_id}
+            for hold_id in sorted(EXPECTED_IDS)
+        ],
+    ]
+    passage_correspondence = [
+        {
+            "passageID": passage_id,
+            "nodeID": "flash-board-body",
+            "sourceNodeID": "flash-board-body",
+            "role": "body",
+            "pointInModel": [0.017, 0.048, 0.076],
+        }
+        for passage_id in ("left-top", "left-bottom", "right-top", "right-bottom")
+    ]
     return {
         "boardID": "tension.flash-board",
         "holdIDs": sorted(EXPECTED_IDS),
         "hold_ids_preserved": 7,
         "body_mesh_count": 1,
         "attachment_mesh_count": 0,
+        "meshCount": 8,
+        "logicalBindings": [
+            {**binding, "sourceNodeID": binding["nodeID"]}
+            for binding in logical_bindings
+        ],
+        "passageCorrespondence": passage_correspondence,
+        "texturedMeshCount": 8,
+        "materialChecks": [
+            {"nodeID": binding["nodeID"], "material": "canonical-neutral-wood", "images": [{"name": "canonical", "width": 1, "height": 1}]}
+            for binding in logical_bindings
+        ],
+        "modelSHA256": "a" * 64,
+        "descriptorSHA256": "b" * 64,
+        "coordinateFrame": "hang-ten-board-v1",
+        "exactDescriptorForActualUSDZ": True,
+        "sourceImagesClearedBeforeImport": True,
+        "sourcePieceCorrespondence": {
+            binding["nodeID"]: binding["nodeID"] for binding in logical_bindings
+        },
         "hardware_mesh_count": 0,
         "baked_cord_mesh_count": 0,
         "baked_anchor_mesh_count": 0,
@@ -64,7 +100,46 @@ def valid_report() -> dict[str, object]:
             position_id: {
                 "expectedHoldIDs": list(verifier.POSITION_HOLD_IDS[position_id]),
                 "rayProbeCount": len(verifier.POSITION_HOLD_IDS[position_id]),
-                "clearanceProbeCount": 1,
+                "ligamentResults": [
+                    {
+                        "probeID": "exterior-left",
+                        "expectedRole": "body",
+                        "nearestRole": "body",
+                        "nearestTriangleIndex": 0,
+                        "passed": True,
+                    },
+                    {
+                        "probeID": "inter-pocket-0",
+                        "expectedRole": "body",
+                        "nearestRole": "body",
+                        "nearestTriangleIndex": 1,
+                        "passed": True,
+                    },
+                ],
+                "allLigamentProbesPassed": True,
+                "surfaceRayResults": [
+                    {
+                        "expectedID": hold_id,
+                        "nearestID": hold_id,
+                        "nearestTriangleIndex": 0,
+                        "hit": True,
+                        "passed": True,
+                    }
+                    for hold_id in verifier.POSITION_HOLD_IDS[position_id]
+                ],
+                "branchClearanceResults": [
+                    {
+                        "branchID": branch_id,
+                        "passed": True,
+                        "minimumDistanceMeters": 0.004,
+                        "requiredClearanceMeters": 0.003,
+                        "sampleCount": 99,
+                        "centerlineSampleCount": 64,
+                        "centerlineSamples": [[0.0, 0.0, 0.0]] * 64,
+                    }
+                    for branch_id in ("left-branch", "right-branch")
+                ],
+                "clearanceProbeCount": 198,
                 "allRayProbesPassed": True,
                 "allClearanceProbesPassed": True,
                 "actualMeshClearance": True,
@@ -99,6 +174,37 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
         report = verifier.verify_report(valid_report(), expected_ids=EXPECTED_IDS)
         self.assertEqual(report["hold_ids_preserved"], 7)
         self.assertEqual(report["attachment"]["nodeID"], "flash-board-body")
+
+
+    def test_verify_report_requires_four_passage_correspondences_and_nonselectable_inventory(self):
+        report = valid_report()
+        report["passageCorrespondence"] = report["passageCorrespondence"][:3]
+        with self.assertRaisesRegex(ValueError, "four passage"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["logicalBindings"].append(
+            {"nodeID": "lower-ledge", "role": "hold", "holdID": "three-edge-left"}
+        )
+        with self.assertRaisesRegex(ValueError, "selectable|binding"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["passageCorrespondence"][0]["role"] = "hold"
+        with self.assertRaisesRegex(ValueError, "passage"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+
+    def test_verify_report_requires_surface_rays_and_both_branch_clearance_results(self):
+        report = valid_report()
+        del report["positionProbes"]["three-edge-upright"]["surfaceRayResults"]
+        with self.assertRaisesRegex(ValueError, "surface ray"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+        report = valid_report()
+        report["positionProbes"]["two-edge-inverted"]["branchClearanceResults"] = []
+        with self.assertRaisesRegex(ValueError, "branch clearance"):
+            verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
 
     def test_verify_report_rejects_contract_regressions(self):
@@ -180,6 +286,37 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             nearest=nearest,
         )
         self.assertFalse(result["passed"])
+
+    def test_two_branch_probe_specs_cover_both_branches_and_their_passage_interfaces(self):
+        suspension = {
+            "type": "twoBranchCord",
+            "passages": {
+                "left": [
+                    {"id": "left-top", "nodeID": "body", "pointInModel": [0.2, 0.9, 0.05]},
+                    {"id": "left-bottom", "nodeID": "body", "pointInModel": [0.3, 0.9, 0.05]},
+                ],
+                "right": [
+                    {"id": "right-top", "nodeID": "body", "pointInModel": [0.7, 0.9, 0.05]},
+                    {"id": "right-bottom", "nodeID": "body", "pointInModel": [0.8, 0.9, 0.05]},
+                ],
+            },
+            "branches": [
+                {"id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 1.5, "radius": 0.002},
+                {"id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 1.5, "radius": 0.002},
+            ],
+            "anchor": {"offsetFromBoardBounds": [0, 0.22, 0]},
+        }
+        pose = {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0]}
+        specs = verifier._branch_probe_specs(
+            {"min": [0, 0, 0], "max": [1, 1, 1]},
+            suspension,
+            pose,
+            {passage_id: "body" for passage_id in ("left-top", "left-bottom", "right-top", "right-bottom")},
+        )
+        self.assertEqual([spec["branchID"] for spec in specs], ["left-branch", "right-branch"])
+        self.assertTrue(all(len(spec["samples"]) == 64 for spec in specs))
+        self.assertTrue(all(len(spec["interfacePoints"]) == 2 for spec in specs))
+        self.assertEqual(specs[0]["passageIDs"], ["left-top", "left-bottom"])
 
 
 if __name__ == "__main__":

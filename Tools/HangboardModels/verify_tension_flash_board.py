@@ -24,6 +24,7 @@ from collections.abc import Mapping, Sequence
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 import sys
 import struct
@@ -137,7 +138,12 @@ def verify_report(
     if report.get("boardID") != EXPECTED_BOARD_ID:
         raise ValueError("report boardID must identify tension.flash-board")
     hold_ids = report.get("holdIDs")
-    if not isinstance(hold_ids, list) or set(hold_ids) != set(expected_ids):
+    if (
+        not isinstance(hold_ids, list)
+        or len(hold_ids) != len(expected_ids)
+        or any(not isinstance(value, str) for value in hold_ids)
+        or set(hold_ids) != set(expected_ids)
+    ):
         raise ValueError("report holdIDs must equal the exact logical inventory")
     if _integer(report, "hold_ids_preserved") != len(expected_ids):
         raise ValueError("report must preserve all seven Flash Board hold IDs")
@@ -148,6 +154,48 @@ def verify_report(
     for key in ("hardware_mesh_count", "baked_cord_mesh_count", "baked_anchor_mesh_count"):
         if _integer(report, key) != 0:
             raise ValueError(f"report must contain no {key.removesuffix('_mesh_count')} meshes")
+    _validate_logical_bindings(report, expected_ids)
+    _validate_passage_correspondence(report)
+    if (
+        report.get("coordinateFrame") != "hang-ten-board-v1"
+        or report.get("exactDescriptorForActualUSDZ") is not True
+        or report.get("sourceImagesClearedBeforeImport") is not True
+    ):
+        raise ValueError("report must prove isolated actual-USDZ verification")
+    for hash_key in ("modelSHA256", "descriptorSHA256"):
+        hash_value = report.get(hash_key)
+        if not isinstance(hash_value, str) or re.fullmatch(r"[0-9a-f]{64}", hash_value) is None:
+            raise ValueError(f"report {hash_key} must be a SHA-256 digest")
+    textured = _integer(report, "texturedMeshCount")
+    mesh_count = _integer(report, "meshCount")
+    material_checks = report.get("materialChecks")
+    if textured != mesh_count or not isinstance(material_checks, list) or len(material_checks) != mesh_count:
+        raise ValueError("every imported board/contact mesh must have material and image evidence")
+    material_nodes = [
+        item.get("nodeID")
+        for item in material_checks
+        if isinstance(item, Mapping)
+    ]
+    binding_nodes = [
+        item.get("nodeID")
+        for item in report["logicalBindings"]
+        if isinstance(item, Mapping)
+    ]
+    if material_nodes != binding_nodes or any(
+        not isinstance(item, Mapping)
+        or not isinstance(item.get("material"), str)
+        or not item.get("material")
+        or not isinstance(item.get("images"), list)
+        or not item["images"]
+        for item in material_checks
+    ):
+        raise ValueError("material evidence must cover every imported board/contact binding")
+    source_mapping = report.get("sourcePieceCorrespondence")
+    if not isinstance(source_mapping, Mapping) or set(source_mapping) != set(binding_nodes):
+        raise ValueError("report source correspondence must cover every imported binding")
+    for binding in report["logicalBindings"]:
+        if binding.get("sourceNodeID") != source_mapping.get(binding.get("nodeID")):
+            raise ValueError("logical binding source correspondence is inconsistent")
     if report.get("explicitTriangles") is not True:
         raise ValueError("report must prove explicit imported triangles")
     triangles = _integer(report, "triangles")
@@ -166,16 +214,19 @@ def verify_report(
         raise ValueError("report must retain the canonical PNG color profile")
 
     attachment = report.get("attachment")
-    if not isinstance(attachment, Mapping):
+    if attachment is not None:
+        if not isinstance(attachment, Mapping):
+            raise ValueError("report attachment must be an object")
+        if not isinstance(attachment.get("nodeID"), str) or not attachment["nodeID"]:
+            raise ValueError("attachment node must identify the imported body node")
+        if attachment.get("sourceNodeID") is not None and not isinstance(attachment.get("sourceNodeID"), str):
+            raise ValueError("attachment source node must be a string")
+        if attachment.get("role") not in {"body", "attachment"}:
+            raise ValueError("attachment node must be body or attachment role")
+        if attachment.get("accessible") is not True:
+            raise ValueError("attachment node and point must be importer-accessible")
+    elif report.get("suspensionType") != "twoBranchCord":
         raise ValueError("report must identify the actual attachment node")
-    if not isinstance(attachment.get("nodeID"), str) or not attachment["nodeID"]:
-        raise ValueError("attachment node must identify the imported body node")
-    if attachment.get("sourceNodeID") != ATTACHMENT_SOURCE_NODE_ID:
-        raise ValueError("attachment source node must be the reviewed body node")
-    if attachment.get("role") not in {"body", "attachment"}:
-        raise ValueError("attachment node must be body or attachment role")
-    if attachment.get("accessible") is not True:
-        raise ValueError("attachment node and point must be importer-accessible")
 
     probes = report.get("positionProbes")
     if not isinstance(probes, Mapping) or set(probes) != set(POSITION_HOLD_IDS):
@@ -186,6 +237,50 @@ def verify_report(
             raise ValueError(f"position probe is not an object: {position_id}")
         if result.get("expectedHoldIDs") != list(expected_hold_ids):
             raise ValueError(f"position probe hold inventory changed: {position_id}")
+        ligaments = result.get("ligamentResults")
+        if not isinstance(ligaments, list) or not ligaments:
+            raise ValueError(f"ligament ray results are incomplete: {position_id}")
+        if result.get("allLigamentProbesPassed") is not True or not all(
+            isinstance(item, Mapping)
+            and item.get("expectedRole") == "body"
+            and item.get("nearestRole") == "body"
+            and item.get("passed") is True
+            and isinstance(item.get("nearestTriangleIndex"), int)
+            and item["nearestTriangleIndex"] >= 0
+            for item in ligaments
+        ):
+            raise ValueError(f"ligament ray probe failed for position {position_id}")
+        rays = result.get("surfaceRayResults")
+        if not isinstance(rays, list) or len(rays) != len(expected_hold_ids):
+            raise ValueError(f"surface ray results are incomplete: {position_id}")
+        if [item.get("expectedID") for item in rays if isinstance(item, Mapping)] != list(expected_hold_ids):
+            raise ValueError(f"surface ray hold order changed: {position_id}")
+        if not all(
+            isinstance(item, Mapping)
+            and item.get("passed") is True
+            and isinstance(item.get("nearestTriangleIndex"), int)
+            and item["nearestTriangleIndex"] >= 0
+            for item in rays
+        ):
+            raise ValueError(f"surface ray probe failed for position {position_id}")
+        branches = result.get("branchClearanceResults")
+        if not isinstance(branches, list) or len(branches) != 2:
+            raise ValueError(f"branch clearance results must contain both branches: {position_id}")
+        branch_ids = [item.get("branchID") for item in branches if isinstance(item, Mapping)]
+        if len(branch_ids) != 2 or len(set(branch_ids)) != 2 or any(not isinstance(value, str) or not value for value in branch_ids):
+            raise ValueError(f"branch clearance IDs are incomplete: {position_id}")
+        if not all(
+            isinstance(item, Mapping)
+            and item.get("passed") is True
+            and isinstance(item.get("minimumDistanceMeters"), (int, float))
+            and isinstance(item.get("requiredClearanceMeters"), (int, float))
+            and item["minimumDistanceMeters"] >= item["requiredClearanceMeters"]
+            and _positive_integer(item, "sampleCount")
+            and isinstance(item.get("centerlineSamples"), list)
+            and len(item["centerlineSamples"]) == item.get("centerlineSampleCount")
+            for item in branches
+        ):
+            raise ValueError(f"branch clearance probe failed for position {position_id}")
         if result.get("allRayProbesPassed") is not True:
             raise ValueError(f"ray probes failed for position {position_id}")
         if result.get("allClearanceProbesPassed") is not True or result.get("actualMeshClearance") is not True:
@@ -195,6 +290,96 @@ def verify_report(
         if _integer(result, "clearanceProbeCount") <= 0:
             raise ValueError(f"clearance probe count is empty: {position_id}")
     return dict(report)
+
+
+def _positive_integer(value: Mapping[str, object], key: str) -> bool:
+    number = value.get(key)
+    return isinstance(number, int) and not isinstance(number, bool) and number > 0
+
+
+def _validate_logical_bindings(
+    report: Mapping[str, object], expected_ids: frozenset[str]
+) -> None:
+    """Require exactly the selectable hold inventory plus one body binding.
+
+    The imported mesh, rather than a camera mask or a material name, is the
+    source of truth.  In particular, a shallow ledge or a passage mouth must
+    not be able to acquire a hold ID and become selectable by accident.
+    """
+    bindings = report.get("logicalBindings")
+    if not isinstance(bindings, list):
+        raise ValueError("report must contain logical binding inventory")
+    node_ids: list[str] = []
+    hold_ids: list[str] = []
+    body_count = 0
+    for binding in bindings:
+        if not isinstance(binding, Mapping):
+            raise ValueError("logical binding must be an object")
+        node_id = binding.get("nodeID")
+        role = binding.get("role")
+        if not isinstance(node_id, str) or not node_id or node_id in node_ids:
+            raise ValueError("logical binding node IDs must be unique")
+        node_ids.append(node_id)
+        if role == "body":
+            body_count += 1
+            if binding.get("holdID") is not None:
+                raise ValueError("body binding may not declare holdID")
+        elif role == "hold":
+            hold_id = binding.get("holdID")
+            if not isinstance(hold_id, str) or not hold_id:
+                raise ValueError("hold binding requires holdID")
+            hold_ids.append(hold_id)
+        elif role == "attachment":
+            if binding.get("holdID") is not None:
+                raise ValueError("attachment binding may not declare holdID")
+        else:
+            raise ValueError("logical binding role is not selectable or physical")
+    if body_count != 1:
+        raise ValueError("logical binding inventory must contain one body")
+    if len(hold_ids) != len(expected_ids) or set(hold_ids) != set(expected_ids):
+        raise ValueError("logical binding inventory must contain exactly seven holds")
+    mesh_count = report.get("meshCount")
+    if isinstance(mesh_count, bool) or not isinstance(mesh_count, int) or mesh_count != len(bindings):
+        raise ValueError("meshCount must equal the imported logical binding inventory")
+
+
+def _validate_passage_correspondence(report: Mapping[str, object]) -> None:
+    passages = report.get("passageCorrespondence")
+    if not isinstance(passages, list) or len(passages) != 4:
+        raise ValueError("report must contain exactly four passage correspondences")
+    bindings = report["logicalBindings"]
+    by_node = {
+        binding["nodeID"]: binding
+        for binding in bindings
+        if isinstance(binding, Mapping) and isinstance(binding.get("nodeID"), str)
+    }
+    passage_ids: list[str] = []
+    for passage in passages:
+        if not isinstance(passage, Mapping):
+            raise ValueError("passage correspondence must be an object")
+        passage_id = passage.get("passageID")
+        node_id = passage.get("nodeID")
+        source_node_id = passage.get("sourceNodeID")
+        role = passage.get("role")
+        point = passage.get("pointInModel")
+        if (
+            not isinstance(passage_id, str)
+            or not passage_id
+            or passage_id in passage_ids
+            or not isinstance(node_id, str)
+            or not node_id
+            or not isinstance(source_node_id, str)
+            or not source_node_id
+            or role not in {"body", "attachment"}
+            or not isinstance(point, list)
+            or len(point) != 3
+            or not all(isinstance(coordinate, (int, float)) and math.isfinite(coordinate) for coordinate in point)
+        ):
+            raise ValueError("passage correspondence is incomplete or duplicated")
+        binding = by_node.get(node_id)
+        if binding is None or binding.get("role") != role:
+            raise ValueError("passage correspondence must target a body or attachment binding")
+        passage_ids.append(passage_id)
 
 
 def validate_attachment_node(attachment: Mapping[str, object], bindings: Sequence[object]) -> None:
@@ -324,16 +509,31 @@ def _suspension_samples(
     pose: Mapping[str, object],
 ) -> list[tuple[float, float, float]]:
     """Reproduce the app's fixed-sample catenary for one canonical pose."""
+    anchor = _suspension_anchor(bounds, suspension)
+    attachment = _transform_point(suspension["attachment"]["pointInModel"], pose)
+    rest_length = float(suspension["cord"]["restLength"])
+    return _catenary_samples(anchor, attachment, rest_length)
+
+
+def _suspension_anchor(
+    bounds: Mapping[str, object], suspension: Mapping[str, object]
+) -> tuple[float, float, float]:
     minimum = tuple(float(value) for value in bounds["min"])
     maximum = tuple(float(value) for value in bounds["max"])
     offset = tuple(float(value) for value in suspension["anchor"]["offsetFromBoardBounds"])
-    anchor = (
+    return (
         (minimum[0] + maximum[0]) / 2 + offset[0],
         maximum[1] + offset[1],
         (minimum[2] + maximum[2]) / 2 + offset[2],
     )
-    attachment = _transform_point(suspension["attachment"]["pointInModel"], pose)
-    rest_length = float(suspension["cord"]["restLength"])
+
+
+def _catenary_samples(
+    anchor: tuple[float, float, float],
+    attachment: tuple[float, float, float],
+    rest_length: float,
+) -> list[tuple[float, float, float]]:
+    """Reproduce the runtime's fixed-sample span solver for two endpoints."""
     delta = tuple(attachment[index] - anchor[index] for index in range(3))
     endpoint_distance = math.sqrt(sum(value * value for value in delta))
     if rest_length < endpoint_distance - 1e-5:
@@ -402,14 +602,13 @@ def _check_centerline_clearance(
     required_clearance: float,
     attachment_node_id: str,
     nearest,
+    interface_points: Sequence[tuple[str, tuple[float, float, float]]] = (),
 ) -> dict[str, object]:
     """Apply the runtime segment/tube clearance rule to a nearest-mesh query."""
     if len(samples) < 2:
         raise ValueError("suspension catenary must contain at least two samples")
     minimum = math.inf
     checked = 0
-    last_segment = len(samples) - 2
-    endpoint = samples[-1]
     node_ids = tuple(getattr(nearest, "node_ids", (attachment_node_id,)))
     for segment_index, (start, end) in enumerate(zip(samples, samples[1:])):
         for subdivision in range(CENTERLINE_SUBDIVISIONS + 1):
@@ -422,10 +621,16 @@ def _check_centerline_clearance(
                 if distance >= required_clearance:
                     continue
                 interface = (
-                    node_id == attachment_node_id
-                    and segment_index == last_segment
+                    any(
+                        interface_node == node_id
+                        and math.dist(point, interface_point) <= 1e-5
+                        for interface_node, interface_point in interface_points
+                    )
+                    if interface_points
+                    else node_id == attachment_node_id
+                    and segment_index == len(samples) - 2
                     and fraction >= 1 - 1e-5
-                    and math.dist(nearest_point, endpoint) <= 1e-5
+                    and math.dist(nearest_point, samples[-1]) <= 1e-5
                 )
                 if not interface:
                     return {
@@ -469,7 +674,7 @@ def _ray_probes(
                 maximum[2] + 0.05 if sign > 0 else minimum[2] - 0.05,
             )
             direction = (0.0, 0.0, -1.0 if sign > 0 else 1.0)
-            hit, location, _, _, nearest, _ = scene.ray_cast(
+            hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
                 depsgraph, origin, direction, distance=0.2
             )
             nearest_hold_id = _property(nearest, "hold_id") if nearest else None
@@ -478,6 +683,9 @@ def _ray_probes(
                 {
                     "expectedID": hold_id,
                     "nearestID": nearest_hold_id,
+                    "nearestTriangleIndex": int(triangle_index) if hit else None,
+                    "origin": [float(v) for v in origin],
+                    "direction": [float(v) for v in direction],
                     "hit": bool(hit),
                     "location": [float(v) for v in location] if hit else None,
                     "passed": passed,
@@ -490,10 +698,140 @@ def _ray_probes(
         result[position_id] = {
             "expectedHoldIDs": list(expected_hold_ids),
             "rayProbeCount": len(probes),
-            "rayProbes": probes,
+            "surfaceRayResults": probes,
             "allRayProbesPassed": True,
         }
+        ligament_results = _ligament_probes(scene, depsgraph, objects, descriptor, sign, expected_hold_ids)
+        result[position_id]["ligamentResults"] = ligament_results
+        result[position_id]["allLigamentProbesPassed"] = True
     return result
+
+
+def _ligament_probes(
+    scene: object,
+    depsgraph: object,
+    objects: Mapping[str, object],
+    descriptor: Mapping[str, object],
+    sign: int,
+    expected_hold_ids: Sequence[str],
+) -> list[dict[str, object]]:
+    """Ray-check exterior and inter-pocket wood ligaments in the real mesh."""
+    body_ids = [node_id for node_id, item in objects.items() if _property(item, "role") == "body"]
+    if len(body_ids) != 1:
+        raise ValueError("actual export must expose one body for ligament probes")
+    body_id = body_ids[0]
+    bounds = descriptor["modelBounds"]
+    minimum = tuple(float(value) for value in bounds["min"])
+    maximum = tuple(float(value) for value in bounds["max"])
+    x_samples: list[tuple[str, float, float]] = [
+        ("exterior-left", 0.02, 0.5),
+        ("exterior-right", 0.98, 0.5),
+    ]
+    intervals = []
+    for left_id, right_id in zip(expected_hold_ids, expected_hold_ids[1:]):
+        left = descriptor["holds"][left_id]["facePlaneAABB"]
+        right = descriptor["holds"][right_id]["facePlaneAABB"]
+        gap_min = max(float(left["max"][0]), float(right["min"][0]))
+        gap_max = min(float(right["max"][0]), float(left["min"][0]))
+        if gap_min >= gap_max:
+            left_max = float(left["max"][0])
+            right_min = float(right["min"][0])
+            if right_min - left_max > 0.005:
+                y_min = max(float(left["min"][1]), float(right["min"][1]))
+                y_max = min(float(left["max"][1]), float(right["max"][1]))
+                intervals.append((left_max + right_min) / 2, (y_min + y_max) / 2 if y_min < y_max else 0.5)
+    x_samples.extend(
+        (f"inter-pocket-{index}", x, y)
+        for index, (x, y) in enumerate(intervals)
+    )
+    results: list[dict[str, object]] = []
+    for probe_id, normalized_x, normalized_y in x_samples:
+        origin = (
+            minimum[0] + (maximum[0] - minimum[0]) * normalized_x,
+            minimum[1] + (maximum[1] - minimum[1]) * normalized_y,
+            maximum[2] + 0.05 if sign > 0 else minimum[2] - 0.05,
+        )
+        direction = (0.0, 0.0, -1.0 if sign > 0 else 1.0)
+        hit, location, _, triangle_index, nearest, _ = scene.ray_cast(
+            depsgraph, origin, direction, distance=0.2
+        )
+        nearest_role = _property(nearest, "role") if nearest else None
+        results.append({
+            "probeID": probe_id,
+            "expectedRole": "body",
+            "nearestRole": nearest_role,
+            "nearestNodeID": nearest.name if nearest else None,
+            "nearestTriangleIndex": int(triangle_index) if hit else None,
+            "origin": [float(value) for value in origin],
+            "direction": [float(value) for value in direction],
+            "location": [float(value) for value in location] if hit else None,
+            "hit": bool(hit),
+            "passed": bool(hit and nearest_role == "body"),
+        })
+        if not results[-1]["passed"]:
+            raise ValueError(f"ligament ray missed body at {probe_id}")
+    return results
+
+
+def _branch_probe_specs(
+    bounds: Mapping[str, object],
+    suspension: Mapping[str, object],
+    pose: Mapping[str, object],
+    passage_node_ids: Mapping[str, str],
+) -> list[dict[str, object]]:
+    """Build the exact two-branch centerlines used by the runtime solver."""
+    if suspension.get("type") != "twoBranchCord":
+        attachment = suspension["attachment"]
+        return [{
+            "branchID": "single-cord",
+            "samples": _suspension_samples(bounds, suspension, pose),
+            "interfacePoints": [(passage_node_ids.get("attachment", str(attachment["nodeID"])), _transform_point(attachment["pointInModel"], pose))],
+            "radius": float(suspension["cord"]["radius"]),
+        }]
+
+    anchor = _suspension_anchor(bounds, suspension)
+    passages = {
+        passage["id"]: passage
+        for side in ("left", "right")
+        for passage in suspension["passages"][side]
+    }
+    specs: list[dict[str, object]] = []
+    for branch in suspension["branches"]:
+        first_record = passages[branch["passageIDs"][0]]
+        second_record = passages[branch["passageIDs"][1]]
+        first = _transform_point(first_record["pointInModel"], pose)
+        second = _transform_point(second_record["pointInModel"], pose)
+        interior = math.dist(first, second)
+        first_distance = math.dist(anchor, first)
+        second_distance = math.dist(anchor, second)
+        declared = float(branch["restLength"])
+        minimum_route = first_distance + interior + second_distance
+        if declared < minimum_route - 1e-5:
+            raise ValueError(f"branch {branch['id']} is shorter than its posed route")
+        free_length = declared - interior
+        endpoint_sum = first_distance + second_distance
+        if endpoint_sum <= 1e-7 or free_length < endpoint_sum - 1e-5:
+            raise ValueError(f"branch {branch['id']} has no valid free span")
+        first_free = free_length * (first_distance / endpoint_sum)
+        second_free = free_length - first_free
+        first_span = _catenary_samples(anchor, first, first_free)
+        second_span = list(reversed(_catenary_samples(anchor, second, second_free)))
+        samples = first_span + [second] + second_span[1:]
+        specs.append({
+            "branchID": str(branch["id"]),
+            "samples": samples,
+            "interfacePoints": [
+                (passage_node_ids[str(first_record["id"])], first),
+                (passage_node_ids[str(second_record["id"])], second),
+            ],
+            "passageIDs": list(branch["passageIDs"]),
+            "radius": float(branch["radius"]),
+            "declaredRestLengthMeters": declared,
+            "interiorPassageLengthMeters": interior,
+        })
+    if len(specs) != 2 or len({spec["branchID"] for spec in specs}) != 2:
+        raise ValueError("two-branch suspension must expose two distinct branches")
+    return specs
 
 
 def _attachment_point(bounds: Mapping[str, object]) -> tuple[float, float, float]:
@@ -511,6 +849,7 @@ def _clearance_probes(
     objects: Mapping[str, object],
     descriptor: Mapping[str, object],
     suspension: Mapping[str, object],
+    passage_node_ids: Mapping[str, str] | None = None,
 ) -> dict[str, dict[str, object]]:
     """Check every posed catenary against the reimported mesh triangles.
 
@@ -533,11 +872,9 @@ def _clearance_probes(
             raise ValueError(f"actual imported mesh has no triangles: {node_id}")
         trees[node_id] = (vertices, polygons)
     result: dict[str, dict[str, object]] = {}
-    required = float(suspension["cord"]["radius"]) + CORD_CLEARANCE_METERS
-    attachment_node_id = str(suspension["attachment"]["nodeID"])
+    resolved_passage_nodes = passage_node_ids or {}
     for position_id in POSITION_HOLD_IDS:
         pose = suspension["canonicalPoses"][position_id]
-        samples = _suspension_samples(bounds, suspension, pose)
         posed_trees: dict[str, object] = {}
         for node_id, (vertices, polygons) in trees.items():
             posed_vertices = [_transform_point(vertex, pose) for vertex in vertices]
@@ -554,30 +891,119 @@ def _clearance_probes(
                     return math.inf, point
                 return float(nearest[3]), tuple(nearest[0])
 
-        check = _check_centerline_clearance(
-            samples,
-            required_clearance=required,
-            attachment_node_id=attachment_node_id,
-            nearest=Query(),
-        )
-        if not check["passed"]:
-            raise ValueError(
-                f"actual mesh cord clearance probe failed for {position_id}: "
-                f"{check['minimumDistanceMeters']:.9f} < {required:.9f}; "
-                f"node={check.get('failedNodeID')} segment={check.get('failedSegmentIndex')} "
-                f"fraction={check.get('failedSegmentFraction')}"
+        branch_results: list[dict[str, object]] = []
+        for branch in _branch_probe_specs(bounds, suspension, pose, resolved_passage_nodes):
+            required = float(branch["radius"]) + CORD_CLEARANCE_METERS
+            interface_points = [
+                (str(node_id), tuple(point))
+                for node_id, point in branch["interfacePoints"]
+            ]
+            attachment_node_id = interface_points[0][0]
+            check = _check_centerline_clearance(
+                branch["samples"],
+                required_clearance=required,
+                attachment_node_id=attachment_node_id,
+                interface_points=interface_points,
+                nearest=Query(),
             )
+            if not check["passed"]:
+                raise ValueError(
+                    f"actual mesh cord clearance probe failed for {position_id} branch {branch['branchID']}: "
+                    f"{check['minimumDistanceMeters']:.9f} < {required:.9f}; "
+                    f"node={check.get('failedNodeID')} segment={check.get('failedSegmentIndex')} "
+                    f"fraction={check.get('failedSegmentFraction')}"
+                )
+            branch_results.append({
+                "branchID": branch["branchID"],
+                "passageIDs": branch.get("passageIDs", []),
+                "minimumDistanceMeters": check["minimumDistanceMeters"],
+                "requiredClearanceMeters": required,
+                "sampleCount": check["sampleCount"],
+                "centerlineSampleCount": len(branch["samples"]),
+                "centerlineSamples": [list(point) for point in branch["samples"]],
+                "segmentSubdivisions": CENTERLINE_SUBDIVISIONS,
+                "declaredRestLengthMeters": branch.get("declaredRestLengthMeters"),
+                "interiorPassageLengthMeters": branch.get("interiorPassageLengthMeters"),
+                "passed": True,
+            })
+        if not branch_results:
+            raise ValueError(f"no branch clearance probes generated for {position_id}")
         result[position_id] = {
-            "clearanceProbeCount": check["sampleCount"],
-            "clearanceMetersMinimum": check["minimumDistanceMeters"],
-            "clearanceRequiredMeters": required,
-            "clearanceProbes": {"centerlineSamples": len(samples), "segmentSubdivisions": CENTERLINE_SUBDIVISIONS},
+            "clearanceProbeCount": sum(int(branch["sampleCount"]) for branch in branch_results),
+            "clearanceMetersMinimum": min(float(branch["minimumDistanceMeters"]) for branch in branch_results),
+            "clearanceRequiredMeters": max(float(branch["requiredClearanceMeters"]) for branch in branch_results),
+            "branchClearanceResults": branch_results,
             "allClearanceProbesPassed": True,
             "actualMeshClearance": True,
             "canonicalPoseTested": True,
-            "transformedAttachment": list(samples[-1]),
         }
     return result
+
+
+def _passage_correspondence(
+    suspension: Mapping[str, object],
+    bindings: Sequence[object],
+    source_correspondence: Mapping[str, str],
+    bounds: Mapping[str, object],
+) -> tuple[list[dict[str, object]], dict[str, str]]:
+    """Resolve declared passage IDs to importer-visible body/attachment nodes."""
+    if suspension.get("type") != "twoBranchCord":
+        attachment = suspension.get("attachment")
+        if not isinstance(attachment, Mapping):
+            raise ValueError("single-cord suspension attachment is missing")
+        records = [attachment]
+    else:
+        passages = suspension.get("passages")
+        if not isinstance(passages, Mapping):
+            raise ValueError("two-branch suspension passages are missing")
+        records = [
+            passage
+            for side in ("left", "right")
+            for passage in passages.get(side, ())
+        ]
+    by_id = {binding.node_id: binding for binding in bindings}
+    source_to_imported = {source: imported for imported, source in source_correspondence.items()}
+    minimum = tuple(float(value) for value in bounds["min"])
+    maximum = tuple(float(value) for value in bounds["max"])
+    result: list[dict[str, object]] = []
+    passage_nodes: dict[str, str] = {}
+    seen_ids: set[str] = set()
+    for index, record in enumerate(records):
+        if not isinstance(record, Mapping):
+            raise ValueError(f"suspension passage {index} is not an object")
+        passage_id = str(record.get("id", "attachment"))
+        requested_node = record.get("nodeID")
+        if not isinstance(requested_node, str) or not requested_node:
+            raise ValueError(f"suspension passage {passage_id} has no nodeID")
+        imported_node = requested_node if requested_node in by_id else source_to_imported.get(requested_node)
+        if imported_node is None:
+            raise ValueError(f"suspension passage node is absent from imported bindings: {requested_node}")
+        binding = by_id[imported_node]
+        if binding.role not in {"body", "attachment"}:
+            raise ValueError(f"suspension passage node is selectable: {requested_node}")
+        point = record.get("pointInModel")
+        if not isinstance(point, Sequence) or isinstance(point, (str, bytes)) or len(point) != 3:
+            raise ValueError(f"suspension passage {passage_id} point is invalid")
+        point_values = [float(value) for value in point]
+        if not all(math.isfinite(value) for value in point_values):
+            raise ValueError(f"suspension passage {passage_id} point is non-finite")
+        if not all(low <= value <= high for value, low, high in zip(point_values, minimum, maximum)):
+            raise ValueError(f"suspension passage {passage_id} point is outside actual descriptor bounds")
+        if passage_id in seen_ids:
+            raise ValueError(f"duplicate suspension passage ID: {passage_id}")
+        seen_ids.add(passage_id)
+        passage_nodes[passage_id] = imported_node
+        result.append({
+            "passageID": passage_id,
+            "nodeID": imported_node,
+            "sourceNodeID": source_correspondence[imported_node],
+            "role": binding.role,
+            "pointInModel": point_values,
+            "provenance": record.get("provenance"),
+        })
+    if suspension.get("type") == "twoBranchCord" and len(result) != 4:
+        raise ValueError("two-branch suspension must expose exactly four passages")
+    return result, passage_nodes
 
 
 def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
@@ -653,25 +1079,15 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         raise ValueError("actual USDZ exceeds the Flash Board triangle ceiling")
 
     source_correspondence = compiler._imported_source_node_ids(scene, bindings)
-    body_binding = next(binding for binding in bindings if binding.role == "body")
-    attachment = {
-        "nodeID": body_binding.node_id,
-        "role": body_binding.role,
-        "sourceNodeID": source_correspondence[body_binding.node_id],
-    }
-    validate_attachment_node(attachment, bindings)
-    point = _attachment_point(descriptor["modelBounds"])
-    minimum = descriptor["modelBounds"]["min"]
-    maximum = descriptor["modelBounds"]["max"]
-    if not all(low <= value <= high for value, low, high in zip(point, minimum, maximum)):
-        raise ValueError("attachment point is outside actual descriptor bounds")
-
-    position_probes = _ray_probes(objects, descriptor)
     board_document = load_json_object(BOARD_JSON)
     suspension = board_document["presentations"][0]["media"]["suspension"]
     if not isinstance(suspension, Mapping):
         raise ValueError("Flash Board package suspension metadata is missing")
-    clearance = _clearance_probes(objects, descriptor, suspension)
+    passage_correspondence, passage_node_ids = _passage_correspondence(
+        suspension, bindings, source_correspondence, descriptor["modelBounds"]
+    )
+    position_probes = _ray_probes(objects, descriptor)
+    clearance = _clearance_probes(objects, descriptor, suspension, passage_node_ids)
     for position_id in POSITION_HOLD_IDS:
         position_probes[position_id].update(clearance[position_id])
     report = {
@@ -698,14 +1114,17 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         "triangleCeiling": TRIANGLE_CEILING,
         "explicitTriangles": True,
         "sourcePieceCorrespondence": source_correspondence,
-        "attachment": {
-            "nodeID": body_binding.node_id,
-            "role": body_binding.role,
-            "sourceNodeID": source_correspondence[body_binding.node_id],
-            "pointInModel": list(point),
-            "accessible": True,
-            "provenance": "estimatedFromApprovedModel; integral cord passage on body",
-        },
+        "suspensionType": suspension.get("type"),
+        "logicalBindings": [
+            {
+                "nodeID": binding.node_id,
+                "role": binding.role,
+                **({"holdID": binding.hold_id} if binding.hold_id is not None else {}),
+                "sourceNodeID": source_correspondence[binding.node_id],
+            }
+            for binding in bindings
+        ],
+        "passageCorrespondence": passage_correspondence,
         "positionProbes": position_probes,
         "rendersSkipped": True,
     }
