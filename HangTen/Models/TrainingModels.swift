@@ -1074,6 +1074,14 @@ struct TrainingBoard: Identifiable, Hashable {
         return presentations.first { $0.id == id }
     }
 
+    /// Returns the authored position without silently substituting another
+    /// position or presentation. This is the single position lookup used by
+    /// model selection and hold-membership resolution.
+    func position(id: String?) -> BoardPosition? {
+        guard let id else { return nil }
+        return positions.first { $0.id == id }
+    }
+
     /// Logical holds that have display-derived matching geometry in this
     /// exact presentation. A missing media mapping is unavailable, rather
     /// than a reason to borrow geometry from another presentation.
@@ -1082,7 +1090,7 @@ struct TrainingBoard: Identifiable, Hashable {
     }
 
     func holdIDs(inPosition positionID: String) -> [String] {
-        guard let position = positions.first(where: { $0.id == positionID }),
+        guard let position = position(id: positionID),
               let presentation = presentation(id: position.presentationID) else {
             return []
         }

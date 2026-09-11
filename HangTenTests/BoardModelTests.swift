@@ -6,6 +6,79 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    func testTrainingBoardHoldIDsUseCanonicalHoldOrderForPositionMembership() throws {
+        let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let authoredOrder = original.holds.map(\.id).reversed()
+        let shuffledPosition = BoardPosition(
+            id: "shuffled",
+            presentationID: original.defaultPresentation.id,
+            holdIDs: Array(authoredOrder)
+        )
+        let board = TrainingBoard(
+            id: original.id,
+            manufacturer: original.manufacturer,
+            name: original.name,
+            subtitle: original.subtitle,
+            dimensions: original.dimensions,
+            aspectRatio: original.aspectRatio,
+            equipmentObjects: original.equipmentObjects,
+            holds: original.holds,
+            semanticHolds: original.semanticHolds,
+            productURL: original.productURL,
+            photoAssetName: original.photoAssetName,
+            presentations: original.presentations,
+            positions: [shuffledPosition],
+            positionTransitions: original.positionTransitions
+        )
+
+        XCTAssertEqual(board.position(id: "shuffled")?.id, "shuffled")
+        XCTAssertEqual(board.holdIDs(inPosition: "shuffled"), original.holds.map(\.id))
+        XCTAssertNil(board.position(id: "missing"))
+    }
+
+    func testTrainingBoardPositionSelectionDoesNotBorrowMembershipOrPresentation() throws {
+        let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let holdIDs = original.holds.map(\.id)
+        let firstPosition = BoardPosition(
+            id: "first",
+            presentationID: original.defaultPresentation.id,
+            holdIDs: Array(holdIDs.prefix(2))
+        )
+        let secondPosition = BoardPosition(
+            id: "second",
+            presentationID: original.defaultPresentation.id,
+            holdIDs: Array(holdIDs.dropFirst(2))
+        )
+        let unavailablePresentationPosition = BoardPosition(
+            id: "unavailable",
+            presentationID: "missing",
+            holdIDs: holdIDs
+        )
+        let board = TrainingBoard(
+            id: original.id,
+            manufacturer: original.manufacturer,
+            name: original.name,
+            subtitle: original.subtitle,
+            dimensions: original.dimensions,
+            aspectRatio: original.aspectRatio,
+            equipmentObjects: original.equipmentObjects,
+            holds: original.holds,
+            semanticHolds: original.semanticHolds,
+            productURL: original.productURL,
+            photoAssetName: original.photoAssetName,
+            presentations: original.presentations,
+            positions: [firstPosition, secondPosition, unavailablePresentationPosition],
+            positionTransitions: original.positionTransitions
+        )
+
+        XCTAssertEqual(board.holdIDs(inPosition: "first"), Array(holdIDs.prefix(2)))
+        XCTAssertEqual(board.holdIDs(inPosition: "second"), Array(holdIDs.dropFirst(2)))
+        XCTAssertEqual(board.position(id: "first")?.presentationID, original.defaultPresentation.id)
+        XCTAssertEqual(board.position(id: "second")?.presentationID, original.defaultPresentation.id)
+        XCTAssertEqual(board.position(id: "unavailable")?.presentationID, "missing")
+        XCTAssertEqual(board.holdIDs(inPosition: "unavailable"), [])
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
