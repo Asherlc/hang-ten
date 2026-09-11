@@ -38,22 +38,69 @@
           }
         },
         "suspension": {
-          "type": "singleCord",
-          "attachment": {
-            "nodeID": "flash_board_body_008",
-            "pointInModel": [0.017, 0.047999999, 0.075999998],
-            "provenance": "estimatedFromApprovedModel; integral cord passage on body"
+          "type": "twoBranchCord",
+          "passages": {
+            "left": [
+              {
+                "id": "left-outer-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.017, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.017, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              },
+              {
+                "id": "left-inner-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.031, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.031, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              }
+            ],
+            "right": [
+              {
+                "id": "right-inner-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.469, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.469, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              },
+              {
+                "id": "right-outer-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.483, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.483, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              }
+            ]
           },
+          "branches": [
+            {
+              "id": "left-branch",
+              "passageIDs": ["left-outer-passage", "left-inner-passage"],
+              "entryContactPoints": [[-0.002, 0.054, 0.12], [0.017, 0.054, 0.07793]],
+              "exteriorContactPoints": [[0.014, 0.048526, -0.001], [-0.002, 0.048526, -0.001], [0.034, 0.048526, -0.001]],
+              "exitContactPoints": [[0.031, 0.054, 0.07793], [-0.002, 0.054, 0.12]],
+              "restLength": 1.56,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "display estimate; bounded exterior left-end guide selected by actual-mesh sweep for all canonical poses"
+            },
+            {
+              "id": "right-branch",
+              "passageIDs": ["right-inner-passage", "right-outer-passage"],
+              "entryContactPoints": [[0.502, 0.054, 0.12], [0.469, 0.054, 0.07793]],
+              "exteriorContactPoints": [[0.466, 0.048526, -0.001], [0.502, 0.048526, -0.001], [0.486, 0.048526, -0.001]],
+              "exitContactPoints": [[0.483, 0.054, 0.07793], [0.502, 0.054, 0.12]],
+              "restLength": 1.56,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "display estimate; bounded exterior right-end guide selected by actual-mesh sweep for all canonical poses"
+            }
+          ],
           "anchor": {
-            "offsetFromBoardBounds": [0, 0.22, 0],
+            "offsetFromBoardBounds": [0, 0.5, 0],
             "visibility": "invisible",
-            "provenance": "displayEstimate"
-          },
-          "cord": {
-            "restLength": 0.4,
-            "radius": 0.002,
-            "material": "matteCord",
-            "provenance": "displayEstimate"
+            "provenance": "display estimate; invisible overhead convergence selected for free-span clearance"
           },
           "canonicalPoses": {
             "three-edge-upright": {

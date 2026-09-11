@@ -20,6 +20,13 @@ DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
+FLASH_TWO_BRANCH_CANDIDATE = (
+    REPO_ROOT
+    / "Tools"
+    / "HangboardModels"
+    / "fixtures"
+    / "tension_flash_board_two_branch_review_candidate.json"
+)
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
 YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
@@ -546,7 +553,17 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         "type", "assetPath", "descriptorPath", "display", "suspension"
     }
     suspension = board["presentations"][0]["media"]["suspension"]
-    assert suspension["attachment"]["nodeID"] == "flash_board_body_008"
+    assert suspension["type"] == "twoBranchCord"
+    assert [
+        passage["id"]
+        for side in ("left", "right")
+        for passage in suspension["passages"][side]
+    ] == [
+        "left-outer-passage",
+        "left-inner-passage",
+        "right-inner-passage",
+        "right-outer-passage",
+    ]
     assert set(suspension["canonicalPoses"]) == {
         "three-edge-upright",
         "three-edge-inverted",
@@ -556,6 +573,54 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert {path.relative_to(FLASH_BOARD_ROOT).as_posix() for path in FLASH_BOARD_ROOT.rglob("*") if path.is_file()} == {
         "board.json", "assets/primary.usdz", "assets/primary.model.json"
     }
+
+
+def test_flash_board_promotes_the_verified_two_branch_contract_and_exact_assets() -> None:
+    """The live package must not regress to the retired single-cord draft."""
+    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+    candidate = json.loads(FLASH_TWO_BRANCH_CANDIDATE.read_text(encoding="utf-8"))
+    suspension = board["presentations"][0]["media"]["suspension"]
+
+    assert suspension["type"] == "twoBranchCord"
+    assert list(suspension) == ["type", "passages", "branches", "anchor", "canonicalPoses"]
+    expected_passages = {
+        side: [
+            {
+                "id": passage["id"],
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": passage["entryPointInModel"],
+                "exitPointInModel": passage["exitPointInModel"],
+                "provenance": passage["provenance"],
+            }
+            for passage in candidate["passages"][side]
+        ]
+        for side in ("left", "right")
+    }
+    assert suspension["passages"] == expected_passages
+    assert suspension["branches"] == candidate["branches"]
+    assert suspension["anchor"] == candidate["anchor"]
+    assert suspension["canonicalPoses"] == {
+        position_id: {
+            **pose,
+            "camera": {
+                "viewDirection": [0, 0, -1] if position_id.startswith("three-edge") else [0, 0, 1],
+                "fitPadding": 0.1,
+            },
+        }
+        for position_id, pose in candidate["canonicalPoses"].items()
+    }
+    expected_model = candidate["expectedModel"]
+    assert hashlib.sha256((FLASH_BOARD_ROOT / "assets/primary.usdz").read_bytes()).hexdigest() == expected_model["modelSHA256"]
+    assert hashlib.sha256((FLASH_BOARD_ROOT / "assets/primary.model.json").read_bytes()).hexdigest() == expected_model["descriptorSHA256"]
+
+    package = load_board_catalog_module().load_board_package(FLASH_BOARD_ROOT)
+    parsed_suspension = package.board.presentations[0].media.suspension
+    assert parsed_suspension is not None
+    assert [
+        passage.node_id
+        for side in (parsed_suspension.passages.left, parsed_suspension.passages.right)
+        for passage in side
+    ] == ["flash_board_body_008"] * 4
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:

@@ -605,7 +605,6 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         _canonical_member_order(passages_payload, ("left", "right"), passages_source)
         parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
         all_passage_ids: set[str] = set()
-        all_passage_node_ids: set[str] = set()
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
             raw_passages = passages_payload[side]
@@ -630,9 +629,6 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                     raise ValueError(f"duplicate suspension passage ID: {passage_id}")
                 all_passage_ids.add(passage_id)
                 node_id = _string(passage_payload["nodeID"], f"{passage_source}.nodeID")
-                if node_id in all_passage_node_ids:
-                    raise ValueError(f"duplicate suspension passage node ID: {node_id}")
-                all_passage_node_ids.add(node_id)
                 passages.append(BoardModelPassage(
                     passage_id,
                     node_id,

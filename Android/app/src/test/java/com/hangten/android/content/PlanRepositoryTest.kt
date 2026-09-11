@@ -97,13 +97,17 @@ class PlanRepositoryTest {
             .flatMap { it.steps }
         val maxHang = steps.first { it.id == "max-hangs-1" }
 
-        assertEquals(59, boards.size)
+        // Android deliberately omits all three model-only packages because it
+        // has no USDZ renderer or raster fallback. The staged catalog has 61
+        // packages, so its raster-only canvas inventory is 58.
+        assertEquals(58, boards.size)
         assertTrue(boards.all { board ->
             board.presentations.all { presentation -> presentation.assetPath.endsWith(".png") } &&
                 board.holds.all { it.geometry.isNotEmpty() }
         })
         assertFalse(boards.any { it.id == "beastmaker-1000" })
         assertFalse(boards.any { it.id == "metolius.wood-grips-compact-ii" })
+        assertFalse(boards.any { it.id == "tension.flash-board" })
         assertEquals(
             "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
             maxHang.instruction,

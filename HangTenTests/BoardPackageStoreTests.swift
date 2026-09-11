@@ -1858,6 +1858,15 @@ final class BoardPackageStoreTests: XCTestCase {
 
     func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+        guard case .model(let media) = board.presentations[0].media,
+              case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must ship the verified two-branch suspension")
+        }
+        XCTAssertEqual(
+            suspension.passages.left.map(\.nodeID) + suspension.passages.right.map(\.nodeID),
+            Array(repeating: "flash_board_body_008", count: 4),
+            "the four integral bores share the one imported nonselectable body mesh"
+        )
 
         XCTAssertEqual(
             board.presentations.map(\.id),

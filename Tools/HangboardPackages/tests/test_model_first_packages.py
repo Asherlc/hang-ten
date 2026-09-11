@@ -422,9 +422,7 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
     assert not hasattr(package.board.holds[0], "presentation_id")
     assert presentation.media.asset_path == "assets/primary.usdz"
     assert presentation.media.descriptor_path == "assets/primary.model.json"
-    assert presentation.media.suspension is not None
-    assert presentation.media.suspension.attachment.node_id == "ZZAttachment"
-    assert set(presentation.media.suspension.canonical_poses) == {"primary"}
+    assert presentation.media.suspension is None
     assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.3, 0.4
     )

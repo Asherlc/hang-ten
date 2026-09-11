@@ -1234,9 +1234,6 @@ struct BoardPackageStore {
         guard Set(passages.map(\.id)).count == passages.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage IDs must be distinct")
         }
-        guard Set(passages.map(\.nodeID)).count == passages.count else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage node IDs must be distinct")
-        }
         let nodesByID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
         for passage in passages {
             guard let node = nodesByID[passage.nodeID], node.role == .body || node.role == .attachment else {
