@@ -717,6 +717,14 @@
       ]
     },
     {
+      "name": "two-branch-order-violation",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "nodes must be sorted",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "descriptor", "op": "replace", "path": ["nodes"], "value": [{"nodeID": "Body", "role": "body"}, {"nodeID": "LeftTop", "role": "attachment"}, {"nodeID": "LeftBottom", "role": "attachment"}, {"nodeID": "Left", "role": "hold", "holdID": "hold-left"}, {"nodeID": "RightBottom", "role": "attachment"}, {"nodeID": "RightTop", "role": "attachment"}]}]
+    },
+    {
       "name": "two-branch-excess-attachment-nodes",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
@@ -742,14 +750,6 @@
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.5, 1, 0.05]},
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "translation"], "value": [0, 0.22, 0]}
       ]
-    },
-    {
-      "name": "two-branch-order-violation",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "nodes must be sorted",
-      "swiftError": "invalidPackage",
-      "mutations": [{"target": "descriptor", "op": "replace", "path": ["nodes"], "value": [{"nodeID": "Body", "role": "body"}, {"nodeID": "LeftTop", "role": "attachment"}, {"nodeID": "LeftBottom", "role": "attachment"}, {"nodeID": "Left", "role": "hold", "holdID": "hold-left"}, {"nodeID": "RightBottom", "role": "attachment"}, {"nodeID": "RightTop", "role": "attachment"}]}]
     }
   ],
   "ordering": {
