@@ -13,6 +13,7 @@ from conftest import write_board_package, write_multi_presentation_board_package
 from hangboard_packages.board_catalog import (
     BoardInventory,
     BoardPresentation,
+    PresentationMediaModel,
     discover_board_packages,
 )
 import hangboard_packages.presentation_remediation_audit as presentation_audit
@@ -1279,6 +1280,11 @@ def _validate_historical_phase2_document(
         ]
         for package_id in pristine_document["packageIDs"]
     }
+    flash_package = next(
+        package
+        for package in live_inventory.packages
+        if package.board.id == "tension.flash-board"
+    )
     inventory = replace(
         live_inventory,
         packages=tuple(
@@ -1286,21 +1292,25 @@ def _validate_historical_phase2_document(
                 package,
                 board=replace(
                     package.board,
-                    presentations=tuple(
-                        BoardPresentation(
-                            id=record["presentationID"],
-                            name=record["workingSurface"],
-                            asset_path=Path(record["assetPath"])
-                            .relative_to(Path("Hangboards") / package.root.name)
-                            .as_posix(),
-                            aspect_ratio=(
-                                record["currentAsset"]["widthPixels"]
-                                / record["currentAsset"]["heightPixels"]
-                            ),
-                            is_default=index == 0,
-                        )
-                        for index, record in enumerate(
-                            historical_records_by_package[package.board.id]
+                    presentations=(
+                        flash_package.board.presentations
+                        if package.board.id == "tension.flash-board"
+                        else tuple(
+                            BoardPresentation(
+                                id=record["presentationID"],
+                                name=record["workingSurface"],
+                                asset_path=Path(record["assetPath"])
+                                .relative_to(Path("Hangboards") / package.root.name)
+                                .as_posix(),
+                                aspect_ratio=(
+                                    record["currentAsset"]["widthPixels"]
+                                    / record["currentAsset"]["heightPixels"]
+                                ),
+                                is_default=index == 0,
+                            )
+                            for index, record in enumerate(
+                                historical_records_by_package[package.board.id]
+                            )
                         )
                     ),
                 ),
@@ -1363,13 +1373,34 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
     assert document["phase"] == "assetRemediation"
     assert report.presentation_count == 85
     assert report.original_presentation_count == 85
-    assert report.inventory_presentation_count == 85
+    assert report.inventory_presentation_count == 82
     assert report.canvas_class_count == 20
     assert report.canvas_covered_repair_count == 65
     assert report.capability_probe_artifact_count == 0
     assert report.pending_phase2_action_count == 66
     assert report.historical_evidence_blocked_keeps == 2
     assert report.blocked_phase2_action_count == 0
+    flash_records = [
+        record
+        for record in document["records"]
+        if record["packageID"] == "tension.flash-board"
+    ]
+    assert len(flash_records) == 4
+    assert all(
+        record["phase2Action"]["state"] == "supersededByModelMigration"
+        for record in flash_records
+    )
+    live_flash = next(
+        package
+        for package in discover_board_packages(
+            REPO_ROOT / "Hangboards", require_complete_inventory=True
+        ).packages
+        if package.board.id == "tension.flash-board"
+    )
+    assert tuple(
+        presentation.id for presentation in live_flash.board.presentations
+    ) == ("primary",)
+    assert isinstance(live_flash.board.presentations[0].media, PresentationMediaModel)
     probes = [
         probe
         for canvas_class in document["phase2"]["canvasPreflight"]["classes"]
