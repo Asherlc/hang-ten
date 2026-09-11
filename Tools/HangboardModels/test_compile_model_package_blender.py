@@ -54,6 +54,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import compile_model_package as compiler
+from geometry_primitives import semantic_snapshot
 
 from compile_model_package import compile_model_package, validate_tagged_scene
 
@@ -78,6 +79,25 @@ def expect_value_error(fragment: str, action) -> None:
         assert fragment in str(error), (fragment, str(error))
     else:
         raise AssertionError(f"expected ValueError containing {fragment!r}")
+
+
+def assert_semantic_snapshot_contract() -> None:
+    """Keep compiler tests coupled to the authored-geometry audit contract."""
+    reset_scene()
+    item = mesh("SnapshotBody")
+    item["role"] = "body"
+    snapshot = semantic_snapshot(bpy.context.scene)
+    record = snapshot["objects"][0]
+    assert record["name"] == "SnapshotBody"
+    assert record["role"] == "body"
+    assert record["holdID"] is None
+    assert record["vertexHash"] and record["topologyHash"]
+    assert record["transform"]
+    assert snapshot["materialImageBytes"] == {}
+    assert snapshot["reviewObjectNames"] == []
+
+
+assert_semantic_snapshot_contract()
 
 
 reset_scene()
