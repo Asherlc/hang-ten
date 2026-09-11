@@ -12,11 +12,13 @@ the model set.
 
 from __future__ import annotations
 
+import atexit
 import json
 import hashlib
 from collections import Counter
 import runpy
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -44,24 +46,59 @@ if bpy is not None:
     )
 
 
-# Approved semantic fingerprints captured from the exact pre-task generators
-# at commit cbcee285. Each projection includes every exported
-# object and the complete snapshot fields relevant to that audit category.
-PRE_MIGRATION_BASELINE_COMMIT = "cbcee285"
-PRE_MIGRATION_BASELINES = {
-    "beastmaker": {
-        "topology": "31d0bd8362301289e3fce021045ece72720a58f090d207955c4c5390c2af6ac4",
-        "transforms": "69fb4bd022831d85032415bab41b24960c8e3d5bbd2a8e568f18b9444a5ab824",
-        "bindings": "26279998308a9e735e96a4259473a4d86a7a1c71e5380671ef42443871b45efe",
-        "materialNodes": "05910bc195086c458bfde95b9cd4b434b5353747452399e5333a5e0e43121267",
-    },
-    "compact": {
-        "topology": "86f29969101a72c3fa52e18b274620a725212fb14c76a87d82f1251cf1c78d08",
-        "transforms": "7e30a29f490e28560adcc8dcf4ea2fae4510044e9fa107c675962cd5d5c5d2a9",
-        "bindings": "c5acc203f7de83a61d9776067c1fb8013606fda22a3506dc0290e6caf35ad6cb",
-        "materialNodes": "03f59de336e25ae2388e4125870cd4d76cf7388304a6d157cf3cabb8f1ca3047",
-    },
+# The baseline is extracted read-only from the pre-task commit during every
+# Blender run.  Do not replace this with manually copied fingerprints: that
+# would only label a baseline rather than prove its source and execution.
+PRE_MIGRATION_BASELINE_COMMIT = "cbcee2850abe5221fdcf24d8fdf2ce822c86f67f"
+HISTORICAL_GENERATORS = {
+    "beastmaker": Path("Tools/HangboardModels/beastmaker_1000.py"),
+    "compact": Path("Tools/HangboardModels/wood_grips_compact_ii.py"),
 }
+# These are every non-standard-library project input read while the historical
+# generators build their compiler-only scenes.  They must remain byte-identical
+# to the pre-task commit, otherwise an exact historical generator source alone
+# would not establish a genuine historical semantic baseline.
+HISTORICAL_DEPENDENCIES = {
+    "beastmaker": (
+        Path("Tools/HangboardModels/canonical_neutral_wood.py"),
+        Path("Hangboards/beastmaker-1000/board.json"),
+    ),
+    "compact": (
+        Path("Tools/HangboardModels/canonical_neutral_wood.py"),
+        Path("Hangboards/metolius-wood-grips-compact-ii/board.json"),
+    ),
+}
+_OWNED_RESOURCE_DIRECTORIES = set()
+
+
+class _OwnedResourceDirectory:
+    """Owned `.context` directory with normal and interpreter-exit cleanup."""
+
+    def __init__(self, repo: Path, label: str):
+        self.path = Path(tempfile.mkdtemp(prefix=f"{repo.name}-{label}-", dir=repo / ".context"))
+        self._closed = False
+        self.path.joinpath("ownership.json").write_text(json.dumps({
+            "owner": repo.name,
+            "resources": [str(self.path)],
+            "external_resources": [],
+        }, indent=2) + "\n", encoding="utf-8")
+        _OWNED_RESOURCE_DIRECTORIES.add(self)
+
+    def cleanup(self) -> None:
+        if self._closed:
+            return
+        shutil.rmtree(self.path, ignore_errors=False)
+        self._closed = True
+        _OWNED_RESOURCE_DIRECTORIES.discard(self)
+        assert not self.path.exists(), f"owned resource remains: {self.path}"
+
+
+@atexit.register
+def _cleanup_owned_resource_directories() -> None:
+    # `finally` provides immediate verification; this protects an unexpected
+    # interpreter exit after an assertion or Blender script failure.
+    for resource in list(_OWNED_RESOURCE_DIRECTORIES):
+        resource.cleanup()
 
 
 def _reset() -> None:
@@ -113,6 +150,58 @@ def _semantic_fingerprints(snapshot):
     return result
 
 
+def _git_bytes(repo: Path, *args: str) -> bytes:
+    return subprocess.run(
+        ["git", *args], cwd=repo, check=True, stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE).stdout
+
+
+def _historical_generator_source(repo: Path, baseline_key: str) -> tuple[Path, bytes, dict[str, str]]:
+    """Read and validate the exact pre-task generator without mutating Git."""
+    resolved_commit = _git_bytes(repo, "rev-parse", "--verify",
+                                 PRE_MIGRATION_BASELINE_COMMIT + "^{commit}").strip().decode()
+    assert resolved_commit == PRE_MIGRATION_BASELINE_COMMIT, resolved_commit
+    relative_path = HISTORICAL_GENERATORS[baseline_key]
+    object_spec = f"{resolved_commit}:{relative_path.as_posix()}"
+    _git_bytes(repo, "cat-file", "-e", object_spec)
+    blob = _git_bytes(repo, "rev-parse", "--verify", object_spec).strip().decode()
+    source = _git_bytes(repo, "show", object_spec)
+    assert source and source == _git_bytes(repo, "cat-file", "blob", blob), object_spec
+    for dependency in HISTORICAL_DEPENDENCIES[baseline_key]:
+        historical = _git_bytes(repo, "show", f"{resolved_commit}:{dependency.as_posix()}")
+        assert (repo / dependency).read_bytes() == historical, (
+            "historical generator dependency changed", dependency)
+    return relative_path, source, {
+        "commit": resolved_commit,
+        "generator": relative_path.as_posix(),
+        "blob": blob,
+        "sourceSHA256": hashlib.sha256(source).hexdigest(),
+    }
+
+
+def _run_historical_generator_snapshot(repo: Path, baseline_key: str, output: Path,
+                                       extra_args=()):
+    """Execute exact `cbcee285` source in memory and snapshot its fresh scene."""
+    relative_path, source, provenance = _historical_generator_source(repo, baseline_key)
+    script = repo / relative_path
+    original_argv = sys.argv
+    try:
+        _reset()
+        # The source comes from Git, but the canonical __file__ preserves the
+        # historical generator's documented Path(__file__) root contract.
+        sys.argv = [str(script), "--", "--output", str(output), *extra_args]
+        namespace = {"__name__": "__main__", "__file__": str(script), "__package__": None}
+        try:
+            exec(compile(source, f"{PRE_MIGRATION_BASELINE_COMMIT}:{relative_path}", "exec"), namespace)
+        except SystemExit as error:
+            assert error.code in (0, None), error.code
+        snapshot = semantic_snapshot(bpy.context.scene)
+        print("HISTORICAL_BASELINE", json.dumps(provenance, sort_keys=True))
+        return snapshot
+    finally:
+        sys.argv = original_argv
+
+
 def _assert_preserved(before, after, name):
     left, right = _records(before)[name], _records(after)[name]
     for key in ("transform", "vertexCount", "topologyCount", "vertexHash",
@@ -135,7 +224,7 @@ def _run_generator_snapshot(script, output, extra_args=()):
         sys.argv = original_argv
 
 
-def _assert_generator_snapshot(script, output, expected_hold_count, baseline_key, extra_args=()):
+def _assert_generator_snapshot(script, output, expected_hold_count, baseline_snapshot, extra_args=()):
     snapshot = _run_generator_snapshot(script, output, extra_args)
     exported = [item for item in snapshot["objects"] if item["export"]]
     holds = [item for item in exported if item["role"] == "hold"]
@@ -144,8 +233,8 @@ def _assert_generator_snapshot(script, output, expected_hold_count, baseline_key
     assert snapshot["reviewObjectNames"] == []
     assert all(item["polygonMaterialIndices"] for item in exported)
     assert all(item["materialNodes"] for item in exported)
-    assert _semantic_fingerprints(snapshot) == PRE_MIGRATION_BASELINES[baseline_key], (
-        baseline_key, _semantic_fingerprints(snapshot), PRE_MIGRATION_BASELINES[baseline_key])
+    assert _semantic_fingerprints(snapshot) == _semantic_fingerprints(baseline_snapshot), (
+        script.name, _semantic_fingerprints(snapshot), _semantic_fingerprints(baseline_snapshot))
     return snapshot
 
 
@@ -235,18 +324,23 @@ def main() -> None:
     # final compiler-input scene; this catches a helper migration that passes
     # toy primitives but drops a real board tag/material/topology.
     repo = TOOLS.parents[1]
-    owner_dir = Path(tempfile.mkdtemp(prefix=f"{repo.name}-task4-snapshots-", dir=repo / ".context"))
+    owned_resource = _OwnedResourceDirectory(repo, "task4-snapshots")
+    owner_dir = owned_resource.path
     try:
-        (owner_dir / "ownership.json").write_text(json.dumps({"owner": repo.name, "resources": [str(owner_dir)], "external_resources": []}) + "\n")
+        beast_baseline = _run_historical_generator_snapshot(
+            repo, "beastmaker", owner_dir / "baseline-beastmaker", ("--compiler-only",))
         beast_snapshot = _assert_generator_snapshot(
-            TOOLS / "beastmaker_1000.py", owner_dir / "beastmaker", 22, "beastmaker", ("--compiler-only",))
+            TOOLS / "beastmaker_1000.py", owner_dir / "beastmaker", 22,
+            beast_baseline, ("--compiler-only",))
+        compact_baseline = _run_historical_generator_snapshot(
+            repo, "compact", owner_dir / "baseline-compact", ("--compiler-only",))
         compact_snapshot = _assert_generator_snapshot(
-            TOOLS / "wood_grips_compact_ii.py", owner_dir / "compact", 19, "compact", ("--compiler-only",))
+            TOOLS / "wood_grips_compact_ii.py", owner_dir / "compact", 19,
+            compact_baseline, ("--compiler-only",))
         assert beast_snapshot["materialImageBytes"]
         assert compact_snapshot["materialImageBytes"]
     finally:
-        shutil.rmtree(owner_dir)
-        assert not owner_dir.exists()
+        owned_resource.cleanup()
     print("GEOMETRY_PRIMITIVES_TEST passed")
 
 
