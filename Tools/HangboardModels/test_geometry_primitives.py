@@ -271,6 +271,28 @@ def main() -> None:
     assert _records(after)["baseline-body"]["role"] == "hold"
     assert _records(after)["baseline-body"]["holdID"] == "semantic-hold"
 
+    # Blender's Boolean pipeline may assign a different opaque vertex-index
+    # order to an otherwise identical mesh. A topology audit must compare the
+    # complete positioned face cycles, not those transient storage indices.
+    _reset()
+    first = create_rounded_body(
+        "canonical-topology",
+        [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
+        [(0, 1, 2, 3)],
+    )
+    tag_piece(first, "body")
+    canonical_before = semantic_snapshot(bpy.context.scene)
+    _reset()
+    reordered = create_rounded_body(
+        "canonical-topology",
+        [(1, 1, 0), (0, 0, 0), (0, 1, 0), (1, 0, 0)],
+        [(1, 3, 0, 2)],
+    )
+    tag_piece(reordered, "body")
+    canonical_after = semantic_snapshot(bpy.context.scene)
+    assert _semantic_fingerprints(canonical_before)["topology"] == (
+        _semantic_fingerprints(canonical_after)["topology"])
+
     # Split changes object partitioning but must preserve the total authored
     # vertex/topology/material binding payload. Start a fresh scene so this
     # family has no unrelated meshes in its before/after audit.

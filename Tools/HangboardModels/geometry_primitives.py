@@ -245,6 +245,40 @@ def _digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _rotate_loop_to_minimum(loop: tuple[tuple[float, float, float], ...]) -> tuple[tuple[float, float, float], ...]:
+    """Canonicalize only a face loop's arbitrary starting corner.
+
+    Winding remains significant: reversing a face changes the returned tuple.
+    """
+    return min(loop[index:] + loop[:index] for index in range(len(loop)))
+
+
+def _canonical_mesh_hashes(
+    vertices: list[tuple[float, float, float]],
+    topology: list[tuple[int, ...]],
+) -> tuple[str, str]:
+    """Hash mesh geometry/topology independently of Blender storage indices.
+
+    Blender's Boolean output may allocate otherwise identical vertices in a
+    different index order. World-space vertex coordinates are unique for the
+    authored display meshes, so they form a bijective vertex identity. Sorting
+    those coordinates and sorting each orientation-preserving cyclic face loop
+    records the complete mesh up to arbitrary vertex/face order and loop start.
+    A duplicate coordinate would make that identity ambiguous, so fail closed
+    rather than silently weaken the topology comparison.
+    """
+    if len(set(vertices)) != len(vertices):
+        raise ValueError("semantic topology requires unique world-space vertex coordinates")
+    coordinate_faces = [
+        _rotate_loop_to_minimum(tuple(vertices[index] for index in face))
+        for face in topology
+    ]
+    return (
+        _digest(repr(sorted(vertices)).encode()),
+        _digest(repr(sorted(coordinate_faces)).encode()),
+    )
+
+
 def _image_digest(image: object) -> str:
     packed = getattr(image, "packed_file", None)
     if packed is not None:
@@ -326,8 +360,7 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
                         for vertex in obj.data.vertices]
             topology = [tuple(int(index) for index in polygon.vertices)
                         for polygon in obj.data.polygons]
-            vertex_payload = repr(vertices).encode()
-            topology_payload = repr(topology).encode()
+            vertex_hash, topology_hash = _canonical_mesh_hashes(vertices, topology)
             materials = [material.name for material in obj.data.materials]
             material_nodes = [_material_snapshot(material, image_bytes)
                               for material in obj.data.materials]
@@ -345,8 +378,8 @@ def semantic_snapshot(scene: object) -> dict[str, object]:
                 "transform": tuple(tuple(float(value) for value in row) for row in obj.matrix_world),
                 "vertexCount": len(vertices),
                 "topologyCount": len(topology),
-                "vertexHash": _digest(vertex_payload),
-                "topologyHash": _digest(topology_payload),
+                "vertexHash": vertex_hash,
+                "topologyHash": topology_hash,
                 "materials": materials,
                 "polygonMaterialIndices": polygon_material_indices,
                 "polygonMaterials": polygon_materials,
