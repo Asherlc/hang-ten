@@ -258,6 +258,20 @@ internal fun JsonValue.asFiniteFloat(path: String): Float {
     return floatValue
 }
 
+internal fun JsonValue.asCanonicalNineDecimalFloat(path: String): Float {
+    val number = this as? JsonValue.Number
+        ?: throw ContentDecodingException("$path must be a number.")
+    val value = number.value
+    if (!value.isFinite()) throw ContentDecodingException("$path must be finite.")
+    val decimal = java.math.BigDecimal.valueOf(value)
+    if (decimal.setScale(9, java.math.RoundingMode.HALF_EVEN).compareTo(decimal) != 0) {
+        throw ContentDecodingException("$path must be rounded to nine decimal places.")
+    }
+    val floatValue = value.toFloat()
+    if (!floatValue.isFinite()) throw ContentDecodingException("$path must be finite.")
+    return floatValue
+}
+
 internal fun JsonValue.Object.required(name: String, path: String): JsonValue =
     fields[name] ?: throw ContentDecodingException("$path.$name is required.")
 

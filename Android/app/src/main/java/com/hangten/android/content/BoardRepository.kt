@@ -251,17 +251,23 @@ class AssetBoardRepository(
     private fun decodeOrientation(value: JsonValue, path: String): BoardOrientation {
         val objectValue = value.asObject(path)
         objectValue.rejectUnknownKeys(path, setOf("pivot", "rotations"))
+        if (objectValue.fields.keys.toList() != listOf("pivot", "rotations")) {
+            fail("$path must contain canonical pivot and rotations members")
+        }
         val pivot = objectValue.requiredText("pivot", path)
         if (pivot != "modelBoundsCenter") fail("$path pivot must be modelBoundsCenter.")
         val rotationsObject = objectValue.required("rotations", path).asObject("$path.rotations")
         if (rotationsObject.fields.isEmpty()) fail("$path.rotations must not be empty.")
+        if (rotationsObject.fields.keys.toList() != rotationsObject.fields.keys.sorted()) {
+            fail("$path.rotations must be sorted by position ID")
+        }
         val rotations = linkedMapOf<String, List<Float>>()
         rotationsObject.fields.forEach { (positionID, value) ->
             requireContentId(positionID, "$path.rotations")
             val components = value.asArray("$path.rotations.$positionID")
             if (components.size != 4) fail("$path.rotations.$positionID must contain [x,y,z,w].")
             val quaternion = components.mapIndexed { index, component ->
-                component.asFiniteFloat("$path.rotations.$positionID[$index]")
+                component.asCanonicalNineDecimalFloat("$path.rotations.$positionID[$index]")
             }
             val norm = kotlin.math.sqrt(quaternion.sumOf { it.toDouble() * it.toDouble() })
             if (!norm.isFinite() || kotlin.math.abs(norm - 1.0) > 1e-6) {
@@ -343,6 +349,7 @@ class AssetBoardRepository(
 
     private fun decodeSchemaV2RasterPresentation(objectValue: JsonValue.Object, path: String): BoardPresentation {
         val media = objectValue.required("media", path).asObject("$path.media")
+        media.rejectUnknownKeys("$path.media", setOf("type", "assetPath", "holdGeometry"))
         val assetPath = media.requiredString("assetPath", "$path.media")
         validateAssetPath(assetPath, "$path.media.assetPath")
         val isDefault = (objectValue.required("isDefault", path) as? JsonValue.BooleanValue)?.value
