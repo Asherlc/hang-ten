@@ -335,8 +335,12 @@
       "pythonException": "ValueError",
       "pythonError": "finite",
       "swiftError": "malformedJSON",
+      "rawJSONReplacement": {
+        "from": "\"rotation\":[0,0,0,1]",
+        "to": "\"rotation\":[0,0,0,1e999]"
+      },
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, 1e999]}
+        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, 1]}
       ]
     },
     {

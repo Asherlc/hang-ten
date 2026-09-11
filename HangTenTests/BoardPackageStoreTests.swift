@@ -136,6 +136,15 @@ final class BoardPackageStoreTests: XCTestCase {
             let fixture = try makeSharedModelParserParityFixtureBundle(specification)
             defer { fixture.remove() }
 
+            if let rawReplacement = specification["rawJSONReplacement"] as? [String: Any] {
+                let from = try XCTUnwrap(rawReplacement["from"] as? String)
+                let to = try XCTUnwrap(rawReplacement["to"] as? String)
+                let boardJSON = String(decoding: try Data(contentsOf: fixture.rootURL
+                    .appendingPathComponent("board.json")), as: UTF8.self)
+                XCTAssertFalse(boardJSON.contains(from), name)
+                XCTAssertEqual(boardJSON.components(separatedBy: to).count - 1, 1, name)
+            }
+
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name) { error in
                 guard let packageError = error as? BoardPackageStoreError else {
                     return XCTFail("Expected BoardPackageStoreError for \(name), got \(error)")
@@ -3375,6 +3384,20 @@ final class BoardPackageStoreTests: XCTestCase {
                         ? ["camera", "translation", "rotation"] : nil
                 )
             )
+        }
+        if let rawReplacement = specification["rawJSONReplacement"] as? [String: Any] {
+            let from = try XCTUnwrap(rawReplacement["from"] as? String)
+            let to = try XCTUnwrap(rawReplacement["to"] as? String)
+            let raw = String(decoding: boardData, as: UTF8.self)
+            let replacementCount = raw.components(separatedBy: from).count - 1
+            guard replacementCount == 1 else {
+                throw NSError(
+                    domain: "BoardPackageStoreTests",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "expected one raw JSON replacement for \(from), found \(replacementCount)"]
+                )
+            }
+            boardData = Data(raw.replacingOccurrences(of: from, with: to).utf8)
         }
 
         return try makeFixtureBundle { hangboardsURL in

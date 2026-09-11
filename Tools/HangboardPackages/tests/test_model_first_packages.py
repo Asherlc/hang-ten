@@ -127,6 +127,14 @@ def _write_shared_model_parser_parity_package(
             for key in ("translation", "rotation", "camera")
         }
     board_json = json.dumps(board, separators=(",", ":"), sort_keys=False)
+    raw_json_replacement = fixture.get("rawJSONReplacement")
+    if raw_json_replacement is not None:
+        assert isinstance(raw_json_replacement, dict)
+        original = raw_json_replacement["from"]
+        replacement = raw_json_replacement["to"]
+        assert isinstance(original, str) and isinstance(replacement, str)
+        assert board_json.count(original) == 1
+        board_json = board_json.replace(original, replacement, 1)
     duplicate_member_key = fixture.get("duplicateTwoBranchMemberKey")
     if duplicate_member_key == "passageID":
         board_json = board_json.replace(
@@ -550,6 +558,12 @@ def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / str(fixture["name"]), fixture
     )
+
+    if raw_json_replacement := fixture.get("rawJSONReplacement"):
+        assert isinstance(raw_json_replacement, dict)
+        board_json = (package_root / "board.json").read_text(encoding="utf-8")
+        assert raw_json_replacement["from"] not in board_json
+        assert board_json.count(str(raw_json_replacement["to"])) == 1
 
     with pytest.raises(ValueError, match=str(fixture["pythonError"])):
         module.load_board_package(package_root)
