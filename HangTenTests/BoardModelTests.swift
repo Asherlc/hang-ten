@@ -219,7 +219,7 @@ final class BoardModelTests: XCTestCase {
 
         model.frame(in: CGSize(width: 386, height: 100))
 
-        XCTAssertEqual(model.camera.camera?.orthographicScale, 1, accuracy: 0.000_001)
+        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), 1, accuracy: 0.000_001)
     }
 
     // This catches cancellation of the camera-depth term in the key-light
