@@ -452,13 +452,31 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
         suspension = document["presentations"][0]["media"]["suspension"]
         bounds = {"min": [0.0, 0.0, 0.0], "max": [0.5, 0.076, 0.076]}
         pose = suspension["canonicalPoses"]["three-edge-inverted"]
-        samples = verifier._suspension_samples(bounds, suspension, pose)
+        specs = verifier._branch_probe_specs(
+            bounds,
+            suspension,
+            pose,
+            {passage_id: "flash_board_body_008" for passage_id in verifier.REVIEW_PASSAGE_IDS},
+        )
+        samples = specs[0]["samples"]
+        free_span = samples[:32]
         # A source-space straight probe would never expose the posed curve's
-        # actual midpoint.  The canonical half-turn moves the attachment and
-        # produces a finite slack catenary with a distinct midpoint.
-        self.assertEqual(samples[0], (0.25, 0.296, 0.038))
-        self.assertNotEqual(samples[len(samples) // 2], (0.25, 0.296, 0.038))
-        self.assertNotEqual(samples[-1], tuple(suspension["attachment"]["pointInModel"]))
+        # actual midpoint. The canonical half-turn moves the branch's guide
+        # point and produces a finite slack catenary with a distinct midpoint.
+        self.assertEqual(free_span[0], verifier._suspension_anchor(bounds, suspension))
+        self.assertNotEqual(
+            free_span[len(free_span) // 2],
+            tuple(
+                (start + end) / 2
+                for start, end in zip(free_span[0], free_span[-1])
+            ),
+        )
+        self.assertEqual(
+            free_span[-1],
+            verifier._transform_point(
+                suspension["branches"][0]["entryContactPoints"][0], pose
+            ),
+        )
 
     def test_mesh_clearance_rejects_collision_even_when_plane_probe_would_pass(self):
         samples = [(0.0, 0.0, 0.1), (0.5, 0.0, 0.1)]
