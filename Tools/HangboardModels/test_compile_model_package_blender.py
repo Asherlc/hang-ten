@@ -215,6 +215,37 @@ try:
         output_2 / "assets" / "primary.model.json"
     ).read_bytes()
     assert descriptor.to_json() == descriptor_2.to_json()
+
+    # The supplied model packages use a Principled material with no image
+    # texture. A renderer-visible material remains required, but image-backed
+    # wood is not the only valid model material contract.
+    reset_scene()
+    untextured_material = bpy.data.materials.new("Untextured compiler material")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        untextured_material.use_nodes = True
+    untextured_body = mesh("UntexturedBody")
+    untextured_body["role"] = "body"
+    untextured_body.data.materials.append(untextured_material)
+    untextured_hold = mesh("UntexturedHold")
+    untextured_hold["role"] = "hold"
+    untextured_hold["hold_id"] = "untextured-left"
+    untextured_hold.data.materials.append(untextured_material)
+    untextured_hold.location = (0.2, 0.1, 0.2)
+    untextured_blend = temporary_root / "untextured-source.blend"
+    bpy.ops.wm.save_as_mainfile(filepath=str(untextured_blend))
+    untextured_board = temporary_root / "untextured-board.json"
+    untextured_board.write_text('{"holds":[{"id":"untextured-left"}]}', encoding="utf-8")
+    untextured_output = temporary_root / "compiled-untextured"
+    untextured_descriptor = compile_model_package(
+        untextured_blend, untextured_board, untextured_output
+    )
+    assert set(untextured_descriptor.holds) == {"untextured-left"}
+    assert {
+        path.relative_to(untextured_output).as_posix()
+        for path in untextured_output.rglob("*")
+        if path.is_file()
+    } == {"assets/primary.model.json", "assets/primary.usdz"}
 finally:
     shutil.rmtree(temporary_root)
     assert not temporary_root.exists()

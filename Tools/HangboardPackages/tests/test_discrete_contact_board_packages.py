@@ -135,7 +135,7 @@ def test_split_palm_and_training_tiles_expose_descriptive_adapted_contacts() -> 
     }
 
     training_tiles = _board("soill-training-tiles")
-    assert len(training_tiles["holds"]) == 20
+    assert len(training_tiles["holds"]) == 16
     assert training_tiles["productURL"] == (
         "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin"
     )
@@ -158,11 +158,7 @@ def test_split_palm_and_training_tiles_expose_descriptive_adapted_contacts() -> 
         hold["id"]: (hold["name"], hold["kind"])
         for hold in training_tiles["holds"]
     } == {
-        "top-jug-left": ("Left top jug", "jug"),
-        "top-jug-right": ("Right top jug", "jug"),
         "top-pocket-outer-left": ("Outer left top pocket", "pocket"),
-        "top-pocket-inner-left": ("Inner left top pocket", "pocket"),
-        "top-pocket-inner-right": ("Inner right top pocket", "pocket"),
         "top-pocket-outer-right": ("Outer right top pocket", "pocket"),
         "upper-sloper-outer-left": ("Outer left upper sloper", "sloper"),
         "upper-sloper-inner-left": ("Inner left upper sloper", "sloper"),

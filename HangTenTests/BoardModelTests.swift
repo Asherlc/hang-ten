@@ -154,8 +154,10 @@ final class BoardModelTests: XCTestCase {
             "nature.stone-hanger",
             "yy.baguette-evo",
             "metolius.wood-grips-compact-ii",
+            "metolius.simulator-3d",
+            "soill.training-tiles",
         ]
-        let rasterBoardIDs = ["metolius.simulator-3d", "soill.training-tiles"]
+        let rasterBoardIDs = ["metolius.contact", "soill.split-palm"]
 
         for boardID in modelBoardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
@@ -194,7 +196,23 @@ final class BoardModelTests: XCTestCase {
                 expectation.holdIDs.count,
                 expectation.boardID
             )
-            XCTAssertEqual(model.geometryNodes.count, expectation.holdIDs.count + 1, expectation.boardID)
+            XCTAssertEqual(
+                model.geometryNodes.count,
+                expectation.holdIDs.count + expectation.bodyNodeIDs.count,
+                expectation.boardID
+            )
+            XCTAssertEqual(
+                Set(media.descriptor.nodes.compactMap { $0.role == .body ? $0.nodeID : nil }),
+                expectation.bodyNodeIDs,
+                expectation.boardID
+            )
+            for bodyNodeID in expectation.bodyNodeIDs {
+                let bodyNode = try XCTUnwrap(
+                    model.geometryNodes.first { $0.name == bodyNodeID },
+                    "\(expectation.boardID): \(bodyNodeID)"
+                )
+                XCTAssertNil(model.holdID(for: bodyNode), "\(expectation.boardID): \(bodyNodeID)")
+            }
 
             for node in model.geometryNodes {
                 let materials = try XCTUnwrap(node.geometry?.materials, expectation.boardID)
@@ -279,6 +297,26 @@ final class BoardModelTests: XCTestCase {
             .init(nodeID: "left", role: .hold, holdID: "left")
         ])
         XCTAssertNil(BoardModelScene(source: source, descriptor: mismatched, display: display()))
+    }
+
+    func testGenericModelBindingKeepsEveryExplicitBodyMeshNonselectable() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body-L", role: .body, holdID: nil),
+            .init(nodeID: "Board/Body-R", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Pocket", role: .hold, holdID: "pocket")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body-L", "Board/Body-R", "Board/Hold/Pocket"]),
+            descriptor: descriptor,
+            display: display()
+        ))
+
+        XCTAssertEqual(Set(model.holdNodes.keys), ["pocket"])
+        XCTAssertEqual(model.geometryNodes.count, 3)
+        for bodyNodeID in ["Body-L", "Body-R"] {
+            let bodyNode = try XCTUnwrap(model.geometryNodes.first { $0.name == bodyNodeID })
+            XCTAssertNil(model.holdID(for: bodyNode), bodyNodeID)
+        }
     }
 
     // This catches a renderer that silently renders nodes the descriptor did
@@ -446,6 +484,7 @@ final class BoardModelTests: XCTestCase {
     private struct MigratedModelExpectation {
         let boardID: String
         let holdIDs: Set<String>
+        let bodyNodeIDs: Set<String>
         let bodyProbe: [Double]
     }
 
@@ -462,6 +501,7 @@ final class BoardModelTests: XCTestCase {
                     "pocket-bottom-inner-left", "pocket-bottom-inner-right", "pocket-bottom-mid-right",
                     "pocket-bottom-outer-right"
                 ],
+                bodyNodeIDs: ["BeastmakerBody_023"],
                 bodyProbe: [0.5, 0.02]
             ),
             MigratedModelExpectation(
@@ -473,7 +513,38 @@ final class BoardModelTests: XCTestCase {
                     "pocket-19-three-left", "pocket-19-three-right", "pocket-19-two-left",
                     "pocket-19-two-right", "pocket-19-four-center", "edge-19-right"
                 ],
+                bodyNodeIDs: ["Wood_Grips_Compact_II_039"],
                 bodyProbe: [0.5, 0.02]
+            ),
+            MigratedModelExpectation(
+                boardID: "metolius.simulator-3d",
+                holdIDs: [
+                    "jug-1-left", "round-sloper-3-left", "jug-14-center", "round-sloper-3-right",
+                    "jug-1-right", "pocket-4-left", "edge-5-left", "edge-6-left", "edge-7-left",
+                    "pocket-8-left", "pocket-9-left", "pocket-10-left", "edge-11-left",
+                    "pocket-12-left", "pocket-13-left", "pocket-15-center", "pocket-16-center",
+                    "pocket-17-center", "pocket-18-center", "pocket-13-right", "pocket-12-right",
+                    "edge-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right",
+                    "edge-7-right", "edge-6-right", "edge-5-right", "pocket-4-right",
+                    "flat-sloper-2-left", "flat-sloper-2-right"
+                ],
+                bodyNodeIDs: ["board_body_001"],
+                bodyProbe: [0.5, 0.02]
+            ),
+            MigratedModelExpectation(
+                boardID: "soill.training-tiles",
+                holdIDs: [
+                    "upper-sloper-outer-left", "upper-sloper-outer-right",
+                    "upper-sloper-inner-left", "upper-sloper-inner-right",
+                    "middle-edge-outer-left", "middle-edge-outer-right",
+                    "middle-edge-inner-left", "middle-edge-inner-right",
+                    "bottom-edge-center-left", "bottom-edge-center-right",
+                    "top-pocket-outer-left", "top-pocket-outer-right",
+                    "bottom-edge-inner-left", "bottom-edge-inner-right",
+                    "bottom-edge-outer-left", "bottom-edge-outer-right"
+                ],
+                bodyNodeIDs: ["body_L_001", "body_R_001"],
+                bodyProbe: [0.05, 0.96]
             )
         ]
     }

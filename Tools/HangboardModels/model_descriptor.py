@@ -196,8 +196,6 @@ def _validate_bindings(nodes: Sequence[NodeBinding]) -> list[NodeBinding]:
             raise ValueError("hold node requires a non-empty holdID")
     if body_count == 0:
         raise ValueError("descriptor requires a body node")
-    if body_count != 1:
-        raise ValueError("descriptor requires exactly one body node")
     return bindings
 
 

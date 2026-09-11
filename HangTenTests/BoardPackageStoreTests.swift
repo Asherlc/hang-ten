@@ -794,7 +794,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 at: packageURL.appendingPathComponent("assets/primary.model.json")
             ) { descriptor in
                 var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
-                nodes.append(["nodeID": "Other", "role": "body"])
+                nodes.append(["nodeID": "Other", "role": "hold", "holdID": "other"])
                 descriptor["nodes"] = nodes
             }
         }

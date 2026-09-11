@@ -114,9 +114,10 @@ pairs are accepted only in preflight or partial mode and only for declarations
 owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
 
 The current repository inventory contains 61 complete packages and zero drafts:
-59 raster v2 packages and two model-only v2 packages (`beastmaker-1000` and
-`metolius-wood-grips-compact-ii`). Model packages declare only their USDZ and
-hash-bound descriptor assets; they do not carry raster fallbacks.
+57 raster v2 packages and four model-only v2 packages (`beastmaker-1000`,
+`metolius-simulator-3d`, `metolius-wood-grips-compact-ii`, and
+`soill-training-tiles`). Model packages declare only their USDZ and hash-bound
+descriptor assets; they do not carry raster fallbacks.
 
 ## Schema migration
 

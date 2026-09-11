@@ -26,6 +26,7 @@ YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
 YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
 YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
+METOLIUS_SIMULATOR_ROOT = HANGBOARDS_ROOT / "metolius-simulator-3d"
 TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
@@ -894,7 +895,66 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() 
     } == set(hold_ids)
 
 
-def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
+def test_metolius_simulator_model_preserves_active_hold_order_and_hash_binding() -> None:
+    board = json.loads((METOLIUS_SIMULATOR_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["id"] == "metolius.simulator-3d"
+    assert [hold["id"] for hold in board["holds"]] == [
+        "jug-1-left", "round-sloper-3-left", "jug-14-center", "round-sloper-3-right",
+        "jug-1-right", "pocket-4-left", "edge-5-left", "edge-6-left", "edge-7-left",
+        "pocket-8-left", "pocket-9-left", "pocket-10-left", "edge-11-left",
+        "pocket-12-left", "pocket-13-left", "pocket-15-center", "pocket-16-center",
+        "pocket-17-center", "pocket-18-center", "pocket-13-right", "pocket-12-right",
+        "edge-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right",
+        "edge-7-right", "edge-6-right", "edge-5-right", "pocket-4-right",
+        "flat-sloper-2-left", "flat-sloper-2-right",
+    ]
+    assert board["holds"][-2:] == [
+        {
+            "id": "flat-sloper-2-left",
+            "equipmentObjectID": "primary",
+            "name": "Left #2 55 mm flat sloper",
+            "kind": "sloper",
+            "sloper": {"type": "flat"},
+            "sizeMillimeters": 55,
+        },
+        {
+            "id": "flat-sloper-2-right",
+            "equipmentObjectID": "primary",
+            "name": "Right #2 55 mm flat sloper",
+            "kind": "sloper",
+            "sloper": {"type": "flat"},
+            "sizeMillimeters": 55,
+        },
+    ]
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert media["display"]["camera"] == {
+        "type": "orthographic",
+        "viewDirection": [0, 0, -1],
+        "up": [0, 1, 0],
+        "fitPadding": 0.08,
+    }
+    assert "holdGeometry" not in media
+    assert {path.relative_to(METOLIUS_SIMULATOR_ROOT).as_posix()
+            for path in METOLIUS_SIMULATOR_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
+    }
+    descriptor = json.loads(
+        (METOLIUS_SIMULATOR_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (METOLIUS_SIMULATOR_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "board_body_001", "role": "body"},
+    ]
+
+
+def test_training_tiles_freezes_source_limited_model_contact_inventory() -> None:
     board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "soill.training-tiles"
@@ -915,11 +975,32 @@ def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
         ("bottom-edge-inner-right", "Inner right bottom edge", "edge"),
         ("bottom-edge-outer-left", "Outer left bottom edge", "edge"),
         ("bottom-edge-outer-right", "Outer right bottom edge", "edge"),
-        ("top-pocket-inner-left", "Inner left top pocket", "pocket"),
-        ("top-pocket-inner-right", "Inner right top pocket", "pocket"),
-        ("top-jug-left", "Left top jug", "jug"),
-        ("top-jug-right", "Right top jug", "jug"),
     )
+    active_ids = {hold["id"] for hold in board["holds"]}
+    assert active_ids.isdisjoint({
+        "top-pocket-inner-left", "top-pocket-inner-right", "top-jug-left", "top-jug-right",
+    })
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert media["display"]["camera"]["type"] == "orthographic"
+    assert "holdGeometry" not in media
+    assert {path.relative_to(TRAINING_TILES_ROOT).as_posix()
+            for path in TRAINING_TILES_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
+    }
+    descriptor = json.loads(
+        (TRAINING_TILES_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (TRAINING_TILES_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == active_ids
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "body_L_001", "role": "body"},
+        {"nodeID": "body_R_001", "role": "body"},
+    ]
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
@@ -1019,7 +1100,12 @@ def test_compact_package_loader_preserves_identity_inventory_and_model_frames() 
 
 def test_target_model_package_rejects_legacy_png_fallback(tmp_path: Path) -> None:
     module = load_board_catalog_module()
-    for slug in ("beastmaker-1000", "metolius-wood-grips-compact-ii"):
+    for slug in (
+        "beastmaker-1000",
+        "metolius-wood-grips-compact-ii",
+        "metolius-simulator-3d",
+        "soill-training-tiles",
+    ):
         package = tmp_path / slug
         shutil.copytree(HANGBOARDS_ROOT / slug, package)
         (package / "assets/primary.png").write_bytes(PRIMARY_PNG_BYTES)

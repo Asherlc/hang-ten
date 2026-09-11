@@ -25,7 +25,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 MODEL_BYTES = b"staging fixture model bytes\x00\xff"
 LIVE_MODEL_PACKAGE_SLUGS = (
     "beastmaker-1000",
+    "metolius-simulator-3d",
     "metolius-wood-grips-compact-ii",
+    "soill-training-tiles",
 )
 
 

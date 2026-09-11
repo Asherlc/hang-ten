@@ -45,7 +45,6 @@ def test_manually_transparent_trango_pivot_is_not_reprocessed_by_legacy_seed_fil
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
-        ("soill-training-tiles", (500, 450), (500, 350)),
         ("tension-grindstone", (887, 443), (887, 360)),
         ("yy-travelboard", (190, 625), (768, 512)),
         ("yy-travelboard", (1348, 625), (768, 512)),
@@ -76,7 +75,13 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
 
 
 @pytest.mark.parametrize(
-    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii")
+    "package",
+    (
+        "beastmaker-1000",
+        "metolius-simulator-3d",
+        "metolius-wood-grips-compact-ii",
+        "soill-training-tiles",
+    ),
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
     assets = HANGBOARDS_ROOT / package / "assets"
