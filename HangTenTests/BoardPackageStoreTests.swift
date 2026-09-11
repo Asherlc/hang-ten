@@ -3386,20 +3386,20 @@ final class BoardPackageStoreTests: XCTestCase {
                 .write(to: assetsURL.appendingPathComponent("primary.model.json"))
             try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
             if let duplicateKey = specification["duplicateTwoBranchMemberKey"] as? String {
-                let suspension = try XCTUnwrap(
-                    (try XCTUnwrap(boardObject["presentations"] as? [[String: Any]])[0]["media"] as? [String: Any])["suspension"] as? [String: Any]
-                )
+                let presentations = try XCTUnwrap(boardObject["presentations"] as? [[String: Any]])
+                let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
                 let original: Data
                 let member: String
                 switch duplicateKey {
                 case "passageID":
                     let passages = try XCTUnwrap(suspension["passages"] as? [String: Any])
-                    original = try serializedTwoBranchPassage(
+                    original = try self.serializedTwoBranchPassage(
                         try XCTUnwrap((passages["left"] as? [Any])?.first as? [String: Any])
                     )
                     member = "id"
                 case "branchID":
-                    original = try serializedTwoBranchBranch(
+                    original = try self.serializedTwoBranchBranch(
                         try XCTUnwrap((suspension["branches"] as? [Any])?.first as? [String: Any])
                     )
                     member = "id"
