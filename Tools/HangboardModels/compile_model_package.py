@@ -458,26 +458,58 @@ def _copy_usd_specs_sorted(
 ) -> None:
     for source_prim in sorted(list(children), key=lambda child: child.name):
         destination_prim = sdf.CreatePrimInLayer(destination_layer, source_prim.path)
-        for key in source_prim.ListInfoKeys():
-            destination_prim.SetInfo(key, source_prim.GetInfo(key))
-        for source_property in sorted(
-            list(source_prim.properties), key=lambda prop: prop.name
-        ):
-            if not sdf.CopySpec(
-                source_layer,
-                source_property.path,
-                destination_layer,
-                source_property.path,
-            ):
-                raise ValueError(
-                    f"USDZ canonical property copy failed: {source_property.path}"
-                )
-        _copy_usd_specs_sorted(
+        _copy_usd_prim_contents_sorted(
             sdf,
             source_layer,
             destination_layer,
-            source_prim.nameChildren,
+            source_prim,
+            destination_prim,
         )
+
+
+def _copy_usd_prim_contents_sorted(
+    sdf: object,
+    source_layer: object,
+    destination_layer: object,
+    source_prim: object,
+    destination_prim: object,
+) -> None:
+    for key in source_prim.ListInfoKeys():
+        destination_prim.SetInfo(key, source_prim.GetInfo(key))
+    for source_property in sorted(
+        list(source_prim.properties), key=lambda prop: prop.name
+    ):
+        if not sdf.CopySpec(
+            source_layer,
+            source_property.path,
+            destination_layer,
+            source_property.path,
+        ):
+            raise ValueError(
+                f"USDZ canonical property copy failed: {source_property.path}"
+            )
+    _copy_usd_specs_sorted(
+        sdf, source_layer, destination_layer, source_prim.nameChildren
+    )
+    for source_variant_set in sorted(
+        list(source_prim.variantSets.values()), key=lambda item: item.name
+    ):
+        for source_variant in sorted(
+            list(source_variant_set.variants.values()), key=lambda item: item.name
+        ):
+            destination_variant = sdf.CreateVariantInLayer(
+                destination_layer,
+                source_prim.path,
+                source_variant_set.name,
+                source_variant.name,
+            )
+            _copy_usd_prim_contents_sorted(
+                sdf,
+                source_layer,
+                destination_layer,
+                source_variant.primSpec,
+                destination_variant.primSpec,
+            )
 
 
 def _import_usdz_into_empty_scene(model_path: Path) -> object:
