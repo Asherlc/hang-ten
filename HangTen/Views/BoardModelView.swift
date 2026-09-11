@@ -435,7 +435,7 @@ final class BoardModelScene {
     }
 
     private func transitionToCanonicalPresentation(
-        _ solved: SuspendedSolvedPresentation,
+        _ solved: SolvedSuspension,
         cord: SCNNode
     ) {
         // Build the replacement cord at its deterministic destination before
@@ -489,7 +489,7 @@ final class BoardModelScene {
         currentFraming = framing
     }
 
-    private func makeCordNode(for solved: SuspendedSolvedPresentation) -> SCNNode {
+    private func makeCordNode(for solved: SolvedSuspension) -> SCNNode {
         let root = SCNNode()
         root.name = "suspended.cord"
         root.categoryBitMask = Self.cordCategory
@@ -517,7 +517,7 @@ final class BoardModelScene {
         return root
     }
 
-    private func hasClearance(for solved: SuspendedSolvedPresentation) -> Bool {
+    private func hasClearance(for solved: SolvedSuspension) -> Bool {
         guard solved.centerlineSamples.count >= 2,
               solved.tubeRadius.isFinite,
               solved.requiredClearance.isFinite,

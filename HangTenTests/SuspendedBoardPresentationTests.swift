@@ -53,6 +53,34 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
     }
 
+    private func singleProfile(
+        attachment: [Double] = [0, 0.4, 0],
+        anchor: [Double] = [0.4, 2, 0],
+        restLength: Double = 2,
+        radius: Double = 0.01
+    ) -> BoardModelSingleCordSuspension {
+        BoardModelSingleCordSuspension(
+            attachment: BoardModelAttachment(
+                nodeID: "attachment",
+                pointInModel: attachment,
+                provenance: "test"
+            ),
+            anchor: BoardModelInvisibleAnchor(
+                offsetFromBoardBounds: [0, 0, 0],
+                visibility: "invisible",
+                provenance: "test",
+                position: anchor
+            ),
+            cord: BoardModelCord(
+                restLength: restLength,
+                radius: radius,
+                material: "test-cord",
+                provenance: "test"
+            ),
+            canonicalPoses: [:]
+        )
+    }
+
     private func twoBranchSuspension(
         left: [[Double]] = [[-0.6, 0.4, 0], [-0.4, 0.4, 0]],
         right: [[Double]] = [[0.4, 0.4, 0], [0.6, 0.4, 0]],
@@ -90,6 +118,66 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(result.boardTransform.columns.3.x, 0, accuracy: 1e-6)
         XCTAssertEqual(result.boardTransform.columns.3.y, 0, accuracy: 1e-6)
         XCTAssertEqual(result.boardTransform.columns.3.z, 0, accuracy: 1e-6)
+    }
+
+    // This catches the extracted profile solver drifting from the established
+    // facade contract: exact endpoints, sample count, tangents, arc lengths,
+    // transform, and framing all have to continue describing the same cord.
+    func testSingleProfileSolverCharacterizesSlackCordAndFacadeCompatibility() throws {
+        let profile = singleProfile()
+        let solved = try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: profile,
+            bounds: bounds
+        )
+        let facade = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: .singleCord(profile),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(solved.cord.samples.count, 32)
+        XCTAssertEqual(solved.cord.samples.first, SIMD3<Float>(0.4, 2, 0))
+        XCTAssertEqual(solved.cord.samples.last, SIMD3<Float>(0, 0.4, 0))
+        XCTAssertFalse(solved.cord.isTaut)
+        XCTAssertEqual(solved.cord.arcLength, 2, accuracy: 1e-6)
+        XCTAssertEqual(solved.cord.polylineArcLength, 2, accuracy: 0.01)
+        XCTAssertEqual(solved.cord.tangents.count, solved.cord.samples.count)
+        XCTAssertTrue(solved.cord.tangents.allSatisfy { simd_length($0) > 0.999 && simd_length($0) < 1.001 })
+        XCTAssertEqual(solved.boardTransform.columns.3, SIMD4<Float>(0, 0, 0, 1))
+        XCTAssertTrue(solved.cameraFraming.contains(solved.fixedAnchor))
+        XCTAssertTrue(solved.cameraFraming.contains(solved.transformedAttachment))
+        XCTAssertTrue(solved.cord.samples.allSatisfy { solved.cameraFraming.contains($0) })
+        XCTAssertEqual(facade.centerlineSamples, solved.cord.samples)
+        XCTAssertEqual(facade.tangentSamples, solved.cord.tangents)
+        XCTAssertEqual(facade.cordArcLength, solved.cord.arcLength)
+    }
+
+    func testSingleProfileSolverCharacterizesTautSlackAndInvalidInputs() throws {
+        let taut = try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2),
+            bounds: bounds
+        )
+        XCTAssertTrue(taut.cord.isTaut)
+        XCTAssertEqual(taut.cord.samples.count, 32)
+        XCTAssertEqual(taut.cord.samples.first, SIMD3<Float>(0, 2, 0))
+        XCTAssertEqual(taut.cord.samples.last, SIMD3<Float>(0, 0, 0))
+
+        XCTAssertThrowsError(try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(attachment: [.infinity, 0, 0]),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .invalidSuspension)
+        }
+        XCTAssertThrowsError(try SuspensionProfileSolver.solveSingle(
+            pose: pose(),
+            profile: singleProfile(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 1.1),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .zeroHorizontalSlack)
+        }
     }
 
     func testQuarterTurnPoseTransformsAttachment() throws {

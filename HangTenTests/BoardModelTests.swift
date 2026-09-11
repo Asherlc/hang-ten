@@ -280,6 +280,35 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.transformedAttachment, solved.transformedAttachment)
     }
 
+    func testReselectingSuspendedPositionAtomicallyReplacesTransientCordWithoutChangingHoldHighlights() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left"),
+            .init(nodeID: "Board/Attachment", role: .attachment, holdID: nil)
+        ], minimum: [-1, -1, -1], maximum: [1, 1, 1])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: suspendedScene(),
+            descriptor: descriptor,
+            display: display(),
+            suspension: suspendedModelSuspension(attachment: [0, 0, 0], anchor: [0, 2, 0], restLength: 2)
+        ))
+        let hold = try XCTUnwrap(model.holdNodes["left"]?.first)
+        model.highlight(["left"], mode: .active)
+        let highlightedMaterial = try XCTUnwrap(hold.geometry?.firstMaterial)
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        let firstCord = try XCTUnwrap(model.transientCordNode)
+        XCTAssertTrue(model.select(positionID: "primary"))
+        let replacement = try XCTUnwrap(model.transientCordNode)
+
+        XCTAssertFalse(firstCord === replacement)
+        XCTAssertNil(firstCord.parent)
+        XCTAssertTrue(replacement.parent === model.scene.rootNode)
+        XCTAssertTrue(replacement.childNodes.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
+        XCTAssertFalse(model.isTransientCordAccessible)
+        XCTAssertTrue(hold.geometry?.firstMaterial === highlightedMaterial)
+    }
+
     func testSuspendedCordIsExcludedFromClosestHoldHit() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),

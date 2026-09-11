@@ -29,6 +29,23 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: legacyFixture.bundle))
     }
 
+    func testStorePreservesSingleCordProfileForThePureSuspensionSolver() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .singleCord(let profile) = media.suspension else {
+            return XCTFail("expected the model fixture's single-cord suspension profile")
+        }
+
+        XCTAssertEqual(profile.attachment.nodeID, "ZZAttachment")
+        XCTAssertEqual(profile.attachment.pointInModel, [0.5, 1, 0.05])
+        XCTAssertEqual(profile.cord.restLength, 0.3)
+        XCTAssertEqual(profile.cord.radius, 0.002)
+        XCTAssertEqual(Array(profile.canonicalPoses.keys), ["primary"])
+    }
+
     @MainActor
     func testModelLoaderFailsClosedWhenValidatedPackageModelIsMissingOrCorrupt() async throws {
         let mutations: [(name: String, mutate: (URL) throws -> Void)] = [
