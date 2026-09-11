@@ -108,11 +108,16 @@ def _copy_regular_file(source: Path, destination: Path) -> None:
     _regular_file(destination)
 
 
+def _iter_regular_children(source: Path):
+    """Yield direct children in staging order with one lstat classification."""
+    for source_child in sorted(source.iterdir(), key=lambda path: path.name):
+        yield source_child, source_child.lstat().st_mode
+
+
 def _validate_regular_tree(source: Path) -> None:
     """Reject unsupported filesystem entries before creating staging output."""
     _regular_directory(source)
-    for source_child in sorted(source.iterdir(), key=lambda path: path.name):
-        mode = source_child.lstat().st_mode
+    for source_child, mode in _iter_regular_children(source):
         if stat.S_ISDIR(mode):
             _validate_regular_tree(source_child)
         elif stat.S_ISREG(mode):
@@ -126,9 +131,8 @@ def _validate_regular_tree(source: Path) -> None:
 def _copy_regular_tree(source: Path, destination: Path) -> None:
     _regular_directory(source)
     destination.mkdir()
-    for source_child in sorted(source.iterdir(), key=lambda path: path.name):
+    for source_child, mode in _iter_regular_children(source):
         destination_child = destination / source_child.name
-        mode = source_child.lstat().st_mode
         if stat.S_ISDIR(mode):
             _copy_regular_tree(source_child, destination_child)
         elif stat.S_ISREG(mode):

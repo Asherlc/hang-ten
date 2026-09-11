@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import shutil
+import stat
 import sys
 from pathlib import Path
 
@@ -356,6 +357,23 @@ def test_staging_preserves_every_live_model_package_file_byte_for_byte(
             if path.is_file() and not path.is_symlink()
         }
         assert staged_files == source_files
+
+
+def test_regular_tree_children_are_classified_in_name_order(
+    tmp_path: Path,
+) -> None:
+    module = load_staging_module()
+    source = tmp_path / "package"
+    source.mkdir()
+    (source / "z-file").write_bytes(b"z")
+    (source / "a-directory").mkdir()
+
+    children = list(module._iter_regular_children(source))
+
+    assert [(path.name, stat.S_IFMT(mode)) for path, mode in children] == [
+        ("a-directory", stat.S_IFDIR),
+        ("z-file", stat.S_IFREG),
+    ]
 
 
 def test_staging_preflights_recursive_file_types_before_creating_destination(
