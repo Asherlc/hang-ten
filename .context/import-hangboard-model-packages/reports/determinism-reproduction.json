@@ -3,11 +3,13 @@
   "candidate": "baguette-evo",
   "cleanupVerified": true,
   "commands": [
-    "Blender --background --factory-startup --python Tools/HangboardModels/import_model_package.py -- --manifest <owned manifest> --mapping <owned mapping> --package baguette-evo --output-directory <owned run-1> --report <owned report>",
-    "repeat with a distinct owned run-2 output, then cmp primary.usdz and primary.model.json"
+    "Blender --background --factory-startup --python Tools/HangboardModels/import_model_package.py -- --manifest <source-manifest> --mapping <baguette-mapping> --package baguette-evo --output-directory <owned run-1> --report <owned run-1 report>",
+    "repeat in an independent Blender process with owned run-2 output, then cmp primary.usdz and primary.model.json"
   ],
-  "descriptorByteIdentical": false,
-  "observedBoundary": "Blender 5.2.0 emitted nondeterministic USD prim order (and therefore different USDZ CRC/content and descriptor model hashes) across clean conversions of identical inputs. Timestamp normalization and canonical text-layer export did not make the semantic prim order stable. Experimental outputs were deleted and cleanup verified.",
-  "status": "blocked",
-  "usdzByteIdentical": false
+  "descriptorByteIdentical": true,
+  "descriptorSHA256": "e73f56e2f9ae903583896f88067f03f9f3d9bb1065b8febddd825fcd98b4532c",
+  "fixBoundary": "The compiler rebuilds a fresh USD layer by copying prim and property specs in sorted semantic order, serializes the canonical layer as deterministic USDA, and writes a sorted 64-byte-aligned stored USDZ with fixed metadata. This removes both Blender's nondeterministic binary-USDC encoding and ZIP metadata variation.",
+  "modelSHA256": "e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b",
+  "status": "verified",
+  "usdzByteIdentical": true
 }

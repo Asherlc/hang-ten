@@ -3,10 +3,48 @@
     "cord-passage-1",
     "cord-passage-2"
   ],
+  "attachments": [
+    {
+      "metadata": {
+        "outward_axis": [
+          -1,
+          0,
+          0
+        ],
+        "role": "Observed lateral cord-port mouth",
+        "side": "left"
+      },
+      "order": 1,
+      "position": [
+        -0.05249999836087227,
+        0.0,
+        -0.002400000113993883
+      ],
+      "sourceNodeID": "cord-passage-1"
+    },
+    {
+      "metadata": {
+        "outward_axis": [
+          1,
+          0,
+          0
+        ],
+        "role": "Observed lateral cord-port mouth",
+        "side": "right"
+      },
+      "order": 2,
+      "position": [
+        0.05249999836087227,
+        0.0,
+        -0.002400000113993883
+      ],
+      "sourceNodeID": "cord-passage-2"
+    }
+  ],
   "cleanReimport": true,
   "coordinateFrame": "hang-ten-board-v1",
   "descriptorMatchesActualUSDZ": true,
-  "descriptorSHA256": "c88eb52a58f5ac755dd0c6f5e21aacc855a76be17c20664dd0137c33782e006c",
+  "descriptorSHA256": "eb2a83c035d1a80e172f196c68210b4b0556a897f367ebd3ddcd27b196237fa8",
   "holdCount": 8,
   "holds": {
     "edge-front-15mm-flat": {
@@ -266,6 +304,6 @@
       -0.0175
     ]
   },
-  "modelSHA256": "2c84e348eda27b117612d1d0e1d693dcb906a66cd31dfc8eec1c5228f9579fa1",
+  "modelSHA256": "366e6833403d8877b62b2403ce98683e4c27f9ce76c1d9e9abaa24e50ba382e4",
   "status": "verified"
 }

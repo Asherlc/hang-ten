@@ -5,10 +5,68 @@
     "cord-passage-3",
     "cord-passage-4"
   ],
+  "attachments": [
+    {
+      "metadata": {
+        "asset_role": "cord_passage",
+        "bore_index": 1,
+        "diameter_estimate_m": 0.0072
+      },
+      "order": 1,
+      "position": [
+        -0.2460000067949295,
+        0.0,
+        0.0
+      ],
+      "sourceNodeID": "cord-passage-1"
+    },
+    {
+      "metadata": {
+        "asset_role": "cord_passage",
+        "bore_index": 2,
+        "diameter_estimate_m": 0.0072
+      },
+      "order": 2,
+      "position": [
+        -0.23100000619888306,
+        0.0,
+        0.0
+      ],
+      "sourceNodeID": "cord-passage-2"
+    },
+    {
+      "metadata": {
+        "asset_role": "cord_passage",
+        "bore_index": 3,
+        "diameter_estimate_m": 0.0072
+      },
+      "order": 3,
+      "position": [
+        0.23100000619888306,
+        0.0,
+        0.0
+      ],
+      "sourceNodeID": "cord-passage-3"
+    },
+    {
+      "metadata": {
+        "asset_role": "cord_passage",
+        "bore_index": 4,
+        "diameter_estimate_m": 0.0072
+      },
+      "order": 4,
+      "position": [
+        0.2460000067949295,
+        0.0,
+        0.0
+      ],
+      "sourceNodeID": "cord-passage-4"
+    }
+  ],
   "cleanReimport": true,
   "coordinateFrame": "hang-ten-board-v1",
   "descriptorMatchesActualUSDZ": true,
-  "descriptorSHA256": "5bc614e355faf57df3c543d518b65501faf067bd111450e6bf4f5c490a4a94e0",
+  "descriptorSHA256": "e73f56e2f9ae903583896f88067f03f9f3d9bb1065b8febddd825fcd98b4532c",
   "holdCount": 19,
   "holds": {
     "edge-10-left": {
@@ -598,6 +656,6 @@
       -0.025000002
     ]
   },
-  "modelSHA256": "df6d9fa0ef740d20368d52807af7fa8514cad559842875d38347af5077a2c75c",
+  "modelSHA256": "e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b",
   "status": "verified"
 }

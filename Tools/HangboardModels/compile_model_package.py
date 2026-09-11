@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 import tempfile
+import zipfile
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,6 +30,8 @@ from model_descriptor import ModelBounds, ModelDescriptorV1, NodeBinding, compil
 _BOUNDS_TOLERANCE_METERS = 0.000001
 _IMPORTED_PROPERTY_PREFIX = "userProperties:"
 _SOURCE_NODE_ID_PROPERTY = "hang_ten_source_node_id"
+_ATTACHMENTS_PROPERTY = "hang_ten_attachments_v1"
+_DETERMINISTIC_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
 
 
 @dataclass(frozen=True)
@@ -149,6 +152,7 @@ def compile_model_package(
         assets.mkdir()
         model_path = assets / "primary.usdz"
         _export_temporary_copies(source_scene, source_nodes, model_path)
+        _canonicalize_usdz(model_path)
         model_bytes = model_path.read_bytes()
         if not model_bytes:
             raise ValueError("USDZ export is empty")
@@ -314,6 +318,13 @@ def _export_temporary_copies(
             copied = bpy.data.objects.new(f"__export__{node.node_id}", mesh)
             copied["role"] = node.role
             copied[_SOURCE_NODE_ID_PROPERTY] = node.node_id
+            for source_owner, copied_owner in (
+                (source, copied),
+                (source.data, mesh),
+            ):
+                attachment_payload = source_owner.get(_ATTACHMENTS_PROPERTY)
+                if attachment_payload is not None:
+                    copied_owner[_ATTACHMENTS_PROPERTY] = attachment_payload
             if node.role == "hold":
                 assert node.hold_id is not None
                 copied["hold_id"] = node.hold_id
@@ -356,6 +367,117 @@ def _export_temporary_copies(
         # .blend on disk is never saved or changed.
         if export_scene.name in bpy.data.scenes:
             bpy.data.scenes.remove(export_scene)
+
+
+def _canonicalize_usdz(model_path: Path) -> None:
+    """Sort USD specs and write a byte-stable, 64-byte-aligned USDZ archive."""
+    from pxr import Sdf
+
+    path = Path(model_path)
+    with tempfile.TemporaryDirectory(
+        prefix=f".{path.stem}.canonical-", dir=path.parent
+    ) as raw_directory:
+        directory = Path(raw_directory)
+        with zipfile.ZipFile(path) as archive:
+            members = sorted(archive.namelist())
+            if any(
+                name.startswith("/") or ".." in Path(name).parts
+                for name in members
+            ):
+                raise ValueError("USDZ export contains unsafe member paths")
+            for name in members:
+                destination = directory / name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(archive.read(name))
+        layers = [
+            name
+            for name in members
+            if Path(name).suffix in {".usd", ".usda", ".usdc"}
+        ]
+        if len(layers) != 1:
+            raise ValueError("USDZ export must contain exactly one USD layer")
+        source_layer = Sdf.Layer.FindOrOpen(str(directory / layers[0]))
+        if source_layer is None:
+            raise ValueError("USDZ export layer is unreadable")
+        source_layer_path = directory / layers[0]
+        canonical_layer = source_layer_path.with_suffix(".usda")
+        temporary_layer = canonical_layer.with_name(
+            f"canonical{canonical_layer.suffix}"
+        )
+        destination_layer = Sdf.Layer.CreateNew(str(temporary_layer))
+        if destination_layer is None:
+            raise ValueError("USDZ canonical layer creation failed")
+        for key in source_layer.pseudoRoot.ListInfoKeys():
+            destination_layer.pseudoRoot.SetInfo(
+                key, source_layer.pseudoRoot.GetInfo(key)
+            )
+        _copy_usd_specs_sorted(
+            Sdf, source_layer, destination_layer, source_layer.rootPrims
+        )
+        destination_layer.Save()
+        if source_layer_path != canonical_layer:
+            source_layer_path.unlink()
+        os.replace(temporary_layer, canonical_layer)
+        members = sorted(
+            canonical_layer.relative_to(directory).as_posix()
+            if name == layers[0]
+            else name
+            for name in members
+        )
+
+        temporary_archive = path.with_name(f".{path.name}.canonical")
+        try:
+            with temporary_archive.open("wb") as destination:
+                with zipfile.ZipFile(
+                    destination, "w", compression=zipfile.ZIP_STORED
+                ) as archive:
+                    for name in members:
+                        offset = destination.tell()
+                        encoded_name = name.encode("utf-8")
+                        padding = (-(offset + 30 + len(encoded_name) + 4)) % 64
+                        info = zipfile.ZipInfo(name, _DETERMINISTIC_ZIP_TIME)
+                        info.compress_type = zipfile.ZIP_STORED
+                        info.create_system = 3
+                        info.external_attr = 0o100644 << 16
+                        info.extra = (
+                            b"\xff\xff"
+                            + padding.to_bytes(2, "little")
+                            + bytes(padding)
+                        )
+                        archive.writestr(info, (directory / name).read_bytes())
+            os.replace(temporary_archive, path)
+        finally:
+            temporary_archive.unlink(missing_ok=True)
+
+
+def _copy_usd_specs_sorted(
+    sdf: object,
+    source_layer: object,
+    destination_layer: object,
+    children: object,
+) -> None:
+    for source_prim in sorted(list(children), key=lambda child: child.name):
+        destination_prim = sdf.CreatePrimInLayer(destination_layer, source_prim.path)
+        for key in source_prim.ListInfoKeys():
+            destination_prim.SetInfo(key, source_prim.GetInfo(key))
+        for source_property in sorted(
+            list(source_prim.properties), key=lambda prop: prop.name
+        ):
+            if not sdf.CopySpec(
+                source_layer,
+                source_property.path,
+                destination_layer,
+                source_property.path,
+            ):
+                raise ValueError(
+                    f"USDZ canonical property copy failed: {source_property.path}"
+                )
+        _copy_usd_specs_sorted(
+            sdf,
+            source_layer,
+            destination_layer,
+            source_prim.nameChildren,
+        )
 
 
 def _import_usdz_into_empty_scene(model_path: Path) -> object:
