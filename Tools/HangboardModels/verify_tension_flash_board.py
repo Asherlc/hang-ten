@@ -507,6 +507,31 @@ def _attachment_point(bounds: Mapping[str, object]) -> tuple[float, float, float
     )
 
 
+def validate_attachment_point(
+    attachment: Mapping[str, object], bounds: Mapping[str, object]
+) -> tuple[float, float, float]:
+    """Match the package endpoint to the approved integral-passage estimate."""
+    declared = attachment.get("pointInModel")
+    try:
+        valid = isinstance(declared, (list, tuple)) and len(declared) == 3 and all(
+            type(value) in (int, float) and math.isfinite(value) for value in declared
+        )
+    except OverflowError:
+        valid = False
+    if not valid:
+        raise ValueError("attachment point must be a finite three-component vector")
+    expected = _attachment_point(bounds)
+    minimum, maximum = bounds["min"], bounds["max"]
+    if not all(
+        low <= actual <= high and low <= approved <= high
+        for actual, approved, low, high in zip(declared, expected, minimum, maximum)
+    ):
+        raise ValueError("attachment point is outside actual descriptor bounds")
+    if any(abs(actual - approved) > 1e-6 for actual, approved in zip(declared, expected)):
+        raise ValueError("attachment point does not match the approved integral passage")
+    return expected
+
+
 def _clearance_probes(
     objects: Mapping[str, object],
     descriptor: Mapping[str, object],
@@ -660,17 +685,12 @@ def verify_package(package: Path, *, skip_renders: bool) -> dict[str, object]:
         "sourceNodeID": source_correspondence[body_binding.node_id],
     }
     validate_attachment_node(attachment, bindings)
-    point = _attachment_point(descriptor["modelBounds"])
-    minimum = descriptor["modelBounds"]["min"]
-    maximum = descriptor["modelBounds"]["max"]
-    if not all(low <= value <= high for value, low, high in zip(point, minimum, maximum)):
-        raise ValueError("attachment point is outside actual descriptor bounds")
-
     position_probes = _ray_probes(objects, descriptor)
     board_document = load_json_object(BOARD_JSON)
     suspension = board_document["presentations"][0]["media"]["suspension"]
     if not isinstance(suspension, Mapping):
         raise ValueError("Flash Board package suspension metadata is missing")
+    point = validate_attachment_point(suspension["attachment"], descriptor["modelBounds"])
     clearance = _clearance_probes(objects, descriptor, suspension)
     for position_id in POSITION_HOLD_IDS:
         position_probes[position_id].update(clearance[position_id])

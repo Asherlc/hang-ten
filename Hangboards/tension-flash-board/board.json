@@ -73,7 +73,7 @@
             },
             "two-edge-inverted": {
               "rotation": [0, 1, 0, 0],
-              "translation": [0.5, 0.075999998, 0.075999998],
+              "translation": [0.5, 0, 0.075999998],
               "camera": { "viewDirection": [0, 0, 1], "fitPadding": 0.1 }
             }
           }

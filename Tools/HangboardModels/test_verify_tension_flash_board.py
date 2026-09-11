@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import hashlib
+import itertools
 from pathlib import Path
 import unittest
 import zipfile
@@ -119,18 +120,52 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
 
     def test_verify_report_rejects_unknown_or_missing_attachment_node(self):
         report = valid_report()
-        report["attachment"] = {"nodeID": "", "role": "body", "sourceNodeID": "flash-board-body"}
-        with self.assertRaisesRegex(ValueError, "attachment"):
+        report["attachment"]["nodeID"] = ""
+        with self.assertRaisesRegex(ValueError, "attachment node must identify"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
 
         report = valid_report()
-        report["attachment"] = {
-            "nodeID": "three-edge-left",
-            "role": "hold",
-            "sourceNodeID": "flash-board-body",
-        }
-        with self.assertRaisesRegex(ValueError, "attachment"):
+        report["attachment"].update(nodeID="three-edge-left", role="hold")
+        with self.assertRaisesRegex(ValueError, "attachment node must be body or attachment role"):
             verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_verify_report_rejects_inaccessible_attachment(self):
+        for accessible in (False, None, 1, "true"):
+            with self.subTest(accessible=accessible):
+                report = valid_report()
+                report["attachment"]["accessible"] = accessible
+                with self.assertRaisesRegex(ValueError, "attachment"):
+                    verifier.verify_report(report, expected_ids=EXPECTED_IDS)
+
+    def test_every_canonical_pose_preserves_actual_descriptor_bounds(self):
+        document = json.loads(verifier.BOARD_JSON.read_text(encoding="utf-8"))
+        media = document["presentations"][0]["media"]
+        descriptor = json.loads((verifier.BOARD_JSON.parent / media["descriptorPath"]).read_text())
+        bounds = descriptor["modelBounds"]
+        corners = list(itertools.product(*zip(bounds["min"], bounds["max"])))
+        for position_id, pose in media["suspension"]["canonicalPoses"].items():
+            with self.subTest(position=position_id):
+                transformed = [verifier._transform_point(point, pose) for point in corners]
+                for axis in range(3):
+                    self.assertAlmostEqual(min(point[axis] for point in transformed), bounds["min"][axis], places=8)
+                    self.assertAlmostEqual(max(point[axis] for point in transformed), bounds["max"][axis], places=8)
+
+    def test_attachment_point_must_match_declared_finite_point_within_bounds(self):
+        bounds = {"min": [0.0, 0.0, 0.0], "max": [0.5, 0.076, 0.076]}
+        attachment = {"pointInModel": [0.017, 0.048, 0.076]}
+        actual = verifier.validate_attachment_point(attachment, bounds)
+        for value, expected in zip(actual, (0.017, 0.048, 0.076)):
+            self.assertAlmostEqual(value, expected, places=9)
+        attachment["pointInModel"] = [0.0170005, 0.048, 0.076]
+        verifier.validate_attachment_point(attachment, bounds)
+        for point in (None, [0.017, 0.048], [0.017, 0.048, 0.076, 0],
+                      [True, 0.048, 0.076], ["0.017", 0.048, 0.076],
+                      [10 ** 400, 0.048, 0.076],
+                      [float("nan"), 0.048, 0.076], [0.017, float("inf"), 0.076],
+                      [0.017002, 0.048, 0.076], [0.017, 0.048, 0.0760001]):
+            with self.subTest(point=point):
+                with self.assertRaisesRegex(ValueError, "attachment point"):
+                    verifier.validate_attachment_point({"pointInModel": point}, bounds)
 
 
     def test_verify_report_requires_all_position_probe_results(self):
@@ -180,6 +215,25 @@ class VerifyTensionFlashBoardTests(unittest.TestCase):
             nearest=nearest,
         )
         self.assertFalse(result["passed"])
+
+    def test_mesh_clearance_exempts_only_approved_attachment_endpoint(self):
+        samples = [(0.0, 0.0, 0.1), (0.5, 0.0, 0.1), (1.0, 0.0, 0.1)]
+
+        def check(contact, nearest_point, contact_node="attachment"):
+            def nearest(node_id, point):
+                if node_id == contact_node and point == contact:
+                    return 0.0, nearest_point
+                return 1.0, point
+            nearest.node_ids = ("attachment", "hold")
+            return verifier._check_centerline_clearance(
+                samples, required_clearance=0.003,
+                attachment_node_id="attachment", nearest=nearest,
+            )["passed"]
+
+        self.assertTrue(check(samples[-1], samples[-1]))
+        self.assertFalse(check(samples[1], samples[1]))
+        self.assertFalse(check(samples[-1], (1.0, 0.00002, 0.1)))
+        self.assertFalse(check(samples[-1], samples[-1], "hold"))
 
 
 if __name__ == "__main__":

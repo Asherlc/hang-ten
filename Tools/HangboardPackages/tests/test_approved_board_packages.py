@@ -559,6 +559,31 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     }
 
 
+def test_flash_model_descriptor_preserves_approved_assets_and_bindings() -> None:
+    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+    media = board["presentations"][0]["media"]
+    model_bytes = (FLASH_BOARD_ROOT / media["assetPath"]).read_bytes()
+    descriptor_bytes = (FLASH_BOARD_ROOT / media["descriptorPath"]).read_bytes()
+    descriptor = json.loads(descriptor_bytes)
+    model_sha = hashlib.sha256(model_bytes).hexdigest()
+    assert model_sha == "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b"
+    assert hashlib.sha256(descriptor_bytes).hexdigest() == "b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58"
+    assert descriptor["modelSHA256"] == model_sha
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    logical_ids = {hold["id"] for hold in board["holds"]}
+    assert set(descriptor["holds"]) == logical_ids
+    hold_nodes = {node["nodeID"]: node["holdID"] for node in descriptor["nodes"] if node["role"] == "hold"}
+    assert set(hold_nodes.values()) == logical_ids
+    assert len(hold_nodes) == len(logical_ids)
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [node_id for node_id, binding in hold_nodes.items() if binding == hold_id]
+    attachment_id = media["suspension"]["attachment"]["nodeID"]
+    assert [node for node in descriptor["nodes"] if node["role"] != "hold"] == [
+        {"nodeID": attachment_id, "role": "body"}
+    ]
+
+
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
     board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text(encoding="utf-8"))
 
