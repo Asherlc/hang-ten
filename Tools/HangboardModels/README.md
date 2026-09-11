@@ -33,6 +33,73 @@ resource. Remote GitHub model-package sync is deferred/unsupported by the
 current PNG/default-oriented GitHub sync. Workbench model editing is
 read-only/unavailable; raster Workbench editing remains supported.
 
+## Extracted verification and migration bookkeeping
+
+The shared verifier is the preservation boundary for the shipped model
+packages. `model_verification.ModelVerificationConfig` carries the expected
+ordered logical IDs, exact package asset set, role/material policy, triangle
+ceiling, and additive board probes. Call
+`model_verification.verify_model_package(package, config, render=False)` for
+the common package, descriptor, material, imported-node, triangle, and
+regenerated-descriptor checks. The board-specific wrappers remain the public
+CLI compatibility layer:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_beastmaker_1000.py -- \
+  --output .context/OWNER-beastmaker-1000/package --skip-renders
+```
+
+The wrapper's `beastmaker_config()` and Compact II's
+`compact_ii_config()` supply the shared `ModelVerificationConfig` when these
+documented Blender entrypoints run.
+
+Compact II uses `compact_ii_config()` and retains its fixed 19-ID inventory,
+150,000-triangle ceiling, exact two-asset package, and `--skip-renders`
+compatibility mode. Beastmaker retains its fixed 22-ID inventory and authored
+rim/nearest-hit probe. Do not use these adapters to infer identity from
+imported names. `verify_tension_flash_board.py` remains a separate Flash
+verifier and baseline: its package, generator, and two-branch presentation are
+not part of this shared route until separately approved.
+
+Capture a pre-extraction record with
+`model_characterization.capture_model_baseline(package, board_json)` and
+compare it with `assert_baseline_matches(actual, expected)`. The record
+preserves exact regular-file asset inventory, model and descriptor SHA-256
+values, descriptor data, and logical hold order. The staging contract remains
+`scripts/stage-board-packages.py`'s recursive copy of parser-approved regular
+files; the staging tests compare every staged file's bytes with its source.
+No model resource is synthesized, renamed, substituted, or synchronized to a
+remote service.
+
+Migration bookkeeping is a closed document. Validate an actual manifest with
+`migration_manifest.load_migration_manifest(path)`; the checked-in
+`migration-manifest.example.json` contains placeholders and is not itself a
+verified board record. After verification, the fixed-view gallery interface
+can be called as follows (the output must be a direct, owner-prefixed child of
+the canonical workspace `.context`):
+
+```python
+from pathlib import Path
+from migration_manifest import load_migration_manifest
+from render_model_gallery import render_model_gallery
+
+manifest = load_migration_manifest(Path("PATH/migration-manifest.json"))
+artifacts = render_model_gallery(
+    Path(".context/OWNER-beastmaker-1000/package"),
+    manifest,
+    Path(".context/OWNER-beastmaker-1000-gallery"),
+)
+```
+
+The gallery imports only the verified USDZ, records fixed-view PNG hashes and
+provenance, and requires explicit cleanup of the owned output directory. It
+does not open source blends/images or edit model geometry. The Swift
+single-cord runtime boundary is `SuspensionProfileSolver.solveSingle` behind
+`SuspendedBoardPresentation`; keep the cord transient, invisible-anchor,
+non-pickable, and unavailable-on-invalid-input behavior. Two-branch solving
+and Flash adoption remain separately gated and unsupported here.
+
 ## Stage 0 evidence packets
 
 For any future model migration, retain at least two complete exact-revision

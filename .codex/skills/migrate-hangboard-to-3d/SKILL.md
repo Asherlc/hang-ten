@@ -29,6 +29,52 @@ Before and after schema migration, run a type- and order-sensitive semantic audi
 
 Keep physical identity, source-backed logical holds, equipment, and positions in `board.json`. Use explicitly tagged raster/model presentations so unrelated raster boards can coexist with migrated boards. A package containing model media is model-only: it must declare no raster presentation or PNG, whether original or derived; presentation derivation is supported only between raster presentations. Exact declared-versus-actual asset equality complements but does not replace this package-level media-isolation rule. Each migrated package owns a required USDZ and an explicit mesh-to-logical-hold-ID binding; multiple disconnected mesh pieces may share one ID. The mesh is the sole geometry for rendering, highlighting, and picking: do not retain parallel raster paths or hand-edited spatial bounds.
 
+## Use the extracted verification and review boundaries
+
+For the shipped Beastmaker 1000 and Compact II model packages, route the
+shared actual-export checks through
+`Tools/HangboardModels/model_verification.py`:
+`ModelVerificationConfig` describes the closed package contract and
+`verify_model_package(package, config, render=False)` performs the cheap
+filesystem, ordered-inventory, and descriptor-hash checks before importing
+Blender, then verifies imported materials and geometry. `verify_beastmaker_1000.py` and
+`verify_wood_grips_compact_ii.py` remain compatibility CLI adapters; use
+`beastmaker_config()` and `compact_ii_config()` for board-specific
+configuration and probes. Retain their existing report fields and
+`--skip-renders` behavior. Do not route Flash through this shared
+configuration: `verify_tension_flash_board.py` remains a separate baseline
+verifier until Flash's independently approved migration and two-branch gate
+is complete.
+
+Freeze behavior before an extraction with
+`model_characterization.capture_model_baseline(package, board_json)` and
+compare it using `assert_baseline_matches(actual, expected)`. The
+characterization includes the recursively discovered regular-file inventory,
+exact model/descriptor hashes, descriptor data, and ordered logical IDs; it is
+a preservation check, not a geometry source. Keep staging as the existing
+recursive regular-file copy and prove source-to-stage byte parity with its
+staging characterization rather than adding a second model-resource path.
+
+For a reviewed model package, load the closed bookkeeping document with
+`migration_manifest.load_migration_manifest(path)`. It rejects unknown,
+duplicate, explicit-null, escaping-path, and geometry/bounds members and
+requires the declared model assets, logical order, omissions, verification
+configuration, review views, and artifact hashes. After package verification,
+`render_model_gallery.render_model_gallery(package, manifest, output)` may
+produce fixed review artifacts only in the canonical workspace `.context`,
+under an owner-prefixed output directory. The gallery consumes the verified
+USDZ, never source images or a source blend, and its owned output must be
+cleaned after review.
+
+For portable single-cord presentations, keep pure solving in
+`SuspensionProfileSolver.solveSingle(pose:profile:bounds:) throws` and call it
+through the existing `SuspendedBoardPresentation` facade. The solver's
+`SolvedSuspension`/`SolvedCordBranch` results and failure mapping are part of
+the compatibility contract; retain the invisible anchor, transient
+non-pickable cord layer, finite canonical poses, and explicit unavailable
+state. `solveTwoBranch` is not a supported extraction route yet and must not
+be documented or implemented until the separate Flash gate passes.
+
 ## Suspended portable presentations
 
 For a future portable-suspension parser/runtime, reject a migration unless all
