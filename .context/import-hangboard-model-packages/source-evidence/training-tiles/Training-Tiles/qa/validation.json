@@ -1,0 +1,308 @@
+{
+  "blender_version": "4.2.0",
+  "asset": "Training-Tiles.blend",
+  "counts": {
+    "L": {
+      "dimensions_m": [
+        0.3555806688964367,
+        0.07617122106503871,
+        0.2031669512980443
+      ],
+      "triangles": 221346
+    },
+    "R": {
+      "dimensions_m": [
+        0.3555806688964367,
+        0.07617123085351452,
+        0.20316692021333438
+      ],
+      "triangles": 221346
+    }
+  },
+  "passed": 48,
+  "failed": 0,
+  "checks": [
+    {
+      "check": "exactly two bodies and sixteen named hold meshes",
+      "pass": true,
+      "details": [
+        "body-L",
+        "body-R",
+        "hold-L-edge-bottom-center",
+        "hold-L-edge-bottom-inner",
+        "hold-L-edge-bottom-outer",
+        "hold-L-edge-middle-inner",
+        "hold-L-edge-middle-outer",
+        "hold-L-pocket",
+        "hold-L-sloper-inner",
+        "hold-L-sloper-outer",
+        "hold-R-edge-bottom-center",
+        "hold-R-edge-bottom-inner",
+        "hold-R-edge-bottom-outer",
+        "hold-R-edge-middle-inner",
+        "hold-R-edge-middle-outer",
+        "hold-R-pocket",
+        "hold-R-sloper-inner",
+        "hold-R-sloper-outer"
+      ]
+    },
+    {
+      "check": "all objects are meshes; no cord, hardware, cameras, lights or markers",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "metric meters",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "applied transforms",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no live modifiers",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no linked libraries",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no external texture dependencies",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-pocket is independently selectable",
+      "pass": true,
+      "details": 13727
+    },
+    {
+      "check": "hold-L-pocket material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-sloper-outer is independently selectable",
+      "pass": true,
+      "details": 4469
+    },
+    {
+      "check": "hold-L-sloper-outer material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-sloper-inner is independently selectable",
+      "pass": true,
+      "details": 5458
+    },
+    {
+      "check": "hold-L-sloper-inner material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-edge-middle-outer is independently selectable",
+      "pass": true,
+      "details": 3989
+    },
+    {
+      "check": "hold-L-edge-middle-outer material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-edge-middle-inner is independently selectable",
+      "pass": true,
+      "details": 4768
+    },
+    {
+      "check": "hold-L-edge-middle-inner material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-edge-bottom-outer is independently selectable",
+      "pass": true,
+      "details": 3028
+    },
+    {
+      "check": "hold-L-edge-bottom-outer material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-edge-bottom-center is independently selectable",
+      "pass": true,
+      "details": 1974
+    },
+    {
+      "check": "hold-L-edge-bottom-center material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-L-edge-bottom-inner is independently selectable",
+      "pass": true,
+      "details": 1297
+    },
+    {
+      "check": "hold-L-edge-bottom-inner material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-pocket is independently selectable",
+      "pass": true,
+      "details": 13710
+    },
+    {
+      "check": "hold-R-pocket material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-sloper-outer is independently selectable",
+      "pass": true,
+      "details": 4485
+    },
+    {
+      "check": "hold-R-sloper-outer material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-sloper-inner is independently selectable",
+      "pass": true,
+      "details": 5450
+    },
+    {
+      "check": "hold-R-sloper-inner material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-edge-middle-outer is independently selectable",
+      "pass": true,
+      "details": 3994
+    },
+    {
+      "check": "hold-R-edge-middle-outer material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-edge-middle-inner is independently selectable",
+      "pass": true,
+      "details": 4768
+    },
+    {
+      "check": "hold-R-edge-middle-inner material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-edge-bottom-outer is independently selectable",
+      "pass": true,
+      "details": 3030
+    },
+    {
+      "check": "hold-R-edge-bottom-outer material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-edge-bottom-center is independently selectable",
+      "pass": true,
+      "details": 1974
+    },
+    {
+      "check": "hold-R-edge-bottom-center material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "hold-R-edge-bottom-inner is independently selectable",
+      "pass": true,
+      "details": 1298
+    },
+    {
+      "check": "hold-R-edge-bottom-inner material is independent",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "L nominal width within 0.5 mm",
+      "pass": true,
+      "details": 0.3555806688964367
+    },
+    {
+      "check": "L nominal height within 0.5 mm",
+      "pass": true,
+      "details": 0.2031669512980443
+    },
+    {
+      "check": "L assembled surface has no missing seams",
+      "pass": true,
+      "details": {
+        "nonmanifold_edges_after_weld": 0
+      }
+    },
+    {
+      "check": "L assembled surface has no duplicated triangles",
+      "pass": true,
+      "details": 0
+    },
+    {
+      "check": "R nominal width within 0.5 mm",
+      "pass": true,
+      "details": 0.3555806688964367
+    },
+    {
+      "check": "R nominal height within 0.5 mm",
+      "pass": true,
+      "details": 0.20316692021333438
+    },
+    {
+      "check": "R assembled surface has no missing seams",
+      "pass": true,
+      "details": {
+        "nonmanifold_edges_after_weld": 0
+      }
+    },
+    {
+      "check": "R assembled surface has no duplicated triangles",
+      "pass": true,
+      "details": 0
+    },
+    {
+      "check": "mesh IDs preserved in GLB",
+      "pass": true,
+      "details": [
+        "body-L",
+        "body-R",
+        "hold-L-edge-bottom-center",
+        "hold-L-edge-bottom-inner",
+        "hold-L-edge-bottom-outer",
+        "hold-L-edge-middle-inner",
+        "hold-L-edge-middle-outer",
+        "hold-L-pocket",
+        "hold-L-sloper-inner",
+        "hold-L-sloper-outer",
+        "hold-R-edge-bottom-center",
+        "hold-R-edge-bottom-inner",
+        "hold-R-edge-bottom-outer",
+        "hold-R-edge-middle-inner",
+        "hold-R-edge-middle-outer",
+        "hold-R-pocket",
+        "hold-R-sloper-inner",
+        "hold-R-sloper-outer"
+      ]
+    }
+  ]
+}

@@ -1,8 +1,7 @@
 {
-  "compilerStage": "actual USDZ export and clean reimport",
   "error": "imported mesh board_body_001 has no image material",
-  "mappingStatus": "complete; 32 source meshes explicitly mapped to 29 logical hold IDs plus body",
+  "errorType": "ValueError",
+  "expectedError": "no image material",
   "packageID": "metolius",
-  "promotionStatus": "rejected",
-  "reason": "The supplied vertex-color material does not survive the existing USDZ compiler as a native image material payload; candidate output was not published."
+  "status": "rejected"
 }

@@ -19,5 +19,7 @@
     {"holdID": "pocket-15-center", "role": "hold", "sourceNodeID": "hold_15_center"}, {"holdID": "pocket-16-center", "role": "hold", "sourceNodeID": "hold_16_center"}, {"holdID": "pocket-17-center", "role": "hold", "sourceNodeID": "hold_17_center"}, {"holdID": "pocket-18-center", "role": "hold", "sourceNodeID": "hold_18_center"}
   ],
   "packageID": "metolius",
+  "promotionStatus": "rejected",
+  "expectedError": "no image material",
   "schemaVersion": 1
 }

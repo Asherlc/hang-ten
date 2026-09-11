@@ -1,0 +1,289 @@
+{
+  "board": "Metolius Simulator 3D",
+  "units": "meters",
+  "up_axis": "Z",
+  "front_axis": "-Y",
+  "body_id": "board_body",
+  "cord_passages": [],
+  "holds": [
+    {
+      "id": "hold_01_left",
+      "manufacturer_number": 1,
+      "side": "left",
+      "grip": "outer jug",
+      "nominal_dimension_mm": null,
+      "dimension_kind": "not published",
+      "selectable": true
+    },
+    {
+      "id": "hold_01_right",
+      "manufacturer_number": 1,
+      "side": "right",
+      "grip": "outer jug",
+      "nominal_dimension_mm": null,
+      "dimension_kind": "not published",
+      "selectable": true
+    },
+    {
+      "id": "hold_02_left",
+      "manufacturer_number": 2,
+      "side": "left",
+      "grip": "flat sloper",
+      "nominal_dimension_mm": 55,
+      "dimension_kind": "nominal sloper grip dimension",
+      "selectable": true
+    },
+    {
+      "id": "hold_02_right",
+      "manufacturer_number": 2,
+      "side": "right",
+      "grip": "flat sloper",
+      "nominal_dimension_mm": 55,
+      "dimension_kind": "nominal sloper grip dimension",
+      "selectable": true
+    },
+    {
+      "id": "hold_03_left",
+      "manufacturer_number": 3,
+      "side": "left",
+      "grip": "round sloper",
+      "nominal_dimension_mm": 65,
+      "dimension_kind": "nominal sloper grip dimension",
+      "selectable": true
+    },
+    {
+      "id": "hold_03_right",
+      "manufacturer_number": 3,
+      "side": "right",
+      "grip": "round sloper",
+      "nominal_dimension_mm": 65,
+      "dimension_kind": "nominal sloper grip dimension",
+      "selectable": true
+    },
+    {
+      "id": "hold_04_left",
+      "manufacturer_number": 4,
+      "side": "left",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 30,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_04_right",
+      "manufacturer_number": 4,
+      "side": "right",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 30,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_05_left",
+      "manufacturer_number": 5,
+      "side": "left",
+      "grip": "edge",
+      "nominal_dimension_mm": 25,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_05_right",
+      "manufacturer_number": 5,
+      "side": "right",
+      "grip": "edge",
+      "nominal_dimension_mm": 25,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_06_left",
+      "manufacturer_number": 6,
+      "side": "left",
+      "grip": "edge",
+      "nominal_dimension_mm": 19,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_06_right",
+      "manufacturer_number": 6,
+      "side": "right",
+      "grip": "edge",
+      "nominal_dimension_mm": 19,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_07_left",
+      "manufacturer_number": 7,
+      "side": "left",
+      "grip": "edge",
+      "nominal_dimension_mm": 36,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_07_right",
+      "manufacturer_number": 7,
+      "side": "right",
+      "grip": "edge",
+      "nominal_dimension_mm": 36,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_08_left",
+      "manufacturer_number": 8,
+      "side": "left",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 15,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_08_right",
+      "manufacturer_number": 8,
+      "side": "right",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 15,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_09_left",
+      "manufacturer_number": 9,
+      "side": "left",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 35,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_09_right",
+      "manufacturer_number": 9,
+      "side": "right",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 35,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_10_left",
+      "manufacturer_number": 10,
+      "side": "left",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 17,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_10_right",
+      "manufacturer_number": 10,
+      "side": "right",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 17,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_11_left",
+      "manufacturer_number": 11,
+      "side": "left",
+      "grip": "edge",
+      "nominal_dimension_mm": 14,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_11_right",
+      "manufacturer_number": 11,
+      "side": "right",
+      "grip": "edge",
+      "nominal_dimension_mm": 14,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_12_left",
+      "manufacturer_number": 12,
+      "side": "left",
+      "grip": "two-finger pocket",
+      "nominal_dimension_mm": 30,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_12_right",
+      "manufacturer_number": 12,
+      "side": "right",
+      "grip": "two-finger pocket",
+      "nominal_dimension_mm": 30,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_13_left",
+      "manufacturer_number": 13,
+      "side": "left",
+      "grip": "two-finger pocket",
+      "nominal_dimension_mm": 14,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_13_right",
+      "manufacturer_number": 13,
+      "side": "right",
+      "grip": "two-finger pocket",
+      "nominal_dimension_mm": 14,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_14_center",
+      "manufacturer_number": 14,
+      "side": "center",
+      "grip": "center jug",
+      "nominal_dimension_mm": null,
+      "dimension_kind": "not published",
+      "selectable": true
+    },
+    {
+      "id": "hold_15_center",
+      "manufacturer_number": 15,
+      "side": "center",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 50,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_16_center",
+      "manufacturer_number": 16,
+      "side": "center",
+      "grip": "three-finger pocket",
+      "nominal_dimension_mm": 37,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_17_center",
+      "manufacturer_number": 17,
+      "side": "center",
+      "grip": "two-finger pocket",
+      "nominal_dimension_mm": 28,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    },
+    {
+      "id": "hold_18_center",
+      "manufacturer_number": 18,
+      "side": "center",
+      "grip": "two-finger pocket",
+      "nominal_dimension_mm": 32,
+      "dimension_kind": "nominal recess depth",
+      "selectable": true
+    }
+  ]
+}

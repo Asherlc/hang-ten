@@ -1,0 +1,13 @@
+{
+  "blenderVersion": "5.2.0 LTS fbe6228777e7",
+  "candidate": "baguette-evo",
+  "cleanupVerified": true,
+  "commands": [
+    "Blender --background --factory-startup --python Tools/HangboardModels/import_model_package.py -- --manifest <owned manifest> --mapping <owned mapping> --package baguette-evo --output-directory <owned run-1> --report <owned report>",
+    "repeat with a distinct owned run-2 output, then cmp primary.usdz and primary.model.json"
+  ],
+  "descriptorByteIdentical": false,
+  "observedBoundary": "Blender 5.2.0 emitted nondeterministic USD prim order (and therefore different USDZ CRC/content and descriptor model hashes) across clean conversions of identical inputs. Timestamp normalization and canonical text-layer export did not make the semantic prim order stable. Experimental outputs were deleted and cleanup verified.",
+  "status": "blocked",
+  "usdzByteIdentical": false
+}

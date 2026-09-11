@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import shutil
 import sys
 import tempfile
@@ -37,6 +38,7 @@ class ValidatedMapping:
     roles_by_node: Mapping[str, str]
     hold_ids_by_node: Mapping[str, str]
     attachment_node_ids: tuple[str, ...]
+    attachment_facts: tuple[Mapping[str, object], ...]
     logical_hold_ids: frozenset[str]
 
 
@@ -72,10 +74,14 @@ def verify_source_entry(entry: Mapping[str, object]) -> None:
         raise SourceManifestError(f"source ZIP hash mismatch: {archive.name}")
     source_model = entry.get("sourceModel")
     retained = entry.get("retainedMembers")
+    retained_root_value = entry.get("retainedEvidenceRoot")
     if not isinstance(source_model, str) or not source_model.endswith(".blend"):
         raise SourceManifestError("sourceModel must name a .blend archive member")
     if not isinstance(retained, Mapping) or not retained:
         raise SourceManifestError("retainedMembers must be a non-empty object")
+    if not isinstance(retained_root_value, str) or not retained_root_value:
+        raise SourceManifestError("retainedEvidenceRoot must name the owned evidence directory")
+    retained_root = Path(retained_root_value)
     with zipfile.ZipFile(archive) as bundle:
         names = set(bundle.namelist())
         if source_model not in names:
@@ -85,6 +91,11 @@ def verify_source_entry(entry: Mapping[str, object]) -> None:
                 raise SourceManifestError(f"retained member missing from ZIP: {member}")
             if _sha256(bundle.read(member)) != expected_hash:
                 raise SourceManifestError(f"retained member hash mismatch: {member}")
+            retained_path = retained_root / member
+            if retained_path.is_symlink() or not retained_path.is_file():
+                raise SourceManifestError(f"retained evidence missing: {member}")
+            if _sha256(retained_path.read_bytes()) != expected_hash:
+                raise SourceManifestError(f"retained evidence hash mismatch: {member}")
 
 
 def validate_mapping(
@@ -105,7 +116,7 @@ def validate_mapping(
         raise MappingError("objects must be an array")
     roles: dict[str, str] = {}
     hold_ids: dict[str, str] = {}
-    attachments: list[str] = []
+    attachments: list[Mapping[str, object]] = []
     for index, raw in enumerate(objects):
         if not isinstance(raw, Mapping):
             raise MappingError(f"objects[{index}] must be an object")
@@ -129,7 +140,19 @@ def validate_mapping(
                 raise MappingError(f"attachment must be explicitly nonselectable: {node_id}")
             if "holdID" in raw:
                 raise MappingError(f"attachment may not declare holdID: {node_id}")
-            attachments.append(node_id)
+            order, position, metadata = raw.get("order"), raw.get("position"), raw.get("metadata")
+            if not isinstance(order, int) or isinstance(order, bool) or order < 1:
+                raise MappingError(f"attachment order must be a positive integer: {node_id}")
+            if not isinstance(position, list) or len(position) != 3 or any(
+                not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value)
+                for value in position
+            ):
+                raise MappingError(f"attachment position must be three finite numbers: {node_id}")
+            if not isinstance(metadata, Mapping) or not metadata:
+                raise MappingError(f"attachment metadata must be a non-empty object: {node_id}")
+            attachments.append({"sourceNodeID": node_id, "order": order,
+                                "position": [float(value) for value in position],
+                                "metadata": dict(metadata)})
         elif role == "hold":
             hold_id = raw.get("holdID")
             if not isinstance(hold_id, str) or not hold_id:
@@ -149,7 +172,103 @@ def validate_mapping(
     missing = sorted(logical_hold_ids - bound)
     if missing:
         raise MappingError(f"unmapped logical hold IDs: {', '.join(missing)}")
-    return ValidatedMapping(roles, hold_ids, tuple(sorted(attachments)), logical_hold_ids)
+    orders = [int(item["order"]) for item in attachments]
+    if len(orders) != len(set(orders)):
+        raise MappingError("attachment orders must be unique")
+    facts = tuple(sorted(attachments, key=lambda item: int(item["order"])))
+    return ValidatedMapping(roles, hold_ids,
+                            tuple(str(item["sourceNodeID"]) for item in facts),
+                            facts, logical_hold_ids)
+
+
+def attachment_facts_from_mapping(
+    document: Mapping[str, object],
+) -> tuple[Mapping[str, object], ...]:
+    """Read explicit attachment facts without inventing source scene objects."""
+    objects = document.get("objects")
+    if not isinstance(objects, list):
+        raise MappingError("objects must be an array")
+    facts: list[Mapping[str, object]] = []
+    for index, raw in enumerate(objects):
+        if not isinstance(raw, Mapping) or raw.get("role") != "attachment":
+            continue
+        source_id, order = raw.get("sourceNodeID"), raw.get("order")
+        position, metadata = raw.get("position"), raw.get("metadata")
+        if not isinstance(source_id, str) or not source_id:
+            raise MappingError(f"objects[{index}].sourceNodeID must be non-empty")
+        if raw.get("selectable") is not False:
+            raise MappingError(f"attachment must be explicitly nonselectable: {source_id}")
+        if not isinstance(order, int) or isinstance(order, bool) or order < 1:
+            raise MappingError(f"attachment order must be a positive integer: {source_id}")
+        if not isinstance(position, list) or len(position) != 3 or any(
+            not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value)
+            for value in position
+        ):
+            raise MappingError(f"attachment position must be three finite numbers: {source_id}")
+        if not isinstance(metadata, Mapping) or not metadata:
+            raise MappingError(f"attachment metadata must be a non-empty object: {source_id}")
+        facts.append({"sourceNodeID": source_id, "order": order,
+                      "position": [float(value) for value in position], "metadata": dict(metadata)})
+    if len({item["sourceNodeID"] for item in facts}) != len(facts):
+        raise MappingError("duplicate attachment source ID")
+    if len({item["order"] for item in facts}) != len(facts):
+        raise MappingError("attachment orders must be unique")
+    return tuple(sorted(facts, key=lambda item: int(item["order"])))
+
+
+def require_actual_attachment_facts(
+    objects_by_name: Mapping[str, object], expected: Sequence[Mapping[str, object]]
+) -> None:
+    for fact in expected:
+        source_id = str(fact["sourceNodeID"])
+        item = objects_by_name.get(source_id)
+        if item is None:
+            raise MappingError(f"attachment marker missing from source scene: {source_id}")
+        location = getattr(getattr(item, "matrix_world", None), "translation", None)
+        if location is None:
+            location = getattr(item, "location", None)
+        if location is None or len(location) != 3:
+            raise MappingError(f"attachment marker has no coordinates: {source_id}")
+        if any(abs(float(left) - float(right)) > 0.000001
+               for left, right in zip(location, fact["position"])):
+            raise MappingError(f"attachment coordinate mismatch: {source_id}")
+        getter = getattr(item, "get", None)
+        if callable(getter):
+            for key, wanted in fact["metadata"].items():
+                actual = getter(key)
+                if hasattr(actual, "to_list"):
+                    actual = actual.to_list()
+                elif not isinstance(actual, (str, bytes, Mapping)) and hasattr(actual, "__iter__"):
+                    actual = list(actual)
+                if actual != wanted:
+                    raise MappingError(f"attachment metadata mismatch for {source_id}: {key}")
+
+
+def _attachment_payload(facts: Sequence[Mapping[str, object]]) -> str:
+    return json.dumps(list(facts), sort_keys=True, separators=(",", ":"), allow_nan=False)
+
+
+def _preserve_attachments_for_compilation(
+    objects_by_name: Mapping[str, object], validated: ValidatedMapping
+) -> None:
+    import bpy
+    require_actual_attachment_facts(objects_by_name, validated.attachment_facts)
+    body_name = next(name for name, role in validated.roles_by_node.items() if role == "body")
+    payload = _attachment_payload(validated.attachment_facts)
+    body = objects_by_name[body_name]
+    body["hang_ten_attachments_v1"] = payload
+    body.data["hang_ten_attachments_v1"] = payload
+    if not validated.attachment_node_ids:
+        return
+    archive_scene = bpy.data.scenes.get("Hang Ten source attachment evidence")
+    if archive_scene is None:
+        archive_scene = bpy.data.scenes.new("Hang Ten source attachment evidence")
+    for source_id in validated.attachment_node_ids:
+        marker = objects_by_name[source_id]
+        archive_scene.collection.objects.link(marker)
+        for collection in list(marker.users_collection):
+            if collection != archive_scene.collection:
+                collection.objects.unlink(marker)
 
 
 def _safe_extract(bundle: zipfile.ZipFile, destination: Path) -> None:
@@ -180,7 +299,7 @@ def import_package(
     if mapping.get("packageID") != package_id:
         raise MappingError("mapping packageID does not match requested package")
     verify_source_entry(entry)
-    if mapping.get("promotionStatus") == "rejected":
+    if mapping.get("promotionStatus") == "rejected" and "expectedError" not in mapping:
         reasons = mapping.get("rejectionReasons")
         if not isinstance(reasons, list) or not reasons:
             raise MappingError("rejected mapping requires rejectionReasons")
@@ -210,11 +329,11 @@ def import_package(
         for node_id, role in validated.roles_by_node.items():
             item = by_name[node_id]
             if role == "attachment":
-                bpy.data.objects.remove(item, do_unlink=True)
                 continue
             item["role"] = role
             if role == "hold":
                 item["hold_id"] = validated.hold_ids_by_node[node_id]
+        _preserve_attachments_for_compilation(by_name, validated)
         adapted = work / "adapted.blend"
         bpy.ops.wm.save_as_mainfile(filepath=str(adapted), check_existing=False)
         board_json = work / "board.json"
@@ -253,7 +372,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         else list(sys.argv[1:] if argv is None else argv)
     )
     arguments = _arguments(raw)
-    report = import_package(arguments.manifest, arguments.mapping, arguments.package, arguments.output_directory)
+    mapping = _load_json(arguments.mapping, "mapping")
+    try:
+        report = import_package(arguments.manifest, arguments.mapping, arguments.package, arguments.output_directory)
+    except Exception as error:
+        expected = mapping.get("expectedError")
+        if mapping.get("promotionStatus") != "rejected" or not isinstance(expected, str) or expected not in str(error):
+            raise
+        report = {"packageID": arguments.package, "status": "rejected",
+                  "errorType": type(error).__name__, "error": str(error),
+                  "expectedError": expected}
     write_json(arguments.report, report)
     return 0
 

@@ -1,0 +1,2209 @@
+{
+  "asset": "/workspace/scratch/21c7bbba04dc/app_asset/Metolius-Simulator-3D.blend",
+  "asset_size_bytes": 20916281,
+  "asset_sha256": "a589f9202fe528b090a27b1047e89893f6c5376a015431846d8c39ce7e94701e",
+  "blender_version": "4.2.0",
+  "passed": true,
+  "checks": {
+    "exact_32_object_names": true,
+    "all_objects_are_scene_meshes": true,
+    "mesh_datablock_names_match_objects": true,
+    "metric_unit_scale_one": true,
+    "no_modifiers": true,
+    "no_parenting": true,
+    "identity_object_transforms": true,
+    "identity_local_transform_channels": true,
+    "nonempty_finite_meshes": true,
+    "individual_patches_have_open_boundaries": true,
+    "patches_have_no_nonmanifold_edges": true,
+    "each_mesh_has_material": true,
+    "each_mesh_has_valid_vertex_color": true,
+    "generated_color_varies": true,
+    "left_right_names_match_front_view": true,
+    "assembled_width_0711m": true,
+    "assembled_height_0222m_on_z": true,
+    "front_negative_y_mounting_plane_y_zero": true,
+    "no_duplicate_surface_triangles": true,
+    "no_degenerate_triangles": true,
+    "assembled_shell_watertight": true,
+    "assembled_shell_winding_consistent": true,
+    "assembled_shell_one_component": true,
+    "assembled_shell_euler_minus_14": true,
+    "assembled_shell_positive_volume": true
+  },
+  "objects": [
+    {
+      "name": "board_body",
+      "vertices": 91400,
+      "triangles": 170414,
+      "boundary_edges": 12434,
+      "edges_with_more_than_two_faces": 0,
+      "components": 8,
+      "regions": [
+        {
+          "vertices": 88634,
+          "triangles": 165754,
+          "centroid_xyz_m": [
+            -0.0016118612214071784,
+            -0.02881930850703437,
+            0.09480616186241682
+          ],
+          "minimum_xyz_m": [
+            -0.3554953634738922,
+            -0.09619846940040588,
+            8.381150109926239e-06
+          ],
+          "maximum_xyz_m": [
+            0.35549625754356384,
+            9.885254257824272e-06,
+            0.1964547336101532
+          ]
+        },
+        {
+          "vertices": 547,
+          "triangles": 979,
+          "centroid_xyz_m": [
+            -0.2770126639053198,
+            -0.025931154711468236,
+            0.15386619880604788
+          ],
+          "minimum_xyz_m": [
+            -0.28921225666999817,
+            -0.03672187775373459,
+            0.15182660520076752
+          ],
+          "maximum_xyz_m": [
+            -0.26736047863960266,
+            -0.015504919923841953,
+            0.1568581908941269
+          ]
+        },
+        {
+          "vertices": 529,
+          "triangles": 938,
+          "centroid_xyz_m": [
+            0.2767376868170466,
+            -0.025964705556955025,
+            0.15389277263489923
+          ],
+          "minimum_xyz_m": [
+            0.26728543639183044,
+            -0.03676543012261391,
+            0.15182659029960632
+          ],
+          "maximum_xyz_m": [
+            0.289051353931427,
+            -0.015504070557653904,
+            0.15685127675533295
+          ]
+        },
+        {
+          "vertices": 563,
+          "triangles": 914,
+          "centroid_xyz_m": [
+            0.16747678310790665,
+            -0.006511874103233827,
+            0.07019187435904786
+          ],
+          "minimum_xyz_m": [
+            0.1323854625225067,
+            -0.00736567797139287,
+            0.06435967236757278
+          ],
+          "maximum_xyz_m": [
+            0.19069550931453705,
+            -0.005479910876601934,
+            0.07884549349546432
+          ]
+        },
+        {
+          "vertices": 518,
+          "triangles": 853,
+          "centroid_xyz_m": [
+            -0.1674419972024369,
+            -0.00649612708894615,
+            0.07002156841996554
+          ],
+          "minimum_xyz_m": [
+            -0.19060268998146057,
+            -0.007348969113081694,
+            0.06434875726699829
+          ],
+          "maximum_xyz_m": [
+            -0.13239558041095734,
+            -0.00547941355034709,
+            0.07884480804204941
+          ]
+        },
+        {
+          "vertices": 315,
+          "triangles": 507,
+          "centroid_xyz_m": [
+            0.12212929337743729,
+            -0.006630202005839064,
+            0.034465862077379984
+          ],
+          "minimum_xyz_m": [
+            0.1015743538737297,
+            -0.007310174871236086,
+            0.030187783762812614
+          ],
+          "maximum_xyz_m": [
+            0.13819345831871033,
+            -0.005959953181445599,
+            0.04194140061736107
+          ]
+        },
+        {
+          "vertices": 291,
+          "triangles": 468,
+          "centroid_xyz_m": [
+            -0.12222555359102197,
+            -0.006631817601467531,
+            0.034249786902027034
+          ],
+          "minimum_xyz_m": [
+            -0.1382416933774948,
+            -0.007339900359511375,
+            0.030182169750332832
+          ],
+          "maximum_xyz_m": [
+            -0.10163092613220215,
+            -0.005960545036941767,
+            0.04193882644176483
+          ]
+        },
+        {
+          "vertices": 3,
+          "triangles": 1,
+          "centroid_xyz_m": [
+            -0.04445760945479075,
+            -0.03300121674935023,
+            0.18299341201782227
+          ],
+          "minimum_xyz_m": [
+            -0.04471460357308388,
+            -0.0335039384663105,
+            0.18296752870082855
+          ],
+          "maximum_xyz_m": [
+            -0.04394951090216637,
+            -0.032748449593782425,
+            0.18302461504936218
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.0015062713949536765,
+        -0.0283746041163632,
+        0.09481165263094997
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 91400,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_01_left",
+      "vertices": 9475,
+      "triangles": 18224,
+      "boundary_edges": 726,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 9475,
+          "triangles": 18224,
+          "centroid_xyz_m": [
+            -0.2966383798959073,
+            -0.046620560386525296,
+            0.16162023231190553
+          ],
+          "minimum_xyz_m": [
+            -0.3402559161186218,
+            -0.07102252542972565,
+            0.1504947990179062
+          ],
+          "maximum_xyz_m": [
+            -0.25761061906814575,
+            -0.003442108863964677,
+            0.1752866804599762
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.2966383798959073,
+        -0.046620560386525296,
+        0.16162023231190553
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 9475,
+          "finite": true,
+          "minimum_rgba": [
+            0.01200356800109148,
+            0.04000357910990715,
+            0.22000250220298767,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6399303674697876,
+            0.66981041431427,
+            0.6618072986602783,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_01_right",
+      "vertices": 9509,
+      "triangles": 18258,
+      "boundary_edges": 760,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 9509,
+          "triangles": 18258,
+          "centroid_xyz_m": [
+            0.29688188309536107,
+            -0.046107796402507055,
+            0.16164379754719868
+          ],
+          "minimum_xyz_m": [
+            0.25750842690467834,
+            -0.07102997601032257,
+            0.15058593451976776
+          ],
+          "maximum_xyz_m": [
+            0.34022122621536255,
+            -0.003459363244473934,
+            0.17528624832630157
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.29688188309536107,
+        -0.046107796402507055,
+        0.16164379754719868
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 9509,
+          "finite": true,
+          "minimum_rgba": [
+            0.012011091224849224,
+            0.040011122822761536,
+            0.2200077921152115,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.20698420703411102,
+            0.23556798696517944,
+            0.35718947649002075,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_02_left",
+      "vertices": 2946,
+      "triangles": 5383,
+      "boundary_edges": 507,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 2946,
+          "triangles": 5383,
+          "centroid_xyz_m": [
+            -0.21124754317524638,
+            -0.03806308397900905,
+            0.17042441815845996
+          ],
+          "minimum_xyz_m": [
+            -0.25126150250434875,
+            -0.06166045367717743,
+            0.1571105420589447
+          ],
+          "maximum_xyz_m": [
+            -0.15052607655525208,
+            -0.0026638279668986797,
+            0.18661026656627655
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.21124754317524638,
+        -0.03806308397900905,
+        0.17042441815845996
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 2946,
+          "finite": true,
+          "minimum_rgba": [
+            0.012154837138950825,
+            0.04015529900789261,
+            0.22010894119739532,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.5010412931442261,
+            0.5305054783821106,
+            0.5640859603881836,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_02_right",
+      "vertices": 3173,
+      "triangles": 5795,
+      "boundary_edges": 549,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 3173,
+          "triangles": 5795,
+          "centroid_xyz_m": [
+            0.21234663620267125,
+            -0.037441917121063435,
+            0.1702746577605516
+          ],
+          "minimum_xyz_m": [
+            0.1507517248392105,
+            -0.06167330592870712,
+            0.15698638558387756
+          ],
+          "maximum_xyz_m": [
+            0.2514776289463043,
+            -0.002679108176380396,
+            0.1866312175989151
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.21234663620267125,
+        -0.037441917121063435,
+        0.1702746577605516
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 3173,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.12320505082607269,
+            0.15153799951076508,
+            0.29824307560920715,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_03_left",
+      "vertices": 3544,
+      "triangles": 6518,
+      "boundary_edges": 568,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 3544,
+          "triangles": 6518,
+          "centroid_xyz_m": [
+            -0.08461949309338364,
+            -0.040070115920310234,
+            0.18765735499241282
+          ],
+          "minimum_xyz_m": [
+            -0.1461961269378662,
+            -0.06766895949840546,
+            0.17408964037895203
+          ],
+          "maximum_xyz_m": [
+            -0.05063784494996071,
+            -0.0026353062130510807,
+            0.19496503472328186
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.08461949309338364,
+        -0.040070115920310234,
+        0.18765735499241282
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 3544,
+          "finite": true,
+          "minimum_rgba": [
+            0.024868059903383255,
+            0.0529065877199173,
+            0.22905386984348297,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_03_right",
+      "vertices": 3360,
+      "triangles": 6186,
+      "boundary_edges": 534,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 3360,
+          "triangles": 6186,
+          "centroid_xyz_m": [
+            0.08540463588821391,
+            -0.03970008792641151,
+            0.1876879619124035
+          ],
+          "minimum_xyz_m": [
+            0.050474654883146286,
+            -0.06781969219446182,
+            0.17428816854953766
+          ],
+          "maximum_xyz_m": [
+            0.14647948741912842,
+            -0.00268011842854321,
+            0.19496826827526093
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.08540463588821391,
+        -0.03970008792641151,
+        0.1876879619124035
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 3360,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_04_left",
+      "vertices": 6674,
+      "triangles": 12944,
+      "boundary_edges": 404,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6674,
+          "triangles": 12944,
+          "centroid_xyz_m": [
+            -0.2983037229155151,
+            -0.04752237094046561,
+            0.13641629116885992
+          ],
+          "minimum_xyz_m": [
+            -0.33441421389579773,
+            -0.07090970873832703,
+            0.11394171416759491
+          ],
+          "maximum_xyz_m": [
+            -0.262068510055542,
+            -0.02516976185142994,
+            0.15720486640930176
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.2983037229155151,
+        -0.04752237094046561,
+        0.13641629116885992
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6674,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.3755355179309845,
+            0.40462395548820496,
+            0.4757809638977051,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_04_right",
+      "vertices": 6582,
+      "triangles": 12733,
+      "boundary_edges": 431,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6582,
+          "triangles": 12733,
+          "centroid_xyz_m": [
+            0.2982982326263861,
+            -0.0472505526414548,
+            0.13589171929082874
+          ],
+          "minimum_xyz_m": [
+            0.2618963420391083,
+            -0.0708828791975975,
+            0.11392071098089218
+          ],
+          "maximum_xyz_m": [
+            0.3347979485988617,
+            -0.025159988552331924,
+            0.15719527006149292
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.2982982326263861,
+        -0.0472505526414548,
+        0.13589171929082874
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6582,
+          "finite": true,
+          "minimum_rgba": [
+            0.06522195786237717,
+            0.09338130056858063,
+            0.2574465870857239,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6545512676239014,
+            0.6844750642776489,
+            0.672094464302063,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_05_left",
+      "vertices": 7960,
+      "triangles": 15506,
+      "boundary_edges": 412,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 7960,
+          "triangles": 15506,
+          "centroid_xyz_m": [
+            -0.26744443659843814,
+            -0.03655480387381947,
+            0.10334329592840905
+          ],
+          "minimum_xyz_m": [
+            -0.31639954447746277,
+            -0.05667237192392349,
+            0.07587370276451111
+          ],
+          "maximum_xyz_m": [
+            -0.22003760933876038,
+            -0.018187016248703003,
+            0.1293293982744217
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.26744443659843814,
+        -0.03655480387381947,
+        0.10334329592840905
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 7960,
+          "finite": true,
+          "minimum_rgba": [
+            0.012618844397366047,
+            0.04062069579958916,
+            0.22043541073799133,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_05_right",
+      "vertices": 8217,
+      "triangles": 16006,
+      "boundary_edges": 426,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 8217,
+          "triangles": 16006,
+          "centroid_xyz_m": [
+            0.2673098063442094,
+            -0.03592062406890204,
+            0.10241848492134194
+          ],
+          "minimum_xyz_m": [
+            0.21995584666728973,
+            -0.056597478687763214,
+            0.07586630433797836
+          ],
+          "maximum_xyz_m": [
+            0.3162183165550232,
+            -0.018212376162409782,
+            0.12939080595970154
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.2673098063442094,
+        -0.03592062406890204,
+        0.10241848492134194
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 8217,
+          "finite": true,
+          "minimum_rgba": [
+            0.40710997581481934,
+            0.4362929165363312,
+            0.4979965388774872,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_06_left",
+      "vertices": 6505,
+      "triangles": 12531,
+      "boundary_edges": 479,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6505,
+          "triangles": 12531,
+          "centroid_xyz_m": [
+            -0.17662840358666693,
+            -0.04137223112116998,
+            0.1173726731967138
+          ],
+          "minimum_xyz_m": [
+            -0.22382844984531403,
+            -0.059642478823661804,
+            0.09309124201536179
+          ],
+          "maximum_xyz_m": [
+            -0.13196343183517456,
+            -0.02754572406411171,
+            0.1392160952091217
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.17662840358666693,
+        -0.04137223112116998,
+        0.1173726731967138
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6505,
+          "finite": true,
+          "minimum_rgba": [
+            0.09613364189863205,
+            0.1243855357170105,
+            0.2791958153247833,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_06_right",
+      "vertices": 6690,
+      "triangles": 12895,
+      "boundary_edges": 485,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6690,
+          "triangles": 12895,
+          "centroid_xyz_m": [
+            0.17692915055739328,
+            -0.04107970834886502,
+            0.11663248588307377
+          ],
+          "minimum_xyz_m": [
+            0.1321263313293457,
+            -0.05951829254627228,
+            0.09311915934085846
+          ],
+          "maximum_xyz_m": [
+            0.22379855811595917,
+            -0.0275465976446867,
+            0.13919174671173096
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.17692915055739328,
+        -0.04107970834886502,
+        0.11663248588307377
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6690,
+          "finite": true,
+          "minimum_rgba": [
+            0.5282928347587585,
+            0.5578386187553406,
+            0.5832599401473999,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_07_left",
+      "vertices": 6362,
+      "triangles": 12351,
+      "boundary_edges": 371,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6362,
+          "triangles": 12351,
+          "centroid_xyz_m": [
+            -0.08927784046566326,
+            -0.03586700043726814,
+            0.12609726135290783
+          ],
+          "minimum_xyz_m": [
+            -0.13621443510055542,
+            -0.0626089870929718,
+            0.10440146178007126
+          ],
+          "maximum_xyz_m": [
+            -0.04464216157793999,
+            -0.012650112621486187,
+            0.14742085337638855
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.08927784046566326,
+        -0.03586700043726814,
+        0.12609726135290783
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6362,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6370840668678284,
+            0.6669555902481079,
+            0.65980464220047,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_07_right",
+      "vertices": 6481,
+      "triangles": 12583,
+      "boundary_edges": 377,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6481,
+          "triangles": 12583,
+          "centroid_xyz_m": [
+            0.08907118639590435,
+            -0.03566189458709549,
+            0.1260306864719372
+          ],
+          "minimum_xyz_m": [
+            0.044632673263549805,
+            -0.06266142427921295,
+            0.10441116988658905
+          ],
+          "maximum_xyz_m": [
+            0.13604316115379333,
+            -0.012649972923099995,
+            0.14740478992462158
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.08907118639590435,
+        -0.03566189458709549,
+        0.1260306864719372
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6481,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_08_left",
+      "vertices": 5242,
+      "triangles": 10204,
+      "boundary_edges": 278,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 5242,
+          "triangles": 10204,
+          "centroid_xyz_m": [
+            -0.24264435012437877,
+            -0.03316371367895355,
+            0.06316063576973108
+          ],
+          "minimum_xyz_m": [
+            -0.28111857175827026,
+            -0.04489930719137192,
+            0.04042771831154823
+          ],
+          "maximum_xyz_m": [
+            -0.20439516007900238,
+            -0.02235010825097561,
+            0.084262914955616
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.24264435012437877,
+        -0.03316371367895355,
+        0.06316063576973108
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 5242,
+          "finite": true,
+          "minimum_rgba": [
+            0.07392273843288422,
+            0.10210813581943512,
+            0.2635684013366699,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_08_right",
+      "vertices": 5344,
+      "triangles": 10379,
+      "boundary_edges": 307,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 5344,
+          "triangles": 10379,
+          "centroid_xyz_m": [
+            0.24225253667849714,
+            -0.03291087920922496,
+            0.06263437936525837
+          ],
+          "minimum_xyz_m": [
+            0.20421354472637177,
+            -0.04489827901124954,
+            0.04042760655283928
+          ],
+          "maximum_xyz_m": [
+            0.28095996379852295,
+            -0.022353174164891243,
+            0.08426579087972641
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.24225253667849714,
+        -0.03291087920922496,
+        0.06263437936525837
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 5344,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.35203149914741516,
+            0.38104957342147827,
+            0.4592437148094177,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_09_left",
+      "vertices": 5731,
+      "triangles": 11001,
+      "boundary_edges": 461,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 5731,
+          "triangles": 11001,
+          "centroid_xyz_m": [
+            -0.15891180860109094,
+            -0.0280461370047293,
+            0.07829968404083992
+          ],
+          "minimum_xyz_m": [
+            -0.19856436550617218,
+            -0.04773972928524017,
+            0.05699192360043526
+          ],
+          "maximum_xyz_m": [
+            -0.12112009525299072,
+            -0.006518320646136999,
+            0.09681805223226547
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.15891180860109094,
+        -0.0280461370047293,
+        0.07829968404083992
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 5731,
+          "finite": true,
+          "minimum_rgba": [
+            0.2644444406032562,
+            0.29320028424263,
+            0.3976181149482727,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_09_right",
+      "vertices": 5702,
+      "triangles": 10892,
+      "boundary_edges": 512,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 5702,
+          "triangles": 10892,
+          "centroid_xyz_m": [
+            0.158542962831725,
+            -0.027594818829345478,
+            0.07738104764919601
+          ],
+          "minimum_xyz_m": [
+            0.1210389956831932,
+            -0.04773510992527008,
+            0.05699789896607399
+          ],
+          "maximum_xyz_m": [
+            0.19838561117649078,
+            -0.006491930224001408,
+            0.09681243449449539
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.158542962831725,
+        -0.027594818829345478,
+        0.07738104764919601
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 5702,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000090442597866,
+            0.04000009223818779,
+            0.22000007331371307,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.5230801701545715,
+            0.5526103973388672,
+            0.5795923471450806,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_10_left",
+      "vertices": 4469,
+      "triangles": 8627,
+      "boundary_edges": 309,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 4469,
+          "triangles": 8627,
+          "centroid_xyz_m": [
+            -0.07883318203204856,
+            -0.03735871374036914,
+            0.08252649839644892
+          ],
+          "minimum_xyz_m": [
+            -0.11903133243322372,
+            -0.051862455904483795,
+            0.06446711719036102
+          ],
+          "maximum_xyz_m": [
+            -0.04162118583917618,
+            -0.025095462799072266,
+            0.10065861791372299
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.07883318203204856,
+        -0.03735871374036914,
+        0.08252649839644892
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 4469,
+          "finite": true,
+          "minimum_rgba": [
+            0.2526853084564209,
+            0.2814059257507324,
+            0.3893444538116455,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_10_right",
+      "vertices": 4413,
+      "triangles": 8518,
+      "boundary_edges": 306,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 4413,
+          "triangles": 8518,
+          "centroid_xyz_m": [
+            0.0784891837886637,
+            -0.03721623239777484,
+            0.08235721226124004
+          ],
+          "minimum_xyz_m": [
+            0.04162222892045975,
+            -0.0519007071852684,
+            0.06446795165538788
+          ],
+          "maximum_xyz_m": [
+            0.1189490556716919,
+            -0.025100013241171837,
+            0.10071664303541183
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.0784891837886637,
+        -0.03721623239777484,
+        0.08235721226124004
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 4413,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.48407649993896484,
+            0.5134899020195007,
+            0.5521496534347534,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_11_left",
+      "vertices": 5981,
+      "triangles": 11576,
+      "boundary_edges": 386,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 5981,
+          "triangles": 11576,
+          "centroid_xyz_m": [
+            -0.19366317878816264,
+            -0.029381043210879774,
+            0.03020904216989489
+          ],
+          "minimum_xyz_m": [
+            -0.2398713082075119,
+            -0.04005228355526924,
+            0.0087135573849082
+          ],
+          "maximum_xyz_m": [
+            -0.14595556259155273,
+            -0.019430380314588547,
+            0.05172775685787201
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.19366317878816264,
+        -0.029381043210879774,
+        0.03020904216989489
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 5981,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.41234448552131653,
+            0.4415431320667267,
+            0.5016794800758362,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_11_right",
+      "vertices": 6102,
+      "triangles": 11794,
+      "boundary_edges": 410,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6102,
+          "triangles": 11794,
+          "centroid_xyz_m": [
+            0.19353052857019049,
+            -0.029123467932293763,
+            0.03003205801200052
+          ],
+          "minimum_xyz_m": [
+            0.1459624469280243,
+            -0.040062516927719116,
+            0.00873061828315258
+          ],
+          "maximum_xyz_m": [
+            0.24030107259750366,
+            -0.019429905340075493,
+            0.05173155665397644
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.19353052857019049,
+        -0.029123467932293763,
+        0.03003205801200052
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6102,
+          "finite": true,
+          "minimum_rgba": [
+            0.013098714873194695,
+            0.041102003306150436,
+            0.22077304124832153,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.5846691131591797,
+            0.6143836975097656,
+            0.622925877571106,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_12_left",
+      "vertices": 4328,
+      "triangles": 8334,
+      "boundary_edges": 322,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 4328,
+          "triangles": 8334,
+          "centroid_xyz_m": [
+            -0.11936674087502874,
+            -0.02554345281044531,
+            0.04132838944892456
+          ],
+          "minimum_xyz_m": [
+            -0.146869495511055,
+            -0.041531726717948914,
+            0.023028772324323654
+          ],
+          "maximum_xyz_m": [
+            -0.09250535070896149,
+            -0.00655176630243659,
+            0.05850646272301674
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.11936674087502874,
+        -0.02554345281044531,
+        0.04132838944892456
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 4328,
+          "finite": true,
+          "minimum_rgba": [
+            0.04829397797584534,
+            0.07640264183282852,
+            0.2455361783504486,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6661974787712097,
+            0.6961561441421509,
+            0.6802886128425598,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_12_right",
+      "vertices": 4337,
+      "triangles": 8335,
+      "boundary_edges": 339,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 4337,
+          "triangles": 8335,
+          "centroid_xyz_m": [
+            0.11924242213839123,
+            -0.02518792504520736,
+            0.041177321191905474
+          ],
+          "minimum_xyz_m": [
+            0.09248360991477966,
+            -0.04153545945882797,
+            0.023114977404475212
+          ],
+          "maximum_xyz_m": [
+            0.14671190083026886,
+            -0.006548660807311535,
+            0.05850609764456749
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.11924242213839123,
+        -0.02518792504520736,
+        0.041177321191905474
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 4337,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.48589763045310974,
+            0.5153164863586426,
+            0.55343097448349,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_13_left",
+      "vertices": 3655,
+      "triangles": 7081,
+      "boundary_edges": 227,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 3655,
+          "triangles": 7081,
+          "centroid_xyz_m": [
+            -0.060608009664818295,
+            -0.03449388907001788,
+            0.048270737726327985
+          ],
+          "minimum_xyz_m": [
+            -0.08691297471523285,
+            -0.04928240552544594,
+            0.031898777931928635
+          ],
+          "maximum_xyz_m": [
+            -0.03622492402791977,
+            -0.0233844593167305,
+            0.06466040015220642
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.060608009664818295,
+        -0.03449388907001788,
+        0.048270737726327985
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 3655,
+          "finite": true,
+          "minimum_rgba": [
+            0.3341894745826721,
+            0.3631541132926941,
+            0.4466902017593384,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_13_right",
+      "vertices": 3714,
+      "triangles": 7184,
+      "boundary_edges": 242,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 3714,
+          "triangles": 7184,
+          "centroid_xyz_m": [
+            0.06057082008777059,
+            -0.03458068071572159,
+            0.04826351052263474
+          ],
+          "minimum_xyz_m": [
+            0.03613976016640663,
+            -0.04930203780531883,
+            0.03189512714743614
+          ],
+          "maximum_xyz_m": [
+            0.08716630190610886,
+            -0.023393338546156883,
+            0.0645323172211647
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.06057082008777059,
+        -0.03458068071572159,
+        0.04826351052263474
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 3714,
+          "finite": true,
+          "minimum_rgba": [
+            0.08276112377643585,
+            0.11097298562526703,
+            0.2697870135307312,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_14_center",
+      "vertices": 15810,
+      "triangles": 31020,
+      "boundary_edges": 600,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 15810,
+          "triangles": 31020,
+          "centroid_xyz_m": [
+            -0.00033518786673719924,
+            -0.058815552101097644,
+            0.19942708271428952
+          ],
+          "minimum_xyz_m": [
+            -0.04575924947857857,
+            -0.09626807272434235,
+            0.1826094090938568
+          ],
+          "maximum_xyz_m": [
+            0.04597828909754753,
+            -0.0034990832209587097,
+            0.22200000286102295
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.00033518786673719924,
+        -0.058815552101097644,
+        0.19942708271428952
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 15810,
+          "finite": true,
+          "minimum_rgba": [
+            0.22397227585315704,
+            0.25260692834854126,
+            0.36914217472076416,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_15_center",
+      "vertices": 6697,
+      "triangles": 12941,
+      "boundary_edges": 453,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 6697,
+          "triangles": 12941,
+          "centroid_xyz_m": [
+            8.190455852290121e-05,
+            -0.05844745683535651,
+            0.1649464231089583
+          ],
+          "minimum_xyz_m": [
+            -0.039119746536016464,
+            -0.09605777263641357,
+            0.14628244936466217
+          ],
+          "maximum_xyz_m": [
+            0.03908807784318924,
+            -0.02748250402510166,
+            0.18229472637176514
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        8.190455852290121e-05,
+        -0.05844745683535651,
+        0.1649464231089583
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 6697,
+          "finite": true,
+          "minimum_rgba": [
+            0.08295664936304092,
+            0.11116909235715866,
+            0.2699245810508728,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6798738241195679,
+            0.7098734378814697,
+            0.6899112462997437,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_16_center",
+      "vertices": 5255,
+      "triangles": 10111,
+      "boundary_edges": 397,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 5255,
+          "triangles": 10111,
+          "centroid_xyz_m": [
+            -0.00026509141616260087,
+            -0.04725446579330995,
+            0.1184991160466147
+          ],
+          "minimum_xyz_m": [
+            -0.03716876730322838,
+            -0.07469085603952408,
+            0.09917803853750229
+          ],
+          "maximum_xyz_m": [
+            0.03706500306725502,
+            -0.025046780705451965,
+            0.13622698187828064
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.00026509141616260087,
+        -0.04725446579330995,
+        0.1184991160466147
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 5255,
+          "finite": true,
+          "minimum_rgba": [
+            0.012000000104308128,
+            0.03999999910593033,
+            0.2199999988079071,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.30759623646736145,
+            0.3364812433719635,
+            0.42797937989234924,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_17_center",
+      "vertices": 4048,
+      "triangles": 7788,
+      "boundary_edges": 306,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 4048,
+          "triangles": 7788,
+          "centroid_xyz_m": [
+            -0.00042493207937742574,
+            -0.044594086402946195,
+            0.07996103132931376
+          ],
+          "minimum_xyz_m": [
+            -0.03499915078282356,
+            -0.06427253782749176,
+            0.062105629593133926
+          ],
+          "maximum_xyz_m": [
+            0.03486619144678116,
+            -0.027661887928843498,
+            0.09658067673444748
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        -0.00042493207937742574,
+        -0.044594086402946195,
+        0.07996103132931376
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 4048,
+          "finite": true,
+          "minimum_rgba": [
+            0.16119824349880219,
+            0.1896449476480484,
+            0.32497480511665344,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    },
+    {
+      "name": "hold_18_center",
+      "vertices": 3798,
+      "triangles": 7228,
+      "boundary_edges": 368,
+      "edges_with_more_than_two_faces": 0,
+      "components": 1,
+      "regions": [
+        {
+          "vertices": 3798,
+          "triangles": 7228,
+          "centroid_xyz_m": [
+            0.00031558162984982616,
+            -0.03867215062861869,
+            0.04006095271088721
+          ],
+          "minimum_xyz_m": [
+            -0.027575882151722908,
+            -0.05663929879665375,
+            0.02302749827504158
+          ],
+          "maximum_xyz_m": [
+            0.027454402297735214,
+            -0.01917017623782158,
+            0.057058487087488174
+          ]
+        }
+      ],
+      "degenerate_triangle_details": [],
+      "finite_vertices": true,
+      "centroid_xyz_m": [
+        0.00031558162984982616,
+        -0.03867215062861869,
+        0.04006095271088721
+      ],
+      "materials": [
+        "Resin_Cobalt_Ivory"
+      ],
+      "color_attributes": [
+        {
+          "name": "ResinColor",
+          "domain": "POINT",
+          "storage": "FLOAT_COLOR",
+          "values": 3798,
+          "finite": true,
+          "minimum_rgba": [
+            0.09265515953302383,
+            0.12089664489030838,
+            0.276748389005661,
+            1.0
+          ],
+          "maximum_rgba": [
+            0.6800000071525574,
+            0.7099999785423279,
+            0.6899999976158142,
+            1.0
+          ],
+          "nonconstant_rgb": true,
+          "within_unit_range": true
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Resin_Cobalt_Ivory",
+      "viewport_rgba": [
+        0.3499999940395355,
+        0.44999998807907104,
+        0.6000000238418579,
+        1.0
+      ],
+      "uses_nodes": true,
+      "vertex_color_inputs": [
+        "ResinColor"
+      ],
+      "image_texture_nodes": 0
+    }
+  ],
+  "warnings": [
+    "board_body has 8 disconnected surface regions; review whether the assignment is intentional."
+  ],
+  "assembled": {
+    "vertices_before_welding": 273504,
+    "vertices_after_exact_welding": 260656,
+    "triangles": 521340,
+    "edges": 782010,
+    "boundary_edges": 0,
+    "edges_with_more_than_two_faces": 0,
+    "duplicate_triangles": 0,
+    "degenerate_triangles": 0,
+    "components": 1,
+    "euler_characteristic": -14,
+    "inferred_tunnels": 8,
+    "signed_volume_m3": 0.004356804941927775,
+    "bounds_m": [
+      [
+        -0.3554953634738922,
+        -0.09626807272434235,
+        8.381150109926239e-06
+      ],
+      [
+        0.35549625754356384,
+        9.885254257824272e-06,
+        0.22200000286102295
+      ]
+    ],
+    "dimensions_xyz_m": [
+      0.710991621017456,
+      0.09627795797860017,
+      0.22199162171091302
+    ]
+  },
+  "limits": [
+    "Welding is exact-coordinate and exists only in temporary arrays; individual exported patches intentionally remain open.",
+    "Euler characteristic verifies the expected tunnel count but does not locate or independently identify individual mounting bores.",
+    "No exhaustive triangle-to-triangle self-intersection test, structural-strength test, or photo-fidelity measurement is performed.",
+    "Color attributes and material inputs are reported; this check does not guarantee that every target app preserves imported normals or vertex colors."
+  ]
+}

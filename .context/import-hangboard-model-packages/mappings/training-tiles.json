@@ -13,6 +13,6 @@
   ],
   "packageID": "training-tiles",
   "promotionStatus": "rejected",
-  "rejectionReasons": ["Source package supplies 16 selectable meshes but the existing logical inventory has 20 IDs.", "No identity-backed source meshes exist for top-pocket-inner-left, top-pocket-inner-right, top-jug-left, or top-jug-right; geometry/position splitting is prohibited."],
+  "expectedError": "unmapped logical hold IDs",
   "schemaVersion": 1
 }

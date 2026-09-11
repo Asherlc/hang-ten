@@ -4,6 +4,7 @@
     {
       "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
       "packageID": "metolius",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/metolius",
       "packageValidationResult": "PASS (supplied validation.json)",
       "retainedMembers": {
         "Metolius-Simulator-3D/README.md": "c6b075666b6aa56480da5dba214de98b1a9ef7780f2158e453e8cbd3bfeb099a",
@@ -17,6 +18,7 @@
     {
       "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
       "packageID": "training-tiles",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/training-tiles",
       "packageValidationResult": "PASS (supplied qa/validation.json); conversion rejected by logical inventory audit",
       "retainedMembers": {
         "Training-Tiles/README.md": "10c6c6494a28a05f26b8539ffe35b91b46581439ff63ba75a12fd9911b49b20e",
@@ -31,6 +33,7 @@
     {
       "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
       "packageID": "baguette-evo",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/baguette-evo",
       "packageValidationResult": "PASS (supplied validation-report.json)",
       "retainedMembers": {
         "YY-Vertical-Baguette-Evo/README.md": "db31f96b3634ba39c5241b648feb0bc8e8485e4788ffb9ed288e4c9abfac7b73",
@@ -46,6 +49,7 @@
     {
       "coordinateFrame": {"front": "-Y", "units": "meters", "up": "+Z"},
       "packageID": "nature-stone-hanger",
+      "retainedEvidenceRoot": ".context/import-hangboard-model-packages/source-evidence/nature-stone-hanger",
       "packageValidationResult": "PASS (supplied qa/validation.json)",
       "retainedMembers": {
         "nature-stone-hanger/README.md": "48b908a6eb80bea016c871563ff34d9f5199f59a25caca9170850a4e737f3fae",

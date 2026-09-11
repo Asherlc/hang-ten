@@ -11,7 +11,10 @@
     {"holdID": "edge-20-left", "role": "hold", "sourceNodeID": "hold-edge-20mm-left"}, {"holdID": "edge-20-right", "role": "hold", "sourceNodeID": "hold-edge-20mm-right"},
     {"holdID": "edge-25-left", "role": "hold", "sourceNodeID": "hold-edge-25mm-left"}, {"holdID": "edge-25-right", "role": "hold", "sourceNodeID": "hold-edge-25mm-right"},
     {"holdID": "rounded-tray", "role": "hold", "sourceNodeID": "hold-rounded-left"}, {"holdID": "rounded-tray", "role": "hold", "sourceNodeID": "hold-rounded-right"},
-    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-1"}, {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-2"}, {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-3"}, {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-4"}
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-1", "order": 1, "position": [-0.2460000067949295, 0.0, 0.0], "metadata": {"asset_role": "cord_passage", "bore_index": 1, "diameter_estimate_m": 0.0072}},
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-2", "order": 2, "position": [-0.23100000619888306, 0.0, 0.0], "metadata": {"asset_role": "cord_passage", "bore_index": 2, "diameter_estimate_m": 0.0072}},
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-3", "order": 3, "position": [0.23100000619888306, 0.0, 0.0], "metadata": {"asset_role": "cord_passage", "bore_index": 3, "diameter_estimate_m": 0.0072}},
+    {"role": "attachment", "selectable": false, "sourceNodeID": "cord-passage-4", "order": 4, "position": [0.2460000067949295, 0.0, 0.0], "metadata": {"asset_role": "cord_passage", "bore_index": 4, "diameter_estimate_m": 0.0072}}
   ],
   "packageID": "baguette-evo",
   "schemaVersion": 1

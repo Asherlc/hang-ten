@@ -1,0 +1,8 @@
+{
+  "blenderVersion": "5.2.0 LTS fbe6228777e7",
+  "candidate": "baguette-evo",
+  "cleanupVerified": true,
+  "error": "actual USDZ is missing exported attachment facts",
+  "evidence": "The repaired importer retained the actual EMPTY marker objects in an archival Blender scene and attached the explicit fact payload to the body object and mesh data. The unchanged compiler creates fresh export objects and copies only role, hold_id, and hang_ten_source_node_id, so the attachment payload does not cross its private export-copy boundary.",
+  "status": "blocked"
+}

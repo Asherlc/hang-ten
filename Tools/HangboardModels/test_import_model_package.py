@@ -75,6 +75,9 @@ class MappingValidationTests(unittest.TestCase):
                     "sourceNodeID": "Passage",
                     "role": "attachment",
                     "selectable": False,
+                    "order": 1,
+                    "position": [0.1, 0.2, 0.3],
+                    "metadata": {"kind": "cord-passage"},
                 },
             ]
         )
@@ -82,6 +85,30 @@ class MappingValidationTests(unittest.TestCase):
             mapping, {"Body": "MESH", "Hold": "MESH", "Passage": "EMPTY"}
         )
         self.assertEqual(result.attachment_node_ids, ("Passage",))
+
+    def test_attachment_facts_are_explicit_and_ordered(self) -> None:
+        mapping = self.mapping([
+            {"sourceNodeID": "Body", "role": "body"},
+            {"sourceNodeID": "Hold", "role": "hold", "holdID": "left"},
+            {"sourceNodeID": "PassageB", "role": "attachment", "selectable": False,
+             "order": 2, "position": [0.2, 0, 0], "metadata": {"kind": "cord-passage"}},
+            {"sourceNodeID": "PassageA", "role": "attachment", "selectable": False,
+             "order": 1, "position": [0.1, 0, 0], "metadata": {"kind": "cord-passage"}},
+        ])
+        result = importer.validate_mapping(mapping, {"Body": "MESH", "Hold": "MESH",
+                                                      "PassageA": "EMPTY", "PassageB": "EMPTY"})
+        self.assertEqual([item["sourceNodeID"] for item in result.attachment_facts],
+                         ["PassageA", "PassageB"])
+
+    def test_attachment_without_coordinates_is_rejected(self) -> None:
+        mapping = self.mapping([
+            {"sourceNodeID": "Body", "role": "body"},
+            {"sourceNodeID": "Hold", "role": "hold", "holdID": "left"},
+            {"sourceNodeID": "Passage", "role": "attachment", "selectable": False,
+             "order": 1, "metadata": {"kind": "cord-passage"}},
+        ])
+        with self.assertRaisesRegex(importer.MappingError, "position"):
+            importer.validate_mapping(mapping, {"Body": "MESH", "Hold": "MESH", "Passage": "EMPTY"})
 
 
 class SourceManifestTests(unittest.TestCase):
@@ -94,15 +121,35 @@ class SourceManifestTests(unittest.TestCase):
                 bundle.writestr("pkg/model.blend", b"blend")
             archive_hash = hashlib.sha256(archive.read_bytes()).hexdigest()
             readme_hash = hashlib.sha256(b"evidence\n").hexdigest()
+            evidence = root / "evidence"
+            (evidence / "pkg").mkdir(parents=True)
+            (evidence / "pkg/README.md").write_bytes(b"evidence\n")
             entry = {
                 "zipPath": str(archive),
                 "zipSHA256": archive_hash,
                 "sourceModel": "pkg/model.blend",
                 "retainedMembers": {"pkg/README.md": readme_hash},
+                "retainedEvidenceRoot": str(evidence),
             }
             importer.verify_source_entry(entry)
             entry["retainedMembers"]["pkg/README.md"] = "0" * 64
             with self.assertRaisesRegex(importer.SourceManifestError, "hash mismatch"):
+                importer.verify_source_entry(entry)
+
+    def test_retained_evidence_copy_is_verified(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive = root / "source.zip"
+            with zipfile.ZipFile(archive, "w") as bundle:
+                bundle.writestr("pkg/README.md", b"evidence\n")
+                bundle.writestr("pkg/model.blend", b"blend")
+            evidence = root / "evidence"
+            (evidence / "pkg").mkdir(parents=True)
+            (evidence / "pkg/README.md").write_bytes(b"changed\n")
+            entry = {"zipPath": str(archive), "zipSHA256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                     "sourceModel": "pkg/model.blend", "retainedEvidenceRoot": str(evidence),
+                     "retainedMembers": {"pkg/README.md": hashlib.sha256(b"evidence\n").hexdigest()}}
+            with self.assertRaisesRegex(importer.SourceManifestError, "retained evidence hash mismatch"):
                 importer.verify_source_entry(entry)
 
     def test_manifest_json_is_written_deterministically(self) -> None:
@@ -125,8 +172,11 @@ class SourceManifestTests(unittest.TestCase):
                 "packageID": "rejected", "zipPath": str(archive),
                 "zipSHA256": hashlib.sha256(archive.read_bytes()).hexdigest(),
                 "sourceModel": "pkg/model.blend",
+                "retainedEvidenceRoot": str(root / "evidence"),
                 "retainedMembers": {"pkg/README.md": hashlib.sha256(b"evidence\n").hexdigest()},
             }]})
+            (root / "evidence/pkg").mkdir(parents=True)
+            (root / "evidence/pkg/README.md").write_bytes(b"evidence\n")
             importer.write_json(mapping, {
                 "schemaVersion": 1, "packageID": "rejected",
                 "promotionStatus": "rejected", "rejectionReasons": ["incomplete"],
@@ -136,6 +186,21 @@ class SourceManifestTests(unittest.TestCase):
             with patch.object(sys, "argv", process):
                 self.assertEqual(importer.main(), 0)
             self.assertEqual(json.loads(report.read_text())["status"], "rejected")
+
+    def test_rejected_cli_captures_conversion_error(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            mapping = root / "mapping.json"
+            report = root / "report.json"
+            importer.write_json(mapping, {"schemaVersion": 1, "packageID": "metolius",
+                "promotionStatus": "rejected", "expectedError": "no image material",
+                "logicalHoldIDs": [], "objects": []})
+            argv = ["--manifest", str(root / "manifest.json"), "--mapping", str(mapping),
+                    "--package", "metolius", "--output-directory", str(root / "output"),
+                    "--report", str(report)]
+            with patch.object(importer, "import_package", side_effect=ValueError("mesh has no image material")):
+                self.assertEqual(importer.main(argv), 0)
+            self.assertEqual(json.loads(report.read_text())["errorType"], "ValueError")
 
 
 class VerificationReportTests(unittest.TestCase):
@@ -183,6 +248,14 @@ class VerificationReportTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(ValueError, "native material"):
             verifier.validate_report_document(report)
+
+    def test_exported_attachment_payload_must_match_mapping(self) -> None:
+        expected = ({"sourceNodeID": "Passage", "order": 1, "position": [0.1, 0.2, 0.3],
+                     "metadata": {"kind": "cord-passage"}},)
+        payload = json.dumps(list(expected), sort_keys=True, separators=(",", ":"))
+        self.assertEqual(verifier.verify_exported_attachment_facts(payload, expected), list(expected))
+        with self.assertRaisesRegex(ValueError, "attachment facts"):
+            verifier.verify_exported_attachment_facts("[]", expected)
 
 
 if __name__ == "__main__":

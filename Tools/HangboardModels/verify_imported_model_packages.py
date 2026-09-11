@@ -15,7 +15,7 @@ _TOOLS = Path(__file__).resolve().parent
 if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
-from import_model_package import validate_mapping, write_json
+from import_model_package import attachment_facts_from_mapping, write_json
 from model_descriptor import ModelDescriptorV1, compile_descriptor
 
 
@@ -34,6 +34,22 @@ def require_source_correspondence(
         raise ValueError("actual USDZ source mesh IDs do not match explicit mapping")
     if len(imported_to_source) != len(set(imported_to_source.values())):
         raise ValueError("actual USDZ duplicates source mesh IDs")
+
+
+def verify_exported_attachment_facts(
+    payload: object, expected: Sequence[Mapping[str, object]]
+) -> list[Mapping[str, object]]:
+    """Read attachment evidence from the imported USDZ, never synthesized types."""
+    if not isinstance(payload, str):
+        raise ValueError("actual USDZ is missing exported attachment facts")
+    try:
+        actual = json.loads(payload)
+    except json.JSONDecodeError as error:
+        raise ValueError("actual USDZ attachment facts are invalid JSON") from error
+    wanted = json.loads(json.dumps(list(expected), sort_keys=True, allow_nan=False))
+    if actual != wanted:
+        raise ValueError("actual USDZ attachment facts do not match explicit mapping")
+    return actual
 
 
 def validate_report_document(report: Mapping[str, object]) -> None:
@@ -102,12 +118,12 @@ def verify_package(package_directory: Path, mapping_path: Path) -> Mapping[str, 
         for item in mapping.get("objects", [])
         if isinstance(item, Mapping) and item.get("role") in {"body", "hold"}
     }
-    validation_objects = dict(expected_objects)
-    for item in mapping.get("objects", []):
-        if isinstance(item, Mapping) and item.get("role") == "attachment":
-            validation_objects[str(item["sourceNodeID"])] = "EMPTY"
-    validated_mapping = validate_mapping(mapping, validation_objects)
-    nodes = compiler.validate_tagged_scene(scene, validated_mapping.logical_hold_ids, imported=True)
+    logical_values = mapping.get("logicalHoldIDs")
+    if not isinstance(logical_values, list) or any(not isinstance(value, str) for value in logical_values):
+        raise ValueError("mapping logicalHoldIDs must be strings")
+    logical_hold_ids = frozenset(logical_values)
+    attachment_facts = attachment_facts_from_mapping(mapping)
+    nodes = compiler.validate_tagged_scene(scene, logical_hold_ids, imported=True)
     correspondence = compiler._imported_source_node_ids(scene, nodes)
     require_source_correspondence(correspondence, set(expected_objects))
     if mesh_node_ids(object_types) != set(correspondence):
@@ -123,10 +139,17 @@ def verify_package(package_directory: Path, mapping_path: Path) -> Mapping[str, 
         model_bytes,
         snapshot.nodes,
         snapshot.vertices_by_node_id,
-        validated_mapping.logical_hold_ids,
+        logical_hold_ids,
     )
     if rebuilt.to_json() != descriptor_value:
         raise ValueError("descriptor hashes/bounds/centers do not match actual USDZ")
+
+    body_node_id = next(node.node_id for node in nodes if node.role == "body")
+    body = next(item for item in scene.objects if item.name == body_node_id)
+    payload = compiler._object_property(body, "hang_ten_attachments_v1", imported=True)
+    if payload is None:
+        payload = compiler._object_property(body.data, "hang_ten_attachments_v1", imported=True)
+    attachments = verify_exported_attachment_facts(payload, attachment_facts)
 
     meshes: list[dict[str, object]] = []
     by_name = {item.name: item for item in scene.objects}
@@ -155,7 +178,8 @@ def verify_package(package_directory: Path, mapping_path: Path) -> Mapping[str, 
             }
         )
     report: dict[str, object] = {
-        "attachmentNodeIDs": list(validated_mapping.attachment_node_ids),
+        "attachments": attachments,
+        "attachmentNodeIDs": [item["sourceNodeID"] for item in attachments],
         "cleanReimport": clean_before,
         "coordinateFrame": descriptor_value["coordinateFrame"],
         "descriptorMatchesActualUSDZ": True,

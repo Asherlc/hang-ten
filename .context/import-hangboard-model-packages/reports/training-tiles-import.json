@@ -1,8 +1,7 @@
 {
+  "error": "unmapped logical hold IDs: top-jug-left, top-jug-right, top-pocket-inner-left, top-pocket-inner-right",
+  "errorType": "MappingError",
+  "expectedError": "unmapped logical hold IDs",
   "packageID": "training-tiles",
-  "reasons": [
-    "Source package supplies 16 selectable meshes but the existing logical inventory has 20 IDs.",
-    "No identity-backed source meshes exist for top-pocket-inner-left, top-pocket-inner-right, top-jug-left, or top-jug-right; geometry/position splitting is prohibited."
-  ],
   "status": "rejected"
 }
