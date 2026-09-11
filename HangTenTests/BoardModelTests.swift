@@ -857,7 +857,10 @@ final class BoardModelTests: XCTestCase {
                     "flat-sloper-2-left", "flat-sloper-2-right"
                 ],
                 bodyNodeIDs: ["board_body_001"],
-                bodyProbe: [0.5, 0.02]
+                // The lower-center projection falls in a recessed opening in
+                // the imported simulator body; use an evidenced body vertex
+                // projection near the upper-left edge instead.
+                bodyProbe: [0.05, 0.96]
             ),
             MigratedModelExpectation(
                 boardID: "soill.training-tiles",
@@ -914,16 +917,43 @@ final class BoardModelTests: XCTestCase {
             let hold = try XCTUnwrap(media.descriptor.holds[holdID], "\(boardID): \(holdID)")
             let minimum = hold.facePlaneAABB.minimum
             let maximum = hold.facePlaneAABB.maximum
-            let sampleFractions: [Double] = [0.2, 0.5, 0.8]
-            let surfaceSamplePoints = sampleFractions.flatMap { xFraction in
-                sampleFractions.map { yFraction in
-                    [
-                        minimum[0] + xFraction * (maximum[0] - minimum[0]),
-                        minimum[1] + yFraction * (maximum[1] - minimum[1])
-                    ]
+            // A face-plane AABB is the projection of the selectable mesh, not
+            // a promise that a regular interior grid crosses every surface.
+            // Recessed pockets can have projected openings between their
+            // triangles, so use the imported, descriptor-bound mesh vertices
+            // as evidence-backed probe positions.
+            let surfaceSamplePoints = model.holdNodes[holdID, default: []]
+                .flatMap { node in
+                    node.geometry.map { geometry in
+                        geometry.sources(for: .vertex).flatMap { source in
+                            guard source.componentsPerVector >= 3, source.usesFloatComponents else {
+                                return []
+                            }
+                            return (0..<source.vectorCount).map { index in
+                                let vertex = source.data.withUnsafeBytes { rawBuffer in
+                                    let offset = source.dataOffset + index * source.dataStride
+                                    return SCNVector3(
+                                        rawBuffer.load(fromByteOffset: offset, as: Float.self),
+                                        rawBuffer.load(fromByteOffset: offset + source.bytesPerComponent, as: Float.self),
+                                        rawBuffer.load(fromByteOffset: offset + 2 * source.bytesPerComponent, as: Float.self)
+                                    )
+                                }
+                                let point = node.convertPosition(vertex, to: model.scene.rootNode)
+                                let x = (Double(point.x) - media.descriptor.modelBounds.minimum[0]) /
+                                    (media.descriptor.modelBounds.maximum[0] - media.descriptor.modelBounds.minimum[0])
+                                let y = (Double(point.y) - media.descriptor.modelBounds.minimum[1]) /
+                                    (media.descriptor.modelBounds.maximum[1] - media.descriptor.modelBounds.minimum[1])
+                                return [x, y]
+                            }
+                        }
+                    } ?? []
                 }
-            }
-            let hits = surfaceSamplePoints.compactMap { normalizedPoint -> String? in
+                .filter { point in
+                    point.count == 2 &&
+                    point[0] >= minimum[0] && point[0] <= maximum[0] &&
+                    point[1] >= minimum[1] && point[1] <= maximum[1]
+                }
+            let hits = surfaceSamplePoints.lazy.compactMap { normalizedPoint -> String? in
                 guard let ray = try? headOnRay(
                     normalizedPoint: normalizedPoint,
                     bounds: media.descriptor.modelBounds,
