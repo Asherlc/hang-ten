@@ -13,6 +13,7 @@ from typing import Any
 
 _HEX = re.compile(r"^[0-9a-fA-F]{64}$")
 _FORBIDDEN = {"geometry", "bounds", "modelbounds", "center", "coordinates", "contours", "masks", "vectors", "trace", "alignment"}
+_REVIEW_VIEWS = ("front", "three-quarter", "clay-detail", "active-hold")
 
 
 @dataclass(frozen=True)
@@ -207,6 +208,8 @@ def load_migration_manifest(path: Path) -> MigrationManifest:
         raise ValueError("verification.triangleCeiling must be a positive integer")
     verification = Verification(ceiling, _strings(verification_payload["probeIDs"], "verification.probeIDs"))
     review_views = _strings(root["reviewViews"], "reviewViews")
+    if not review_views or any(view not in _REVIEW_VIEWS for view in review_views):
+        raise ValueError("reviewViews must contain one or more fixed gallery review views")
     artifacts_payload = _closed(root["artifacts"], {"packageSHA256", "descriptorSHA256"}, "artifacts")
     artifacts = Artifacts(_sha(artifacts_payload["packageSHA256"], "artifacts.packageSHA256"), _sha(artifacts_payload["descriptorSHA256"], "artifacts.descriptorSHA256"))
     return MigrationManifest(1, board_id, revision, board_json, evidence_packet, source_blend, logical_ids, presentation, tuple(positions_list), suspension_profile, omissions, verification, review_views, artifacts)

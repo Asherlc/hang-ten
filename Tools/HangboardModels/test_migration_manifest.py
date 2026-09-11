@@ -11,6 +11,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from migration_manifest import MigrationManifest, load_migration_manifest
 
 
+SCHEMA_PATH = Path(__file__).with_name("migration-manifest.schema.json")
+EXPECTED_REVIEW_VIEWS = ("front", "three-quarter", "clay-detail", "active-hold")
+
+
 def valid_document() -> dict[str, object]:
     return {
         "schemaVersion": 1,
@@ -167,6 +171,33 @@ class MigrationManifestTests(unittest.TestCase):
         document["positions"] = [{"id": "default", "activeHoldIDs": ["unknown"]}]
         with self.assertRaisesRegex(ValueError, "position"):
             self.load(document)
+
+    def test_positions_reject_duplicate_ids_and_duplicate_active_hold_ids(self):
+        document = valid_document()
+        document["positions"] = [
+            {"id": "default", "activeHoldIDs": ["jug-left"]},
+            {"id": "default", "activeHoldIDs": ["jug-right"]},
+        ]
+        with self.assertRaisesRegex(ValueError, "duplicate IDs"):
+            self.load(document)
+
+        document = valid_document()
+        document["positions"] = [{"id": "default", "activeHoldIDs": ["jug-left", "jug-left"]}]
+        with self.assertRaisesRegex(ValueError, "duplicate values"):
+            self.load(document)
+
+    def test_review_views_use_the_fixed_gallery_vocabulary(self):
+        document = valid_document()
+        document["reviewViews"] = ["front", "isometric"]
+        with self.assertRaisesRegex(ValueError, "reviewViews"):
+            self.load(document)
+
+    def test_schema_declares_the_same_review_view_vocabulary_as_the_loader(self):
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        review_views = schema["properties"]["reviewViews"]
+        self.assertEqual(tuple(review_views["items"]["enum"]), EXPECTED_REVIEW_VIEWS)
+        self.assertEqual(review_views["minItems"], 1)
+        self.assertNotIn("uniqueItems", schema["properties"]["positions"])
 
     def test_omissions_are_explicit_and_required(self):
         document = valid_document()

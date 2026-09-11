@@ -127,16 +127,6 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
                 "notes": "Two wells and end features are visible in the retained views.",
             },
         ],
-        "nonSelectableFeatures": [
-            {
-                "featureID": "lower-ledges",
-                "faceID": "three-well",
-                "sourceLocalPaths": [user_evidence[0]["localPath"]],
-                "description": "Shallow lower grooves adjacent to the wells.",
-                "reason": "Unresolved from imagery; retain as nonselectable display geometry.",
-            }
-        ],
-        "logicalRuling": "no-new-logical-ids",
         "visualApproval": {
             "approvedSnapshotPaths": [retained[0][0], retained[1][0]],
             "materiallyDistinct": True,
@@ -149,13 +139,6 @@ def valid_suspended_packet(tmp_path: Path) -> Path:
             {"name": "camera", "value": "canonical camera", "provenance": "displayEstimate"},
         ],
     }
-    payload["conflictsAndRulings"] = [
-        {
-            "claimID": "lower-ledge-interpretation",
-            "conflict": "Supplied closeups show shallow lower grooves, but do not establish separate logical contacts.",
-            "ruling": "Keep the grooves as nonselectable geometry and preserve the approved logical inventory.",
-        }
-    ]
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
 
@@ -201,6 +184,23 @@ def valid_flash_suspended_packet(tmp_path: Path) -> Path:
         {"positionID": "two-edge-upright", "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"], "sourceLocalPath": "sources/front.png"},
         {"positionID": "two-edge-inverted", "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"], "sourceLocalPath": "sources/front.png"},
     ]
+    payload["suspendedPresentation"]["nonSelectableFeatures"] = [  # type: ignore[index]
+        {
+            "featureID": "lower-ledges",
+            "faceID": "three-well",
+            "sourceLocalPaths": ["sources/user-closeup-three-well-face.png"],
+            "description": "Shallow lower grooves adjacent to the wells.",
+            "reason": "Unresolved from imagery; retain as nonselectable display geometry.",
+        }
+    ]
+    payload["suspendedPresentation"]["logicalRuling"] = "no-new-logical-ids"  # type: ignore[index]
+    payload["conflictsAndRulings"] = [
+        {
+            "claimID": "lower-ledge-interpretation",
+            "conflict": "Supplied closeups show shallow lower grooves, but do not establish separate logical contacts.",
+            "ruling": "Keep the grooves as nonselectable geometry and preserve the approved logical inventory.",
+        }
+    ]
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
 
@@ -208,6 +208,14 @@ def valid_flash_suspended_packet(tmp_path: Path) -> Path:
 def test_accepts_valid_suspended_presentation(tmp_path: Path) -> None:
     packet = valid_suspended_packet(tmp_path)
     assert validate_evidence_packet(packet).suspended_presentation["positionIDs"]
+
+
+def test_non_flash_suspended_packets_do_not_require_flash_only_rulings(tmp_path: Path) -> None:
+    packet = valid_suspended_packet(tmp_path)
+    payload = _payload(packet)
+    assert "nonSelectableFeatures" not in payload["suspendedPresentation"]  # type: ignore[operator]
+    assert "logicalRuling" not in payload["suspendedPresentation"]  # type: ignore[operator]
+    assert validate_evidence_packet(packet).suspended_presentation is not None
 
 
 def test_accepts_amazon_face_map_only_as_commerce(tmp_path: Path) -> None:
@@ -329,7 +337,7 @@ def test_rejects_lower_groove_mapped_as_new_id(tmp_path: Path) -> None:
 
 
 def test_requires_lower_ledge_conflict_ruling(tmp_path: Path) -> None:
-    packet = valid_suspended_packet(tmp_path)
+    packet = valid_flash_suspended_packet(tmp_path)
     payload = _payload(packet)
     payload["conflictsAndRulings"] = []
     _rewrite(packet, payload)
@@ -390,6 +398,16 @@ def test_rejects_suspended_presentation_without_distinct_snapshots(tmp_path: Pat
     _rewrite(packet, payload)
     with pytest.raises(ValueError, match="two.*distinct"):
         validate_evidence_packet(packet)
+
+
+def test_requires_visual_approval_materially_distinct_to_be_a_true_boolean(tmp_path: Path) -> None:
+    for value in (False, 1, "true"):
+        packet = valid_suspended_packet(tmp_path / repr(value))
+        payload = _payload(packet)
+        payload["suspendedPresentation"]["visualApproval"]["materiallyDistinct"] = value  # type: ignore[index]
+        _rewrite(packet, payload)
+        with pytest.raises(ValueError, match="materially distinct"):
+            validate_evidence_packet(packet)
 
 
 def test_rejects_unretained_attachment_view(tmp_path: Path) -> None:

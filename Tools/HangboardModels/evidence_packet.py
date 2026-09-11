@@ -235,20 +235,23 @@ def _validate_suspended_presentation(
 ) -> None:
     if not isinstance(value, dict):
         raise ValueError("suspendedPresentation must be an object")
-    allowed = {
+    required = {
         "positionIDs",
         "positionMappings",
         "attachmentEvidence",
         "faceInventoryNotes",
-        "nonSelectableFeatures",
-        "logicalRuling",
         "visualApproval",
         "displayEstimates",
     }
+    allowed = set(required)
+    if board_revision == "tension-flash-board-2":
+        flash_only = {"nonSelectableFeatures", "logicalRuling"}
+        allowed.update(flash_only)
+        required.update(flash_only)
     unknown = set(value) - allowed
     if unknown:
         raise ValueError(f"suspendedPresentation contains unknown key: {sorted(unknown)[0]}")
-    for key in allowed:
+    for key in sorted(required):
         if key not in value:
             raise ValueError(f"suspendedPresentation is missing {key}")
 
@@ -318,40 +321,42 @@ def _validate_suspended_presentation(
             _require_retained_reference(reference, source_tiers, "face inventory note")
         _required_string(note, "notes")
 
-    features = _dict_list(value["nonSelectableFeatures"], "suspendedPresentation.nonSelectableFeatures")
-    if not features:
-        raise ValueError("nonSelectableFeatures must be non-empty")
-    for feature in features:
-        if set(feature) - {"featureID", "faceID", "sourceLocalPaths", "description", "reason"}:
-            raise ValueError("non-selectable feature contains unknown or logical-hold key")
-        for key in ("featureID", "faceID", "description", "reason"):
-            _required_string(feature, key)
-        references = _strings(feature.get("sourceLocalPaths"), "non-selectable feature sourceLocalPaths")
-        if not references:
-            raise ValueError("non-selectable feature sourceLocalPaths must be non-empty")
-        for reference in references:
-            _require_retained_reference(reference, source_tiers, "non-selectable feature")
+    if board_revision == "tension-flash-board-2":
+        features = _dict_list(value["nonSelectableFeatures"], "suspendedPresentation.nonSelectableFeatures")
+        if not features:
+            raise ValueError("nonSelectableFeatures must be non-empty")
+        for feature in features:
+            if set(feature) - {"featureID", "faceID", "sourceLocalPaths", "description", "reason"}:
+                raise ValueError("non-selectable feature contains unknown or logical-hold key")
+            for key in ("featureID", "faceID", "description", "reason"):
+                _required_string(feature, key)
+            references = _strings(feature.get("sourceLocalPaths"), "non-selectable feature sourceLocalPaths")
+            if not references:
+                raise ValueError("non-selectable feature sourceLocalPaths must be non-empty")
+            for reference in references:
+                _require_retained_reference(reference, source_tiers, "non-selectable feature")
 
-    if value.get("logicalRuling") != "no-new-logical-ids":
-        raise ValueError("suspendedPresentation.logicalRuling must be no-new-logical-ids")
+        if value.get("logicalRuling") != "no-new-logical-ids":
+            raise ValueError("suspendedPresentation.logicalRuling must be no-new-logical-ids")
     mapped_ids = {hold for mapping in mappings for hold in mapping["holdIDs"]}
     if mapped_ids != inventory_ids:
         raise ValueError("suspended presentation logical hold inventory does not match position mappings")
-    lower_ruling = next(
-        (
-            item
-            for item in conflicts
-            if isinstance(item, dict)
-            and item.get("claimID") == "lower-ledge-interpretation"
-            and isinstance(item.get("conflict"), str)
-            and item["conflict"].strip()
-            and isinstance(item.get("ruling"), str)
-            and item["ruling"].strip()
-        ),
-        None,
-    )
-    if lower_ruling is None:
-        raise ValueError("conflictsAndRulings requires lower-ledge-interpretation conflict and ruling")
+    if board_revision == "tension-flash-board-2":
+        lower_ruling = next(
+            (
+                item
+                for item in conflicts
+                if isinstance(item, dict)
+                and item.get("claimID") == "lower-ledge-interpretation"
+                and isinstance(item.get("conflict"), str)
+                and item["conflict"].strip()
+                and isinstance(item.get("ruling"), str)
+                and item["ruling"].strip()
+            ),
+            None,
+        )
+        if lower_ruling is None:
+            raise ValueError("conflictsAndRulings requires lower-ledge-interpretation conflict and ruling")
 
     attachment = value["attachmentEvidence"]
     if not isinstance(attachment, dict):
@@ -368,7 +373,12 @@ def _validate_suspended_presentation(
     if set(approval) - {"approvedSnapshotPaths", "materiallyDistinct", "decisionDate"}:
         raise ValueError("visualApproval contains unknown key")
     snapshots = _strings(approval.get("approvedSnapshotPaths"), "visualApproval.approvedSnapshotPaths")
-    if len(snapshots) < 2 or len(snapshots) != len(set(snapshots)) or not approval.get("materiallyDistinct"):
+    if (
+        len(snapshots) < 2
+        or len(snapshots) != len(set(snapshots))
+        or type(approval.get("materiallyDistinct")) is not bool
+        or approval["materiallyDistinct"] is not True
+    ):
         raise ValueError("visualApproval requires two or more materially distinct snapshots")
     for snapshot in snapshots:
         _require_retained_reference(snapshot, source_tiers, "visualApproval snapshot")
