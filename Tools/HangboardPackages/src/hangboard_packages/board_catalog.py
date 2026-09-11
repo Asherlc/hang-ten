@@ -407,9 +407,16 @@ class PresentationMediaModel:
     descriptor_path: str
     display: Mapping[str, Any]
     suspension: "BoardModelSuspension | None" = None
+    orientation: "BoardModelOrientation | None" = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
+
+
+@dataclass(frozen=True)
+class BoardModelOrientation:
+    pivot: str
+    rotations: Mapping[str, tuple[float, float, float, float]]
 
 
 @dataclass(frozen=True)
@@ -739,6 +746,32 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     )
 
 
+def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
+    payload = _mapping(value, source)
+    _closed(payload, {"pivot", "rotations"}, source)
+    pivot = _string(payload["pivot"], f"{source}.pivot")
+    if pivot != "modelBoundsCenter":
+        raise ValueError(f"{source}.pivot must be modelBoundsCenter")
+    raw_rotations = _mapping(payload["rotations"], f"{source}.rotations")
+    if not raw_rotations:
+        raise ValueError(f"{source}.rotations must not be empty")
+    rotations: dict[str, tuple[float, float, float, float]] = {}
+    for position_id in sorted(raw_rotations):
+        raw_quaternion = raw_rotations[position_id]
+        position_source = f"{source}.rotations[{position_id}]"
+        position_id = _identifier(position_id, f"{position_source} positionID")
+        if not isinstance(raw_quaternion, list) or len(raw_quaternion) != 4:
+            raise ValueError(f"{position_source} must contain exactly four coordinates")
+        quaternion = tuple(_number(item, f"{position_source}[{index}]") for index, item in enumerate(raw_quaternion))
+        if any(round(component, 9) != component for component in quaternion):
+            raise ValueError(f"{position_source} must be rounded to nine decimals")
+        norm = math.sqrt(sum(component * component for component in quaternion))
+        if not math.isfinite(norm) or abs(norm - 1.0) > 1e-6:
+            raise ValueError(f"{position_source} must be unit length")
+        rotations[position_id] = quaternion  # type: ignore[assignment]
+    return BoardModelOrientation(pivot, MappingProxyType(rotations))
+
+
 def _load_v2_media(value: Any, source: str) -> PresentationMedia:
     payload = _mapping(value, source)
     media_type = _string(payload.get("type"), f"{source}.type")
@@ -756,7 +789,12 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
             MappingProxyType(hold_geometry),
         )
     if media_type == "model":
-        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension"})
+        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension", "orientation"})
+        orientation = None
+        if "orientation" in payload and "suspension" in payload:
+            raise ValueError("orientation and suspension are mutually exclusive")
+        if "orientation" in payload:
+            orientation = _load_model_orientation(payload["orientation"], f"{source}.orientation")
         return PresentationMediaModel(
             _typed_asset_path(
                 payload["assetPath"], f"{source}.assetPath", ".usdz", "a USDZ"
@@ -771,6 +809,7 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
             _load_model_suspension(payload["suspension"], f"{source}.suspension")
             if "suspension" in payload
             else None,
+            orientation,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -805,14 +844,27 @@ def _load_v2_presentation(value: Any, source: str) -> BoardPresentation:
 class BoardPosition:
     id: str
     presentation_id: str
+    hold_ids: tuple[str, ...] = ()
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPosition":
         payload = _mapping(value, source)
-        _closed(payload, {"id", "presentationID"}, source)
+        _closed(payload, {"id", "presentationID"}, source, optional={"holdIDs"})
+        hold_ids: tuple[str, ...] = ()
+        if "holdIDs" in payload:
+            raw_hold_ids = payload["holdIDs"]
+            if not isinstance(raw_hold_ids, list) or not raw_hold_ids:
+                raise ValueError(f"{source}.holdIDs must be a non-empty array")
+            hold_ids = tuple(
+                _identifier(item, f"{source}.holdIDs[{index}]")
+                for index, item in enumerate(raw_hold_ids)
+            )
+            if len(set(hold_ids)) != len(hold_ids):
+                raise ValueError(f"{source}.holdIDs must not contain duplicates")
         return cls(
             _identifier(payload["id"], f"{source}.id"),
             _identifier(payload["presentationID"], f"{source}.presentationID"),
+            hold_ids,
         )
 
 
@@ -931,7 +983,8 @@ class BoardDocument:
             owned = set(presentation.media.hold_geometry)
             return tuple(hold.id for hold in self.holds if hold.id in owned)
         if isinstance(presentation.media, PresentationMediaModel):
-            return tuple(hold.id for hold in self.holds)
+            owned = set(position.hold_ids)
+            return tuple(hold.id for hold in self.holds if hold.id in owned)
         raise ValueError(f"presentation {presentation.id} has no typed media")
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
@@ -1337,6 +1390,17 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
             raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
     logical_hold_ids = {hold.id for hold in holds_tuple}
+    model_presentation_ids = {
+        presentation.id
+        for presentation in presentations
+        if isinstance(presentation.media, PresentationMediaModel)
+    }
+    positions = tuple(
+        replace(position, hold_ids=tuple(hold.id for hold in holds_tuple))
+        if position.presentation_id in model_presentation_ids and not position.hold_ids
+        else position
+        for position in positions
+    )
     raw_presentations = value["presentations"]
     raw_presentations_by_id = {
         presentation.id: raw_presentations[index]
@@ -1408,6 +1472,36 @@ def _descriptor_vector(
     if any(round(coordinate, 9) != coordinate for coordinate in coordinates):
         raise ValueError(f"{source} must be rounded to nine decimals")
     return coordinates
+
+
+def _validate_model_orientation(
+    orientation: BoardModelOrientation | None,
+    positions: tuple[BoardPosition, ...],
+    descriptor_hold_ids: set[str],
+    model_position_ids: set[str],
+    source: str,
+) -> None:
+    if orientation is None:
+        return
+    rotation_ids = set(orientation.rotations)
+    if rotation_ids != model_position_ids:
+        raise ValueError(
+            f"{source}.rotations must exactly match model position IDs"
+        )
+    seen: set[str] = set()
+    for index, position in enumerate(positions):
+        if position.id not in model_position_ids:
+            continue
+        hold_source = f"positions[{index}].holdIDs"
+        unknown = set(position.hold_ids) - descriptor_hold_ids
+        if unknown:
+            raise ValueError(f"{hold_source} contains unknown hold IDs")
+        overlap = seen.intersection(position.hold_ids)
+        if overlap:
+            raise ValueError(f"{hold_source} contains duplicate hold IDs across positions")
+        seen.update(position.hold_ids)
+    if seen != descriptor_hold_ids:
+        raise ValueError("model positions holdIDs must exactly partition descriptor holds")
 
 
 def _validate_model_suspension(
@@ -1737,6 +1831,18 @@ def _validate_finished_shape(
             position_ids={position.id for position in board.positions
                           if position.presentation_id == presentation.id},
         )
+        if presentation.media.orientation is not None:
+            _validate_model_orientation(
+                presentation.media.orientation,
+                board.positions,
+                set(frames),
+                {
+                    position.id
+                    for position in board.positions
+                    if position.presentation_id == presentation.id
+                },
+                "board.json.presentations[].media.orientation",
+            )
         model_frames.update(
             ((presentation.id, hold_id), frame) for hold_id, frame in frames.items()
         )
