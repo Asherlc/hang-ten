@@ -246,6 +246,17 @@ class BoardRepositoryTest {
     }
 
     @Test
+    fun acceptsOrientationQuaternionComponentsRoundedToNineDecimalPlaces() {
+        val result = loadModelWithOrientation(
+            "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0.707106781, 0, 0, 0.707106781], \"reverse\": [0, 1, 0, 0]}}",
+            positions = true,
+        )
+
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrThrow().isEmpty())
+    }
+
+    @Test
     fun rejectsOrientationQuaternionWithMoreThanNineDecimalPlaces() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0.1234567891, 0, 0, 0.992349949], \"reverse\": [0, 1, 0, 0]}}",
@@ -325,6 +336,17 @@ class BoardRepositoryTest {
         )
 
         assertTrueFailureContaining(result, "exactly partition")
+    }
+
+    @Test
+    fun rejectsOverlappingModelHoldPositionPartition() {
+        val result = loadModelWithOrientation(
+            "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-shared\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-shared\", \"jug-reverse\"]}]",
+            holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-shared\", \"equipmentObjectID\": \"primary\", \"name\": \"Shared jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
+        )
+
+        assertTrueFailureContaining(result, "overlap another model position")
     }
 
     @Test
