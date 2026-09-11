@@ -293,6 +293,15 @@ def main() -> None:
     assert _semantic_fingerprints(canonical_before)["topology"] == (
         _semantic_fingerprints(canonical_after)["topology"])
 
+    # A factory-scene reset removes its material datablocks. Build fixtures
+    # only after the reset that owns their scene.
+    _reset()
+    fixture_material = _material("fixture lifetime material")
+    fixture_body = create_rounded_body(
+        "fixture-lifetime", [(0, 0, 0), (1, 0, 0), (0, 1, 0)], [(0, 1, 2)],
+        materials=(fixture_material,))
+    assert fixture_body.data.materials[0] == fixture_material
+
     # Material bindings belong to positioned canonical faces, not raw polygon
     # slots. Face ordering and loop rotation remain tolerated, but exchanging
     # two materials on those faces must invalidate the topology audit.
@@ -311,6 +320,8 @@ def main() -> None:
     tag_piece(bound_first, "body")
     bound_snapshot = semantic_snapshot(bpy.context.scene)
     _reset()
+    material_a = _material("canonical material A")
+    material_b = _material("canonical material B")
     bound_reordered = create_rounded_body(
         "canonical-materials", face_vertices, [(6, 7, 4, 5), (2, 3, 0, 1)],
         materials=(material_a, material_b),
@@ -321,6 +332,8 @@ def main() -> None:
     assert _semantic_fingerprints(bound_snapshot)["topology"] == (
         _semantic_fingerprints(reordered_snapshot)["topology"])
     _reset()
+    material_a = _material("canonical material A")
+    material_b = _material("canonical material B")
     bound_swapped = create_rounded_body(
         "canonical-materials", face_vertices, [(0, 1, 2, 3), (4, 5, 6, 7)],
         materials=(material_a, material_b),
