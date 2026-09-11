@@ -321,6 +321,13 @@ struct BoardDetailMapView: View {
                 BoardModelSurface(
                     board: board,
                     presentation: map.presentation,
+                    positionID: selectedHoldID.flatMap { holdID in
+                        board.positions.first {
+                            board.holdIDs(inPosition: $0.id).contains(holdID)
+                        }?.id
+                    } ?? board.positions.first(where: {
+                        $0.presentationID == map.presentation.id
+                    })?.id,
                     highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
                     highlightMode: .active,
                     onHoldTap: { select($0.id) }
@@ -437,6 +444,7 @@ struct BoardMapView: View {
     private let activeHoldID: String?
 
     @State private var presentationSelection: BoardMapPresentationSelection
+    @State private var selectedPositionID: String?
 
     init(
         board: TrainingBoard,
@@ -460,6 +468,11 @@ struct BoardMapView: View {
                 highlightedHoldIDs: highlightedHoldIDs
             )
         )
+        _selectedPositionID = State(initialValue: Self.resolvePositionID(
+            board: board,
+            presentationID: selectedPresentationID,
+            activeHoldID: activeHoldID
+        ))
     }
 
     var body: some View {
@@ -467,13 +480,14 @@ struct BoardMapView: View {
             board: board,
             selectedPresentationID: presentationSelection.presentationID
         )
+        let displayedHolds = content.holds
         VStack(spacing: 8) {
             if board.presentations.count > 1 {
                 Picker(
                     "Board surface",
                     selection: Binding(
                         get: { content.presentation.id },
-                        set: { presentationSelection.selectPresentation(id: $0, on: board) }
+                        set: { selectPresentation(id: $0) }
                     )
                 ) {
                     ForEach(board.presentations) { presentation in
@@ -496,7 +510,7 @@ struct BoardMapView: View {
                                 presentationID: content.presentation.id
                             )
 
-                            ForEach(content.holds) { hold in
+                            ForEach(displayedHolds) { hold in
                                 PhysicalHoldVisual(
                                     hold: hold,
                                     pieces: content.pieces(for: hold.id),
@@ -514,6 +528,7 @@ struct BoardMapView: View {
                     BoardModelSurface(
                         board: board,
                         presentation: content.presentation,
+                        positionID: selectedPositionID,
                         highlightedHoldIDs: highlightedHoldIDs,
                         highlightMode: highlightMode,
                         onHoldTap: onHoldTap
@@ -530,9 +545,19 @@ struct BoardMapView: View {
                 activeHoldID: activeHoldID,
                 on: board
             )
+            selectedPositionID = Self.resolvePositionID(
+                board: board,
+                presentationID: presentationSelection.presentationID,
+                activeHoldID: activeHoldID
+            )
         }
         .onChange(of: activeHoldID) { _, holdID in
             presentationSelection.activateHold(id: holdID, on: board)
+            selectedPositionID = Self.resolvePositionID(
+                board: board,
+                presentationID: presentationSelection.presentationID,
+                activeHoldID: holdID
+            )
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
             presentationSelection.updateRequestedPresentation(
@@ -540,6 +565,11 @@ struct BoardMapView: View {
                 activeHoldID: activeHoldID,
                 highlightedHoldIDs: highlightedHoldIDs,
                 on: board
+            )
+            selectedPositionID = Self.resolvePositionID(
+                board: board,
+                presentationID: presentationID,
+                activeHoldID: activeHoldID
             )
         }
         .onChange(of: board.id) { _, _ in
@@ -549,7 +579,41 @@ struct BoardMapView: View {
                 activeHoldID: activeHoldID,
                 highlightedHoldIDs: highlightedHoldIDs
             )
+            selectedPositionID = Self.resolvePositionID(
+                board: board,
+                presentationID: requestedPresentationID,
+                activeHoldID: activeHoldID
+            )
         }
+    }
+
+    private func selectPresentation(id: String) {
+        presentationSelection.selectPresentation(id: id, on: board)
+        selectedPositionID = Self.resolvePositionID(
+            board: board,
+            presentationID: id,
+            activeHoldID: activeHoldID
+        )
+    }
+
+    private static func resolvePositionID(
+        board: TrainingBoard,
+        presentationID: String?,
+        activeHoldID: String?
+    ) -> String? {
+        if let activeHoldID,
+           let activePosition = board.positions.first(where: {
+               board.holdIDs(inPosition: $0.id).contains(activeHoldID)
+           }) {
+            return activePosition.id
+        }
+        if let presentationID,
+           let presentationPosition = board.positions.first(where: {
+               $0.presentationID == presentationID
+           }) {
+            return presentationPosition.id
+        }
+        return board.positions.first?.id
     }
 }
 
