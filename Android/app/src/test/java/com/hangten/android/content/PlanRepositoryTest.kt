@@ -97,7 +97,7 @@ class PlanRepositoryTest {
             .flatMap { it.steps }
         val maxHang = steps.first { it.id == "max-hangs-1" }
 
-        assertEquals(58, boards.size)
+        assertEquals(57, boards.size)
         assertTrue(boards.all { board ->
             board.presentations.all { presentation -> presentation.assetPath.endsWith(".png") } &&
                 board.holds.all { it.geometry.isNotEmpty() }

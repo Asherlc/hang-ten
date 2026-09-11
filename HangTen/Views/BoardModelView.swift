@@ -360,7 +360,8 @@ final class BoardModelScene {
             return true
         }
         guard let positionID,
-              let pose = suspension.canonicalPoses[positionID] else {
+              let pose = suspension.canonicalPoses[positionID],
+              hasDeclaredAttachmentBindings(for: suspension) else {
             enterUnavailable()
             return false
         }
@@ -382,6 +383,21 @@ final class BoardModelScene {
         } catch {
             enterUnavailable()
             return false
+        }
+    }
+
+    private func hasDeclaredAttachmentBindings(for suspension: BoardModelSuspension) -> Bool {
+        let nodeIDs: [String]
+        switch suspension {
+        case .singleCord(let single):
+            nodeIDs = [single.attachment.nodeID]
+        case .twoBranchCord(let twoBranch):
+            nodeIDs = (twoBranch.passages.left + twoBranch.passages.right).map(\.nodeID)
+            guard nodeIDs.count == 4 else { return false }
+        }
+        return nodeIDs.allSatisfy { nodeID in
+            descriptor.nodes.contains { $0.nodeID == nodeID && $0.role == .attachment }
+                && geometryByNodeID[nodeID] != nil
         }
     }
 
@@ -465,7 +481,10 @@ final class BoardModelScene {
     ) {
         // Build the replacement cord at its deterministic destination before
         // the transaction. It is never bound to descriptor geometry and the
-        // existing transient node is removed as one replacement operation.
+        // existing transient node is removed without implicit actions. Board
+        // and camera animation begins in its own transaction below.
+        SCNTransaction.begin()
+        SCNTransaction.disableActions = true
         transientCordNode?.removeFromParentNode()
         transientCordNode = cord
         scene.rootNode.addChildNode(cord)
@@ -477,6 +496,7 @@ final class BoardModelScene {
         } else {
             boardContainer.simdTransform = solved.boardTransform
         }
+        SCNTransaction.commit()
         SCNTransaction.begin()
         SCNTransaction.animationDuration = Self.canonicalTransitionDuration
         if boardMoves {

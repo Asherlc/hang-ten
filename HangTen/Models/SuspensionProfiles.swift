@@ -295,39 +295,130 @@ enum SuspendedCordSolver {
         try solve(start: start, end: end, restLength: restLength)
     }
 
-    static func hasSelfIntersection(_ samples: [SIMD3<Float>], tolerance: Float = 1e-6) -> Bool {
+    static func hasSelfIntersection(
+        _ samples: [SIMD3<Float>],
+        tolerance: Float = 1e-6
+    ) -> Bool {
         guard samples.count >= 4 else { return false }
         for first in 0..<(samples.count - 2) {
             for second in (first + 2)..<(samples.count - 1) {
-                if samples[first] == samples[second] || samples[first] == samples[second + 1]
-                    || samples[first + 1] == samples[second] || samples[first + 1] == samples[second + 1] { return true }
-                let approach = segmentClosestApproach(samples[first], samples[first + 1], samples[second], samples[second + 1])
-                if approach.s > 1e-4 && approach.s < 1 - 1e-4 && approach.t > 1e-4 && approach.t < 1 - 1e-4
-                    && approach.distanceSquared <= tolerance * tolerance { return true }
+                if samples[first] == samples[second]
+                    || samples[first] == samples[second + 1]
+                    || samples[first + 1] == samples[second]
+                    || samples[first + 1] == samples[second + 1] {
+                    return true
+                }
+                let approach = segmentClosestApproach(
+                    samples[first], samples[first + 1],
+                    samples[second], samples[second + 1]
+                )
+                if approach.distanceSquared <= tolerance * tolerance,
+                   !closestApproachTouchesOnlySegmentEndpoints(
+                    approach,
+                    firstStart: samples[first],
+                    firstEnd: samples[first + 1],
+                    secondStart: samples[second],
+                    secondEnd: samples[second + 1],
+                    tolerance: tolerance
+                   ) {
+                    return true
+                }
             }
         }
         return false
     }
 
-    static func validateNoSelfIntersection(_ samples: [SIMD3<Float>], tolerance: Float = 1e-6) throws {
-        guard samples.count >= 2, samples.allSatisfy(\.allFinite) else { throw SuspendedPresentationError.nonFiniteCurve }
-        guard !hasSelfIntersection(samples, tolerance: tolerance) else { throw SuspendedPresentationError.selfIntersection }
+    static func validateNoSelfIntersection(
+        _ samples: [SIMD3<Float>],
+        tolerance: Float = 1e-6
+    ) throws {
+        guard samples.count >= 2, samples.allSatisfy(\.allFinite) else {
+            throw SuspendedPresentationError.nonFiniteCurve
+        }
+        guard !hasSelfIntersection(samples, tolerance: tolerance) else {
+            throw SuspendedPresentationError.selfIntersection
+        }
     }
 
-    static func validateNoSelfIntersectionAllowingClosedEndpoint(_ samples: [SIMD3<Float>], tolerance: Float = 1e-6) throws {
-        guard samples.count >= 2, samples.allSatisfy(\.allFinite) else { throw SuspendedPresentationError.nonFiniteCurve }
-        guard samples.first == samples.last else { try validateNoSelfIntersection(samples, tolerance: tolerance); return }
+    /// Validates a closed branch path while allowing only its intentional
+    /// anchor closure. Adjacent segments are allowed to share their passage
+    /// endpoint; every other endpoint touch or segment crossing is rejected.
+    static func validateNoSelfIntersectionAllowingClosedEndpoint(
+        _ samples: [SIMD3<Float>],
+        tolerance: Float = 1e-6
+    ) throws {
+        guard samples.count >= 2, samples.allSatisfy(\.allFinite) else {
+            throw SuspendedPresentationError.nonFiniteCurve
+        }
+        guard samples.first == samples.last else {
+            try validateNoSelfIntersection(samples, tolerance: tolerance)
+            return
+        }
         guard samples.count >= 4 else { return }
         for first in 0..<(samples.count - 2) {
             for second in (first + 2)..<(samples.count - 1) {
-                if first == 0 && second == samples.count - 2 { continue }
-                if samples[first] == samples[second] || samples[first] == samples[second + 1]
-                    || samples[first + 1] == samples[second] || samples[first + 1] == samples[second + 1] {
+                let isAnchorClosure = first == 0 && second == samples.count - 2
+                let sharesOnlyAnchor = isAnchorClosure
+                    && samples[first] == samples[second + 1]
+                    && samples[first] != samples[second]
+                    && samples[first + 1] != samples[second]
+                    && samples[first + 1] != samples[second + 1]
+                if !sharesOnlyAnchor && (
+                    samples[first] == samples[second]
+                        || samples[first] == samples[second + 1]
+                        || samples[first + 1] == samples[second]
+                        || samples[first + 1] == samples[second + 1]
+                ) {
                     throw SuspendedPresentationError.selfIntersection
                 }
-                let approach = segmentClosestApproach(samples[first], samples[first + 1], samples[second], samples[second + 1])
-                if approach.s > 1e-4 && approach.s < 1 - 1e-4 && approach.t > 1e-4 && approach.t < 1 - 1e-4
-                    && approach.distanceSquared <= tolerance * tolerance { throw SuspendedPresentationError.selfIntersection }
+                let approach = segmentClosestApproach(
+                    samples[first], samples[first + 1],
+                    samples[second], samples[second + 1]
+                )
+                let isEndpointToEndpoint = closestApproachTouchesOnlySegmentEndpoints(
+                    approach,
+                    firstStart: samples[first],
+                    firstEnd: samples[first + 1],
+                    secondStart: samples[second],
+                    secondEnd: samples[second + 1],
+                    tolerance: tolerance
+                )
+                let firstClosestPoint = pointAtSegmentParameter(
+                    approach.s,
+                    start: samples[first],
+                    end: samples[first + 1]
+                )
+                let secondClosestPoint = pointAtSegmentParameter(
+                    approach.t,
+                    start: samples[second],
+                    end: samples[second + 1]
+                )
+                let touchesOnlyAnchor = isAnchorClosure
+                    && simd_dot(
+                        firstClosestPoint - samples[first],
+                        firstClosestPoint - samples[first]
+                    ) <= tolerance * tolerance
+                    && simd_dot(
+                        secondClosestPoint - samples[second + 1],
+                        secondClosestPoint - samples[second + 1]
+                    ) <= tolerance * tolerance
+                if approach.distanceSquared <= tolerance * tolerance,
+                   (!isEndpointToEndpoint || (isAnchorClosure && !touchesOnlyAnchor)) {
+                    throw SuspendedPresentationError.selfIntersection
+                }
+                if isAnchorClosure {
+                    let toleranceSquared = tolerance * tolerance
+                    let finalStartDistance = pointSegmentDistanceSquared(
+                        samples[second], samples[first], samples[first + 1]
+                    )
+                    let firstEndDistance = pointSegmentDistanceSquared(
+                        samples[first + 1], samples[second], samples[second + 1]
+                    )
+                    if (finalStartDistance <= toleranceSquared && samples[second] != samples[first])
+                        || (firstEndDistance <= toleranceSquared && samples[first + 1] != samples[first]) {
+                        throw SuspendedPresentationError.selfIntersection
+                    }
+                }
             }
         }
     }
@@ -389,6 +480,58 @@ enum SuspendedCordSolver {
         let t = abs(tN) < 1e-12 ? 0 : tN / tD
         let difference = w + u * s - v * t
         return (simd_dot(difference, difference), s, t)
+    }
+    private static func pointSegmentDistanceSquared(
+        _ point: SIMD3<Float>,
+        _ start: SIMD3<Float>,
+        _ end: SIMD3<Float>
+    ) -> Float {
+        let direction = end - start
+        let lengthSquared = simd_dot(direction, direction)
+        guard lengthSquared.isFinite, lengthSquared > 1e-12 else {
+            let difference = point - start
+            return simd_dot(difference, difference)
+        }
+        let parameter = min(max(simd_dot(point - start, direction) / lengthSquared, 0), 1)
+        let difference = point - (start + direction * parameter)
+        return simd_dot(difference, difference)
+    }
+
+    /// Parameter thresholds are not a safe proxy for an endpoint: a real
+    /// endpoint-to-interior touch can occur arbitrarily close to an endpoint.
+    /// Classify the closest points geometrically instead, so only two segment
+    /// endpoints may receive the very-short-taut non-intersection allowance.
+    private static func closestApproachTouchesOnlySegmentEndpoints(
+        _ approach: (distanceSquared: Float, s: Float, t: Float),
+        firstStart: SIMD3<Float>,
+        firstEnd: SIMD3<Float>,
+        secondStart: SIMD3<Float>,
+        secondEnd: SIMD3<Float>,
+        tolerance: Float
+    ) -> Bool {
+        let firstPoint = pointAtSegmentParameter(approach.s, start: firstStart, end: firstEnd)
+        let secondPoint = pointAtSegmentParameter(approach.t, start: secondStart, end: secondEnd)
+        return pointIsAtSegmentEndpoint(firstPoint, start: firstStart, end: firstEnd, tolerance: tolerance)
+            && pointIsAtSegmentEndpoint(secondPoint, start: secondStart, end: secondEnd, tolerance: tolerance)
+    }
+
+    private static func pointAtSegmentParameter(
+        _ parameter: Float,
+        start: SIMD3<Float>,
+        end: SIMD3<Float>
+    ) -> SIMD3<Float> {
+        start + (end - start) * min(max(parameter, 0), 1)
+    }
+
+    private static func pointIsAtSegmentEndpoint(
+        _ point: SIMD3<Float>,
+        start: SIMD3<Float>,
+        end: SIMD3<Float>,
+        tolerance: Float
+    ) -> Bool {
+        let toleranceSquared = tolerance * tolerance
+        return simd_dot(point - start, point - start) <= toleranceSquared
+            || simd_dot(point - end, point - end) <= toleranceSquared
     }
 }
 

@@ -103,14 +103,15 @@ def _write_shared_model_parser_parity_package(
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
     suspension = board["presentations"][0]["media"].get("suspension")
-    assert isinstance(suspension, dict)
     if fixture.get("reorderTwoBranchSuspensionMembers"):
+        assert isinstance(suspension, dict)
         board["presentations"][0]["media"]["suspension"] = {
             key: suspension[key]
             for key in ("anchor", "branches", "canonicalPoses", "passages", "type")
         }
         suspension = board["presentations"][0]["media"]["suspension"]
     if fixture.get("reorderTwoBranchPassageMembers"):
+        assert isinstance(suspension, dict)
         passages = suspension["passages"]
         assert isinstance(passages, dict)
         left = passages["left"]
@@ -120,6 +121,7 @@ def _write_shared_model_parser_parity_package(
             for key in ("nodeID", "id", "pointInModel", "provenance")
         }
     if fixture.get("reorderTwoBranchBranchMembers"):
+        assert isinstance(suspension, dict)
         branches = suspension["branches"]
         assert isinstance(branches, list) and isinstance(branches[0], dict)
         branches[0] = {
@@ -127,6 +129,7 @@ def _write_shared_model_parser_parity_package(
             for key in ("passageIDs", "id", "restLength", "radius", "material", "provenance")
         }
     if fixture.get("reorderTwoBranchPoseMembers"):
+        assert isinstance(suspension, dict)
         poses = suspension["canonicalPoses"]
         assert isinstance(poses, dict) and isinstance(poses["primary"], dict)
         poses["primary"] = {
@@ -508,7 +511,7 @@ def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
 
 def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
     package_root = _write_shared_model_parser_parity_package(
-        tmp_path / "valid-single-cord", {"base": "model", "mutations": []}
+        tmp_path / "valid-single-cord", {"base": "singleCordModel", "mutations": []}
     )
 
     package = load_board_catalog_module().load_board_package(package_root)

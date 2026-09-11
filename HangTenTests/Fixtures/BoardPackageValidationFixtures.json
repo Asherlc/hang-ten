@@ -705,6 +705,51 @@
       "mutations": []
     },
     {
+      "name": "two-branch-duplicate-passage-key",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "invalid JSON",
+      "swiftError": "malformedJSON",
+      "duplicateTwoBranchMemberKey": "passageID",
+      "mutations": []
+    },
+    {
+      "name": "two-branch-duplicate-branch-key",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "invalid JSON",
+      "swiftError": "malformedJSON",
+      "duplicateTwoBranchMemberKey": "branchID",
+      "mutations": []
+    },
+    {
+      "name": "two-branch-passage-member-order",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderTwoBranchPassageMembers": true,
+      "mutations": []
+    },
+    {
+      "name": "two-branch-branch-member-order",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderTwoBranchBranchMembers": true,
+      "mutations": []
+    },
+    {
+      "name": "two-branch-pose-member-order",
+      "base": "twoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderTwoBranchPoseMembers": true,
+      "mutations": []
+    },
+    {
       "name": "two-branch-passage-segment-too-short",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
