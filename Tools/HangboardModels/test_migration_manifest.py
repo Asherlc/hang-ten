@@ -89,12 +89,66 @@ class MigrationManifestTests(unittest.TestCase):
             self.load(document)
 
     def test_paths_must_be_relative_and_confined(self):
-        for path_value in ("/tmp/model.usdz", "../model.usdz", "assets\\primary.usdz", "assets/../model.usdz"):
+        for path_value in (
+            "/tmp/model.usdz", "../model.usdz", "assets\\primary.usdz", "assets/../model.usdz",
+            "assets/./primary.usdz", "assets//primary.usdz", "assets/primary\x00.usdz",
+            "assets/primary\n.usdz", "assets/primary\x7f.usdz",
+        ):
             with self.subTest(path=path_value):
                 document = valid_document()
                 document["presentation"] = dict(document["presentation"], assetPath=path_value)  # type: ignore[arg-type]
                 with self.assertRaisesRegex(ValueError, "path"):
                     self.load(document)
+
+    def test_every_path_bearing_field_uses_the_raw_relative_path_contract(self):
+        mutations = (
+            ("boardJSON", "assets/./board.json"),
+            ("evidencePacket", "docs//evidence.json"),
+            ("sourceBlend.path", "sources/../blend.blend"),
+            ("presentation.assetPath", "assets/\x00primary.usdz"),
+            ("presentation.descriptorPath", "assets/primary\n.model.json"),
+        )
+        for field, path_value in mutations:
+            with self.subTest(field=field):
+                document = valid_document()
+                if field in {"boardJSON", "evidencePacket"}:
+                    document[field] = path_value
+                elif field == "sourceBlend.path":
+                    document["sourceBlend"] = dict(document["sourceBlend"], path=path_value)  # type: ignore[arg-type]
+                else:
+                    document["presentation"] = dict(document["presentation"], **{field.split(".")[1]: path_value})  # type: ignore[arg-type]
+                with self.assertRaisesRegex(ValueError, "path"):
+                    self.load(document)
+
+    def test_nested_duplicate_keys_are_rejected(self):
+        text = json.dumps(valid_document()).replace(
+            '"path": "sources/compact-ii.blend"',
+            '"path": "sources/compact-ii.blend", "path": "sources/other.blend"',
+            1,
+        )
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "manifest.json"
+            path.write_text(text, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "duplicate"):
+                load_migration_manifest(path)
+
+    def test_nested_explicit_null_and_wrong_scalar_type_are_rejected(self):
+        for field, value in (("sourceBlend", None), ("presentation", "model"), ("verification", 1)):
+            with self.subTest(field=field):
+                document = valid_document()
+                document[field] = value
+                with self.assertRaises(ValueError):
+                    self.load(document)
+
+    def test_nonfinite_and_overflowed_numbers_are_rejected(self):
+        for token in ("NaN", "Infinity", "-Infinity", "1e400", "-1e400"):
+            with self.subTest(token=token):
+                text = json.dumps(valid_document()).replace("150000", token, 1)
+                with tempfile.TemporaryDirectory() as raw:
+                    path = Path(raw) / "manifest.json"
+                    path.write_text(text, encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "finite|valid JSON"):
+                        load_migration_manifest(path)
 
     def test_geometry_and_bounds_are_rejected_at_any_manifest_level(self):
         for key in ("geometry", "bounds", "modelBounds", "center"):

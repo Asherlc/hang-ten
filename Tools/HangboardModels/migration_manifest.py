@@ -7,7 +7,7 @@ import json
 import math
 import re
 from dataclasses import dataclass
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from typing import Any
 
 
@@ -109,8 +109,12 @@ def _string(value: Any, label: str) -> str:
 
 def _path(value: Any, label: str) -> str:
     result = _string(value, label)
-    parsed = PurePosixPath(result)
-    if result.startswith("/") or "\\" in result or parsed.is_absolute() or any(part in ("", ".", "..") for part in parsed.parts):
+    if (
+        result.startswith("/")
+        or "\\" in result
+        or any(ord(character) < 0x20 or ord(character) == 0x7F for character in result)
+        or any(part in ("", ".", "..") for part in result.split("/"))
+    ):
         raise ValueError(f"{label} is an invalid path")
     return result
 
