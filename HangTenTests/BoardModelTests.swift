@@ -958,7 +958,7 @@ final class BoardModelTests: XCTestCase {
                     point[1] >= minimum[1] && point[1] <= maximum[1]
                 }
             let hits = surfaceSamplePoints.lazy.compactMap { normalizedPoint -> String? in
-                guard let ray = try? headOnRay(
+                guard let ray = try? self.headOnRay(
                     normalizedPoint: normalizedPoint,
                     bounds: media.descriptor.modelBounds,
                     context: "\(boardID): \(holdID)"
