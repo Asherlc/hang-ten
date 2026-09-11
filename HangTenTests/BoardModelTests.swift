@@ -923,9 +923,9 @@ final class BoardModelTests: XCTestCase {
             // triangles, so use the imported, descriptor-bound mesh vertices
             // as evidence-backed probe positions.
             let surfaceSamplePoints = model.holdNodes[holdID, default: []]
-                .flatMap { node in
+                .flatMap { node -> [[Double]] in
                     node.geometry.map { geometry in
-                        geometry.sources(for: .vertex).flatMap { source in
+                        geometry.sources(for: .vertex).flatMap { source -> [[Double]] in
                             guard source.componentsPerVector >= 3, source.usesFloatComponents else {
                                 return []
                             }
@@ -939,10 +939,14 @@ final class BoardModelTests: XCTestCase {
                                     )
                                 }
                                 let point = node.convertPosition(vertex, to: model.scene.rootNode)
-                                let x = (Double(point.x) - media.descriptor.modelBounds.minimum[0]) /
-                                    (media.descriptor.modelBounds.maximum[0] - media.descriptor.modelBounds.minimum[0])
-                                let y = (Double(point.y) - media.descriptor.modelBounds.minimum[1]) /
-                                    (media.descriptor.modelBounds.maximum[1] - media.descriptor.modelBounds.minimum[1])
+                                let pointX: Double = Double(point.x)
+                                let pointY: Double = Double(point.y)
+                                let minimumX: Double = media.descriptor.modelBounds.minimum[0]
+                                let minimumY: Double = media.descriptor.modelBounds.minimum[1]
+                                let width: Double = media.descriptor.modelBounds.maximum[0] - minimumX
+                                let height: Double = media.descriptor.modelBounds.maximum[1] - minimumY
+                                let x: Double = (pointX - minimumX) / width
+                                let y: Double = (pointY - minimumY) / height
                                 return [x, y]
                             }
                         }
