@@ -33,6 +33,13 @@ _SHARED_VALIDATION_FIXTURES = (
     / "Fixtures"
     / "BoardPackageValidationFixtures.json"
 )
+_RAW_NONFINITE_SENTINEL = "__raw_nonfinite_number_1e999__"
+
+
+def _dump_shared_json_document(document: object) -> str:
+    return json.dumps(document, separators=(",", ":"), sort_keys=False).replace(
+        json.dumps(_RAW_NONFINITE_SENTINEL), "1e999"
+    )
 
 
 def _shared_model_parser_parity_fixtures() -> tuple[dict[str, object], ...]:
@@ -70,7 +77,7 @@ def _write_shared_model_parser_parity_package(
     root: Path, fixture: dict[str, object]
 ) -> Path:
     fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
-    model = fixtures["model"]
+    model = fixtures[fixture.get("base", "model")]
     assert isinstance(model, dict)
     board = copy.deepcopy(model["board"])
     descriptor = copy.deepcopy(model["descriptor"])
@@ -94,8 +101,45 @@ def _write_shared_model_parser_parity_package(
         asset_path = root / relative_path
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
-    _rewrite(root / "board.json", board)
-    _rewrite(assets / "primary.model.json", descriptor)
+    board_path = root / "board.json"
+    board_json = _dump_shared_json_document(board)
+    if fixture.get("reorderTwoBranchSuspensionMembers"):
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = {
+            key: suspension[key]
+            for key in ("anchor", "branches", "canonicalPoses", "passages", "type")
+        }
+        board_json = board_json.replace(
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            1,
+        )
+    board_path.write_text(board_json, encoding="utf-8")
+    (assets / "primary.model.json").write_text(
+        _dump_shared_json_document(descriptor), encoding="utf-8"
+    )
+    if fixture.get("duplicateCanonicalPoseKey"):
+        board_path = root / "board.json"
+        raw = board_json
+        pose = json.dumps(
+            board["presentations"][0]["media"]["suspension"]["canonicalPoses"]["primary"],
+            separators=(",", ":"),
+            sort_keys=False,
+        )
+        needle = '"canonicalPoses":{"primary":' + pose + "}"
+        replacement = '"canonicalPoses":{"primary":' + pose + ',"primary":' + pose + "}"
+        if needle in raw:
+            raw = raw.replace(needle, replacement, 1)
+        else:
+            prefix = '"canonicalPoses":{"primary":' + pose + ',"'
+            assert prefix in raw
+            raw = raw.replace(
+                prefix,
+                '"canonicalPoses":{"primary":' + pose + ',"primary":' + pose + ',"',
+                1,
+            )
+        board_path.write_text(raw, encoding="utf-8")
     return root
 
 
@@ -383,6 +427,7 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
     assert not hasattr(package.board.holds[0], "presentation_id")
     assert presentation.media.asset_path == "assets/primary.usdz"
     assert presentation.media.descriptor_path == "assets/primary.model.json"
+    assert presentation.media.suspension is None
     assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.3, 0.4
     )
@@ -397,6 +442,70 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
     _rewrite(descriptor_path, descriptor)
     with pytest.raises(ValueError, match="SHA-256"):
         module.load_board_package(package_root)
+
+
+def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path) -> None:
+    fixture = {"base": "twoBranchModel", "mutations": []}
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "valid-two-branch", fixture
+    )
+
+    package = load_board_catalog_module().load_board_package(package_root)
+    suspension = package.board.presentations[0].media.suspension
+    assert suspension is not None
+    assert suspension.__class__.__name__ == "BoardModelTwoBranchSuspension"
+    assert len(suspension.passages.left) == 2
+    assert len(suspension.passages.right) == 2
+    assert len(suspension.branches) == 2
+    assert set(suspension.canonical_poses) == {
+        "primary", "secondary", "tertiary", "quaternary"
+    }
+    assert [branch.rest_length for branch in suspension.branches] == [0.92, 0.92]
+
+
+def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "valid-single-cord", {"base": "singleCordModel", "mutations": []}
+    )
+
+    package = load_board_catalog_module().load_board_package(package_root)
+    suspension = package.board.presentations[0].media.suspension
+    assert suspension is not None
+    assert suspension.__class__.__name__ == "BoardModelSingleCordSuspension"
+
+
+def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
+    for fixture in _shared_model_parser_parity_fixtures():
+        expected = fixture.get("pythonError")
+        assert isinstance(expected, str) and expected and expected != ".*", fixture["name"]
+
+
+def test_two_branch_order_and_segment_regressions_are_specific(tmp_path: Path) -> None:
+    fixtures = {
+        fixture["name"]: fixture
+        for fixture in _shared_model_parser_parity_fixtures()
+    }
+    module = load_board_catalog_module()
+    for name in ("two-branch-suspension-member-order", "two-branch-passage-segment-too-short"):
+        fixture = fixtures[name]
+        package_root = _write_shared_model_parser_parity_package(
+            tmp_path / name, fixture
+        )
+        with pytest.raises(ValueError, match=fixture["pythonError"]):
+            module.load_board_package(package_root)
+
+
+def test_two_branch_declared_member_order_loads_without_sorting(tmp_path: Path) -> None:
+    fixture: dict[str, object] = {
+        "base": "twoBranchModel",
+        "mutations": [],
+    }
+    package_root = _write_shared_model_parser_parity_package(tmp_path, fixture)
+    board_json = (package_root / "board.json").read_text(encoding="utf-8")
+    assert '"suspension":{"type":"twoBranchCord","passages":' in board_json
+
+    package = load_board_catalog_module().load_board_package(package_root)
+    assert package.board.presentations[0].media.suspension.__class__.__name__ == "BoardModelTwoBranchSuspension"
 
 
 @pytest.mark.parametrize(
@@ -416,7 +525,7 @@ def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
         tmp_path / str(fixture["name"]), fixture
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=str(fixture["pythonError"])):
         module.load_board_package(package_root)
 
 

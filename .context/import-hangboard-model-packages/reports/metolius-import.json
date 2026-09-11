@@ -1,0 +1,7 @@
+{
+  "error": "imported mesh board_body_001 has no image material",
+  "errorType": "ValueError",
+  "expectedError": "no image material",
+  "packageID": "metolius",
+  "status": "rejected"
+}

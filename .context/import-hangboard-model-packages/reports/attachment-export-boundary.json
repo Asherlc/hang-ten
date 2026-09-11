@@ -1,0 +1,10 @@
+{
+  "blenderVersion": "5.2.0 LTS fbe6228777e7",
+  "candidate": "baguette-evo",
+  "cleanupVerified": true,
+  "markerCount": 4,
+  "markerProof": "A clean reimport of the rebuilt actual USDZ recovered hang_ten_attachments_v1 from the exported body. Its four ordered facts, source node IDs, explicit positions, and metadata exactly match the source mapping; see baguette-evo-verification.json.",
+  "regression": "test_compile_model_package_blender.py compiles a source body carrying an exact marker payload, cleanly reimports primary.usdz, and requires the byte-identical payload on the imported body or mesh.",
+  "rootCause": "The compiler's private export-copy boundary copied role, hold_id, and source node ID but omitted hang_ten_attachments_v1 from the source body object and mesh.",
+  "status": "verified"
+}

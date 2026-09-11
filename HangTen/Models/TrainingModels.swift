@@ -87,11 +87,141 @@ struct BoardModelNodeDescriptor: Hashable {
     enum Role: String, Hashable {
         case body
         case hold
+        case attachment
     }
 
     let nodeID: String
     let role: Role
     let holdID: String?
+}
+
+struct BoardModelAttachment: Hashable {
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+}
+
+struct BoardModelInvisibleAnchor: Hashable {
+    let offsetFromBoardBounds: [Double]
+    let visibility: String
+    let provenance: String
+    let position: [Double]
+}
+
+struct BoardModelCord: Hashable {
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+}
+
+struct BoardModelCanonicalCamera: Hashable {
+    let viewDirection: [Double]
+    let fitPadding: Double
+}
+
+struct BoardModelCanonicalPose: Hashable {
+    let rotation: [Double]
+    let translation: [Double]
+    let camera: BoardModelCanonicalCamera
+}
+
+struct BoardModelSingleCordSuspension: Hashable {
+    let attachment: BoardModelAttachment
+    let anchor: BoardModelInvisibleAnchor
+    let cord: BoardModelCord
+    let canonicalPoses: [String: BoardModelCanonicalPose]
+}
+
+struct BoardModelPassage: Hashable {
+    let id: String
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+}
+
+struct BoardModelPassagePairs: Hashable {
+    let left: [BoardModelPassage]
+    let right: [BoardModelPassage]
+}
+
+struct BoardModelCordBranch: Hashable {
+    let id: String
+    let passageIDs: [String]
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+}
+
+struct BoardModelTwoBranchSuspension: Hashable {
+    let passages: BoardModelPassagePairs
+    let branches: [BoardModelCordBranch]
+    let anchor: BoardModelInvisibleAnchor
+    let canonicalPoses: [String: BoardModelCanonicalPose]
+}
+
+enum BoardModelSuspension: Hashable {
+    case singleCord(BoardModelSingleCordSuspension)
+    case twoBranchCord(BoardModelTwoBranchSuspension)
+
+    // Compatibility projections for the existing single-cord renderer. New
+    // two-branch consumers must switch on the discriminator explicitly.
+    init(
+        attachment: BoardModelAttachment,
+        anchor: BoardModelInvisibleAnchor,
+        cord: BoardModelCord,
+        canonicalPoses: [String: BoardModelCanonicalPose]
+    ) {
+        self = .singleCord(BoardModelSingleCordSuspension(
+            attachment: attachment,
+            anchor: anchor,
+            cord: cord,
+            canonicalPoses: canonicalPoses
+        ))
+    }
+
+    var attachment: BoardModelAttachment {
+        switch self {
+        case .singleCord(let suspension): suspension.attachment
+        case .twoBranchCord(let suspension):
+            suspension.passages.left[0].asAttachment
+        }
+    }
+
+    var anchor: BoardModelInvisibleAnchor {
+        switch self {
+        case .singleCord(let suspension): suspension.anchor
+        case .twoBranchCord(let suspension): suspension.anchor
+        }
+    }
+
+    var cord: BoardModelCord {
+        switch self {
+        case .singleCord(let suspension): return suspension.cord
+        case .twoBranchCord(let suspension):
+            let branch = suspension.branches[0]
+            return BoardModelCord(
+                restLength: branch.restLength,
+                radius: branch.radius,
+                material: branch.material,
+                provenance: branch.provenance
+            )
+        }
+    }
+
+    var canonicalPoses: [String: BoardModelCanonicalPose] {
+        switch self {
+        case .singleCord(let suspension): suspension.canonicalPoses
+        case .twoBranchCord(let suspension): suspension.canonicalPoses
+        }
+    }
+}
+
+private extension BoardModelPassage {
+    var asAttachment: BoardModelAttachment {
+        BoardModelAttachment(nodeID: nodeID, pointInModel: pointInModel, provenance: provenance)
+    }
 }
 
 struct BoardModelHoldDescriptor: Hashable {
@@ -125,6 +255,21 @@ struct BoardModelMedia: Hashable {
     let descriptorPath: String
     let descriptor: BoardModelDescriptor
     let display: BoardModelDisplay
+    let suspension: BoardModelSuspension?
+
+    init(
+        assetPath: String,
+        descriptorPath: String,
+        descriptor: BoardModelDescriptor,
+        display: BoardModelDisplay,
+        suspension: BoardModelSuspension? = nil
+    ) {
+        self.assetPath = assetPath
+        self.descriptorPath = descriptorPath
+        self.descriptor = descriptor
+        self.display = display
+        self.suspension = suspension
+    }
 }
 
 enum BoardPresentationMedia: Hashable {

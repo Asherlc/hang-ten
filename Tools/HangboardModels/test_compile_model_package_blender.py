@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import io
 import json
 import runpy
@@ -149,6 +150,14 @@ try:
 
     compiled_body = mesh("Body")
     compiled_body["role"] = "body"
+    attachment_payload = (
+        '[{"metadata":{"asset_role":"cord_passage","bore_index":1,'
+        '"diameter_estimate_m":0.0072},"order":1,'
+        '"position":[-0.2460000067949295,0.0,0.0],'
+        '"sourceNodeID":"cord-passage-1"}]'
+    )
+    compiled_body["hang_ten_attachments_v1"] = attachment_payload
+    compiled_body.data["hang_ten_attachments_v1"] = attachment_payload
     compiled_body.data.materials.append(material)
     compiled_hold = mesh("Hold")
     compiled_hold["role"] = "hold"
@@ -165,7 +174,7 @@ try:
     bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
     board_json = temporary_root / "board.json"
     board_json.write_text('{"holds":[{"id":"left"}]}', encoding="utf-8")
-    output = temporary_root / "compiled"
+    output = temporary_root / "compiled-1"
 
     descriptor = compile_model_package(blend_path, board_json, output)
     assert set(descriptor.holds) == {"left"}
@@ -175,6 +184,37 @@ try:
         for path in output.rglob("*")
         if path.is_file()
     } == {"assets/primary.model.json", "assets/primary.usdz"}
+
+    imported = compiler._import_usdz_into_empty_scene(
+        output / "assets" / "primary.usdz"
+    )
+    imported_body = next(
+        item
+        for item in imported.objects
+        if compiler._object_property(item, "role", imported=True) == "body"
+    )
+    exported_payload = compiler._object_property(
+        imported_body, "hang_ten_attachments_v1", imported=True
+    )
+    if exported_payload is None:
+        exported_payload = compiler._object_property(
+            imported_body.data, "hang_ten_attachments_v1", imported=True
+        )
+    assert exported_payload == attachment_payload
+
+    output_2 = temporary_root / "compiled-2"
+    descriptor_2 = compile_model_package(blend_path, board_json, output_2)
+    model_1 = (output / "assets" / "primary.usdz").read_bytes()
+    model_2 = (output_2 / "assets" / "primary.usdz").read_bytes()
+    assert model_1 == model_2, (
+        hashlib.sha256(model_1).hexdigest(), hashlib.sha256(model_2).hexdigest()
+    )
+    assert (
+        output / "assets" / "primary.model.json"
+    ).read_bytes() == (
+        output_2 / "assets" / "primary.model.json"
+    ).read_bytes()
+    assert descriptor.to_json() == descriptor_2.to_json()
 finally:
     shutil.rmtree(temporary_root)
     assert not temporary_root.exists()

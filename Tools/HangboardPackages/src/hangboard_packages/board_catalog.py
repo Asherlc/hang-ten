@@ -92,6 +92,13 @@ def _closed(
         raise ValueError(f"{source} is missing keys: {sorted(missing)}")
 
 
+def _canonical_member_order(
+    payload: Mapping[str, Any], expected: tuple[str, ...], source: str
+) -> None:
+    if tuple(payload) != expected:
+        raise ValueError(f"{source} must use canonical member order")
+
+
 def _mapping(value: Any, source: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError(f"{source} must be an object")
@@ -175,9 +182,24 @@ def _load_json(path: Path, label: str) -> Mapping[str, Any]:
     if path.is_symlink() or not path.is_file():
         raise ValueError(f"{label} does not exist as a regular file: {path}")
     try:
-        return _mapping(json.loads(path.read_text(encoding="utf-8")), label)
-    except json.JSONDecodeError as error:
+        return _mapping(
+            json.loads(
+                path.read_text(encoding="utf-8"),
+                object_pairs_hook=_reject_duplicate_json_keys,
+            ),
+            label,
+        )
+    except (json.JSONDecodeError, ValueError) as error:
         raise ValueError(f"{label} is invalid JSON: {path}") from error
+
+
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key: {key}")
+        result[key] = value
+    return result
 
 
 def _require_no_symlinks(root: Path) -> None:
@@ -384,9 +406,82 @@ class PresentationMediaModel:
     asset_path: str
     descriptor_path: str
     display: Mapping[str, Any]
+    suspension: "BoardModelSuspension | None" = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
+
+
+@dataclass(frozen=True)
+class BoardModelAttachment:
+    node_id: str
+    point_in_model: tuple[float, float, float]
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelInvisibleAnchor:
+    offset_from_board_bounds: tuple[float, float, float]
+    visibility: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelCord:
+    rest_length: float
+    radius: float
+    material: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelCanonicalPose:
+    rotation: tuple[float, float, float, float]
+    translation: tuple[float, float, float]
+    camera: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
+class BoardModelSingleCordSuspension:
+    attachment: BoardModelAttachment
+    anchor: BoardModelInvisibleAnchor
+    cord: BoardModelCord
+    canonical_poses: Mapping[str, BoardModelCanonicalPose]
+
+
+@dataclass(frozen=True)
+class BoardModelPassage:
+    id: str
+    node_id: str
+    point_in_model: tuple[float, float, float]
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelPassagePairs:
+    left: tuple[BoardModelPassage, BoardModelPassage]
+    right: tuple[BoardModelPassage, BoardModelPassage]
+
+
+@dataclass(frozen=True)
+class BoardModelCordBranch:
+    id: str
+    passage_ids: tuple[str, str]
+    rest_length: float
+    radius: float
+    material: str
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelTwoBranchSuspension:
+    passages: BoardModelPassagePairs
+    branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
+    anchor: BoardModelInvisibleAnchor
+    canonical_poses: Mapping[str, BoardModelCanonicalPose]
+
+
+BoardModelSuspension = BoardModelSingleCordSuspension | BoardModelTwoBranchSuspension
 
 
 @dataclass(frozen=True)
@@ -424,6 +519,199 @@ def _vector3(value: Any, source: str) -> tuple[float, float, float]:
     if result == (0.0, 0.0, 0.0):
         raise ValueError(f"{source} must be non-zero")
     return result  # type: ignore[return-value]
+
+
+def _unit_vector(value: Any, source: str) -> tuple[float, ...]:
+    if not isinstance(value, list):
+        raise ValueError(f"{source} must be an array")
+    return tuple(_number(item, f"{source}[{index}]") for index, item in enumerate(value))
+
+
+def _finite_vector3(value: Any, source: str) -> tuple[float, float, float]:
+    if not isinstance(value, list) or len(value) != 3:
+        raise ValueError(f"{source} must contain exactly three coordinates")
+    result = tuple(_number(item, f"{source}[{index}]") for index, item in enumerate(value))
+    return result  # type: ignore[return-value]
+
+
+def _load_model_anchor(value: Any, source: str) -> BoardModelInvisibleAnchor:
+    anchor_payload = _mapping(value, source)
+    _closed(anchor_payload, {"offsetFromBoardBounds", "visibility", "provenance"}, source)
+    visibility = _string(anchor_payload["visibility"], f"{source}.visibility")
+    if visibility != "invisible":
+        raise ValueError(f"{source}.visibility must be invisible")
+    return BoardModelInvisibleAnchor(
+        _finite_vector3(anchor_payload["offsetFromBoardBounds"], f"{source}.offsetFromBoardBounds"),
+        visibility,
+        _string(anchor_payload["provenance"], f"{source}.provenance"),
+    )
+
+
+def _load_model_poses(
+    value: Any, source: str, *, canonical_order: bool = False
+) -> Mapping[str, BoardModelCanonicalPose]:
+    poses_payload = _mapping(value, source)
+    if not poses_payload:
+        raise ValueError(f"{source} must not be empty")
+    poses: dict[str, BoardModelCanonicalPose] = {}
+    for position_id, raw_pose in poses_payload.items():
+        position_source = f"{source}[{position_id}]"
+        position_id = _identifier(position_id, f"{position_source} positionID")
+        pose_payload = _mapping(raw_pose, position_source)
+        _closed(pose_payload, {"rotation", "translation", "camera"}, position_source)
+        if canonical_order:
+            _canonical_member_order(
+                pose_payload, ("rotation", "translation", "camera"), position_source
+            )
+        rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
+        if len(rotation) != 4:
+            raise ValueError(f"{position_source}.rotation must contain exactly four coordinates")
+        norm = math.sqrt(sum(value * value for value in rotation))
+        if not math.isfinite(norm) or abs(norm - 1.0) > 1e-6:
+            raise ValueError(f"{position_source}.rotation must be normalized")
+        translation = _finite_vector3(pose_payload["translation"], f"{position_source}.translation")
+        camera_source = f"{position_source}.camera"
+        camera_payload = _mapping(pose_payload["camera"], camera_source)
+        _closed(camera_payload, {"viewDirection", "fitPadding"}, camera_source)
+        if canonical_order:
+            _canonical_member_order(
+                camera_payload, ("viewDirection", "fitPadding"), camera_source
+            )
+        view_direction = _vector3(camera_payload["viewDirection"], f"{camera_source}.viewDirection")
+        fit_padding = _positive_number(camera_payload["fitPadding"], f"{camera_source}.fitPadding")
+        poses[position_id] = BoardModelCanonicalPose(
+            tuple(rotation),
+            translation,
+            MappingProxyType({"viewDirection": view_direction, "fitPadding": fit_padding}),
+        )
+    return MappingProxyType(poses)
+
+
+def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
+    payload = _mapping(value, source)
+    suspension_type = _string(payload.get("type"), f"{source}.type")
+    if suspension_type == "twoBranchCord":
+        _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source)
+        _canonical_member_order(
+            payload, ("type", "passages", "branches", "anchor", "canonicalPoses"), source
+        )
+        passages_source = f"{source}.passages"
+        passages_payload = _mapping(payload["passages"], passages_source)
+        _closed(passages_payload, {"left", "right"}, passages_source)
+        _canonical_member_order(passages_payload, ("left", "right"), passages_source)
+        parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
+        all_passage_ids: set[str] = set()
+        all_passage_node_ids: set[str] = set()
+        for side in ("left", "right"):
+            side_source = f"{passages_source}.{side}"
+            raw_passages = passages_payload[side]
+            if not isinstance(raw_passages, list) or len(raw_passages) != 2:
+                raise ValueError(f"{side_source} must contain exactly two passages")
+            passages: list[BoardModelPassage] = []
+            for index, raw_passage in enumerate(raw_passages):
+                passage_source = f"{side_source}[{index}]"
+                passage_payload = _mapping(raw_passage, passage_source)
+                _closed(passage_payload, {"id", "nodeID", "pointInModel", "provenance"}, passage_source)
+                _canonical_member_order(
+                    passage_payload, ("id", "nodeID", "pointInModel", "provenance"), passage_source
+                )
+                passage_id = _identifier(passage_payload["id"], f"{passage_source}.id")
+                if passage_id in all_passage_ids:
+                    raise ValueError(f"duplicate suspension passage ID: {passage_id}")
+                all_passage_ids.add(passage_id)
+                node_id = _string(passage_payload["nodeID"], f"{passage_source}.nodeID")
+                if node_id in all_passage_node_ids:
+                    raise ValueError(f"duplicate suspension passage node ID: {node_id}")
+                all_passage_node_ids.add(node_id)
+                passages.append(BoardModelPassage(
+                    passage_id,
+                    node_id,
+                    _finite_vector3(passage_payload["pointInModel"], f"{passage_source}.pointInModel"),
+                    _string(passage_payload["provenance"], f"{passage_source}.provenance"),
+                ))
+            parsed_pairs[side] = (passages[0], passages[1])
+        passage_pairs = BoardModelPassagePairs(parsed_pairs["left"], parsed_pairs["right"])
+
+        branches_source = f"{source}.branches"
+        raw_branches = payload["branches"]
+        if not isinstance(raw_branches, list) or len(raw_branches) != 2:
+            raise ValueError(f"{branches_source} must contain exactly two branches")
+        branches: list[BoardModelCordBranch] = []
+        expected_pairs = (
+            tuple(passage.id for passage in passage_pairs.left),
+            tuple(passage.id for passage in passage_pairs.right),
+        )
+        branch_ids: set[str] = set()
+        for index, raw_branch in enumerate(raw_branches):
+            branch_source = f"{branches_source}[{index}]"
+            branch_payload = _mapping(raw_branch, branch_source)
+            _closed(branch_payload, {"id", "passageIDs", "restLength", "radius", "material", "provenance"}, branch_source)
+            _canonical_member_order(
+                branch_payload,
+                ("id", "passageIDs", "restLength", "radius", "material", "provenance"),
+                branch_source,
+            )
+            branch_id = _identifier(branch_payload["id"], f"{branch_source}.id")
+            if branch_id in branch_ids:
+                raise ValueError(f"duplicate suspension branch ID: {branch_id}")
+            branch_ids.add(branch_id)
+            passage_ids_value = branch_payload["passageIDs"]
+            if not isinstance(passage_ids_value, list) or len(passage_ids_value) != 2:
+                raise ValueError(f"{branch_source}.passageIDs must contain exactly two IDs")
+            passage_ids = tuple(_identifier(item, f"{branch_source}.passageIDs[{item_index}]") for item_index, item in enumerate(passage_ids_value))
+            if passage_ids != expected_pairs[index]:
+                raise ValueError(f"{branch_source}.passageIDs must match its ordered passage pair")
+            branches.append(BoardModelCordBranch(
+                branch_id,
+                passage_ids,  # type: ignore[arg-type]
+                _positive_number(branch_payload["restLength"], f"{branch_source}.restLength"),
+                _positive_number(branch_payload["radius"], f"{branch_source}.radius"),
+                _string(branch_payload["material"], f"{branch_source}.material"),
+                _string(branch_payload["provenance"], f"{branch_source}.provenance"),
+            ))
+        anchor_source = f"{source}.anchor"
+        anchor_payload = _mapping(payload["anchor"], anchor_source)
+        _closed(anchor_payload, {"offsetFromBoardBounds", "visibility", "provenance"}, anchor_source)
+        _canonical_member_order(
+            anchor_payload, ("offsetFromBoardBounds", "visibility", "provenance"), anchor_source
+        )
+        return BoardModelTwoBranchSuspension(
+            passage_pairs,
+            (branches[0], branches[1]),
+            _load_model_anchor(anchor_payload, anchor_source),
+            _load_model_poses(
+                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
+            ),
+        )
+
+    if suspension_type != "singleCord":
+        raise ValueError(f"{source}.type must be singleCord or twoBranchCord")
+    _closed(payload, {"type", "attachment", "anchor", "cord", "canonicalPoses"}, source)
+
+    attachment_source = f"{source}.attachment"
+    attachment_payload = _mapping(payload["attachment"], attachment_source)
+    _closed(attachment_payload, {"nodeID", "pointInModel", "provenance"}, attachment_source)
+    attachment = BoardModelAttachment(
+        _string(attachment_payload["nodeID"], f"{attachment_source}.nodeID"),
+        _finite_vector3(attachment_payload["pointInModel"], f"{attachment_source}.pointInModel"),
+        _string(attachment_payload["provenance"], f"{attachment_source}.provenance"),
+    )
+
+    anchor = _load_model_anchor(payload["anchor"], f"{source}.anchor")
+
+    cord_source = f"{source}.cord"
+    cord_payload = _mapping(payload["cord"], cord_source)
+    _closed(cord_payload, {"restLength", "radius", "material", "provenance"}, cord_source)
+    cord = BoardModelCord(
+        _positive_number(cord_payload["restLength"], f"{cord_source}.restLength"),
+        _positive_number(cord_payload["radius"], f"{cord_source}.radius"),
+        _string(cord_payload["material"], f"{cord_source}.material"),
+        _string(cord_payload["provenance"], f"{cord_source}.provenance"),
+    )
+
+    return BoardModelSingleCordSuspension(
+        attachment, anchor, cord, _load_model_poses(payload["canonicalPoses"], f"{source}.canonicalPoses")
+    )
 
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
@@ -468,7 +756,7 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
             MappingProxyType(hold_geometry),
         )
     if media_type == "model":
-        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source)
+        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension"})
         return PresentationMediaModel(
             _typed_asset_path(
                 payload["assetPath"], f"{source}.assetPath", ".usdz", "a USDZ"
@@ -480,6 +768,9 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
                 "a .model.json descriptor",
             ),
             _load_model_display(payload["display"], f"{source}.display"),
+            _load_model_suspension(payload["suspension"], f"{source}.suspension")
+            if "suspension" in payload
+            else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -852,6 +1143,8 @@ def _validate_v2_presentation_compatibility(
         isinstance(presentation.media, PresentationMediaModel)
         for presentation in presentations
     )
+    if sum(isinstance(presentation.media, PresentationMediaModel) for presentation in presentations) > 1:
+        raise ValueError("v2 packages may contain only one model presentation")
     has_raster = any(
         isinstance(presentation.media, PresentationMediaRaster)
         for presentation in presentations
@@ -1117,10 +1410,121 @@ def _descriptor_vector(
     return coordinates
 
 
+def _validate_model_suspension(
+    suspension: BoardModelSuspension,
+    *,
+    model_bounds: tuple[tuple[float, ...], tuple[float, ...]],
+    nodes: Mapping[str, str],
+    position_ids: set[str],
+) -> None:
+    minimum, maximum = model_bounds
+    if set(suspension.canonical_poses) != position_ids:
+        raise ValueError("suspension canonical poses must exactly match position IDs")
+
+    # The anchor is evaluated once from the unposed model: the center of the
+    # top (+Y) bounds face plus the authored display offset. It never follows
+    # a canonical pose.
+    offset = suspension.anchor.offset_from_board_bounds
+    anchor = (
+        (minimum[0] + maximum[0]) / 2 + offset[0],
+        maximum[1] + offset[1],
+        (minimum[2] + maximum[2]) / 2 + offset[2],
+    )
+    if not all(math.isfinite(value) for value in anchor):
+        raise ValueError("suspension anchor must be finite")
+    if isinstance(suspension, BoardModelSingleCordSuspension):
+        passages = (suspension.attachment,)
+    else:
+        passages = tuple(
+            passage
+            for side in (suspension.passages.left, suspension.passages.right)
+            for passage in side
+        )
+        if len(passages) != 4 or len({passage.id for passage in passages}) != 4:
+            raise ValueError("twoBranchCord suspension requires four distinct passages")
+        for passage in passages:
+            role = nodes.get(passage.node_id)
+            if role not in {"body", "attachment"}:
+                raise ValueError("suspension passage node must be a body or attachment node")
+            if any(
+                coordinate < minimum[index] or coordinate > maximum[index]
+                for index, coordinate in enumerate(passage.point_in_model)
+            ):
+                raise ValueError("suspension passage point must be inside model bounds")
+    if isinstance(suspension, BoardModelSingleCordSuspension):
+        role = nodes.get(suspension.attachment.node_id)
+        if role not in {"body", "attachment"}:
+            raise ValueError("suspension attachment node must be a body or attachment node")
+        if any(
+            coordinate < minimum[index] or coordinate > maximum[index]
+            for index, coordinate in enumerate(suspension.attachment.point_in_model)
+        ):
+            raise ValueError("suspension attachment point must be inside model bounds")
+    for position_id, pose in suspension.canonical_poses.items():
+        qx, qy, qz, qw = pose.rotation
+        endpoints_by_branch = (
+            (((suspension.attachment,), (suspension.cord.rest_length,)),)
+            if isinstance(suspension, BoardModelSingleCordSuspension)
+            else (
+                (suspension.passages.left, (suspension.branches[0].rest_length,)),
+                (suspension.passages.right, (suspension.branches[1].rest_length,)),
+            )
+        )
+        for branch_endpoints, branch_lengths in endpoints_by_branch:
+            transformed_endpoints: list[tuple[float, float, float]] = []
+            for endpoint in branch_endpoints:
+                px, py, pz = endpoint.point_in_model
+                # Quaternion rotation followed by canonical translation.
+                tx = 2 * (qy * pz - qz * py)
+                ty = 2 * (qz * px - qx * pz)
+                tz = 2 * (qx * py - qy * px)
+                transformed = (
+                    px + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
+                    py + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
+                    pz + qw * tz + (qx * ty - qy * tx) + pose.translation[2],
+                )
+                transformed_endpoints.append(transformed)
+                distance = math.sqrt(sum((transformed[index] - anchor[index]) ** 2 for index in range(3)))
+                if not math.isfinite(distance):
+                    raise ValueError(f"suspension pose {position_id} endpoint distance must be finite")
+            if len(transformed_endpoints) == 1:
+                rest_length = branch_lengths[0]
+                distance = math.sqrt(
+                    sum((transformed_endpoints[0][index] - anchor[index]) ** 2 for index in range(3))
+                )
+                if rest_length < distance - 1e-5:
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than endpoint distance")
+            if len(transformed_endpoints) == 2:
+                passage_distance = math.sqrt(
+                    sum(
+                        (transformed_endpoints[0][index] - transformed_endpoints[1][index]) ** 2
+                        for index in range(3)
+                    )
+                )
+                if not math.isfinite(passage_distance):
+                    raise ValueError(f"suspension pose {position_id} passage-to-passage distance must be finite")
+                endpoint_distances = tuple(
+                    math.sqrt(sum((endpoint[index] - anchor[index]) ** 2 for index in range(3)))
+                    for endpoint in transformed_endpoints
+                )
+                minimum_route_length = sum(endpoint_distances) + passage_distance
+                if not all(math.isfinite(distance) for distance in endpoint_distances) or not math.isfinite(minimum_route_length):
+                    raise ValueError(f"suspension pose {position_id} closed route length must be finite")
+                if passage_distance <= 1e-7:
+                    raise ValueError(f"suspension pose {position_id} must have distinct passage endpoints")
+                if any(distance <= 1e-7 for distance in endpoint_distances):
+                    raise ValueError(f"suspension pose {position_id} passage endpoints must not coincide with the anchor")
+                if branch_lengths[0] < minimum_route_length - 1e-5:
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than the closed route")
+
+
 def _load_model_descriptor(
     path: Path,
     asset_path: Path,
     logical_hold_ids: set[str],
+    *,
+    suspension: BoardModelSuspension | None = None,
+    position_ids: set[str] | None = None,
 ) -> Mapping[str, NormalizedFrame]:
     descriptor = _load_json(path, "model descriptor")
     _closed(
@@ -1171,6 +1575,7 @@ def _load_model_descriptor(
     node_ids: set[str] = set()
     node_ids_by_hold: dict[str, list[str]] = {}
     body_count = 0
+    attachment_count = 0
     ordered_node_ids: list[str] = []
     for index, raw_node in enumerate(raw_nodes):
         source = f"model descriptor nodes[{index}]"
@@ -1188,8 +1593,13 @@ def _load_model_descriptor(
         elif role == "hold":
             hold_id = _identifier(node["holdID"], f"{source}.holdID")
             node_ids_by_hold.setdefault(hold_id, []).append(node_id)
+        elif role == "attachment":
+            attachment_count += 1
+            max_attachments = 4 if isinstance(suspension, BoardModelTwoBranchSuspension) else 1
+            if attachment_count > max_attachments:
+                raise ValueError("model descriptor has too many attachment nodes")
         else:
-            raise ValueError(f"{source}.role must be body or hold")
+            raise ValueError(f"{source}.role must be body, hold, or attachment")
     if body_count != 1:
         raise ValueError("model descriptor requires exactly one body node")
     if ordered_node_ids != sorted(ordered_node_ids):
@@ -1241,6 +1651,17 @@ def _load_model_descriptor(
             face_min[1],
             round(face_max[0] - face_min[0], 9),
             round(face_max[1] - face_min[1], 9),
+        )
+    if suspension is not None:
+        _validate_model_suspension(
+            suspension,
+            model_bounds=(minimum, maximum),
+            nodes={
+                node["nodeID"]: node["role"]
+                for node in raw_nodes
+                if isinstance(node, Mapping)
+            },
+            position_ids=position_ids or set(),
         )
     return MappingProxyType(frames)
 
@@ -1312,6 +1733,9 @@ def _validate_finished_shape(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,
             logical_hold_ids,
+            suspension=presentation.media.suspension,
+            position_ids={position.id for position in board.positions
+                          if position.presentation_id == presentation.id},
         )
         model_frames.update(
             ((presentation.id, hold_id), frame) for hold_id, frame in frames.items()

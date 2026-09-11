@@ -9,6 +9,25 @@ struct BoardModelKey: Hashable {
     let modelSHA256: String
 }
 
+enum BoardModelSolvedSuspension {
+    case single(SuspendedSolvedPresentation)
+    case twoBranch(SuspendedTwoBranchSolvedPresentation)
+
+    var boardTransform: simd_float4x4 {
+        switch self {
+        case .single(let solved): solved.boardTransform
+        case .twoBranch(let solved): solved.boardTransform
+        }
+    }
+
+    var cameraFraming: SuspendedCameraFraming {
+        switch self {
+        case .single(let solved): solved.cameraFraming
+        case .twoBranch(let solved): solved.cameraFraming
+        }
+    }
+}
+
 enum BoardModelAsset {
     static func load(media _: BoardModelMedia, packageURL: URL) -> SCNScene? {
         guard packageURL.isFileURL,
@@ -65,7 +84,8 @@ enum BoardModelLoader {
         return BoardModelScene(
             source: source,
             descriptor: media.descriptor,
-            display: media.display
+            display: media.display,
+            suspension: media.suspension
         )
     }
 }
@@ -81,10 +101,27 @@ struct BoardModelSurface: View {
 
     let board: TrainingBoard
     let presentation: BoardPresentation
+    let positionID: String?
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
     let onHoldTap: ((BoardHold) -> Void)?
     @State private var result: ResultState = .loading
+
+    init(
+        board: TrainingBoard,
+        presentation: BoardPresentation,
+        positionID: String? = nil,
+        highlightedHoldIDs: Set<String>,
+        highlightMode: BoardHighlightMode,
+        onHoldTap: ((BoardHold) -> Void)?
+    ) {
+        self.board = board
+        self.presentation = presentation
+        self.positionID = positionID
+        self.highlightedHoldIDs = highlightedHoldIDs
+        self.highlightMode = highlightMode
+        self.onHoldTap = onHoldTap
+    }
 
     enum DisplayState: Equatable {
         case loading
@@ -106,9 +143,11 @@ struct BoardModelSurface: View {
                     model: model,
                     boardName: board.name,
                     holds: board.holds(in: presentation),
+                    positionID: positionID,
                     highlightedHoldIDs: highlightedHoldIDs,
                     highlightMode: highlightMode,
-                    onHoldTap: onHoldTap
+                    onHoldTap: onHoldTap,
+                    onUnavailable: { result = .unavailable }
                 )
                 .accessibilityIdentifier("boardModel.3d")
                 .allowsHitTesting(Self.permitsHoldSelection(for: .ready, onHoldTap: onHoldTap))
@@ -163,9 +202,18 @@ struct BoardModelUnavailableView: View {
 
 @MainActor
 final class BoardModelScene {
+    static let modelPickCategory = 1
+    static let cordCategory = 2
+    static let canonicalTransitionDuration: CFTimeInterval = 0.18
+
     let scene = SCNScene()
     let camera = SCNNode()
     let geometryNodes: [SCNNode]
+    private(set) var boardTransform: simd_float4x4
+    private let boardContainer: SCNNode
+    private let descriptor: BoardModelDescriptor
+    private let suspension: BoardModelSuspension?
+    private let geometryByNodeID: [String: SCNNode]
     private let projectedWidth: Float
     private let projectedHeight: Float
     private(set) var holdNodes: [String: [SCNNode]] = [:]
@@ -173,11 +221,23 @@ final class BoardModelScene {
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
     private var lastHighlights: Set<String> = []
     private var lastMode: BoardHighlightMode?
+    private var canonicalFraming: SuspendedCameraFraming?
+    private var currentFraming: SuspendedCameraFraming?
+    private var orbitAzimuth: Float = 0
+    private var orbitElevation: Float = 0
+    private var orbitZoom: Float = 1
+    private var viewportSize: CGSize = .zero
+    private(set) var activePositionID: String?
+    private(set) var transformedAttachment = SIMD3<Float>.zero
+    private(set) var transientCordNode: SCNNode?
+    private(set) var isUnavailable = false
+    private(set) var isTransientCordAccessible = false
 
     init?(
         source: SCNScene,
         descriptor: BoardModelDescriptor,
-        display: BoardModelDisplay
+        display: BoardModelDisplay,
+        suspension: BoardModelSuspension? = nil
     ) {
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
@@ -243,6 +303,8 @@ final class BoardModelScene {
                 boundHoldNodes[holdID, default: []].append(node)
                 boundHoldIDsByNode[ObjectIdentifier(node)] = holdID
                 originals[ObjectIdentifier(node)] = node.geometry?.materials
+            case .attachment:
+                guard binding.holdID == nil else { return nil }
             }
         }
 
@@ -258,6 +320,9 @@ final class BoardModelScene {
         }
 
         geometryNodes = clonedGeometryNodes
+        self.descriptor = descriptor
+        self.suspension = suspension
+        self.geometryByNodeID = geometryByNodeID
         holdNodes = boundHoldNodes
         holdIDsByNode = boundHoldIDsByNode
         originalMaterials = originals
@@ -266,7 +331,15 @@ final class BoardModelScene {
         }
         projectedWidth = framing.width
         projectedHeight = framing.height
-        scene.rootNode.addChildNode(modelRoot)
+        boardTransform = matrix_identity_float4x4
+        let modelContainer = SCNNode()
+        modelContainer.name = "board.model"
+        modelContainer.addChildNode(modelRoot)
+        scene.rootNode.addChildNode(modelContainer)
+        boardContainer = modelContainer
+        for node in clonedGeometryNodes {
+            node.categoryBitMask = Self.modelPickCategory
+        }
         configureCameraAndLighting(framing: framing)
     }
 
@@ -279,10 +352,558 @@ final class BoardModelScene {
         return nil
     }
 
+    @discardableResult
+    func select(positionID: String?) -> Bool {
+        guard let suspension else {
+            activePositionID = positionID
+            isUnavailable = false
+            return true
+        }
+        guard let positionID,
+              let pose = suspension.canonicalPoses[positionID] else {
+            enterUnavailable()
+            return false
+        }
+
+        do {
+            let solved = try Self.solveSuspension(
+                pose: pose, suspension: suspension, bounds: descriptor.modelBounds
+            )
+            guard hasClearance(for: solved) else {
+                enterUnavailable()
+                return false
+            }
+            let cord = makeCordNode(for: solved)
+            transitionToCanonicalPresentation(solved, cord: cord)
+            canonicalFraming = solved.cameraFraming
+            activePositionID = positionID
+            isUnavailable = false
+            return true
+        } catch {
+            enterUnavailable()
+            return false
+        }
+    }
+
+    static func solveSuspension(
+        pose: BoardModelCanonicalPose,
+        suspension: BoardModelSuspension,
+        bounds: BoardModelBounds
+    ) throws -> BoardModelSolvedSuspension {
+        switch suspension {
+        case .singleCord(let single):
+            return .single(try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: .singleCord(single), bounds: bounds
+            ))
+        case .twoBranchCord(let twoBranch):
+            return .twoBranch(try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: twoBranch, bounds: bounds
+            ))
+        }
+    }
+
+    func orbit(azimuth: Float, elevation: Float, zoomScale: Float = 1) {
+        guard let framing = canonicalFraming,
+              azimuth.isFinite, elevation.isFinite,
+              zoomScale.isFinite, zoomScale > 0 else { return }
+        orbitAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
+        orbitElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
+        orbitZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+        let baseOffset = -framing.direction * framing.distance
+        let yaw = simd_quatf(angle: orbitAzimuth, axis: SIMD3<Float>(0, 1, 0))
+        let pitchAxis = framing.right
+        let pitch = simd_quatf(angle: orbitElevation, axis: pitchAxis)
+        let offset = (pitch * yaw).act(baseOffset)
+        let distance = max(0.01, framing.distance / orbitZoom)
+        let normalizedOffset = simd_length(offset) > 1e-6
+            ? simd_normalize(offset) * distance
+            : baseOffset
+        let position = framing.target + normalizedOffset
+        camera.position = SCNVector3(position)
+        camera.camera?.orthographicScale = Double(cameraScale(for: framing) / orbitZoom)
+        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        currentFraming = framing
+    }
+
+    func resetCamera(animated: Bool) {
+        guard let framing = canonicalFraming ?? currentFraming else { return }
+        let apply = {
+            self.applyCanonicalCamera(framing)
+        }
+        if animated {
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = Self.canonicalTransitionDuration
+            apply()
+            SCNTransaction.commit()
+        } else {
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 0
+            SCNTransaction.disableActions = true
+            apply()
+            SCNTransaction.commit()
+        }
+    }
+
+    private func cameraScale(for framing: SuspendedCameraFraming) -> Float {
+        let aspect = viewportSize.width > 0 && viewportSize.height > 0
+            ? Float(viewportSize.width / viewportSize.height)
+            : 1
+        return max(framing.height, framing.width / aspect) * framing.fitPadding
+    }
+
+    private func enterUnavailable() {
+        transientCordNode?.removeFromParentNode()
+        transientCordNode = nil
+        isTransientCordAccessible = false
+        isUnavailable = true
+        activePositionID = nil
+    }
+
+    private func transitionToCanonicalPresentation(
+        _ solved: BoardModelSolvedSuspension,
+        cord: SCNNode
+    ) {
+        // Build the replacement cord at its deterministic destination before
+        // the transaction. It is never bound to descriptor geometry and the
+        // existing transient node is removed as one replacement operation.
+        transientCordNode?.removeFromParentNode()
+        transientCordNode = cord
+        scene.rootNode.addChildNode(cord)
+        isTransientCordAccessible = false
+
+        let boardMoves = !Self.transformsMatch(boardTransform, solved.boardTransform)
+        if boardMoves {
+            cord.opacity = 0
+        } else {
+            boardContainer.simdTransform = solved.boardTransform
+        }
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = Self.canonicalTransitionDuration
+        if boardMoves {
+            boardContainer.simdTransform = solved.boardTransform
+            cord.opacity = 1
+        }
+        applyCanonicalCamera(solved.cameraFraming)
+        SCNTransaction.commit()
+
+        boardTransform = solved.boardTransform
+        if case .single(let single) = solved {
+            transformedAttachment = single.transformedAttachment
+        }
+        currentFraming = solved.cameraFraming
+    }
+
+    private static func transformsMatch(
+        _ lhs: simd_float4x4,
+        _ rhs: simd_float4x4,
+        tolerance: Float = 1e-6
+    ) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where abs(lhs[column][row] - rhs[column][row]) > tolerance {
+                return false
+            }
+        }
+        return true
+    }
+
+    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
+        orbitAzimuth = 0
+        orbitElevation = 0
+        orbitZoom = 1
+        camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
+        camera.camera?.orthographicScale = Double(cameraScale(for: framing))
+        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        currentFraming = framing
+    }
+
+    private func makeCordNode(for solved: BoardModelSolvedSuspension) -> SCNNode {
+        let root = SCNNode()
+        root.name = "suspended.cord"
+        root.categoryBitMask = Self.cordCategory
+        let paths: [([SIMD3<Float>], Float)]
+        switch solved {
+        case .single(let single):
+            paths = [(single.centerlineSamples, single.tubeRadius)]
+        case .twoBranch(let twoBranch):
+            paths = twoBranch.branches.map { ($0.centerlineSamples, twoBranch.tubeRadius) }
+        }
+        for (branchIndex, path) in paths.enumerated() {
+            for (index, points) in zip(path.0, path.0.dropFirst()).enumerated() {
+                let start = points.0
+                let end = points.1
+                let direction = end - start
+                let length = simd_length(direction)
+                guard length.isFinite, length > 1e-7 else { continue }
+                let geometry = SCNCylinder(radius: CGFloat(path.1), height: CGFloat(length))
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor(white: 0.08, alpha: 1)
+                material.roughness.contents = 0.8
+                geometry.firstMaterial = material
+                let segment = SCNNode(geometry: geometry)
+                segment.name = "suspended.cord.branch.\(branchIndex).segment.\(index)"
+                segment.categoryBitMask = Self.cordCategory
+                segment.position = SCNVector3((start + end) / 2)
+                segment.simdOrientation = simd_quatf(
+                    from: SIMD3<Float>(0, 1, 0),
+                    to: simd_normalize(direction)
+                )
+                root.addChildNode(segment)
+            }
+        }
+        return root
+    }
+
+    private func hasClearance(for solved: BoardModelSolvedSuspension) -> Bool {
+        struct IntentionalContact {
+            let pathIndex: Int
+            let segmentIndex: Int
+            let segmentParameter: Float
+            let nodeID: String
+            let point: SIMD3<Float>
+        }
+        let paths: [[SIMD3<Float>]]
+        let clearanceRadius: Float
+        let intentionalContacts: [IntentionalContact]
+        switch solved {
+        case .single(let single):
+            guard case .some(.singleCord(let singleSuspension)) = suspension else { return false }
+            paths = [single.centerlineSamples]
+            clearanceRadius = single.requiredClearance
+            intentionalContacts = [IntentionalContact(
+                pathIndex: 0,
+                segmentIndex: single.centerlineSamples.count - 2,
+                segmentParameter: 1,
+                nodeID: singleSuspension.attachment.nodeID,
+                point: single.transformedAttachment
+            )]
+        case .twoBranch(let twoBranch):
+            paths = twoBranch.branches.map(\.centerlineSamples)
+            clearanceRadius = twoBranch.requiredClearance
+            guard case .some(.twoBranchCord(let twoBranchSuspension)) = suspension else { return false }
+            let transform = twoBranch.boardTransform
+            let passagePairs = [twoBranchSuspension.passages.left, twoBranchSuspension.passages.right]
+            intentionalContacts = passagePairs.enumerated().flatMap { pathIndex, passages in
+                passages.enumerated().flatMap { passageIndex, passage -> [IntentionalContact] in
+                    let point = SIMD3<Float>(Float(passage.pointInModel[0]), Float(passage.pointInModel[1]), Float(passage.pointInModel[2]))
+                    let transformed = transform * SIMD4<Float>(point.x, point.y, point.z, 1)
+                    let worldPoint = SIMD3<Float>(transformed.x, transformed.y, transformed.z)
+                    let joinIndex = SuspendedCordSolver.sampleCount - 1 + passageIndex
+                    return [
+                        IntentionalContact(pathIndex: pathIndex, segmentIndex: joinIndex - 1, segmentParameter: 1, nodeID: passage.nodeID, point: worldPoint),
+                        IntentionalContact(pathIndex: pathIndex, segmentIndex: joinIndex, segmentParameter: 0, nodeID: passage.nodeID, point: worldPoint),
+                    ]
+                }
+            }
+        }
+        guard paths.allSatisfy({ $0.count >= 2 }),
+              clearanceRadius.isFinite, clearanceRadius > 0 else {
+            return false
+        }
+        // The solver's required clearance already includes the cord radius
+        // plus its additional separation. Measure mesh distance from the
+        // centreline through that single contract, never as a ray.
+        // Clearance is evaluated against the solved destination transform,
+        // without committing that transform before the canonical transition.
+        let previousTransform = boardContainer.simdTransform
+        SCNTransaction.begin()
+        SCNTransaction.disableActions = true
+        boardContainer.simdTransform = solved.boardTransform
+        defer {
+            boardContainer.simdTransform = previousTransform
+            SCNTransaction.commit()
+        }
+
+        for (nodeID, node) in geometryByNodeID {
+            guard let geometry = node.geometry,
+                  let triangles = Self.worldTriangles(for: geometry, node: node) else {
+                return false
+            }
+            for (pathIndex, path) in paths.enumerated() {
+                for (segmentIndex, points) in zip(path, path.dropFirst()).enumerated() {
+                for triangle in triangles {
+                    let approach = Self.closestApproach(
+                        from: points.0,
+                        to: points.1,
+                        triangle: triangle
+                    )
+                    guard approach.distanceSquared.isFinite else { return false }
+                    if approach.distanceSquared >= clearanceRadius * clearanceRadius { continue }
+                    if intentionalContacts.contains(where: {
+                        $0.pathIndex == pathIndex &&
+                        $0.segmentIndex == segmentIndex &&
+                        $0.nodeID == nodeID &&
+                        abs(approach.segmentParameter - $0.segmentParameter) <= 1e-5 &&
+                        simd_length(approach.trianglePoint - $0.point) <= 1e-5
+                    }) {
+                        continue
+                    }
+                    return false
+                }
+                }
+            }
+        }
+        return true
+    }
+
+    private struct Triangle {
+        let a: SIMD3<Float>
+        let b: SIMD3<Float>
+        let c: SIMD3<Float>
+    }
+
+    private struct TriangleApproach {
+        let distanceSquared: Float
+        let segmentParameter: Float
+        let trianglePoint: SIMD3<Float>
+    }
+
+    private static func worldTriangles(for geometry: SCNGeometry, node: SCNNode) -> [Triangle]? {
+        guard let source = geometry.sources(for: .vertex).first,
+              source.usesFloatComponents,
+              source.bytesPerComponent == MemoryLayout<Float>.size,
+              source.componentsPerVector >= 3,
+              source.dataStride >= source.dataOffset + source.componentsPerVector * source.bytesPerComponent,
+              source.vectorCount > 0 else {
+            return nil
+        }
+
+        let vertices = (0..<source.vectorCount).compactMap { index -> SIMD3<Float>? in
+            let offset = source.dataOffset + index * source.dataStride
+            guard offset >= 0,
+                  offset + 3 * MemoryLayout<Float>.size <= source.data.count else {
+                return nil
+            }
+            let local = SIMD3<Float>(
+                float32(in: source.data, at: offset),
+                float32(in: source.data, at: offset + 4),
+                float32(in: source.data, at: offset + 8)
+            )
+            let world = node.simdWorldTransform * SIMD4<Float>(local.x, local.y, local.z, 1)
+            guard world.x.isFinite, world.y.isFinite, world.z.isFinite else { return nil }
+            return SIMD3<Float>(world.x, world.y, world.z)
+        }
+        guard vertices.count == source.vectorCount else { return nil }
+
+        var result: [Triangle] = []
+        for element in geometry.elements {
+            guard element.primitiveType == .triangles,
+                  element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4,
+                  element.primitiveCount >= 0 else {
+                return nil
+            }
+            let indexCount = element.primitiveCount * 3
+            guard indexCount >= 0,
+                  indexCount * element.bytesPerIndex <= element.data.count else {
+                return nil
+            }
+            for offset in stride(from: 0, to: indexCount, by: 3) {
+                guard let first = index(in: element, at: offset),
+                      let second = index(in: element, at: offset + 1),
+                      let third = index(in: element, at: offset + 2),
+                      vertices.indices.contains(first),
+                      vertices.indices.contains(second),
+                      vertices.indices.contains(third) else {
+                    return nil
+                }
+                result.append(Triangle(a: vertices[first], b: vertices[second], c: vertices[third]))
+            }
+        }
+        return result.isEmpty ? nil : result
+    }
+
+    private static func float32(in data: Data, at offset: Int) -> Float {
+        let bytes = data[offset..<(offset + 4)]
+        let bitPattern = bytes.enumerated().reduce(UInt32.zero) { result, byte in
+            result | UInt32(byte.element) << UInt32(byte.offset * 8)
+        }
+        return Float(bitPattern: bitPattern)
+    }
+
+    private static func index(in element: SCNGeometryElement, at index: Int) -> Int? {
+        let offset = index * element.bytesPerIndex
+        guard offset >= 0, offset + element.bytesPerIndex <= element.data.count else { return nil }
+        let value = element.data[offset..<(offset + element.bytesPerIndex)].enumerated().reduce(UInt32.zero) {
+            $0 | UInt32($1.element) << UInt32($1.offset * 8)
+        }
+        return Int(value)
+    }
+
+    private static func closestApproach(
+        from start: SIMD3<Float>,
+        to end: SIMD3<Float>,
+        triangle: Triangle
+    ) -> TriangleApproach {
+        let direction = end - start
+        if let parameter = segmentTriangleIntersectionParameter(
+            start: start,
+            direction: direction,
+            triangle: triangle
+        ) {
+            let point = start + direction * parameter
+            return TriangleApproach(distanceSquared: 0, segmentParameter: parameter, trianglePoint: point)
+        }
+
+        var best = TriangleApproach(
+            distanceSquared: .infinity,
+            segmentParameter: 0,
+            trianglePoint: triangle.a
+        )
+        let endpointCandidates: [(point: SIMD3<Float>, parameter: Float)] = [
+            (start, 0), (end, 1)
+        ]
+        for (point, parameter) in endpointCandidates {
+            let trianglePoint = closestPoint(on: triangle, to: point)
+            let difference: SIMD3<Float> = point - trianglePoint
+            let distanceSquared = simd_dot(difference, difference)
+            if distanceSquared < best.distanceSquared {
+                best = TriangleApproach(
+                    distanceSquared: distanceSquared,
+                    segmentParameter: parameter,
+                    trianglePoint: trianglePoint
+                )
+            }
+        }
+        for (edgeStart, edgeEnd) in [
+            (triangle.a, triangle.b), (triangle.b, triangle.c), (triangle.c, triangle.a)
+        ] {
+            let approach = closestSegmentApproach(start, end, edgeStart, edgeEnd)
+            if approach.distanceSquared < best.distanceSquared {
+                best = TriangleApproach(
+                    distanceSquared: approach.distanceSquared,
+                    segmentParameter: approach.firstParameter,
+                    trianglePoint: approach.secondPoint
+                )
+            }
+        }
+        return best
+    }
+
+    private static func segmentTriangleIntersectionParameter(
+        start: SIMD3<Float>,
+        direction: SIMD3<Float>,
+        triangle: Triangle
+    ) -> Float? {
+        let firstEdge = triangle.b - triangle.a
+        let secondEdge = triangle.c - triangle.a
+        let perpendicular = simd_cross(direction, secondEdge)
+        let determinant = simd_dot(firstEdge, perpendicular)
+        guard determinant.isFinite, abs(determinant) > 1e-7 else { return nil }
+        let inverse = 1 / determinant
+        let offset = start - triangle.a
+        let u = simd_dot(offset, perpendicular) * inverse
+        guard u >= 0, u <= 1 else { return nil }
+        let q = simd_cross(offset, firstEdge)
+        let v = simd_dot(direction, q) * inverse
+        guard v >= 0, u + v <= 1 else { return nil }
+        let parameter = simd_dot(secondEdge, q) * inverse
+        guard parameter >= 0, parameter <= 1, parameter.isFinite else { return nil }
+        return parameter
+    }
+
+    private static func closestPoint(on triangle: Triangle, to point: SIMD3<Float>) -> SIMD3<Float> {
+        let ab = triangle.b - triangle.a
+        let ac = triangle.c - triangle.a
+        let ap = point - triangle.a
+        let d1 = simd_dot(ab, ap)
+        let d2 = simd_dot(ac, ap)
+        if d1 <= 0, d2 <= 0 { return triangle.a }
+
+        let bp = point - triangle.b
+        let d3 = simd_dot(ab, bp)
+        let d4 = simd_dot(ac, bp)
+        if d3 >= 0, d4 <= d3 { return triangle.b }
+
+        let vc = d1 * d4 - d3 * d2
+        if vc <= 0, d1 >= 0, d3 <= 0 {
+            return triangle.a + ab * (d1 / (d1 - d3))
+        }
+
+        let cp = point - triangle.c
+        let d5 = simd_dot(ab, cp)
+        let d6 = simd_dot(ac, cp)
+        if d6 >= 0, d5 <= d6 { return triangle.c }
+
+        let vb = d5 * d2 - d1 * d6
+        if vb <= 0, d2 >= 0, d6 <= 0 {
+            return triangle.a + ac * (d2 / (d2 - d6))
+        }
+
+        let va = d3 * d6 - d5 * d4
+        if va <= 0, d4 - d3 >= 0, d5 - d6 >= 0 {
+            let edge = triangle.c - triangle.b
+            return triangle.b + edge * ((d4 - d3) / ((d4 - d3) + (d5 - d6)))
+        }
+
+        let denominator = va + vb + vc
+        guard denominator.isFinite, abs(denominator) > 1e-7 else { return triangle.a }
+        let inverse = 1 / denominator
+        return triangle.a + ab * (vb * inverse) + ac * (vc * inverse)
+    }
+
+    private static func closestSegmentApproach(
+        _ firstStart: SIMD3<Float>,
+        _ firstEnd: SIMD3<Float>,
+        _ secondStart: SIMD3<Float>,
+        _ secondEnd: SIMD3<Float>
+    ) -> (distanceSquared: Float, firstParameter: Float, secondPoint: SIMD3<Float>) {
+        let firstDirection = firstEnd - firstStart
+        let secondDirection = secondEnd - secondStart
+        let offset = firstStart - secondStart
+        let a = simd_dot(firstDirection, firstDirection)
+        let b = simd_dot(firstDirection, secondDirection)
+        let c = simd_dot(secondDirection, secondDirection)
+        let d = simd_dot(firstDirection, offset)
+        let e = simd_dot(secondDirection, offset)
+        let epsilon: Float = 1e-7
+        var firstParameter: Float = 0
+        var secondParameter: Float = 0
+
+        if a <= epsilon, c <= epsilon {
+            let difference = firstStart - secondStart
+            return (simd_dot(difference, difference), 0, secondStart)
+        }
+        if a <= epsilon {
+            secondParameter = min(max(e / c, 0), 1)
+        } else if c <= epsilon {
+            firstParameter = min(max(-d / a, 0), 1)
+        } else {
+            let denominator = a * c - b * b
+            if denominator > epsilon {
+                firstParameter = min(max((b * e - c * d) / denominator, 0), 1)
+            }
+            secondParameter = (b * firstParameter + e) / c
+            if secondParameter < 0 {
+                secondParameter = 0
+                firstParameter = min(max(-d / a, 0), 1)
+            } else if secondParameter > 1 {
+                secondParameter = 1
+                firstParameter = min(max((b - d) / a, 0), 1)
+            }
+        }
+        let firstPoint = firstStart + firstDirection * firstParameter
+        let secondPoint = secondStart + secondDirection * secondParameter
+        let difference = firstPoint - secondPoint
+        return (simd_dot(difference, difference), firstParameter, secondPoint)
+    }
+
+    private func nodeID(for node: SCNNode) -> String? {
+        var candidate: SCNNode? = node
+        while let current = candidate {
+            if let match = geometryByNodeID.first(where: { $0.value === current }) { return match.key }
+            candidate = current.parent
+        }
+        return nil
+    }
+
     func frame(in size: CGSize) {
         guard size.width > 0, size.height > 0 else { return }
+        viewportSize = size
         let aspect = Float(size.width / size.height)
-        camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect))
+        if let framing = currentFraming {
+            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding)
+        } else {
+            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect))
+        }
     }
 
     func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
@@ -432,6 +1053,10 @@ final class BoardModelScene {
 }
 
 private extension SCNVector3 {
+    init(_ value: SIMD3<Float>) {
+        self.init(value.x, value.y, value.z)
+    }
+
     init(_ values: [Double]) {
         self.init(Float(values[0]), Float(values[1]), Float(values[2]))
     }
@@ -475,9 +1100,11 @@ private struct BoardModelView: UIViewRepresentable {
     let model: BoardModelScene
     let boardName: String
     let holds: [BoardHold]
+    let positionID: String?
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
     let onHoldTap: ((BoardHold) -> Void)?
+    let onUnavailable: (() -> Void)?
 
     func makeUIView(context: Context) -> BoardModelSCNView {
         let view = BoardModelSCNView()
@@ -488,8 +1115,13 @@ private struct BoardModelView: UIViewRepresentable {
         view.isPlaying = false
         view.allowsCameraControl = false
         view.display(model)
+        view.onUnavailable = onUnavailable
+        view.positionID = positionID
         view.delegate = view
         view.addGestureRecognizer(UITapGestureRecognizer(target: view, action: #selector(view.selectHold(_:))))
+        view.addGestureRecognizer(UIPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:))))
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: view, action: #selector(view.orbitPinch(_:))))
+        view.selectPositionIfNeeded()
         return view
     }
 
@@ -497,16 +1129,20 @@ private struct BoardModelView: UIViewRepresentable {
         view.display(model)
         view.boardName = boardName
         view.holds = holds
+        view.positionID = positionID
         view.onHoldTap = onHoldTap
+        view.onUnavailable = onUnavailable
         view.highlightedHoldIDs = highlightedHoldIDs
         view.isUserInteractionEnabled = onHoldTap != nil
         view.needsAccessibilityProjection = true
         model.highlight(highlightedHoldIDs, mode: highlightMode)
+        view.selectPositionIfNeeded()
         view.updateAccessibility()
     }
 
     static func dismantleUIView(_ view: BoardModelSCNView, coordinator: ()) {
         view.onHoldTap = nil
+        view.onUnavailable = nil
         view.accessibilityElements = nil
         view.delegate = nil
         view.scene = nil
@@ -529,6 +1165,8 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var holds: [BoardHold] = []
     var highlightedHoldIDs: Set<String> = []
     var onHoldTap: ((BoardHold) -> Void)?
+    var onUnavailable: (() -> Void)?
+    var positionID: String?
     var needsAccessibilityProjection = true
     private var holdAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityHoldIDs: [String] = []
@@ -539,6 +1177,17 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         scene = model.scene
         pointOfView = model.camera
         model.frame(in: bounds.size)
+        needsAccessibilityProjection = true
+    }
+
+    func selectPositionIfNeeded() {
+        guard let model else { return }
+        guard model.select(positionID: positionID) else {
+            onUnavailable?()
+            return
+        }
+        scene = model.scene
+        pointOfView = model.camera
         needsAccessibilityProjection = true
     }
 
@@ -562,10 +1211,33 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         // traverses newly cloned geometry.
         SCNTransaction.flush()
         guard let model,
-              let hit = hitTest(recognizer.location(in: self), options: [.searchMode: SCNHitTestSearchMode.closest.rawValue]).first,
+              let hit = hitTest(recognizer.location(in: self), options: [
+                  SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
+                  SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
+              ]).first,
               let id = model.holdID(for: hit.node),
               let hold = holds.first(where: { $0.id == id }) else { return }
         onHoldTap?(hold)
+        _ = model.select(positionID: model.activePositionID)
+        model.resetCamera(animated: true)
+    }
+
+    @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
+        guard let model, recognizer.state == .changed else { return }
+        let translation = recognizer.translation(in: self)
+        let width = max(bounds.width, 1)
+        let height = max(bounds.height, 1)
+        model.orbit(
+            azimuth: Float(-translation.x / width) * 0.9,
+            elevation: Float(-translation.y / height) * 0.65
+        )
+        recognizer.setTranslation(.zero, in: self)
+    }
+
+    @objc func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
+        guard let model, recognizer.state == .changed else { return }
+        model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(recognizer.scale))
+        recognizer.scale = 1
     }
 
     func updateAccessibility() {

@@ -442,9 +442,9 @@ struct BoardPackageStore {
             let data = try Data(contentsOf: boardURL)
             document = try JSONDecoder().decode(BoardPackageV2BoardDocument.self, from: data)
             var rawParser = BoardPackageRawJSONParser(data: data)
-            rawRasterGeometryByPresentationID = try rawParser
-                .parseDocument()
-                .rasterGeometryByPresentationID()
+            let rawDocument = try rawParser.parseDocument()
+            try rawDocument.validateTwoBranchSuspensionMemberOrder()
+            rawRasterGeometryByPresentationID = try rawDocument.rasterGeometryByPresentationID()
         } catch {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
@@ -641,7 +641,7 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateV2AssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display):
+            case .model(let assetPath, let descriptorPath, let display, _):
                 hasModel = true
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
@@ -665,6 +665,15 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
                 reason: "v2 packages may not mix model and raster presentations"
+            )
+        }
+        guard document.presentations.filter({
+            if case .model = $0.media { return true }
+            return false
+        }).count <= 1 else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "v2 packages may contain only one model presentation"
             )
         }
         let documentsByPresentationID = Dictionary(
@@ -711,6 +720,9 @@ struct BoardPackageStore {
         var descriptorURLs: [String: URL] = [:]
         var originalRasterOwnershipCounts = Dictionary(
             uniqueKeysWithValues: holdIDs.map { ($0, 0) }
+        )
+        let declaredPositionIDs = Set(
+            (document.positions?.map(\.id) ?? document.presentations.map(\.id))
         )
         for presentation in document.presentations {
             let media: BoardPresentationMedia
@@ -773,14 +785,23 @@ struct BoardPackageStore {
                     )
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, holdGeometry: holdGeometry))
-            case .model(let assetPath, let descriptorPath, let displayDocument):
+            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument):
                 let descriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: packageURL.appendingPathComponent(assetPath),
                     logicalHoldIDs: holdIDs,
                     boardID: document.id,
-                    resource: descriptorPath
+                    resource: descriptorPath,
+                    suspensionDocument: suspensionDocument
                 )
+                let suspension = try suspensionDocument.map {
+                    try makeModelSuspension(
+                        $0,
+                        descriptor: descriptor,
+                        positionIDs: declaredPositionIDs,
+                        boardID: document.id
+                    )
+                }
                 let camera = displayDocument.camera
                 media = .model(
                     BoardModelMedia(
@@ -794,7 +815,8 @@ struct BoardPackageStore {
                                 up: camera.up,
                                 fitPadding: camera.fitPadding
                             )
-                        )
+                        ),
+                        suspension: suspension
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
@@ -932,7 +954,8 @@ struct BoardPackageStore {
         modelURL: URL,
         logicalHoldIDs: Set<String>,
         boardID: String,
-        resource: String
+        resource: String,
+        suspensionDocument: BoardPackageSuspensionDocument?
     ) throws -> BoardModelDescriptor {
         let data: Data
         let modelData: Data
@@ -941,6 +964,8 @@ struct BoardPackageStore {
         do {
             data = try Data(contentsOf: url)
             modelData = try Data(contentsOf: modelURL)
+            var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
+            _ = try rawDescriptorParser.parseDocument()
             var memberOrder = BoardPackageJSONMemberOrder(data: data)
             orderedHoldIDs = try memberOrder.memberNames(inRootObjectNamed: "holds")
             document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
@@ -976,6 +1001,7 @@ struct BoardPackageStore {
         }
         var nodes: [BoardModelNodeDescriptor] = []
         var bodyCount = 0
+        var attachmentCount = 0
         var nodeIDsByHold: [String: [String]] = [:]
         for node in document.nodes {
             guard !node.nodeID.isEmpty else {
@@ -992,8 +1018,22 @@ struct BoardPackageStore {
                 }
                 nodeIDsByHold[holdID, default: []].append(node.nodeID)
                 nodes.append(.init(nodeID: node.nodeID, role: .hold, holdID: holdID))
+            case "attachment":
+                guard node.holdID == nil else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare holdID")
+                }
+                let maximumAttachmentCount: Int = {
+                    guard let suspension = suspensionDocument else { return 1 }
+                    if case .twoBranchCord = suspension { return 4 }
+                    return 1
+                }()
+                attachmentCount += 1
+                guard attachmentCount <= maximumAttachmentCount else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor has too many attachment nodes")
+                }
+                nodes.append(.init(nodeID: node.nodeID, role: .attachment, holdID: nil))
             default:
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body or hold")
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, hold, or attachment")
             }
         }
         guard bodyCount == 1, Set(nodeIDsByHold.keys) == logicalHoldIDs,
@@ -1063,6 +1103,242 @@ struct BoardPackageStore {
         }
     }
 
+    private static func makeModelSuspension(
+        _ document: BoardPackageSuspensionDocument,
+        descriptor: BoardModelDescriptor,
+        positionIDs: Set<String>,
+        boardID: String
+    ) throws -> BoardModelSuspension {
+        switch document {
+        case .singleCord(let single):
+            return try makeSingleCordSuspension(single, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
+        case .twoBranchCord(let twoBranch):
+            return try makeTwoBranchSuspension(twoBranch, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
+        case .unsupported(let type):
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension type must be singleCord or twoBranchCord: \(type)")
+        case .shapeMismatch(let type):
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension type \(type) does not match its members")
+        }
+    }
+
+    private static func makeSingleCordSuspension(
+        _ document: BoardPackageSingleCordSuspensionDocument,
+        descriptor: BoardModelDescriptor,
+        positionIDs: Set<String>,
+        boardID: String
+    ) throws -> BoardModelSuspension {
+        guard document.attachment.nodeID.isEmpty == false,
+              document.attachment.pointInModel.count == 3,
+              document.attachment.pointInModel.allSatisfy(\.isFinite),
+              zip(document.attachment.pointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+              zip(document.attachment.pointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension attachment point must be finite and inside model bounds")
+        }
+        let nodeRole = descriptor.nodes.first(where: { $0.nodeID == document.attachment.nodeID })?.role
+        guard nodeRole == .body || nodeRole == .attachment else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension attachment node must be a body or attachment node")
+        }
+        guard document.anchor.offsetFromBoardBounds.count == 3,
+              document.anchor.offsetFromBoardBounds.allSatisfy(\.isFinite),
+              document.anchor.visibility == "invisible",
+              document.cord.restLength.isFinite, document.cord.restLength > 0,
+              document.cord.radius.isFinite, document.cord.radius > 0,
+              document.canonicalPoses.count == positionIDs.count,
+              Set(document.canonicalPoses.keys) == positionIDs else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "invalid suspension anchor, cord, or canonical pose set")
+        }
+        let bounds = descriptor.modelBounds
+        let offset = document.anchor.offsetFromBoardBounds
+        let anchorPosition = [
+            (bounds.minimum[0] + bounds.maximum[0]) / 2 + offset[0],
+            bounds.maximum[1] + offset[1],
+            (bounds.minimum[2] + bounds.maximum[2]) / 2 + offset[2]
+        ]
+        guard anchorPosition.allSatisfy(\.isFinite) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension anchor must be finite")
+        }
+        var poses: [String: BoardModelCanonicalPose] = [:]
+        for (positionID, pose) in document.canonicalPoses {
+            guard pose.rotation.count == 4,
+                  pose.rotation.allSatisfy(\.isFinite),
+                  pose.translation.count == 3,
+                  pose.translation.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.count == 3,
+                  pose.camera.viewDirection.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.contains(where: { $0 != 0 }),
+                  pose.camera.fitPadding.isFinite,
+                  pose.camera.fitPadding > 0 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) is not finite")
+            }
+            let norm = sqrt(pose.rotation.reduce(0) { $0 + $1 * $1 })
+            guard abs(norm - 1) <= 1e-6 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) rotation must be normalized")
+            }
+            let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
+            let p = document.attachment.pointInModel
+            let tx = 2 * (qy * p[2] - qz * p[1])
+            let ty = 2 * (qz * p[0] - qx * p[2])
+            let tz = 2 * (qx * p[1] - qy * p[0])
+            let transformed = [
+                p[0] + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
+                p[1] + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
+                p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
+            ]
+            let endpointDistance = zip(transformed, anchorPosition).reduce(0) { partial, pair in
+                partial + (pair.0 - pair.1) * (pair.0 - pair.1)
+            }.squareRoot()
+            guard endpointDistance.isFinite,
+                  document.cord.restLength >= endpointDistance - 1e-5 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "suspension pose \(positionID) restLength is shorter than endpoint distance")
+            }
+            poses[positionID] = BoardModelCanonicalPose(
+                rotation: pose.rotation,
+                translation: pose.translation,
+                camera: BoardModelCanonicalCamera(
+                    viewDirection: pose.camera.viewDirection,
+                    fitPadding: pose.camera.fitPadding
+                )
+            )
+        }
+        return .singleCord(BoardModelSingleCordSuspension(
+            attachment: BoardModelAttachment(
+                nodeID: document.attachment.nodeID,
+                pointInModel: document.attachment.pointInModel,
+                provenance: document.attachment.provenance
+            ),
+            anchor: BoardModelInvisibleAnchor(
+                offsetFromBoardBounds: document.anchor.offsetFromBoardBounds,
+                visibility: document.anchor.visibility,
+                provenance: document.anchor.provenance,
+                position: anchorPosition
+            ),
+            cord: BoardModelCord(
+                restLength: document.cord.restLength,
+                radius: document.cord.radius,
+                material: document.cord.material,
+                provenance: document.cord.provenance
+            ),
+            canonicalPoses: poses
+        ))
+    }
+
+    private static func makeTwoBranchSuspension(
+        _ document: BoardPackageTwoBranchSuspensionDocument,
+        descriptor: BoardModelDescriptor,
+        positionIDs: Set<String>,
+        boardID: String
+    ) throws -> BoardModelSuspension {
+        guard document.passages.left.count == 2,
+              document.passages.right.count == 2 else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
+        }
+        let passages = document.passages.left + document.passages.right
+        guard Set(passages.map(\.id)).count == passages.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage IDs must be distinct")
+        }
+        guard Set(passages.map(\.nodeID)).count == passages.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage node IDs must be distinct")
+        }
+        let nodesByID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
+        for passage in passages {
+            guard let node = nodesByID[passage.nodeID], node.role == .body || node.role == .attachment else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage node must be a body or attachment node")
+            }
+            guard passage.pointInModel.count == 3,
+                  passage.pointInModel.allSatisfy(\.isFinite),
+                  zip(passage.pointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+                  zip(passage.pointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage point must be finite and inside model bounds")
+            }
+        }
+        guard document.branches.count == 2,
+              document.branches[0].passageIDs == document.passages.left.map(\.id),
+              document.branches[1].passageIDs == document.passages.right.map(\.id),
+              Set(document.branches.map(\.id)).count == document.branches.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches must be two distinct ordered passage pairs")
+        }
+        guard document.branches.allSatisfy({
+            $0.passageIDs.count == 2 && $0.restLength.isFinite && $0.restLength > 0 &&
+            $0.radius.isFinite && $0.radius > 0 && !$0.material.isEmpty
+        }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches have invalid cord parameters")
+        }
+        guard document.anchor.offsetFromBoardBounds.count == 3,
+              document.anchor.offsetFromBoardBounds.allSatisfy(\.isFinite),
+              document.anchor.visibility == "invisible",
+              document.canonicalPoses.count == positionIDs.count,
+              Set(document.canonicalPoses.keys) == positionIDs else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "invalid twoBranchCord anchor or canonical pose set")
+        }
+        let bounds = descriptor.modelBounds
+        let offset = document.anchor.offsetFromBoardBounds
+        let anchorPosition = [
+            (bounds.minimum[0] + bounds.maximum[0]) / 2 + offset[0],
+            bounds.maximum[1] + offset[1],
+            (bounds.minimum[2] + bounds.maximum[2]) / 2 + offset[2]
+        ]
+        guard anchorPosition.allSatisfy(\.isFinite) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord anchor must be finite")
+        }
+        for (positionID, pose) in document.canonicalPoses {
+            guard pose.rotation.count == 4, pose.rotation.allSatisfy(\.isFinite),
+                  pose.translation.count == 3, pose.translation.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.count == 3, pose.camera.viewDirection.allSatisfy(\.isFinite),
+                  pose.camera.viewDirection.contains(where: { $0 != 0 }),
+                  pose.camera.fitPadding.isFinite, pose.camera.fitPadding > 0 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) is not finite")
+            }
+            let norm = sqrt(pose.rotation.reduce(0) { $0 + $1 * $1 })
+            guard abs(norm - 1) <= 1e-6 else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) rotation must be normalized")
+            }
+            for (branchIndex, branch) in document.branches.enumerated() {
+                let side = branchIndex == 0 ? document.passages.left : document.passages.right
+                var transformedEndpoints: [[Double]] = []
+                for passage in side {
+                    let p = passage.pointInModel
+                    let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
+                    let tx = 2 * (qy * p[2] - qz * p[1])
+                    let ty = 2 * (qz * p[0] - qx * p[2])
+                    let tz = 2 * (qx * p[1] - qy * p[0])
+                    let transformed = [
+                        p[0] + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
+                        p[1] + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
+                        p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
+                    ]
+                    transformedEndpoints.append(transformed)
+                }
+                let firstEndpointDistance = zip(transformedEndpoints[0], anchorPosition)
+                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                let secondEndpointDistance = zip(transformedEndpoints[1], anchorPosition)
+                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                let passageDistance = zip(transformedEndpoints[0], transformedEndpoints[1])
+                    .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }
+                    .squareRoot()
+                let minimumRouteLength = firstEndpointDistance + passageDistance + secondEndpointDistance
+                guard firstEndpointDistance.isFinite, secondEndpointDistance.isFinite,
+                      passageDistance.isFinite, minimumRouteLength.isFinite,
+                      firstEndpointDistance > 1e-7, secondEndpointDistance > 1e-7,
+                      passageDistance > 1e-7,
+                      branch.restLength >= minimumRouteLength - 1e-5 else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) must have distinct passage and anchor endpoints with a feasible closed route")
+                }
+            }
+        }
+        let poseValues = document.canonicalPoses.mapValues {
+            BoardModelCanonicalPose(rotation: $0.rotation, translation: $0.translation, camera: BoardModelCanonicalCamera(viewDirection: $0.camera.viewDirection, fitPadding: $0.camera.fitPadding))
+        }
+        return .twoBranchCord(BoardModelTwoBranchSuspension(
+            passages: BoardModelPassagePairs(
+                left: document.passages.left.map { BoardModelPassage(id: $0.id, nodeID: $0.nodeID, pointInModel: $0.pointInModel, provenance: $0.provenance) },
+                right: document.passages.right.map { BoardModelPassage(id: $0.id, nodeID: $0.nodeID, pointInModel: $0.pointInModel, provenance: $0.provenance) }
+            ),
+            branches: document.branches.map { BoardModelCordBranch(id: $0.id, passageIDs: $0.passageIDs, restLength: $0.restLength, radius: $0.radius, material: $0.material, provenance: $0.provenance) },
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: document.anchor.offsetFromBoardBounds, visibility: document.anchor.visibility, provenance: document.anchor.provenance, position: anchorPosition),
+            canonicalPoses: poseValues
+        ))
+
+}
 }
 
 private enum BoardPackageRawJSONError: Error {
@@ -1113,11 +1389,66 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
         }
         return result
     }
+
+    func validateTwoBranchSuspensionMemberOrder() throws {
+        guard case .object(let rootMembers) = self,
+              case .array(let presentations)? = rootMembers.value(named: "presentations") else {
+            throw BoardPackageRawJSONError.invalid
+        }
+        for presentation in presentations {
+            guard case .object(let presentationMembers) = presentation,
+                  case .object(let mediaMembers)? = presentationMembers.value(named: "media"),
+                  case .string(let mediaType)? = mediaMembers.value(named: "type") else {
+                throw BoardPackageRawJSONError.invalid
+            }
+            guard mediaType == "model",
+                  case .object(let suspensionMembers)? = mediaMembers.value(named: "suspension"),
+                  case .string(let suspensionType)? = suspensionMembers.value(named: "type") else {
+                continue
+            }
+            guard suspensionType == "twoBranchCord" else { continue }
+            try suspensionMembers.requireCanonicalOrder(["type", "passages", "branches", "anchor", "canonicalPoses"])
+            guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+                  case .array(let leftPassages)? = passagesMembers.value(named: "left"),
+                  case .array(let rightPassages)? = passagesMembers.value(named: "right"),
+                  case .array(let branches)? = suspensionMembers.value(named: "branches"),
+                  case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
+                  case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
+                throw BoardPackageRawJSONError.invalid
+            }
+            try passagesMembers.requireCanonicalOrder(["left", "right"])
+            for passage in leftPassages + rightPassages {
+                guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
+                try members.requireCanonicalOrder(["id", "nodeID", "pointInModel", "provenance"])
+            }
+            for branch in branches {
+                guard case .object(let members) = branch else { throw BoardPackageRawJSONError.invalid }
+                try members.requireCanonicalOrder(["id", "passageIDs", "restLength", "radius", "material", "provenance"])
+            }
+            try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
+            for pose in poseMembers.mapValues() {
+                guard case .object(let poseObject) = pose,
+                      case .object(let camera)? = poseObject.value(named: "camera") else {
+                    throw BoardPackageRawJSONError.invalid
+                }
+                try poseObject.requireCanonicalOrder(["rotation", "translation", "camera"])
+                try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
+            }
+        }
+    }
 }
 
 private extension Array where Element == BoardPackageRawJSONMember {
     func value(named name: String) -> BoardPackageRawJSONValue? {
         first(where: { $0.name == name })?.value
+    }
+
+    var names: [String] { map(\.name) }
+
+    func mapValues() -> [BoardPackageRawJSONValue] { map(\.value) }
+
+    func requireCanonicalOrder(_ expected: [String]) throws {
+        guard names == expected else { throw BoardPackageRawJSONError.invalid }
     }
 }
 
@@ -1509,10 +1840,10 @@ private enum BoardPackageV2DerivationDocument: Decodable {
 
 private enum BoardPackageV2MediaDocument: Decodable {
     case raster(assetPath: String, holdGeometry: [String: [BoardPackageGeometryDocument]])
-    case model(assetPath: String, descriptorPath: String, display: BoardPackageModelDisplayDocument)
+    case model(assetPath: String, descriptorPath: String, display: BoardPackageModelDisplayDocument, suspension: BoardPackageSuspensionDocument?)
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, holdGeometry, descriptorPath, display
+        case type, assetPath, holdGeometry, descriptorPath, display, suspension
     }
 
     init(from decoder: Decoder) throws {
@@ -1529,11 +1860,14 @@ private enum BoardPackageV2MediaDocument: Decodable {
                 )
             )
         case "model":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension"])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
-                display: try container.decode(BoardPackageModelDisplayDocument.self, forKey: .display)
+                display: try container.decode(BoardPackageModelDisplayDocument.self, forKey: .display),
+                suspension: container.contains(.suspension)
+                    ? try container.decode(BoardPackageSuspensionDocument.self, forKey: .suspension)
+                    : nil
             )
         default:
             throw DecodingError.dataCorruptedError(
@@ -1546,8 +1880,206 @@ private enum BoardPackageV2MediaDocument: Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _): assetPath
         }
+    }
+}
+
+private enum BoardPackageSuspensionDocument: Decodable {
+    case singleCord(BoardPackageSingleCordSuspensionDocument)
+    case twoBranchCord(BoardPackageTwoBranchSuspensionDocument)
+    case unsupported(String)
+    case shapeMismatch(String)
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: SuspensionCodingKey.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "singleCord":
+            if container.allKeys.contains(where: { $0.stringValue == "passages" || $0.stringValue == "branches" }) {
+                self = .shapeMismatch(type)
+            } else {
+                self = .singleCord(try BoardPackageSingleCordSuspensionDocument(from: decoder))
+            }
+        case "twoBranchCord":
+            if container.allKeys.contains(where: { $0.stringValue == "attachment" || $0.stringValue == "cord" }) {
+                self = .shapeMismatch(type)
+            } else {
+                self = .twoBranchCord(try BoardPackageTwoBranchSuspensionDocument(from: decoder))
+            }
+        default:
+            self = .unsupported(type)
+        }
+    }
+
+    private enum SuspensionCodingKey: String, CodingKey {
+        case type, attachment, anchor, cord, canonicalPoses, passages, branches
+    }
+}
+
+private struct BoardPackageSingleCordSuspensionDocument: Decodable {
+    let type: String
+    let attachment: BoardPackageAttachmentDocument
+    let anchor: BoardPackageAnchorDocument
+    let cord: BoardPackageCordDocument
+    let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
+
+    private enum CodingKeys: String, CodingKey {
+        case type, attachment, anchor, cord, canonicalPoses
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["type", "attachment", "anchor", "cord", "canonicalPoses"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(String.self, forKey: .type)
+        attachment = try container.decode(BoardPackageAttachmentDocument.self, forKey: .attachment)
+        anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
+        cord = try container.decode(BoardPackageCordDocument.self, forKey: .cord)
+        canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)
+    }
+}
+
+private struct BoardPackagePassageDocument: Decodable {
+    let id: String
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case id, nodeID, pointInModel, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "nodeID", "pointInModel", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        nodeID = try container.decode(String.self, forKey: .nodeID)
+        pointInModel = try container.decode([Double].self, forKey: .pointInModel)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackagePassagePairsDocument: Decodable {
+    let left: [BoardPackagePassageDocument]
+    let right: [BoardPackagePassageDocument]
+
+    private enum CodingKeys: String, CodingKey { case left, right }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["left", "right"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        left = try container.decode([BoardPackagePassageDocument].self, forKey: .left)
+        right = try container.decode([BoardPackagePassageDocument].self, forKey: .right)
+    }
+}
+
+private struct BoardPackageCordBranchDocument: Decodable {
+    let id: String
+    let passageIDs: [String]
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case id, passageIDs, restLength, radius, material, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "passageIDs", "restLength", "radius", "material", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        passageIDs = try container.decode([String].self, forKey: .passageIDs)
+        restLength = try container.decode(Double.self, forKey: .restLength)
+        radius = try container.decode(Double.self, forKey: .radius)
+        material = try container.decode(String.self, forKey: .material)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageTwoBranchSuspensionDocument: Decodable {
+    let passages: BoardPackagePassagePairsDocument
+    let branches: [BoardPackageCordBranchDocument]
+    let anchor: BoardPackageAnchorDocument
+    let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
+
+    private enum CodingKeys: String, CodingKey { case type, passages, branches, anchor, canonicalPoses }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["type", "passages", "branches", "anchor", "canonicalPoses"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        _ = try container.decode(String.self, forKey: .type)
+        passages = try container.decode(BoardPackagePassagePairsDocument.self, forKey: .passages)
+        branches = try container.decode([BoardPackageCordBranchDocument].self, forKey: .branches)
+        anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
+        canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)
+    }
+}
+
+private struct BoardPackageAttachmentDocument: Decodable {
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case nodeID, pointInModel, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["nodeID", "pointInModel", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        nodeID = try container.decode(String.self, forKey: .nodeID)
+        pointInModel = try container.decode([Double].self, forKey: .pointInModel)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageAnchorDocument: Decodable {
+    let offsetFromBoardBounds: [Double]
+    let visibility: String
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case offsetFromBoardBounds, visibility, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["offsetFromBoardBounds", "visibility", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        offsetFromBoardBounds = try container.decode([Double].self, forKey: .offsetFromBoardBounds)
+        visibility = try container.decode(String.self, forKey: .visibility)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageCordDocument: Decodable {
+    let restLength: Double
+    let radius: Double
+    let material: String
+    let provenance: String
+
+    private enum CodingKeys: String, CodingKey { case restLength, radius, material, provenance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["restLength", "radius", "material", "provenance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        restLength = try container.decode(Double.self, forKey: .restLength)
+        radius = try container.decode(Double.self, forKey: .radius)
+        material = try container.decode(String.self, forKey: .material)
+        provenance = try container.decode(String.self, forKey: .provenance)
+    }
+}
+
+private struct BoardPackageCanonicalPoseDocument: Decodable {
+    let rotation: [Double]
+    let translation: [Double]
+    let camera: BoardPackageCanonicalCameraDocument
+
+    private enum CodingKeys: String, CodingKey { case rotation, translation, camera }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["rotation", "translation", "camera"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        rotation = try container.decode([Double].self, forKey: .rotation)
+        translation = try container.decode([Double].self, forKey: .translation)
+        camera = try container.decode(BoardPackageCanonicalCameraDocument.self, forKey: .camera)
+    }
+}
+
+private struct BoardPackageCanonicalCameraDocument: Decodable {
+    let viewDirection: [Double]
+    let fitPadding: Double
+
+    private enum CodingKeys: String, CodingKey { case viewDirection, fitPadding }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["viewDirection", "fitPadding"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        viewDirection = try container.decode([Double].self, forKey: .viewDirection)
+        fitPadding = try container.decode(Double.self, forKey: .fitPadding)
     }
 }
 

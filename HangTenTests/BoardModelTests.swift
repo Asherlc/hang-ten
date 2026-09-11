@@ -6,6 +6,180 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            return XCTFail("Nature Stone Hanger must route through model media")
+        }
+        let expectedHoldIDs = [
+            "edge-front-15mm-incut",
+            "edge-front-15mm-flat",
+            "edge-front-20mm-wood-flat",
+            "edge-front-20mm-granite",
+            "edge-reverse-10mm-incut",
+            "edge-reverse-10mm-flat",
+            "edge-reverse-06mm-flat",
+            "edge-reverse-06mm-incut",
+        ]
+
+        XCTAssertEqual(board.id, "nature.stone-hanger")
+        XCTAssertEqual(presentation.id, "primary")
+        XCTAssertTrue(presentation.isDefault)
+        XCTAssertEqual(board.holds.map(\.id), expectedHoldIDs)
+        XCTAssertEqual(Set(media.descriptor.holds.keys), Set(expectedHoldIDs))
+        XCTAssertEqual(media.assetPath, "assets/primary.usdz")
+        XCTAssertEqual(media.descriptorPath, "assets/primary.model.json")
+        XCTAssertEqual(media.display.camera.type, "orthographic")
+        XCTAssertEqual(media.display.camera.viewDirection, [0, 0, -1])
+        XCTAssertEqual(media.display.camera.up, [0, 1, 0])
+        XCTAssertEqual(media.display.camera.fitPadding, 0.08)
+
+        let assetURL = try XCTUnwrap(
+            BoardCatalog.packageStore.presentationAssetURL(for: board, presentationID: presentation.id)
+        )
+        let descriptorURL = try XCTUnwrap(
+            BoardCatalog.packageStore.presentationDescriptorURL(for: board, presentationID: presentation.id)
+        )
+        XCTAssertTrue(assetURL.path.hasSuffix("/Hangboards/nature-stone-hanger/assets/primary.usdz"))
+        XCTAssertTrue(descriptorURL.path.hasSuffix("/Hangboards/nature-stone-hanger/assets/primary.model.json"))
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board, presentationID: presentation.id))
+    }
+
+    // The package has two observed external cord-port mouths, but its source
+    // does not establish the hidden route, cord dimensions, anchor, or poses.
+    // Keep that unsupported suspension contract explicitly unavailable instead
+    // of inventing enough inputs to invoke Task 1's deterministic solver.
+    func testNatureStoneHangerLeavesUnsupportedSuspensionRoutingUnavailable() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("Nature Stone Hanger must route through model media")
+        }
+
+        XCTAssertNil(media.suspension)
+        XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
+            for: .unavailable,
+            onHoldTap: { _ in XCTFail("unavailable routing must not select a hold") }
+        ))
+    }
+
+    func testNatureStoneHangerHighlightsNativeHoldMaterialsAndClearsThem() async throws {
+        let (board, _, model) = try await loadMigratedModel("nature.stone-hanger")
+        let highlightedID = "edge-front-20mm-granite"
+        let untouchedID = "edge-front-20mm-wood-flat"
+        let highlightedNode = try XCTUnwrap(model.holdNodes[highlightedID]?.first)
+        let untouchedNode = try XCTUnwrap(model.holdNodes[untouchedID]?.first)
+        let highlightedOriginal = try XCTUnwrap(highlightedNode.geometry?.firstMaterial)
+        let untouchedOriginal = try XCTUnwrap(untouchedNode.geometry?.firstMaterial)
+
+        XCTAssertEqual(model.holdNodes.count, board.holds.count)
+        model.highlight([highlightedID], mode: .active)
+        XCTAssertEqual(
+            highlightedNode.geometry?.firstMaterial?.diffuse.contents as? UIColor,
+            UIColor(Color.holdActive)
+        )
+        XCTAssertFalse(highlightedNode.geometry?.firstMaterial === highlightedOriginal)
+        XCTAssertTrue(untouchedNode.geometry?.firstMaterial === untouchedOriginal)
+
+        model.highlight([], mode: .active)
+        XCTAssertTrue(highlightedNode.geometry?.firstMaterial === highlightedOriginal)
+        XCTAssertTrue(untouchedNode.geometry?.firstMaterial === untouchedOriginal)
+    }
+
+    func testNatureStoneHangerCordPassageMarkersAreNotSelectableOrAccessible() async throws {
+        let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
+        let passageMarkerIDs = ["cord-passage-1", "cord-passage-2"]
+        let descriptorNodeIDs = Set(media.descriptor.nodes.map(\.nodeID))
+
+        XCTAssertTrue(passageMarkerIDs.allSatisfy { !descriptorNodeIDs.contains($0) })
+        XCTAssertTrue(passageMarkerIDs.allSatisfy { model.holdNodes[$0] == nil })
+        XCTAssertEqual(model.geometryNodes.count, board.holds.count + 1)
+        for markerID in passageMarkerIDs {
+            let marker = SCNNode()
+            marker.name = markerID
+            XCTAssertNil(model.holdID(for: marker), markerID)
+        }
+
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
+        view.display(model)
+        view.holds = board.holds
+        view.onHoldTap = { _ in }
+        view.updateAccessibility()
+
+        let identifiers = try XCTUnwrap(view.accessibilityElements as? [UIAccessibilityElement])
+            .compactMap(\.accessibilityIdentifier)
+        XCTAssertEqual(Set(identifiers), Set(board.holds.map { "boardModel.hold.\($0.id)" }))
+        XCTAssertTrue(passageMarkerIDs.allSatisfy { !identifiers.contains("boardModel.hold.\($0)") })
+    }
+
+    func testExistingPlanTargetsStillResolveOnMetoliusBaguetteAndTrainingTilesBoards() throws {
+        let directPlanBoardIDs: Set<String> = ["metolius.contact", "metolius.simulator-3d"]
+        let directPlans = PlanCatalog.all.filter { plan in
+            plan.boardID.map(directPlanBoardIDs.contains) == true
+        }
+        XCTAssertFalse(directPlans.isEmpty)
+        for plan in directPlans {
+            let board = try XCTUnwrap(plan.boardID.flatMap {
+                BoardCatalog.packageStore.board(id: $0)
+            })
+            for target in plan.steps.flatMap(\.targets) {
+                XCTAssertFalse(
+                    BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty,
+                    "Expected \(plan.id) target \(target) to resolve on \(board.id)"
+                )
+            }
+        }
+
+        for boardID in ["yy.baguette-evo", "soill.training-tiles"] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let compatibleGenericPlans = PlanCatalog.all.filter { plan in
+                plan.boardID == nil && plan.steps.flatMap(\.targets).allSatisfy {
+                    !BoardTargetResolver.substituteHoldIDs(for: $0, on: board).isEmpty
+                }
+            }
+            XCTAssertFalse(compatibleGenericPlans.isEmpty, boardID)
+            for plan in compatibleGenericPlans {
+                for target in plan.steps.flatMap(\.targets) {
+                    let resolvedIDs = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+                    XCTAssertTrue(Set(resolvedIDs).isSubset(of: Set(board.holds.map(\.id))), "\(plan.id): \(boardID)")
+                }
+            }
+        }
+
+        XCTAssertFalse(PlanCatalog.all.contains { $0.boardID == "nature.stone-hanger" })
+    }
+
+    func testExistingRasterAndModelPresentationRoutingDoesNotRegress() throws {
+        let modelBoardIDs = [
+            "nature.stone-hanger",
+            "yy.baguette-evo",
+            "metolius.wood-grips-compact-ii",
+        ]
+        let rasterBoardIDs = ["metolius.simulator-3d", "soill.training-tiles"]
+
+        for boardID in modelBoardIDs {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            guard case .model = board.defaultPresentation.media else {
+                XCTFail("\(boardID) must remain model-routed")
+                continue
+            }
+            XCTAssertNotNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+            XCTAssertNotNil(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+            XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+        }
+
+        for boardID in rasterBoardIDs {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            guard case .raster = board.defaultPresentation.media else {
+                XCTFail("\(boardID) must remain raster-routed")
+                continue
+            }
+            XCTAssertNotNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+            XCTAssertNotNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+            XCTAssertNil(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+        }
+    }
+
     func testMigratedPackageModelsBindExactInventoriesMaterialsAndNearestHits() async throws {
         for expectation in migratedModelExpectations {
             let (board, media, model) = try await loadMigratedModel(expectation.boardID)
