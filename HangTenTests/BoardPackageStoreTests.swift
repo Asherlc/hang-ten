@@ -104,10 +104,13 @@ final class BoardPackageStoreTests: XCTestCase {
                 "two-branch-invalid-rest-length", "two-branch-invalid-radius", "two-branch-invalid-material",
                 "two-branch-missing-pose", "two-branch-unknown-pose", "two-branch-duplicate-pose",
                 "two-branch-explicit-null", "two-branch-scalar-kind-mismatch",
-                "two-branch-duplicate-raw-json-key", "two-branch-suspension-member-order",
-                "two-branch-passage-segment-too-short", "two-branch-order-violation",
+                "two-branch-suspension-member-order",
+                "two-branch-directed-route-too-short", "two-branch-order-violation",
                 "two-branch-excess-attachment-nodes", "two-branch-coincident-passage-endpoints",
-                "two-branch-passage-anchor-coincidence"
+                "two-branch-passage-anchor-coincidence",
+                "directed-mixed-passage-representations", "directed-zero-bore",
+                "directed-null-contact", "directed-empty-contact", "directed-short-route",
+                "directed-mixed-mouth-fields"
             ]
         )
 
@@ -156,6 +159,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
         XCTAssertEqual(media.suspension?.cord.restLength, 0.92)
+        XCTAssertEqual(suspension.branches.map(\.restLength), [0.92, 0.92])
         XCTAssertTrue(
             board.positions.allSatisfy { Set($0.holdIDs) == Set(media.descriptor.holds.keys) },
             "legacy suspension positions materialize the descriptor inventory without partitioning it"
@@ -171,6 +175,18 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
+        let directedFixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "directedTwoBranchModel", "mutations": []
+        ])
+        defer { directedFixture.remove() }
+        let directedBoard = try XCTUnwrap(BoardPackageStore(bundle: directedFixture.bundle).boards.first)
+        guard case .model(let directedMedia) = directedBoard.presentations[0].media,
+              case .twoBranchCord(let directedSuspension) = directedMedia.suspension else {
+            return XCTFail("expected directed through-bore suspension")
+        }
+        XCTAssertTrue(directedSuspension.passages.left.allSatisfy(\.isThroughBore))
+        XCTAssertEqual(directedSuspension.branches.map(\.restLength), [1.5, 1.5])
+
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "twoBranchModel",
             "mutations": []
@@ -225,7 +241,7 @@ final class BoardPackageStoreTests: XCTestCase {
     func testTwoBranchOrderAndPassageSegmentRegressionsUseDeclaredCategories() throws {
         let fixtures = try validationFixtures()
         let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
-        for name in ["two-branch-suspension-member-order", "two-branch-passage-segment-too-short"] {
+        for name in ["two-branch-suspension-member-order", "two-branch-directed-route-too-short"] {
             let specification = try XCTUnwrap(matrix.first(where: { $0["name"] as? String == name }))
             let fixture = try makeSharedModelParserParityFixtureBundle(specification)
             defer { fixture.remove() }
@@ -253,51 +269,27 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(content.holds.map(\.id), ["hold-left"])
     }
 
-    func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
+    func testFlashBoardModelPreservesBothFacesAndUprightAndInvertedPositions() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
-
-        XCTAssertEqual(
-            board.presentations.map(\.id),
-            [
-                "three-edge-upright",
-                "three-edge-inverted",
-                "two-edge-upright",
-                "two-edge-inverted",
-            ]
-        )
-
-        let expectedHoldIDsByConfiguration = [
-            "three-edge-upright": [
-                "three-edge-left",
-                "three-edge-center",
-                "three-edge-right",
-            ],
-            "three-edge-inverted": [
-                "three-edge-left",
-                "three-edge-center",
-                "three-edge-right",
-            ],
-            "two-edge-upright": [
-                "two-edge-left",
-                "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
-            ],
-            "two-edge-inverted": [
-                "two-edge-left",
-                "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
-            ],
+        let positionIDs = [
+            "three-edge-upright", "three-edge-inverted",
+            "two-edge-upright", "two-edge-inverted",
         ]
-
-        for (configurationID, expectedHoldIDs) in expectedHoldIDsByConfiguration {
-            let content = BoardMapPresentationContent(
-                board: board,
-                selectedPresentationID: configurationID
-            )
-            XCTAssertEqual(content.presentation.id, configurationID)
-            XCTAssertEqual(content.holds.map(\.id), expectedHoldIDs)
+        XCTAssertEqual(board.presentations.map(\.id), ["primary"])
+        XCTAssertEqual(board.positions.map(\.id), positionIDs)
+        XCTAssertEqual(Set(board.positions.map(\.presentationID)), ["primary"])
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .singleCord(let suspension) = media.suspension else {
+            return XCTFail("expected Flash's promoted single-cord model presentation")
+        }
+        XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(positionIDs))
+        let expectedHoldIDs = [
+            "three-edge-left", "three-edge-center", "three-edge-right",
+            "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"
+        ]
+        XCTAssertEqual(Set(media.descriptor.holds.keys), Set(expectedHoldIDs))
+        for positionID in positionIDs {
+            XCTAssertEqual(board.holdIDs(inPosition: positionID), expectedHoldIDs, positionID)
         }
     }
 
@@ -1917,7 +1909,6 @@ final class BoardPackageStoreTests: XCTestCase {
             "back.png"
         )
     }
-
     func testBoardMapSelectionPrioritizesInitialHighlightedHoldOverRequestedSurface() throws {
         let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
@@ -1931,6 +1922,35 @@ final class BoardPackageStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(selection.presentationID, "back")
+    }
+
+    func testPositionResolverUsesResolvedSurfaceAndFallsBackWhenSurfaceHasNoPosition() throws {
+        let fixture = try makeMultiPresentationFixtureBundle(boardMutation: { board in
+            board["positions"] = [["id": "front-pose", "presentationID": "front"],
+                                  ["id": "back-pose", "presentationID": "back"]]
+        })
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let selection = BoardMapPresentationSelection(board: board, requestedPresentationID: "front",
+            activeHoldID: nil, highlightedHoldIDs: ["hold-back"])
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: selection.presentationID, activeHoldID: nil), "back-pose")
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "unpositioned", activeHoldID: nil), "front-pose")
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "hold-back"), "back-pose")
+    }
+
+    func testTwoBranchRejectsNonIdentifierPassageAndBranchIDs() throws {
+        for mutations in [
+            [["target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "id"], "value": "invalid id"]],
+            [["target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "id"], "value": "invalid id"],
+             ["target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "passageIDs", 0], "value": "invalid id"]],
+        ] as [[[String: Any]]] {
+            let fixture = try makeSharedModelParserParityFixtureBundle(["base": "twoBranchModel", "mutations": mutations])
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
     }
 
     func testBoardMapSelectionMovesToNewActiveHoldWhenAnotherSurfaceIsAlreadyHighlighted() throws {
@@ -3654,14 +3674,14 @@ final class BoardPackageStoreTests: XCTestCase {
     private func serializedTwoBranchPassage(_ passage: [String: Any]) throws -> Data {
         try orderedJSONObjectData(
             passage,
-            keys: ["id", "nodeID", "pointInModel", "provenance"]
+            keys: ["id", "nodeID"] + (passage["pointInModel"] != nil ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]) + ["provenance"]
         )
     }
 
     private func serializedTwoBranchBranch(_ branch: [String: Any]) throws -> Data {
         try orderedJSONObjectData(
             branch,
-            keys: ["id", "passageIDs", "restLength", "radius", "material", "provenance"]
+            keys: ["id", "passageIDs"] + (branch["entryContactPoints"] != nil ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []) + ["restLength", "radius", "material", "provenance"]
         )
     }
 

@@ -31,7 +31,7 @@ from canonical_wood_color import (
 
 ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_NAME = "canonical-neutral-wood.png"
-EXPECTED_MODEL_SLUGS = frozenset(
+CANONICAL_WOOD_MODEL_SLUGS = frozenset(
     {"beastmaker-1000", "metolius-wood-grips-compact-ii"}
 )
 
@@ -57,7 +57,7 @@ def embedded_pngs(model_path: Path) -> tuple[tuple[str, bytes], ...]:
         )
 
 
-def assert_clean_import_has_usable_image_materials(model_path: Path) -> None:
+def assert_clean_import_has_usable_image_materials(model_path: Path, *, require_image: bool = True) -> None:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     result = bpy.ops.wm.usd_import(filepath=str(model_path), merge_parent_xform=True)
     if "FINISHED" not in result:
@@ -78,7 +78,7 @@ def assert_clean_import_has_usable_image_materials(model_path: Path) -> None:
                 for node in material.node_tree.nodes
                 if node.type == "TEX_IMAGE" and node.image is not None
             ]
-            if not images:
+            if require_image and not images:
                 raise AssertionError(f"mesh lacks image material: {item.name}")
             for image in images:
                 _ = image.pixels[0]
@@ -86,8 +86,11 @@ def assert_clean_import_has_usable_image_materials(model_path: Path) -> None:
                     raise AssertionError(f"mesh has unusable image material: {item.name}")
 
 
-packages = model_packages()
-assert {slug for slug, _ in packages} == EXPECTED_MODEL_SLUGS, packages
+all_packages = model_packages()
+# The canonical-wood contract applies to these authored wood models. Imported
+# mixed-material boards and Flash retain their separately reviewed materials.
+packages = tuple(item for item in all_packages if item[0] in CANONICAL_WOOD_MODEL_SLUGS)
+assert {slug for slug, _ in packages} == CANONICAL_WOOD_MODEL_SLUGS, all_packages
 images_by_slug = {slug: embedded_pngs(model_path) for slug, model_path in packages}
 assert all(images_by_slug.values()), "every shipped model USDZ must embed an image"
 payloads = [payload for images in images_by_slug.values() for _, payload in images]
@@ -106,8 +109,8 @@ for payload in payloads:
     assert_standard_srgb_png_profile(payload)
 assert png_dimensions(canonical_bytes)[0] >= 1024
 assert_light_neutral_wood_srgb(srgb_color_evidence(canonical_bytes))
-for _, model_path in packages:
-    assert_clean_import_has_usable_image_materials(model_path)
+for slug, model_path in all_packages:
+    assert_clean_import_has_usable_image_materials(model_path, require_image=slug in CANONICAL_WOOD_MODEL_SLUGS)
 
 print(
     "CANONICAL_WOOD_MATERIAL_TEST passed",

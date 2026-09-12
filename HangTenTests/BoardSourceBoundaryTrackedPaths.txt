@@ -32,6 +32,7 @@ HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
 HangTen/Models/SentryDiagnostics.swift
 HangTen/Models/SimulatedMotherboardTransport.swift
+HangTen/Models/SuspensionProfiles.swift
 HangTen/Models/Telemetry.swift
 HangTen/Models/TrainingModels.swift
 HangTen/Models/WHC06Protocol.swift

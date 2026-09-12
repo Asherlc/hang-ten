@@ -8,6 +8,10 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 
+from model_characterization import assert_baseline_matches, capture_model_baseline
+from model_verification import VerificationReport
+import verify_wood_grips_compact_ii as compact
+
 
 TOOLS = Path(__file__).resolve().parent
 ROOT = TOOLS.parents[1]
@@ -27,6 +31,12 @@ def execute(nodes, namespace):
     exec(compile(ast.Module(body=nodes, type_ignores=[]), "<model-tool>", "exec"), namespace)
 
 
+def semantic_tag(piece, role, hold_id=None):
+    piece["role"] = role
+    if hold_id is not None:
+        piece["hold_id"] = hold_id
+
+
 def beastmaker_report_functions():
     tree = ast.parse((TOOLS / "verify_beastmaker_1000.py").read_text())
     nodes = [
@@ -43,25 +53,55 @@ def beastmaker_report_functions():
     )
 
 
-def compact_package_paths():
-    tree = ast.parse((TOOLS / "verify_wood_grips_compact_ii.py").read_text())
-    nodes = [
-        node
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and node.name == "package_paths"
-    ]
-    namespace = {"Path": Path}
-    execute(nodes, namespace)
-    return namespace.get(
-        "package_paths",
-        lambda package: (
-            Path(package) / "wood-grips-compact-ii.usdz",
-            Path(package) / "export-verification.json",
-        ),
-    )
-
-
 class ModelReportTests(unittest.TestCase):
+    def test_compact_adapter_retains_skip_render_report_compatibility(self):
+        config = compact.compact_ii_config()
+        checks = {
+            "logicalHoldIDs": list(config.expected_hold_ids),
+            "sourcePieceCorrespondence": {f"mesh-{index}": f"source-{index}" for index in range(20)},
+            "modelSHA256": "model", "descriptorSHA256": "descriptor",
+            "triangleCeiling": 150_000,
+        }
+        report = compact.compact_report(
+            VerificationReport("metolius-wood-grips-compact-ii", checks),
+            expected_hold_ids=config.expected_hold_ids,
+            renders_skipped=True,
+        )
+        self.assertTrue(report["rendersSkipped"])
+        self.assertEqual(report["triangleCeiling"], 150_000)
+        self.assertEqual(report["assets"], ["assets/primary.model.json", "assets/primary.usdz"])
+
+    def test_compact_adapter_has_no_body_depth_or_review_rig_claim(self):
+        source = (TOOLS / "verify_wood_grips_compact_ii.py").read_text(encoding="utf-8")
+        self.assertNotIn("BODY_DEPTH", source)
+        self.assertNotIn("review_rig", source)
+
+    def test_all_verifier_sources_retain_report_contract_fields(self):
+        contracts = {
+            "verify_beastmaker_1000.py": {
+                "hold_ids_preserved", "hardware_mesh_count", "modelSHA256", "descriptorSHA256"
+            },
+            "verify_wood_grips_compact_ii.py": {
+                "hold_ids_preserved", "texturedMeshCount", "modelSHA256", "descriptorSHA256",
+                "triangleCeiling", "explicitTriangles"
+            },
+            "verify_tension_flash_board.py": {
+                "boardID", "holdIDs", "hold_ids_preserved", "body_mesh_count",
+                "hardware_mesh_count", "explicitTriangles", "triangles", "triangleCeiling"
+            },
+        }
+        for filename, fields in contracts.items():
+            source = (TOOLS / filename).read_text(encoding="utf-8")
+            for field in fields:
+                with self.subTest(verifier=filename, field=field):
+                    self.assertIn(f'"{field}"', source)
+
+    def test_shipped_model_baselines_are_self_consistent(self):
+        for slug in ("beastmaker-1000", "metolius-wood-grips-compact-ii", "tension-flash-board"):
+            package = ROOT / "Hangboards" / slug
+            baseline = capture_model_baseline(package, package / "board.json")
+            assert_baseline_matches(baseline, baseline)
+
     def test_beastmaker_report_requires_22_hold_ids_and_no_hardware(self):
         load_report, verify_report = beastmaker_report_functions()
         fixture = {
@@ -87,38 +127,32 @@ class ModelReportTests(unittest.TestCase):
                 expected_ids=BEASTMAKER_IDS,
             )
 
-    def test_compact_verifier_uses_compiler_package_assets(self):
-        paths = compact_package_paths()
-        with tempfile.TemporaryDirectory(
-            prefix=f"{ROOT.name}-compact-package-", dir=ROOT / ".context"
-        ) as directory:
-            package = Path(directory)
-            assets = package / "assets"
-            assets.mkdir()
-            (assets / "primary.usdz").write_bytes(b"fixture USDZ")
-            (assets / "primary.model.json").write_text("{}", encoding="utf-8")
-            model, descriptor = paths(package)
+    def test_compact_verifier_has_no_duplicate_package_inventory_helper(self):
+        tree = ast.parse((TOOLS / "verify_wood_grips_compact_ii.py").read_text())
+        self.assertFalse(any(
+            isinstance(node, ast.FunctionDef) and node.name == "package_paths"
+            for node in tree.body
+        ))
 
-        self.assertEqual(model, assets / "primary.usdz")
-        self.assertEqual(descriptor, assets / "primary.model.json")
-
-    def test_compact_verifier_rejects_raster_promotion(self):
-        paths = compact_package_paths()
-        with tempfile.TemporaryDirectory(
-            prefix=f"{ROOT.name}-compact-raster-promotion-", dir=ROOT / ".context"
-        ) as directory:
-            package = Path(directory)
-            assets = package / "assets"
-            assets.mkdir()
-            (assets / "primary.usdz").write_bytes(b"fixture USDZ")
-            (assets / "primary.model.json").write_text("{}", encoding="utf-8")
-            (assets / "primary.png").write_bytes(b"raster promotion")
-            with self.assertRaises(ValueError):
-                paths(package)
+    def test_compact_report_rejects_renamed_hold_against_config_inventory(self):
+        config = compact.compact_ii_config()
+        actual_ids = list(config.expected_hold_ids)
+        actual_ids[-1] = "renamed-hold"
+        checks = {
+            "logicalHoldIDs": actual_ids,
+            "sourcePieceCorrespondence": {},
+            "modelSHA256": "model", "descriptorSHA256": "descriptor",
+            "triangleCeiling": 150_000,
+        }
+        with self.assertRaisesRegex(ValueError, "all 19 Compact II hold IDs"):
+            compact.compact_report(
+                VerificationReport("metolius-wood-grips-compact-ii", checks),
+                expected_hold_ids=config.expected_hold_ids,
+                renders_skipped=True,
+            )
 
     def test_default_outputs_follow_checkout_name(self):
-        for filename in ("wood_grips_compact_ii.py", "verify_wood_grips_compact_ii.py",
-                         "render_hold_highlights.py"):
+        for filename in ("wood_grips_compact_ii.py", "render_hold_highlights.py"):
             with self.subTest(tool=filename):
                 nodes = statements(filename)
                 start = next(i for i, node in enumerate(nodes)
@@ -133,6 +167,17 @@ class ModelReportTests(unittest.TestCase):
                 self.assertEqual(args.output, expected / "highlights" if hasattr(args, "blend") else expected)
                 if hasattr(args, "blend"):
                     self.assertEqual(args.blend, expected / "wood-grips-compact-ii.blend")
+
+    def test_compact_verifier_only_parses_arguments_inside_main(self):
+        tree = ast.parse((TOOLS / "verify_wood_grips_compact_ii.py").read_text())
+        module_parse_calls = [
+            node for node in tree.body
+            if isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call)
+            and isinstance(node.value.func, ast.Attribute)
+            and node.value.func.attr == "parse_args"
+        ]
+        self.assertEqual(module_parse_calls, [])
 
     def test_preserved_hold_count_measures_matching_ids(self):
         tree = ast.parse((TOOLS / "verify_wood_grips_compact_ii.py").read_text())
@@ -156,7 +201,7 @@ class ModelReportTests(unittest.TestCase):
             None,
         )
         self.assertIsNotNone(function, "Compact generator must tag every compiler source mesh")
-        namespace = {}
+        namespace = {"tag_piece": semantic_tag}
         execute([function], namespace)
 
         class Piece(dict):

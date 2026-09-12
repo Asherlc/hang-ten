@@ -460,8 +460,14 @@ class BoardModelSingleCordSuspension:
 class BoardModelPassage:
     id: str
     node_id: str
-    point_in_model: tuple[float, float, float]
+    entry_point_in_model: tuple[float, float, float]
+    exit_point_in_model: tuple[float, float, float]
     provenance: str
+    is_through_bore: bool = True
+
+    @property
+    def point_in_model(self) -> tuple[float, float, float]:
+        return self.entry_point_in_model
 
 
 @dataclass(frozen=True)
@@ -474,6 +480,9 @@ class BoardModelPassagePairs:
 class BoardModelCordBranch:
     id: str
     passage_ids: tuple[str, str]
+    entry_contact_points: tuple[tuple[float, float, float], ...]
+    exterior_contact_points: tuple[tuple[float, float, float], ...]
+    exit_contact_points: tuple[tuple[float, float, float], ...]
     rest_length: float
     radius: float
     material: str
@@ -608,7 +617,6 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         _canonical_member_order(passages_payload, ("left", "right"), passages_source)
         parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
         all_passage_ids: set[str] = set()
-        all_passage_node_ids: set[str] = set()
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
             raw_passages = passages_payload[side]
@@ -618,26 +626,45 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             for index, raw_passage in enumerate(raw_passages):
                 passage_source = f"{side_source}[{index}]"
                 passage_payload = _mapping(raw_passage, passage_source)
-                _closed(passage_payload, {"id", "nodeID", "pointInModel", "provenance"}, passage_source)
+                through_bore = "pointInModel" not in passage_payload
+                point_keys = ("entryPointInModel", "exitPointInModel") if through_bore else ("pointInModel",)
+                _closed(
+                    passage_payload,
+                    {"id", "nodeID", *point_keys, "provenance"},
+                    passage_source,
+                )
                 _canonical_member_order(
-                    passage_payload, ("id", "nodeID", "pointInModel", "provenance"), passage_source
+                    passage_payload,
+                    ("id", "nodeID", *point_keys, "provenance"),
+                    passage_source,
                 )
                 passage_id = _identifier(passage_payload["id"], f"{passage_source}.id")
                 if passage_id in all_passage_ids:
                     raise ValueError(f"duplicate suspension passage ID: {passage_id}")
                 all_passage_ids.add(passage_id)
                 node_id = _string(passage_payload["nodeID"], f"{passage_source}.nodeID")
-                if node_id in all_passage_node_ids:
-                    raise ValueError(f"duplicate suspension passage node ID: {node_id}")
-                all_passage_node_ids.add(node_id)
                 passages.append(BoardModelPassage(
                     passage_id,
                     node_id,
-                    _finite_vector3(passage_payload["pointInModel"], f"{passage_source}.pointInModel"),
+                    _finite_vector3(
+                        passage_payload[point_keys[0]],
+                        f"{passage_source}.{point_keys[0]}",
+                    ),
+                    _finite_vector3(
+                        passage_payload[point_keys[-1]],
+                        f"{passage_source}.{point_keys[-1]}",
+                    ),
                     _string(passage_payload["provenance"], f"{passage_source}.provenance"),
+                    through_bore,
                 ))
             parsed_pairs[side] = (passages[0], passages[1])
         passage_pairs = BoardModelPassagePairs(parsed_pairs["left"], parsed_pairs["right"])
+        all_passages = passage_pairs.left + passage_pairs.right
+        if len({passage.is_through_bore for passage in all_passages}) != 1:
+            raise ValueError("twoBranchCord cannot mix point passages and through-bores")
+        through_bore = all_passages[0].is_through_bore
+        if not through_bore and len({passage.node_id for passage in all_passages}) != 4:
+            raise ValueError("duplicate suspension passage node ID")
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
@@ -652,10 +679,15 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         for index, raw_branch in enumerate(raw_branches):
             branch_source = f"{branches_source}[{index}]"
             branch_payload = _mapping(raw_branch, branch_source)
-            _closed(branch_payload, {"id", "passageIDs", "restLength", "radius", "material", "provenance"}, branch_source)
+            contact_keys = ("entryContactPoints", "exteriorContactPoints", "exitContactPoints") if through_bore else ()
+            _closed(
+                branch_payload,
+                {"id", "passageIDs", *contact_keys, "restLength", "radius", "material", "provenance"},
+                branch_source,
+            )
             _canonical_member_order(
                 branch_payload,
-                ("id", "passageIDs", "restLength", "radius", "material", "provenance"),
+                ("id", "passageIDs", *contact_keys, "restLength", "radius", "material", "provenance"),
                 branch_source,
             )
             branch_id = _identifier(branch_payload["id"], f"{branch_source}.id")
@@ -668,9 +700,28 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             passage_ids = tuple(_identifier(item, f"{branch_source}.passageIDs[{item_index}]") for item_index, item in enumerate(passage_ids_value))
             if passage_ids != expected_pairs[index]:
                 raise ValueError(f"{branch_source}.passageIDs must match its ordered passage pair")
+            parsed_contacts: dict[str, tuple[tuple[float, float, float], ...]] = {}
+            for key, minimum_count in (
+                ("entryContactPoints", 1),
+                ("exteriorContactPoints", 2),
+                ("exitContactPoints", 1),
+            ):
+                if not through_bore:
+                    parsed_contacts[key] = ()
+                    continue
+                points_value = branch_payload[key]
+                if not isinstance(points_value, list) or len(points_value) < minimum_count:
+                    raise ValueError(f"{branch_source}.{key} must contain at least {minimum_count} points")
+                parsed_contacts[key] = tuple(
+                    _finite_vector3(point, f"{branch_source}.{key}[{point_index}]")
+                    for point_index, point in enumerate(points_value)
+                )
             branches.append(BoardModelCordBranch(
                 branch_id,
                 passage_ids,  # type: ignore[arg-type]
+                parsed_contacts["entryContactPoints"],
+                parsed_contacts["exteriorContactPoints"],
+                parsed_contacts["exitContactPoints"],
                 _positive_number(branch_payload["restLength"], f"{branch_source}.restLength"),
                 _positive_number(branch_payload["radius"], f"{branch_source}.radius"),
                 _string(branch_payload["material"], f"{branch_source}.material"),
@@ -1540,9 +1591,7 @@ def _validate_model_suspension(
     )
     if not all(math.isfinite(value) for value in anchor):
         raise ValueError("suspension anchor must be finite")
-    if isinstance(suspension, BoardModelSingleCordSuspension):
-        passages = (suspension.attachment,)
-    else:
+    if isinstance(suspension, BoardModelTwoBranchSuspension):
         passages = tuple(
             passage
             for side in (suspension.passages.left, suspension.passages.right)
@@ -1554,11 +1603,17 @@ def _validate_model_suspension(
             role = nodes.get(passage.node_id)
             if role not in {"body", "attachment"}:
                 raise ValueError("suspension passage node must be a body or attachment node")
-            if any(
-                coordinate < minimum[index] or coordinate > maximum[index]
-                for index, coordinate in enumerate(passage.point_in_model)
+            for mouth_name, point in (
+                ("entry", passage.entry_point_in_model),
+                ("exit", passage.exit_point_in_model),
             ):
-                raise ValueError("suspension passage point must be inside model bounds")
+                if any(
+                    coordinate < minimum[index] or coordinate > maximum[index]
+                    for index, coordinate in enumerate(point)
+                ):
+                    raise ValueError(f"suspension passage {mouth_name} point must be inside model bounds")
+            if passage.is_through_bore and math.dist(passage.entry_point_in_model, passage.exit_point_in_model) <= 1e-7:
+                raise ValueError("suspension passage entry and exit must form a non-zero through-bore")
     if isinstance(suspension, BoardModelSingleCordSuspension):
         role = nodes.get(suspension.attachment.node_id)
         if role not in {"body", "attachment"}:
@@ -1574,14 +1629,35 @@ def _validate_model_suspension(
             (((suspension.attachment,), (suspension.cord.rest_length,)),)
             if isinstance(suspension, BoardModelSingleCordSuspension)
             else (
-                (suspension.passages.left, (suspension.branches[0].rest_length,)),
-                (suspension.passages.right, (suspension.branches[1].rest_length,)),
+                (suspension.passages.left, suspension.branches[0]),
+                (suspension.passages.right, suspension.branches[1]),
             )
         )
-        for branch_endpoints, branch_lengths in endpoints_by_branch:
+        for branch_endpoints, branch_data in endpoints_by_branch:
+            if isinstance(suspension, BoardModelSingleCordSuspension):
+                endpoints = (suspension.attachment.point_in_model,)
+                rest_length = suspension.cord.rest_length
+                rigid_route_length = 0.0
+            else:
+                assert isinstance(branch_data, BoardModelCordBranch)
+                endpoints = (
+                    *branch_data.entry_contact_points,
+                    branch_endpoints[0].entry_point_in_model,
+                    branch_endpoints[0].exit_point_in_model,
+                    *branch_data.exterior_contact_points,
+                    branch_endpoints[1].exit_point_in_model,
+                    branch_endpoints[1].entry_point_in_model,
+                    *branch_data.exit_contact_points,
+                )
+                rest_length = branch_data.rest_length
+                if not branch_endpoints[0].is_through_bore:
+                    endpoints = tuple(passage.point_in_model for passage in branch_endpoints)
+                rigid_route_length = sum(
+                    math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
+                ) + math.dist(endpoints[0], endpoints[1])
             transformed_endpoints: list[tuple[float, float, float]] = []
-            for endpoint in branch_endpoints:
-                px, py, pz = endpoint.point_in_model
+            for endpoint in endpoints:
+                px, py, pz = endpoint
                 # Quaternion rotation followed by canonical translation.
                 tx = 2 * (qy * pz - qz * py)
                 ty = 2 * (qz * px - qx * pz)
@@ -1595,35 +1671,20 @@ def _validate_model_suspension(
                 distance = math.sqrt(sum((transformed[index] - anchor[index]) ** 2 for index in range(3)))
                 if not math.isfinite(distance):
                     raise ValueError(f"suspension pose {position_id} endpoint distance must be finite")
-            if len(transformed_endpoints) == 1:
-                rest_length = branch_lengths[0]
-                distance = math.sqrt(
-                    sum((transformed_endpoints[0][index] - anchor[index]) ** 2 for index in range(3))
-                )
                 if rest_length < distance - 1e-5:
                     raise ValueError(f"suspension pose {position_id} restLength is shorter than endpoint distance")
-            if len(transformed_endpoints) == 2:
-                passage_distance = math.sqrt(
-                    sum(
-                        (transformed_endpoints[0][index] - transformed_endpoints[1][index]) ** 2
-                        for index in range(3)
-                    )
-                )
-                if not math.isfinite(passage_distance):
-                    raise ValueError(f"suspension pose {position_id} passage-to-passage distance must be finite")
-                endpoint_distances = tuple(
-                    math.sqrt(sum((endpoint[index] - anchor[index]) ** 2 for index in range(3)))
-                    for endpoint in transformed_endpoints
-                )
-                minimum_route_length = sum(endpoint_distances) + passage_distance
-                if not all(math.isfinite(distance) for distance in endpoint_distances) or not math.isfinite(minimum_route_length):
-                    raise ValueError(f"suspension pose {position_id} closed route length must be finite")
-                if passage_distance <= 1e-7:
+            if len(transformed_endpoints) > 1:
+                first_distance = math.dist(anchor, transformed_endpoints[0])
+                second_distance = math.dist(anchor, transformed_endpoints[-1])
+                if not math.isfinite(rigid_route_length):
+                    raise ValueError(f"suspension pose {position_id} rigid route must be finite")
+                if rigid_route_length <= 1e-7:
                     raise ValueError(f"suspension pose {position_id} must have distinct passage endpoints")
-                if any(distance <= 1e-7 for distance in endpoint_distances):
+                if min(first_distance, second_distance) <= 1e-7:
                     raise ValueError(f"suspension pose {position_id} passage endpoints must not coincide with the anchor")
-                if branch_lengths[0] < minimum_route_length - 1e-5:
-                    raise ValueError(f"suspension pose {position_id} restLength is shorter than the closed route")
+                if rest_length < first_distance + rigid_route_length + second_distance - 1e-5:
+                    route = "directed route" if branch_endpoints[0].is_through_bore else "the closed route"
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than {route}")
 
 
 def _load_model_descriptor(

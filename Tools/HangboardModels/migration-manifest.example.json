@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "boardID": "metolius-wood-grips-compact-ii",
+  "revision": "compact-ii-revision-3",
+  "boardJSON": "Hangboards/metolius-wood-grips-compact-ii/board.json",
+  "evidencePacket": "docs/source-audits/compact-ii/evidence-packet.json",
+  "sourceBlend": {"path": "sources/compact-ii.blend", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "logicalHoldIDs": ["jug-left", "jug-right"],
+  "presentation": {"id": "primary", "type": "model", "assetPath": "assets/primary.usdz", "descriptorPath": "assets/primary.model.json"},
+  "positions": [{"id": "default", "activeHoldIDs": ["jug-left", "jug-right"]}],
+  "suspensionProfile": "none",
+  "deliberateOmissions": ["screw holes", "mounting hardware"],
+  "verification": {"triangleCeiling": 150000, "probeIDs": ["front"]},
+  "reviewViews": ["front", "three-quarter", "clay-detail", "active-hold"],
+  "artifacts": {"packageSHA256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "descriptorSHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+}

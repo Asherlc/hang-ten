@@ -416,6 +416,46 @@ class BoardRepositoryTest {
         assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
     }
 
+    @Test
+    fun omitsFlashModelOnlyPackageWithoutPngFallbackWhileKeepingRasterNeighbor() {
+        val accessedPaths = mutableListOf<String>()
+        val assets = FixtureAssets(
+            mapOf(
+                "Hangboards/raster-neighbor/board.json" to schemaV2RasterBoardJson()
+                    .replace("demo.board", "raster.neighbor")
+                    .replace("Demo Board", "Raster Neighbor"),
+                "Hangboards/raster-neighbor/assets/primary.png" to "png",
+                "Hangboards/tension-flash-board/board.json" to schemaV2ModelOnlyBoardJson()
+                    .replace("model.only", "tension.flash-board")
+                    .replace("Model only", "Flash Board"),
+                "Hangboards/tension-flash-board/assets/primary.usdz" to "usdz",
+                "Hangboards/tension-flash-board/assets/primary.model.json" to "descriptor",
+                "PlanLibrary.json" to
+                    """
+                    {
+                      "boardMappings": [
+                        {
+                          "boardID": "tension.flash-board",
+                          "semanticHolds": { "jugs": { "kind": "jug" } }
+                        }
+                      ]
+                    }
+                    """.trimIndent(),
+            ),
+            accessedPaths = accessedPaths,
+        )
+
+        val boards = AssetBoardRepository(assets).loadBoards().getOrThrow()
+
+        assertEquals(listOf("raster.neighbor"), boards.map { it.id })
+        assertEquals("Raster Neighbor", boards.single().name)
+        assertEquals("assets/primary.png", boards.single().presentations.single().assetPath)
+        assertFalse("Hangboards/tension-flash-board/assets/primary.png" in accessedPaths)
+        assertFalse("Hangboards/tension-flash-board/assets/primary.usdz" in accessedPaths)
+        assertFalse("Hangboards/tension-flash-board/assets/primary.model.json" in accessedPaths)
+        assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
+    }
+
     private fun boardJson(): String =
         """
         {
@@ -586,6 +626,7 @@ class BoardRepositoryTest {
 
 class FixtureAssets(
     private val files: Map<String, String>,
+    private val accessedPaths: MutableList<String> = mutableListOf(),
 ) : ContentAssets {
     override fun list(path: String): List<String>? {
         val prefix = path.trimEnd('/') + "/"
@@ -596,9 +637,15 @@ class FixtureAssets(
             .takeIf { it.isNotEmpty() }
     }
 
-    override fun read(path: String): String? = files[path]
+    override fun read(path: String): String? {
+        accessedPaths += path
+        return files[path]
+    }
 
-    override fun exists(path: String): Boolean = path in files
+    override fun exists(path: String): Boolean {
+        accessedPaths += path
+        return path in files
+    }
 }
 
 private fun assertTrueFailureContaining(result: Result<*>, expected: String) {

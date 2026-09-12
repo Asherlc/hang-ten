@@ -20,6 +20,13 @@ DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
+FLASH_TWO_BRANCH_CANDIDATE = (
+    REPO_ROOT
+    / "Tools"
+    / "HangboardModels"
+    / "fixtures"
+    / "tension_flash_board_two_branch_review_candidate.json"
+)
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
 YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
@@ -514,84 +521,74 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert "dimensions" not in board
     assert _presentation_summary(board) == [
         (
-            "three-edge-upright",
-            "Three-edge surface — right side up",
-            "assets/primary.png",
+            "primary",
+            "Primary suspended model",
+            "assets/primary.usdz",
             1.5,
             True,
             None,
             False,
-        ),
-        (
-            "three-edge-inverted",
-            "Three-edge surface — upside down",
-            "assets/three-edge-inverted.png",
-            1.5,
-            False,
-            "three-edge-upright",
-            True,
-        ),
-        (
-            "two-edge-upright",
-            "Two-edge surface — right side up",
-            "assets/two-edge-surface.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "two-edge-inverted",
-            "Two-edge surface — upside down",
-            "assets/two-edge-inverted.png",
-            2.0,
-            False,
-            "two-edge-upright",
-            True,
         ),
     ]
 
-    owners = _original_hold_owners(board)
-    holds_by_presentation = {
-        presentation_id: tuple(
-            hold["id"]
-            for hold in board["holds"]
-            if owners[hold["id"]] == presentation_id
-        )
-        for presentation_id in ("three-edge-upright", "two-edge-upright")
-    }
-    assert holds_by_presentation == {
-        "three-edge-upright": (
-            "three-edge-left",
-            "three-edge-center",
-            "three-edge-right",
-        ),
-        "two-edge-upright": (
-            "two-edge-left",
-            "two-edge-right",
-            "small-crimp-left",
-            "small-crimp-right",
-        ),
-    }
+    assert [hold["id"] for hold in board["holds"]] == [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right",
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right",
+    ]
     assert all(hold["kind"] == "edge" for hold in board["holds"])
     assert all("sizeMillimeters" not in hold for hold in board["holds"])
-    geometry = document_hold_geometry(board)
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
-    assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
-    )
-
-    expected_sizes = {
-        "assets/primary.png": (1536, 1024),
-        "assets/three-edge-inverted.png": (1536, 1024),
-        "assets/two-edge-surface.png": (1774, 887),
-        "assets/two-edge-inverted.png": (1774, 887),
+    assert all("presentationID" not in hold and "geometry" not in hold for hold in board["holds"])
+    assert [position["id"] for position in board["positions"]] == [
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    ]
+    assert {position["presentationID"] for position in board["positions"]} == {"primary"}
+    assert set(board["presentations"][0]["media"]) == {
+        "type", "assetPath", "descriptorPath", "display", "suspension"
     }
-    for asset_path, expected_size in expected_sizes.items():
-        with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
-            assert image.format == "PNG"
-            assert image.size == expected_size
+    suspension = board["presentations"][0]["media"]["suspension"]
+    assert suspension["attachment"]["nodeID"] == "flash_board_body_008"
+    assert set(suspension["canonicalPoses"]) == {
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    }
+    assert {path.relative_to(FLASH_BOARD_ROOT).as_posix() for path in FLASH_BOARD_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+
+
+def test_flash_model_descriptor_preserves_approved_assets_and_bindings() -> None:
+    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+    media = board["presentations"][0]["media"]
+    model_bytes = (FLASH_BOARD_ROOT / media["assetPath"]).read_bytes()
+    descriptor_bytes = (FLASH_BOARD_ROOT / media["descriptorPath"]).read_bytes()
+    descriptor = json.loads(descriptor_bytes)
+    model_sha = hashlib.sha256(model_bytes).hexdigest()
+    assert model_sha == "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b"
+    assert hashlib.sha256(descriptor_bytes).hexdigest() == "b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58"
+    assert descriptor["modelSHA256"] == model_sha
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    logical_ids = {hold["id"] for hold in board["holds"]}
+    assert set(descriptor["holds"]) == logical_ids
+    hold_nodes = {node["nodeID"]: node["holdID"] for node in descriptor["nodes"] if node["role"] == "hold"}
+    assert set(hold_nodes.values()) == logical_ids
+    assert len(hold_nodes) == len(logical_ids)
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [node_id for node_id, binding in hold_nodes.items() if binding == hold_id]
+    attachment_id = media["suspension"]["attachment"]["nodeID"]
+    assert [node for node in descriptor["nodes"] if node["role"] != "hold"] == [
+        {"nodeID": attachment_id, "role": "body"}
+    ]
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:

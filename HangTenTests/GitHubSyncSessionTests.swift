@@ -283,11 +283,9 @@ final class GitHubSyncSessionTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) async {
-        for _ in 0..<100 {
-            if predicate() {
-                break
-            }
-            await Task.yield()
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        while !predicate(), ContinuousClock.now < deadline {
+            try? await Task.sleep(for: .milliseconds(10))
         }
         XCTAssertTrue(predicate(), file: file, line: line)
     }

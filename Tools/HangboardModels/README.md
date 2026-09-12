@@ -2,10 +2,12 @@
 
 This directory contains the evidence-packet validator and the deterministic
 USDZ-to-descriptor compiler for the schema-v2 board package contract. The
-completed inventory contains 59 raster v2 packages and two model-only
-packages: Beastmaker 1000 and Metolius Wood Grips Compact II. Both promoted
-package trees contain `board.json`, `assets/primary.usdz`, and
-`assets/primary.model.json`; model media is read-only. This tooling documents
+completed inventory contains 58 raster v2 packages and three model-only
+packages: Beastmaker 1000, Metolius Wood Grips Compact II, and Tension Flash
+Board. Each model-only package tree contains `board.json`,
+`assets/primary.usdz`, and `assets/primary.model.json`; model media is
+read-only. This extraction covers the Beastmaker and Compact II packages;
+Flash remains a separately gated model package. This tooling documents
 demonstrated package validation and staging, not remote model sync or model
 editing.
 
@@ -32,6 +34,74 @@ byte-for-byte; it does not synthesize a raster fallback or substitute a model
 resource. Remote GitHub model-package sync is deferred/unsupported by the
 current PNG/default-oriented GitHub sync. Workbench model editing is
 read-only/unavailable; raster Workbench editing remains supported.
+
+## Extracted verification and migration bookkeeping
+
+The shared verifier is the preservation boundary for the extracted Beastmaker
+1000 and Compact II packages. `model_verification.ModelVerificationConfig`
+carries the expected
+ordered logical IDs, exact package asset set, role/material policy, triangle
+ceiling, and additive board probes. Call
+`model_verification.verify_model_package(package, config, render=False)` for
+the common package, descriptor, material, imported-node, triangle, and
+regenerated-descriptor checks. The board-specific wrappers remain the public
+CLI compatibility layer:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_beastmaker_1000.py -- \
+  --output .context/OWNER-beastmaker-1000/package --skip-renders
+```
+
+The wrapper's `beastmaker_config()` and Compact II's
+`compact_ii_config()` supply the shared `ModelVerificationConfig` when these
+documented Blender entrypoints run.
+
+Compact II uses `compact_ii_config()` and retains its fixed 19-ID inventory,
+150,000-triangle ceiling, exact two-asset package, and `--skip-renders`
+compatibility mode. Beastmaker retains its fixed 22-ID inventory and authored
+rim/nearest-hit probe. Do not use these adapters to infer identity from
+imported names. `verify_tension_flash_board.py` remains a separate Flash
+verifier and baseline: its package, generator, and two-branch presentation are
+not part of this shared route until separately approved.
+
+Capture a pre-extraction record with
+`model_characterization.capture_model_baseline(package, board_json)` and
+compare it with `assert_baseline_matches(actual, expected)`. The record
+preserves exact regular-file asset inventory, model and descriptor SHA-256
+values, descriptor data, and logical hold order. The staging contract remains
+`scripts/stage-board-packages.py`'s recursive copy of parser-approved regular
+files; the staging tests compare every staged file's bytes with its source.
+No model resource is synthesized, renamed, substituted, or synchronized to a
+remote service.
+
+Migration bookkeeping is a closed document. Validate an actual manifest with
+`migration_manifest.load_migration_manifest(path)`; the checked-in
+`migration-manifest.example.json` contains placeholders and is not itself a
+verified board record. After verification, the fixed-view gallery interface
+can be called as follows (the output must be a direct, owner-prefixed child of
+the canonical workspace `.context`):
+
+```python
+from pathlib import Path
+from migration_manifest import load_migration_manifest
+from render_model_gallery import render_model_gallery
+
+manifest = load_migration_manifest(Path("PATH/migration-manifest.json"))
+artifacts = render_model_gallery(
+    Path(".context/OWNER-beastmaker-1000/package"),
+    manifest,
+    Path(".context/OWNER-beastmaker-1000-gallery"),
+)
+```
+
+The gallery imports only the verified USDZ, records fixed-view PNG hashes and
+provenance, and requires explicit cleanup of the owned output directory. It
+does not open source blends/images or edit model geometry. The Swift
+single-cord runtime boundary is `SuspensionProfileSolver.solveSingle` behind
+`SuspendedBoardPresentation`; keep the cord transient, invisible-anchor,
+non-pickable, and unavailable-on-invalid-input behavior. Two-branch solving
+and Flash adoption remain separately gated and unsupported here.
 
 ## Stage 0 evidence packets
 
@@ -103,17 +173,21 @@ rounded to nine decimal places. The coordinate frame is
 right, `+Y` up, and `+Z` toward the climber.
 
 The compiler is package/tooling support, not a geometry authoring workflow.
-Human visual review of the display geometry was completed before the two model
-packages entered the live inventory. The shared warm-white/light-neutral
-fallback and final front lighting were subsequently reviewed in the actual app
-renderer and human-approved. Package-local descriptors are generated from
-actual exports and remain read-only.
+Human visual review of the extracted Beastmaker and Compact II display geometry
+was completed before those packages entered the live inventory. The shared
+warm-white/light-neutral fallback and final front lighting were subsequently
+reviewed in the actual app renderer and human-approved for those two packages.
+Flash's package, generator, descriptor, and review status remain under its
+separate migration gate and are not changed or claimed by this extraction.
+Package-local descriptors are generated from actual exports and remain
+read-only.
 
 ## Canonical wood display material
 
-Every shipped wood display model uses the one committed original source
-`assets/canonical-neutral-wood.png`: light neutral, low-to-moderate fine grain,
-and no species-match, logo, knot, stain, or board-color claim. The PNG declares
+The two extracted wood display models—Beastmaker 1000 and Compact II—use the
+one committed original source `assets/canonical-neutral-wood.png`: light
+neutral, low-to-moderate fine grain, and no species-match, logo, knot, stain,
+or board-color claim. The PNG declares
 its encoded color explicitly with standard-sRGB `sRGB`, `gAMA`, and `cHRM`
 chunks so the source and self-contained USDZ payload do not depend on a
 decoder's unprofiled-image default. The deterministic v5 generator, its
@@ -127,18 +201,20 @@ rtk python3 -B Tools/HangboardModels/canonical_neutral_wood.py
 
 The approved canonical PNG SHA-256 is
 `fdab3b78ce575a0dbf90b300db4d52438cb94f7e71cd6d589d56a044de97ec0a`.
-The final packages and generated descriptors are:
+The extracted packages and generated descriptors are:
 
 | package | USDZ SHA-256 | descriptor SHA-256 | inventory |
 | --- | --- | --- | --- |
 | Beastmaker 1000 | `19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d` | `ee095c463804312cbd6ed08f5113019793b934ab6806a6fb343be939ff8a68d3` | 22 holds / 23 nodes |
 | Compact II | `addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a` | `a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f` | 19 holds / 20 nodes |
 
-Each exporter loads and packs those exact bytes, so its USDZ remains
-self-contained/offline while both packages embed the same stable
+Each covered exporter loads and packs those exact bytes, so its USDZ remains
+self-contained/offline while the two extracted packages embed the same stable
 `textures/canonical-neutral-wood.png` member. After changing that source, run
-the complete discovered-model rebuild. It provisions disposable compiler
-sources from the checked-in board generators in an owned temporary directory;
+the complete rebuild for these two covered packages. Flash is intentionally
+excluded from this extraction's canonical-wood rebuild and requires its own
+approved migration gate. The rebuild provisions disposable compiler sources
+from the checked-in covered-board generators in an owned temporary directory;
 it never reads or mutates durable `.context` `.blend` files. It refuses
 incomplete builder coverage and rejects descriptor geometry/inventory drift
 before promotion:
@@ -147,8 +223,9 @@ before promotion:
 rtk python3 -B Tools/HangboardModels/rebuild_all_wood_models.py
 ```
 
-Then run the actual-package material regression. It cleanly reimports every
-shipped model USDZ and requires the byte-identical embedded canonical PNG plus
+Then run the actual-package material regression for the two extracted packages.
+It cleanly reimports their model USDZs and requires the byte-identical embedded
+canonical PNG plus
 the exact standard-sRGB metadata, positive loaded image dimensions, and image
 material bindings on every mesh. Blender reimport/render verifies the Blender
 side only; a controlled app-renderer comparison remains required after a
