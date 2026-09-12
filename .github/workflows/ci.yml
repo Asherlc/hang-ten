@@ -150,10 +150,16 @@ jobs:
 
   android:
     name: Android validation
+    # Pull requests skip this job by design because the Android check is handled by
+    # `android-required`, which can report success or skip outcomes for changed-path
+    # coverage decisions while preserving PR branch-protection behavior.
     needs:
       - changes
     if: >-
-      github.event_name != 'pull_request'
+      github.event_name != 'pull_request' &&
+      (needs.changes.outputs.android == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -240,9 +246,9 @@ jobs:
           fail_level: error
 
   android-required:
-    # Keep this stable: branch protection requires this exact check name. An
-    # Android job skipped by path classification is reported here so this
-    # stable check does not leave the pull request waiting forever.
+    # Keep this stable: branch protection requires this exact check name. Pull requests
+    # skip direct Android validation, so this stable job reports Android as skipped
+    # or required-success for branch-protection outcomes.
     name: Android verification
     needs:
       - changes
