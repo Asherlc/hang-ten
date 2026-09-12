@@ -19,6 +19,7 @@ COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
 DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
+PROJECT_ROOT = HANGBOARDS_ROOT / "metolius-project"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
@@ -485,7 +486,7 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
     assert board["id"] == "metolius.prime-rib"
     assert board["dimensions"] == "20 × 4.2 × 1.5 in"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.png", 1704 / 923, True, None, False)
+        ("primary", "Primary", "assets/primary.usdz", 4.7619050011605735, True, None, False)
     ]
     assert tuple(
         (
@@ -496,15 +497,31 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
         )
         for hold in board["holds"]
     ) == PRIME_RIB_HOLDS
-    geometry = document_hold_geometry(board)
-    assert _original_hold_owners(board) == {
-        hold["id"]: "front" for hold in board["holds"]
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "holdGeometry" not in media
+    assert {path.relative_to(PRIME_RIB_ROOT).as_posix()
+            for path in PRIME_RIB_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
     }
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
-    assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
+    descriptor = json.loads(
+        (PRIME_RIB_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
     )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (PRIME_RIB_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "body_mesh_001", "role": "body"},
+    ]
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [
+            node["nodeID"] for node in descriptor["nodes"]
+            if node.get("holdID") == hold_id
+        ]
 
 
 def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
@@ -513,85 +530,149 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert board["id"] == "tension.flash-board"
     assert "dimensions" not in board
     assert _presentation_summary(board) == [
-        (
-            "three-edge-upright",
-            "Three-edge surface — right side up",
-            "assets/primary.png",
-            1.5,
-            True,
-            None,
-            False,
-        ),
-        (
-            "three-edge-inverted",
-            "Three-edge surface — upside down",
-            "assets/three-edge-inverted.png",
-            1.5,
-            False,
-            "three-edge-upright",
-            True,
-        ),
-        (
-            "two-edge-upright",
-            "Two-edge surface — right side up",
-            "assets/two-edge-surface.png",
-            2.0,
-            False,
-            None,
-            False,
-        ),
-        (
-            "two-edge-inverted",
-            "Two-edge surface — upside down",
-            "assets/two-edge-inverted.png",
-            2.0,
-            False,
-            "two-edge-upright",
-            True,
-        ),
+        ("primary", "Primary", "assets/primary.usdz", 6.333333302712162, True, None, False),
+    ]
+    assert [(hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]] == [
+        ("three-edge-left", "Left edge on three-edge surface", "edge"),
+        ("three-edge-center", "Center edge on three-edge surface", "edge"),
+        ("three-edge-right", "Right edge on three-edge surface", "edge"),
+        ("two-edge-left", "Left edge on two-edge surface", "edge"),
+        ("two-edge-right", "Right edge on two-edge surface", "edge"),
+    ]
+    assert all("sizeMillimeters" not in hold for hold in board["holds"])
+    # The two usable faces survive as authored positions over the shared
+    # model; the unbound small-crimp legacy IDs are intentionally gone.
+    assert board["positions"] == [
+        {
+            "id": "three-edge",
+            "presentationID": "primary",
+            "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
+        },
+        {
+            "id": "two-edge",
+            "presentationID": "primary",
+            "holdIDs": ["two-edge-left", "two-edge-right"],
+        },
     ]
 
-    owners = _original_hold_owners(board)
-    holds_by_presentation = {
-        presentation_id: tuple(
-            hold["id"]
-            for hold in board["holds"]
-            if owners[hold["id"]] == presentation_id
-        )
-        for presentation_id in ("three-edge-upright", "two-edge-upright")
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "holdGeometry" not in media
+    assert media["orientation"] == {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+            "three-edge": [0, 0, 0, 1],
+            "two-edge": [1, 0, 0, 0],
+        },
     }
-    assert holds_by_presentation == {
-        "three-edge-upright": (
-            "three-edge-left",
-            "three-edge-center",
-            "three-edge-right",
-        ),
-        "two-edge-upright": (
-            "two-edge-left",
-            "two-edge-right",
-            "small-crimp-left",
-            "small-crimp-right",
-        ),
+    assert {path.relative_to(FLASH_BOARD_ROOT).as_posix()
+            for path in FLASH_BOARD_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
     }
-    assert all(hold["kind"] == "edge" for hold in board["holds"])
-    assert all("sizeMillimeters" not in hold for hold in board["holds"])
-    geometry = document_hold_geometry(board)
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
-    assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
+    descriptor = json.loads(
+        (FLASH_BOARD_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
     )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (FLASH_BOARD_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "body_surface_001", "role": "body"},
+    ]
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [
+            node["nodeID"] for node in descriptor["nodes"]
+            if node.get("holdID") == hold_id
+        ]
 
-    expected_sizes = {
-        "assets/primary.png": (1536, 1024),
-        "assets/three-edge-inverted.png": (1536, 1024),
-        "assets/two-edge-surface.png": (1774, 887),
-        "assets/two-edge-inverted.png": (1774, 887),
+
+def test_project_package_freezes_the_official_numbered_inventory_as_model() -> None:
+    board = json.loads((PROJECT_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["id"] == "metolius.project"
+    assert board["dimensions"] == "24.5 × 6 in"
+    assert _presentation_summary(board) == [
+        ("primary", "Primary", "assets/primary.usdz", 4.083333463473314, True, None, False),
+    ]
+    assert [
+        (hold["id"], hold["kind"], hold.get("sizeMillimeters")) for hold in board["holds"]
+    ] == [
+        ("jug-1-left", "jug", None),
+        ("round-sloper-8-center", "sloper", None),
+        ("jug-1-right", "jug", None),
+        ("flat-sloper-2-left", "sloper", 55),
+        ("flat-sloper-2-right", "sloper", 55),
+        ("pocket-3-left", "pocket", 45),
+        ("edge-4-left", "edge", 30),
+        ("pocket-5-left", "pocket", 40),
+        ("pocket-6-left", "pocket", 22),
+        ("pocket-7-left", "pocket", 22),
+        ("edge-9-center", "edge", 39),
+        ("edge-10-center", "edge", 16),
+        ("pocket-7-right", "pocket", 22),
+        ("pocket-6-right", "pocket", 22),
+        ("pocket-5-right", "pocket", 40),
+        ("edge-4-right", "edge", 30),
+        ("pocket-3-right", "pocket", 45),
+    ]
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "holdGeometry" not in media
+    assert {path.relative_to(PROJECT_ROOT).as_posix()
+            for path in PROJECT_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
     }
-    for asset_path, expected_size in expected_sizes.items():
-        with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
-            assert image.format == "PNG"
-            assert image.size == expected_size
+    descriptor = json.loads(
+        (PROJECT_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (PROJECT_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "project_body_partition_mesh_001", "role": "body"},
+    ]
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [
+            node["nodeID"] for node in descriptor["nodes"]
+            if node.get("holdID") == hold_id
+        ]
+
+
+def test_project_model_pairs_preserve_mirrored_bounds_and_node_ownership() -> None:
+    descriptor = json.loads(
+        (PROJECT_ROOT / "assets/primary.model.json").read_text(encoding="utf-8")
+    )
+    for left_id, right_id in (
+        ("jug-1-left", "jug-1-right"),
+        ("flat-sloper-2-left", "flat-sloper-2-right"),
+        ("pocket-3-left", "pocket-3-right"),
+        ("edge-4-left", "edge-4-right"),
+        ("pocket-5-left", "pocket-5-right"),
+        ("pocket-6-left", "pocket-6-right"),
+        ("pocket-7-left", "pocket-7-right"),
+    ):
+        left = descriptor["holds"][left_id]
+        right = descriptor["holds"][right_id]
+        assert left["nodeIDs"] == [left_id.replace("-", "_") + "_partition_mesh_001"]
+        assert right["nodeIDs"] == [right_id.replace("-", "_") + "_partition_mesh_001"]
+        # Imported float32 coordinates retain symmetry within export precision.
+        assert right["center"] == pytest.approx(
+            [1 - left["center"][0], left["center"][1]], abs=1e-4
+        )
+        left_bounds, right_bounds = left["facePlaneAABB"], right["facePlaneAABB"]
+        assert right_bounds["min"] == pytest.approx(
+            [1 - left_bounds["max"][0], left_bounds["min"][1]], abs=1e-4
+        )
+        assert right_bounds["max"] == pytest.approx(
+            [1 - left_bounds["min"][0], left_bounds["max"][1]], abs=1e-4
+        )
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:

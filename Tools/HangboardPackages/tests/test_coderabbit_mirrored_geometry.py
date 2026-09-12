@@ -22,14 +22,6 @@ MIRRORED_PAIRS = {
         ("hold-10", "hold-9"),
         ("hold-12", "hold-13"),
     ),
-    "metolius-project": (
-        ("jug-1-left", "jug-1-right"),
-        ("pocket-3-left", "pocket-3-right"),
-        ("edge-4-left", "edge-4-right"),
-        ("pocket-5-left", "pocket-5-right"),
-        ("pocket-6-left", "pocket-6-right"),
-        ("pocket-7-left", "pocket-7-right"),
-    ),
     "metolius-simulator-3d": (
         ("jug-1-left", "jug-1-right"),
         ("round-sloper-3-left", "round-sloper-3-right"),
@@ -43,11 +35,6 @@ MIRRORED_PAIRS = {
         ("edge-11-left", "edge-11-right"),
         ("pocket-12-left", "pocket-12-right"),
         ("pocket-13-left", "pocket-13-right"),
-    ),
-    "beastmaker-2000": (
-        ("front-middle-2", "front-middle-8"),
-        ("front-middle-3", "front-middle-7"),
-        ("hold-26", "hold-27"),
     ),
     "nature-stoak-board-iii": (
         ("gradient-edge-left", "gradient-edge-right"),

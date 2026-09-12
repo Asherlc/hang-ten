@@ -1,0 +1,433 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-10-center": {
+      "center": [
+        0.499999659,
+        0.268981582
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.666120211,
+          0.382889659
+        ],
+        "min": [
+          0.333879107,
+          0.155073506
+        ]
+      },
+      "nodeIDs": [
+        "edge_10_center_partition_mesh_001"
+      ]
+    },
+    "edge-4-left": {
+      "center": [
+        0.120750859,
+        0.505244825
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.201918651,
+          0.636808107
+        ],
+        "min": [
+          0.039583066,
+          0.373681543
+        ]
+      },
+      "nodeIDs": [
+        "edge_4_left_partition_mesh_001"
+      ]
+    },
+    "edge-4-right": {
+      "center": [
+        0.879249142,
+        0.505256974
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.960416934,
+          0.636808107
+        ],
+        "min": [
+          0.798081349,
+          0.373705841
+        ]
+      },
+      "nodeIDs": [
+        "edge_4_right_partition_mesh_001"
+      ]
+    },
+    "edge-9-center": {
+      "center": [
+        0.500001203,
+        0.584081757
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.666898254,
+          0.707876916
+        ],
+        "min": [
+          0.333104153,
+          0.460286597
+        ]
+      },
+      "nodeIDs": [
+        "edge_9_center_partition_mesh_001"
+      ]
+    },
+    "flat-sloper-2-left": {
+      "center": [
+        0.238068463,
+        0.833288764
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.332878037,
+          0.882921167
+        ],
+        "min": [
+          0.14325889,
+          0.78365636
+        ]
+      },
+      "nodeIDs": [
+        "flat_sloper_2_left_partition_mesh_001"
+      ]
+    },
+    "flat-sloper-2-right": {
+      "center": [
+        0.761931537,
+        0.833288764
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.85674111,
+          0.882921167
+        ],
+        "min": [
+          0.667121963,
+          0.78365636
+        ]
+      },
+      "nodeIDs": [
+        "flat_sloper_2_right_partition_mesh_001"
+      ]
+    },
+    "jug-1-left": {
+      "center": [
+        0.071629445,
+        0.879957019
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.14325889,
+          1.0
+        ],
+        "min": [
+          0.0,
+          0.759914039
+        ]
+      },
+      "nodeIDs": [
+        "jug_1_left_partition_mesh_001"
+      ]
+    },
+    "jug-1-right": {
+      "center": [
+        0.928370555,
+        0.879957019
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          1.0
+        ],
+        "min": [
+          0.85674111,
+          0.759914039
+        ]
+      },
+      "nodeIDs": [
+        "jug_1_right_partition_mesh_001"
+      ]
+    },
+    "pocket-3-left": {
+      "center": [
+        0.079654952,
+        0.767699236
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.135769614,
+          0.87195053
+        ],
+        "min": [
+          0.02354029,
+          0.663447941
+        ]
+      },
+      "nodeIDs": [
+        "pocket_3_left_partition_mesh_001"
+      ]
+    },
+    "pocket-3-right": {
+      "center": [
+        0.920345048,
+        0.767699236
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.97645971,
+          0.87195053
+        ],
+        "min": [
+          0.864230386,
+          0.663447941
+        ]
+      },
+      "nodeIDs": [
+        "pocket_3_right_partition_mesh_001"
+      ]
+    },
+    "pocket-5-left": {
+      "center": [
+        0.273419941,
+        0.531505665
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.312575057,
+          0.642096895
+        ],
+        "min": [
+          0.234264825,
+          0.420914435
+        ]
+      },
+      "nodeIDs": [
+        "pocket_5_left_partition_mesh_001"
+      ]
+    },
+    "pocket-5-right": {
+      "center": [
+        0.726580059,
+        0.531505665
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.765735175,
+          0.642096895
+        ],
+        "min": [
+          0.687424943,
+          0.420914435
+        ]
+      },
+      "nodeIDs": [
+        "pocket_5_right_partition_mesh_001"
+      ]
+    },
+    "pocket-6-left": {
+      "center": [
+        0.146475199,
+        0.196831378
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.203477633,
+          0.307277731
+        ],
+        "min": [
+          0.089472765,
+          0.086385026
+        ]
+      },
+      "nodeIDs": [
+        "pocket_6_left_partition_mesh_001"
+      ]
+    },
+    "pocket-6-right": {
+      "center": [
+        0.853524801,
+        0.196831378
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.910527235,
+          0.307277731
+        ],
+        "min": [
+          0.796522367,
+          0.086385026
+        ]
+      },
+      "nodeIDs": [
+        "pocket_6_right_partition_mesh_001"
+      ]
+    },
+    "pocket-7-left": {
+      "center": [
+        0.275014272,
+        0.209907169
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.312569824,
+          0.307430091
+        ],
+        "min": [
+          0.237458721,
+          0.112384246
+        ]
+      },
+      "nodeIDs": [
+        "pocket_7_left_partition_mesh_001"
+      ]
+    },
+    "pocket-7-right": {
+      "center": [
+        0.724985728,
+        0.209907169
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.762541279,
+          0.307430091
+        ],
+        "min": [
+          0.687430176,
+          0.112384246
+        ]
+      },
+      "nodeIDs": [
+        "pocket_7_right_partition_mesh_001"
+      ]
+    },
+    "round-sloper-8-center": {
+      "center": [
+        0.5,
+        0.856782268
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.667121963,
+          0.89363035
+        ],
+        "min": [
+          0.332878037,
+          0.819934185
+        ]
+      },
+      "nodeIDs": [
+        "round_sloper_8_center_partition_mesh_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.311150014,
+      0.152400002,
+      0.075999998
+    ],
+    "min": [
+      -0.311150014,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "1ed3eaf98280543f1b71e60d107f7c044740e29b4983c4a0cd336200d68e0d6a",
+  "nodes": [
+    {
+      "holdID": "edge-10-center",
+      "nodeID": "edge_10_center_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-4-left",
+      "nodeID": "edge_4_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-4-right",
+      "nodeID": "edge_4_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-9-center",
+      "nodeID": "edge_9_center_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "flat-sloper-2-left",
+      "nodeID": "flat_sloper_2_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "flat-sloper-2-right",
+      "nodeID": "flat_sloper_2_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-1-left",
+      "nodeID": "jug_1_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "jug-1-right",
+      "nodeID": "jug_1_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-3-left",
+      "nodeID": "pocket_3_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-3-right",
+      "nodeID": "pocket_3_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-5-left",
+      "nodeID": "pocket_5_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-5-right",
+      "nodeID": "pocket_5_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-6-left",
+      "nodeID": "pocket_6_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-6-right",
+      "nodeID": "pocket_6_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-7-left",
+      "nodeID": "pocket_7_left_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-7-right",
+      "nodeID": "pocket_7_right_partition_mesh_001",
+      "role": "hold"
+    },
+    {
+      "nodeID": "project_body_partition_mesh_001",
+      "role": "body"
+    },
+    {
+      "holdID": "round-sloper-8-center",
+      "nodeID": "round_sloper_8_center_partition_mesh_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

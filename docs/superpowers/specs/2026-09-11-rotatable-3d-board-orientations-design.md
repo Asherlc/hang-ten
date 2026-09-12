@@ -60,16 +60,17 @@ struct BoardPosition: Identifiable, Codable, Hashable {
 
 `holdIDs` is the complete logical inventory preferred for that physical
 position, not a hint for rendering. For a model presentation, the position
-arrays form an exact partition of the descriptor hold inventory: every model
-hold ID occurs in exactly one position, no position contains an unknown or
-duplicate ID, and the union equals the descriptor's hold IDs. This makes a
-position selection deterministic while still recording which contacts belong
-to each reviewed orientation. IDs are unique, non-empty board identifiers and
-are ordered in canonical board hold order. Existing decoded positions without the
-field receive the presentation's complete logical hold inventory, preserving
-old behavior. New authored model positions must provide the field and must not
-be empty; a position with no usable logical holds is rejected by package
-validation.
+arrays form a cover of the descriptor hold inventory: every model hold ID
+occurs in at least one position, no position contains an unknown or duplicate
+ID, and the union equals the descriptor's hold IDs. A hold may appear in
+multiple positions (e.g., upright and inverted views of the same face). This
+makes a position selection deterministic while still recording which contacts
+belong to each reviewed orientation. IDs are unique, non-empty board
+identifiers and are ordered in canonical board hold order. Existing decoded
+positions without the field receive the presentation's complete logical hold
+inventory, preserving old behavior. New authored model positions must provide
+the field and must not be empty; a position with no usable logical holds is
+rejected by package validation.
 
 Model media gains an optional orientation block. The block is deliberately
 separate from `suspension`:
@@ -133,14 +134,23 @@ Strict validation must reject:
   unknown or duplicate position IDs, or a rotation map with missing or extra
   position IDs;
 * a position with duplicate/unknown hold IDs, a presentation mismatch, or a
-  model position whose `holdIDs` partition is not exact (missing, repeated, or
-  extra model hold IDs);
+  model position whose `holdIDs` cover is not exact (missing, repeated within
+  a position, or extra model hold IDs; the union of all position `holdIDs`
+  must equal the descriptor's hold IDs);
 * non-finite or non-nine-decimal quaternion components, a zero quaternion, or
   a quaternion whose norm differs from one beyond the existing descriptor
   tolerance;
 * both `orientation` and `suspension` on one model media object; and
 * orientation metadata on a model with no declared multiple physical
   positions. A fixed model uses the legacy canonical front path instead.
+
+**Selection disambiguation:** When a hold appears in multiple positions, the
+runtime selector chooses the position whose rotation is closest to the current
+view quaternion (minimum geodesic distance on the unit quaternion sphere). If
+no orientation metadata is present (fixed model), or distances are equal, the
+first position in the authored array order containing the hold is selected.
+This rule is implemented in `BoardModelScene.select(positionID:)` and
+`BoardMapView.resolvePositionID` and must be kept in sync across platforms.
 
 The loader reports the existing `invalidPackage(boardID:reason:)` error with a
 field-specific reason. It never falls back to a different presentation,
@@ -216,9 +226,9 @@ smallest change:
 
 1. Swift package decoder tests cover legacy positions, valid orientation JSON,
    sorted canonical output, pivot/quaternion validation, unknown and incomplete
-   rotation maps, duplicate/unknown hold IDs, non-partitioned hold IDs, and
-   orientation+suspension rejection. Assert the exact `invalidPackage` reason
-   category.
+   rotation maps, duplicate/unknown hold IDs, non-covered hold IDs (union must
+   equal descriptor), and orientation+suspension rejection. Assert the exact
+   `invalidPackage` reason category.
 2. Swift model-scene tests use a non-centered descriptor and prove a canonical
    quaternion rotates around model-bounds center, recomputes framing, preserves
    hold node bindings, and leaves manual orbit functional after selection.
@@ -226,9 +236,11 @@ smallest change:
    prove no cord is created.
 3. A package inventory test discovers every `Hangboards/**/board.json` with
    model media, loads it through the real package validator, and asserts that
-   every multi-orientation package has a complete position/hold/rotation
-   matrix while every fixed/front-only package has no orientation block. This
-   catches omissions when a new model package is added.
+   every multi-orientation package has a complete position/hold/rotation matrix
+   while every fixed/front-only package has no orientation block. This catches
+   omissions when a new model package is added. The inventory test also asserts
+   union coverage (every descriptor hold appears in at least one position) and
+   validates the selection disambiguation rule for overlapping holds.
 4. Android repository tests cover the shared JSON contract and assert that model
    packages either decode the same orientation fields or produce the explicit
    existing unavailable-model result without accepting malformed metadata. No

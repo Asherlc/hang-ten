@@ -257,7 +257,7 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
 
         XCTAssertEqual(
-            board.presentations.map(\.id),
+            board.positions.map(\.id),
             [
                 "three-edge-upright",
                 "three-edge-inverted",
@@ -266,7 +266,7 @@ final class BoardPackageStoreTests: XCTestCase {
             ]
         )
 
-        let expectedHoldIDsByConfiguration = [
+        let expectedHoldIDsByPosition = [
             "three-edge-upright": [
                 "three-edge-left",
                 "three-edge-center",
@@ -280,25 +280,32 @@ final class BoardPackageStoreTests: XCTestCase {
             "two-edge-upright": [
                 "two-edge-left",
                 "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
             ],
             "two-edge-inverted": [
                 "two-edge-left",
                 "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
             ],
         ]
 
-        for (configurationID, expectedHoldIDs) in expectedHoldIDsByConfiguration {
-            let content = BoardMapPresentationContent(
-                board: board,
-                selectedPresentationID: configurationID
-            )
-            XCTAssertEqual(content.presentation.id, configurationID)
-            XCTAssertEqual(content.holds.map(\.id), expectedHoldIDs)
+        for (positionID, expectedHoldIDs) in expectedHoldIDsByPosition {
+            let position = try XCTUnwrap(board.positions.first { $0.id == positionID })
+            XCTAssertEqual(position.holdIDs, expectedHoldIDs)
+            XCTAssertEqual(position.presentationID, "primary")
         }
+
+        // Verify orientation metadata matches the four positions
+        let presentation = try XCTUnwrap(board.presentations.first)
+        guard case .model(let media) = presentation.media else {
+            XCTFail("Expected model media"); return
+        }
+        let orientation = try XCTUnwrap(media.orientation)
+        XCTAssertEqual(orientation.pivot, "modelBoundsCenter")
+        XCTAssertEqual(Set(orientation.rotations.keys), Set(expectedHoldIDsByPosition.keys))
+        // Verify quaternion values (authored display estimates)
+        XCTAssertEqual(orientation.rotations["three-edge-upright"], SIMD4(0.0, 0.0, 0.0, 1.0))
+        XCTAssertEqual(orientation.rotations["three-edge-inverted"], SIMD4(0.0, 0.0, 1.0, 0.0))
+        XCTAssertEqual(orientation.rotations["two-edge-upright"], SIMD4(1.0, 0.0, 0.0, 0.0))
+        XCTAssertEqual(orientation.rotations["two-edge-inverted"], SIMD4(0.0, 1.0, 0.0, 0.0))
     }
 
     func testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame() {

@@ -231,8 +231,18 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let migratedModelBoardIDs: Set<String> = [
             "beastmaker-1000",
+            "beastmaker-2000",
+            "captain-fingerfood.dual",
+            "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel",
+            "lattice-triple-rung",
+            "lattice.mxedge-lift-large",
+            "lattice.mxedge-lift-small",
+            "metolius.prime-rib",
+            "metolius.project",
             "metolius.wood-grips-compact-ii",
             "nature.stone-hanger",
+            "tension.flash-board",
             "yy.baguette-evo"
         ]
 

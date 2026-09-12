@@ -20,8 +20,18 @@ ORIENTATION_AUDIT = (
 
 MODEL_PACKAGE_IDS = {
     "beastmaker-1000",
+    "beastmaker-2000",
+    "captain-fingerfood.dual",
+    "captain-fingerfood.pocket",
+    "captain-fingerfood.unlevel",
+    "lattice-triple-rung",
+    "lattice.mxedge-lift-large",
+    "lattice.mxedge-lift-small",
+    "metolius.prime-rib",
+    "metolius.project",
     "metolius.wood-grips-compact-ii",
     "nature.stone-hanger",
+    "tension.flash-board",
     "yy.baguette-evo",
 }
 
@@ -46,7 +56,7 @@ def _discovered_model_packages() -> dict[str, object]:
     return model_packages
 
 
-def _assert_exact_model_position_partition(board: object) -> None:
+def _assert_model_position_union_coverage(board: object) -> None:
     hold_ids = tuple(hold.id for hold in board.holds)
     positions = board.positions
     assert positions, "a model with orientation metadata must declare positions"
@@ -54,13 +64,16 @@ def _assert_exact_model_position_partition(board: object) -> None:
 
     flattened = [hold_id for position in positions for hold_id in position.hold_ids]
     assert all(position.hold_ids for position in positions)
+    # Union must cover all descriptor holds (no missing holds)
     assert set(flattened) == set(hold_ids)
-    assert len(flattened) == len(hold_ids)
-    assert len(flattened) == len(set(flattened))
+    # No duplicates within a single position
     for position in positions:
+        assert len(position.hold_ids) == len(set(position.hold_ids))
+        # Canonical order
         assert tuple(position.hold_ids) == tuple(
             hold_id for hold_id in hold_ids if hold_id in position.hold_ids
         )
+    # Overlap across positions is now allowed (e.g., upright/inverted same face)
 
 
 def _orientation() -> dict[str, object]:
@@ -136,12 +149,26 @@ def test_model_orientation_rejects_non_unit_or_noncanonical_quaternion(
         )
 
 
-def test_model_orientation_rejects_overlapping_or_incomplete_hold_membership(tmp_path: Path) -> None:
+def test_model_orientation_allows_overlapping_hold_membership(tmp_path: Path) -> None:
+    # Overlap is now allowed: a hold may appear in multiple positions
     positions = [
         {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left", "hold-right"]},
         {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-right"]},
     ]
-    with pytest.raises(ValueError, match=r"positions\[1\]\.holdIDs"):
+    board = load_board_catalog_module().load_board_package(
+        write_model_package(tmp_path, orientation=_orientation(), positions=positions)
+    ).board
+    assert board.positions[0].hold_ids == ("hold-left", "hold-right")
+    assert board.positions[1].hold_ids == ("hold-right",)
+
+
+def test_model_orientation_rejects_incomplete_union_coverage(tmp_path: Path) -> None:
+    # Union must cover all descriptor holds (hold-left, hold-right)
+    positions = [
+        {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
+        {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-left"]},  # missing hold-right
+    ]
+    with pytest.raises(ValueError, match="union coverage"):
         load_board_catalog_module().load_board_package(
             write_model_package(tmp_path, orientation=_orientation(), positions=positions)
         )
@@ -156,8 +183,8 @@ def test_model_positions_reject_duplicate_hold_ids_in_one_position(tmp_path: Pat
         )
 
 
-def test_model_positions_reject_nonempty_incomplete_partition(tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match="partition"):
+def test_model_positions_reject_nonempty_incomplete_union(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="union coverage"):
         load_board_catalog_module().load_board_package(
             write_model_package(tmp_path, positions=[
                 {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
@@ -199,10 +226,6 @@ def test_fixed_model_rejects_orientation_metadata(tmp_path: Path) -> None:
     [
         [
             {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
-            {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-left"]},
-        ],
-        [
-            {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]},
             {"id": "reverse", "presentationID": "primary", "holdIDs": []},
         ],
         [
@@ -211,13 +234,26 @@ def test_fixed_model_rejects_orientation_metadata(tmp_path: Path) -> None:
         ],
     ],
 )
-def test_model_positions_require_exact_partition_without_orientation(
+def test_model_positions_reject_empty_or_unknown_holds(
     tmp_path: Path, positions: list[dict[str, object]]
 ) -> None:
-    with pytest.raises(ValueError, match=r"positions\[|partition"):
+    with pytest.raises(ValueError, match=r"positions\["):
         load_board_catalog_module().load_board_package(
             write_model_package(tmp_path, positions=positions)
         )
+
+
+def test_model_positions_allow_overlap_without_orientation(tmp_path: Path) -> None:
+    # Overlap is allowed even without orientation metadata
+    positions = [
+        {"id": "front", "presentationID": "primary", "holdIDs": ["hold-left", "hold-right"]},
+        {"id": "reverse", "presentationID": "primary", "holdIDs": ["hold-right"]},
+    ]
+    board = load_board_catalog_module().load_board_package(
+        write_model_package(tmp_path, positions=positions)
+    ).board
+    assert board.positions[0].hold_ids == ("hold-left", "hold-right")
+    assert board.positions[1].hold_ids == ("hold-right",)
 
 
 def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
@@ -227,14 +263,21 @@ def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
         )
 
 
-def test_discovered_model_inventory_is_exactly_the_four_current_packages() -> None:
+def test_discovered_model_inventory_is_exactly_the_fourteen_current_packages() -> None:
     model_packages = _discovered_model_packages()
     assert set(model_packages) == MODEL_PACKAGE_IDS
 
 
 @pytest.mark.parametrize(
     "board_id",
-    ["beastmaker-1000", "metolius.wood-grips-compact-ii"],
+    [
+        "beastmaker-1000",
+        "beastmaker-2000",
+        "lattice-triple-rung",
+        "metolius.prime-rib",
+        "metolius.project",
+        "metolius.wood-grips-compact-ii",
+    ],
 )
 def test_fixed_model_packages_keep_one_canonical_position_without_orientation(
     board_id: str,
@@ -269,7 +312,7 @@ def test_nature_stone_hanger_declares_reviewed_front_and_reverse_orientation() -
     # that future Astra judgment while requiring a complete authored matrix.
     assert {position.id for position in board.positions} == {"front", "reverse"}
     assert all(position.presentation_id == "primary" for position in board.positions)
-    _assert_exact_model_position_partition(board)
+    _assert_model_position_union_coverage(board)
     assert media.orientation is not None
     assert media.orientation.pivot == "modelBoundsCenter"
     assert set(media.orientation.rotations) == {"front", "reverse"}
@@ -284,15 +327,50 @@ def test_baguette_evo_requires_authored_contact_groupings_and_orientation() -> N
     # Do not encode guessed IDs, grouping, or angles here. The reviewed
     # grouping is deliberately supplied by the later evidence/Astra pass; this
     # RED contract only requires every reviewed grouping to be explicit and to
-    # partition the descriptor inventory exactly once.
+    # cover the descriptor inventory (union coverage).
     assert len(board.positions) > 1
     assert all(position.presentation_id == "primary" for position in board.positions)
-    _assert_exact_model_position_partition(board)
+    _assert_model_position_union_coverage(board)
     assert media.orientation is not None
     assert media.orientation.pivot == "modelBoundsCenter"
     assert set(media.orientation.rotations) == {
         position.id for position in board.positions
     }
+
+
+def test_flash_board_allows_upright_inverted_overlap() -> None:
+    board = _discovered_model_packages()["tension.flash-board"].board
+    presentation = board.presentations[0]
+    media = presentation.media
+    assert isinstance(media, load_board_catalog_module().PresentationMediaModel)
+
+    # Flash board has 4 positions with upright/inverted pairs sharing holds
+    expected_positions = {
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    }
+    assert {position.id for position in board.positions} == expected_positions
+    assert all(position.presentation_id == "primary" for position in board.positions)
+    _assert_model_position_union_coverage(board)
+
+    # Verify overlap: three-edge holds appear in both upright and inverted
+    three_edge_upright = next(p for p in board.positions if p.id == "three-edge-upright")
+    three_edge_inverted = next(p for p in board.positions if p.id == "three-edge-inverted")
+    assert three_edge_upright.hold_ids == three_edge_inverted.hold_ids
+    assert set(three_edge_upright.hold_ids) == {"three-edge-left", "three-edge-center", "three-edge-right"}
+
+    # Two-edge holds appear in both upright and inverted
+    two_edge_upright = next(p for p in board.positions if p.id == "two-edge-upright")
+    two_edge_inverted = next(p for p in board.positions if p.id == "two-edge-inverted")
+    assert two_edge_upright.hold_ids == two_edge_inverted.hold_ids
+    assert set(two_edge_upright.hold_ids) == {"two-edge-left", "two-edge-right"}
+
+    # Orientation metadata
+    assert media.orientation is not None
+    assert media.orientation.pivot == "modelBoundsCenter"
+    assert set(media.orientation.rotations) == expected_positions
 
 
 def test_orientation_audit_records_all_model_packages_and_review_fields() -> None:

@@ -1,0 +1,145 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "three-edge-center": {
+      "center": [
+        0.5,
+        0.499999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.604900538,
+          0.752828654
+        ],
+        "min": [
+          0.395099462,
+          0.247171322
+        ]
+      },
+      "nodeIDs": [
+        "three_edge_center_surface_001"
+      ]
+    },
+    "three-edge-left": {
+      "center": [
+        0.251346871,
+        0.499999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.356247409,
+          0.752828654
+        ],
+        "min": [
+          0.146446332,
+          0.247171322
+        ]
+      },
+      "nodeIDs": [
+        "three_edge_left_surface_001"
+      ]
+    },
+    "three-edge-right": {
+      "center": [
+        0.74865313,
+        0.499999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.853553668,
+          0.752828654
+        ],
+        "min": [
+          0.643752591,
+          0.247171322
+        ]
+      },
+      "nodeIDs": [
+        "three_edge_right_surface_001"
+      ]
+    },
+    "two-edge-left": {
+      "center": [
+        0.74865313,
+        0.499999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.853553668,
+          0.752828654
+        ],
+        "min": [
+          0.643752591,
+          0.247171322
+        ]
+      },
+      "nodeIDs": [
+        "two_edge_left_surface_001"
+      ]
+    },
+    "two-edge-right": {
+      "center": [
+        0.251346871,
+        0.499999988
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.356247409,
+          0.752828654
+        ],
+        "min": [
+          0.146446332,
+          0.247171322
+        ]
+      },
+      "nodeIDs": [
+        "two_edge_right_surface_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.241300002,
+      0.076200001,
+      0.076200001
+    ],
+    "min": [
+      -0.241300002,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "282cc54a905a25ff972bb562f05de2ae9fd9b373086c68131259d3521ead506c",
+  "nodes": [
+    {
+      "nodeID": "body_surface_001",
+      "role": "body"
+    },
+    {
+      "holdID": "three-edge-center",
+      "nodeID": "three_edge_center_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "three-edge-left",
+      "nodeID": "three_edge_left_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "three-edge-right",
+      "nodeID": "three_edge_right_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "two-edge-left",
+      "nodeID": "two_edge_left_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "two-edge-right",
+      "nodeID": "two_edge_right_surface_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

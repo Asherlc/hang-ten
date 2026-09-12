@@ -1,0 +1,121 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "curved-edge-20": {
+      "center": [
+        0.5,
+        0.21448432
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.829268948,
+          0.299999995
+        ],
+        "min": [
+          0.170731052,
+          0.128968645
+        ]
+      },
+      "nodeIDs": [
+        "Hold_Curved20_EditableSkin_001"
+      ]
+    },
+    "curved-edge-25": {
+      "center": [
+        0.5,
+        0.78551568
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.829268948,
+          0.871031355
+        ],
+        "min": [
+          0.170731052,
+          0.700000005
+        ]
+      },
+      "nodeIDs": [
+        "Hold_Curved25_EditableSkin_001"
+      ]
+    },
+    "outer-jug": {
+      "center": [
+        0.5,
+        0.95714285
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.910467923,
+          1.0
+        ],
+        "min": [
+          0.089532077,
+          0.914285701
+        ]
+      },
+      "nodeIDs": [
+        "Hold_OuterJug_EditableSkin_001"
+      ]
+    },
+    "pocket-end-wall-20-25": {
+      "center": [
+        0.87027471,
+        0.5
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.925000002,
+          0.871428578
+        ],
+        "min": [
+          0.815549418,
+          0.128571422
+        ]
+      },
+      "nodeIDs": [
+        "Hold_EndPocket_EditableSkin_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.059999999,
+      0.035,
+      0.015
+    ],
+    "min": [
+      -0.059999999,
+      -0.035,
+      -0.015
+    ]
+  },
+  "modelSHA256": "507a03fc66ce91e88d387f336cfcfad983757132dd2f724eb5d40e05f970ddce",
+  "nodes": [
+    {
+      "nodeID": "Body_EditableSkin_001",
+      "role": "body"
+    },
+    {
+      "holdID": "curved-edge-20",
+      "nodeID": "Hold_Curved20_EditableSkin_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "curved-edge-25",
+      "nodeID": "Hold_Curved25_EditableSkin_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-end-wall-20-25",
+      "nodeID": "Hold_EndPocket_EditableSkin_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "outer-jug",
+      "nodeID": "Hold_OuterJug_EditableSkin_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

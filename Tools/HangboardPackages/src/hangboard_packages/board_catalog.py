@@ -1480,6 +1480,7 @@ def _validate_model_orientation(
     orientation: BoardModelOrientation | None,
     positions: tuple[BoardPosition, ...],
     descriptor_hold_ids: set[str],
+    canonical_hold_ids: list[str],
     model_position_ids: set[str],
     source: str,
 ) -> None:
@@ -1491,7 +1492,6 @@ def _validate_model_orientation(
             raise ValueError(
                 f"{source}.rotations must exactly match model position IDs"
             )
-    seen: set[str] = set()
     model_positions = [
         (index, position)
         for index, position in enumerate(positions)
@@ -1505,17 +1505,23 @@ def _validate_model_orientation(
         raise ValueError(f"positions[{missing_index}].holdIDs must be explicitly provided for every model position")
     if not model_authored:
         return
+    seen: set[str] = set()
     for index, position in model_positions:
         hold_source = f"positions[{index}].holdIDs"
         unknown = set(position.hold_ids) - descriptor_hold_ids
         if unknown:
             raise ValueError(f"{hold_source} contains unknown hold IDs")
-        overlap = seen.intersection(position.hold_ids)
-        if overlap:
-            raise ValueError(f"{hold_source} contains duplicate hold IDs across positions")
+        if not position.hold_ids:
+            raise ValueError(f"{hold_source} must not be empty")
+        if len(set(position.hold_ids)) != len(position.hold_ids):
+            raise ValueError(f"{hold_source} must not contain duplicates")
+        if position.hold_ids != tuple(
+            hold_id for hold_id in canonical_hold_ids if hold_id in position.hold_ids
+        ):
+            raise ValueError(f"{hold_source} must follow canonical board hold order")
         seen.update(position.hold_ids)
     if seen != descriptor_hold_ids:
-        raise ValueError("model positions holdIDs must exactly partition descriptor holds")
+        raise ValueError("model positions holdIDs must cover all descriptor holds (union coverage)")
 
 
 def _validate_model_suspension(
@@ -1834,6 +1840,7 @@ def _validate_finished_shape(
             )
     model_frames: dict[tuple[str, str], NormalizedFrame] = {}
     logical_hold_ids = {hold.id for hold in board.holds}
+    canonical_hold_ids = [hold.id for hold in board.holds]
     for presentation in board.presentations:
         if not isinstance(presentation.media, PresentationMediaModel):
             continue
@@ -1849,6 +1856,7 @@ def _validate_finished_shape(
             presentation.media.orientation,
             board.positions,
             set(frames),
+            canonical_hold_ids,
             {
                 position.id
                 for position in board.positions
