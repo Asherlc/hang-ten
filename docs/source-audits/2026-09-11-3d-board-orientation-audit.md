@@ -4,7 +4,7 @@ Reviewed 2026-09-11 at commit `6e24dece` (Task 6, Step 3 evidence-only
 preparation). This document does not change a board package, USDZ, descriptor,
 hold inventory, contact grouping, rotation, or quaternion. It is the cheap
 evidence packet for the four model packages currently discovered by the live
-catalog. The final Nature and YY Vertical Baguette Evo position partitions and
+catalog. The final Nature and YY Vertical Baguette Evo position groupings and
 quaternion judgment remain **pending Astra**.
 
 ## Decision and review gate
@@ -60,7 +60,7 @@ The four descriptors use schema version 1 normalized image-plane values:
 `center = [x, y]`, `facePlaneAABB.min/max = [x, y]`. The table records the
 union of all hold face-plane AABBs in descriptor order, with no rounding beyond
 the stored nine-decimal values. These values are suitable for checking that a
-future position partition references the complete descriptor inventory; they
+future position set covers the complete descriptor inventory; they
 do not establish body thickness, recess depth, or a rotation.
 
 | package | `boardBounds` | descriptor hold-AABB union (`min` → `max`) | source/model bound context |
@@ -74,8 +74,12 @@ do not establish body thickness, recess depth, or a rotation.
 
 The following is the exact current `board.json` order. It is the order the
 legacy loader puts in the effective `primary` position today. A future
-multi-position model must preserve each position's relative order and form an
-exact, non-overlapping partition of these IDs.
+multi-position model must cover every descriptor hold at least once and
+preserve canonical hold order within each position. Intentional overlaps are
+allowed when the same hold is usable from multiple positions. Select among
+overlapping candidates by closest view quaternion, breaking equal-distance
+ties by authored position order. The exact-once statements below apply only to
+the named board-specific configurations that intentionally remain disjoint.
 
 ### Beastmaker 1000 — 22 holds
 
@@ -141,8 +145,8 @@ source supports a single usable face, not a selectable reverse presentation.
 Current effective position: `primary` → all IDs below. Current model
 orientation: none. Physical candidates are the two usable faces identified in
 the retained source packet: `front` and `reverse`, with upper/lower contact
-halves changing with inversion. The exact partition of these eight IDs into
-those positions is intentionally not authored here.
+halves changing with inversion. The position coverage and grouping for these
+eight IDs are intentionally not authored here.
 
 | order | hold ID | descriptor center | descriptor face-plane AABB min → max | USDZ node |
 | ---: | --- | --- | --- | --- |
@@ -228,7 +232,7 @@ gallery includes distinct front product views and oblique/reverse or use
 views. The retained integration packet identifies two physical lateral cord
 passage markers (front-view left/right) and eight named edge contacts split by
 front/reverse source semantics. These establish two physical usable faces as
-orientation candidates, not the final ID partition.
+orientation candidates, not the final ID grouping.
 
 The two candidates are `front` (front face, with its upper/lower contacts) and
 `reverse` (block inverted to expose the reverse face). A future orientation
@@ -274,7 +278,7 @@ only and cannot override a manufacturer claim.
 | --- | --- | --- | --- |
 | Beastmaker 1000 | [manufacturer product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series); [official front](https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068); [Beech/shared-layout page](https://www.beastmaker.co.uk/products/beastmaker-1000-beech); [FluxPerfect commerce-gap page](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) | identity, wood, 580 × 150 mm face, grouped hold families, visible front layout; FluxPerfect `Ansicht_1` adds a complete top/side/rounded-end view | per-ID family/depth map, hidden reverse, cavity sections, exact thickness/radii |
 | Metolius Compact II | [manufacturer product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards); [official Compact front](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000); [official depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000); [Bergfreunde commerce-gap page](https://www.bergfreunde.eu/metolius-wood-grips-compact-ii-training-board/) | Compact identity/dimensions, front inventory, 29/19 mm and 56 mm diagram labels; commerce view adds top/side rollover | hidden back, complete sections, exact body depth, alternate usable face |
-| Nature Stone Hanger | [manufacturer product page](https://natureclimbing.com/products/stone-hanger-1); gallery artifacts `GRANITE1_2_1024x.png`, `GRANITE1_1024x.png`, `GRANITE2_2_800x.png`, `GRANITE2_1024x.png` linked from that page | exact selected product family, oak/granite, 105 × 105 × 35 mm, 20/15/10/6 mm families, multiple front/oblique/reverse-use views; retained technical drawing and mapping establish eight named contacts | complete cord route, hidden bore/sleeve, exact contact sections, final front/reverse partition or quaternion |
+| Nature Stone Hanger | [manufacturer product page](https://natureclimbing.com/products/stone-hanger-1); gallery artifacts `GRANITE1_2_1024x.png`, `GRANITE1_1024x.png`, `GRANITE2_2_800x.png`, `GRANITE2_1024x.png` linked from that page | exact selected product family, oak/granite, 105 × 105 × 35 mm, 20/15/10/6 mm families, multiple front/oblique/reverse-use views; retained technical drawing and mapping establish eight named contacts | complete cord route, hidden bore/sleeve, exact contact sections, final front/reverse grouping or quaternion |
 | Baguette Evo | [manufacturer English product page](https://www.yyvertical.com/en-eu/products/baguette-evo); [manufacturer product page](https://www.yyvertical.com/en/products/baguette-evo); gallery artifacts `YY_BAGUETTE_EVO_02_FG.webp`, `YY_BAGUETTE_EVO_07_FG.webp`, `YY_BAGUETTE_EVO_03_FG.webp`, and the use image `yy-vertical-escalade-agres-nomade-entrainement-nomadic-tool-gear-equipment-training-baguette-evo-utilisation-22.webp` linked from the page | exact round Evo identity, 520 × 50 × 50 mm, named paired/central depths, rounded option, Turn & Pull and multiple product/use views | exact milling profiles, fillets, bore dimensions, hidden cord route, final face grouping or quaternion |
 
 ### Existing local audit and packet links
@@ -305,7 +309,7 @@ not new source claims:
 
 The Baguette README's `Hold IDs and object mapping` and Nature README's `Hold
 ID → object mapping` are evidence mappings for the supplied display assets;
-they are not an Astra-approved app position partition.
+they are not an Astra-approved app position grouping.
 
 ## Fixed-board rationale
 
@@ -330,8 +334,8 @@ Before any metadata promotion, Astra/human review must:
 
 1. approve exact retained source snapshots and their hashes for each package;
 2. verify the declared board coordinate frame against the actual USDZ;
-3. author a complete ordered position partition for Nature and Baguette with
-   no guessed or duplicated hold IDs;
+3. author complete ordered position coverage for Nature and Baguette with no
+   missing IDs, validating any intentional overlap against source evidence;
 4. choose canonical quaternions about `modelBoundsCenter` only after visual
    review of front/reverse/inclined poses;
 5. rerun descriptor/package validation and refresh the four model/descriptor
@@ -424,20 +428,24 @@ selectable second face.
 | `metolius.prime-rib` | 3: `edge-38`, `edge-23`, `edge-15` | `[-0.254000008, 0.0, 0.0]` → `[0.254000008, 0.106679998, 0.0381]` | none (no orientation block) | Metolius Prime Rib page (`https://www.metoliusclimbing.com/products/prime-rib`); batch-01 research records no exact-revision reverse/back view |
 | `metolius.project` | 17: `jug-1-left`, `round-sloper-8-center`, `jug-1-right`, `flat-sloper-2-left`, `flat-sloper-2-right`, `pocket-3-left/right`, `edge-4-left/right`, `pocket-5-left/right`, `pocket-6-left/right`, `pocket-7-left/right`, `edge-9-center`, `edge-10-center` | `[-0.311150014, 0.0, 0.0]` → `[0.311150014, 0.152400002, 0.075999998]` | none (no orientation block) | Metolius Project page plus the official numbered depth diagram (`https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307`), which distinguishes the paired #2 55 mm flat slopers (new `flat-sloper-2-left/right` IDs) from the #8 53 mm center round sloper |
 
-### Tension Flash Board — `three-edge` / `two-edge`
+### Tension Flash Board — upright / inverted `three-edge` and `two-edge`
 
 Grouping is source-backed: the batch-01 research ruling confirms five cavity
 zones retaining their existing IDs and declares the two legacy small-crimp
 IDs unresolved and unbound (no selectable geometry fabricated for them), so
-the positions partition the 5-contact inventory exactly once (3+2).
+the two face inventories jointly cover all five descriptor contacts. The
+upright and inverted positions for a face intentionally overlap with identical
+hold IDs because both orientations expose the same physical contacts.
 
 Descriptor model bounds: `[-0.241300002, 0.0, 0.0]` →
 `[0.241300002, 0.076200001, 0.076200001]`. Pivot: `modelBoundsCenter`.
 
 | position | hold IDs (canonical board order) | quaternion | basis |
 | --- | --- | --- | --- |
-| `three-edge` | `three-edge-left`, `three-edge-center`, `three-edge-right` | `[0, 0, 0, 1]` | identity = delivered base pose; source-backed three-edge broad face |
-| `two-edge` | `two-edge-left`, `two-edge-right` | `[1, 0, 0, 0]` | authored display estimate: 180° about X exposes the opposing two-edge broad face (batch-01 ruling: face registration approximately 180°, an authored estimate) |
+| `three-edge-upright` | `three-edge-left`, `three-edge-center`, `three-edge-right` | `[0, 0, 0, 1]` | identity = delivered base pose; source-backed three-edge broad face upright |
+| `three-edge-inverted` | `three-edge-left`, `three-edge-center`, `three-edge-right` | `[0, 0, 1, 0]` | authored display estimate: half-turn about Z presents the same three-edge face inverted |
+| `two-edge-upright` | `two-edge-left`, `two-edge-right` | `[0, 1, 0, 0]` | authored display estimate: 180° about Y exposes the opposing two-edge face while preserving its up axis |
+| `two-edge-inverted` | `two-edge-left`, `two-edge-right` | `[1, 0, 0, 0]` | authored display estimate: 180° about X exposes the same two-edge face inverted |
 
 ### Captain Fingerfood — four single-contact positions each
 
@@ -455,6 +463,9 @@ Descriptor model bounds: `[-0.059999999, -0.035, -0.015]` →
 (`https://en.captainfingerfood.rocks/products/dual-hangboard`); batch-02
 research behavior "contacts are fixed to one board: a single front recess
 with opposing long lips plus a separately labeled short-end Pocket".
+The model-visible width/height ratio is recorded as `1.7142857`. The official
+grip panel depicts one hand using the short-end pocket, supporting
+`handCapacity: 1` without asserting an unsupported finger count.
 
 | position | hold IDs | quaternion | basis |
 | --- | --- | --- | --- |
@@ -470,6 +481,13 @@ Descriptor model bounds: `[-0.055, -0.033, -0.0145]` →
 (`https://en.captainfingerfood.rocks/products/lines-hangboard`); batch-02
 research behavior "single front recess with long grip edges plus separately
 labeled short-end Pocket".
+The model-visible width/height ratio is recorded as `1.6666667`. The official
+`LINESGriffe.jpg` panel labels the short-end contact `15/20mm Pocket` and shows
+one-finger, one-hand use, supporting `depthRangeMillimeters` lower/upper
+bounds of `15`/`20`, `fingerCapacity: 1`, and `handCapacity: 1`. The package
+still declares only
+the single `primary` equipment object; this metadata does not make bilateral
+steps available.
 
 | position | hold IDs | quaternion | basis |
 | --- | --- | --- | --- |
@@ -485,6 +503,10 @@ Descriptor model bounds: `[-0.059999999, -0.035, -0.015]` →
 (`https://en.captainfingerfood.rocks/products/unlevel-hangboard`); batch-02
 research behavior "contacts are fixed to one board: a single front recess
 with opposing long lips plus a separately labeled short-end Pocket".
+The model-visible width/height ratio is recorded as
+`1.7142857142857142`. Official grip panels show one hand using the short-end
+pocket, supporting `handCapacity: 1`; finger capacity remains omitted because
+the retained panels show different finger pairs rather than one fixed count.
 
 | position | hold IDs | quaternion | basis |
 | --- | --- | --- | --- |
@@ -505,6 +527,11 @@ numeric angle below is an authored display estimate. Pivot for both boards:
 `modelBoundsCenter`. Both descriptors share model bounds
 `[-0.083999999, -0.048999999, -0.017000001]` →
 `[0.083999999, 0.048999999, 0.017000001]`.
+Both packages record the manufacturer product page's `20 × 11 × 5 cm`
+technical dimensions rather than reusing these display-model bounds. The
+retained source packet separately preserves the manufacturer's conflicting
+`16.8 × 9.8 × 3.4 cm` infographic dimensions; neither value is inferred from
+the model.
 
 #### Large — `lattice.mxedge-lift-large`
 

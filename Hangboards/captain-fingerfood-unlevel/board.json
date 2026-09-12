@@ -6,7 +6,7 @@
   "subtitle": "Compact board with two curved edge depths plus an outer jug.",
   "productURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
   "dimensions": "12 × 7 × 3 cm",
-  "aspectRatio": 1.5,
+  "aspectRatio": 1.7142857142857142,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,7 +17,7 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.5,
+      "aspectRatio": 1.7142857142857142,
       "isDefault": true,
       "derivation": {
         "type": "original"
@@ -102,7 +102,8 @@
       "id": "pocket-end-wall-20-25",
       "equipmentObjectID": "primary",
       "name": "25/20 mm Pocket — short end-wall",
-      "kind": "pocket"
+      "kind": "pocket",
+      "handCapacity": 1
     }
   ],
   "positions": [

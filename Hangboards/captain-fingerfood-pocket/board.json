@@ -6,7 +6,7 @@
   "subtitle": "Current Lines colorway of the 110 × 66 × 29 mm two-depth POCKET revision.",
   "productURL": "https://en.captainfingerfood.rocks/products/lines-hangboard",
   "dimensions": "110 × 66 × 29 mm",
-  "aspectRatio": 1.5,
+  "aspectRatio": 1.6666667,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,7 +17,7 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.5,
+      "aspectRatio": 1.6666667,
       "isDefault": true,
       "derivation": {
         "type": "original"
@@ -102,7 +102,13 @@
       "id": "pocket-end-wall-15-20",
       "equipmentObjectID": "primary",
       "name": "15/20 mm Pocket — short end-wall",
-      "kind": "pocket"
+      "kind": "pocket",
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 20
+      },
+      "fingerCapacity": 1,
+      "handCapacity": 1
     }
   ],
   "positions": [

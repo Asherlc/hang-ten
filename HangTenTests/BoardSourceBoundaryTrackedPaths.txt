@@ -32,6 +32,7 @@ HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
 HangTen/Models/SentryDiagnostics.swift
 HangTen/Models/SimulatedMotherboardTransport.swift
+HangTen/Models/SuspensionProfiles.swift
 HangTen/Models/Telemetry.swift
 HangTen/Models/TrainingModels.swift
 HangTen/Models/WHC06Protocol.swift
@@ -77,6 +78,10 @@ HangTen/Views/BoardEditor/GitHubEditorSyncViews.swift
 HangTen/Views/BoardEditor/HoldEditorCanvasView.swift
 HangTen/Views/BoardEditor/HoldInspectorView.swift
 HangTen/Views/BoardMapView.swift
+HangTen/Views/BoardMapView.swift
+HangTen/Views/BoardMapView.swift
+HangTen/Views/BoardModelView.swift
+HangTen/Views/BoardModelView.swift
 HangTen/Views/BoardModelView.swift
 HangTen/Views/CustomRoutineEditorView.swift
 HangTen/Views/DesignSystem.swift

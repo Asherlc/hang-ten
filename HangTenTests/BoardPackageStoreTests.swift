@@ -3029,7 +3029,7 @@ final class BoardPackageStoreTests: XCTestCase {
     // This catches permissive orientation parsing, partial inventories, and
     // accidental coexistence with the mutually-exclusive suspension metadata.
     func testStoreRejectsInvalidModelOrientationAndPositionInventory() throws {
-        let mutations: [(String, (inout [String: Any]) -> Void, String)] = [
+        let mutations: [(String, (inout [String: Any]) throws -> Void, String)] = [
             ("wrong pivot", { board in
                 self.mutateOrientation(in: &board) { $0["pivot"] = "boardOrigin" }
             }, "orientation pivot"),
@@ -3040,7 +3040,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 self.mutateOrientation(in: &board) { $0["rotations"] = ["front": [0, 0, 0, 2], "reverse": [0, 1, 0, 0]] }
             }, "orientation rotations"),
             ("noncanonical membership order", { board in
-                var positions = board["positions"] as! [[String: Any]]
+                var positions = try XCTUnwrap(board["positions"] as? [[String: Any]])
                 positions[0]["holdIDs"] = ["hold-right", "hold-left"]
                 positions[1]["holdIDs"] = []
                 board["positions"] = positions
@@ -3058,7 +3058,7 @@ final class BoardPackageStoreTests: XCTestCase {
     // (union-cover contract: holds may appear in multiple positions).
     func testStoreAcceptsOverlappingModelPositionHoldMemberships() throws {
         let fixture = try makeOrientableModelFixtureBundle { board in
-            var positions = board["positions"] as! [[String: Any]]
+            var positions = try XCTUnwrap(board["positions"] as? [[String: Any]])
             positions[1]["holdIDs"] = ["hold-left", "hold-right"]
             board["positions"] = positions
         }
@@ -3106,8 +3106,15 @@ final class BoardPackageStoreTests: XCTestCase {
         let baseline = try BoardPackageWriter.data(for: document)
         var touched = document
         touched.positions = [BoardPosition(id: "primary", presentationID: "primary")]
+        let encoded = try BoardPackageWriter.data(for: touched)
+        let encodedObject = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let encodedPositions = try XCTUnwrap(encodedObject["positions"] as? [[String: Any]])
+        let encodedPosition = try XCTUnwrap(encodedPositions.first)
 
-        XCTAssertEqual(try BoardPackageWriter.data(for: touched), baseline)
+        XCTAssertEqual(encoded, baseline)
+        XCTAssertNil(encodedPosition["holdIDs"])
     }
 
     func testStoreRejectsInvalidPositionsAndTransitions() throws {
@@ -3430,7 +3437,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     private func makeOrientableModelFixtureBundle(
-        boardMutation: ((inout [String: Any]) -> Void)? = nil
+        boardMutation: ((inout [String: Any]) throws -> Void)? = nil
     ) throws -> FixtureBundle {
         try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
@@ -3452,7 +3459,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 ]
                 presentations[0]["media"] = media
                 board["presentations"] = presentations
-                boardMutation?(&board)
+                try boardMutation?(&board)
             }
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("assets/primary.model.json")) { descriptor in
                 var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])

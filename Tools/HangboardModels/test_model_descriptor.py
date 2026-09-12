@@ -50,6 +50,43 @@ def hold(node_id: str, hold_id: str) -> NodeBinding:
     return NodeBinding(node_id, "hold", hold_id)
 
 
+def attachment(node_id: str) -> NodeBinding:
+    return NodeBinding(node_id, "attachment")
+
+
+def test_descriptor_allows_one_non_hold_attachment_without_derived_hold_frame() -> None:
+    descriptor = compile_descriptor(
+        b"usdz",
+        [body("Body"), hold("Hold", "one"), attachment("Attachment")],
+        {
+            "Body": [(0, 0, 0), (1, 1, 1)],
+            "Hold": [(0.25, 0.5, 0)],
+            "Attachment": [(0.5, 1, 0.5)],
+        },
+        frozenset({"one"}),
+    )
+    assert [node.role for node in descriptor.nodes] == ["attachment", "body", "hold"]
+    assert descriptor.holds["one"].node_ids == ("Hold",)
+    assert descriptor.to_json()["nodes"][0] == {"nodeID": "Attachment", "role": "attachment"}
+
+
+def test_descriptor_rejects_multiple_attachments_and_attachment_hold_id() -> None:
+    with pytest.raises(ValueError, match="at most one attachment"):
+        compile_descriptor(
+            b"usdz",
+            [body("Body"), hold("Hold", "one"), attachment("A"), attachment("B")],
+            {"Body": [(0, 0, 0), (1, 1, 1)], "Hold": [(0.25, 0.5, 0)], "A": [(0, 0, 0)], "B": [(0, 0, 0)]},
+            frozenset({"one"}),
+        )
+    with pytest.raises(ValueError, match="attachment node may not declare holdID"):
+        compile_descriptor(
+            b"usdz",
+            [body("Body"), hold("Hold", "one"), NodeBinding("Attachment", "attachment", "one")],
+            {"Body": [(0, 0, 0), (1, 1, 1)], "Hold": [(0.25, 0.5, 0)], "Attachment": [(0, 0, 0)]},
+            frozenset({"one"}),
+        )
+
+
 def test_package_compiler_reads_logical_inventory_without_legacy_geometry(tmp_path) -> None:
     """Catches coupling the model compiler to raster hold paths or geometry fields."""
     board_json = tmp_path / "board.json"
@@ -69,13 +106,24 @@ def test_package_compiler_validates_and_sorts_authored_mesh_tags() -> None:
         FakeSceneObject("Body", role="body"),
         FakeSceneObject("HoldA", role="hold", hold_id="left"),
     )
-
     assert model_compiler.validate_tagged_scene(scene, frozenset({"left"})) == (
         body("Body"),
         hold("HoldA", "left"),
         hold("HoldB", "left"),
     )
 
+
+def test_package_compiler_keeps_attachment_out_of_hold_inventory() -> None:
+    scene = FakeScene(
+        FakeSceneObject("Body", role="body"),
+        FakeSceneObject("Hold", role="hold", hold_id="left"),
+        FakeSceneObject("Attachment", role="attachment"),
+    )
+    assert model_compiler.validate_tagged_scene(scene, frozenset({"left"})) == (
+        NodeBinding("Attachment", "attachment"),
+        body("Body"),
+        hold("Hold", "left"),
+    )
 
 def test_package_compiler_ignores_importer_created_non_mesh_parent_nodes() -> None:
     """Catches rejecting a valid USDZ solely because Blender materialized an Xform parent."""

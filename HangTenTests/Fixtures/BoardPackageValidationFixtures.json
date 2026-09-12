@@ -59,6 +59,99 @@
       }
     }
   },
+  "directedTwoBranchModel": {
+    "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
+    "board": {
+      "schemaVersion": 2,
+      "id": "fixture.two-branch",
+      "manufacturer": "Fixture Maker",
+      "name": "Two branch fixture",
+      "subtitle": "A two branch parser fixture.",
+      "productURL": "https://example.com/fixture.two-branch",
+      "dimensions": "20 × 10 cm",
+      "aspectRatio": 2,
+      "presentations": [
+        {
+          "id": "primary",
+          "name": "Primary",
+          "aspectRatio": 2,
+          "isDefault": true,
+          "derivation": { "type": "original" },
+          "media": {
+            "type": "model",
+            "assetPath": "assets/primary.usdz",
+            "descriptorPath": "assets/primary.model.json",
+            "display": {
+              "camera": {
+                "type": "orthographic",
+                "viewDirection": [0, 0, -1],
+                "up": [0, 1, 0],
+                "fitPadding": 0.08
+              }
+            },
+            "suspension": {
+              "type": "twoBranchCord",
+              "passages": {
+                "left": [
+                  { "id": "left-top", "nodeID": "LeftTop", "entryPointInModel": [0.2, 0.9, 0.1], "exitPointInModel": [0.2, 0.9, 0], "provenance": "estimatedFromApprovedModel" },
+                  { "id": "left-bottom", "nodeID": "LeftBottom", "entryPointInModel": [0.3, 0.9, 0.1], "exitPointInModel": [0.3, 0.9, 0], "provenance": "estimatedFromApprovedModel" }
+                ],
+                "right": [
+                  { "id": "right-top", "nodeID": "RightTop", "entryPointInModel": [0.7, 0.9, 0.1], "exitPointInModel": [0.7, 0.9, 0], "provenance": "estimatedFromApprovedModel" },
+                  { "id": "right-bottom", "nodeID": "RightBottom", "entryPointInModel": [0.8, 0.9, 0.1], "exitPointInModel": [0.8, 0.9, 0], "provenance": "estimatedFromApprovedModel" }
+                ]
+              },
+              "branches": [
+                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "entryContactPoints": [[0.2, 0.9, 0.12]], "exteriorContactPoints": [[0.15, 0.9, 0], [0.35, 0.9, 0]], "exitContactPoints": [[0.3, 0.9, 0.12]], "restLength": 1.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
+                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "entryContactPoints": [[0.7, 0.9, 0.12]], "exteriorContactPoints": [[0.65, 0.9, 0], [0.85, 0.9, 0]], "exitContactPoints": [[0.8, 0.9, 0.12]], "restLength": 1.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
+              ],
+              "anchor": {
+                "offsetFromBoardBounds": [0, 0.22, 0],
+                "visibility": "invisible",
+                "provenance": "displayEstimate"
+              },
+              "canonicalPoses": {
+                "primary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
+                "secondary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
+                "tertiary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
+                "quaternary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } }
+              }
+            }
+          }
+        }
+      ],
+      "positions": [
+        { "id": "primary", "presentationID": "primary" },
+        { "id": "secondary", "presentationID": "primary" },
+        { "id": "tertiary", "presentationID": "primary" },
+        { "id": "quaternary", "presentationID": "primary" }
+      ],
+      "holds": [
+        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      ]
+    },
+    "descriptor": {
+      "schemaVersion": 1,
+      "coordinateFrame": "hang-ten-board-v1",
+      "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
+      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "nodes": [
+        { "nodeID": "Body", "role": "body" },
+        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" },
+        { "nodeID": "LeftBottom", "role": "attachment" },
+        { "nodeID": "LeftTop", "role": "attachment" },
+        { "nodeID": "RightBottom", "role": "attachment" },
+        { "nodeID": "RightTop", "role": "attachment" }
+      ],
+      "holds": {
+        "hold-left": {
+          "nodeIDs": ["Left"],
+          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
+          "center": [0.25, 0.4]
+        }
+      }
+    }
+  },
   "singleCordModel": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
@@ -687,15 +780,6 @@
       "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "restLength"], "value": "0.5"}]
     },
     {
-      "name": "two-branch-duplicate-raw-json-key",
-      "base": "twoBranchModel",
-      "pythonException": "ValueError",
-      "pythonError": "invalid JSON",
-      "swiftError": "malformedJSON",
-      "duplicateCanonicalPoseKey": true,
-      "mutations": []
-    },
-    {
       "name": "two-branch-suspension-member-order",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
@@ -705,7 +789,7 @@
       "mutations": []
     },
     {
-      "name": "two-branch-passage-segment-too-short",
+      "name": "two-branch-directed-route-too-short",
       "base": "twoBranchModel",
       "pythonException": "ValueError",
       "pythonError": "closed route",
@@ -749,6 +833,163 @@
       "mutations": [
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.5, 1, 0.05]},
         {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "translation"], "value": [0, 0.22, 0]}
+      ]
+    },
+    {
+      "name": "directed-mixed-passage-representations",
+      "base": "directedTwoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "cannot mix",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0
+          ],
+          "value": {
+            "id": "left-top",
+            "nodeID": "LeftTop",
+            "pointInModel": [
+              0.2,
+              0.9,
+              0.1
+            ],
+            "provenance": "estimatedFromApprovedModel"
+          }
+        }
+      ]
+    },
+    {
+      "name": "directed-zero-bore",
+      "base": "directedTwoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "non-zero through-bore",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "exitPointInModel"
+          ],
+          "value": [
+            0.2,
+            0.9,
+            0.1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "directed-null-contact",
+      "base": "directedTwoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "at least 1 points",
+      "swiftError": "malformedJSON",
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "entryContactPoints"
+          ],
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "directed-empty-contact",
+      "base": "directedTwoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "at least 2 points",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "exteriorContactPoints"
+          ],
+          "value": []
+        }
+      ]
+    },
+    {
+      "name": "directed-short-route",
+      "base": "directedTwoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "shorter than",
+      "swiftError": "invalidPackage",
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "restLength"
+          ],
+          "value": 0.4
+        }
+      ]
+    },
+    {
+      "name": "directed-mixed-mouth-fields",
+      "base": "directedTwoBranchModel",
+      "pythonException": "ValueError",
+      "pythonError": "unknown keys",
+      "swiftError": "malformedJSON",
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "pointInModel"
+          ],
+          "value": [
+            0.2,
+            0.9,
+            0.1
+          ]
+        }
       ]
     }
   ],

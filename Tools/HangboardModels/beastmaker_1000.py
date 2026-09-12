@@ -34,6 +34,8 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import canonical_neutral_wood
+from geometry_primitives import (create_recess, create_rounded_body,
+                                 make_review_rig, split_contact_surface)
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKET_SHA = "510def2516477dedb248ea85e3ec858129d0f298014b28c3e7ef9b19bd41cce0"
@@ -186,7 +188,8 @@ def author_body(materials, material_indices):
             indices.append(material_indices[contact] if is_top and contact else 0)
     faces.extend([tuple(range(count-1, -1, -1)), tuple((len(xs)-1)*count+j for j in range(count))])
     indices.extend([0, 0])
-    obj = mesh_object("BeastmakerBody", verts, faces, materials)
+    obj = create_rounded_body("BeastmakerBody", verts, faces,
+                              materials=materials, mesh_factory=mesh_object)
     for face, index in zip(obj.data.polygons, indices):
         face.material_index = index
     recalculate(obj)
@@ -249,7 +252,8 @@ def subtract_pocket(body, spec, materials, material_indices):
     faces += [(i*n+j, i*n+(j+1)%n, (i+1)*n+(j+1)%n, (i+1)*n+j)
               for i in range(len(rings)-1) for j in range(n)]
     faces.append(tuple((len(rings)-1)*n+j for j in range(n)))
-    cutter = mesh_object("TemporaryRecessCutter", verts, faces, materials)
+    cutter = create_recess("TemporaryRecessCutter", verts, faces,
+                           materials=materials, mesh_factory=mesh_object)
     for p in cutter.data.polygons:
         p.material_index = material_indices[spec["holdID"]]
     recalculate(cutter)
@@ -288,24 +292,16 @@ def split_and_tag(body, hold_ids):
         for li in p.loop_indices:
             co = body.data.vertices[body.data.loops[li].vertex_index].co
             uv.data[li].uv = (co.x/(W*.001), (co.y+.35*co.z)/((H+.35*D)*.001))
-    active(body)
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.separate(type="MATERIAL")
-    bpy.ops.object.mode_set(mode="OBJECT")
-    objects = list(bpy.context.selected_objects)
-    for obj in objects:
-        used = {p.material_index for p in obj.data.polygons}
-        assert len(used) == 1, (obj.name, used)
-        name = obj.data.materials[next(iter(used))].name
-        obj["role"] = "hold" if name in hold_ids else "body"
-        if name in hold_ids:
-            obj["hold_id"] = name
-        obj.name = "Hold_"+name.replace("-", "_") if name in hold_ids else "BeastmakerBody"
-        obj["coordinate_frame"] = FRAME
-        obj["display_estimate"] = True
-        obj.color = (.66, .66, .66, 1)
-    return objects
+    return split_contact_surface(
+        body,
+        hold_ids,
+        tag=True,
+        coordinate_frame=FRAME,
+        display_estimate=True,
+        name_for_material=lambda name: (
+            "Hold_" + name.replace("-", "_") if name in hold_ids else "BeastmakerBody"
+        ),
+    )
 
 
 def verify_outer_middle_wood_rims():
@@ -410,42 +406,7 @@ def save_compiler_input(objects, output):
 
 
 def review_rig(samples):
-    scene = bpy.context.scene
-    scene.render.resolution_percentage = 100
-    scene.render.image_settings.file_format = "PNG"
-    scene.render.film_transparent = False
-    scene.render.engine = "CYCLES"
-    scene.cycles.device = "CPU"
-    scene.cycles.samples = samples
-    scene.cycles.use_denoising = True
-    scene.world.color = (.35, .35, .35)
-    scene.world.use_nodes = True
-    background = scene.world.node_tree.nodes.get("Background")
-    background.inputs["Color"].default_value = (.82, .85, .89, 1)
-    background.inputs["Strength"].default_value = .45
-    scene.view_settings.view_transform = "AgX"
-    scene.view_settings.look = "AgX - Medium High Contrast"
-    scene.view_settings.exposure = -1.0
-    camera_data = bpy.data.cameras.new("ReviewCamera")
-    camera = bpy.data.objects.new("ReviewCamera", camera_data)
-    scene.collection.objects.link(camera)
-    camera_data.type = "ORTHO"
-    camera_data.clip_start, camera_data.clip_end = .001, 10
-    scene.camera = camera
-    lights = []
-    for name, location, power, size in [
-        ("Key", (.06, .48, .55), 22, .38),
-        ("Fill", (.65, .18, .32), 6, .32),
-        ("Rim", (.3, .36, -.18), 13, .30),
-    ]:
-        data = bpy.data.lights.new("Review"+name, "AREA")
-        data.energy, data.shape, data.size = power, "DISK", size
-        obj = bpy.data.objects.new("Review"+name, data)
-        scene.collection.objects.link(obj)
-        obj.location = location
-        aim(obj, (.29, .075, .03))
-        lights.append(dict(name=name, locationMeters=location, watts=power, sizeMeters=size))
-    return camera, lights
+    return make_review_rig(samples)
 
 
 def render_view(output, name, camera, location, target, scale, resolution, *, clay=False):

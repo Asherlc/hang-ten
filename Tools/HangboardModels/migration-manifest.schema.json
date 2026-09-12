@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "boardID", "revision", "boardJSON", "evidencePacket", "sourceBlend", "logicalHoldIDs", "presentation", "positions", "suspensionProfile", "deliberateOmissions", "verification", "reviewViews", "artifacts"],
+  "properties": {
+    "schemaVersion": {"const": 1}, "boardID": {"type": "string", "minLength": 1}, "revision": {"type": "string", "minLength": 1},
+    "boardJSON": {"$ref": "#/$defs/path"}, "evidencePacket": {"$ref": "#/$defs/path"},
+    "sourceBlend": {"$ref": "#/$defs/sourceBlend"},
+    "logicalHoldIDs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "presentation": {"$ref": "#/$defs/presentation"},
+    "positions": {"type": "array", "items": {"$ref": "#/$defs/position"}},
+    "suspensionProfile": {"enum": ["singleCord", "twoBranchCord", "none"]},
+    "deliberateOmissions": {"const": ["screw holes", "mounting hardware"]},
+    "verification": {"$ref": "#/$defs/verification"},
+    "reviewViews": {"type": "array", "minItems": 1, "items": {"enum": ["front", "three-quarter", "clay-detail", "active-hold"]}, "uniqueItems": true},
+    "artifacts": {"$ref": "#/$defs/artifacts"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "path": {"type": "string", "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\u0000-\\u001F\\u007F])[^/]+(?:/[^/]+)*$"},
+    "sourceBlend": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"$ref": "#/$defs/path"}, "sha256": {"$ref": "#/$defs/sha"}}},
+    "presentation": {"type": "object", "additionalProperties": false, "required": ["id", "type", "assetPath", "descriptorPath"], "properties": {"id": {"const": "primary"}, "type": {"const": "model"}, "assetPath": {"allOf": [{"$ref": "#/$defs/path"}, {"const": "assets/primary.usdz"}]}, "descriptorPath": {"allOf": [{"$ref": "#/$defs/path"}, {"const": "assets/primary.model.json"}]}}},
+    "position": {"type": "object", "additionalProperties": false, "required": ["id", "activeHoldIDs"], "properties": {"id": {"type": "string", "minLength": 1}, "activeHoldIDs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}},
+    "verification": {"type": "object", "additionalProperties": false, "required": ["triangleCeiling", "probeIDs"], "properties": {"triangleCeiling": {"type": "integer", "exclusiveMinimum": 0}, "probeIDs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}},
+    "artifacts": {"type": "object", "additionalProperties": false, "required": ["packageSHA256", "descriptorSHA256"], "properties": {"packageSHA256": {"$ref": "#/$defs/sha"}, "descriptorSHA256": {"$ref": "#/$defs/sha"}}}
+  }
+}

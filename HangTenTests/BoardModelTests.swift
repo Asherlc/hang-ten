@@ -6,6 +6,28 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))
+        let content = BoardMapPresentationContent(board: board, selectedPresentationID: nil)
+        let cases: [(positionID: String, holdID: String, aspectRatio: CGFloat)] = [
+            ("paired-25-20-15-10", "edge-20-left", 10.4),
+            ("paired-12-8-6", "edge-12-left", 10.4),
+            ("central-30-25", "edge-central-30", 10.4),
+            ("central-20-6", "edge-central-20", 7.6133276),
+            ("rounded-tray", "rounded-tray", 10.4)
+        ]
+        XCTAssertEqual(board.positions.map(\.id), cases.map(\.positionID))
+        for fixture in cases {
+            let positionID = BoardMapPresentationSelection.resolvePositionID(
+                board: board,
+                presentationID: content.presentation.id,
+                activeHoldID: fixture.holdID
+            )
+            XCTAssertEqual(positionID, fixture.positionID)
+            XCTAssertEqual(content.presentation.aspectRatio(for: positionID), fixture.aspectRatio, accuracy: 0.000_01, fixture.positionID)
+        }
+    }
+
     func testTrainingBoardHoldIDsUseCanonicalHoldOrderForPositionMembership() throws {
         let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let authoredOrder = original.holds.map(\.id).reversed()
@@ -85,13 +107,13 @@ final class BoardModelTests: XCTestCase {
             if case .model = $0.media { return true }
             return false
         }))
-        XCTAssertNil(BoardMapView.resolvePositionID(
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(
             board: board,
             presentationID: modelPresentation.id,
             activeHoldID: "not-on-model"
         ))
         XCTAssertEqual(
-            BoardMapView.resolvePositionID(
+            BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: modelPresentation.id,
                 activeHoldID: nil
@@ -345,18 +367,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(Set(orientation.rotations.keys), ["front", "reverse"])
         XCTAssertFalse(model.geometryNodes.isEmpty, "Nature scene must contain geometry")
         XCTAssertEqual(model.holdNodes.count, board.holds.count)
-        for positionID in ["front", "reverse"] {
-            XCTAssertTrue(model.select(positionID: positionID), positionID)
-            XCTAssertEqual(model.activePositionID, positionID)
-            SCNTransaction.flush()
-            let cameraPosition = model.camera.position
-            XCTAssertTrue(
-                cameraPosition.x.isFinite && cameraPosition.y.isFinite && cameraPosition.z.isFinite,
-                "\(positionID) camera must be finite: \(cameraPosition)"
-            )
-            let scale = try XCTUnwrap(model.camera.camera?.orthographicScale, positionID)
-            XCTAssertTrue(scale.isFinite && scale > 0, "\(positionID) scale must be positive finite")
-        }
+        try assertVisibleFraming(model, positionIDs: ["front", "reverse"])
         // NOTE: head-on CPU rays at descriptor face-plane centers intentionally
         // are NOT asserted here. The Stone Hanger's recess interiors belong to
         // the body mesh while only the contact lips are hold meshes, so such
@@ -384,18 +395,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(board.positions.map(\.id), expectedIDs)
         XCTAssertFalse(model.geometryNodes.isEmpty, "Baguette scene must contain geometry")
         XCTAssertEqual(model.holdNodes.count, board.holds.count)
-        for positionID in expectedIDs {
-            XCTAssertTrue(model.select(positionID: positionID), positionID)
-            XCTAssertEqual(model.activePositionID, positionID)
-            SCNTransaction.flush()
-            let cameraPosition = model.camera.position
-            XCTAssertTrue(
-                cameraPosition.x.isFinite && cameraPosition.y.isFinite && cameraPosition.z.isFinite,
-                "\(positionID) camera must be finite: \(cameraPosition)"
-            )
-            let scale = try XCTUnwrap(model.camera.camera?.orthographicScale, positionID)
-            XCTAssertTrue(scale.isFinite && scale > 0, "\(positionID) scale must be positive finite")
-        }
+        try assertVisibleFraming(model, positionIDs: expectedIDs)
     }
 
     func testNatureStoneHangerCordPassageMarkersAreNotSelectableOrAccessible() async throws {
@@ -816,6 +816,43 @@ final class BoardModelTests: XCTestCase {
         )
         let model = try XCTUnwrap(loaded, boardID)
         return (board, media, model)
+    }
+
+    private func assertVisibleFraming(
+        _ model: BoardModelScene,
+        positionIDs: [String],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        for positionID in positionIDs {
+            XCTAssertTrue(
+                model.select(positionID: positionID),
+                positionID,
+                file: file,
+                line: line
+            )
+            XCTAssertEqual(model.activePositionID, positionID, file: file, line: line)
+            SCNTransaction.flush()
+            let cameraPosition = model.camera.position
+            XCTAssertTrue(
+                cameraPosition.x.isFinite && cameraPosition.y.isFinite && cameraPosition.z.isFinite,
+                "\(positionID) camera must be finite: \(cameraPosition)",
+                file: file,
+                line: line
+            )
+            let scale = try XCTUnwrap(
+                model.camera.camera?.orthographicScale,
+                positionID,
+                file: file,
+                line: line
+            )
+            XCTAssertTrue(
+                scale.isFinite && scale > 0,
+                "\(positionID) scale must be positive finite",
+                file: file,
+                line: line
+            )
+        }
     }
 
     private func assertNearestHeadOnHitForEveryHold(

@@ -6,11 +6,10 @@ import shutil
 from pathlib import Path
 
 import pytest
-
 from PIL import Image
 
-from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 from _board_package_helpers import document_hold_geometry
+from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -30,6 +29,43 @@ YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
 TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
+
+
+def _assert_model_descriptor(
+    root: Path, board: dict[str, object], body_node_id: str
+) -> dict[str, object]:
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    media = presentations[0]["media"]
+    assert media["type"] == "model"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "holdGeometry" not in media
+    assert {
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    descriptor = json.loads(
+        (root / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (root / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    assert set(descriptor["holds"]) == {hold["id"] for hold in holds}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": body_node_id, "role": "body"},
+    ]
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [
+            node["nodeID"]
+            for node in descriptor["nodes"]
+            if node.get("holdID") == hold_id
+        ]
+    return descriptor
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
@@ -497,31 +533,7 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
         )
         for hold in board["holds"]
     ) == PRIME_RIB_HOLDS
-    media = board["presentations"][0]["media"]
-    assert media["type"] == "model"
-    assert media["descriptorPath"] == "assets/primary.model.json"
-    assert "holdGeometry" not in media
-    assert {path.relative_to(PRIME_RIB_ROOT).as_posix()
-            for path in PRIME_RIB_ROOT.rglob("*") if path.is_file()} == {
-        "board.json", "assets/primary.usdz", "assets/primary.model.json",
-    }
-    descriptor = json.loads(
-        (PRIME_RIB_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
-    )
-    assert descriptor["schemaVersion"] == 1
-    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
-    assert descriptor["modelSHA256"] == hashlib.sha256(
-        (PRIME_RIB_ROOT / media["assetPath"]).read_bytes()
-    ).hexdigest()
-    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
-    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
-        {"nodeID": "body_mesh_001", "role": "body"},
-    ]
-    for hold_id, hold in descriptor["holds"].items():
-        assert hold["nodeIDs"] == [
-            node["nodeID"] for node in descriptor["nodes"]
-            if node.get("holdID") == hold_id
-        ]
+    _assert_model_descriptor(PRIME_RIB_ROOT, board, "body_mesh_001")
 
 
 def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
@@ -574,31 +586,11 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         "rotations": {
             "three-edge-upright": [0.0, 0.0, 0.0, 1.0],
             "three-edge-inverted": [0.0, 0.0, 1.0, 0.0],
-            "two-edge-upright": [1.0, 0.0, 0.0, 0.0],
-            "two-edge-inverted": [0.0, 1.0, 0.0, 0.0],
+            "two-edge-inverted": [1.0, 0.0, 0.0, 0.0],
+            "two-edge-upright": [0.0, 1.0, 0.0, 0.0],
         },
     }
-    assert {path.relative_to(FLASH_BOARD_ROOT).as_posix()
-            for path in FLASH_BOARD_ROOT.rglob("*") if path.is_file()} == {
-        "board.json", "assets/primary.usdz", "assets/primary.model.json",
-    }
-    descriptor = json.loads(
-        (FLASH_BOARD_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
-    )
-    assert descriptor["schemaVersion"] == 1
-    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
-    assert descriptor["modelSHA256"] == hashlib.sha256(
-        (FLASH_BOARD_ROOT / media["assetPath"]).read_bytes()
-    ).hexdigest()
-    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
-    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
-        {"nodeID": "body_surface_001", "role": "body"},
-    ]
-    for hold_id, hold in descriptor["holds"].items():
-        assert hold["nodeIDs"] == [
-            node["nodeID"] for node in descriptor["nodes"]
-            if node.get("holdID") == hold_id
-        ]
+    _assert_model_descriptor(FLASH_BOARD_ROOT, board, "body_surface_001")
 
 
 def test_project_package_freezes_the_official_numbered_inventory_as_model() -> None:
@@ -630,31 +622,9 @@ def test_project_package_freezes_the_official_numbered_inventory_as_model() -> N
         ("edge-4-right", "edge", 30),
         ("pocket-3-right", "pocket", 45),
     ]
-    media = board["presentations"][0]["media"]
-    assert media["type"] == "model"
-    assert media["descriptorPath"] == "assets/primary.model.json"
-    assert "holdGeometry" not in media
-    assert {path.relative_to(PROJECT_ROOT).as_posix()
-            for path in PROJECT_ROOT.rglob("*") if path.is_file()} == {
-        "board.json", "assets/primary.usdz", "assets/primary.model.json",
-    }
-    descriptor = json.loads(
-        (PROJECT_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    _assert_model_descriptor(
+        PROJECT_ROOT, board, "project_body_partition_mesh_001"
     )
-    assert descriptor["schemaVersion"] == 1
-    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
-    assert descriptor["modelSHA256"] == hashlib.sha256(
-        (PROJECT_ROOT / media["assetPath"]).read_bytes()
-    ).hexdigest()
-    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
-    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
-        {"nodeID": "project_body_partition_mesh_001", "role": "body"},
-    ]
-    for hold_id, hold in descriptor["holds"].items():
-        assert hold["nodeIDs"] == [
-            node["nodeID"] for node in descriptor["nodes"]
-            if node.get("holdID") == hold_id
-        ]
 
 
 def test_project_model_pairs_preserve_mirrored_bounds_and_node_ownership() -> None:

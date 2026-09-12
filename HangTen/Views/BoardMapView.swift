@@ -103,8 +103,35 @@ struct BoardMapPresentationContent {
     }
 }
 
+extension BoardPresentation {
+    @MainActor
+    func aspectRatio(for positionID: String?) -> CGFloat {
+        guard case .model(let media) = media,
+              let orientation = media.orientation,
+              let positionID,
+              let framing = BoardModelScene.framing(
+                  bounds: media.descriptor.modelBounds,
+                  display: media.display,
+                  orientation: orientation,
+                  positionID: positionID
+              ) else {
+            return aspectRatio
+        }
+        return CGFloat(framing.width) / CGFloat(framing.height)
+    }
+}
+
 struct BoardMapPresentationSelection: Equatable {
     private(set) var presentationID: String
+
+    static func resolvePositionID(board: TrainingBoard, presentationID: String?, activeHoldID: String?) -> String? {
+        if let activeHoldID,
+           let position = board.positions.first(where: { board.holdIDs(inPosition: $0.id).contains(activeHoldID) }) {
+            return position.id
+        }
+        return board.positions.first(where: { $0.presentationID == presentationID })?.id
+            ?? board.positions.first?.id
+    }
 
     init(
         board: TrainingBoard,
@@ -321,10 +348,8 @@ struct BoardDetailMapView: View {
                 BoardModelSurface(
                     board: board,
                     presentation: map.presentation,
-                    positionID: BoardMapView.resolvePositionID(
-                        board: board,
-                        presentationID: map.presentation.id,
-                        activeHoldID: selectedHoldID
+                    positionID: BoardMapPresentationSelection.resolvePositionID(
+                        board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
                     ),
                     highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
                     highlightMode: .active,
@@ -332,7 +357,9 @@ struct BoardDetailMapView: View {
                 )
             }
         }
-        .aspectRatio(map.presentation.aspectRatio, contentMode: .fit)
+        .aspectRatio(map.presentation.aspectRatio(for: BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
+        )), contentMode: .fit)
         .accessibilityIdentifier("boardDetail.map")
     }
 
@@ -458,17 +485,16 @@ struct BoardMapView: View {
         self.onHoldTap = onHoldTap
         requestedPresentationID = selectedPresentationID
         self.activeHoldID = activeHoldID
-        _presentationSelection = State(
-            initialValue: BoardMapPresentationSelection(
-                board: board,
-                requestedPresentationID: selectedPresentationID,
-                activeHoldID: activeHoldID,
-                highlightedHoldIDs: highlightedHoldIDs
-            )
-        )
-        _selectedPositionID = State(initialValue: Self.resolvePositionID(
+        let resolvedSelection = BoardMapPresentationSelection(
             board: board,
-            presentationID: selectedPresentationID,
+            requestedPresentationID: selectedPresentationID,
+            activeHoldID: activeHoldID,
+            highlightedHoldIDs: highlightedHoldIDs
+        )
+        _presentationSelection = State(initialValue: resolvedSelection)
+        _selectedPositionID = State(initialValue: BoardMapPresentationSelection.resolvePositionID(
+            board: board,
+            presentationID: resolvedSelection.presentationID,
             activeHoldID: activeHoldID
         ))
     }
@@ -533,7 +559,7 @@ struct BoardMapView: View {
                     )
                 }
             }
-            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
+            .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in
@@ -543,7 +569,7 @@ struct BoardMapView: View {
                 activeHoldID: activeHoldID,
                 on: board
             )
-            selectedPositionID = Self.resolvePositionID(
+            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: presentationSelection.presentationID,
                 activeHoldID: activeHoldID
@@ -551,7 +577,7 @@ struct BoardMapView: View {
         }
         .onChange(of: activeHoldID) { _, holdID in
             presentationSelection.activateHold(id: holdID, on: board)
-            selectedPositionID = Self.resolvePositionID(
+            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: presentationSelection.presentationID,
                 activeHoldID: holdID
@@ -564,9 +590,9 @@ struct BoardMapView: View {
                 highlightedHoldIDs: highlightedHoldIDs,
                 on: board
             )
-            selectedPositionID = Self.resolvePositionID(
+            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
-                presentationID: presentationID,
+                presentationID: presentationSelection.presentationID,
                 activeHoldID: activeHoldID
             )
         }
@@ -577,9 +603,9 @@ struct BoardMapView: View {
                 activeHoldID: activeHoldID,
                 highlightedHoldIDs: highlightedHoldIDs
             )
-            selectedPositionID = Self.resolvePositionID(
+            selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
-                presentationID: requestedPresentationID,
+                presentationID: presentationSelection.presentationID,
                 activeHoldID: activeHoldID
             )
         }
@@ -587,28 +613,11 @@ struct BoardMapView: View {
 
     private func selectPresentation(id: String) {
         presentationSelection.selectPresentation(id: id, on: board)
-        selectedPositionID = Self.resolvePositionID(
+        selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
             board: board,
-            presentationID: id,
+            presentationID: presentationSelection.presentationID,
             activeHoldID: activeHoldID
         )
-    }
-
-    static func resolvePositionID(
-        board: TrainingBoard,
-        presentationID: String?,
-        activeHoldID: String?
-    ) -> String? {
-        let resolvedPresentationID = presentationID ?? board.defaultPresentation.id
-        if let activeHoldID,
-           let activePosition = board.position(
-               presentationID: resolvedPresentationID,
-               containingHoldID: activeHoldID
-           ) {
-            return activePosition.id
-        }
-        guard activeHoldID == nil else { return nil }
-        return board.position(presentationID: resolvedPresentationID)?.id
     }
 }
 

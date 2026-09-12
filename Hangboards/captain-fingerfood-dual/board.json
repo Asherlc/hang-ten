@@ -6,7 +6,7 @@
   "subtitle": "Compact board with straight and curved 20 mm edges plus an outer jug.",
   "productURL": "https://en.captainfingerfood.rocks/products/dual-hangboard",
   "dimensions": "12 × 7 × 3 cm",
-  "aspectRatio": 1.5,
+  "aspectRatio": 1.7142857,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,7 +17,7 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.5,
+      "aspectRatio": 1.7142857,
       "isDefault": true,
       "derivation": {
         "type": "original"
@@ -103,6 +103,7 @@
       "equipmentObjectID": "primary",
       "name": "20 mm Pocket — short end-wall",
       "kind": "pocket",
+      "handCapacity": 1,
       "sizeMillimeters": 20
     }
   ],

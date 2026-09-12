@@ -149,17 +149,9 @@ class BoardRepositoryTest {
 
     @Test
     fun acceptsValidModelOrientationBeforeReturningTheExplicitUnavailableModelResult() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(
-                        positions = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
-                        holds = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
-                        orientation = "\"orientation\": {\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-                    ),
-                ),
-            ),
-        ).loadBoards()
+        val result = loadModelWithOrientation(
+            "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
+        )
 
         assertTrue(result.isSuccess)
         assertTrue(result.getOrThrow().isEmpty())
@@ -229,7 +221,6 @@ class BoardRepositoryTest {
     fun rejectsInvalidOrientationPivot() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"worldOrigin\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "orientation pivot")
@@ -239,7 +230,6 @@ class BoardRepositoryTest {
     fun rejectsNonUnitOrientationQuaternion() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 2], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "unit quaternion")
@@ -249,7 +239,6 @@ class BoardRepositoryTest {
     fun acceptsOrientationQuaternionComponentsRoundedToNineDecimalPlaces() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0.707106781, 0, 0, 0.707106781], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrue(result.isSuccess)
@@ -260,7 +249,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationQuaternionWithMoreThanNineDecimalPlaces() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0.1234567891, 0, 0, 0.992349949], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "nine decimal")
@@ -270,7 +258,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationMembersThatAreNotPivotThenRotations() {
         val result = loadModelWithOrientation(
             "{\"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}, \"pivot\": \"modelBoundsCenter\"}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "canonical pivot and rotations")
@@ -280,7 +267,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationRotationsThatAreNotSortedByPositionID() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"reverse\": [0, 1, 0, 0], \"front\": [0, 0, 0, 1]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "sorted by position ID")
@@ -290,7 +276,6 @@ class BoardRepositoryTest {
     fun rejectsRotationIdsThatDoNotMatchPositions() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"other\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "rotation IDs")
@@ -328,25 +313,25 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun rejectsIncompleteNonOverlappingModelHoldPartition() {
+    fun rejectsModelPositionHoldIDsWithoutUnionCoverage() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
             positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
             holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}, {\"id\": \"jug-extra\", \"equipmentObjectID\": \"primary\", \"name\": \"Extra jug\", \"kind\": \"jug\"}",
         )
 
-        assertTrueFailureContaining(result, "exactly partition")
+        assertTrueFailureContaining(result, "union coverage")
     }
 
     @Test
-    fun rejectsOverlappingModelHoldPositionPartition() {
+    fun acceptsIdenticalOverlappingModelPositionHoldIDs() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-shared\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-shared\", \"jug-reverse\"]}]",
-            holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-shared\", \"equipmentObjectID\": \"primary\", \"name\": \"Shared jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-reverse\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-reverse\"]}]",
         )
 
-        assertTrueFailureContaining(result, "overlap another model position")
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrThrow().isEmpty())
     }
 
     @Test
@@ -364,7 +349,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationAndSuspensionTogether() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
             suspension = "{}",
         )
 
@@ -413,6 +397,46 @@ class BoardRepositoryTest {
 
         val boards = result.getOrThrow()
         assertEquals(listOf("demo.board"), boards.map { it.id })
+        assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
+    }
+
+    @Test
+    fun omitsFlashModelOnlyPackageWithoutPngFallbackWhileKeepingRasterNeighbor() {
+        val accessedPaths = mutableListOf<String>()
+        val assets = FixtureAssets(
+            mapOf(
+                "Hangboards/raster-neighbor/board.json" to schemaV2RasterBoardJson()
+                    .replace("demo.board", "raster.neighbor")
+                    .replace("Demo Board", "Raster Neighbor"),
+                "Hangboards/raster-neighbor/assets/primary.png" to "png",
+                "Hangboards/tension-flash-board/board.json" to schemaV2ModelOnlyBoardJson()
+                    .replace("model.only", "tension.flash-board")
+                    .replace("Model only", "Flash Board"),
+                "Hangboards/tension-flash-board/assets/primary.usdz" to "usdz",
+                "Hangboards/tension-flash-board/assets/primary.model.json" to "descriptor",
+                "PlanLibrary.json" to
+                    """
+                    {
+                      "boardMappings": [
+                        {
+                          "boardID": "tension.flash-board",
+                          "semanticHolds": { "jugs": { "kind": "jug" } }
+                        }
+                      ]
+                    }
+                    """.trimIndent(),
+            ),
+            accessedPaths = accessedPaths,
+        )
+
+        val boards = AssetBoardRepository(assets).loadBoards().getOrThrow()
+
+        assertEquals(listOf("raster.neighbor"), boards.map { it.id })
+        assertEquals("Raster Neighbor", boards.single().name)
+        assertEquals("assets/primary.png", boards.single().presentations.single().assetPath)
+        assertFalse("Hangboards/tension-flash-board/assets/primary.png" in accessedPaths)
+        assertFalse("Hangboards/tension-flash-board/assets/primary.usdz" in accessedPaths)
+        assertFalse("Hangboards/tension-flash-board/assets/primary.model.json" in accessedPaths)
         assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
     }
 
@@ -564,18 +588,22 @@ class BoardRepositoryTest {
         }
         """.trimIndent()
 
+    private val defaultModelPositionsJSON =
+        "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]"
+    private val defaultModelHoldsJSON =
+        "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}"
+
     private fun loadModelWithOrientation(
         orientation: String,
-        positions: Boolean = false,
+        positionsJSON: String? = defaultModelPositionsJSON,
+        holdsJSON: String = defaultModelHoldsJSON,
         suspension: String? = null,
-        positionsJSON: String? = null,
-        holdsJSON: String? = null,
     ): Result<List<Board>> = AssetBoardRepository(
         FixtureAssets(
             mapOf(
                 "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(
-                    positions = positionsJSON ?: if (positions) "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]" else null,
-                    holds = holdsJSON ?: if (positions) "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}" else "{\"id\": \"jug\", \"equipmentObjectID\": \"primary\", \"name\": \"Jug\", \"kind\": \"jug\"}",
+                    positions = positionsJSON,
+                    holds = holdsJSON,
                     orientation = "\"orientation\": $orientation",
                     suspension = suspension,
                 ),
@@ -586,6 +614,7 @@ class BoardRepositoryTest {
 
 class FixtureAssets(
     private val files: Map<String, String>,
+    private val accessedPaths: MutableList<String> = mutableListOf(),
 ) : ContentAssets {
     override fun list(path: String): List<String>? {
         val prefix = path.trimEnd('/') + "/"
@@ -596,9 +625,15 @@ class FixtureAssets(
             .takeIf { it.isNotEmpty() }
     }
 
-    override fun read(path: String): String? = files[path]
+    override fun read(path: String): String? {
+        accessedPaths += path
+        return files[path]
+    }
 
-    override fun exists(path: String): Boolean = path in files
+    override fun exists(path: String): Boolean {
+        accessedPaths += path
+        return path in files
+    }
 }
 
 private fun assertTrueFailureContaining(result: Result<*>, expected: String) {
