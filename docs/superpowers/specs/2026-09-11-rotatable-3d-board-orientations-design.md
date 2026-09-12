@@ -124,8 +124,8 @@ Canonical serialization is deterministic: root object keys use the existing
 schema order; `positions` retain authored array order; each `holdIDs` array is
 canonical hold order; and `orientation.rotations` object members are sorted by
 position ID. Numeric components are finite and rounded to nine decimal places.
-The writer emits `orientation` only when present and emits no empty optional
-objects.
+There is no v2 model serializer in this change; canonical ordering and
+numeric normalization apply to hand-authored v2 JSON and validator behavior.
 
 Strict validation must reject:
 
@@ -255,6 +255,16 @@ hold is visible and selectable, rotate manually, reset, switch positions, and
 confirm framing remains within the viewport. Validate both detail and workout
 surfaces, plus the display-only preview's intentional gesture policy. A failed
 load must show the existing unavailable state, never a raster fallback.
+
+The Nature Stone Hanger 3D card renders blank under the synthetic landscape
+review flag (a programmatic `requestGeometryUpdate(.landscapeRight)` with the
+device physically in portrait). The identical scene state renders correctly in
+portrait, and the shared renderer proves itself on all other boards in the
+same harness. The scene graph state is verified correct via live debugger
+inspection (non-zero size, valid scene/geometry/lights/camera, zero errors).
+This is a harness presentation edge, not a package defect. A physical-device
+landscape rotation check is required before marking this validation fully
+complete.
 
 All simulator screenshots, temporary build products, and validation logs live
 under `.context/<workspace-owner>/`. Before completion, install an exit trap

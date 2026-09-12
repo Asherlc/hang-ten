@@ -22,6 +22,7 @@ MODEL_PACKAGE_IDS = {
     "beastmaker-1000",
     "metolius.wood-grips-compact-ii",
     "nature.stone-hanger",
+    "tension.flash-board",
     "yy.baguette-evo",
 }
 
@@ -67,8 +68,8 @@ def _orientation() -> dict[str, object]:
     return {
         "pivot": "modelBoundsCenter",
         "rotations": {
-            "reverse": [0, 1, 0, 0],
             "front": [0, 0, 0, 1],
+            "reverse": [0, 1, 0, 0],
         },
     }
 
@@ -227,9 +228,34 @@ def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
         )
 
 
-def test_discovered_model_inventory_is_exactly_the_four_current_packages() -> None:
+def test_discovered_model_inventory_is_exactly_the_five_current_packages() -> None:
     model_packages = _discovered_model_packages()
     assert set(model_packages) == MODEL_PACKAGE_IDS
+
+
+def test_flash_board_keeps_suspension_poses_without_orientation() -> None:
+    board = _discovered_model_packages()["tension.flash-board"].board
+    presentation = board.presentations[0]
+    media = presentation.media
+    assert isinstance(media, load_board_catalog_module().PresentationMediaModel)
+
+    # Suspension and orientation are mutually exclusive: the Flash Board keeps
+    # its four legacy suspension poses, each materializing the complete hold
+    # inventory, and declares no orientation block.
+    assert media.suspension is not None
+    assert media.orientation is None
+    assert {position.id for position in board.positions} == {
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    }
+    assert all(position.presentation_id == "primary" for position in board.positions)
+    assert not any(position.hold_ids_authored for position in board.positions)
+    assert all(
+        position.hold_ids == tuple(hold.id for hold in board.holds)
+        for position in board.positions
+    )
 
 
 @pytest.mark.parametrize(

@@ -806,8 +806,11 @@ def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
     raw_rotations = _mapping(payload["rotations"], f"{source}.rotations")
     if not raw_rotations:
         raise ValueError(f"{source}.rotations must not be empty")
+    rotation_ids = list(raw_rotations.keys())
+    if rotation_ids != sorted(rotation_ids):
+        raise ValueError(f"{source}.rotations keys must be sorted by position ID")
     rotations: dict[str, tuple[float, float, float, float]] = {}
-    for position_id in sorted(raw_rotations):
+    for position_id in rotation_ids:
         raw_quaternion = raw_rotations[position_id]
         position_source = f"{source}.rotations[{position_id}]"
         position_id = _identifier(position_id, f"{position_source} positionID")
@@ -1531,6 +1534,7 @@ def _validate_model_orientation(
     orientation: BoardModelOrientation | None,
     positions: tuple[BoardPosition, ...],
     descriptor_hold_ids: set[str],
+    canonical_hold_ids: list[str],
     model_position_ids: set[str],
     source: str,
 ) -> None:
@@ -1565,6 +1569,11 @@ def _validate_model_orientation(
         if overlap:
             raise ValueError(f"{hold_source} contains duplicate hold IDs across positions")
         seen.update(position.hold_ids)
+        # Check canonical hold order: authored arrays must match the
+        # descriptor's canonical hold order.
+        expected_hold_ids = [hid for hid in canonical_hold_ids if hid in position.hold_ids]
+        if list(position.hold_ids) != expected_hold_ids:
+            raise ValueError(f"{hold_source} must follow canonical board hold order")
     if seen != descriptor_hold_ids:
         raise ValueError("model positions holdIDs must exactly partition descriptor holds")
 
@@ -1910,6 +1919,7 @@ def _validate_finished_shape(
             presentation.media.orientation,
             board.positions,
             set(frames),
+            [hold.id for hold in board.holds],
             {
                 position.id
                 for position in board.positions

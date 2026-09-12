@@ -1924,7 +1924,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(selection.presentationID, "back")
     }
 
-    func testPositionResolverUsesResolvedSurfaceAndFallsBackWhenSurfaceHasNoPosition() throws {
+    func testPositionResolverUsesResolvedSurfaceAndRejectsUnknownSurfaceOrHold() throws {
         let fixture = try makeMultiPresentationFixtureBundle(boardMutation: { board in
             board["positions"] = [["id": "front-pose", "presentationID": "front"],
                                   ["id": "back-pose", "presentationID": "back"]]
@@ -1936,9 +1936,15 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
             presentationID: selection.presentationID, activeHoldID: nil), "back-pose")
         XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
-            presentationID: "unpositioned", activeHoldID: nil), "front-pose")
-        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
-            presentationID: "front", activeHoldID: "hold-back"), "back-pose")
+            presentationID: "front", activeHoldID: "hold-left"), "front-pose")
+        // Unknown presentations and cross-presentation holds resolve to no
+        // position rather than borrowing another surface's membership.
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "unpositioned", activeHoldID: nil))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "hold-back"))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "not-on-model"))
     }
 
     func testTwoBranchRejectsNonIdentifierPassageAndBranchIDs() throws {
