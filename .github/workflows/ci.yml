@@ -153,10 +153,7 @@ jobs:
     needs:
       - changes
     if: >-
-      github.event_name != 'pull_request' ||
-      needs.changes.outputs.android == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
