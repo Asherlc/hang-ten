@@ -51,6 +51,18 @@ data class BoardPresentation(
     val assetPath: String,
     val aspectRatio: Float,
     val isDefault: Boolean,
+    val orientation: BoardOrientation? = null,
+)
+
+data class BoardPosition(
+    val id: String,
+    val presentationId: String,
+    val holdIds: List<String>,
+)
+
+data class BoardOrientation(
+    val pivot: String,
+    val rotations: Map<String, List<Float>>,
 )
 
 data class Board(
@@ -62,6 +74,7 @@ data class Board(
     val aspectRatio: Float,
     val presentations: List<BoardPresentation>,
     val holds: List<BoardHold>,
+    val positions: List<BoardPosition> = emptyList(),
     val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
     /** Asset package identity; deliberately separate from the public logical board ID. */
     val packageSlug: String = id,
@@ -245,6 +258,20 @@ internal fun JsonValue.asFiniteFloat(path: String): Float {
     return floatValue
 }
 
+internal fun JsonValue.asCanonicalNineDecimalFloat(path: String): Float {
+    val number = this as? JsonValue.Number
+        ?: throw ContentDecodingException("$path must be a number.")
+    val value = number.value
+    if (!value.isFinite()) throw ContentDecodingException("$path must be finite.")
+    val decimal = java.math.BigDecimal.valueOf(value)
+    if (decimal.setScale(9, java.math.RoundingMode.HALF_EVEN).compareTo(decimal) != 0) {
+        throw ContentDecodingException("$path must be rounded to nine decimal places.")
+    }
+    val floatValue = value.toFloat()
+    if (!floatValue.isFinite()) throw ContentDecodingException("$path must be finite.")
+    return floatValue
+}
+
 internal fun JsonValue.Object.required(name: String, path: String): JsonValue =
     fields[name] ?: throw ContentDecodingException("$path.$name is required.")
 
@@ -255,6 +282,12 @@ internal fun JsonValue.Object.requiredString(name: String, path: String): String
 
 internal fun JsonValue.Object.requiredText(name: String, path: String): String =
     required(name, path).asString("$path.$name")
+
+internal fun JsonValue.Object.rejectUnknownKeys(path: String, allowed: Set<String>) {
+    fields.keys.firstOrNull { it !in allowed }?.let { unknown ->
+        throw ContentDecodingException("$path contains unknown key $unknown.")
+    }
+}
 
 internal fun requireContentId(value: String, path: String) {
     if (value.isBlank()) throw ContentDecodingException("$path must not be blank.")

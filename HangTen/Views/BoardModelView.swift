@@ -85,7 +85,11 @@ enum BoardModelLoader {
             source: source,
             descriptor: media.descriptor,
             display: media.display,
-            suspension: media.suspension
+            suspension: media.suspension,
+            orientation: media.orientation,
+            allowedPositionIDs: Set(board.positions.filter {
+                $0.presentationID == presentation.id
+            }.map(\.id))
         )
     }
 }
@@ -210,9 +214,11 @@ final class BoardModelScene {
     let camera = SCNNode()
     let geometryNodes: [SCNNode]
     private(set) var boardTransform: simd_float4x4
-    private let boardContainer: SCNNode
+    private(set) var boardContainer: SCNNode
     private let descriptor: BoardModelDescriptor
+    private let display: BoardModelDisplay
     private let suspension: BoardModelSuspension?
+    private let orientation: BoardModelOrientation?
     private let geometryByNodeID: [String: SCNNode]
     private let projectedWidth: Float
     private let projectedHeight: Float
@@ -235,13 +241,17 @@ final class BoardModelScene {
     private(set) var transientCordNode: SCNNode?
     private(set) var isUnavailable = false
     private(set) var isTransientCordAccessible = false
+    private let allowedPositionIDs: Set<String>
 
     init?(
         source: SCNScene,
         descriptor: BoardModelDescriptor,
         display: BoardModelDisplay,
-        suspension: BoardModelSuspension? = nil
+        suspension: BoardModelSuspension? = nil,
+        orientation: BoardModelOrientation? = nil,
+        allowedPositionIDs: Set<String>? = nil
     ) {
+        guard !(suspension != nil && orientation != nil) else { return nil }
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -324,7 +334,13 @@ final class BoardModelScene {
 
         geometryNodes = clonedGeometryNodes
         self.descriptor = descriptor
+        self.display = display
         self.suspension = suspension
+        self.orientation = orientation
+        self.allowedPositionIDs = allowedPositionIDs
+            ?? orientation.map { Set($0.rotations.keys) }
+            ?? suspension.map { Set($0.canonicalPoses.keys) }
+            ?? []
         self.geometryByNodeID = geometryByNodeID
         holdNodes = boundHoldNodes
         holdIDsByNode = boundHoldIDsByNode
@@ -357,13 +373,51 @@ final class BoardModelScene {
 
     @discardableResult
     func select(positionID: String?) -> Bool {
-        guard let suspension else {
+        guard let positionID, allowedPositionIDs.contains(positionID) else {
+            enterUnavailable()
+            return false
+        }
+        if let orientation {
+            guard let components = orientation.rotations[positionID],
+                  orientation.pivot == "modelBoundsCenter",
+                  let quaternion = Self.quaternion(from: components) else {
+                enterUnavailable()
+                return false
+            }
+            let pivot = Self.boundsCenter(descriptor.modelBounds)
+            let rotatedCorners = Self.rotatedCorners(
+                descriptor.modelBounds,
+                by: quaternion,
+                pivot: pivot
+            )
+            guard let framing = Self.framing(points: rotatedCorners, display: display) else {
+                enterUnavailable()
+                return false
+            }
+            transitionToOrientation(
+                transform: Self.transform(rotating: quaternion, about: pivot),
+                framing: framing
+            )
+            canonicalFraming = framing
             activePositionID = positionID
             isUnavailable = false
             return true
         }
-        guard let positionID,
-              let pose = suspension.canonicalPoses[positionID],
+        guard let suspension else {
+            guard let framing = Self.framing(descriptor: descriptor, display: display) else {
+                enterUnavailable()
+                return false
+            }
+            // Preserve the existing fixed-board camera scale exactly while
+            // making its canonical pose available to orbit/reset gestures.
+            // Fixed models do not receive an orientation transition.
+            canonicalFraming = Self.fixedFraming(from: framing)
+            currentFraming = canonicalFraming
+            activePositionID = positionID
+            isUnavailable = false
+            return true
+        }
+        guard let pose = suspension.canonicalPoses[positionID],
               hasDeclaredAttachmentBindings(for: suspension) else {
             enterUnavailable()
             return false
@@ -510,6 +564,44 @@ final class BoardModelScene {
             transformedAttachment = single.transformedAttachment
         }
         currentFraming = solved.cameraFraming
+    }
+
+    private func transitionToOrientation(
+        transform: simd_float4x4,
+        framing: SuspendedCameraFraming
+    ) {
+        transientCordNode?.removeFromParentNode()
+        transientCordNode = nil
+        isTransientCordAccessible = false
+        transformedAttachment = .zero
+
+        let boardMoves = !Self.transformsMatch(boardTransform, transform)
+        if !boardMoves {
+            boardContainer.simdTransform = transform
+        }
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = Self.canonicalTransitionDuration
+        if boardMoves {
+            boardContainer.simdTransform = transform
+        }
+        applyCanonicalCamera(framing)
+        SCNTransaction.commit()
+
+        boardTransform = transform
+        currentFraming = framing
+    }
+
+    private static func transformsMatch(
+        _ lhs: simd_float4x4,
+        _ rhs: simd_float4x4,
+        tolerance: Float = 1e-6
+    ) -> Bool {
+        for column in 0..<4 {
+            for row in 0..<4 where abs(lhs[column][row] - rhs[column][row]) > tolerance {
+                return false
+            }
+        }
+        return true
     }
 
     private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
@@ -983,53 +1075,83 @@ final class BoardModelScene {
         return name
     }
 
-    private struct Framing {
-        let target: SCNVector3
-        let direction: SCNVector3
-        let up: SCNVector3
-        let distance: Float
-        let width: Float
-        let height: Float
-        let padding: Float
+    static func rotatedBounds(
+        _ bounds: BoardModelBounds,
+        by quaternion: simd_quatf,
+        pivot: SIMD3<Float>
+    ) -> BoardModelBounds {
+        let transformedCorners = rotatedCorners(bounds, by: quaternion, pivot: pivot)
+        let transformedMinimum = SIMD3<Float>(
+            transformedCorners.map(\.x).min() ?? 0,
+            transformedCorners.map(\.y).min() ?? 0,
+            transformedCorners.map(\.z).min() ?? 0
+        )
+        let transformedMaximum = SIMD3<Float>(
+            transformedCorners.map(\.x).max() ?? 0,
+            transformedCorners.map(\.y).max() ?? 0,
+            transformedCorners.map(\.z).max() ?? 0
+        )
+        return BoardModelBounds(
+            minimum: [Double(transformedMinimum.x), Double(transformedMinimum.y), Double(transformedMinimum.z)],
+            maximum: [Double(transformedMaximum.x), Double(transformedMaximum.y), Double(transformedMaximum.z)]
+        )
     }
 
-    private static func framing(
+    static func rotatedCorners(
+        _ bounds: BoardModelBounds,
+        by quaternion: simd_quatf,
+        pivot: SIMD3<Float>
+    ) -> [SIMD3<Float>] {
+        boundsCorners(bounds).map { quaternion.act($0 - pivot) + pivot }
+    }
+
+    static func framing(
         descriptor: BoardModelDescriptor,
         display: BoardModelDisplay
-    ) -> Framing? {
-        let minimum = descriptor.modelBounds.minimum
-        let maximum = descriptor.modelBounds.maximum
+    ) -> SuspendedCameraFraming? {
+        framing(bounds: descriptor.modelBounds, display: display)
+    }
+
+    static func framing(
+        bounds: BoardModelBounds,
+        display: BoardModelDisplay
+    ) -> SuspendedCameraFraming? {
+        framing(points: boundsCorners(bounds), display: display)
+    }
+
+    static func framing(
+        points: [SIMD3<Float>],
+        display: BoardModelDisplay
+    ) -> SuspendedCameraFraming? {
         let camera = display.camera
-        guard minimum.count == 3,
-              maximum.count == 3,
+        guard points.count == 8,
               camera.type == "orthographic",
               camera.viewDirection.count == 3,
               camera.up.count == 3,
               camera.fitPadding.isFinite,
               camera.fitPadding > 0,
-              minimum.allSatisfy(\.isFinite),
-              maximum.allSatisfy(\.isFinite),
+              points.allSatisfy({
+                  $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
+              }),
               camera.viewDirection.allSatisfy(\.isFinite),
               camera.up.allSatisfy(\.isFinite) else {
             return nil
         }
-        let minimumVector = SCNVector3(minimum[0], minimum[1], minimum[2])
-        let maximumVector = SCNVector3(maximum[0], maximum[1], maximum[2])
-        let target = (minimumVector + maximumVector) / 2
-        guard let direction = SCNVector3(camera.viewDirection).normalized(),
-              let requestedUp = SCNVector3(camera.up).normalized(),
-              let right = direction.cross(requestedUp).normalized() else {
+        let target = points.reduce(SIMD3<Float>.zero, +) / Float(points.count)
+        let direction = SIMD3<Float>(Float(camera.viewDirection[0]), Float(camera.viewDirection[1]), Float(camera.viewDirection[2]))
+        let requestedUp = SIMD3<Float>(Float(camera.up[0]), Float(camera.up[1]), Float(camera.up[2]))
+        guard simd_length(direction) > 0,
+              simd_length(requestedUp) > 0 else {
             return nil
         }
-        let up = right.cross(direction)
-        let corners = [minimumVector.x, maximumVector.x].flatMap { x in
-            [minimumVector.y, maximumVector.y].flatMap { y in
-                [minimumVector.z, maximumVector.z].map { z in SCNVector3(x, y, z) }
-            }
-        }
-        let horizontal = corners.map { ($0 - target).dot(right) }
-        let vertical = corners.map { ($0 - target).dot(up) }
-        let depth = corners.map { ($0 - target).dot(direction) }
+        let normalizedDirection = simd_normalize(direction)
+        let cross = simd_cross(normalizedDirection, simd_normalize(requestedUp))
+        guard simd_length(cross) > 0 else { return nil }
+        let right = simd_normalize(cross)
+        let up = simd_cross(right, normalizedDirection)
+        let horizontal = points.map { simd_dot($0 - target, right) }
+        let vertical = points.map { simd_dot($0 - target, up) }
+        let depth = points.map { simd_dot($0 - target, normalizedDirection) }
         guard let width = horizontal.max().flatMap({ maximum in horizontal.min().map { maximum - $0 } }),
               let height = vertical.max().flatMap({ maximum in vertical.min().map { maximum - $0 } }),
               let depthSpan = depth.max().flatMap({ maximum in depth.min().map { maximum - $0 } }),
@@ -1039,18 +1161,91 @@ final class BoardModelScene {
         }
         let fitPadding = Float(1 + camera.fitPadding * 2)
         let distance = max(width, height, depthSpan) * fitPadding
-        return Framing(
+        return SuspendedCameraFraming(
             target: target,
-            direction: direction,
+            direction: normalizedDirection,
+            viewDirection: normalizedDirection,
+            right: right,
             up: up,
             distance: distance,
             width: width,
             height: height,
-            padding: fitPadding
+            depth: depthSpan,
+            fitPadding: fitPadding,
+            includedPoints: points
         )
     }
 
-    private func configureCameraAndLighting(framing: Framing) {
+    private static func boundsCorners(_ bounds: BoardModelBounds) -> [SIMD3<Float>] {
+        guard bounds.minimum.count == 3, bounds.maximum.count == 3 else { return [] }
+        let minimum = SIMD3<Float>(
+            Float(bounds.minimum[0]), Float(bounds.minimum[1]), Float(bounds.minimum[2])
+        )
+        let maximum = SIMD3<Float>(
+            Float(bounds.maximum[0]), Float(bounds.maximum[1]), Float(bounds.maximum[2])
+        )
+        return [minimum.x, maximum.x].flatMap { x in
+            [minimum.y, maximum.y].flatMap { y in
+                [minimum.z, maximum.z].map { z in SIMD3<Float>(x, y, z) }
+            }
+        }
+    }
+
+    private static func boundsCenter(_ bounds: BoardModelBounds) -> SIMD3<Float> {
+        SIMD3<Float>(
+            Float((bounds.minimum[0] + bounds.maximum[0]) / 2),
+            Float((bounds.minimum[1] + bounds.maximum[1]) / 2),
+            Float((bounds.minimum[2] + bounds.maximum[2]) / 2)
+        )
+    }
+
+    private static func fixedFraming(
+        from framing: SuspendedCameraFraming
+    ) -> SuspendedCameraFraming {
+        SuspendedCameraFraming(
+            target: framing.target,
+            direction: framing.direction,
+            viewDirection: framing.viewDirection,
+            right: framing.right,
+            up: framing.up,
+            distance: framing.distance,
+            width: framing.width,
+            height: framing.height,
+            depth: framing.depth,
+            fitPadding: 1,
+            includedPoints: framing.includedPoints
+        )
+    }
+
+    private static func quaternion(from components: SIMD4<Double>) -> simd_quatf? {
+        guard components.x.isFinite, components.y.isFinite,
+              components.z.isFinite, components.w.isFinite else {
+            return nil
+        }
+        let quaternion = simd_quatf(
+            ix: Float(components.x), iy: Float(components.y),
+            iz: Float(components.z), r: Float(components.w)
+        )
+        guard quaternion.vector.x.isFinite, quaternion.vector.y.isFinite,
+              quaternion.vector.z.isFinite, quaternion.vector.w.isFinite,
+              simd_length(quaternion.vector) > 1e-6 else {
+            return nil
+        }
+        return simd_normalize(quaternion)
+    }
+
+    private static func transform(
+        rotating quaternion: simd_quatf,
+        about pivot: SIMD3<Float>
+    ) -> simd_float4x4 {
+        var translateToPivot = matrix_identity_float4x4
+        translateToPivot.columns.3 = SIMD4<Float>(pivot.x, pivot.y, pivot.z, 1)
+        var translateFromPivot = matrix_identity_float4x4
+        translateFromPivot.columns.3 = SIMD4<Float>(-pivot.x, -pivot.y, -pivot.z, 1)
+        return translateToPivot * simd_float4x4(quaternion) * translateFromPivot
+    }
+
+    private func configureCameraAndLighting(framing: SuspendedCameraFraming) {
         camera.camera = SCNCamera()
         camera.camera?.usesOrthographicProjection = true
         camera.camera?.zNear = 0.01
@@ -1060,8 +1255,8 @@ final class BoardModelScene {
         camera.camera?.screenSpaceAmbientOcclusionRadius = 0.018
         camera.camera?.screenSpaceAmbientOcclusionBias = 0.001
         camera.camera?.screenSpaceAmbientOcclusionDepthThreshold = 0.03
-        camera.position = framing.target - framing.direction * framing.distance
-        camera.look(at: framing.target, up: framing.up, localFront: SCNVector3(0, 0, -1))
+        camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
+        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
         scene.rootNode.addChildNode(camera)
 
         let ambient = SCNNode()
@@ -1081,8 +1276,8 @@ final class BoardModelScene {
         key.light?.zNear = 0.01
         key.light?.zFar = 3
         key.light?.maximumShadowDistance = 3
-        key.position = camera.position + framing.up * framing.height
-        key.look(at: framing.target, up: framing.up, localFront: SCNVector3(0, 0, -1))
+        key.position = camera.position + SCNVector3(framing.up) * framing.height
+        key.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
         scene.rootNode.addChildNode(key)
     }
 }

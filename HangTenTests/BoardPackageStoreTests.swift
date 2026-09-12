@@ -158,7 +158,12 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.passages.right.count, 2)
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
+        XCTAssertEqual(media.suspension?.cord.restLength, 0.92)
         XCTAssertEqual(suspension.branches.map(\.restLength), [0.92, 0.92])
+        XCTAssertTrue(
+            board.positions.allSatisfy { Set($0.holdIDs) == Set(media.descriptor.holds.keys) },
+            "legacy suspension positions materialize the descriptor inventory without partitioning it"
+        )
         let solved = try SuspendedBoardPresentation.solve(
             pose: try XCTUnwrap(suspension.canonicalPoses["primary"]),
             suspension: suspension,
@@ -1919,7 +1924,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(selection.presentationID, "back")
     }
 
-    func testPositionResolverUsesResolvedSurfaceAndFallsBackWhenSurfaceHasNoPosition() throws {
+    func testPositionResolverUsesResolvedSurfaceAndRejectsUnknownSurfaceOrHold() throws {
         let fixture = try makeMultiPresentationFixtureBundle(boardMutation: { board in
             board["positions"] = [["id": "front-pose", "presentationID": "front"],
                                   ["id": "back-pose", "presentationID": "back"]]
@@ -1931,9 +1936,15 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
             presentationID: selection.presentationID, activeHoldID: nil), "back-pose")
         XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
-            presentationID: "unpositioned", activeHoldID: nil), "front-pose")
-        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
-            presentationID: "front", activeHoldID: "hold-back"), "back-pose")
+            presentationID: "front", activeHoldID: "hold-left"), "front-pose")
+        // Unknown presentations and cross-presentation holds resolve to no
+        // position rather than borrowing another surface's membership.
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "unpositioned", activeHoldID: nil))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "hold-back"))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "not-on-model"))
     }
 
     func testTwoBranchRejectsNonIdentifierPassageAndBranchIDs() throws {
@@ -3015,6 +3026,99 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.transitionKind(from: "flipped", to: "front"), .setupRequired)
     }
 
+    // This catches a loader that ignores authored model-position membership or
+    // binds rotations to presentation IDs instead of position IDs.
+    func testStoreDecodesModelOrientationAndExactPositionInventories() throws {
+        let fixture = try makeOrientableModelFixtureBundle()
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media else {
+            return XCTFail("expected model media")
+        }
+
+        XCTAssertEqual(board.positions.map(\.holdIDs), [["hold-left"], ["hold-right"]])
+        XCTAssertEqual(board.holdIDs(inPosition: "front"), ["hold-left"])
+        XCTAssertEqual(board.holdIDs(inPosition: "reverse"), ["hold-right"])
+        XCTAssertEqual(media.orientation?.pivot, "modelBoundsCenter")
+        XCTAssertEqual(media.orientation?.rotations["front"], SIMD4(0, 0, 0, 1))
+        XCTAssertEqual(media.orientation?.rotations["reverse"], SIMD4(0, 1, 0, 0))
+    }
+
+    // This catches permissive orientation parsing, partial inventories, and
+    // accidental coexistence with the mutually-exclusive suspension metadata.
+    func testStoreRejectsInvalidModelOrientationAndPositionInventory() throws {
+        let mutations: [(String, (inout [String: Any]) -> Void, String)] = [
+            ("wrong pivot", { board in
+                self.mutateOrientation(in: &board) { $0["pivot"] = "boardOrigin" }
+            }, "orientation pivot"),
+            ("rotation inventory", { board in
+                self.mutateOrientation(in: &board) { $0["rotations"] = ["front": [0, 0, 0, 1]] }
+            }, "orientation rotations"),
+            ("nonunit quaternion", { board in
+                self.mutateOrientation(in: &board) { $0["rotations"] = ["front": [0, 0, 0, 2], "reverse": [0, 1, 0, 0]] }
+            }, "orientation rotations"),
+            ("overlapping memberships", { board in
+                var positions = board["positions"] as! [[String: Any]]
+                positions[1]["holdIDs"] = ["hold-left"]
+                board["positions"] = positions
+            }, "positions[1].holdIDs"),
+            ("noncanonical membership order", { board in
+                var positions = board["positions"] as! [[String: Any]]
+                positions[0]["holdIDs"] = ["hold-right", "hold-left"]
+                positions[1]["holdIDs"] = []
+                board["positions"] = positions
+            }, "canonical board hold order")
+        ]
+
+        for (name, mutation, reason) in mutations {
+            let fixture = try makeOrientableModelFixtureBundle(boardMutation: mutation)
+            defer { fixture.remove() }
+            assertStoreRejects(fixture.bundle, reasonContaining: reason)
+        }
+    }
+
+    func testStoreRejectsUnknownOrientationMember() throws {
+        let fixture = try makeOrientableModelFixtureBundle { board in
+            self.mutateOrientation(in: &board) { $0["unexpected"] = true }
+        }
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "orientation must contain")
+    }
+
+    func testStoreRejectsOrientationAndSuspensionTogether() throws {
+        let fixture = try makeOrientableModelFixtureBundle { board in
+            var presentations = board["presentations"] as! [[String: Any]]
+            var media = presentations[0]["media"] as! [String: Any]
+            media["suspension"] = ["type": "unsupported"]
+            presentations[0]["media"] = media
+            board["presentations"] = presentations
+        }
+        defer { fixture.remove() }
+
+        assertStoreRejects(fixture.bundle, reasonContaining: "orientation and suspension")
+    }
+
+    // The editable raster document remains a legacy boundary: constructing a
+    // compatibility position must not add v2 model inventory bytes to it.
+    func testCompatibilityPositionInitializerPreservesLegacyEditableDocumentBytes() throws {
+        var legacy = try XCTUnwrap(
+            JSONSerialization.jsonObject(
+                with: legacyBoardData(for: PackageSpec(slug: "fixture-model", id: "fixture.board"))
+            ) as? [String: Any]
+        )
+        legacy["positions"] = [["id": "primary", "presentationID": "primary"]]
+        let document = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: legacy, options: [.sortedKeys])
+        )
+        let baseline = try BoardPackageWriter.data(for: document)
+        var touched = document
+        touched.positions = [BoardPosition(id: "primary", presentationID: "primary")]
+
+        XCTAssertEqual(try BoardPackageWriter.data(for: touched), baseline)
+    }
+
     func testStoreRejectsInvalidPositionsAndTransitions() throws {
         let mutations: [(String, (inout [String: Any]) -> Void)] = [
             ("duplicate position ID", { board in
@@ -3332,6 +3436,59 @@ final class BoardPackageStoreTests: XCTestCase {
                 .write(to: assetsURL.appendingPathComponent("primary.model.json"))
             try mutatePackage?(packageURL)
         }
+    }
+
+    private func makeOrientableModelFixtureBundle(
+        boardMutation: ((inout [String: Any]) -> Void)? = nil
+    ) throws -> FixtureBundle {
+        try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds.append(["id": "hold-right", "name": "Right hold", "kind": "jug"])
+                board["holds"] = holds
+                board["positions"] = [
+                    ["id": "front", "presentationID": "primary", "holdIDs": ["hold-left"]],
+                    ["id": "reverse", "presentationID": "primary", "holdIDs": ["hold-right"]]
+                ]
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                media["orientation"] = [
+                    "pivot": "modelBoundsCenter",
+                    "rotations": [
+                        "front": [0, 0, 0, 1],
+                        "reverse": [0, 1, 0, 0]
+                    ]
+                ]
+                presentations[0]["media"] = media
+                board["presentations"] = presentations
+                boardMutation?(&board)
+            }
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("assets/primary.model.json")) { descriptor in
+                var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
+                nodes.append(["nodeID": "Right", "role": "hold", "holdID": "hold-right"])
+                descriptor["nodes"] = nodes
+                var holds = try XCTUnwrap(descriptor["holds"] as? [String: Any])
+                holds["hold-right"] = [
+                    "nodeIDs": ["Right"],
+                    "facePlaneAABB": ["min": [0.6, 0.2], "max": [0.9, 0.6]],
+                    "center": [0.75, 0.4]
+                ]
+                descriptor["holds"] = holds
+            }
+        }
+    }
+
+    private func mutateOrientation(
+        in board: inout [String: Any],
+        mutation: (inout [String: Any]) -> Void
+    ) {
+        var presentations = board["presentations"] as! [[String: Any]]
+        var media = presentations[0]["media"] as! [String: Any]
+        var orientation = media["orientation"] as! [String: Any]
+        mutation(&orientation)
+        media["orientation"] = orientation
+        presentations[0]["media"] = media
+        board["presentations"] = presentations
     }
 
     private func makeSharedModelParserParityFixtureBundle(

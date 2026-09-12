@@ -211,17 +211,30 @@ def _model_document() -> dict[str, object]:
     }
 
 
-def _write_model_package(root: Path) -> Path:
+def write_model_package(
+    root: Path,
+    orientation: dict[str, object] | None = None,
+    positions: list[dict[str, object]] | None = None,
+    media_overrides: dict[str, object] | None = None,
+) -> Path:
+    document = _model_document()
+    if orientation is not None:
+        document["presentations"][0]["media"]["orientation"] = orientation
+    if media_overrides:
+        document["presentations"][0]["media"].update(media_overrides)
+    if positions is not None:
+        document["positions"] = positions
     assets = root / "assets"
     assets.mkdir(parents=True)
     (assets / "primary.usdz").write_bytes(MODEL_BYTES)
     (assets / "primary.model.json").write_text(
         json.dumps(_descriptor()), encoding="utf-8"
     )
-    (root / "board.json").write_text(
-        json.dumps(_model_document()), encoding="utf-8"
-    )
+    (root / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return root
+
+
+_write_model_package = write_model_package
 
 
 def _rewrite(path: Path, document: dict[str, object]) -> None:
