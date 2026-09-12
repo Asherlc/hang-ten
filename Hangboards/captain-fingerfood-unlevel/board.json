@@ -5,7 +5,7 @@
   "name": "UNLEVEL",
   "subtitle": "Compact board with two curved edge depths plus an outer jug.",
   "productURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
-  "dimensions": "12 \u00d7 7 \u00d7 3 cm",
+  "dimensions": "12 × 7 × 3 cm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -101,7 +101,7 @@
     {
       "id": "pocket-end-wall-20-25",
       "equipmentObjectID": "primary",
-      "name": "25/20 mm Pocket \u2014 short end-wall",
+      "name": "25/20 mm Pocket — short end-wall",
       "kind": "pocket"
     }
   ],

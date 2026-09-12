@@ -43,27 +43,27 @@
         "orientation": {
           "pivot": "modelBoundsCenter",
           "rotations": {
-            "three-edge-upright": [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ],
             "three-edge-inverted": [
               0.0,
               0.0,
               1.0,
               0.0
             ],
-            "two-edge-upright": [
-              1.0,
+            "three-edge-upright": [
               0.0,
               0.0,
-              0.0
+              0.0,
+              1.0
             ],
             "two-edge-inverted": [
               0.0,
               1.0,
+              0.0,
+              0.0
+            ],
+            "two-edge-upright": [
+              1.0,
+              0.0,
               0.0,
               0.0
             ]

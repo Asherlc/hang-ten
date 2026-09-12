@@ -3,9 +3,9 @@
   "id": "captain-fingerfood.pocket",
   "manufacturer": "Captain Fingerfood",
   "name": "POCKET Hangboard | Lines Edition",
-  "subtitle": "Current Lines colorway of the 110 \u00d7 66 \u00d7 29 mm two-depth POCKET revision.",
+  "subtitle": "Current Lines colorway of the 110 × 66 × 29 mm two-depth POCKET revision.",
   "productURL": "https://en.captainfingerfood.rocks/products/lines-hangboard",
-  "dimensions": "110 \u00d7 66 \u00d7 29 mm",
+  "dimensions": "110 × 66 × 29 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -45,16 +45,22 @@
         "orientation": {
           "pivot": "modelBoundsCenter",
           "rotations": {
+            "edge-15-inverted": [
+              9e-09,
+              0.199367862,
+              -0.979924719,
+              4.3e-08
+            ],
             "edge-20-front": [
               0.199367862,
               0.0,
               0.0,
               0.979924719
             ],
-            "edge-15-inverted": [
+            "jug-reverse": [
               9e-09,
+              0.979924719,
               0.199367862,
-              -0.979924719,
               4.3e-08
             ],
             "pocket-short-end": [
@@ -62,12 +68,6 @@
               -0.14097438,
               0.692911411,
               0.692911411
-            ],
-            "jug-reverse": [
-              9e-09,
-              0.979924719,
-              0.199367862,
-              4.3e-08
             ]
           }
         }
@@ -101,7 +101,7 @@
     {
       "id": "pocket-end-wall-15-20",
       "equipmentObjectID": "primary",
-      "name": "15/20 mm Pocket \u2014 short end-wall",
+      "name": "15/20 mm Pocket — short end-wall",
       "kind": "pocket"
     }
   ],

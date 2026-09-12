@@ -3039,11 +3039,6 @@ final class BoardPackageStoreTests: XCTestCase {
             ("nonunit quaternion", { board in
                 self.mutateOrientation(in: &board) { $0["rotations"] = ["front": [0, 0, 0, 2], "reverse": [0, 1, 0, 0]] }
             }, "orientation rotations"),
-            ("overlapping memberships", { board in
-                var positions = board["positions"] as! [[String: Any]]
-                positions[1]["holdIDs"] = ["hold-left"]
-                board["positions"] = positions
-            }, "positions[1].holdIDs"),
             ("noncanonical membership order", { board in
                 var positions = board["positions"] as! [[String: Any]]
                 positions[0]["holdIDs"] = ["hold-right", "hold-left"]
@@ -3057,6 +3052,21 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
             assertStoreRejects(fixture.bundle, reasonContaining: reason)
         }
+    }
+
+    // This verifies that overlapping model position hold memberships are now accepted
+    // (union-cover contract: holds may appear in multiple positions).
+    func testStoreAcceptsOverlappingModelPositionHoldMemberships() throws {
+        let fixture = try makeOrientableModelFixtureBundle { board in
+            var positions = board["positions"] as! [[String: Any]]
+            positions[1]["holdIDs"] = ["hold-left", "hold-right"]
+            board["positions"] = positions
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        XCTAssertEqual(board.positions[0].holdIDs, ["hold-left"])
+        XCTAssertEqual(board.positions[1].holdIDs, ["hold-left", "hold-right"])
     }
 
     func testStoreRejectsUnknownOrientationMember() throws {
