@@ -257,7 +257,7 @@ jobs:
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           ANDROID_RESULT: ${{ needs.android.result }}
-          ANDROID_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.android == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
+          ANDROID_REQUIRED: ${{ github.event_name != 'pull_request' && (needs.changes.outputs.android == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true') }}
         run: |
           set -euo pipefail
           if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
