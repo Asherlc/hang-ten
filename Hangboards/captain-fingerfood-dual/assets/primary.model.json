@@ -1,0 +1,121 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "curved-edge-20": {
+      "center": [
+        0.5,
+        0.25535715
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.950000022,
+          0.425000001
+        ],
+        "min": [
+          0.049999978,
+          0.085714299
+        ]
+      },
+      "nodeIDs": [
+        "DUAL_skin_curved_edge_20_001"
+      ]
+    },
+    "outer-jug": {
+      "center": [
+        0.5,
+        0.042857149
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.873003485,
+          0.085714299
+        ],
+        "min": [
+          0.126996515,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "DUAL_skin_outer_jug_001"
+      ]
+    },
+    "pocket-end-wall-20": {
+      "center": [
+        0.098536476,
+        0.5
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.147072974,
+          0.812499993
+        ],
+        "min": [
+          0.049999978,
+          0.187500007
+        ]
+      },
+      "nodeIDs": [
+        "DUAL_skin_pocket_end_wall_20_001"
+      ]
+    },
+    "straight-edge-20": {
+      "center": [
+        0.5,
+        0.76964285
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.950000022,
+          0.914285701
+        ],
+        "min": [
+          0.049999978,
+          0.625
+        ]
+      },
+      "nodeIDs": [
+        "DUAL_skin_straight_edge_20_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.059999999,
+      0.035,
+      0.015
+    ],
+    "min": [
+      -0.059999999,
+      -0.035,
+      -0.015
+    ]
+  },
+  "modelSHA256": "3dbaddc74def347c466ba283c3d3829283b00c7e1317dd03fb6960d215ff934b",
+  "nodes": [
+    {
+      "nodeID": "DUAL_skin_body_001",
+      "role": "body"
+    },
+    {
+      "holdID": "curved-edge-20",
+      "nodeID": "DUAL_skin_curved_edge_20_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "outer-jug",
+      "nodeID": "DUAL_skin_outer_jug_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "pocket-end-wall-20",
+      "nodeID": "DUAL_skin_pocket_end_wall_20_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "straight-edge-20",
+      "nodeID": "DUAL_skin_straight_edge_20_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

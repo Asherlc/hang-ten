@@ -11,6 +11,12 @@ sys.path.insert(0, str(WORKBENCH_ROOT))
 import board_package  # noqa: E402
 
 
+def _presentation_asset_path(presentation: dict) -> str:
+    if "media" in presentation:
+        return presentation["media"]["assetPath"]
+    return presentation["assetPath"]
+
+
 def _assert_audited_single_hand_package(
     slug: str, board_id: str, hold_ids: set[str]
 ) -> None:
@@ -22,7 +28,7 @@ def _assert_audited_single_hand_package(
     assert {hold["id"] for hold in board["holds"]} == hold_ids
     assert all(hold.get("handCapacity") == 1 for hold in board["holds"])
     for presentation in board["presentations"]:
-        assert (package_root / presentation["assetPath"]).is_file()
+        assert (package_root / _presentation_asset_path(presentation)).is_file()
 
 
 def test_nature_stone_hanger_mini_matches_audited_inventory() -> None:
@@ -52,7 +58,8 @@ def test_lattice_mini_bar_matches_audited_inventory() -> None:
     package = board_package.load_board_package(package_root)
     presentations = package.board["presentations"]
     assert [
-        (item["id"], item["name"], item["assetPath"]) for item in presentations
+        (item["id"], item["name"], _presentation_asset_path(item))
+        for item in presentations
     ] == [
         ("edge-10", "10 mm edge", "assets/edge-10.png"),
         ("edge-20", "20 mm edge", "assets/edge-20.png"),
@@ -73,7 +80,7 @@ def test_lattice_mini_bar_matches_audited_inventory() -> None:
         assert {
             region["metadata"]["holdID"] for region in document["regions"]
         } == {presentation_id}
-        assert (package_root / presentation["assetPath"]).is_file()
+        assert (package_root / _presentation_asset_path(presentation)).is_file()
 
 
 def test_lattice_mxedge_lift_small_matches_audited_inventory() -> None:
@@ -112,7 +119,7 @@ def test_captain_fingerfood_pocket_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-pocket",
         "captain-fingerfood.pocket",
-        {"edge-15", "edge-20", "jug-outer-rim"},
+        {"edge-15", "edge-20", "jug-outer-rim", "pocket-end-wall-15-20"},
     )
 
 
@@ -120,7 +127,7 @@ def test_captain_fingerfood_unlevel_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-unlevel",
         "captain-fingerfood.unlevel",
-        {"curved-edge-20", "curved-edge-25", "outer-jug"},
+        {"curved-edge-20", "curved-edge-25", "outer-jug", "pocket-end-wall-20-25"},
     )
 
 
@@ -128,7 +135,7 @@ def test_captain_fingerfood_dual_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-dual",
         "captain-fingerfood.dual",
-        {"straight-edge-20", "curved-edge-20", "outer-jug"},
+        {"straight-edge-20", "curved-edge-20", "outer-jug", "pocket-end-wall-20"},
     )
 
 
@@ -206,7 +213,7 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
     )
     assert option_4["sourcePresentationID"] == "primary"
     assert option_4["isInverted"] is True
-    assert option_4["assetPath"] == "assets/front-inverted.png"
+    assert _presentation_asset_path(option_4) == "assets/front-inverted.png"
     option_4_document = board_package.editor_document(
         package, "cord-option-4-20mm-incut"
     )

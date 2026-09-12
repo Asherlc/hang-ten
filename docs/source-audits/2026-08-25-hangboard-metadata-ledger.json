@@ -5287,6 +5287,118 @@
     {
       "boardID": "metolius.project",
       "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "value": 55
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this contact."
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this contact."
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
         "pocket-3-left",
         "pocket-3-right"
       ],
@@ -11462,118 +11574,6 @@
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/flash-board-2",
         "label": "Edges: 8 mm, 10 mm, 15 mm, and 20 mm; official two-edge gallery views"
-      },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "kind",
-      "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "value": "edge"
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "reason": "The official product page says Small Crimps but gives no exact per-contact depth; the separate overview's approximately 6 mm category is not an exact value."
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "depthRangeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "reason": "The official source publishes no lower/upper depth range for this contact."
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "fingerCapacity",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "handCapacity",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "gripType",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
-    },
-    {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "features",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
       },
       "reason": "The official source does not publish an exact package feature-tag set for this contact."
     },
@@ -38051,22 +38051,6 @@
       "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
     },
     {
-      "boardID": "tension.flash-board",
-      "holdIDs": [
-        "small-crimp-left",
-        "small-crimp-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/flash-board-2",
-        "label": "Edges: Small Crimps; official two-edge gallery views"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
       "boardID": "tension.grindstone",
       "holdIDs": [
         "top-jug"
@@ -40987,6 +40971,22 @@
       },
       "outcome": "unavailable",
       "reason": "The manufacturer diagram identifies flat and round sloper zones within this one continuous canonical contact, so no single subtype accurately describes it."
+    },
+    {
+      "boardID": "metolius.project",
+      "holdIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ],
+      "field": "sloper",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-11",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307",
+        "label": "2 — 55 mm flat slopers (left/right partitions of the continuous top contact)"
+      },
+      "reason": "The package carries no sloper subtype for this contact; the official diagram labels the #2 zones flat slopers but publishes no package subtype enum."
     },
     {
       "boardID": "metolius.simulator-3d",

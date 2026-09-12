@@ -1,191 +1,143 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
   "holds": {
-    "small-crimp-left": {
-      "center": [
-        0.328000009,
-        0.810526313
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.391600013,
-          0.848684193
-        ],
-        "min": [
-          0.264400005,
-          0.772368433
-        ]
-      },
-      "nodeIDs": [
-        "flash_board_body_009"
-      ]
-    },
-    "small-crimp-right": {
-      "center": [
-        0.671999991,
-        0.810526313
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.735599995,
-          0.848684193
-        ],
-        "min": [
-          0.608399987,
-          0.772368433
-        ]
-      },
-      "nodeIDs": [
-        "flash_board_body_010"
-      ]
-    },
     "three-edge-center": {
       "center": [
-        0.500000015,
-        0.487840751
+        0.5,
+        0.499999988
       ],
       "facePlaneAABB": {
         "max": [
-          0.614400029,
-          0.719736844
+          0.604900538,
+          0.752828654
         ],
         "min": [
-          0.385600001,
-          0.255944657
+          0.395099462,
+          0.247171322
         ]
       },
       "nodeIDs": [
-        "flash_board_body_011"
+        "three_edge_center_surface_001"
       ]
     },
     "three-edge-left": {
       "center": [
-        0.224000003,
-        0.487840751
+        0.251346871,
+        0.499999988
       ],
       "facePlaneAABB": {
         "max": [
-          0.338400006,
-          0.719736844
+          0.356247409,
+          0.752828654
         ],
         "min": [
-          0.1096,
-          0.255944657
+          0.146446332,
+          0.247171322
         ]
       },
       "nodeIDs": [
-        "flash_board_body_012"
+        "three_edge_left_surface_001"
       ]
     },
     "three-edge-right": {
       "center": [
-        0.775999993,
-        0.487840738
+        0.74865313,
+        0.499999988
       ],
       "facePlaneAABB": {
         "max": [
-          0.890399992,
-          0.719736844
+          0.853553668,
+          0.752828654
         ],
         "min": [
-          0.661599994,
-          0.255944632
+          0.643752591,
+          0.247171322
         ]
       },
       "nodeIDs": [
-        "flash_board_body_013"
+        "three_edge_right_surface_001"
       ]
     },
     "two-edge-left": {
       "center": [
-        0.254000001,
-        0.44017887
+        0.74865313,
+        0.499999988
       ],
       "facePlaneAABB": {
         "max": [
-          0.375400007,
-          0.667105303
+          0.853553668,
+          0.752828654
         ],
         "min": [
-          0.132599995,
-          0.213252436
+          0.643752591,
+          0.247171322
         ]
       },
       "nodeIDs": [
-        "flash_board_body_014"
+        "two_edge_left_surface_001"
       ]
     },
     "two-edge-right": {
       "center": [
-        0.745999992,
-        0.44017887
+        0.251346871,
+        0.499999988
       ],
       "facePlaneAABB": {
         "max": [
-          0.867399991,
-          0.667105303
+          0.356247409,
+          0.752828654
         ],
         "min": [
-          0.624599993,
-          0.213252436
+          0.146446332,
+          0.247171322
         ]
       },
       "nodeIDs": [
-        "flash_board_body_015"
+        "two_edge_right_surface_001"
       ]
     }
   },
   "modelBounds": {
     "max": [
-      0.5,
-      0.075999998,
-      0.075999998
+      0.241300002,
+      0.076200001,
+      0.076200001
     ],
     "min": [
-      0.0,
+      -0.241300002,
       0.0,
       0.0
     ]
   },
-  "modelSHA256": "ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b",
+  "modelSHA256": "282cc54a905a25ff972bb562f05de2ae9fd9b373086c68131259d3521ead506c",
   "nodes": [
     {
-      "nodeID": "flash_board_body_008",
+      "nodeID": "body_surface_001",
       "role": "body"
     },
     {
-      "holdID": "small-crimp-left",
-      "nodeID": "flash_board_body_009",
-      "role": "hold"
-    },
-    {
-      "holdID": "small-crimp-right",
-      "nodeID": "flash_board_body_010",
-      "role": "hold"
-    },
-    {
       "holdID": "three-edge-center",
-      "nodeID": "flash_board_body_011",
+      "nodeID": "three_edge_center_surface_001",
       "role": "hold"
     },
     {
       "holdID": "three-edge-left",
-      "nodeID": "flash_board_body_012",
+      "nodeID": "three_edge_left_surface_001",
       "role": "hold"
     },
     {
       "holdID": "three-edge-right",
-      "nodeID": "flash_board_body_013",
+      "nodeID": "three_edge_right_surface_001",
       "role": "hold"
     },
     {
       "holdID": "two-edge-left",
-      "nodeID": "flash_board_body_014",
+      "nodeID": "two_edge_left_surface_001",
       "role": "hold"
     },
     {
       "holdID": "two-edge-right",
-      "nodeID": "flash_board_body_015",
+      "nodeID": "two_edge_right_surface_001",
       "role": "hold"
     }
   ],

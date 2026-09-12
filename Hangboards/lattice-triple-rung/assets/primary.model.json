@@ -1,0 +1,97 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-10": {
+      "center": [
+        0.5,
+        0.642307728
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.676923098
+        ],
+        "min": [
+          0.0,
+          0.607692358
+        ]
+      },
+      "nodeIDs": [
+        "edge_10_editable_surface_001"
+      ]
+    },
+    "edge-20": {
+      "center": [
+        0.5,
+        0.230769235
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.292307694
+        ],
+        "min": [
+          0.0,
+          0.169230775
+        ]
+      },
+      "nodeIDs": [
+        "edge_20_editable_surface_001"
+      ]
+    },
+    "edge-45": {
+      "center": [
+        0.5,
+        0.915384641
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          1.0
+        ],
+        "min": [
+          0.0,
+          0.830769283
+        ]
+      },
+      "nodeIDs": [
+        "edge_45_editable_surface_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.275000006,
+      0.129999995,
+      0.050000001
+    ],
+    "min": [
+      -0.275000006,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "5614b90120ed981855e36ef696f33f335b3e6c0ce1973a0d16daca504dbc3cbd",
+  "nodes": [
+    {
+      "nodeID": "LatticeBody_editable_surface_001",
+      "role": "body"
+    },
+    {
+      "holdID": "edge-10",
+      "nodeID": "edge_10_editable_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-20",
+      "nodeID": "edge_20_editable_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-45",
+      "nodeID": "edge_45_editable_surface_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

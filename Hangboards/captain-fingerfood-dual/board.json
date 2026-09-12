@@ -5,8 +5,8 @@
   "name": "DUAL",
   "subtitle": "Compact board with straight and curved 20 mm edges plus an outer jug.",
   "productURL": "https://en.captainfingerfood.rocks/products/dual-hangboard",
-  "dimensions": "12 \u00d7 7 \u00d7 3 cm",
-  "aspectRatio": 1.5,
+  "dimensions": "12 × 7 × 3 cm",
+  "aspectRatio": 1.7142857,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -16,381 +16,60 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Straight face",
-      "aspectRatio": 1.5,
+      "name": "Primary",
+      "aspectRatio": 1.7142857,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "holdGeometry": {
-          "straight-edge-20": [
-            {
-              "frame": {
-                "x": 0.17,
-                "y": 0.586,
-                "width": 0.66,
-                "height": 0.062
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.24
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.07,
-                      0.06
-                    ],
-                    "control2": [
-                      0.12,
-                      0.0
-                    ],
-                    "to": [
-                      0.18,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.82,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.88,
-                      0.0
-                    ],
-                    "control2": [
-                      0.93,
-                      0.06
-                    ],
-                    "to": [
-                      1.0,
-                      0.24
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.4
-                    ],
-                    "control2": [
-                      1.0,
-                      0.62
-                    ],
-                    "to": [
-                      1.0,
-                      0.74
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.95,
-                      0.91
-                    ],
-                    "control2": [
-                      0.89,
-                      1.0
-                    ],
-                    "to": [
-                      0.82,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.18,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.11,
-                      1.0
-                    ],
-                    "control2": [
-                      0.05,
-                      0.91
-                    ],
-                    "to": [
-                      0.0,
-                      0.74
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.61
-                    ],
-                    "control2": [
-                      0.0,
-                      0.4
-                    ],
-                    "to": [
-                      0.0,
-                      0.24
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "outer-jug": [
-            {
-              "frame": {
-                "x": 0.126,
-                "y": 0.279,
-                "width": 0.748,
-                "height": 0.075
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.035,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.965,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.985,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.18
-                    ],
-                    "to": [
-                      1.0,
-                      0.34
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.78
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.92
-                    ],
-                    "control2": [
-                      0.985,
-                      1.0
-                    ],
-                    "to": [
-                      0.96,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.04,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.015,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.92
-                    ],
-                    "to": [
-                      0.0,
-                      0.78
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.34
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.18
-                    ],
-                    "control2": [
-                      0.015,
-                      0.0
-                    ],
-                    "to": [
-                      0.035,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "reverse",
-      "name": "Curved face",
-      "aspectRatio": 1.5,
-      "isDefault": false,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/reverse.png",
-        "holdGeometry": {
-          "curved-edge-20": [
-            {
-              "frame": {
-                "x": 0.17,
-                "y": 0.598,
-                "width": 0.66,
-                "height": 0.104
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.48
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.16,
-                      0.48
-                    ],
-                    "control2": [
-                      0.34,
-                      0.0
-                    ],
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.66,
-                      0.0
-                    ],
-                    "control2": [
-                      0.84,
-                      0.48
-                    ],
-                    "to": [
-                      1.0,
-                      0.48
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.84,
-                      1.0
-                    ],
-                    "control2": [
-                      0.66,
-                      0.55
-                    ],
-                    "to": [
-                      0.5,
-                      0.55
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.34,
-                      0.55
-                    ],
-                    "control2": [
-                      0.16,
-                      1.0
-                    ],
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.48
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ]
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "orientation": {
+          "pivot": "modelBoundsCenter",
+          "rotations": {
+            "curved-lip-front": [
+              0.173648148,
+              0.0,
+              0.0,
+              0.984807758
+            ],
+            "exterior-jug-back": [
+              -0.984807767,
+              0.0,
+              0.0,
+              0.1736481
+            ],
+            "left-pocket-vertical": [
+              0.122787789,
+              -0.122787789,
+              0.696364243,
+              0.696364243
+            ],
+            "straight-lip-inverted": [
+              8e-09,
+              0.173648148,
+              -0.984807758,
+              4.3e-08
+            ]
+          }
         }
       }
     }
@@ -418,6 +97,44 @@
       "kind": "edge",
       "handCapacity": 1,
       "sizeMillimeters": 20
+    },
+    {
+      "id": "pocket-end-wall-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm Pocket — short end-wall",
+      "kind": "pocket",
+      "handCapacity": 1,
+      "sizeMillimeters": 20
+    }
+  ],
+  "positions": [
+    {
+      "id": "curved-lip-front",
+      "presentationID": "primary",
+      "holdIDs": [
+        "curved-edge-20"
+      ]
+    },
+    {
+      "id": "straight-lip-inverted",
+      "presentationID": "primary",
+      "holdIDs": [
+        "straight-edge-20"
+      ]
+    },
+    {
+      "id": "left-pocket-vertical",
+      "presentationID": "primary",
+      "holdIDs": [
+        "pocket-end-wall-20"
+      ]
+    },
+    {
+      "id": "exterior-jug-back",
+      "presentationID": "primary",
+      "holdIDs": [
+        "outer-jug"
+      ]
     }
   ]
 }

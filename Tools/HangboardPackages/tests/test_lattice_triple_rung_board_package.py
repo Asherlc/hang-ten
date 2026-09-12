@@ -1,12 +1,8 @@
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
-
-import pytest
-from PIL import Image
-
-from hangboard_packages.board_catalog import load_board_package
-from _board_package_helpers import board_hold_geometry
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -18,52 +14,61 @@ EXPECTED_HOLDS = (
 )
 
 
-def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
-    board = load_board_package(PACKAGE_ROOT).board
-    geometry = board_hold_geometry(board)
+def test_lattice_triple_rung_freezes_three_edges_as_model_package() -> None:
+    board = json.loads((PACKAGE_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board.id == "lattice-triple-rung"
-    assert board.manufacturer == "Lattice Training"
-    assert board.name == "Triple Rung"
-    assert board.facts["dimensions"] == "55 × 13 × 5 cm"
-    assert board.presentation_asset_path == "assets/primary.png"
-    with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
-        presentation_size = image.size
-    # aspectRatio is the presentation canvas ratio, not the physical product
-    # envelope, so it must follow the runtime presentation asset dimensions.
-    assert board.facts["aspectRatio"] == pytest.approx(
-        presentation_size[0] / presentation_size[1]
-    )
+    assert board["id"] == "lattice-triple-rung"
+    assert board["manufacturer"] == "Lattice Training"
+    assert board["name"] == "Triple Rung"
+    assert board["dimensions"] == "55 × 13 × 5 cm"
+    assert [
+        (
+            presentation["id"],
+            presentation["name"],
+            presentation["media"]["assetPath"],
+            presentation["isDefault"],
+        )
+        for presentation in board["presentations"]
+    ] == [
+        ("primary", "Primary", "assets/primary.usdz", True),
+    ]
     assert tuple(
-        (hold.id, hold.kind, hold.size_millimeters) for hold in board.holds
+        (hold["id"], hold["kind"], hold.get("sizeMillimeters")) for hold in board["holds"]
     ) == EXPECTED_HOLDS
+    for hold in board["holds"]:
+        assert hold.get("depthRangeMillimeters") is None
+        assert hold.get("gripType") is None
+        assert hold.get("fingerCapacity") is None
+        assert hold.get("features") is None
 
-    edge_frames = []
-    for hold in board.holds:
-        assert len(geometry[hold.id]) == 1
-        piece = geometry[hold.id][0]
-        assert piece.shape.type == "path"
-        assert piece.shape.commands[0].command == "move"
-        assert piece.shape.commands[-1].command == "close"
-        assert len(piece.shape.commands) >= 8
-        frame_width = piece.frame.width * presentation_size[0]
-        frame_height = piece.frame.height * presentation_size[1]
-        # A continuous rung occupies the overwhelming majority of the
-        # presentation width rather than being split into separate grips.
-        assert frame_width >= presentation_size[0] * 0.9
-        # The source board is rendered at 512 px tall; a rung shorter than
-        # 20 px would be too small to preserve as an independently editable
-        # continuous edge region.
-        assert frame_height >= 20
-        assert piece.frame.x >= 0
-        assert piece.frame.y >= 0
-        assert piece.frame.x + piece.frame.width <= 1
-        assert piece.frame.y + piece.frame.height <= 1
-        edge_frames.append(piece.frame)
-        assert hold.depth_range_millimeters is None
-        assert hold.grip_type is None
-        assert hold.finger_capacity is None
-        assert hold.features is None
-
-    assert edge_frames[0].y + edge_frames[0].height < edge_frames[1].y
-    assert edge_frames[1].y + edge_frames[1].height < edge_frames[2].y
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "holdGeometry" not in media
+    assert {
+        path.relative_to(PACKAGE_ROOT).as_posix()
+        for path in PACKAGE_ROOT.rglob("*")
+        if path.is_file()
+    } == {
+        "board.json",
+        "assets/primary.usdz",
+        "assets/primary.model.json",
+    }
+    descriptor = json.loads(
+        (PACKAGE_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (PACKAGE_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
+        {"nodeID": "LatticeBody_editable_surface_001", "role": "body"},
+    ]
+    for hold_id, hold in descriptor["holds"].items():
+        assert hold["nodeIDs"] == [
+            node["nodeID"]
+            for node in descriptor["nodes"]
+            if node.get("holdID") == hold_id
+        ]

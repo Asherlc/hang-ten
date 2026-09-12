@@ -385,12 +385,12 @@ final class BoardModelScene {
                 return false
             }
             let pivot = Self.boundsCenter(descriptor.modelBounds)
-            let rotatedCorners = Self.rotatedCorners(
-                descriptor.modelBounds,
-                by: quaternion,
-                pivot: pivot
-            )
-            guard let framing = Self.framing(points: rotatedCorners, display: display) else {
+            guard let framing = Self.framing(
+                bounds: descriptor.modelBounds,
+                display: display,
+                orientation: orientation,
+                positionID: positionID
+            ) else {
                 enterUnavailable()
                 return false
             }
@@ -1103,6 +1103,26 @@ final class BoardModelScene {
         pivot: SIMD3<Float>
     ) -> [SIMD3<Float>] {
         boundsCorners(bounds).map { quaternion.act($0 - pivot) + pivot }
+    }
+
+    static func framing(
+        bounds: BoardModelBounds,
+        display: BoardModelDisplay,
+        orientation: BoardModelOrientation,
+        positionID: String
+    ) -> SuspendedCameraFraming? {
+        guard orientation.pivot == "modelBoundsCenter",
+              let components = orientation.rotations[positionID],
+              let quaternion = quaternion(from: components),
+              bounds.minimum.count == 3, bounds.maximum.count == 3 else {
+            return nil
+        }
+        // Project the rotated corners directly into the camera plane. A new
+        // axis-aligned box would overestimate oblique views of the rotated model.
+        return framing(
+            points: rotatedCorners(bounds, by: quaternion, pivot: boundsCenter(bounds)),
+            display: display
+        )
     }
 
     static func framing(

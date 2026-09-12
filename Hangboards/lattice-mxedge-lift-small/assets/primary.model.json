@@ -1,0 +1,121 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-14": {
+      "center": [
+        0.5,
+        0.655612248
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.839285719,
+          0.734693884
+        ],
+        "min": [
+          0.160714281,
+          0.576530613
+        ]
+      },
+      "nodeIDs": [
+        "edge_14_actual_surface_001"
+      ]
+    },
+    "edge-18": {
+      "center": [
+        0.446428573,
+        0.220408156
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.732142865,
+          0.295918367
+        ],
+        "min": [
+          0.160714281,
+          0.144897945
+        ]
+      },
+      "nodeIDs": [
+        "edge_18_actual_surface_001"
+      ]
+    },
+    "edge-8": {
+      "center": [
+        0.5,
+        0.80612246
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.839285719,
+          0.877551035
+        ],
+        "min": [
+          0.160714281,
+          0.734693884
+        ]
+      },
+      "nodeIDs": [
+        "edge_8_actual_surface_001"
+      ]
+    },
+    "mono-25": {
+      "center": [
+        0.799999993,
+        0.295918368
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.873809515,
+          0.43673469
+        ],
+        "min": [
+          0.726190472,
+          0.155102047
+        ]
+      },
+      "nodeIDs": [
+        "mono_25_actual_surface_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.083999999,
+      0.048999999,
+      0.017000001
+    ],
+    "min": [
+      -0.083999999,
+      -0.048999999,
+      -0.017000001
+    ]
+  },
+  "modelSHA256": "9f942cc76e461471a50970529c90190c24dd9d378acd9e60df1821dd73feacb7",
+  "nodes": [
+    {
+      "nodeID": "Body_actual_surface_001",
+      "role": "body"
+    },
+    {
+      "holdID": "edge-14",
+      "nodeID": "edge_14_actual_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-18",
+      "nodeID": "edge_18_actual_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-8",
+      "nodeID": "edge_8_actual_surface_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "mono-25",
+      "nodeID": "mono_25_actual_surface_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

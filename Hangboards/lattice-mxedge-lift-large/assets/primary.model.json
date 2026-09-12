@@ -1,0 +1,121 @@
+{
+  "coordinateFrame": "hang-ten-board-v1",
+  "holds": {
+    "edge-12": {
+      "center": [
+        0.5,
+        0.821428576
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.875000011,
+          0.908163267
+        ],
+        "min": [
+          0.124999989,
+          0.734693884
+        ]
+      },
+      "nodeIDs": [
+        "MXL_edge_12_editable_skin_001"
+      ]
+    },
+    "edge-16": {
+      "center": [
+        0.5,
+        0.627551023
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.875000011,
+          0.714285717
+        ],
+        "min": [
+          0.124999989,
+          0.54081633
+        ]
+      },
+      "nodeIDs": [
+        "MXL_edge_16_editable_skin_001"
+      ]
+    },
+    "edge-22": {
+      "center": [
+        0.493229163,
+        0.191326524
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.852083333,
+          0.275510199
+        ],
+        "min": [
+          0.134374993,
+          0.107142849
+        ]
+      },
+      "nodeIDs": [
+        "MXL_edge_22_editable_skin_001"
+      ]
+    },
+    "mono-28": {
+      "center": [
+        0.79010417,
+        0.275510204
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.868749994,
+          0.418367341
+        ],
+        "min": [
+          0.711458346,
+          0.132653067
+        ]
+      },
+      "nodeIDs": [
+        "MXL_mono_28_editable_skin_001"
+      ]
+    }
+  },
+  "modelBounds": {
+    "max": [
+      0.083999999,
+      0.048999999,
+      0.017000001
+    ],
+    "min": [
+      -0.083999999,
+      -0.048999999,
+      -0.017000001
+    ]
+  },
+  "modelSHA256": "70df778321088ad721b61d23f9862c1fc19129c2492c87f090cba7a20819e1f3",
+  "nodes": [
+    {
+      "nodeID": "MXL_body_editable_skin_001",
+      "role": "body"
+    },
+    {
+      "holdID": "edge-12",
+      "nodeID": "MXL_edge_12_editable_skin_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-16",
+      "nodeID": "MXL_edge_16_editable_skin_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "edge-22",
+      "nodeID": "MXL_edge_22_editable_skin_001",
+      "role": "hold"
+    },
+    {
+      "holdID": "mono-28",
+      "nodeID": "MXL_mono_28_editable_skin_001",
+      "role": "hold"
+    }
+  ],
+  "schemaVersion": 1
+}

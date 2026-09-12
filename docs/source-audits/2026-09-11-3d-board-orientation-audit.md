@@ -2,15 +2,16 @@
 
 Reviewed 2026-09-11 at commit `6e24dece` (Task 6, Step 3 evidence-only
 preparation), promoted at `ca27fbdc` (Nature/Baguette orientation metadata),
-and extended at merge time for the fifth model package. This document does
-not change a board package, USDZ, descriptor, hold inventory, contact
-grouping, rotation, or quaternion. It is the evidence packet for the five
-model packages currently discovered by the live catalog. The Nature and YY
-Vertical Baguette Evo position partitions and quaternions are authored in
-the Promotion record below; the Tension Flash Board keeps suspension poses
-and declares no orientation.
+and extended on origin/main for a fifth model package. The initial sections
+retain that five-package snapshot, including the historical Flash Board
+single-cord suspension disposition. They do not describe the complete current
+catalog. The Batch-01 / batch-02 promotion record below covers the current
+fourteen model packages and supersedes the Flash snapshot with five contacts,
+four authored orientation positions, and no suspension block. The Nature and
+YY Vertical Baguette Evo groupings and quaternions are recorded in the
+Promotion record. This document does not itself change package or model bytes.
 
-## Decision and review gate
+## Decision and review gate (initial five-package snapshot)
 
 The web evidence supports proceeding to a human/Astra orientation review for
 all five packages. Beastmaker 1000 and Metolius Compact II have a complete
@@ -42,9 +43,9 @@ while the Flash Board needs none of them (suspension path):
 * no rotation of a USDZ, descriptor, board asset, or presentation camera;
 * no new physical contacts inferred from product-use photographs.
 
-## Live inventory and baseline
+## Initial five-package inventory and baseline (historical)
 
-Discovery at execution time finds exactly these five complete model packages.
+Discovery at that review point found these five complete model packages.
 Each has one `primary` model presentation. Beastmaker 1000 and Metolius
 Compact II keep the legacy effective position `primary` with no orientation
 or suspension metadata. Nature Stone Hanger and Baguette Evo declare
@@ -54,7 +55,7 @@ single-cord suspension block and no orientation. `boardBounds` is explicitly
 `null` in every checked-in descriptor; the normalized hold face-plane AABB
 union below is a descriptor diagnostic, not a physical board bound.
 
-| package ID | package / presentation | current effective position | holds | model SHA-256 | descriptor SHA-256 |
+| package ID | package / presentation | effective position at review | holds | model SHA-256 | descriptor SHA-256 |
 | --- | --- | --- | ---: | --- | --- |
 | `beastmaker-1000` | `Hangboards/beastmaker-1000`, `primary` | `primary` (legacy, all holds) | 22 | `19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d` | `ee095c463804312cbd6ed08f5113019793b934ab6806a6fb343be939ff8a68d3` |
 | `metolius.wood-grips-compact-ii` | `Hangboards/metolius-wood-grips-compact-ii`, `primary` | `primary` (legacy, all holds) | 19 | `addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a` | `a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f` |
@@ -62,17 +63,18 @@ union below is a descriptor diagnostic, not a physical board bound.
 | `yy.baguette-evo` | `Hangboards/yy-baguette-evo`, `primary` | 5 authored positions, exact partition | 19 | `e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b` | `e73f56e2f9ae903583896f88067f03f9f3d9bb1065b8febddd825fcd98b4532c` |
 | `tension.flash-board` | `Hangboards/tension-flash-board`, `primary` | 4 legacy suspension poses, full inventory each | 7 | `ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b` | `b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58` |
 
-The hashes are exact bytes at this review point. They are a baseline for the
-future Astra orientation pass; changing a USDZ or descriptor invalidates the
-corresponding baseline and requires a fresh audit.
+The hashes record the bytes at that review point, not a current-catalog
+verification. The Flash model and descriptor were subsequently replaced as
+recorded in the batch promotion below; its historical hashes and bounds must
+not be used to validate the current package.
 
-## Coordinate and bounds convention
+## Coordinate and bounds convention (initial snapshot)
 
 The five descriptors use schema version 1 normalized image-plane values:
 `center = [x, y]`, `facePlaneAABB.min/max = [x, y]`. The table records the
 union of all hold face-plane AABBs in descriptor order, with no rounding beyond
 the stored nine-decimal values. These values are suitable for checking that a
-future position partition references the complete descriptor inventory; they
+future position set covers the complete descriptor inventory; they
 do not establish body thickness, recess depth, or a rotation.
 
 | package | `boardBounds` | descriptor hold-AABB union (`min` → `max`) | source/model bound context |
@@ -85,12 +87,16 @@ do not establish body thickness, recess depth, or a rotation.
 
 ## Ordered hold IDs and position history
 
-The following is the exact current `board.json` hold order. Where a section is
-explicitly labeled as a pre-promotion assessment, its position prose records
-the historical Step-3 state; the Live inventory and Promotion record describe
-the current promoted state. Every authored multi-position model preserves each
-position's relative order and forms an exact, non-overlapping partition of
-these IDs.
+The following is the exact `board.json` hold order for the initial audit set.
+Where a section is explicitly labeled as a pre-promotion assessment, its
+position prose records the historical Step-3 state; the Promotion records
+describe subsequent states. Authored multi-position models must cover every
+descriptor hold at least once and preserve canonical hold order within each
+position. Intentional overlaps are allowed when the same hold is usable from
+multiple positions. Select among overlapping candidates by closest view
+quaternion, breaking equal-distance ties by authored position order. The
+exact-once statements below apply only to the named board-specific
+configurations that intentionally remain disjoint.
 
 ### Beastmaker 1000 — 22 holds
 
@@ -203,7 +209,7 @@ record below.)
 | 18 | `edge-central-6` | `[0.500000000, 0.825936649]` | `[0.423076922, 0.652280658]` → `[0.576923078, 0.999592640]` | `hold_central_06mm_mesh_001` |
 | 19 | `rounded-tray` | `[0.500000000, 0.136502368]` | `[0.076923064, 0.000000000]` → `[0.923076936, 0.273004737]` | `hold_rounded_left_mesh_001`, `hold_rounded_right_mesh_001` |
 
-### Tension Flash Board — 7 holds
+### Tension Flash Board — 7 holds (historical suspension package)
 
 Four legacy suspension poses (`three-edge-upright`, `three-edge-inverted`,
 `two-edge-upright`, `two-edge-inverted`), each materializing the complete
@@ -262,7 +268,7 @@ gallery includes distinct front product views and oblique/reverse or use
 views. The retained integration packet identifies two physical lateral cord
 passage markers (front-view left/right) and eight named edge contacts split by
 front/reverse source semantics. These establish two physical usable faces as
-orientation candidates, not the final ID partition.
+orientation candidates, not the final ID grouping.
 
 The two candidates are `front` (front face, with its upper/lower contacts) and
 `reverse` (block inverted to expose the reverse face). A future orientation
@@ -292,7 +298,7 @@ centers/AABBs are a spatial inventory only; they do not prove which IDs are
 active in each physical face. The reviewed five-position grouping and
 canonical quaternions are authored in the Promotion record below.
 
-### Tension Flash Board
+### Tension Flash Board (historical suspension disposition)
 
 Portable suspended board with a shipped single-cord suspension block
 (`type`, `attachment`, `anchor`, `cord`, four `canonicalPoses`) and four
@@ -353,7 +359,7 @@ not new source claims:
 
 The Baguette README's `Hold IDs and object mapping` and Nature README's `Hold
 ID → object mapping` are evidence mappings for the supplied display assets;
-they are not an Astra-approved app position partition.
+they are not an Astra-approved app position grouping.
 
 ## Fixed-board rationale
 
@@ -444,6 +450,174 @@ remains one logical ID over two mesh pieces. No new contacts were inferred.
 - `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`: exit 0, 0 drafts.
 - Beastmaker 1000 and Metolius Compact II untouched: single `primary`
   position, no orientation block (fixed/front-only disposition confirmed).
+
+## Batch-01 / batch-02 promotion record (2026-09-11/12, Muse Spark)
+
+Discovery now finds fourteen complete model packages: the original four
+(Beastmaker 1000, Compact II, Nature, and Baguette) plus
+`beastmaker-2000`, `lattice-triple-rung`, `metolius.prime-rib`,
+`metolius.project`, `tension.flash-board`, `captain-fingerfood.dual`,
+`captain-fingerfood.pocket`, `captain-fingerfood.unlevel`,
+`lattice.mxedge-lift-large`, and `lattice.mxedge-lift-small`. No USDZ or
+descriptor bytes changed in this pass; only `board.json` `positions` and
+`media.orientation` were added by the conversion. Quaternions are `[x, y, z,
+w]` unit values in the descriptor `hang-ten-board-v1` frame, applied about
+`modelBoundsCenter`. The `board.json` schema rejects provenance keys, so this
+document is the labeling vehicle: every non-identity angle below is an
+authored display estimate, deliberately chosen from the retained manufacturer
+evidence and model geometry so that selecting a hold rotates the shared model
+to expose that hold's usable face. No angle is a manufacturer-published
+training prescription. Author: Muse Spark, 2026-09-11/12.
+
+### Fixed boards — single legacy `primary` position, no orientation block
+
+These four boards keep the full logical inventory in one loader-materialized
+`primary` position (no explicit `positions`, no `orientation` block). The
+physical basis in each case is a single fixed front face: the retained
+manufacturer evidence shows the front product view and no source-backed
+selectable second face.
+
+| package ID | holds | descriptor model bounds (`min` → `max`) | pivot | evidence basis |
+| --- | ---: | --- | --- | --- |
+| `beastmaker-2000` | 27: `top-sloper-1..4`, `front-upper-1..2`, `front-middle-1..9`, `front-lower-1..9`, `hold-26`, `hold-27`, `hold-28` | `[-0.289999992, 0.0, 0.0]` → `[0.289999992, 0.150000006, 0.057999998]` | none (no orientation block) | Beastmaker 2000 series page (`https://www.beastmaker.co.uk/products/beastmaker-2000-series`); batch-01 research preserves the 27-contact inventory exactly |
+| `lattice-triple-rung` | 3: `edge-45`, `edge-10`, `edge-20` | `[-0.275000006, 0.0, 0.0]` → `[0.275000006, 0.129999995, 0.050000001]` | none (no orientation block) | Lattice Triple Rung page (`https://latticetraining.com/product/triple-rung-wooden-hangboard/`); batch-01 research corroborates the mounted front disposition and records no manufacturer back/underside orthographic |
+| `metolius.prime-rib` | 3: `edge-38`, `edge-23`, `edge-15` | `[-0.254000008, 0.0, 0.0]` → `[0.254000008, 0.106679998, 0.0381]` | none (no orientation block) | Metolius Prime Rib page (`https://www.metoliusclimbing.com/products/prime-rib`); batch-01 research records no exact-revision reverse/back view |
+| `metolius.project` | 17: `jug-1-left`, `round-sloper-8-center`, `jug-1-right`, `flat-sloper-2-left`, `flat-sloper-2-right`, `pocket-3-left/right`, `edge-4-left/right`, `pocket-5-left/right`, `pocket-6-left/right`, `pocket-7-left/right`, `edge-9-center`, `edge-10-center` | `[-0.311150014, 0.0, 0.0]` → `[0.311150014, 0.152400002, 0.075999998]` | none (no orientation block) | Metolius Project page plus the official numbered depth diagram (`https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307`), which distinguishes the paired #2 55 mm flat slopers (new `flat-sloper-2-left/right` IDs) from the #8 53 mm center round sloper |
+
+### Tension Flash Board — upright / inverted `three-edge` and `two-edge`
+
+Grouping is source-backed: the batch-01 research ruling confirms five cavity
+zones retaining their existing IDs and declares the two legacy small-crimp
+IDs unresolved and unbound (no selectable geometry fabricated for them), so
+the two face inventories jointly cover all five descriptor contacts. The
+upright and inverted positions for a face intentionally overlap with identical
+hold IDs because both orientations expose the same physical contacts.
+
+Descriptor model bounds: `[-0.241300002, 0.0, 0.0]` →
+`[0.241300002, 0.076200001, 0.076200001]`. Pivot: `modelBoundsCenter`.
+
+| position | hold IDs (canonical board order) | quaternion | basis |
+| --- | --- | --- | --- |
+| `three-edge-upright` | `three-edge-left`, `three-edge-center`, `three-edge-right` | `[0, 0, 0, 1]` | identity = delivered base pose; source-backed three-edge broad face upright |
+| `three-edge-inverted` | `three-edge-left`, `three-edge-center`, `three-edge-right` | `[0, 0, 1, 0]` | authored display estimate: half-turn about Z presents the same three-edge face inverted |
+| `two-edge-upright` | `two-edge-left`, `two-edge-right` | `[0, 1, 0, 0]` | authored display estimate: 180° about Y exposes the opposing two-edge face while preserving its up axis |
+| `two-edge-inverted` | `two-edge-left`, `two-edge-right` | `[1, 0, 0, 0]` | authored display estimate: 180° about X exposes the same two-edge face inverted |
+
+### Captain Fingerfood — four single-contact positions each
+
+Each board's four positions partition its four-contact descriptor inventory
+exactly once (1+1+1+1). Groupings follow the batch-02 research contact
+inventories (front recess long lips, short-end Pocket end-wall, outer jug
+rim); every research `orientationDecision` records `axisProvenance:
+authored-estimate` with exact display angle and pivot as authored estimates.
+Pivot for all three boards: `modelBoundsCenter`.
+
+#### DUAL — `captain-fingerfood.dual`
+
+Descriptor model bounds: `[-0.059999999, -0.035, -0.015]` →
+`[0.059999999, 0.035, 0.015]`. Evidence: DUAL page
+(`https://en.captainfingerfood.rocks/products/dual-hangboard`); batch-02
+research behavior "contacts are fixed to one board: a single front recess
+with opposing long lips plus a separately labeled short-end Pocket".
+The model-visible width/height ratio is recorded as `1.7142857`. The official
+grip panel depicts one hand using the short-end pocket, supporting
+`handCapacity: 1` without asserting an unsupported finger count.
+
+| position | hold IDs | quaternion | basis |
+| --- | --- | --- | --- |
+| `curved-lip-front` | `curved-edge-20` | `[0.173648148, 0.0, 0.0, 0.984807758]` | authored display estimate: +20° about X onto the curved lip |
+| `straight-lip-inverted` | `straight-edge-20` | `[8e-09, 0.173648148, -0.984807758, 4.3e-08]` | authored display estimate: half-turn exposing the inverted straight lip |
+| `left-pocket-vertical` | `pocket-end-wall-20` | `[0.122787789, -0.122787789, 0.696364243, 0.696364243]` | authored display estimate: ~92° tilt onto the short end-wall |
+| `exterior-jug-back` | `outer-jug` | `[-0.984807767, 0.0, 0.0, 0.1736481]` | authored display estimate: 160° about X onto the exterior jug back |
+
+#### POCKET Lines — `captain-fingerfood.pocket`
+
+Descriptor model bounds: `[-0.055, -0.033, -0.0145]` →
+`[0.055, 0.033, 0.0145]`. Evidence: Lines page
+(`https://en.captainfingerfood.rocks/products/lines-hangboard`); batch-02
+research behavior "single front recess with long grip edges plus separately
+labeled short-end Pocket".
+The model-visible width/height ratio is recorded as `1.6666667`. The official
+`LINESGriffe.jpg` panel labels the short-end contact `15/20mm Pocket` and shows
+one-finger, one-hand use, supporting `depthRangeMillimeters` lower/upper
+bounds of `15`/`20`, `fingerCapacity: 1`, and `handCapacity: 1`. The package
+still declares only
+the single `primary` equipment object; this metadata does not make bilateral
+steps available.
+
+| position | hold IDs | quaternion | basis |
+| --- | --- | --- | --- |
+| `edge-20-front` | `edge-20` | `[0.199367862, 0.0, 0.0, 0.979924719]` | authored display estimate: +23° about X onto the 20 mm edge |
+| `edge-15-inverted` | `edge-15` | `[9e-09, 0.199367862, -0.979924719, 4.3e-08]` | authored display estimate: half-turn exposing the inverted 15 mm edge |
+| `pocket-short-end` | `pocket-end-wall-15-20` | `[0.14097438, -0.14097438, 0.692911411, 0.692911411]` | authored display estimate: ~92° tilt onto the short end-wall |
+| `jug-reverse` | `jug-outer-rim` | `[9e-09, 0.979924719, 0.199367862, 4.3e-08]` | authored display estimate: half-turn onto the outer jug rim |
+
+#### UNLEVEL — `captain-fingerfood.unlevel`
+
+Descriptor model bounds: `[-0.059999999, -0.035, -0.015]` →
+`[0.059999999, 0.035, 0.015]`. Evidence: UNLEVEL page
+(`https://en.captainfingerfood.rocks/products/unlevel-hangboard`); batch-02
+research behavior "contacts are fixed to one board: a single front recess
+with opposing long lips plus a separately labeled short-end Pocket".
+The model-visible width/height ratio is recorded as
+`1.7142857142857142`. Official grip panels show one hand using the short-end
+pocket, supporting `handCapacity: 1`; finger capacity remains omitted because
+the retained panels show different finger pairs rather than one fixed count.
+
+| position | hold IDs | quaternion | basis |
+| --- | --- | --- | --- |
+| `edge20-front` | `curved-edge-20` | `[0.207911694, 0.0, 0.0, 0.9781476]` | authored display estimate: +24° about X onto the 20 mm curved edge |
+| `edge25-inverted` | `curved-edge-25` | `[9e-09, 0.207911694, -0.9781476, 4.3e-08]` | authored display estimate: half-turn exposing the inverted 25 mm edge |
+| `jug-reverse` | `outer-jug` | `[9e-09, 0.9781476, 0.207911694, 4.3e-08]` | authored display estimate: half-turn onto the outer jug |
+| `pocket-right-end` | `pocket-end-wall-20-25` | `[0.147015774, 0.147015759, -0.691654772, 0.691654831]` | authored display estimate: ~92° tilt onto the short end-wall |
+
+### Lattice MXEdge Lift — lower group plus inverted upper lip
+
+Both boards group the lower lips and mono in one front position and expose
+the upper lip inverted (3+1 partition, exact). Groupings are source-backed by
+the Lattice MXEdge Lift page, the instruction artwork (S02), and the
+front/back weighed views (S04/S05); the batch-02 research classifies both
+boards flippable with source-supported upright/inverted displays while
+recording that no physical hinge, pivot, or axis is published, so every
+numeric angle below is an authored display estimate. Pivot for both boards:
+`modelBoundsCenter`. Both descriptors share model bounds
+`[-0.083999999, -0.048999999, -0.017000001]` →
+`[0.083999999, 0.048999999, 0.017000001]`.
+Both packages record the manufacturer product page's `20 × 11 × 5 cm`
+technical dimensions rather than reusing these display-model bounds. The
+retained source packet separately preserves the manufacturer's conflicting
+`16.8 × 9.8 × 3.4 cm` infographic dimensions; neither value is inferred from
+the model.
+
+#### Large — `lattice.mxedge-lift-large`
+
+| position | hold IDs (canonical board order) | quaternion | basis |
+| --- | --- | --- | --- |
+| `lower-lips-front` | `edge-22`, `edge-16`, `mono-28` | `[0.190808995, 0.0, 0.0, 0.981627183]` | authored display estimate: +22° about X onto the lower lips and mono |
+| `upper-lip-inverted` | `edge-12` | `[0.0, 0.190808995, -0.981627183, 0.0]` | authored display estimate: half-turn exposing the inverted MX12 upper lip |
+
+#### Small — `lattice.mxedge-lift-small`
+
+| position | hold IDs (canonical board order) | quaternion | basis |
+| --- | --- | --- | --- |
+| `lower-lips-and-mono` | `edge-18`, `edge-14`, `mono-25` | `[0.156434415, 0.0, 0.0, 0.987688349]` | authored display estimate: +18° about X onto the lower lips and mono |
+| `inverted-upper-lip` | `edge-8` | `[7e-09, 0.156434415, -0.987688349, 4.3e-08]` | authored display estimate: half-turn exposing the inverted MX8 upper lip |
+
+### Verification (this pass)
+
+- `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` grows 4 → 14;
+  `test_discovered_model_inventory_is_exactly_the_fourteen_current_packages`
+  plus the fixed-package single-position contract over all six fixed boards.
+- `test_approved_board_packages.py`: prime-rib and flash raster freezes
+  replaced with model-package freezes; new project model freeze and
+  descriptor-mirror test replace the removed coderabbit project params;
+  beastmaker mirrors move to descriptor assertions in
+  `test_beastmaker_2000_board_package.py`.
+- Metadata ledger: flash small-crimp rows removed (unbound legacy IDs);
+  project `flat-sloper-2-left/right` rows added against the official numbered
+  depth diagram.
+- `scripts/hangboard-packages.sh validate --root Hangboards
+  --final-inventory`: exit 0, 0 drafts (rerun in this pass).
 
 ## Task 7 visual validation (2026-09-11, Muse Spark)
 

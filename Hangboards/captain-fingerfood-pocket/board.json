@@ -3,10 +3,10 @@
   "id": "captain-fingerfood.pocket",
   "manufacturer": "Captain Fingerfood",
   "name": "POCKET Hangboard | Lines Edition",
-  "subtitle": "Current Lines colorway of the 110 \u00d7 66 \u00d7 29 mm two-depth POCKET revision.",
+  "subtitle": "Current Lines colorway of the 110 × 66 × 29 mm two-depth POCKET revision.",
   "productURL": "https://en.captainfingerfood.rocks/products/lines-hangboard",
-  "dimensions": "110 \u00d7 66 \u00d7 29 mm",
-  "aspectRatio": 1.5,
+  "dimensions": "110 × 66 × 29 mm",
+  "aspectRatio": 1.6666667,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -16,372 +16,60 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "15 / 20 mm face and outer contacts",
-      "aspectRatio": 1.5,
+      "name": "Primary",
+      "aspectRatio": 1.6666667,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "holdGeometry": {
-          "edge-15": [
-            {
-              "frame": {
-                "x": 0.209,
-                "y": 0.398,
-                "width": 0.582,
-                "height": 0.055
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.32
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.06,
-                      0.08
-                    ],
-                    "control2": [
-                      0.1,
-                      0.0
-                    ],
-                    "to": [
-                      0.16,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.84,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.9,
-                      0.0
-                    ],
-                    "control2": [
-                      0.94,
-                      0.08
-                    ],
-                    "to": [
-                      1.0,
-                      0.32
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.84
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.91,
-                      0.96
-                    ],
-                    "control2": [
-                      0.87,
-                      1.0
-                    ],
-                    "to": [
-                      0.82,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.18,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.13,
-                      1.0
-                    ],
-                    "control2": [
-                      0.09,
-                      0.96
-                    ],
-                    "to": [
-                      0.0,
-                      0.84
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.32
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "edge-20": [
-            {
-              "frame": {
-                "x": 0.209400440104,
-                "y": 0.413366361328,
-                "width": 0.570027535156,
-                "height": 0.249174924805
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.058283717046,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.941716282954,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.973905491184,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.089543050249
-                    ],
-                    "to": [
-                      1.0,
-                      0.199999997648
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.799999998432
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.910456949751
-                    ],
-                    "control2": [
-                      0.973905491184,
-                      1.0
-                    ],
-                    "to": [
-                      0.941716282954,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.058283717046,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.026094508816,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.910456949751
-                    ],
-                    "to": [
-                      0.0,
-                      0.799999998432
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.199999997648
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.089543050249
-                    ],
-                    "control2": [
-                      0.026094508816,
-                      0.0
-                    ],
-                    "to": [
-                      0.058283717046,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "jug-outer-rim": [
-            {
-              "frame": {
-                "x": 0.115850384766,
-                "y": 0.239508245117,
-                "width": 0.762587494792,
-                "height": 0.1433300625
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.025060304897,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.974939695103,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.988780119418,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.089543049892
-                    ],
-                    "to": [
-                      1.0,
-                      0.200000001363
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.799999998637
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.910456950108
-                    ],
-                    "control2": [
-                      0.988780119418,
-                      1.0
-                    ],
-                    "to": [
-                      0.974939695103,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.025060304897,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.011219880582,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.910456950108
-                    ],
-                    "to": [
-                      0.0,
-                      0.799999998637
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.200000001363
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.089543049892
-                    ],
-                    "control2": [
-                      0.011219880582,
-                      0.0
-                    ],
-                    "to": [
-                      0.025060304897,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ]
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "orientation": {
+          "pivot": "modelBoundsCenter",
+          "rotations": {
+            "edge-15-inverted": [
+              9e-09,
+              0.199367862,
+              -0.979924719,
+              4.3e-08
+            ],
+            "edge-20-front": [
+              0.199367862,
+              0.0,
+              0.0,
+              0.979924719
+            ],
+            "jug-reverse": [
+              9e-09,
+              0.979924719,
+              0.199367862,
+              4.3e-08
+            ],
+            "pocket-short-end": [
+              0.14097438,
+              -0.14097438,
+              0.692911411,
+              0.692911411
+            ]
+          }
         }
       }
     }
@@ -409,6 +97,48 @@
       "name": "Outer jug rim",
       "kind": "jug",
       "handCapacity": 1
+    },
+    {
+      "id": "pocket-end-wall-15-20",
+      "equipmentObjectID": "primary",
+      "name": "15/20 mm Pocket — short end-wall",
+      "kind": "pocket",
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 20
+      },
+      "fingerCapacity": 1,
+      "handCapacity": 1
+    }
+  ],
+  "positions": [
+    {
+      "id": "edge-20-front",
+      "presentationID": "primary",
+      "holdIDs": [
+        "edge-20"
+      ]
+    },
+    {
+      "id": "edge-15-inverted",
+      "presentationID": "primary",
+      "holdIDs": [
+        "edge-15"
+      ]
+    },
+    {
+      "id": "pocket-short-end",
+      "presentationID": "primary",
+      "holdIDs": [
+        "pocket-end-wall-15-20"
+      ]
+    },
+    {
+      "id": "jug-reverse",
+      "presentationID": "primary",
+      "holdIDs": [
+        "jug-outer-rim"
+      ]
     }
   ]
 }

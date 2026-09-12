@@ -103,6 +103,24 @@ struct BoardMapPresentationContent {
     }
 }
 
+extension BoardPresentation {
+    @MainActor
+    func aspectRatio(for positionID: String?) -> CGFloat {
+        guard case .model(let media) = media,
+              let orientation = media.orientation,
+              let positionID,
+              let framing = BoardModelScene.framing(
+                  bounds: media.descriptor.modelBounds,
+                  display: media.display,
+                  orientation: orientation,
+                  positionID: positionID
+              ) else {
+            return aspectRatio
+        }
+        return CGFloat(framing.width) / CGFloat(framing.height)
+    }
+}
+
 struct BoardMapPresentationSelection: Equatable {
     private(set) var presentationID: String
 
@@ -343,7 +361,9 @@ struct BoardDetailMapView: View {
                 )
             }
         }
-        .aspectRatio(map.presentation.aspectRatio, contentMode: .fit)
+        .aspectRatio(map.presentation.aspectRatio(for: BoardMapPresentationSelection.resolvePositionID(
+            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
+        )), contentMode: .fit)
         .accessibilityIdentifier("boardDetail.map")
     }
 
@@ -543,7 +563,7 @@ struct BoardMapView: View {
                     )
                 }
             }
-            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
+            .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in

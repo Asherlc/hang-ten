@@ -16,7 +16,7 @@
 - Store quaternions as normalized finite `[x, y, z, w]` values, rounded to nine decimal places, in the `hang-ten-board-v1` frame.
 - Permit only `pivot: "modelBoundsCenter"`; the saved model path and descriptor remain the sole geometry sources.
 - Orientation and suspension are mutually exclusive on one model media object; orientation is never interpreted as raster data.
-- Model position `holdIDs` arrays are an exact partition of descriptor hold IDs, in canonical hold order; legacy decoded positions materialize the complete inventory.
+- Model position `holdIDs` arrays form a union cover of descriptor hold IDs, in canonical hold order: every hold appears in at least one position, intentional overlap is allowed, and legacy decoded positions materialize the complete inventory. When memberships overlap, choose the closest view quaternion and then authored position order for ties.
 - Do not add board-ID runtime conditionals, duplicate USDZs, mesh-normal inference, geometry edits, or generated masks/contours.
 - Fixed/front-only model packages have one canonical position and no orientation block; suspension packages retain the existing solver and pose path.
 - Baguette quaternion provenance must say exactly “authored display estimate” and cite retained manufacturer evidence; unsupported source claims are omitted.
@@ -26,11 +26,11 @@
 
 ## File Map
 
-- Modify `Tools/HangboardPackages/src/hangboard_packages/board_catalog.py` and `Tools/HangboardPackages/tests/test_model_first_packages.py` for Python schema/domain parsing, exact partition validation, canonical quaternion checks, and model inventory.
+- Modify `Tools/HangboardPackages/src/hangboard_packages/board_catalog.py` and `Tools/HangboardPackages/tests/test_model_first_packages.py` for Python schema/domain parsing, union-cover validation, canonical quaternion checks, and model inventory.
 - Modify `HangTen/Models/TrainingModels.swift`, `HangTen/Models/BoardPackageStore.swift`, and `HangTenTests/BoardPackageStoreTests.swift` for the Swift domain contract and strict loader. `BoardPackageWriter.swift` is the legacy editable raster/v1 document and is not a v2 model serializer.
 - Modify `HangTen/Views/BoardModelView.swift` and `HangTenTests/BoardModelTests.swift` for canonical rotation, center pivot, transformed framing, reset/orbit behavior, and no-cord orientation state.
 - Modify `Android/app/src/main/java/com/hangten/android/content/BoardModels.kt`, `Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt`, and `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt` for the strict decoder boundary.
-- Modify `Hangboards/yy-baguette-evo/board.json`, `Hangboards/nature-stone-hanger/board.json`, `Hangboards/beastmaker-1000/board.json`, `Hangboards/metolius-wood-grips-compact-ii/board.json`, and add `docs/source-audits/2026-09-11-3d-board-orientation-audit.md` for reviewed metadata and provenance.
+- Modify all 14 migrated packages—`Hangboards/beastmaker-1000/board.json`, `Hangboards/beastmaker-2000/board.json`, `Hangboards/captain-fingerfood-dual/board.json`, `Hangboards/captain-fingerfood-pocket/board.json`, `Hangboards/captain-fingerfood-unlevel/board.json`, `Hangboards/lattice-triple-rung/board.json`, `Hangboards/lattice-mxedge-lift-large/board.json`, `Hangboards/lattice-mxedge-lift-small/board.json`, `Hangboards/metolius-prime-rib/board.json`, `Hangboards/metolius-project/board.json`, `Hangboards/metolius-wood-grips-compact-ii/board.json`, `Hangboards/nature-stone-hanger/board.json`, `Hangboards/tension-flash-board/board.json`, and `Hangboards/yy-baguette-evo/board.json`—and add `docs/source-audits/2026-09-11-3d-board-orientation-audit.md` for reviewed metadata and provenance.
 - Modify/add `Tools/HangboardPackages/tests/test_model_orientation_inventory.py` for synthetic/discovered-package coverage; add simulator artifacts only under `.context/$workspace_owner/`.
 
 ## Native XCTest Lifecycle (Tasks 2–4)
@@ -69,7 +69,7 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 ```
 
 - [x] **Step 2: Run the focused RED tests.** Run `rtk python3 -m pytest -q Tools/HangboardPackages/tests/test_model_first_packages.py Tools/HangboardPackages/tests/test_model_orientation_inventory.py`; expected failures include missing `orientation` parsing, missing `hold_ids`, and unchanged model positions accepting incomplete membership.
-- [x] **Step 3: Implement the smallest Python contract.** Add closed-key parsing, finite/unit/9-decimal quaternion validation, `modelBoundsCenter` validation, orientation/suspension exclusivity, model-only exact partition checks, and legacy materialization. Validate canonical source object/member order where the parser contract requires it; Python has no model JSON serializer, so source JSON is hand-authored in canonical order.
+- [x] **Step 3: Implement the smallest Python contract.** Add closed-key parsing, finite/unit/9-decimal quaternion validation, `modelBoundsCenter` validation, orientation/suspension exclusivity, model-only union-cover checks, and legacy materialization. Validate canonical source object/member order where the parser contract requires it; Python has no model JSON serializer, so source JSON is hand-authored in canonical order.
 - [x] **Step 4: Add discovery mechanics without reclassifying current packages.** Discover `Hangboards/**/board.json`, select packages whose presentations contain `media.type == "model"`, load each through the real package validator, and assert the discovered model set is non-empty, every package has complete descriptor hold inventory, and synthetic fixtures exercise the multi-orientation/fixed branches. Defer expectations about Baguette and Nature metadata to Task 6; do not encode board IDs in runtime code.
 - [x] **Step 5: Run GREEN Python checks.** Run `rtk python3 -m pytest -q Tools/HangboardPackages/tests/test_model_first_packages.py Tools/HangboardPackages/tests/test_model_orientation_inventory.py Tools/HangboardPackages/tests/test_board_catalog.py` and `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`; expected result is all focused tests passing and a valid final inventory.
 - [x] **Step 6: Commit.** `git add Tools/HangboardPackages/src/hangboard_packages/board_catalog.py Tools/HangboardPackages/tests/test_model_first_packages.py Tools/HangboardPackages/tests/test_model_orientation_inventory.py HangTenTests/Fixtures/BoardPackageValidationFixtures.json && git commit -m "feat: validate model orientation metadata"`
@@ -90,11 +90,11 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 
 - [x] **Step 1: Write RED XCTest cases** mirroring Task 1’s valid/invalid matrix, including legacy `BoardPosition` decoding and strict member order/unknown-key checks. Do not add writer tests: there is no v2 model serializer. Add one regression assertion that legacy editable-document bytes remain unchanged if a compatibility initializer is touched.
 - [x] **Step 2: Run RED using the Native XCTest Lifecycle.** After creating/recording `Hang Ten Paseo royal-anaconda Review` and setting `$simulator_uuid`, run `rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id='$simulator_uuid -derivedDataPath .context/$workspace_name/task-2-DerivedData -resultBundlePath .context/$workspace_name/task-2.xcresult -only-testing:HangTenTests/BoardPackageStoreTests`; expected failures show absent Swift members/decoders. Cleanup must remain armed after the RED run.
-- [x] **Step 3: Implement Swift value types and strict decoding.** Add explicit CodingKeys/rejectUnknownKeys for `orientation`, require exact rotation IDs and model hold partition after descriptor load, materialize legacy inventories, reject both metadata blocks, and retain `invalidPackage(boardID:reason:)` with stable field-specific reasons. Ensure fixed model packages cannot gain orientation implicitly.
+- [x] **Step 3: Implement Swift value types and strict decoding.** Add explicit CodingKeys/rejectUnknownKeys for `orientation`, require exact rotation IDs and model hold union coverage after descriptor load, materialize legacy inventories, reject both metadata blocks, and retain `invalidPackage(boardID:reason:)` with stable field-specific reasons. Ensure fixed model packages cannot gain orientation implicitly.
 - [x] **Step 4: Run GREEN using the Native XCTest Lifecycle.** Re-run the same focused command with the fresh exact UUID and task-specific paths; all tests pass before cleanup and commit. Do not add model editing or serializer behavior to Workbench.
 - [x] **Step 5: Commit.** `git add HangTen/Models/TrainingModels.swift HangTen/Models/BoardPackageStore.swift HangTenTests/BoardPackageStoreTests.swift && git commit -m "feat: add Swift orientation package contract"`
 
-### Task 3: Make BoardPosition hold partition and selection deterministic
+### Task 3: Make BoardPosition hold coverage and selection deterministic
 
 **Files:**
 - Modify: `HangTen/Models/TrainingModels.swift` (`TrainingBoard.holdIDs(inPosition:)`, position initialization/selection helpers)
@@ -105,7 +105,7 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 - `TrainingBoard.holdIDs(inPosition:) -> [String]` returns the position’s explicit `holdIDs` in canonical `holds` order, with legacy positions already materialized by the loader.
 - `TrainingBoard.position(id:) -> BoardPosition?` remains the sole position lookup used by model selection; no board-ID checks are introduced.
 
-- [x] **Step 1: Write RED tests** proving shuffled authored hold IDs return canonical board order, unknown/duplicate IDs fail package loading, every model hold appears exactly once across positions, and selecting a position does not borrow another position’s presentation or holds.
+- [x] **Step 1: Write RED tests** proving shuffled authored hold IDs return canonical board order, unknown/duplicate IDs fail package loading, the union of positions covers every model hold while allowing intentional cross-position overlap, and selecting a position does not borrow another position’s presentation or holds.
 - [x] **Step 2: Run RED using the Native XCTest Lifecycle.** With a newly recorded exact UUID for `Hang Ten Paseo royal-anaconda Review`, run `rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id='$simulator_uuid -derivedDataPath .context/$workspace_name/task-3-DerivedData -resultBundlePath .context/$workspace_name/task-3.xcresult -only-testing:HangTenTests/BoardModelTests -only-testing:HangTenTests/BoardPackageStoreTests`; expected failure is current `holdIDs(inPosition:)` deriving all model descriptor holds for every position.
 - [x] **Step 3: Implement deterministic selection.** Use explicit membership for model positions, preserve raster geometry ownership behavior, and reject an unavailable or mismatched selected position rather than falling back.
 - [x] **Step 4: Run GREEN using the Native XCTest Lifecycle.** Re-run with a fresh exact UUID and task-specific paths; expected all tests pass with exact hold arrays and stable active position IDs, then verify cleanup.
@@ -150,10 +150,20 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 ### Task 6: Deliberately audit and backfill every current 3D package
 
 **Files:**
-- Modify: `Hangboards/yy-baguette-evo/board.json`
-- Modify: `Hangboards/nature-stone-hanger/board.json`
 - Modify: `Hangboards/beastmaker-1000/board.json`
+- Modify: `Hangboards/beastmaker-2000/board.json`
+- Modify: `Hangboards/captain-fingerfood-dual/board.json`
+- Modify: `Hangboards/captain-fingerfood-pocket/board.json`
+- Modify: `Hangboards/captain-fingerfood-unlevel/board.json`
+- Modify: `Hangboards/lattice-triple-rung/board.json`
+- Modify: `Hangboards/lattice-mxedge-lift-large/board.json`
+- Modify: `Hangboards/lattice-mxedge-lift-small/board.json`
+- Modify: `Hangboards/metolius-prime-rib/board.json`
+- Modify: `Hangboards/metolius-project/board.json`
 - Modify: `Hangboards/metolius-wood-grips-compact-ii/board.json`
+- Modify: `Hangboards/nature-stone-hanger/board.json`
+- Modify: `Hangboards/tension-flash-board/board.json`
+- Modify: `Hangboards/yy-baguette-evo/board.json`
 - Add: `docs/source-audits/2026-09-11-3d-board-orientation-audit.md`
 - Test: `Tools/HangboardPackages/tests/test_model_orientation_inventory.py`
 
@@ -189,6 +199,6 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 ## Final Review Gate
 
 - [x] Run the full relevant suites: `rtk python3 -m pytest -q Tools/HangboardPackages/tests`, the Native XCTest Lifecycle with a fresh `Hang Ten Paseo royal-anaconda Review` UUID and `-destination 'platform=iOS Simulator,id='$simulator_uuid` using `.context/$workspace_name/final-DerivedData` and `.context/$workspace_name/final.xcresult`, and `rtk ./Android/gradlew -p Android test`.
-- [x] Re-read the spec section-by-section and map each acceptance criterion to Tasks 1–7; verify no board-ID conditional, USDZ/descriptor edit, invented provenance, orientation+suspension combination, arbitrary pivot, or incomplete hold partition exists.
+- [x] Re-read the spec section-by-section and map each acceptance criterion to Tasks 1–7; verify no board-ID conditional, USDZ/descriptor edit, invented provenance, orientation+suspension combination, arbitrary pivot, or incomplete hold coverage exists.
 - [x] Search this plan for forbidden planning markers and vague instructions; none may remain. Check that all later interfaces use the exact names/types defined above.
 - [x] A fresh reviewer must inspect each task’s diff and test output before the implementation branch is integrated. Push every resulting commit automatically: `git push -u origin HEAD`. (Auto-push is the established workflow policy; maintainer review happens on the PR, not per-commit.)

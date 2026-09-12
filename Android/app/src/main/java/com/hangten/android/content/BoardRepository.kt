@@ -328,12 +328,11 @@ class AssetBoardRepository(
             if (position.holdIds != logicalHoldIDs.filter { it in position.holdIds }) {
                 fail("$path[$index].holdIDs must follow canonical board hold order.")
             }
-            if (position.holdIds.any { it in seen }) {
-                fail("$path[$index].holdIDs overlap another model position.")
-            }
             seen.addAll(position.holdIds)
         }
-        if (seen != logicalHoldIDs.toSet()) fail("model positions holdIDs must exactly partition descriptor holds.")
+        if (seen != logicalHoldIDs.toSet()) {
+            fail("model positions holdIDs must cover all descriptor holds (union coverage).")
+        }
     }
 
     private fun decodePresentation(objectValue: JsonValue.Object, path: String): BoardPresentation {

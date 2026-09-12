@@ -174,19 +174,25 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(solved.branches[1].arcLength, 0.92, accuracy: 1e-4)
     }
 
-    func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
-        let directedFixture = try makeSharedModelParserParityFixtureBundle([
-            "base": "directedTwoBranchModel", "mutations": []
+    func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "directedTwoBranchModel",
+            "mutations": []
         ])
-        defer { directedFixture.remove() }
-        let directedBoard = try XCTUnwrap(BoardPackageStore(bundle: directedFixture.bundle).boards.first)
-        guard case .model(let directedMedia) = directedBoard.presentations[0].media,
-              case .twoBranchCord(let directedSuspension) = directedMedia.suspension else {
-            return XCTFail("expected directed through-bore suspension")
-        }
-        XCTAssertTrue(directedSuspension.passages.left.allSatisfy(\.isThroughBore))
-        XCTAssertEqual(directedSuspension.branches.map(\.restLength), [1.5, 1.5])
+        defer { fixture.remove() }
 
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("expected directed twoBranchCord model suspension")
+        }
+        XCTAssertTrue((suspension.passages.left + suspension.passages.right).allSatisfy(\.isThroughBore))
+        XCTAssertTrue(suspension.branches.allSatisfy {
+            !$0.entryContactPoints.isEmpty && $0.exteriorContactPoints.count >= 2 && !$0.exitContactPoints.isEmpty
+        })
+    }
+
+    func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "twoBranchModel",
             "mutations": []
@@ -238,7 +244,7 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testTwoBranchOrderAndPassageSegmentRegressionsUseDeclaredCategories() throws {
+    func testTwoBranchOrderAndDirectedRouteRegressionsUseDeclaredCategories() throws {
         let fixtures = try validationFixtures()
         let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
         for name in ["two-branch-suspension-member-order", "two-branch-directed-route-too-short"] {
@@ -269,28 +275,59 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(content.holds.map(\.id), ["hold-left"])
     }
 
-    func testFlashBoardModelPreservesBothFacesAndUprightAndInvertedPositions() throws {
+    func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
-        let positionIDs = [
-            "three-edge-upright", "three-edge-inverted",
-            "two-edge-upright", "two-edge-inverted",
+
+        XCTAssertEqual(
+            board.positions.map(\.id),
+            [
+                "three-edge-upright",
+                "three-edge-inverted",
+                "two-edge-upright",
+                "two-edge-inverted",
+            ]
+        )
+
+        let expectedHoldIDsByPosition = [
+            "three-edge-upright": [
+                "three-edge-left",
+                "three-edge-center",
+                "three-edge-right",
+            ],
+            "three-edge-inverted": [
+                "three-edge-left",
+                "three-edge-center",
+                "three-edge-right",
+            ],
+            "two-edge-upright": [
+                "two-edge-left",
+                "two-edge-right",
+            ],
+            "two-edge-inverted": [
+                "two-edge-left",
+                "two-edge-right",
+            ],
         ]
-        XCTAssertEqual(board.presentations.map(\.id), ["primary"])
-        XCTAssertEqual(board.positions.map(\.id), positionIDs)
-        XCTAssertEqual(Set(board.positions.map(\.presentationID)), ["primary"])
-        guard case .model(let media) = board.defaultPresentation.media,
-              case .singleCord(let suspension) = media.suspension else {
-            return XCTFail("expected Flash's promoted single-cord model presentation")
+
+        for (positionID, expectedHoldIDs) in expectedHoldIDsByPosition {
+            let position = try XCTUnwrap(board.positions.first { $0.id == positionID })
+            XCTAssertEqual(position.holdIDs, expectedHoldIDs)
+            XCTAssertEqual(position.presentationID, "primary")
         }
-        XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(positionIDs))
-        let expectedHoldIDs = [
-            "three-edge-left", "three-edge-center", "three-edge-right",
-            "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"
-        ]
-        XCTAssertEqual(Set(media.descriptor.holds.keys), Set(expectedHoldIDs))
-        for positionID in positionIDs {
-            XCTAssertEqual(board.holdIDs(inPosition: positionID), expectedHoldIDs, positionID)
+
+        // Verify orientation metadata matches the four positions
+        let presentation = try XCTUnwrap(board.presentations.first)
+        guard case .model(let media) = presentation.media else {
+            XCTFail("Expected model media"); return
         }
+        let orientation = try XCTUnwrap(media.orientation)
+        XCTAssertEqual(orientation.pivot, "modelBoundsCenter")
+        XCTAssertEqual(Set(orientation.rotations.keys), Set(expectedHoldIDsByPosition.keys))
+        // Verify quaternion values (authored display estimates)
+        XCTAssertEqual(orientation.rotations["three-edge-upright"], SIMD4(0.0, 0.0, 0.0, 1.0))
+        XCTAssertEqual(orientation.rotations["three-edge-inverted"], SIMD4(0.0, 0.0, 1.0, 0.0))
+        XCTAssertEqual(orientation.rotations["two-edge-upright"], SIMD4(0.0, 1.0, 0.0, 0.0))
+        XCTAssertEqual(orientation.rotations["two-edge-inverted"], SIMD4(1.0, 0.0, 0.0, 0.0))
     }
 
     func testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame() {
@@ -1909,6 +1946,7 @@ final class BoardPackageStoreTests: XCTestCase {
             "back.png"
         )
     }
+
     func testBoardMapSelectionPrioritizesInitialHighlightedHoldOverRequestedSurface() throws {
         let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
@@ -3048,7 +3086,7 @@ final class BoardPackageStoreTests: XCTestCase {
     // This catches permissive orientation parsing, partial inventories, and
     // accidental coexistence with the mutually-exclusive suspension metadata.
     func testStoreRejectsInvalidModelOrientationAndPositionInventory() throws {
-        let mutations: [(String, (inout [String: Any]) -> Void, String)] = [
+        let mutations: [(String, (inout [String: Any]) throws -> Void, String)] = [
             ("wrong pivot", { board in
                 self.mutateOrientation(in: &board) { $0["pivot"] = "boardOrigin" }
             }, "orientation pivot"),
@@ -3058,13 +3096,8 @@ final class BoardPackageStoreTests: XCTestCase {
             ("nonunit quaternion", { board in
                 self.mutateOrientation(in: &board) { $0["rotations"] = ["front": [0, 0, 0, 2], "reverse": [0, 1, 0, 0]] }
             }, "orientation rotations"),
-            ("overlapping memberships", { board in
-                var positions = board["positions"] as! [[String: Any]]
-                positions[1]["holdIDs"] = ["hold-left"]
-                board["positions"] = positions
-            }, "positions[1].holdIDs"),
             ("noncanonical membership order", { board in
-                var positions = board["positions"] as! [[String: Any]]
+                var positions = try XCTUnwrap(board["positions"] as? [[String: Any]])
                 positions[0]["holdIDs"] = ["hold-right", "hold-left"]
                 positions[1]["holdIDs"] = []
                 board["positions"] = positions
@@ -3076,6 +3109,21 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
             assertStoreRejects(fixture.bundle, reasonContaining: reason)
         }
+    }
+
+    // This verifies that overlapping model position hold memberships are now accepted
+    // (union-cover contract: holds may appear in multiple positions).
+    func testStoreAcceptsOverlappingModelPositionHoldMemberships() throws {
+        let fixture = try makeOrientableModelFixtureBundle { board in
+            var positions = try XCTUnwrap(board["positions"] as? [[String: Any]])
+            positions[1]["holdIDs"] = ["hold-left", "hold-right"]
+            board["positions"] = positions
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        XCTAssertEqual(board.positions[0].holdIDs, ["hold-left"])
+        XCTAssertEqual(board.positions[1].holdIDs, ["hold-left", "hold-right"])
     }
 
     func testStoreRejectsUnknownOrientationMember() throws {
@@ -3115,8 +3163,15 @@ final class BoardPackageStoreTests: XCTestCase {
         let baseline = try BoardPackageWriter.data(for: document)
         var touched = document
         touched.positions = [BoardPosition(id: "primary", presentationID: "primary")]
+        let encoded = try BoardPackageWriter.data(for: touched)
+        let encodedObject = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let encodedPositions = try XCTUnwrap(encodedObject["positions"] as? [[String: Any]])
+        let encodedPosition = try XCTUnwrap(encodedPositions.first)
 
-        XCTAssertEqual(try BoardPackageWriter.data(for: touched), baseline)
+        XCTAssertEqual(encoded, baseline)
+        XCTAssertNil(encodedPosition["holdIDs"])
     }
 
     func testStoreRejectsInvalidPositionsAndTransitions() throws {
@@ -3439,7 +3494,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     private func makeOrientableModelFixtureBundle(
-        boardMutation: ((inout [String: Any]) -> Void)? = nil
+        boardMutation: ((inout [String: Any]) throws -> Void)? = nil
     ) throws -> FixtureBundle {
         try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
@@ -3461,7 +3516,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 ]
                 presentations[0]["media"] = media
                 board["presentations"] = presentations
-                boardMutation?(&board)
+                try boardMutation?(&board)
             }
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("assets/primary.model.json")) { descriptor in
                 var nodes = try XCTUnwrap(descriptor["nodes"] as? [[String: Any]])
@@ -3678,16 +3733,20 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     private func serializedTwoBranchPassage(_ passage: [String: Any]) throws -> Data {
-        try orderedJSONObjectData(
+        let pointKeys = passage["pointInModel"] != nil
+            ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
+        return try orderedJSONObjectData(
             passage,
-            keys: ["id", "nodeID"] + (passage["pointInModel"] != nil ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]) + ["provenance"]
+            keys: ["id", "nodeID"] + pointKeys + ["provenance"]
         )
     }
 
     private func serializedTwoBranchBranch(_ branch: [String: Any]) throws -> Data {
-        try orderedJSONObjectData(
+        let contactKeys = branch["entryContactPoints"] != nil
+            ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
+        return try orderedJSONObjectData(
             branch,
-            keys: ["id", "passageIDs"] + (branch["entryContactPoints"] != nil ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []) + ["restLength", "radius", "material", "provenance"]
+            keys: ["id", "passageIDs"] + contactKeys + ["restLength", "radius", "material", "provenance"]
         )
     }
 

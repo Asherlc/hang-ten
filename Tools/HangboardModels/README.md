@@ -24,7 +24,15 @@ Each presentation owns one tagged media payload:
   every logical hold ID exactly once, forming an exact, single-owner partition.
 - `model` has a `.usdz` `assetPath`, a generated `.model.json` `descriptorPath`,
   and `display.camera` with an orthographic type, finite non-zero
-  `viewDirection` and `up` vectors, and positive `fitPadding`.
+  `viewDirection` and `up` vectors, and positive `fitPadding`. Model positions
+  declare `holdIDs` arrays that form a union cover of the descriptor hold
+  inventory: every model hold ID occurs in at least one position, no position
+  contains an unknown or duplicate ID, and the union equals the descriptor's
+  hold IDs. A hold may appear in multiple positions (e.g., upright and inverted
+  views of the same face). `TrainingBoard.position(presentationID:containingHoldID:)`
+  resolves overlap to the first matching position in authored array order.
+  `BoardModelScene.select(positionID:)` then applies that position's authored
+  rotation; the shipped resolver does not compare the current view quaternion.
 
 Model media is model-only: a package may not mix model and raster
 presentations, and a model presentation may not be derived or inverted. Its

@@ -149,17 +149,9 @@ class BoardRepositoryTest {
 
     @Test
     fun acceptsValidModelOrientationBeforeReturningTheExplicitUnavailableModelResult() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(
-                        positions = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
-                        holds = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
-                        orientation = "\"orientation\": {\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-                    ),
-                ),
-            ),
-        ).loadBoards()
+        val result = loadModelWithOrientation(
+            "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
+        )
 
         assertTrue(result.isSuccess)
         assertTrue(result.getOrThrow().isEmpty())
@@ -229,7 +221,6 @@ class BoardRepositoryTest {
     fun rejectsInvalidOrientationPivot() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"worldOrigin\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "orientation pivot")
@@ -239,7 +230,6 @@ class BoardRepositoryTest {
     fun rejectsNonUnitOrientationQuaternion() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 2], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "unit quaternion")
@@ -249,7 +239,6 @@ class BoardRepositoryTest {
     fun acceptsOrientationQuaternionComponentsRoundedToNineDecimalPlaces() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0.707106781, 0, 0, 0.707106781], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrue(result.isSuccess)
@@ -260,7 +249,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationQuaternionWithMoreThanNineDecimalPlaces() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0.1234567891, 0, 0, 0.992349949], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "nine decimal")
@@ -270,7 +258,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationMembersThatAreNotPivotThenRotations() {
         val result = loadModelWithOrientation(
             "{\"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}, \"pivot\": \"modelBoundsCenter\"}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "canonical pivot and rotations")
@@ -280,7 +267,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationRotationsThatAreNotSortedByPositionID() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"reverse\": [0, 1, 0, 0], \"front\": [0, 0, 0, 1]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "sorted by position ID")
@@ -290,7 +276,6 @@ class BoardRepositoryTest {
     fun rejectsRotationIdsThatDoNotMatchPositions() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"other\": [0, 1, 0, 0]}}",
-            positions = true,
         )
 
         assertTrueFailureContaining(result, "rotation IDs")
@@ -328,25 +313,25 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun rejectsIncompleteNonOverlappingModelHoldPartition() {
+    fun rejectsModelPositionHoldIDsWithoutUnionCoverage() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
             positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
             holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}, {\"id\": \"jug-extra\", \"equipmentObjectID\": \"primary\", \"name\": \"Extra jug\", \"kind\": \"jug\"}",
         )
 
-        assertTrueFailureContaining(result, "exactly partition")
+        assertTrueFailureContaining(result, "union coverage")
     }
 
     @Test
-    fun rejectsOverlappingModelHoldPositionPartition() {
+    fun acceptsIdenticalOverlappingModelPositionHoldIDs() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-shared\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-shared\", \"jug-reverse\"]}]",
-            holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-shared\", \"equipmentObjectID\": \"primary\", \"name\": \"Shared jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-reverse\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-reverse\"]}]",
         )
 
-        assertTrueFailureContaining(result, "overlap another model position")
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrThrow().isEmpty())
     }
 
     @Test
@@ -364,7 +349,6 @@ class BoardRepositoryTest {
     fun rejectsOrientationAndSuspensionTogether() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positions = true,
             suspension = "{}",
         )
 
@@ -604,18 +588,22 @@ class BoardRepositoryTest {
         }
         """.trimIndent()
 
+    private val defaultModelPositionsJSON =
+        "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]"
+    private val defaultModelHoldsJSON =
+        "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}"
+
     private fun loadModelWithOrientation(
         orientation: String,
-        positions: Boolean = false,
+        positionsJSON: String? = defaultModelPositionsJSON,
+        holdsJSON: String = defaultModelHoldsJSON,
         suspension: String? = null,
-        positionsJSON: String? = null,
-        holdsJSON: String? = null,
     ): Result<List<Board>> = AssetBoardRepository(
         FixtureAssets(
             mapOf(
                 "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(
-                    positions = positionsJSON ?: if (positions) "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]" else null,
-                    holds = holdsJSON ?: if (positions) "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}" else "{\"id\": \"jug\", \"equipmentObjectID\": \"primary\", \"name\": \"Jug\", \"kind\": \"jug\"}",
+                    positions = positionsJSON,
+                    holds = holdsJSON,
                     orientation = "\"orientation\": $orientation",
                     suspension = suspension,
                 ),

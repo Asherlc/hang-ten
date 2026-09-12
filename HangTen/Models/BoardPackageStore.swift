@@ -1216,13 +1216,10 @@ struct BoardPackageStore {
             guard position.holdIDs == canonicalHoldIDs.filter({ position.holdIDs.contains($0) }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs must follow canonical board hold order")
             }
-            guard seen.intersection(position.holdIDs).isEmpty else {
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs overlap another model position")
-            }
             seen.formUnion(position.holdIDs)
         }
         guard seen == descriptorHoldIDs else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model positions holdIDs must exactly partition descriptor holds")
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model positions holdIDs must cover all descriptor holds (union coverage)")
         }
     }
 
