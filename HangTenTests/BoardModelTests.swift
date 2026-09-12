@@ -276,6 +276,18 @@ final class BoardModelTests: XCTestCase {
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
     }
 
+    func testFlashBoardNativeSceneUsesOrientationWithoutLegacySuspension() async throws {
+        let (board, media, model) = try await loadMigratedModel("tension.flash-board")
+        XCTAssertNil(media.suspension)
+        XCTAssertNotNil(media.orientation)
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            XCTAssertFalse(model.isUnavailable, position.id)
+            XCTAssertEqual(model.activePositionID, position.id)
+            XCTAssertNil(model.transientCordNode, position.id)
+        }
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation

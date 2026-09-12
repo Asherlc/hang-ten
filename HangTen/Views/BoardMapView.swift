@@ -125,12 +125,16 @@ struct BoardMapPresentationSelection: Equatable {
     private(set) var presentationID: String
 
     static func resolvePositionID(board: TrainingBoard, presentationID: String?, activeHoldID: String?) -> String? {
+        let resolvedPresentationID = presentationID ?? board.defaultPresentation.id
         if let activeHoldID,
-           let position = board.positions.first(where: { board.holdIDs(inPosition: $0.id).contains(activeHoldID) }) {
-            return position.id
+           let activePosition = board.position(
+               presentationID: resolvedPresentationID,
+               containingHoldID: activeHoldID
+           ) {
+            return activePosition.id
         }
-        return board.positions.first(where: { $0.presentationID == presentationID })?.id
-            ?? board.positions.first?.id
+        guard activeHoldID == nil else { return nil }
+        return board.position(presentationID: resolvedPresentationID)?.id
     }
 
     init(

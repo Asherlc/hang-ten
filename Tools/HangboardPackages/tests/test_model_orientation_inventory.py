@@ -292,6 +292,29 @@ def test_discovered_model_inventory_is_exactly_the_fourteen_current_packages() -
     assert set(model_packages) == MODEL_PACKAGE_IDS
 
 
+def test_flash_board_uses_orientation_with_overlapping_face_inventories() -> None:
+    board = _discovered_model_packages()["tension.flash-board"].board
+    media = board.presentations[0].media
+    assert isinstance(media, BOARD_CATALOG.PresentationMediaModel)
+    assert media.suspension is None
+    assert media.orientation is not None
+    positions = {position.id: position for position in board.positions}
+    assert set(positions) == {
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted",
+    }
+    assert set(media.orientation.rotations) == set(positions)
+    assert all(position.presentation_id == "primary" for position in board.positions)
+    _assert_model_position_union_coverage(board)
+    assert positions["three-edge-upright"].hold_ids == positions["three-edge-inverted"].hold_ids
+    assert positions["two-edge-upright"].hold_ids == positions["two-edge-inverted"].hold_ids
+    assert set(positions["three-edge-upright"].hold_ids).isdisjoint(
+        positions["two-edge-upright"].hold_ids
+    )
+
+
 @pytest.mark.parametrize(
     "board_id",
     [

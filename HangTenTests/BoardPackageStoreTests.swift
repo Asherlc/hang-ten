@@ -156,6 +156,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary", "secondary", "tertiary", "quaternary"])
         XCTAssertEqual(media.suspension?.cord.restLength, 0.92)
+        XCTAssertEqual(suspension.branches.map(\.restLength), [0.92, 0.92])
         XCTAssertTrue(
             board.positions.allSatisfy { Set($0.holdIDs) == Set(media.descriptor.holds.keys) },
             "legacy suspension positions materialize the descriptor inventory without partitioning it"
@@ -1938,6 +1939,41 @@ final class BoardPackageStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(selection.presentationID, "back")
+    }
+
+    func testPositionResolverUsesResolvedSurfaceAndRejectsUnknownSurfaceOrHold() throws {
+        let fixture = try makeMultiPresentationFixtureBundle(boardMutation: { board in
+            board["positions"] = [["id": "front-pose", "presentationID": "front"],
+                                  ["id": "back-pose", "presentationID": "back"]]
+        })
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let selection = BoardMapPresentationSelection(board: board, requestedPresentationID: "front",
+            activeHoldID: nil, highlightedHoldIDs: ["hold-back"])
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: selection.presentationID, activeHoldID: nil), "back-pose")
+        XCTAssertEqual(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "hold-left"), "front-pose")
+        // Unknown presentations and cross-presentation holds resolve to no
+        // position rather than borrowing another surface's membership.
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "unpositioned", activeHoldID: nil))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "hold-back"))
+        XCTAssertNil(BoardMapPresentationSelection.resolvePositionID(board: board,
+            presentationID: "front", activeHoldID: "not-on-model"))
+    }
+
+    func testTwoBranchRejectsNonIdentifierPassageAndBranchIDs() throws {
+        for mutations in [
+            [["target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "id"], "value": "invalid id"]],
+            [["target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "id"], "value": "invalid id"],
+             ["target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "passageIDs", 0], "value": "invalid id"]],
+        ] as [[[String: Any]]] {
+            let fixture = try makeSharedModelParserParityFixtureBundle(["base": "twoBranchModel", "mutations": mutations])
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
     }
 
     func testBoardMapSelectionMovesToNewActiveHoldWhenAnotherSurfaceIsAlreadyHighlighted() throws {

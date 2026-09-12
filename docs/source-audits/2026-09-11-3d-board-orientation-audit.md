@@ -1,21 +1,29 @@
 # 3-D board orientation evidence packet
 
 Reviewed 2026-09-11 at commit `6e24dece` (Task 6, Step 3 evidence-only
-preparation). This document does not change a board package, USDZ, descriptor,
-hold inventory, contact grouping, rotation, or quaternion. It is the cheap
-evidence packet for the four model packages currently discovered by the live
-catalog. The final Nature and YY Vertical Baguette Evo position groupings and
-quaternion judgment remain **pending Astra**.
+preparation), promoted at `ca27fbdc` (Nature/Baguette orientation metadata),
+and extended on origin/main for a fifth model package. The initial sections
+retain that five-package snapshot, including the historical Flash Board
+single-cord suspension disposition. They do not describe the complete current
+catalog. The Batch-01 / batch-02 promotion record below covers the current
+fourteen model packages and supersedes the Flash snapshot with five contacts,
+four authored orientation positions, and no suspension block. The Nature and
+YY Vertical Baguette Evo groupings and quaternions are recorded in the
+Promotion record. This document does not itself change package or model bytes.
 
-## Decision and review gate
+## Decision and review gate (initial five-package snapshot)
 
 The web evidence supports proceeding to a human/Astra orientation review for
-all four packages. Beastmaker 1000 and Metolius Compact II have a complete
+all five packages. Beastmaker 1000 and Metolius Compact II have a complete
 manufacturer front plus a materially different commerce-gap oblique view in
 the prior retained packet. Nature Stone Hanger and Baguette Evo have multiple
 materially distinct views in their current manufacturer galleries (front,
 oblique/profile/reverse-use views). This establishes a review set, not a claim
-that every hidden surface or machining dimension is known.
+that every hidden surface or machining dimension is known. The Tension Flash
+Board is a suspended portable board whose shipped single-cord suspension
+metadata establishes four hanging poses; orientation is not applicable to it
+by mutual exclusivity, so it receives a disposition record but no rotation
+review.
 
 The current checkout does not retain the ignored source-image bytes referenced
 by the earlier `.context/shaky-rat-*` packet ledgers; those paths, hashes and
@@ -25,7 +33,9 @@ asset is used as a second physical view. A human must approve the exact
 multi-angle set before Astra authors orientation metadata. If the approved
 source bytes cannot be recovered, stop at that gate rather than infer a view.
 
-The following decisions are deliberately out of scope here:
+The following decisions were deliberately out of scope in the Step-3 draft;
+the Promotion record below resolves all of them for Nature and Baguette,
+while the Flash Board needs none of them (suspension path):
 
 * no authored `orientation` object or quaternion;
 * no final `front`/`reverse`/Turn & Pull contact grouping for Nature or
@@ -33,30 +43,34 @@ The following decisions are deliberately out of scope here:
 * no rotation of a USDZ, descriptor, board asset, or presentation camera;
 * no new physical contacts inferred from product-use photographs.
 
-## Live inventory and baseline
+## Initial five-package inventory and baseline (historical)
 
-Discovery at execution time finds exactly these four complete model packages.
-Each currently has one `primary` model presentation, no explicit authored
-positions, and no orientation or suspension metadata. The loader therefore
-materializes the legacy effective position `primary`, containing the board's
-ordered hold IDs. `boardBounds` is explicitly `null` in every checked-in
-descriptor; the normalized hold face-plane AABB union below is a descriptor
-diagnostic, not a physical board bound.
+Discovery at that review point found these five complete model packages.
+Each has one `primary` model presentation. Beastmaker 1000 and Metolius
+Compact II keep the legacy effective position `primary` with no orientation
+or suspension metadata. Nature Stone Hanger and Baguette Evo declare
+authored positions with an orientation block (see the Promotion record).
+The Tension Flash Board declares four legacy suspension poses with a
+single-cord suspension block and no orientation. `boardBounds` is explicitly
+`null` in every checked-in descriptor; the normalized hold face-plane AABB
+union below is a descriptor diagnostic, not a physical board bound.
 
-| package ID | package / presentation | current effective position | holds | model SHA-256 | descriptor SHA-256 |
+| package ID | package / presentation | effective position at review | holds | model SHA-256 | descriptor SHA-256 |
 | --- | --- | --- | ---: | --- | --- |
 | `beastmaker-1000` | `Hangboards/beastmaker-1000`, `primary` | `primary` (legacy, all holds) | 22 | `19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d` | `ee095c463804312cbd6ed08f5113019793b934ab6806a6fb343be939ff8a68d3` |
 | `metolius.wood-grips-compact-ii` | `Hangboards/metolius-wood-grips-compact-ii`, `primary` | `primary` (legacy, all holds) | 19 | `addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a` | `a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f` |
-| `nature.stone-hanger` | `Hangboards/nature-stone-hanger`, `primary` | `primary` (legacy, all holds) | 8 | `366e6833403d8877b62b2403ce98683e4c27f9ce76c1d9e9abaa24e50ba382e4` | `eb2a83c035d1a80e172f196c68210b4b0556a897f367ebd3ddcd27b196237fa8` |
-| `yy.baguette-evo` | `Hangboards/yy-baguette-evo`, `primary` | `primary` (legacy, all holds) | 19 | `e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b` | `e73f56e2f9ae903583896f88067f03f9f3d9bb1065b8febddd825fcd98b4532c` |
+| `nature.stone-hanger` | `Hangboards/nature-stone-hanger`, `primary` | `front` + `reverse`, exact partition | 8 | `366e6833403d8877b62b2403ce98683e4c27f9ce76c1d9e9abaa24e50ba382e4` | `eb2a83c035d1a80e172f196c68210b4b0556a897f367ebd3ddcd27b196237fa8` |
+| `yy.baguette-evo` | `Hangboards/yy-baguette-evo`, `primary` | 5 authored positions, exact partition | 19 | `e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b` | `e73f56e2f9ae903583896f88067f03f9f3d9bb1065b8febddd825fcd98b4532c` |
+| `tension.flash-board` | `Hangboards/tension-flash-board`, `primary` | 4 legacy suspension poses, full inventory each | 7 | `ea4d014f1af63300561c8ad4ec6e78710ebc519c0811630502aba4e33d62c25b` | `b7a31d182e1f8a07b27f0fa2157f9733969d1e0ff55aa8cc78f744e028cf2c58` |
 
-The hashes are exact bytes at this review point. They are a baseline for the
-future Astra orientation pass; changing a USDZ or descriptor invalidates the
-corresponding baseline and requires a fresh audit.
+The hashes record the bytes at that review point, not a current-catalog
+verification. The Flash model and descriptor were subsequently replaced as
+recorded in the batch promotion below; its historical hashes and bounds must
+not be used to validate the current package.
 
-## Coordinate and bounds convention
+## Coordinate and bounds convention (initial snapshot)
 
-The four descriptors use schema version 1 normalized image-plane values:
+The five descriptors use schema version 1 normalized image-plane values:
 `center = [x, y]`, `facePlaneAABB.min/max = [x, y]`. The table records the
 union of all hold face-plane AABBs in descriptor order, with no rounding beyond
 the stored nine-decimal values. These values are suitable for checking that a
@@ -69,17 +83,20 @@ do not establish body thickness, recess depth, or a rotation.
 | Metolius Compact II | `null` | `[0.000000000, 0.042771465]` → `[1.000000000, 1.000000000]` | Manufacturer Compact is 610 × 157 mm (24 × 6.2 in); the 56 mm labels are sloper callouts, not body thickness. Existing model depth is an authored display estimate. |
 | Nature Stone Hanger | `null` | `[0.092380923, 0.128571409]` → `[0.907619077, 0.858095244]` | Retained integration evidence gives combined model bounds X/Z ±0.0525 m and Y ±0.0175 m; manufacturer publishes 105 × 105 × 35 mm. Fine sections, cord routing and port depth remain unknown. |
 | Baguette Evo | `null` | `[0.076923064, 0.000000000]` → `[0.923076936, 1.000000000]` | Retained README gives a 520 × 50 × 50 mm round envelope and origin at its center; machining profiles, bore dimensions and small-edge offsets are estimates. |
+| Tension Flash Board | `null` | `[0.1096, 0.213252436]` → `[0.890399992, 0.848684193]` | Manufacturer Flash Board 2 page; model bounds X 0–0.5 m with Y/Z ±0.076 m (origin at one end, not centered). No complete body sections published. |
 
-## Ordered hold IDs and current descriptor positions
+## Ordered hold IDs and position history
 
-The following is the exact current `board.json` order. It is the order the
-legacy loader puts in the effective `primary` position today. A future
-multi-position model must cover every descriptor hold at least once and
-preserve canonical hold order within each position. Intentional overlaps are
-allowed when the same hold is usable from multiple positions. Select among
-overlapping candidates by closest view quaternion, breaking equal-distance
-ties by authored position order. The exact-once statements below apply only to
-the named board-specific configurations that intentionally remain disjoint.
+The following is the exact `board.json` hold order for the initial audit set.
+Where a section is explicitly labeled as a pre-promotion assessment, its
+position prose records the historical Step-3 state; the Promotion records
+describe subsequent states. Authored multi-position models must cover every
+descriptor hold at least once and preserve canonical hold order within each
+position. Intentional overlaps are allowed when the same hold is usable from
+multiple positions. Select among overlapping candidates by closest view
+quaternion, breaking equal-distance ties by authored position order. The
+exact-once statements below apply only to the named board-specific
+configurations that intentionally remain disjoint.
 
 ### Beastmaker 1000 — 22 holds
 
@@ -142,11 +159,12 @@ source supports a single usable face, not a selectable reverse presentation.
 
 ### Nature Stone Hanger — 8 holds
 
-Current effective position: `primary` → all IDs below. Current model
-orientation: none. Physical candidates are the two usable faces identified in
-the retained source packet: `front` and `reverse`, with upper/lower contact
-halves changing with inversion. The position coverage and grouping for these
-eight IDs are intentionally not authored here.
+Historical pre-promotion state: the effective position was `primary` → all
+IDs below, with no model orientation. The retained source packet identified
+`front` and `reverse` as the two usable faces, with upper/lower contact halves
+changing with inversion, but the exact partition was not yet authored. Current
+promoted state: `front` and `reverse` have an orientation block and the exact
+four-hold-per-face partition documented in the Promotion record below.
 
 | order | hold ID | descriptor center | descriptor face-plane AABB min → max | USDZ node |
 | ---: | --- | --- | --- | --- |
@@ -165,8 +183,9 @@ Current effective position: `primary` → all IDs below. Current model
 orientation: none. Physical candidates include a primary paired-edge face,
 the opposite/reverse contact face, and the continuous Turn & Pull inclination
 range. The rounded option has two mesh pieces sharing `rounded-tray`; that is
-one logical ID, not two contacts. The final multi-position authored grouping
-is intentionally pending Astra.
+one logical ID, not two contacts. (Pre-promotion assessment; the final
+multi-position grouping and quaternions are authored in the Promotion
+record below.)
 
 | order | hold ID | descriptor center | descriptor face-plane AABB min → max | USDZ node(s) |
 | ---: | --- | --- | --- | --- |
@@ -189,6 +208,23 @@ is intentionally pending Astra.
 | 17 | `edge-central-20` | `[0.500000000, 0.691557015]` | `[0.423076922, 0.424961519]` → `[0.576923078, 0.958152512]` | `hold_central_20mm_mesh_001` |
 | 18 | `edge-central-6` | `[0.500000000, 0.825936649]` | `[0.423076922, 0.652280658]` → `[0.576923078, 0.999592640]` | `hold_central_06mm_mesh_001` |
 | 19 | `rounded-tray` | `[0.500000000, 0.136502368]` | `[0.076923064, 0.000000000]` → `[0.923076936, 0.273004737]` | `hold_rounded_left_mesh_001`, `hold_rounded_right_mesh_001` |
+
+### Tension Flash Board — 7 holds (historical suspension package)
+
+Four legacy suspension poses (`three-edge-upright`, `three-edge-inverted`,
+`two-edge-upright`, `two-edge-inverted`), each materializing the complete
+ordered inventory below. The single-cord suspension block is established and
+mutually exclusive with orientation, so no rotation review applies.
+
+| order | hold ID | descriptor center | descriptor face-plane AABB min → max | USDZ node(s) |
+| ---: | --- | --- | --- | --- |
+| 1 | `three-edge-left` | `[0.224000003, 0.487840751]` | `[0.1096, 0.255944657]` → `[0.338400006, 0.719736844]` | `flash_board_body_012` |
+| 2 | `three-edge-center` | `[0.500000015, 0.487840751]` | `[0.385600001, 0.255944657]` → `[0.614400029, 0.719736844]` | `flash_board_body_011` |
+| 3 | `three-edge-right` | `[0.775999993, 0.487840738]` | `[0.661599994, 0.255944632]` → `[0.890399992, 0.719736844]` | `flash_board_body_013` |
+| 4 | `two-edge-left` | `[0.254000001, 0.44017887]` | `[0.132599995, 0.213252436]` → `[0.375400007, 0.667105303]` | `flash_board_body_014` |
+| 5 | `two-edge-right` | `[0.745999992, 0.44017887]` | `[0.624599993, 0.213252436]` → `[0.867399991, 0.667105303]` | `flash_board_body_015` |
+| 6 | `small-crimp-left` | `[0.328000009, 0.810526313]` | `[0.264400005, 0.772368433]` → `[0.391600013, 0.848684193]` | `flash_board_body_009` |
+| 7 | `small-crimp-right` | `[0.671999991, 0.810526313]` | `[0.608399987, 0.772368433]` → `[0.735599995, 0.848684193]` | `flash_board_body_010` |
 
 ## Physical disposition candidates and uncertainty
 
@@ -259,8 +295,21 @@ selectable mesh pieces to 19 logical IDs because both rounded pieces share
 The candidates are a paired-edge primary face, the opposite/reverse contact
 face, and intermediate Turn & Pull inclinations. The existing descriptor
 centers/AABBs are a spatial inventory only; they do not prove which IDs are
-active in each physical face. Final multi-position grouping, position names,
-and canonical quaternions are explicitly **pending Astra**.
+active in each physical face. The reviewed five-position grouping and
+canonical quaternions are authored in the Promotion record below.
+
+### Tension Flash Board (historical suspension disposition)
+
+Portable suspended board with a shipped single-cord suspension block
+(`type`, `attachment`, `anchor`, `cord`, four `canonicalPoses`) and four
+legacy positions (`three-edge-upright`, `three-edge-inverted`,
+`two-edge-upright`, `two-edge-inverted`), each materializing the complete
+seven-hold inventory. Orientation is mutually exclusive with suspension, so
+no rotation review applies and no quaternion is authored.
+
+Limitations: this packet did not re-review the Flash gallery or cord route;
+it records the shipped suspension disposition only. Hidden bore paths, exact
+milling profiles, and body sections remain unpublished.
 
 Limitations: the manufacturer does not publish exact machining profiles,
 pocket widths, fillets, bore dimensions, or small-edge offsets. The retained
@@ -278,8 +327,9 @@ only and cannot override a manufacturer claim.
 | --- | --- | --- | --- |
 | Beastmaker 1000 | [manufacturer product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series); [official front](https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068); [Beech/shared-layout page](https://www.beastmaker.co.uk/products/beastmaker-1000-beech); [FluxPerfect commerce-gap page](https://www.fluxperfect.at/products/beastmaker-1000-series-hangboard) | identity, wood, 580 × 150 mm face, grouped hold families, visible front layout; FluxPerfect `Ansicht_1` adds a complete top/side/rounded-end view | per-ID family/depth map, hidden reverse, cavity sections, exact thickness/radii |
 | Metolius Compact II | [manufacturer product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards); [official Compact front](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952&width=2000); [official depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428&width=2000); [Bergfreunde commerce-gap page](https://www.bergfreunde.eu/metolius-wood-grips-compact-ii-training-board/) | Compact identity/dimensions, front inventory, 29/19 mm and 56 mm diagram labels; commerce view adds top/side rollover | hidden back, complete sections, exact body depth, alternate usable face |
-| Nature Stone Hanger | [manufacturer product page](https://natureclimbing.com/products/stone-hanger-1); gallery artifacts `GRANITE1_2_1024x.png`, `GRANITE1_1024x.png`, `GRANITE2_2_800x.png`, `GRANITE2_1024x.png` linked from that page | exact selected product family, oak/granite, 105 × 105 × 35 mm, 20/15/10/6 mm families, multiple front/oblique/reverse-use views; retained technical drawing and mapping establish eight named contacts | complete cord route, hidden bore/sleeve, exact contact sections, final front/reverse grouping or quaternion |
-| Baguette Evo | [manufacturer English product page](https://www.yyvertical.com/en-eu/products/baguette-evo); [manufacturer product page](https://www.yyvertical.com/en/products/baguette-evo); gallery artifacts `YY_BAGUETTE_EVO_02_FG.webp`, `YY_BAGUETTE_EVO_07_FG.webp`, `YY_BAGUETTE_EVO_03_FG.webp`, and the use image `yy-vertical-escalade-agres-nomade-entrainement-nomadic-tool-gear-equipment-training-baguette-evo-utilisation-22.webp` linked from the page | exact round Evo identity, 520 × 50 × 50 mm, named paired/central depths, rounded option, Turn & Pull and multiple product/use views | exact milling profiles, fillets, bore dimensions, hidden cord route, final face grouping or quaternion |
+| Nature Stone Hanger | [manufacturer product page](https://natureclimbing.com/products/stone-hanger-1); gallery artifacts `GRANITE1_2_1024x.png`, `GRANITE1_1024x.png`, `GRANITE2_2_800x.png`, `GRANITE2_1024x.png` linked from that page | exact selected product family, oak/granite, 105 × 105 × 35 mm, 20/15/10/6 mm families, multiple front/oblique/reverse-use views; retained technical drawing and mapping establish eight named contacts and the promoted front/reverse partition | complete cord route, hidden bore/sleeve, exact contact sections |
+| Baguette Evo | [manufacturer English product page](https://www.yyvertical.com/en-eu/products/baguette-evo); [manufacturer product page](https://www.yyvertical.com/en/products/baguette-evo); gallery artifacts `YY_BAGUETTE_EVO_02_FG.webp`, `YY_BAGUETTE_EVO_07_FG.webp`, `YY_BAGUETTE_EVO_03_FG.webp`, and the use image `yy-vertical-escalade-agres-nomade-entrainement-nomadic-tool-gear-equipment-training-baguette-evo-utilisation-22.webp` linked from the page | exact round Evo identity, 520 × 50 × 50 mm, named paired/central depths, rounded option, Turn & Pull and multiple product/use views; reviewed five-position grouping and quaternions in the Promotion record | exact milling profiles, fillets, bore dimensions, hidden cord route |
+| Tension Flash Board | [manufacturer product page](https://tensionclimbing.com/products/flash-board-2) | suspended portable board identity; shipped suspension block and four hanging poses; seven named contacts | re-reviewed gallery/cord route, body sections, orientation (not applicable) |
 
 ### Existing local audit and packet links
 
@@ -323,23 +373,28 @@ existing ordered inventory and avoids authoring an orientation quaternion that
 the evidence cannot justify.
 
 Nature and Baguette differ: the evidence explicitly depicts two usable faces
-or a reversible/continuously adjustable tool. That is enough to prepare an
-Astra review candidate, but not enough for this cheap worker to choose final
-groupings or quaternions. Their final grouping and quaternion judgment remain
-**pending Astra**.
+or a reversible/continuously adjustable tool. Their reviewed groupings and
+quaternions are authored in the Promotion record below. The Tension Flash
+Board is a third disposition — suspended, not fixed and not orientable —
+and keeps its shipped suspension poses with no orientation metadata.
 
 ## Astra handoff checklist
 
-Before any metadata promotion, Astra/human review must:
+The Astra handoff is complete for Nature and Baguette. These historical steps
+are recorded in the Promotion record below and are not applicable to the fixed
+boards or to the Flash Board (suspension path). Only the synthetic-landscape
+presentation anomaly remains open:
 
-1. approve exact retained source snapshots and their hashes for each package;
-2. verify the declared board coordinate frame against the actual USDZ;
-3. author complete ordered position coverage for Nature and Baguette with no
-   missing IDs, validating any intentional overlap against source evidence;
-4. choose canonical quaternions about `modelBoundsCenter` only after visual
-   review of front/reverse/inclined poses;
-5. rerun descriptor/package validation and refresh the four model/descriptor
-   baseline hashes if any model bytes change.
+- [x] Approved the exact retained source snapshots and hashes.
+- [x] Verified the declared board coordinate frame against the actual USDZ.
+- [x] Authored complete ordered position partitions for Nature and Baguette
+  with no guessed or duplicated hold IDs.
+- [x] Selected canonical quaternions about `modelBoundsCenter` after visual
+  review of front/reverse/inclined poses.
+- [x] Reran descriptor/package validation; no model or descriptor bytes
+  changed, so the recorded baseline hashes remain current.
+- [ ] Verify Nature on a physical device genuinely rotated to landscape; the
+  synthetic-landscape harness still renders its 3D card blank.
 
 ## Promotion record (orientation metadata authored)
 
@@ -398,7 +453,8 @@ remains one logical ID over two mesh pieces. No new contacts were inferred.
 
 ## Batch-01 / batch-02 promotion record (2026-09-11/12, Muse Spark)
 
-Discovery now finds fourteen complete model packages: the four above plus
+Discovery now finds fourteen complete model packages: the original four
+(Beastmaker 1000, Compact II, Nature, and Baguette) plus
 `beastmaker-2000`, `lattice-triple-rung`, `metolius.prime-rib`,
 `metolius.project`, `tension.flash-board`, `captain-fingerfood.dual`,
 `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`,
