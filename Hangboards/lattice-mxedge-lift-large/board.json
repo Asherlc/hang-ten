@@ -5,8 +5,8 @@
   "name": "MXEdge Lift Large",
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
-  "dimensions": "20 \u00d7 11 \u00d7 5 cm",
-  "aspectRatio": 1.0,
+  "dimensions": "16.8 \u00d7 3.4 \u00d7 9.8 cm",
+  "aspectRatio": 1.7142857142857142,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,7 +17,7 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.0,
+      "aspectRatio": 1.7142857142857142,
       "isDefault": true,
       "derivation": {
         "type": "original"
