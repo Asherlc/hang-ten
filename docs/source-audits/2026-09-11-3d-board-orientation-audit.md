@@ -83,12 +83,14 @@ do not establish body thickness, recess depth, or a rotation.
 | Baguette Evo | `null` | `[0.076923064, 0.000000000]` → `[0.923076936, 1.000000000]` | Retained README gives a 520 × 50 × 50 mm round envelope and origin at its center; machining profiles, bore dimensions and small-edge offsets are estimates. |
 | Tension Flash Board | `null` | `[0.1096, 0.213252436]` → `[0.890399992, 0.848684193]` | Manufacturer Flash Board 2 page; model bounds X 0–0.5 m with Y/Z ±0.076 m (origin at one end, not centered). No complete body sections published. |
 
-## Ordered hold IDs and current descriptor positions
+## Ordered hold IDs and position history
 
-The following is the exact current `board.json` order. It is the order the
-legacy loader puts in the effective `primary` position today. A future
-multi-position model must preserve each position's relative order and form an
-exact, non-overlapping partition of these IDs.
+The following is the exact current `board.json` hold order. Where a section is
+explicitly labeled as a pre-promotion assessment, its position prose records
+the historical Step-3 state; the Live inventory and Promotion record describe
+the current promoted state. Every authored multi-position model preserves each
+position's relative order and forms an exact, non-overlapping partition of
+these IDs.
 
 ### Beastmaker 1000 — 22 holds
 
@@ -151,11 +153,12 @@ source supports a single usable face, not a selectable reverse presentation.
 
 ### Nature Stone Hanger — 8 holds
 
-Current effective position: `primary` → all IDs below. Current model
-orientation: none. Physical candidates are the two usable faces identified in
-the retained source packet: `front` and `reverse`, with upper/lower contact
-halves changing with inversion. The exact partition of these eight IDs into
-those positions is intentionally not authored here.
+Historical pre-promotion state: the effective position was `primary` → all
+IDs below, with no model orientation. The retained source packet identified
+`front` and `reverse` as the two usable faces, with upper/lower contact halves
+changing with inversion, but the exact partition was not yet authored. Current
+promoted state: `front` and `reverse` have an orientation block and the exact
+four-hold-per-face partition documented in the Promotion record below.
 
 | order | hold ID | descriptor center | descriptor face-plane AABB min → max | USDZ node |
 | ---: | --- | --- | --- | --- |
@@ -371,21 +374,21 @@ and keeps its shipped suspension poses with no orientation metadata.
 
 ## Astra handoff checklist
 
-Completed for Nature and Baguette in the Promotion record below (source
-snapshots, coordinate-frame check, ordered partitions, reviewed
-quaternions, validation rerun). Not applicable to the fixed boards or to
-the Flash Board (suspension path). The remaining open item from Task 7 is
-the synthetic-landscape presentation anomaly, which needs a
-physical-device rotation check:
+The Astra handoff is complete for Nature and Baguette. These historical steps
+are recorded in the Promotion record below and are not applicable to the fixed
+boards or to the Flash Board (suspension path). Only the synthetic-landscape
+presentation anomaly remains open:
 
-1. approve exact retained source snapshots and their hashes for each package;
-2. verify the declared board coordinate frame against the actual USDZ;
-3. author a complete ordered position partition for Nature and Baguette with
-   no guessed or duplicated hold IDs;
-4. choose canonical quaternions about `modelBoundsCenter` only after visual
-   review of front/reverse/inclined poses;
-5. rerun descriptor/package validation and refresh the model/descriptor
-   baseline hashes if any model bytes change.
+- [x] Approved the exact retained source snapshots and hashes.
+- [x] Verified the declared board coordinate frame against the actual USDZ.
+- [x] Authored complete ordered position partitions for Nature and Baguette
+  with no guessed or duplicated hold IDs.
+- [x] Selected canonical quaternions about `modelBoundsCenter` after visual
+  review of front/reverse/inclined poses.
+- [x] Reran descriptor/package validation; no model or descriptor bytes
+  changed, so the recorded baseline hashes remain current.
+- [ ] Verify Nature on a physical device genuinely rotated to landscape; the
+  synthetic-landscape harness still renders its 3D card blank.
 
 ## Promotion record (orientation metadata authored)
 
