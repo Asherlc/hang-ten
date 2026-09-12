@@ -104,10 +104,13 @@ final class BoardPackageStoreTests: XCTestCase {
                 "two-branch-invalid-rest-length", "two-branch-invalid-radius", "two-branch-invalid-material",
                 "two-branch-missing-pose", "two-branch-unknown-pose", "two-branch-duplicate-pose",
                 "two-branch-explicit-null", "two-branch-scalar-kind-mismatch",
-                "two-branch-duplicate-raw-json-key", "two-branch-suspension-member-order",
-                "two-branch-passage-segment-too-short", "two-branch-order-violation",
+                "two-branch-suspension-member-order",
+                "two-branch-directed-route-too-short", "two-branch-order-violation",
                 "two-branch-excess-attachment-nodes", "two-branch-coincident-passage-endpoints",
-                "two-branch-passage-anchor-coincidence"
+                "two-branch-passage-anchor-coincidence",
+                "directed-mixed-passage-representations", "directed-zero-bore",
+                "directed-null-contact", "directed-empty-contact", "directed-short-route",
+                "directed-mixed-mouth-fields"
             ]
         )
 
@@ -171,6 +174,24 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(solved.branches[1].arcLength, 0.92, accuracy: 1e-4)
     }
 
+    func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "directedTwoBranchModel",
+            "mutations": []
+        ])
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("expected directed twoBranchCord model suspension")
+        }
+        XCTAssertTrue((suspension.passages.left + suspension.passages.right).allSatisfy(\.isThroughBore))
+        XCTAssertTrue(suspension.branches.allSatisfy {
+            !$0.entryContactPoints.isEmpty && $0.exteriorContactPoints.count >= 2 && !$0.exitContactPoints.isEmpty
+        })
+    }
+
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "twoBranchModel",
@@ -223,10 +244,10 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testTwoBranchOrderAndPassageSegmentRegressionsUseDeclaredCategories() throws {
+    func testTwoBranchOrderAndDirectedRouteRegressionsUseDeclaredCategories() throws {
         let fixtures = try validationFixtures()
         let matrix = try XCTUnwrap(fixtures["modelParserParity"] as? [[String: Any]])
-        for name in ["two-branch-suspension-member-order", "two-branch-passage-segment-too-short"] {
+        for name in ["two-branch-suspension-member-order", "two-branch-directed-route-too-short"] {
             let specification = try XCTUnwrap(matrix.first(where: { $0["name"] as? String == name }))
             let fixture = try makeSharedModelParserParityFixtureBundle(specification)
             defer { fixture.remove() }
@@ -305,8 +326,8 @@ final class BoardPackageStoreTests: XCTestCase {
         // Verify quaternion values (authored display estimates)
         XCTAssertEqual(orientation.rotations["three-edge-upright"], SIMD4(0.0, 0.0, 0.0, 1.0))
         XCTAssertEqual(orientation.rotations["three-edge-inverted"], SIMD4(0.0, 0.0, 1.0, 0.0))
-        XCTAssertEqual(orientation.rotations["two-edge-upright"], SIMD4(1.0, 0.0, 0.0, 0.0))
-        XCTAssertEqual(orientation.rotations["two-edge-inverted"], SIMD4(0.0, 1.0, 0.0, 0.0))
+        XCTAssertEqual(orientation.rotations["two-edge-upright"], SIMD4(0.0, 1.0, 0.0, 0.0))
+        XCTAssertEqual(orientation.rotations["two-edge-inverted"], SIMD4(1.0, 0.0, 0.0, 0.0))
     }
 
     func testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame() {
@@ -3712,16 +3733,20 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     private func serializedTwoBranchPassage(_ passage: [String: Any]) throws -> Data {
-        try orderedJSONObjectData(
+        let pointKeys = passage["pointInModel"] != nil
+            ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
+        return try orderedJSONObjectData(
             passage,
-            keys: ["id", "nodeID", "pointInModel", "provenance"]
+            keys: ["id", "nodeID"] + pointKeys + ["provenance"]
         )
     }
 
     private func serializedTwoBranchBranch(_ branch: [String: Any]) throws -> Data {
-        try orderedJSONObjectData(
+        let contactKeys = branch["entryContactPoints"] != nil
+            ? ["entryContactPoints", "exteriorContactPoints", "exitContactPoints"] : []
+        return try orderedJSONObjectData(
             branch,
-            keys: ["id", "passageIDs", "restLength", "radius", "material", "provenance"]
+            keys: ["id", "passageIDs"] + contactKeys + ["restLength", "radius", "material", "provenance"]
         )
     }
 

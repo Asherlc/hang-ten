@@ -717,7 +717,8 @@ final class BoardModelTests: XCTestCase {
 
         model.frame(in: CGSize(width: 386, height: 100))
 
-        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), 1, accuracy: 0.000_001)
+        // SceneKit's orthographic scale is half the visible height.
+        XCTAssertEqual(try XCTUnwrap(model.camera.camera?.orthographicScale), 0.5, accuracy: 0.000_001)
     }
 
     // This catches cancellation of the camera-depth term in the key-light
