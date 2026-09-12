@@ -540,16 +540,26 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ("two-edge-right", "Right edge on two-edge surface", "edge"),
     ]
     assert all("sizeMillimeters" not in hold for hold in board["holds"])
-    # The two usable faces survive as authored positions over the shared
-    # model; the unbound small-crimp legacy IDs are intentionally gone.
+    # Four positions over the shared model: upright/inverted for each usable face.
+    # The unbound small-crimp legacy IDs are intentionally gone.
     assert board["positions"] == [
         {
-            "id": "three-edge",
+            "id": "three-edge-upright",
             "presentationID": "primary",
             "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
         },
         {
-            "id": "two-edge",
+            "id": "three-edge-inverted",
+            "presentationID": "primary",
+            "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
+        },
+        {
+            "id": "two-edge-upright",
+            "presentationID": "primary",
+            "holdIDs": ["two-edge-left", "two-edge-right"],
+        },
+        {
+            "id": "two-edge-inverted",
             "presentationID": "primary",
             "holdIDs": ["two-edge-left", "two-edge-right"],
         },
@@ -562,8 +572,10 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert media["orientation"] == {
         "pivot": "modelBoundsCenter",
         "rotations": {
-            "three-edge": [0, 0, 0, 1],
-            "two-edge": [1, 0, 0, 0],
+            "three-edge-upright": [0.0, 0.0, 0.0, 1.0],
+            "three-edge-inverted": [0.0, 0.0, 1.0, 0.0],
+            "two-edge-upright": [1.0, 0.0, 0.0, 0.0],
+            "two-edge-inverted": [0.0, 1.0, 0.0, 0.0],
         },
     }
     assert {path.relative_to(FLASH_BOARD_ROOT).as_posix()
