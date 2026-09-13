@@ -652,12 +652,6 @@ struct BoardPackageStore {
                 declaredAssetPaths.insert(assetPath)
             case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation):
                 hasModel = true
-                guard !(suspension != nil && orientation != nil) else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "orientation and suspension are mutually exclusive"
-                    )
-                }
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,

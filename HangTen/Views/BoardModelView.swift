@@ -251,7 +251,6 @@ final class BoardModelScene {
         orientation: BoardModelOrientation? = nil,
         allowedPositionIDs: Set<String>? = nil
     ) {
-        guard !(suspension != nil && orientation != nil) else { return nil }
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -338,8 +337,8 @@ final class BoardModelScene {
         self.suspension = suspension
         self.orientation = orientation
         self.allowedPositionIDs = allowedPositionIDs
-            ?? orientation.map { Set($0.rotations.keys) }
             ?? suspension.map { Set($0.canonicalPoses.keys) }
+            ?? orientation.map { Set($0.rotations.keys) }
             ?? []
         self.geometryByNodeID = geometryByNodeID
         holdNodes = boundHoldNodes
@@ -377,7 +376,7 @@ final class BoardModelScene {
             enterUnavailable()
             return false
         }
-        if let orientation {
+        if suspension == nil, let orientation {
             guard let components = orientation.rotations[positionID],
                   orientation.pivot == "modelBoundsCenter",
                   let quaternion = Self.quaternion(from: components) else {

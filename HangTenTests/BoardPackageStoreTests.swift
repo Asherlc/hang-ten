@@ -3135,7 +3135,7 @@ final class BoardPackageStoreTests: XCTestCase {
         assertStoreRejects(fixture.bundle, reasonContaining: "orientation must contain")
     }
 
-    func testStoreRejectsOrientationAndSuspensionTogether() throws {
+    func testStoreValidatesSuspensionWhenOrientationIsAlsoPresent() throws {
         let fixture = try makeOrientableModelFixtureBundle { board in
             var presentations = board["presentations"] as! [[String: Any]]
             var media = presentations[0]["media"] as! [String: Any]
@@ -3145,7 +3145,7 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        assertStoreRejects(fixture.bundle, reasonContaining: "orientation and suspension")
+        assertStoreRejects(fixture.bundle, reasonContaining: "suspension type")
     }
 
     // The editable raster document remains a legacy boundary: constructing a

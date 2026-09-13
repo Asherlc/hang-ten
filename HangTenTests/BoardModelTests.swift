@@ -199,7 +199,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(framing.height, 6, accuracy: 0.000_001)
     }
 
-    func testOrientationSelectionResetsOrbitAndRejectsSuspensionAtRuntime() throws {
+    func testSuspensionSelectionUsesCanonicalPoseWhenOrientationAlsoExists() throws {
         let descriptor = modelDescriptor(
             nodes: [
                 .init(nodeID: "Board/Body", role: .body, holdID: nil),
@@ -244,7 +244,7 @@ final class BoardModelTests: XCTestCase {
                 )
             ]
         )
-        XCTAssertNil(BoardModelScene(
+        let model = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
             descriptor: descriptor,
             display: display(),
@@ -252,6 +252,21 @@ final class BoardModelTests: XCTestCase {
             orientation: orientation,
             allowedPositionIDs: ["reverse"]
         ))
+
+        XCTAssertTrue(model.select(positionID: "reverse"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertEqual(model.activePositionID, "reverse")
+        XCTAssertNotNil(model.transientCordNode)
+        XCTAssertFalse(model.transientCordNode?.childNodes.isEmpty ?? true)
+        XCTAssertFalse(model.isTransientCordAccessible)
+        XCTAssertEqual(model.transformedAttachment, SIMD3<Float>(1, 2, 3))
+        XCTAssertTrue(model.transientCordNode?.childNodes.allSatisfy {
+            $0.geometry != nil && !$0.isHidden
+        } ?? false)
+        XCTAssertEqual(model.boardTransform.columns.0, SIMD4<Float>(1, 0, 0, 0))
+        XCTAssertEqual(model.boardTransform.columns.1, SIMD4<Float>(0, 1, 0, 0))
+        XCTAssertEqual(model.boardTransform.columns.2, SIMD4<Float>(0, 0, 1, 0))
+        XCTAssertEqual(model.boardTransform.columns.3, SIMD4<Float>(0, 0, 0, 1))
     }
 
     func testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms() throws {
