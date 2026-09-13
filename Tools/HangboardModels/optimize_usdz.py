@@ -70,12 +70,12 @@ def optimize_usdz(
         output_members = [target_layer_name] + sorted(
             name for name in members if name != source_layer_name
         )
-        temporary_archive = output.with_name(f".{output.name}.tmp")
-        try:
+        with tempfile.TemporaryDirectory(
+            prefix=f".{output.name}.archive-", dir=output.parent
+        ) as raw_archive_directory:
+            temporary_archive = Path(raw_archive_directory) / output.name
             _write_deterministic_archive(temporary_archive, directory, output_members)
             os.replace(temporary_archive, output)
-        finally:
-            temporary_archive.unlink(missing_ok=True)
 
 
 def _regular_file(path: Path, label: str) -> Path:

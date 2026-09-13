@@ -194,6 +194,37 @@ class OptimizeUSDZTests(unittest.TestCase):
                 self.assertFalse(marker.exists(), "conversion must not start")
                 self.assertFalse(output.exists())
 
+    def test_optimizer_temporary_archive_cannot_replace_colliding_input(self) -> None:
+        with _workspace("temporary-input-collision-") as raw_path:
+            tmp_path = Path(raw_path)
+            output = tmp_path / "optimized.usdz"
+            source = tmp_path / f".{output.name}.tmp"
+            _write_fixture(source)
+            source_bytes = source.read_bytes()
+
+            optimize_usdz(source, output)
+
+            self.assertEqual(source.read_bytes(), source_bytes)
+            self.assertTrue(zipfile.is_zipfile(output))
+
+    def test_optimizer_temporary_archive_does_not_follow_preexisting_symlink(self) -> None:
+        with _workspace("temporary-symlink-collision-") as raw_path:
+            tmp_path = Path(raw_path)
+            source = tmp_path / "source.usdz"
+            output = tmp_path / "optimized.usdz"
+            unrelated = tmp_path / "unrelated.txt"
+            old_temporary_archive = tmp_path / f".{output.name}.tmp"
+            _write_fixture(source)
+            unrelated.write_bytes(b"do not overwrite")
+            old_temporary_archive.symlink_to(unrelated)
+
+            optimize_usdz(source, output)
+
+            self.assertEqual(unrelated.read_bytes(), b"do not overwrite")
+            self.assertTrue(old_temporary_archive.is_symlink())
+            self.assertFalse(output.is_symlink())
+            self.assertTrue(zipfile.is_zipfile(output))
+
     def test_compiler_canonicalizes_existing_usdc_without_path_collision(self) -> None:
         class FakeRoot:
             def ListInfoKeys(self):
