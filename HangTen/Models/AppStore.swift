@@ -391,15 +391,11 @@ final class AppStore: ObservableObject {
                 stopwatchDurations: stopwatchDurations,
                 stepMeasurements: session?.steps ?? []
             )
-            if hasRequestedHealthAuthorization {
-                activityContext = PendingWorkoutActivityContext(
-                    boardID: board.id,
-                    boardName: board.name,
-                    activityMetadata: activityMetadata
-                )
-            } else {
-                activityContext = nil
-            }
+            activityContext = PendingWorkoutActivityContext(
+                boardID: board.id,
+                boardName: board.name,
+                activityMetadata: activityMetadata
+            )
             recordingErrorMessage = nil
         } catch {
             activityContext = nil

@@ -233,7 +233,7 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(decoded.aggregateLoadKGF, measurement.aggregateLoadKGF)
     }
 
-    func testSessionRecordDecodesWithoutOptionalBodyweightOrGranularSamples() throws {
+    func testSessionRecordRejectsMissingV2CollectionsAndStepTitles() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "plan",
@@ -247,21 +247,19 @@ final class MotherboardModelsTests: XCTestCase {
         )
         let data = try JSONEncoder().encode(record)
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
-        object.removeValue(forKey: "bodyweightKGF")
         object.removeValue(forKey: "motherboardMeasurements")
         object.removeValue(forKey: "motherboardMeasurementsTruncated")
         object.removeValue(forKey: "stepTitles")
-        let legacyData = try JSONSerialization.data(withJSONObject: object)
 
-        let decoded = try JSONDecoder().decode(WorkoutSessionRecord.self, from: legacyData)
-        XCTAssertNil(decoded.bodyweightKGF)
-        XCTAssertEqual(decoded.motherboardMeasurements, [])
-        XCTAssertFalse(decoded.motherboardMeasurementsTruncated)
-        XCTAssertEqual(decoded.stepTitles, [])
-        XCTAssertEqual(decoded.stepTitle(at: 0), "Step 1")
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutSessionRecord.self,
+                from: JSONSerialization.data(withJSONObject: object)
+            )
+        )
     }
 
-    func testSessionRecordDecodesMissingLoadAdjustmentAsZero() throws {
+    func testSessionRecordRejectsMissingV2LoadAdjustment() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "plan",
@@ -277,12 +275,12 @@ final class MotherboardModelsTests: XCTestCase {
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         object.removeValue(forKey: "loadAdjustmentKGF")
 
-        let decoded = try JSONDecoder().decode(
-            WorkoutSessionRecord.self,
-            from: JSONSerialization.data(withJSONObject: object)
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutSessionRecord.self,
+                from: JSONSerialization.data(withJSONObject: object)
+            )
         )
-
-        XCTAssertEqual(decoded.loadAdjustmentKGF, 0, accuracy: 0.0001)
     }
 
     func testSessionRecordRoundTripsSignedLoadAdjustmentInKilogramsForce() throws {
@@ -331,7 +329,7 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(decoded.loadAdjustmentDisplayUnit, .pounds)
     }
 
-    func testLegacySessionRecordDefaultsLoadAdjustmentDisplayUnitToKilograms() throws {
+    func testSessionRecordRejectsMissingV2LoadAdjustmentDisplayUnit() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "plan",
@@ -347,12 +345,12 @@ final class MotherboardModelsTests: XCTestCase {
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         object.removeValue(forKey: "loadAdjustmentDisplayUnit")
 
-        let decoded = try JSONDecoder().decode(
-            WorkoutSessionRecord.self,
-            from: JSONSerialization.data(withJSONObject: object)
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutSessionRecord.self,
+                from: JSONSerialization.data(withJSONObject: object)
+            )
         )
-
-        XCTAssertEqual(decoded.loadAdjustmentDisplayUnit, .kilograms)
     }
 
     func testSessionRecordRoundTripsRecordedStepTitles() throws {
@@ -426,7 +424,7 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).forceSensorProfile, .automatic)
     }
 
-    func testLegacySessionRecordDecodesMissingForceSensorProfileAsMotherboard() throws {
+    func testSessionRecordRejectsMissingV2ForceSensorProfile() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "legacy-plan",
@@ -442,15 +440,15 @@ final class MotherboardModelsTests: XCTestCase {
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         object.removeValue(forKey: "forceSensorProfile")
 
-        let decoded = try JSONDecoder().decode(
-            WorkoutSessionRecord.self,
-            from: JSONSerialization.data(withJSONObject: object)
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutSessionRecord.self,
+                from: JSONSerialization.data(withJSONObject: object)
+            )
         )
-
-        XCTAssertEqual(decoded.forceSensorProfile, .motherboard)
     }
 
-    func testSessionRecordDecodesUnsupportedForceSensorProfileAsMotherboard() throws {
+    func testSessionRecordRejectsUnsupportedV2ForceSensorProfile() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "future-profile-plan",
@@ -466,12 +464,12 @@ final class MotherboardModelsTests: XCTestCase {
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         object["forceSensorProfile"] = "future-force-sensor"
 
-        let decoded = try JSONDecoder().decode(
-            WorkoutSessionRecord.self,
-            from: JSONSerialization.data(withJSONObject: object)
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutSessionRecord.self,
+                from: JSONSerialization.data(withJSONObject: object)
+            )
         )
-
-        XCTAssertEqual(decoded.forceSensorProfile, .motherboard)
     }
 
     func testSessionRecordRoundTripsForceSensorProfileThroughCodable() throws {

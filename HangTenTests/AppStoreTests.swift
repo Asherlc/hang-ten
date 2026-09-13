@@ -289,7 +289,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertFalse(historyStore.load()[0].healthUploadAttempted)
     }
 
-    func testCompletionBeforeConnectDoesNotAttachActivityContextWhenMigratedAfterConnect() {
+    func testCompletionBeforeConnectPersistsResolvedActivityContextAndUploadsItAfterConnect() throws {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -302,8 +302,16 @@ final class AppStoreTests: XCTestCase {
             workoutHistoryStore: historyStore,
             defaults: defaults
         )
-        let plan = activityPlan(requirement: nil)
-        let board = appStore.board(for: plan)
+        let requirement = ContactRequirement.feature(.mediumEdge)
+        let plan = activityPlan(requirement: requirement)
+        let board = modelActivityBoard(
+            contact: PhysicalContact(
+                id: "medium-edge",
+                name: "Medium edge",
+                kind: .edge,
+                features: [.mediumEdge]
+            )
+        )
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
         let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
@@ -316,11 +324,28 @@ final class AppStoreTests: XCTestCase {
         )
         waitForHistory(in: appStore)
 
+        let pendingContext = try XCTUnwrap(historyStore.load().first?.activityContext)
+        let snapshot = try XCTUnwrap(
+            pendingContext.activitySegments.first?.target?.resolvedContactSnapshot
+        )
+        XCTAssertEqual(snapshot.boardID, "activity-board")
+        XCTAssertEqual(snapshot.revisionID, "activity-board-revision")
+        XCTAssertEqual(snapshot.modelSHA256, "activity-board-model-sha256")
+        XCTAssertEqual(snapshot.requirement, requirement)
+        XCTAssertEqual(snapshot.contactIDs, ["medium-edge"])
+
         healthStore.authorizationState = .authorized
         appStore.requestHealthAuthorization()
         waitUntil { healthStore.saveCallCount == 1 }
 
-        XCTAssertEqual(healthStore.savedActivityContexts, [nil])
+        XCTAssertEqual(
+            healthStore.savedActivityContexts,
+            [FakeWorkoutHealthStore.SavedActivityContext(
+                boardID: board.id,
+                boardName: board.name,
+                activitySegments: pendingContext.activitySegments
+            )]
+        )
     }
 
     func testWriteOnlyHealthStoreUsesLocalFallbackWhenHistoryReadIsUnsupported() {
@@ -838,7 +863,10 @@ final class AppStoreTests: XCTestCase {
         XCTAssertNil(appStore.healthAuthorizationError)
         let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
         XCTAssertEqual(context.activitySegments.count, 1)
-        XCTAssertNil(context.activitySegments[0].resolution)
+        let activityJSON = try WorkoutActivityRecorder().json(
+            for: WorkoutActivityMetadata(segments: context.activitySegments)
+        )
+        XCTAssertTrue(activityJSON.contains(#""target":{"kind":"selfSelected"}"#))
     }
 
     private func assertCompletionFailsForUnresolvedTarget(
@@ -967,6 +995,64 @@ final class AppStoreTests: XCTestCase {
                     isDefault: true,
                     media: .raster(
                         BoardRasterMedia(assetPath: "", contactGeometry: geometry)
+                    )
+                )
+            ]
+        )
+    }
+
+    private func modelActivityBoard(contact: PhysicalContact) -> BoardRevision {
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: 1,
+            coordinateFrame: "board-face-normalized-v1",
+            modelSHA256: "activity-board-model-sha256",
+            modelBounds: BoardModelBounds(
+                minimum: [0, 0, 0],
+                maximum: [1, 1, 0.1]
+            ),
+            nodes: [],
+            contacts: [
+                contact.id: BoardModelContactDescriptor(
+                    nodeIDs: ["Board/Contact/medium-edge"],
+                    facePlaneAABB: BoardModelFacePlaneAABB(
+                        minimum: [0.1, 0.1, 0],
+                        maximum: [0.9, 0.3, 0.1]
+                    ),
+                    center: [0.5, 0.2, 0.05]
+                )
+            ]
+        )
+        return BoardRevision(
+            id: "activity-board",
+            revisionID: "activity-board-revision",
+            manufacturer: "Fixture",
+            name: "Activity board",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            contacts: [contact],
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "model",
+                    name: "Model",
+                    aspectRatio: 1,
+                    isDefault: true,
+                    media: .model(
+                        BoardModelMedia(
+                            assetPath: "assets/board.usdz",
+                            descriptorPath: "assets/board.model.json",
+                            descriptor: descriptor,
+                            display: BoardModelDisplay(
+                                camera: BoardModelCamera(
+                                    type: "orthographic",
+                                    viewDirection: [0, 0, -1],
+                                    up: [0, 1, 0],
+                                    fitPadding: 0
+                                )
+                            )
+                        )
                     )
                 )
             ]

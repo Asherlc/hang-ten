@@ -497,15 +497,17 @@ final class WorkoutHistoryServiceTests: XCTestCase {
                     stepID: "step-a",
                     stepNumber: 1,
                     kind: .work,
-                    resolution: ResolvedContactSnapshot(
-                        boardID: "board-a",
-                        revisionID: "2026-09-contact-first",
-                        modelSHA256: nil,
-                        requirement: .edge(
-                            depthRangeMillimeters: .init(minimum: 20, maximum: 20),
-                            selection: .bilateralPair
-                        ),
-                        contactIDs: ["a1", "a2"]
+                    target: .resolvedContacts(
+                        ResolvedContactSnapshot(
+                            boardID: "board-a",
+                            revisionID: "2026-09-contact-first",
+                            modelSHA256: nil,
+                            requirement: .edge(
+                                depthRangeMillimeters: .init(minimum: 20, maximum: 20),
+                                selection: .bilateralPair
+                            ),
+                            contactIDs: ["a1", "a2"]
+                        )
                     ),
                     durationSeconds: 7
                 )

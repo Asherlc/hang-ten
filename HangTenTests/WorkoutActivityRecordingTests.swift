@@ -356,7 +356,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             WorkoutActivityRecorder().segments(for: workout, on: modelBoard)
                 .first(where: { $0.kind == .work })
         )
-        let resolution = try XCTUnwrap(record.resolution)
+        let resolution = try XCTUnwrap(record.target?.resolvedContactSnapshot)
 
         XCTAssertEqual(resolution.boardID, modelBoard.id)
         XCTAssertEqual(resolution.revisionID, "2026-09-contact-first")
@@ -466,9 +466,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
         XCTAssertEqual(records.count, 1)
-        XCTAssertEqual(records[0].resolution?.requirement, .feature(.mediumEdge))
-        XCTAssertEqual(records[0].resolution?.contactIDs, ["edge-left", "edge-right"])
-        XCTAssertNil(records[0].resolution?.modelSHA256)
+        XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.requirement, .feature(.mediumEdge))
+        XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.contactIDs, ["edge-left", "edge-right"])
+        XCTAssertNil(records[0].target?.resolvedContactSnapshot?.modelSHA256)
         XCTAssertEqual(records[0].durationSeconds, 12)
     }
 
@@ -486,8 +486,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
 
         XCTAssertEqual(records.count, 2)
-        XCTAssertEqual(records.map(\.resolution?.requirement), [.feature(.mediumEdge), .kind(.jug)])
-        XCTAssertEqual(records.map(\.resolution?.contactIDs), [
+        XCTAssertEqual(
+            records.map { $0.target?.resolvedContactSnapshot?.requirement },
+            [.feature(.mediumEdge), .kind(.jug)]
+        )
+        XCTAssertEqual(records.map { $0.target?.resolvedContactSnapshot?.contactIDs }, [
             ["edge-left", "edge-right"],
             ["jug-center"]
         ])
@@ -509,7 +512,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(records.map(\.kind), [.work, .rest])
         XCTAssertEqual(records.map(\.durationSeconds), [20, 10])
-        XCTAssertNil(records[1].resolution)
+        XCTAssertNil(records[1].target)
     }
 
     func testRPTCRepeatersRecordSelfSelectedWorkWithoutBoardHolds() throws {
@@ -524,7 +527,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         let workRecords = records.filter { $0.kind == .work }
         XCTAssertEqual(workRecords.count, 7)
-        XCTAssertTrue(workRecords.allSatisfy { $0.resolution == nil })
+        XCTAssertTrue(workRecords.allSatisfy { $0.target == .selfSelected })
         XCTAssertEqual(workRecords.map(\.durationSeconds), Array(repeating: 7, count: 7))
     }
 
@@ -542,8 +545,22 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(records.count, 1)
         XCTAssertEqual(records[0].kind, .work)
-        XCTAssertNil(records[0].resolution)
         XCTAssertEqual(records[0].durationSeconds, 7)
+        let json = try WorkoutActivityRecorder().json(
+            for: WorkoutActivityMetadata(segments: records)
+        )
+        XCTAssertEqual(
+            json,
+            #"{"segments":[{"durationSeconds":7,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"selfSelected"}}],"version":2}"#
+        )
+        let decoded = try JSONDecoder().decode(
+            WorkoutActivityMetadata.self,
+            from: Data(json.utf8)
+        )
+        XCTAssertEqual(
+            try WorkoutActivityRecorder().json(for: decoded),
+            json
+        )
     }
 
     func testStopwatchWorkUsesSuppliedObservedDuration() throws {
@@ -609,7 +626,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
         XCTAssertEqual(records.count, 1)
-        XCTAssertEqual(records[0].resolution?.contactIDs, ["edge-left", "edge-right"])
+        XCTAssertEqual(
+            records[0].target?.resolvedContactSnapshot?.contactIDs,
+            ["edge-left", "edge-right"]
+        )
     }
 
     func testOneRequirementProducesOneSnapshotAcrossContactDescriptors() throws {
@@ -626,7 +646,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(records.count, 1)
         XCTAssertEqual(
-            records[0].resolution?.contactIDs,
+            records[0].target?.resolvedContactSnapshot?.contactIDs,
             ["edge-left", "edge-right", "edge-deep", "jug-center"]
         )
     }
@@ -653,7 +673,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     stepID: "step",
                     stepNumber: 1,
                     kind: .rest,
-                    resolution: nil,
+                    target: nil,
                     durationSeconds: nil
                 )
             ]
@@ -672,7 +692,28 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(decoded, metadata)
         XCTAssertEqual(decoded.version, 2)
         XCTAssertFalse(json.contains("durationSeconds"))
-        XCTAssertFalse(json.contains("resolution"))
+        XCTAssertFalse(json.contains("target"))
+    }
+
+    func testWorkSegmentWithoutExplicitTargetCannotBeEncoded() {
+        let metadata = WorkoutActivityMetadata(
+            segments: [
+                RecordedActivitySegment(
+                    stepID: "step",
+                    stepNumber: 1,
+                    kind: .work,
+                    target: nil,
+                    durationSeconds: 7
+                )
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutActivityRecorder().json(for: metadata)) { error in
+            guard case let EncodingError.invalidValue(_, context) = error else {
+                return XCTFail("Expected explicit-target encoding rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("explicit target"))
+        }
     }
 
     func testMeasuredStepIsExportedOnceAlongsideDescriptorSegments() throws {
@@ -881,7 +922,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
-        XCTAssertEqual(records.map(\.resolution?.contactIDs), [["right-a"]])
+        XCTAssertEqual(
+            records.map { $0.target?.resolvedContactSnapshot?.contactIDs },
+            [["right-a"]]
+        )
     }
 
     func testActivityRecordingDoubleHandStepUsesExactFactualPairOnOneObject() throws {
@@ -889,7 +933,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = portablePlan(handUse: .double, side: .both)
 
         XCTAssertEqual(
-            try WorkoutActivityRecorder().segments(for: workout, on: board).first?.resolution?.contactIDs,
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+                .first?.target?.resolvedContactSnapshot?.contactIDs,
             ["left-a", "left-b"]
         )
     }
@@ -902,7 +947,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
         XCTAssertEqual(
-            try WorkoutActivityRecorder().segments(for: workout, on: board).first?.resolution?.contactIDs,
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+                .first?.target?.resolvedContactSnapshot?.contactIDs,
             ["left-a", "left-b"]
         )
     }
@@ -912,7 +958,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
         XCTAssertEqual(
-            try WorkoutActivityRecorder().segments(for: workout, on: board).first?.resolution?.contactIDs,
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+                .first?.target?.resolvedContactSnapshot?.contactIDs,
             ["left-a", "left-b"]
         )
     }
@@ -946,7 +993,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             .segments(for: plan, on: board)
             .filter { $0.kind == .work }
         XCTAssertEqual(recordedWork.count, workSteps.count)
-        XCTAssertTrue(recordedWork.allSatisfy { $0.resolution == nil })
+        XCTAssertTrue(recordedWork.allSatisfy { $0.target == .selfSelected })
     }
 
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
@@ -1196,12 +1243,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 stepID: "step",
                 stepNumber: 1,
                 kind: .work,
-                resolution: ResolvedContactSnapshot(
-                    boardID: board.id,
-                    revisionID: board.revisionID,
-                    modelSHA256: nil,
-                    requirement: requirement,
-                    contactIDs: ["edge-left"]
+                target: .resolvedContacts(
+                    ResolvedContactSnapshot(
+                        boardID: board.id,
+                        revisionID: board.revisionID,
+                        modelSHA256: nil,
+                        requirement: requirement,
+                        contactIDs: ["edge-left"]
+                    )
                 ),
                 durationSeconds: 8.75
             )
@@ -1234,7 +1283,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         XCTAssertEqual(
             json,
-            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"kind":"edge","requiredFeatures":["mediumEdge"],"selection":"allMatching"},"revisionID":"test-fixture"},"stepID":"step","stepNumber":1}],"version":2}"#
+            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"kind":"edge","requiredFeatures":["mediumEdge"],"selection":"allMatching"},"revisionID":"test-fixture"}}}],"version":2}"#
         )
         XCTAssertEqual(
             decoded,
@@ -1254,6 +1303,22 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 from: Data(json.utf8)
             )
         )
+    }
+
+    func testVersionTwoPayloadRejectsProhibitedBareHoldFields() {
+        let json = #"{"segments":[{"holdIDs":["edge"],"holdType":"edge","kind":"work","sizeMillimeters":20,"stepID":"step","stepNumber":1}],"version":2}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict segment-field rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("Unsupported recorded activity field"))
+        }
     }
 
     @discardableResult
@@ -1276,7 +1341,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             stepID: "step",
             stepNumber: 1,
             kind: .work,
-            resolution: nil,
+            target: .selfSelected,
             durationSeconds: .nan
         )
 

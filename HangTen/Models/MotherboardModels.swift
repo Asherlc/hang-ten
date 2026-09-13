@@ -426,32 +426,6 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.motherboardMeasurementsTruncated = motherboardMeasurementsTruncated
     }
 
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        planID = try container.decode(String.self, forKey: .planID)
-        planTitle = try container.decode(String.self, forKey: .planTitle)
-        recordedAt = try container.decode(Date.self, forKey: .recordedAt)
-        startDate = try container.decode(Date.self, forKey: .startDate)
-        endDate = try container.decode(Date.self, forKey: .endDate)
-        motherboardIdentifier = try container.decodeIfPresent(String.self, forKey: .motherboardIdentifier)
-        batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
-        steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
-        stepTitles = try container.decodeIfPresent([String].self, forKey: .stepTitles) ?? []
-        let forceSensorProfileRawValue = try container.decodeIfPresent(String.self, forKey: .forceSensorProfile)
-        forceSensorProfile = forceSensorProfileRawValue.flatMap(ForceSensorProfile.init(rawValue:)) ?? .motherboard
-        bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
-        loadAdjustmentKGF = Self.normalizedLoadAdjustment(
-            try container.decodeIfPresent(Double.self, forKey: .loadAdjustmentKGF) ?? 0
-        )
-        loadAdjustmentDisplayUnit = try container.decodeIfPresent(
-            WorkoutLoadAdjustmentDisplayUnit.self,
-            forKey: .loadAdjustmentDisplayUnit
-        ) ?? .kilograms
-        motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
-        motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false
-    }
-
     func stepTitle(at index: Int) -> String {
         guard stepTitles.indices.contains(index),
               !stepTitles[index].trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {

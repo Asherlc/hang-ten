@@ -8,29 +8,90 @@ struct ResolvedContactSnapshot: Codable, Hashable {
     let contactIDs: [String]
 }
 
+enum RecordedActivityTarget: Codable, Hashable {
+    case resolvedContacts(ResolvedContactSnapshot)
+    case selfSelected
+
+    var resolvedContactSnapshot: ResolvedContactSnapshot? {
+        guard case .resolvedContacts(let snapshot) = self else { return nil }
+        return snapshot
+    }
+
+    private enum Kind: String, Codable {
+        case resolvedContacts
+        case selfSelected
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case kind, resolution
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported recorded activity target field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        switch try container.decode(Kind.self, forKey: .kind) {
+        case .resolvedContacts:
+            self = .resolvedContacts(
+                try container.decode(ResolvedContactSnapshot.self, forKey: .resolution)
+            )
+        case .selfSelected:
+            guard !container.contains(.resolution) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .resolution,
+                    in: container,
+                    debugDescription: "Self-selected activity targets cannot contain a contact resolution."
+                )
+            }
+            self = .selfSelected
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .resolvedContacts(let snapshot):
+            try container.encode(Kind.resolvedContacts, forKey: .kind)
+            try container.encode(snapshot, forKey: .resolution)
+        case .selfSelected:
+            try container.encode(Kind.selfSelected, forKey: .kind)
+        }
+    }
+}
+
 struct RecordedActivitySegment: Codable, Hashable {
     let stepID: String
     let stepNumber: Int
     let kind: WorkoutSegmentKind
-    let resolution: ResolvedContactSnapshot?
+    let target: RecordedActivityTarget?
     let durationSeconds: TimeInterval?
 
     init(
         stepID: String,
         stepNumber: Int,
         kind: WorkoutSegmentKind,
-        resolution: ResolvedContactSnapshot?,
+        target: RecordedActivityTarget?,
         durationSeconds: TimeInterval?
     ) {
         self.stepID = stepID
         self.stepNumber = stepNumber
         self.kind = kind
-        self.resolution = resolution
+        self.target = target
         self.durationSeconds = durationSeconds
     }
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case stepID, stepNumber, kind, resolution, durationSeconds
+        case stepID, stepNumber, kind, target, durationSeconds
     }
 
     init(from decoder: Decoder) throws {
@@ -50,14 +111,57 @@ struct RecordedActivitySegment: Codable, Hashable {
         stepID = try container.decode(String.self, forKey: .stepID)
         stepNumber = try container.decode(Int.self, forKey: .stepNumber)
         kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
-        resolution = try container.decodeIfPresent(
-            ResolvedContactSnapshot.self,
-            forKey: .resolution
-        )
+        target = try container.decodeIfPresent(RecordedActivityTarget.self, forKey: .target)
         durationSeconds = try container.decodeIfPresent(
             TimeInterval.self,
             forKey: .durationSeconds
         )
+        switch kind {
+        case .work where target == nil:
+            throw DecodingError.dataCorruptedError(
+                forKey: .target,
+                in: container,
+                debugDescription: "Recorded work activity requires an explicit target."
+            )
+        case .rest where target != nil:
+            throw DecodingError.dataCorruptedError(
+                forKey: .target,
+                in: container,
+                debugDescription: "Recorded rest activity cannot contain a target."
+            )
+        default:
+            break
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        switch kind {
+        case .work where target == nil:
+            throw EncodingError.invalidValue(
+                self,
+                EncodingError.Context(
+                    codingPath: encoder.codingPath,
+                    debugDescription: "Recorded work activity requires an explicit target."
+                )
+            )
+        case .rest where target != nil:
+            throw EncodingError.invalidValue(
+                self,
+                EncodingError.Context(
+                    codingPath: encoder.codingPath,
+                    debugDescription: "Recorded rest activity cannot contain a target."
+                )
+            )
+        default:
+            break
+        }
+
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(stepID, forKey: .stepID)
+        try container.encode(stepNumber, forKey: .stepNumber)
+        try container.encode(kind, forKey: .kind)
+        try container.encodeIfPresent(target, forKey: .target)
+        try container.encodeIfPresent(durationSeconds, forKey: .durationSeconds)
     }
 }
 
@@ -304,7 +408,7 @@ struct WorkoutActivityRecorder {
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .rest,
-                            resolution: nil,
+                            target: nil,
                             durationSeconds: duration
                         )
                     )
@@ -322,7 +426,7 @@ struct WorkoutActivityRecorder {
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .work,
-                            resolution: nil,
+                            target: .selfSelected,
                             durationSeconds: duration
                         )
                     )
@@ -348,12 +452,14 @@ struct WorkoutActivityRecorder {
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .work,
-                            resolution: ResolvedContactSnapshot(
-                                boardID: board.id,
-                                revisionID: board.revisionID,
-                                modelSHA256: modelSHA256(for: board.defaultPresentation),
-                                requirement: requirement,
-                                contactIDs: contacts.map(\.id)
+                            target: .resolvedContacts(
+                                ResolvedContactSnapshot(
+                                    boardID: board.id,
+                                    revisionID: board.revisionID,
+                                    modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                    requirement: requirement,
+                                    contactIDs: contacts.map(\.id)
+                                )
                             ),
                             durationSeconds: duration
                         )
