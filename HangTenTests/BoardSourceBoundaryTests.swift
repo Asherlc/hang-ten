@@ -96,7 +96,21 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
         XCTAssertEqual(model.assetPath, "assets/primary.usdz")
         XCTAssertEqual(model.descriptorPath, "assets/primary.model.json")
-        XCTAssertNotNil(BoardCatalog.packageStore.presentationAssetURL(for: compact))
+        XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: compact))
+        XCTAssertEqual(
+            BoardCatalog.packageStore.modelResource(for: compact),
+            BoardModelResource(
+                packageSlug: "metolius-wood-grips-compact-ii",
+                assetPath: "assets/primary.usdz"
+            )
+        )
+        XCTAssertTrue(
+            try XCTUnwrap(
+                BoardCatalog.packageStore.presentationDescriptorURL(for: compact)
+            ).path.hasSuffix(
+                "/Hangboards/metolius-wood-grips-compact-ii/assets/primary.model.json"
+            )
+        )
         XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: compact))
     }
 
@@ -106,6 +120,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         for board in BoardCatalog.all {
             let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let bundledDocumentURL = try XCTUnwrap(Bundle.main.resourceURL)
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+                .appendingPathComponent("board.json")
+            let bundledDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: bundledDocumentURL)) as? [String: Any]
+            )
+            XCTAssertEqual(bundledDocument["id"] as? String, board.id)
             let documentURL = repositoryRoot
                 .appendingPathComponent("Hangboards", isDirectory: true)
                 .appendingPathComponent(packagePath, isDirectory: true)
@@ -113,29 +135,54 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let document = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: documentURL)) as? [String: Any]
             )
+            XCTAssertEqual(try Data(contentsOf: bundledDocumentURL), try Data(contentsOf: documentURL))
             let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
             let defaultPresentation = try XCTUnwrap(
                 presentations.first { ($0["isDefault"] as? Bool) == true }
             )
             let media = try XCTUnwrap(defaultPresentation["media"] as? [String: Any])
             let defaultAssetPath = try XCTUnwrap(media["assetPath"] as? String)
-            let expectedAssetURL = Bundle.main.resourceURL!
-                .appendingPathComponent("Hangboards", isDirectory: true)
-                .appendingPathComponent(packagePath, isDirectory: true)
-                .appendingPathComponent(defaultAssetPath)
-                .standardizedFileURL
-
             switch board.defaultPresentation.media {
             case .raster:
+                let expectedAssetURL = Bundle.main.resourceURL!
+                    .appendingPathComponent("Hangboards", isDirectory: true)
+                    .appendingPathComponent(packagePath, isDirectory: true)
+                    .appendingPathComponent(defaultAssetPath)
+                    .standardizedFileURL
                 let imageURL = try XCTUnwrap(
                     BoardCatalog.packageStore.presentationImageURL(for: board)
                 )
                 XCTAssertEqual(imageURL.standardizedFileURL, expectedAssetURL)
-            case .model:
-                let assetURL = try XCTUnwrap(
-                    BoardCatalog.packageStore.presentationAssetURL(for: board)
+            case .model(let model):
+                let descriptorPath = try XCTUnwrap(media["descriptorPath"] as? String)
+                let expectedDescriptorURL = Bundle.main.resourceURL!
+                    .appendingPathComponent("Hangboards", isDirectory: true)
+                    .appendingPathComponent(packagePath, isDirectory: true)
+                    .appendingPathComponent(descriptorPath)
+                    .standardizedFileURL
+
+                XCTAssertEqual(model.assetPath, defaultAssetPath)
+                XCTAssertEqual(model.descriptorPath, descriptorPath)
+                XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+                XCTAssertEqual(
+                    try XCTUnwrap(
+                        BoardCatalog.packageStore.presentationDescriptorURL(for: board)
+                    ).standardizedFileURL,
+                    expectedDescriptorURL
                 )
-                XCTAssertEqual(assetURL.standardizedFileURL, expectedAssetURL)
+                let sourceDescriptorURL = documentURL.deletingLastPathComponent()
+                    .appendingPathComponent(descriptorPath)
+                XCTAssertEqual(
+                    try Data(contentsOf: expectedDescriptorURL),
+                    try Data(contentsOf: sourceDescriptorURL)
+                )
+                XCTAssertEqual(
+                    BoardCatalog.packageStore.modelResource(for: board),
+                    BoardModelResource(
+                        packageSlug: packagePath,
+                        assetPath: defaultAssetPath
+                    )
+                )
                 XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
             }
         }

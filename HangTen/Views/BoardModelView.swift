@@ -11,6 +11,7 @@ struct BoardModelKey: Hashable {
 }
 
 protocol BoardModelResourceRequesting: AnyObject {
+    var progress: Progress { get }
     func beginAccessingResources() async throws
     func endAccessingResources()
 }
@@ -28,6 +29,46 @@ final class BoardModelResourceLease {
 
     deinit {
         request?.endAccessingResources()
+    }
+}
+
+private final class BoardModelResourceRequestAccess: @unchecked Sendable {
+    private let lock = NSLock()
+    private var request: BoardModelResourceRequesting?
+    private var isCancelled = false
+
+    init(request: BoardModelResourceRequesting) {
+        self.request = request
+    }
+
+    func cancel() {
+        lock.lock()
+        isCancelled = true
+        let request = request
+        lock.unlock()
+        // Cancellation signals the pending request; only a completed successful
+        // begin (or its transferred lease) may balance resource access.
+        request?.progress.cancel()
+    }
+
+    func endAccessingResources() {
+        lock.lock()
+        let request = request
+        self.request = nil
+        lock.unlock()
+        request?.endAccessingResources()
+    }
+
+    func lease(for url: URL) -> BoardModelResourceLease? {
+        lock.lock()
+        guard !isCancelled else {
+            lock.unlock()
+            return nil
+        }
+        let request = request
+        self.request = nil
+        lock.unlock()
+        return request.map { BoardModelResourceLease(url: url, request: $0) }
     }
 }
 
@@ -55,21 +96,29 @@ struct BoardModelResourceAccess {
         _ resource: BoardModelResource,
         bundle: Bundle
     ) async -> BoardModelResourceLease? {
+        guard !Task.isCancelled else { return nil }
         let request = requestFactory([resource.tag], bundle)
-        do {
-            try await request.beginAccessingResources()
-        } catch {
-            return nil
+        let access = BoardModelResourceRequestAccess(request: request)
+        return await withTaskCancellationHandler {
+            guard !Task.isCancelled else { return nil }
+            do {
+                try await request.beginAccessingResources()
+            } catch {
+                return nil
+            }
+            // Begin has succeeded. Keep ownership through URL resolution;
+            // lease transfer and cancellation choose an owner under one lock.
+            defer { access.endAccessingResources() }
+            guard !Task.isCancelled,
+                  let url = urlResolver(bundle, resource),
+                  let lease = access.lease(for: url),
+                  !Task.isCancelled else {
+                return nil
+            }
+            return lease
+        } onCancel: {
+            access.cancel()
         }
-        guard !Task.isCancelled else {
-            request.endAccessingResources()
-            return nil
-        }
-        guard let url = urlResolver(bundle, resource) else {
-            request.endAccessingResources()
-            return nil
-        }
-        return BoardModelResourceLease(url: url, request: request)
     }
 }
 
@@ -93,6 +142,12 @@ enum BoardModelSolvedSuspension {
 }
 
 enum BoardModelAsset {
+    #if DEBUG
+    // Task-scoped synchronization for the decode lifetime regression. The
+    // production decoder and model source remain unchanged by the test hook.
+    @TaskLocal static var willDecodeForTesting: (@Sendable (URL) -> Void)?
+    #endif
+
     static func load(media: BoardModelMedia, packageURL: URL) -> SCNScene? {
         guard packageURL.isFileURL,
               let values = try? packageURL.resourceValues(forKeys: [.isRegularFileKey]),
@@ -131,7 +186,12 @@ private final class BoardModelLoadedAsset {
 
 @MainActor
 private enum BoardModelCache {
-    static var loading: [BoardModelKey: Task<BoardModelLoadedAsset?, Never>] = [:]
+    private final class InFlight {
+        var task: Task<Void, Never>?
+        var waiters: [UUID: CheckedContinuation<BoardModelLoadedAsset?, Never>] = [:]
+    }
+
+    private static var loading: [BoardModelKey: InFlight] = [:]
 
     static func source(
         for key: BoardModelKey,
@@ -141,36 +201,92 @@ private enum BoardModelCache {
         store: BoardPackageStore,
         resourceAccess: BoardModelResourceAccess
     ) async -> BoardModelLoadedAsset? {
-        if let task = loading[key] { return await task.value }
-        let task = Task { () -> BoardModelLoadedAsset? in
-            let resourceLease: BoardModelResourceLease?
-            if let bundledURL = store.presentationAssetURL(
-                for: board,
-                presentationID: presentationID
-            ) {
-                resourceLease = BoardModelResourceLease(url: bundledURL)
-            } else if let resource = store.modelResource(
-                for: board,
-                presentationID: presentationID
-            ) {
-                resourceLease = await resourceAccess.acquire(
-                    resource,
-                    bundle: store.resourceBundle
-                )
-            } else {
-                resourceLease = nil
+        let waiterID = UUID()
+        return await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                guard !Task.isCancelled else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                if let entry = loading[key] {
+                    entry.waiters[waiterID] = continuation
+                    return
+                }
+                let entry = InFlight()
+                entry.waiters[waiterID] = continuation
+                loading[key] = entry
+                entry.task = Task {
+                    let loaded = await loadSource(
+                        media: media,
+                        board: board,
+                        presentationID: presentationID,
+                        store: store,
+                        resourceAccess: resourceAccess
+                    )
+                    // A canceled acquisition may finish after a replacement
+                    // load has started for the same model identity.
+                    guard loading[key] === entry else { return }
+                    loading[key] = nil
+                    let waiters = entry.waiters
+                    entry.waiters.removeAll()
+                    for waiter in waiters.values {
+                        waiter.resume(returning: loaded)
+                    }
+                }
             }
-            guard let resourceLease, !Task.isCancelled else { return nil }
-            let scene = await Task.detached(priority: .userInitiated) {
-                BoardModelAsset.load(media: media, packageURL: resourceLease.url)
-            }.value
-            guard let scene, !Task.isCancelled else { return nil }
-            return BoardModelLoadedAsset(scene: scene, resourceLease: resourceLease)
+        } onCancel: {
+            Task { @MainActor in
+                guard let entry = loading[key],
+                      let waiter = entry.waiters.removeValue(forKey: waiterID) else { return }
+                if entry.waiters.isEmpty {
+                    loading[key] = nil
+                    entry.task?.cancel()
+                }
+                // Release the view task immediately. The resource request still
+                // balances any successful access when its completion arrives.
+                waiter.resume(returning: nil)
+            }
         }
-        loading[key] = task
-        let loaded = await task.value
-        loading[key] = nil
-        return loaded
+    }
+
+    private static func loadSource(
+        media: BoardModelMedia,
+        board: TrainingBoard,
+        presentationID: String,
+        store: BoardPackageStore,
+        resourceAccess: BoardModelResourceAccess
+    ) async -> BoardModelLoadedAsset? {
+        let resourceLease: BoardModelResourceLease?
+        if let bundledURL = store.presentationAssetURL(
+            for: board,
+            presentationID: presentationID
+        ) {
+            resourceLease = BoardModelResourceLease(url: bundledURL)
+        } else if let resource = store.modelResource(
+            for: board,
+            presentationID: presentationID
+        ) {
+            resourceLease = await resourceAccess.acquire(
+                resource,
+                bundle: store.resourceBundle
+            )
+        } else {
+            resourceLease = nil
+        }
+        guard let resourceLease, !Task.isCancelled else { return nil }
+        #if DEBUG
+        let willDecodeForTesting = BoardModelAsset.willDecodeForTesting
+        #endif
+        let scene = await Task.detached(priority: .userInitiated) {
+            withExtendedLifetime(resourceLease) {
+                #if DEBUG
+                willDecodeForTesting?(resourceLease.url)
+                #endif
+                return BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+            }
+        }.value
+        guard let scene, !Task.isCancelled else { return nil }
+        return BoardModelLoadedAsset(scene: scene, resourceLease: resourceLease)
     }
 }
 
@@ -221,6 +337,11 @@ struct BoardModelSurface: View {
         case loading
         case ready(BoardModelScene)
         case unavailable
+
+        var loadingMessage: String? {
+            guard case .loading = self else { return nil }
+            return "Downloading 3D model…"
+        }
     }
 
     let board: TrainingBoard
@@ -275,15 +396,27 @@ struct BoardModelSurface: View {
                 )
                 .accessibilityIdentifier("boardModel.3d")
                 .allowsHitTesting(Self.permitsHoldSelection(for: .ready, onHoldTap: onHoldTap))
-            } else if case .loading = result {
-                ProgressView()
-                    .accessibilityHidden(true)
-                    .allowsHitTesting(false)
+            } else if let loadingMessage = result.loadingMessage {
+                HStack(spacing: 12) {
+                    ProgressView()
+                    Text(loadingMessage)
+                        .font(.subheadline)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .ignore)
+                .accessibilityIdentifier("boardModel.loading")
+                .accessibilityLabel(loadingMessage)
+                .allowsHitTesting(false)
             } else {
                 BoardModelUnavailableView()
             }
         }
         .task(id: loadIdentity) {
+            guard !Task.isCancelled else { return }
             guard case .model = presentation.media else {
                 result = .unavailable
                 return
