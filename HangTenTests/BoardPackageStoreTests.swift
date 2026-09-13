@@ -3,6 +3,173 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testOnDemandStoreKeepsDescriptorAvailableWhileModelIsAbsentFromBaseBundle() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try FileManager.default.removeItem(
+                at: packageURL.appendingPathComponent("assets/primary.usdz")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            return XCTFail("expected model presentation")
+        }
+
+        XCTAssertEqual(media.descriptor.schemaVersion, 1)
+        XCTAssertEqual(
+            store.presentationDescriptorURL(for: board),
+            fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/primary.model.json"
+            )
+        )
+        XCTAssertNil(store.presentationAssetURL(for: board))
+        XCTAssertEqual(
+            store.modelResource(for: board, presentationID: presentation.id),
+            BoardModelResource(
+                packageSlug: "fixture-model",
+                assetPath: "assets/primary.usdz"
+            )
+        )
+    }
+
+    func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
+        let resource = BoardModelResource(
+            packageSlug: "metolius-wood-grips-compact-ii",
+            assetPath: "assets/primary.usdz"
+        )
+
+        XCTAssertEqual(
+            resource.tag,
+            "hang-ten-model-metolius-wood-grips-compact-ii"
+        )
+        XCTAssertTrue(resource.tag.allSatisfy { character in
+            character.isLowercase || character.isNumber || character == "-"
+        })
+    }
+
+    @MainActor
+    func testOnDemandModelLoaderRetainsAccessForSceneLifetimeAndSupportsRepeatedLoads() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let modelBytes = try Data(contentsOf: bundledModelURL)
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        var requestedTags: [Set<String>] = []
+        var endCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { tags, _ in
+                requestedTags.append(tags)
+                return TestBoardModelResourceRequest(
+                    begin: {
+                        try FileManager.default.createDirectory(
+                            at: requestedModelURL.deletingLastPathComponent(),
+                            withIntermediateDirectories: true
+                        )
+                        try modelBytes.write(to: requestedModelURL)
+                    },
+                    end: {
+                        endCount += 1
+                        try? FileManager.default.removeItem(at: requestedModelURL)
+                    }
+                )
+            },
+            urlResolver: { _, _ in
+                FileManager.default.fileExists(atPath: requestedModelURL.path)
+                    ? requestedModelURL
+                    : nil
+            }
+        )
+
+        for attempt in 1...2 {
+            var scene = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: store,
+                resourceAccess: access
+            )
+
+            XCTAssertNotNil(scene, "load \(attempt)")
+            XCTAssertEqual(
+                try Data(contentsOf: requestedModelURL),
+                modelBytes,
+                "load \(attempt)"
+            )
+            scene = nil
+            XCTAssertFalse(
+                FileManager.default.fileExists(atPath: requestedModelURL.path),
+                "load \(attempt) must end access when its scene is released"
+            )
+        }
+
+        XCTAssertEqual(
+            requestedTags,
+            [
+                ["hang-ten-model-fixture-model"],
+                ["hang-ten-model-fixture-model"]
+            ]
+        )
+        XCTAssertEqual(endCount, 2)
+    }
+
+    @MainActor
+    func testCancelledOnDemandAccessEndsAfterRequestCompletionWithoutResolvingModel() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(
+            packageSlug: "fixture-model",
+            assetPath: "assets/primary.usdz"
+        )
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let request = DelayedBoardModelResourceRequest(
+            modelURL: requestedModelURL,
+            bytes: Data("downloaded".utf8)
+        )
+        var resolutionCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return requestedModelURL
+            }
+        )
+
+        let acquisition = Task {
+            await access.acquire(resource, bundle: fixture.bundle)
+        }
+        while !request.isWaiting {
+            await Task.yield()
+        }
+        acquisition.cancel()
+        request.complete()
+
+        let acquiredLease = await acquisition.value
+        XCTAssertNil(acquiredLease)
+        XCTAssertEqual(resolutionCount, 0)
+        XCTAssertTrue(request.didEndAccess)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
+    }
+
     func testStoreLoadsV2ModelAndRejectsLegacyV1AfterMigration() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
@@ -4277,5 +4444,60 @@ private struct FixtureBundle {
 
     func remove() {
         try? FileManager.default.removeItem(at: rootURL)
+    }
+}
+
+private final class TestBoardModelResourceRequest: BoardModelResourceRequesting {
+    private let beginAction: () throws -> Void
+    private let endAction: () -> Void
+
+    init(begin: @escaping () throws -> Void, end: @escaping () -> Void) {
+        self.beginAction = begin
+        self.endAction = end
+    }
+
+    func beginAccessingResources() async throws {
+        try beginAction()
+    }
+
+    func endAccessingResources() {
+        endAction()
+    }
+}
+
+private final class DelayedBoardModelResourceRequest: BoardModelResourceRequesting {
+    private let modelURL: URL
+    private let bytes: Data
+    private var continuation: CheckedContinuation<Void, Error>?
+    private(set) var didEndAccess = false
+
+    var isWaiting: Bool {
+        continuation != nil
+    }
+
+    init(modelURL: URL, bytes: Data) {
+        self.modelURL = modelURL
+        self.bytes = bytes
+    }
+
+    func beginAccessingResources() async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            self.continuation = continuation
+        }
+    }
+
+    func complete() {
+        try? FileManager.default.createDirectory(
+            at: modelURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try? bytes.write(to: modelURL)
+        continuation?.resume()
+        continuation = nil
+    }
+
+    func endAccessingResources() {
+        didEndAccess = true
+        try? FileManager.default.removeItem(at: modelURL)
     }
 }

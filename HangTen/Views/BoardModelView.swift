@@ -1,3 +1,4 @@
+import CryptoKit
 import SceneKit
 import SwiftUI
 
@@ -7,6 +8,69 @@ struct BoardModelKey: Hashable {
     let boardID: String
     let presentationID: String
     let modelSHA256: String
+}
+
+protocol BoardModelResourceRequesting: AnyObject {
+    func beginAccessingResources() async throws
+    func endAccessingResources()
+}
+
+extension NSBundleResourceRequest: BoardModelResourceRequesting {}
+
+final class BoardModelResourceLease {
+    let url: URL
+    private var request: BoardModelResourceRequesting?
+
+    init(url: URL, request: BoardModelResourceRequesting? = nil) {
+        self.url = url
+        self.request = request
+    }
+
+    deinit {
+        request?.endAccessingResources()
+    }
+}
+
+struct BoardModelResourceAccess {
+    typealias RequestFactory = (Set<String>, Bundle) -> BoardModelResourceRequesting
+    typealias URLResolver = (Bundle, BoardModelResource) -> URL?
+
+    static let live = BoardModelResourceAccess(
+        requestFactory: { tags, bundle in
+            NSBundleResourceRequest(tags: tags, bundle: bundle)
+        },
+        urlResolver: { bundle, resource in
+            bundle.url(
+                forResource: resource.resourceName,
+                withExtension: resource.resourceExtension,
+                subdirectory: resource.bundleSubdirectory
+            )
+        }
+    )
+
+    let requestFactory: RequestFactory
+    let urlResolver: URLResolver
+
+    func acquire(
+        _ resource: BoardModelResource,
+        bundle: Bundle
+    ) async -> BoardModelResourceLease? {
+        let request = requestFactory([resource.tag], bundle)
+        do {
+            try await request.beginAccessingResources()
+        } catch {
+            return nil
+        }
+        guard !Task.isCancelled else {
+            request.endAccessingResources()
+            return nil
+        }
+        guard let url = urlResolver(bundle, resource) else {
+            request.endAccessingResources()
+            return nil
+        }
+        return BoardModelResourceLease(url: url, request: request)
+    }
 }
 
 enum BoardModelSolvedSuspension {
@@ -29,32 +93,84 @@ enum BoardModelSolvedSuspension {
 }
 
 enum BoardModelAsset {
-    static func load(media _: BoardModelMedia, packageURL: URL) -> SCNScene? {
+    static func load(media: BoardModelMedia, packageURL: URL) -> SCNScene? {
         guard packageURL.isFileURL,
               let values = try? packageURL.resourceValues(forKeys: [.isRegularFileKey]),
-              values.isRegularFile == true else {
+              values.isRegularFile == true,
+              sha256(of: packageURL) == media.descriptor.modelSHA256 else {
             return nil
         }
         // SceneKit can otherwise return an empty scene for a missing asset.
         return try? SCNScene(url: packageURL, options: [.convertToYUp: true])
     }
+
+    private static func sha256(of url: URL) -> String? {
+        do {
+            let handle = try FileHandle(forReadingFrom: url)
+            defer { try? handle.close() }
+            var hash = SHA256()
+            while let data = try handle.read(upToCount: 1_048_576), !data.isEmpty {
+                hash.update(data: data)
+            }
+            return hash.finalize().map { String(format: "%02x", $0) }.joined()
+        } catch {
+            return nil
+        }
+    }
+}
+
+private final class BoardModelLoadedAsset {
+    let scene: SCNScene
+    let resourceLease: BoardModelResourceLease
+
+    init(scene: SCNScene, resourceLease: BoardModelResourceLease) {
+        self.scene = scene
+        self.resourceLease = resourceLease
+    }
 }
 
 @MainActor
 private enum BoardModelCache {
-    static var loading: [BoardModelKey: Task<SCNScene?, Never>] = [:]
+    static var loading: [BoardModelKey: Task<BoardModelLoadedAsset?, Never>] = [:]
 
     static func source(
         for key: BoardModelKey,
         media: BoardModelMedia,
-        packageURL: URL
-    ) async -> SCNScene? {
+        board: TrainingBoard,
+        presentationID: String,
+        store: BoardPackageStore,
+        resourceAccess: BoardModelResourceAccess
+    ) async -> BoardModelLoadedAsset? {
         if let task = loading[key] { return await task.value }
-        let task = Task.detached(priority: .userInitiated) { () -> SCNScene? in
-            BoardModelAsset.load(media: media, packageURL: packageURL)
+        let task = Task { () -> BoardModelLoadedAsset? in
+            let resourceLease: BoardModelResourceLease?
+            if let bundledURL = store.presentationAssetURL(
+                for: board,
+                presentationID: presentationID
+            ) {
+                resourceLease = BoardModelResourceLease(url: bundledURL)
+            } else if let resource = store.modelResource(
+                for: board,
+                presentationID: presentationID
+            ) {
+                resourceLease = await resourceAccess.acquire(
+                    resource,
+                    bundle: store.resourceBundle
+                )
+            } else {
+                resourceLease = nil
+            }
+            guard let resourceLease, !Task.isCancelled else { return nil }
+            let scene = await Task.detached(priority: .userInitiated) {
+                BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+            }.value
+            guard let scene, !Task.isCancelled else { return nil }
+            return BoardModelLoadedAsset(scene: scene, resourceLease: resourceLease)
         }
         loading[key] = task
-        return await task.value
+        let loaded = await task.value
+        loading[key] = nil
+        return loaded
     }
 }
 
@@ -63,10 +179,10 @@ enum BoardModelLoader {
     static func load(
         board: TrainingBoard,
         presentation: BoardPresentation,
-        store: BoardPackageStore
+        store: BoardPackageStore,
+        resourceAccess: BoardModelResourceAccess = .live
     ) async -> BoardModelScene? {
-        guard case .model(let media) = presentation.media,
-              let packageURL = store.presentationAssetURL(for: board, presentationID: presentation.id) else {
+        guard case .model(let media) = presentation.media else {
             return nil
         }
         let key = BoardModelKey(
@@ -77,19 +193,23 @@ enum BoardModelLoader {
         guard let source = await BoardModelCache.source(
             for: key,
             media: media,
-            packageURL: packageURL
+            board: board,
+            presentationID: presentation.id,
+            store: store,
+            resourceAccess: resourceAccess
         ), !Task.isCancelled else {
             return nil
         }
         return BoardModelScene(
-            source: source,
+            source: source.scene,
             descriptor: media.descriptor,
             display: media.display,
             suspension: media.suspension,
             orientation: media.orientation,
             allowedPositionIDs: Set(board.positions.filter {
                 $0.presentationID == presentation.id
-            }.map(\.id))
+            }.map(\.id)),
+            resourceLease: source.resourceLease
         )
     }
 }
@@ -179,6 +299,9 @@ struct BoardModelSurface: View {
             }
             result = .ready(model)
         }
+        .onDisappear {
+            result = .loading
+        }
     }
 
     private var loadIdentity: BoardModelKey? {
@@ -242,6 +365,7 @@ final class BoardModelScene {
     private(set) var isUnavailable = false
     private(set) var isTransientCordAccessible = false
     private let allowedPositionIDs: Set<String>
+    private let resourceLease: BoardModelResourceLease?
 
     init?(
         source: SCNScene,
@@ -249,7 +373,8 @@ final class BoardModelScene {
         display: BoardModelDisplay,
         suspension: BoardModelSuspension? = nil,
         orientation: BoardModelOrientation? = nil,
-        allowedPositionIDs: Set<String>? = nil
+        allowedPositionIDs: Set<String>? = nil,
+        resourceLease: BoardModelResourceLease? = nil
     ) {
         guard !(suspension != nil && orientation != nil) else { return nil }
         let modelRoot = source.rootNode.clone()
@@ -341,6 +466,7 @@ final class BoardModelScene {
             ?? orientation.map { Set($0.rotations.keys) }
             ?? suspension.map { Set($0.canonicalPoses.keys) }
             ?? []
+        self.resourceLease = resourceLease
         self.geometryByNodeID = geometryByNodeID
         holdNodes = boundHoldNodes
         holdIDsByNode = boundHoldIDsByNode

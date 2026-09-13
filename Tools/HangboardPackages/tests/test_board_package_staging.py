@@ -72,6 +72,11 @@ def build_repository(tmp_path: Path) -> tuple[Path, list[Path], Path]:
 def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Path) -> None:
     monkeypatch.setenv("TARGET_BUILD_DIR", str(destination.parent.parent))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
+    monkeypatch.setenv("DERIVED_FILE_DIR", str(destination.parents[2] / "DerivedFiles"))
+
+
+def odr_staging_root(destination: Path) -> Path:
+    return destination.parents[2] / "DerivedFiles" / "HangTenModelODR"
 
 
 def make_v2_model_package(root: Path) -> Path:
@@ -267,7 +272,7 @@ def test_staging_copies_the_exact_declared_asset_set(
     assert (staged_assets / "back.png").read_bytes() == SECONDARY_PNG_BYTES
 
 
-def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
+def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     source = make_v2_model_package(
@@ -276,9 +281,6 @@ def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
 
     staged = stage_with_xcode_environment(source, monkeypatch)
 
-    assert (staged / "assets" / "primary.usdz").read_bytes() == (
-        source / "assets" / "primary.usdz"
-    ).read_bytes()
     assert (staged / "assets" / "primary.model.json").read_bytes() == (
         source / "assets" / "primary.model.json"
     ).read_bytes()
@@ -286,10 +288,19 @@ def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
         path.relative_to(staged).as_posix()
         for path in staged.rglob("*")
         if path.is_file() and not path.is_symlink()
-    } == {"assets/primary.usdz", "assets/primary.model.json", "board.json"}
+    } == {"assets/primary.model.json", "board.json"}
+    odr_model = (
+        odr_staging_root(staged.parent)
+        / "fixture-model"
+        / "Hangboards"
+        / "fixture-model"
+        / "assets"
+        / "primary.usdz"
+    )
+    assert odr_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
 
 
-def test_staging_preserves_live_model_package_assets_and_hash_bindings(
+def test_staging_preserves_live_descriptors_and_odr_model_hash_bindings(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repository_root, destination, module = stage_live_model_packages(
@@ -325,21 +336,29 @@ def test_staging_preserves_live_model_package_assets_and_hash_bindings(
             if path.is_file() and not path.is_symlink() and path.relative_to(staged_package).parts[:1] == ("assets",)
         }
         assert source_assets == declared_assets
-        assert staged_assets == declared_assets
-        for relative_path in declared_assets:
-            assert (staged_package / relative_path).read_bytes() == (
-                source_package / relative_path
-            ).read_bytes()
+        assert staged_assets == {media.descriptor_path}
+        assert (staged_package / media.descriptor_path).read_bytes() == (
+            source_package / media.descriptor_path
+        ).read_bytes()
+
+        odr_model = (
+            odr_staging_root(destination)
+            / slug
+            / "Hangboards"
+            / slug
+            / media.asset_path
+        )
+        assert odr_model.read_bytes() == (source_package / media.asset_path).read_bytes()
 
         descriptor = json.loads(
             (staged_package / media.descriptor_path).read_text(encoding="utf-8")
         )
         assert descriptor["modelSHA256"] == hashlib.sha256(
-            (staged_package / media.asset_path).read_bytes()
+            odr_model.read_bytes()
         ).hexdigest()
 
 
-def test_staging_preserves_every_live_model_package_file_byte_for_byte(
+def test_staging_splits_every_live_model_package_without_duplication(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repository_root, destination, _ = stage_live_model_packages(tmp_path, monkeypatch)
@@ -351,12 +370,25 @@ def test_staging_preserves_every_live_model_package_file_byte_for_byte(
             for path in source_package.rglob("*")
             if path.is_file() and not path.is_symlink()
         }
-        staged_files = {
+        staged_base_files = {
             path.relative_to(staged_package).as_posix(): path.read_bytes()
             for path in staged_package.rglob("*")
             if path.is_file() and not path.is_symlink()
         }
-        assert staged_files == source_files
+        odr_package_root = odr_staging_root(destination) / slug / "Hangboards" / slug
+        staged_odr_files = {
+            path.relative_to(odr_package_root).as_posix(): path.read_bytes()
+            for path in odr_package_root.rglob("*")
+            if path.is_file() and not path.is_symlink()
+        }
+        assert staged_base_files == {
+            relative: contents
+            for relative, contents in source_files.items()
+            if relative != "assets/primary.usdz"
+        }
+        assert staged_odr_files == {
+            "assets/primary.usdz": source_files["assets/primary.usdz"]
+        }
 
 
 def test_regular_tree_children_are_classified_in_name_order(
@@ -497,3 +529,31 @@ def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
     phase_start = project.index("CC0000000000000000000007 /* Stage Board Packages */ = {")
     phase_end = project.index("\n\t\t};", phase_start)
     assert "alwaysOutOfDate = 1;" in project[phase_start:phase_end]
+
+
+def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
+    project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
+        encoding="utf-8"
+    )
+    parser_module = load_staging_module().load_board_package_module(REPO_ROOT)
+    inventory = parser_module.discover_board_packages(
+        REPO_ROOT / "Hangboards",
+        require_complete_inventory=True,
+    )
+    model_slugs = sorted(
+        package.root.name
+        for package in inventory.packages
+        if any(
+            isinstance(presentation.media, parser_module.PresentationMediaModel)
+            for presentation in package.board.presentations
+        )
+    )
+
+    assert model_slugs
+    for slug in model_slugs:
+        tag = f"hang-ten-model-{slug}"
+        assert all(character.islower() or character.isdigit() or character == "-" for character in tag)
+        assert f"HangTenModelODR/{slug}/Hangboards" in project
+        assert f'ASSET_TAGS = ("{tag}", );' in project
+
+    assert "EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;" in project
