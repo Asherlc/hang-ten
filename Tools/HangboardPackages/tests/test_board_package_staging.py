@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import shutil
 import stat
 import sys
@@ -556,4 +557,34 @@ def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
         assert f"HangTenModelODR/{slug}/Hangboards" in project
         assert f'ASSET_TAGS = ("{tag}", );' in project
 
-    assert "EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;" in project
+    referenced_slugs = re.findall(
+        r'path = "\$\(DERIVED_FILE_DIR\)/HangTenModelODR/([^/"]+)/Hangboards";',
+        project,
+    )
+    tagged_slugs = re.findall(
+        r'ASSET_TAGS = \("hang-ten-model-([^"]+)", \);',
+        project,
+    )
+    assert sorted(referenced_slugs) == model_slugs
+    assert sorted(tagged_slugs) == model_slugs
+
+    debug_start = project.index('FF0000000000000000000021 /* Debug */ = {')
+    debug_end = project.index("\n\t\t};", debug_start)
+    debug_settings = project[debug_start:debug_end]
+    assert "ENABLE_ON_DEMAND_RESOURCES = YES;" in debug_settings
+    assert "EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;" in debug_settings
+
+    release_start = project.index('FF0000000000000000000022 /* Release */ = {')
+    release_end = project.index("\n\t\t};", release_start)
+    release_settings = project[release_start:release_end]
+    assert "ENABLE_ON_DEMAND_RESOURCES = YES;" in release_settings
+    assert "EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE" not in release_settings
+    assert "ASSET_PACK_MANIFEST_URL_PREFIX" not in project
+
+    target_start = project.index('EE0000000000000000000001 /* HangTen */ = {')
+    target_end = project.index("\n\t\t};", target_start)
+    target = project[target_start:target_end]
+    assert target.index("CC0000000000000000000007 /* Stage Board Packages */") < target.index(
+        "CC0000000000000000000003 /* Resources */"
+    )
+    assert '"${DERIVED_FILE_DIR}/HangTenModelODR",' in project

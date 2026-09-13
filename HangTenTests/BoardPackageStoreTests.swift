@@ -170,6 +170,49 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
     }
 
+    @MainActor
+    func testFailedOnDemandRequestReturnsUnavailableWithoutResolvingModel() async throws {
+        struct RequestFailure: Error {}
+
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        var resolutionCount = 0
+        var endCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in
+                TestBoardModelResourceRequest(
+                    begin: { throw RequestFailure() },
+                    end: { endCount += 1 }
+                )
+            },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return bundledModelURL
+            }
+        )
+
+        let scene = await BoardModelLoader.load(
+            board: board,
+            presentation: presentation,
+            store: store,
+            resourceAccess: access
+        )
+
+        XCTAssertNil(scene)
+        XCTAssertEqual(resolutionCount, 0)
+        XCTAssertEqual(endCount, 0)
+    }
+
     func testStoreLoadsV2ModelAndRejectsLegacyV1AfterMigration() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
