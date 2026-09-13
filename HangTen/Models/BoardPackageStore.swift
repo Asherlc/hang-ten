@@ -2072,20 +2072,21 @@ private enum BoardPackageMediaDocument: Decodable {
     }
 }
 
-private struct BoardPackageModelOrientationDocument: Decodable {
+struct BoardPackageModelOrientationDocument: Decodable, Equatable {
     let pivot: String
     let rotations: [String: [Double]]
 
     private enum CodingKeys: String, CodingKey { case pivot, rotations }
 
     init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["pivot", "rotations"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         pivot = try container.decode(String.self, forKey: .pivot)
         rotations = try container.decode([String: [Double]].self, forKey: .rotations)
     }
 }
 
-private enum BoardPackageSuspensionDocument: Decodable {
+enum BoardPackageSuspensionDocument: Decodable, Equatable {
     case singleCord(BoardPackageSingleCordSuspensionDocument)
     case twoBranchCord(BoardPackageTwoBranchSuspensionDocument)
     case unsupported(String)
@@ -2117,7 +2118,7 @@ private enum BoardPackageSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackageSingleCordSuspensionDocument: Decodable {
+struct BoardPackageSingleCordSuspensionDocument: Decodable, Equatable {
     let type: String
     let attachment: BoardPackageAttachmentDocument
     let anchor: BoardPackageAnchorDocument
@@ -2139,7 +2140,7 @@ private struct BoardPackageSingleCordSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackagePassageDocument: Decodable {
+struct BoardPackagePassageDocument: Decodable, Equatable {
     let id: String
     let nodeID: String
     let entryPointInModel: [Double]
@@ -2165,7 +2166,7 @@ private struct BoardPackagePassageDocument: Decodable {
     }
 }
 
-private struct BoardPackagePassagePairsDocument: Decodable {
+struct BoardPackagePassagePairsDocument: Decodable, Equatable {
     let left: [BoardPackagePassageDocument]
     let right: [BoardPackagePassageDocument]
 
@@ -2178,7 +2179,7 @@ private struct BoardPackagePassagePairsDocument: Decodable {
     }
 }
 
-private struct BoardPackageCordBranchDocument: Decodable {
+struct BoardPackageCordBranchDocument: Decodable, Equatable {
     let id: String
     let passageIDs: [String]
     let entryContactPoints: [[Double]]
@@ -2207,7 +2208,7 @@ private struct BoardPackageCordBranchDocument: Decodable {
     }
 }
 
-private struct BoardPackageTwoBranchSuspensionDocument: Decodable {
+struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
     let passages: BoardPackagePassagePairsDocument
     let branches: [BoardPackageCordBranchDocument]
     let anchor: BoardPackageAnchorDocument
@@ -2225,7 +2226,7 @@ private struct BoardPackageTwoBranchSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackageAttachmentDocument: Decodable {
+struct BoardPackageAttachmentDocument: Decodable, Equatable {
     let nodeID: String
     let pointInModel: [Double]
     let provenance: String
@@ -2240,7 +2241,7 @@ private struct BoardPackageAttachmentDocument: Decodable {
     }
 }
 
-private struct BoardPackageAnchorDocument: Decodable {
+struct BoardPackageAnchorDocument: Decodable, Equatable {
     let offsetFromBoardBounds: [Double]
     let visibility: String
     let provenance: String
@@ -2255,7 +2256,7 @@ private struct BoardPackageAnchorDocument: Decodable {
     }
 }
 
-private struct BoardPackageCordDocument: Decodable {
+struct BoardPackageCordDocument: Decodable, Equatable {
     let restLength: Double
     let radius: Double
     let material: String
@@ -2272,7 +2273,7 @@ private struct BoardPackageCordDocument: Decodable {
     }
 }
 
-private struct BoardPackageCanonicalPoseDocument: Decodable {
+struct BoardPackageCanonicalPoseDocument: Decodable, Equatable {
     let rotation: [Double]
     let translation: [Double]
     let camera: BoardPackageCanonicalCameraDocument
@@ -2287,7 +2288,7 @@ private struct BoardPackageCanonicalPoseDocument: Decodable {
     }
 }
 
-private struct BoardPackageCanonicalCameraDocument: Decodable {
+struct BoardPackageCanonicalCameraDocument: Decodable, Equatable {
     let viewDirection: [Double]
     let fitPadding: Double
 
@@ -2300,7 +2301,7 @@ private struct BoardPackageCanonicalCameraDocument: Decodable {
     }
 }
 
-private struct BoardPackageModelDisplayDocument: Decodable {
+struct BoardPackageModelDisplayDocument: Decodable, Equatable {
     let camera: BoardPackageModelCameraDocument
 
     private enum CodingKeys: String, CodingKey { case camera }
@@ -2312,7 +2313,7 @@ private struct BoardPackageModelDisplayDocument: Decodable {
     }
 }
 
-private struct BoardPackageModelCameraDocument: Decodable {
+struct BoardPackageModelCameraDocument: Decodable, Equatable {
     let type: String
     let viewDirection: [Double]
     let up: [Double]

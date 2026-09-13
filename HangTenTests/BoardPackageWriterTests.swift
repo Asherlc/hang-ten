@@ -65,7 +65,10 @@ final class BoardPackageWriterTests: XCTestCase {
         var document = makeDocument()
         document.presentations[0].media = .model(
             assetPath: "assets/primary.usdz",
-            descriptorPath: "assets/primary.model.json"
+            descriptorPath: "assets/primary.model.json",
+            display: try modelDisplay(),
+            suspension: nil,
+            orientation: nil
         )
 
         XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
@@ -76,17 +79,103 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
-    func testEditorDecoderRecognizesModelMediaWithoutAdaptingIt() throws {
+    func testEditorDecoderPreservesTypedModelDisplayAndOrientationWithoutAdaptingIt() throws {
         let boardURL = repositoryHangboardsURL()
-            .appendingPathComponent("beastmaker-1000/board.json")
+            .appendingPathComponent("captain-fingerfood-pocket/board.json")
         let document = try BoardEditableDocument(data: Data(contentsOf: boardURL))
 
-        guard case .model(let assetPath, let descriptorPath) = document.presentations[0].media else {
+        guard case .model(
+            let assetPath,
+            let descriptorPath,
+            let display,
+            let suspension,
+            let orientation
+        ) = document.presentations[0].media else {
             return XCTFail("expected typed model media")
         }
         XCTAssertEqual(assetPath, "assets/primary.usdz")
         XCTAssertEqual(descriptorPath, "assets/primary.model.json")
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
+        XCTAssertEqual(display.camera.type, "orthographic")
+        XCTAssertEqual(display.camera.viewDirection, [0, 0, -1])
+        XCTAssertEqual(display.camera.up, [0, 1, 0])
+        XCTAssertEqual(display.camera.fitPadding, 0.08)
+        XCTAssertNil(suspension)
+        XCTAssertEqual(orientation?.pivot, "modelBoundsCenter")
+        XCTAssertEqual(
+            orientation?.rotations["edge-20-front"],
+            [0.199367862, 0, 0, 0.979924719]
+        )
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid("board captain-fingerfood.pocket: model-only packages are not editable")
+            )
+        }
+    }
+
+    func testEditorDecoderPreservesTypedModelSuspensionWithoutAdaptingIt() throws {
+        let boardURL = repositoryHangboardsURL()
+            .appendingPathComponent("beastmaker-1000/board.json")
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+        media["suspension"] = [
+            "type": "singleCord",
+            "attachment": [
+                "nodeID": "body-main",
+                "pointInModel": [0.1, 0.2, 0.3],
+                "provenance": "fixture attachment",
+            ],
+            "anchor": [
+                "offsetFromBoardBounds": [0.0, 0.4, 0.0],
+                "visibility": "invisible",
+                "provenance": "fixture anchor",
+            ],
+            "cord": [
+                "restLength": 1.25,
+                "radius": 0.004,
+                "material": "polyester",
+                "provenance": "fixture cord",
+            ],
+            "canonicalPoses": [
+                "primary": [
+                    "rotation": [0.0, 0.0, 0.0, 1.0],
+                    "translation": [0.0, 0.1, 0.0],
+                    "camera": [
+                        "viewDirection": [0.0, 0.0, -1.0],
+                        "fitPadding": 0.12,
+                    ],
+                ],
+            ],
+        ]
+        presentations[0]["media"] = media
+        payload["presentations"] = presentations
+
+        let document = try decode(payload)
+        guard case .model(_, _, _, let suspension, _) = document.presentations[0].media,
+              case .singleCord(let singleCord) = suspension else {
+            return XCTFail("expected typed single-cord suspension")
+        }
+        XCTAssertEqual(singleCord.type, "singleCord")
+        XCTAssertEqual(singleCord.attachment.nodeID, "body-main")
+        XCTAssertEqual(singleCord.attachment.pointInModel, [0.1, 0.2, 0.3])
+        XCTAssertEqual(singleCord.attachment.provenance, "fixture attachment")
+        XCTAssertEqual(singleCord.anchor.offsetFromBoardBounds, [0, 0.4, 0])
+        XCTAssertEqual(singleCord.anchor.visibility, "invisible")
+        XCTAssertEqual(singleCord.anchor.provenance, "fixture anchor")
+        XCTAssertEqual(singleCord.cord.restLength, 1.25)
+        XCTAssertEqual(singleCord.cord.radius, 0.004)
+        XCTAssertEqual(singleCord.cord.material, "polyester")
+        XCTAssertEqual(singleCord.cord.provenance, "fixture cord")
+        XCTAssertEqual(singleCord.canonicalPoses["primary"]?.rotation, [0, 0, 0, 1])
+        XCTAssertEqual(singleCord.canonicalPoses["primary"]?.translation, [0, 0.1, 0])
+        XCTAssertEqual(
+            singleCord.canonicalPoses["primary"]?.camera.viewDirection,
+            [0, 0, -1]
+        )
+        XCTAssertEqual(singleCord.canonicalPoses["primary"]?.camera.fitPadding, 0.12)
     }
 
     func testRasterCatalogDocumentsRoundTripThroughV3Writer() throws {
@@ -105,6 +194,47 @@ final class BoardPackageWriterTests: XCTestCase {
             let decoded = try BoardEditableDocument(data: encoded)
             XCTAssertEqual(decoded, document, slug)
         }
+    }
+
+    func testGeometryReadsAndWritesOnlyTheDeclaredDefaultRasterPresentation() throws {
+        var document = makeDocument()
+        var nonDefaultPiece = makePiece()
+        nonDefaultPiece.frame = BoardPackageFrameDocument(
+            x: 0.05,
+            y: 0.1,
+            width: 0.2,
+            height: 0.3
+        )
+        let nonDefault = BoardEditablePresentation(
+            id: "alternate",
+            name: "Alternate",
+            aspectRatio: 2,
+            isDefault: false,
+            media: .raster(
+                assetPath: "assets/alternate.png",
+                contactGeometry: ["hold-one": [nonDefaultPiece]]
+            )
+        )
+        document.presentations.insert(nonDefault, at: 0)
+
+        XCTAssertEqual(document.geometry(forContactID: "hold-one")?[0].frame.x, 0.1)
+
+        var replacement = makePiece()
+        replacement.frame = BoardPackageFrameDocument(
+            x: 0.7,
+            y: 0.2,
+            width: 0.2,
+            height: 0.3
+        )
+        document.replaceGeometry(forContactID: "hold-one", with: [replacement])
+
+        guard case .raster(_, let alternateGeometry) = document.presentations[0].media,
+              case .raster(_, let defaultGeometry) = document.presentations[1].media else {
+            return XCTFail("expected two raster presentations")
+        }
+        XCTAssertEqual(alternateGeometry["hold-one"]?[0], nonDefaultPiece)
+        XCTAssertEqual(defaultGeometry["hold-one"]?[0], replacement)
+        XCTAssertEqual(document.geometry(forContactID: "hold-one")?[0], replacement)
     }
 
     func testWriterRejectsGeometryForUnknownContact() throws {
@@ -184,5 +314,12 @@ final class BoardPackageWriterTests: XCTestCase {
 
     private func decode(_ payload: [String: Any]) throws -> BoardEditableDocument {
         try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: payload))
+    }
+
+    private func modelDisplay() throws -> BoardPackageModelDisplayDocument {
+        try JSONDecoder().decode(
+            BoardPackageModelDisplayDocument.self,
+            from: Data(#"{"camera":{"type":"orthographic","viewDirection":[0,0,-1],"up":[0,1,0],"fitPadding":0.08}}"#.utf8)
+        )
     }
 }

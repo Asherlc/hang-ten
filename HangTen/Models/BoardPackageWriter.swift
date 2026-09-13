@@ -115,30 +115,34 @@ struct BoardEditableDocument: Equatable, Decodable {
     }
 
     func geometry(forContactID contactID: String) -> [BoardEditablePiece]? {
-        for presentation in presentations {
-            guard case .raster(_, let contactGeometry) = presentation.media,
-                  let pieces = contactGeometry[contactID] else { continue }
-            return pieces
+        guard let presentationIndex = editableRasterPresentationIndex,
+              case .raster(_, let contactGeometry) = presentations[presentationIndex].media else {
+            return nil
         }
-        return nil
+        return contactGeometry[contactID]
     }
 
     mutating func replaceGeometry(
         forContactID contactID: String,
         with pieces: [BoardEditablePiece]
     ) {
-        guard let presentationIndex = presentations.firstIndex(where: { presentation in
-            guard case .raster(_, let contactGeometry) = presentation.media else { return false }
-            return contactGeometry[contactID] != nil
-        }) else { return }
+        guard let presentationIndex = editableRasterPresentationIndex else { return }
         guard case .raster(let assetPath, var contactGeometry) = presentations[presentationIndex].media else {
             return
         }
+        guard contactGeometry[contactID] != nil else { return }
         contactGeometry[contactID] = pieces
         presentations[presentationIndex].media = .raster(
             assetPath: assetPath,
             contactGeometry: contactGeometry
         )
+    }
+
+    private var editableRasterPresentationIndex: Int? {
+        presentations.firstIndex { presentation in
+            guard presentation.isDefault, case .raster = presentation.media else { return false }
+            return true
+        }
     }
 }
 
@@ -251,7 +255,13 @@ enum BoardEditablePresentationDerivation: Equatable, Decodable {
 
 enum BoardEditablePresentationMedia: Equatable, Decodable {
     case raster(assetPath: String, contactGeometry: [String: [BoardEditablePiece]])
-    case model(assetPath: String, descriptorPath: String)
+    case model(
+        assetPath: String,
+        descriptorPath: String,
+        display: BoardPackageModelDisplayDocument,
+        suspension: BoardPackageSuspensionDocument?,
+        orientation: BoardPackageModelOrientationDocument?
+    )
 
     private enum CodingKeys: String, CodingKey {
         case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation
@@ -259,7 +269,7 @@ enum BoardEditablePresentationMedia: Equatable, Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _): assetPath
         }
     }
 
@@ -280,16 +290,22 @@ enum BoardEditablePresentationMedia: Equatable, Decodable {
             try decoder.rejectUnknownEditorKeys([
                 "type", "assetPath", "descriptorPath", "display", "suspension", "orientation"
             ])
-            _ = try container.decode(BoardEditableIgnoredJSON.self, forKey: .display)
-            if container.contains(.suspension) {
-                _ = try container.decode(BoardEditableIgnoredJSON.self, forKey: .suspension)
-            }
-            if container.contains(.orientation) {
-                _ = try container.decode(BoardEditableIgnoredJSON.self, forKey: .orientation)
-            }
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
-                descriptorPath: try container.decode(String.self, forKey: .descriptorPath)
+                descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
+                display: try container.decode(
+                    BoardPackageModelDisplayDocument.self,
+                    forKey: .display
+                ),
+                suspension: container.contains(.suspension)
+                    ? try container.decode(BoardPackageSuspensionDocument.self, forKey: .suspension)
+                    : nil,
+                orientation: container.contains(.orientation)
+                    ? try container.decode(
+                        BoardPackageModelOrientationDocument.self,
+                        forKey: .orientation
+                    )
+                    : nil
             )
         default:
             throw DecodingError.dataCorruptedError(
@@ -298,29 +314,6 @@ enum BoardEditablePresentationMedia: Equatable, Decodable {
                 debugDescription: "media type must be raster or model"
             )
         }
-    }
-}
-
-private enum BoardEditableIgnoredJSON: Decodable {
-    case value
-
-    init(from decoder: Decoder) throws {
-        if var array = try? decoder.unkeyedContainer() {
-            while !array.isAtEnd { _ = try array.decode(BoardEditableIgnoredJSON.self) }
-        } else if let object = try? decoder.container(keyedBy: EditorCodingKey.self) {
-            for key in object.allKeys { _ = try object.decode(BoardEditableIgnoredJSON.self, forKey: key) }
-        } else {
-            let scalar = try decoder.singleValueContainer()
-            if scalar.decodeNil() { self = .value; return }
-            if (try? scalar.decode(Bool.self)) != nil ||
-                (try? scalar.decode(Double.self)) != nil ||
-                (try? scalar.decode(String.self)) != nil {
-                self = .value
-                return
-            }
-            throw DecodingError.dataCorruptedError(in: scalar, debugDescription: "invalid JSON value")
-        }
-        self = .value
     }
 }
 

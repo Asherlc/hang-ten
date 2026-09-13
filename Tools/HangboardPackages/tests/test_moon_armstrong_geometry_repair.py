@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from _board_package_helpers import document_hold_geometry
+from _board_package_helpers import document_contact_geometry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -33,7 +33,7 @@ def test_moon_armstrong_right_layout_is_source_reviewed_and_collision_free() -> 
             encoding="utf-8"
         )
     )
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
 
     assert len(geometry) == 21
     expected_right_frames = {

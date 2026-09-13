@@ -18,7 +18,7 @@ def presentation_frame(
     )
 
 
-def document_hold_geometry(document: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+def document_contact_geometry(document: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     """Return canonical raster geometry keyed by physical contact ID."""
     result: dict[str, list[dict[str, Any]]] = {}
     for presentation in document["presentations"]:
@@ -31,7 +31,7 @@ def document_hold_geometry(document: dict[str, Any]) -> dict[str, list[dict[str,
     return result
 
 
-def board_hold_geometry(board: object) -> dict[str, tuple[object, ...]]:
+def board_contact_geometry(board: object) -> dict[str, tuple[object, ...]]:
     """Return parsed canonical raster geometry keyed by physical contact ID."""
     result: dict[str, tuple[object, ...]] = {}
     for presentation in board.presentations:

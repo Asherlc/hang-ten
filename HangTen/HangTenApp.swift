@@ -77,9 +77,7 @@ struct HangTenApp: App {
         WindowGroup {
             Group {
                 #if DEBUG
-                if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
-                    Color.clear
-                } else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
                     GripHandModelReviewView()
                 } else {
                     RootView()

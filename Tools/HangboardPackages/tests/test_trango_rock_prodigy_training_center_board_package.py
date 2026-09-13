@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from _board_package_helpers import document_hold_geometry
+from _board_package_helpers import document_contact_geometry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BOARD_PATH = (
@@ -30,7 +30,7 @@ def _geometry_digest(geometry: object) -> str:
 
 def test_training_center_preserves_audited_compound_contact_geometry() -> None:
     board = json.loads(BOARD_PATH.read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
 
     assert len(board["contacts"]) == 24
     assert sum(len(pieces) for pieces in geometry.values()) == 28

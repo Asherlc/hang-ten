@@ -20,7 +20,7 @@ from conftest import (
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
-from _board_package_helpers import board_hold_geometry, board_positions_document
+from _board_package_helpers import board_contact_geometry, board_positions_document
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
@@ -609,7 +609,7 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     package = module.load_board_package(package_root)
-    geometry = board_hold_geometry(package.board)["hold-left"]
+    geometry = board_contact_geometry(package.board)["hold-left"]
 
     assert len(geometry) == 2
     frame = package.board.contact_frame("hold-left", "primary")
@@ -847,7 +847,7 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
 
     package = module.load_board_package(package_root)
 
-    constraint = board_hold_geometry(package.board)["hold-left"][0].shape_constraint
+    constraint = board_contact_geometry(package.board)["hold-left"][0].shape_constraint
     assert constraint is not None
     assert constraint.shape == "roundedRectangle"
     assert constraint.rotation_degrees == -17.5
