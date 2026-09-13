@@ -20,7 +20,7 @@ from collections.abc import Sequence
 
 
 _DETERMINISTIC_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
-_USD_LAYER_SUFFIXES = frozenset({".usd", ".usda", ".usdc"})
+_USD_LAYER_SUFFIXES = frozenset({".usda"})
 _TARGET_LAYER_SUFFIX = ".usdc"
 
 
@@ -55,7 +55,7 @@ def optimize_usdz(
             name for name in members if PurePosixPath(name).suffix in _USD_LAYER_SUFFIXES
         ]
         if len(layer_names) != 1:
-            raise ValueError("USDZ export must contain exactly one USD layer")
+            raise ValueError("USDZ optimizer requires exactly one text USDA layer")
         source_layer_name = layer_names[0]
         source_layer = directory / _native_path(source_layer_name)
         target_layer_name = str(
@@ -65,8 +65,8 @@ def optimize_usdz(
         _convert_layer_to_usdc(usdcat, source_layer, target_layer)
         source_layer.unlink()
 
-        output_members = sorted(
-            target_layer_name if name == source_layer_name else name for name in members
+        output_members = [target_layer_name] + sorted(
+            name for name in members if name != source_layer_name
         )
         temporary_archive = output.with_name(f".{output.name}.tmp")
         try:
@@ -100,6 +100,7 @@ def _safe_member_name(name: str) -> None:
         not name
         or "\x00" in name
         or "\\" in name
+        or path.as_posix() != name
         or path.is_absolute()
         or name.endswith("/")
         or any(part in {"", ".", ".."} for part in path.parts)
@@ -197,7 +198,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         else list(sys.argv[1:] if argv is None else argv)
     )
     arguments = _arguments(raw_arguments)
-    optimize_usdz(arguments.input, arguments.output, usdcat_executable=arguments.usdcat)
+    try:
+        optimize_usdz(
+            arguments.input,
+            arguments.output,
+            usdcat_executable=arguments.usdcat,
+        )
+    except ValueError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 2
     return 0
 
 

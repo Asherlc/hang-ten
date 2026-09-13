@@ -391,12 +391,19 @@ def _canonicalize_usdz(model_path: Path) -> None:
     ) as raw_directory:
         directory = Path(raw_directory)
         with zipfile.ZipFile(path) as archive:
-            members = sorted(archive.namelist())
-            if any(
-                name.startswith("/") or ".." in Path(name).parts
+            members = archive.namelist()
+            if len(members) != len(set(members)) or any(
+                not name
+                or "\x00" in name
+                or "\\" in name
+                or Path(name).as_posix() != name
+                or name.startswith("/")
+                or name.endswith("/")
+                or ".." in Path(name).parts
                 for name in members
             ):
                 raise ValueError("USDZ export contains unsafe member paths")
+            members = sorted(members)
             for name in members:
                 destination = directory / name
                 destination.parent.mkdir(parents=True, exist_ok=True)
@@ -416,7 +423,7 @@ def _canonicalize_usdz(model_path: Path) -> None:
             _canonical_output_layer_suffix(source_layer_path.suffix)
         )
         temporary_layer = canonical_layer.with_name(
-            f"canonical{canonical_layer.suffix}"
+            f".canonical-{canonical_layer.name}"
         )
         destination_layer = Sdf.Layer.CreateNew(str(temporary_layer))
         if destination_layer is None:
@@ -432,11 +439,9 @@ def _canonicalize_usdz(model_path: Path) -> None:
         if source_layer_path != canonical_layer:
             source_layer_path.unlink()
         os.replace(temporary_layer, canonical_layer)
-        members = sorted(
-            canonical_layer.relative_to(directory).as_posix()
-            if name == layers[0]
-            else name
-            for name in members
+        canonical_layer_name = canonical_layer.relative_to(directory).as_posix()
+        members = [canonical_layer_name] + sorted(
+            name for name in members if name != layers[0]
         )
 
         temporary_archive = path.with_name(f".{path.name}.canonical")
