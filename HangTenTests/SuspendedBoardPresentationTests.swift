@@ -185,6 +185,19 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testPairedLeadRejectsDistinctLeadsThatAreTooCloseAfterTheirSharedAnchor() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: pairedLeadSuspension(
+                left: [0, 0.4, 0],
+                right: [0.005, 0.4, 0]
+            ),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
     func testSingleCordSamplesAreStraightAndTautForSupportedPoses() throws {
         let poses = [
             pose(),

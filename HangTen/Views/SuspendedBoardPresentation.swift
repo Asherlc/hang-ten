@@ -131,8 +131,10 @@ enum SuspendedBoardPresentation {
               zip(leads, transformedAttachments).allSatisfy({ $0.0.samples.last == $0.1 }) else {
             throw SuspendedPresentationError.nonFiniteCurve
         }
-        try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(
-            leads[0].samples + Array(leads[1].samples.reversed().dropFirst())
+        let tubeRadius = Float(suspension.cord.radius)
+        try validatePairedLeadClearance(
+            leads,
+            requiredClearance: tubeRadius + additionalClearance
         )
 
         let framing = try makeCameraFraming(
@@ -143,7 +145,6 @@ enum SuspendedBoardPresentation {
                 + transformedAttachments
                 + leads.flatMap(\.samples)
         )
-        let tubeRadius = Float(suspension.cord.radius)
         return SuspendedPairedLeadSolvedPresentation(
             boardTransform: transform,
             fixedAnchor: fixedAnchor,
@@ -444,6 +445,127 @@ enum SuspendedBoardPresentation {
             let next = points[min(points.count - 1, index + 1)]
             return normalized(next - previous) ?? SIMD3<Float>(0, 1, 0)
         }
+    }
+
+    private static func validatePairedLeadClearance(
+        _ leads: [SolvedCordBranch],
+        requiredClearance: Float
+    ) throws {
+        guard leads.count == 2,
+              leads.allSatisfy({ $0.samples.count >= 2 }),
+              requiredClearance.isFinite,
+              requiredClearance > 0 else {
+            throw SuspendedPresentationError.invalidCord
+        }
+        let firstPath = leads[0].samples
+        let secondPath = leads[1].samples
+        let sharedAnchor = firstPath[0]
+        guard sharedAnchor == secondPath[0] else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let clearanceSquared = requiredClearance * requiredClearance
+        for (firstIndex, firstSegment) in zip(firstPath, firstPath.dropFirst()).enumerated() {
+            for (secondIndex, secondSegment) in zip(secondPath, secondPath.dropFirst()).enumerated() {
+                let approach = segmentClosestApproach(
+                    firstSegment.0, firstSegment.1,
+                    secondSegment.0, secondSegment.1
+                )
+                guard approach.distanceSquared.isFinite else {
+                    throw SuspendedPresentationError.nonFiniteCurve
+                }
+                guard approach.distanceSquared < clearanceSquared else { continue }
+                let firstPoint = pointOnSegment(
+                    firstSegment.0,
+                    firstSegment.1,
+                    parameter: approach.firstParameter
+                )
+                let secondPoint = pointOnSegment(
+                    secondSegment.0,
+                    secondSegment.1,
+                    parameter: approach.secondParameter
+                )
+                let isSharedAnchorContact = firstIndex == 0
+                    && secondIndex == 0
+                    && simd_length_squared(firstPoint - sharedAnchor) <= 1e-12
+                    && simd_length_squared(secondPoint - sharedAnchor) <= 1e-12
+                if !isSharedAnchorContact {
+                    throw SuspendedPresentationError.selfIntersection
+                }
+            }
+        }
+    }
+
+    private static func segmentClosestApproach(
+        _ firstStart: SIMD3<Float>,
+        _ firstEnd: SIMD3<Float>,
+        _ secondStart: SIMD3<Float>,
+        _ secondEnd: SIMD3<Float>
+    ) -> (distanceSquared: Float, firstParameter: Float, secondParameter: Float) {
+        let firstDirection = firstEnd - firstStart
+        let secondDirection = secondEnd - secondStart
+        let startDifference = firstStart - secondStart
+        let firstLengthSquared = simd_dot(firstDirection, firstDirection)
+        let directionDot = simd_dot(firstDirection, secondDirection)
+        let secondLengthSquared = simd_dot(secondDirection, secondDirection)
+        let firstOffset = simd_dot(firstDirection, startDifference)
+        let secondOffset = simd_dot(secondDirection, startDifference)
+        let denominator = firstLengthSquared * secondLengthSquared - directionDot * directionDot
+        var firstNumerator: Float
+        var firstDenominator = denominator
+        var secondNumerator: Float
+        var secondDenominator = denominator
+
+        if denominator < 1e-12 {
+            firstNumerator = 0
+            firstDenominator = 1
+            secondNumerator = secondOffset
+            secondDenominator = secondLengthSquared
+        } else {
+            firstNumerator = directionDot * secondOffset - secondLengthSquared * firstOffset
+            secondNumerator = firstLengthSquared * secondOffset - directionDot * firstOffset
+            if firstNumerator < 0 {
+                firstNumerator = 0
+                secondNumerator = secondOffset
+                secondDenominator = secondLengthSquared
+            } else if firstNumerator > firstDenominator {
+                firstNumerator = firstDenominator
+                secondNumerator = secondOffset + directionDot
+                secondDenominator = secondLengthSquared
+            }
+        }
+        if secondNumerator < 0 {
+            secondNumerator = 0
+            if -firstOffset < 0 {
+                firstNumerator = 0
+            } else if -firstOffset > firstLengthSquared {
+                firstNumerator = firstDenominator
+            } else {
+                firstNumerator = -firstOffset
+                firstDenominator = firstLengthSquared
+            }
+        } else if secondNumerator > secondDenominator {
+            secondNumerator = secondDenominator
+            if -firstOffset + directionDot < 0 {
+                firstNumerator = 0
+            } else if -firstOffset + directionDot > firstLengthSquared {
+                firstNumerator = firstDenominator
+            } else {
+                firstNumerator = -firstOffset + directionDot
+                firstDenominator = firstLengthSquared
+            }
+        }
+        let firstParameter = abs(firstNumerator) < 1e-12 ? 0 : firstNumerator / firstDenominator
+        let secondParameter = abs(secondNumerator) < 1e-12 ? 0 : secondNumerator / secondDenominator
+        let difference = startDifference + firstDirection * firstParameter - secondDirection * secondParameter
+        return (simd_dot(difference, difference), firstParameter, secondParameter)
+    }
+
+    private static func pointOnSegment(
+        _ start: SIMD3<Float>,
+        _ end: SIMD3<Float>,
+        parameter: Float
+    ) -> SIMD3<Float> {
+        start + (end - start) * parameter
     }
 
     private static func transformedBoundsCorners(
