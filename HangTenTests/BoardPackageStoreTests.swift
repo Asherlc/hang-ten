@@ -1,7 +1,840 @@
+import Dispatch
 import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
+
+    func testOnDemandStoreKeepsDescriptorAvailableWhileModelIsAbsentFromBaseBundle() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try FileManager.default.removeItem(
+                at: packageURL.appendingPathComponent("assets/primary.usdz")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            return XCTFail("expected model presentation")
+        }
+
+        XCTAssertEqual(media.descriptor.schemaVersion, 1)
+        XCTAssertEqual(
+            store.presentationDescriptorURL(for: board),
+            fixture.rootURL.appendingPathComponent(
+                "Hangboards/fixture-model/assets/primary.model.json"
+            )
+        )
+        XCTAssertNil(store.presentationAssetURL(for: board))
+        XCTAssertEqual(
+            store.modelResource(for: board, presentationID: presentation.id),
+            BoardModelResource(
+                packageSlug: "fixture-model",
+                assetPath: "assets/primary.usdz"
+            )
+        )
+    }
+
+    func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
+        let resource = BoardModelResource(
+            packageSlug: "metolius-wood-grips-compact-ii",
+            assetPath: "assets/primary.usdz"
+        )
+
+        XCTAssertEqual(
+            resource.tag,
+            "hang-ten-model-metolius-wood-grips-compact-ii"
+        )
+        XCTAssertTrue(resource.tag.allSatisfy { character in
+            character.isLowercase || character.isNumber || character == "-"
+        })
+    }
+
+    @MainActor
+    func testOnDemandModelLoaderRetainsAccessForSceneLifetimeAndSupportsRepeatedLoads() async throws {
+        let fixture = try makeSceneModelFixtureBundle(
+            boardID: "fixture.scene-lifetime-\(UUID().uuidString.lowercased())"
+        )
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let modelBytes = try Data(contentsOf: bundledModelURL)
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        var requestedTags: [Set<String>] = []
+        var endCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { tags, _ in
+                requestedTags.append(tags)
+                return TestBoardModelResourceRequest(
+                    begin: {
+                        try FileManager.default.createDirectory(
+                            at: requestedModelURL.deletingLastPathComponent(),
+                            withIntermediateDirectories: true
+                        )
+                        try modelBytes.write(to: requestedModelURL)
+                    },
+                    end: {
+                        endCount += 1
+                        try? FileManager.default.removeItem(at: requestedModelURL)
+                    }
+                )
+            },
+            urlResolver: { _, _ in
+                FileManager.default.fileExists(atPath: requestedModelURL.path)
+                    ? requestedModelURL
+                    : nil
+            }
+        )
+
+        for attempt in 1...2 {
+            var scene = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: store,
+                resourceAccess: access
+            )
+
+            XCTAssertNotNil(scene, "load \(attempt)")
+            XCTAssertEqual(
+                try Data(contentsOf: requestedModelURL),
+                modelBytes,
+                "load \(attempt)"
+            )
+            scene = nil
+            XCTAssertFalse(
+                FileManager.default.fileExists(atPath: requestedModelURL.path),
+                "load \(attempt) must end access when its scene is released"
+            )
+        }
+
+        XCTAssertEqual(
+            requestedTags,
+            [
+                ["hang-ten-model-fixture-model"],
+                ["hang-ten-model-fixture-model"]
+            ]
+        )
+        XCTAssertEqual(endCount, 2)
+    }
+
+    @MainActor
+    func testCancelledOnDemandAccessCancelsProgressAndEndsOnlyAfterLateSuccess() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(
+            packageSlug: "fixture-model",
+            assetPath: "assets/primary.usdz"
+        )
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let request = DelayedBoardModelResourceRequest(
+            modelURL: requestedModelURL,
+            bytes: Data("downloaded".utf8)
+        )
+        let started = expectation(description: "request starts")
+        request.onBegin = { started.fulfill() }
+        let progressCancelled = expectation(description: "pending request progress is canceled")
+        request.recordingProgress.onCancel = { progressCancelled.fulfill() }
+        var resolutionCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return requestedModelURL
+            }
+        )
+
+        let acquisition = Task {
+            await access.acquire(resource, bundle: fixture.bundle)
+        }
+        await fulfillment(of: [started], timeout: 1)
+        XCTAssertTrue(request.isWaiting)
+        acquisition.cancel()
+        await fulfillment(of: [progressCancelled], timeout: 1)
+        XCTAssertEqual(request.recordingProgress.cancelCount, 1)
+        XCTAssertEqual(request.endCount, 0)
+        XCTAssertEqual(resolutionCount, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
+        request.complete()
+
+        let acquiredLease = await acquisition.value
+        XCTAssertNil(acquiredLease)
+        XCTAssertEqual(resolutionCount, 0)
+        XCTAssertEqual(request.endCount, 1)
+        XCTAssertEqual(request.endBeforeBeginCompletionCount, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
+    }
+
+    @MainActor
+    func testCancelledOnDemandAccessDoesNotEndAfterLateFailure() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(packageSlug: "fixture-model", assetPath: "assets/primary.usdz")
+        let request = DelayedBoardModelResourceRequest(
+            modelURL: fixture.rootURL.appendingPathComponent("requested.usdz"), bytes: Data()
+        )
+        let started = expectation(description: "request starts")
+        request.onBegin = { started.fulfill() }
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in XCTFail("failed request must not resolve URL"); return nil }
+        )
+        let acquisition = Task { await access.acquire(resource, bundle: fixture.bundle) }
+        await fulfillment(of: [started], timeout: 1)
+        acquisition.cancel()
+        XCTAssertEqual(request.recordingProgress.cancelCount, 1)
+        XCTAssertEqual(request.endCount, 0)
+        request.fail()
+        let lease = await acquisition.value
+        XCTAssertNil(lease)
+        XCTAssertEqual(request.beginCount, 1)
+        XCTAssertEqual(request.endCount, 0, "failed begin never owns successful access")
+        XCTAssertEqual(request.endBeforeBeginCompletionCount, 0)
+    }
+
+    @MainActor
+    func testCancellationDuringURLResolutionEndsSuccessfulAccessExactlyOnce() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(packageSlug: "fixture-model", assetPath: "assets/primary.usdz")
+        let requestedURL = fixture.rootURL.appendingPathComponent("requested.usdz")
+        let request = DelayedBoardModelResourceRequest(modelURL: requestedURL, bytes: Data("model".utf8))
+        let started = expectation(description: "request starts")
+        request.onBegin = { started.fulfill() }
+        var resolutions = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in
+                resolutions += 1
+                withUnsafeCurrentTask { $0?.cancel() }
+                XCTAssertEqual(request.recordingProgress.cancelCount, 1)
+                XCTAssertEqual(request.endCount, 0, "resolver still owns access to files")
+                XCTAssertTrue(FileManager.default.fileExists(atPath: requestedURL.path))
+                return requestedURL
+            }
+        )
+        let acquisition = Task { await access.acquire(resource, bundle: fixture.bundle) }
+        await fulfillment(of: [started], timeout: 1)
+        request.complete()
+        let lease = await acquisition.value
+        XCTAssertNil(lease)
+        XCTAssertEqual(resolutions, 1)
+        XCTAssertEqual(request.endCount, 1)
+        XCTAssertEqual(request.endBeforeBeginCompletionCount, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedURL.path))
+    }
+
+    @MainActor
+    func testExternalCancellationBeforeLeaseTransferKeepsResolverAsOnlyAccessOwner() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(packageSlug: "fixture-model", assetPath: "assets/primary.usdz")
+        let requestedURL = fixture.rootURL.appendingPathComponent("requested.usdz")
+        let request = DelayedBoardModelResourceRequest(modelURL: requestedURL, bytes: Data("model".utf8))
+        let started = expectation(description: "request starts")
+        request.onBegin = { started.fulfill() }
+        let resolving = expectation(description: "successful begin enters URL resolver before transfer")
+        let resumeResolution = DispatchSemaphore(value: 0)
+        defer { resumeResolution.signal() }
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in
+                resolving.fulfill()
+                XCTAssertEqual(resumeResolution.wait(timeout: .now() + 5), .success)
+                XCTAssertEqual(request.endCount, 0, "resolver remains the sole access owner")
+                XCTAssertTrue(FileManager.default.fileExists(atPath: requestedURL.path))
+                return requestedURL
+            }
+        )
+        let acquisition = Task { await access.acquire(resource, bundle: fixture.bundle) }
+        await fulfillment(of: [started], timeout: 1)
+        request.complete()
+        await fulfillment(of: [resolving], timeout: 1)
+
+        acquisition.cancel()
+        XCTAssertEqual(request.recordingProgress.cancelCount, 1, "cancellation handler is still registered")
+        XCTAssertEqual(request.endCount, 0, "cancellation must not reclaim the resolver's files")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: requestedURL.path))
+        resumeResolution.signal()
+        let lease = await acquisition.value
+        XCTAssertNil(lease, "cancellation wins before lease transfer")
+        XCTAssertEqual(request.beginCount, 1)
+        XCTAssertEqual(request.endCount, 1, "only the successful-begin owner balances access")
+        XCTAssertEqual(request.endBeforeBeginCompletionCount, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedURL.path))
+        acquisition.cancel()
+        XCTAssertEqual(request.endCount, 1)
+    }
+
+    @MainActor
+    func testSuccessfulOnDemandAccessTransfersOwnershipToLease() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(packageSlug: "fixture-model", assetPath: "assets/primary.usdz")
+        let requestedURL = fixture.rootURL.appendingPathComponent("requested.usdz")
+        let request = DelayedBoardModelResourceRequest(modelURL: requestedURL, bytes: Data("model".utf8))
+        let started = expectation(description: "request starts")
+        request.onBegin = { started.fulfill() }
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request }, urlResolver: { _, _ in requestedURL }
+        )
+        var lease: BoardModelResourceLease?
+        let acquisition = Task { lease = await access.acquire(resource, bundle: fixture.bundle) }
+        await fulfillment(of: [started], timeout: 1)
+        request.complete()
+        await acquisition.value
+        XCTAssertEqual(lease?.url, requestedURL)
+        XCTAssertEqual(request.beginCount, 1)
+        XCTAssertEqual(request.recordingProgress.cancelCount, 0)
+        XCTAssertEqual(request.endCount, 0)
+        acquisition.cancel()
+        XCTAssertEqual(request.endCount, 0, "completed task cannot reclaim transferred access")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: requestedURL.path))
+        lease = nil
+        XCTAssertEqual(request.endCount, 1)
+        XCTAssertEqual(request.endBeforeBeginCompletionCount, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedURL.path))
+    }
+
+    @MainActor
+    func testCancellationRacingSuccessfulCompletionHasExactlyOneAccessOwner() async throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(packageSlug: "fixture-model", assetPath: "assets/primary.usdz")
+        for iteration in 0..<50 {
+            let requestedURL = fixture.rootURL.appendingPathComponent("race-\(iteration).usdz")
+            let request = DelayedBoardModelResourceRequest(modelURL: requestedURL, bytes: Data("model".utf8))
+            let started = expectation(description: "racing request \(iteration) starts")
+            request.onBegin = { started.fulfill() }
+            let access = BoardModelResourceAccess(
+                requestFactory: { _, _ in request }, urlResolver: { _, _ in requestedURL }
+            )
+            var lease: BoardModelResourceLease?
+            let acquisition = Task { lease = await access.acquire(resource, bundle: fixture.bundle) }
+            await fulfillment(of: [started], timeout: 1)
+            let cancellation = Task.detached { acquisition.cancel() }
+            request.complete()
+            await cancellation.value
+            await acquisition.value
+
+            XCTAssertEqual(request.beginCount, 1)
+            XCTAssertLessThanOrEqual(request.recordingProgress.cancelCount, 1)
+            XCTAssertEqual(request.endBeforeBeginCompletionCount, 0)
+            if lease != nil {
+                XCTAssertEqual(request.endCount, 0, "transfer winner retains access")
+                XCTAssertTrue(FileManager.default.fileExists(atPath: requestedURL.path))
+            } else {
+                XCTAssertEqual(request.endCount, 1, "cancellation winner balances late success")
+            }
+            lease = nil
+            XCTAssertEqual(request.endCount, 1, "only one owner ends access in iteration \(iteration)")
+            XCTAssertFalse(FileManager.default.fileExists(atPath: requestedURL.path))
+        }
+    }
+
+    @MainActor
+    func testAlreadyCancelledAcquisitionDoesNotCreateRequest() async {
+        let resource = BoardModelResource(packageSlug: "fixture-model", assetPath: "assets/primary.usdz")
+        var requestCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in
+                requestCount += 1
+                return TestBoardModelResourceRequest(begin: {}, end: {})
+            },
+            urlResolver: { _, _ in XCTFail("canceled acquisition must not resolve URL"); return nil }
+        )
+        let acquisition = Task { await access.acquire(resource, bundle: .main) }
+        acquisition.cancel()
+        let lease = await acquisition.value
+        XCTAssertNil(lease)
+        XCTAssertEqual(requestCount, 0)
+    }
+
+    @MainActor
+    func testCancellingModelLoaderCancelsPendingOnDemandAcquisition() async throws {
+        let fixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.loader-cancellation-\(UUID().uuidString.lowercased())"
+        )
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let modelBytes = try Data(contentsOf: bundledModelURL)
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let request = DelayedBoardModelResourceRequest(
+            modelURL: requestedModelURL,
+            bytes: modelBytes
+        )
+        let progressCancelled = expectation(description: "canceled acquisition cancels progress")
+        request.recordingProgress.onCancel = { progressCancelled.fulfill() }
+        let accessEnded = expectation(description: "late successful acquisition ends access")
+        request.onEnd = { accessEnded.fulfill() }
+        let accessStarted = expectation(description: "acquisition starts")
+        request.onBegin = { accessStarted.fulfill() }
+        var resolutionCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return requestedModelURL
+            }
+        )
+
+        let loaderReturned = expectation(description: "view-facing loader returns before ODR completes")
+        let load = Task {
+            let scene = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: store,
+                resourceAccess: access
+            )
+            loaderReturned.fulfill()
+            return scene
+        }
+        await fulfillment(of: [accessStarted], timeout: 1)
+        load.cancel()
+        await fulfillment(of: [loaderReturned], timeout: 1)
+        await fulfillment(of: [progressCancelled], timeout: 1)
+        XCTAssertEqual(request.recordingProgress.cancelCount, 1)
+        XCTAssertEqual(request.endCount, 0, "pending cancellation must not end ODR access")
+        XCTAssertEqual(resolutionCount, 0)
+        request.complete()
+        await fulfillment(of: [accessEnded], timeout: 1)
+
+        let scene = await load.value
+        XCTAssertNil(scene)
+        XCTAssertEqual(resolutionCount, 0)
+        XCTAssertEqual(request.endCount, 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
+    }
+
+    #if DEBUG
+    @MainActor
+    func testCancellingFinalSharedModelLoadWaiterKeepsODRAccessThroughBlockedDecode() async throws {
+        let fixture = try makeSceneModelFixtureBundle(
+            boardID: "fixture.decode-lifetime-\(UUID().uuidString.lowercased())"
+        )
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let modelBytes = try Data(contentsOf: bundledModelURL)
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let request = DelayedBoardModelResourceRequest(
+            modelURL: requestedModelURL,
+            bytes: modelBytes
+        )
+        let accessStarted = expectation(description: "ODR access starts")
+        let accessEnded = expectation(description: "ODR access ends after decode drains")
+        request.onBegin = { accessStarted.fulfill() }
+        request.onEnd = { accessEnded.fulfill() }
+        var resolutionCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in request },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return requestedModelURL
+            }
+        )
+        let decodeStarted = expectation(description: "SceneKit decode blocks")
+        let decodeResumed = expectation(description: "decode barrier released")
+        let decodeRelease = DispatchSemaphore(value: 0)
+        defer { decodeRelease.signal() }
+        let loaderReturned = expectation(description: "final canceled waiter returns promptly")
+
+        let load = Task {
+            let scene = await BoardModelAsset.$willDecodeForTesting.withValue(
+                { url in
+                    XCTAssertEqual(url, requestedModelURL)
+                    decodeStarted.fulfill()
+                    XCTAssertEqual(decodeRelease.wait(timeout: .now() + 5), .success)
+                    XCTAssertEqual(request.endCount, 0, "real SceneKit decode still needs the file")
+                    XCTAssertTrue(FileManager.default.fileExists(atPath: url.path))
+                    decodeResumed.fulfill()
+                }
+            ) {
+                await BoardModelLoader.load(
+                    board: board,
+                    presentation: presentation,
+                    store: store,
+                    resourceAccess: access
+                )
+            }
+            loaderReturned.fulfill()
+            return scene
+        }
+        await fulfillment(of: [accessStarted], timeout: 1)
+        request.complete()
+        await fulfillment(of: [decodeStarted], timeout: 1)
+
+        load.cancel()
+        await fulfillment(of: [loaderReturned], timeout: 1)
+        XCTAssertEqual(resolutionCount, 1)
+        XCTAssertEqual(request.endCount, 0, "blocked decode still owns ODR access")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: requestedModelURL.path))
+
+        decodeRelease.signal()
+        await fulfillment(of: [decodeResumed, accessEnded], timeout: 1)
+        let scene = await load.value
+        XCTAssertNil(scene)
+        XCTAssertEqual(request.endCount, 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
+    }
+    #endif
+
+    @MainActor
+    func testCancellingOneSharedModelLoadKeepsOtherWaiterAndSingleLease() async throws {
+        let fixture = try makeSceneModelFixtureBundle(
+            boardID: "fixture.shared-loader-\(UUID().uuidString.lowercased())"
+        )
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let modelBytes = try Data(contentsOf: bundledModelURL)
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        let requestedModelURL = fixture.rootURL.appendingPathComponent(
+            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        let request = DelayedBoardModelResourceRequest(
+            modelURL: requestedModelURL,
+            bytes: modelBytes
+        )
+        let accessStarted = expectation(description: "shared acquisition starts")
+        request.onBegin = { accessStarted.fulfill() }
+        var requestCount = 0
+        var resolutionCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in
+                requestCount += 1
+                return request
+            },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return requestedModelURL
+            }
+        )
+
+        let cancelledReturned = expectation(description: "canceled waiter returns while request is pending")
+        let cancelledLoad = Task {
+            let scene = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: store,
+                resourceAccess: access
+            )
+            cancelledReturned.fulfill()
+            return scene
+        }
+        await fulfillment(of: [accessStarted], timeout: 1)
+        let survivorEnteredLoader = expectation(description: "survivor enters loader")
+        var survivingScene: BoardModelScene?
+        let survivingLoad = Task {
+            survivorEnteredLoader.fulfill()
+            survivingScene = await BoardModelLoader.load(
+                board: board,
+                presentation: presentation,
+                store: store,
+                resourceAccess: access
+            )
+        }
+        // Both calls stay on MainActor until registering their continuation.
+        await fulfillment(of: [survivorEnteredLoader], timeout: 1)
+        cancelledLoad.cancel()
+        await fulfillment(of: [cancelledReturned], timeout: 1)
+        XCTAssertTrue(request.isWaiting)
+        XCTAssertEqual(request.recordingProgress.cancelCount, 0)
+        XCTAssertEqual(request.endCount, 0)
+        request.complete()
+
+        let cancelledScene = await cancelledLoad.value
+        await survivingLoad.value
+        XCTAssertNil(cancelledScene)
+        XCTAssertNotNil(survivingScene)
+        XCTAssertEqual(requestCount, 1)
+        XCTAssertEqual(resolutionCount, 1)
+        XCTAssertFalse(request.didEndAccess)
+
+        survivingScene = nil
+        XCTAssertEqual(request.endCount, 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: requestedModelURL.path))
+    }
+
+    @MainActor
+    func testAlreadyCancelledModelLoadDoesNotBeginOnDemandAccess() async throws {
+        let fixture = try makeSceneModelFixtureBundle(
+            boardID: "fixture.already-cancelled-\(UUID().uuidString.lowercased())"
+        )
+        defer { fixture.remove() }
+        try FileManager.default.removeItem(
+            at: fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.usdz")
+        )
+        let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+        let board = try XCTUnwrap(store.boards.first)
+        XCTAssertNil(store.presentationAssetURL(for: board))
+        XCTAssertNotNil(store.modelResource(for: board))
+        var requestCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in
+                requestCount += 1
+                return TestBoardModelResourceRequest(begin: {}, end: {})
+            },
+            urlResolver: { _, _ in
+                XCTFail("A canceled load must not resolve a model URL")
+                return nil
+            }
+        )
+        let load = Task {
+            await BoardModelLoader.load(
+                board: board,
+                presentation: board.defaultPresentation,
+                store: store,
+                resourceAccess: access
+            )
+        }
+        // Cancel before the MainActor task can enter the loader.
+        load.cancel()
+        let scene = await load.value
+        XCTAssertNil(scene)
+        XCTAssertEqual(requestCount, 0)
+    }
+
+    @MainActor
+    func testCancelledSharedLoadCannotEvictReplacementAndLeaseLastsUntilFinalScene() async throws {
+        let fixture = try makeSceneModelFixtureBundle(
+            boardID: "fixture.replacement-\(UUID().uuidString.lowercased())"
+        )
+        defer { fixture.remove() }
+        let bundledURL = fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.usdz")
+        let bytes = try Data(contentsOf: bundledURL)
+        try FileManager.default.removeItem(at: bundledURL)
+        let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+        let board = try XCTUnwrap(store.boards.first)
+        let oldURL = fixture.rootURL.appendingPathComponent("OnDemand/old/primary.usdz")
+        let replacementURL = fixture.rootURL.appendingPathComponent("OnDemand/replacement/primary.usdz")
+        let oldRequest = DelayedBoardModelResourceRequest(modelURL: oldURL, bytes: bytes)
+        let replacementRequest = DelayedBoardModelResourceRequest(modelURL: replacementURL, bytes: bytes)
+        let oldStarted = expectation(description: "old request starts")
+        let replacementStarted = expectation(description: "replacement request starts")
+        let oldEnded = expectation(description: "late old access ends")
+        oldRequest.onBegin = { oldStarted.fulfill() }
+        oldRequest.onEnd = { oldEnded.fulfill() }
+        replacementRequest.onBegin = { replacementStarted.fulfill() }
+        var requestCount = 0
+        var resolutionCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in
+                requestCount += 1
+                return requestCount == 1 ? oldRequest : replacementRequest
+            },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return replacementURL
+            }
+        )
+        let cancelledReturned = expectation(description: "both canceled waiters return before ODR")
+        cancelledReturned.expectedFulfillmentCount = 2
+        let first = Task {
+            let scene = await BoardModelLoader.load(
+                board: board, presentation: board.defaultPresentation, store: store, resourceAccess: access
+            )
+            cancelledReturned.fulfill()
+            return scene
+        }
+        await fulfillment(of: [oldStarted], timeout: 1)
+        let secondEntered = expectation(description: "second waiter enters")
+        let second = Task {
+            secondEntered.fulfill()
+            let scene = await BoardModelLoader.load(
+                board: board, presentation: board.defaultPresentation, store: store, resourceAccess: access
+            )
+            cancelledReturned.fulfill()
+            return scene
+        }
+        await fulfillment(of: [secondEntered], timeout: 1)
+        first.cancel()
+        second.cancel()
+        await fulfillment(of: [cancelledReturned], timeout: 1)
+        XCTAssertEqual(oldRequest.recordingProgress.cancelCount, 1)
+        XCTAssertEqual(oldRequest.endCount, 0)
+
+        var firstScene: BoardModelScene?
+        let replacement = Task {
+            firstScene = await BoardModelLoader.load(
+                board: board, presentation: board.defaultPresentation, store: store, resourceAccess: access
+            )
+        }
+        await fulfillment(of: [replacementStarted], timeout: 1)
+        oldRequest.complete()
+        await fulfillment(of: [oldEnded], timeout: 1)
+        XCTAssertEqual(oldRequest.endBeforeBeginCompletionCount, 0)
+
+        // Late completion of the canceled entry must not remove this entry.
+        let thirdEntered = expectation(description: "third waiter joins replacement")
+        var secondScene: BoardModelScene?
+        let third = Task {
+            thirdEntered.fulfill()
+            secondScene = await BoardModelLoader.load(
+                board: board, presentation: board.defaultPresentation, store: store, resourceAccess: access
+            )
+        }
+        await fulfillment(of: [thirdEntered], timeout: 1)
+        replacementRequest.complete()
+        let cancelledFirst = await first.value
+        let cancelledSecond = await second.value
+        await replacement.value
+        await third.value
+        XCTAssertNil(cancelledFirst)
+        XCTAssertNil(cancelledSecond)
+        XCTAssertNotNil(firstScene)
+        XCTAssertNotNil(secondScene)
+        XCTAssertFalse(firstScene === secondScene, "consumers need independently mutable scenes")
+        XCTAssertEqual(requestCount, 2)
+        XCTAssertEqual(resolutionCount, 1)
+        XCTAssertEqual(oldRequest.endCount, 1)
+        XCTAssertEqual(replacementRequest.endCount, 0)
+        firstScene = nil
+        XCTAssertEqual(replacementRequest.endCount, 0)
+        secondScene = nil
+        XCTAssertEqual(replacementRequest.endCount, 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: oldURL.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: replacementURL.path))
+    }
+
+    @MainActor
+    func testOnDemandModelFailuresEndAccessAndAllowRetry() async throws {
+        for failure in ["unresolved", "missing", "corrupt"] {
+            let fixture = try makeSceneModelFixtureBundle(
+                boardID: "fixture.odr-failure-\(failure)-\(UUID().uuidString.lowercased())"
+            )
+            defer { fixture.remove() }
+            let bundledURL = fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.usdz")
+            let bytes = try Data(contentsOf: bundledURL)
+            try FileManager.default.removeItem(at: bundledURL)
+            let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+            let board = try XCTUnwrap(store.boards.first)
+            let requestedURL = fixture.rootURL.appendingPathComponent("requested.usdz")
+            var requestCount = 0
+            var endCount = 0
+            let access = BoardModelResourceAccess(
+                requestFactory: { _, _ in
+                    requestCount += 1
+                    return TestBoardModelResourceRequest(
+                        begin: {
+                            if requestCount > 1 {
+                                try bytes.write(to: requestedURL)
+                            } else if failure == "corrupt" {
+                                try Data("not the descriptor's USDZ".utf8).write(to: requestedURL)
+                            }
+                        },
+                        end: {
+                            endCount += 1
+                            try? FileManager.default.removeItem(at: requestedURL)
+                        }
+                    )
+                },
+                urlResolver: { _, _ in
+                    failure == "unresolved" && requestCount == 1 ? nil : requestedURL
+                }
+            )
+            let failedScene = await BoardModelLoader.load(
+                board: board, presentation: board.defaultPresentation, store: store, resourceAccess: access
+            )
+            XCTAssertNil(failedScene, failure)
+            XCTAssertEqual(endCount, 1, failure)
+            var retriedScene = await BoardModelLoader.load(
+                board: board, presentation: board.defaultPresentation, store: store, resourceAccess: access
+            )
+            XCTAssertNotNil(retriedScene, failure)
+            XCTAssertEqual(requestCount, 2, failure)
+            XCTAssertEqual(endCount, 1, failure)
+            retriedScene = nil
+            XCTAssertEqual(endCount, 2, failure)
+            XCTAssertFalse(FileManager.default.fileExists(atPath: requestedURL.path), failure)
+        }
+    }
+
+    @MainActor
+    func testFailedOnDemandRequestReturnsUnavailableWithoutResolvingModel() async throws {
+        struct RequestFailure: Error {}
+
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let bundledModelURL = fixture.rootURL.appendingPathComponent(
+            "Hangboards/fixture-model/assets/primary.usdz"
+        )
+        try FileManager.default.removeItem(at: bundledModelURL)
+        let store = try BoardPackageStore(
+            bundle: fixture.bundle,
+            modelAssetMode: .onDemand
+        )
+        let board = try XCTUnwrap(store.boards.first)
+        let presentation = board.defaultPresentation
+        var resolutionCount = 0
+        var endCount = 0
+        let access = BoardModelResourceAccess(
+            requestFactory: { _, _ in
+                TestBoardModelResourceRequest(
+                    begin: { throw RequestFailure() },
+                    end: { endCount += 1 }
+                )
+            },
+            urlResolver: { _, _ in
+                resolutionCount += 1
+                return bundledModelURL
+            }
+        )
+
+        let scene = await BoardModelLoader.load(
+            board: board,
+            presentation: presentation,
+            store: store,
+            resourceAccess: access
+        )
+
+        XCTAssertNil(scene)
+        XCTAssertEqual(resolutionCount, 0)
+        XCTAssertEqual(endCount, 0)
+    }
 
     func testStoreLoadsV2ModelAndRejectsLegacyV1AfterMigration() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
@@ -3493,6 +4326,36 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    /// Validation fixtures intentionally contain placeholder bytes; loader tests
+    /// need a real USDZ and its unchanged production descriptor and inventory.
+    private func makeSceneModelFixtureBundle(boardID: String) throws -> FixtureBundle {
+        let sourcePackageURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Hangboards/metolius-prime-rib", isDirectory: true)
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
+            for path in ["board.json", "assets/primary.model.json", "assets/primary.usdz"] {
+                try Data(contentsOf: sourcePackageURL.appendingPathComponent(path))
+                    .write(to: packageURL.appendingPathComponent(path))
+            }
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) {
+                $0["id"] = boardID
+            }
+        }
+        do {
+            // Validate the complete package before each test moves its model to ODR.
+            let store = try BoardPackageStore(bundle: fixture.bundle)
+            XCTAssertEqual(store.boards.map(\.id), [boardID])
+            return fixture
+        } catch {
+            fixture.remove()
+            throw error
+        }
+    }
+
     private func makeOrientableModelFixtureBundle(
         boardMutation: ((inout [String: Any]) throws -> Void)? = nil
     ) throws -> FixtureBundle {
@@ -4277,5 +5140,112 @@ private struct FixtureBundle {
 
     func remove() {
         try? FileManager.default.removeItem(at: rootURL)
+    }
+}
+
+private final class TestBoardModelResourceRequest: BoardModelResourceRequesting {
+    let progress = Progress(totalUnitCount: 1)
+    private let beginAction: () throws -> Void
+    private let endAction: () -> Void
+
+    init(begin: @escaping () throws -> Void, end: @escaping () -> Void) {
+        self.beginAction = begin
+        self.endAction = end
+    }
+
+    func beginAccessingResources() async throws {
+        try beginAction()
+    }
+
+    func endAccessingResources() {
+        endAction()
+    }
+}
+
+private final class RecordingBoardModelResourceProgress: Progress, @unchecked Sendable {
+    private let lock = NSLock()
+    private var cancellations = 0
+    var onCancel: (() -> Void)?
+
+    var cancelCount: Int { lock.withLock { cancellations } }
+
+    override func cancel() {
+        lock.withLock { cancellations += 1 }
+        super.cancel()
+        onCancel?()
+    }
+}
+
+private final class DelayedBoardModelResourceRequest: BoardModelResourceRequesting {
+    let recordingProgress = RecordingBoardModelResourceProgress()
+    var progress: Progress { recordingProgress }
+    private let modelURL: URL
+    private let bytes: Data
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Void, Error>?
+    private var begins = 0
+    private var ends = 0
+    private var prematureEnds = 0
+    private var beginCompleted = false
+    var onBegin: (() -> Void)?
+    var onEnd: (() -> Void)?
+
+    var beginCount: Int { lock.withLock { begins } }
+    var endCount: Int { lock.withLock { ends } }
+    var endBeforeBeginCompletionCount: Int { lock.withLock { prematureEnds } }
+    var didEndAccess: Bool { endCount > 0 }
+    var isWaiting: Bool { lock.withLock { continuation != nil } }
+
+    init(modelURL: URL, bytes: Data) {
+        self.modelURL = modelURL
+        self.bytes = bytes
+    }
+
+    func beginAccessingResources() async throws {
+        defer { lock.withLock { beginCompleted = true } }
+        try await withCheckedThrowingContinuation { continuation in
+            lock.withLock {
+                begins += 1
+                self.continuation = continuation
+            }
+            onBegin?()
+        }
+    }
+
+    // Progress cancellation is only a signal: the system can still complete
+    // successfully or fail later. Ending access must not fabricate completion.
+    func complete() {
+        do {
+            try FileManager.default.createDirectory(
+                at: modelURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+            try bytes.write(to: modelURL)
+            finish(.success(()))
+        } catch {
+            finish(.failure(error))
+        }
+    }
+
+    func fail() {
+        finish(.failure(CancellationError()))
+    }
+
+    private func finish(_ result: Result<Void, Error>) {
+        let pending = lock.withLock {
+            let pending = continuation
+            continuation = nil
+            return pending
+        }
+        pending?.resume(with: result)
+    }
+
+    func endAccessingResources() {
+        lock.withLock {
+            ends += 1
+            if !beginCompleted { prematureEnds += 1 }
+        }
+        try? FileManager.default.removeItem(at: modelURL)
+        onEnd?()
     }
 }

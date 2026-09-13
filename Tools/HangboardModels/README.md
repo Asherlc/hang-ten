@@ -190,6 +190,28 @@ separate migration gate and are not changed or claimed by this extraction.
 Package-local descriptors are generated from actual exports and remain
 read-only.
 
+## Lossless binary USDZ serialization optimization
+
+For a reviewed USDZ whose single USD layer is text USDA, the standalone
+optimizer can encode that layer as binary USDC without changing mesh geometry,
+topology, node names/properties, materials, UVs, or texture bytes:
+
+```sh
+rtk python3 -B Tools/HangboardModels/optimize_usdz.py \
+  --input PATH/source.usdz \
+  --output .context/OWNER-binary-usdz/optimized.usdz \
+  --usdcat /usr/bin/usdcat
+```
+
+The input is read-only, the output path must be new, and archive members remain
+uncompressed, sorted, timestamp-stable, and 64-byte aligned. The output USDZ
+bytes and therefore `modelSHA256` necessarily change. This tool does not
+rewrite a production model asset or descriptor and does not regenerate
+`primary.model.json`; descriptor hash regeneration is an explicit downstream
+step after the optimized bytes have passed actual-export verification. A
+normalized text comparison is only a serialization check: reimport and run
+the applicable board verifier against the exact output bytes before promotion.
+
 ## Canonical wood display material
 
 The two extracted wood display models—Beastmaker 1000 and Compact II—use the

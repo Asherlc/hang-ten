@@ -65,6 +65,33 @@ private extension String {
     }
 }
 
+enum BoardPackageModelAssetMode: Equatable {
+    case bundled
+    case onDemand
+}
+
+struct BoardModelResource: Equatable {
+    let packageSlug: String
+    let assetPath: String
+
+    var tag: String {
+        "hang-ten-model-\(packageSlug)"
+    }
+
+    var bundleSubdirectory: String {
+        let assetDirectory = (assetPath as NSString).deletingLastPathComponent
+        return "Hangboards/\(packageSlug)/\(assetDirectory)"
+    }
+
+    var resourceName: String {
+        ((assetPath as NSString).lastPathComponent as NSString).deletingPathExtension
+    }
+
+    var resourceExtension: String {
+        (assetPath as NSString).pathExtension
+    }
+}
+
 enum BoardPackageStoreError: Error, Equatable, LocalizedError {
     case missingLibrary
     case malformedJSON(resource: String)
@@ -111,8 +138,13 @@ struct BoardPackageStore {
     private let boardsByID: [String: TrainingBoard]
     private let presentationURLsByBoardID: [String: [String: URL]]
     private let descriptorURLsByBoardID: [String: [String: URL]]
+    private let modelResourcesByBoardID: [String: [String: BoardModelResource]]
+    let resourceBundle: Bundle
 
-    init(bundle: Bundle = .main) throws {
+    init(
+        bundle: Bundle = .main,
+        modelAssetMode: BoardPackageModelAssetMode = .bundled
+    ) throws {
         guard let resourceURL = bundle.resourceURL else {
             throw BoardPackageStoreError.missingLibrary
         }
@@ -121,6 +153,7 @@ struct BoardPackageStore {
         var loadedBoards: [TrainingBoard] = []
         var loadedPresentationURLs: [String: [String: URL]] = [:]
         var loadedDescriptorURLs: [String: [String: URL]] = [:]
+        var loadedModelResources: [String: [String: BoardModelResource]] = [:]
         var seenBoardIDs = Set<String>()
 
         for packageURL in try Self.directChildDirectories(of: hangboardsURL) {
@@ -142,7 +175,8 @@ struct BoardPackageStore {
             let resourcePrefix = "Hangboards/\(slug)"
             let loaded = try Self.loadV2Package(
                 at: packageURL,
-                resource: "\(resourcePrefix)/board.json"
+                resource: "\(resourcePrefix)/board.json",
+                modelAssetMode: modelAssetMode
             )
             guard seenBoardIDs.insert(loaded.board.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(loaded.board.id)
@@ -150,6 +184,7 @@ struct BoardPackageStore {
             loadedBoards.append(loaded.board)
             loadedPresentationURLs[loaded.board.id] = loaded.presentationURLs
             loadedDescriptorURLs[loaded.board.id] = loaded.descriptorURLs
+            loadedModelResources[loaded.board.id] = loaded.modelResources
         }
 
         loadedBoards.sort(by: Self.boardComesBefore)
@@ -157,6 +192,8 @@ struct BoardPackageStore {
         self.boardsByID = Dictionary(uniqueKeysWithValues: loadedBoards.map { ($0.id, $0) })
         self.presentationURLsByBoardID = loadedPresentationURLs
         self.descriptorURLsByBoardID = loadedDescriptorURLs
+        self.modelResourcesByBoardID = loadedModelResources
+        self.resourceBundle = bundle
     }
 
     func board(id: String) -> TrainingBoard? {
@@ -190,6 +227,14 @@ struct BoardPackageStore {
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
         return descriptorURLsByBoardID[board.id]?[resolvedID]
+    }
+
+    func modelResource(
+        for board: TrainingBoard,
+        presentationID: String? = nil
+    ) -> BoardModelResource? {
+        let resolvedID = presentationID ?? board.defaultPresentation.id
+        return modelResourcesByBoardID[board.id]?[resolvedID]
     }
 
     private static func decode<Value: Decodable>(
@@ -429,11 +474,13 @@ struct BoardPackageStore {
 
     private static func loadV2Package(
         at packageURL: URL,
-        resource: String
+        resource: String,
+        modelAssetMode: BoardPackageModelAssetMode
     ) throws -> (
         board: TrainingBoard,
         presentationURLs: [String: URL],
-        descriptorURLs: [String: URL]
+        descriptorURLs: [String: URL],
+        modelResources: [String: BoardModelResource]
     ) {
         let boardURL = packageURL.appendingPathComponent("board.json")
         let document: BoardPackageV2BoardDocument
@@ -633,6 +680,7 @@ struct BoardPackageStore {
         var hasRaster = false
         var hasModel = false
         var declaredAssetPaths = Set<String>()
+        var onDemandModelAssetPaths = Set<String>()
         for presentation in document.presentations {
             guard presentation.id.isBoardPackageIdentifier,
                   !presentation.name.isEmpty,
@@ -668,6 +716,9 @@ struct BoardPackageStore {
                 try validateV2AssetPath(descriptorPath, suffix: ".model.json", boardID: document.id, packageURL: packageURL)
                 try validateModelDisplay(display, boardID: document.id)
                 declaredAssetPaths.formUnion([assetPath, descriptorPath])
+                if modelAssetMode == .onDemand {
+                    onDemandModelAssetPaths.insert(assetPath)
+                }
             }
         }
         guard defaultCount == 1 else {
@@ -717,13 +768,14 @@ struct BoardPackageStore {
             relativeTo: packageURL,
             boardID: document.id
         )
-        guard actualAssetPaths == declaredAssetPaths else {
+        let expectedBundledAssetPaths = declaredAssetPaths.subtracting(onDemandModelAssetPaths)
+        guard actualAssetPaths == expectedBundledAssetPaths else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
                 reason: "assets must contain exactly the declared presentation assets"
             )
         }
-        for path in declaredAssetPaths {
+        for path in expectedBundledAssetPaths {
             let url = packageURL.appendingPathComponent(path)
             guard try isRegularFile(url), FileManager.default.isReadableFile(atPath: url.path) else {
                 throw BoardPackageStoreError.missingPresentationAsset(boardID: document.id, path: path)
@@ -733,6 +785,7 @@ struct BoardPackageStore {
         var presentations: [BoardPresentation] = []
         var presentationURLs: [String: URL] = [:]
         var descriptorURLs: [String: URL] = [:]
+        var modelResources: [String: BoardModelResource] = [:]
         var originalRasterOwnershipCounts = Dictionary(
             uniqueKeysWithValues: holdIDs.map { ($0, 0) }
         )
@@ -803,7 +856,9 @@ struct BoardPackageStore {
             case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument):
                 let descriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
-                    modelURL: packageURL.appendingPathComponent(assetPath),
+                    modelURL: modelAssetMode == .bundled
+                        ? packageURL.appendingPathComponent(assetPath)
+                        : nil,
                     logicalHoldIDs: holdIDs,
                     boardID: document.id,
                     resource: descriptorPath,
@@ -843,6 +898,12 @@ struct BoardPackageStore {
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
+                if modelAssetMode == .onDemand {
+                    modelResources[presentation.id] = BoardModelResource(
+                        packageSlug: packageURL.lastPathComponent,
+                        assetPath: assetPath
+                    )
+                }
             }
             let sourceID: String?
             let inverted: Bool
@@ -865,7 +926,11 @@ struct BoardPackageStore {
                     media: media
                 )
             )
-            presentationURLs[presentation.id] = packageURL.appendingPathComponent(presentation.media.assetPath)
+            if !onDemandModelAssetPaths.contains(presentation.media.assetPath) {
+                presentationURLs[presentation.id] = packageURL.appendingPathComponent(
+                    presentation.media.assetPath
+                )
+            }
         }
 
         if hasRaster && originalRasterOwnershipCounts.values.contains(where: { $0 != 1 }) {
@@ -959,7 +1024,7 @@ struct BoardPackageStore {
             positions: positions,
             positionTransitions: transitions
         )
-        return (board, presentationURLs, descriptorURLs)
+        return (board, presentationURLs, descriptorURLs, modelResources)
     }
 
     private static func validateV2AssetPath(
@@ -1008,19 +1073,17 @@ struct BoardPackageStore {
 
     private static func loadModelDescriptor(
         at url: URL,
-        modelURL: URL,
+        modelURL: URL?,
         logicalHoldIDs: Set<String>,
         boardID: String,
         resource: String,
         suspensionDocument: BoardPackageSuspensionDocument?
     ) throws -> BoardModelDescriptor {
         let data: Data
-        let modelData: Data
         let document: BoardPackageModelDescriptorDocument
         let orderedHoldIDs: [String]
         do {
             data = try Data(contentsOf: url)
-            modelData = try Data(contentsOf: modelURL)
             var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
             _ = try rawDescriptorParser.parseDocument()
             var memberOrder = BoardPackageJSONMemberOrder(data: data)
@@ -1038,9 +1101,25 @@ struct BoardPackageStore {
               document.modelSHA256.allSatisfy({ ("0"..."9").contains(String($0)) || ("a"..."f").contains(String($0)) }) else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor header is invalid")
         }
-        let actualHash = SHA256.hash(data: modelData).map { String(format: "%02x", $0) }.joined()
-        guard actualHash == document.modelSHA256 else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor SHA-256 does not match USDZ bytes")
+        if let modelURL {
+            let modelData: Data
+            do {
+                modelData = try Data(contentsOf: modelURL)
+            } catch {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "model descriptor is missing or malformed: \(resource)"
+                )
+            }
+            let actualHash = SHA256.hash(data: modelData)
+                .map { String(format: "%02x", $0) }
+                .joined()
+            guard actualHash == document.modelSHA256 else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "model descriptor SHA-256 does not match USDZ bytes"
+                )
+            }
         }
         try validateDescriptorVector(document.modelBounds.minimum, length: 3, boardID: boardID)
         try validateDescriptorVector(document.modelBounds.maximum, length: 3, boardID: boardID)
