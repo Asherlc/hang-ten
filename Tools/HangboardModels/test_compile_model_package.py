@@ -103,3 +103,10 @@ def test_sorted_usd_copy_preserves_variant_contents() -> None:
         "/Board{finish=wood}/Inset",
     ]
     assert destination.properties == {"/Board{finish=wood}.roughness"}
+
+
+def test_canonical_output_retains_binary_usd_layer_suffix() -> None:
+    """Catches canonicalization changing an existing USDC layer back to USDA."""
+    assert compiler._canonical_output_layer_suffix(".usdc") == ".usdc"
+    assert compiler._canonical_output_layer_suffix(".usda") == ".usda"
+    assert compiler._canonical_output_layer_suffix(".usd") == ".usda"

@@ -377,7 +377,12 @@ def _export_temporary_copies(
 
 
 def _canonicalize_usdz(model_path: Path) -> None:
-    """Sort USD specs and write a byte-stable, 64-byte-aligned USDZ archive."""
+    """Sort USD specs and write a byte-stable, aligned USDZ archive.
+
+    Text layers retain the historical ``.usda`` output name. Existing binary
+    ``.usdc`` layers remain binary so canonicalization does not force a format
+    change.
+    """
     from pxr import Sdf
 
     path = Path(model_path)
@@ -407,7 +412,9 @@ def _canonicalize_usdz(model_path: Path) -> None:
         if source_layer is None:
             raise ValueError("USDZ export layer is unreadable")
         source_layer_path = directory / layers[0]
-        canonical_layer = source_layer_path.with_suffix(".usda")
+        canonical_layer = source_layer_path.with_suffix(
+            _canonical_output_layer_suffix(source_layer_path.suffix)
+        )
         temporary_layer = canonical_layer.with_name(
             f"canonical{canonical_layer.suffix}"
         )
@@ -455,6 +462,11 @@ def _canonicalize_usdz(model_path: Path) -> None:
             os.replace(temporary_archive, path)
         finally:
             temporary_archive.unlink(missing_ok=True)
+
+
+def _canonical_output_layer_suffix(source_suffix: str) -> str:
+    """Keep an existing binary layer binary; retain legacy text output otherwise."""
+    return source_suffix if source_suffix == ".usdc" else ".usda"
 
 
 def _copy_usd_specs_sorted(
