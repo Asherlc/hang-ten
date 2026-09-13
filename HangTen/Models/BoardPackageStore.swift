@@ -2514,36 +2514,23 @@ private struct BoardPackagePositionTransitionDocument: Decodable {
 
 private struct BoardPackageEquipmentObjectDocument: Decodable {
     let id: String
-    let missingHandCapacityPolicy: MissingHandCapacityPolicy
 
     private enum CodingKeys: String, CodingKey {
         case id
-        case missingHandCapacityPolicy
     }
 
-    init(
-        id: String,
-        missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
-    ) {
+    init(id: String) {
         self.id = id
-        self.missingHandCapacityPolicy = missingHandCapacityPolicy
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "missingHandCapacityPolicy"])
+        try decoder.rejectUnknownKeys(["id"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        missingHandCapacityPolicy = try container.decodeIfPresent(
-            MissingHandCapacityPolicy.self,
-            forKey: .missingHandCapacityPolicy
-        ) ?? .legacyBilateral
     }
 
     var equipmentObject: EquipmentObject {
-        EquipmentObject(
-            id: id,
-            missingHandCapacityPolicy: missingHandCapacityPolicy
-        )
+        EquipmentObject(id: id)
     }
 }
 

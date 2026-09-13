@@ -32,7 +32,7 @@ def test_training_center_preserves_audited_compound_contact_geometry() -> None:
     board = json.loads(BOARD_PATH.read_text(encoding="utf-8"))
     geometry = document_hold_geometry(board)
 
-    assert len(board["holds"]) == 24
+    assert len(board["contacts"]) == 24
     assert sum(len(pieces) for pieces in geometry.values()) == 28
     assert {
         hold_id: len(pieces)

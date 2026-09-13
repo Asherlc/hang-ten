@@ -1355,17 +1355,8 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
             equipment_object,
             {"id"},
             source,
-            optional={"missingHandCapacityPolicy"},
+            optional=set(),
         )
-        if "missingHandCapacityPolicy" in equipment_object:
-            policy = _string(
-                equipment_object["missingHandCapacityPolicy"],
-                f"{source}.missingHandCapacityPolicy",
-            )
-            if policy != "unavailable":
-                raise ValueError(
-                    f"{source}.missingHandCapacityPolicy must be unavailable"
-                )
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")

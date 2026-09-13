@@ -74,8 +74,8 @@ def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Pa
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
 
 
-def make_v2_model_package(root: Path) -> Path:
-    """Write a complete, parser-valid v2 model package without shared fixtures."""
+def make_v3_model_package(root: Path) -> Path:
+    """Write a complete, parser-valid v3 model package without shared fixtures."""
     assets = root / "assets"
     assets.mkdir(parents=True)
     (assets / "primary.usdz").write_bytes(MODEL_BYTES)
@@ -86,10 +86,10 @@ def make_v2_model_package(root: Path) -> Path:
         "modelBounds": {"min": [0, 0, 0], "max": [1, 1, 0.1]},
         "nodes": [
             {"nodeID": "Body", "role": "body"},
-            {"nodeID": "Left", "role": "hold", "holdID": "hold-left"},
-            {"nodeID": "Right", "role": "hold", "holdID": "hold-right"},
+            {"nodeID": "Left", "role": "contact", "contactID": "hold-left"},
+            {"nodeID": "Right", "role": "contact", "contactID": "hold-right"},
         ],
-        "holds": {
+        "contacts": {
             "hold-left": {
                 "nodeIDs": ["Left"],
                 "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]},
@@ -103,8 +103,9 @@ def make_v2_model_package(root: Path) -> Path:
         },
     }
     board = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "id": "fixture.model",
+        "revisionID": "test-revision",
         "manufacturer": "Fixture Maker",
         "name": "Model fixture",
         "subtitle": "A typed-media staging fixture.",
@@ -132,9 +133,15 @@ def make_v2_model_package(root: Path) -> Path:
                 },
             }
         ],
-        "holds": [
-            {"id": "hold-left", "name": "Left hold", "kind": "jug"},
-            {"id": "hold-right", "name": "Right hold", "kind": "jug"},
+        "contacts": [
+            {
+                "id": "hold-left", "equipmentObjectID": "primary",
+                "name": "Left hold", "kind": "jug", "features": [], "gripTypes": []
+            },
+            {
+                "id": "hold-right", "equipmentObjectID": "primary",
+                "name": "Right hold", "kind": "jug", "features": [], "gripTypes": []
+            },
         ],
     }
     (assets / "primary.model.json").write_text(
@@ -270,7 +277,7 @@ def test_staging_copies_the_exact_declared_asset_set(
 def test_staging_copies_model_and_hash_bound_descriptor_byte_for_byte(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    source = make_v2_model_package(
+    source = make_v3_model_package(
         tmp_path / "repository" / "Hangboards" / "fixture-model"
     )
 
@@ -417,7 +424,7 @@ def test_staging_fails_closed_for_a_malformed_completed_package(
     module = load_staging_module()
     repository_root, packages, _ = build_repository(tmp_path)
     document = json.loads((packages[0] / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0]["geometry"] = []
+    document["contacts"][0]["geometry"] = []
     (packages[0] / "board.json").write_text(json.dumps(document), encoding="utf-8")
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)

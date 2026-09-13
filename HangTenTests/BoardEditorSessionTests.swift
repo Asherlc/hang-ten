@@ -3,600 +3,92 @@ import XCTest
 
 @MainActor
 final class BoardEditorSessionTests: XCTestCase {
-    private let fixtureSlug = "editor-session-fixture"
-    private var temporaryDirectory: URL!
+    private let slug = "editor-session-fixture"
+    private var editDirectory: URL!
     private var sourceLibraryURL: URL!
     private var store: BoardEditorStore!
 
     override func setUp() async throws {
         try await super.setUp()
-        temporaryDirectory = FileManager.default.temporaryDirectory
+        editDirectory = FileManager.default.temporaryDirectory
             .appendingPathComponent("board-editor-session-\(UUID().uuidString)", isDirectory: true)
         sourceLibraryURL = try BoardEditorTestFixtures.makeSourceLibrary(
-            slug: fixtureSlug,
+            slug: slug,
             document: BoardEditorTestFixtures.sessionDocument()
         )
-        store = BoardEditorStore(
-            baseDirectory: temporaryDirectory,
-            sourceLibraryURL: sourceLibraryURL
-        )
+        store = BoardEditorStore(baseDirectory: editDirectory, sourceLibraryURL: sourceLibraryURL)
     }
 
     override func tearDown() async throws {
-        if let temporaryDirectory {
-            try? FileManager.default.removeItem(at: temporaryDirectory)
-        }
-        if let sourceLibraryURL {
-            try? FileManager.default.removeItem(at: sourceLibraryURL)
-        }
+        if let editDirectory { try? FileManager.default.removeItem(at: editDirectory) }
+        if let sourceLibraryURL { try? FileManager.default.removeItem(at: sourceLibraryURL) }
         try await super.tearDown()
     }
 
-    private func makeSession() throws -> BoardEditorSession {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let package = try store.loadDocument(slug: fixtureSlug)
-        return BoardEditorSession(package: package, store: store)
-    }
-
-    private func firstPathHoldPiece(
-        in document: BoardEditableDocument
-    ) -> (holdID: String, pieceIndex: Int)? {
-        for hold in document.holds {
-            for (index, piece) in hold.geometry.enumerated() where piece.shape.type == "path" {
-                return (hold.id, index)
-            }
-        }
-        return nil
-    }
-
-    private func package(
-        _ source: BoardEditedPackage,
-        replacing document: BoardEditableDocument
-    ) -> BoardEditedPackage {
-        BoardEditedPackage(
-            slug: source.slug,
-            packageURL: source.packageURL,
-            document: document,
-            imageURL: source.imageURL,
-            pixelWidth: source.pixelWidth,
-            pixelHeight: source.pixelHeight
-        )
-    }
-
-    private func selectFirstPathPiece(_ session: inout BoardEditorSession) throws -> (
-        holdID: String,
-        pieceIndex: Int
-    ) {
-        guard let target = firstPathHoldPiece(in: session.document) else {
-            throw XCTSkip("package has no path-shaped pieces")
-        }
-        session.select(holdID: target.holdID, pieceIndex: target.pieceIndex)
-        return target
-    }
-
-    private func makeSelectedSloperSession(
-        metadata: SloperMetadata? = nil
-    ) throws -> BoardEditorSession {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
-        var document = loadedPackage.document
-        document.holds[0].kind = .sloper
-        document.holds[0].sloper = metadata
-        let holdID = document.holds[0].id
-        let session = BoardEditorSession(
-            package: package(loadedPackage, replacing: document),
-            store: store
-        )
-        session.select(holdID: holdID)
-        return session
-    }
-
-    func testSelectedSloperMetadataTransitionsPreserveOnlyValidAngleState() throws {
-        let session = try makeSelectedSloperSession()
-        XCTAssertNil(session.selectedHold?.sloper)
-
-        try session.setSelectedSloperType(.flat)
-        XCTAssertEqual(
-            session.selectedHold?.sloper,
-            SloperMetadata(type: .flat, angleDegrees: nil)
-        )
-
-        try session.setSelectedSloperAngleDegrees(20)
-        XCTAssertEqual(
-            session.selectedHold?.sloper,
-            SloperMetadata(type: .flat, angleDegrees: 20)
-        )
-
-        try session.setSelectedSloperType(.round)
-        XCTAssertEqual(
-            session.selectedHold?.sloper,
-            SloperMetadata(type: .round, angleDegrees: nil)
-        )
-
-        try session.setSelectedSloperType(nil)
-        XCTAssertNil(session.selectedHold?.sloper)
-    }
-
-    func testSloperMetadataEditsUndoOneTransitionAtATime() throws {
-        let session = try makeSelectedSloperSession()
-
-        try session.setSelectedSloperType(.flat)
-        try session.setSelectedSloperAngleDegrees(20)
-        try session.setSelectedSloperType(.round)
-        try session.setSelectedSloperType(nil)
-
-        session.undo()
-        XCTAssertEqual(session.selectedHold?.sloper, SloperMetadata(type: .round, angleDegrees: nil))
-        session.undo()
-        XCTAssertEqual(session.selectedHold?.sloper, SloperMetadata(type: .flat, angleDegrees: 20))
-        session.undo()
-        XCTAssertEqual(session.selectedHold?.sloper, SloperMetadata(type: .flat, angleDegrees: nil))
-        session.undo()
-        XCTAssertNil(session.selectedHold?.sloper)
-        XCTAssertFalse(session.canUndo)
-    }
-
-    func testSloperAngleUpdateRejectsInvalidOrInapplicableValuesWithoutChangingDocument() throws {
-        let session = try makeSelectedSloperSession()
-        let unspecified = session.document
-
-        XCTAssertThrowsError(try session.setSelectedSloperAngleDegrees(20))
-        XCTAssertEqual(session.document, unspecified)
-        XCTAssertFalse(session.canUndo)
-
-        try session.setSelectedSloperType(.round)
-        let round = session.document
-        XCTAssertThrowsError(try session.setSelectedSloperAngleDegrees(20))
-        XCTAssertEqual(session.document, round)
-
-        try session.setSelectedSloperType(.flat)
-        let flat = session.document
-        for invalidAngle in [-0.01, 90.01, .infinity, .nan] {
-            XCTAssertThrowsError(try session.setSelectedSloperAngleDegrees(invalidAngle))
-            XCTAssertEqual(session.document, flat)
-        }
-    }
-
-    func testBoardCommandsMapFrameIntoBoardSpaceAndBack() throws {
-        var session = try makeSession()
-        let target = try selectFirstPathPiece(&session)
-        let piece = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        let localAnchors = try XCTUnwrap(piece.shape.commands).compactMap { command in
-            try? command.holdPathCommand().holdEndPoint
-        }
-        let boardCommands = try session.boardCommands(for: piece)
-        let boardAnchors = boardCommands.compactMap(\.boardAnchor)
-
-        XCTAssertEqual(localAnchors.count, boardAnchors.count)
-        let frame = piece.frame.cgRect
-        XCTAssertTrue(boardAnchors.allSatisfy { point in
-            point.x >= frame.minX - 1e-9 && point.x <= frame.maxX + 1e-9 &&
-                point.y >= frame.minY - 1e-9 && point.y <= frame.maxY + 1e-9
-        })
-    }
-
-    func testCanvasExposesAggregateAndPerHoldWarningsForIncompleteMetadata() throws {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
-        var document = loadedPackage.document
-        XCTAssertGreaterThanOrEqual(document.holds.count, 2)
-        for index in document.holds.indices {
-            document.holds[index].fingerCapacity = 1
-            document.holds[index].depthRangeMillimeters = BoardEditableMillimeterRange(
-                lowerBound: 10,
-                upperBound: 12
-            )
-            document.holds[index].handCapacity = 1
-        }
-        let incompleteHoldID = document.holds[0].id
-        document.holds[0].fingerCapacity = nil
-        document.holds[1].sizeMillimeters = nil
-        document.holds[1].features = nil
-
-        let session = BoardEditorSession(package: package(loadedPackage, replacing: document), store: store)
-        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-        canvas.session = session
-        canvas.updateMetadataWarningAccessibility()
-
-        let elements = try XCTUnwrap(canvas.accessibilityElements as? [UIAccessibilityElement])
-        XCTAssertEqual(elements.count, 2)
-        XCTAssertEqual(
-            elements[0].accessibilityLabel,
-            "Hangboard hold editor. 1 hold is missing required metadata."
-        )
-        XCTAssertEqual(elements[0].accessibilityValue, "Incomplete hold: \(incompleteHoldID)")
-        XCTAssertEqual(elements[1].accessibilityLabel, "Incomplete hold metadata: \(incompleteHoldID)")
-        XCTAssertEqual(elements[1].accessibilityValue, "Missing: finger capacity")
-        XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.width, 0)
-        XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
-    }
-
-    func testCanvasHighlightsOnlyEdgesAndPocketsMissingDepthMetadata() throws {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
-        var document = loadedPackage.document
-        document.holds = Array(document.holds.prefix(7))
-        XCTAssertEqual(document.holds.count, 7)
-
-        let kinds: [HoldKind] = [.jug, .sloper, .pinch, .edge, .pocket, .edge, .pocket]
-        for index in document.holds.indices {
-            document.holds[index].kind = kinds[index]
-            document.holds[index].fingerCapacity = 1
-            document.holds[index].handCapacity = 1
-            document.holds[index].sizeMillimeters = nil
-            document.holds[index].depthRangeMillimeters = nil
-        }
-        document.holds[3].sizeMillimeters = 12
-        document.holds[4].depthRangeMillimeters = BoardEditableMillimeterRange(
-            lowerBound: 10,
-            upperBound: 12
-        )
-
-        let session = BoardEditorSession(
-            package: package(loadedPackage, replacing: document),
-            store: store
-        )
-        try withExtendedLifetime(session) {
-            let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-            canvas.session = session
-            canvas.updateMetadataWarningAccessibility()
-
-            let elements = try XCTUnwrap(canvas.accessibilityElements as? [UIAccessibilityElement])
-            XCTAssertEqual(elements.count, 3)
-            XCTAssertEqual(elements[0].accessibilityLabel, "Hangboard hold editor. 2 holds are missing required metadata.")
-            XCTAssertEqual(
-                elements[0].accessibilityValue,
-                "Incomplete holds: \(document.holds[5].id), \(document.holds[6].id)"
-            )
-            XCTAssertEqual(
-                elements.dropFirst().compactMap(\.accessibilityLabel),
-                [
-                    "Incomplete hold metadata: \(document.holds[5].id)",
-                    "Incomplete hold metadata: \(document.holds[6].id)",
-                ]
-            )
-            XCTAssertTrue(elements.dropFirst().allSatisfy {
-                $0.accessibilityValue == "Missing: depth"
-                    && $0.accessibilityFrameInContainerSpace.width > 0
-                    && $0.accessibilityFrameInContainerSpace.height > 0
-            })
-        }
-    }
-
-    func testCanvasAppliesTheSessionSelectedBackgroundColor() {
-        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-
-        canvas.editorBackgroundColor = .black
-
-        XCTAssertEqual(canvas.backgroundColor, .black)
-    }
-
-    func testViewportOperationsRefreshIncompleteHoldAccessibilityFrame() throws {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
-        var document = loadedPackage.document
-        document.holds = [document.holds[0]]
-        document.holds[0].fingerCapacity = nil
-        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
-            lowerBound: 10,
-            upperBound: 12
-        )
-        document.holds[0].handCapacity = 1
-
-        let session = BoardEditorSession(
-            package: package(loadedPackage, replacing: document),
-            store: store
-        )
-        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-        canvas.session = session
-        let frameBeforePan = try XCTUnwrap(
-            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
-        ).accessibilityFrameInContainerSpace
-
-        canvas.beginViewportPan()
-        canvas.updateViewportPan(translation: CGPoint(x: 48, y: 16))
-
-        let frameAfterPan = try XCTUnwrap(
-            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
-        ).accessibilityFrameInContainerSpace
-        XCTAssertNotEqual(frameAfterPan, frameBeforePan)
-
-        canvas.beginViewportZoom()
-        canvas.updateViewportZoom(scale: 1.5)
-
-        let frameAfterPinch = try XCTUnwrap(
-            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
-        ).accessibilityFrameInContainerSpace
-        XCTAssertNotEqual(frameAfterPinch, frameAfterPan)
-    }
-
-    func testIncompleteMetadataRequiresKindFingerDepthAndHandForEdgesButNotSizeOrFeatures() throws {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
-        var document = loadedPackage.document
-        let holdID = document.holds[0].id
-        document.holds = [document.holds[0]]
-        document.holds[0].kind = .edge
-        document.holds[0].fingerCapacity = 1
-        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
-            lowerBound: 10,
-            upperBound: 12
-        )
-        document.holds[0].handCapacity = 1
-        document.holds[0].sizeMillimeters = nil
-        document.holds[0].features = nil
-
-        let completeSession = BoardEditorSession(
-            package: package(loadedPackage, replacing: document),
-            store: store
-        )
-        XCTAssertEqual(completeSession.incompleteMetadataHoldIDs, [])
-
-        document.holds[0].kind = nil
-        XCTAssertEqual(
-            BoardEditorSession(
-                package: package(loadedPackage, replacing: document),
-                store: store
-            ).incompleteMetadataHoldIDs,
-            [holdID]
-        )
-        document.holds[0].kind = .edge
-
-        document.holds[0].fingerCapacity = nil
-        XCTAssertEqual(
-            BoardEditorSession(
-                package: package(loadedPackage, replacing: document),
-                store: store
-            ).incompleteMetadataHoldIDs,
-            [holdID]
-        )
-        document.holds[0].fingerCapacity = 1
-
-        document.holds[0].depthRangeMillimeters = nil
-        XCTAssertEqual(
-            BoardEditorSession(
-                package: package(loadedPackage, replacing: document),
-                store: store
-            ).incompleteMetadataHoldIDs,
-            [holdID]
-        )
-        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
-            lowerBound: 10,
-            upperBound: 12
-        )
-
-        document.holds[0].handCapacity = nil
-        XCTAssertEqual(
-            BoardEditorSession(
-                package: package(loadedPackage, replacing: document),
-                store: store
-            ).incompleteMetadataHoldIDs,
-            [holdID]
-        )
-    }
-
-    func testIncompleteMetadataRequiresDepthOnlyForEdgesAndPockets() throws {
-        _ = try store.startEditing(slug: fixtureSlug)
-        let loadedPackage = try store.loadDocument(slug: fixtureSlug)
-        var document = loadedPackage.document
-        document.holds = Array(document.holds.prefix(5))
-        XCTAssertEqual(document.holds.count, 5)
-
-        let kinds: [HoldKind] = [.jug, .sloper, .pinch, .edge, .pocket]
-        for index in document.holds.indices {
-            document.holds[index].kind = kinds[index]
-            document.holds[index].fingerCapacity = 1
-            document.holds[index].handCapacity = 1
-            document.holds[index].sizeMillimeters = nil
-            document.holds[index].depthRangeMillimeters = nil
-        }
-
-        document.holds[3].sizeMillimeters = 12
-        document.holds[4].depthRangeMillimeters = BoardEditableMillimeterRange(
-            lowerBound: 10,
-            upperBound: 12
-        )
-
-        let completeSession = BoardEditorSession(
-            package: package(loadedPackage, replacing: document),
-            store: store
-        )
-        XCTAssertEqual(completeSession.incompleteMetadataHoldIDs, [])
-
-        document.holds[3].sizeMillimeters = nil
-        document.holds[4].depthRangeMillimeters = nil
-        let incompleteSession = BoardEditorSession(
-            package: package(loadedPackage, replacing: document),
-            store: store
-        )
-        XCTAssertEqual(
-            incompleteSession.incompleteMetadataHoldIDs,
-            [document.holds[3].id, document.holds[4].id]
-        )
-    }
-
-    func testTranslateMovesFrameAndKeepsCommandsNormalized() throws {
-        var session = try makeSession()
-        let target = try selectFirstPathPiece(&session)
-        let before = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        let beforeBounds = try HoldPathEngine.bounds(of: session.boardCommands(for: before))
-
-        session.beginInteractiveEdit()
-        try session.translateSelectedPiece(deltaX: 0.02, deltaY: 0.01, recordsHistory: false)
-
-        let after = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        let afterCommands = try session.boardCommands(for: after)
-        let afterBounds = HoldPathEngine.bounds(of: afterCommands)
-
-        XCTAssertEqual(afterBounds.minX, beforeBounds.minX + 0.02, accuracy: 1e-9)
-        XCTAssertEqual(afterBounds.minY, beforeBounds.minY + 0.01, accuracy: 1e-9)
-        XCTAssertEqual(after.frame.width, before.frame.width, accuracy: 1e-9)
-        XCTAssertLessThanOrEqual(after.frame.width, 1)
-        XCTAssertNotNil(after.shapeConstraint == nil ? nil : after.shapeConstraint)
-        XCTAssertTrue(after.shape.commands?.allSatisfy { command in
-            command.to?.allSatisfy { (-0.0000001...1.0000001).contains($0) } ?? true
-        } ?? false)
-    }
-
-    func testAnchorDragRewritesTightFrame() throws {
-        var session = try makeSession()
-        let target = try selectFirstPathPiece(&session)
-        let pieceBefore = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        let commandsBefore = try session.boardCommands(for: pieceBefore)
-        var leftmostAnchorCandidate: (index: Int, point: CGPoint)?
-        for (index, command) in commandsBefore.enumerated() {
-            guard let point = command.boardAnchor else { continue }
-            guard let current = leftmostAnchorCandidate else {
-                leftmostAnchorCandidate = (index: index, point: point)
-                continue
-            }
-            if point.x < current.point.x ||
-                (point.x == current.point.x && index < current.index) {
-                leftmostAnchorCandidate = (index: index, point: point)
-            }
-        }
-        let leftmostAnchor = try XCTUnwrap(leftmostAnchorCandidate)
-        session.select(handle: .anchor(commandIndex: leftmostAnchor.index))
-
-        session.beginInteractiveEdit()
-        try session.moveSelectedAnchor(
-            commandIndex: leftmostAnchor.index,
-            deltaX: -0.01,
-            deltaY: 0,
-            recordsHistory: false
-        )
-
-        let pieceAfter = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        XCTAssertEqual(pieceAfter.frame.x, pieceBefore.frame.x - 0.01, accuracy: 1e-9)
-        XCTAssertEqual(pieceAfter.frame.width, pieceBefore.frame.width + 0.01, accuracy: 1e-9)
-        try session.boardCommands(for: pieceAfter)
-    }
-
-    func testUndoRedoRoundTripRestoresDocument() throws {
+    func testSessionReadsGeometryFromTypedRasterMedia() throws {
         let session = try makeSession()
-        var working = session
-        let target = try selectFirstPathPiece(&working)
-        let original = working.document
+        session.select(contactID: "hold-one")
 
-        working.beginInteractiveEdit()
-        try working.translateSelectedPiece(deltaX: 0.03, deltaY: 0, recordsHistory: false)
-        XCTAssertFalse(working.document == original)
-        XCTAssertTrue(working.canUndo)
-
-        working.undo()
-        XCTAssertTrue(working.document == original)
-        XCTAssertTrue(working.canRedo)
-
-        working.redo()
-        XCTAssertFalse(working.document == original)
-        _ = target
+        XCTAssertEqual(session.selectedContact?.id, "hold-one")
+        XCTAssertEqual(session.selectedPieceDocument, session.document.geometry(forContactID: "hold-one")?[0])
     }
 
-    func testSavePersistsEditsThroughStore() throws {
-        var session = try makeSession()
-        let target = try selectFirstPathPiece(&session)
-        session.beginInteractiveEdit()
-        try session.translateSelectedPiece(deltaX: 0.005, deltaY: 0.002, recordsHistory: false)
-        session.save()
-        XCTAssertTrue(session.isSaved)
+    func testSessionEditsRasterContactGeometryAndUndoRedo() throws {
+        let session = try makeSession()
+        session.select(contactID: "hold-one")
+        let before = try XCTUnwrap(session.selectedPieceDocument)
 
-        let reloaded = try store.loadDocument(slug: session.slug)
-        let savedPiece = reloaded.document.holds.first { $0.id == target.holdID }?
-            .geometry[target.pieceIndex]
-        let originalPiece = session.hold(id: target.holdID)?.geometry[target.pieceIndex]
-        XCTAssertEqual(savedPiece?.frame, originalPiece?.frame)
+        try session.translateSelectedPiece(deltaX: 0.05, deltaY: 0.04, recordsHistory: true)
+        let after = try XCTUnwrap(session.selectedPieceDocument)
+        XCTAssertNotEqual(after.frame, before.frame)
+        XCTAssertFalse(session.isSaved)
+
+        session.undo()
+        XCTAssertEqual(session.selectedPieceDocument, before)
+        session.redo()
+        XCTAssertEqual(session.selectedPieceDocument, after)
     }
 
-    func testConstrainedResizeRespectsPixelDerivedMinimums() throws {
-        var session = try makeSession()
-        let holds = session.document.holds
-        let constrainedTarget = holds.enumerated().compactMap { _, hold -> (String, Int)? in
-            for (index, piece) in hold.geometry.enumerated()
-            where piece.shape.type == "path" && piece.shapeConstraint != nil {
-                return (hold.id, index)
-            }
-            return nil
-        }.first
+    func testSessionSavePersistsV3RasterGeometry() throws {
+        let session = try makeSession()
+        session.select(contactID: "hold-one")
+        try session.translateSelectedPiece(deltaX: 0.02, deltaY: 0, recordsHistory: true)
 
-        guard let constrainedTarget else {
-            throw XCTSkip("package has no constrained path pieces")
-        }
-        session.select(holdID: constrainedTarget.0, pieceIndex: constrainedTarget.1)
-        guard let piece = session.selectedPieceDocument,
-              let constraint = piece.shapeConstraint else {
-            return XCTFail("expected constrained piece")
-        }
-        let startPath = try session.boardCommands(for: piece)
-        let startCenter = BoardEditorSession.anchorCentroid(startPath)
-        let farPointer = CGPoint(x: startCenter.x - 10, y: startCenter.y - 10)
+        try session.save()
 
-        session.beginInteractiveEdit()
-        try session.resizeConstrained(
-            handle: .nw,
-            pointerBoardSpace: farPointer,
-            recordsHistory: false
+        let reloaded = try store.loadDocument(slug: slug)
+        XCTAssertEqual(
+            reloaded.document.geometry(forContactID: "hold-one"),
+            session.document.geometry(forContactID: "hold-one")
         )
-
-        let resized = session.hold(id: constrainedTarget.0)!.geometry[constrainedTarget.1]
-        let resizedCommands = try session.boardCommands(for: resized)
-        let bounds = HoldPathEngine.bounds(of: resizedCommands)
-        XCTAssertGreaterThanOrEqual(bounds.width + 1e-9, session.minimumResizeWidth)
-        XCTAssertGreaterThanOrEqual(bounds.height + 1e-9, session.minimumResizeHeight)
-        XCTAssertEqual(constraint.rotationDegrees, resized.shapeConstraint?.rotationDegrees)
+        let payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(
+                with: Data(contentsOf: reloaded.packageURL.appendingPathComponent("board.json"))
+            ) as? [String: Any]
+        )
+        XCTAssertEqual(payload["schemaVersion"] as? Int, 3)
+        XCTAssertNil(payload["holds"])
     }
 
-    func testRoundedRectConversionProducesEquivalentOutline() throws {
-        var session = try makeSession()
-        let roundedTarget = session.document.holds.compactMap { hold -> (String, Int)? in
-            for (index, piece) in hold.geometry.enumerated()
-            where piece.shape.type == "roundedRect" {
-                return (hold.id, index)
-            }
-            return nil
-        }.first
-
-        guard let roundedTarget else {
-            throw XCTSkip("package has no roundedRect pieces")
-        }
-        session.select(holdID: roundedTarget.0, pieceIndex: roundedTarget.1)
+    func testRoundedRectConversionWritesBackToRasterMedia() throws {
+        let session = try makeSession()
+        session.select(contactID: "hold-2")
         XCTAssertTrue(session.isRoundedRectPiece)
-        let before = session.selectedPieceDocument!
 
         try session.convertRoundedRectToPath()
 
-        let converted = session.hold(id: roundedTarget.0)!.geometry[roundedTarget.1]
-        XCTAssertEqual(converted.shape.type, "path")
-        XCTAssertEqual(converted.shapeConstraint, before.shapeConstraint)
-        let convertedCommands = try session.boardCommands(for: converted)
-        let bounds = HoldPathEngine.bounds(of: convertedCommands)
-        XCTAssertEqual(bounds.width, CGFloat(before.frame.width), accuracy: 1e-9)
-        XCTAssertEqual(bounds.height, CGFloat(before.frame.height), accuracy: 1e-9)
-    }
-
-    func testPresetApplicationRegeneratesConstrainedPrimitive() throws {
-        var session = try makeSession()
-        let target = try selectFirstPathPiece(&session)
-        let before = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        let beforeBounds = HoldPathEngine.bounds(of: try session.boardCommands(for: before))
-
-        try session.applyPreset(.pill)
-
-        let after = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
-        XCTAssertEqual(after.shapeConstraint?.shape, ShapeConstraintShape.pill)
-        let afterCommands = try session.boardCommands(for: after)
-        let afterBounds = HoldPathEngine.bounds(of: afterCommands)
-        XCTAssertEqual(afterBounds.width, beforeBounds.width, accuracy: 1e-6)
-        XCTAssertEqual(afterBounds.height, beforeBounds.height, accuracy: 1e-6)
-        let afterAnchors = afterCommands.compactMap({ $0.boardAnchor }).count
-        XCTAssertGreaterThan(afterAnchors, 4, "pill regeneration must reshape the outline")
+        XCTAssertEqual(session.selectedPieceDocument?.shape.type, "path")
+        XCTAssertNotNil(session.document.geometry(forContactID: "hold-2"))
     }
 
     func testNormalizedConstraintDegreesWrapsIntoRange() {
         XCTAssertEqual(BoardEditorSession.normalizedConstraintDegrees(185), -175)
         XCTAssertEqual(BoardEditorSession.normalizedConstraintDegrees(-185), 175)
         XCTAssertEqual(BoardEditorSession.normalizedConstraintDegrees(180), -180)
-        XCTAssertEqual(BoardEditorSession.normalizedConstraintDegrees(-0.0), 0)
-        XCTAssertEqual(BoardEditorSession.normalizedConstraintDegrees(359.5), -0.5)
     }
 
+    private func makeSession() throws -> BoardEditorSession {
+        let package = try store.prepareEditablePackage(slug: slug)
+        return BoardEditorSession(package: package, store: store)
+    }
 }

@@ -83,13 +83,13 @@ def test_complete_catalog_omits_contradicted_optional_semantics() -> None:
         "yy.verticalboard-first",
         "yy.verticalboard-one",
     ):
-        holds = boards[board_id]["holds"]
-        assert all(hold.get("gripType") != "threeFingerPocket" for hold in holds)
-        assert all(hold.get("fingerCapacity") != 3 for hold in holds)
+        contacts = boards[board_id]["contacts"]
+        assert all("threeFingerPocket" not in contact["gripTypes"] for contact in contacts)
+        assert all(contact.get("fingerCapacity") != 3 for contact in contacts)
 
-    whetstone_holds = boards["tension.whetstone"]["holds"]
-    assert all(hold.get("gripType") != "fourFingerPocket" for hold in whetstone_holds)
-    assert all(hold.get("fingerCapacity") != 4 for hold in whetstone_holds)
+    whetstone_contacts = boards["tension.whetstone"]["contacts"]
+    assert all("fourFingerPocket" not in contact["gripTypes"] for contact in whetstone_contacts)
+    assert all(contact.get("fingerCapacity") != 4 for contact in whetstone_contacts)
 
-    honestone_holds = boards["tension.honestone"]["holds"]
-    assert all(hold.get("fingerCapacity") != 4 for hold in honestone_holds)
+    honestone_contacts = boards["tension.honestone"]["contacts"]
+    assert all(contact.get("fingerCapacity") != 4 for contact in honestone_contacts)

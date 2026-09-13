@@ -803,24 +803,11 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
-enum MissingHandCapacityPolicy: String, Codable, Hashable {
-    /// Compatibility for equipment modeled before simultaneous hand capacity
-    /// was recorded. This is a migration rule, not physical source data.
-    case legacyBilateral
-    /// Missing capacity cannot satisfy a bilateral step.
-    case unavailable
-}
-
 struct EquipmentObject: Codable, Hashable, Identifiable {
     let id: String
-    let missingHandCapacityPolicy: MissingHandCapacityPolicy
 
-    init(
-        id: String,
-        missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
-    ) {
+    init(id: String) {
         self.id = id
-        self.missingHandCapacityPolicy = missingHandCapacityPolicy
     }
 }
 

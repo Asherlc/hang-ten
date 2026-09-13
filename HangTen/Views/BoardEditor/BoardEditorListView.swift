@@ -114,8 +114,12 @@ struct BoardEditorListView: View {
 
     private func row(_ board: BoardRevision) -> some View {
         let allowsPackageActions = resetCoordinator.allowsPackageActions(for: board.id)
+        let isEditable = board.presentations.allSatisfy { presentation in
+            if case .raster = presentation.media { return true }
+            return false
+        }
         return Button {
-            guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
+            guard resetCoordinator.allowsPackageActions(for: board.id), isEditable else { return }
             openSlug = SlugRoute(slug: board.id)
         } label: {
             HStack(spacing: 14) {
@@ -132,6 +136,8 @@ struct BoardEditorListView: View {
                         .foregroundStyle(Color.hangMuted)
                     if editedSlugs.contains(board.id) {
                         Pill(title: "Local edits", tint: .holdActiveDeep, fill: Color.holdActive.opacity(0.12))
+                    } else if !isEditable {
+                        Pill(title: "Model · read only", tint: .hangMuted, fill: Color.hangLine.opacity(0.25))
                     }
                 }
                 Spacer()
@@ -147,7 +153,7 @@ struct BoardEditorListView: View {
             }
         }
         .buttonStyle(.plain)
-        .disabled(!allowsPackageActions)
+        .disabled(!allowsPackageActions || !isEditable)
         .contextMenu {
             Button {
                 guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
@@ -155,13 +161,13 @@ struct BoardEditorListView: View {
             } label: {
                 Label("Push to GitHub…", systemImage: "arrow.up.circle")
             }
-            .disabled(!allowsPackageActions)
+            .disabled(!allowsPackageActions || !isEditable)
             Button {
                 pullFromGitHub(board)
             } label: {
                 Label("Pull latest from GitHub", systemImage: "arrow.down.circle")
             }
-            .disabled(!allowsPackageActions)
+            .disabled(!allowsPackageActions || !isEditable)
             if editedSlugs.contains(board.id) {
                 Button(role: .destructive) {
                     guard resetCoordinator.allowsPackageActions(for: board.id) else { return }

@@ -394,12 +394,7 @@ internal enum BoardTargetResolver {
             if let bilateralHold = candidates.first(where: { $0.handCapacity == 2 }) {
                 return [bilateralHold.id]
             }
-            guard let objectID = selectedObjectIDs.first,
-                  board.object(id: objectID)?.missingHandCapacityPolicy == .legacyBilateral else {
-                return []
-            }
-            guard !candidates.contains(where: { $0.handCapacity == 1 }) else { return [] }
-            return candidates.map(\.id)
+            return []
         }
     }
 

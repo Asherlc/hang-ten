@@ -92,7 +92,7 @@ final class HoldEditorCanvasUIView: UIView {
 
         var elements: [UIAccessibilityElement] = [aggregate]
         if let session {
-            for hold in session.document.holds where !session.missingRequiredMetadata(for: hold).isEmpty {
+            for hold in session.document.contacts where !session.missingRequiredMetadata(for: hold).isEmpty {
                 let warning = UIAccessibilityElement(accessibilityContainer: self)
                 warning.accessibilityTraits = .image
                 warning.accessibilityLabel = "Incomplete hold metadata: \(hold.id)"
@@ -111,8 +111,9 @@ final class HoldEditorCanvasUIView: UIView {
         updateMetadataWarningAccessibility()
     }
 
-    private func accessibilityFrame(for hold: BoardEditableHold) -> CGRect {
-        let boardFrame = hold.geometry.map(\.frame.cgRect).reduce(CGRect.null) { partial, frame in
+    private func accessibilityFrame(for hold: BoardEditableContact) -> CGRect {
+        let geometry = session?.document.geometry(forContactID: hold.id) ?? []
+        let boardFrame = geometry.map(\.frame.cgRect).reduce(CGRect.null) { partial, frame in
             partial.union(frame)
         }
         guard !boardFrame.isNull else { return bounds }
@@ -223,10 +224,10 @@ final class HoldEditorCanvasUIView: UIView {
         guard gesture.state == .ended, let session else { return }
         let location = gesture.location(in: self)
         if let piece = hitTestPiece(at: location) {
-            session.select(holdID: piece.holdID, pieceIndex: piece.pieceIndex)
+            session.select(contactID: piece.contactID, pieceIndex: piece.pieceIndex)
             session.select(handle: hitTestHandle(at: location))
         } else {
-            session.select(holdID: nil)
+            session.select(contactID: nil)
         }
         setNeedsDisplay()
     }
@@ -285,7 +286,7 @@ final class HoldEditorCanvasUIView: UIView {
         }
         if let selection = hitTestPiece(at: location) {
             if selection != session.selectedPiece {
-                session.select(holdID: selection.holdID, pieceIndex: selection.pieceIndex)
+                session.select(contactID: selection.contactID, pieceIndex: selection.pieceIndex)
             }
             if session.isRoundedRectPiece { return }
             guard let piece = session.selectedPieceDocument,
@@ -567,8 +568,8 @@ final class HoldEditorCanvasUIView: UIView {
         guard let session else { return nil }
         let boardLocation = boardPoint(fromScreen: location, bounds: bounds)
         var best: (selection: BoardEditorSession.PieceSelection, area: CGFloat)?
-        for hold in session.document.holds {
-            for (pieceIndex, piece) in hold.geometry.enumerated() {
+        for hold in session.document.contacts {
+            for (pieceIndex, piece) in (session.document.geometry(forContactID: hold.id) ?? []).enumerated() {
                 guard let commands = try? session.boardCommands(for: piece),
                   commands.containsBoard(point: boardLocation) else {
                     continue
@@ -577,7 +578,7 @@ final class HoldEditorCanvasUIView: UIView {
                 let area = max(pieceBounds.width * pieceBounds.height, 0)
                 if best == nil || area < best!.area {
                     best = (
-                        BoardEditorSession.PieceSelection(holdID: hold.id, pieceIndex: pieceIndex),
+                        BoardEditorSession.PieceSelection(contactID: hold.id, pieceIndex: pieceIndex),
                         area
                     )
                 }
@@ -608,13 +609,13 @@ final class HoldEditorCanvasUIView: UIView {
             ))
         }
 
-        let selectedHoldID = session.selectedPiece?.holdID
+        let selectedContactID = session.selectedPiece?.contactID
         let selectedPieceIndex = session.selectedPiece?.pieceIndex
-        let incompleteHoldIDs = Set(session.incompleteMetadataHoldIDs)
+        let incompleteHoldIDs = Set(session.incompleteMetadataContactIDs)
 
-        for hold in session.document.holds {
-            for (pieceIndex, piece) in hold.geometry.enumerated() {
-                let isSelected = hold.id == selectedHoldID && pieceIndex == selectedPieceIndex
+        for hold in session.document.contacts {
+            for (pieceIndex, piece) in (session.document.geometry(forContactID: hold.id) ?? []).enumerated() {
+                let isSelected = hold.id == selectedContactID && pieceIndex == selectedPieceIndex
                 let isMetadataIncomplete = incompleteHoldIDs.contains(hold.id)
                 guard let commands = try? session.boardCommands(for: piece) else { continue }
                 let path = bezierPath(commands: commands)

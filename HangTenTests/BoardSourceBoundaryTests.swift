@@ -261,14 +261,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     with: Data(contentsOf: packageURL.appendingPathComponent("board.json"))
                 ) as? [String: Any]
             )
-            let holds = try XCTUnwrap(boardDocument["holds"] as? [[String: Any]])
+            let holds = try XCTUnwrap(boardDocument["contacts"] as? [[String: Any]])
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 2)
+            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 3)
             XCTAssertNil(boardDocument["presentation"])
             let presentations = try XCTUnwrap(
                 boardDocument["presentations"] as? [[String: Any]]
@@ -309,7 +309,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 for presentation in presentations {
                     guard let presentationMedia = presentation["media"] as? [String: Any],
                           presentationMedia["type"] as? String == "raster",
-                          let holdGeometry = presentationMedia["holdGeometry"] as? [String: Any]
+                          let holdGeometry = presentationMedia["contactGeometry"] as? [String: Any]
                     else {
                         continue
                     }
@@ -721,7 +721,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let boardObject = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
             )
-            let holds = try XCTUnwrap(boardObject["holds"] as? [[String: Any]])
+            let holds = try XCTUnwrap(boardObject["contacts"] as? [[String: Any]])
             identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
 
             for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {

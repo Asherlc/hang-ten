@@ -902,8 +902,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testActivityRecordingDoubleHandStepRejectsNewPortABoardWithoutHandCapacity() {
         let board = portableBoard(
             id: "new-single-object-board",
-            handCapacity: nil,
-            missingHandCapacityPolicy: .unavailable
+            handCapacity: nil
         )
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
@@ -915,13 +914,16 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
     }
 
-    func testActivityRecordingDoubleHandStepKeepsLegacyNilHandCapacityCompatible() throws {
+    func testActivityRecordingDoubleHandStepRejectsUnknownHandCapacity() throws {
         let board = portableBoard(id: "beastmaker-1000", handCapacity: nil)
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
-        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
-
-        XCTAssertEqual(records.map(\.holdIDs), [["left-a"]])
+        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "portable-step", segmentIndex: 0)
+            )
+        }
     }
 
     func testSevenThreeRepeatersResolveExpectedLeftRightEdgePairs() throws {
@@ -1454,8 +1456,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     private func portableBoard(
         id: String = "portable-board",
-        handCapacity: Int?,
-        missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
+        handCapacity: Int?
     ) -> BoardRevision {
         BoardRevision(
             id: id,
@@ -1465,12 +1466,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
-            equipmentObjects: [
-                .init(
-                    id: "left",
-                    missingHandCapacityPolicy: missingHandCapacityPolicy
-                )
-            ],
+            equipmentObjects: [.init(id: "left")],
             contacts: [
                 PhysicalContact(id: "left-a", equipmentObjectID: "left", name: "Left A", kind: .pocket, handCapacity: handCapacity),
                 PhysicalContact(id: "left-b", equipmentObjectID: "left", name: "Left B", kind: .pocket, handCapacity: handCapacity)
