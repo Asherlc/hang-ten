@@ -356,6 +356,91 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testFlashBoardTwoEdgeSceneProjectsBoardAndBothCordBranchesAndRendersSnapshot() async throws {
+        let (_, _, model) = try await loadMigratedModel("tension.flash-board")
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
+        view.backgroundColor = .white
+        view.isOpaque = true
+        view.rendersContinuously = false
+        view.isPlaying = false
+        view.display(model)
+        view.scene = model.scene
+        view.pointOfView = model.camera
+
+        func projectedCorners(for node: SCNNode) -> [SCNVector3] {
+            let bounds = node.boundingBox
+            let corners = [bounds.min.x, bounds.max.x].flatMap { x in
+                [bounds.min.y, bounds.max.y].flatMap { y in
+                    [bounds.min.z, bounds.max.z].map { z in SCNVector3(x, y, z) }
+                }
+            }
+            return corners.map { view.projectPoint(node.convertPosition($0, to: nil)) }
+        }
+
+        func assertProjected(_ nodes: [SCNNode], _ label: String) {
+            let points = nodes.flatMap(projectedCorners)
+            XCTAssertFalse(points.isEmpty, "\(label) must have projected geometry")
+            let visible = points.filter { point in
+                point.x >= 0 && point.x <= Float(view.bounds.width) &&
+                point.y >= 0 && point.y <= Float(view.bounds.height) &&
+                point.z >= 0 && point.z <= 1
+            }
+            let xValues = points.map(\.x)
+            let yValues = points.map(\.y)
+            let zValues = points.map(\.z)
+            XCTAssertFalse(
+                visible.isEmpty,
+                "\(label) must intersect the viewport with visible depth; " +
+                "x=\(xValues.min() ?? .nan)...\(xValues.max() ?? .nan), " +
+                "y=\(yValues.min() ?? .nan)...\(yValues.max() ?? .nan), " +
+                "z=\(zValues.min() ?? .nan)...\(zValues.max() ?? .nan), " +
+                "cameraPosition=\(model.camera.position), cameraFront=\(model.camera.simdWorldFront)"
+            )
+        }
+
+        func assertProjectedPresentation(_ positionID: String, _ label: String) {
+            view.positionID = positionID
+            view.selectPositionIfNeeded()
+            SCNTransaction.flush()
+
+            assertProjected(model.geometryNodes, "\(label) board")
+            guard let cord = model.transientCordNode else {
+                XCTFail("\(label) must create a cord node")
+                return
+            }
+            for branchIndex in 0..<2 {
+                let segments = cord.childNodes.filter {
+                    $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+                }
+                XCTAssertFalse(segments.isEmpty, "\(label) branch \(branchIndex) must contain cord geometry")
+                assertProjected(segments, "\(label) cord branch \(branchIndex)")
+            }
+        }
+
+        assertProjectedPresentation("three-edge-upright", "three-edge control")
+        assertProjectedPresentation("two-edge-upright", "two-edge")
+
+        let image = view.snapshot()
+        guard let cgImage = image.cgImage,
+              let providerData = cgImage.dataProvider?.data,
+              let bytes = CFDataGetBytePtr(providerData) else {
+            return XCTFail("two-edge snapshot must provide pixel data")
+        }
+        let bytesPerPixel = max(cgImage.bitsPerPixel / 8, 1)
+        let bytesPerRow = cgImage.bytesPerRow
+        let hasRenderedPixels = (0..<cgImage.height).contains { row in
+            (0..<cgImage.width).contains { column in
+                let offset = row * bytesPerRow + column * bytesPerPixel
+                guard offset + min(bytesPerPixel, 4) <= CFDataGetLength(providerData) else { return false }
+                let red = bytes[offset]
+                let green = bytes[offset + min(1, bytesPerPixel - 1)]
+                let blue = bytes[offset + min(2, bytesPerPixel - 1)]
+                return red < 240 || green < 240 || blue < 240
+            }
+        }
+        XCTAssertTrue(hasRenderedPixels, "two-edge snapshot must contain non-background pixels")
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation

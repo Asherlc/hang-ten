@@ -607,10 +607,23 @@ final class BoardModelScene {
         orbitAzimuth = 0
         orbitElevation = 0
         orbitZoom = 1
-        camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
+        let position = framing.target - framing.direction * framing.distance
+        camera.position = SCNVector3(position)
         camera.camera?.orthographicScale = Double(cameraScale(for: framing))
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        orientCamera(at: framing.target, up: framing.up)
         currentFraming = framing
+    }
+
+    private func orientCamera(at target: SIMD3<Float>, up requestedUp: SIMD3<Float>) {
+        let forward = simd_normalize(target - camera.simdPosition)
+        let right = simd_normalize(simd_cross(forward, requestedUp))
+        let up = simd_cross(right, forward)
+        var transform = matrix_identity_float4x4
+        transform.columns.0 = SIMD4<Float>(right.x, right.y, right.z, 0)
+        transform.columns.1 = SIMD4<Float>(up.x, up.y, up.z, 0)
+        transform.columns.2 = SIMD4<Float>(-forward.x, -forward.y, -forward.z, 0)
+        transform.columns.3 = SIMD4<Float>(camera.simdPosition.x, camera.simdPosition.y, camera.simdPosition.z, 1)
+        camera.simdTransform = transform
     }
 
     private func makeCordNode(for solved: BoardModelSolvedSuspension) -> SCNNode {
