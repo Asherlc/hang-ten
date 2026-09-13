@@ -127,6 +127,34 @@ def _write_shared_model_parser_parity_package(
             '"suspension":' + json.dumps(reordered, separators=(",", ":")),
             1,
         )
+    if fixture.get("reorderPairedLeadAnchorMembers"):
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = dict(suspension)
+        anchor = suspension["anchor"]
+        reordered["anchor"] = {
+            key: anchor[key]
+            for key in ("visibility", "offsetFromBoardBounds", "provenance")
+        }
+        board_json = board_json.replace(
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            1,
+        )
+    if fixture.get("reorderPairedLeadCordMembers"):
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = dict(suspension)
+        cord = suspension["cord"]
+        reordered["cord"] = {
+            key: cord[key]
+            for key in ("radius", "restLength", "material", "provenance")
+        }
+        board_json = board_json.replace(
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            1,
+        )
     board_path.write_text(board_json, encoding="utf-8")
     (assets / "primary.model.json").write_text(
         _dump_shared_json_document(descriptor), encoding="utf-8"

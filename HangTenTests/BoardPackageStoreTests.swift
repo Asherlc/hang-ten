@@ -947,7 +947,10 @@ final class BoardPackageStoreTests: XCTestCase {
                 "paired-lead-three-attachments", "paired-lead-duplicate-id",
                 "paired-lead-hold-node", "paired-lead-visible-anchor",
                 "paired-lead-unknown-pose", "paired-lead-short-lead",
-                "paired-lead-suspension-member-order"
+                "paired-lead-suspension-member-order",
+                "paired-lead-anchor-member-order", "paired-lead-cord-member-order",
+                "paired-lead-empty-attachment-provenance", "paired-lead-empty-anchor-provenance",
+                "paired-lead-empty-cord-material", "paired-lead-empty-cord-provenance"
             ]
         )
 
@@ -4519,6 +4522,28 @@ final class BoardPackageStoreTests: XCTestCase {
                 )
             )
         }
+        if specification["reorderPairedLeadAnchorMembers"] as? Bool == true {
+            let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
+            try replaceSerializedSuspension(
+                in: &boardData,
+                matching: try serializedPairedLeadSuspension(suspension),
+                with: try serializedPairedLeadSuspension(
+                    suspension,
+                    anchorMemberOrder: ["visibility", "offsetFromBoardBounds", "provenance"]
+                )
+            )
+        }
+        if specification["reorderPairedLeadCordMembers"] as? Bool == true {
+            let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
+            try replaceSerializedSuspension(
+                in: &boardData,
+                matching: try serializedPairedLeadSuspension(suspension),
+                with: try serializedPairedLeadSuspension(
+                    suspension,
+                    cordMemberOrder: ["radius", "restLength", "material", "provenance"]
+                )
+            )
+        }
         boardData = replacingRawNonfiniteSentinel(in: boardData)
         var descriptorData = try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys])
         descriptorData = replacingRawNonfiniteSentinel(in: descriptorData)
@@ -4631,7 +4656,9 @@ final class BoardPackageStoreTests: XCTestCase {
 
     private func serializedPairedLeadSuspension(
         _ suspension: [String: Any],
-        memberOrder: [String] = ["type", "attachments", "anchor", "cord", "canonicalPoses"]
+        memberOrder: [String] = ["type", "attachments", "anchor", "cord", "canonicalPoses"],
+        anchorMemberOrder: [String] = ["offsetFromBoardBounds", "visibility", "provenance"],
+        cordMemberOrder: [String] = ["restLength", "radius", "material", "provenance"]
     ) throws -> Data {
         let attachments = try XCTUnwrap(suspension["attachments"] as? [Any])
         let anchor = try XCTUnwrap(suspension["anchor"] as? [String: Any])
@@ -4649,11 +4676,11 @@ final class BoardPackageStoreTests: XCTestCase {
                 }),
                 "anchor": try orderedJSONObjectData(
                     anchor,
-                    keys: ["offsetFromBoardBounds", "visibility", "provenance"]
+                    keys: anchorMemberOrder
                 ),
                 "cord": try orderedJSONObjectData(
                     cord,
-                    keys: ["restLength", "radius", "material", "provenance"]
+                    keys: cordMemberOrder
                 ),
                 "canonicalPoses": try serializedTwoBranchCanonicalPoses(poses),
             ]

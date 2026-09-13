@@ -790,10 +790,18 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 _finite_vector3(attachment_payload["pointInModel"], f"{attachment_source}.pointInModel"),
                 _string(attachment_payload["provenance"], f"{attachment_source}.provenance"),
             ))
-        anchor = _load_model_anchor(payload["anchor"], f"{source}.anchor")
+        anchor_source = f"{source}.anchor"
+        anchor_payload = _mapping(payload["anchor"], anchor_source)
+        _canonical_member_order(
+            anchor_payload, ("offsetFromBoardBounds", "visibility", "provenance"), anchor_source
+        )
+        anchor = _load_model_anchor(anchor_payload, anchor_source)
         cord_source = f"{source}.cord"
         cord_payload = _mapping(payload["cord"], cord_source)
         _closed(cord_payload, {"restLength", "radius", "material", "provenance"}, cord_source)
+        _canonical_member_order(
+            cord_payload, ("restLength", "radius", "material", "provenance"), cord_source
+        )
         cord = BoardModelCord(
             _positive_number(cord_payload["restLength"], f"{cord_source}.restLength"),
             _positive_number(cord_payload["radius"], f"{cord_source}.radius"),

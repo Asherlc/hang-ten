@@ -1080,6 +1080,56 @@
       "swiftError": "malformedJSON",
       "reorderPairedLeadSuspensionMembers": true,
       "mutations": []
+    },
+    {
+      "name": "paired-lead-anchor-member-order",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderPairedLeadAnchorMembers": true,
+      "mutations": []
+    },
+    {
+      "name": "paired-lead-cord-member-order",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderPairedLeadCordMembers": true,
+      "mutations": []
+    },
+    {
+      "name": "paired-lead-empty-attachment-provenance",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "non-empty string",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachments", 0, "provenance"], "value": ""}]
+    },
+    {
+      "name": "paired-lead-empty-anchor-provenance",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "non-empty string",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "anchor", "provenance"], "value": ""}]
+    },
+    {
+      "name": "paired-lead-empty-cord-material",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "non-empty string",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "material"], "value": ""}]
+    },
+    {
+      "name": "paired-lead-empty-cord-provenance",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "non-empty string",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "provenance"], "value": ""}]
     }
   ],
   "ordering": {

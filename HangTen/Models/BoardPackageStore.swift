@@ -1428,6 +1428,7 @@ struct BoardPackageStore {
     ) throws -> BoardModelSuspension {
         guard document.attachments.count == 2,
               document.attachments.allSatisfy({ $0.id.isBoardPackageIdentifier }),
+              document.attachments.allSatisfy({ !$0.provenance.isEmpty }),
               Set(document.attachments.map(\.id)).count == document.attachments.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord requires exactly two distinct identifier-shaped attachment IDs")
         }
@@ -1446,8 +1447,11 @@ struct BoardPackageStore {
         guard document.anchor.offsetFromBoardBounds.count == 3,
               document.anchor.offsetFromBoardBounds.allSatisfy(\.isFinite),
               document.anchor.visibility == "invisible",
+              !document.anchor.provenance.isEmpty,
               document.cord.restLength.isFinite, document.cord.restLength > 0,
               document.cord.radius.isFinite, document.cord.radius > 0,
+              !document.cord.material.isEmpty,
+              !document.cord.provenance.isEmpty,
               document.canonicalPoses.count == positionIDs.count,
               Set(document.canonicalPoses.keys) == positionIDs else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "invalid pairedLeadCord anchor, cord, or canonical pose set")
