@@ -356,6 +356,154 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testFlashBoardCordCenterlinesAreTautAcrossEveryCanonicalPose() async throws {
+        let (_, media, model) = try await loadMigratedModel("tension.flash-board")
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+
+        for (positionID, pose) in suspension.canonicalPoses.sorted(by: { $0.key < $1.key }) {
+            let solved = try BoardModelScene.solveSuspension(
+                pose: pose,
+                suspension: .twoBranchCord(suspension),
+                bounds: media.descriptor.modelBounds
+            )
+            guard case .twoBranch(let presentation) = solved else {
+                return XCTFail("Flash \(positionID) must solve as two branches")
+            }
+            let passagesByID = Dictionary(uniqueKeysWithValues: (suspension.passages.left + suspension.passages.right).map {
+                ($0.id, $0)
+            })
+            XCTAssertTrue(model.select(positionID: positionID), "Flash \(positionID) must render its solved presentation")
+            assertRenderedCordSegments(
+                model.transientCordNode,
+                paths: presentation.branches.map(\.centerlineSamples),
+                label: "Flash \(positionID)"
+            )
+            for branch in presentation.branches {
+                XCTAssertEqual(branch.spans.count, 3, "\(positionID)/\(branch.id)")
+                let authoredBranch = try XCTUnwrap(suspension.branches.first { $0.id == branch.id })
+                let firstPassage = try XCTUnwrap(passagesByID[authoredBranch.passageIDs[0]])
+                let secondPassage = try XCTUnwrap(passagesByID[authoredBranch.passageIDs[1]])
+                func transformed(_ point: [Double]) -> SIMD3<Float> {
+                    let modelPoint = SIMD3<Float>(
+                        Float(point[0]), Float(point[1]), Float(point[2])
+                    )
+                    let worldPoint = presentation.boardTransform * SIMD4(modelPoint, 1)
+                    return SIMD3(worldPoint.x, worldPoint.y, worldPoint.z)
+                }
+                let expectedRoute = authoredBranch.entryContactPoints.map(transformed)
+                    + [transformed(firstPassage.entryPointInModel), transformed(firstPassage.exitPointInModel)]
+                    + authoredBranch.exteriorContactPoints.map(transformed)
+                    + [transformed(secondPassage.exitPointInModel), transformed(secondPassage.entryPointInModel)]
+                    + authoredBranch.exitContactPoints.map(transformed)
+                XCTAssertEqual(
+                    branch.spans[1],
+                    expectedRoute,
+                    "Flash \(positionID)/\(branch.id) must preserve authored route points in order"
+                )
+                assertStraightSamples(
+                    branch.spans[0],
+                    label: "Flash \(positionID)/\(branch.id) incoming free span"
+                )
+                assertStraightSamples(
+                    branch.spans[2],
+                    label: "Flash \(positionID)/\(branch.id) outgoing free span"
+                )
+                for (index, pair) in zip(branch.spans[1], branch.spans[1].dropFirst()).enumerated() {
+                    XCTAssertGreaterThan(
+                        simd_length(pair.1 - pair.0),
+                        1e-7,
+                        "Flash \(positionID)/\(branch.id) authored route segment \(index)"
+                    )
+                }
+                let declaredLength = suspension.branches.first { $0.id == branch.id }!.restLength
+                XCTAssertLessThanOrEqual(
+                    branch.arcLength,
+                    Float(declaredLength) + SuspendedCordSolver.tautTolerance,
+                    "Flash \(positionID)/\(branch.id) exceeds declared cord length"
+                )
+            }
+        }
+    }
+
+    private func assertRenderedCordSegments(
+        _ cord: SCNNode?,
+        paths: [[SIMD3<Float>]],
+        label: String
+    ) {
+        guard let cord else {
+            return XCTFail("\(label) must have rendered cord geometry")
+        }
+        for (branchIndex, path) in paths.enumerated() {
+            let segments = cord.childNodes
+                .filter { $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true }
+                .sorted { segmentIndex($0) < segmentIndex($1) }
+            XCTAssertEqual(
+                segments.count,
+                max(path.count - 1, 0),
+                "\(label) branch \(branchIndex) must render one segment per consecutive centerline pair"
+            )
+            for (index, pair) in zip(path, path.dropFirst()).enumerated() {
+                guard index < segments.count,
+                      let cylinder = segments[index].geometry as? SCNCylinder else {
+                    XCTFail("\(label) branch \(branchIndex) segment \(index) must be a cylinder")
+                    continue
+                }
+                let start = pair.0
+                let end = pair.1
+                let direction = end - start
+                let length = simd_length(direction)
+                XCTAssertEqual(
+                    Float(cylinder.height),
+                    length,
+                    accuracy: 1e-5,
+                    "\(label) branch \(branchIndex) segment \(index) height must equal its direct span"
+                )
+                XCTAssertEqual(
+                    segments[index].simdPosition,
+                    (start + end) / 2,
+                    "\(label) branch \(branchIndex) segment \(index) must be centered on its direct span"
+                )
+                if length > 1e-7 {
+                    let axis = segments[index].simdOrientation.act(SIMD3<Float>(0, 1, 0))
+                    XCTAssertLessThan(
+                        simd_length(axis - direction / length),
+                        1e-5,
+                        "\(label) branch \(branchIndex) segment \(index) must point along its direct span"
+                    )
+                }
+            }
+        }
+    }
+
+    private func segmentIndex(_ node: SCNNode) -> Int {
+        Int(node.name?.split(separator: ".").last ?? "") ?? -1
+    }
+
+    func testFlashBoardCanonicalCameraFacesSelectedSurfaceAcrossEveryPose() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash must declare its two-branch canonical poses")
+        }
+        XCTAssertEqual(suspension.canonicalPoses.count, 4)
+        for (positionID, pose) in suspension.canonicalPoses {
+            let solved = try BoardModelScene.solveSuspension(
+                pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
+            )
+            // The verified source faces are +Z (three-edge) and -Z (two-edge).
+            // The authored X/Y half-turns bring the two-edge face toward +Z;
+            // the three-edge Z half-turn preserves +Z. All four posed faces
+            // therefore require a camera looking toward -Z in world space.
+            XCTAssertLessThan(
+                simd_length(solved.cameraFraming.direction - SIMD3<Float>(0, 0, -1)),
+                1e-5,
+                "\(positionID) camera must face the selected physical surface"
+            )
+        }
+    }
+
     func testFlashBoardCameraBasisIsFiniteOrthonormalAndRightHanded() async throws {
         let (_, media, model) = try await loadMigratedModel("tension.flash-board")
         guard case .twoBranchCord(let suspension) = media.suspension else {
@@ -944,6 +1092,56 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(elements.compactMap(\.accessibilityLabel), ["Bound left"])
     }
 
+    func testPausedModelViewRequestsLayerRedrawAfterEveryVisibleMutation() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, holdID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        let view = RedrawRecordingBoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        view.rendersContinuously = false
+        view.isPlaying = false
+
+        view.redrawRequestCount = 0
+
+        view.display(model)
+        assertRequestedRedraw(view, "scene installation")
+        view.redrawRequestCount = 0
+
+        view.positionID = "front"
+        view.selectPositionIfNeeded()
+        assertRequestedRedraw(view, "canonical position selection")
+        view.redrawRequestCount = 0
+
+        view.frame = CGRect(x: 0, y: 0, width: 360, height: 180)
+        view.redrawRequestCount = 0
+        view.layoutSubviews()
+        assertRequestedRedraw(view, "layout/frame update")
+        view.redrawRequestCount = 0
+
+        view.applyHighlights(["left"], mode: .active)
+        assertRequestedRedraw(view, "highlight update")
+        view.redrawRequestCount = 0
+
+        let pan = TestPanGestureRecognizer(translation: CGPoint(x: 24, y: -12))
+        view.orbitPan(pan)
+        assertRequestedRedraw(view, "orbit pan")
+        view.redrawRequestCount = 0
+
+        let pinch = TestPinchGestureRecognizer(scale: 1.1)
+        view.orbitPinch(pinch)
+        assertRequestedRedraw(view, "orbit pinch")
+    }
+
+    private func assertRequestedRedraw(_ view: RedrawRecordingBoardModelSCNView, _ mutation: String) {
+        XCTAssertGreaterThan(view.redrawRequestCount, 0, "paused SceneKit view did not request redraw after \(mutation)")
+    }
+
     // This catches a renderer that accepts names by suffix, normalization, or
     // descriptor subsets instead of binding the importer-visible node paths.
     func testGenericModelBindingUsesExactDescriptorNodeIDs() throws {
@@ -1214,6 +1412,34 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(actual.z, expected.z, accuracy: 0.000_1, "\(message) z", file: file, line: line)
     }
 
+    private func assertStraightSamples(
+        _ samples: [SIMD3<Float>],
+        label: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let start = samples.first, let end = samples.last else {
+            return XCTFail("\(label) must have endpoints", file: file, line: line)
+        }
+        let direction = end - start
+        let lengthSquared = simd_length_squared(direction)
+        XCTAssertGreaterThan(lengthSquared, 1e-12, "\(label) endpoints must differ", file: file, line: line)
+        guard lengthSquared > 1e-12 else { return }
+        for sample in samples {
+            let parameter = simd_dot(sample - start, direction) / lengthSquared
+            let closest = start + direction * parameter
+            XCTAssertGreaterThanOrEqual(parameter, -1e-5, "\(label) sample before start", file: file, line: line)
+            XCTAssertLessThanOrEqual(parameter, 1 + 1e-5, "\(label) sample after end", file: file, line: line)
+            XCTAssertLessThanOrEqual(
+                simd_length(sample - closest),
+                1e-5,
+                "\(label) sample is not collinear",
+                file: file,
+                line: line
+            )
+        }
+    }
+
     private func hasNonBackgroundPixels(_ image: CGImage) -> Bool {
         let width = image.width
         let height = image.height
@@ -1450,4 +1676,52 @@ final class BoardModelTests: XCTestCase {
         return node
     }
 
+}
+
+private final class TestPanGestureRecognizer: UIPanGestureRecognizer {
+    private let simulatedTranslation: CGPoint
+
+    init(translation: CGPoint) {
+        simulatedTranslation = translation
+        super.init(target: nil, action: nil)
+    }
+
+    override var state: UIGestureRecognizer.State {
+        get { .changed }
+        set {}
+    }
+
+    override func translation(in view: UIView?) -> CGPoint {
+        simulatedTranslation
+    }
+}
+
+private final class TestPinchGestureRecognizer: UIPinchGestureRecognizer {
+    private let simulatedScale: CGFloat
+
+    init(scale: CGFloat) {
+        simulatedScale = scale
+        super.init(target: nil, action: nil)
+    }
+
+    override var state: UIGestureRecognizer.State {
+        get { .changed }
+        set {}
+    }
+
+    override var scale: CGFloat {
+        get { simulatedScale }
+        set {}
+    }
+}
+
+// Observe our view's UIKit invalidation boundary while preserving real SceneKit
+// behavior. An unattached SCNView's layer may stay dirty after displayIfNeeded.
+private final class RedrawRecordingBoardModelSCNView: BoardModelSCNView {
+    var redrawRequestCount = 0
+
+    override func setNeedsDisplay() {
+        redrawRequestCount += 1
+        super.setNeedsDisplay()
+    }
 }

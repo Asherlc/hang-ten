@@ -170,8 +170,12 @@ final class BoardPackageStoreTests: XCTestCase {
             bounds: media.descriptor.modelBounds
         )
         XCTAssertEqual(solved.branches.map(\.id), ["left-branch", "right-branch"])
-        XCTAssertEqual(solved.branches[0].arcLength, 0.92, accuracy: 1e-4)
-        XCTAssertEqual(solved.branches[1].arcLength, 0.92, accuracy: 1e-4)
+        // The fixture anchor is (0.5, 1.22, 0.05); each mirrored route has
+        // horizontal free-span offsets 0.3 and 0.2, height 0.32, and a 0.1 bridge.
+        let tautRouteLength: Float = sqrt(0.3 * 0.3 + 0.32 * 0.32)
+            + 0.1 + sqrt(0.2 * 0.2 + 0.32 * 0.32)
+        XCTAssertEqual(solved.branches[0].arcLength, tautRouteLength, accuracy: 1e-4)
+        XCTAssertEqual(solved.branches[1].arcLength, tautRouteLength, accuracy: 1e-4)
     }
 
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {

@@ -200,10 +200,9 @@ enum SuspendedBoardPresentation {
                 throw SuspendedPresentationError.cordTooShort
             }
 
-            // Reserve the exact modeled passage route, then distribute the
-            // remaining free-cord length in proportion to the two endpoint
-            // separations. This is deterministic and preserves the declared
-            // total branch length without inventing knot geometry.
+            // Reserve the exact authored route and allocate the remaining
+            // declared capacity between free spans. Each span renders taut;
+            // unused capacity never introduces sag or changes the bore route.
             let freeLength = declaredLength - rigidLength
             let endpointDistanceSum = firstDistance + secondDistance
             guard freeLength.isFinite, endpointDistanceSum.isFinite,
@@ -251,8 +250,8 @@ enum SuspendedBoardPresentation {
             }
             let arcLength = firstSpan.arcLength + rigidLength + secondSpan.arcLength
             guard measuredLength.isFinite, arcLength.isFinite,
-                  abs(arcLength - declaredLength) <= 1e-4,
-                  abs(measuredLength - declaredLength) <= 0.02 else {
+                  arcLength <= declaredLength + SuspendedCordSolver.tautTolerance,
+                  measuredLength <= declaredLength + 0.02 else {
                 throw SuspendedPresentationError.nonFiniteCurve
             }
             branches.append(SuspendedBranchSolution(
@@ -274,7 +273,7 @@ enum SuspendedBoardPresentation {
               tubeRadius.isFinite, tubeRadius > 0 else {
             throw SuspendedPresentationError.invalidCord
         }
-        let framing = try makeCameraFraming(pose: pose, points: framingPoints)
+        let framing = try makeCameraFraming(pose: pose, transform: transform, points: framingPoints)
         return SuspendedTwoBranchSolvedPresentation(
             boardTransform: transform,
             fixedAnchor: fixedAnchor,
@@ -364,6 +363,7 @@ enum SuspendedBoardPresentation {
 
     private static func makeCameraFraming(
         pose: BoardModelCanonicalPose,
+        transform: simd_float4x4,
         points: [SIMD3<Float>]
     ) throws -> SuspendedCameraFraming {
         guard pose.camera.viewDirection.count == 3,
@@ -374,7 +374,11 @@ enum SuspendedBoardPresentation {
             throw SuspendedPresentationError.invalidCamera
         }
         let requestedDirection = SIMD3<Float>(pose.camera.viewDirection.map(Float.init))
-        guard let direction = normalized(requestedDirection) else {
+        // The declared direction identifies the face in the unposed model.
+        // Rotate it with the board before framing the world-space route;
+        // otherwise a half-turn can point the camera at the opposite face.
+        let posedDirection = transform * SIMD4<Float>(requestedDirection, 0)
+        guard let direction = normalized(SIMD3<Float>(posedDirection.x, posedDirection.y, posedDirection.z)) else {
             throw SuspendedPresentationError.invalidCamera
         }
         let worldUp = SIMD3<Float>(0, 1, 0)

@@ -1527,10 +1527,9 @@ private struct BoardModelView: UIViewRepresentable {
         view.positionID = positionID
         view.onHoldTap = onHoldTap
         view.onUnavailable = onUnavailable
-        view.highlightedHoldIDs = highlightedHoldIDs
         view.isUserInteractionEnabled = onHoldTap != nil
         view.needsAccessibilityProjection = true
-        model.highlight(highlightedHoldIDs, mode: highlightMode)
+        view.applyHighlights(highlightedHoldIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
         view.updateAccessibility()
     }
@@ -1554,7 +1553,7 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
     }
 }
 
-final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
+class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var model: BoardModelScene?
     var boardName = "hangboard"
     var holds: [BoardHold] = []
@@ -1566,6 +1565,11 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     private var holdAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityHoldIDs: [String] = []
 
+    private func requestPausedRedraw() {
+        guard !rendersContinuously, !isPlaying else { return }
+        setNeedsDisplay()
+    }
+
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
@@ -1573,23 +1577,27 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         pointOfView = model.camera
         model.frame(in: bounds.size)
         needsAccessibilityProjection = true
+        requestPausedRedraw()
     }
 
     func selectPositionIfNeeded() {
         guard let model else { return }
-        guard model.select(positionID: positionID) else {
-            onUnavailable?()
-            return
-        }
+        let didSelect = model.select(positionID: positionID)
         scene = model.scene
         pointOfView = model.camera
         needsAccessibilityProjection = true
+        requestPausedRedraw()
+        guard didSelect else {
+            onUnavailable?()
+            return
+        }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         model?.frame(in: bounds.size)
         needsAccessibilityProjection = true
+        requestPausedRedraw()
         updateAccessibility()
     }
 
@@ -1615,6 +1623,7 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         onHoldTap?(hold)
         _ = model.select(positionID: model.activePositionID)
         model.resetCamera(animated: true)
+        requestPausedRedraw()
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
@@ -1627,12 +1636,20 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
             elevation: Float(-translation.y / height) * 0.65
         )
         recognizer.setTranslation(.zero, in: self)
+        requestPausedRedraw()
     }
 
     @objc func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
         guard let model, recognizer.state == .changed else { return }
         model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(recognizer.scale))
         recognizer.scale = 1
+        requestPausedRedraw()
+    }
+
+    func applyHighlights(_ ids: Set<String>, mode: BoardHighlightMode) {
+        highlightedHoldIDs = ids
+        model?.highlight(ids, mode: mode)
+        requestPausedRedraw()
     }
 
     func updateAccessibility() {
