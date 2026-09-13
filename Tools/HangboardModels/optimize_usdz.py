@@ -20,7 +20,7 @@ from collections.abc import Sequence
 
 
 _DETERMINISTIC_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
-_USD_LAYER_SUFFIXES = frozenset({".usda"})
+_USD_LAYER_SUFFIXES = frozenset({".usd", ".usda", ".usdc"})
 _TARGET_LAYER_SUFFIX = ".usdc"
 
 
@@ -55,8 +55,10 @@ def optimize_usdz(
             name for name in members if PurePosixPath(name).suffix in _USD_LAYER_SUFFIXES
         ]
         if len(layer_names) != 1:
-            raise ValueError("USDZ optimizer requires exactly one text USDA layer")
+            raise ValueError("USDZ optimizer requires exactly one USD layer")
         source_layer_name = layer_names[0]
+        if PurePosixPath(source_layer_name).suffix != ".usda":
+            raise ValueError("USDZ optimizer requires the USD layer to be text USDA (.usda)")
         source_layer = directory / _native_path(source_layer_name)
         target_layer_name = str(
             PurePosixPath(source_layer_name).with_suffix(_TARGET_LAYER_SUFFIX)

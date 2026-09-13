@@ -168,6 +168,32 @@ class OptimizeUSDZTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "text USDA"):
                     optimize_usdz(source, tmp_path / "optimized.usdz")
 
+    def test_optimizer_rejects_multiple_usd_layers_before_conversion(self) -> None:
+        for extra_suffix in (".usd", ".usdc"):
+            with self.subTest(extra_suffix=extra_suffix), _workspace("multi-layer-fixture-") as raw_path:
+                tmp_path = Path(raw_path)
+                source = tmp_path / "source.usdz"
+                output = tmp_path / "optimized.usdz"
+                with zipfile.ZipFile(source, "w") as archive:
+                    archive.writestr("scene.usda", USDA)
+                    archive.writestr(f"scene{extra_suffix}", b"second USD layer")
+                marker = tmp_path / "converter-called"
+                converter = tmp_path / "converter"
+                converter.write_text(
+                    f"#!/bin/sh\nprintf called > {marker}\n", encoding="utf-8"
+                )
+                converter.chmod(0o755)
+
+                with self.assertRaisesRegex(ValueError, "exactly one USD layer"):
+                    optimize_usdz(
+                        source,
+                        output,
+                        usdcat_executable=str(converter),
+                    )
+
+                self.assertFalse(marker.exists(), "conversion must not start")
+                self.assertFalse(output.exists())
+
     def test_compiler_canonicalizes_existing_usdc_without_path_collision(self) -> None:
         class FakeRoot:
             def ListInfoKeys(self):
