@@ -8,7 +8,7 @@ final class AppStore: ObservableObject {
     private static let favoritePlanIDsKey = "favoritePlanIDs"
     private static let favoriteBoardIDsKey = "favoriteBoardIDs"
 
-    @Published private(set) var selectedBoard: TrainingBoard
+    @Published private(set) var selectedBoard: BoardRevision
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
     @Published var lastSessionTitle: String?
     @Published private(set) var sessionHistory: [WorkoutSessionRecord]
@@ -217,7 +217,7 @@ final class AppStore: ObservableObject {
         customDefinition(for: plan.id) != nil
     }
 
-    func selectBoard(_ board: TrainingBoard) {
+    func selectBoard(_ board: BoardRevision) {
         selectedBoard = board
         defaults.set(board.id, forKey: Self.selectedBoardIDKey)
         guard let family = telemetryBoardFamily(for: board) else { return }
@@ -290,11 +290,11 @@ final class AppStore: ObservableObject {
         defaults.set(favoritePlanIDs.sorted(), forKey: Self.favoritePlanIDsKey)
     }
 
-    func isFavorite(_ board: TrainingBoard) -> Bool {
+    func isFavorite(_ board: BoardRevision) -> Bool {
         favoriteBoardIDs.contains(board.id)
     }
 
-    func toggleFavorite(_ board: TrainingBoard) {
+    func toggleFavorite(_ board: BoardRevision) {
         if favoriteBoardIDs.contains(board.id) {
             favoriteBoardIDs.remove(board.id)
         } else {
@@ -313,11 +313,11 @@ final class AppStore: ObservableObject {
         return plans.first
     }
 
-    func board(for plan: TrainingPlan) -> TrainingBoard {
+    func board(for plan: TrainingPlan) -> BoardRevision {
         BoardCatalog.board(for: plan.boardID ?? selectedBoard.id)
     }
 
-    func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
+    func holdIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
         let gripType = step.targets.count == 1 ? step.gripType : nil
         let ids = step.targets.flatMap {
             BoardTargetResolver.substituteHoldIDs(
@@ -331,13 +331,13 @@ final class AppStore: ObservableObject {
         return Set(ids)
     }
 
-    func usesFallbackMapping(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
+    func usesFallbackMapping(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
         plan.steps.contains { step in
             let gripType = step.targets.count == 1 ? step.gripType : nil
             return step.targets.contains { target in
                 guard let feature = target.feature,
                       !target.fallbackFeatures.isEmpty else { return false }
-                let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
+                let hasExactMatch = board.contacts.contains { $0.features.contains(feature) }
                 return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
                     for: target,
                     handUse: step.handUse,
@@ -349,7 +349,7 @@ final class AppStore: ObservableObject {
         }
     }
 
-    func isIncompatible(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
+    func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
         plan.steps.contains { step in
             let gripType = step.targets.count == 1 ? step.gripType : nil
             return step.targets.contains { target in
@@ -394,7 +394,7 @@ final class AppStore: ObservableObject {
 
     func markSessionComplete(
         _ plan: TrainingPlan,
-        board: TrainingBoard,
+        board: BoardRevision,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
         startDate: Date,
         endDate: Date,
@@ -597,7 +597,7 @@ final class AppStore: ObservableObject {
     }
 
     private func telemetryBoardFamily(
-        for board: TrainingBoard
+        for board: BoardRevision
     ) -> HangTenTelemetryEvent.BoardFamily? {
         let normalizedBoardID = board.id.replacingOccurrences(of: "-", with: "_")
 

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "tension.flash-board",
   "manufacturer": "Tension Climbing",
   "name": "Flash Board",
@@ -76,7 +76,7 @@
     {
       "id": "three-edge-upright",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "three-edge-left",
         "three-edge-center",
         "three-edge-right"
@@ -85,7 +85,7 @@
     {
       "id": "three-edge-inverted",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "three-edge-left",
         "three-edge-center",
         "three-edge-right"
@@ -94,7 +94,7 @@
     {
       "id": "two-edge-upright",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "two-edge-left",
         "two-edge-right"
       ]
@@ -102,42 +102,53 @@
     {
       "id": "two-edge-inverted",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "two-edge-left",
         "two-edge-right"
       ]
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "three-edge-left",
       "equipmentObjectID": "primary",
       "name": "Left edge on three-edge surface",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "three-edge-center",
       "equipmentObjectID": "primary",
       "name": "Center edge on three-edge surface",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "three-edge-right",
       "equipmentObjectID": "primary",
       "name": "Right edge on three-edge surface",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "two-edge-left",
       "equipmentObjectID": "primary",
       "name": "Left edge on two-edge surface",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "two-edge-right",
       "equipmentObjectID": "primary",
       "name": "Right edge on two-edge surface",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

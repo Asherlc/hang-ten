@@ -3,17 +3,19 @@ import XCTest
 
 final class BoardTargetSubstitutionTests: XCTestCase {
     private struct FramedHold {
-        let hold: BoardHold
-        let piece: BoardHoldPiece
+        let hold: PhysicalContact
+        let piece: BoardContactPiece
     }
 
-    func testBoardHoldDepthMeasurementRejectsFixedAndVariableDepths() {
-        let measurement = BoardHold.DepthMeasurement(
-            sizeMillimeters: 7.5,
+    func testPhysicalContactStoresOneCanonicalDepthRange() {
+        let contact = PhysicalContact(
+            id: "edge",
+            name: "Edge",
+            kind: .edge,
             depthRangeMillimeters: 7.5...12.5
         )
 
-        XCTAssertNil(measurement)
+        XCTAssertEqual(contact.depthRangeMillimeters, 7.5...12.5)
     }
 
     private func hold(
@@ -30,20 +32,19 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         width: Double = 0.1,
         height: Double = 0.1
     ) -> FramedHold {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: id,
             equipmentObjectID: equipmentObjectID,
             name: id,
             kind: kind,
-            sizeMillimeters: sizeMillimeters,
+            features: Set(feature.map { [$0] } ?? []),
             fingerCapacity: fingerCapacity,
             handCapacity: handCapacity,
-            depthRangeMillimeters: depthRangeMillimeters,
-            features: feature.map { [$0] }
+            depthRangeMillimeters: depthRangeMillimeters ?? sizeMillimeters.map { $0...$0 }
         )
-        let piece = BoardHoldPiece(
+        let piece = BoardContactPiece(
             id: "\(id)-piece",
-            holdID: id,
+            contactID: id,
             frame: CGRect(x: x, y: y, width: width, height: height),
             shape: .roundedRect(cornerRadiusFraction: 0),
             treatment: .surface
@@ -54,18 +55,19 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     private func board(
         id: String = "test-board",
         holds: [FramedHold]
-    ) -> TrainingBoard {
+    ) -> BoardRevision {
         let geometry = Dictionary(uniqueKeysWithValues: holds.map {
             ($0.hold.id, [$0.piece])
         })
-        return TrainingBoard(
+        return BoardRevision(
             id: id,
+            revisionID: "test-fixture",
             manufacturer: "Test",
             name: "Test Board",
             subtitle: "",
             dimensions: "30x60",
             aspectRatio: 0.5,
-            holds: holds.map(\.hold),
+            contacts: holds.map(\.hold),
             productURL: URL(string: "https://example.com")!,
             photoAssetName: nil,
             presentations: [
@@ -74,7 +76,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
                     name: "Primary",
                     aspectRatio: 0.5,
                     isDefault: true,
-                    media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
+                    media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
                 )
             ]
         )
@@ -91,7 +93,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
 
         XCTAssertEqual(Set(ids.compactMap { id in
-            rockRings.holds.first { $0.id == id }?.equipmentObjectID
+            rockRings.contacts.first { $0.id == id }?.equipmentObjectID
         }).count, 1)
     }
 
@@ -144,7 +146,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
         XCTAssertEqual(
             Set(ids.compactMap { id in
-                rockRings.holds.first { $0.id == id }?.equipmentObjectID
+                rockRings.contacts.first { $0.id == id }?.equipmentObjectID
             }),
             ["left-ring", "right-ring"]
         )
@@ -252,8 +254,8 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             BoardTargetResolver.substituteHoldIDs(for: .feature(.roundSloper), on: compactII),
             ["sloper-round-center"]
         )
-        XCTAssertEqual(compactII.holds.first(where: { $0.id == "sloper-flat-left" })?.sloper?.type, .flat)
-        XCTAssertEqual(compactII.holds.first(where: { $0.id == "sloper-flat-right" })?.sloper?.type, .flat)
+        XCTAssertEqual(compactII.contacts.first(where: { $0.id == "sloper-flat-left" })?.features.contains(.flatSloper), true)
+        XCTAssertEqual(compactII.contacts.first(where: { $0.id == "sloper-flat-right" })?.features.contains(.flatSloper), true)
     }
 
     func testGenericPocketKindSelectsOneMirroredCapacityPair() {

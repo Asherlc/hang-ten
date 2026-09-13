@@ -79,14 +79,15 @@ final class AppStoreTests: XCTestCase {
             defaults: makeDefaults(),
             telemetry: telemetry.dependencies
         )
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fixture.rock-prodigy-training-center",
+            revisionID: "test-fixture",
             manufacturer: "Fixture",
             name: "Rock Prodigy Training Center",
             subtitle: "Fixture board",
             dimensions: "Fixture dimensions",
             aspectRatio: 1,
-            holds: [],
+            contacts: [],
             productURL: URL(string: "https://example.com")!,
             photoAssetName: nil
         )

@@ -19,12 +19,12 @@ def presentation_frame(
 
 
 def document_hold_geometry(document: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
-    """Return canonical raster geometry keyed by logical hold ID."""
+    """Return canonical raster geometry keyed by physical contact ID."""
     result: dict[str, list[dict[str, Any]]] = {}
     for presentation in document["presentations"]:
         if presentation["derivation"]["type"] != "original":
             continue
-        for hold_id, geometry in presentation["media"]["holdGeometry"].items():
+        for hold_id, geometry in presentation["media"]["contactGeometry"].items():
             if hold_id in result:
                 raise AssertionError(f"duplicate original geometry for {hold_id}")
             result[hold_id] = geometry
@@ -32,15 +32,15 @@ def document_hold_geometry(document: dict[str, Any]) -> dict[str, list[dict[str,
 
 
 def board_hold_geometry(board: object) -> dict[str, tuple[object, ...]]:
-    """Return parsed canonical raster geometry keyed by logical hold ID."""
+    """Return parsed canonical raster geometry keyed by physical contact ID."""
     result: dict[str, tuple[object, ...]] = {}
     for presentation in board.presentations:
         if presentation.source_presentation_id is not None:
             continue
         media = presentation.media
-        if not hasattr(media, "hold_geometry"):
+        if not hasattr(media, "contact_geometry"):
             continue
-        for hold_id, geometry in media.hold_geometry.items():
+        for hold_id, geometry in media.contact_geometry.items():
             if hold_id in result:
                 raise AssertionError(f"duplicate original geometry for {hold_id}")
             result[hold_id] = geometry
@@ -88,8 +88,8 @@ def board_positions_document(document: dict[str, Any]) -> dict[str, Any]:
             "media": {
                 "type": "raster",
                 "assetPath": "assets/front-inverted.png",
-                "holdGeometry": copy.deepcopy(
-                    document["presentations"][0]["media"]["holdGeometry"]
+                "contactGeometry": copy.deepcopy(
+                    document["presentations"][0]["media"]["contactGeometry"]
                 ),
             },
         }

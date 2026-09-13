@@ -1,119 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "dewoodstok-woodbord",
   "manufacturer": "deWoodstok",
   "name": "Woodbord",
   "subtitle": "Solid certified bamboo hangboard.",
   "productURL": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
-  "dimensions": "590 \u00d7 148 \u00d7 40 mm",
+  "dimensions": "590 × 148 × 40 mm",
   "aspectRatio": 3.6236559139784945,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "top-rim",
-      "equipmentObjectID": "primary",
-      "name": "Top rim",
-      "kind": "sloper"
-    },
-    {
-      "id": "front-upper-1",
-      "equipmentObjectID": "primary",
-      "name": "Upper pocket 1",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-upper-2",
-      "equipmentObjectID": "primary",
-      "name": "Upper pocket 2",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-upper-3",
-      "equipmentObjectID": "primary",
-      "name": "Upper pocket 3",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-upper-4",
-      "equipmentObjectID": "primary",
-      "name": "Upper pocket 4",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-upper-5",
-      "equipmentObjectID": "primary",
-      "name": "Upper pocket 5",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-upper-6",
-      "equipmentObjectID": "primary",
-      "name": "Upper pocket 6",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-middle-1",
-      "equipmentObjectID": "primary",
-      "name": "Middle pocket 1",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-middle-2",
-      "equipmentObjectID": "primary",
-      "name": "Middle pocket 2",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-middle-3",
-      "equipmentObjectID": "primary",
-      "name": "Middle pocket 3",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-middle-4",
-      "equipmentObjectID": "primary",
-      "name": "Middle pocket 4",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-lower-1",
-      "equipmentObjectID": "primary",
-      "name": "Lower pocket 1",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-lower-2",
-      "equipmentObjectID": "primary",
-      "name": "Lower pocket 2",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-lower-3",
-      "equipmentObjectID": "primary",
-      "name": "Lower pocket 3",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-lower-4",
-      "equipmentObjectID": "primary",
-      "name": "Lower pocket 4",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-lower-5",
-      "equipmentObjectID": "primary",
-      "name": "Lower pocket 5",
-      "kind": "pocket"
-    },
-    {
-      "id": "front-lower-6",
-      "equipmentObjectID": "primary",
-      "name": "Lower pocket 6",
-      "kind": "pocket"
     }
   ],
   "presentations": [
@@ -128,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "top-rim": [
             {
               "frame": {
@@ -1844,6 +1740,145 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "top-rim",
+      "equipmentObjectID": "primary",
+      "name": "Top rim",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-upper-1",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket 1",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-upper-2",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket 2",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-upper-3",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket 3",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-upper-4",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket 4",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-upper-5",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket 5",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-upper-6",
+      "equipmentObjectID": "primary",
+      "name": "Upper pocket 6",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-middle-1",
+      "equipmentObjectID": "primary",
+      "name": "Middle pocket 1",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-middle-2",
+      "equipmentObjectID": "primary",
+      "name": "Middle pocket 2",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-middle-3",
+      "equipmentObjectID": "primary",
+      "name": "Middle pocket 3",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-middle-4",
+      "equipmentObjectID": "primary",
+      "name": "Middle pocket 4",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-lower-1",
+      "equipmentObjectID": "primary",
+      "name": "Lower pocket 1",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-lower-2",
+      "equipmentObjectID": "primary",
+      "name": "Lower pocket 2",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-lower-3",
+      "equipmentObjectID": "primary",
+      "name": "Lower pocket 3",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-lower-4",
+      "equipmentObjectID": "primary",
+      "name": "Lower pocket 4",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-lower-5",
+      "equipmentObjectID": "primary",
+      "name": "Lower pocket 5",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "front-lower-6",
+      "equipmentObjectID": "primary",
+      "name": "Lower pocket 6",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

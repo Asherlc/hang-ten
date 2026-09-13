@@ -1,120 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "tension.honestone",
   "manufacturer": "Tension Climbing",
   "name": "Honestone",
   "subtitle": "Wooden hangboard with macro-textured top slopers, edges, and one-finger pockets.",
   "productURL": "https://tensionclimbing.com/products/honestone",
-  "dimensions": "25 \u00d7 6 \u00d7 2.5 in",
+  "dimensions": "25 × 6 × 2.5 in",
   "aspectRatio": 1.7768331562167907,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "macro-sloper-left",
-      "equipmentObjectID": "primary",
-      "name": "Left macro sloper region",
-      "kind": "sloper"
-    },
-    {
-      "id": "mono-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 25 mm one-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 25,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "mono-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 25 mm one-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 25,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "edge-25-center",
-      "equipmentObjectID": "primary",
-      "name": "25 mm center incut edge",
-      "kind": "edge",
-      "sizeMillimeters": 25
-    },
-    {
-      "id": "edge-20-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-15-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-15-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-20-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-10-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
-    },
-    {
-      "id": "edge-8-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 8 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 8
-    },
-    {
-      "id": "edge-8-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 8 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 8
-    },
-    {
-      "id": "edge-10-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
-    },
-    {
-      "id": "macro-sloper-right-center",
-      "equipmentObjectID": "primary",
-      "name": "Right-center macro sloper region",
-      "kind": "sloper"
-    },
-    {
-      "id": "macro-sloper-left-center",
-      "equipmentObjectID": "primary",
-      "name": "Left-center macro sloper region",
-      "kind": "sloper"
-    },
-    {
-      "id": "macro-sloper-right",
-      "equipmentObjectID": "primary",
-      "name": "Right macro sloper region",
-      "kind": "sloper"
     }
   ],
   "presentations": [
@@ -129,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "macro-sloper-left": [
             {
               "frame": {
@@ -1453,6 +1348,175 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "macro-sloper-left",
+      "equipmentObjectID": "primary",
+      "name": "Left macro sloper region",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "mono-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 25 mm one-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 25 mm one-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-center",
+      "equipmentObjectID": "primary",
+      "name": "25 mm center incut edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 10 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 8 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 8 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 10 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "macro-sloper-right-center",
+      "equipmentObjectID": "primary",
+      "name": "Right-center macro sloper region",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "macro-sloper-left-center",
+      "equipmentObjectID": "primary",
+      "name": "Left-center macro sloper region",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "macro-sloper-right",
+      "equipmentObjectID": "primary",
+      "name": "Right macro sloper region",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

@@ -72,12 +72,12 @@ struct WorkoutBoardCue: Equatable {
 }
 
 struct WorkoutHoldCue: Equatable {
-    let hold: BoardHold
+    let hold: PhysicalContact
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
 
     init(
-        hold: BoardHold,
+        hold: PhysicalContact,
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) {
@@ -103,8 +103,8 @@ enum WorkoutHoldCueVisibilityPolicy {
 enum WorkoutHoldCuePolicy {
     static func resolve(
         step: WorkoutStep?,
-        hold: BoardHold?,
-        on board: TrainingBoard
+        hold: PhysicalContact?,
+        on board: BoardRevision
     ) -> WorkoutHoldCue? {
         guard let step,
               step.targets.count == 1,
@@ -355,7 +355,7 @@ enum WorkoutLiftCompletionPolicy {
 }
 
 enum WorkoutHighlightResolver {
-    static func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> [String] {
+    static func holdIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
         let gripType = step.targets.count == 1 ? step.gripType : nil
         let selectedHoldIDs = step.targets.flatMap {
             BoardTargetResolver.substituteHoldIDs(
@@ -367,7 +367,7 @@ enum WorkoutHighlightResolver {
             )
         }
         let selectedObjectIDs = Set(
-            board.holds
+            board.contacts
                 .filter { selectedHoldIDs.contains($0.id) }
                 .map(\.equipmentObjectID)
         )
@@ -376,7 +376,7 @@ enum WorkoutHighlightResolver {
         // Preserve their hold-level cues while portable multi-object boards
         // highlight the whole selected physical object.
         guard board.equipmentObjects.count > 1 else { return selectedHoldIDs }
-        return board.holds
+        return board.contacts
             .filter { selectedObjectIDs.contains($0.equipmentObjectID) }
             .map(\.id)
     }

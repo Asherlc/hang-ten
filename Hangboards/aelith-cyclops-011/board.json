@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "aelith.cyclops-011",
   "manufacturer": "Aelith Equipment",
   "name": "Cyclops #011 Blue x Black",
@@ -24,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "mono-20": [
             {
               "frame": {
@@ -117,15 +117,21 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "mono-20",
       "equipmentObjectID": "primary",
       "name": "20 mm mono edge",
       "kind": "pocket",
+      "features": [],
       "fingerCapacity": 1,
       "handCapacity": 1,
-      "sizeMillimeters": 20
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     }
   ]
 }

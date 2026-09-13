@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "nature.stone-hanger-mini-karma8a",
   "manufacturer": "Nature Climbing",
   "name": "Stone Hanger Mini x KARMA8A",
   "subtitle": "Compact smoked-oak lifting edge with stone, wood, and pinch contacts.",
   "productURL": "https://natureclimbing.com/products/mini-hanger",
-  "dimensions": "10.5 \u00d7 6 \u00d7 3 cm",
+  "dimensions": "10.5 × 6 × 3 cm",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -25,7 +25,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "wood-edge-15": [
             {
               "frame": {
@@ -572,30 +572,46 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "wood-edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm wood edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 15
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "granite-edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm granite edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 15
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "pinch-60",
       "equipmentObjectID": "primary",
       "name": "60 mm pinch block",
       "kind": "pinch",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 60
+      "depthRangeMillimeters": {
+        "lowerBound": 60,
+        "upperBound": 60
+      },
+      "gripTypes": []
     }
   ]
 }

@@ -39,13 +39,13 @@ struct BoardEditorListView: View {
     @StateObject private var resetCoordinator = BoardEditorResetCoordinator()
     @State private var editedSlugs: Set<String> = []
     @State private var openSlug: SlugRoute?
-    @State private var resetTarget: TrainingBoard?
+    @State private var resetTarget: BoardRevision?
     @State private var showsGitHubSheet = false
-    @State private var pushTarget: TrainingBoard?
+    @State private var pushTarget: BoardRevision?
 
     private let syncService = GitHubBoardSyncService()
 
-    private var boards: [TrainingBoard] { BoardCatalog.packageStore.boards }
+    private var boards: [BoardRevision] { BoardCatalog.packageStore.boards }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -112,7 +112,7 @@ struct BoardEditorListView: View {
         editedSlugs = Set(editorStore.editedSlugs())
     }
 
-    private func row(_ board: TrainingBoard) -> some View {
+    private func row(_ board: BoardRevision) -> some View {
         let allowsPackageActions = resetCoordinator.allowsPackageActions(for: board.id)
         return Button {
             guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
@@ -127,7 +127,7 @@ struct BoardEditorListView: View {
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
                         .multilineTextAlignment(.leading)
-                    Text("\(board.manufacturer) · \(board.holds.count) holds")
+                    Text("\(board.manufacturer) · \(board.contacts.count) holds")
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                     if editedSlugs.contains(board.id) {
@@ -212,7 +212,7 @@ struct BoardEditorListView: View {
         .background(Color.hangGreen.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
-    private func pullFromGitHub(_ board: TrainingBoard) {
+    private func pullFromGitHub(_ board: BoardRevision) {
         guard resetCoordinator.allowsPackageActions(for: board.id) else { return }
         guard let token = syncSession.token else {
             showsGitHubSheet = true

@@ -53,8 +53,8 @@ enum BoardSourceBoundaryAudit {
         // Retain the audit for every nonempty source literal.
         let presentationMappingPattern = #"(?:assetPath|photoAssetName)\s*:\s*\"(?!\")"#
         let boardSpecificGeometryConstructs = [
-            "TrainingBoard(",
-            "BoardHold(",
+            "BoardRevision(",
+            "PhysicalContact(",
             "HoldFrame(",
             "BoardNormalizedPath(commands:"
         ]

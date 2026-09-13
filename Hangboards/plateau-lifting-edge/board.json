@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "plateau.lifting-edge",
   "manufacturer": "Plateau Climbing",
   "name": "Lifting Edge",
@@ -24,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-18": [
             {
               "frame": {
@@ -361,30 +361,46 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "edge-18",
       "equipmentObjectID": "primary",
       "name": "18 mm wood edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 18
+      "depthRangeMillimeters": {
+        "lowerBound": 18,
+        "upperBound": 18
+      },
+      "gripTypes": []
     },
     {
       "id": "blocker-edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm blocker edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 15
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "blocker-edge-10",
       "equipmentObjectID": "primary",
       "name": "10 mm blocker edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 10
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     }
   ]
 }

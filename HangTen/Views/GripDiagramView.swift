@@ -6,12 +6,12 @@ enum GripCueSide {
 }
 
 struct GripDiagramView: View {
-    let hold: BoardHold
+    let hold: PhysicalContact
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
 
     init(
-        hold: BoardHold,
+        hold: PhysicalContact,
         gripType: GripType?,
         fingerConfiguration: FingerConfiguration? = nil
     ) {

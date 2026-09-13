@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "tension.grindstone-pro",
   "manufacturer": "Tension Climbing",
   "name": "Grindstone Pro",
@@ -10,123 +10,6 @@
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "phone-slot",
-      "equipmentObjectID": "primary",
-      "name": "Top phone slot",
-      "kind": "edge"
-    },
-    {
-      "id": "edge-35-left",
-      "equipmentObjectID": "primary",
-      "name": "35 mm left warm-up edge",
-      "kind": "edge",
-      "sizeMillimeters": 35
-    },
-    {
-      "id": "edge-35-right",
-      "equipmentObjectID": "primary",
-      "name": "35 mm right warm-up edge",
-      "kind": "edge",
-      "sizeMillimeters": 35
-    },
-    {
-      "id": "edge-7-incut",
-      "equipmentObjectID": "primary",
-      "name": "7 mm incut edge",
-      "kind": "edge",
-      "sizeMillimeters": 7
-    },
-    {
-      "id": "edge-20-left",
-      "equipmentObjectID": "primary",
-      "name": "20 mm left edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "mono-45-left",
-      "equipmentObjectID": "primary",
-      "name": "45 mm left mono pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 45,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "pocket-25-left",
-      "equipmentObjectID": "primary",
-      "name": "25 mm left two-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 25,
-      "fingerCapacity": 2
-    },
-    {
-      "id": "edge-30-center",
-      "equipmentObjectID": "primary",
-      "name": "30 mm center edge",
-      "kind": "edge",
-      "sizeMillimeters": 30
-    },
-    {
-      "id": "mono-45-right",
-      "equipmentObjectID": "primary",
-      "name": "45 mm right mono pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 45,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "pocket-25-right",
-      "equipmentObjectID": "primary",
-      "name": "25 mm right two-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 25,
-      "fingerCapacity": 2
-    },
-    {
-      "id": "edge-20-right",
-      "equipmentObjectID": "primary",
-      "name": "20 mm right edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-15-left",
-      "equipmentObjectID": "primary",
-      "name": "15 mm left edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-10-left",
-      "equipmentObjectID": "primary",
-      "name": "10 mm left edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
-    },
-    {
-      "id": "edge-22-center",
-      "equipmentObjectID": "primary",
-      "name": "22 mm center edge",
-      "kind": "edge",
-      "sizeMillimeters": 22
-    },
-    {
-      "id": "edge-15-right",
-      "equipmentObjectID": "primary",
-      "name": "15 mm right edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-10-right",
-      "equipmentObjectID": "primary",
-      "name": "10 mm right edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
     }
   ],
   "presentations": [
@@ -141,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "phone-slot": [
             {
               "frame": {
@@ -432,6 +315,201 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "phone-slot",
+      "equipmentObjectID": "primary",
+      "name": "Top phone slot",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-35-left",
+      "equipmentObjectID": "primary",
+      "name": "35 mm left warm-up edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 35,
+        "upperBound": 35
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-35-right",
+      "equipmentObjectID": "primary",
+      "name": "35 mm right warm-up edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 35,
+        "upperBound": 35
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-7-incut",
+      "equipmentObjectID": "primary",
+      "name": "7 mm incut edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 7,
+        "upperBound": 7
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "20 mm left edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-45-left",
+      "equipmentObjectID": "primary",
+      "name": "45 mm left mono pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 45,
+        "upperBound": 45
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-25-left",
+      "equipmentObjectID": "primary",
+      "name": "25 mm left two-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-30-center",
+      "equipmentObjectID": "primary",
+      "name": "30 mm center edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-45-right",
+      "equipmentObjectID": "primary",
+      "name": "45 mm right mono pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 45,
+        "upperBound": 45
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-25-right",
+      "equipmentObjectID": "primary",
+      "name": "25 mm right two-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "20 mm right edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "primary",
+      "name": "15 mm left edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-left",
+      "equipmentObjectID": "primary",
+      "name": "10 mm left edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-22-center",
+      "equipmentObjectID": "primary",
+      "name": "22 mm center edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "primary",
+      "name": "15 mm right edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-right",
+      "equipmentObjectID": "primary",
+      "name": "10 mm right edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     }
   ]
 }

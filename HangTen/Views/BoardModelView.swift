@@ -61,7 +61,7 @@ private enum BoardModelCache {
 @MainActor
 enum BoardModelLoader {
     static func load(
-        board: TrainingBoard,
+        board: BoardRevision,
         presentation: BoardPresentation,
         store: BoardPackageStore
     ) async -> BoardModelScene? {
@@ -103,21 +103,21 @@ struct BoardModelSurface: View {
         case unavailable
     }
 
-    let board: TrainingBoard
+    let board: BoardRevision
     let presentation: BoardPresentation
     let positionID: String?
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
-    let onHoldTap: ((BoardHold) -> Void)?
+    let onHoldTap: ((PhysicalContact) -> Void)?
     @State private var result: ResultState = .loading
 
     init(
-        board: TrainingBoard,
+        board: BoardRevision,
         presentation: BoardPresentation,
         positionID: String? = nil,
         highlightedHoldIDs: Set<String>,
         highlightMode: BoardHighlightMode,
-        onHoldTap: ((BoardHold) -> Void)?
+        onHoldTap: ((PhysicalContact) -> Void)?
     ) {
         self.board = board
         self.presentation = presentation
@@ -135,7 +135,7 @@ struct BoardModelSurface: View {
 
     static func permitsHoldSelection(
         for state: DisplayState,
-        onHoldTap: ((BoardHold) -> Void)?
+        onHoldTap: ((PhysicalContact) -> Void)?
     ) -> Bool {
         state == .ready && onHoldTap != nil
     }
@@ -146,7 +146,7 @@ struct BoardModelSurface: View {
                 BoardModelView(
                     model: model,
                     boardName: board.name,
-                    holds: board.holds(in: presentation),
+                    holds: board.contacts(in: presentation),
                     positionID: positionID,
                     highlightedHoldIDs: highlightedHoldIDs,
                     highlightMode: highlightMode,
@@ -310,22 +310,22 @@ final class BoardModelScene {
             guard let binding = descriptorsByNodeID[nodeID] else { return nil }
             switch binding.role {
             case .body:
-                guard binding.holdID == nil else { return nil }
-            case .hold:
-                guard let holdID = binding.holdID, !holdID.isEmpty else { return nil }
+                guard binding.contactID == nil else { return nil }
+            case .contact:
+                guard let holdID = binding.contactID, !holdID.isEmpty else { return nil }
                 boundHoldNodes[holdID, default: []].append(node)
                 boundHoldIDsByNode[ObjectIdentifier(node)] = holdID
                 originals[ObjectIdentifier(node)] = node.geometry?.materials
             case .attachment:
-                guard binding.holdID == nil else { return nil }
+                guard binding.contactID == nil else { return nil }
             }
         }
 
-        guard Set(boundHoldNodes.keys) == Set(descriptor.holds.keys),
-              descriptor.holds.allSatisfy({ holdID, hold in
+        guard Set(boundHoldNodes.keys) == Set(descriptor.contacts.keys),
+              descriptor.contacts.allSatisfy({ holdID, hold in
                   Set(hold.nodeIDs) == Set(
                       descriptor.nodes.compactMap { node in
-                          node.role == .hold && node.holdID == holdID ? node.nodeID : nil
+                          node.role == .contact && node.contactID == holdID ? node.nodeID : nil
                       }
                   )
               }) else {
@@ -362,7 +362,7 @@ final class BoardModelScene {
         configureCameraAndLighting(framing: framing)
     }
 
-    func holdID(for node: SCNNode) -> String? {
+    func contactID(for node: SCNNode) -> String? {
         var candidate: SCNNode? = node
         while let current = candidate {
             if let holdID = holdIDsByNode[ObjectIdentifier(current)] { return holdID }
@@ -1349,11 +1349,11 @@ private extension SCNVector3 {
 private struct BoardModelView: UIViewRepresentable {
     let model: BoardModelScene
     let boardName: String
-    let holds: [BoardHold]
+    let holds: [PhysicalContact]
     let positionID: String?
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
-    let onHoldTap: ((BoardHold) -> Void)?
+    let onHoldTap: ((PhysicalContact) -> Void)?
     let onUnavailable: (() -> Void)?
 
     func makeUIView(context: Context) -> BoardModelSCNView {
@@ -1412,9 +1412,9 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
 final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var model: BoardModelScene?
     var boardName = "hangboard"
-    var holds: [BoardHold] = []
+    var holds: [PhysicalContact] = []
     var highlightedHoldIDs: Set<String> = []
-    var onHoldTap: ((BoardHold) -> Void)?
+    var onHoldTap: ((PhysicalContact) -> Void)?
     var onUnavailable: (() -> Void)?
     var positionID: String?
     var needsAccessibilityProjection = true
@@ -1465,7 +1465,7 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
                   SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
                   SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
               ]).first,
-              let id = model.holdID(for: hit.node),
+              let id = model.contactID(for: hit.node),
               let hold = holds.first(where: { $0.id == id }) else { return }
         onHoldTap?(hold)
         _ = model.select(positionID: model.activePositionID)

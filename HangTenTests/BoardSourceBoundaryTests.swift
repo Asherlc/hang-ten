@@ -295,7 +295,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     migratedModelBoardIDs.contains(board.id),
                     "Migrated board \(board.id) must not retain raster media."
                 )
-                XCTAssertFalse(media.holdGeometry.isEmpty)
+                XCTAssertFalse(media.contactGeometry.isEmpty)
                 let logicalHoldIDs = Set(holds.compactMap { $0["id"] as? String })
                 var originalRasterHoldIDs = Set<String>()
                 XCTAssertTrue(
@@ -358,7 +358,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 XCTAssertTrue(holds.allSatisfy {
                     $0["geometry"] == nil && $0["presentationID"] == nil
                 })
-                XCTAssertEqual(Set(media.descriptor.holds.keys), Set(holds.compactMap {
+                XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(holds.compactMap {
                     $0["id"] as? String
                 }))
             }
@@ -395,7 +395,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
         XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: pieces)"))
+        XCTAssertTrue(source.contains("BoardContactPathShape(pieces: pieces)"))
         XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
         XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
         XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
@@ -454,7 +454,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         ).isEmpty)
         XCTAssertFalse(BoardSourceBoundaryAudit.findings(
             relativePath: "HangTen/Views/BoardModelView.swift",
-            source: "enum BoardModelIdentity { let hold = BoardHold() }", packageOwnedLiterals: literals
+            source: "enum BoardModelIdentity { let hold = PhysicalContact() }", packageOwnedLiterals: literals
         ).isEmpty)
     }
 

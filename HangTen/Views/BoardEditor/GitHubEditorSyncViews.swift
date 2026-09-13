@@ -300,7 +300,7 @@ struct GitHubSignInView: View {
 }
 
 struct GitHubPushSheet: View {
-    let board: TrainingBoard
+    let board: BoardRevision
     let editorStore: BoardEditorStore
     let syncService: GitHubBoardSyncService
 

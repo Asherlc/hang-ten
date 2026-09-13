@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "owl-climb.poker",
   "manufacturer": "Owl Climb",
   "name": "Poker",
   "subtitle": "Four-face rotating wood hangboard.",
   "productURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
-  "dimensions": "660 \u00d7 100 \u00d7 100 mm",
+  "dimensions": "660 × 100 × 100 mm",
   "aspectRatio": 6.6,
   "equipmentObjects": [
     {
@@ -16,7 +16,7 @@
   "presentations": [
     {
       "id": "face-a",
-      "name": "Face A \u2014 flat center",
+      "name": "Face A — flat center",
       "aspectRatio": 6.6,
       "isDefault": true,
       "derivation": {
@@ -25,7 +25,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/face-a.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "face-a-left-outer-slot": [
             {
               "frame": {
@@ -157,7 +157,7 @@
     },
     {
       "id": "face-b",
-      "name": "Face B \u2014 deep slopers",
+      "name": "Face B — deep slopers",
       "aspectRatio": 6.6,
       "isDefault": false,
       "derivation": {
@@ -166,7 +166,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/face-b.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "face-b-left-outer-slot": [
             {
               "frame": {
@@ -420,7 +420,7 @@
     },
     {
       "id": "face-c",
-      "name": "Face C \u2014 shallow half-rounds",
+      "name": "Face C — shallow half-rounds",
       "aspectRatio": 6.6,
       "isDefault": false,
       "derivation": {
@@ -429,7 +429,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/face-c.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "face-c-left-outer-slot": [
             {
               "frame": {
@@ -685,7 +685,7 @@
     },
     {
       "id": "face-d",
-      "name": "Face D \u2014 deep rounded recesses",
+      "name": "Face D — deep rounded recesses",
       "aspectRatio": 6.6,
       "isDefault": false,
       "derivation": {
@@ -694,7 +694,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/face-d.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "face-d-left-outer-slot": [
             {
               "frame": {
@@ -963,228 +963,303 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "face-a-left-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face A left outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-a-left-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face A left single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-a-left-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face A left dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-a-center-pull-up-slot",
       "equipmentObjectID": "primary",
       "name": "Face A center pull-up slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-a-right-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face A right dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-a-right-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face A right single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-a-right-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face A right outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-b-left-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face B left outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-b-left-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face B left single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-b-left-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face B left dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-b-left-deep-sloper",
       "equipmentObjectID": "primary",
       "name": "Face B left deep sloper",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-b-center-pull-up-slot",
       "equipmentObjectID": "primary",
       "name": "Face B center pull-up slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-b-right-deep-sloper",
       "equipmentObjectID": "primary",
       "name": "Face B right deep sloper",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-b-right-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face B right dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-b-right-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face B right single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-b-right-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face B right outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-c-left-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face C left outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-c-left-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face C left single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-c-left-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face C left dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-c-left-shallow-half-round",
       "equipmentObjectID": "primary",
       "name": "Face C left shallow half-round",
       "kind": "sloper",
-      "sizeMillimeters": 100
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 100,
+        "upperBound": 100
+      },
+      "gripTypes": []
     },
     {
       "id": "face-c-center-pull-up-slot",
       "equipmentObjectID": "primary",
       "name": "Face C center pull-up slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-c-right-shallow-half-round",
       "equipmentObjectID": "primary",
       "name": "Face C right shallow half-round",
       "kind": "sloper",
-      "sizeMillimeters": 100
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 100,
+        "upperBound": 100
+      },
+      "gripTypes": []
     },
     {
       "id": "face-c-right-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face C right dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-c-right-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face C right single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-c-right-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face C right outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-d-left-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face D left outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-d-left-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face D left single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-d-left-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face D left dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-d-left-deep-rounded-recess",
       "equipmentObjectID": "primary",
       "name": "Face D left deep rounded recess",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-d-center-pull-up-slot",
       "equipmentObjectID": "primary",
       "name": "Face D center pull-up slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-d-right-deep-rounded-recess",
       "equipmentObjectID": "primary",
       "name": "Face D right deep rounded recess",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "face-d-right-dual-pocket",
       "equipmentObjectID": "primary",
       "name": "Face D right dual-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 2
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": []
     },
     {
       "id": "face-d-right-single-pocket",
       "equipmentObjectID": "primary",
       "name": "Face D right single-finger pocket",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "face-d-right-outer-slot",
       "equipmentObjectID": "primary",
       "name": "Face D right outer slot",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

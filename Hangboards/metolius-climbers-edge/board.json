@@ -1,126 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "metolius.climbers-edge",
   "manufacturer": "Metolius",
   "name": "Climber's Edge",
   "subtitle": "Over-door training board with six edge depths, round and flat slopers, and jugs.",
   "productURL": "https://www.metoliusclimbing.com/products/climbers-edge-board",
-  "dimensions": "23.6 \u00d7 6.3 in",
+  "dimensions": "23.6 × 6.3 in",
   "aspectRatio": 1.8744541484716157,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "jug-left",
-      "equipmentObjectID": "primary",
-      "name": "Left jug",
-      "kind": "jug"
-    },
-    {
-      "id": "flat-sloper-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20-degree flat sloper",
-      "kind": "sloper",
-      "sloper": {
-        "type": "flat"
-      }
-    },
-    {
-      "id": "round-sloper-center",
-      "equipmentObjectID": "primary",
-      "name": "Center 40 mm-radius round sloper",
-      "kind": "sloper",
-      "sloper": {
-        "type": "round"
-      }
-    },
-    {
-      "id": "flat-sloper-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20-degree flat sloper",
-      "kind": "sloper",
-      "sloper": {
-        "type": "flat"
-      }
-    },
-    {
-      "id": "jug-right",
-      "equipmentObjectID": "primary",
-      "name": "Right jug",
-      "kind": "jug"
-    },
-    {
-      "id": "edge-20-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-15-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-10-center",
-      "equipmentObjectID": "primary",
-      "name": "Center 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
-    },
-    {
-      "id": "edge-15-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-20-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-17-5-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 17.5 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 17.5
-    },
-    {
-      "id": "edge-12-5-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 12.5 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 12.5
-    },
-    {
-      "id": "edge-7-5-center",
-      "equipmentObjectID": "primary",
-      "name": "Center 7.5 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 7.5
-    },
-    {
-      "id": "edge-12-5-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 12.5 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 12.5
-    },
-    {
-      "id": "edge-17-5-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 17.5 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 17.5
     }
   ],
   "presentations": [
@@ -135,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "jug-left": [
             {
               "frame": {
@@ -1678,6 +1567,175 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "jug-left",
+      "equipmentObjectID": "primary",
+      "name": "Left jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "flat-sloper-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20-degree flat sloper",
+      "kind": "sloper",
+      "features": [
+        "flatSloper"
+      ],
+      "gripTypes": []
+    },
+    {
+      "id": "round-sloper-center",
+      "equipmentObjectID": "primary",
+      "name": "Center 40 mm-radius round sloper",
+      "kind": "sloper",
+      "features": [
+        "roundSloper"
+      ],
+      "gripTypes": []
+    },
+    {
+      "id": "flat-sloper-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20-degree flat sloper",
+      "kind": "sloper",
+      "features": [
+        "flatSloper"
+      ],
+      "gripTypes": []
+    },
+    {
+      "id": "jug-right",
+      "equipmentObjectID": "primary",
+      "name": "Right jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-center",
+      "equipmentObjectID": "primary",
+      "name": "Center 10 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-17-5-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 17.5 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 17.5,
+        "upperBound": 17.5
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12-5-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 12.5 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 12.5,
+        "upperBound": 12.5
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-7-5-center",
+      "equipmentObjectID": "primary",
+      "name": "Center 7.5 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 7.5,
+        "upperBound": 7.5
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12-5-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 12.5 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 12.5,
+        "upperBound": 12.5
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-17-5-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 17.5 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 17.5,
+        "upperBound": 17.5
+      },
+      "gripTypes": []
     }
   ]
 }

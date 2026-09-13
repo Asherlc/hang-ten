@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "yy.travelboard",
   "manufacturer": "YY Vertical",
   "name": "TravelBoard",
   "productURL": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
   "subtitle": "Portable board with three edges, two mono-finger openings, and a tray",
-  "dimensions": "34 \u00d7 10 \u00d7 3 cm",
+  "dimensions": "34 × 10 × 3 cm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -24,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "tray": [
             {
               "frame": {
@@ -497,7 +497,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/reverse.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-10": [
             {
               "frame": {
@@ -605,47 +605,69 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "tray",
       "equipmentObjectID": "primary",
       "name": "Wide tray",
-      "kind": "jug"
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "edge-25",
       "equipmentObjectID": "primary",
       "name": "25 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 25
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 15
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "mono-left",
       "equipmentObjectID": "primary",
       "name": "Left mono-finger opening",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "mono-right",
       "equipmentObjectID": "primary",
       "name": "Right mono-finger opening",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "edge-10",
       "equipmentObjectID": "primary",
       "name": "10 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 10
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     }
   ]
 }

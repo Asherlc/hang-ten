@@ -1,143 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "trango.rock-prodigy-natural",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Natural",
   "subtitle": "FSC-certified beech two-piece board with variable rails, pockets, crimps, and top jugs.",
   "productURL": "https://trango.com/products/rock-prodigy-natural",
-  "dimensions": "7.5 \u00d7 6 \u00d7 1.5 in (each board)",
+  "dimensions": "7.5 × 6 × 1.5 in (each board)",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "top-jug-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 40 mm top jug",
-      "kind": "jug",
-      "sizeMillimeters": 40,
-      "fingerCapacity": 4
-    },
-    {
-      "id": "top-jug-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 40 mm top jug",
-      "kind": "jug",
-      "sizeMillimeters": 40,
-      "fingerCapacity": 4
-    },
-    {
-      "id": "top-variable-rail-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20\u201333 mm top variable-depth rail",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 33
-      },
-      "fingerCapacity": 4
-    },
-    {
-      "id": "top-variable-rail-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20\u201333 mm top variable-depth rail",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 33
-      },
-      "fingerCapacity": 4
-    },
-    {
-      "id": "bottom-variable-rail-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 10\u201324 mm bottom variable-depth rail",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 24
-      },
-      "fingerCapacity": 4
-    },
-    {
-      "id": "bottom-variable-rail-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 10\u201324 mm bottom variable-depth rail",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 24
-      },
-      "fingerCapacity": 4
-    },
-    {
-      "id": "closed-crimp-left",
-      "equipmentObjectID": "primary",
-      "name": "Left closed crimp",
-      "kind": "edge",
-      "fingerCapacity": 4,
-      "gripType": "fullCrimp"
-    },
-    {
-      "id": "closed-crimp-right",
-      "equipmentObjectID": "primary",
-      "name": "Right closed crimp",
-      "kind": "edge",
-      "fingerCapacity": 4,
-      "gripType": "fullCrimp"
-    },
-    {
-      "id": "upper-pocket-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 38 mm upper pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 38,
-      "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
-    },
-    {
-      "id": "upper-pocket-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 38 mm upper pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 38,
-      "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
-    },
-    {
-      "id": "center-lower-pocket-left",
-      "equipmentObjectID": "primary",
-      "name": "Left center lower pocket",
-      "kind": "pocket",
-      "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
-    },
-    {
-      "id": "center-lower-pocket-right",
-      "equipmentObjectID": "primary",
-      "name": "Right center lower pocket",
-      "kind": "pocket",
-      "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
-    },
-    {
-      "id": "outer-supported-pocket-left",
-      "equipmentObjectID": "primary",
-      "name": "Left outer supported pocket",
-      "kind": "pocket",
-      "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
-    },
-    {
-      "id": "outer-supported-pocket-right",
-      "equipmentObjectID": "primary",
-      "name": "Right outer supported pocket",
-      "kind": "pocket",
-      "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
     }
   ],
   "presentations": [
@@ -152,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "top-jug-left": [
             {
               "frame": {
@@ -1595,6 +1467,183 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "top-jug-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 40 mm top jug",
+      "kind": "jug",
+      "features": [],
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "top-jug-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 40 mm top jug",
+      "kind": "jug",
+      "features": [],
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "top-variable-rail-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20–33 mm top variable-depth rail",
+      "kind": "edge",
+      "features": [],
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 33
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "top-variable-rail-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20–33 mm top variable-depth rail",
+      "kind": "edge",
+      "features": [],
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 33
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-variable-rail-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 10–24 mm bottom variable-depth rail",
+      "kind": "edge",
+      "features": [],
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 24
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-variable-rail-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 10–24 mm bottom variable-depth rail",
+      "kind": "edge",
+      "features": [],
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 24
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "closed-crimp-left",
+      "equipmentObjectID": "primary",
+      "name": "Left closed crimp",
+      "kind": "edge",
+      "features": [],
+      "fingerCapacity": 4,
+      "gripTypes": [
+        "fullCrimp"
+      ]
+    },
+    {
+      "id": "closed-crimp-right",
+      "equipmentObjectID": "primary",
+      "name": "Right closed crimp",
+      "kind": "edge",
+      "features": [],
+      "fingerCapacity": 4,
+      "gripTypes": [
+        "fullCrimp"
+      ]
+    },
+    {
+      "id": "upper-pocket-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 38 mm upper pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 3,
+      "depthRangeMillimeters": {
+        "lowerBound": 38,
+        "upperBound": 38
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "upper-pocket-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 38 mm upper pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 3,
+      "depthRangeMillimeters": {
+        "lowerBound": 38,
+        "upperBound": 38
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "center-lower-pocket-left",
+      "equipmentObjectID": "primary",
+      "name": "Left center lower pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "center-lower-pocket-right",
+      "equipmentObjectID": "primary",
+      "name": "Right center lower pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "outer-supported-pocket-left",
+      "equipmentObjectID": "primary",
+      "name": "Left outer supported pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "outer-supported-pocket-right",
+      "equipmentObjectID": "primary",
+      "name": "Right outer supported pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 3,
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
     }
   ]
 }

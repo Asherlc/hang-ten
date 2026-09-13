@@ -156,28 +156,29 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHighlightResolverUsesSelectedEquipmentObjectForPortableBoard() {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "portable",
+            revisionID: "test-fixture",
             manufacturer: "Test",
             name: "Portable",
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
             equipmentObjects: [.init(id: "left-ring"), .init(id: "right-ring")],
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "left-pocket",
                     equipmentObjectID: "left-ring",
                     name: "Left pocket",
                     kind: .pocket,
                 ),
-                BoardHold(
+                PhysicalContact(
                     id: "left-edge",
                     equipmentObjectID: "left-ring",
                     name: "Left edge",
                     kind: .edge,
                 ),
-                BoardHold(
+                PhysicalContact(
                     id: "right-pocket",
                     equipmentObjectID: "right-ring",
                     name: "Right pocket",
@@ -235,22 +236,23 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHighlightResolverUsesSubstitutedFallbackObjectsForPortableBoard() {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "portable-fallback",
+            revisionID: "test-fixture",
             manufacturer: "Test",
             name: "Portable fallback",
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
             equipmentObjects: [.init(id: "left"), .init(id: "right")],
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "left-edge",
                     equipmentObjectID: "left",
                     name: "Left edge",
                     kind: .edge,
                 ),
-                BoardHold(
+                PhysicalContact(
                     id: "right-edge",
                     equipmentObjectID: "right",
                     name: "Right edge",
@@ -286,11 +288,11 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHoldCuePrefersSingleTargetStepGripOverride() {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
-            gripType: nil
+            gripTypes: []
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -313,12 +315,12 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHoldCueDoesNotInferGripFromBoardMetadata() {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: "cue-pocket",
             name: "Cue pocket",
             kind: .pocket,
-            gripType: .openHand,
-            fingerCapacity: 3
+            fingerCapacity: 3,
+            gripTypes: [.openHand]
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -337,7 +339,7 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHoldCueAcceptsHighlightedFallbackFeatureHold() {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: "fallback-edge",
             name: "Fallback edge",
             kind: .edge,
@@ -361,7 +363,7 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHoldCueIsUnavailableForMultiTargetSteps() {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
@@ -381,7 +383,7 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHoldCueResolvesWhenHighlightedHoldMatchesSingleTarget() {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
@@ -404,7 +406,7 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testSourceBackedHoldCueRemainsVisibleAtCountdownZero() {
-        let hold = BoardHold(
+        let hold = PhysicalContact(
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
@@ -435,7 +437,7 @@ final class WorkoutTimelineTests: XCTestCase {
 
     func testHoldCueVisibilityShowsAvailableCueDuringSkipCountdown() {
         let holdCue = WorkoutHoldCue(
-            hold: BoardHold(
+            hold: PhysicalContact(
                 id: "cue-edge",
                 name: "Cue edge",
                 kind: .edge,
@@ -456,7 +458,7 @@ final class WorkoutTimelineTests: XCTestCase {
 
     func testHoldCueVisibilityStillSuppressesCountdownCompletionAndMissingCue() {
         let holdCue = WorkoutHoldCue(
-            hold: BoardHold(
+            hold: PhysicalContact(
                 id: "cue-edge",
                 name: "Cue edge",
                 kind: .edge,
@@ -488,12 +490,12 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 
     func testHoldCueIsUnavailableWhenHighlightedHoldDoesNotMatchSingleTarget() {
-        let targetHold = BoardHold(
+        let targetHold = PhysicalContact(
             id: "target-edge",
             name: "Target edge",
             kind: .edge,
         )
-        let highlightedHold = BoardHold(
+        let highlightedHold = PhysicalContact(
             id: "highlighted-jug",
             name: "Highlighted jug",
             kind: .jug,
@@ -518,18 +520,19 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
-    private func board(containing holds: [BoardHold]) -> TrainingBoard {
+    private func board(containing holds: [PhysicalContact]) -> BoardRevision {
         let frames = Dictionary(uniqueKeysWithValues: holds.enumerated().map { index, hold in
             (hold.id, CGRect(x: Double(index) * 0.1, y: 0, width: 0.1, height: 0.1))
         })
-        return TrainingBoard(
+        return BoardRevision(
             id: "cue-board",
+            revisionID: "test-fixture",
             manufacturer: "Test",
             name: "Cue board",
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
-            holds: holds,
+            contacts: holds,
             productURL: URL(string: "https://example.com/cue-board")!,
             photoAssetName: nil,
             presentations: [rasterPresentation(frames: frames)]
@@ -538,9 +541,9 @@ final class WorkoutTimelineTests: XCTestCase {
 
     private func rasterPresentation(frames: [String: CGRect]) -> BoardPresentation {
         let geometry = Dictionary(uniqueKeysWithValues: frames.map { id, frame in
-            (id, [BoardHoldPiece(
+            (id, [BoardContactPiece(
                 id: "\(id)-piece",
-                holdID: id,
+                contactID: id,
                 frame: frame,
                 shape: .roundedRect(cornerRadiusFraction: 0),
                 treatment: .surface
@@ -551,7 +554,7 @@ final class WorkoutTimelineTests: XCTestCase {
             name: "Primary",
             aspectRatio: 1,
             isDefault: true,
-            media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
+            media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
         )
     }
 

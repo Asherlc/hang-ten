@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlsplit
 
-from .board_catalog import BoardHold, BoardInventory, is_board_identifier
+from .board_catalog import PhysicalContact, BoardInventory, is_board_identifier
 
 
 _FIELDS = frozenset(
@@ -358,13 +358,19 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
     )
 
 
-def _hold_value(hold: BoardHold, field: str) -> object | None:
+def _hold_value(hold: PhysicalContact, field: str) -> object | None:
     if field == "kind":
         return hold.kind
     if field == "sizeMillimeters":
-        return hold.size_millimeters
+        depth = hold.depth_range_millimeters
+        if depth is None or depth.lower_bound != depth.upper_bound:
+            return None
+        return depth.lower_bound
     if field == "depthRangeMillimeters":
-        if hold.depth_range_millimeters is None:
+        if hold.depth_range_millimeters is None or (
+            hold.depth_range_millimeters.lower_bound
+            == hold.depth_range_millimeters.upper_bound
+        ):
             return None
         return {
             "lowerBound": hold.depth_range_millimeters.lower_bound,
@@ -375,21 +381,25 @@ def _hold_value(hold: BoardHold, field: str) -> object | None:
     if field == "handCapacity":
         return hold.hand_capacity
     if field == "gripType":
-        return hold.grip_type
+        return next(iter(hold.grip_types)) if len(hold.grip_types) == 1 else None
     if field == "sloper":
-        if hold.sloper is None:
+        if "flatSloper" in hold.features:
+            return {"type": "flat"}
+        if "roundSloper" in hold.features:
+            return {"type": "round"}
+        if hold.kind != "sloper":
             return None
-        value: dict[str, object] = {"type": hold.sloper.type}
-        if hold.sloper.angle_degrees is not None:
-            value["angleDegrees"] = hold.sloper.angle_degrees
-        return value
+        return None
     assert field == "features"
-    return list(hold.features) if hold.features is not None else None
+    source_features = hold.features - {"flatSloper", "roundSloper"}
+    return sorted(source_features) if source_features else None
 
 
 def _values_match(expected: object, actual: object) -> bool:
     if isinstance(expected, bool) or isinstance(actual, bool):
         return False
+    if isinstance(expected, list) and isinstance(actual, list):
+        return len(expected) == len(actual) and set(expected) == set(actual)
     return expected == actual
 
 
@@ -411,7 +421,7 @@ def validate_metadata_ledger(
 
     records_by_key: dict[tuple[str, str, str], MetadataRecord] = {}
     holds_by_board = {
-        board_id: {hold.id: hold for hold in packages[board_id].holds}
+        board_id: {hold.id: hold for hold in packages[board_id].contacts}
         for board_id in ledger.reviewed_board_ids + ledger.sloper_only_board_ids
     }
     for record in ledger.records:

@@ -7,7 +7,7 @@
   "model": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "id": "fixture.board",
       "manufacturer": "Fixture Maker",
       "name": "Fixture Board",
@@ -21,7 +21,9 @@
           "name": "Primary",
           "aspectRatio": 2,
           "isDefault": true,
-          "derivation": { "type": "original" },
+          "derivation": {
+            "type": "original"
+          },
           "media": {
             "type": "model",
             "assetPath": "assets/primary.usdz",
@@ -29,32 +31,85 @@
             "display": {
               "camera": {
                 "type": "orthographic",
-                "viewDirection": [0, 0, -1],
-                "up": [0, 1, 0],
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "up": [
+                  0,
+                  1,
+                  0
+                ],
                 "fitPadding": 0.08
               }
             }
           }
         }
       ],
-      "holds": [
-        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      "contacts": [
+        {
+          "id": "hold-left",
+          "name": "Left hold",
+          "kind": "jug",
+          "equipmentObjectID": "primary",
+          "features": [],
+          "gripTypes": []
+        }
+      ],
+      "revisionID": "2026-09-contact-first",
+      "equipmentObjects": [
+        {
+          "id": "primary"
+        }
       ]
     },
     "descriptor": {
       "schemaVersion": 1,
       "coordinateFrame": "hang-ten-board-v1",
       "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
-      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "modelBounds": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          1,
+          1,
+          0.1
+        ]
+      },
       "nodes": [
-        { "nodeID": "Body", "role": "body" },
-        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }
+        {
+          "nodeID": "Body",
+          "role": "body"
+        },
+        {
+          "nodeID": "Left",
+          "role": "contact",
+          "contactID": "hold-left"
+        }
       ],
-      "holds": {
+      "contacts": {
         "hold-left": {
-          "nodeIDs": ["Left"],
-          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
-          "center": [0.25, 0.4]
+          "nodeIDs": [
+            "Left"
+          ],
+          "facePlaneAABB": {
+            "min": [
+              0.1,
+              0.2
+            ],
+            "max": [
+              0.4,
+              0.6
+            ]
+          },
+          "center": [
+            0.25,
+            0.4
+          ]
         }
       }
     }
@@ -62,7 +117,7 @@
   "directedTwoBranchModel": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "id": "fixture.two-branch",
       "manufacturer": "Fixture Maker",
       "name": "Two branch fixture",
@@ -76,7 +131,9 @@
           "name": "Primary",
           "aspectRatio": 2,
           "isDefault": true,
-          "derivation": { "type": "original" },
+          "derivation": {
+            "type": "original"
+          },
           "media": {
             "type": "model",
             "assetPath": "assets/primary.usdz",
@@ -84,8 +141,16 @@
             "display": {
               "camera": {
                 "type": "orthographic",
-                "viewDirection": [0, 0, -1],
-                "up": [0, 1, 0],
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "up": [
+                  0,
+                  1,
+                  0
+                ],
                 "fitPadding": 0.08
               }
             },
@@ -93,61 +158,342 @@
               "type": "twoBranchCord",
               "passages": {
                 "left": [
-                  { "id": "left-top", "nodeID": "LeftTop", "entryPointInModel": [0.2, 0.9, 0.1], "exitPointInModel": [0.2, 0.9, 0], "provenance": "estimatedFromApprovedModel" },
-                  { "id": "left-bottom", "nodeID": "LeftBottom", "entryPointInModel": [0.3, 0.9, 0.1], "exitPointInModel": [0.3, 0.9, 0], "provenance": "estimatedFromApprovedModel" }
+                  {
+                    "id": "left-top",
+                    "nodeID": "LeftTop",
+                    "entryPointInModel": [
+                      0.2,
+                      0.9,
+                      0.1
+                    ],
+                    "exitPointInModel": [
+                      0.2,
+                      0.9,
+                      0
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  },
+                  {
+                    "id": "left-bottom",
+                    "nodeID": "LeftBottom",
+                    "entryPointInModel": [
+                      0.3,
+                      0.9,
+                      0.1
+                    ],
+                    "exitPointInModel": [
+                      0.3,
+                      0.9,
+                      0
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  }
                 ],
                 "right": [
-                  { "id": "right-top", "nodeID": "RightTop", "entryPointInModel": [0.7, 0.9, 0.1], "exitPointInModel": [0.7, 0.9, 0], "provenance": "estimatedFromApprovedModel" },
-                  { "id": "right-bottom", "nodeID": "RightBottom", "entryPointInModel": [0.8, 0.9, 0.1], "exitPointInModel": [0.8, 0.9, 0], "provenance": "estimatedFromApprovedModel" }
+                  {
+                    "id": "right-top",
+                    "nodeID": "RightTop",
+                    "entryPointInModel": [
+                      0.7,
+                      0.9,
+                      0.1
+                    ],
+                    "exitPointInModel": [
+                      0.7,
+                      0.9,
+                      0
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  },
+                  {
+                    "id": "right-bottom",
+                    "nodeID": "RightBottom",
+                    "entryPointInModel": [
+                      0.8,
+                      0.9,
+                      0.1
+                    ],
+                    "exitPointInModel": [
+                      0.8,
+                      0.9,
+                      0
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  }
                 ]
               },
               "branches": [
-                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "entryContactPoints": [[0.2, 0.9, 0.12]], "exteriorContactPoints": [[0.15, 0.9, 0], [0.35, 0.9, 0]], "exitContactPoints": [[0.3, 0.9, 0.12]], "restLength": 1.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
-                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "entryContactPoints": [[0.7, 0.9, 0.12]], "exteriorContactPoints": [[0.65, 0.9, 0], [0.85, 0.9, 0]], "exitContactPoints": [[0.8, 0.9, 0.12]], "restLength": 1.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
+                {
+                  "id": "left-branch",
+                  "passageIDs": [
+                    "left-top",
+                    "left-bottom"
+                  ],
+                  "entryContactPoints": [
+                    [
+                      0.2,
+                      0.9,
+                      0.12
+                    ]
+                  ],
+                  "exteriorContactPoints": [
+                    [
+                      0.15,
+                      0.9,
+                      0
+                    ],
+                    [
+                      0.35,
+                      0.9,
+                      0
+                    ]
+                  ],
+                  "exitContactPoints": [
+                    [
+                      0.3,
+                      0.9,
+                      0.12
+                    ]
+                  ],
+                  "restLength": 1.5,
+                  "radius": 0.002,
+                  "material": "matteCord",
+                  "provenance": "displayEstimate"
+                },
+                {
+                  "id": "right-branch",
+                  "passageIDs": [
+                    "right-top",
+                    "right-bottom"
+                  ],
+                  "entryContactPoints": [
+                    [
+                      0.7,
+                      0.9,
+                      0.12
+                    ]
+                  ],
+                  "exteriorContactPoints": [
+                    [
+                      0.65,
+                      0.9,
+                      0
+                    ],
+                    [
+                      0.85,
+                      0.9,
+                      0
+                    ]
+                  ],
+                  "exitContactPoints": [
+                    [
+                      0.8,
+                      0.9,
+                      0.12
+                    ]
+                  ],
+                  "restLength": 1.5,
+                  "radius": 0.002,
+                  "material": "matteCord",
+                  "provenance": "displayEstimate"
+                }
               ],
               "anchor": {
-                "offsetFromBoardBounds": [0, 0.22, 0],
+                "offsetFromBoardBounds": [
+                  0,
+                  0.22,
+                  0
+                ],
                 "visibility": "invisible",
                 "provenance": "displayEstimate"
               },
               "canonicalPoses": {
-                "primary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
-                "secondary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
-                "tertiary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
-                "quaternary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } }
+                "primary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                },
+                "secondary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                },
+                "tertiary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                },
+                "quaternary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                }
               }
             }
           }
         }
       ],
       "positions": [
-        { "id": "primary", "presentationID": "primary" },
-        { "id": "secondary", "presentationID": "primary" },
-        { "id": "tertiary", "presentationID": "primary" },
-        { "id": "quaternary", "presentationID": "primary" }
+        {
+          "id": "primary",
+          "presentationID": "primary"
+        },
+        {
+          "id": "secondary",
+          "presentationID": "primary"
+        },
+        {
+          "id": "tertiary",
+          "presentationID": "primary"
+        },
+        {
+          "id": "quaternary",
+          "presentationID": "primary"
+        }
       ],
-      "holds": [
-        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      "contacts": [
+        {
+          "id": "hold-left",
+          "name": "Left hold",
+          "kind": "jug",
+          "equipmentObjectID": "primary",
+          "features": [],
+          "gripTypes": []
+        }
+      ],
+      "revisionID": "2026-09-contact-first",
+      "equipmentObjects": [
+        {
+          "id": "primary"
+        }
       ]
     },
     "descriptor": {
       "schemaVersion": 1,
       "coordinateFrame": "hang-ten-board-v1",
       "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
-      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "modelBounds": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          1,
+          1,
+          0.1
+        ]
+      },
       "nodes": [
-        { "nodeID": "Body", "role": "body" },
-        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" },
-        { "nodeID": "LeftBottom", "role": "attachment" },
-        { "nodeID": "LeftTop", "role": "attachment" },
-        { "nodeID": "RightBottom", "role": "attachment" },
-        { "nodeID": "RightTop", "role": "attachment" }
+        {
+          "nodeID": "Body",
+          "role": "body"
+        },
+        {
+          "nodeID": "Left",
+          "role": "contact",
+          "contactID": "hold-left"
+        },
+        {
+          "nodeID": "LeftBottom",
+          "role": "attachment"
+        },
+        {
+          "nodeID": "LeftTop",
+          "role": "attachment"
+        },
+        {
+          "nodeID": "RightBottom",
+          "role": "attachment"
+        },
+        {
+          "nodeID": "RightTop",
+          "role": "attachment"
+        }
       ],
-      "holds": {
+      "contacts": {
         "hold-left": {
-          "nodeIDs": ["Left"],
-          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
-          "center": [0.25, 0.4]
+          "nodeIDs": [
+            "Left"
+          ],
+          "facePlaneAABB": {
+            "min": [
+              0.1,
+              0.2
+            ],
+            "max": [
+              0.4,
+              0.6
+            ]
+          },
+          "center": [
+            0.25,
+            0.4
+          ]
         }
       }
     }
@@ -155,7 +501,7 @@
   "singleCordModel": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "id": "fixture.board",
       "manufacturer": "Fixture Maker",
       "name": "Fixture Board",
@@ -169,7 +515,9 @@
           "name": "Primary",
           "aspectRatio": 2,
           "isDefault": true,
-          "derivation": { "type": "original" },
+          "derivation": {
+            "type": "original"
+          },
           "media": {
             "type": "model",
             "assetPath": "assets/primary.usdz",
@@ -177,8 +525,16 @@
             "display": {
               "camera": {
                 "type": "orthographic",
-                "viewDirection": [0, 0, -1],
-                "up": [0, 1, 0],
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "up": [
+                  0,
+                  1,
+                  0
+                ],
                 "fitPadding": 0.08
               }
             },
@@ -186,11 +542,19 @@
               "type": "singleCord",
               "attachment": {
                 "nodeID": "ZZAttachment",
-                "pointInModel": [0.5, 1, 0.05],
+                "pointInModel": [
+                  0.5,
+                  1,
+                  0.05
+                ],
                 "provenance": "estimatedFromApprovedModel"
               },
               "anchor": {
-                "offsetFromBoardBounds": [0, 0.22, 0],
+                "offsetFromBoardBounds": [
+                  0,
+                  0.22,
+                  0
+                ],
                 "visibility": "invisible",
                 "provenance": "displayEstimate"
               },
@@ -202,10 +566,23 @@
               },
               "canonicalPoses": {
                 "primary": {
-                  "rotation": [0, 0, 0, 1],
-                  "translation": [0, 0, 0],
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
                   "camera": {
-                    "viewDirection": [0, 0, -1],
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
                     "fitPadding": 0.1
                   }
                 }
@@ -215,27 +592,78 @@
         }
       ],
       "positions": [
-        {"id": "primary", "presentationID": "primary"}
+        {
+          "id": "primary",
+          "presentationID": "primary"
+        }
       ],
-      "holds": [
-        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      "contacts": [
+        {
+          "id": "hold-left",
+          "name": "Left hold",
+          "kind": "jug",
+          "equipmentObjectID": "primary",
+          "features": [],
+          "gripTypes": []
+        }
+      ],
+      "revisionID": "2026-09-contact-first",
+      "equipmentObjects": [
+        {
+          "id": "primary"
+        }
       ]
     },
     "descriptor": {
       "schemaVersion": 1,
       "coordinateFrame": "hang-ten-board-v1",
       "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
-      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "modelBounds": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          1,
+          1,
+          0.1
+        ]
+      },
       "nodes": [
-        { "nodeID": "Body", "role": "body" },
-        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" },
-        { "nodeID": "ZZAttachment", "role": "attachment" }
+        {
+          "nodeID": "Body",
+          "role": "body"
+        },
+        {
+          "nodeID": "Left",
+          "role": "contact",
+          "contactID": "hold-left"
+        },
+        {
+          "nodeID": "ZZAttachment",
+          "role": "attachment"
+        }
       ],
-      "holds": {
+      "contacts": {
         "hold-left": {
-          "nodeIDs": ["Left"],
-          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
-          "center": [0.25, 0.4]
+          "nodeIDs": [
+            "Left"
+          ],
+          "facePlaneAABB": {
+            "min": [
+              0.1,
+              0.2
+            ],
+            "max": [
+              0.4,
+              0.6
+            ]
+          },
+          "center": [
+            0.25,
+            0.4
+          ]
         }
       }
     }
@@ -243,7 +671,7 @@
   "twoBranchModel": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "id": "fixture.two-branch",
       "manufacturer": "Fixture Maker",
       "name": "Two branch fixture",
@@ -257,7 +685,9 @@
           "name": "Primary",
           "aspectRatio": 2,
           "isDefault": true,
-          "derivation": { "type": "original" },
+          "derivation": {
+            "type": "original"
+          },
           "media": {
             "type": "model",
             "assetPath": "assets/primary.usdz",
@@ -265,8 +695,16 @@
             "display": {
               "camera": {
                 "type": "orthographic",
-                "viewDirection": [0, 0, -1],
-                "up": [0, 1, 0],
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "up": [
+                  0,
+                  1,
+                  0
+                ],
                 "fitPadding": 0.08
               }
             },
@@ -274,61 +712,270 @@
               "type": "twoBranchCord",
               "passages": {
                 "left": [
-                  { "id": "left-top", "nodeID": "LeftTop", "pointInModel": [0.2, 0.9, 0.05], "provenance": "estimatedFromApprovedModel" },
-                  { "id": "left-bottom", "nodeID": "LeftBottom", "pointInModel": [0.3, 0.9, 0.05], "provenance": "estimatedFromApprovedModel" }
+                  {
+                    "id": "left-top",
+                    "nodeID": "LeftTop",
+                    "pointInModel": [
+                      0.2,
+                      0.9,
+                      0.05
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  },
+                  {
+                    "id": "left-bottom",
+                    "nodeID": "LeftBottom",
+                    "pointInModel": [
+                      0.3,
+                      0.9,
+                      0.05
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  }
                 ],
                 "right": [
-                  { "id": "right-top", "nodeID": "RightTop", "pointInModel": [0.7, 0.9, 0.05], "provenance": "estimatedFromApprovedModel" },
-                  { "id": "right-bottom", "nodeID": "RightBottom", "pointInModel": [0.8, 0.9, 0.05], "provenance": "estimatedFromApprovedModel" }
+                  {
+                    "id": "right-top",
+                    "nodeID": "RightTop",
+                    "pointInModel": [
+                      0.7,
+                      0.9,
+                      0.05
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  },
+                  {
+                    "id": "right-bottom",
+                    "nodeID": "RightBottom",
+                    "pointInModel": [
+                      0.8,
+                      0.9,
+                      0.05
+                    ],
+                    "provenance": "estimatedFromApprovedModel"
+                  }
                 ]
               },
               "branches": [
-                { "id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 0.92, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" },
-                { "id": "right-branch", "passageIDs": ["right-top", "right-bottom"], "restLength": 0.92, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate" }
+                {
+                  "id": "left-branch",
+                  "passageIDs": [
+                    "left-top",
+                    "left-bottom"
+                  ],
+                  "restLength": 0.92,
+                  "radius": 0.002,
+                  "material": "matteCord",
+                  "provenance": "displayEstimate"
+                },
+                {
+                  "id": "right-branch",
+                  "passageIDs": [
+                    "right-top",
+                    "right-bottom"
+                  ],
+                  "restLength": 0.92,
+                  "radius": 0.002,
+                  "material": "matteCord",
+                  "provenance": "displayEstimate"
+                }
               ],
               "anchor": {
-                "offsetFromBoardBounds": [0, 0.22, 0],
+                "offsetFromBoardBounds": [
+                  0,
+                  0.22,
+                  0
+                ],
                 "visibility": "invisible",
                 "provenance": "displayEstimate"
               },
               "canonicalPoses": {
-                "primary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
-                "secondary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
-                "tertiary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } },
-                "quaternary": { "rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 } }
+                "primary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                },
+                "secondary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                },
+                "tertiary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                },
+                "quaternary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      0,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                }
               }
             }
           }
         }
       ],
       "positions": [
-        { "id": "primary", "presentationID": "primary" },
-        { "id": "secondary", "presentationID": "primary" },
-        { "id": "tertiary", "presentationID": "primary" },
-        { "id": "quaternary", "presentationID": "primary" }
+        {
+          "id": "primary",
+          "presentationID": "primary"
+        },
+        {
+          "id": "secondary",
+          "presentationID": "primary"
+        },
+        {
+          "id": "tertiary",
+          "presentationID": "primary"
+        },
+        {
+          "id": "quaternary",
+          "presentationID": "primary"
+        }
       ],
-      "holds": [
-        { "id": "hold-left", "name": "Left hold", "kind": "jug" }
+      "contacts": [
+        {
+          "id": "hold-left",
+          "name": "Left hold",
+          "kind": "jug",
+          "equipmentObjectID": "primary",
+          "features": [],
+          "gripTypes": []
+        }
+      ],
+      "revisionID": "2026-09-contact-first",
+      "equipmentObjects": [
+        {
+          "id": "primary"
+        }
       ]
     },
     "descriptor": {
       "schemaVersion": 1,
       "coordinateFrame": "hang-ten-board-v1",
       "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
-      "modelBounds": { "min": [0, 0, 0], "max": [1, 1, 0.1] },
+      "modelBounds": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          1,
+          1,
+          0.1
+        ]
+      },
       "nodes": [
-        { "nodeID": "Body", "role": "body" },
-        { "nodeID": "Left", "role": "hold", "holdID": "hold-left" },
-        { "nodeID": "LeftBottom", "role": "attachment" },
-        { "nodeID": "LeftTop", "role": "attachment" },
-        { "nodeID": "RightBottom", "role": "attachment" },
-        { "nodeID": "RightTop", "role": "attachment" }
+        {
+          "nodeID": "Body",
+          "role": "body"
+        },
+        {
+          "nodeID": "Left",
+          "role": "contact",
+          "contactID": "hold-left"
+        },
+        {
+          "nodeID": "LeftBottom",
+          "role": "attachment"
+        },
+        {
+          "nodeID": "LeftTop",
+          "role": "attachment"
+        },
+        {
+          "nodeID": "RightBottom",
+          "role": "attachment"
+        },
+        {
+          "nodeID": "RightTop",
+          "role": "attachment"
+        }
       ],
-      "holds": {
+      "contacts": {
         "hold-left": {
-          "nodeIDs": ["Left"],
-          "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] },
-          "center": [0.25, 0.4]
+          "nodeIDs": [
+            "Left"
+          ],
+          "facePlaneAABB": {
+            "min": [
+              0.1,
+              0.2
+            ],
+            "max": [
+              0.4,
+              0.6
+            ]
+          },
+          "center": [
+            0.25,
+            0.4
+          ]
         }
       }
     }
@@ -340,7 +987,14 @@
       "pythonError": "schemaVersion",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["schemaVersion"], "value": 1}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "schemaVersion"
+          ],
+          "value": 2
+        }
       ]
     },
     {
@@ -349,7 +1003,17 @@
       "pythonError": "media.type",
       "swiftError": "malformedJSON",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "type"], "value": "video"}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "type"
+          ],
+          "value": "video"
+        }
       ]
     },
     {
@@ -358,7 +1022,17 @@
       "pythonError": "USDZ beneath assets",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "assetPath"], "value": "assets/../primary.usdz"}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "assetPath"
+          ],
+          "value": "assets/../primary.usdz"
+        }
       ]
     },
     {
@@ -367,7 +1041,10 @@
       "pythonError": "undeclared presentation asset",
       "swiftError": "invalidPackage",
       "extraAssets": [
-        {"path": "assets/extra.usdz", "base64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw=="}
+        {
+          "path": "assets/extra.usdz",
+          "base64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw=="
+        }
       ],
       "mutations": []
     },
@@ -377,25 +1054,50 @@
       "pythonError": "SHA-256",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "replace", "path": ["modelSHA256"], "value": "0000000000000000000000000000000000000000000000000000000000000000"}
+        {
+          "target": "descriptor",
+          "op": "replace",
+          "path": [
+            "modelSHA256"
+          ],
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
       ]
     },
     {
       "name": "omitted-node",
       "pythonException": "ValueError",
-      "pythonError": "node hold IDs",
+      "pythonError": "node contact IDs",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "remove", "path": ["nodes", 1]}
+        {
+          "target": "descriptor",
+          "op": "remove",
+          "path": [
+            "nodes",
+            1
+          ]
+        }
       ]
     },
     {
       "name": "extra-node",
       "pythonException": "ValueError",
-      "pythonError": "node hold IDs",
+      "pythonError": "node contact IDs",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Spare", "role": "hold", "holdID": "hold-spare"}}
+        {
+          "target": "descriptor",
+          "op": "append",
+          "path": [
+            "nodes"
+          ],
+          "value": {
+            "nodeID": "Spare",
+            "role": "contact",
+            "contactID": "hold-spare"
+          }
+        }
       ]
     },
     {
@@ -404,7 +1106,19 @@
       "pythonError": "unknown keys",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "replace", "path": ["nodes", 0], "value": {"nodeID": "Body", "role": "body", "holdID": "hold-left"}}
+        {
+          "target": "descriptor",
+          "op": "replace",
+          "path": [
+            "nodes",
+            0
+          ],
+          "value": {
+            "nodeID": "Body",
+            "role": "body",
+            "contactID": "hold-left"
+          }
+        }
       ]
     },
     {
@@ -413,7 +1127,18 @@
       "pythonError": "nodeIDs",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "replace", "path": ["holds", "hold-left", "nodeIDs"], "value": ["Unbound"]}
+        {
+          "target": "descriptor",
+          "op": "replace",
+          "path": [
+            "contacts",
+            "hold-left",
+            "nodeIDs"
+          ],
+          "value": [
+            "Unbound"
+          ]
+        }
       ]
     },
     {
@@ -422,7 +1147,23 @@
       "pythonError": "viewDirection",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "display", "camera", "viewDirection"], "value": [0, 0, 0]}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "display",
+            "camera",
+            "viewDirection"
+          ],
+          "value": [
+            0,
+            0,
+            0
+          ]
+        }
       ]
     },
     {
@@ -432,7 +1173,18 @@
       "pythonError": "unknown keys",
       "swiftError": "malformedJSON",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "unexpected"], "value": true}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "unexpected"
+          ],
+          "value": true
+        }
       ]
     },
     {
@@ -442,7 +1194,18 @@
       "pythonError": "singleCord",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "type"], "value": "doubleCord"}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "type"
+          ],
+          "value": "doubleCord"
+        }
       ]
     },
     {
@@ -452,7 +1215,18 @@
       "pythonError": "canonicalPoses",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses"], "value": {}}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses"
+          ],
+          "value": {}
+        }
       ]
     },
     {
@@ -462,7 +1236,61 @@
       "pythonError": "canonical poses",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses"], "value": {"primary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}, "unknown": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses"
+          ],
+          "value": {
+            "primary": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            },
+            "unknown": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            }
+          }
+        }
       ]
     },
     {
@@ -481,7 +1309,25 @@
       "pythonError": "normalized",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, 2]}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses",
+            "primary",
+            "rotation"
+          ],
+          "value": [
+            0,
+            0,
+            0,
+            2
+          ]
+        }
       ]
     },
     {
@@ -491,7 +1337,25 @@
       "pythonError": "finite",
       "swiftError": "malformedJSON",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "rotation"], "value": [0, 0, 0, "__raw_nonfinite_number_1e999__"]}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses",
+            "primary",
+            "rotation"
+          ],
+          "value": [
+            0,
+            0,
+            0,
+            "__raw_nonfinite_number_1e999__"
+          ]
+        }
       ]
     },
     {
@@ -501,7 +1365,19 @@
       "pythonError": "positive number",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "radius"], "value": 0}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "cord",
+            "radius"
+          ],
+          "value": 0
+        }
       ]
     },
     {
@@ -511,7 +1387,19 @@
       "pythonError": "positive number",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "cord",
+            "restLength"
+          ],
+          "value": 0
+        }
       ]
     },
     {
@@ -521,7 +1409,19 @@
       "pythonError": "attachment node",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachment", "nodeID"], "value": "Missing"}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "attachment",
+            "nodeID"
+          ],
+          "value": "Missing"
+        }
       ]
     },
     {
@@ -531,7 +1431,19 @@
       "pythonError": "attachment node",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachment", "nodeID"], "value": "Left"}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "attachment",
+            "nodeID"
+          ],
+          "value": "Left"
+        }
       ]
     },
     {
@@ -541,7 +1453,23 @@
       "pythonError": "inside model bounds",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachment", "pointInModel"], "value": [1.1, 1, 0.05]}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "attachment",
+            "pointInModel"
+          ],
+          "value": [
+            1.1,
+            1,
+            0.05
+          ]
+        }
       ]
     },
     {
@@ -551,7 +1479,19 @@
       "pythonError": "shorter than endpoint distance",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0.01}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "cord",
+            "restLength"
+          ],
+          "value": 0.01
+        }
       ]
     },
     {
@@ -560,10 +1500,48 @@
       "pythonError": "mix model and raster",
       "swiftError": "invalidPackage",
       "extraAssets": [
-        {"path": "assets/fallback.png", "base64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGNgYGD4//8/AAYBAv4CsjmuAAAAAElFTkSuQmCC"}
+        {
+          "path": "assets/fallback.png",
+          "base64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGNgYGD4//8/AAYBAv4CsjmuAAAAAElFTkSuQmCC"
+        }
       ],
       "mutations": [
-        {"target": "board", "op": "append", "path": ["presentations"], "value": {"id": "fallback", "name": "Fallback", "aspectRatio": 2, "isDefault": false, "derivation": {"type": "original"}, "media": {"type": "raster", "assetPath": "assets/fallback.png", "holdGeometry": {"hold-left": [{"frame": {"x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2}}]}}}}
+        {
+          "target": "board",
+          "op": "append",
+          "path": [
+            "presentations"
+          ],
+          "value": {
+            "id": "fallback",
+            "name": "Fallback",
+            "aspectRatio": 2,
+            "isDefault": false,
+            "derivation": {
+              "type": "original"
+            },
+            "media": {
+              "type": "raster",
+              "assetPath": "assets/fallback.png",
+              "contactGeometry": {
+                "hold-left": [
+                  {
+                    "frame": {
+                      "x": 0.1,
+                      "y": 0.2,
+                      "width": 0.2,
+                      "height": 0.4
+                    },
+                    "shape": {
+                      "type": "roundedRect",
+                      "cornerRadiusFraction": 0.2
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
       ]
     },
     {
@@ -572,7 +1550,93 @@
       "pythonError": "only one model",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "append", "path": ["presentations"], "value": {"id": "secondary", "name": "Secondary", "aspectRatio": 2, "isDefault": false, "derivation": {"type": "original"}, "media": {"type": "model", "assetPath": "assets/primary.usdz", "descriptorPath": "assets/primary.model.json", "display": {"camera": {"type": "orthographic", "viewDirection": [0, 0, -1], "up": [0, 1, 0], "fitPadding": 0.08}}, "suspension": {"type": "singleCord", "attachment": {"nodeID": "ZZAttachment", "pointInModel": [0.5, 1, 0.05], "provenance": "estimatedFromApprovedModel"}, "anchor": {"offsetFromBoardBounds": [0, 0.22, 0], "visibility": "invisible", "provenance": "displayEstimate"}, "cord": {"restLength": 0.3, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate"}, "canonicalPoses": {"primary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}}}}}
+        {
+          "target": "board",
+          "op": "append",
+          "path": [
+            "presentations"
+          ],
+          "value": {
+            "id": "secondary",
+            "name": "Secondary",
+            "aspectRatio": 2,
+            "isDefault": false,
+            "derivation": {
+              "type": "original"
+            },
+            "media": {
+              "type": "model",
+              "assetPath": "assets/primary.usdz",
+              "descriptorPath": "assets/primary.model.json",
+              "display": {
+                "camera": {
+                  "type": "orthographic",
+                  "viewDirection": [
+                    0,
+                    0,
+                    -1
+                  ],
+                  "up": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "fitPadding": 0.08
+                }
+              },
+              "suspension": {
+                "type": "singleCord",
+                "attachment": {
+                  "nodeID": "ZZAttachment",
+                  "pointInModel": [
+                    0.5,
+                    1,
+                    0.05
+                  ],
+                  "provenance": "estimatedFromApprovedModel"
+                },
+                "anchor": {
+                  "offsetFromBoardBounds": [
+                    0,
+                    0.22,
+                    0
+                  ],
+                  "visibility": "invisible",
+                  "provenance": "displayEstimate"
+                },
+                "cord": {
+                  "restLength": 0.3,
+                  "radius": 0.002,
+                  "material": "matteCord",
+                  "provenance": "displayEstimate"
+                },
+                "canonicalPoses": {
+                  "primary": {
+                    "rotation": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ],
+                    "translation": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "camera": {
+                      "viewDirection": [
+                        0,
+                        0,
+                        -1
+                      ],
+                      "fitPadding": 0.1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       ]
     },
     {
@@ -581,7 +1645,17 @@
       "pythonError": "role must be body",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Rope", "role": "rope"}}
+        {
+          "target": "descriptor",
+          "op": "append",
+          "path": [
+            "nodes"
+          ],
+          "value": {
+            "nodeID": "Rope",
+            "role": "rope"
+          }
+        }
       ]
     },
     {
@@ -590,7 +1664,17 @@
       "pythonError": "role must be body",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "Anchor", "role": "anchor"}}
+        {
+          "target": "descriptor",
+          "op": "append",
+          "path": [
+            "nodes"
+          ],
+          "value": {
+            "nodeID": "Anchor",
+            "role": "anchor"
+          }
+        }
       ]
     },
     {
@@ -599,7 +1683,20 @@
       "pythonError": "derived or inverted",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "derivation"], "value": {"type": "derived", "sourcePresentationID": "primary", "isInverted": true}}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "derivation"
+          ],
+          "value": {
+            "type": "derived",
+            "sourcePresentationID": "primary",
+            "isInverted": true
+          }
+        }
       ]
     },
     {
@@ -608,7 +1705,20 @@
       "pythonException": "ValueError",
       "pythonError": "unknown keys",
       "swiftError": "malformedJSON",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "unexpected"], "value": true}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "unexpected"
+          ],
+          "value": true
+        }
+      ]
     },
     {
       "name": "two-branch-wrong-discriminator",
@@ -616,7 +1726,20 @@
       "pythonException": "ValueError",
       "pythonError": "unknown keys",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "type"], "value": "singleCord"}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "type"
+          ],
+          "value": "singleCord"
+        }
+      ]
     },
     {
       "name": "two-branch-missing-passage",
@@ -624,7 +1747,32 @@
       "pythonException": "ValueError",
       "pythonError": "exactly two passages",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left"], "value": [{"id": "left-top", "nodeID": "LeftTop", "pointInModel": [0.2, 0.9, 0.05], "provenance": "estimatedFromApprovedModel"}]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left"
+          ],
+          "value": [
+            {
+              "id": "left-top",
+              "nodeID": "LeftTop",
+              "pointInModel": [
+                0.2,
+                0.9,
+                0.05
+              ],
+              "provenance": "estimatedFromApprovedModel"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-extra-passage",
@@ -632,7 +1780,30 @@
       "pythonException": "ValueError",
       "pythonError": "exactly two passages",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "append", "path": ["presentations", 0, "media", "suspension", "passages", "left"], "value": {"id": "left-extra", "nodeID": "LeftTop", "pointInModel": [0.25, 0.9, 0.05], "provenance": "estimatedFromApprovedModel"}}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "append",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left"
+          ],
+          "value": {
+            "id": "left-extra",
+            "nodeID": "LeftTop",
+            "pointInModel": [
+              0.25,
+              0.9,
+              0.05
+            ],
+            "provenance": "estimatedFromApprovedModel"
+          }
+        }
+      ]
     },
     {
       "name": "two-branch-duplicate-passage-id",
@@ -640,7 +1811,23 @@
       "pythonException": "ValueError",
       "pythonError": "duplicate suspension passage ID",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "right", 0, "id"], "value": "left-top"}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "right",
+            0,
+            "id"
+          ],
+          "value": "left-top"
+        }
+      ]
     },
     {
       "name": "two-branch-unknown-passage-node",
@@ -648,7 +1835,23 @@
       "pythonException": "ValueError",
       "pythonError": "passage node must be",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "nodeID"], "value": "Missing"}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "nodeID"
+          ],
+          "value": "Missing"
+        }
+      ]
     },
     {
       "name": "two-branch-hold-passage-node",
@@ -656,7 +1859,23 @@
       "pythonException": "ValueError",
       "pythonError": "passage node must be",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "nodeID"], "value": "Left"}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "nodeID"
+          ],
+          "value": "Left"
+        }
+      ]
     },
     {
       "name": "two-branch-nonfinite-passage-point",
@@ -664,7 +1883,27 @@
       "pythonException": "ValueError",
       "pythonError": "must be finite",
       "swiftError": "malformedJSON",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0, 0, "__raw_nonfinite_number_1e999__"]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "pointInModel"
+          ],
+          "value": [
+            0,
+            0,
+            "__raw_nonfinite_number_1e999__"
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-passage-point-out-of-bounds",
@@ -672,7 +1911,27 @@
       "pythonException": "ValueError",
       "pythonError": "inside model bounds",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [1.1, 0.9, 0.05]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "pointInModel"
+          ],
+          "value": [
+            1.1,
+            0.9,
+            0.05
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-missing-branch",
@@ -680,7 +1939,32 @@
       "pythonException": "ValueError",
       "pythonError": "exactly two branches",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches"], "value": [{"id": "left-branch", "passageIDs": ["left-top", "left-bottom"], "restLength": 0.5, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate"}]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches"
+          ],
+          "value": [
+            {
+              "id": "left-branch",
+              "passageIDs": [
+                "left-top",
+                "left-bottom"
+              ],
+              "restLength": 0.5,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "displayEstimate"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-duplicate-branch-id",
@@ -688,7 +1972,22 @@
       "pythonException": "ValueError",
       "pythonError": "duplicate suspension branch ID",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 1, "id"], "value": "left-branch"}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            1,
+            "id"
+          ],
+          "value": "left-branch"
+        }
+      ]
     },
     {
       "name": "two-branch-wrong-branch-pair",
@@ -696,7 +1995,25 @@
       "pythonException": "ValueError",
       "pythonError": "ordered passage pair",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 1, "passageIDs"], "value": ["right-top", "left-bottom"]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            1,
+            "passageIDs"
+          ],
+          "value": [
+            "right-top",
+            "left-bottom"
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-branch-pair-order",
@@ -704,7 +2021,25 @@
       "pythonException": "ValueError",
       "pythonError": "ordered passage pair",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "passageIDs"], "value": ["left-bottom", "left-top"]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "passageIDs"
+          ],
+          "value": [
+            "left-bottom",
+            "left-top"
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-distinct-branch-anchors",
@@ -712,7 +2047,31 @@
       "pythonException": "ValueError",
       "pythonError": "unknown keys",
       "swiftError": "malformedJSON",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "anchor"], "value": {"left": [0, 0.22, 0], "right": [1, 0.22, 0]}}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "anchor"
+          ],
+          "value": {
+            "left": [
+              0,
+              0.22,
+              0
+            ],
+            "right": [
+              1,
+              0.22,
+              0
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "two-branch-invalid-rest-length",
@@ -720,7 +2079,22 @@
       "pythonException": "ValueError",
       "pythonError": "positive number",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "restLength"], "value": 0}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "restLength"
+          ],
+          "value": 0
+        }
+      ]
     },
     {
       "name": "two-branch-invalid-radius",
@@ -728,7 +2102,22 @@
       "pythonException": "ValueError",
       "pythonError": "positive number",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "radius"], "value": 0}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "radius"
+          ],
+          "value": 0
+        }
+      ]
     },
     {
       "name": "two-branch-invalid-material",
@@ -736,7 +2125,22 @@
       "pythonException": "ValueError",
       "pythonError": "non-empty string",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "material"], "value": ""}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "material"
+          ],
+          "value": ""
+        }
+      ]
     },
     {
       "name": "two-branch-missing-pose",
@@ -744,7 +2148,84 @@
       "pythonException": "ValueError",
       "pythonError": "canonical poses",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses"], "value": {"primary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}, "secondary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}, "tertiary": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses"
+          ],
+          "value": {
+            "primary": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            },
+            "secondary": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            },
+            "tertiary": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            }
+          }
+        }
+      ]
     },
     {
       "name": "two-branch-unknown-pose",
@@ -752,7 +2233,41 @@
       "pythonException": "ValueError",
       "pythonError": "canonical poses",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "unknown"], "value": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses",
+            "unknown"
+          ],
+          "value": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "camera": {
+              "viewDirection": [
+                0,
+                0,
+                -1
+              ],
+              "fitPadding": 0.1
+            }
+          }
+        }
+      ]
     },
     {
       "name": "two-branch-duplicate-pose",
@@ -769,7 +2284,20 @@
       "pythonException": "ValueError",
       "pythonError": "must be an object",
       "swiftError": "malformedJSON",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages"], "value": null}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages"
+          ],
+          "value": null
+        }
+      ]
     },
     {
       "name": "two-branch-scalar-kind-mismatch",
@@ -777,7 +2305,22 @@
       "pythonException": "ValueError",
       "pythonError": "must be finite",
       "swiftError": "malformedJSON",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "restLength"], "value": "0.5"}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "restLength"
+          ],
+          "value": "0.5"
+        }
+      ]
     },
     {
       "name": "two-branch-suspension-member-order",
@@ -795,9 +2338,58 @@
       "pythonError": "closed route",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.1, 0.9, 0.05]},
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 1, "pointInModel"], "value": [0.9, 0.9, 0.05]},
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "branches", 0, "restLength"], "value": 0.55}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "pointInModel"
+          ],
+          "value": [
+            0.1,
+            0.9,
+            0.05
+          ]
+        },
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            1,
+            "pointInModel"
+          ],
+          "value": [
+            0.9,
+            0.9,
+            0.05
+          ]
+        },
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "branches",
+            0,
+            "restLength"
+          ],
+          "value": 0.55
+        }
       ]
     },
     {
@@ -806,7 +2398,42 @@
       "pythonException": "ValueError",
       "pythonError": "nodes must be sorted",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "descriptor", "op": "replace", "path": ["nodes"], "value": [{"nodeID": "Body", "role": "body"}, {"nodeID": "LeftTop", "role": "attachment"}, {"nodeID": "LeftBottom", "role": "attachment"}, {"nodeID": "Left", "role": "hold", "holdID": "hold-left"}, {"nodeID": "RightBottom", "role": "attachment"}, {"nodeID": "RightTop", "role": "attachment"}]}]
+      "mutations": [
+        {
+          "target": "descriptor",
+          "op": "replace",
+          "path": [
+            "nodes"
+          ],
+          "value": [
+            {
+              "nodeID": "Body",
+              "role": "body"
+            },
+            {
+              "nodeID": "LeftTop",
+              "role": "attachment"
+            },
+            {
+              "nodeID": "LeftBottom",
+              "role": "attachment"
+            },
+            {
+              "nodeID": "Left",
+              "role": "contact",
+              "contactID": "hold-left"
+            },
+            {
+              "nodeID": "RightBottom",
+              "role": "attachment"
+            },
+            {
+              "nodeID": "RightTop",
+              "role": "attachment"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-excess-attachment-nodes",
@@ -814,7 +2441,19 @@
       "pythonException": "ValueError",
       "pythonError": "too many attachment nodes",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "descriptor", "op": "append", "path": ["nodes"], "value": {"nodeID": "ZZExtraAttachment", "role": "attachment"}}]
+      "mutations": [
+        {
+          "target": "descriptor",
+          "op": "append",
+          "path": [
+            "nodes"
+          ],
+          "value": {
+            "nodeID": "ZZExtraAttachment",
+            "role": "attachment"
+          }
+        }
+      ]
     },
     {
       "name": "two-branch-coincident-passage-endpoints",
@@ -822,7 +2461,27 @@
       "pythonException": "ValueError",
       "pythonError": "distinct passage endpoints",
       "swiftError": "invalidPackage",
-      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 1, "pointInModel"], "value": [0.2, 0.9, 0.05]}]
+      "mutations": [
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            1,
+            "pointInModel"
+          ],
+          "value": [
+            0.2,
+            0.9,
+            0.05
+          ]
+        }
+      ]
     },
     {
       "name": "two-branch-passage-anchor-coincidence",
@@ -831,8 +2490,43 @@
       "pythonError": "must not coincide with the anchor",
       "swiftError": "invalidPackage",
       "mutations": [
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "passages", "left", 0, "pointInModel"], "value": [0.5, 1, 0.05]},
-        {"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "translation"], "value": [0, 0.22, 0]}
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "passages",
+            "left",
+            0,
+            "pointInModel"
+          ],
+          "value": [
+            0.5,
+            1,
+            0.05
+          ]
+        },
+        {
+          "target": "board",
+          "op": "replace",
+          "path": [
+            "presentations",
+            0,
+            "media",
+            "suspension",
+            "canonicalPoses",
+            "primary",
+            "translation"
+          ],
+          "value": [
+            0,
+            0.22,
+            0
+          ]
+        }
       ]
     },
     {
@@ -1060,22 +2754,74 @@
       "name": "zero-area",
       "expectedMessage": "enclose area",
       "commands": [
-        {"command": "move", "to": [0, 0]},
-        {"command": "line", "to": [1, 1]},
-        {"command": "line", "to": [0.5, 0.5]},
-        {"command": "close"}
+        {
+          "command": "move",
+          "to": [
+            0,
+            0
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            1,
+            1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "command": "close"
+        }
       ]
     },
     {
       "name": "non-collinear-fully-backtracked",
       "expectedMessage": "enclose area",
       "commands": [
-        {"command": "move", "to": [0.7, 0.7]},
-        {"command": "line", "to": [0.2, 0.6]},
-        {"command": "line", "to": [0.7, 0.5]},
-        {"command": "line", "to": [0.2, 0.6]},
-        {"command": "line", "to": [0.7, 0.7]},
-        {"command": "close"}
+        {
+          "command": "move",
+          "to": [
+            0.7,
+            0.7
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.7,
+            0.5
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.7,
+            0.7
+          ]
+        },
+        {
+          "command": "close"
+        }
       ]
     }
   ],
@@ -1083,33 +2829,107 @@
     {
       "name": "symmetric-bow-tie",
       "commands": [
-        {"command": "move", "to": [0, 0]},
-        {"command": "line", "to": [1, 1]},
-        {"command": "line", "to": [0, 1]},
-        {"command": "line", "to": [1, 0]},
-        {"command": "close"}
+        {
+          "command": "move",
+          "to": [
+            0,
+            0
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            1,
+            1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0,
+            1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            1,
+            0
+          ]
+        },
+        {
+          "command": "close"
+        }
       ]
     },
     {
       "name": "filled-contour-with-retraced-spur",
       "commands": [
-        {"command": "move", "to": [0, 0]},
-        {"command": "line", "to": [1, 0]},
-        {"command": "line", "to": [1, 1]},
-        {"command": "line", "to": [0, 1]},
-        {"command": "line", "to": [0.5, 0.5]},
-        {"command": "line", "to": [0, 1]},
-        {"command": "close"}
+        {
+          "command": "move",
+          "to": [
+            0,
+            0
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            1,
+            0
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            1,
+            1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0,
+            1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0,
+            1
+          ]
+        },
+        {
+          "command": "close"
+        }
       ]
     }
   ],
   "boardPositions": {
     "positions": [
-      {"id": "front", "presentationID": "primary"},
-      {"id": "flipped", "presentationID": "front-inverted"}
+      {
+        "id": "front",
+        "presentationID": "primary"
+      },
+      {
+        "id": "flipped",
+        "presentationID": "front-inverted"
+      }
     ],
     "positionTransitions": [
-      {"fromPositionID": "front", "toPositionID": "flipped", "kind": "seamless"}
+      {
+        "fromPositionID": "front",
+        "toPositionID": "flipped",
+        "kind": "seamless"
+      }
     ]
   }
 }

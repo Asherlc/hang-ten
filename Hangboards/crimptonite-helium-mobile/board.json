@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "crimptonite.helium-mobile",
   "manufacturer": "Crimptonite",
   "name": "Helium Mobile",
   "subtitle": "Ultra-light mobile board with four edges and jug/sloper surfaces.",
   "productURL": "https://crimptonite.com/product/helium-mobile/",
-  "dimensions": "400 \u00d7 58 \u00d7 24 mm",
+  "dimensions": "400 × 58 × 24 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -16,7 +16,7 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Front \u2014 14/10 mm side right-side up",
+      "name": "Front — 14/10 mm side right-side up",
       "aspectRatio": 1.5,
       "isDefault": true,
       "derivation": {
@@ -25,7 +25,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-14": [
             {
               "frame": {
@@ -732,7 +732,7 @@
     },
     {
       "id": "front-inverted",
-      "name": "Front \u2014 22/18 mm side right-side up",
+      "name": "Front — 22/18 mm side right-side up",
       "aspectRatio": 1.5,
       "isDefault": false,
       "derivation": {
@@ -743,7 +743,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/front-inverted.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-14": [
             {
               "frame": {
@@ -1450,7 +1450,7 @@
     },
     {
       "id": "reverse",
-      "name": "Back \u2014 sloper side right-side up",
+      "name": "Back — sloper side right-side up",
       "aspectRatio": 1.5,
       "isDefault": false,
       "derivation": {
@@ -1459,7 +1459,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/reverse.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "back-jug-sloper": [
             {
               "frame": {
@@ -1585,7 +1585,7 @@
     },
     {
       "id": "reverse-inverted",
-      "name": "Back \u2014 jug side right-side up",
+      "name": "Back — jug side right-side up",
       "aspectRatio": 1.5,
       "isDefault": false,
       "derivation": {
@@ -1596,7 +1596,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/reverse-inverted.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "back-jug-sloper": [
             {
               "frame": {
@@ -1721,52 +1721,77 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "edge-14",
       "equipmentObjectID": "primary",
       "name": "14 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 14
+      "depthRangeMillimeters": {
+        "lowerBound": 14,
+        "upperBound": 14
+      },
+      "gripTypes": []
     },
     {
       "id": "center-edge-18",
       "equipmentObjectID": "primary",
       "name": "18 mm center edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 18
+      "depthRangeMillimeters": {
+        "lowerBound": 18,
+        "upperBound": 18
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-22",
       "equipmentObjectID": "primary",
       "name": "22 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 22
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
     },
     {
       "id": "center-edge-10",
       "equipmentObjectID": "primary",
       "name": "10 mm center edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 10
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     },
     {
       "id": "back-jug-sloper",
       "equipmentObjectID": "primary",
       "name": "Back jug / sloper surface",
       "kind": "sloper",
-      "handCapacity": 1
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "top-jug",
       "equipmentObjectID": "primary",
       "name": "Top jug",
       "kind": "jug",
-      "handCapacity": 1
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
     }
   ]
 }

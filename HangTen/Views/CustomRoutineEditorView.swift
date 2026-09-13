@@ -32,7 +32,7 @@ struct CustomRoutineEditorView: View {
         draft.id != nil
     }
 
-    private var selectedBoard: TrainingBoard {
+    private var selectedBoard: BoardRevision {
         BoardCatalog.board(for: selectedBoardID)
     }
 
@@ -259,7 +259,7 @@ private enum EditorTargetMode: String, CaseIterable, Identifiable {
 private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
     let targetMode: CustomRoutineTargetMode
-    let board: TrainingBoard
+    let board: BoardRevision
     let onAddPair: (CustomRoutineStepDraft) -> Void
 
     @State private var activeHoldID: String?
@@ -422,7 +422,7 @@ private struct CustomRoutineStepEditor: View {
         )
     }
 
-    private func toggleHold(_ hold: BoardHold) {
+    private func toggleHold(_ hold: PhysicalContact) {
         activeHoldID = hold.id
         var holdIDs = selectedHoldIDs
         if !holdIDs.insert(hold.id).inserted {
@@ -430,7 +430,7 @@ private struct CustomRoutineStepEditor: View {
         }
         step.targets = holdIDs.isEmpty
             ? []
-            : [.holdIDs(board.holds.compactMap { holdIDs.contains($0.id) ? $0.id : nil })]
+            : [.holdIDs(board.contacts.compactMap { holdIDs.contains($0.id) ? $0.id : nil })]
     }
 }
 

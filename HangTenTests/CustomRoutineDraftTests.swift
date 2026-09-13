@@ -174,15 +174,16 @@ final class CustomRoutineDraftTests: XCTestCase {
     }
 
     func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {
-        let retainedHold = try XCTUnwrap(BoardCatalog.defaultBoard.holds.first)
-        let replacementBoard = TrainingBoard(
+        let retainedHold = try XCTUnwrap(BoardCatalog.defaultBoard.contacts.first)
+        let replacementBoard = BoardRevision(
             id: "replacement-board",
+            revisionID: "test-fixture",
             manufacturer: "Test",
             name: "Replacement",
             subtitle: "Test board",
             dimensions: "1 × 1",
             aspectRatio: 1,
-            holds: [retainedHold],
+            contacts: [retainedHold],
             productURL: try XCTUnwrap(URL(string: "https://example.com/board")),
             photoAssetName: nil
         )

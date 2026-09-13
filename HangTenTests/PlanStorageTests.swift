@@ -130,15 +130,16 @@ final class PlanStorageTests: XCTestCase {
             SemanticHoldMappingDefinition.self,
             from: Data(#"{"holdIDs":["fixture.edge"]}"#.utf8)
         )
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fixture.board",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Fixture Board",
             subtitle: "Fixture",
             dimensions: nil,
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.edge",
                     name: "Edge",
                     kind: .edge,
@@ -1798,7 +1799,7 @@ final class PlanStorageTests: XCTestCase {
             let numberedTargets = plan.steps.flatMap(\.targets)
             XCTAssertFalse(numberedTargets.isEmpty)
             XCTAssertTrue(numberedTargets.allSatisfy {
-                !$0.holdIDs.isEmpty && Set($0.holdIDs).isSubset(of: Set(board.holds.map(\.id)))
+                !$0.holdIDs.isEmpty && Set($0.holdIDs).isSubset(of: Set(board.contacts.map(\.id)))
             })
             for otherBoard in BoardCatalog.all where otherBoard.id != boardID {
                 XCTAssertFalse(
@@ -1867,7 +1868,7 @@ final class PlanStorageTests: XCTestCase {
 
             XCTAssertEqual(
                 Set(step.targets.flatMap(\.holdIDs)),
-                Set(board.holds.map(\.id)),
+                Set(board.contacts.map(\.id)),
                 "\(stepID) must keep the source's any-hold option unconstrained."
             )
         }
@@ -2208,15 +2209,16 @@ final class PlanStorageTests: XCTestCase {
             let presentation = rasterPresentation(frames: [
                 "fixture.large-edge": CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.1)
             ])
-            let edgeOnlyBoard = TrainingBoard(
+            let edgeOnlyBoard = BoardRevision(
                 id: "fixture.edge-only.\(expected.fingerCapacity)",
+                revisionID: "test-fixture",
                 manufacturer: "Fixture Maker",
                 name: "Edge-only Board",
                 subtitle: "A test board without pockets.",
                 dimensions: "10 × 5",
                 aspectRatio: 2,
-                holds: [
-                    BoardHold(
+                contacts: [
+                    PhysicalContact(
                         id: "fixture.large-edge",
                         name: "Large edge",
                         kind: .edge,
@@ -2304,15 +2306,16 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testFeatureTargetValidationAcceptsRuntimeResolvableUntaggedSameKindHold() {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fixture.untagged-edge",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Untagged Edge",
             subtitle: "A test board whose edge has no feature metadata.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.edge",
                     name: "Fixture edge",
                     kind: .edge
@@ -2347,15 +2350,16 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testFeatureTargetValidationRejectsTargetRuntimeCannotResolve() {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fixture.jug-only",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Jug Only",
             subtitle: "A test board with no edge or pocket holds.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.jug",
                     name: "Fixture jug",
                     kind: .jug
@@ -2385,15 +2389,16 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testPlanSemanticMappingsRemainAuthoritativeDuringValidation() {
-        let edgeOnlyBoard = TrainingBoard(
+        let edgeOnlyBoard = BoardRevision(
             id: "fixture.edge-only",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Edge Only",
             subtitle: "A test board with only an edge.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.edge",
                     name: "Fixture edge",
                     kind: .edge,
@@ -2437,21 +2442,22 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testPlanMappingsOverrideBoardLoadedSemanticMappings() throws {
-        func hold(id: String, name: String, kind: HoldKind) -> BoardHold {
-            BoardHold(
+        func hold(id: String, name: String, kind: HoldKind) -> PhysicalContact {
+            PhysicalContact(
                 id: id,
                 name: name,
                 kind: kind
             )
         }
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fixture.board",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Fixture Board",
             subtitle: "A test board.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
+            contacts: [
                 hold(id: "fixture.edge", name: "Fixture edge", kind: .edge),
                 hold(id: "fixture.pinch", name: "Fixture pinch", kind: .pinch),
                 hold(id: "fixture.jug", name: "Fixture jug", kind: .jug)
@@ -2530,9 +2536,9 @@ final class PlanStorageTests: XCTestCase {
         frames: [String: CGRect]
     ) -> BoardPresentation {
         let geometry = Dictionary(uniqueKeysWithValues: frames.map { holdID, frame in
-            (holdID, [BoardHoldPiece(
+            (holdID, [BoardContactPiece(
                 id: "\(holdID)-piece",
-                holdID: holdID,
+                contactID: holdID,
                 frame: frame,
                 shape: .roundedRect(cornerRadiusFraction: 0),
                 treatment: .surface
@@ -2543,7 +2549,7 @@ final class PlanStorageTests: XCTestCase {
             name: id,
             aspectRatio: 2,
             isDefault: true,
-            media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
+            media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
         )
     }
 

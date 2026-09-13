@@ -77,31 +77,31 @@ final class CustomRoutineStoreTests: XCTestCase {
 
     func testCompactIIPocketsExposeCapacityWithDistinctGripSemantics() throws {
         let twoFingerPocket = try XCTUnwrap(
-            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-two-left" }
+            BoardCatalog.defaultBoard.contacts.first { $0.id == "pocket-29-two-left" }
         )
         let threeFingerPocket = try XCTUnwrap(
-            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-three-left" }
+            BoardCatalog.defaultBoard.contacts.first { $0.id == "pocket-29-three-left" }
         )
         let fourFingerPocket = try XCTUnwrap(
-            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-four-center" }
+            BoardCatalog.defaultBoard.contacts.first { $0.id == "pocket-29-four-center" }
         )
 
         XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
         XCTAssertEqual(threeFingerPocket.fingerCapacity, 3)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertEqual(twoFingerPocket.gripType, .twoFingerPocket)
-        XCTAssertEqual(threeFingerPocket.gripType, .threeFingerPocket)
-        XCTAssertEqual(fourFingerPocket.gripType, .fourFingerPocket)
+        XCTAssertEqual(twoFingerPocket.gripTypes, [.twoFingerPocket])
+        XCTAssertEqual(threeFingerPocket.gripTypes, [.threeFingerPocket])
+        XCTAssertEqual(fourFingerPocket.gripTypes, [.fourFingerPocket])
     }
 
     func testPocketCapacityDoesNotManufacturePhysicalFeatures() {
-        let oneFingerPocket = BoardHold(
+        let oneFingerPocket = PhysicalContact(
             id: "one-finger",
             name: "One finger",
             kind: .pocket,
             fingerCapacity: 1
         )
-        let fourFingerPocket = BoardHold(
+        let fourFingerPocket = PhysicalContact(
             id: "four-finger",
             name: "Four finger",
             kind: .pocket,
@@ -470,15 +470,16 @@ final class CustomRoutineStoreTests: XCTestCase {
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
         let definition = genericDefinition(targets: [.feature(.flatEdge, fallbacks: [])])
-        let jugOnlyBoard = TrainingBoard(
+        let jugOnlyBoard = BoardRevision(
             id: "fixture.jug-only",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Jug Only",
             subtitle: "A board without edges.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.jug",
                     name: "Fixture jug",
                     kind: .jug

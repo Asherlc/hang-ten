@@ -163,7 +163,7 @@ enum CustomRoutineValidationIssue: Error, Equatable {
 enum CustomRoutineValidator {
     static func issues(
         for definition: CustomRoutineDefinition,
-        availableBoards: [TrainingBoard]
+        availableBoards: [BoardRevision]
     ) -> [CustomRoutineValidationIssue] {
         var issues = idIssues(for: definition.id)
         if definition.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -175,7 +175,7 @@ enum CustomRoutineValidator {
             issues.append(.terminalRestStep)
         }
 
-        let boards: [TrainingBoard]
+        let boards: [BoardRevision]
         switch definition.targetMode {
         case let .boardSpecific(boardID):
             if let board = availableBoards.first(where: { $0.id == boardID }) {
@@ -308,8 +308,8 @@ enum CustomRoutineValidator {
 
     static func compatibleBoards(
         for definition: CustomRoutineDefinition,
-        availableBoards: [TrainingBoard]
-    ) -> [TrainingBoard] {
+        availableBoards: [BoardRevision]
+    ) -> [BoardRevision] {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
                 (step.phase == .rest || targetsResolve(
@@ -345,7 +345,7 @@ enum CustomRoutineValidator {
         targets: [WorkoutTargetDefinition],
         stepIndex: Int,
         segmentIndex: Int?,
-        boards: [TrainingBoard],
+        boards: [BoardRevision],
         targetMode: CustomRoutineTargetMode,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
@@ -357,7 +357,7 @@ enum CustomRoutineValidator {
         }
 
         if targetMode.isBoardSpecific {
-            let knownHoldIDs = Set(boards.flatMap(\.holds).map(\.id))
+            let knownHoldIDs = Set(boards.flatMap(\.contacts).map(\.id))
             for target in targets {
                 guard case let .holdIDs(holdIDs) = target else { continue }
                 for holdID in holdIDs where !knownHoldIDs.contains(holdID) {
@@ -394,7 +394,7 @@ enum CustomRoutineValidator {
         _ targets: [WorkoutTargetDefinition],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) -> Bool {
         !targets.isEmpty && targets.allSatisfy {
             targetResolves($0, handUse: handUse, side: side, on: board)
@@ -405,7 +405,7 @@ enum CustomRoutineValidator {
         _ target: WorkoutTargetDefinition,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
-        onAny boards: [TrainingBoard]
+        onAny boards: [BoardRevision]
     ) -> Bool {
         boards.contains {
             targetResolves(target, handUse: handUse, side: side, on: $0)
@@ -416,7 +416,7 @@ enum CustomRoutineValidator {
         _ target: WorkoutTargetDefinition,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) -> Bool {
         switch target {
         case .semantic, .semantics:
@@ -466,7 +466,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
 
     private let defaults: UserDefaults
     private let key: String
-    private let availableBoards: [TrainingBoard]
+    private let availableBoards: [BoardRevision]
 
     private(set) var routines: [CustomRoutineDefinition]
     private(set) var persistenceError: String?
@@ -474,7 +474,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
     init(
         defaults: UserDefaults = .standard,
         key: String = CustomRoutineStore.defaultKey,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) {
         self.defaults = defaults
         self.key = key
@@ -515,7 +515,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         }
 
         let boardID: String?
-        let resolverBoards: [TrainingBoard]
+        let resolverBoards: [BoardRevision]
         switch definition.targetMode {
         case let .boardSpecific(id):
             boardID = id

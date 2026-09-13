@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "beastmaker-2000",
   "manufacturer": "Beastmaker",
   "name": "Beastmaker 2000",
   "subtitle": "Tulipwood fingerboard.",
   "productURL": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
-  "dimensions": "580 \u00d7 150 \u00d7 58 mm",
+  "dimensions": "580 × 150 × 58 mm",
   "aspectRatio": 3.8666664053333437,
   "equipmentObjects": [
     {
@@ -44,206 +44,327 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "top-sloper-1",
       "equipmentObjectID": "primary",
       "name": "Top Sloper 1",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "top-sloper-2",
       "equipmentObjectID": "primary",
       "name": "Top Sloper 2",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "top-sloper-3",
       "equipmentObjectID": "primary",
       "name": "Top Sloper 3",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "top-sloper-4",
       "equipmentObjectID": "primary",
       "name": "Top Sloper 4",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "front-upper-1",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 40,
-      "fingerCapacity": 3,
       "name": "Front Upper 1",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 3,
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
     },
     {
       "id": "front-upper-2",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 20,
-      "fingerCapacity": 3,
       "name": "Front Upper 2",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 3,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-1",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 33,
       "name": "Front Middle 1",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 33,
+        "upperBound": 33
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-2",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 55,
-      "fingerCapacity": 1,
       "name": "Front Middle 2",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 55,
+        "upperBound": 55
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-3",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 35,
-      "fingerCapacity": 2,
       "name": "Front Middle 3",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 35,
+        "upperBound": 35
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-4",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 30,
-      "fingerCapacity": 2,
       "name": "Front Middle 4",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-5",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 50,
       "name": "50 mm 4 Finger Edge Center",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 50,
+        "upperBound": 50
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-6",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 30,
-      "fingerCapacity": 2,
       "name": "Front Middle 6",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-7",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 35,
-      "fingerCapacity": 2,
       "name": "Front Middle 7",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 35,
+        "upperBound": 35
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-8",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 55,
-      "fingerCapacity": 1,
       "name": "Front Middle 8",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 55,
+        "upperBound": 55
+      },
+      "gripTypes": []
     },
     {
       "id": "front-middle-9",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 33,
       "name": "Front Middle 9",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 33,
+        "upperBound": 33
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-1",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 15,
       "name": "Front Lower 1",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-2",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 25,
-      "fingerCapacity": 1,
       "name": "Front Lower 2",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-3",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 20,
-      "fingerCapacity": 2,
       "name": "Front Lower 3",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-4",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 20,
-      "fingerCapacity": 2,
       "name": "Front Lower 4",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-5",
       "equipmentObjectID": "primary",
       "name": "22 mm Center Edge",
       "kind": "edge",
-      "sizeMillimeters": 22
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-6",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 20,
-      "fingerCapacity": 2,
       "name": "Front Lower 6",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-7",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 20,
-      "fingerCapacity": 2,
       "name": "Front Lower 7",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-8",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 25,
-      "fingerCapacity": 1,
       "name": "Front Lower 8",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
     },
     {
       "id": "front-lower-9",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 15,
       "name": "Front Lower 9",
-      "kind": "edge"
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "hold-26",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 50,
-      "fingerCapacity": 2,
       "name": "Hold 26",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 50,
+        "upperBound": 50
+      },
+      "gripTypes": []
     },
     {
       "id": "hold-27",
       "equipmentObjectID": "primary",
-      "sizeMillimeters": 50,
-      "fingerCapacity": 2,
       "name": "Hold 27",
-      "kind": "pocket"
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 50,
+        "upperBound": 50
+      },
+      "gripTypes": []
     },
     {
       "id": "hold-28",
       "equipmentObjectID": "primary",
       "name": "Hold 28",
-      "kind": "sloper"
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

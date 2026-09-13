@@ -1,6 +1,46 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.055,
+      0.033,
+      0.0145
+    ],
+    "min": [
+      -0.055,
+      -0.033,
+      -0.0145
+    ]
+  },
+  "modelSHA256": "b70a6da190865481d7f8a1aec2bd0b62ca7ecbdda85a233d6af6a9b7c273fc93",
+  "nodes": [
+    {
+      "nodeID": "body_skin_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "edge_15_skin_001",
+      "role": "contact",
+      "contactID": "edge-15"
+    },
+    {
+      "nodeID": "edge_20_skin_001",
+      "role": "contact",
+      "contactID": "edge-20"
+    },
+    {
+      "nodeID": "jug_outer_rim_skin_001",
+      "role": "contact",
+      "contactID": "jug-outer-rim"
+    },
+    {
+      "nodeID": "pocket_end_wall_15_20_skin_001",
+      "role": "contact",
+      "contactID": "pocket-end-wall-15-20"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "edge-15": {
       "center": [
         0.5,
@@ -77,45 +117,5 @@
         "pocket_end_wall_15_20_skin_001"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.055,
-      0.033,
-      0.0145
-    ],
-    "min": [
-      -0.055,
-      -0.033,
-      -0.0145
-    ]
-  },
-  "modelSHA256": "b70a6da190865481d7f8a1aec2bd0b62ca7ecbdda85a233d6af6a9b7c273fc93",
-  "nodes": [
-    {
-      "nodeID": "body_skin_001",
-      "role": "body"
-    },
-    {
-      "holdID": "edge-15",
-      "nodeID": "edge_15_skin_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-20",
-      "nodeID": "edge_20_skin_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "jug-outer-rim",
-      "nodeID": "jug_outer_rim_skin_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-end-wall-15-20",
-      "nodeID": "pocket_end_wall_15_20_skin_001",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

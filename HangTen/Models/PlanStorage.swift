@@ -259,11 +259,11 @@ enum WorkoutTargetDefinition: Codable, Hashable {
         }
         let fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         if let fingerCapacity,
-           !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+           !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
             throw DecodingError.dataCorruptedError(
                 forKey: .fingerCapacity,
                 in: container,
-                debugDescription: "Workout target fingerCapacity must be in \(BoardHold.validFingerCapacityRange)."
+                debugDescription: "Workout target fingerCapacity must be in \(PhysicalContact.validFingerCapacityRange)."
             )
         }
         let fallbackRawValues = try container.decodeIfPresent(
@@ -707,7 +707,7 @@ struct PlanLibraryDefinition: Codable, Hashable {
         plans = try container.decode([PlanDefinition].self, forKey: .plans)
     }
 
-    func validationIssues(availableBoards: [TrainingBoard]) -> [PlanValidationIssue] {
+    func validationIssues(availableBoards: [BoardRevision]) -> [PlanValidationIssue] {
         PlanLibraryValidator.issues(for: self, availableBoards: availableBoards)
     }
 }
@@ -758,7 +758,7 @@ enum PlanLibraryStoreError: LocalizedError {
 enum PlanLibraryValidator {
     static func issues(
         for library: PlanLibraryDefinition,
-        availableBoards: [TrainingBoard]
+        availableBoards: [BoardRevision]
     ) -> [PlanValidationIssue] {
         var issues: [PlanValidationIssue] = []
         let boardByID = Dictionary(grouping: availableBoards, by: \.id)
@@ -779,7 +779,7 @@ enum PlanLibraryValidator {
             }
 
             guard let board = boardByID[mapping.boardID]?.first else { continue }
-            let knownHoldIDs = Set(board.holds.map(\.id))
+            let knownHoldIDs = Set(board.contacts.map(\.id))
             let knownPositionIDs = Set(board.positions.map(\.id))
             for (semanticID, target) in mapping.semanticHolds {
                 let semanticPath = "\(path).semanticHolds.\(semanticID)"
@@ -805,7 +805,7 @@ enum PlanLibraryValidator {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown position ID \"\(positionID)\" for board \"\(mapping.boardID)\"."))
                 }
                 if let kind = target.kind,
-                   !board.holds.contains(where: { $0.kind == kind }) {
+                   !board.contacts.contains(where: { $0.kind == kind }) {
                     issues.append(
                         PlanValidationIssue(
                             path: semanticPath,
@@ -1074,8 +1074,8 @@ enum PlanLibraryValidator {
         path: String,
         blockByID: [String: WorkoutBlockDefinition],
         mappingByBoardID: [String: BoardMappingDefinition],
-        boardByID: [String: [TrainingBoard]],
-        availableBoards: [TrainingBoard],
+        boardByID: [String: [BoardRevision]],
+        availableBoards: [BoardRevision],
         issues: inout [PlanValidationIssue]
     ) {
         let metadataPath = "\(path).metadata"
@@ -1285,8 +1285,8 @@ enum PlanLibraryValidator {
         planBoardID: String?,
         stepPath: String,
         mappingByBoardID: [String: BoardMappingDefinition],
-        boardByID: [String: [TrainingBoard]],
-        availableBoards: [TrainingBoard],
+        boardByID: [String: [BoardRevision]],
+        availableBoards: [BoardRevision],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
         issues: inout [PlanValidationIssue]
@@ -1315,7 +1315,7 @@ enum PlanLibraryValidator {
                     issues.append(PlanValidationIssue(path: targetPath, message: "A direct hold target cannot be empty."))
                 }
                 for boardID in boardIDs {
-                    let knownHoldIDs = Set(boardByID[boardID]?.first?.holds.map(\.id) ?? [])
+                    let knownHoldIDs = Set(boardByID[boardID]?.first?.contacts.map(\.id) ?? [])
                     for holdID in holdIDs where !knownHoldIDs.contains(holdID) {
                         issues.append(PlanValidationIssue(path: targetPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(boardID)\"."))
                     }
@@ -1418,11 +1418,11 @@ enum PlanLibraryValidator {
 
 struct PlanDefinitionResolver {
     let library: PlanLibraryDefinition
-    let availableBoards: [TrainingBoard]
+    let availableBoards: [BoardRevision]
 
     init(
         library: PlanLibraryDefinition,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         let issues = library.validationIssues(availableBoards: availableBoards)
         guard issues.isEmpty else {
@@ -1509,7 +1509,7 @@ struct PlanDefinitionResolver {
     private func resolveTargets(
         _ targets: [WorkoutTargetDefinition],
         mapping: BoardMappingDefinition?,
-        board: TrainingBoard
+        board: BoardRevision
     ) throws -> [HoldTarget] {
         var resolved: [HoldTarget] = []
 
@@ -1556,7 +1556,7 @@ struct PlanDefinitionResolver {
         _ step: WorkoutStepDefinition,
         targets: [HoldTarget],
         mapping: BoardMappingDefinition?,
-        board: TrainingBoard
+        board: BoardRevision
     ) throws -> [WorkoutSegment] {
         guard !step.segments.isEmpty else { return [] }
 
@@ -1583,7 +1583,7 @@ struct PlanLibraryStore {
 
     init(
         definition: PlanLibraryDefinition,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         let issues = definition.validationIssues(availableBoards: availableBoards)
         guard issues.isEmpty else {
@@ -1598,7 +1598,7 @@ struct PlanLibraryStore {
     init(
         data: Data,
         decoder: JSONDecoder = JSONDecoder(),
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         let definition: PlanLibraryDefinition
         do {
@@ -1636,7 +1636,7 @@ struct PlanLibraryStore {
     init(
         contentsOf url: URL,
         decoder: JSONDecoder = JSONDecoder(),
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         do {
             try self.init(

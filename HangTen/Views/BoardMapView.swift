@@ -4,9 +4,9 @@ import UIKit
 struct BoardDetailHoldMap {
     struct Entry: Identifiable, Hashable {
         let number: Int
-        let hold: BoardHold
+        let hold: PhysicalContact
         let frame: HoldFrame
-        let pieces: [BoardHoldPiece]
+        let pieces: [BoardContactPiece]
 
         var id: String { hold.id }
     }
@@ -14,7 +14,7 @@ struct BoardDetailHoldMap {
     let presentation: BoardPresentation
     let entries: [Entry]
 
-    init(board: TrainingBoard, presentationID: String?) {
+    init(board: BoardRevision, presentationID: String?) {
         let content = BoardMapPresentationContent(
             board: board,
             selectedPresentationID: presentationID
@@ -50,21 +50,24 @@ enum BoardDetailContentOrder: Hashable {
 }
 
 enum BoardHoldSpecifications {
-    static func entries(for hold: BoardHold) -> [BoardHoldSpecification] {
+    static func entries(for hold: PhysicalContact) -> [BoardHoldSpecification] {
         var entries = [BoardHoldSpecification(label: "Kind", value: hold.kind.detailLabel)]
 
-        if let size = hold.sizeMillimeters {
-            entries.append(.init(label: "Depth", value: millimeters(size)))
-        } else if let range = hold.depthRangeMillimeters {
-            entries.append(
-                .init(
-                    label: "Depth range",
-                    value: "\(millimeters(range.lowerBound))–\(millimeters(range.upperBound))"
+        if let range = hold.depthRangeMillimeters {
+            if range.lowerBound == range.upperBound {
+                entries.append(.init(label: "Depth", value: millimeters(range.lowerBound)))
+            } else {
+                entries.append(
+                    .init(
+                        label: "Depth range",
+                        value: "\(millimeters(range.lowerBound))–\(millimeters(range.upperBound))"
+                    )
                 )
-            )
+            }
         }
-        if let gripType = hold.gripType {
-            entries.append(.init(label: "Grip", value: gripType.label))
+        if !hold.gripTypes.isEmpty {
+            let labels = hold.gripTypes.sorted { $0.rawValue < $1.rawValue }.map(\.label)
+            entries.append(.init(label: "Grip", value: labels.joined(separator: ", ")))
         }
         if let fingerCapacity = hold.fingerCapacity {
             entries.append(.init(label: "Finger capacity", value: "\(fingerCapacity)"))
@@ -85,21 +88,21 @@ enum BoardHoldSpecifications {
 
 struct BoardMapPresentationContent {
     let presentation: BoardPresentation
-    let holds: [BoardHold]
+    let holds: [PhysicalContact]
 
     init(
-        board: TrainingBoard,
+        board: BoardRevision,
         selectedPresentationID: String?
     ) {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        holds = board.holds(in: resolvedPresentation)
+        holds = board.contacts(in: resolvedPresentation)
     }
 
-    func pieces(for holdID: String) -> [BoardHoldPiece] {
+    func pieces(for holdID: String) -> [BoardContactPiece] {
         guard case .raster(let media) = presentation.media else { return [] }
-        return media.holdGeometry[holdID] ?? []
+        return media.contactGeometry[holdID] ?? []
     }
 }
 
@@ -124,12 +127,12 @@ extension BoardPresentation {
 struct BoardMapPresentationSelection: Equatable {
     private(set) var presentationID: String
 
-    static func resolvePositionID(board: TrainingBoard, presentationID: String?, activeHoldID: String?) -> String? {
+    static func resolvePositionID(board: BoardRevision, presentationID: String?, activeHoldID: String?) -> String? {
         let resolvedPresentationID = presentationID ?? board.defaultPresentation.id
         if let activeHoldID,
            let activePosition = board.position(
                presentationID: resolvedPresentationID,
-               containingHoldID: activeHoldID
+               containingContactID: activeHoldID
            ) {
             return activePosition.id
         }
@@ -138,7 +141,7 @@ struct BoardMapPresentationSelection: Equatable {
     }
 
     init(
-        board: TrainingBoard,
+        board: BoardRevision,
         requestedPresentationID: String?,
         activeHoldID: String?,
         highlightedHoldIDs: Set<String>
@@ -151,7 +154,7 @@ struct BoardMapPresentationSelection: Equatable {
             on: board
         ) {
             presentationID = activePresentationID
-        } else if let highlightedHoldID = board.holds.first(where: {
+        } else if let highlightedHoldID = board.contacts.first(where: {
             highlightedHoldIDs.contains($0.id)
         })?.id,
            let highlightedPresentationID = Self.presentationID(
@@ -165,7 +168,7 @@ struct BoardMapPresentationSelection: Equatable {
         }
     }
 
-    mutating func selectPresentation(id: String, on board: TrainingBoard) {
+    mutating func selectPresentation(id: String, on board: BoardRevision) {
         guard let presentation = board.presentation(id: id) else { return }
         presentationID = presentation.id
     }
@@ -174,7 +177,7 @@ struct BoardMapPresentationSelection: Equatable {
         from previousHoldIDs: Set<String>,
         to highlightedHoldIDs: Set<String>,
         activeHoldID: String?,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) {
         if let activePresentationID = Self.presentationID(
             for: activeHoldID,
@@ -185,7 +188,7 @@ struct BoardMapPresentationSelection: Equatable {
             return
         }
         let addedHoldIDs = highlightedHoldIDs.subtracting(previousHoldIDs)
-        if let addedHold = board.holds.first(where: { addedHoldIDs.contains($0.id) }) {
+        if let addedHold = board.contacts.first(where: { addedHoldIDs.contains($0.id) }) {
             presentationID = Self.presentationID(
                 for: addedHold.id,
                 preferring: presentationID,
@@ -194,7 +197,7 @@ struct BoardMapPresentationSelection: Equatable {
         }
     }
 
-    mutating func activateHold(id: String?, on board: TrainingBoard) {
+    mutating func activateHold(id: String?, on board: BoardRevision) {
         guard let activePresentationID = Self.presentationID(
             for: id,
             preferring: presentationID,
@@ -209,7 +212,7 @@ struct BoardMapPresentationSelection: Equatable {
         id: String?,
         activeHoldID: String?,
         highlightedHoldIDs: Set<String>,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) {
         if let requestedPresentation = board.presentation(id: id) {
             presentationID = requestedPresentation.id
@@ -224,7 +227,7 @@ struct BoardMapPresentationSelection: Equatable {
     }
 
     mutating func reset(
-        board: TrainingBoard,
+        board: BoardRevision,
         requestedPresentationID: String?,
         activeHoldID: String?,
         highlightedHoldIDs: Set<String>
@@ -240,29 +243,29 @@ struct BoardMapPresentationSelection: Equatable {
     private static func presentationID(
         for holdID: String?,
         preferring preferredPresentationID: String,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) -> String? {
         guard let holdID else { return nil }
-        guard board.holds.contains(where: { $0.id == holdID }) else {
+        guard board.contacts.contains(where: { $0.id == holdID }) else {
             return nil
         }
         guard let preferredPresentation = board.presentation(id: preferredPresentationID) else {
-            return board.presentations.first(where: { $0.containsHold(id: holdID) })?.id
+            return board.presentations.first(where: { $0.containsContact(id: holdID) })?.id
         }
-        if preferredPresentation.containsHold(id: holdID) { return preferredPresentation.id }
-        return board.presentations.first(where: { $0.containsHold(id: holdID) })?.id
+        if preferredPresentation.containsContact(id: holdID) { return preferredPresentation.id }
+        return board.presentations.first(where: { $0.containsContact(id: holdID) })?.id
     }
 }
 
 struct BoardDetailMapView: View {
-    let board: TrainingBoard
+    let board: BoardRevision
     @Binding var selectedHoldID: String?
     private let selectedHoldContent: AnyView?
 
     @State private var presentationSelection: BoardMapPresentationSelection
 
     init(
-        board: TrainingBoard,
+        board: BoardRevision,
         selectedHoldID: Binding<String?>,
         selectedHoldContent: AnyView? = nil
     ) {
@@ -465,10 +468,10 @@ private struct BoardHoldNumberMarker: View {
 }
 
 struct BoardMapView: View {
-    let board: TrainingBoard
+    let board: BoardRevision
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
-    let onHoldTap: ((BoardHold) -> Void)?
+    let onHoldTap: ((PhysicalContact) -> Void)?
     private let requestedPresentationID: String?
     private let activeHoldID: String?
 
@@ -476,12 +479,12 @@ struct BoardMapView: View {
     @State private var selectedPositionID: String?
 
     init(
-        board: TrainingBoard,
+        board: BoardRevision,
         highlightedHoldIDs: Set<String> = [],
         highlightMode: BoardHighlightMode = .active,
         selectedPresentationID: String? = nil,
         activeHoldID: String? = nil,
-        onHoldTap: ((BoardHold) -> Void)? = nil
+        onHoldTap: ((PhysicalContact) -> Void)? = nil
     ) {
         self.board = board
         self.highlightedHoldIDs = highlightedHoldIDs
@@ -628,10 +631,10 @@ struct BoardMapView: View {
 /// Loads only a package-declared presentation file. A board without one has
 /// no image view and never falls back to an asset-catalog name.
 struct BoardPresentationImage: View {
-    let board: TrainingBoard
+    let board: BoardRevision
     let presentationID: String?
 
-    init(board: TrainingBoard, presentationID: String? = nil) {
+    init(board: BoardRevision, presentationID: String? = nil) {
         self.board = board
         self.presentationID = presentationID
     }
@@ -650,16 +653,16 @@ struct BoardPresentationImage: View {
 }
 
 private struct PhysicalHoldVisual: View {
-    let hold: BoardHold
-    let pieces: [BoardHoldPiece]
+    let hold: PhysicalContact
+    let pieces: [BoardContactPiece]
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
     let isInverted: Bool
-    let onTap: ((BoardHold) -> Void)?
+    let onTap: ((PhysicalContact) -> Void)?
 
     @ViewBuilder
     var body: some View {
-        let shape = BoardHoldPathShape(pieces: pieces)
+        let shape = BoardContactPathShape(pieces: pieces)
         let visual = ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)

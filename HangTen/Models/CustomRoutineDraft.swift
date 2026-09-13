@@ -184,7 +184,7 @@ struct CustomRoutineDraft: Equatable {
 
     func retargeted(
         to targetMode: CustomRoutineTargetMode,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) -> CustomRoutineDraft {
         guard id == nil, targetMode != self.targetMode else {
             return self
@@ -278,14 +278,14 @@ struct CustomRoutineDraft: Equatable {
     private static func compatibleTargets(
         _ targets: [WorkoutTargetDefinition],
         for targetMode: CustomRoutineTargetMode,
-        availableBoards: [TrainingBoard]
+        availableBoards: [BoardRevision]
     ) -> [WorkoutTargetDefinition] {
         switch targetMode {
         case let .boardSpecific(boardID):
             guard let board = availableBoards.first(where: { $0.id == boardID }) else {
                 return []
             }
-            let knownHoldIDs = Set(board.holds.map(\.id))
+            let knownHoldIDs = Set(board.contacts.map(\.id))
             return targets.compactMap { target in
                 guard case let .holdIDs(holdIDs) = target else { return nil }
                 let compatibleIDs = holdIDs.filter(knownHoldIDs.contains)

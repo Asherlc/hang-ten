@@ -636,11 +636,11 @@ enum BoardPackageWriter {
                 throw invalid("non-gaston hold \(hold.id) must not declare pairedHoldID", document)
             }
             if let fingerCapacity = hold.fingerCapacity,
-               !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+               !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
                 throw invalid("hold \(hold.id) has an invalid finger capacity", document)
             }
             if let handCapacity = hold.handCapacity,
-               !BoardHold.validHandCapacityRange.contains(handCapacity) {
+               !PhysicalContact.validHandCapacityRange.contains(handCapacity) {
                 throw invalid("hold \(hold.id) has an invalid hand capacity", document)
             }
             if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {

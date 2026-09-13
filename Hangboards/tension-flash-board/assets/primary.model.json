@@ -1,6 +1,51 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.241300002,
+      0.076200001,
+      0.076200001
+    ],
+    "min": [
+      -0.241300002,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "282cc54a905a25ff972bb562f05de2ae9fd9b373086c68131259d3521ead506c",
+  "nodes": [
+    {
+      "nodeID": "body_surface_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "three_edge_center_surface_001",
+      "role": "contact",
+      "contactID": "three-edge-center"
+    },
+    {
+      "nodeID": "three_edge_left_surface_001",
+      "role": "contact",
+      "contactID": "three-edge-left"
+    },
+    {
+      "nodeID": "three_edge_right_surface_001",
+      "role": "contact",
+      "contactID": "three-edge-right"
+    },
+    {
+      "nodeID": "two_edge_left_surface_001",
+      "role": "contact",
+      "contactID": "two-edge-left"
+    },
+    {
+      "nodeID": "two_edge_right_surface_001",
+      "role": "contact",
+      "contactID": "two-edge-right"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "three-edge-center": {
       "center": [
         0.5,
@@ -96,50 +141,5 @@
         "two_edge_right_surface_001"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.241300002,
-      0.076200001,
-      0.076200001
-    ],
-    "min": [
-      -0.241300002,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "282cc54a905a25ff972bb562f05de2ae9fd9b373086c68131259d3521ead506c",
-  "nodes": [
-    {
-      "nodeID": "body_surface_001",
-      "role": "body"
-    },
-    {
-      "holdID": "three-edge-center",
-      "nodeID": "three_edge_center_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "three-edge-left",
-      "nodeID": "three_edge_left_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "three-edge-right",
-      "nodeID": "three_edge_right_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "two-edge-left",
-      "nodeID": "two_edge_left_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "two-edge-right",
-      "nodeID": "two_edge_right_surface_001",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

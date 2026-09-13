@@ -1,6 +1,46 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.083999999,
+      0.048999999,
+      0.017000001
+    ],
+    "min": [
+      -0.083999999,
+      -0.048999999,
+      -0.017000001
+    ]
+  },
+  "modelSHA256": "70df778321088ad721b61d23f9862c1fc19129c2492c87f090cba7a20819e1f3",
+  "nodes": [
+    {
+      "nodeID": "MXL_body_editable_skin_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "MXL_edge_12_editable_skin_001",
+      "role": "contact",
+      "contactID": "edge-12"
+    },
+    {
+      "nodeID": "MXL_edge_16_editable_skin_001",
+      "role": "contact",
+      "contactID": "edge-16"
+    },
+    {
+      "nodeID": "MXL_edge_22_editable_skin_001",
+      "role": "contact",
+      "contactID": "edge-22"
+    },
+    {
+      "nodeID": "MXL_mono_28_editable_skin_001",
+      "role": "contact",
+      "contactID": "mono-28"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "edge-12": {
       "center": [
         0.5,
@@ -77,45 +117,5 @@
         "MXL_mono_28_editable_skin_001"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.083999999,
-      0.048999999,
-      0.017000001
-    ],
-    "min": [
-      -0.083999999,
-      -0.048999999,
-      -0.017000001
-    ]
-  },
-  "modelSHA256": "70df778321088ad721b61d23f9862c1fc19129c2492c87f090cba7a20819e1f3",
-  "nodes": [
-    {
-      "nodeID": "MXL_body_editable_skin_001",
-      "role": "body"
-    },
-    {
-      "holdID": "edge-12",
-      "nodeID": "MXL_edge_12_editable_skin_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-16",
-      "nodeID": "MXL_edge_16_editable_skin_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-22",
-      "nodeID": "MXL_edge_22_editable_skin_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "mono-28",
-      "nodeID": "MXL_mono_28_editable_skin_001",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

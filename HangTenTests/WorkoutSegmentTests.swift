@@ -2,15 +2,15 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSegmentTests: XCTestCase {
-    func testBoardHoldPreservesPhysicalSizeSeparatelyFromDisplayName() {
-        let hold = BoardHold(
+    func testPhysicalContactPreservesDepthSeparatelyFromDisplayName() {
+        let hold = PhysicalContact(
             id: "edge-21",
             name: "Left 21 mm edge",
             kind: .edge,
-            sizeMillimeters: 21
+            depthRangeMillimeters: 21...21
         )
 
-        XCTAssertEqual(hold.sizeMillimeters, 21)
+        XCTAssertEqual(hold.depthRangeMillimeters, 21...21)
         XCTAssertEqual(hold.kind, .edge)
     }
 

@@ -37,13 +37,13 @@ struct HoldFrame: Hashable {
     }
 }
 
-/// One independently shaped contact surface belonging to a physical hold.
-struct BoardHoldPiece: Identifiable, Hashable {
+/// One independently shaped geometry piece belonging to a physical contact.
+struct BoardContactPiece: Identifiable, Hashable {
     let id: String
-    let holdID: String
+    let contactID: String
     let frame: CGRect
     let shape: BoardShape
-    let treatment: BoardHoldTreatment
+    let treatment: BoardContactTreatment
 
     func rect(in boardRect: CGRect) -> CGRect {
         CGRect(
@@ -61,7 +61,7 @@ struct BoardHoldPiece: Identifiable, Hashable {
 
 struct BoardRasterMedia: Hashable {
     let assetPath: String
-    let holdGeometry: [String: [BoardHoldPiece]]
+    let contactGeometry: [String: [BoardContactPiece]]
 }
 
 struct BoardModelBounds: Hashable {
@@ -73,7 +73,7 @@ struct BoardModelFacePlaneAABB: Hashable {
     let minimum: [Double]
     let maximum: [Double]
 
-    var holdFrame: HoldFrame {
+    var contactFrame: HoldFrame {
         return HoldFrame(
             x: minimum[0],
             y: minimum[1],
@@ -86,13 +86,13 @@ struct BoardModelFacePlaneAABB: Hashable {
 struct BoardModelNodeDescriptor: Hashable {
     enum Role: String, Hashable {
         case body
-        case hold
+        case contact
         case attachment
     }
 
     let nodeID: String
     let role: Role
-    let holdID: String?
+    let contactID: String?
 }
 
 struct BoardModelAttachment: Hashable {
@@ -268,7 +268,7 @@ private extension BoardModelPassage {
     }
 }
 
-struct BoardModelHoldDescriptor: Hashable {
+struct BoardModelContactDescriptor: Hashable {
     let nodeIDs: [String]
     let facePlaneAABB: BoardModelFacePlaneAABB
     let center: [Double]
@@ -280,7 +280,7 @@ struct BoardModelDescriptor: Hashable {
     let modelSHA256: String
     let modelBounds: BoardModelBounds
     let nodes: [BoardModelNodeDescriptor]
-    let holds: [String: BoardModelHoldDescriptor]
+    let contacts: [String: BoardModelContactDescriptor]
 }
 
 struct BoardModelCamera: Hashable {
@@ -350,8 +350,8 @@ enum BoardPresentationMedia: Hashable {
 }
 
 /// The one path source used for normal contact, highlighting, and hit testing.
-struct BoardHoldPathShape: Shape {
-    let pieces: [BoardHoldPiece]
+struct BoardContactPathShape: Shape {
+    let pieces: [BoardContactPiece]
 
     func path(in rect: CGRect) -> Path {
         pieces.reduce(into: Path()) { path, piece in
@@ -360,7 +360,7 @@ struct BoardHoldPathShape: Shape {
     }
 }
 
-enum BoardHoldTreatment: Hashable {
+enum BoardContactTreatment: Hashable {
     case recess(BoardRecessProfile)
     case shelf(BoardShelfProfile)
     case surface
@@ -484,6 +484,11 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum ContactSide: String, Codable, Hashable {
+    case left
+    case right
+}
+
 enum SloperType: String, Codable, Hashable {
     case flat
     case round
@@ -583,6 +588,7 @@ enum HoldCueStyle: String, Codable, Hashable {
 /// routine content unchanged as more boards are added.
 enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
+    case flatSloper
     case roundSloper
     case largeSlope
     case largeEdge
@@ -602,6 +608,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     var label: String {
         switch self {
         case .jug: "Jug"
+        case .flatSloper: "Flat sloper"
         case .roundSloper: "Round sloper"
         case .largeSlope: "Large sloper"
         case .largeEdge: "Large edge"
@@ -629,7 +636,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     /// One canonical row per case: physical kind and cross-kind substitution
     /// group, kept together so adding a case can't leave the two properties
     /// out of sync with each other. Finger count is real per-hold/per-target
-    /// data (`BoardHold.fingerCapacity`, `HoldTarget.fingerCapacity`), not
+    /// data (`PhysicalContact.fingerCapacity`, `HoldTarget.fingerCapacity`), not
     /// something derived from a feature's identity.
     private struct Physicality {
         let holdKind: HoldKind
@@ -639,6 +646,8 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     private var physicality: Physicality {
         switch self {
         case .jug:
+            Physicality(holdKind: .sloper, featureGroup: .sloper)
+        case .flatSloper:
             Physicality(holdKind: .sloper, featureGroup: .sloper)
         case .roundSloper:
             Physicality(holdKind: .sloper, featureGroup: .sloper)
@@ -815,75 +824,45 @@ struct EquipmentObject: Codable, Hashable, Identifiable {
     }
 }
 
-struct BoardHold: Identifiable, Hashable {
+struct PhysicalContact: Identifiable, Hashable {
     let id: String
     let equipmentObjectID: String
     let name: String
     let kind: HoldKind
-    let sloper: SloperMetadata?
-    let gripType: GripType?
+    let features: Set<HoldFeature>
     let fingerCapacity: Int?
     let handCapacity: Int?
-    let sizeMillimeters: Double?
     let depthRangeMillimeters: ClosedRange<Double>?
-    let features: Set<HoldFeature>?
-    let pairedHoldID: String?
+    let gripTypes: Set<GripType>
+    let side: ContactSide?
+    let pairedContactID: String?
 
     static let validFingerCapacityRange = 1...4
     static let validHandCapacityRange = 1...2
-
-    enum DepthMeasurement: Equatable {
-        case none
-        case fixed(Double)
-        case continuous(ClosedRange<Double>)
-
-        init?(
-            sizeMillimeters: Double?,
-            depthRangeMillimeters: ClosedRange<Double>?
-        ) {
-            switch (sizeMillimeters, depthRangeMillimeters) {
-            case (nil, nil):
-                self = .none
-            case (let size?, nil):
-                self = .fixed(size)
-            case (nil, let range?):
-                self = .continuous(range)
-            case (.some, .some):
-                return nil
-            }
-        }
-    }
 
     init(
         id: String,
         equipmentObjectID: String = "primary",
         name: String,
         kind: HoldKind,
-        sloper: SloperMetadata? = nil,
-        sizeMillimeters: Double? = nil,
-        gripType: GripType? = nil,
+        features: Set<HoldFeature> = [],
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
-        features: Set<HoldFeature>? = nil,
-        pairedHoldID: String? = nil
+        gripTypes: Set<GripType> = [],
+        side: ContactSide? = nil,
+        pairedContactID: String? = nil
     ) {
-        guard let depthMeasurement = DepthMeasurement(
-            sizeMillimeters: sizeMillimeters,
-            depthRangeMillimeters: depthRangeMillimeters
-        ) else {
-            preconditionFailure("BoardHold must not specify both a size and depth range.")
-        }
         if let fingerCapacity {
             precondition(
                 Self.validFingerCapacityRange.contains(fingerCapacity),
-                "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
+                "PhysicalContact fingerCapacity must be in \(Self.validFingerCapacityRange)."
             )
         }
         if let handCapacity {
             precondition(
                 Self.validHandCapacityRange.contains(handCapacity),
-                "BoardHold handCapacity must be in \(Self.validHandCapacityRange)."
+                "PhysicalContact handCapacity must be in \(Self.validHandCapacityRange)."
             )
         }
 
@@ -891,30 +870,20 @@ struct BoardHold: Identifiable, Hashable {
         self.equipmentObjectID = equipmentObjectID
         self.name = name
         self.kind = kind
-        self.sloper = sloper
-        self.gripType = gripType
+        self.features = features
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
-        switch depthMeasurement {
-        case .none:
-            self.sizeMillimeters = nil
-            self.depthRangeMillimeters = nil
-        case .fixed(let size):
-            self.sizeMillimeters = size
-            self.depthRangeMillimeters = nil
-        case .continuous(let range):
-            self.sizeMillimeters = nil
-            self.depthRangeMillimeters = range
-        }
-        self.features = features
-        self.pairedHoldID = pairedHoldID
+        self.depthRangeMillimeters = depthRangeMillimeters
+        self.gripTypes = gripTypes
+        self.side = side
+        self.pairedContactID = pairedContactID
     }
 
-    /// True when this hold declares any of `features`, and (when specified)
+    /// True when this contact declares any of `features`, and (when specified)
     /// also has the exact `fingerCapacity`. Shared by plan and custom-routine
     /// validation so their matching rules can't drift apart.
     func matches(anyOf features: some Collection<HoldFeature>, fingerCapacity: Int?) -> Bool {
-        guard self.features?.contains(where: features.contains) == true else { return false }
+        guard self.features.contains(where: features.contains) else { return false }
         guard let fingerCapacity else { return true }
         return self.fingerCapacity == fingerCapacity
     }
@@ -922,7 +891,7 @@ struct BoardHold: Identifiable, Hashable {
     func resolvedFrame(in presentation: BoardPresentation) -> HoldFrame? {
         switch presentation.media {
         case .raster(let media):
-            guard let pieces = media.holdGeometry[id],
+            guard let pieces = media.contactGeometry[id],
                   let first = pieces.first else { return nil }
             let union = pieces.dropFirst().reduce(first.frame) { $0.union($1.frame) }
             return HoldFrame(
@@ -932,7 +901,7 @@ struct BoardHold: Identifiable, Hashable {
                 height: boardDescriptorRoundedToNinePlaces(union.height)
             )
         case .model(let media):
-            return media.descriptor.holds[id]?.facePlaneAABB.holdFrame
+            return media.descriptor.contacts[id]?.facePlaneAABB.contactFrame
         }
     }
 }
@@ -958,7 +927,7 @@ struct BoardPresentation: Identifiable, Hashable {
         sourcePresentationID: String? = nil,
         isInverted: Bool = false,
         media: BoardPresentationMedia = .raster(
-            BoardRasterMedia(assetPath: "", holdGeometry: [:])
+            BoardRasterMedia(assetPath: "", contactGeometry: [:])
         )
     ) {
         self.id = id
@@ -970,15 +939,15 @@ struct BoardPresentation: Identifiable, Hashable {
         self.media = media
     }
 
-    var holdIDs: Set<String> {
+    var contactIDs: Set<String> {
         switch media {
-        case .raster(let media): Set(media.holdGeometry.keys)
-        case .model(let media): Set(media.descriptor.holds.keys)
+        case .raster(let media): Set(media.contactGeometry.keys)
+        case .model(let media): Set(media.descriptor.contacts.keys)
         }
     }
 
-    func containsHold(id: String) -> Bool {
-        holdIDs.contains(id)
+    func containsContact(id: String) -> Bool {
+        contactIDs.contains(id)
     }
 }
 
@@ -998,34 +967,34 @@ enum ResolvedBoardPositionTransitionKind: Hashable {
 struct BoardPosition: Identifiable, Codable, Hashable {
     let id: String
     let presentationID: String
-    let holdIDs: [String]
-    /// Retained internally so model packages can distinguish omitted legacy
-    /// membership (which materializes) from an authored empty array (invalid).
-    let holdIDsWereExplicitlyAuthored: Bool
+    let contactIDs: [String]
+    /// Retained internally so model packages can distinguish omitted membership
+    /// (which materializes) from an authored empty array (invalid).
+    let contactIDsWereExplicitlyAuthored: Bool
 
-    init(id: String, presentationID: String, holdIDs: [String]) {
+    init(id: String, presentationID: String, contactIDs: [String]) {
         self.id = id
         self.presentationID = presentationID
-        self.holdIDs = holdIDs
-        self.holdIDsWereExplicitlyAuthored = true
+        self.contactIDs = contactIDs
+        self.contactIDsWereExplicitlyAuthored = true
     }
 
     init(id: String, presentationID: String) {
         self.id = id
         self.presentationID = presentationID
-        self.holdIDs = []
-        self.holdIDsWereExplicitlyAuthored = false
+        self.contactIDs = []
+        self.contactIDsWereExplicitlyAuthored = false
     }
 
-    private enum CodingKeys: String, CodingKey { case id, presentationID, holdIDs }
+    private enum CodingKeys: String, CodingKey { case id, presentationID, contactIDs }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         presentationID = try container.decode(String.self, forKey: .presentationID)
-        holdIDsWereExplicitlyAuthored = container.contains(.holdIDs)
-        holdIDs = holdIDsWereExplicitlyAuthored
-            ? try container.decode([String].self, forKey: .holdIDs)
+        contactIDsWereExplicitlyAuthored = container.contains(.contactIDs)
+        contactIDs = contactIDsWereExplicitlyAuthored
+            ? try container.decode([String].self, forKey: .contactIDs)
             : []
     }
 
@@ -1033,8 +1002,8 @@ struct BoardPosition: Identifiable, Codable, Hashable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(presentationID, forKey: .presentationID)
-        if holdIDsWereExplicitlyAuthored {
-            try container.encode(holdIDs, forKey: .holdIDs)
+        if contactIDsWereExplicitlyAuthored {
+            try container.encode(contactIDs, forKey: .contactIDs)
         }
     }
 }
@@ -1045,15 +1014,16 @@ struct BoardPositionTransition: Codable, Hashable {
     let kind: BoardPositionTransitionKind
 }
 
-struct TrainingBoard: Identifiable, Hashable {
+struct BoardRevision: Identifiable, Hashable {
     let id: String
+    let revisionID: String
     let manufacturer: String
     let name: String
     let subtitle: String
     let dimensions: String?
     let aspectRatio: CGFloat
     let equipmentObjects: [EquipmentObject]
-    let holds: [BoardHold]
+    let contacts: [PhysicalContact]
     let presentations: [BoardPresentation]
     let positions: [BoardPosition]
     let positionTransitions: [BoardPositionTransition]
@@ -1067,13 +1037,14 @@ struct TrainingBoard: Identifiable, Hashable {
 
     init(
         id: String,
+        revisionID: String,
         manufacturer: String,
         name: String,
         subtitle: String,
         dimensions: String?,
         aspectRatio: CGFloat,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
-        holds: [BoardHold],
+        contacts: [PhysicalContact],
         semanticHolds: [String: SemanticHoldMappingDefinition] = [:],
         productURL: URL,
         photoAssetName: String?,
@@ -1082,13 +1053,14 @@ struct TrainingBoard: Identifiable, Hashable {
         positionTransitions: [BoardPositionTransition] = []
     ) {
         self.id = id
+        self.revisionID = revisionID
         self.manufacturer = manufacturer
         self.name = name
         self.subtitle = subtitle
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
         self.equipmentObjects = equipmentObjects
-        self.holds = holds
+        self.contacts = contacts
         let resolvedPresentations = presentations.isEmpty
             ? [
                 BoardPresentation(
@@ -1126,32 +1098,32 @@ struct TrainingBoard: Identifiable, Hashable {
         return positions.first { $0.id == id }
     }
 
-    func position(presentationID: String, containingHoldID holdID: String? = nil) -> BoardPosition? {
+    func position(presentationID: String, containingContactID contactID: String? = nil) -> BoardPosition? {
         positions.first { position in
             guard position.presentationID == presentationID else { return false }
-            guard let holdID else { return true }
-            return holdIDs(inPosition: position.id).contains(holdID)
+            guard let contactID else { return true }
+            return contactIDs(inPosition: position.id).contains(contactID)
         }
     }
 
-    /// Logical holds that have display-derived matching geometry in this
+    /// Physical contacts that have display-derived matching geometry in this
     /// exact presentation. A missing media mapping is unavailable, rather
     /// than a reason to borrow geometry from another presentation.
-    func holds(in presentation: BoardPresentation) -> [BoardHold] {
-        holds.filter { $0.resolvedFrame(in: presentation) != nil }
+    func contacts(in presentation: BoardPresentation) -> [PhysicalContact] {
+        contacts.filter { $0.resolvedFrame(in: presentation) != nil }
     }
 
-    func holdIDs(inPosition positionID: String) -> [String] {
+    func contactIDs(inPosition positionID: String) -> [String] {
         guard let position = position(id: positionID),
               let presentation = presentation(id: position.presentationID) else {
             return []
         }
         let presentedIDs: Set<String>
         switch presentation.media {
-        case .model: presentedIDs = Set(position.holdIDs)
-        case .raster(let media): presentedIDs = Set(media.holdGeometry.keys)
+        case .model: presentedIDs = Set(position.contactIDs)
+        case .raster(let media): presentedIDs = Set(media.contactGeometry.keys)
         }
-        return holds.compactMap { presentedIDs.contains($0.id) ? $0.id : nil }
+        return contacts.compactMap { presentedIDs.contains($0.id) ? $0.id : nil }
     }
 
     func transitionKind(
@@ -1186,7 +1158,7 @@ struct HoldTarget: Hashable {
     let feature: HoldFeature?
     let fallbackFeatures: [HoldFeature]
     /// The finger count this target wants, matched against
-    /// `BoardHold.fingerCapacity`. Real, author-specified data that can
+    /// `PhysicalContact.fingerCapacity`. Real, author-specified data that can
     /// qualify either a kind or a feature target.
     let fingerCapacity: Int?
 
@@ -1199,8 +1171,8 @@ struct HoldTarget: Hashable {
     ) {
         if let fingerCapacity {
             precondition(
-                BoardHold.validFingerCapacityRange.contains(fingerCapacity),
-                "HoldTarget fingerCapacity must be in \(BoardHold.validFingerCapacityRange)."
+                PhysicalContact.validFingerCapacityRange.contains(fingerCapacity),
+                "HoldTarget fingerCapacity must be in \(PhysicalContact.validFingerCapacityRange)."
             )
         }
         self.holdIDs = holdIDs
@@ -1601,7 +1573,7 @@ enum BoardCatalog {
     /// the legacy semantic-hold mappings. Crashes rather than falling back to
     /// an unrelated board, since silently resolving generic targets against
     /// the wrong board would misrepresent every hold callout in those plans.
-    static let defaultBoard: TrainingBoard = {
+    static let defaultBoard: BoardRevision = {
         guard let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID else {
             fatalError("LegacyPlanSeedBoardMappings.all is empty.")
         }
@@ -1611,7 +1583,7 @@ enum BoardCatalog {
         return board
     }()
 
-    static func board(for id: String?) -> TrainingBoard {
+    static func board(for id: String?) -> BoardRevision {
         guard let id else { return defaultBoard }
         return packageStore.board(id: id) ?? defaultBoard
     }
@@ -1847,7 +1819,7 @@ enum LegacyPlanSeedBoardMappings {
         case pocket11
         case pocket13
 
-        fileprivate var holdIDs: [String] {
+        fileprivate var contactIDs: [String] {
             switch self {
             case .anyHold:
                 [
@@ -1894,7 +1866,7 @@ enum LegacyPlanSeedBoardMappings {
         case pocket17
         case pocket18
 
-        fileprivate var holdIDs: [String] {
+        fileprivate var contactIDs: [String] {
             switch self {
             case .anyHold:
                 [
@@ -1924,11 +1896,11 @@ enum LegacyPlanSeedBoardMappings {
     }
 
     static func contactTargets(_ groups: MetoliusContactTarget...) -> [HoldTarget] {
-        groups.map { .ids($0.holdIDs) }
+        groups.map { .ids($0.contactIDs) }
     }
 
     static func simulator3DTargets(_ groups: MetoliusSimulator3DTarget...) -> [HoldTarget] {
-        groups.map { .ids($0.holdIDs) }
+        groups.map { .ids($0.contactIDs) }
     }
 
     static let all = [
@@ -3403,8 +3375,8 @@ enum LegacyPlanSeedCatalog {
         assert(adaptedPlans.allSatisfy { $0.provenance == .adapted })
 
         let plans = metoliusPlans + officialPlans + adaptedPlans
-        func targetResolves(_ target: HoldTarget, on board: TrainingBoard) -> Bool {
-            let boardHoldIDs = Set(board.holds.map(\.id))
+        func targetResolves(_ target: HoldTarget, on board: BoardRevision) -> Bool {
+            let boardHoldIDs = Set(board.contacts.map(\.id))
             if !target.holdIDs.isEmpty {
                 return Set(target.holdIDs).isSubset(of: boardHoldIDs)
             }
@@ -3412,7 +3384,7 @@ enum LegacyPlanSeedCatalog {
                 return !BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
             }
             if let kind = target.kind {
-                return board.holds.contains { $0.kind == kind }
+                return board.contacts.contains { $0.kind == kind }
             }
             return false
         }

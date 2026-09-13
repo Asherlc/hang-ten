@@ -36,7 +36,6 @@ _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _PACKAGE_ENTRIES = frozenset({"board.json", "assets"})
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
-_SLOPER_TYPES = frozenset({"flat", "round"})
 _GRIP_TYPES = frozenset(
     {
         "openHand",
@@ -51,6 +50,7 @@ _GRIP_TYPES = frozenset(
 _HOLD_FEATURES = frozenset(
     {
         "jug",
+        "flatSloper",
         "roundSloper",
         "largeSlope",
         "largeEdge",
@@ -119,7 +119,7 @@ def _identifier(value: Any, source: str) -> str:
 
 
 def is_board_identifier(value: object) -> bool:
-    """Return whether *value* follows the canonical board/hold ID grammar."""
+    """Return whether *value* follows the canonical board/contact ID grammar."""
     return isinstance(value, str) and _IDENTIFIER.fullmatch(value) is not None
 
 
@@ -224,29 +224,6 @@ class MillimeterRange:
         if lower > upper:
             raise ValueError(f"{source}.lowerBound must not exceed upperBound")
         return cls(lower, upper)
-
-
-@dataclass(frozen=True)
-class SloperMetadata:
-    type: str
-    angle_degrees: float | None
-
-    @classmethod
-    def from_json(cls, value: Any, source: str) -> "SloperMetadata":
-        payload = _mapping(value, source)
-        sloper_type = _string(payload.get("type"), f"{source}.type")
-        if sloper_type not in _SLOPER_TYPES:
-            raise ValueError(f"{source}.type must be one of {sorted(_SLOPER_TYPES)}")
-        if sloper_type == "flat":
-            _closed(payload, {"type", "angleDegrees"} & set(payload), source)
-            angle_degrees = None
-            if "angleDegrees" in payload:
-                angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
-                if not 0 <= angle_degrees <= 90:
-                    raise ValueError(f"{source}.angleDegrees must be in 0...90")
-            return cls(sloper_type, angle_degrees)
-        _closed(payload, {"type"}, source)
-        return cls(sloper_type, None)
 
 
 @dataclass(frozen=True)
@@ -398,7 +375,7 @@ class BoardGeometryPiece:
 @dataclass(frozen=True)
 class PresentationMediaRaster:
     asset_path: str
-    hold_geometry: Mapping[str, tuple[BoardGeometryPiece, ...]]
+    contact_geometry: Mapping[str, tuple[BoardGeometryPiece, ...]]
 
 
 @dataclass(frozen=True)
@@ -511,7 +488,7 @@ class BoardPresentation:
     is_inverted: bool = False
     media: PresentationMedia | None = None
 
-def _load_v2_derivation(
+def _load_derivation(
     value: Any, source: str
 ) -> tuple[str | None, bool]:
     payload = _mapping(value, source)
@@ -826,21 +803,21 @@ def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
     return BoardModelOrientation(pivot, MappingProxyType(rotations))
 
 
-def _load_v2_media(value: Any, source: str) -> PresentationMedia:
+def _load_media(value: Any, source: str) -> PresentationMedia:
     payload = _mapping(value, source)
     media_type = _string(payload.get("type"), f"{source}.type")
     if media_type == "raster":
-        _closed(payload, {"type", "assetPath", "holdGeometry"}, source)
-        raw_geometry = _mapping(payload["holdGeometry"], f"{source}.holdGeometry")
-        hold_geometry = {
-            _identifier(hold_id, f"{source}.holdGeometry hold ID"): _load_geometry(
-                pieces, f"{source}.holdGeometry[{hold_id}]"
+        _closed(payload, {"type", "assetPath", "contactGeometry"}, source)
+        raw_geometry = _mapping(payload["contactGeometry"], f"{source}.contactGeometry")
+        contact_geometry = {
+            _identifier(contact_id, f"{source}.contactGeometry contact ID"): _load_geometry(
+                pieces, f"{source}.contactGeometry[{contact_id}]"
             )
-            for hold_id, pieces in raw_geometry.items()
+            for contact_id, pieces in raw_geometry.items()
         }
         return PresentationMediaRaster(
             _asset_path(payload["assetPath"], f"{source}.assetPath"),
-            MappingProxyType(hold_geometry),
+            MappingProxyType(contact_geometry),
         )
     if media_type == "model":
         _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension", "orientation"})
@@ -868,7 +845,7 @@ def _load_v2_media(value: Any, source: str) -> PresentationMedia:
     raise ValueError(f"{source}.type must be raster or model")
 
 
-def _load_v2_presentation(value: Any, source: str) -> BoardPresentation:
+def _load_presentation(value: Any, source: str) -> BoardPresentation:
     payload = _mapping(value, source)
     _closed(
         payload,
@@ -876,10 +853,10 @@ def _load_v2_presentation(value: Any, source: str) -> BoardPresentation:
         source,
     )
     aspect_ratio = _positive_number(payload["aspectRatio"], f"{source}.aspectRatio")
-    source_presentation_id, is_inverted = _load_v2_derivation(
+    source_presentation_id, is_inverted = _load_derivation(
         payload["derivation"], f"{source}.derivation"
     )
-    media = _load_v2_media(payload["media"], f"{source}.media")
+    media = _load_media(payload["media"], f"{source}.media")
     if isinstance(media, PresentationMediaModel) and source_presentation_id is not None:
         raise ValueError(f"{source} model media may not be derived or inverted")
     return BoardPresentation(
@@ -898,29 +875,29 @@ def _load_v2_presentation(value: Any, source: str) -> BoardPresentation:
 class BoardPosition:
     id: str
     presentation_id: str
-    hold_ids: tuple[str, ...] = ()
-    hold_ids_authored: bool = False
+    contact_ids: tuple[str, ...] = ()
+    contact_ids_authored: bool = False
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPosition":
         payload = _mapping(value, source)
-        _closed(payload, {"id", "presentationID"}, source, optional={"holdIDs"})
-        hold_ids: tuple[str, ...] = ()
-        if "holdIDs" in payload:
-            raw_hold_ids = payload["holdIDs"]
-            if not isinstance(raw_hold_ids, list) or not raw_hold_ids:
-                raise ValueError(f"{source}.holdIDs must be a non-empty array")
-            hold_ids = tuple(
-                _identifier(item, f"{source}.holdIDs[{index}]")
-                for index, item in enumerate(raw_hold_ids)
+        _closed(payload, {"id", "presentationID"}, source, optional={"contactIDs"})
+        contact_ids: tuple[str, ...] = ()
+        if "contactIDs" in payload:
+            raw_contact_ids = payload["contactIDs"]
+            if not isinstance(raw_contact_ids, list) or not raw_contact_ids:
+                raise ValueError(f"{source}.contactIDs must be a non-empty array")
+            contact_ids = tuple(
+                _identifier(item, f"{source}.contactIDs[{index}]")
+                for index, item in enumerate(raw_contact_ids)
             )
-            if len(set(hold_ids)) != len(hold_ids):
-                raise ValueError(f"{source}.holdIDs must not contain duplicates")
+            if len(set(contact_ids)) != len(contact_ids):
+                raise ValueError(f"{source}.contactIDs must not contain duplicates")
         return cls(
             _identifier(payload["id"], f"{source}.id"),
             _identifier(payload["presentationID"], f"{source}.presentationID"),
-            hold_ids,
-            "holdIDs" in payload,
+            contact_ids,
+            "contactIDs" in payload,
         )
 
 
@@ -928,6 +905,11 @@ class BoardPositionTransitionKind(StrEnum):
     SEAMLESS = "seamless"
     SETUP_REQUIRED = "setupRequired"
     UNSUPPORTED = "unsupported"
+
+
+class ContactSide(StrEnum):
+    LEFT = "left"
+    RIGHT = "right"
 
 
 @dataclass(frozen=True)
@@ -953,31 +935,31 @@ class BoardPositionTransition:
 
 
 @dataclass(frozen=True)
-class BoardHold:
+class PhysicalContact:
     id: str
     equipment_object_id: str
     name: str
     kind: str
-    sloper: SloperMetadata | None
-    size_millimeters: float | None
-    depth_range_millimeters: MillimeterRange | None
-    grip_type: str | None
+    features: frozenset[str]
     finger_capacity: int | None
     hand_capacity: int | None
-    features: tuple[str, ...] | None
-    paired_hold_id: str | None
+    depth_range_millimeters: MillimeterRange | None
+    grip_types: frozenset[str]
+    side: ContactSide | None
+    paired_contact_id: str | None
 
 
 @dataclass(frozen=True)
-class BoardDocument:
+class BoardRevision:
     id: str
+    revision_id: str
     facts: Mapping[str, Any]
     equipment_objects: tuple[str, ...]
-    holds: tuple[BoardHold, ...]
+    contacts: tuple[PhysicalContact, ...]
     presentations: tuple[BoardPresentation, ...]
     positions: tuple[BoardPosition, ...]
     position_transitions: tuple[BoardPositionTransition, ...]
-    model_hold_frames: Mapping[tuple[str, str], NormalizedFrame] = field(
+    model_contact_frames: Mapping[tuple[str, str], NormalizedFrame] = field(
         default_factory=lambda: MappingProxyType({}), repr=False
     )
 
@@ -998,9 +980,9 @@ class BoardDocument:
             if presentation.is_default
         )
 
-    def hold_frame(self, hold_id: str, presentation_id: str) -> NormalizedFrame:
-        if hold_id not in {hold.id for hold in self.holds}:
-            raise ValueError(f"unknown hold id: {hold_id}")
+    def contact_frame(self, contact_id: str, presentation_id: str) -> NormalizedFrame:
+        if contact_id not in {contact.id for contact in self.contacts}:
+            raise ValueError(f"unknown contact id: {contact_id}")
         presentation = next(
             (candidate for candidate in self.presentations if candidate.id == presentation_id),
             None,
@@ -1008,22 +990,22 @@ class BoardDocument:
         if presentation is None:
             raise ValueError(f"unknown presentation id: {presentation_id}")
         if isinstance(presentation.media, PresentationMediaRaster):
-            pieces = presentation.media.hold_geometry.get(hold_id)
+            pieces = presentation.media.contact_geometry.get(contact_id)
             if not pieces:
                 raise ValueError(
-                    f"presentation {presentation_id} has no geometry for hold {hold_id}"
+                    f"presentation {presentation_id} has no geometry for contact {contact_id}"
                 )
             return _union_frames(piece.frame for piece in pieces)
         if isinstance(presentation.media, PresentationMediaModel):
             try:
-                return self.model_hold_frames[(presentation_id, hold_id)]
+                return self.model_contact_frames[(presentation_id, contact_id)]
             except KeyError as error:
                 raise ValueError(
-                    f"presentation {presentation_id} has no descriptor frame for hold {hold_id}"
+                    f"presentation {presentation_id} has no descriptor frame for contact {contact_id}"
                 ) from error
         raise ValueError(f"presentation {presentation_id} has no typed media")
 
-    def hold_ids_for_position(self, position_id: str) -> tuple[str, ...]:
+    def contact_ids_for_position(self, position_id: str) -> tuple[str, ...]:
         position = next(
             (candidate for candidate in self.positions if candidate.id == position_id),
             None,
@@ -1036,11 +1018,11 @@ class BoardDocument:
             if candidate.id == position.presentation_id
         )
         if isinstance(presentation.media, PresentationMediaRaster):
-            owned = set(presentation.media.hold_geometry)
-            return tuple(hold.id for hold in self.holds if hold.id in owned)
+            owned = set(presentation.media.contact_geometry)
+            return tuple(contact.id for contact in self.contacts if contact.id in owned)
         if isinstance(presentation.media, PresentationMediaModel):
-            owned = set(position.hold_ids)
-            return tuple(hold.id for hold in self.holds if hold.id in owned)
+            owned = set(position.contact_ids)
+            return tuple(contact.id for contact in self.contacts if contact.id in owned)
         raise ValueError(f"presentation {presentation.id} has no typed media")
 
     def transition_kind(self, from_id: str, to_id: str) -> str:
@@ -1068,7 +1050,7 @@ class BoardDocument:
 @dataclass(frozen=True)
 class BoardPackage:
     root: Path
-    board: BoardDocument
+    board: BoardRevision
 
 
 @dataclass(frozen=True)
@@ -1100,58 +1082,49 @@ def _load_geometry(value: Any, source: str) -> tuple[BoardGeometryPiece, ...]:
     )
 
 
-def _load_hold(value: Any, source: str) -> BoardHold:
+def _load_contact(value: Any, source: str) -> PhysicalContact:
     payload = _mapping(value, source)
     _closed(
         payload,
-        {"id", "name", "kind"},
+        {"id", "equipmentObjectID", "name", "kind", "features", "gripTypes"},
         source,
         optional={
-            "equipmentObjectID",
-            "sizeMillimeters",
             "depthRangeMillimeters",
-            "gripType",
             "fingerCapacity",
             "handCapacity",
-            "features",
-            "sloper",
-            "pairedHoldID",
+            "side",
+            "pairedContactID",
         },
     )
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
         raise ValueError(f"{source}.kind must be one of {sorted(_HOLD_KINDS)}")
-    if kind == "sloper":
-        sloper = (
-            SloperMetadata.from_json(payload["sloper"], f"{source}.sloper")
-            if "sloper" in payload
-            else None
+    if kind == "gaston":
+        paired_contact_id = _identifier(
+            payload.get("pairedContactID"), f"{source}.pairedContactID"
         )
     else:
-        if "sloper" in payload:
-            raise ValueError(f"{source}.sloper is only allowed for sloper holds")
-        sloper = None
-    if kind == "gaston":
-        paired_hold_id = _identifier(payload.get("pairedHoldID"), f"{source}.pairedHoldID")
-    else:
-        if "pairedHoldID" in payload:
-            raise ValueError(f"{source}.pairedHoldID is only allowed for gaston holds")
-        paired_hold_id = None
-    if "sizeMillimeters" in payload and "depthRangeMillimeters" in payload:
-        raise ValueError(f"{source} must not specify both a size and depth range")
-    size = None
-    if "sizeMillimeters" in payload:
-        size = _positive_number(payload["sizeMillimeters"], f"{source}.sizeMillimeters")
+        if "pairedContactID" in payload:
+            raise ValueError(
+                f"{source}.pairedContactID is only allowed for gaston contacts"
+            )
+        paired_contact_id = None
     depth_range = None
     if "depthRangeMillimeters" in payload:
         depth_range = MillimeterRange.from_json(
             payload["depthRangeMillimeters"], f"{source}.depthRangeMillimeters"
         )
-    grip_type = None
-    if "gripType" in payload:
-        grip_type = _string(payload["gripType"], f"{source}.gripType")
-        if grip_type not in _GRIP_TYPES:
-            raise ValueError(f"{source}.gripType must be one of {sorted(_GRIP_TYPES)}")
+    raw_grip_types = payload["gripTypes"]
+    if not isinstance(raw_grip_types, list):
+        raise ValueError(f"{source}.gripTypes must be an array")
+    grip_types = tuple(
+        _string(grip_type, f"{source}.gripTypes[{index}]")
+        for index, grip_type in enumerate(raw_grip_types)
+    )
+    if any(grip_type not in _GRIP_TYPES for grip_type in grip_types):
+        raise ValueError(f"{source}.gripTypes contains an unsupported grip type")
+    if len(grip_types) != len(set(grip_types)):
+        raise ValueError(f"{source}.gripTypes must be unique")
     finger_capacity = None
     if "fingerCapacity" in payload:
         finger_capacity = _positive_integer(
@@ -1166,44 +1139,47 @@ def _load_hold(value: Any, source: str) -> BoardHold:
         )
         if hand_capacity not in range(1, 3):
             raise ValueError(f"{source}.handCapacity must be in 1...2")
-    features = None
-    if "features" in payload:
-        raw_features = payload["features"]
-        if not isinstance(raw_features, list):
-            raise ValueError(f"{source}.features must be an array")
-        features = tuple(
-            _string(feature, f"{source}.features[{index}]")
-            for index, feature in enumerate(raw_features)
-        )
-        if any(feature not in _HOLD_FEATURES for feature in features):
-            raise ValueError(f"{source}.features contains an unsupported feature")
-        if len(features) != len(set(features)):
-            raise ValueError(f"{source}.features must be unique")
+    raw_features = payload["features"]
+    if not isinstance(raw_features, list):
+        raise ValueError(f"{source}.features must be an array")
+    features = tuple(
+        _string(feature, f"{source}.features[{index}]")
+        for index, feature in enumerate(raw_features)
+    )
+    if any(feature not in _HOLD_FEATURES for feature in features):
+        raise ValueError(f"{source}.features contains an unsupported feature")
+    if len(features) != len(set(features)):
+        raise ValueError(f"{source}.features must be unique")
+    side = None
+    if "side" in payload:
+        try:
+            side = ContactSide(_string(payload["side"], f"{source}.side"))
+        except ValueError as error:
+            raise ValueError(f"{source}.side is unsupported") from error
     common = {
         "id": _identifier(payload["id"], f"{source}.id"),
         "equipment_object_id": _identifier(
-            payload.get("equipmentObjectID", "primary"),
+            payload["equipmentObjectID"],
             f"{source}.equipmentObjectID",
         ),
         "name": _string(payload["name"], f"{source}.name"),
         "kind": kind,
-        "sloper": sloper,
-        "size_millimeters": size,
-        "depth_range_millimeters": depth_range,
-        "grip_type": grip_type,
+        "features": frozenset(features),
         "finger_capacity": finger_capacity,
         "hand_capacity": hand_capacity,
-        "features": features,
-        "paired_hold_id": paired_hold_id,
+        "depth_range_millimeters": depth_range,
+        "grip_types": frozenset(grip_types),
+        "side": side,
+        "paired_contact_id": paired_contact_id,
     }
-    return BoardHold(**common)
+    return PhysicalContact(**common)
 
 
 def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...]:
     if not isinstance(value, list) or not value:
         raise ValueError(f"{source} must be a non-empty array")
     presentations = tuple(
-        _load_v2_presentation(item, f"{source}[{index}]")
+        _load_presentation(item, f"{source}[{index}]")
         for index, item in enumerate(value)
     )
     if len({presentation.id for presentation in presentations}) != len(presentations):
@@ -1232,7 +1208,7 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
     return presentations
 
 
-def _validate_v2_presentation_compatibility(
+def _validate_presentation_compatibility(
     presentations: tuple[BoardPresentation, ...],
 ) -> None:
     presentations_by_id = {
@@ -1246,20 +1222,20 @@ def _validate_v2_presentation_compatibility(
             presentation.media, PresentationMediaRaster
         ) or not isinstance(source.media, PresentationMediaRaster):
             raise ValueError(
-                "v2 derived presentation relationships must be raster to raster"
+                "derived presentation relationships must be raster to raster"
             )
     has_model = any(
         isinstance(presentation.media, PresentationMediaModel)
         for presentation in presentations
     )
     if sum(isinstance(presentation.media, PresentationMediaModel) for presentation in presentations) > 1:
-        raise ValueError("v2 packages may contain only one model presentation")
+        raise ValueError("packages may contain only one model presentation")
     has_raster = any(
         isinstance(presentation.media, PresentationMediaRaster)
         for presentation in presentations
     )
     if has_model and has_raster:
-        raise ValueError("v2 packages may not mix model and raster presentations")
+        raise ValueError("packages may not mix model and raster presentations")
 
 
 def _json_values_are_exactly_equal(left: Any, right: Any) -> bool:
@@ -1332,21 +1308,22 @@ def _load_position_transitions(
     return transitions
 
 
-def _load_board(value: Mapping[str, Any]) -> BoardDocument:
+def _load_board(value: Mapping[str, Any]) -> BoardRevision:
     schema_version = value.get("schemaVersion")
-    if schema_version != 2 or isinstance(schema_version, bool):
-        raise ValueError("board.json.schemaVersion must be 2 when present")
+    if schema_version != 3 or isinstance(schema_version, bool):
+        raise ValueError("board.json.schemaVersion must be 3")
     required = {
+        "schemaVersion",
         "id",
+        "revisionID",
         "manufacturer",
         "name",
         "subtitle",
         "productURL",
         "aspectRatio",
         "presentations",
-        "holds",
+        "contacts",
     }
-    required.add("schemaVersion")
     _closed(
         value,
         required,
@@ -1385,14 +1362,14 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
                 equipment_object["missingHandCapacityPolicy"],
                 f"{source}.missingHandCapacityPolicy",
             )
-            if policy not in {"legacyBilateral", "unavailable"}:
+            if policy != "unavailable":
                 raise ValueError(
-                    f"{source}.missingHandCapacityPolicy must be legacyBilateral or unavailable"
+                    f"{source}.missingHandCapacityPolicy must be unavailable"
                 )
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")
-    _validate_v2_presentation_compatibility(presentations)
+    _validate_presentation_compatibility(presentations)
     positions = (
         _load_positions(
             value["positions"],
@@ -1414,46 +1391,59 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         if "positionTransitions" in value
         else ()
     )
-    raw_holds = value["holds"]
-    if not isinstance(raw_holds, list) or not raw_holds:
-        raise ValueError("board.json.holds must be a non-empty array")
-    holds: list[BoardHold] = []
-    for index, item in enumerate(raw_holds):
-        source = f"board.json.holds[{index}]"
-        holds.append(_load_hold(item, source))
-    holds_tuple = tuple(holds)
-    if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
-        raise ValueError("duplicate physical hold id")
+    raw_contacts = value["contacts"]
+    if not isinstance(raw_contacts, list) or not raw_contacts:
+        raise ValueError("board.json.contacts must be a non-empty array")
+    contacts: list[PhysicalContact] = []
+    for index, item in enumerate(raw_contacts):
+        source = f"board.json.contacts[{index}]"
+        contacts.append(_load_contact(item, source))
+    contacts_tuple = tuple(contacts)
+    if len({contact.id for contact in contacts_tuple}) != len(contacts_tuple):
+        raise ValueError("duplicate physical contact id")
     equipment_object_ids = set(equipment_objects)
-    for hold in holds_tuple:
-        if hold.equipment_object_id not in equipment_object_ids:
+    for contact in contacts_tuple:
+        if contact.equipment_object_id not in equipment_object_ids:
             raise ValueError(
-                f"hold {hold.id} references unknown equipment object {hold.equipment_object_id}"
+                f"contact {contact.id} references unknown equipment object "
+                f"{contact.equipment_object_id}"
             )
-    owned_equipment_object_ids = {hold.equipment_object_id for hold in holds_tuple}
+    owned_equipment_object_ids = {
+        contact.equipment_object_id for contact in contacts_tuple
+    }
     for equipment_object_id in equipment_objects:
         if equipment_object_id not in owned_equipment_object_ids:
             raise ValueError(
-                f"equipment object {equipment_object_id} must own at least one hold"
+                f"equipment object {equipment_object_id} must own at least one contact"
             )
-    holds_by_id = {hold.id: hold for hold in holds_tuple}
-    for hold in holds_tuple:
-        if hold.kind != "gaston":
+    contacts_by_id = {contact.id: contact for contact in contacts_tuple}
+    for contact in contacts_tuple:
+        if contact.kind != "gaston":
             continue
-        if hold.paired_hold_id == hold.id or hold.paired_hold_id not in holds_by_id:
-            raise ValueError(f"gaston hold {hold.id} must pair with a distinct existing hold")
-        paired_hold = holds_by_id[hold.paired_hold_id]
-        if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
-            raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
-    logical_hold_ids = {hold.id for hold in holds_tuple}
+        if (
+            contact.paired_contact_id == contact.id
+            or contact.paired_contact_id not in contacts_by_id
+        ):
+            raise ValueError(
+                f"gaston contact {contact.id} must pair with a distinct existing contact"
+            )
+        paired_contact = contacts_by_id[contact.paired_contact_id]
+        if (
+            paired_contact.kind != "gaston"
+            or paired_contact.paired_contact_id != contact.id
+        ):
+            raise ValueError(
+                f"gaston contact {contact.id} must have a reciprocal gaston pair"
+            )
+    physical_contact_ids = {contact.id for contact in contacts_tuple}
     model_presentation_ids = {
         presentation.id
         for presentation in presentations
         if isinstance(presentation.media, PresentationMediaModel)
     }
     positions = tuple(
-        replace(position, hold_ids=tuple(hold.id for hold in holds_tuple))
-        if position.presentation_id in model_presentation_ids and not position.hold_ids
+        replace(position, contact_ids=tuple(contact.id for contact in contacts_tuple))
+        if position.presentation_id in model_presentation_ids and not position.contact_ids
         else position
         for position in positions
     )
@@ -1463,27 +1453,27 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         for index, presentation in enumerate(presentations)
     }
     original_raster_ownership_counts = {
-        hold_id: 0 for hold_id in logical_hold_ids
+        contact_id: 0 for contact_id in physical_contact_ids
     }
     derived_raster_presentations: list[tuple[int, BoardPresentation]] = []
     has_raster = False
     for index, presentation in enumerate(presentations):
         if isinstance(presentation.media, PresentationMediaRaster):
             has_raster = True
-            presentation_hold_ids = set(presentation.media.hold_geometry)
-            if not presentation_hold_ids:
+            presentation_contact_ids = set(presentation.media.contact_geometry)
+            if not presentation_contact_ids:
                 raise ValueError(
-                    f"presentation {presentation.id} media.holdGeometry must "
-                    "own at least one logical hold"
+                    f"presentation {presentation.id} media.contactGeometry must "
+                    "own at least one physical contact"
                 )
-            if not presentation_hold_ids <= logical_hold_ids:
+            if not presentation_contact_ids <= physical_contact_ids:
                 raise ValueError(
-                    f"presentation {presentation.id} media.holdGeometry must "
-                    "only own logical holds"
+                    f"presentation {presentation.id} media.contactGeometry must "
+                    "only own physical contacts"
                 )
             if presentation.source_presentation_id is None:
-                for hold_id in presentation_hold_ids:
-                    original_raster_ownership_counts[hold_id] += 1
+                for contact_id in presentation_contact_ids:
+                    original_raster_ownership_counts[contact_id] += 1
             else:
                 derived_raster_presentations.append((index, presentation))
     if has_raster and any(
@@ -1491,7 +1481,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         for ownership_count in original_raster_ownership_counts.values()
     ):
         raise ValueError(
-            "v2 original raster media.holdGeometry must own every logical hold "
+            "original raster media.contactGeometry must own every physical contact "
             "exactly once"
         )
     for index, presentation in derived_raster_presentations:
@@ -1500,17 +1490,18 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
             presentation.source_presentation_id
         ]["media"]
         if not _json_values_are_exactly_equal(
-            raw_media["holdGeometry"], raw_source_media["holdGeometry"]
+            raw_media["contactGeometry"], raw_source_media["contactGeometry"]
         ):
             raise ValueError(
-                f"derived presentation {presentation.id} media.holdGeometry "
+                f"derived presentation {presentation.id} media.contactGeometry "
                 "must exactly equal its source geometry"
             )
-    return BoardDocument(
+    return BoardRevision(
         _identifier(value["id"], "board.json.id"),
+        _identifier(value["revisionID"], "board.json.revisionID"),
         MappingProxyType(facts),
         equipment_objects,
-        holds_tuple,
+        contacts_tuple,
         presentations,
         positions,
         position_transitions,
@@ -1533,8 +1524,8 @@ def _descriptor_vector(
 def _validate_model_orientation(
     orientation: BoardModelOrientation | None,
     positions: tuple[BoardPosition, ...],
-    descriptor_hold_ids: set[str],
-    canonical_hold_ids: list[str],
+    descriptor_contact_ids: set[str],
+    canonical_contact_ids: list[str],
     model_position_ids: set[str],
     source: str,
 ) -> None:
@@ -1552,30 +1543,38 @@ def _validate_model_orientation(
         if position.id in model_position_ids
     ]
     model_authored = [
-        position for _, position in model_positions if position.hold_ids_authored
+        position for _, position in model_positions if position.contact_ids_authored
     ]
     if model_authored and len(model_authored) != len(model_positions):
-        missing_index = next(index for index, position in model_positions if not position.hold_ids_authored)
-        raise ValueError(f"positions[{missing_index}].holdIDs must be explicitly provided for every model position")
+        missing_index = next(index for index, position in model_positions if not position.contact_ids_authored)
+        raise ValueError(
+            f"positions[{missing_index}].contactIDs must be explicitly provided "
+            "for every model position"
+        )
     if not model_authored:
         return
     seen: set[str] = set()
     for index, position in model_positions:
-        hold_source = f"positions[{index}].holdIDs"
-        unknown = set(position.hold_ids) - descriptor_hold_ids
+        contact_source = f"positions[{index}].contactIDs"
+        unknown = set(position.contact_ids) - descriptor_contact_ids
         if unknown:
-            raise ValueError(f"{hold_source} contains unknown hold IDs")
-        if not position.hold_ids:
-            raise ValueError(f"{hold_source} must not be empty")
-        if len(set(position.hold_ids)) != len(position.hold_ids):
-            raise ValueError(f"{hold_source} must not contain duplicates")
-        if position.hold_ids != tuple(
-            hold_id for hold_id in canonical_hold_ids if hold_id in position.hold_ids
+            raise ValueError(f"{contact_source} contains unknown contact IDs")
+        if not position.contact_ids:
+            raise ValueError(f"{contact_source} must not be empty")
+        if len(set(position.contact_ids)) != len(position.contact_ids):
+            raise ValueError(f"{contact_source} must not contain duplicates")
+        if position.contact_ids != tuple(
+            contact_id for contact_id in canonical_contact_ids if contact_id in position.contact_ids
         ):
-            raise ValueError(f"{hold_source} must follow canonical board hold order")
-        seen.update(position.hold_ids)
-    if seen != descriptor_hold_ids:
-        raise ValueError("model positions holdIDs must cover all descriptor holds (union coverage)")
+            raise ValueError(
+                f"{contact_source} must follow canonical board contact order"
+            )
+        seen.update(position.contact_ids)
+    if seen != descriptor_contact_ids:
+        raise ValueError(
+            "model positions contactIDs must cover all descriptor contacts "
+            "(union coverage)"
+        )
 
 
 def _validate_model_suspension(
@@ -1699,7 +1698,7 @@ def _validate_model_suspension(
 def _load_model_descriptor(
     path: Path,
     asset_path: Path,
-    logical_hold_ids: set[str],
+    physical_contact_ids: set[str],
     *,
     suspension: BoardModelSuspension | None = None,
     position_ids: set[str] | None = None,
@@ -1713,7 +1712,7 @@ def _load_model_descriptor(
             "modelSHA256",
             "modelBounds",
             "nodes",
-            "holds",
+            "contacts",
         },
         "model descriptor",
     )
@@ -1751,7 +1750,7 @@ def _load_model_descriptor(
     if not isinstance(raw_nodes, list) or not raw_nodes:
         raise ValueError("model descriptor nodes must be a non-empty array")
     node_ids: set[str] = set()
-    node_ids_by_hold: dict[str, list[str]] = {}
+    node_ids_by_contact: dict[str, list[str]] = {}
     body_count = 0
     attachment_count = 0
     ordered_node_ids: list[str] = []
@@ -1759,7 +1758,7 @@ def _load_model_descriptor(
         source = f"model descriptor nodes[{index}]"
         node = _mapping(raw_node, source)
         role = node.get("role")
-        expected = {"nodeID", "role", "holdID"} if role == "hold" else {"nodeID", "role"}
+        expected = {"nodeID", "role", "contactID"} if role == "contact" else {"nodeID", "role"}
         _closed(node, expected, source)
         node_id = _string(node["nodeID"], f"{source}.nodeID")
         if node_id in node_ids:
@@ -1768,41 +1767,48 @@ def _load_model_descriptor(
         ordered_node_ids.append(node_id)
         if role == "body":
             body_count += 1
-        elif role == "hold":
-            hold_id = _identifier(node["holdID"], f"{source}.holdID")
-            node_ids_by_hold.setdefault(hold_id, []).append(node_id)
+        elif role == "contact":
+            contact_id = _identifier(node["contactID"], f"{source}.contactID")
+            node_ids_by_contact.setdefault(contact_id, []).append(node_id)
         elif role == "attachment":
             attachment_count += 1
             max_attachments = 4 if isinstance(suspension, BoardModelTwoBranchSuspension) else 1
             if attachment_count > max_attachments:
                 raise ValueError("model descriptor has too many attachment nodes")
         else:
-            raise ValueError(f"{source}.role must be body, hold, or attachment")
-    if body_count != 1:
-        raise ValueError("model descriptor requires exactly one body node")
+            raise ValueError(f"{source}.role must be body, contact, or attachment")
+    if body_count < 1:
+        raise ValueError("model descriptor requires at least one body node")
     if ordered_node_ids != sorted(ordered_node_ids):
         raise ValueError("model descriptor nodes must be sorted by nodeID")
-    if set(node_ids_by_hold) != logical_hold_ids:
-        raise ValueError("model descriptor node hold IDs must equal logical holds")
+    if set(node_ids_by_contact) != physical_contact_ids:
+        raise ValueError(
+            "model descriptor node contact IDs must equal physical contacts"
+        )
 
-    raw_holds = _mapping(descriptor["holds"], "model descriptor holds")
-    if list(raw_holds) != sorted(raw_holds):
-        raise ValueError("model descriptor holds must be sorted by holdID")
-    if set(raw_holds) != logical_hold_ids:
-        raise ValueError("model descriptor holds must equal logical holds")
+    raw_contacts = _mapping(descriptor["contacts"], "model descriptor contacts")
+    if list(raw_contacts) != sorted(raw_contacts):
+        raise ValueError("model descriptor contacts must be sorted by contactID")
+    if set(raw_contacts) != physical_contact_ids:
+        raise ValueError("model descriptor contacts must equal physical contacts")
     frames: dict[str, NormalizedFrame] = {}
-    for hold_id, raw_hold in raw_holds.items():
-        source = f"model descriptor holds[{hold_id}]"
-        hold = _mapping(raw_hold, source)
-        _closed(hold, {"nodeIDs", "facePlaneAABB", "center"}, source)
-        hold_node_ids = hold["nodeIDs"]
+    for contact_id, raw_contact in raw_contacts.items():
+        source = f"model descriptor contacts[{contact_id}]"
+        contact = _mapping(raw_contact, source)
+        _closed(contact, {"nodeIDs", "facePlaneAABB", "center"}, source)
+        contact_node_ids = contact["nodeIDs"]
         if (
-            not isinstance(hold_node_ids, list)
-            or any(not isinstance(node_id, str) or not node_id for node_id in hold_node_ids)
-            or hold_node_ids != sorted(node_ids_by_hold[hold_id])
+            not isinstance(contact_node_ids, list)
+            or any(
+                not isinstance(node_id, str) or not node_id
+                for node_id in contact_node_ids
+            )
+            or contact_node_ids != sorted(node_ids_by_contact[contact_id])
         ):
             raise ValueError(f"{source}.nodeIDs must exactly match bound nodes")
-        face_bounds = _mapping(hold["facePlaneAABB"], f"{source}.facePlaneAABB")
+        face_bounds = _mapping(
+            contact["facePlaneAABB"], f"{source}.facePlaneAABB"
+        )
         _closed(face_bounds, {"min", "max"}, f"{source}.facePlaneAABB")
         face_min = _descriptor_vector(
             face_bounds["min"], 2, f"{source}.facePlaneAABB.min"
@@ -1817,14 +1823,14 @@ def _load_model_descriptor(
             for index in range(2)
         ):
             raise ValueError(f"{source}.facePlaneAABB must be normalized")
-        center = _descriptor_vector(hold["center"], 2, f"{source}.center")
+        center = _descriptor_vector(contact["center"], 2, f"{source}.center")
         expected_center = tuple(
             round(face_min[index] + (face_max[index] - face_min[index]) / 2, 9)
             for index in range(2)
         )
         if center != expected_center:
             raise ValueError(f"{source}.center must derive from facePlaneAABB")
-        frames[hold_id] = NormalizedFrame(
+        frames[contact_id] = NormalizedFrame(
             face_min[0],
             face_min[1],
             round(face_max[0] - face_min[0], 9),
@@ -1845,7 +1851,7 @@ def _load_model_descriptor(
 
 
 def _validate_finished_shape(
-    root: Path, board: BoardDocument
+    root: Path, board: BoardRevision
 ) -> Mapping[tuple[str, str], NormalizedFrame]:
     _require_no_symlinks(root)
     entries = {item.name for item in root.iterdir()}
@@ -1903,15 +1909,15 @@ def _validate_finished_shape(
                 "its image width/height within 0.1%"
             )
     model_frames: dict[tuple[str, str], NormalizedFrame] = {}
-    logical_hold_ids = {hold.id for hold in board.holds}
-    canonical_hold_ids = [hold.id for hold in board.holds]
+    physical_contact_ids = {contact.id for contact in board.contacts}
+    canonical_contact_ids = [contact.id for contact in board.contacts]
     for presentation in board.presentations:
         if not isinstance(presentation.media, PresentationMediaModel):
             continue
         frames = _load_model_descriptor(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,
-            logical_hold_ids,
+            physical_contact_ids,
             suspension=presentation.media.suspension,
             position_ids={position.id for position in board.positions
                           if position.presentation_id == presentation.id},
@@ -1920,7 +1926,7 @@ def _validate_finished_shape(
             presentation.media.orientation,
             board.positions,
             set(frames),
-            canonical_hold_ids,
+            canonical_contact_ids,
             {
                 position.id
                 for position in board.positions
@@ -1929,7 +1935,7 @@ def _validate_finished_shape(
             "board.json.presentations[].media.orientation",
         )
         model_frames.update(
-            ((presentation.id, hold_id), frame) for hold_id, frame in frames.items()
+            ((presentation.id, contact_id), frame) for contact_id, frame in frames.items()
         )
     return MappingProxyType(model_frames)
 
@@ -2228,7 +2234,7 @@ def load_board_package(package_root: Path) -> BoardPackage:
     board = _load_board(_load_json(root / "board.json", "board.json"))
     board = replace(
         board,
-        model_hold_frames=_validate_finished_shape(root, board),
+        model_contact_frames=_validate_finished_shape(root, board),
     )
     return BoardPackage(root.resolve(), board)
 

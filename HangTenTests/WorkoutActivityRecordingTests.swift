@@ -22,30 +22,30 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         super.tearDown()
     }
 
-    private let board: TrainingBoard = {
+    private let board: BoardRevision = {
         let holds = [
-            BoardHold(
+            PhysicalContact(
                 id: "edge-left",
                 name: "Left medium edge",
                 kind: .edge,
-                sizeMillimeters: 21,
-                features: [.mediumEdge]
+                features: [.mediumEdge],
+                depthRangeMillimeters: 21...21
             ),
-            BoardHold(
+            PhysicalContact(
                 id: "edge-right",
                 name: "Right medium edge",
                 kind: .edge,
-                sizeMillimeters: 21,
-                features: [.mediumEdge]
+                features: [.mediumEdge],
+                depthRangeMillimeters: 21...21
             ),
-            BoardHold(
+            PhysicalContact(
                 id: "edge-deep",
                 name: "Deep edge",
                 kind: .edge,
-                sizeMillimeters: 35,
-                features: [.largeEdge]
+                features: [.largeEdge],
+                depthRangeMillimeters: 35...35
             ),
-            BoardHold(
+            PhysicalContact(
                 id: "jug-center",
                 name: "Center jug",
                 kind: .jug
@@ -58,22 +58,23 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             "jug-center": CGRect(x: 0.4, y: 0.7, width: 0.2, height: 0.2)
         ]
         let geometry = Dictionary(uniqueKeysWithValues: frames.map { id, frame in
-            (id, [BoardHoldPiece(
+            (id, [BoardContactPiece(
                 id: "\(id)-piece",
-                holdID: id,
+                contactID: id,
                 frame: frame,
                 shape: .roundedRect(cornerRadiusFraction: 0),
                 treatment: .surface
             )])
         })
-        return TrainingBoard(
+        return BoardRevision(
             id: "fixture.board",
+            revisionID: "test-fixture",
             manufacturer: "Fixture",
             name: "Board",
             subtitle: "",
             dimensions: "",
             aspectRatio: 2,
-            holds: holds,
+            contacts: holds,
             productURL: URL(string: "https://example.com/board")!,
             photoAssetName: nil,
             presentations: [
@@ -82,7 +83,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     name: "Primary",
                     aspectRatio: 2,
                     isDefault: true,
-                    media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
+                    media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
                 )
             ]
         )
@@ -96,7 +97,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let descriptorHolds = Dictionary(uniqueKeysWithValues: bounds.map { id, frame in
             (
                 id,
-                BoardModelHoldDescriptor(
+                BoardModelContactDescriptor(
                     nodeIDs: ["Board/Hold/\\(id)"],
                     facePlaneAABB: BoardModelFacePlaneAABB(
                         minimum: [frame.x, frame.y, 0],
@@ -112,7 +113,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             modelSHA256: "fixture",
             modelBounds: BoardModelBounds(minimum: [0, 0, 0], maximum: [1, 1, 0.1]),
             nodes: [],
-            holds: descriptorHolds
+            contacts: descriptorHolds
         )
         return BoardPresentation(
             id: id,
@@ -145,9 +146,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let geometry = Dictionary(uniqueKeysWithValues: bounds.map { id, frame in
             (
                 id,
-                [BoardHoldPiece(
+                [BoardContactPiece(
                     id: "\\(id)-piece",
-                    holdID: id,
+                    contactID: id,
                     frame: frame.rect,
                     shape: .roundedRect(cornerRadiusFraction: 0),
                     treatment: .surface
@@ -159,22 +160,23 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             name: id,
             aspectRatio: 1,
             isDefault: isDefault,
-            media: .raster(BoardRasterMedia(assetPath: "assets/\\(id).png", holdGeometry: geometry))
+            media: .raster(BoardRasterMedia(assetPath: "assets/\\(id).png", contactGeometry: geometry))
         )
     }
 
     private func board(
-        holds: [BoardHold],
+        holds: [PhysicalContact],
         presentations: [BoardPresentation]
-    ) -> TrainingBoard {
-        TrainingBoard(
+    ) -> BoardRevision {
+        BoardRevision(
             id: "fixture.media-aware-board",
+            revisionID: "test-fixture",
             manufacturer: "Fixture",
             name: "Media-aware Board",
             subtitle: "",
             dimensions: nil,
             aspectRatio: 1,
-            holds: holds,
+            contacts: holds,
             productURL: URL(string: "https://example.com/media-aware-board")!,
             photoAssetName: nil,
             presentations: presentations
@@ -280,38 +282,38 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testModelDescriptorFacePlaneAABBResolvesExactlyForWorkoutMatching() {
-        let hold = BoardHold(id: "model-left", name: "Model left", kind: .edge)
+        let hold = PhysicalContact(id: "model-left", name: "Model left", kind: .edge)
         let expected = HoldFrame(x: 0.1, y: 0.2, width: 0.3, height: 0.4)
         let presentation = modelPresentation(bounds: [hold.id: expected])
 
         XCTAssertEqual(hold.resolvedFrame(in: presentation), expected)
-        XCTAssertEqual(board(holds: [hold], presentations: [presentation]).holds(in: presentation), [hold])
+        XCTAssertEqual(board(holds: [hold], presentations: [presentation]).contacts(in: presentation), [hold])
     }
 
     func testWorkoutMatchingTreatsMissingDefaultMediaMappingAsUnavailable() {
-        let mapped = BoardHold(id: "mapped", name: "Mapped", kind: .edge)
-        let missing = BoardHold(id: "missing", name: "Missing", kind: .edge)
+        let mapped = PhysicalContact(id: "mapped", name: "Mapped", kind: .edge)
+        let missing = PhysicalContact(id: "missing", name: "Missing", kind: .edge)
         let presentation = modelPresentation(bounds: [
             mapped.id: HoldFrame(x: 0.1, y: 0.2, width: 0.3, height: 0.1)
         ])
         let board = board(holds: [mapped, missing], presentations: [presentation])
 
         XCTAssertNil(missing.resolvedFrame(in: presentation))
-        XCTAssertEqual(board.holds(in: presentation), [mapped])
+        XCTAssertEqual(board.contacts(in: presentation), [mapped])
         XCTAssertTrue(
             BoardTargetResolver.resolveHoldIDs(for: .ids(missing.id), on: board).isEmpty
         )
     }
 
     func testWorkoutMatchingSideAndSymmetryUseOnlyDefaultPresentation() {
-        let left = BoardHold(
+        let left = PhysicalContact(
             id: "pocket-left",
             name: "Left pocket",
             kind: .pocket,
             fingerCapacity: 3,
             handCapacity: 1
         )
-        let right = BoardHold(
+        let right = PhysicalContact(
             id: "pocket-right",
             name: "Right pocket",
             kind: .pocket,
@@ -774,25 +776,26 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testFallbackResolutionPrefersNearestFractionalDepthMeasurement() {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fractional-depth.board",
+            revisionID: "test-fixture",
             manufacturer: "Fixture",
             name: "Fractional depth board",
             subtitle: "",
             dimensions: "",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "range-edge",
                     name: "20.5 to 21 mm edge",
                     kind: .edge,
                     depthRangeMillimeters: 20.5...21
                 ),
-                BoardHold(
+                PhysicalContact(
                     id: "scalar-edge",
                     name: "19.75 mm edge",
                     kind: .edge,
-                    sizeMillimeters: 19.75
+                    depthRangeMillimeters: 19.75...19.75
                 )
             ],
             productURL: URL(string: "https://example.com/fractional-depth-board")!,
@@ -839,24 +842,25 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records[0].holdIDs, ["left-a"])
         XCTAssertEqual(
             Set(records[0].holdIDs.compactMap { id in
-                board.holds.first { $0.id == id }?.equipmentObjectID
+                board.contacts.first { $0.id == id }?.equipmentObjectID
             }),
             ["left"]
         )
     }
 
     func testActivityRecordingSingleHandStepRecordsRequestedRightObject() throws {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "paired-portable-board",
+            revisionID: "test-fixture",
             manufacturer: "Fixture",
             name: "Paired portable board",
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
             equipmentObjects: [.init(id: "left"), .init(id: "right")],
-            holds: [
-                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left", kind: .pocket, handCapacity: 1),
-                BoardHold(id: "right-a", equipmentObjectID: "right", name: "Right", kind: .pocket, handCapacity: 1)
+            contacts: [
+                PhysicalContact(id: "left-a", equipmentObjectID: "left", name: "Left", kind: .pocket, handCapacity: 1),
+                PhysicalContact(id: "right-a", equipmentObjectID: "right", name: "Right", kind: .pocket, handCapacity: 1)
             ],
             productURL: URL(string: "https://example.com/paired-portable")!,
             photoAssetName: nil,
@@ -868,7 +872,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     isDefault: true,
                     media: .raster(BoardRasterMedia(
                         assetPath: "",
-                        holdGeometry: [
+                        contactGeometry: [
                             "left-a": [testPiece(id: "left-a", x: 0)],
                             "right-a": [testPiece(id: "right-a", x: 0.9)]
                         ]
@@ -1014,11 +1018,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     $0.fingerConfiguration == cue.fingerConfiguration
                 })
 
-                let holds = board.holds.filter { cue.targetIDs.contains($0.id) }
+                let holds = board.contacts.filter { cue.targetIDs.contains($0.id) }
                 XCTAssertEqual(holds.count, 2)
                 XCTAssertTrue(holds.allSatisfy {
                     $0.kind == .edge &&
-                        $0.sizeMillimeters == cue.sizeMillimeters
+                        $0.depthRangeMillimeters == cue.sizeMillimeters...cue.sizeMillimeters
                 })
             }
         }
@@ -1031,7 +1035,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             XCTAssertEqual(holdIDs.filter { $0.hasSuffix("-left") }.count, 1)
             XCTAssertEqual(holdIDs.filter { $0.hasSuffix("-right") }.count, 1)
 
-            let holds = board.holds.filter { holdIDs.contains($0.id) }
+            let holds = board.contacts.filter { holdIDs.contains($0.id) }
             XCTAssertEqual(holds.count, 2)
             guard holds.count == 2 else { continue }
 
@@ -1042,7 +1046,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             XCTAssertLessThan(leftFrame.x, rightFrame.x)
             XCTAssertEqual(leftHold.kind, .edge)
             XCTAssertEqual(rightHold.kind, .edge)
-            XCTAssertEqual(leftHold.sizeMillimeters, rightHold.sizeMillimeters)
+            XCTAssertEqual(leftHold.depthRangeMillimeters, rightHold.depthRangeMillimeters)
             XCTAssertEqual(leftHold.fingerCapacity, rightHold.fingerCapacity)
             XCTAssertEqual(leftHold.features, rightHold.features)
             XCTAssertTrue(leftHold.name.hasPrefix("Left "))
@@ -1050,7 +1054,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
 
         let centeredFourFingerPocketIDs = Set(
-            board.holds
+            board.contacts
                 .filter {
                     guard $0.kind == .pocket,
                           $0.fingerCapacity == 4,
@@ -1452,9 +1456,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         id: String = "portable-board",
         handCapacity: Int?,
         missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
-    ) -> TrainingBoard {
-        TrainingBoard(
+    ) -> BoardRevision {
+        BoardRevision(
             id: id,
+            revisionID: "test-fixture",
             manufacturer: "Fixture",
             name: "Portable board",
             subtitle: "",
@@ -1466,9 +1471,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     missingHandCapacityPolicy: missingHandCapacityPolicy
                 )
             ],
-            holds: [
-                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left A", kind: .pocket, handCapacity: handCapacity),
-                BoardHold(id: "left-b", equipmentObjectID: "left", name: "Left B", kind: .pocket, handCapacity: handCapacity)
+            contacts: [
+                PhysicalContact(id: "left-a", equipmentObjectID: "left", name: "Left A", kind: .pocket, handCapacity: handCapacity),
+                PhysicalContact(id: "left-b", equipmentObjectID: "left", name: "Left B", kind: .pocket, handCapacity: handCapacity)
             ],
             productURL: URL(string: "https://example.com/portable")!,
             photoAssetName: nil,
@@ -1480,7 +1485,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     isDefault: true,
                     media: .raster(BoardRasterMedia(
                         assetPath: "",
-                        holdGeometry: [
+                        contactGeometry: [
                             "left-a": [testPiece(id: "left-a", x: 0)],
                             "left-b": [testPiece(id: "left-b", x: 0.2)]
                         ]
@@ -1490,10 +1495,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
-    private func testPiece(id: String, x: CGFloat) -> BoardHoldPiece {
-        BoardHoldPiece(
+    private func testPiece(id: String, x: CGFloat) -> BoardContactPiece {
+        BoardContactPiece(
             id: "\(id)-piece",
-            holdID: id,
+            contactID: id,
             frame: CGRect(x: x, y: 0, width: 0.1, height: 0.1),
             shape: .roundedRect(cornerRadiusFraction: 0),
             treatment: .surface

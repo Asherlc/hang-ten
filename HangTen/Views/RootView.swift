@@ -618,7 +618,7 @@ private struct NoMatchingPlansCard: View {
 
 private struct PlanCard: View {
     let plan: TrainingPlan
-    let board: TrainingBoard
+    let board: BoardRevision
     let labels: [String]
     var isIncompatible: Bool = false
 
@@ -679,7 +679,7 @@ private struct PlanCard: View {
 
 struct FavoritePlanCard: View {
     let plan: TrainingPlan
-    let board: TrainingBoard
+    let board: BoardRevision
     var labels: [String] = []
     let isFavorite: Bool
     var isIncompatible: Bool = false
@@ -924,7 +924,7 @@ struct PlanDetailView: View {
         let board = store.board(for: currentPlan)
         let firstStep = currentPlan.steps.first
         let firstStepHoldIDs = firstStep.map { store.holdIDs(for: $0, on: board) } ?? []
-        let firstStepHold = board.holds.first { firstStepHoldIDs.contains($0.id) }
+        let firstStepHold = board.contacts.first { firstStepHoldIDs.contains($0.id) }
         let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
             step: firstStep,
             hold: firstStepHold,
@@ -1717,7 +1717,7 @@ struct WorkoutView: View {
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
 
-    private var board: TrainingBoard {
+    private var board: BoardRevision {
         store.board(for: plan)
     }
 
@@ -1747,7 +1747,7 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
+				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
 				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
