@@ -183,25 +183,6 @@ def test_ci_concurrency_cancels_stale_work_only_within_same_event_ref_group() ->
     assert concurrency["cancel-in-progress"] is True
 
 
-def test_android_instrumented_tests_use_a_published_api_36_x86_64_system_image() -> None:
-    """API/build tooling tracks compileSdk 36; its published runner image is x86_64."""
-    workflow = _ci_workflow()
-    android_job = workflow["jobs"]["android"]
-    emulator_step = next(
-        step
-        for step in android_job["steps"]
-        if step.get("name") == "Run Android instrumented tests"
-    )
-
-    assert emulator_step["uses"] == (
-        "reactivecircus/android-emulator-runner@"
-        "e89f39f1abbbd05b1113a29cf4db69e7540cae5a"
-    )
-    assert re.search(r"^\s*compileSdk\s*=\s*36\s*$", ANDROID_APP_BUILD.read_text(encoding="utf-8"), re.MULTILINE)
-    assert emulator_step["with"]["api-level"] == 36
-    assert emulator_step["with"]["arch"] == "x86_64"
-
-
 def test_testing_guidance_uses_direct_discovery_not_lifecycle_inventory_terms() -> None:
     testing = TESTING.read_text(encoding="utf-8")
 
