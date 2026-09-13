@@ -1,27 +1,63 @@
 import Foundation
 
+struct ResolvedContactSnapshot: Codable, Hashable {
+    let boardID: String
+    let revisionID: String
+    let modelSHA256: String?
+    let requirement: ContactRequirement
+    let contactIDs: [String]
+}
+
 struct RecordedActivitySegment: Codable, Hashable {
     let stepID: String
     let stepNumber: Int
     let kind: WorkoutSegmentKind
-    let holdIDs: [String]
-    let holdType: String?
-    let sizeMillimeters: Double?
+    let resolution: ResolvedContactSnapshot?
     let durationSeconds: TimeInterval?
 
-    enum CodingKeys: String, CodingKey {
-        case stepID, stepNumber, kind, holdIDs, holdType, sizeMillimeters, durationSeconds
+    init(
+        stepID: String,
+        stepNumber: Int,
+        kind: WorkoutSegmentKind,
+        resolution: ResolvedContactSnapshot?,
+        durationSeconds: TimeInterval?
+    ) {
+        self.stepID = stepID
+        self.stepNumber = stepNumber
+        self.kind = kind
+        self.resolution = resolution
+        self.durationSeconds = durationSeconds
     }
 
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(stepID, forKey: .stepID)
-        try container.encode(stepNumber, forKey: .stepNumber)
-        try container.encode(kind, forKey: .kind)
-        try container.encode(holdIDs, forKey: .holdIDs)
-        try container.encodeIfPresent(holdType, forKey: .holdType)
-        try container.encodeIfPresent(sizeMillimeters, forKey: .sizeMillimeters)
-        try container.encodeIfPresent(durationSeconds, forKey: .durationSeconds)
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case stepID, stepNumber, kind, resolution, durationSeconds
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported recorded activity field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stepID = try container.decode(String.self, forKey: .stepID)
+        stepNumber = try container.decode(Int.self, forKey: .stepNumber)
+        kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
+        resolution = try container.decodeIfPresent(
+            ResolvedContactSnapshot.self,
+            forKey: .resolution
+        )
+        durationSeconds = try container.decodeIfPresent(
+            TimeInterval.self,
+            forKey: .durationSeconds
+        )
     }
 }
 
@@ -32,18 +68,55 @@ struct RecordedActivityStepMeasurement: Codable, Hashable {
 }
 
 struct WorkoutActivityMetadata: Codable, Hashable {
+    static let currentVersion = 2
+
     let version: Int
     let segments: [RecordedActivitySegment]
     let measurements: [RecordedActivityStepMeasurement]?
 
     init(
-        version: Int = 1,
         segments: [RecordedActivitySegment],
         measurements: [RecordedActivityStepMeasurement]? = nil
     ) {
-        self.version = version
+        version = Self.currentVersion
         self.segments = segments
         self.measurements = measurements
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case version, segments, measurements
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decode(Int.self, forKey: .version)
+        guard version == Self.currentVersion else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .version,
+                in: container,
+                debugDescription: "Unsupported workout activity version \(version)."
+            )
+        }
+        segments = try container.decode([RecordedActivitySegment].self, forKey: .segments)
+        measurements = try container.decodeIfPresent(
+            [RecordedActivityStepMeasurement].self,
+            forKey: .measurements
+        )
+    }
+}
+
+private struct ActivityCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
     }
 }
 
@@ -231,9 +304,7 @@ struct WorkoutActivityRecorder {
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .rest,
-                            holdIDs: [],
-                            holdType: nil,
-                            sizeMillimeters: nil,
+                            resolution: nil,
                             durationSeconds: duration
                         )
                     )
@@ -251,68 +322,51 @@ struct WorkoutActivityRecorder {
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .work,
-                            holdIDs: [],
-                            holdType: nil,
-                            sizeMillimeters: nil,
+                            resolution: nil,
                             durationSeconds: duration
                         )
                     )
                     continue
                 }
 
-                let holds: [PhysicalContact]
-                do {
-                    holds = try ContactResolver.resolve(segment.targets, step: step, board: board)
-                } catch {
-                    throw WorkoutActivityRecordingError.unresolvedTarget(
-                        stepID: step.id,
-                        segmentIndex: index
-                    )
-                }
-
-                if segment.targets.count > 1 {
+                for requirement in segment.targets {
+                    let contacts: [PhysicalContact]
+                    do {
+                        contacts = try ContactResolver.resolve(
+                            requirement,
+                            step: step,
+                            board: board
+                        )
+                    } catch {
+                        throw WorkoutActivityRecordingError.unresolvedTarget(
+                            stepID: step.id,
+                            segmentIndex: index
+                        )
+                    }
                     result.append(
                         RecordedActivitySegment(
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .work,
-                            holdIDs: holds.map(\.id),
-                            holdType: nil,
-                            sizeMillimeters: nil,
+                            resolution: ResolvedContactSnapshot(
+                                boardID: board.id,
+                                revisionID: board.revisionID,
+                                modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                requirement: requirement,
+                                contactIDs: contacts.map(\.id)
+                            ),
                             durationSeconds: duration
                         )
-                    )
-                    continue
-                }
-
-                var groups: [(HoldKind, Double?, [String])] = []
-                for hold in holds {
-                    let recordedDepth = hold.depthRangeMillimeters.flatMap { range in
-                        range.lowerBound == range.upperBound ? range.lowerBound : nil
-                    }
-                    let descriptor = (hold.kind, recordedDepth)
-                    if let groupIndex = groups.firstIndex(where: {
-                        $0.0 == descriptor.0 && $0.1 == descriptor.1
-                    }) {
-                        groups[groupIndex].2.append(hold.id)
-                    } else {
-                        groups.append((hold.kind, recordedDepth, [hold.id]))
-                    }
-                }
-                result += groups.map { kind, size, ids in
-                    RecordedActivitySegment(
-                        stepID: step.id,
-                        stepNumber: step.number,
-                        kind: .work,
-                        holdIDs: ids,
-                        holdType: kind.rawValue,
-                        sizeMillimeters: size,
-                        durationSeconds: duration
                     )
                 }
             }
         }
         return result
+    }
+
+    private func modelSHA256(for presentation: BoardPresentation) -> String? {
+        guard case .model(let media) = presentation.media else { return nil }
+        return media.descriptor.modelSHA256
     }
 
     private func allowsSourceLinkedUntargetedWork(

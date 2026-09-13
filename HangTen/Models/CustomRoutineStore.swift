@@ -433,7 +433,8 @@ enum CustomRoutineStoreError: LocalizedError {
 }
 
 final class CustomRoutineStore: CustomRoutineStoring {
-    static let defaultKey = "HangTen.customRoutines"
+    static let defaultKey = "HangTen.customRoutines.v2"
+    static let legacyKeys = ["HangTen.customRoutines", "HangTen.customRoutines.v1"]
 
     private let defaults: UserDefaults
     private let key: String
@@ -452,7 +453,12 @@ final class CustomRoutineStore: CustomRoutineStoring {
         self.availableBoards = availableBoards
         routines = []
         persistenceError = nil
+        Self.removeLegacyPersistence(from: defaults)
         load()
+    }
+
+    static func removeLegacyPersistence(from defaults: UserDefaults) {
+        legacyKeys.forEach(defaults.removeObject(forKey:))
     }
 
     func save(_ routine: CustomRoutineDefinition) throws {

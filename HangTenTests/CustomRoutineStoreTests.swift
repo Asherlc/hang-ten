@@ -2,20 +2,23 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
-    func testStoreDoesNotLoadFormerVersionedStorageKey() throws {
+    func testStoreDeletesFormerStorageKeysWithoutDecoding() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
-        defaults.set(
-            try JSONEncoder().encode(
-                CustomRoutineLibrary(routines: [genericDefinition(id: "custom.former-key")])
-            ),
-            forKey: "HangTen.customRoutines.v1"
+        let formerPayload = try JSONEncoder().encode(
+            CustomRoutineLibrary(routines: [genericDefinition(id: "custom.former-key")])
         )
+        for key in CustomRoutineStore.legacyKeys {
+            defaults.set(formerPayload, forKey: key)
+        }
 
         let store = CustomRoutineStore(defaults: defaults)
 
         XCTAssertTrue(store.routines.isEmpty)
+        XCTAssertTrue(CustomRoutineStore.legacyKeys.allSatisfy {
+            defaults.object(forKey: $0) == nil
+        })
     }
 
     func testCustomRoutineLibraryEncodingContainsOnlyRoutines() throws {

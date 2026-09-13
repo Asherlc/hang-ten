@@ -5,6 +5,7 @@ enum HangTenHealthMetadata {
     static let brandName = "Hang Ten"
     static let planNameKey = "HangTen.PlanName"
     static let sessionIDKey = "HangTen.SessionID"
+    static let activitySegmentsKey = "HangTen.ActivitySegments.v2"
 }
 
 struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
@@ -37,34 +38,6 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
         self.shouldUploadToHealthKit = shouldUploadToHealthKit
     }
 
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case planTitle
-        case startDate
-        case endDate
-        case healthUploadAttempted
-        case healthWorkoutUUID
-        case activityContext
-        case shouldUploadToHealthKit
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        planTitle = try container.decode(String.self, forKey: .planTitle)
-        startDate = try container.decode(Date.self, forKey: .startDate)
-        endDate = try container.decode(Date.self, forKey: .endDate)
-        healthUploadAttempted = try container.decode(Bool.self, forKey: .healthUploadAttempted)
-        healthWorkoutUUID = try container.decodeIfPresent(UUID.self, forKey: .healthWorkoutUUID)
-        activityContext = try container.decodeIfPresent(
-            PendingWorkoutActivityContext.self,
-            forKey: .activityContext
-        )
-        shouldUploadToHealthKit = try container.decodeIfPresent(
-            Bool.self,
-            forKey: .shouldUploadToHealthKit
-        ) ?? true
-    }
 }
 
 struct PendingWorkoutActivityContext: Codable, Equatable {
@@ -74,10 +47,6 @@ struct PendingWorkoutActivityContext: Codable, Equatable {
 
     var activitySegments: [RecordedActivitySegment] { activityMetadata.segments }
 
-    private enum CodingKeys: String, CodingKey {
-        case boardID, boardName, activityMetadata, activitySegments
-    }
-
     init(
         boardID: String,
         boardName: String,
@@ -86,25 +55,6 @@ struct PendingWorkoutActivityContext: Codable, Equatable {
         self.boardID = boardID
         self.boardName = boardName
         self.activityMetadata = activityMetadata
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        boardID = try container.decode(String.self, forKey: .boardID)
-        boardName = try container.decode(String.self, forKey: .boardName)
-        activityMetadata = try container.decodeIfPresent(
-            WorkoutActivityMetadata.self,
-            forKey: .activityMetadata
-        ) ?? WorkoutActivityMetadata(
-            segments: try container.decode([RecordedActivitySegment].self, forKey: .activitySegments)
-        )
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(boardID, forKey: .boardID)
-        try container.encode(boardName, forKey: .boardName)
-        try container.encode(activityMetadata, forKey: .activityMetadata)
     }
 }
 

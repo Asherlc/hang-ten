@@ -838,9 +838,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertNil(appStore.healthAuthorizationError)
         let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
         XCTAssertEqual(context.activitySegments.count, 1)
-        XCTAssertEqual(context.activitySegments[0].holdIDs, [])
-        XCTAssertNil(context.activitySegments[0].holdType)
-        XCTAssertNil(context.activitySegments[0].sizeMillimeters)
+        XCTAssertNil(context.activitySegments[0].resolution)
     }
 
     private func assertCompletionFailsForUnresolvedTarget(
