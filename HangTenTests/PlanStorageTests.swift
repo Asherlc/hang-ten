@@ -918,7 +918,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testWorkSegmentRequiresTarget() {
+    func testCustomWorkSegmentRequiresTarget() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
             targets: [],
@@ -926,7 +926,20 @@ final class PlanStorageTests: XCTestCase {
             duration: nil
         )
 
-        XCTAssertTrue(validationIssues(for: segment).contains {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "validation",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [segment]
+                )
+            ],
+            provenance: .custom,
+            sourceURL: nil
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
             $0.path == "blocks[0].steps[0].segments[0].targets"
         })
     }
@@ -1343,7 +1356,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testPlanLibraryRejectsUntargetedTimedHangOutsideOfficialRPTCImporter() {
+    func testPlanLibraryAllowsSourceLinkedUntargetedTimedHang() {
         let selfSelectedHang = WorkoutStepDefinition(
             id: "self-selected-hang",
             title: "Self-selected hang",
@@ -1358,6 +1371,30 @@ final class PlanStorageTests: XCTestCase {
         let issues = makeLibrary(
             steps: [selfSelectedHang],
             provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertFalse(issues.contains {
+            $0.path == "blocks[0].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryRejectsUntargetedCustomHang() {
+        let step = WorkoutStepDefinition(
+            id: "custom-untargeted-hang",
+            title: "Custom hang",
+            instruction: "Hang.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+
+        let issues = makeLibrary(
+            steps: [step],
+            provenance: .custom,
+            sourceURL: nil
         ).validationIssues(availableBoards: BoardCatalog.all)
 
         XCTAssertTrue(issues.contains {
@@ -1403,7 +1440,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testOfficialRPTCImporterRejectsUntargetedRepeaterWithUnknownIDOrTiming() {
+    func testSourceLinkedUntargetedWorkDoesNotDependOnPlanSpecificIdentifiers() {
         let cases = [
             (id: "rptc-repeaters-set-rep-extra", duration: 10.0, activeDuration: 7.0),
             (id: "rptc-repeaters-set-rep-1", duration: 11.0, activeDuration: 7.0),
@@ -1428,10 +1465,10 @@ final class PlanStorageTests: XCTestCase {
                 sourceURL: URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155")
             ).validationIssues(availableBoards: BoardCatalog.all)
 
-            XCTAssertTrue(issues.contains {
+            XCTAssertFalse(issues.contains {
                 $0.path == "blocks[0].steps[0].targets" &&
                     $0.message == "Non-rest steps need at least one target."
-            }, "Expected \(testCase.id) with timing \(testCase.activeDuration)s/\(testCase.duration)s to be rejected.")
+            }, "Expected source-linked targetless work to remain valid without a plan-specific exception.")
         }
     }
 
@@ -1461,6 +1498,59 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.provenance, .official)
     }
 
+    func testBundledPlansOmitEveryTargetMarkedAsNonPrescribedBySourceLedger() throws {
+        let targetlessPlanIDs: Set<String> = [
+            "research.max-hangs",
+            "research.megos-one-arm-7-3",
+            "research.force-feedback-f80",
+            "research.force-feedback-f100",
+            "research.eva-int-hangs",
+            "research.seven-three-repeaters",
+            "research.abrahangs",
+            "coach.horst-seven-fifty-three",
+            "coach.bechtel-three-six-nine",
+            "coach.density-hangs",
+            "device.zlagboard-sixty-sixty",
+            "hoopers-beta.introductory-home-hangboard",
+            "method.intermediate-hangboarding.repeaters",
+            "method.intermediate-hangboarding.emom",
+            "rei.hangboard-sample-workout"
+        ]
+
+        for planID in targetlessPlanIDs {
+            let plan = try XCTUnwrap(
+                LegacyPlanSeedCatalog.all.first { $0.id == planID },
+                "Missing bundled plan \(planID)."
+            )
+            XCTAssertTrue(
+                plan.steps.allSatisfy {
+                    $0.targets.isEmpty && $0.segments.allSatisfy(\.targets.isEmpty)
+                },
+                "\(planID) emitted an app-selected target requirement."
+            )
+        }
+    }
+
+    func testSimulator3DPlansOmitUnexpressibleOuterAndCenterJugTargets() throws {
+        let simulatorPlans = LegacyPlanSeedCatalog.all.filter {
+            $0.id.hasPrefix("metolius.simulator-3d.")
+        }
+        XCTAssertEqual(simulatorPlans.count, 3)
+        XCTAssertTrue(
+            simulatorPlans.flatMap(\.steps).flatMap(\.targets).allSatisfy {
+                $0.kind != .jug
+            }
+        )
+
+        let entry = try XCTUnwrap(
+            simulatorPlans.first { $0.id == "metolius.simulator-3d.entry" }
+        )
+        XCTAssertTrue(entry.steps[1].targets.isEmpty)
+        XCTAssertEqual(entry.steps[2].targets.count, 1)
+        XCTAssertEqual(entry.steps[2].targets[0].kind, .pocket)
+        XCTAssertTrue(entry.steps[6].targets.isEmpty)
+    }
+
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
         let terminalSteps = try LegacyPlanSeedCatalog.all
             .filter {
@@ -1482,16 +1572,13 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
-    func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
+    func testAbrahangsSecondGripKeepsSourceBackedCueWithoutAppSelectedTarget() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
         )
 
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
-        XCTAssertEqual(
-            step.targets,
-            [.feature(.mediumEdge)]
-        )
+        XCTAssertTrue(step.targets.isEmpty)
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
@@ -1628,6 +1715,7 @@ final class PlanStorageTests: XCTestCase {
             let numberedTargets = plan.steps.flatMap(\.targets)
             XCTAssertFalse(numberedTargets.isEmpty)
             XCTAssertTrue(plan.steps.allSatisfy { step in
+                guard !step.targets.isEmpty else { return true }
                 guard let resolved = try? ContactResolver.resolve(
                     step.targets,
                     step: step,
@@ -1724,7 +1812,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.mediumEdge),
+                    target: nil,
                     timing: .fixed,
                     duration: 7
                 ),

@@ -117,7 +117,7 @@ final class AppStoreTests: XCTestCase {
             defaults: makeDefaults(),
             telemetry: telemetry.dependencies
         )
-        let definition = try store.duplicateRoutine(PlanCatalog.all[0])
+        let definition = try validCustomRoutineDefinition()
 
         try store.saveCustomRoutine(definition)
 
@@ -131,7 +131,7 @@ final class AppStoreTests: XCTestCase {
             defaults: makeDefaults(),
             telemetry: telemetry.dependencies
         )
-        let definition = try store.duplicateRoutine(PlanCatalog.all[0])
+        let definition = try validCustomRoutineDefinition()
 
         XCTAssertThrowsError(try store.saveCustomRoutine(definition))
 
@@ -276,7 +276,7 @@ final class AppStoreTests: XCTestCase {
         )
 
         appStore.markSessionComplete(
-            PlanCatalog.all[0],
+            activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
@@ -302,7 +302,7 @@ final class AppStoreTests: XCTestCase {
             workoutHistoryStore: historyStore,
             defaults: defaults
         )
-        let plan = PlanCatalog.all[0]
+        let plan = activityPlan(requirement: nil)
         let board = appStore.board(for: plan)
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
         let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
@@ -370,7 +370,7 @@ final class AppStoreTests: XCTestCase {
             workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
             defaults: defaults
         )
-        let plan = PlanCatalog.all[0]
+        let plan = activityPlan(requirement: nil)
         let board = appStore.board(for: plan)
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
         let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
@@ -578,22 +578,23 @@ final class AppStoreTests: XCTestCase {
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
         let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
-        appStore.markSessionComplete(PlanCatalog.all[0], startDate: startDate, endDate: endDate)
+        let plan = activityPlan(requirement: nil)
+        appStore.markSessionComplete(plan, startDate: startDate, endDate: endDate)
 
         waitForHistory(in: appStore)
 
         let persistedRecords = historyStore.load()
         XCTAssertEqual(persistedRecords.count, 1)
         XCTAssertEqual(healthStore.savedIDs, [persistedRecords[0].id])
-        XCTAssertEqual(persistedRecords[0].planTitle, PlanCatalog.all[0].title)
+        XCTAssertEqual(persistedRecords[0].planTitle, plan.title)
         XCTAssertEqual(persistedRecords[0].startDate, startDate)
         XCTAssertEqual(persistedRecords[0].endDate, endDate)
         XCTAssertEqual(appStore.workoutHistory.source, .localFallback)
         XCTAssertEqual(appStore.workoutHistory.entries.map(\.id), [persistedRecords[0].id])
         XCTAssertEqual(appStore.workoutHistory.sessionCount, 1)
-        XCTAssertEqual(appStore.workoutHistory.latestSessionTitle, PlanCatalog.all[0].title)
+        XCTAssertEqual(appStore.workoutHistory.latestSessionTitle, plan.title)
         XCTAssertEqual(appStore.sessionsCompleted, 1)
-        XCTAssertEqual(appStore.lastSessionTitle, PlanCatalog.all[0].title)
+        XCTAssertEqual(appStore.lastSessionTitle, plan.title)
     }
 
     func testRefreshFailureShowsHistorySyncErrorAndSuccessfulRefreshClearsIt() {
@@ -649,7 +650,7 @@ final class AppStoreTests: XCTestCase {
         )
 
         appStore.markSessionComplete(
-            PlanCatalog.all[0],
+            activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
@@ -673,11 +674,7 @@ final class AppStoreTests: XCTestCase {
             workoutHistoryStore: historyStore,
             defaults: defaults
         )
-        let plan = PlanCatalog.all.first { plan in
-            plan.steps.contains { step in
-                step.segments.contains { $0.timing == .stopwatch }
-            }
-        }!
+        let plan = activityPlan(requirement: nil, timing: .stopwatch)
         let stopwatchStep = plan.steps.first { step in
             step.segments.contains { $0.timing == .stopwatch }
         }!
@@ -722,7 +719,7 @@ final class AppStoreTests: XCTestCase {
         )
 
         appStore.markSessionComplete(
-            PlanCatalog.all[0],
+            activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
@@ -766,7 +763,7 @@ final class AppStoreTests: XCTestCase {
         )
 
         appStore.markSessionComplete(
-            PlanCatalog.all[0],
+            activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
@@ -779,6 +776,202 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(
             appStore.healthAuthorizationError,
             "Apple Health history could not sync. Local history remains available."
+        )
+    }
+
+    func testCompletionFailsClosedWhenStepGripMetadataIsUnknown() {
+        let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
+        assertCompletionFailsForUnresolvedTarget(
+            plan: activityPlan(
+                requirement: .kind(.edge, selection: .single),
+                gripType: .halfCrimp
+            ),
+            board: activityBoard(contacts: [contact])
+        )
+    }
+
+    func testCompletionFailsClosedWhenUnilateralSideMetadataIsUnknown() {
+        let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
+        assertCompletionFailsForUnresolvedTarget(
+            plan: activityPlan(
+                requirement: .kind(.edge, selection: .single),
+                handUse: .single,
+                side: .left
+            ),
+            board: activityBoard(contacts: [contact])
+        )
+    }
+
+    func testCompletionFailsClosedWhenBilateralPairMetadataIsUnknown() {
+        let contacts = [
+            PhysicalContact(id: "left", name: "Left edge", kind: .edge),
+            PhysicalContact(id: "right", name: "Right edge", kind: .edge)
+        ]
+        assertCompletionFailsForUnresolvedTarget(
+            plan: activityPlan(
+                requirement: .kind(.edge, selection: .bilateralPair)
+            ),
+            board: activityBoard(contacts: contacts)
+        )
+    }
+
+    func testCompletionRecordsSourceLinkedTargetlessWorkWithoutFabricatedHold() throws {
+        let defaults = makeDefaults()
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            defaults: defaults
+        )
+        let plan = activityPlan(requirement: nil)
+        let board = activityBoard(contacts: [])
+
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010)
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        XCTAssertNil(appStore.healthAuthorizationError)
+        let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(context.activitySegments.count, 1)
+        XCTAssertEqual(context.activitySegments[0].holdIDs, [])
+        XCTAssertNil(context.activitySegments[0].holdType)
+        XCTAssertNil(context.activitySegments[0].sizeMillimeters)
+    }
+
+    private func assertCompletionFailsForUnresolvedTarget(
+        plan: TrainingPlan,
+        board: BoardRevision,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let defaults = makeDefaults()
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            defaults: defaults
+        )
+
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010)
+        )
+        waitUntil({ appStore.healthAuthorizationError != nil }, file: file, line: line)
+
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board.",
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(healthStore.saveCallCount, 0, file: file, line: line)
+    }
+
+    private func activityPlan(
+        requirement: ContactRequirement?,
+        gripType: GripType? = nil,
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both,
+        timing: WorkoutSegmentTiming = .fixed
+    ) -> TrainingPlan {
+        let targets = requirement.map { [$0] } ?? []
+        return TrainingPlan(
+            id: "activity-plan",
+            title: "Activity plan",
+            subtitle: "",
+            level: "",
+            sourceLabel: "Source fixture",
+            sourceURL: URL(string: "https://example.com/source")!,
+            provenance: .adapted,
+            boardID: nil,
+            steps: [
+                WorkoutStep(
+                    id: "activity-step",
+                    number: 1,
+                    title: "Activity step",
+                    instruction: "Perform the source task.",
+                    accessory: "10s",
+                    duration: 10,
+                    phase: .hang,
+                    targets: targets,
+                    segments: [
+                        WorkoutSegment(
+                            kind: .work,
+                            targets: targets,
+                            timing: timing,
+                            duration: timing == .fixed ? 10 : nil
+                        )
+                    ],
+                    gripType: gripType,
+                    handUse: handUse,
+                    side: side,
+                    timedWorkDuration: timing == .fixed ? 10 : nil
+                )
+            ]
+        )
+    }
+
+    private func validCustomRoutineDefinition() throws -> CustomRoutineDefinition {
+        let plan = activityPlan(
+            requirement: .kind(.jug, selection: .allMatching)
+        )
+        return try CustomRoutineStore.definition(
+            from: plan,
+            metadata: PlanMetadata(
+                title: plan.title,
+                subtitle: plan.subtitle,
+                level: plan.level,
+                sourceLabel: plan.sourceLabel,
+                sourceURL: plan.sourceURL,
+                provenance: .custom
+            ),
+            id: "custom.\(UUID().uuidString)"
+        )
+    }
+
+    private func activityBoard(contacts: [PhysicalContact]) -> BoardRevision {
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
+            (
+                contact.id,
+                [BoardContactPiece(
+                    id: "\(contact.id)-piece",
+                    contactID: contact.id,
+                    frame: CGRect(x: 0, y: 0, width: 0.1, height: 0.1),
+                    shape: .roundedRect(cornerRadiusFraction: 0),
+                    treatment: .surface
+                )]
+            )
+        })
+        return BoardRevision(
+            id: "activity-board",
+            revisionID: "fixture",
+            manufacturer: "Fixture",
+            name: "Activity board",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            contacts: contacts,
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "front",
+                    name: "Front",
+                    aspectRatio: 1,
+                    isDefault: true,
+                    media: .raster(
+                        BoardRasterMedia(assetPath: "", contactGeometry: geometry)
+                    )
+                )
+            ]
         )
     }
 

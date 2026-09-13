@@ -788,7 +788,7 @@ enum PlanLibraryValidator {
             }
             let allowsUntargetedStep = !plansReferencingBlock.isEmpty &&
                 plansReferencingBlock.allSatisfy {
-                    allowsUntargetedRPTCSelfSelectedHang(step, in: $0)
+                    allowsSourceLinkedUntargetedWork(step, in: $0)
                 }
             validateStep(
                 step,
@@ -857,7 +857,7 @@ enum PlanLibraryValidator {
             let targetPath = "\(path).segments[\(index)].targets"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
-            if segment.kind == .work && segment.targets.isEmpty {
+            if segment.kind == .work && segment.targets.isEmpty && !allowsUntargetedStep {
                 issues.append(
                     PlanValidationIssue(
                         path: targetPath,
@@ -1075,33 +1075,14 @@ enum PlanLibraryValidator {
         }
     }
 
-    private static func allowsUntargetedRPTCSelfSelectedHang(
+    private static func allowsSourceLinkedUntargetedWork(
         _ step: WorkoutStepDefinition,
         in plan: PlanDefinition
     ) -> Bool {
-        let expectedDuration: TimeInterval
-        switch step.id {
-        case "rptc-repeaters-set-rep-1",
-            "rptc-repeaters-set-rep-2",
-            "rptc-repeaters-set-rep-3",
-            "rptc-repeaters-set-rep-4",
-            "rptc-repeaters-set-rep-5",
-            "rptc-repeaters-set-rep-6":
-            expectedDuration = 10
-        case "rptc-repeaters-set-rep-7":
-            expectedDuration = 180
-        default:
-            return false
-        }
-
-        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id &&
-            plan.metadata.provenance == .official &&
-            plan.metadata.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL &&
-            plan.boardID == nil &&
-            step.phase == .hang &&
-            step.segments.isEmpty &&
-            step.activeDuration == 7 &&
-            step.duration == expectedDuration
+        plan.metadata.provenance != .custom
+            && plan.metadata.sourceURL != nil
+            && step.phase != .rest
+            && step.phase != .conditioning
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {

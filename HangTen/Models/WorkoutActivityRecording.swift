@@ -168,7 +168,7 @@ enum ContactResolver {
         contact: PhysicalContact
     ) -> Bool {
         guard let stepGripType else { return true }
-        return contact.gripTypes.isEmpty || contact.gripTypes.contains(stepGripType)
+        return contact.gripTypes.contains(stepGripType)
     }
 
     private static func applying(
@@ -177,23 +177,16 @@ enum ContactResolver {
     ) -> [PhysicalContact] {
         guard side != .both else { return candidates }
         let requiredSide: ContactSide = side == .left ? .left : .right
-        let sidedCandidates = candidates.filter { $0.side != nil }
-        guard !sidedCandidates.isEmpty else { return candidates }
-        return sidedCandidates.filter { $0.side == requiredSide }
+        return candidates.filter { $0.side == requiredSide }
     }
 
     private static func isDocumentedPair(
         _ first: PhysicalContact,
         _ second: PhysicalContact
     ) -> Bool {
-        if first.pairedContactID == second.id,
-           second.pairedContactID == first.id {
-            return true
-        }
-
-        let sidesAreCompatible = Set([first.side, second.side]) == Set([.left, .right])
-            || (first.side == nil && second.side == nil)
-        return sidesAreCompatible
+        first.pairedContactID == second.id
+            && second.pairedContactID == first.id
+            && Set([first.side, second.side]) == Set([.left, .right])
             && first.kind == second.kind
             && first.features == second.features
             && first.fingerCapacity == second.fingerCapacity
@@ -247,7 +240,7 @@ struct WorkoutActivityRecorder {
                     continue
                 }
                 guard !segment.targets.isEmpty else {
-                    guard allowsUntargetedRPTCSelfSelectedWork(segment, in: step, plan: plan) else {
+                    guard allowsSourceLinkedUntargetedWork(segment, in: step, plan: plan) else {
                         throw WorkoutActivityRecordingError.unresolvedTarget(
                             stepID: step.id,
                             segmentIndex: index
@@ -322,27 +315,17 @@ struct WorkoutActivityRecorder {
         return result
     }
 
-    private func allowsUntargetedRPTCSelfSelectedWork(
+    private func allowsSourceLinkedUntargetedWork(
         _ segment: WorkoutSegment,
         in step: WorkoutStep,
         plan: TrainingPlan
     ) -> Bool {
-        let expectedStepIDs = Set((1...7).map { "rptc-repeaters-set-rep-\($0).segment-1" })
-        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id
-            && plan.provenance == .official
-            && plan.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL
-            && plan.boardID == nil
-            && plan.steps.count == 15
-            && expectedStepIDs.contains(step.id)
-            && step.phase == .hang
-            && step.targets.isEmpty
-            && step.duration == 7
-            && step.timedWorkDuration == 7
-            && step.segments == [segment]
+        plan.provenance != .custom
+            && plan.sourceURL != nil
+            && step.phase != .rest
+            && step.phase != .conditioning
             && segment.kind == .work
             && segment.targets.isEmpty
-            && segment.timing == .fixed
-            && segment.duration == 7
     }
 
     func metadata(

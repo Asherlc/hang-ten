@@ -290,7 +290,7 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
-    func testHoldCuePrefersSingleTargetStepGripOverride() {
+    func testHoldCueRejectsUnknownContactGripMetadataForStepGrip() {
         let hold = PhysicalContact(
             id: "cue-edge",
             name: "Cue edge",
@@ -312,9 +312,7 @@ final class WorkoutTimelineTests: XCTestCase {
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
 
-        XCTAssertEqual(cue?.hold, hold)
-        XCTAssertEqual(cue?.gripType, .halfCrimp)
-        XCTAssertEqual(cue?.fingerConfiguration?.orderedFingers, [.index, .ring])
+        XCTAssertNil(cue)
     }
 
     func testHoldCueDoesNotInferGripFromBoardMetadata() {
@@ -392,6 +390,7 @@ final class WorkoutTimelineTests: XCTestCase {
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
+            gripTypes: [.halfCrimp]
         )
         let step = WorkoutStep(
             id: "cue-step",
