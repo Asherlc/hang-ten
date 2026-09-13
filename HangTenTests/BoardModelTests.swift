@@ -425,6 +425,132 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.camera.simdTransform, originalTransform)
     }
 
+    func testFrameRejectsInvalidSizesWithoutChangingCameraOrCanonicalSelection() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ],
+            minimum: [0, 0, 0],
+            maximum: [4, 2, 1]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: [
+                "front": SIMD4<Double>(0, 0, 0, 1),
+                "reverse": SIMD4<Double>(0, 1, 0, 0)
+            ]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front", "reverse"]
+        ))
+
+        let validSize = CGSize(width: 386, height: 100)
+        model.frame(in: validSize)
+        XCTAssertTrue(model.select(positionID: "front"))
+        let originalPosition = model.camera.simdPosition
+        let originalTransform = model.camera.simdTransform
+        let originalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+
+        for invalidSize in [
+            CGSize(width: CGFloat.nan, height: 100),
+            CGSize(width: 100, height: CGFloat.infinity),
+            CGSize(width: 0, height: 100),
+            CGSize(width: 100, height: 0),
+            CGSize(width: -1, height: 100),
+            CGSize(width: 100, height: -1)
+        ] {
+            model.frame(in: invalidSize)
+            XCTAssertEqual(model.camera.simdPosition, originalPosition, invalidSize.debugDescription)
+            XCTAssertEqual(model.camera.simdTransform, originalTransform, invalidSize.debugDescription)
+            XCTAssertEqual(model.camera.camera?.orthographicScale, originalScale, invalidSize.debugDescription)
+        }
+
+        XCTAssertTrue(model.select(positionID: "reverse"))
+        let expected = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front", "reverse"]
+        ))
+        expected.frame(in: validSize)
+        XCTAssertTrue(expected.select(positionID: "front"))
+        XCTAssertTrue(expected.select(positionID: "reverse"))
+
+        XCTAssertEqual(model.camera.simdPosition, expected.camera.simdPosition)
+        XCTAssertEqual(model.camera.simdTransform, expected.camera.simdTransform)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, expected.camera.camera?.orthographicScale)
+    }
+
+    func testOrbitRejectsInvalidInputsWithoutChangingCameraOrNextValidOrbit() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: ["front": SIMD4<Double>(0, 0, 0, 1)]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front"]
+        ))
+        model.frame(in: CGSize(width: 386, height: 100))
+        XCTAssertTrue(model.select(positionID: "front"))
+
+        let originalPosition = model.camera.simdPosition
+        let originalTransform = model.camera.simdTransform
+        let originalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        let invalidInputs: [(Float, Float, Float)] = [
+            (.nan, 0, 1),
+            (0, .infinity, 1),
+            (0, 0, 0),
+            (0, 0, -1)
+        ]
+        for (azimuth, elevation, zoomScale) in invalidInputs {
+            model.orbit(azimuth: azimuth, elevation: elevation, zoomScale: zoomScale)
+            XCTAssertEqual(model.camera.simdPosition, originalPosition)
+            XCTAssertEqual(model.camera.simdTransform, originalTransform)
+            XCTAssertEqual(model.camera.camera?.orthographicScale, originalScale)
+        }
+
+        let validOrbit = (azimuth: Float(0.3), elevation: Float(-0.2), zoomScale: Float(1.2))
+        model.orbit(
+            azimuth: validOrbit.azimuth,
+            elevation: validOrbit.elevation,
+            zoomScale: validOrbit.zoomScale
+        )
+
+        let expected = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front"]
+        ))
+        expected.frame(in: CGSize(width: 386, height: 100))
+        XCTAssertTrue(expected.select(positionID: "front"))
+        expected.orbit(
+            azimuth: validOrbit.azimuth,
+            elevation: validOrbit.elevation,
+            zoomScale: validOrbit.zoomScale
+        )
+
+        XCTAssertEqual(model.camera.simdPosition, expected.camera.simdPosition)
+        XCTAssertEqual(model.camera.simdTransform, expected.camera.simdTransform)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, expected.camera.camera?.orthographicScale)
+    }
+
     func testFlashBoardTwoEdgeSceneProjectsOrbitsAndRendersEachComponentSeparately() async throws {
         let (_, _, model) = try await loadMigratedModel("tension.flash-board")
         let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))

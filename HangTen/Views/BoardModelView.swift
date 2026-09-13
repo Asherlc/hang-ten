@@ -210,6 +210,11 @@ final class BoardModelScene {
     static let cordCategory = 2
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
 
+    private struct PreparedCameraState {
+        let transform: simd_float4x4
+        let orthographicScale: Double?
+    }
+
     let scene = SCNScene()
     let camera = SCNNode()
     let geometryNodes: [SCNNode]
@@ -393,10 +398,10 @@ final class BoardModelScene {
                 enterUnavailable()
                 return false
             }
-            transitionToOrientation(
+            guard transitionToOrientation(
                 transform: Self.transform(rotating: quaternion, about: pivot),
                 framing: framing
-            )
+            ) else { return false }
             canonicalFraming = framing
             activePositionID = positionID
             isUnavailable = false
@@ -438,7 +443,7 @@ final class BoardModelScene {
                 cord = makeCordNode(for: solved)
                 verifiedPresentations[positionID] = (solved, cord)
             }
-            transitionToCanonicalPresentation(solved, cord: cord)
+            guard transitionToCanonicalPresentation(solved, cord: cord) else { return false }
             canonicalFraming = solved.cameraFraming
             activePositionID = positionID
             isUnavailable = false
@@ -536,10 +541,16 @@ final class BoardModelScene {
     }
 
     private func cameraScale(for framing: SuspendedCameraFraming) -> Float {
-        let aspect = viewportSize.width > 0 && viewportSize.height > 0
-            ? Float(viewportSize.width / viewportSize.height)
-            : 1
-        return max(framing.height, framing.width / aspect) * framing.fitPadding / 2
+        let aspect: Float
+        if viewportSize.width.isFinite, viewportSize.height.isFinite,
+           viewportSize.width > 0, viewportSize.height > 0 {
+            aspect = Float(viewportSize.width / viewportSize.height)
+        } else {
+            aspect = 1
+        }
+        guard aspect.isFinite, aspect > 0 else { return .nan }
+        let scale = max(framing.height, framing.width / aspect) * framing.fitPadding / 2
+        return scale.isFinite && scale > 0 ? scale : .nan
     }
 
     private func enterUnavailable() {
@@ -553,7 +564,10 @@ final class BoardModelScene {
     private func transitionToCanonicalPresentation(
         _ solved: BoardModelSolvedSuspension,
         cord: SCNNode
-    ) {
+    ) -> Bool {
+        guard let cameraState = preparedCanonicalCameraState(for: solved.cameraFraming) else {
+            return false
+        }
         // Commit the board, destination-solved cord, and camera together.
         // Cached cords are detached before reuse, so no visible frame can
         // combine the destination cord with the previous board transform.
@@ -564,7 +578,7 @@ final class BoardModelScene {
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
         boardContainer.simdTransform = solved.boardTransform
-        applyCanonicalCamera(solved.cameraFraming)
+        applyPreparedCameraState(cameraState)
         SCNTransaction.commit()
 
         boardTransform = solved.boardTransform
@@ -572,12 +586,16 @@ final class BoardModelScene {
             transformedAttachment = single.transformedAttachment
         }
         currentFraming = solved.cameraFraming
+        return true
     }
 
     private func transitionToOrientation(
         transform: simd_float4x4,
         framing: SuspendedCameraFraming
-    ) {
+    ) -> Bool {
+        guard let cameraState = preparedCanonicalCameraState(for: framing) else {
+            return false
+        }
         transientCordNode?.removeFromParentNode()
         transientCordNode = nil
         isTransientCordAccessible = false
@@ -592,11 +610,12 @@ final class BoardModelScene {
         if boardMoves {
             boardContainer.simdTransform = transform
         }
-        applyCanonicalCamera(framing)
+        applyPreparedCameraState(cameraState)
         SCNTransaction.commit()
 
         boardTransform = transform
         currentFraming = framing
+        return true
     }
 
     private static func transformsMatch(
@@ -612,19 +631,35 @@ final class BoardModelScene {
         return true
     }
 
-    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
+    @discardableResult
+    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) -> Bool {
         let position = framing.target - framing.direction * framing.distance
         let scale = Double(cameraScale(for: framing))
-        guard applyCamera(
+        guard let cameraState = Self.preparedCameraState(
             position: position,
             target: framing.target,
             up: framing.up,
             orthographicScale: scale
-        ) else { return }
+        ) else { return false }
+        applyPreparedCameraState(cameraState)
         orbitAzimuth = 0
         orbitElevation = 0
         orbitZoom = 1
         currentFraming = framing
+        return true
+    }
+
+    private func preparedCanonicalCameraState(
+        for framing: SuspendedCameraFraming
+    ) -> PreparedCameraState? {
+        let position = framing.target - framing.direction * framing.distance
+        let scale = Double(cameraScale(for: framing))
+        return Self.preparedCameraState(
+            position: position,
+            target: framing.target,
+            up: framing.up,
+            orthographicScale: scale
+        )
     }
 
     @discardableResult
@@ -639,19 +674,40 @@ final class BoardModelScene {
         up requestedUp: SIMD3<Float>,
         orthographicScale: Double? = nil
     ) -> Bool {
-        guard let transform = Self.cameraTransform(
+        guard let state = Self.preparedCameraState(
             position: position,
             target: target,
-            up: requestedUp
-        ),
-              orthographicScale.map({ $0.isFinite && $0 > 0 }) ?? true else {
+            up: requestedUp,
+            orthographicScale: orthographicScale
+        ) else {
             return false
         }
-        camera.simdTransform = transform
-        if let orthographicScale {
+        applyPreparedCameraState(state)
+        return true
+    }
+
+    private func applyPreparedCameraState(_ state: PreparedCameraState) {
+        camera.simdTransform = state.transform
+        if let orthographicScale = state.orthographicScale {
             camera.camera?.orthographicScale = orthographicScale
         }
-        return true
+    }
+
+    private static func preparedCameraState(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up: SIMD3<Float>,
+        orthographicScale: Double? = nil
+    ) -> PreparedCameraState? {
+        guard orthographicScale.map({ $0.isFinite && $0 > 0 }) ?? true,
+              let transform = cameraTransform(
+                  position: position,
+                  target: target,
+                  up: up
+              ) else {
+            return nil
+        }
+        return PreparedCameraState(transform: transform, orthographicScale: orthographicScale)
     }
 
     private static func cameraTransform(
@@ -1100,14 +1156,26 @@ final class BoardModelScene {
     }
 
     func frame(in size: CGSize) {
-        guard size.width > 0, size.height > 0 else { return }
-        viewportSize = size
-        let aspect = Float(size.width / size.height)
+        guard size.width.isFinite, size.height.isFinite,
+              size.width > 0, size.height > 0 else { return }
+        let aspect = size.width / size.height
+        guard aspect.isFinite, aspect > 0 else { return }
+        let aspectFloat = Float(aspect)
+        guard aspectFloat.isFinite, aspectFloat > 0 else { return }
+
+        let candidateScale: Double
         if let framing = currentFraming {
-            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom / 2)
+            candidateScale = Double(
+                max(framing.height, framing.width / aspectFloat)
+                    * framing.fitPadding / orbitZoom / 2
+            )
         } else {
-            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) / 2)
+            candidateScale = Double(max(projectedHeight, projectedWidth / aspectFloat) / 2)
         }
+        guard candidateScale.isFinite, candidateScale > 0 else { return }
+
+        viewportSize = size
+        camera.camera?.orthographicScale = candidateScale
     }
 
     func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
