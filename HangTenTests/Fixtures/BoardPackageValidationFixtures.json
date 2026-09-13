@@ -333,6 +333,38 @@
       }
     }
   },
+  "pairedLeadCordModel": {
+    "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
+    "board": {
+      "schemaVersion": 2,
+      "id": "fixture.paired-lead",
+      "manufacturer": "Fixture Maker",
+      "name": "Paired lead fixture",
+      "subtitle": "A paired lead parser fixture.",
+      "productURL": "https://example.com/fixture.paired-lead",
+      "dimensions": "20 × 10 cm",
+      "aspectRatio": 2,
+      "presentations": [{
+        "id": "primary", "name": "Primary", "aspectRatio": 2, "isDefault": true,
+        "derivation": { "type": "original" },
+        "media": {
+          "type": "model", "assetPath": "assets/primary.usdz", "descriptorPath": "assets/primary.model.json",
+          "display": { "camera": { "type": "orthographic", "viewDirection": [0, 0, -1], "up": [0, 1, 0], "fitPadding": 0.08 } },
+          "suspension": {"type":"pairedLeadCord","attachments":[{"id":"left-lead","nodeID":"Body","pointInModel":[0.2,0.5,0.1],"provenance":"displayEstimate"},{"id":"right-lead","nodeID":"Body","pointInModel":[0.8,0.5,0.1],"provenance":"displayEstimate"}],"anchor":{"offsetFromBoardBounds":[0,0.4,0],"visibility":"invisible","provenance":"displayEstimate"},"cord":{"restLength":0.8,"radius":0.002,"material":"matteCord","provenance":"displayEstimate"},"canonicalPoses":{"primary":{"rotation":[0,0,0,1],"translation":[0,0,0],"camera":{"viewDirection":[0,0,-1],"fitPadding":0.1}}}}
+        }
+      }],
+      "positions": [{ "id": "primary", "presentationID": "primary" }],
+      "holds": [{ "id": "hold-left", "name": "Left hold", "kind": "jug" }]
+    },
+    "descriptor": {
+      "schemaVersion": 1,
+      "coordinateFrame": "hang-ten-board-v1",
+      "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
+      "modelBounds": { "min": [0, 0, 0], "max": [1, 0.5, 0.1] },
+      "nodes": [{ "nodeID": "Body", "role": "body" }, { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }],
+      "holds": { "hold-left": { "nodeIDs": ["Left"], "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] }, "center": [0.25, 0.4] } }
+    }
+  },
   "modelParserParity": [
     {
       "name": "wrong-schema-version",
@@ -991,6 +1023,63 @@
           ]
         }
       ]
+    },
+    {
+      "name": "paired-lead-three-attachments",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "exactly two attachments",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "append", "path": ["presentations", 0, "media", "suspension", "attachments"], "value": {"id": "third-lead", "nodeID": "Body", "pointInModel": [0.5, 0.5, 0.1], "provenance": "displayEstimate"}}]
+    },
+    {
+      "name": "paired-lead-duplicate-id",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "duplicate paired lead attachment ID",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachments", 1, "id"], "value": "left-lead"}]
+    },
+    {
+      "name": "paired-lead-hold-node",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "paired lead attachment node must be",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachments", 0, "nodeID"], "value": "Left"}]
+    },
+    {
+      "name": "paired-lead-visible-anchor",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "visibility must be invisible",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "anchor", "visibility"], "value": "visible"}]
+    },
+    {
+      "name": "paired-lead-unknown-pose",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical poses",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "unknown"], "value": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}}]
+    },
+    {
+      "name": "paired-lead-short-lead",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "shorter than endpoint distance",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0.4}]
+    },
+    {
+      "name": "paired-lead-suspension-member-order",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "canonical member order",
+      "swiftError": "malformedJSON",
+      "reorderPairedLeadSuspensionMembers": true,
+      "mutations": []
     }
   ],
   "ordering": {

@@ -457,6 +457,22 @@ class BoardModelSingleCordSuspension:
 
 
 @dataclass(frozen=True)
+class BoardModelPairedLeadAttachment:
+    id: str
+    node_id: str
+    point_in_model: tuple[float, float, float]
+    provenance: str
+
+
+@dataclass(frozen=True)
+class BoardModelPairedLeadCord:
+    attachments: tuple[BoardModelPairedLeadAttachment, BoardModelPairedLeadAttachment]
+    anchor: BoardModelInvisibleAnchor
+    cord: BoardModelCord
+    canonical_poses: Mapping[str, BoardModelCanonicalPose]
+
+
+@dataclass(frozen=True)
 class BoardModelPassage:
     id: str
     node_id: str
@@ -497,7 +513,11 @@ class BoardModelTwoBranchSuspension:
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
 
 
-BoardModelSuspension = BoardModelSingleCordSuspension | BoardModelTwoBranchSuspension
+BoardModelSuspension = (
+    BoardModelSingleCordSuspension
+    | BoardModelPairedLeadCord
+    | BoardModelTwoBranchSuspension
+)
 
 
 @dataclass(frozen=True)
@@ -742,8 +762,55 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             ),
         )
 
+    if suspension_type == "pairedLeadCord":
+        _closed(payload, {"type", "attachments", "anchor", "cord", "canonicalPoses"}, source)
+        _canonical_member_order(
+            payload, ("type", "attachments", "anchor", "cord", "canonicalPoses"), source
+        )
+        attachments_source = f"{source}.attachments"
+        attachments_value = payload["attachments"]
+        if not isinstance(attachments_value, list) or len(attachments_value) != 2:
+            raise ValueError(f"{attachments_source} must contain exactly two attachments")
+        attachment_ids: set[str] = set()
+        attachments: list[BoardModelPairedLeadAttachment] = []
+        for index, raw_attachment in enumerate(attachments_value):
+            attachment_source = f"{attachments_source}[{index}]"
+            attachment_payload = _mapping(raw_attachment, attachment_source)
+            _closed(attachment_payload, {"id", "nodeID", "pointInModel", "provenance"}, attachment_source)
+            _canonical_member_order(
+                attachment_payload, ("id", "nodeID", "pointInModel", "provenance"), attachment_source
+            )
+            attachment_id = _identifier(attachment_payload["id"], f"{attachment_source}.id")
+            if attachment_id in attachment_ids:
+                raise ValueError(f"duplicate paired lead attachment ID: {attachment_id}")
+            attachment_ids.add(attachment_id)
+            attachments.append(BoardModelPairedLeadAttachment(
+                attachment_id,
+                _string(attachment_payload["nodeID"], f"{attachment_source}.nodeID"),
+                _finite_vector3(attachment_payload["pointInModel"], f"{attachment_source}.pointInModel"),
+                _string(attachment_payload["provenance"], f"{attachment_source}.provenance"),
+            ))
+        anchor = _load_model_anchor(payload["anchor"], f"{source}.anchor")
+        cord_source = f"{source}.cord"
+        cord_payload = _mapping(payload["cord"], cord_source)
+        _closed(cord_payload, {"restLength", "radius", "material", "provenance"}, cord_source)
+        cord = BoardModelCord(
+            _positive_number(cord_payload["restLength"], f"{cord_source}.restLength"),
+            _positive_number(cord_payload["radius"], f"{cord_source}.radius"),
+            _string(cord_payload["material"], f"{cord_source}.material"),
+            _string(cord_payload["provenance"], f"{cord_source}.provenance"),
+        )
+        return BoardModelPairedLeadCord(
+            (attachments[0], attachments[1]),
+            anchor,
+            cord,
+            _load_model_poses(
+                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
+            ),
+        )
+
     if suspension_type != "singleCord":
-        raise ValueError(f"{source}.type must be singleCord or twoBranchCord")
+        raise ValueError(f"{source}.type must be singleCord, pairedLeadCord, or twoBranchCord")
     _closed(payload, {"type", "attachment", "anchor", "cord", "canonicalPoses"}, source)
 
     attachment_source = f"{source}.attachment"
@@ -1630,20 +1697,36 @@ def _validate_model_suspension(
             for index, coordinate in enumerate(suspension.attachment.point_in_model)
         ):
             raise ValueError("suspension attachment point must be inside model bounds")
+    if isinstance(suspension, BoardModelPairedLeadCord):
+        if len(suspension.attachments) != 2 or len({attachment.id for attachment in suspension.attachments}) != 2:
+            raise ValueError("pairedLeadCord suspension requires two distinct attachment IDs")
+        for attachment in suspension.attachments:
+            role = nodes.get(attachment.node_id)
+            if role not in {"body", "attachment"}:
+                raise ValueError("paired lead attachment node must be a body or attachment node")
+            if any(
+                coordinate < minimum[index] or coordinate > maximum[index]
+                for index, coordinate in enumerate(attachment.point_in_model)
+            ):
+                raise ValueError("paired lead attachment point must be inside model bounds")
     for position_id, pose in suspension.canonical_poses.items():
         qx, qy, qz, qw = pose.rotation
         endpoints_by_branch = (
-            (((suspension.attachment,), (suspension.cord.rest_length,)),)
+            (((suspension.attachment,), suspension.cord),)
             if isinstance(suspension, BoardModelSingleCordSuspension)
+            else tuple(
+                ((attachment,), suspension.cord) for attachment in suspension.attachments
+            )
+            if isinstance(suspension, BoardModelPairedLeadCord)
             else (
                 (suspension.passages.left, suspension.branches[0]),
                 (suspension.passages.right, suspension.branches[1]),
             )
         )
         for branch_endpoints, branch_data in endpoints_by_branch:
-            if isinstance(suspension, BoardModelSingleCordSuspension):
-                endpoints = (suspension.attachment.point_in_model,)
-                rest_length = suspension.cord.rest_length
+            if isinstance(branch_data, BoardModelCord):
+                endpoints = tuple(endpoint.point_in_model for endpoint in branch_endpoints)
+                rest_length = branch_data.rest_length
                 rigid_route_length = 0.0
             else:
                 assert isinstance(branch_data, BoardModelCordBranch)
@@ -1771,7 +1854,11 @@ def _load_model_descriptor(
             node_ids_by_hold.setdefault(hold_id, []).append(node_id)
         elif role == "attachment":
             attachment_count += 1
-            max_attachments = 4 if isinstance(suspension, BoardModelTwoBranchSuspension) else 1
+            max_attachments = (
+                4 if isinstance(suspension, BoardModelTwoBranchSuspension)
+                else 2 if isinstance(suspension, BoardModelPairedLeadCord)
+                else 1
+            )
             if attachment_count > max_attachments:
                 raise ValueError("model descriptor has too many attachment nodes")
         else:
