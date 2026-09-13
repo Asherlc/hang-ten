@@ -356,7 +356,76 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testFlashBoardTwoEdgeSceneProjectsBoardAndBothCordBranchesAndRendersSnapshot() async throws {
+    func testFlashBoardCameraBasisIsFiniteOrthonormalAndRightHanded() async throws {
+        let (_, media, model) = try await loadMigratedModel("tension.flash-board")
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+        let pose = try XCTUnwrap(suspension.canonicalPoses["two-edge-upright"])
+        let solved = try BoardModelScene.solveSuspension(
+            pose: pose,
+            suspension: .twoBranchCord(suspension),
+            bounds: media.descriptor.modelBounds
+        )
+        let framing = solved.cameraFraming
+
+        XCTAssertTrue(model.select(positionID: "two-edge-upright"))
+        SCNTransaction.flush()
+        assertCameraBasis(
+            model.camera,
+            expectedFront: framing.direction,
+            expectedUp: framing.up,
+            expectedRight: framing.right,
+            label: "two-edge canonical"
+        )
+
+        let azimuth: Float = 0.3
+        let elevation: Float = -0.2
+        let zoomScale: Float = 1.2
+        model.orbit(azimuth: azimuth, elevation: elevation, zoomScale: zoomScale)
+        SCNTransaction.flush()
+
+        let baseOffset = -framing.direction * framing.distance
+        let yaw = simd_quatf(angle: azimuth, axis: SIMD3<Float>(0, 1, 0))
+        let pitch = simd_quatf(angle: elevation, axis: framing.right)
+        let offset = (pitch * yaw).act(baseOffset)
+        let expectedPosition = framing.target + simd_normalize(offset) * (framing.distance / zoomScale)
+        let expectedFront = simd_normalize(framing.target - expectedPosition)
+        let expectedRight = simd_normalize(simd_cross(expectedFront, framing.up))
+        let expectedUp = simd_cross(expectedRight, expectedFront)
+        assertCameraBasis(
+            model.camera,
+            expectedFront: expectedFront,
+            expectedUp: expectedUp,
+            expectedRight: expectedRight,
+            label: "two-edge orbit"
+        )
+    }
+
+    func testCameraOrientationRejectsDegenerateBasisWithoutMovingCamera() async throws {
+        let (_, _, model) = try await loadMigratedModel("tension.flash-board")
+        XCTAssertTrue(model.select(positionID: "two-edge-upright"))
+        SCNTransaction.flush()
+
+        let originalPosition = model.camera.simdPosition
+        let originalTransform = model.camera.simdTransform
+        let originalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        let degenerateTarget = originalPosition + SIMD3<Float>(0, 1, 0)
+
+        XCTAssertFalse(model.orientCamera(at: degenerateTarget, up: SIMD3<Float>(0, 1, 0)))
+        XCTAssertEqual(model.camera.simdPosition, originalPosition)
+        XCTAssertEqual(model.camera.simdTransform, originalTransform)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, originalScale)
+
+        XCTAssertFalse(model.orientCamera(
+            at: originalPosition + SIMD3<Float>(0, 0, -1),
+            up: SIMD3<Float>(.nan, 1, 0)
+        ))
+        XCTAssertEqual(model.camera.simdPosition, originalPosition)
+        XCTAssertEqual(model.camera.simdTransform, originalTransform)
+    }
+
+    func testFlashBoardTwoEdgeSceneProjectsOrbitsAndRendersEachComponentSeparately() async throws {
         let (_, _, model) = try await loadMigratedModel("tension.flash-board")
         let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
         view.backgroundColor = .white
@@ -365,6 +434,7 @@ final class BoardModelTests: XCTestCase {
         view.isPlaying = false
         view.display(model)
         view.scene = model.scene
+        view.scene?.background.contents = UIColor.white
         view.pointOfView = model.camera
 
         func projectedCorners(for node: SCNNode) -> [SCNVector3] {
@@ -398,10 +468,15 @@ final class BoardModelTests: XCTestCase {
             )
         }
 
-        func assertProjectedPresentation(_ positionID: String, _ label: String) {
+        func assertProjectedPresentation(_ positionID: String, _ label: String, orbit: Bool = false) throws {
             view.positionID = positionID
             view.selectPositionIfNeeded()
             SCNTransaction.flush()
+
+            if orbit {
+                model.orbit(azimuth: 0.3, elevation: -0.2, zoomScale: 1.2)
+                SCNTransaction.flush()
+            }
 
             assertProjected(model.geometryNodes, "\(label) board")
             guard let cord = model.transientCordNode else {
@@ -415,30 +490,42 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(segments.isEmpty, "\(label) branch \(branchIndex) must contain cord geometry")
                 assertProjected(segments, "\(label) cord branch \(branchIndex)")
             }
-        }
 
-        assertProjectedPresentation("three-edge-upright", "three-edge control")
-        assertProjectedPresentation("two-edge-upright", "two-edge")
+            func capture(_ label: String, only predicate: (SCNNode) -> Bool) throws -> CGImage {
+                let nodes = model.geometryNodes + [cord] + cord.childNodes
+                let visibility = nodes.map { ($0, $0.isHidden) }
+                defer {
+                    for (node, isHidden) in visibility {
+                        node.isHidden = isHidden
+                    }
+                }
+                for node in nodes {
+                    node.isHidden = !predicate(node)
+                }
+                SCNTransaction.flush()
+                view.layoutIfNeeded()
+                guard let image = view.snapshot().cgImage else {
+                    throw XCTSkip("\(label) snapshot did not produce a CGImage")
+                }
+                XCTAssertTrue(
+                    hasNonBackgroundPixels(image),
+                    "\(label) isolated snapshot must contain rendered pixels"
+                )
+                return image
+            }
 
-        let image = view.snapshot()
-        guard let cgImage = image.cgImage,
-              let providerData = cgImage.dataProvider?.data,
-              let bytes = CFDataGetBytePtr(providerData) else {
-            return XCTFail("two-edge snapshot must provide pixel data")
-        }
-        let bytesPerPixel = max(cgImage.bitsPerPixel / 8, 1)
-        let bytesPerRow = cgImage.bytesPerRow
-        let hasRenderedPixels = (0..<cgImage.height).contains { row in
-            (0..<cgImage.width).contains { column in
-                let offset = row * bytesPerRow + column * bytesPerPixel
-                guard offset + min(bytesPerPixel, 4) <= CFDataGetLength(providerData) else { return false }
-                let red = bytes[offset]
-                let green = bytes[offset + min(1, bytesPerPixel - 1)]
-                let blue = bytes[offset + min(2, bytesPerPixel - 1)]
-                return red < 240 || green < 240 || blue < 240
+            _ = try capture("\(label) board", only: { node in
+                model.geometryNodes.contains { $0 === node }
+            })
+            for branchIndex in 0..<2 {
+                _ = try capture("\(label) cord branch \(branchIndex)", only: { node in
+                    node === cord || node.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+                })
             }
         }
-        XCTAssertTrue(hasRenderedPixels, "two-edge snapshot must contain non-background pixels")
+
+        try assertProjectedPresentation("three-edge-upright", "three-edge control")
+        try assertProjectedPresentation("two-edge-upright", "two-edge", orbit: true)
     }
 
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
@@ -954,6 +1041,79 @@ final class BoardModelTests: XCTestCase {
                 bodyProbe: [0.5, 0.02]
             )
         ]
+    }
+
+    private func assertCameraBasis(
+        _ camera: SCNNode,
+        expectedFront: SIMD3<Float>,
+        expectedUp: SIMD3<Float>,
+        expectedRight: SIMD3<Float>,
+        label: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let front = camera.simdWorldFront
+        let up = camera.simdWorldUp
+        let right = camera.simdWorldRight
+        let vectors = [front, up, right]
+        XCTAssertTrue(
+            vectors.allSatisfy { vector in
+                vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+            },
+            "\(label) camera basis must be finite",
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(simd_length(front), 1, accuracy: 0.000_1, "\(label) front", file: file, line: line)
+        XCTAssertEqual(simd_length(up), 1, accuracy: 0.000_1, "\(label) up", file: file, line: line)
+        XCTAssertEqual(simd_length(right), 1, accuracy: 0.000_1, "\(label) right", file: file, line: line)
+        XCTAssertEqual(simd_dot(front, up), 0, accuracy: 0.000_1, "\(label) front/up", file: file, line: line)
+        XCTAssertEqual(simd_dot(front, right), 0, accuracy: 0.000_1, "\(label) front/right", file: file, line: line)
+        XCTAssertEqual(simd_dot(up, right), 0, accuracy: 0.000_1, "\(label) up/right", file: file, line: line)
+        assertVectorEqual(simd_cross(front, up), right, "\(label) right-handed", file: file, line: line)
+        assertVectorEqual(front, expectedFront, "\(label) expected front", file: file, line: line)
+        assertVectorEqual(up, expectedUp, "\(label) expected up", file: file, line: line)
+        assertVectorEqual(right, expectedRight, "\(label) expected right", file: file, line: line)
+    }
+
+    private func assertVectorEqual(
+        _ actual: SIMD3<Float>,
+        _ expected: SIMD3<Float>,
+        _ message: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(actual.x, expected.x, accuracy: 0.000_1, "\(message) x", file: file, line: line)
+        XCTAssertEqual(actual.y, expected.y, accuracy: 0.000_1, "\(message) y", file: file, line: line)
+        XCTAssertEqual(actual.z, expected.z, accuracy: 0.000_1, "\(message) z", file: file, line: line)
+    }
+
+    private func hasNonBackgroundPixels(_ image: CGImage) -> Bool {
+        let width = image.width
+        let height = image.height
+        guard width > 0, height > 0 else { return false }
+        var rgba = [UInt8](repeating: 0, count: width * height * 4)
+        return rgba.withUnsafeMutableBytes { bytes -> Bool in
+            guard let baseAddress = bytes.baseAddress,
+                  let context = CGContext(
+                      data: baseAddress,
+                      width: width,
+                      height: height,
+                      bitsPerComponent: 8,
+                      bytesPerRow: width * 4,
+                      space: CGColorSpaceCreateDeviceRGB(),
+                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                  ) else {
+                return false
+            }
+            context.setFillColor(UIColor.white.cgColor)
+            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return (0..<(width * height)).contains { index in
+                let offset = index * 4
+                return bytes[offset] < 245 || bytes[offset + 1] < 245 || bytes[offset + 2] < 245
+            }
+        }
     }
 
     private func loadMigratedModel(

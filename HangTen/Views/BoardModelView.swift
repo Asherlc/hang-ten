@@ -488,22 +488,31 @@ final class BoardModelScene {
         guard let framing = canonicalFraming,
               azimuth.isFinite, elevation.isFinite,
               zoomScale.isFinite, zoomScale > 0 else { return }
-        orbitAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
-        orbitElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
-        orbitZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+        let nextAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
+        let nextElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
+        let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
         let baseOffset = -framing.direction * framing.distance
-        let yaw = simd_quatf(angle: orbitAzimuth, axis: SIMD3<Float>(0, 1, 0))
+        let yaw = simd_quatf(angle: nextAzimuth, axis: SIMD3<Float>(0, 1, 0))
         let pitchAxis = framing.right
-        let pitch = simd_quatf(angle: orbitElevation, axis: pitchAxis)
+        let pitch = simd_quatf(angle: nextElevation, axis: pitchAxis)
         let offset = (pitch * yaw).act(baseOffset)
-        let distance = max(0.01, framing.distance / orbitZoom)
+        let distance = max(0.01, framing.distance / nextZoom)
         let normalizedOffset = simd_length(offset) > 1e-6
             ? simd_normalize(offset) * distance
             : baseOffset
         let position = framing.target + normalizedOffset
-        camera.position = SCNVector3(position)
-        camera.camera?.orthographicScale = Double(cameraScale(for: framing) / orbitZoom)
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        let scale = Double(cameraScale(for: framing) / nextZoom)
+        guard position.x.isFinite, position.y.isFinite, position.z.isFinite,
+              scale.isFinite, scale > 0,
+              applyCamera(
+                  position: position,
+                  target: framing.target,
+                  up: framing.up,
+                  orthographicScale: scale
+              ) else { return }
+        orbitAzimuth = nextAzimuth
+        orbitElevation = nextElevation
+        orbitZoom = nextZoom
         currentFraming = framing
     }
 
@@ -604,26 +613,82 @@ final class BoardModelScene {
     }
 
     private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
+        let position = framing.target - framing.direction * framing.distance
+        let scale = Double(cameraScale(for: framing))
+        guard applyCamera(
+            position: position,
+            target: framing.target,
+            up: framing.up,
+            orthographicScale: scale
+        ) else { return }
         orbitAzimuth = 0
         orbitElevation = 0
         orbitZoom = 1
-        let position = framing.target - framing.direction * framing.distance
-        camera.position = SCNVector3(position)
-        camera.camera?.orthographicScale = Double(cameraScale(for: framing))
-        orientCamera(at: framing.target, up: framing.up)
         currentFraming = framing
     }
 
-    private func orientCamera(at target: SIMD3<Float>, up requestedUp: SIMD3<Float>) {
-        let forward = simd_normalize(target - camera.simdPosition)
-        let right = simd_normalize(simd_cross(forward, requestedUp))
+    @discardableResult
+    func orientCamera(at target: SIMD3<Float>, up requestedUp: SIMD3<Float>) -> Bool {
+        applyCamera(position: camera.simdPosition, target: target, up: requestedUp)
+    }
+
+    @discardableResult
+    private func applyCamera(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up requestedUp: SIMD3<Float>,
+        orthographicScale: Double? = nil
+    ) -> Bool {
+        guard let transform = Self.cameraTransform(
+            position: position,
+            target: target,
+            up: requestedUp
+        ),
+              orthographicScale.map({ $0.isFinite && $0 > 0 }) ?? true else {
+            return false
+        }
+        camera.simdTransform = transform
+        if let orthographicScale {
+            camera.camera?.orthographicScale = orthographicScale
+        }
+        return true
+    }
+
+    private static func cameraTransform(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up requestedUp: SIMD3<Float>
+    ) -> simd_float4x4? {
+        let direction = target - position
+        let directionLength = simd_length(direction)
+        let requestedUpLength = simd_length(requestedUp)
+        guard [position, target, requestedUp, direction].allSatisfy({ vector in
+            vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+        }),
+              directionLength.isFinite, directionLength > 1e-6,
+              requestedUpLength.isFinite, requestedUpLength > 1e-6 else {
+            return nil
+        }
+
+        let forward = direction / directionLength
+        let normalizedRequestedUp = requestedUp / requestedUpLength
+        let rightVector = simd_cross(forward, normalizedRequestedUp)
+        let rightLength = simd_length(rightVector)
+        guard rightLength.isFinite, rightLength > 1e-6 else { return nil }
+        let right = rightVector / rightLength
         let up = simd_cross(right, forward)
+        guard [forward, right, up].allSatisfy({ vector in
+            vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+        }),
+              abs(simd_length(up) - 1) <= 1e-4 else {
+            return nil
+        }
         var transform = matrix_identity_float4x4
         transform.columns.0 = SIMD4<Float>(right.x, right.y, right.z, 0)
         transform.columns.1 = SIMD4<Float>(up.x, up.y, up.z, 0)
         transform.columns.2 = SIMD4<Float>(-forward.x, -forward.y, -forward.z, 0)
-        transform.columns.3 = SIMD4<Float>(camera.simdPosition.x, camera.simdPosition.y, camera.simdPosition.z, 1)
-        camera.simdTransform = transform
+        transform.columns.3 = SIMD4<Float>(position.x, position.y, position.z, 1)
+        return transform
     }
 
     private func makeCordNode(for solved: BoardModelSolvedSuspension) -> SCNNode {
@@ -1288,7 +1353,7 @@ final class BoardModelScene {
         camera.camera?.screenSpaceAmbientOcclusionBias = 0.001
         camera.camera?.screenSpaceAmbientOcclusionDepthThreshold = 0.03
         camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        guard orientCamera(at: framing.target, up: framing.up) else { return }
         scene.rootNode.addChildNode(camera)
 
         let ambient = SCNNode()
