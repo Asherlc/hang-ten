@@ -153,6 +153,62 @@ def test_represented_record_requires_two_distinct_evidence_views(tmp_path: Path)
         )
 
 
+def test_represented_record_rejects_differently_labelled_duplicate_evidence_url(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(
+        _model_package(
+            "fixture.board",
+            suspension=BoardModelSingleCordSuspension(None, None, None, {}),  # type: ignore[arg-type]
+        )
+    )
+
+    with pytest.raises(CordAuditError, match="distinct evidence URLs"):
+        _validate(
+            tmp_path,
+            inventory,
+            [
+                _record(
+                    "fixture.board",
+                    decision="represented",
+                    topology="singleCord",
+                    evidence=[
+                        {"view": "front", "url": "https://example.com/view"},
+                        {"view": "oblique", "url": "https://example.com/view"},
+                    ],
+                )
+            ],
+        )
+
+
+def test_represented_record_rejects_duplicate_normalized_evidence_view_labels(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(
+        _model_package(
+            "fixture.board",
+            suspension=BoardModelSingleCordSuspension(None, None, None, {}),  # type: ignore[arg-type]
+        )
+    )
+
+    with pytest.raises(CordAuditError, match="distinct evidence views"):
+        _validate(
+            tmp_path,
+            inventory,
+            [
+                _record(
+                    "fixture.board",
+                    decision="represented",
+                    topology="singleCord",
+                    evidence=[
+                        {"view": "Front", "url": "https://example.com/front"},
+                        {"view": " front ", "url": "https://example.com/oblique"},
+                    ],
+                )
+            ],
+        )
+
+
 def test_manifest_rejects_unknown_record_keys(tmp_path: Path) -> None:
     inventory = _inventory(_model_package("fixture.board"))
     record = _record("fixture.board")

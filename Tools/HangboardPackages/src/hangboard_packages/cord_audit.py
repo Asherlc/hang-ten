@@ -225,9 +225,15 @@ def validate_cord_audit_manifest(
     for package_id, record in records_by_package.items():
         package_topology = topologies_by_package[package_id]
         if record.decision == "represented":
-            if len({item.view for item in record.evidence}) < 2:
+            evidence_views = {item.view.strip().casefold() for item in record.evidence}
+            if len(evidence_views) != len(record.evidence) or len(evidence_views) < 2:
                 raise CordAuditError(
                     f"represented record requires two distinct evidence views: {package_id}"
+                )
+            evidence_urls = {item.url for item in record.evidence}
+            if len(evidence_urls) != len(record.evidence) or len(evidence_urls) < 2:
+                raise CordAuditError(
+                    f"represented record requires two distinct evidence URLs: {package_id}"
                 )
             if record.topology != package_topology:
                 raise CordAuditError(
