@@ -2659,6 +2659,7 @@ def test_staging_ignores_primary_only_drafts_when_staging_packages(
     destination = build_root / "Resources" / "Hangboards"
     monkeypatch.setenv("TARGET_BUILD_DIR", str(build_root))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", "Resources")
+    monkeypatch.setenv("DERIVED_FILE_DIR", str(tmp_path / "DerivedFiles"))
 
     staged = stage_module.stage_board_packages(repository, destination)
 
@@ -2693,6 +2694,7 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     (destination / "previous.txt").write_text("recoverable", encoding="utf-8")
     monkeypatch.setenv("TARGET_BUILD_DIR", str(build_root))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", "Resources")
+    monkeypatch.setenv("DERIVED_FILE_DIR", str(tmp_path / "DerivedFiles"))
     real_rmtree = shutil.rmtree
     cleanup_failures: list[Path] = []
 
