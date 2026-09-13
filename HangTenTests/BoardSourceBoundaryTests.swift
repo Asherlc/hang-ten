@@ -177,7 +177,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             for step in plan.steps {
                 for target in step.targets {
                     XCTAssertFalse(
-                        BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty,
+                        (try? ContactResolver.resolve(target, step: step, board: board))?.isEmpty ?? true,
                         "Expected target in \(plan.id)/\(step.id) to resolve on \(board.id)."
                     )
                 }
@@ -534,49 +534,16 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testBoundaryAuditAllowsPlanMappingsOnlyInDedicatedOwner() {
-        let mapping = """
-        enum LegacyPlanSeedBoardMappings {
-            static let all = [BoardMappingDefinition(
-                boardID: "metolius.wood-grips-compact-ii",
-                semanticHolds: [
-                    "edge-19": SemanticHoldMappingDefinition(
-                        holdIDs: ["edge-19-left", "edge-19-right"]
-                    )
-                ]
-            )]
-        }
-        """
-        let packageOwnedLiterals: Set<String> = [
-            "metolius.wood-grips-compact-ii",
-            "edge-19-left",
-            "edge-19-right"
-        ]
+    func testBoundaryAuditAllowsFactualPlanRequirements() {
+        let requirement = "ContactRequirement(kind: .edge, selection: .bilateralPair)"
 
         XCTAssertEqual(
             BoardSourceBoundaryAudit.findings(
                 relativePath: "HangTen/Models/TrainingModels.swift",
-                source: mapping,
-                packageOwnedLiterals: packageOwnedLiterals
+                source: requirement,
+                packageOwnedLiterals: []
             ),
             []
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/UnauthorizedMappings.swift",
-                source: mapping,
-                packageOwnedLiterals: packageOwnedLiterals
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/TrainingModels.swift",
-                source: mapping + "\n" + mapping.replacingOccurrences(
-                    of: "LegacyPlanSeedBoardMappings",
-                    with: "UnauthorizedPlanMappings"
-                ),
-                packageOwnedLiterals: packageOwnedLiterals
-            ).isEmpty
         )
         XCTAssertFalse(
             BoardSourceBoundaryAudit.findings(

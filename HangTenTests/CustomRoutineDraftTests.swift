@@ -144,7 +144,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.holdIDs(["edge-19-left"])],
+                targets: [.kind(.edge)],
                 timing: .stopwatch
             ),
             .init(
@@ -196,7 +196,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "",
                 duration: 10,
                 phase: .hang,
-                targets: [.holdIDs([retainedHold.id, "not-on-new-board"])],
+                targets: [.kind(.edge)],
                 timing: .fixed
             )
         ]
@@ -206,7 +206,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             availableBoards: [replacementBoard]
         )
 
-        XCTAssertEqual(retargeted.steps[0].targets, [.holdIDs([retainedHold.id])])
+        XCTAssertEqual(retargeted.steps[0].targets, [.kind(.edge)])
     }
 
     func testEditorMetadataOptionsUseBuiltInVocabulariesAndCustomDefaults() {
@@ -289,7 +289,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.holdIDs(["edge-19-left", "edge-19-right"])],
+                targets: [.kind(.edge)],
                 timing: .fixed
             )
         ]
@@ -300,17 +300,17 @@ final class CustomRoutineDraftTests: XCTestCase {
             definition.targetMode,
             .boardSpecific(boardID: BoardCatalog.defaultBoard.id)
         )
-        XCTAssertEqual(definition.steps[0].targets, [.holdIDs(["edge-19-left", "edge-19-right"])])
+        XCTAssertEqual(definition.steps[0].targets, [.kind(.edge)])
     }
 
     func testGenericDraftCanStoreKindAndFeatureTargets() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = [
             .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed),
-            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge, fallbacks: [])], timing: .fixed)
+            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)], timing: .fixed)
         ]
 
-        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge, fallbacks: [])]])
+        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge)]])
     }
 
     func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
@@ -360,10 +360,10 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.holdIDs(["edge-left", "edge-right"])],
+                targets: [.kind(.edge)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.holdIDs(["edge-left", "edge-right"])],
+                    targets: [.kind(.edge)],
                     timing: .fixed,
                     duration: 10
                 )],
@@ -496,7 +496,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.holdIDs(["edge-19-left"])],
+                targets: [.kind(.edge)],
                 gripType: .openHand,
                 activeDuration: 10
             )]
@@ -544,10 +544,10 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "Up to 60s",
                 duration: 60,
                 phase: .hang,
-                targets: [.feature(.roundSloper, fallbacks: [])],
+                targets: [.feature(.roundSloper)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.feature(.roundSloper, fallbacks: [])],
+                    targets: [.feature(.roundSloper)],
                     timing: .stopwatch,
                     duration: nil
                 )]

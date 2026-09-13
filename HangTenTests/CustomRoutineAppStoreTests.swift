@@ -30,8 +30,8 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 duration: 10,
                 phase: .hang,
                 targets: mode == .generic
-                    ? [.feature(.mediumEdge, fallbacks: [])]
-                    : [.holdIDs(["edge-19-left", "edge-19-right"])],
+                    ? [.feature(.mediumEdge)]
+                    : [.kind(.edge)],
                 gripType: .halfCrimp,
                 activeDuration: 10
             )]
@@ -51,7 +51,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let custom = try XCTUnwrap(store.plans.first { $0.id == "custom.edge" })
         XCTAssertEqual(store.board(for: custom).id, BoardCatalog.defaultBoard.id)
         XCTAssertEqual(
-            store.holdIDs(for: custom.steps[0], on: BoardCatalog.defaultBoard),
+            store.contactIDs(for: custom.steps[0], on: BoardCatalog.defaultBoard),
             ["edge-19-left", "edge-19-right"] as Set
         )
     }
@@ -176,7 +176,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 accessory: "8s",
                 duration: 8,
                 phase: .hang,
-                targets: [.holdIDs(["edge-19-left"])],
+                targets: [.kind(.edge)],
                 gripType: .halfCrimp,
                 activeDuration: 8
             )]

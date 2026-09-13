@@ -155,7 +155,7 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
     }
 
-    func testHighlightResolverUsesSelectedEquipmentObjectForPortableBoard() {
+    func testHighlightResolverUsesFactualSideMetadataForPortableBoard() {
         let board = BoardRevision(
             id: "portable",
             revisionID: "test-fixture",
@@ -171,18 +171,21 @@ final class WorkoutTimelineTests: XCTestCase {
                     equipmentObjectID: "left-ring",
                     name: "Left pocket",
                     kind: .pocket,
+                    side: .left
                 ),
                 PhysicalContact(
                     id: "left-edge",
                     equipmentObjectID: "left-ring",
                     name: "Left edge",
                     kind: .edge,
+                    side: .left
                 ),
                 PhysicalContact(
                     id: "right-pocket",
                     equipmentObjectID: "right-ring",
                     name: "Right pocket",
                     kind: .pocket,
+                    side: .right
                 )
             ],
             productURL: URL(string: "https://example.com/portable")!,
@@ -211,8 +214,8 @@ final class WorkoutTimelineTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            WorkoutHighlightResolver.holdIDs(for: step, on: board),
-            ["left-pocket", "left-edge"]
+            WorkoutHighlightResolver.contactIDs(for: step, on: board),
+            ["left-pocket"]
         )
 
         let rightStep = WorkoutStep(
@@ -230,12 +233,12 @@ final class WorkoutTimelineTests: XCTestCase {
             repetitions: 1
         )
         XCTAssertEqual(
-            WorkoutHighlightResolver.holdIDs(for: rightStep, on: board),
+            WorkoutHighlightResolver.contactIDs(for: rightStep, on: board),
             ["right-pocket"]
         )
     }
 
-    func testHighlightResolverUsesSubstitutedFallbackObjectsForPortableBoard() {
+    func testHighlightResolverDoesNotSubstituteForMissingRequiredFeatures() {
         let board = BoardRevision(
             id: "portable-fallback",
             revisionID: "test-fixture",
@@ -282,8 +285,8 @@ final class WorkoutTimelineTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            WorkoutHighlightResolver.holdIDs(for: step, on: board),
-            ["left-edge", "right-edge"]
+            WorkoutHighlightResolver.contactIDs(for: step, on: board),
+            []
         )
     }
 
@@ -338,12 +341,13 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertNil(cue)
     }
 
-    func testHoldCueAcceptsHighlightedFallbackFeatureHold() {
+    func testHoldCueAcceptsHighlightedRequiredFeatureHold() {
         let hold = PhysicalContact(
             id: "fallback-edge",
             name: "Fallback edge",
             kind: .edge,
-            features: [.largeEdge]
+            features: [.largeEdge],
+            gripTypes: [.halfCrimp]
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -353,7 +357,7 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.feature(.smallEdge, fallbacks: [.largeEdge])],
+            targets: [.feature(.largeEdge)],
             gripType: .halfCrimp
         )
 
@@ -367,6 +371,7 @@ final class WorkoutTimelineTests: XCTestCase {
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
+            gripTypes: [.halfCrimp]
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -396,7 +401,7 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.ids(hold.id)],
+            targets: [.kind(.edge, selection: .single)],
             gripType: .halfCrimp
         )
 
@@ -410,7 +415,8 @@ final class WorkoutTimelineTests: XCTestCase {
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
-            handCapacity: 2
+            handCapacity: 2,
+            gripTypes: [.halfCrimp]
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -420,7 +426,7 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.ids(hold.id)],
+            targets: [.kind(.edge, selection: .single)],
             gripType: .halfCrimp,
             fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
         )
@@ -508,7 +514,7 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.ids(targetHold.id)]
+            targets: [.kind(.edge, selection: .single)]
         )
 
         XCTAssertNil(

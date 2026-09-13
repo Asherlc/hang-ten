@@ -1539,7 +1539,6 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertTrue(presentation.isDefault)
         XCTAssertEqual(raster.assetPath, "assets/primary.png")
         XCTAssertEqual(raster.contactGeometry["hold-left"]?.count, 2)
-        XCTAssertEqual(store.semantics(for: board.id), [:])
         let imageURL = try XCTUnwrap(store.presentationImageURL(for: board))
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
         XCTAssertEqual(try Data(contentsOf: imageURL), try presentationBytes())

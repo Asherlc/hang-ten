@@ -110,13 +110,8 @@ enum WorkoutHoldCuePolicy {
               step.targets.count == 1,
               let target = step.targets.first,
               let hold,
-              BoardTargetResolver.substituteHoldIDs(
-                  for: target,
-                  handUse: step.handUse,
-                  side: step.side,
-                  on: board,
-                  gripType: step.gripType
-              ).contains(hold.id),
+              (try? ContactResolver.resolve(target, step: step, board: board))?
+                .contains(where: { $0.id == hold.id }) == true,
               step.gripType != nil || step.fingerConfiguration != nil
         else {
             return nil
@@ -355,29 +350,11 @@ enum WorkoutLiftCompletionPolicy {
 }
 
 enum WorkoutHighlightResolver {
-    static func holdIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
-        let gripType = step.targets.count == 1 ? step.gripType : nil
-        let selectedHoldIDs = step.targets.flatMap {
-            BoardTargetResolver.substituteHoldIDs(
-                for: $0,
-                handUse: step.handUse,
-                side: step.side,
-                on: board,
-                gripType: gripType
-            )
-        }
-        let selectedObjectIDs = Set(
-            board.contacts
-                .filter { selectedHoldIDs.contains($0.id) }
-                .map(\.equipmentObjectID)
-        )
-
-        // Legacy boards treat the board itself as the sole equipment object.
-        // Preserve their hold-level cues while portable multi-object boards
-        // highlight the whole selected physical object.
-        guard board.equipmentObjects.count > 1 else { return selectedHoldIDs }
-        return board.contacts
-            .filter { selectedObjectIDs.contains($0.equipmentObjectID) }
-            .map(\.id)
+    static func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
+        (try? ContactResolver.resolve(
+            step.targets,
+            step: step,
+            board: board
+        ).map(\.id)) ?? []
     }
 }

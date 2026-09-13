@@ -163,10 +163,6 @@ struct BoardPackageStore {
         boardsByID[id]
     }
 
-    func semantics(for _: String) -> [String: [String]] {
-        [:]
-    }
-
     func presentationImageURL(
         for board: BoardRevision,
         presentationID: String? = nil
@@ -941,7 +937,6 @@ struct BoardPackageStore {
             aspectRatio: document.aspectRatio,
             equipmentObjects: document.equipmentObjects.map(\.equipmentObject),
             contacts: contacts,
-            semanticHolds: [:],
             productURL: document.productURL,
             photoAssetName: nil,
             presentations: presentations,

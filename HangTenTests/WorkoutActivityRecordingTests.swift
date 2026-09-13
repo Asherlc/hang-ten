@@ -89,6 +89,27 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }()
 
+    func testResolverRejectsAnAmbiguousSingleRequirement() {
+        let bilateralStep = WorkoutStep(
+            id: "bilateral",
+            number: 1,
+            title: "Bilateral edge hang",
+            instruction: "Hang with both hands.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [.edge(selection: .single)]
+        )
+
+        XCTAssertThrowsError(
+            try ContactResolver.resolve(
+                .edge(selection: .single),
+                step: bilateralStep,
+                board: board
+            )
+        )
+    }
+
     private func modelPresentation(
         id: String = "model",
         isDefault: Bool = true,
@@ -256,7 +277,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         instruction: String = "Use the named board feature",
         _ segments: [WorkoutSegment]
     ) -> TrainingPlan {
-        TrainingPlan(
+        return TrainingPlan(
             id: "plan",
             title: "Plan",
             subtitle: "",
@@ -290,7 +311,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(board(holds: [hold], presentations: [presentation]).contacts(in: presentation), [hold])
     }
 
-    func testWorkoutMatchingTreatsMissingDefaultMediaMappingAsUnavailable() {
+    func testWorkoutMatchingUsesOnlyContactsInTheDefaultPresentation() throws {
         let mapped = PhysicalContact(id: "mapped", name: "Mapped", kind: .edge)
         let missing = PhysicalContact(id: "missing", name: "Missing", kind: .edge)
         let presentation = modelPresentation(bounds: [
@@ -300,12 +321,15 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertNil(missing.resolvedFrame(in: presentation))
         XCTAssertEqual(board.contacts(in: presentation), [mapped])
-        XCTAssertTrue(
-            BoardTargetResolver.resolveHoldIDs(for: .ids(missing.id), on: board).isEmpty
+        let requirement = ContactRequirement.kind(.edge, selection: .single)
+        let workoutStep = step(targets: [requirement])
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: workoutStep, board: board).map(\.id),
+            [mapped.id]
         )
     }
 
-    func testWorkoutMatchingSideAndSymmetryUseOnlyDefaultPresentation() {
+    func testWorkoutMatchingSideAndPairCardinalityUseOnlyDefaultPresentation() throws {
         let left = PhysicalContact(
             id: "pocket-left",
             name: "Left pocket",
@@ -330,23 +354,41 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         let board = board(holds: [left, right], presentations: [defaultModel, alternateRaster])
 
-        XCTAssertEqual(
-            BoardTargetResolver.resolveHoldIDs(
-                for: .kind(.pocket, fingerCapacity: 3),
-                handUse: .single,
-                side: .right,
-                on: board
-            ),
-            [left.id]
+        let singleRequirement = ContactRequirement.kind(
+            .pocket,
+            fingerCapacity: 3,
+            selection: .single
+        )
+        let singleStep = WorkoutStep(
+            id: "single",
+            number: 1,
+            title: "Single",
+            instruction: "",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [singleRequirement],
+            handUse: .single,
+            side: .right
         )
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(
-                for: .kind(.pocket),
-                handUse: .double,
-                side: .both,
-                on: board
-            ),
-            []
+            try ContactResolver.resolve(singleRequirement, step: singleStep, board: board).map(\.id),
+            [left.id]
+        )
+
+        let pairRequirement = ContactRequirement.kind(.pocket, selection: .bilateralPair)
+        let pairStep = WorkoutStep(
+            id: "pair",
+            number: 1,
+            title: "Pair",
+            instruction: "",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [pairRequirement]
+        )
+        XCTAssertThrowsError(
+            try ContactResolver.resolve(pairRequirement, step: pairStep, board: board)
         )
     }
 
@@ -374,7 +416,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testMultiTargetWorkRecordsAllHoldsWithOneDuration() throws {
         let segment = WorkoutSegment(
             kind: .work,
-            targets: [.ids("edge-left"), .ids("jug-center")],
+            targets: [.feature(.mediumEdge), .kind(.jug)],
             timing: .fixed,
             duration: 10
         )
@@ -385,7 +427,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
 
         XCTAssertEqual(records.count, 1)
-        XCTAssertEqual(records[0].holdIDs, ["edge-left", "jug-center"])
+        XCTAssertEqual(records[0].holdIDs, ["edge-left", "edge-right", "jug-center"])
         XCTAssertNil(records[0].holdType)
         XCTAssertNil(records[0].sizeMillimeters)
         XCTAssertEqual(records[0].durationSeconds, 10)
@@ -395,7 +437,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .feature(.mediumEdge),
                 timing: .fixed,
                 duration: 20
             ),
@@ -453,7 +495,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .feature(.mediumEdge),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -473,7 +515,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: ContactRequirement(selection: .allMatching),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -488,7 +530,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .feature(.mediumEdge),
                 timing: .undefined,
                 duration: 30
             )
@@ -503,7 +545,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left", "edge-right"),
+                target: .feature(.mediumEdge),
                 timing: .fixed,
                 duration: 10
             )
@@ -519,7 +561,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left", "edge-deep", "jug-center"),
+                target: ContactRequirement(selection: .allMatching),
                 timing: .fixed,
                 duration: 10
             )
@@ -528,7 +570,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
         XCTAssertEqual(records.count, 3)
-        XCTAssertEqual(records[0].holdIDs, ["edge-left"])
+        XCTAssertEqual(records[0].holdIDs, ["edge-left", "edge-right"])
         XCTAssertEqual(records[0].holdType, "edge")
         XCTAssertEqual(records[0].sizeMillimeters, 21)
         XCTAssertEqual(records[1].holdIDs, ["edge-deep"])
@@ -542,7 +584,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testRepeatedSourceSegmentsRemainDistinct() throws {
         let repeated = WorkoutSegment(
             kind: .work,
-            target: .ids("edge-left"),
+            target: .feature(.mediumEdge),
             timing: .fixed,
             duration: 5
         )
@@ -590,7 +632,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left", "jug-center"),
+                target: .kind(.edge),
                 timing: .fixed,
                 duration: 10
             )
@@ -627,7 +669,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .kind(.edge),
                 timing: .fixed,
                 duration: 10
             )
@@ -654,7 +696,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("missing"),
+                target: ContactRequirement(
+                    kind: .edge,
+                    requiredFeatures: [.roundSloper],
+                    selection: .allMatching
+                ),
                 timing: .fixed,
                 duration: 1
             )
@@ -674,7 +720,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                targets: [.ids("edge-left"), .ids("missing")],
+                targets: [
+                    .kind(.jug),
+                    ContactRequirement(
+                        kind: .edge,
+                        requiredFeatures: [.roundSloper],
+                        selection: .allMatching
+                    )
+                ],
                 timing: .fixed,
                 duration: 10
             )
@@ -694,7 +747,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .kind(.edge),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -717,104 +770,6 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
     }
 
-    func testAppStoreResolutionPreservesDirectFeatureFallbackAndKindBehavior() {
-        let defaults = makeDefaults()
-        let store = AppStore(
-            healthKitService: HealthWorkoutSavingSpy(),
-            workoutSessionStore: makeSessionStore(defaults: defaults),
-            defaults: defaults
-        )
-        let exactFeatureTarget = HoldTarget.feature(
-            .mediumEdge,
-            fallbacks: [.largeEdge]
-        )
-
-        XCTAssertEqual(
-            store.holdIDs(
-                for: step(targets: [.ids("missing", "edge-right")]),
-                on: board
-            ),
-            ["edge-right"]
-        )
-        XCTAssertEqual(
-            store.holdIDs(for: step(targets: [exactFeatureTarget]), on: board),
-            ["edge-left", "edge-right"]
-        )
-        XCTAssertEqual(
-            store.holdIDs(
-                for: step(
-                    targets: [
-                        .feature(.smallEdge, fallbacks: [.largeEdge])
-                    ]
-                ),
-                on: board
-            ),
-            ["edge-deep"]
-        )
-        XCTAssertEqual(
-            store.holdIDs(for: step(targets: [.kind(.jug)]), on: board),
-            ["jug-center"]
-        )
-
-        XCTAssertFalse(
-            store.usesFallbackMapping(
-                plan(targets: [exactFeatureTarget], segments: []),
-                on: board
-            )
-        )
-        XCTAssertTrue(
-            store.usesFallbackMapping(
-                plan(
-                    targets: [
-                        .feature(.smallEdge, fallbacks: [.largeEdge])
-                    ],
-                    segments: []
-                ),
-                on: board
-            )
-        )
-    }
-
-    func testFallbackResolutionPrefersNearestFractionalDepthMeasurement() {
-        let board = BoardRevision(
-            id: "fractional-depth.board",
-            revisionID: "test-fixture",
-            manufacturer: "Fixture",
-            name: "Fractional depth board",
-            subtitle: "",
-            dimensions: "",
-            aspectRatio: 2,
-            contacts: [
-                PhysicalContact(
-                    id: "range-edge",
-                    name: "20.5 to 21 mm edge",
-                    kind: .edge,
-                    depthRangeMillimeters: 20.5...21
-                ),
-                PhysicalContact(
-                    id: "scalar-edge",
-                    name: "19.75 mm edge",
-                    kind: .edge,
-                    depthRangeMillimeters: 19.75...19.75
-                )
-            ],
-            productURL: URL(string: "https://example.com/fractional-depth-board")!,
-            photoAssetName: nil,
-            presentations: [rasterPresentation(bounds: [
-                "range-edge": HoldFrame(x: 0.1, y: 0.1, width: 0.2, height: 0.1),
-                "scalar-edge": HoldFrame(x: 0.7, y: 0.1, width: 0.2, height: 0.1)
-            ])]
-        )
-
-        XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(
-                for: .feature(.mediumEdge),
-                on: board
-            ),
-            ["scalar-edge"]
-        )
-    }
-
     func testAppStoreResolutionSelectsOneThreeFingerPocketPerHand() {
         let defaults = makeDefaults()
         let store = AppStore(
@@ -824,28 +779,24 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            store.holdIDs(
-                for: step(targets: [.kind(.pocket, fingerCapacity: 3)]),
+            store.contactIDs(
+                for: step(targets: [ContactRequirement(
+                    kind: .pocket,
+                    depthRangeMillimeters: .init(minimum: 29, maximum: 29),
+                    fingerCapacity: 3,
+                    selection: .bilateralPair
+                )]),
                 on: BoardCatalog.defaultBoard
             ),
             ["pocket-29-three-left", "pocket-29-three-right"]
         )
     }
 
-    func testActivityRecordingSingleHandStepSelectsOneEquipmentObject() throws {
+    func testActivityRecordingRejectsAmbiguousSingleHandRequirement() {
         let board = portableBoard(handCapacity: nil)
         let workout = portablePlan(handUse: .single, side: .left)
 
-        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
-
-        XCTAssertEqual(records.count, 1)
-        XCTAssertEqual(records[0].holdIDs, ["left-a"])
-        XCTAssertEqual(
-            Set(records[0].holdIDs.compactMap { id in
-                board.contacts.first { $0.id == id }?.equipmentObjectID
-            }),
-            ["left"]
-        )
+        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board))
     }
 
     func testActivityRecordingSingleHandStepRecordsRequestedRightObject() throws {
@@ -859,8 +810,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             aspectRatio: 1,
             equipmentObjects: [.init(id: "left"), .init(id: "right")],
             contacts: [
-                PhysicalContact(id: "left-a", equipmentObjectID: "left", name: "Left", kind: .pocket, handCapacity: 1),
-                PhysicalContact(id: "right-a", equipmentObjectID: "right", name: "Right", kind: .pocket, handCapacity: 1)
+                PhysicalContact(id: "left-a", equipmentObjectID: "left", name: "Left", kind: .pocket, handCapacity: 1, side: .left),
+                PhysicalContact(id: "right-a", equipmentObjectID: "right", name: "Right", kind: .pocket, handCapacity: 1, side: .right)
             ],
             productURL: URL(string: "https://example.com/paired-portable")!,
             photoAssetName: nil,
@@ -887,43 +838,37 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records.map(\.holdIDs), [["right-a"]])
     }
 
-    func testActivityRecordingDoubleHandStepRejectsExplicitSingleHandPairOnOneObject() {
+    func testActivityRecordingDoubleHandStepUsesExactFactualPairOnOneObject() throws {
         let board = portableBoard(handCapacity: 1)
         let workout = portablePlan(handUse: .double, side: .both)
 
-        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
-            XCTAssertEqual(
-                error as? WorkoutActivityRecordingError,
-                .unresolvedTarget(stepID: "portable-step", segmentIndex: 0)
-            )
-        }
+        XCTAssertEqual(
+            try WorkoutActivityRecorder().segments(for: workout, on: board).first?.holdIDs,
+            ["left-a", "left-b"]
+        )
     }
 
-    func testActivityRecordingDoubleHandStepRejectsNewPortABoardWithoutHandCapacity() {
+    func testActivityRecordingDoubleHandStepUsesPairWithoutInventingCapacity() throws {
         let board = portableBoard(
             id: "new-single-object-board",
             handCapacity: nil
         )
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
-        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
-            XCTAssertEqual(
-                error as? WorkoutActivityRecordingError,
-                .unresolvedTarget(stepID: "portable-step", segmentIndex: 0)
-            )
-        }
+        XCTAssertEqual(
+            try WorkoutActivityRecorder().segments(for: workout, on: board).first?.holdIDs,
+            ["left-a", "left-b"]
+        )
     }
 
-    func testActivityRecordingDoubleHandStepRejectsUnknownHandCapacity() throws {
+    func testActivityRecordingDoubleHandStepDoesNotSpecialCaseBoardIDs() throws {
         let board = portableBoard(id: "beastmaker-1000", handCapacity: nil)
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
-        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
-            XCTAssertEqual(
-                error as? WorkoutActivityRecordingError,
-                .unresolvedTarget(stepID: "portable-step", segmentIndex: 0)
-            )
-        }
+        XCTAssertEqual(
+            try WorkoutActivityRecorder().segments(for: workout, on: board).first?.holdIDs,
+            ["left-a", "left-b"]
+        )
     }
 
     func testSevenThreeRepeatersResolveExpectedLeftRightEdgePairs() throws {
@@ -1013,7 +958,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 XCTAssertEqual(seriesSteps.count, 7)
                 XCTAssertTrue(seriesSteps.allSatisfy { $0.activeDuration == 7 })
                 XCTAssertTrue(seriesSteps.allSatisfy {
-                    store.holdIDs(for: $0, on: board).sorted() == cue.targetIDs.sorted()
+                    store.contactIDs(for: $0, on: board).sorted() == cue.targetIDs.sorted()
                 })
                 XCTAssertTrue(seriesSteps.allSatisfy { $0.gripType == cue.gripType })
                 XCTAssertTrue(seriesSteps.allSatisfy {
@@ -1029,7 +974,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             }
         }
 
-        let resolvedPairs = workSteps.map { store.holdIDs(for: $0, on: board).sorted() }
+        let resolvedPairs = workSteps.map { store.contactIDs(for: $0, on: board).sorted() }
         XCTAssertEqual(Set(resolvedPairs), Set(expectedProgressionCues.map { $0.targetIDs.sorted() }))
 
         for holdIDs in Set(resolvedPairs) {
@@ -1093,7 +1038,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .feature(.mediumEdge),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -1140,7 +1085,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .kind(.edge),
                 timing: .fixed,
                 duration: 10
             )
@@ -1202,7 +1147,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .kind(.edge),
                 timing: .fixed,
                 duration: 8
             )
@@ -1232,7 +1177,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .kind(.edge),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -1280,7 +1225,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("missing"),
+                target: ContactRequirement(
+                    kind: .edge,
+                    requiredFeatures: [.roundSloper],
+                    selection: .allMatching
+                ),
                 timing: .fixed,
                 duration: 10
             )
@@ -1412,7 +1361,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
     }
 
-    private func step(targets: [HoldTarget]) -> WorkoutStep {
+    private func step(targets: [ContactRequirement]) -> WorkoutStep {
         WorkoutStep(
             id: "step",
             number: 1,
@@ -1426,7 +1375,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     private func plan(
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         segments: [WorkoutSegment]
     ) -> TrainingPlan {
         TrainingPlan(
@@ -1506,7 +1455,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         side: WorkoutSide,
         boardID: String = "portable-board"
     ) -> TrainingPlan {
-        TrainingPlan(
+        let requirement = ContactRequirement.kind(
+            .pocket,
+            selection: handUse == .single ? .single : .bilateralPair
+        )
+        return TrainingPlan(
             id: "portable-plan",
             title: "Portable plan",
             subtitle: "",
@@ -1524,8 +1477,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .hang,
-                    targets: [.kind(.pocket)],
-                    segments: [WorkoutSegment(kind: .work, target: .kind(.pocket), timing: .fixed, duration: 10)],
+                    targets: [requirement],
+                    segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
                     handUse: handUse,
                     side: side
                 )

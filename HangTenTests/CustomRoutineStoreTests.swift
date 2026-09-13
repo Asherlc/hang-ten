@@ -134,7 +134,6 @@ final class CustomRoutineStoreTests: XCTestCase {
                 title: "Exact fingers",
                 generatedAt: "2026-08-07"
             ),
-            boardMappings: [],
             blocks: [WorkoutBlockDefinition(id: "exact-finger-block", steps: [step])],
             plans: [
                 PlanDefinition(
@@ -236,7 +235,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left", "edge-19-right"])],
+                    targets: [.kind(.edge)],
                     gripType: .halfCrimp,
                     activeDuration: 10
                 )
@@ -260,7 +259,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         let plan = try reloaded.plan(for: persisted)
         XCTAssertEqual(plan.id, definition.id)
         XCTAssertEqual(plan.title, definition.title)
-        XCTAssertEqual(plan.steps[0].targets, [.ids("edge-19-left", "edge-19-right")])
+        XCTAssertEqual(plan.steps[0].targets, [.kind(.edge)])
         XCTAssertEqual(plan.provenance, .custom)
         XCTAssertNil(plan.sourceURL)
     }
@@ -282,7 +281,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.feature(.mediumEdge, fallbacks: [])],
+                    targets: [.feature(.mediumEdge)],
                     activeDuration: 10
                 )
             ]
@@ -311,7 +310,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .pull,
-                    targets: [.holdIDs(["edge-20"])],
+                    targets: [.kind(.edge)],
                     handUse: .double,
                     side: .both
                 )
@@ -459,7 +458,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             category: nil,
             tags: [],
             targetMode: .boardSpecific(boardID: "unknown-board"),
-            steps: [validStep(targets: [.holdIDs(["missing-hold"])])]
+            steps: [validStep(targets: [.kind(.edge)])]
         )
 
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
@@ -469,7 +468,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.flatEdge, fallbacks: [])])
+        let definition = genericDefinition(targets: [.feature(.flatEdge)])
         let jugOnlyBoard = BoardRevision(
             id: "fixture.jug-only",
             revisionID: "test-fixture",
@@ -514,7 +513,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s hang · 4s rest",
                     duration: 12,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])],
+                    targets: [.kind(.edge)],
                     activeDuration: 8
                 )
             ]
@@ -540,7 +539,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             tags: [],
             targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [
-                validStep(targets: [.holdIDs(["edge-19-left"])]),
+                validStep(targets: [.kind(.edge)]),
                 WorkoutStepDefinition(
                     id: "rest",
                     title: "Rest",
@@ -583,11 +582,11 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s hang · 4s rest",
                     duration: 12,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])],
+                    targets: [.kind(.edge)],
                     segments: [
                         WorkoutSegmentDefinition(
                             kind: .work,
-                            targets: [.holdIDs(["edge-19-left"])],
+                            targets: [.kind(.edge)],
                             timing: .fixed,
                             duration: 8
                         ),
@@ -627,7 +626,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.mediumEdge, fallbacks: [])],
+                        targets: [.feature(.mediumEdge)],
                         timing: .fixed,
                         duration: 10
                     )
@@ -635,11 +634,11 @@ final class CustomRoutineStoreTests: XCTestCase {
             )]
         )
         let generic = genericDefinition(
-            targets: [.holdIDs(["edge-19-left"])],
+            targets: [.kind(.edge)],
             segments: [
                 WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.holdIDs(["edge-19-right"])],
+                    targets: [.kind(.edge)],
                     timing: .fixed,
                     duration: 10
                 )
@@ -681,11 +680,11 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s · 4s",
                     duration: 12,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])],
+                    targets: [.kind(.edge)],
                     segments: [
                         WorkoutSegmentDefinition(
                             kind: .work,
-                            targets: [.holdIDs(["edge-19-right"])],
+                            targets: [.kind(.edge)],
                             timing: .fixed,
                             duration: 8
                         ),
@@ -705,7 +704,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "Up to 20s",
                     duration: 20,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])]
+                    targets: [.kind(.edge)]
                 ),
                 WorkoutStepDefinition(
                     id: "stopwatch",
@@ -714,11 +713,11 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "Up to 30s",
                     duration: 30,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-right"])],
+                    targets: [.kind(.edge)],
                     segments: [
                         WorkoutSegmentDefinition(
                             kind: .work,
-                            targets: [.holdIDs(["edge-19-right"])],
+                            targets: [.kind(.edge)],
                             timing: .stopwatch,
                             duration: nil
                         )
@@ -737,10 +736,10 @@ final class CustomRoutineStoreTests: XCTestCase {
         ])
         XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest, .hang, .hang])
         XCTAssertEqual(stored.steps.map(\.targets), [
-            [.holdIDs(["edge-19-right"])],
+            [.kind(.edge)],
             [],
-            [.holdIDs(["edge-19-left"])],
-            [.holdIDs(["edge-19-right"])]
+            [.kind(.edge)],
+            [.kind(.edge)]
         ])
         XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1, 1])
         let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
@@ -966,7 +965,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         difficulty: String? = nil,
         category: String? = nil,
         tags: [String] = [],
-        targets: [WorkoutTargetDefinition] = [.kind(.jug)],
+        targets: [ContactRequirement] = [.kind(.jug)],
         segments: [WorkoutSegmentDefinition] = []
     ) -> CustomRoutineDefinition {
         CustomRoutineDefinition(
@@ -982,7 +981,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     private func validStep(
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         segments: [WorkoutSegmentDefinition] = []
     ) -> WorkoutStepDefinition {
         WorkoutStepDefinition(
@@ -1005,7 +1004,6 @@ final class CustomRoutineStoreTests: XCTestCase {
                 title: "Test library",
                 generatedAt: "2026-08-05"
             ),
-            boardMappings: [],
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: [validStep(targets: [.kind(.jug)])])],
             plans: [PlanDefinition(id: "test.plan", metadata: metadata, boardID: nil, blocks: [WorkoutBlockReference(blockID: "test.block")])]
         )

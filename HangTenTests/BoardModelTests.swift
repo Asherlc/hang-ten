@@ -46,7 +46,6 @@ final class BoardModelTests: XCTestCase {
             aspectRatio: original.aspectRatio,
             equipmentObjects: original.equipmentObjects,
             contacts: original.contacts,
-            semanticHolds: original.semanticHolds,
             productURL: original.productURL,
             photoAssetName: original.photoAssetName,
             presentations: original.presentations,
@@ -87,7 +86,6 @@ final class BoardModelTests: XCTestCase {
             aspectRatio: original.aspectRatio,
             equipmentObjects: original.equipmentObjects,
             contacts: original.contacts,
-            semanticHolds: original.semanticHolds,
             productURL: original.productURL,
             photoAssetName: original.photoAssetName,
             presentations: original.presentations,
@@ -448,25 +446,22 @@ final class BoardModelTests: XCTestCase {
             let board = try XCTUnwrap(plan.boardID.flatMap {
                 BoardCatalog.packageStore.board(id: $0)
             })
-            for target in plan.steps.flatMap(\.targets) {
-                XCTAssertFalse(
-                    BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty,
-                    "Expected \(plan.id) target \(target) to resolve on \(board.id)"
-                )
+            for step in plan.steps {
+                XCTAssertNoThrow(try ContactResolver.resolve(step.targets, step: step, board: board))
             }
         }
 
         for boardID in ["yy.baguette-evo", "soill.training-tiles"] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let compatibleGenericPlans = PlanCatalog.all.filter { plan in
-                plan.boardID == nil && plan.steps.flatMap(\.targets).allSatisfy {
-                    !BoardTargetResolver.substituteHoldIDs(for: $0, on: board).isEmpty
+                plan.boardID == nil && plan.steps.allSatisfy { step in
+                    (try? ContactResolver.resolve(step.targets, step: step, board: board)) != nil
                 }
             }
             XCTAssertFalse(compatibleGenericPlans.isEmpty, boardID)
             for plan in compatibleGenericPlans {
-                for target in plan.steps.flatMap(\.targets) {
-                    let resolvedIDs = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+                for step in plan.steps {
+                    let resolvedIDs = try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)
                     XCTAssertTrue(Set(resolvedIDs).isSubset(of: Set(board.contacts.map(\.id))), "\(plan.id): \(boardID)")
                 }
             }

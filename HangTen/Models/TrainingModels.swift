@@ -636,7 +636,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     /// One canonical row per case: physical kind and cross-kind substitution
     /// group, kept together so adding a case can't leave the two properties
     /// out of sync with each other. Finger count is real per-hold/per-target
-    /// data (`PhysicalContact.fingerCapacity`, `HoldTarget.fingerCapacity`), not
+    /// data (`PhysicalContact.fingerCapacity`, `ContactRequirement.fingerCapacity`), not
     /// something derived from a feature's identity.
     private struct Physicality {
         let holdKind: HoldKind
@@ -1014,9 +1014,6 @@ struct BoardRevision: Identifiable, Hashable {
     let presentations: [BoardPresentation]
     let positions: [BoardPosition]
     let positionTransitions: [BoardPositionTransition]
-    /// Board-owned semantic targets loaded alongside the physical hold data.
-    /// The empty default preserves hand-built board fixtures and catalog entries.
-    let semanticHolds: [String: SemanticHoldMappingDefinition]
     let productURL: URL
     /// Optional board-specific reference art. Boards without a photo use the
     /// vector fallback, so adding another board does not require an image.
@@ -1032,7 +1029,6 @@ struct BoardRevision: Identifiable, Hashable {
         aspectRatio: CGFloat,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         contacts: [PhysicalContact],
-        semanticHolds: [String: SemanticHoldMappingDefinition] = [:],
         productURL: URL,
         photoAssetName: String?,
         presentations: [BoardPresentation] = [],
@@ -1063,7 +1059,6 @@ struct BoardRevision: Identifiable, Hashable {
             BoardPosition(id: $0.id, presentationID: $0.id)
         }
         self.positionTransitions = positionTransitions
-        self.semanticHolds = semanticHolds
         self.productURL = productURL
         self.photoAssetName = photoAssetName
     }
@@ -1139,81 +1134,6 @@ struct BoardRevision: Identifiable, Hashable {
     }
 }
 
-struct HoldTarget: Hashable {
-    let holdIDs: [String]
-    let kind: HoldKind?
-    let feature: HoldFeature?
-    let fallbackFeatures: [HoldFeature]
-    /// The finger count this target wants, matched against
-    /// `PhysicalContact.fingerCapacity`. Real, author-specified data that can
-    /// qualify either a kind or a feature target.
-    let fingerCapacity: Int?
-
-    init(
-        holdIDs: [String],
-        kind: HoldKind?,
-        feature: HoldFeature?,
-        fallbackFeatures: [HoldFeature],
-        fingerCapacity: Int?
-    ) {
-        if let fingerCapacity {
-            precondition(
-                PhysicalContact.validFingerCapacityRange.contains(fingerCapacity),
-                "HoldTarget fingerCapacity must be in \(PhysicalContact.validFingerCapacityRange)."
-            )
-        }
-        self.holdIDs = holdIDs
-        self.kind = kind
-        self.feature = feature
-        self.fallbackFeatures = fallbackFeatures
-        self.fingerCapacity = fingerCapacity
-    }
-
-    static func ids(_ holdIDs: String...) -> HoldTarget {
-        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
-    }
-
-    static func ids(_ holdIDs: [String]) -> HoldTarget {
-        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
-    }
-
-    static func kind(
-        _ kind: HoldKind,
-        fingerCapacity: Int? = nil,
-        fallback fallbackFeatures: HoldFeature...
-    ) -> HoldTarget {
-        self.kind(kind, fallbacks: fallbackFeatures, fingerCapacity: fingerCapacity)
-    }
-
-    static func kind(
-        _ kind: HoldKind,
-        fallbacks: [HoldFeature],
-        fingerCapacity: Int? = nil
-    ) -> HoldTarget {
-        HoldTarget(
-            holdIDs: [],
-            kind: kind,
-            feature: nil,
-            fallbackFeatures: fallbacks,
-            fingerCapacity: fingerCapacity
-        )
-    }
-
-    static func feature(
-        _ feature: HoldFeature,
-        fingerCapacity: Int? = nil,
-        fallback fallbackFeatures: HoldFeature...
-    ) -> HoldTarget {
-        HoldTarget(
-            holdIDs: [],
-            kind: nil,
-            feature: feature,
-            fallbackFeatures: fallbackFeatures,
-            fingerCapacity: fingerCapacity
-        )
-    }
-}
-
 enum WorkoutSegmentKind: String, Codable, Hashable {
     case work
     case rest
@@ -1237,14 +1157,14 @@ enum WorkoutSegmentTiming: String, CaseIterable, Codable, Hashable, Identifiable
 
 struct WorkoutSegment: Hashable {
     let kind: WorkoutSegmentKind
-    let targets: [HoldTarget]
-    var target: HoldTarget? { targets.first }
+    let targets: [ContactRequirement]
+    var target: ContactRequirement? { targets.first }
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
 
     init(
         kind: WorkoutSegmentKind,
-        target: HoldTarget?,
+        target: ContactRequirement?,
         timing: WorkoutSegmentTiming,
         duration: TimeInterval?
     ) {
@@ -1258,7 +1178,7 @@ struct WorkoutSegment: Hashable {
 
     init(
         kind: WorkoutSegmentKind,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         timing: WorkoutSegmentTiming,
         duration: TimeInterval?
     ) {
@@ -1365,7 +1285,7 @@ struct WorkoutStep: Identifiable, Hashable {
     let accessory: String
     let duration: TimeInterval
     let phase: WorkoutPhase
-    let targets: [HoldTarget]
+    let targets: [ContactRequirement]
     let segments: [WorkoutSegment]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
@@ -1387,7 +1307,7 @@ struct WorkoutStep: Identifiable, Hashable {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         segments: [WorkoutSegment] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
@@ -1476,7 +1396,7 @@ struct MetoliusTaskDefinition: Hashable {
     let accessory: String
     let duration: TimeInterval
     let phase: WorkoutPhase
-    let targets: [HoldTarget]
+    let targets: [ContactRequirement]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
     let timing: WorkoutSegmentTiming
@@ -1487,7 +1407,7 @@ struct MetoliusTaskDefinition: Hashable {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
         timing: WorkoutSegmentTiming = .fixed
@@ -1556,16 +1476,12 @@ enum BoardCatalog {
 
     static let all = packageStore.boards
 
-    /// Generic plans (`boardID: nil`) are authored against the same board as
-    /// the legacy semantic-hold mappings. Crashes rather than falling back to
-    /// an unrelated board, since silently resolving generic targets against
-    /// the wrong board would misrepresent every hold callout in those plans.
+    /// The initial catalog selection remains stable while plan requirements
+    /// resolve independently against whichever board the athlete selects.
     static let defaultBoard: BoardRevision = {
-        guard let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID else {
-            fatalError("LegacyPlanSeedBoardMappings.all is empty.")
-        }
+        let boardID = "metolius.wood-grips-compact-ii"
         guard let board = packageStore.board(id: boardID) else {
-            fatalError("The bundled board catalog is missing the legacy default board '\(boardID)'.")
+            fatalError("The bundled board catalog is missing the default board '\(boardID)'.")
         }
         return board
     }()
@@ -1602,7 +1518,7 @@ enum MetoliusCycleBuilder {
         title: String,
         instruction: String,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
@@ -1623,7 +1539,7 @@ enum MetoliusCycleBuilder {
         title: String,
         instruction: String,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
@@ -1644,7 +1560,7 @@ enum MetoliusCycleBuilder {
         instruction: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
@@ -1666,7 +1582,7 @@ enum MetoliusCycleBuilder {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
@@ -1687,7 +1603,7 @@ enum MetoliusCycleBuilder {
         title: String,
         instruction: String,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
@@ -1764,7 +1680,7 @@ enum MetoliusCycleBuilder {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType?,
         fingerConfiguration: FingerConfiguration?,
         timing: WorkoutSegmentTiming = .fixed
@@ -1783,9 +1699,9 @@ enum MetoliusCycleBuilder {
     }
 }
 
-/// Board-specific target vocabulary retained by the plan migration seed.
-/// Physical board packages intentionally contain no training-plan semantics.
-enum LegacyPlanSeedBoardMappings {
+/// Source-audited factual requirements for Metolius's numbered routines.
+/// The plan guide and official numbered/depth diagrams establish every field.
+enum BundledPlanContactRequirements {
     static let metoliusContactBoardID = "metolius.contact"
     static let metoliusSimulator3DBoardID = "metolius.simulator-3d"
 
@@ -1806,33 +1722,48 @@ enum LegacyPlanSeedBoardMappings {
         case pocket11
         case pocket13
 
-        fileprivate var contactIDs: [String] {
+        fileprivate var requirement: ContactRequirement {
             switch self {
             case .anyHold:
-                [
-                    "pinch-left", "jug-left", "flat-sloper-center", "pocket-4-left", "pocket-5-left",
-                    "pocket-6-left", "pocket-7-left", "pocket-8-left", "pocket-9-left", "pocket-10-left",
-                    "pocket-11-left", "pocket-12-left", "pocket-13-left", "pocket-14-left", "edge-16-center",
-                    "edge-17-center", "edge-18-center", "edge-19-center", "pocket-14-right", "pocket-13-right",
-                    "pocket-12-right", "pocket-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right",
-                    "pocket-7-right", "pocket-6-right", "pocket-5-right", "pocket-4-right", "round-sloper-3-left",
-                    "round-sloper-3-right", "jug-right", "pinch-right"
-                ]
-            case .outerJugs: ["jug-left", "jug-right"]
-            case .pinches: ["pinch-left", "pinch-right"]
-            case .flatSloper: ["flat-sloper-center"]
-            case .roundSlopers: ["round-sloper-3-left", "round-sloper-3-right"]
-            case .edge16: ["edge-16-center"]
-            case .edge17: ["edge-17-center"]
-            case .edge18: ["edge-18-center"]
-            case .pocket4: ["pocket-4-left", "pocket-4-right"]
-            case .pocket6: ["pocket-6-left", "pocket-6-right"]
-            case .pocket7: ["pocket-7-left", "pocket-7-right"]
-            case .pocket8: ["pocket-8-left", "pocket-8-right"]
-            case .pocket9: ["pocket-9-left", "pocket-9-right"]
-            case .pocket11: ["pocket-11-left", "pocket-11-right"]
-            case .pocket13: ["pocket-13-left", "pocket-13-right"]
+                ContactRequirement(selection: .allMatching)
+            case .outerJugs:
+                .kind(.jug, selection: .bilateralPair)
+            case .pinches:
+                .kind(.pinch, selection: .bilateralPair)
+            case .flatSloper:
+                .feature(.flatSloper, selection: .single)
+            case .roundSlopers:
+                .feature(.roundSloper, selection: .bilateralPair)
+            case .edge16:
+                .edge(depthRangeMillimeters: .init(minimum: 15, maximum: 15), selection: .single)
+            case .edge17:
+                .edge(depthRangeMillimeters: .init(minimum: 35, maximum: 35), selection: .single)
+            case .edge18:
+                .edge(depthRangeMillimeters: .init(minimum: 28, maximum: 28), selection: .single)
+            case .pocket4:
+                pocket(fingers: 4, depth: 30)
+            case .pocket6:
+                pocket(fingers: 3, depth: 20)
+            case .pocket7:
+                pocket(fingers: 3, depth: 30)
+            case .pocket8:
+                pocket(fingers: 2, depth: 32)
+            case .pocket9:
+                pocket(fingers: 4, depth: 20)
+            case .pocket11:
+                pocket(fingers: 2, depth: 25)
+            case .pocket13:
+                pocket(fingers: 3, depth: 17)
             }
+        }
+
+        private func pocket(fingers: Int, depth: Double) -> ContactRequirement {
+            ContactRequirement(
+                kind: .pocket,
+                depthRangeMillimeters: .init(minimum: depth, maximum: depth),
+                fingerCapacity: fingers,
+                selection: .bilateralPair
+            )
         }
     }
 
@@ -1853,91 +1784,69 @@ enum LegacyPlanSeedBoardMappings {
         case pocket17
         case pocket18
 
-        fileprivate var contactIDs: [String] {
+        fileprivate var requirement: ContactRequirement {
             switch self {
             case .anyHold:
-                [
-                    "jug-1-left", "round-sloper-3-left", "jug-14-center", "round-sloper-3-right", "jug-1-right",
-                    "pocket-4-left", "edge-5-left", "edge-6-left", "edge-7-left", "pocket-8-left", "pocket-9-left",
-                    "pocket-10-left", "edge-11-left", "pocket-12-left", "pocket-13-left", "pocket-15-center",
-                    "pocket-16-center", "pocket-17-center", "pocket-18-center", "pocket-13-right", "pocket-12-right",
-                    "edge-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right", "edge-7-right", "edge-6-right",
-                    "edge-5-right", "pocket-4-right"
-                ]
-            case .outerJugs: ["jug-1-left", "jug-1-right"]
-            case .centerJug: ["jug-14-center"]
-            case .roundSlopers: ["round-sloper-3-left", "round-sloper-3-right"]
-            case .edge5: ["edge-5-left", "edge-5-right"]
-            case .edge6: ["edge-6-left", "edge-6-right"]
-            case .edge7: ["edge-7-left", "edge-7-right"]
-            case .edge11: ["edge-11-left", "edge-11-right"]
-            case .pocket4: ["pocket-4-left", "pocket-4-right"]
-            case .pocket8: ["pocket-8-left", "pocket-8-right"]
-            case .pocket9: ["pocket-9-left", "pocket-9-right"]
-            case .pocket12: ["pocket-12-left", "pocket-12-right"]
-            case .pocket15: ["pocket-15-center"]
-            case .pocket17: ["pocket-17-center"]
-            case .pocket18: ["pocket-18-center"]
+                ContactRequirement(selection: .allMatching)
+            case .outerJugs, .centerJug:
+                // The source distinguishes outer and center jugs, but the
+                // factual requirement grammar has no position/name field.
+                // Keep only the supported kind rather than inferring one.
+                .kind(.jug, selection: .allMatching)
+            case .roundSlopers:
+                .kind(.sloper, selection: .bilateralPair)
+            case .edge5:
+                edge(depth: 25)
+            case .edge6:
+                edge(depth: 19)
+            case .edge7:
+                edge(depth: 36)
+            case .edge11:
+                edge(depth: 14)
+            case .pocket4:
+                pocket(fingers: 3, depth: 30, selection: .bilateralPair)
+            case .pocket8:
+                pocket(fingers: 3, depth: 15, selection: .bilateralPair)
+            case .pocket9:
+                pocket(fingers: 3, depth: 35, selection: .bilateralPair)
+            case .pocket12:
+                pocket(fingers: 2, depth: 30, selection: .bilateralPair)
+            case .pocket15:
+                pocket(fingers: 3, depth: 50, selection: .single)
+            case .pocket17:
+                pocket(fingers: 2, depth: 28, selection: .single)
+            case .pocket18:
+                pocket(fingers: 2, depth: 32, selection: .single)
             }
+        }
+
+        private func edge(depth: Double) -> ContactRequirement {
+            .edge(
+                depthRangeMillimeters: .init(minimum: depth, maximum: depth),
+                selection: .bilateralPair
+            )
+        }
+
+        private func pocket(
+            fingers: Int,
+            depth: Double,
+            selection: ContactSelectionPolicy
+        ) -> ContactRequirement {
+            ContactRequirement(
+                kind: .pocket,
+                depthRangeMillimeters: .init(minimum: depth, maximum: depth),
+                fingerCapacity: fingers,
+                selection: selection
+            )
         }
     }
 
-    static func contactTargets(_ groups: MetoliusContactTarget...) -> [HoldTarget] {
-        groups.map { .ids($0.contactIDs) }
+    static func contactTargets(_ groups: MetoliusContactTarget...) -> [ContactRequirement] {
+        groups.map(\.requirement)
     }
 
-    static func simulator3DTargets(_ groups: MetoliusSimulator3DTarget...) -> [HoldTarget] {
-        groups.map { .ids($0.contactIDs) }
-    }
-
-    static let all = [
-        BoardMappingDefinition(
-            boardID: "metolius.wood-grips-compact-ii",
-            semanticHolds: [
-                "edge-19": SemanticHoldMappingDefinition(
-                    holdIDs: ["edge-19-left", "edge-19-right"]
-                ),
-                "edge-29": SemanticHoldMappingDefinition(
-                    holdIDs: ["edge-29-left", "edge-29-right"]
-                ),
-                "flat-slopers": SemanticHoldMappingDefinition(
-                    holdIDs: ["sloper-flat-left", "sloper-flat-right"]
-                ),
-                "outer-jugs": SemanticHoldMappingDefinition(
-                    holdIDs: ["jug-left", "jug-right"]
-                ),
-                "pocket-19-four": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-19-four-center"]
-                ),
-                "pocket-19-three": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-19-three-left", "pocket-19-three-right"]
-                ),
-                "pocket-19-two": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-19-two-left", "pocket-19-two-right"]
-                ),
-                "pocket-29-four": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-29-four-center"]
-                ),
-                "pocket-29-three": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-29-three-left", "pocket-29-three-right"]
-                ),
-                "pocket-29-two": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-29-two-left", "pocket-29-two-right"]
-                ),
-                "round-sloper": SemanticHoldMappingDefinition(
-                    holdIDs: ["sloper-round-center"]
-                )
-            ]
-        )
-    ]
-
-    static func required(containingSemantic semanticID: String) -> BoardMappingDefinition {
-        let matches = all.filter { $0.semanticHolds[semanticID] != nil }
-        precondition(
-            matches.count == 1,
-            "Expected exactly one plan mapping with \(semanticID) semantics."
-        )
-        return matches[0]
+    static func simulator3DTargets(_ groups: MetoliusSimulator3DTarget...) -> [ContactRequirement] {
+        groups.map(\.requirement)
     }
 }
 
@@ -1986,7 +1895,7 @@ enum LegacyPlanSeedCatalog {
     /// app-defined per-repetition work durations.
     private static func officialSourceCycles(
         planID: String,
-        _ minutes: [(instruction: String, targets: [HoldTarget], phase: WorkoutPhase)]
+        _ minutes: [(instruction: String, targets: [ContactRequirement], phase: WorkoutPhase)]
     ) -> [WorkoutStep] {
         precondition(minutes.count == 10, "An official Metolius routine has ten source minutes.")
         return minutes.enumerated().map { index, minute in
@@ -2019,7 +1928,7 @@ enum LegacyPlanSeedCatalog {
         sourceURL: URL,
         boardID: String,
         subtitle: String = "Official ten-minute sequence; remaining time rests.",
-        minutes: [(instruction: String, targets: [HoldTarget], phase: WorkoutPhase)]
+        minutes: [(instruction: String, targets: [ContactRequirement], phase: WorkoutPhase)]
     ) -> TrainingPlan {
         TrainingPlan(
             id: id,
@@ -2040,18 +1949,18 @@ enum LegacyPlanSeedCatalog {
         level: "Entry",
         sourceLabel: "Metolius Contact Training Guide",
         sourceURL: contactSourceURL,
-        boardID: LegacyPlanSeedBoardMappings.metoliusContactBoardID,
+        boardID: BundledPlanContactRequirements.metoliusContactBoardID,
         minutes: [
-            ("1 pull-up outer jugs (2); 10 second hang center edge (17).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs, .edge17), .pull),
-            ("1 pull-up deep four finger edge (4), stay on — 10 s bent arm hang (90°), stay on — 1 more pull-up.", LegacyPlanSeedBoardMappings.contactTargets(.pocket4), .pull),
-            ("2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs, .pocket6), .pull),
-            ("6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang pinches (11).", LegacyPlanSeedBoardMappings.contactTargets(.anyHold, .pocket11), .hang),
-            ("10 s. dead hang flat sloper (15); 5 knee raises outer jug (2).", LegacyPlanSeedBoardMappings.contactTargets(.flatSloper, .outerJugs), .hang),
-            ("16 s. offset hang (8 s. per side) deep edge (17) & med pocket (7).", LegacyPlanSeedBoardMappings.contactTargets(.edge17, .pocket7), .hang),
-            ("3 pull-ups any hold.", LegacyPlanSeedBoardMappings.contactTargets(.anyHold), .pull),
-            ("10 s. bent arm hang (elbows 90°) deep four finger (3).", LegacyPlanSeedBoardMappings.contactTargets(.roundSlopers), .hang),
-            ("1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s. dead hang deep four finger pockets (3).", LegacyPlanSeedBoardMappings.contactTargets(.pinches, .pocket11, .roundSlopers), .pull),
-            ("2 pull-ups any hold; dead hang center edge (17) till failure. Fight hard & don't let go!!", LegacyPlanSeedBoardMappings.contactTargets(.anyHold, .edge17), .hang)
+            ("1 pull-up outer jugs (2); 10 second hang center edge (17).", BundledPlanContactRequirements.contactTargets(.outerJugs, .edge17), .pull),
+            ("1 pull-up deep four finger edge (4), stay on — 10 s bent arm hang (90°), stay on — 1 more pull-up.", BundledPlanContactRequirements.contactTargets(.pocket4), .pull),
+            ("2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket6), .pull),
+            ("6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
+            ("10 s. dead hang flat sloper (15); 5 knee raises outer jug (2).", BundledPlanContactRequirements.contactTargets(.flatSloper, .outerJugs), .hang),
+            ("16 s. offset hang (8 s. per side) deep edge (17) & med pocket (7).", BundledPlanContactRequirements.contactTargets(.edge17, .pocket7), .hang),
+            ("3 pull-ups any hold.", BundledPlanContactRequirements.contactTargets(.anyHold), .pull),
+            ("10 s. bent arm hang (elbows 90°) deep four finger (3).", BundledPlanContactRequirements.contactTargets(.roundSlopers), .hang),
+            ("1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s. dead hang deep four finger pockets (3).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket11, .roundSlopers), .pull),
+            ("2 pull-ups any hold; dead hang center edge (17) till failure. Fight hard & don't let go!!", BundledPlanContactRequirements.contactTargets(.anyHold, .edge17), .hang)
         ]
     )
 
@@ -2061,18 +1970,18 @@ enum LegacyPlanSeedCatalog {
         level: "Intermediate",
         sourceLabel: "Metolius Contact Training Guide",
         sourceURL: contactSourceURL,
-        boardID: LegacyPlanSeedBoardMappings.metoliusContactBoardID,
+        boardID: BundledPlanContactRequirements.metoliusContactBoardID,
         minutes: [
-            ("3 pull-ups outer jugs (2); 20 second dead hang deep three finger pockets (6).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs, .pocket6), .pull),
-            ("10 s. bent arm (elbows at 90°) hang round sloper (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs), .hang),
-            ("4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs, .pocket6), .pull),
-            ("10 s. L-hang on any holds; 10 s. dead hang on pinches (11).", LegacyPlanSeedBoardMappings.contactTargets(.anyHold, .pocket11), .hang),
-            ("10 s. offset hang, deep center edge (17) & med three finger edge (8), reverse holds — repeat.", LegacyPlanSeedBoardMappings.contactTargets(.edge17, .pocket8), .hang),
-            ("15 s. offset hang pockets (4) & (13), reverse holds — repeat.", LegacyPlanSeedBoardMappings.contactTargets(.pocket4, .pocket13), .hang),
-            ("4 pull-ups deep center edge (17); 10 knee raises any holds.", LegacyPlanSeedBoardMappings.contactTargets(.edge17, .anyHold), .pull),
-            ("15 s. dead hang, two finger pockets (7); rest 10 s.; 10 s. hang three finger pockets (9).", LegacyPlanSeedBoardMappings.contactTargets(.pocket7, .pocket9), .hang),
-            ("10 s. one arm hang jugs (3), repeat other arm; 4 pull-ups center edge (17).", LegacyPlanSeedBoardMappings.contactTargets(.roundSlopers, .edge17), .hang),
-            ("4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang to failure. Fight hard!!", LegacyPlanSeedBoardMappings.contactTargets(.flatSloper, .roundSlopers), .hang)
+            ("3 pull-ups outer jugs (2); 20 second dead hang deep three finger pockets (6).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket6), .pull),
+            ("10 s. bent arm (elbows at 90°) hang round sloper (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
+            ("4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket6), .pull),
+            ("10 s. L-hang on any holds; 10 s. dead hang on pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
+            ("10 s. offset hang, deep center edge (17) & med three finger edge (8), reverse holds — repeat.", BundledPlanContactRequirements.contactTargets(.edge17, .pocket8), .hang),
+            ("15 s. offset hang pockets (4) & (13), reverse holds — repeat.", BundledPlanContactRequirements.contactTargets(.pocket4, .pocket13), .hang),
+            ("4 pull-ups deep center edge (17); 10 knee raises any holds.", BundledPlanContactRequirements.contactTargets(.edge17, .anyHold), .pull),
+            ("15 s. dead hang, two finger pockets (7); rest 10 s.; 10 s. hang three finger pockets (9).", BundledPlanContactRequirements.contactTargets(.pocket7, .pocket9), .hang),
+            ("10 s. one arm hang jugs (3), repeat other arm; 4 pull-ups center edge (17).", BundledPlanContactRequirements.contactTargets(.roundSlopers, .edge17), .hang),
+            ("4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang to failure. Fight hard!!", BundledPlanContactRequirements.contactTargets(.flatSloper, .roundSlopers), .hang)
         ]
     )
 
@@ -2082,18 +1991,18 @@ enum LegacyPlanSeedCatalog {
         level: "Advanced",
         sourceLabel: "Metolius Contact Training Guide",
         sourceURL: contactSourceURL,
-        boardID: LegacyPlanSeedBoardMappings.metoliusContactBoardID,
+        boardID: BundledPlanContactRequirements.metoliusContactBoardID,
         minutes: [
-            ("6 pull-ups round slopers (2); 20 s. dead hang deep two finger pockets (4).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs, .pocket4), .pull),
-            ("15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs), .hang),
-            ("6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18).", LegacyPlanSeedBoardMappings.contactTargets(.outerJugs, .pocket4, .edge18), .pull),
-            ("15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11).", LegacyPlanSeedBoardMappings.contactTargets(.anyHold, .pocket11), .hang),
-            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s.", LegacyPlanSeedBoardMappings.contactTargets(.pocket13, .pocket9, .outerJugs), .hang),
-            ("15 s. one arm hang center edge (17); rest 20 s.; repeat other arm.", LegacyPlanSeedBoardMappings.contactTargets(.edge17), .hang),
-            ("5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4).", LegacyPlanSeedBoardMappings.contactTargets(.pinches, .pocket4), .pull),
-            ("10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep).", LegacyPlanSeedBoardMappings.contactTargets(.edge16, .edge17), .hang),
-            ("20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang.", LegacyPlanSeedBoardMappings.contactTargets(.pocket7, .roundSlopers), .hang),
-            ("8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!!", LegacyPlanSeedBoardMappings.contactTargets(.roundSlopers), .hang)
+            ("6 pull-ups round slopers (2); 20 s. dead hang deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4), .pull),
+            ("15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
+            ("6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4, .edge18), .pull),
+            ("15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
+            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s.", BundledPlanContactRequirements.contactTargets(.pocket13, .pocket9, .outerJugs), .hang),
+            ("15 s. one arm hang center edge (17); rest 20 s.; repeat other arm.", BundledPlanContactRequirements.contactTargets(.edge17), .hang),
+            ("5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket4), .pull),
+            ("10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep).", BundledPlanContactRequirements.contactTargets(.edge16, .edge17), .hang),
+            ("20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang.", BundledPlanContactRequirements.contactTargets(.pocket7, .roundSlopers), .hang),
+            ("8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!!", BundledPlanContactRequirements.contactTargets(.roundSlopers), .hang)
         ]
     )
 
@@ -2103,19 +2012,19 @@ enum LegacyPlanSeedCatalog {
         level: "Entry",
         sourceLabel: "Metolius Simulator 3D Training Guide",
         sourceURL: simulator3DSourceURL,
-        boardID: LegacyPlanSeedBoardMappings.metoliusSimulator3DBoardID,
+        boardID: BundledPlanContactRequirements.metoliusSimulator3DBoardID,
         subtitle: "Official ten-minute sequence; remaining time rests. Feet on a chair may lower resistance; place it 1'–3' behind the board plane.",
         minutes: [
-            ("10 second dead hang, deep flat edge (7).", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge7), .hang),
-            ("15 second dead hang + one pull-up, outer jugs (1).", LegacyPlanSeedBoardMappings.simulator3DTargets(.outerJugs), .hang),
-            ("2 offset pull-up (1 each arm) center jug (14) & deep three finger pockets (4).", LegacyPlanSeedBoardMappings.simulator3DTargets(.centerJug, .pocket4), .pull),
-            ("15 second dead hang, extra deep 3 finger pockets (9).", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket9), .hang),
-            ("12 second dead hang flat slopers (2) & 5 knee raises outer jugs (1).", LegacyPlanSeedBoardMappings.simulator3DTargets(.roundSlopers, .outerJugs), .hang),
-            ("16 second offset hang / (8 sec per side), deep pocket (15) & shallow edge (5).", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket15, .edge5), .hang),
-            ("3 pull-ups outer jugs (1).", LegacyPlanSeedBoardMappings.simulator3DTargets(.outerJugs), .pull),
-            ("8 second bent arm hang (elbows @ 90), round slopers (3).", LegacyPlanSeedBoardMappings.simulator3DTargets(.roundSlopers), .hang),
-            ("1 pull-up & then 10 second hang, ext-deep 3 finger pocket (9).", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket9), .pull),
-            ("Dead hang to failure, any holds.", LegacyPlanSeedBoardMappings.simulator3DTargets(.anyHold), .hang)
+            ("10 second dead hang, deep flat edge (7).", BundledPlanContactRequirements.simulator3DTargets(.edge7), .hang),
+            ("15 second dead hang + one pull-up, outer jugs (1).", BundledPlanContactRequirements.simulator3DTargets(.outerJugs), .hang),
+            ("2 offset pull-up (1 each arm) center jug (14) & deep three finger pockets (4).", BundledPlanContactRequirements.simulator3DTargets(.centerJug, .pocket4), .pull),
+            ("15 second dead hang, extra deep 3 finger pockets (9).", BundledPlanContactRequirements.simulator3DTargets(.pocket9), .hang),
+            ("12 second dead hang flat slopers (2) & 5 knee raises outer jugs (1).", BundledPlanContactRequirements.simulator3DTargets(.roundSlopers, .outerJugs), .hang),
+            ("16 second offset hang / (8 sec per side), deep pocket (15) & shallow edge (5).", BundledPlanContactRequirements.simulator3DTargets(.pocket15, .edge5), .hang),
+            ("3 pull-ups outer jugs (1).", BundledPlanContactRequirements.simulator3DTargets(.outerJugs), .pull),
+            ("8 second bent arm hang (elbows @ 90), round slopers (3).", BundledPlanContactRequirements.simulator3DTargets(.roundSlopers), .hang),
+            ("1 pull-up & then 10 second hang, ext-deep 3 finger pocket (9).", BundledPlanContactRequirements.simulator3DTargets(.pocket9), .pull),
+            ("Dead hang to failure, any holds.", BundledPlanContactRequirements.simulator3DTargets(.anyHold), .hang)
         ]
     )
 
@@ -2125,18 +2034,18 @@ enum LegacyPlanSeedCatalog {
         level: "Intermediate",
         sourceLabel: "Metolius Simulator 3D Training Guide",
         sourceURL: simulator3DSourceURL,
-        boardID: LegacyPlanSeedBoardMappings.metoliusSimulator3DBoardID,
+        boardID: BundledPlanContactRequirements.metoliusSimulator3DBoardID,
         minutes: [
-            ("25 second dead hang, medium edge (5).", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge5), .hang),
-            ("20 second dead hang, flat slopers (2), 3 pull-ups flat slopers.", LegacyPlanSeedBoardMappings.simulator3DTargets(.roundSlopers), .hang),
-            ("15 second bent arm hang, shallow edge (6) & 10 knee raises, jugs (1).", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge6, .outerJugs), .hang),
-            ("15 second dead hang flat slope (2), 15 second dead hang round slopers (3).", LegacyPlanSeedBoardMappings.simulator3DTargets(.roundSlopers), .hang),
-            ("20 second offset hang, jug (1) & shallow pocket (17), reverse holds — repeat.", LegacyPlanSeedBoardMappings.simulator3DTargets(.outerJugs, .pocket17), .hang),
-            ("15 second offset hang, pockets (4 & 9), reverse holds and repeat.", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket4, .pocket9), .hang),
-            ("4 pull-ups, medium edges, 10 knee raises any holds.", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge5, .anyHold), .pull),
-            ("30 second dead hang, deep pockets (7).", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge7), .hang),
-            ("10 sec one arm hang jugs (1), repeat other arm.", LegacyPlanSeedBoardMappings.simulator3DTargets(.outerJugs), .hang),
-            ("5 pull-ups deep edges (7), without dropping off, bump up to round slopers (3) & dead hang till failure.", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge7, .roundSlopers), .hang)
+            ("25 second dead hang, medium edge (5).", BundledPlanContactRequirements.simulator3DTargets(.edge5), .hang),
+            ("20 second dead hang, flat slopers (2), 3 pull-ups flat slopers.", BundledPlanContactRequirements.simulator3DTargets(.roundSlopers), .hang),
+            ("15 second bent arm hang, shallow edge (6) & 10 knee raises, jugs (1).", BundledPlanContactRequirements.simulator3DTargets(.edge6, .outerJugs), .hang),
+            ("15 second dead hang flat slope (2), 15 second dead hang round slopers (3).", BundledPlanContactRequirements.simulator3DTargets(.roundSlopers), .hang),
+            ("20 second offset hang, jug (1) & shallow pocket (17), reverse holds — repeat.", BundledPlanContactRequirements.simulator3DTargets(.outerJugs, .pocket17), .hang),
+            ("15 second offset hang, pockets (4 & 9), reverse holds and repeat.", BundledPlanContactRequirements.simulator3DTargets(.pocket4, .pocket9), .hang),
+            ("4 pull-ups, medium edges, 10 knee raises any holds.", BundledPlanContactRequirements.simulator3DTargets(.edge5, .anyHold), .pull),
+            ("30 second dead hang, deep pockets (7).", BundledPlanContactRequirements.simulator3DTargets(.edge7), .hang),
+            ("10 sec one arm hang jugs (1), repeat other arm.", BundledPlanContactRequirements.simulator3DTargets(.outerJugs), .hang),
+            ("5 pull-ups deep edges (7), without dropping off, bump up to round slopers (3) & dead hang till failure.", BundledPlanContactRequirements.simulator3DTargets(.edge7, .roundSlopers), .hang)
         ]
     )
 
@@ -2146,18 +2055,18 @@ enum LegacyPlanSeedCatalog {
         level: "Advanced",
         sourceLabel: "Metolius Simulator 3D Training Guide",
         sourceURL: simulator3DSourceURL,
-        boardID: LegacyPlanSeedBoardMappings.metoliusSimulator3DBoardID,
+        boardID: BundledPlanContactRequirements.metoliusSimulator3DBoardID,
         minutes: [
-            ("25 second dead hang shallow edge (6), 5 pull-ups three finger pockets (9).", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge6, .pocket9), .hang),
-            ("5 offset pull-ups, pockets (15 & 12), reverse holds repeat.", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket15, .pocket12), .pull),
-            ("45 second dead hang, extra shallow edges (11).", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge11), .hang),
-            ("5 offset pull-ups, round sloper (3) & deep pocket (4), reverse holds repeat.", LegacyPlanSeedBoardMappings.simulator3DTargets(.roundSlopers, .pocket4), .pull),
-            ("10 second dead hang, x-shallow edges (11), staying on, campus to three finger pockets (9), campus to shallow edges (6), campus to flat slopers (2), hold for 15 seconds.", LegacyPlanSeedBoardMappings.simulator3DTargets(.edge11, .pocket9, .edge6, .roundSlopers), .hang),
-            ("15 second one arm hang, round sloper (3), rest 10 seconds, repeat other arm.", LegacyPlanSeedBoardMappings.simulator3DTargets(.roundSlopers), .hang),
-            ("5 L-sit pull-ups (bend knees if you have to), jugs (1), 20 second bent arm hang (elbows @ 90), deep two finger pockets (12).", LegacyPlanSeedBoardMappings.simulator3DTargets(.outerJugs, .pocket12), .pull),
-            ("20 second slightly bent arm hang, shallow 3 finger pocket (8), stay on, bump to x-deep three finger pockets 25 second dead hang.", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket8, .pocket9), .hang),
-            ("10 second hang center pockets (18 & 17), reverse holds repeat, three power pull-ups (use weights or helper for resistance, should just be able to complete third pull).", LegacyPlanSeedBoardMappings.simulator3DTargets(.pocket18, .pocket17), .hang),
-            ("8 fast pull-ups, jugs (1) (keeping form perfect), dead hang round sloper to failure (fighting hard!).", LegacyPlanSeedBoardMappings.simulator3DTargets(.outerJugs, .roundSlopers), .hang)
+            ("25 second dead hang shallow edge (6), 5 pull-ups three finger pockets (9).", BundledPlanContactRequirements.simulator3DTargets(.edge6, .pocket9), .hang),
+            ("5 offset pull-ups, pockets (15 & 12), reverse holds repeat.", BundledPlanContactRequirements.simulator3DTargets(.pocket15, .pocket12), .pull),
+            ("45 second dead hang, extra shallow edges (11).", BundledPlanContactRequirements.simulator3DTargets(.edge11), .hang),
+            ("5 offset pull-ups, round sloper (3) & deep pocket (4), reverse holds repeat.", BundledPlanContactRequirements.simulator3DTargets(.roundSlopers, .pocket4), .pull),
+            ("10 second dead hang, x-shallow edges (11), staying on, campus to three finger pockets (9), campus to shallow edges (6), campus to flat slopers (2), hold for 15 seconds.", BundledPlanContactRequirements.simulator3DTargets(.edge11, .pocket9, .edge6, .roundSlopers), .hang),
+            ("15 second one arm hang, round sloper (3), rest 10 seconds, repeat other arm.", BundledPlanContactRequirements.simulator3DTargets(.roundSlopers), .hang),
+            ("5 L-sit pull-ups (bend knees if you have to), jugs (1), 20 second bent arm hang (elbows @ 90), deep two finger pockets (12).", BundledPlanContactRequirements.simulator3DTargets(.outerJugs, .pocket12), .pull),
+            ("20 second slightly bent arm hang, shallow 3 finger pocket (8), stay on, bump to x-deep three finger pockets 25 second dead hang.", BundledPlanContactRequirements.simulator3DTargets(.pocket8, .pocket9), .hang),
+            ("10 second hang center pockets (18 & 17), reverse holds repeat, three power pull-ups (use weights or helper for resistance, should just be able to complete third pull).", BundledPlanContactRequirements.simulator3DTargets(.pocket18, .pocket17), .hang),
+            ("8 fast pull-ups, jugs (1) (keeping form perfect), dead hang round sloper to failure (fighting hard!).", BundledPlanContactRequirements.simulator3DTargets(.outerJugs, .roundSlopers), .hang)
         ]
     )
 
@@ -2255,7 +2164,7 @@ enum LegacyPlanSeedCatalog {
                     title: "Four-finger flat-edge pull-ups",
                     instruction: "Do 3 pull-ups on a four-finger flat edge.",
                     phase: .pull,
-                    targets: [.feature(.flatEdge, fingerCapacity: 4, fallback: .largeEdge)]
+                    targets: [.feature(.flatEdge, fingerCapacity: 4)]
                 )
             ],
             [
@@ -2309,14 +2218,14 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Hang one-armed from a four-finger flat edge for 20 seconds.",
                     duration: 20,
                     phase: .hang,
-                    targets: [.feature(.flatEdge, fingerCapacity: 4, fallback: .largeEdge)]
+                    targets: [.feature(.flatEdge, fingerCapacity: 4)]
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "Single-arm flat-edge hang · other hand",
                     instruction: "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
                     duration: 20,
                     phase: .hang,
-                    targets: [.feature(.flatEdge, fingerCapacity: 4, fallback: .largeEdge)]
+                    targets: [.feature(.flatEdge, fingerCapacity: 4)]
                 )
             ],
             [
@@ -2341,7 +2250,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
                     duration: 30,
                     phase: .hang,
-                    targets: [.feature(.incutEdge, fingerCapacity: 4, fallback: .largeEdge)]
+                    targets: [.feature(.incutEdge, fingerCapacity: 4)]
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "Straight-arm three-finger-pocket hang",
@@ -2399,7 +2308,7 @@ enum LegacyPlanSeedCatalog {
         ])
     )
 
-    private static func fixedWork(_ target: HoldTarget, _ duration: TimeInterval) -> WorkoutSegment {
+    private static func fixedWork(_ target: ContactRequirement, _ duration: TimeInterval) -> WorkoutSegment {
         WorkoutSegment(kind: .work, target: target, timing: .fixed, duration: duration)
     }
 
@@ -2417,7 +2326,7 @@ enum LegacyPlanSeedCatalog {
         accessory: String,
         active: TimeInterval,
         rest: TimeInterval,
-        targets: [HoldTarget],
+        targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> WorkoutStep {
@@ -2474,7 +2383,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
+                targets: [.feature(.mediumEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -2485,7 +2394,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
+                targets: [.feature(.mediumEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -2496,7 +2405,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
+                targets: [.feature(.mediumEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -2507,7 +2416,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
+                targets: [.feature(.mediumEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -2518,7 +2427,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
+                targets: [.feature(.mediumEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -2546,7 +2455,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: set == 3 && rep == 12 ? 0 : 6,
-                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail)],
+                            targets: [.feature(.smallEdge)],
                             gripType: nil
                         )
                     )
@@ -2587,7 +2496,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: 0,
-                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail)],
+                            targets: [.feature(.smallEdge)],
                             gripType: nil
                         )
                     )
@@ -2599,7 +2508,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
-                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail)],
+                            targets: [.feature(.smallEdge)],
                             gripType: nil
                         )
                     )
@@ -2630,7 +2539,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 5s rest",
                             active: 10,
                             rest: rep < 5 ? 5 : 0,
-                            targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)],
+                            targets: [.feature(.mediumEdge)],
                             gripType: nil
                         )
                     )
@@ -2663,16 +2572,16 @@ enum LegacyPlanSeedCatalog {
             var steps: [WorkoutStep] = []
             let grips: [(
                 title: String,
-                targets: [HoldTarget],
+                targets: [ContactRequirement],
                 grip: GripType?,
                 fingerConfiguration: FingerConfiguration?
             )] = [
-                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .openHand, nil),
-                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, nil),
-                ("19 mm half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, nil),
-                ("Front-three open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("Back-three half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("Front-two open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
+                ("29 mm open edge", [.edge(depthRangeMillimeters: .init(minimum: 29, maximum: 29), selection: .bilateralPair)], .openHand, nil),
+                ("19 mm open edge", [.edge(depthRangeMillimeters: .init(minimum: 19, maximum: 19), selection: .bilateralPair)], .openHand, nil),
+                ("19 mm half crimp", [.edge(depthRangeMillimeters: .init(minimum: 19, maximum: 19), selection: .bilateralPair)], .halfCrimp, nil),
+                ("Front-three open edge", [.edge(depthRangeMillimeters: .init(minimum: 19, maximum: 19), selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("Back-three half crimp", [.edge(depthRangeMillimeters: .init(minimum: 19, maximum: 19), selection: .bilateralPair)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("Front-two open edge", [.edge(depthRangeMillimeters: .init(minimum: 19, maximum: 19), selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
             ]
 
             for set in 1...2 {
@@ -2732,7 +2641,7 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            let target: [HoldTarget] = [.feature(.mediumEdge)]
+            let target: [ContactRequirement] = [.feature(.mediumEdge)]
 
             for set in 1...6 {
                 for side in [WorkoutSide.left, .right] {
@@ -2830,13 +2739,13 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            let grips: [(title: String, targets: [HoldTarget], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, nil),
-                ("F3 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+            let grips: [(title: String, targets: [ContactRequirement], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
+                ("Half 4 Hang", [.feature(.mediumEdge)], .halfCrimp, nil),
+                ("F3 Open Hang", [.feature(.mediumEdge)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [.feature(.mediumEdge)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [.feature(.mediumEdge)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [.feature(.mediumEdge)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [.feature(.mediumEdge)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -2869,16 +2778,16 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm half crimp", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .halfCrimp),
-                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand),
+            let grips: [(title: String, targets: [ContactRequirement], grip: GripType)] = [
+                ("29 mm half crimp", [.feature(.largeEdge)], .halfCrimp),
+                ("19 mm open edge", [.feature(.mediumEdge)], .openHand),
                 (
                     "Two-finger pocket",
                     [
                         .kind(
                             .pocket,
                             fingerCapacity: 2,
-                            fallback: .mediumEdge, .largeEdge, .largeOpenHandRail
+                            selection: .allMatching
                         )
                     ],
                     .openHand
@@ -2936,7 +2845,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "\(hangSeconds)s hang · 30s rest",
                             active: TimeInterval(hangSeconds),
                             rest: index < 2 ? 30 : 0,
-                            targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)],
+                            targets: [.feature(.largeEdge)],
                             gripType: nil
                         )
                     )
@@ -2967,15 +2876,15 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .openHand),
+            let grips: [(title: String, targets: [ContactRequirement], grip: GripType)] = [
+                ("29 mm open edge", [.feature(.largeEdge)], .openHand),
                 (
                     "Four-finger pocket",
                     [
                         .kind(
                             .pocket,
                             fingerCapacity: 4,
-                            fallback: .mediumEdge, .largeEdge, .largeOpenHandRail
+                            selection: .allMatching
                         )
                     ],
                     .openHand
@@ -3044,7 +2953,7 @@ enum LegacyPlanSeedCatalog {
                         accessory: "60s hang · 60s rest",
                         active: 60,
                         rest: interval < 10 ? 60 : 0,
-                        targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)],
+                        targets: [.feature(.largeEdge)],
                         gripType: nil
                     )
                 )
@@ -3064,7 +2973,7 @@ enum LegacyPlanSeedCatalog {
         instruction: String,
         accessory: String,
         phase: WorkoutPhase,
-        targets: [HoldTarget] = [],
+        targets: [ContactRequirement] = [],
         duration: TimeInterval = 60,
         timing: WorkoutSegmentTiming = .undefined,
         gripType: GripType? = nil
@@ -3111,7 +3020,7 @@ enum LegacyPlanSeedCatalog {
         id: String,
         title: String,
         instruction: String,
-        work: [(target: HoldTarget, duration: TimeInterval, phase: WorkoutPhase, gripType: GripType?)],
+        work: [(target: ContactRequirement, duration: TimeInterval, phase: WorkoutPhase, gripType: GripType?)],
         rest: TimeInterval
     ) -> WorkoutStep {
         let workSegments = work.map {
@@ -3240,12 +3149,12 @@ enum LegacyPlanSeedCatalog {
             emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs.", work: [(.kind(.pocket, fingerCapacity: 3), 15, .hang, .openHand), (.kind(.jug), 15, .pull, nil)], rest: 30),
             emomMinute(id: "method-emom-minute-3", title: "Minute 3 · 20mm hang + jug knee raises", instruction: "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs.", work: [(.feature(.mediumEdge), 10, .hang, .halfCrimp), (.kind(.jug), 5, .pull, nil)], rest: 45),
             emomMinute(id: "method-emom-minute-4", title: "Minute 4 · bent-arm 15mm hang", instruction: "Hold a bent-arm hang for 15 seconds on 15mm, then rest for the remainder.", work: [(.feature(.smallEdge), 15, .hang, .halfCrimp)], rest: 45),
-            emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(.feature(.largeSlope, fallback: .roundSloper), 10, .hang, .openHand), (.kind(.jug), 15, .pull, nil)], rest: 35),
+            emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(.feature(.largeSlope), 10, .hang, .openHand), (.kind(.jug), 15, .pull, nil)], rest: 35),
             emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(.kind(.pocket, fingerCapacity: 3), 10, .hang, .openHand)], rest: 50),
             emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(.kind(.jug), 15, .pull, nil), (.feature(.smallEdge), 15, .pull, nil)], rest: 30),
             emomMinute(id: "method-emom-minute-8", title: "Minute 8 · 15mm hang", instruction: "Hang for 25 seconds on a 15mm edge, then rest for the remainder.", work: [(.feature(.smallEdge), 25, .hang, .halfCrimp)], rest: 35),
             emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.", work: [(.feature(.mediumEdge), 20, .hang, .halfCrimp), (.kind(.jug), 10, .pull, nil)], rest: 30),
-            guidedTask(id: "method-emom-minute-10", title: "Minute 10 · max sloper", instruction: "Take a max hang on a sloper.", accessory: "Max effort · stopwatch", phase: .hang, targets: [.feature(.largeSlope, fallback: .roundSloper)], duration: 60, timing: .stopwatch, gripType: .openHand)
+            guidedTask(id: "method-emom-minute-10", title: "Minute 10 · max sloper", instruction: "Take a max hang on a sloper.", accessory: "Max effort · stopwatch", phase: .hang, targets: [.feature(.largeSlope)], duration: 60, timing: .stopwatch, gripType: .openHand)
         ])
     )
 
@@ -3262,12 +3171,12 @@ enum LegacyPlanSeedCatalog {
             var steps: [WorkoutStep] = [
                 guidedTask(id: "rei-sample-warm-up", title: "Warm-up", instruction: "Warm up with 20–30 minutes of easy climbing or light traversing, OR use 20–30-second dead hangs on the biggest holds plus several pull-up sets.", accessory: "20–30m easy climbing OR 20–30s big-hold hangs + pull-up sets", phase: .conditioning, duration: 1500, timing: .stopwatch)
             ]
-            let grips: [(title: String, target: HoldTarget, grip: GripType)] = [
+            let grips: [(title: String, target: ContactRequirement, grip: GripType)] = [
                 ("Jug", .kind(.jug), .openHand),
                 ("Three-finger pocket", .kind(.pocket, fingerCapacity: 3), .openHand),
                 ("Medium edge", .feature(.mediumEdge), .openHand),
-                ("Medium pinch", .feature(.mediumPinch, fallback: .mediumEdge), .openHand),
-                ("Large sloper", .feature(.largeSlope, fallback: .roundSloper), .openHand)
+                ("Medium pinch", .feature(.mediumPinch), .openHand),
+                ("Large sloper", .feature(.largeSlope), .openHand)
             ]
             for (index, grip) in grips.enumerated() {
                 for rep in 1...6 {
@@ -3354,53 +3263,31 @@ enum LegacyPlanSeedCatalog {
             assert(plan.steps.map(\.number) == Array(1...10))
             assert(Set(plan.steps.map(\.id)).count == 10)
             assert(
-                plan.boardID == LegacyPlanSeedBoardMappings.metoliusContactBoardID ||
-                    plan.boardID == LegacyPlanSeedBoardMappings.metoliusSimulator3DBoardID
+                plan.boardID == BundledPlanContactRequirements.metoliusContactBoardID ||
+                    plan.boardID == BundledPlanContactRequirements.metoliusSimulator3DBoardID
             )
         }
         assert(officialPlans.allSatisfy { $0.provenance == .official })
         assert(adaptedPlans.allSatisfy { $0.provenance == .adapted })
 
         let plans = metoliusPlans + officialPlans + adaptedPlans
-        func targetResolves(_ target: HoldTarget, on board: BoardRevision) -> Bool {
-            let boardHoldIDs = Set(board.contacts.map(\.id))
-            if !target.holdIDs.isEmpty {
-                return Set(target.holdIDs).isSubset(of: boardHoldIDs)
-            }
-            if target.feature != nil {
-                return !BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
-            }
-            if let kind = target.kind {
-                return board.contacts.contains { $0.kind == kind }
-            }
-            return false
-        }
-
         assert(Set(plans.map(\.id)).count == plans.count)
         for plan in plans {
             assert(Set(plan.steps.map(\.id)).count == plan.steps.count)
 
             if let boardID = plan.boardID {
                 assert(BoardCatalog.all.contains { $0.id == boardID })
-            } else {
+            }
+            if let boardID = plan.boardID {
+                let board = BoardCatalog.board(for: boardID)
                 assert(
-                    plan.steps.flatMap(\.targets).allSatisfy { $0.holdIDs.isEmpty },
-                    "Board-flexible plans must use semantic targets"
+                    plan.steps.allSatisfy { step in
+                        step.targets.allSatisfy {
+                            (try? ContactResolver.resolve($0, step: step, board: board)) != nil
+                        }
+                    },
+                    "The declared board cannot run \(plan.id)"
                 )
-            }
-            let candidateBoards = plan.boardID.map { [BoardCatalog.board(for: $0)] }
-                ?? BoardCatalog.all
-            let compatibleBoards = candidateBoards.filter { board in
-                plan.steps.flatMap(\.targets).allSatisfy {
-                    targetResolves($0, on: board)
-                }
-            }
-            assert(!compatibleBoards.isEmpty, "No board can run \(plan.id)")
-
-            for board in compatibleBoards {
-                for target in plan.steps.flatMap(\.targets) {
-                    assert(targetResolves(target, on: board))
-                }
             }
         }
         #endif

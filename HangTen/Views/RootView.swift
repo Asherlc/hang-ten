@@ -923,7 +923,7 @@ struct PlanDetailView: View {
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
         let board = store.board(for: currentPlan)
         let firstStep = currentPlan.steps.first
-        let firstStepHoldIDs = firstStep.map { store.holdIDs(for: $0, on: board) } ?? []
+        let firstStepHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
         let firstStepHold = board.contacts.first { firstStepHoldIDs.contains($0.id) }
         let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
             step: firstStep,
@@ -951,12 +951,6 @@ struct PlanDetailView: View {
                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
             }
-			if store.usesFallbackMapping(currentPlan, on: board) {
-				Text("Uses the closest available hold on this board.")
-					.font(.system(size: 12, weight: .medium, design: .rounded))
-					.foregroundStyle(Color.hangMuted)
-					.fixedSize(horizontal: false, vertical: true)
-			}
         }
         .hangCard()
     }
@@ -1743,7 +1737,7 @@ struct WorkoutView: View {
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
-				let previewHoldIDs = highlightedStep.map { WorkoutHighlightResolver.holdIDs(for: $0, on: board) } ?? []
+				let previewHoldIDs = highlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty

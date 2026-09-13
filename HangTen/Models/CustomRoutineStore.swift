@@ -342,7 +342,7 @@ enum CustomRoutineValidator {
     }
 
     private static func validate(
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         stepIndex: Int,
         segmentIndex: Int?,
         boards: [BoardRevision],
@@ -354,16 +354,6 @@ enum CustomRoutineValidator {
         guard targets.allSatisfy({ targetMatchesMode($0, targetMode: targetMode) }) else {
             issues.append(.targetModeMismatch(stepIndex: stepIndex, segmentIndex: segmentIndex))
             return
-        }
-
-        if targetMode.isBoardSpecific {
-            let knownHoldIDs = Set(boards.flatMap(\.contacts).map(\.id))
-            for target in targets {
-                guard case let .holdIDs(holdIDs) = target else { continue }
-                for holdID in holdIDs where !knownHoldIDs.contains(holdID) {
-                    issues.append(.unknownHoldID(stepIndex: stepIndex, holdID: holdID))
-                }
-            }
         }
 
         guard targets.allSatisfy({
@@ -379,19 +369,16 @@ enum CustomRoutineValidator {
     }
 
     private static func targetMatchesMode(
-        _ target: WorkoutTargetDefinition,
+        _ target: ContactRequirement,
         targetMode: CustomRoutineTargetMode
     ) -> Bool {
-        switch (targetMode, target) {
-        case (.boardSpecific, .holdIDs), (.generic, .kind), (.generic, .feature):
-            true
-        default:
-            false
-        }
+        _ = target
+        _ = targetMode
+        return true
     }
 
     private static func targetsResolve(
-        _ targets: [WorkoutTargetDefinition],
+        _ targets: [ContactRequirement],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
         on board: BoardRevision
@@ -402,7 +389,7 @@ enum CustomRoutineValidator {
     }
 
     private static func targetResolves(
-        _ target: WorkoutTargetDefinition,
+        _ target: ContactRequirement,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
         onAny boards: [BoardRevision]
@@ -413,40 +400,24 @@ enum CustomRoutineValidator {
     }
 
     private static func targetResolves(
-        _ target: WorkoutTargetDefinition,
+        _ target: ContactRequirement,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
         on board: BoardRevision
     ) -> Bool {
-        switch target {
-        case .semantic, .semantics:
-            return false
-        case let .holdIDs(holdIDs):
-            return !holdIDs.isEmpty && !BoardTargetResolver.substituteHoldIDs(
-                for: .ids(holdIDs),
-                handUse: handUse,
-                side: side,
-                on: board
-            ).isEmpty
-        case let .kind(kind, fallbacks, fingerCapacity):
-            return !BoardTargetResolver.substituteHoldIDs(
-                for: .kind(kind, fallbacks: fallbacks, fingerCapacity: fingerCapacity),
-                handUse: handUse,
-                side: side,
-                on: board
-            ).isEmpty
-        case let .feature(feature, fallbacks, fingerCapacity):
-            return !BoardTargetResolver.substituteHoldIDs(
-                for: .feature(
-                    feature,
-                    fallbacks: fallbacks,
-                    fingerCapacity: fingerCapacity
-                ),
-                handUse: handUse,
-                side: side,
-                on: board
-            ).isEmpty
-        }
+        let step = WorkoutStep(
+            id: "custom-validation",
+            number: 0,
+            title: "Validation",
+            instruction: "",
+            accessory: "",
+            duration: 1,
+            phase: .hang,
+            targets: [target],
+            handUse: handUse,
+            side: side
+        )
+        return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
     }
 }
 
@@ -545,7 +516,6 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 title: "Custom routine",
                 generatedAt: "local"
             ),
-            boardMappings: [],
             blocks: [block],
             plans: [planDefinition]
         )

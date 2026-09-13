@@ -317,49 +317,14 @@ final class AppStore: ObservableObject {
         BoardCatalog.board(for: plan.boardID ?? selectedBoard.id)
     }
 
-    func holdIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
-        let gripType = step.targets.count == 1 ? step.gripType : nil
-        let ids = step.targets.flatMap {
-            BoardTargetResolver.substituteHoldIDs(
-                for: $0,
-                handUse: step.handUse,
-                side: step.side,
-                on: board,
-                gripType: gripType
-            )
-        }
-        return Set(ids)
-    }
-
-    func usesFallbackMapping(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
-        plan.steps.contains { step in
-            let gripType = step.targets.count == 1 ? step.gripType : nil
-            return step.targets.contains { target in
-                guard let feature = target.feature,
-                      !target.fallbackFeatures.isEmpty else { return false }
-                let hasExactMatch = board.contacts.contains { $0.features.contains(feature) }
-                return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
-                    for: target,
-                    handUse: step.handUse,
-                    side: step.side,
-                    on: board,
-                    gripType: gripType
-                ).isEmpty
-            }
-        }
+    func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
+        Set((try? ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)) ?? [])
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
         plan.steps.contains { step in
-            let gripType = step.targets.count == 1 ? step.gripType : nil
             return step.targets.contains { target in
-                BoardTargetResolver.substituteHoldIDs(
-                    for: target,
-                    handUse: step.handUse,
-                    side: step.side,
-                    on: board,
-                    gripType: gripType
-                ).isEmpty
+                (try? ContactResolver.resolve(target, step: step, board: board)) == nil
             }
         }
     }
