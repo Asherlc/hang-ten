@@ -148,6 +148,8 @@ final class BoardPackageStoreTests: XCTestCase {
             modelURL: requestedModelURL,
             bytes: Data("downloaded".utf8)
         )
+        let started = expectation(description: "request starts")
+        request.onBegin = { started.fulfill() }
         let progressCancelled = expectation(description: "pending request progress is canceled")
         request.recordingProgress.onCancel = { progressCancelled.fulfill() }
         var resolutionCount = 0
@@ -162,9 +164,8 @@ final class BoardPackageStoreTests: XCTestCase {
         let acquisition = Task {
             await access.acquire(resource, bundle: fixture.bundle)
         }
-        while !request.isWaiting {
-            await Task.yield()
-        }
+        await fulfillment(of: [started], timeout: 1)
+        XCTAssertTrue(request.isWaiting)
         acquisition.cancel()
         await fulfillment(of: [progressCancelled], timeout: 1)
         XCTAssertEqual(request.recordingProgress.cancelCount, 1)

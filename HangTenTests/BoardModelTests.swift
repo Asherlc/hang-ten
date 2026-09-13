@@ -857,10 +857,9 @@ final class BoardModelTests: XCTestCase {
             .appendingPathComponent(resource.assetPath)
         // The hosted app can load the same catalog model concurrently. Give this
         // assertion its own cache identity without changing any model metadata.
-        let isolatedBundleURL = repositoryRootURL()
-            .appendingPathComponent(".context", isDirectory: true)
+        let isolatedBundleURL = FileManager.default.temporaryDirectory
             .appendingPathComponent(
-                "BoardModelTests-\(repositoryRootURL().lastPathComponent)-\(UUID().uuidString).bundle",
+                "BoardModelTests-\(UUID().uuidString).bundle",
                 isDirectory: true
             )
         defer { try? FileManager.default.removeItem(at: isolatedBundleURL) }

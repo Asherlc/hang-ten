@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import unicodedata
 import zipfile
 from collections.abc import Sequence
 
@@ -75,7 +76,10 @@ def optimize_usdz(
         ) as raw_archive_directory:
             temporary_archive = Path(raw_archive_directory) / output.name
             _write_deterministic_archive(temporary_archive, directory, output_members)
-            os.replace(temporary_archive, output)
+            try:
+                os.link(temporary_archive, output)
+            except FileExistsError as error:
+                raise ValueError(f"output USDZ must not already exist: {output}") from error
 
 
 def _regular_file(path: Path, label: str) -> Path:
@@ -113,14 +117,27 @@ def _safe_member_name(name: str) -> None:
 def _extract_safe_archive(source: Path, destination: Path) -> tuple[str, ...]:
     try:
         with zipfile.ZipFile(source) as archive:
-            names = tuple(info.filename for info in archive.infolist())
+            members = tuple(archive.infolist())
+            names = tuple(info.filename for info in members)
             if len(names) != len(set(names)):
                 raise ValueError("USDZ export contains duplicate member paths")
-            for name in names:
-                _safe_member_name(name)
-                target = destination / _native_path(name)
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(archive.read(name))
+            if len(
+                {
+                    unicodedata.normalize("NFD", name).casefold()
+                    for name in names
+                }
+            ) != len(names):
+                raise ValueError("USDZ export contains unsafe member paths")
+            try:
+                for info in members:
+                    name = info.filename
+                    _safe_member_name(name)
+                    target = destination / _native_path(name)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    with archive.open(name) as member, target.open("xb") as extracted:
+                        shutil.copyfileobj(member, extracted)
+            except FileExistsError as error:
+                raise ValueError("USDZ export contains unsafe member paths") from error
             return names
     except zipfile.BadZipFile as error:
         raise ValueError("input USDZ is not a readable archive") from error

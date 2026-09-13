@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 import tempfile
+import unicodedata
 import zipfile
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -383,8 +384,6 @@ def _canonicalize_usdz(model_path: Path) -> None:
     ``.usdc`` layers remain binary so canonicalization does not force a format
     change.
     """
-    from pxr import Sdf
-
     path = Path(model_path)
     with tempfile.TemporaryDirectory(
         prefix=f".{path.stem}.canonical-", dir=path.parent
@@ -403,11 +402,22 @@ def _canonicalize_usdz(model_path: Path) -> None:
                 for name in members
             ):
                 raise ValueError("USDZ export contains unsafe member paths")
+            if len(
+                {
+                    unicodedata.normalize("NFD", name).casefold()
+                    for name in members
+                }
+            ) != len(members):
+                raise ValueError("USDZ export contains unsafe member paths")
             members = sorted(members)
-            for name in members:
-                destination = directory / name
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                destination.write_bytes(archive.read(name))
+            try:
+                for name in members:
+                    destination = directory / name
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    with destination.open("xb") as extracted:
+                        extracted.write(archive.read(name))
+            except FileExistsError as error:
+                raise ValueError("USDZ export contains unsafe member paths") from error
         layers = [
             name
             for name in members
@@ -415,6 +425,8 @@ def _canonicalize_usdz(model_path: Path) -> None:
         ]
         if len(layers) != 1:
             raise ValueError("USDZ export must contain exactly one USD layer")
+        from pxr import Sdf
+
         source_layer = Sdf.Layer.FindOrOpen(str(directory / layers[0]))
         if source_layer is None:
             raise ValueError("USDZ export layer is unreadable")

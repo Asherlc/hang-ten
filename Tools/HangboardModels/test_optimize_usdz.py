@@ -159,6 +159,32 @@ class OptimizeUSDZTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "unsafe member paths"):
                 optimize_usdz(source, tmp_path / "optimized.usdz")
 
+    def test_optimizer_rejects_filesystem_member_aliases(self) -> None:
+        with _workspace("filesystem-alias-fixture-") as raw_path:
+            tmp_path = Path(raw_path)
+            source = tmp_path / "alias.usdz"
+            with zipfile.ZipFile(source, "w") as archive:
+                archive.writestr("scene.usda", USDA)
+                archive.writestr("Scene.usda", USDA)
+
+            with self.assertRaisesRegex(ValueError, "unsafe member paths"):
+                optimize_usdz(source, tmp_path / "optimized.usdz")
+
+    def test_optimizer_streams_members_without_archive_read(self) -> None:
+        with _workspace("streaming-extract-fixture-") as raw_path:
+            tmp_path = Path(raw_path)
+            source = tmp_path / "source.usdz"
+            destination = tmp_path / "extracted"
+            _write_fixture(source)
+
+            with patch.object(zipfile.ZipFile, "read", side_effect=AssertionError):
+                names = optimizer._extract_safe_archive(source, destination)
+
+            self.assertEqual(names, ("notes.bin", "textures/wood.png", "scene.usda"))
+            self.assertEqual(
+                (destination / "notes.bin").read_bytes(), b"unchanged non-USD member"
+            )
+
     def test_optimizer_requires_text_usda_layer(self) -> None:
         for suffix in (".usd", ".usdc"):
             with self.subTest(suffix=suffix), _workspace("suffix-fixture-") as raw_path:
@@ -194,36 +220,27 @@ class OptimizeUSDZTests(unittest.TestCase):
                 self.assertFalse(marker.exists(), "conversion must not start")
                 self.assertFalse(output.exists())
 
-    def test_optimizer_temporary_archive_cannot_replace_colliding_input(self) -> None:
-        with _workspace("temporary-input-collision-") as raw_path:
+    def test_optimizer_does_not_replace_output_created_during_publication(self) -> None:
+        with _workspace("publication-collision-") as raw_path:
             tmp_path = Path(raw_path)
             output = tmp_path / "optimized.usdz"
-            source = tmp_path / f".{output.name}.tmp"
-            _write_fixture(source)
-            source_bytes = source.read_bytes()
-
-            optimize_usdz(source, output)
-
-            self.assertEqual(source.read_bytes(), source_bytes)
-            self.assertTrue(zipfile.is_zipfile(output))
-
-    def test_optimizer_temporary_archive_does_not_follow_preexisting_symlink(self) -> None:
-        with _workspace("temporary-symlink-collision-") as raw_path:
-            tmp_path = Path(raw_path)
             source = tmp_path / "source.usdz"
-            output = tmp_path / "optimized.usdz"
-            unrelated = tmp_path / "unrelated.txt"
-            old_temporary_archive = tmp_path / f".{output.name}.tmp"
             _write_fixture(source)
-            unrelated.write_bytes(b"do not overwrite")
-            old_temporary_archive.symlink_to(unrelated)
+            original_writer = optimizer._write_deterministic_archive
 
-            optimize_usdz(source, output)
+            def write_then_create_output(*args: object) -> None:
+                original_writer(*args)
+                output.write_bytes(b"do not replace")
 
-            self.assertEqual(unrelated.read_bytes(), b"do not overwrite")
-            self.assertTrue(old_temporary_archive.is_symlink())
-            self.assertFalse(output.is_symlink())
-            self.assertTrue(zipfile.is_zipfile(output))
+            with patch.object(
+                optimizer,
+                "_write_deterministic_archive",
+                side_effect=write_then_create_output,
+            ):
+                with self.assertRaisesRegex(ValueError, "must not already exist"):
+                    optimize_usdz(source, output)
+
+            self.assertEqual(output.read_bytes(), b"do not replace")
 
     def test_compiler_canonicalizes_existing_usdc_without_path_collision(self) -> None:
         class FakeRoot:
@@ -272,6 +289,17 @@ class OptimizeUSDZTests(unittest.TestCase):
                 self.assertEqual(
                     archive.namelist(), ["canonical.usdc", "aaa.bin", "texture.bin"]
                 )
+
+    def test_compiler_rejects_filesystem_member_aliases(self) -> None:
+        with _workspace("compiler-filesystem-alias-fixture-") as raw_path:
+            tmp_path = Path(raw_path)
+            model = tmp_path / "model.usdz"
+            with zipfile.ZipFile(model, "w") as archive:
+                archive.writestr("sc\u0065\u0301ne.usda", USDA)
+                archive.writestr("sc\u00e9ne.usda", USDA)
+
+            with self.assertRaisesRegex(ValueError, "unsafe member paths"):
+                compiler._canonicalize_usdz(model)
 
     def test_cli_reports_value_errors_without_traceback(self) -> None:
         with _workspace("cli-error-fixture-") as raw_path:
