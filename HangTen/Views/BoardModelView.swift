@@ -466,6 +466,11 @@ final class BoardModelScene {
     static let cordCategory = 2
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
 
+    private struct PreparedCameraState {
+        let transform: simd_float4x4
+        let orthographicScale: Double?
+    }
+
     let scene = SCNScene()
     let camera = SCNNode()
     let geometryNodes: [SCNNode]
@@ -509,7 +514,6 @@ final class BoardModelScene {
         allowedPositionIDs: Set<String>? = nil,
         resourceLease: BoardModelResourceLease? = nil
     ) {
-        guard !(suspension != nil && orientation != nil) else { return nil }
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -596,8 +600,8 @@ final class BoardModelScene {
         self.suspension = suspension
         self.orientation = orientation
         self.allowedPositionIDs = allowedPositionIDs
-            ?? orientation.map { Set($0.rotations.keys) }
             ?? suspension.map { Set($0.canonicalPoses.keys) }
+            ?? orientation.map { Set($0.rotations.keys) }
             ?? []
         self.resourceLease = resourceLease
         self.geometryByNodeID = geometryByNodeID
@@ -636,7 +640,7 @@ final class BoardModelScene {
             enterUnavailable()
             return false
         }
-        if let orientation {
+        if suspension == nil, let orientation {
             guard let components = orientation.rotations[positionID],
                   orientation.pivot == "modelBoundsCenter",
                   let quaternion = Self.quaternion(from: components) else {
@@ -653,10 +657,10 @@ final class BoardModelScene {
                 enterUnavailable()
                 return false
             }
-            transitionToOrientation(
+            guard transitionToOrientation(
                 transform: Self.transform(rotating: quaternion, about: pivot),
                 framing: framing
-            )
+            ) else { return false }
             canonicalFraming = framing
             activePositionID = positionID
             isUnavailable = false
@@ -698,7 +702,7 @@ final class BoardModelScene {
                 cord = makeCordNode(for: solved)
                 verifiedPresentations[positionID] = (solved, cord)
             }
-            transitionToCanonicalPresentation(solved, cord: cord)
+            guard transitionToCanonicalPresentation(solved, cord: cord) else { return false }
             canonicalFraming = solved.cameraFraming
             activePositionID = positionID
             isUnavailable = false
@@ -748,22 +752,31 @@ final class BoardModelScene {
         guard let framing = canonicalFraming,
               azimuth.isFinite, elevation.isFinite,
               zoomScale.isFinite, zoomScale > 0 else { return }
-        orbitAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
-        orbitElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
-        orbitZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+        let nextAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
+        let nextElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
+        let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
         let baseOffset = -framing.direction * framing.distance
-        let yaw = simd_quatf(angle: orbitAzimuth, axis: SIMD3<Float>(0, 1, 0))
+        let yaw = simd_quatf(angle: nextAzimuth, axis: SIMD3<Float>(0, 1, 0))
         let pitchAxis = framing.right
-        let pitch = simd_quatf(angle: orbitElevation, axis: pitchAxis)
+        let pitch = simd_quatf(angle: nextElevation, axis: pitchAxis)
         let offset = (pitch * yaw).act(baseOffset)
-        let distance = max(0.01, framing.distance / orbitZoom)
+        let distance = max(0.01, framing.distance / nextZoom)
         let normalizedOffset = simd_length(offset) > 1e-6
             ? simd_normalize(offset) * distance
             : baseOffset
         let position = framing.target + normalizedOffset
-        camera.position = SCNVector3(position)
-        camera.camera?.orthographicScale = Double(cameraScale(for: framing) / orbitZoom)
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        let scale = Double(cameraScale(for: framing) / nextZoom)
+        guard position.x.isFinite, position.y.isFinite, position.z.isFinite,
+              scale.isFinite, scale > 0,
+              applyCamera(
+                  position: position,
+                  target: framing.target,
+                  up: framing.up,
+                  orthographicScale: scale
+              ) else { return }
+        orbitAzimuth = nextAzimuth
+        orbitElevation = nextElevation
+        orbitZoom = nextZoom
         currentFraming = framing
     }
 
@@ -787,10 +800,16 @@ final class BoardModelScene {
     }
 
     private func cameraScale(for framing: SuspendedCameraFraming) -> Float {
-        let aspect = viewportSize.width > 0 && viewportSize.height > 0
-            ? Float(viewportSize.width / viewportSize.height)
-            : 1
-        return max(framing.height, framing.width / aspect) * framing.fitPadding / 2
+        let aspect: Float
+        if viewportSize.width.isFinite, viewportSize.height.isFinite,
+           viewportSize.width > 0, viewportSize.height > 0 {
+            aspect = Float(viewportSize.width / viewportSize.height)
+        } else {
+            aspect = 1
+        }
+        guard aspect.isFinite, aspect > 0 else { return .nan }
+        let scale = max(framing.height, framing.width / aspect) * framing.fitPadding / 2
+        return scale.isFinite && scale > 0 ? scale : .nan
     }
 
     private func enterUnavailable() {
@@ -804,7 +823,10 @@ final class BoardModelScene {
     private func transitionToCanonicalPresentation(
         _ solved: BoardModelSolvedSuspension,
         cord: SCNNode
-    ) {
+    ) -> Bool {
+        guard let cameraState = preparedCanonicalCameraState(for: solved.cameraFraming) else {
+            return false
+        }
         // Commit the board, destination-solved cord, and camera together.
         // Cached cords are detached before reuse, so no visible frame can
         // combine the destination cord with the previous board transform.
@@ -815,7 +837,7 @@ final class BoardModelScene {
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
         boardContainer.simdTransform = solved.boardTransform
-        applyCanonicalCamera(solved.cameraFraming)
+        applyPreparedCameraState(cameraState)
         SCNTransaction.commit()
 
         boardTransform = solved.boardTransform
@@ -823,12 +845,16 @@ final class BoardModelScene {
             transformedAttachment = single.transformedAttachment
         }
         currentFraming = solved.cameraFraming
+        return true
     }
 
     private func transitionToOrientation(
         transform: simd_float4x4,
         framing: SuspendedCameraFraming
-    ) {
+    ) -> Bool {
+        guard let cameraState = preparedCanonicalCameraState(for: framing) else {
+            return false
+        }
         transientCordNode?.removeFromParentNode()
         transientCordNode = nil
         isTransientCordAccessible = false
@@ -843,11 +869,12 @@ final class BoardModelScene {
         if boardMoves {
             boardContainer.simdTransform = transform
         }
-        applyCanonicalCamera(framing)
+        applyPreparedCameraState(cameraState)
         SCNTransaction.commit()
 
         boardTransform = transform
         currentFraming = framing
+        return true
     }
 
     private static func transformsMatch(
@@ -863,14 +890,120 @@ final class BoardModelScene {
         return true
     }
 
-    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
+    @discardableResult
+    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) -> Bool {
+        let position = framing.target - framing.direction * framing.distance
+        let scale = Double(cameraScale(for: framing))
+        guard let cameraState = Self.preparedCameraState(
+            position: position,
+            target: framing.target,
+            up: framing.up,
+            orthographicScale: scale
+        ) else { return false }
+        applyPreparedCameraState(cameraState)
         orbitAzimuth = 0
         orbitElevation = 0
         orbitZoom = 1
-        camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
-        camera.camera?.orthographicScale = Double(cameraScale(for: framing))
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
         currentFraming = framing
+        return true
+    }
+
+    private func preparedCanonicalCameraState(
+        for framing: SuspendedCameraFraming
+    ) -> PreparedCameraState? {
+        let position = framing.target - framing.direction * framing.distance
+        let scale = Double(cameraScale(for: framing))
+        return Self.preparedCameraState(
+            position: position,
+            target: framing.target,
+            up: framing.up,
+            orthographicScale: scale
+        )
+    }
+
+    @discardableResult
+    func orientCamera(at target: SIMD3<Float>, up requestedUp: SIMD3<Float>) -> Bool {
+        applyCamera(position: camera.simdPosition, target: target, up: requestedUp)
+    }
+
+    @discardableResult
+    private func applyCamera(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up requestedUp: SIMD3<Float>,
+        orthographicScale: Double? = nil
+    ) -> Bool {
+        guard let state = Self.preparedCameraState(
+            position: position,
+            target: target,
+            up: requestedUp,
+            orthographicScale: orthographicScale
+        ) else {
+            return false
+        }
+        applyPreparedCameraState(state)
+        return true
+    }
+
+    private func applyPreparedCameraState(_ state: PreparedCameraState) {
+        camera.simdTransform = state.transform
+        if let orthographicScale = state.orthographicScale {
+            camera.camera?.orthographicScale = orthographicScale
+        }
+    }
+
+    private static func preparedCameraState(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up: SIMD3<Float>,
+        orthographicScale: Double? = nil
+    ) -> PreparedCameraState? {
+        guard orthographicScale.map({ $0.isFinite && $0 > 0 }) ?? true,
+              let transform = cameraTransform(
+                  position: position,
+                  target: target,
+                  up: up
+              ) else {
+            return nil
+        }
+        return PreparedCameraState(transform: transform, orthographicScale: orthographicScale)
+    }
+
+    private static func cameraTransform(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up requestedUp: SIMD3<Float>
+    ) -> simd_float4x4? {
+        let direction = target - position
+        let directionLength = simd_length(direction)
+        let requestedUpLength = simd_length(requestedUp)
+        guard [position, target, requestedUp, direction].allSatisfy({ vector in
+            vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+        }),
+              directionLength.isFinite, directionLength > 1e-6,
+              requestedUpLength.isFinite, requestedUpLength > 1e-6 else {
+            return nil
+        }
+
+        let forward = direction / directionLength
+        let normalizedRequestedUp = requestedUp / requestedUpLength
+        let rightVector = simd_cross(forward, normalizedRequestedUp)
+        let rightLength = simd_length(rightVector)
+        guard rightLength.isFinite, rightLength > 1e-6 else { return nil }
+        let right = rightVector / rightLength
+        let up = simd_cross(right, forward)
+        guard [forward, right, up].allSatisfy({ vector in
+            vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+        }),
+              abs(simd_length(up) - 1) <= 1e-4 else {
+            return nil
+        }
+        var transform = matrix_identity_float4x4
+        transform.columns.0 = SIMD4<Float>(right.x, right.y, right.z, 0)
+        transform.columns.1 = SIMD4<Float>(up.x, up.y, up.z, 0)
+        transform.columns.2 = SIMD4<Float>(-forward.x, -forward.y, -forward.z, 0)
+        transform.columns.3 = SIMD4<Float>(position.x, position.y, position.z, 1)
+        return transform
     }
 
     private func makeCordNode(for solved: BoardModelSolvedSuspension) -> SCNNode {
@@ -1282,14 +1415,26 @@ final class BoardModelScene {
     }
 
     func frame(in size: CGSize) {
-        guard size.width > 0, size.height > 0 else { return }
-        viewportSize = size
-        let aspect = Float(size.width / size.height)
+        guard size.width.isFinite, size.height.isFinite,
+              size.width > 0, size.height > 0 else { return }
+        let aspect = size.width / size.height
+        guard aspect.isFinite, aspect > 0 else { return }
+        let aspectFloat = Float(aspect)
+        guard aspectFloat.isFinite, aspectFloat > 0 else { return }
+
+        let candidateScale: Double
         if let framing = currentFraming {
-            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom / 2)
+            candidateScale = Double(
+                max(framing.height, framing.width / aspectFloat)
+                    * framing.fitPadding / orbitZoom / 2
+            )
         } else {
-            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) / 2)
+            candidateScale = Double(max(projectedHeight, projectedWidth / aspectFloat) / 2)
         }
+        guard candidateScale.isFinite, candidateScale > 0 else { return }
+
+        viewportSize = size
+        camera.camera?.orthographicScale = candidateScale
     }
 
     func highlight(_ ids: Set<String>, mode: BoardHighlightMode) {
@@ -1535,7 +1680,7 @@ final class BoardModelScene {
         camera.camera?.screenSpaceAmbientOcclusionBias = 0.001
         camera.camera?.screenSpaceAmbientOcclusionDepthThreshold = 0.03
         camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        guard orientCamera(at: framing.target, up: framing.up) else { return }
         scene.rootNode.addChildNode(camera)
 
         let ambient = SCNNode()
@@ -1641,10 +1786,9 @@ private struct BoardModelView: UIViewRepresentable {
         view.positionID = positionID
         view.onHoldTap = onHoldTap
         view.onUnavailable = onUnavailable
-        view.highlightedHoldIDs = highlightedHoldIDs
         view.isUserInteractionEnabled = onHoldTap != nil
         view.needsAccessibilityProjection = true
-        model.highlight(highlightedHoldIDs, mode: highlightMode)
+        view.applyHighlights(highlightedHoldIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
         view.updateAccessibility()
     }
@@ -1668,7 +1812,7 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
     }
 }
 
-final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
+class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var model: BoardModelScene?
     var boardName = "hangboard"
     var holds: [BoardHold] = []
@@ -1680,6 +1824,11 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     private var holdAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityHoldIDs: [String] = []
 
+    private func requestPausedRedraw() {
+        guard !rendersContinuously, !isPlaying else { return }
+        setNeedsDisplay()
+    }
+
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
@@ -1687,23 +1836,27 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         pointOfView = model.camera
         model.frame(in: bounds.size)
         needsAccessibilityProjection = true
+        requestPausedRedraw()
     }
 
     func selectPositionIfNeeded() {
         guard let model else { return }
-        guard model.select(positionID: positionID) else {
-            onUnavailable?()
-            return
-        }
+        let didSelect = model.select(positionID: positionID)
         scene = model.scene
         pointOfView = model.camera
         needsAccessibilityProjection = true
+        requestPausedRedraw()
+        guard didSelect else {
+            onUnavailable?()
+            return
+        }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         model?.frame(in: bounds.size)
         needsAccessibilityProjection = true
+        requestPausedRedraw()
         updateAccessibility()
     }
 
@@ -1729,6 +1882,7 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         onHoldTap?(hold)
         _ = model.select(positionID: model.activePositionID)
         model.resetCamera(animated: true)
+        requestPausedRedraw()
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
@@ -1741,12 +1895,20 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
             elevation: Float(-translation.y / height) * 0.65
         )
         recognizer.setTranslation(.zero, in: self)
+        requestPausedRedraw()
     }
 
     @objc func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
         guard let model, recognizer.state == .changed else { return }
         model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(recognizer.scale))
         recognizer.scale = 1
+        requestPausedRedraw()
+    }
+
+    func applyHighlights(_ ids: Set<String>, mode: BoardHighlightMode) {
+        highlightedHoldIDs = ids
+        model?.highlight(ids, mode: mode)
+        requestPausedRedraw()
     }
 
     func updateAccessibility() {

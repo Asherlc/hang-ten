@@ -346,13 +346,14 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun rejectsOrientationAndSuspensionTogether() {
+    fun retainsOrientationAndSuspensionTogether() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            suspension = "{}",
+            suspension = "{\"type\": \"singleCord\", \"attachment\": {}, \"anchor\": {}, \"cord\": {}, \"canonicalPoses\": {}}",
         )
 
-        assertTrueFailureContaining(result, "orientation and suspension")
+        assertTrue(result.isSuccess)
+        assertTrue(result.getOrThrow().isEmpty())
     }
 
     @Test

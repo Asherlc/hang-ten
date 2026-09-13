@@ -5,21 +5,26 @@
   "name": "Flash Board",
   "subtitle": "Compact cylindrical portable board with small crimps and 8, 10, 15, and 20 mm edges.",
   "productURL": "https://tensionclimbing.com/products/flash-board-2",
-  "aspectRatio": 6.333333302712162,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
-    {
-      "id": "primary"
-    }
+    { "id": "primary" }
+  ],
+  "holds": [
+    { "id": "three-edge-left", "equipmentObjectID": "primary", "name": "Left edge on three-edge surface", "kind": "edge" },
+    { "id": "three-edge-center", "equipmentObjectID": "primary", "name": "Center edge on three-edge surface", "kind": "edge" },
+    { "id": "three-edge-right", "equipmentObjectID": "primary", "name": "Right edge on three-edge surface", "kind": "edge" },
+    { "id": "two-edge-left", "equipmentObjectID": "primary", "name": "Left edge on two-edge surface", "kind": "edge" },
+    { "id": "two-edge-right", "equipmentObjectID": "primary", "name": "Right edge on two-edge surface", "kind": "edge" },
+    { "id": "small-crimp-left", "equipmentObjectID": "primary", "name": "Left small crimp", "kind": "edge" },
+    { "id": "small-crimp-right", "equipmentObjectID": "primary", "name": "Right small crimp", "kind": "edge" }
   ],
   "presentations": [
     {
       "id": "primary",
-      "name": "Primary",
-      "aspectRatio": 6.333333302712162,
+      "name": "Primary suspended model",
+      "aspectRatio": 1.5,
       "isDefault": true,
-      "derivation": {
-        "type": "original"
-      },
+      "derivation": { "type": "original" },
       "media": {
         "type": "model",
         "assetPath": "assets/primary.usdz",
@@ -27,46 +32,97 @@
         "display": {
           "camera": {
             "type": "orthographic",
-            "viewDirection": [
-              0,
-              0,
-              -1
-            ],
-            "up": [
-              0,
-              1,
-              0
-            ],
+            "viewDirection": [0, 0, -1],
+            "up": [0, 1, 0],
             "fitPadding": 0.08
           }
         },
-        "orientation": {
-          "pivot": "modelBoundsCenter",
-          "rotations": {
-            "three-edge-inverted": [
-              0.0,
-              0.0,
-              1.0,
-              0.0
+        "suspension": {
+          "type": "twoBranchCord",
+          "passages": {
+            "left": [
+              {
+                "id": "left-outer-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.017, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.017, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              },
+              {
+                "id": "left-inner-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.031, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.031, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              }
             ],
-            "three-edge-upright": [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ],
-            "two-edge-inverted": [
-              1.0,
-              0.0,
-              0.0,
-              0.0
-            ],
-            "two-edge-upright": [
-              0.0,
-              1.0,
-              0.0,
-              0.0
+            "right": [
+              {
+                "id": "right-inner-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.469, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.469, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              },
+              {
+                "id": "right-outer-passage",
+                "nodeID": "flash_board_body_008",
+                "entryPointInModel": [0.483, 0.047999999, 0.075999998],
+                "exitPointInModel": [0.483, 0.047999999, 0.0013394],
+                "provenance": "approved visual evidence; display estimate; directed front-to-rear bore"
+              }
             ]
+          },
+          "branches": [
+            {
+              "id": "left-branch",
+              "passageIDs": ["left-outer-passage", "left-inner-passage"],
+              "entryContactPoints": [[-0.002, 0.05, 0.12], [0.017, 0.054, 0.07793]],
+              "exteriorContactPoints": [[0.014, 0.048526, -0.001], [0.034, 0.048526, -0.001]],
+              "exitContactPoints": [[0.031, 0.054, 0.07793], [-0.008, 0.058, 0.12]],
+              "restLength": 1.56,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "display estimate; bounded exterior left-end guide selected by actual-mesh sweep for all canonical poses"
+            },
+            {
+              "id": "right-branch",
+              "passageIDs": ["right-inner-passage", "right-outer-passage"],
+              "entryContactPoints": [[0.508, 0.058, 0.12], [0.469, 0.054, 0.07793]],
+              "exteriorContactPoints": [[0.466, 0.048526, -0.001], [0.486, 0.048526, -0.001]],
+              "exitContactPoints": [[0.483, 0.054, 0.07793], [0.502, 0.05, 0.12]],
+              "restLength": 1.56,
+              "radius": 0.002,
+              "material": "matteCord",
+              "provenance": "display estimate; bounded exterior right-end guide selected by actual-mesh sweep for all canonical poses"
+            }
+          ],
+          "anchor": {
+            "offsetFromBoardBounds": [0, 0.5, 0],
+            "visibility": "invisible",
+            "provenance": "display estimate; invisible overhead convergence selected for free-span clearance"
+          },
+          "canonicalPoses": {
+            "three-edge-upright": {
+              "rotation": [0, 0, 0, 1],
+              "translation": [0, 0, 0],
+              "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 }
+            },
+            "three-edge-inverted": {
+              "rotation": [0, 0, 1, 0],
+              "translation": [0.5, 0.075999998, 0],
+              "camera": { "viewDirection": [0, 0, -1], "fitPadding": 0.1 }
+            },
+            "two-edge-upright": {
+              "rotation": [1, 0, 0, 0],
+              "translation": [0, 0.075999998, 0.075999998],
+              "camera": { "viewDirection": [0, 0, 1], "fitPadding": 0.1 }
+            },
+            "two-edge-inverted": {
+              "rotation": [0, 1, 0, 0],
+              "translation": [0.5, 0.075999998, 0.075999998],
+              "camera": { "viewDirection": [0, 0, 1], "fitPadding": 0.1 }
+            }
           }
         }
       }
@@ -76,68 +132,36 @@
     {
       "id": "three-edge-upright",
       "presentationID": "primary",
-      "holdIDs": [
-        "three-edge-left",
-        "three-edge-center",
-        "three-edge-right"
-      ]
+      "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"]
     },
     {
       "id": "three-edge-inverted",
       "presentationID": "primary",
-      "holdIDs": [
-        "three-edge-left",
-        "three-edge-center",
-        "three-edge-right"
-      ]
+      "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"]
     },
     {
       "id": "two-edge-upright",
       "presentationID": "primary",
-      "holdIDs": [
-        "two-edge-left",
-        "two-edge-right"
-      ]
+      "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"]
     },
     {
       "id": "two-edge-inverted",
       "presentationID": "primary",
-      "holdIDs": [
-        "two-edge-left",
-        "two-edge-right"
-      ]
+      "holdIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"]
     }
   ],
-  "holds": [
-    {
-      "id": "three-edge-left",
-      "equipmentObjectID": "primary",
-      "name": "Left edge on three-edge surface",
-      "kind": "edge"
-    },
-    {
-      "id": "three-edge-center",
-      "equipmentObjectID": "primary",
-      "name": "Center edge on three-edge surface",
-      "kind": "edge"
-    },
-    {
-      "id": "three-edge-right",
-      "equipmentObjectID": "primary",
-      "name": "Right edge on three-edge surface",
-      "kind": "edge"
-    },
-    {
-      "id": "two-edge-left",
-      "equipmentObjectID": "primary",
-      "name": "Left edge on two-edge surface",
-      "kind": "edge"
-    },
-    {
-      "id": "two-edge-right",
-      "equipmentObjectID": "primary",
-      "name": "Right edge on two-edge surface",
-      "kind": "edge"
-    }
+  "positionTransitions": [
+    { "fromPositionID": "three-edge-upright", "toPositionID": "three-edge-inverted", "kind": "setupRequired" },
+    { "fromPositionID": "three-edge-upright", "toPositionID": "two-edge-upright", "kind": "setupRequired" },
+    { "fromPositionID": "three-edge-upright", "toPositionID": "two-edge-inverted", "kind": "setupRequired" },
+    { "fromPositionID": "three-edge-inverted", "toPositionID": "three-edge-upright", "kind": "setupRequired" },
+    { "fromPositionID": "three-edge-inverted", "toPositionID": "two-edge-upright", "kind": "setupRequired" },
+    { "fromPositionID": "three-edge-inverted", "toPositionID": "two-edge-inverted", "kind": "setupRequired" },
+    { "fromPositionID": "two-edge-upright", "toPositionID": "three-edge-upright", "kind": "setupRequired" },
+    { "fromPositionID": "two-edge-upright", "toPositionID": "three-edge-inverted", "kind": "setupRequired" },
+    { "fromPositionID": "two-edge-upright", "toPositionID": "two-edge-inverted", "kind": "setupRequired" },
+    { "fromPositionID": "two-edge-inverted", "toPositionID": "three-edge-upright", "kind": "setupRequired" },
+    { "fromPositionID": "two-edge-inverted", "toPositionID": "three-edge-inverted", "kind": "setupRequired" },
+    { "fromPositionID": "two-edge-inverted", "toPositionID": "two-edge-upright", "kind": "setupRequired" }
   ]
 }

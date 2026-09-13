@@ -52,6 +52,7 @@ data class BoardPresentation(
     val aspectRatio: Float,
     val isDefault: Boolean,
     val orientation: BoardOrientation? = null,
+    val suspension: BoardSuspension? = null,
 )
 
 data class BoardPosition(
@@ -63,6 +64,15 @@ data class BoardPosition(
 data class BoardOrientation(
     val pivot: String,
     val rotations: Map<String, List<Float>>,
+)
+
+/**
+ * Parsed suspension declaration retained for future Android model rendering.
+ * Android currently has no 3D renderer, so the declaration's nested geometry
+ * is intentionally not modeled here.
+ */
+data class BoardSuspension(
+    val type: String,
 )
 
 data class Board(

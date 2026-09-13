@@ -16,10 +16,10 @@ enum SuspendedPresentationError: Error, Equatable, LocalizedError {
         case .invalidSuspension: "Suspension attachment or anchor is invalid"
         case .invalidCord: "Suspension cord parameters are invalid"
         case .cordTooShort: "Suspension cord is shorter than its endpoints"
-        case .zeroHorizontalSlack: "Slack cord has no horizontal gravity-plane direction"
-        case .unbracketedCatenary: "Suspension catenary has no finite bounded solution"
-        case .nonFiniteCurve: "Suspension catenary contains a non-finite sample"
-        case .selfIntersection: "Suspension catenary self-intersects"
+        case .zeroHorizontalSlack: "Suspension cord has no valid endpoint span"
+        case .unbracketedCatenary: "Suspension cord has no finite bounded solution"
+        case .nonFiniteCurve: "Suspension cord contains a non-finite sample"
+        case .selfIntersection: "Suspension cord self-intersects"
         case .invalidCamera: "Suspended canonical camera framing is invalid"
         }
     }
@@ -241,9 +241,7 @@ enum SuspensionProfileSolver {
 
 enum SuspendedCordSolver {
     static let sampleCount = 32
-    static let bisectionTolerance: Float = 1e-6
     static let tautTolerance: Float = 1e-5
-    static let gravity = SIMD3<Float>(0, -1, 0)
 
     static func solve(start: SIMD3<Float>, end: SIMD3<Float>, restLength: Float) throws -> SolvedCordBranch {
         guard start.allFinite, end.allFinite, restLength.isFinite, restLength > 0 else {
@@ -253,42 +251,18 @@ enum SuspendedCordSolver {
         let endpointDistance = simd_length(delta)
         guard endpointDistance.isFinite else { throw SuspendedPresentationError.invalidCord }
         guard restLength >= endpointDistance - tautTolerance else { throw SuspendedPresentationError.cordTooShort }
-        let isTaut = abs(restLength - endpointDistance) <= tautTolerance
-        if isTaut {
-            let tangent = endpointDistance > 1e-7 ? delta / endpointDistance : SIMD3<Float>(0, 1, 0)
-            var samples = (0..<sampleCount).map { start + delta * (Float($0) / Float(sampleCount - 1)) }
-            samples[0] = start
-            samples[sampleCount - 1] = end
-            return try makeSolution(samples: samples, tangents: Array(repeating: tangent, count: sampleCount), arcLength: endpointDistance, isTaut: true)
-        }
-        let vertical = simd_dot(delta, gravity)
-        let horizontalVector = delta - gravity * vertical
-        let horizontal = simd_length(horizontalVector)
-        guard horizontal.isFinite, horizontal > 1e-7 else { throw SuspendedPresentationError.zeroHorizontalSlack }
-        let horizontalAxis = horizontalVector / horizontal
-        let horizontalArc = (restLength * restLength - vertical * vertical).squareRoot()
-        guard horizontalArc.isFinite, horizontalArc > horizontal else { throw SuspendedPresentationError.unbracketedCatenary }
-        let a = try solveCatenaryParameter(horizontal: horizontal, arc: horizontalArc)
-        let shift = horizontal / 2 + a * Float(asinh(Double(vertical / horizontalArc)))
-        let offset = a * Float(cosh(Double(shift / a)))
-        var samples: [SIMD3<Float>] = []
-        var tangents: [SIMD3<Float>] = []
-        samples.reserveCapacity(sampleCount)
-        tangents.reserveCapacity(sampleCount)
-        for index in 0..<sampleCount {
-            let t = Float(index) / Float(sampleCount - 1)
-            let x = horizontal * t
-            let argument = (x - shift) / a
-            let sag = offset - a * Float(cosh(Double(argument)))
-            let tangentVector = horizontalAxis + gravity * -Float(sinh(Double(argument)))
-            guard sag.isFinite, tangentVector.allFinite else { throw SuspendedPresentationError.nonFiniteCurve }
-            samples.append(start + horizontalAxis * x + gravity * sag)
-            guard let tangent = normalized(tangentVector) else { throw SuspendedPresentationError.nonFiniteCurve }
-            tangents.append(tangent)
-        }
+        // Display cords are always tensioned. Declared rest length limits
+        // reach, while rendered length is the straight endpoint separation.
+        let tangent = endpointDistance > 1e-7 ? delta / endpointDistance : SIMD3<Float>(0, 1, 0)
+        var samples = (0..<sampleCount).map { start + delta * (Float($0) / Float(sampleCount - 1)) }
         samples[0] = start
         samples[sampleCount - 1] = end
-        return try makeSolution(samples: samples, tangents: tangents, arcLength: restLength, isTaut: false)
+        return try makeSolution(
+            samples: samples,
+            tangents: Array(repeating: tangent, count: sampleCount),
+            arcLength: endpointDistance,
+            isTaut: true
+        )
     }
 
     static func solve(from start: SIMD3<Float>, to end: SIMD3<Float>, restLength: Float) throws -> SolvedCordBranch {
@@ -423,33 +397,6 @@ enum SuspendedCordSolver {
         }
     }
 
-    private static func solveCatenaryParameter(horizontal: Float, arc: Float) throws -> Float {
-        func residual(_ parameter: Float) -> Float {
-            guard parameter.isFinite, parameter > 0 else { return .infinity }
-            let argument = Double(horizontal / (2 * parameter))
-            guard argument < 80 else { return .infinity }
-            let value = 2 * parameter * Float(sinh(argument)) - arc
-            return value.isFinite ? value : .infinity
-        }
-        var lower = max(Float.ulpOfOne * 1024, min(horizontal, arc) * 1e-6)
-        var upper = max(horizontal, arc) / 2
-        var lowerValue = residual(lower), upperValue = residual(upper)
-        var attempts = 0
-        while lowerValue < 0 && attempts < 64 { lower /= 2; lowerValue = residual(lower); attempts += 1 }
-        attempts = 0
-        while upperValue > 0 && attempts < 64 { upper *= 2; upperValue = residual(upper); attempts += 1 }
-        guard lowerValue >= 0, upperValue <= 0, lower.isFinite, upper.isFinite else { throw SuspendedPresentationError.unbracketedCatenary }
-        for _ in 0..<128 {
-            let midpoint = (lower + upper) / 2
-            let value = residual(midpoint)
-            if value.isFinite { if value > 0 { lower = midpoint } else { upper = midpoint } } else { lower = midpoint }
-            if upper - lower <= bisectionTolerance { break }
-        }
-        let result = (lower + upper) / 2
-        guard result.isFinite, result > 0 else { throw SuspendedPresentationError.unbracketedCatenary }
-        return result
-    }
-
     private static func makeSolution(samples: [SIMD3<Float>], tangents: [SIMD3<Float>], arcLength: Float, isTaut: Bool) throws -> SolvedCordBranch {
         guard samples.count == sampleCount, tangents.count == sampleCount, arcLength.isFinite,
               samples.allSatisfy(\.allFinite), tangents.allSatisfy(\.allFinite) else { throw SuspendedPresentationError.nonFiniteCurve }
@@ -457,12 +404,6 @@ enum SuspendedCordSolver {
         let polylineArcLength = zip(samples, samples.dropFirst()).reduce(Float.zero) { $0 + simd_length($1.1 - $1.0) }
         guard polylineArcLength.isFinite else { throw SuspendedPresentationError.nonFiniteCurve }
         return SolvedCordBranch(samples: samples, tangents: tangents, arcLength: arcLength, polylineArcLength: polylineArcLength, isTaut: isTaut)
-    }
-
-    private static func normalized(_ vector: SIMD3<Float>) -> SIMD3<Float>? {
-        let length = simd_length(vector)
-        guard length.isFinite, length > 1e-7 else { return nil }
-        return vector / length
     }
 
     private static func segmentClosestApproach(_ p0: SIMD3<Float>, _ p1: SIMD3<Float>, _ q0: SIMD3<Float>, _ q1: SIMD3<Float>) -> (distanceSquared: Float, s: Float, t: Float) {

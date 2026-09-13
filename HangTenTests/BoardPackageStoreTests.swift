@@ -1003,8 +1003,12 @@ final class BoardPackageStoreTests: XCTestCase {
             bounds: media.descriptor.modelBounds
         )
         XCTAssertEqual(solved.branches.map(\.id), ["left-branch", "right-branch"])
-        XCTAssertEqual(solved.branches[0].arcLength, 0.92, accuracy: 1e-4)
-        XCTAssertEqual(solved.branches[1].arcLength, 0.92, accuracy: 1e-4)
+        // The fixture anchor is (0.5, 1.22, 0.05); each mirrored route has
+        // horizontal free-span offsets 0.3 and 0.2, height 0.32, and a 0.1 bridge.
+        let tautRouteLength: Float = sqrt(0.3 * 0.3 + 0.32 * 0.32)
+            + 0.1 + sqrt(0.2 * 0.2 + 0.32 * 0.32)
+        XCTAssertEqual(solved.branches[0].arcLength, tautRouteLength, accuracy: 1e-4)
+        XCTAssertEqual(solved.branches[1].arcLength, tautRouteLength, accuracy: 1e-4)
     }
 
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
@@ -1135,10 +1139,14 @@ final class BoardPackageStoreTests: XCTestCase {
             "two-edge-upright": [
                 "two-edge-left",
                 "two-edge-right",
+                "small-crimp-left",
+                "small-crimp-right",
             ],
             "two-edge-inverted": [
                 "two-edge-left",
                 "two-edge-right",
+                "small-crimp-left",
+                "small-crimp-right",
             ],
         ]
 
@@ -1148,19 +1156,16 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertEqual(position.presentationID, "primary")
         }
 
-        // Verify orientation metadata matches the four positions
+        // Verify the suspended model metadata matches the four positions.
         let presentation = try XCTUnwrap(board.presentations.first)
         guard case .model(let media) = presentation.media else {
             XCTFail("Expected model media"); return
         }
-        let orientation = try XCTUnwrap(media.orientation)
-        XCTAssertEqual(orientation.pivot, "modelBoundsCenter")
-        XCTAssertEqual(Set(orientation.rotations.keys), Set(expectedHoldIDsByPosition.keys))
-        // Verify quaternion values (authored display estimates)
-        XCTAssertEqual(orientation.rotations["three-edge-upright"], SIMD4(0.0, 0.0, 0.0, 1.0))
-        XCTAssertEqual(orientation.rotations["three-edge-inverted"], SIMD4(0.0, 0.0, 1.0, 0.0))
-        XCTAssertEqual(orientation.rotations["two-edge-upright"], SIMD4(0.0, 1.0, 0.0, 0.0))
-        XCTAssertEqual(orientation.rotations["two-edge-inverted"], SIMD4(1.0, 0.0, 0.0, 0.0))
+        XCTAssertNil(media.orientation)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            XCTFail("Expected twoBranchCord suspension"); return
+        }
+        XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(expectedHoldIDsByPosition.keys))
     }
 
     func testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame() {
@@ -3968,7 +3973,7 @@ final class BoardPackageStoreTests: XCTestCase {
         assertStoreRejects(fixture.bundle, reasonContaining: "orientation must contain")
     }
 
-    func testStoreRejectsOrientationAndSuspensionTogether() throws {
+    func testStoreValidatesSuspensionWhenOrientationIsAlsoPresent() throws {
         let fixture = try makeOrientableModelFixtureBundle { board in
             var presentations = board["presentations"] as! [[String: Any]]
             var media = presentations[0]["media"] as! [String: Any]
@@ -3978,7 +3983,7 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        assertStoreRejects(fixture.bundle, reasonContaining: "orientation and suspension")
+        assertStoreRejects(fixture.bundle, reasonContaining: "suspension type")
     }
 
     // The editable raster document remains a legacy boundary: constructing a
