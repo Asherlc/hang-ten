@@ -488,11 +488,39 @@ enum SuspendedBoardPresentation {
                     && secondIndex == 0
                     && simd_length_squared(firstPoint - sharedAnchor) <= 1e-12
                     && simd_length_squared(secondPoint - sharedAnchor) <= 1e-12
+                    && firstSegmentsContactOnlyAtSharedAnchor(
+                        firstSegment,
+                        secondSegment,
+                        sharedAnchor: sharedAnchor
+                    )
                 if !isSharedAnchorContact {
                     throw SuspendedPresentationError.selfIntersection
                 }
             }
         }
+    }
+
+    private static func firstSegmentsContactOnlyAtSharedAnchor(
+        _ firstSegment: (SIMD3<Float>, SIMD3<Float>),
+        _ secondSegment: (SIMD3<Float>, SIMD3<Float>),
+        sharedAnchor: SIMD3<Float>
+    ) -> Bool {
+        guard firstSegment.0 == sharedAnchor,
+              secondSegment.0 == sharedAnchor else {
+            return false
+        }
+        let firstDirection = firstSegment.1 - firstSegment.0
+        let secondDirection = secondSegment.1 - secondSegment.0
+        let firstLengthSquared = simd_length_squared(firstDirection)
+        let secondLengthSquared = simd_length_squared(secondDirection)
+        guard firstLengthSquared > 1e-12, secondLengthSquared > 1e-12 else {
+            return false
+        }
+        let crossLengthSquared = simd_length_squared(simd_cross(firstDirection, secondDirection))
+        let collinearTolerance = 1e-10 * firstLengthSquared * secondLengthSquared
+        let pointsAlongSameRay = crossLengthSquared <= collinearTolerance
+            && simd_dot(firstDirection, secondDirection) > 0
+        return !pointsAlongSameRay
     }
 
     private static func segmentClosestApproach(
