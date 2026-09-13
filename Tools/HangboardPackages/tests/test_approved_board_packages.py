@@ -555,7 +555,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     ]
     assert all("sizeMillimeters" not in hold for hold in board["holds"])
     # Four positions over the shared model: upright/inverted for each usable face.
-    # The unbound small-crimp legacy IDs are intentionally gone.
+    # The two-edge positions retain both small crimps per the approved audit.
     assert board["positions"] == [
         {
             "id": "three-edge-upright",
@@ -570,12 +570,22 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         {
             "id": "two-edge-upright",
             "presentationID": "primary",
-            "holdIDs": ["two-edge-left", "two-edge-right"],
+            "holdIDs": [
+                "two-edge-left",
+                "two-edge-right",
+                "small-crimp-left",
+                "small-crimp-right",
+            ],
         },
         {
             "id": "two-edge-inverted",
             "presentationID": "primary",
-            "holdIDs": ["two-edge-left", "two-edge-right"],
+            "holdIDs": [
+                "two-edge-left",
+                "two-edge-right",
+                "small-crimp-left",
+                "small-crimp-right",
+            ],
         },
     ]
 

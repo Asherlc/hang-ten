@@ -305,11 +305,22 @@ def test_flash_board_uses_suspension_with_overlapping_face_inventories() -> None
         "two-edge-upright",
         "two-edge-inverted",
     }
-    assert set(media.orientation.rotations) == set(positions)
+    assert set(media.suspension.canonical_poses) == set(positions)
     assert all(position.presentation_id == "primary" for position in board.positions)
     _assert_model_position_union_coverage(board)
     assert positions["three-edge-upright"].hold_ids == positions["three-edge-inverted"].hold_ids
     assert positions["two-edge-upright"].hold_ids == positions["two-edge-inverted"].hold_ids
+    assert set(positions["three-edge-upright"].hold_ids) == {
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right",
+    }
+    assert set(positions["two-edge-upright"].hold_ids) == {
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right",
+    }
     assert set(positions["three-edge-upright"].hold_ids).isdisjoint(
         positions["two-edge-upright"].hold_ids
     )
@@ -410,12 +421,16 @@ def test_flash_board_allows_upright_inverted_overlap() -> None:
     two_edge_upright = next(p for p in board.positions if p.id == "two-edge-upright")
     two_edge_inverted = next(p for p in board.positions if p.id == "two-edge-inverted")
     assert two_edge_upright.hold_ids == two_edge_inverted.hold_ids
-    assert set(two_edge_upright.hold_ids) == {"two-edge-left", "two-edge-right"}
+    assert set(two_edge_upright.hold_ids) == {
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right",
+    }
 
-    # Orientation metadata
-    assert media.orientation is not None
-    assert media.orientation.pivot == "modelBoundsCenter"
-    assert set(media.orientation.rotations) == expected_positions
+    # Suspension metadata covers every canonical position.
+    assert media.suspension is not None
+    assert set(media.suspension.canonical_poses) == expected_positions
 
 
 def test_orientation_audit_records_all_model_packages_and_review_fields() -> None:

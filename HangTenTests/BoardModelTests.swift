@@ -124,6 +124,26 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
+    func testFlashBoardTwoEdgeAndSmallCrimpHoldsResolveOnlyToTwoEdgePosition() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+        let twoEdgeHoldIDs = [
+            "two-edge-left",
+            "two-edge-right",
+            "small-crimp-left",
+            "small-crimp-right",
+        ]
+
+        for holdID in twoEdgeHoldIDs {
+            let resolvedPositionID = BoardMapPresentationSelection.resolvePositionID(
+                board: board,
+                presentationID: "primary",
+                activeHoldID: holdID
+            )
+            XCTAssertEqual(resolvedPositionID, "two-edge-upright", holdID)
+            XCTAssertNotEqual(resolvedPositionID, "three-edge-upright", holdID)
+        }
+    }
+
     func testModelSceneRejectsUnknownPositionWithoutFallback() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, holdID: nil),
