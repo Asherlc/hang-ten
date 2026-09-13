@@ -1,125 +1,4 @@
 {
-  "coordinateFrame": "hang-ten-board-v1",
-  "modelBounds": {
-    "max": [
-      0.25999999,
-      0.025000002,
-      0.025000002
-    ],
-    "min": [
-      -0.25999999,
-      -0.025,
-      -0.025000002
-    ]
-  },
-  "modelSHA256": "e006aad2dfac8e5a3911d1e3e0944830056856d45d757fc76c360e339c76f91b",
-  "nodes": [
-    {
-      "nodeID": "body_mesh_001",
-      "role": "body"
-    },
-    {
-      "nodeID": "hold_central_06mm_mesh_001",
-      "role": "contact",
-      "contactID": "edge-central-6"
-    },
-    {
-      "nodeID": "hold_central_20mm_mesh_001",
-      "role": "contact",
-      "contactID": "edge-central-20"
-    },
-    {
-      "nodeID": "hold_central_25mm_mesh_001",
-      "role": "contact",
-      "contactID": "edge-central-25"
-    },
-    {
-      "nodeID": "hold_central_30mm_mesh_001",
-      "role": "contact",
-      "contactID": "edge-central-30"
-    },
-    {
-      "nodeID": "hold_edge_06mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-6-upper"
-    },
-    {
-      "nodeID": "hold_edge_06mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-6-lower"
-    },
-    {
-      "nodeID": "hold_edge_08mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-8-left"
-    },
-    {
-      "nodeID": "hold_edge_08mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-8-right"
-    },
-    {
-      "nodeID": "hold_edge_10mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-10-left"
-    },
-    {
-      "nodeID": "hold_edge_10mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-10-right"
-    },
-    {
-      "nodeID": "hold_edge_12mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-12-left"
-    },
-    {
-      "nodeID": "hold_edge_12mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-12-right"
-    },
-    {
-      "nodeID": "hold_edge_15mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-15-left"
-    },
-    {
-      "nodeID": "hold_edge_15mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-15-right"
-    },
-    {
-      "nodeID": "hold_edge_20mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-20-left"
-    },
-    {
-      "nodeID": "hold_edge_20mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-20-right"
-    },
-    {
-      "nodeID": "hold_edge_25mm_left_mesh_001",
-      "role": "contact",
-      "contactID": "edge-25-left"
-    },
-    {
-      "nodeID": "hold_edge_25mm_right_mesh_001",
-      "role": "contact",
-      "contactID": "edge-25-right"
-    },
-    {
-      "nodeID": "hold_rounded_left_mesh_001",
-      "role": "contact",
-      "contactID": "rounded-tray"
-    },
-    {
-      "nodeID": "hold_rounded_right_mesh_001",
-      "role": "contact",
-      "contactID": "rounded-tray"
-    }
-  ],
-  "schemaVersion": 1,
   "contacts": {
     "edge-10-left": {
       "center": [
@@ -483,5 +362,126 @@
         "hold_rounded_right_mesh_001"
       ]
     }
-  }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.25999999,
+      0.025000002,
+      0.025000002
+    ],
+    "min": [
+      -0.25999999,
+      -0.025,
+      -0.025000002
+    ]
+  },
+  "modelSHA256": "c984434edc54cfc6ec7b950a710e03e80b2514a5c5919e5fb7d1dde48e65e088",
+  "nodes": [
+    {
+      "nodeID": "body_mesh_001",
+      "role": "body"
+    },
+    {
+      "contactID": "edge-central-6",
+      "nodeID": "hold_central_06mm_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-central-20",
+      "nodeID": "hold_central_20mm_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-central-25",
+      "nodeID": "hold_central_25mm_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-central-30",
+      "nodeID": "hold_central_30mm_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-6-upper",
+      "nodeID": "hold_edge_06mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-6-lower",
+      "nodeID": "hold_edge_06mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-8-left",
+      "nodeID": "hold_edge_08mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-8-right",
+      "nodeID": "hold_edge_08mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-10-left",
+      "nodeID": "hold_edge_10mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-10-right",
+      "nodeID": "hold_edge_10mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-12-left",
+      "nodeID": "hold_edge_12mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-12-right",
+      "nodeID": "hold_edge_12mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-15-left",
+      "nodeID": "hold_edge_15mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-15-right",
+      "nodeID": "hold_edge_15mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20-left",
+      "nodeID": "hold_edge_20mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20-right",
+      "nodeID": "hold_edge_20mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-25-left",
+      "nodeID": "hold_edge_25mm_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-25-right",
+      "nodeID": "hold_edge_25mm_right_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "rounded-tray",
+      "nodeID": "hold_rounded_left_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "rounded-tray",
+      "nodeID": "hold_rounded_right_mesh_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
 }

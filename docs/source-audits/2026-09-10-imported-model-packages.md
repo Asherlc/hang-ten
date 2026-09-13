@@ -180,3 +180,59 @@ cleanup checks are recorded in
 simulators, their manifest entries, the stale validation process, DerivedData,
 and the result bundle were verified absent. No HTTP server or network action
 was used. No verifier defect was found, so the verifier was unchanged.
+
+## 2026-09-13 contact-first Baguette Evo re-audit
+
+Task 5 re-audited only `yy-baguette-evo` after the schema-v3 contact-first hard
+cut. The historical archive at
+`/Users/asherlc/Downloads/models/YY-Vertical-Baguette-Evo-Package.zip`
+(`e74609c64e65030c5a1011dee64e6cc6b4166d99821614929eaf391c97d5e92f`)
+remains unrecoverable. By explicit user ruling, the audited model source is now
+the user-provided `baguette-evo.blend`, retained under the workspace evidence
+root with SHA-256
+`43ad5ab63b580aee09be458e1d10179dadf6adc80e5ff2eae1f72dea848b9131`.
+That ruling supersedes only the missing ZIP as model-source provenance. It does
+not supersede YY Vertical evidence, which remains authoritative for revision
+identity and physical facts.
+
+The retained manufacturer packet contains 20 primary sources. Before model
+work, the user explicitly approved the exact eight-view YY Vertical set listed
+in `.context/strong-blowfish-task-5-evidence-repair/human-review-candidate.json`.
+The validated packet binds all 19 physical `contactID` values to 20 source mesh
+pieces. `hold-rounded-left` and `hold-rounded-right` remain two mesh pieces for
+the single continuous `rounded-tray` contact. Source-left 6 mm remains the
+stable canonical ID `edge-6-upper`, and source-right 6 mm remains
+`edge-6-lower`; those names are display identities, not claimed manufacturer
+terminology.
+
+Two independent Blender 5.2 exports were byte-identical. The promoted current
+outputs are:
+
+| Path | SHA-256 |
+| --- | --- |
+| `Hangboards/yy-baguette-evo/assets/primary.usdz` | `c984434edc54cfc6ec7b950a710e03e80b2514a5c5919e5fb7d1dde48e65e088` |
+| `Hangboards/yy-baguette-evo/assets/primary.model.json` | `f1d44e9f6e5ce76e8bc3cebb912d1bc594e375da467e01a2566b6191281e148d` |
+
+The actual-export report cleanly reimports the shipped USDZ into an empty
+scene, regenerates the current descriptor exactly, and verifies one body mesh,
+20 contact meshes, all 19 logical contacts, positive triangles, image-backed
+native materials, one-to-one correspondence for all 21 source meshes, and the
+four exact nonselectable cord-passage evidence records. The retained source
+hash is unchanged. The package root contains only `board.json`,
+`assets/primary.usdz`, and `assets/primary.model.json`; no raster asset,
+presentation, contact path, or fallback remains.
+
+Focused native SceneKit validation passes both the exact schema-v3 physical
+inventory test and exhaustive closest-triangle picking for every mapped
+contact mesh piece across its canonical position and bounded runtime orbit
+angles. Front, oblique, selected 20 mm, and selected 8 mm app captures, plus
+seven actual-USDZ geometry-review renders, are retained under
+`.context/strong-blowfish-task-5-promotion/visual-review`. The user explicitly
+approved that exact hash-bound model-render set on 2026-09-13; the durable
+ruling is retained in
+`.context/strong-blowfish-task-5-promotion/human-model-review-approval.json`.
+The ruling also retains the bounded-orbit caveat: paired 8 mm and central 25 mm
+meshes can be co-projected behind shallower contacts in the exact head-on view,
+but the native SceneKit test proves every mapped contact piece becomes the
+nearest selectable actual triangle within the app's normal orbit bounds. No
+geometry or correspondence was changed to mask that behavior.

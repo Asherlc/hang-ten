@@ -410,6 +410,90 @@ final class BoardModelTests: XCTestCase {
         try assertVisibleFraming(model, positionIDs: expectedIDs)
     }
 
+    func testPromotedModelMatchesItsV3PhysicalContactInventory() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        let expectedContactIDs = [
+            "edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left",
+            "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right",
+            "edge-12-left", "edge-12-right", "edge-8-left", "edge-8-right",
+            "edge-6-upper", "edge-6-lower", "edge-central-30", "edge-central-25",
+            "edge-central-20", "edge-central-6", "rounded-tray",
+        ]
+
+        XCTAssertEqual(board.contacts.map(\.id), expectedContactIDs)
+        XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(expectedContactIDs))
+        XCTAssertEqual(Set(model.contactNodes.keys), Set(expectedContactIDs))
+        XCTAssertEqual(media.descriptor.nodes.filter { $0.role == .body }.count, 1)
+        XCTAssertEqual(media.descriptor.nodes.filter { $0.role == .contact }.count, 20)
+        XCTAssertEqual(model.geometryNodes.count, 21)
+        XCTAssertEqual(model.contactNodes["rounded-tray"]?.count, 2)
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+
+        let assetURL = try XCTUnwrap(BoardCatalog.packageStore.presentationAssetURL(for: board))
+        let packageURL = assetURL.deletingLastPathComponent().deletingLastPathComponent()
+        let packageFiles = try FileManager.default.contentsOfDirectory(atPath: packageURL.path)
+        let assetFiles = try FileManager.default.contentsOfDirectory(
+            atPath: assetURL.deletingLastPathComponent().path
+        )
+        XCTAssertEqual(Set(packageFiles), ["assets", "board.json"])
+        XCTAssertEqual(Set(assetFiles), ["primary.model.json", "primary.usdz"])
+    }
+
+    func testBaguetteEvoNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
+            .map { Float($1 - $0) }
+            .max() ?? 1
+        let rayExtension = max(extent * 4, 1)
+
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            SCNTransaction.flush()
+            let reviewAngles: [SIMD2<Float>] = [
+                [0, 0], [0.45, 0], [-0.45, 0], [0, 0.4], [0, -0.4],
+                [0.35, 0.3], [-0.35, 0.3], [0.35, -0.3], [-0.35, -0.3],
+            ]
+            for contactID in position.contactIDs {
+                let nodes = try XCTUnwrap(model.contactNodes[contactID], "\(position.id): \(contactID)")
+                for node in nodes {
+                    let raySamples = try nativeTriangleCenters(for: node)
+                    let hasNativePick = reviewAngles.contains { angle in
+                        model.resetCamera(animated: false)
+                        model.orbit(azimuth: angle.x, elevation: angle.y)
+                        SCNTransaction.flush()
+                        let direction = model.camera.presentation.worldFront
+                        return raySamples.contains { localCenter in
+                            let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
+                            let start = SCNVector3(
+                                center.x - direction.x * rayExtension,
+                                center.y - direction.y * rayExtension,
+                                center.z - direction.z * rayExtension
+                            )
+                            let end = SCNVector3(
+                                center.x + direction.x * rayExtension,
+                                center.y + direction.y * rayExtension,
+                                center.z + direction.z * rayExtension
+                            )
+                            let closest = model.scene.rootNode.hitTestWithSegment(
+                                from: start,
+                                to: end,
+                                options: [
+                                    SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
+                                    SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                                ]
+                            ).first
+                            return closest.flatMap { model.contactID(for: $0.node) } == contactID
+                        }
+                    }
+                    XCTAssertTrue(
+                        hasNativePick,
+                        "\(position.id): \(contactID): \(node.name ?? "unnamed") has no nearest native triangle pick across its bounds"
+                    )
+                }
+            }
+        }
+    }
+
     func testNatureStoneHangerCordPassageMarkersAreNotSelectableOrAccessible() async throws {
         let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
         let passageMarkerIDs = ["cord-passage-1", "cord-passage-2"]
@@ -891,6 +975,94 @@ final class BoardModelTests: XCTestCase {
                 line: line
             )
         }
+    }
+
+    private func nativeTriangleCenters(for node: SCNNode) throws -> [SCNVector3] {
+        let geometry = try XCTUnwrap(node.geometry, node.name ?? "unnamed")
+        let source = try XCTUnwrap(
+            geometry.sources(for: .vertex).first,
+            "\(node.name ?? "unnamed") has no vertex source"
+        )
+        guard source.usesFloatComponents,
+              source.bytesPerComponent == MemoryLayout<Float>.size else {
+            throw NSError(
+                domain: "BoardModelTests.nativeTriangleCenters",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "unsupported native vertex component layout"]
+            )
+        }
+
+        func vertex(_ index: Int) throws -> SCNVector3 {
+            guard index >= 0, index < source.vectorCount else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "native triangle index exceeds vertex inventory"]
+                )
+            }
+            func component(_ component: Int) -> Float {
+                let byteOffset = source.dataOffset + index * source.dataStride
+                    + component * source.bytesPerComponent
+                return source.data.withUnsafeBytes {
+                    $0.loadUnaligned(fromByteOffset: byteOffset, as: Float.self)
+                }
+            }
+            return SCNVector3(component(0), component(1), component(2))
+        }
+
+        func index(in element: SCNGeometryElement, at offset: Int) throws -> Int {
+            let byteOffset = offset * element.bytesPerIndex
+            guard [1, 2, 4, 8].contains(element.bytesPerIndex),
+                  byteOffset >= 0,
+                  byteOffset + element.bytesPerIndex <= element.data.count else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 3,
+                    userInfo: [NSLocalizedDescriptionKey: "unsupported native triangle index layout"]
+                )
+            }
+            return element.data.withUnsafeBytes { bytes in
+                switch element.bytesPerIndex {
+                case 1: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt8.self))
+                case 2: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt16.self))
+                case 4: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt32.self))
+                default: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt64.self))
+                }
+            }
+        }
+
+        var centers: [SCNVector3] = []
+        for element in geometry.elements where element.primitiveType == .triangles {
+            let plainSize = element.primitiveCount * 3 * element.bytesPerIndex
+            let importerMultiIndexSize = element.primitiveCount * 9 * element.bytesPerIndex
+            let layout: (stride: Int, corners: [Int])
+            if element.data.count == plainSize {
+                layout = (3, [0, 1, 2])
+            } else if element.data.count == importerMultiIndexSize {
+                // USD-imported SceneKit geometry carries vertex/normal/UV
+                // tuples for each corner. Vertex indexes are lanes 0, 3, 6.
+                layout = (9, [0, 3, 6])
+            } else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 4,
+                    userInfo: [NSLocalizedDescriptionKey: "unknown native triangle element layout"]
+                )
+            }
+            for triangle in 0..<element.primitiveCount {
+                let base = triangle * layout.stride
+                let first = try vertex(index(in: element, at: base + layout.corners[0]))
+                let second = try vertex(index(in: element, at: base + layout.corners[1]))
+                let third = try vertex(index(in: element, at: base + layout.corners[2]))
+                centers.append(SCNVector3(
+                    (first.x + second.x + third.x) / 3,
+                    (first.y + second.y + third.y) / 3,
+                    (first.z + second.z + third.z) / 3
+                ))
+            }
+        }
+        XCTAssertFalse(centers.isEmpty, "\(node.name ?? "unnamed") has no native triangles")
+        return centers
     }
 
     private func assertNearestHeadOnHitForEveryContact(

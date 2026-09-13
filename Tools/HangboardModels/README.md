@@ -190,6 +190,49 @@ separate migration gate and are not changed or claimed by this extraction.
 Package-local descriptors are generated from actual exports and remain
 read-only.
 
+## Contact-first v3 audited import route
+
+Current schema-v3 migrations use the separate contact-first tools. They do not
+translate a legacy descriptor or raster path. `contact_model_descriptor.py`
+emits only `body`, `contact`, and `attachment` roles, `contactID`, and a
+top-level `contacts` inventory. It permits multiple body components, multiple
+attachment meshes, and multiple mesh pieces for one physical contact.
+`contact_model_package.py` exports disposable tagged mesh copies, triangulates
+only those copies, deterministically canonicalizes the USDZ, cleanly reimports
+it, and generates the descriptor from importer-visible vertices.
+
+An audited external scene enters that compiler only through
+`import_contact_model_source.py`, with a SHA-bound user-provided source
+manifest and an explicit, complete source-object/contact mapping. The importer
+adds semantic tags to an owned transport copy; it never changes retained model
+geometry. The YY Baguette Evo actual-export verifier additionally proves all
+21 source mesh correspondences, positive imported triangles and native image
+materials, exact 19-contact descriptor regeneration, and the four retained
+nonselectable cord-passage evidence records:
+
+```sh
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/import_contact_model_source.py -- \
+  --manifest PATH/model-source-manifest.json \
+  --mapping PATH/contact-mapping.json \
+  --package yy-baguette-evo \
+  --board-json Hangboards/yy-baguette-evo/board.json \
+  --output-directory PATH/compiled \
+  --report PATH/import-report.json
+
+rtk proxy blender --background --factory-startup --python-exit-code 1 \
+  --python Tools/HangboardModels/verify_yy_baguette_evo.py -- \
+  --package-directory Hangboards/yy-baguette-evo \
+  --mapping PATH/contact-mapping.json \
+  --report PATH/actual-export.json
+```
+
+The Baguette source mapping is evidence, not a geometry recipe. Manufacturer
+evidence remains authoritative for product revision and physical facts; a
+user-provided model source may supersede only missing model-source provenance.
+Promotion still requires model-only package validation, native SceneKit
+nearest-triangle picking, and explicit front, oblique, and highlight review.
+
 ## Canonical wood display material
 
 The two extracted wood display models—Beastmaker 1000 and Compact II—use the
