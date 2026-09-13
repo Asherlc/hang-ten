@@ -242,7 +242,7 @@ enum BoardModelSuspension: Hashable {
 
     var attachment: BoardModelAttachment {
         switch self {
-        case .singleCord(let suspension): suspension.attachment
+        case .singleCord(let suspension): return suspension.attachment
         case .pairedLeadCord(let suspension):
             let attachment = suspension.attachments[0]
             return BoardModelAttachment(
@@ -251,7 +251,7 @@ enum BoardModelSuspension: Hashable {
                 provenance: attachment.provenance
             )
         case .twoBranchCord(let suspension):
-            suspension.passages.left[0].asAttachment
+            return suspension.passages.left[0].asAttachment
         }
     }
 

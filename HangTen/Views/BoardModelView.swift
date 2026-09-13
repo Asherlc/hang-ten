@@ -124,11 +124,13 @@ struct BoardModelResourceAccess {
 
 enum BoardModelSolvedSuspension {
     case single(SuspendedSolvedPresentation)
+    case pairedLead(SuspendedPairedLeadSolvedPresentation)
     case twoBranch(SuspendedTwoBranchSolvedPresentation)
 
     var boardTransform: simd_float4x4 {
         switch self {
         case .single(let solved): solved.boardTransform
+        case .pairedLead(let solved): solved.boardTransform
         case .twoBranch(let solved): solved.boardTransform
         }
     }
@@ -136,6 +138,7 @@ enum BoardModelSolvedSuspension {
     var cameraFraming: SuspendedCameraFraming {
         switch self {
         case .single(let solved): solved.cameraFraming
+        case .pairedLead(let solved): solved.cameraFraming
         case .twoBranch(let solved): solved.cameraFraming
         }
     }
@@ -718,6 +721,9 @@ final class BoardModelScene {
         switch suspension {
         case .singleCord(let single):
             nodeIDs = [single.attachment.nodeID]
+        case .pairedLeadCord(let pairedLead):
+            nodeIDs = pairedLead.attachments.map(\.nodeID)
+            guard nodeIDs.count == 2, Set(nodeIDs).count == nodeIDs.count else { return false }
         case .twoBranchCord(let twoBranch):
             nodeIDs = (twoBranch.passages.left + twoBranch.passages.right).map(\.nodeID)
             guard nodeIDs.count == 4 else { return false }
@@ -740,6 +746,10 @@ final class BoardModelScene {
         case .singleCord(let single):
             return .single(try SuspendedBoardPresentation.solve(
                 pose: pose, suspension: .singleCord(single), bounds: bounds
+            ))
+        case .pairedLeadCord(let pairedLead):
+            return .pairedLead(try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: pairedLead, bounds: bounds
             ))
         case .twoBranchCord(let twoBranch):
             return .twoBranch(try SuspendedBoardPresentation.solve(
@@ -1014,6 +1024,8 @@ final class BoardModelScene {
         switch solved {
         case .single(let single):
             paths = [(single.centerlineSamples, single.tubeRadius)]
+        case .pairedLead(let pairedLead):
+            paths = pairedLead.leads.map { ($0.centerlineSamples, pairedLead.tubeRadius) }
         case .twoBranch(let twoBranch):
             paths = twoBranch.branches.map { ($0.centerlineSamples, twoBranch.tubeRadius) }
         }
@@ -1069,6 +1081,21 @@ final class BoardModelScene {
                 nodeID: singleSuspension.attachment.nodeID,
                 point: single.transformedAttachment
             )]
+        case .pairedLead(let pairedLead):
+            paths = pairedLead.leads.map(\.centerlineSamples)
+            clearanceRadius = pairedLead.requiredClearance
+            guard case .some(.pairedLeadCord(let pairedLeadSuspension)) = suspension,
+                  pairedLeadSuspension.attachments.count == pairedLead.leads.count else { return false }
+            intentionalContacts = zip(pairedLead.leads, pairedLeadSuspension.attachments).enumerated().map {
+                index, pair in
+                IntentionalContact(
+                    pathIndex: index,
+                    segmentIndex: pair.0.centerlineSamples.count - 2,
+                    segmentParameter: 1,
+                    nodeID: pair.1.nodeID,
+                    point: pair.0.centerlineSamples[pair.0.centerlineSamples.count - 1]
+                )
+            }
         case .twoBranch(let twoBranch):
             paths = twoBranch.branches.map(\.centerlineSamples)
             clearanceRadius = twoBranch.requiredClearance

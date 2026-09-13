@@ -356,6 +356,71 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testPairedLeadSceneRendersTwoTransientNonPickableCylinderGroupsAndRejectsOneBadLead() throws {
+        let selectedPose = BoardModelCanonicalPose(
+            rotation: [0, 0, 0, 1],
+            translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.08)
+        )
+        func suspension(right: [Double]) -> BoardModelPairedLeadCord {
+            BoardModelPairedLeadCord(
+                attachments: [
+                    BoardModelPairedLeadAttachment(id: "left", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test"),
+                    BoardModelPairedLeadAttachment(id: "right", nodeID: "Lead/Right", pointInModel: right, provenance: "test"),
+                ],
+                anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+                cord: BoardModelCord(restLength: 2, radius: 0.01, material: "test-cord", provenance: "test"),
+                canonicalPoses: ["primary": selectedPose]
+            )
+        }
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Body", role: .body, holdID: nil),
+                .init(nodeID: "Hold", role: .hold, holdID: "hold"),
+                .init(nodeID: "Lead/Left", role: .attachment, holdID: nil),
+                .init(nodeID: "Lead/Right", role: .attachment, holdID: nil),
+            ],
+            minimum: [-1, -0.5, -0.2],
+            maximum: [1, 0.5, 0.2]
+        )
+        func source() -> SCNScene {
+            let source = scene(nodes: ["Body", "Hold", "Lead/Left", "Lead/Right"])
+            for path in ["Body", "Hold", "Lead/Left", "Lead/Right"] {
+                node(at: path, in: source)?.simdPosition = SIMD3<Float>(10, 10, 10)
+            }
+            return source
+        }
+
+        let valid = suspension(right: [0.6, 0.4, -0.05])
+        let validModel = try XCTUnwrap(BoardModelScene(
+            source: source(), descriptor: descriptor, display: display(), suspension: .pairedLeadCord(valid)
+        ))
+        XCTAssertTrue(validModel.select(positionID: "primary"))
+        let cord = try XCTUnwrap(validModel.transientCordNode)
+        XCTAssertFalse(cord.isHidden)
+        XCTAssertFalse(validModel.isTransientCordAccessible)
+        XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory)
+        XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
+        for branchIndex in 0..<2 {
+            let segments = cord.childNodes.filter {
+                $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+            }
+            XCTAssertEqual(segments.count, SuspendedCordSolver.sampleCount - 1)
+            XCTAssertTrue(segments.allSatisfy {
+                !$0.isHidden && $0.geometry is SCNCylinder && $0.categoryBitMask == BoardModelScene.cordCategory
+                    && validModel.holdID(for: $0) == nil
+            })
+        }
+
+        let invalidModel = try XCTUnwrap(BoardModelScene(
+            source: source(), descriptor: descriptor, display: display(),
+            suspension: .pairedLeadCord(suspension(right: [1, -0.5, 0]))
+        ))
+        XCTAssertFalse(invalidModel.select(positionID: "primary"))
+        XCTAssertTrue(invalidModel.isUnavailable)
+        XCTAssertNil(invalidModel.transientCordNode)
+    }
+
     func testFlashBoardCordCenterlinesAreTautAcrossEveryCanonicalPose() async throws {
         let (_, media, model) = try await loadMigratedModel("tension.flash-board")
         guard case .twoBranchCord(let suspension) = media.suspension else {

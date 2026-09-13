@@ -24,6 +24,15 @@ struct SuspendedTwoBranchSolvedPresentation {
     let requiredClearance: Float
 }
 
+struct SuspendedPairedLeadSolvedPresentation {
+    let boardTransform: simd_float4x4
+    let fixedAnchor: SIMD3<Float>
+    let leads: [SolvedCordBranch]
+    let cameraFraming: SuspendedCameraFraming
+    let tubeRadius: Float
+    let requiredClearance: Float
+}
+
 
 enum SuspendedBoardPresentation {
     static let additionalClearance: Float = 0.001
@@ -38,6 +47,8 @@ enum SuspendedBoardPresentation {
         switch suspension {
         case .singleCord(let single):
             profile = single
+        case .pairedLeadCord:
+            throw SuspendedPresentationError.invalidSuspension
         case .twoBranchCord:
             // Preserve the compatibility projection for callers that still
             // route an enum value through the historical single-cord facade.
@@ -52,6 +63,94 @@ enum SuspendedBoardPresentation {
             pose: pose,
             profile: profile,
             bounds: bounds
+        )
+    }
+
+    static func solve(
+        pose: BoardModelCanonicalPose,
+        suspension: BoardModelPairedLeadCord,
+        bounds: BoardModelBounds
+    ) throws -> SuspendedPairedLeadSolvedPresentation {
+        let transform = try boardTransform(for: pose)
+        let (minimum, maximum) = try validatedBounds(bounds)
+        guard suspension.attachments.count == 2,
+              Set(suspension.attachments.map(\.id)).count == suspension.attachments.count,
+              suspension.attachments.allSatisfy({
+                  $0.pointInModel.count == 3
+                      && $0.pointInModel.allSatisfy(\.isFinite)
+                      && zip($0.pointInModel, bounds.minimum).allSatisfy({ $0 >= $1 })
+                      && zip($0.pointInModel, bounds.maximum).allSatisfy({ $0 <= $1 })
+              }),
+              suspension.anchor.visibility == "invisible",
+              suspension.anchor.position.count == 3,
+              suspension.anchor.position.allSatisfy(\.isFinite) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        guard suspension.cord.restLength.isFinite,
+              suspension.cord.restLength > 0,
+              suspension.cord.radius.isFinite,
+              suspension.cord.radius > 0 else {
+            throw SuspendedPresentationError.invalidCord
+        }
+
+        let fixedAnchor = SIMD3<Float>(
+            Float(suspension.anchor.position[0]),
+            Float(suspension.anchor.position[1]),
+            Float(suspension.anchor.position[2])
+        )
+        guard fixedAnchor.allFinite else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let transformedAttachments = suspension.attachments.map { attachment in
+            transformPoint(
+                transform,
+                SIMD3<Float>(
+                    Float(attachment.pointInModel[0]),
+                    Float(attachment.pointInModel[1]),
+                    Float(attachment.pointInModel[2])
+                )
+            )
+        }
+        guard transformedAttachments.allSatisfy(\.allFinite) else {
+            throw SuspendedPresentationError.invalidPose
+        }
+        let leads = try transformedAttachments.map {
+            try SuspendedCordSolver.solve(
+                start: fixedAnchor,
+                end: $0,
+                restLength: Float(suspension.cord.restLength)
+            )
+        }
+        guard leads.count == 2,
+              leads.allSatisfy({
+                  $0.samples.count == SuspendedCordSolver.sampleCount
+                      && $0.samples.first == fixedAnchor
+                      && $0.samples.allSatisfy(\.allFinite)
+                      && $0.tangents.allSatisfy(\.allFinite)
+              }),
+              zip(leads, transformedAttachments).allSatisfy({ $0.0.samples.last == $0.1 }) else {
+            throw SuspendedPresentationError.nonFiniteCurve
+        }
+        try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(
+            leads[0].samples + Array(leads[1].samples.reversed().dropFirst())
+        )
+
+        let framing = try makeCameraFraming(
+            pose: pose,
+            transform: transform,
+            points: transformedBoundsCorners(minimum: minimum, maximum: maximum, transform: transform)
+                + [fixedAnchor]
+                + transformedAttachments
+                + leads.flatMap(\.samples)
+        )
+        let tubeRadius = Float(suspension.cord.radius)
+        return SuspendedPairedLeadSolvedPresentation(
+            boardTransform: transform,
+            fixedAnchor: fixedAnchor,
+            leads: leads,
+            cameraFraming: framing,
+            tubeRadius: tubeRadius,
+            requiredClearance: tubeRadius + additionalClearance
         )
     }
 
