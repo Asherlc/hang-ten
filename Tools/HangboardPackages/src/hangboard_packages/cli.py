@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .cord_audit import load_cord_audit_manifest, validate_cord_audit_manifest
 from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
 from .presentation_remediation_audit import (
     PresentationValidationMode,
@@ -23,10 +24,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         inventory = discover_board_packages(
             arguments.root,
             require_complete_inventory=(
-                arguments.command in {"audit-metadata", "audit-presentations"}
+                arguments.command
+                in {"audit-cords", "audit-metadata", "audit-presentations"}
                 or arguments.final_inventory
             ),
         )
+        if arguments.command == "audit-cords":
+            report = validate_cord_audit_manifest(
+                load_cord_audit_manifest(arguments.manifest), inventory
+            )
+            print(json.dumps(report.to_json(), indent=2, sort_keys=True))
+            return 0
         if arguments.command == "audit-metadata":
             report = validate_metadata_ledger(
                 load_metadata_ledger(arguments.ledger), inventory
@@ -91,6 +99,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     audit_metadata.add_argument("--root", type=Path, required=True)
     audit_metadata.add_argument("--ledger", type=Path, required=True)
+    audit_cords = subcommands.add_parser(
+        "audit-cords", help="validate model hangboard cord source-audit coverage"
+    )
+    audit_cords.add_argument("--root", type=Path, required=True)
+    audit_cords.add_argument("--manifest", type=Path, required=True)
     audit_presentations = subcommands.add_parser(
         "audit-presentations", help="validate a presentation remediation manifest"
     )
