@@ -68,7 +68,7 @@ class ImportContactModelSourceTests(unittest.TestCase):
                 "schemaVersion": 1,
                 "packageID": "fixture",
                 "manufacturerPhysicalAuthority": {"publisher": "Manufacturer", "evidencePacket": "evidence.json"},
-                "historicalSource": {"status": "unrecoverable"},
+                "historicalSource": {"status": "missing"},
                 "auditedModelSource": {
                     "provenanceType": "user-provided",
                     "authorization": "explicit user ruling",

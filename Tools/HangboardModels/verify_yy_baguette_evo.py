@@ -90,6 +90,24 @@ def require_source_correspondence(imported_to_source: Mapping[str, str]) -> None
         raise ValueError("actual USDZ duplicates a source mesh ID")
 
 
+def require_source_bindings(
+    imported_to_source: Mapping[str, str],
+    bindings_by_imported: Mapping[str, object],
+    expected_roles_by_source: Mapping[str, str],
+    expected_contact_ids_by_source: Mapping[str, str],
+) -> None:
+    """Require every imported source mesh to retain its approved binding."""
+    for imported_id, source_id in imported_to_source.items():
+        binding = bindings_by_imported.get(imported_id)
+        expected_role = expected_roles_by_source.get(source_id)
+        if binding is None or expected_role not in {"body", "contact"}:
+            raise ValueError(f"actual USDZ role/contact binding is missing: {source_id}")
+        actual = (getattr(binding, "role", None), getattr(binding, "contact_id", None))
+        expected = (expected_role, expected_contact_ids_by_source.get(source_id))
+        if actual != expected:
+            raise ValueError(f"actual USDZ role/contact binding mismatch: {source_id}")
+
+
 def _attachment_facts(mapping: Mapping[str, object]) -> list[Mapping[str, object]]:
     facts: list[Mapping[str, object]] = []
     objects = mapping.get("objects")
@@ -209,6 +227,13 @@ def verify_package(package_directory: Path, mapping_path: Path) -> Mapping[str, 
     )
     correspondence = compiler._imported_source_node_ids(scene, nodes)
     require_source_correspondence(correspondence)
+    bindings = {node.node_id: node for node in nodes}
+    require_source_bindings(
+        correspondence,
+        bindings,
+        validated.roles_by_node,
+        validated.contact_ids_by_node,
+    )
     importer_mesh_ids = {item.name for item in scene.objects if item.type == "MESH"}
     if importer_mesh_ids != set(correspondence):
         raise ValueError("actual USDZ contains unbound importer-visible mesh IDs")
@@ -240,7 +265,6 @@ def verify_package(package_directory: Path, mapping_path: Path) -> Mapping[str, 
         )
     attachments = _verify_attachment_payload(payload, _attachment_facts(mapping))
 
-    bindings = {node.node_id: node for node in nodes}
     meshes: list[dict[str, object]] = []
     for node_id in sorted(correspondence):
         item = by_name[node_id]

@@ -81,8 +81,8 @@ def verify_source_manifest(manifest_path: Path, package_id: str) -> Path:
     ):
         raise SourceManifestError("manufacturer physical authority is incomplete")
     historical = document.get("historicalSource")
-    if not isinstance(historical, Mapping) or historical.get("status") != "unrecoverable":
-        raise SourceManifestError("historical source must be explicitly unrecoverable")
+    if not isinstance(historical, Mapping) or historical.get("status") != "missing":
+        raise SourceManifestError("historical source must be explicitly recorded as missing")
     source = document.get("auditedModelSource")
     if not isinstance(source, Mapping):
         raise SourceManifestError("auditedModelSource must be an object")

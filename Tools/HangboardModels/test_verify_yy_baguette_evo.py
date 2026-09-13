@@ -6,6 +6,7 @@ import importlib
 import json
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 
 class VerifyYYBaguetteEvoTests(unittest.TestCase):
@@ -60,6 +61,44 @@ class VerifyYYBaguetteEvoTests(unittest.TestCase):
         correspondence.pop(next(iter(correspondence)))
         with self.assertRaisesRegex(ValueError, "source mesh"):
             verifier.require_source_correspondence(correspondence)
+
+    def test_source_correspondence_rejects_swapped_contact_bindings(self) -> None:
+        verifier = self.module()
+        correspondence = {
+            "BodyImported": "body",
+            "LeftImported": "hold-edge-20mm-left",
+            "RightImported": "hold-edge-20mm-right",
+        }
+        bindings = {
+            "BodyImported": SimpleNamespace(role="body", contact_id=None),
+            "LeftImported": SimpleNamespace(role="contact", contact_id="edge-20-left"),
+            "RightImported": SimpleNamespace(role="contact", contact_id="edge-20-right"),
+        }
+        expected_roles = {
+            "body": "body",
+            "hold-edge-20mm-left": "contact",
+            "hold-edge-20mm-right": "contact",
+        }
+        expected_contacts = {
+            "hold-edge-20mm-left": "edge-20-left",
+            "hold-edge-20mm-right": "edge-20-right",
+        }
+
+        verifier.require_source_bindings(
+            correspondence,
+            bindings,
+            expected_roles,
+            expected_contacts,
+        )
+        bindings["LeftImported"].contact_id = "edge-20-right"
+        bindings["RightImported"].contact_id = "edge-20-left"
+        with self.assertRaisesRegex(ValueError, "role/contact binding"):
+            verifier.require_source_bindings(
+                correspondence,
+                bindings,
+                expected_roles,
+                expected_contacts,
+            )
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import CryptoKit
 import SceneKit
 import SwiftUI
 import UIKit
@@ -412,6 +413,8 @@ final class BoardModelTests: XCTestCase {
 
     func testPromotedModelMatchesItsV3PhysicalContactInventory() async throws {
         let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        let approvedModelSHA256 = "c984434edc54cfc6ec7b950a710e03e80b2514a5c5919e5fb7d1dde48e65e088"
+        let approvedDescriptorSHA256 = "f1d44e9f6e5ce76e8bc3cebb912d1bc594e375da467e01a2566b6191281e148d"
         let expectedContactIDs = [
             "edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left",
             "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right",
@@ -428,8 +431,43 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.geometryNodes.count, 21)
         XCTAssertEqual(model.contactNodes["rounded-tray"]?.count, 2)
         XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+        XCTAssertEqual(media.descriptor.modelSHA256, approvedModelSHA256)
+
+        let expectedBindings = [
+            "body_mesh_001|body|-",
+            "hold_central_06mm_mesh_001|contact|edge-central-6",
+            "hold_central_20mm_mesh_001|contact|edge-central-20",
+            "hold_central_25mm_mesh_001|contact|edge-central-25",
+            "hold_central_30mm_mesh_001|contact|edge-central-30",
+            "hold_edge_06mm_left_mesh_001|contact|edge-6-upper",
+            "hold_edge_06mm_right_mesh_001|contact|edge-6-lower",
+            "hold_edge_08mm_left_mesh_001|contact|edge-8-left",
+            "hold_edge_08mm_right_mesh_001|contact|edge-8-right",
+            "hold_edge_10mm_left_mesh_001|contact|edge-10-left",
+            "hold_edge_10mm_right_mesh_001|contact|edge-10-right",
+            "hold_edge_12mm_left_mesh_001|contact|edge-12-left",
+            "hold_edge_12mm_right_mesh_001|contact|edge-12-right",
+            "hold_edge_15mm_left_mesh_001|contact|edge-15-left",
+            "hold_edge_15mm_right_mesh_001|contact|edge-15-right",
+            "hold_edge_20mm_left_mesh_001|contact|edge-20-left",
+            "hold_edge_20mm_right_mesh_001|contact|edge-20-right",
+            "hold_edge_25mm_left_mesh_001|contact|edge-25-left",
+            "hold_edge_25mm_right_mesh_001|contact|edge-25-right",
+            "hold_rounded_left_mesh_001|contact|rounded-tray",
+            "hold_rounded_right_mesh_001|contact|rounded-tray",
+        ]
+        let actualBindings = media.descriptor.nodes.map {
+            "\($0.nodeID)|\($0.role.rawValue)|\($0.contactID ?? "-")"
+        }
+        XCTAssertEqual(actualBindings, expectedBindings)
 
         let assetURL = try XCTUnwrap(BoardCatalog.packageStore.presentationAssetURL(for: board))
+        let descriptorURL = try XCTUnwrap(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+        let descriptorData = try Data(contentsOf: descriptorURL)
+        let descriptorSHA256 = SHA256.hash(data: descriptorData)
+            .map { String(format: "%02x", $0) }
+            .joined()
+        XCTAssertEqual(descriptorSHA256, approvedDescriptorSHA256)
         let packageURL = assetURL.deletingLastPathComponent().deletingLastPathComponent()
         let packageFiles = try FileManager.default.contentsOfDirectory(atPath: packageURL.path)
         let assetFiles = try FileManager.default.contentsOfDirectory(

@@ -187,7 +187,8 @@ Task 5 re-audited only `yy-baguette-evo` after the schema-v3 contact-first hard
 cut. The historical archive at
 `/Users/asherlc/Downloads/models/YY-Vertical-Baguette-Evo-Package.zip`
 (`e74609c64e65030c5a1011dee64e6cc6b4166d99821614929eaf391c97d5e92f`)
-remains unrecoverable. By explicit user ruling, the audited model source is now
+was absent from the recorded path and was not found by the retained searches.
+By explicit user ruling, the audited model source is now
 the user-provided `baguette-evo.blend`, retained under the workspace evidence
 root with SHA-256
 `43ad5ab63b580aee09be458e1d10179dadf6adc80e5ff2eae1f72dea848b9131`.
@@ -195,9 +196,11 @@ That ruling supersedes only the missing ZIP as model-source provenance. It does
 not supersede YY Vertical evidence, which remains authoritative for revision
 identity and physical facts.
 
-The retained manufacturer packet contains 20 primary sources. Before model
-work, the user explicitly approved the exact eight-view YY Vertical set listed
-in `.context/strong-blowfish-task-5-evidence-repair/human-review-candidate.json`.
+The retained manufacturer source register contains 20 records. The validated
+evidence packet intentionally retains 12 of those records as `primarySources`;
+the remaining eight register-only snapshots are not packet sources. Before
+model work, the user explicitly approved the exact eight-view YY Vertical set
+listed in `.context/strong-blowfish-task-5-evidence-repair/human-review-candidate.json`.
 The validated packet binds all 19 physical `contactID` values to 20 source mesh
 pieces. `hold-rounded-left` and `hold-rounded-right` remain two mesh pieces for
 the single continuous `rounded-tray` contact. Source-left 6 mm remains the
