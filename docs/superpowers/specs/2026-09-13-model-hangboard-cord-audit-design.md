@@ -40,6 +40,11 @@ The model package remains one USDZ and one descriptor. Its optional
    attachment node.
 2. `twoBranchCord` binds two source-supported passage pairs and routes each
    branch through its declared passages.
+3. `pairedLeadCord` binds exactly two source-supported external attachment
+   points. It renders one lead from the shared invisible anchor to each point;
+   it deliberately renders no segment between those points. This is only for
+   a product, such as Stone Hanger, whose evidence establishes two external
+   support branches but does not establish a complete interior cord route.
 
 The renderer transforms the selected position's canonical model pose, solves
 the declared cord(s) from an invisible world anchor, and adds non-pickable
@@ -52,6 +57,12 @@ No cord is baked into a USDZ, exposed to accessibility, or made selectable.
 No environment object (wall, hook, carabiner, weight, band, ceiling) is added.
 The existing Flash two-branch implementation remains unchanged except for
 shared audit coverage.
+
+`pairedLeadCord` is not a permissive fallback for incomplete two-branch
+evidence. Its parser rejects a declared interior route, a third lead, duplicate
+or unknown attachment IDs, a non-body/non-attachment node, unknown positions,
+or a visible anchor. Its label and source audit must explicitly say that the
+unrendered interior section is not established by evidence.
 
 ## Delivery slices
 
@@ -66,7 +77,11 @@ shared audit coverage.
    metadata. If the existing USDZ lacks a source-supported attachment/passage
    feature, refine only that physical model geometry after the evidence gate;
    final shape work is performed by Astra.
-4. Add package, solver, native-picking, clearance, and position coverage for
+4. Add the closed `pairedLeadCord` package/runtime contract before promoting
+   Stone Hanger. It reuses the existing deterministic single-span solver for
+   each independent lead, shares an invisible anchor, and never reconstructs
+   the product's unproven internal route.
+5. Add package, solver, native-picking, clearance, and position coverage for
    every promoted package. Render review artifacts in an owner-prefixed
    `.context` directory, visually review them, then clean up the artifacts.
 
@@ -76,6 +91,12 @@ Any missing evidence ruling, unresolved attachment, invalid pose, unknown
 descriptor node, short/unsolved cord, self-intersection, mesh collision, or
 cord hit target leaves that presentation unavailable; it never falls back to a
 straight line, raster board, or invented attachment.
+
+For `pairedLeadCord`, either lead failing validation makes the entire
+presentation unavailable. The two rendered leads must terminate exactly at
+their own documented attachment points, share only the invisible anchor, and
+remain mutually clear and clear of the model. No rendering result may imply
+that the two endpoints are joined inside the product.
 
 Tests first establish the catalog-audit failure for an unclassified model
 package. Per promoted board they verify parser acceptance, all canonical poses,
