@@ -135,6 +135,7 @@ jobs:
           resource_root="$RUNNER_TEMP/hang-ten-package-stage"
           TARGET_BUILD_DIR="$resource_root/build" \
           UNLOCALIZED_RESOURCES_FOLDER_PATH="Resources" \
+          DERIVED_FILE_DIR="$resource_root/DerivedFiles" \
           python3 scripts/stage-board-packages.py \
             --repository-root "$GITHUB_WORKSPACE" \
             --destination "$resource_root/build/Resources/Hangboards"
