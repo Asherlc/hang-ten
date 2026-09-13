@@ -358,9 +358,9 @@ struct BoardDetailMapView: View {
                     positionID: BoardMapPresentationSelection.resolvePositionID(
                         board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
                     ),
-                    highlightedHoldIDs: Set([selectedHoldID].compactMap { $0 }),
+                    highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
                     highlightMode: .active,
-                    onHoldTap: { select($0.id) }
+                    onContactTap: { select($0.id) }
                 )
             }
         }
@@ -560,9 +560,9 @@ struct BoardMapView: View {
                         board: board,
                         presentation: content.presentation,
                         positionID: selectedPositionID,
-                        highlightedHoldIDs: highlightedHoldIDs,
+                        highlightedContactIDs: highlightedHoldIDs,
                         highlightMode: highlightMode,
-                        onHoldTap: onHoldTap
+                        onContactTap: onHoldTap
                     )
                 }
             }

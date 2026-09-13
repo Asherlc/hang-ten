@@ -353,6 +353,28 @@ def test_v3_model_descriptor_binds_contacts_and_allows_two_bodies(tmp_path):
     assert tuple(contact.id for contact in loaded.board.contacts) == ("left-edge", "right-edge")
 
 
+@pytest.mark.parametrize("missing_contact", ["left-edge", "right-edge"])
+def test_v3_model_descriptor_requires_exact_contact_node_coverage(
+    tmp_path: Path, missing_contact: str
+) -> None:
+    package = write_v3_model_package(
+        tmp_path,
+        contacts=("left-edge", "right-edge"),
+        body_nodes=("left-body", "right-body"),
+    )
+    descriptor_path = package / "assets" / "primary.model.json"
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
+    descriptor["nodes"] = [
+        node
+        for node in descriptor["nodes"]
+        if node.get("contactID") != missing_contact
+    ]
+    _rewrite(descriptor_path, descriptor)
+
+    with pytest.raises(ValueError, match="node contact IDs must equal physical contacts"):
+        load_board_package(package)
+
+
 def test_v3_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = _write_model_package(tmp_path / "fixture-model")
