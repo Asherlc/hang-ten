@@ -234,7 +234,7 @@ final class BoardModelTests: XCTestCase {
 
         let suspension = BoardModelSuspension(
             attachment: .init(nodeID: "Board/Body", pointInModel: [1, 2, 3], provenance: "test"),
-            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "hidden", provenance: "test", position: [1, 10, 3]),
+            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "invisible", provenance: "test", position: [2, 10, 3]),
             cord: .init(restLength: 10, radius: 0.01, material: "test", provenance: "test"),
             canonicalPoses: [
                 "reverse": .init(
@@ -244,7 +244,7 @@ final class BoardModelTests: XCTestCase {
                 )
             ]
         )
-        let model = try XCTUnwrap(BoardModelScene(
+        let suspendedModel = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
             descriptor: descriptor,
             display: display(),
@@ -253,20 +253,20 @@ final class BoardModelTests: XCTestCase {
             allowedPositionIDs: ["reverse"]
         ))
 
-        XCTAssertTrue(model.select(positionID: "reverse"))
-        XCTAssertFalse(model.isUnavailable)
-        XCTAssertEqual(model.activePositionID, "reverse")
-        XCTAssertNotNil(model.transientCordNode)
-        XCTAssertFalse(model.transientCordNode?.childNodes.isEmpty ?? true)
-        XCTAssertFalse(model.isTransientCordAccessible)
-        XCTAssertEqual(model.transformedAttachment, SIMD3<Float>(1, 2, 3))
-        XCTAssertTrue(model.transientCordNode?.childNodes.allSatisfy {
+        XCTAssertTrue(suspendedModel.select(positionID: "reverse"))
+        XCTAssertFalse(suspendedModel.isUnavailable)
+        XCTAssertEqual(suspendedModel.activePositionID, "reverse")
+        XCTAssertNotNil(suspendedModel.transientCordNode)
+        XCTAssertFalse(suspendedModel.transientCordNode?.childNodes.isEmpty ?? true)
+        XCTAssertFalse(suspendedModel.isTransientCordAccessible)
+        XCTAssertEqual(suspendedModel.transformedAttachment, SIMD3<Float>(1, 2, 3))
+        XCTAssertTrue(suspendedModel.transientCordNode?.childNodes.allSatisfy {
             $0.geometry != nil && !$0.isHidden
         } ?? false)
-        XCTAssertEqual(model.boardTransform.columns.0, SIMD4<Float>(1, 0, 0, 0))
-        XCTAssertEqual(model.boardTransform.columns.1, SIMD4<Float>(0, 1, 0, 0))
-        XCTAssertEqual(model.boardTransform.columns.2, SIMD4<Float>(0, 0, 1, 0))
-        XCTAssertEqual(model.boardTransform.columns.3, SIMD4<Float>(0, 0, 0, 1))
+        XCTAssertEqual(suspendedModel.boardTransform.columns.0, SIMD4<Float>(1, 0, 0, 0))
+        XCTAssertEqual(suspendedModel.boardTransform.columns.1, SIMD4<Float>(0, 1, 0, 0))
+        XCTAssertEqual(suspendedModel.boardTransform.columns.2, SIMD4<Float>(0, 0, 1, 0))
+        XCTAssertEqual(suspendedModel.boardTransform.columns.3, SIMD4<Float>(0, 0, 0, 1))
     }
 
     func testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms() throws {
@@ -291,15 +291,48 @@ final class BoardModelTests: XCTestCase {
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
     }
 
-    func testFlashBoardNativeSceneUsesOrientationWithoutLegacySuspension() async throws {
+    func testFlashBoardNativeSceneUsesApprovedSuspensionAcrossCanonicalPositions() async throws {
         let (board, media, model) = try await loadMigratedModel("tension.flash-board")
-        XCTAssertNil(media.suspension)
-        XCTAssertNotNil(media.orientation)
+        XCTAssertNil(media.orientation)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+        XCTAssertEqual(suspension.branches.count, 2)
         for position in board.positions {
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
             XCTAssertEqual(model.activePositionID, position.id)
-            XCTAssertNil(model.transientCordNode, position.id)
+            XCTAssertNotNil(model.transientCordNode, position.id)
+        }
+    }
+
+    func testFlashBoardNativeSceneBuildsVisibleThreeDCordBranchesForSelectedPosition() async throws {
+        let (_, media, model) = try await loadMigratedModel("tension.flash-board")
+
+        XCTAssertEqual(media.descriptor.modelSHA256, "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524")
+        XCTAssertEqual(media.descriptor.holds.count, 7)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+        XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(suspension.passages.left.map(\.id), ["left-outer-passage", "left-inner-passage"])
+        XCTAssertEqual(suspension.passages.right.map(\.id), ["right-inner-passage", "right-outer-passage"])
+        XCTAssertEqual(Set((suspension.passages.left + suspension.passages.right).map(\.nodeID)), ["flash_board_body_008"])
+        XCTAssertEqual(suspension.branches[0].exteriorContactPoints, [[0.014, 0.048526, -0.001], [0.034, 0.048526, -0.001]])
+        XCTAssertEqual(suspension.branches[1].exteriorContactPoints, [[0.466, 0.048526, -0.001], [0.486, 0.048526, -0.001]])
+
+        XCTAssertTrue(model.select(positionID: "three-edge-upright"))
+        let cord = try XCTUnwrap(model.transientCordNode)
+        XCTAssertFalse(cord.isHidden)
+        XCTAssertFalse(model.isTransientCordAccessible)
+        for branchIndex in 0..<2 {
+            let segments = cord.childNodes.filter {
+                $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+            }
+            XCTAssertFalse(segments.isEmpty, "branch \(branchIndex) must contain visible 3D segments")
+            XCTAssertTrue(segments.allSatisfy {
+                !$0.isHidden && $0.geometry is SCNCylinder && $0.categoryBitMask == BoardModelScene.cordCategory
+            })
         }
     }
 

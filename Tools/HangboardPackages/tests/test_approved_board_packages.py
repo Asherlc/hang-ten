@@ -542,7 +542,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert board["id"] == "tension.flash-board"
     assert "dimensions" not in board
     assert _presentation_summary(board) == [
-        ("primary", "Primary", "assets/primary.usdz", 6.333333302712162, True, None, False),
+        ("primary", "Primary suspended model", "assets/primary.usdz", 1.5, True, None, False),
     ]
     assert [(hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]] == [
         ("three-edge-left", "Left edge on three-edge surface", "edge"),
@@ -550,6 +550,8 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ("three-edge-right", "Right edge on three-edge surface", "edge"),
         ("two-edge-left", "Left edge on two-edge surface", "edge"),
         ("two-edge-right", "Right edge on two-edge surface", "edge"),
+        ("small-crimp-left", "Left small crimp", "edge"),
+        ("small-crimp-right", "Right small crimp", "edge"),
     ]
     assert all("sizeMillimeters" not in hold for hold in board["holds"])
     # Four positions over the shared model: upright/inverted for each usable face.
@@ -581,16 +583,13 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "holdGeometry" not in media
-    assert media["orientation"] == {
-        "pivot": "modelBoundsCenter",
-        "rotations": {
-            "three-edge-upright": [0.0, 0.0, 0.0, 1.0],
-            "three-edge-inverted": [0.0, 0.0, 1.0, 0.0],
-            "two-edge-inverted": [1.0, 0.0, 0.0, 0.0],
-            "two-edge-upright": [0.0, 1.0, 0.0, 0.0],
-        },
-    }
-    _assert_model_descriptor(FLASH_BOARD_ROOT, board, "body_surface_001")
+    assert media.get("orientation") is None
+    suspension = media["suspension"]
+    assert suspension["type"] == "twoBranchCord"
+    assert len(suspension["passages"]["left"]) == 2
+    assert len(suspension["passages"]["right"]) == 2
+    assert [branch["id"] for branch in suspension["branches"]] == ["left-branch", "right-branch"]
+    _assert_model_descriptor(FLASH_BOARD_ROOT, board, "flash_board_body_008")
 
 
 def test_project_package_freezes_the_official_numbered_inventory_as_model() -> None:

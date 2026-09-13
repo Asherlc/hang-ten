@@ -292,12 +292,12 @@ def test_discovered_model_inventory_is_exactly_the_fourteen_current_packages() -
     assert set(model_packages) == MODEL_PACKAGE_IDS
 
 
-def test_flash_board_uses_orientation_with_overlapping_face_inventories() -> None:
+def test_flash_board_uses_suspension_with_overlapping_face_inventories() -> None:
     board = _discovered_model_packages()["tension.flash-board"].board
     media = board.presentations[0].media
     assert isinstance(media, BOARD_CATALOG.PresentationMediaModel)
-    assert media.suspension is None
-    assert media.orientation is not None
+    assert media.suspension is not None
+    assert media.orientation is None
     positions = {position.id: position for position in board.positions}
     assert set(positions) == {
         "three-edge-upright",
