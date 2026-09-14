@@ -971,14 +971,22 @@ final class BoardModelTests: XCTestCase {
             nil
         }
         let media = try XCTUnwrap(candidateMedia, "\(boardID) is not a package model")
-        let packageURL = try XCTUnwrap(
+        XCTAssertNil(
             BoardCatalog.packageStore.presentationAssetURL(
                 for: board,
                 presentationID: presentation.id
             ),
             boardID
         )
-        XCTAssertEqual(packageURL.lastPathComponent, "primary.usdz", boardID)
+        let resource = try XCTUnwrap(
+            BoardCatalog.packageStore.modelResource(
+                for: board,
+                presentationID: presentation.id
+            ),
+            boardID
+        )
+        XCTAssertEqual(resource.assetPath, media.assetPath, boardID)
+        XCTAssertEqual(resource.packageSlug, boardID.replacingOccurrences(of: ".", with: "-"), boardID)
         let loaded = await BoardModelLoader.load(
             board: board,
             presentation: presentation,
