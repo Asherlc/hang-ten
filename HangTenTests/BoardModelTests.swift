@@ -393,6 +393,35 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testPairedLeadModelHangboardsReserveCordAwareCanonicalCameraMargin() async throws {
+        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+            let (board, media, model) = try await loadMigratedModel(boardID)
+            guard case .pairedLeadCord(let suspension) = media.suspension else {
+                return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
+            }
+
+            // The generic model padding only proves that a centerline reaches
+            // the frame edge. A paired hanging lead needs enough surrounding
+            // view space to remain visibly distinct from the board in detail.
+            for position in board.positions {
+                let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
+                let solved = try BoardModelScene.solveSuspension(
+                    pose: pose,
+                    suspension: .pairedLeadCord(suspension),
+                    bounds: media.descriptor.modelBounds
+                )
+                XCTAssertGreaterThanOrEqual(
+                    solved.cameraFraming.fitPadding,
+                    1.4,
+                    "\(boardID)/\(position.id) needs a cord-aware camera margin"
+                )
+                model.frame(in: CGSize(width: 390, height: 228))
+                XCTAssertTrue(model.select(positionID: position.id))
+                XCTAssertFalse(model.isUnavailable)
+            }
+        }
+    }
+
     func testPairedLeadSceneRendersTwoTransientNonPickableCylinderGroupsAndRejectsOneBadLead() throws {
         let selectedPose = BoardModelCanonicalPose(
             rotation: [0, 0, 0, 1],

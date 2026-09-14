@@ -36,6 +36,11 @@ struct SuspendedPairedLeadSolvedPresentation {
 
 enum SuspendedBoardPresentation {
     static let additionalClearance: Float = 0.001
+    // Two independent hanging leads need more than the generic model edge
+    // padding so the free span stays plainly visible in the detail view.
+    // This is presentation-only framing; it does not alter any authored cord
+    // route, attachment, anchor, or board geometry.
+    static let pairedLeadMinimumCameraFitPadding: Float = 1.4
 
     static func solve(
         pose: BoardModelCanonicalPose,
@@ -140,6 +145,7 @@ enum SuspendedBoardPresentation {
         let framing = try makeCameraFraming(
             pose: pose,
             transform: transform,
+            minimumFitPadding: pairedLeadMinimumCameraFitPadding,
             points: transformedBoundsCorners(minimum: minimum, maximum: maximum, transform: transform)
                 + [fixedAnchor]
                 + transformedAttachments
@@ -613,6 +619,7 @@ enum SuspendedBoardPresentation {
     private static func makeCameraFraming(
         pose: BoardModelCanonicalPose,
         transform: simd_float4x4,
+        minimumFitPadding: Float = 1,
         points: [SIMD3<Float>]
     ) throws -> SuspendedCameraFraming {
         guard pose.camera.viewDirection.count == 3,
@@ -653,9 +660,11 @@ enum SuspendedBoardPresentation {
         let width = maxHorizontal - minHorizontal
         let height = maxVertical - minVertical
         let depthSpan = maxDepth - minDepth
-        let fitPadding = Float(1 + pose.camera.fitPadding * 2)
+        let fitPadding = max(Float(1 + pose.camera.fitPadding * 2), minimumFitPadding)
         guard width.isFinite, height.isFinite, depthSpan.isFinite,
-              width > 0, height > 0, depthSpan > 0, fitPadding.isFinite else {
+              width > 0, height > 0, depthSpan > 0,
+              minimumFitPadding.isFinite, minimumFitPadding >= 1,
+              fitPadding.isFinite else {
             throw SuspendedPresentationError.invalidCamera
         }
         let target = right * ((minHorizontal + maxHorizontal) / 2)
