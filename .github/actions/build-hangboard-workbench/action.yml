@@ -195,7 +195,7 @@ runs:
             exit 1
           fi
           if curl --fail --silent --show-error "${readiness_curl_timeout_args[@]}" "$health_url" 2>/dev/null \
-            | python -c 'import json,sys; assert json.load(sys.stdin) == {"ok": True}' 2>/dev/null; then
+            | python -c 'import json,sys; sys.exit(0 if json.load(sys.stdin) == {"ok": True} else 1)' 2>/dev/null; then
             ready=true
             break
           fi
