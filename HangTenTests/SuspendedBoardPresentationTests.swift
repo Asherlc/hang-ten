@@ -262,6 +262,22 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testPairedLeadAllowsDivergingLeadsContainedInTheSharedAnchorKnot() throws {
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: pairedLeadSuspension(
+                left: [-0.001, 0.402, 0],
+                right: [0.001, 0.402, 0],
+                anchor: [0, 0.4, 0],
+                restLength: 0.01,
+                radius: 0.01
+            ),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(result.leads.count, 2)
+    }
+
     func testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),

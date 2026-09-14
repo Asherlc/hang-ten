@@ -480,13 +480,6 @@ enum SuspendedBoardPresentation {
             throw SuspendedPresentationError.invalidSuspension
         }
         let clearanceSquared = requiredClearance * requiredClearance
-        // The shared-anchor exemption represents only the short physical knot
-        // at the authored anchor. Both independent leads must leave that knot;
-        // otherwise fully overlapping leads could remain exempt end to end.
-        guard simd_length_squared(firstPath[firstPath.count - 1] - sharedAnchor) > clearanceSquared,
-              simd_length_squared(secondPath[secondPath.count - 1] - sharedAnchor) > clearanceSquared else {
-            throw SuspendedPresentationError.selfIntersection
-        }
         for (firstIndex, firstSegment) in zip(firstPath, firstPath.dropFirst()).enumerated() {
             for (secondIndex, secondSegment) in zip(secondPath, secondPath.dropFirst()).enumerated() {
                 let approach = segmentClosestApproach(
@@ -521,7 +514,14 @@ enum SuspendedBoardPresentation {
                 // within two tube diameters for a short distance after that
                 // knot. Allow only that bounded anchor neighborhood; every
                 // later approach must maintain the full two-tube clearance.
-                let isWithinSharedAnchorKnot = simd_length(firstPoint - sharedAnchor) <= requiredClearance
+                let isWithinSharedAnchorKnot = firstIndex == 0
+                    && secondIndex == 0
+                    && firstSegmentsContactOnlyAtSharedAnchor(
+                        firstSegment,
+                        secondSegment,
+                        sharedAnchor: sharedAnchor
+                    )
+                    && simd_length(firstPoint - sharedAnchor) <= requiredClearance
                     && simd_length(secondPoint - sharedAnchor) <= requiredClearance
                 if !isSharedAnchorContact && !isWithinSharedAnchorKnot {
                     throw SuspendedPresentationError.selfIntersection
