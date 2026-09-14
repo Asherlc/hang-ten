@@ -239,7 +239,11 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
 
         XCTAssertEqual(result.leads.count, 2)
-        XCTAssertEqual(result.requiredClearance, radius + SuspendedBoardPresentation.additionalClearance, accuracy: Float(1e-6))
+        XCTAssertEqual(
+            result.requiredClearance,
+            Float(radius + SuspendedBoardPresentation.additionalClearance),
+            accuracy: Float(1e-6)
+        )
     }
 
     func testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor() {
