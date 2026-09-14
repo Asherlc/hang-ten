@@ -226,10 +226,10 @@ def test_model_positions_reject_mixed_legacy_and_explicit_membership(tmp_path: P
         )
 
 
-def test_model_orientation_and_suspension_are_mutually_exclusive(tmp_path: Path) -> None:
-    # The shared fixture is intentionally not copied here; this checks the closed
-    # model-media contract using a minimal orientation-bearing package.
-    with pytest.raises(ValueError, match="orientation and suspension are mutually exclusive"):
+def test_model_orientation_and_suspension_are_parsed_independently(tmp_path: Path) -> None:
+    # The suspension remains independently validated; orientation metadata does
+    # not make an otherwise malformed suspension look valid.
+    with pytest.raises(ValueError, match=r"suspension\.type"):
         BOARD_CATALOG.load_board_package(
             write_model_package(tmp_path, orientation=_orientation(), media_overrides={"suspension": {}})
         )

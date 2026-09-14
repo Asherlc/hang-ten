@@ -971,13 +971,6 @@ final class BoardModelTests: XCTestCase {
             nil
         }
         let media = try XCTUnwrap(candidateMedia, "\(boardID) is not a package model")
-        XCTAssertNil(
-            BoardCatalog.packageStore.presentationAssetURL(
-                for: board,
-                presentationID: presentation.id
-            ),
-            boardID
-        )
         let resource = try XCTUnwrap(
             BoardCatalog.packageStore.modelResource(
                 for: board,
@@ -985,15 +978,104 @@ final class BoardModelTests: XCTestCase {
             ),
             boardID
         )
-        XCTAssertEqual(resource.assetPath, media.assetPath, boardID)
-        XCTAssertEqual(resource.packageSlug, boardID.replacingOccurrences(of: ".", with: "-"), boardID)
+        let packageURL = repositoryRootURL()
+            .appendingPathComponent("Hangboards", isDirectory: true)
+            .appendingPathComponent(resource.packageSlug, isDirectory: true)
+            .appendingPathComponent(resource.assetPath)
+        // The hosted app can load the same catalog model concurrently. Give this
+        // assertion its own cache identity without changing any model metadata.
+        let isolatedBundleURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "BoardModelTests-\(UUID().uuidString).bundle",
+                isDirectory: true
+            )
+        defer { try? FileManager.default.removeItem(at: isolatedBundleURL) }
+        let isolatedPackageURL = isolatedBundleURL
+            .appendingPathComponent("Hangboards/\(resource.packageSlug)", isDirectory: true)
+        let descriptorURL = try XCTUnwrap(
+            BoardCatalog.packageStore.presentationDescriptorURL(for: board)
+        )
+        try FileManager.default.createDirectory(
+            at: isolatedPackageURL.appendingPathComponent("assets", isDirectory: true),
+            withIntermediateDirectories: true
+        )
+        let boardURL = try XCTUnwrap(Bundle.main.resourceURL)
+            .appendingPathComponent("Hangboards/\(resource.packageSlug)/board.json")
+        let boardJSON = try String(contentsOf: boardURL, encoding: .utf8)
+        let isolatedBoardID = "fixture.migrated-\(UUID().uuidString.lowercased())"
+        // Suspension objects require authored member order. Replace only the
+        // unique board ID token instead of reserializing and sorting the package.
+        let originalIDToken = "\"\(board.id)\""
+        XCTAssertEqual(boardJSON.components(separatedBy: originalIDToken).count, 2, boardID)
+        let isolatedBoardJSON = boardJSON.replacingOccurrences(
+            of: originalIDToken,
+            with: "\"\(isolatedBoardID)\""
+        )
+        try Data(isolatedBoardJSON.utf8)
+            .write(to: isolatedPackageURL.appendingPathComponent("board.json"))
+        try Data(contentsOf: descriptorURL)
+            .write(to: isolatedPackageURL.appendingPathComponent(media.descriptorPath))
+        try PropertyListSerialization.data(
+            fromPropertyList: [
+                "CFBundleIdentifier": "com.hangten.tests.migrated.\(UUID().uuidString)",
+                "CFBundlePackageType": "BNDL",
+                "CFBundleVersion": "1"
+            ],
+            format: .xml,
+            options: 0
+        ).write(to: isolatedBundleURL.appendingPathComponent("Info.plist"))
+        let isolatedStore = try BoardPackageStore(
+            bundle: XCTUnwrap(Bundle(url: isolatedBundleURL)),
+            modelAssetMode: .onDemand
+        )
+        let isolatedBoard = try XCTUnwrap(isolatedStore.board(id: isolatedBoardID))
+        XCTAssertEqual(isolatedBoard.presentations, board.presentations, boardID)
+        XCTAssertEqual(isolatedBoard.contacts, board.contacts, boardID)
+        XCTAssertEqual(isolatedBoard.positions, board.positions, boardID)
+        XCTAssertEqual(isolatedStore.modelResource(for: isolatedBoard), resource, boardID)
+        XCTAssertNil(isolatedStore.presentationAssetURL(for: isolatedBoard), boardID)
+        let request = ImmediateBoardModelResourceRequest()
+        var requestedTags: [Set<String>] = []
+        var resolvedURLs: [URL] = []
+        let resourceAccess = BoardModelResourceAccess(
+            requestFactory: { tags, _ in
+                requestedTags.append(tags)
+                return request
+            },
+            urlResolver: { _, requestedResource in
+                XCTAssertTrue(request.didBeginAccess, boardID)
+                guard requestedResource == resource else { return nil }
+                resolvedURLs.append(packageURL)
+                return packageURL
+            }
+        )
+
+        XCTAssertNil(
+            BoardCatalog.packageStore.presentationAssetURL(
+                for: board,
+                presentationID: presentation.id
+            ),
+            boardID
+        )
         let loaded = await BoardModelLoader.load(
-            board: board,
-            presentation: presentation,
-            store: BoardCatalog.packageStore
+            board: isolatedBoard,
+            presentation: isolatedBoard.defaultPresentation,
+            store: isolatedStore,
+            resourceAccess: resourceAccess
         )
         let model = try XCTUnwrap(loaded, boardID)
+        XCTAssertEqual(resolvedURLs, [packageURL], boardID)
+        XCTAssertEqual(resolvedURLs.first?.lastPathComponent, "primary.usdz", boardID)
+        XCTAssertEqual(requestedTags, [[resource.tag]], boardID)
+        XCTAssertTrue(request.didBeginAccess, boardID)
+        XCTAssertFalse(request.didEndAccess, boardID)
         return (board, media, model)
+    }
+
+    private func repositoryRootURL() -> URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
     }
 
     private func assertVisibleFraming(
@@ -1261,4 +1343,18 @@ final class BoardModelTests: XCTestCase {
         return node
     }
 
+}
+
+private final class ImmediateBoardModelResourceRequest: BoardModelResourceRequesting {
+    let progress = Progress(totalUnitCount: 1)
+    private(set) var didBeginAccess = false
+    private(set) var didEndAccess = false
+
+    func beginAccessingResources() async throws {
+        didBeginAccess = true
+    }
+
+    func endAccessingResources() {
+        didEndAccess = true
+    }
 }
