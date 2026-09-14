@@ -26,6 +26,7 @@ _DECISIONS = frozenset({"represented", "excluded"})
 _TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord"})
 _SOURCE_TIERS = frozenset({"manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
+_SELF_AUTHORED_LEDGER_SUFFIXES = frozenset({".md", ".markdown"})
 
 
 class CordAuditError(ValueError):
@@ -164,9 +165,12 @@ def _verify_snapshot(
         )
 
 
-def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
-    if not isinstance(value, list) or not value:
-        raise CordAuditError(f"{source} must be a non-empty array")
+def _load_evidence(
+    value: Any, source: str, *, allow_empty: bool = False
+) -> tuple[CordAuditEvidence, ...]:
+    if not isinstance(value, list) or (not value and not allow_empty):
+        expected = "array" if allow_empty else "non-empty array"
+        raise CordAuditError(f"{source} must be an {expected}")
     evidence: list[CordAuditEvidence] = []
     for index, raw_evidence in enumerate(value):
         evidence_source = f"{source}[{index}]"
@@ -180,6 +184,14 @@ def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
         parsed = urlsplit(url)
         if parsed.scheme != "https" or not parsed.hostname:
             raise CordAuditError(f"{evidence_source}.url must be an HTTPS URL")
+        snapshot_path = _relative_snapshot_path(
+            payload["snapshotPath"], f"{evidence_source}.snapshotPath"
+        )
+        if Path(snapshot_path).suffix.casefold() in _SELF_AUTHORED_LEDGER_SUFFIXES:
+            raise CordAuditError(
+                f"{evidence_source}.snapshotPath must reference a retained source artifact, "
+                "not a self-authored markdown ledger"
+            )
         evidence.append(
             CordAuditEvidence(
                 view=_nonempty_string(payload["view"], f"{evidence_source}.view"),
@@ -191,9 +203,7 @@ def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
                 snapshot_sha256=_sha256(
                     payload["snapshotSHA256"], f"{evidence_source}.snapshotSHA256"
                 ),
-                snapshot_path=_relative_snapshot_path(
-                    payload["snapshotPath"], f"{evidence_source}.snapshotPath"
-                ),
+                snapshot_path=snapshot_path,
             )
         )
     return tuple(evidence)
@@ -246,7 +256,11 @@ def _load_record(value: Any, source: str) -> CordAuditRecord:
         decision=decision,
         topology=topology_value,
         ruling=_nonempty_string(payload["ruling"], f"{source}.ruling"),
-        evidence=_load_evidence(payload["evidence"], f"{source}.evidence"),
+        evidence=_load_evidence(
+            payload["evidence"],
+            f"{source}.evidence",
+            allow_empty=decision == "excluded",
+        ),
         human_approval=_load_human_approval(payload["humanApproval"], f"{source}.humanApproval"),
     )
 
@@ -351,11 +365,26 @@ def validate_cord_audit_manifest(
     for package_id, record in records_by_package.items():
         package_topology = topologies_by_package[package_id]
         revision_ids = {item.exact_revision_id for item in record.evidence}
-        if len(revision_ids) != 1:
+        if record.evidence and len(revision_ids) != 1:
             raise CordAuditError(
                 f"evidence must agree on one exact revision ID: {package_id}"
             )
+        if record.evidence:
+            evidence_paths = {item.snapshot_path for item in record.evidence}
+            evidence_digests = {item.snapshot_sha256 for item in record.evidence}
+            if (
+                len(evidence_paths) != len(record.evidence)
+                or len(evidence_digests) != len(record.evidence)
+            ):
+                raise CordAuditError(
+                    "record requires distinct retained source artifacts: "
+                    f"{package_id}"
+                )
         if record.decision == "represented":
+            if not record.evidence:
+                raise CordAuditError(
+                    f"represented record requires retained source evidence: {package_id}"
+                )
             evidence_views = {item.view.strip().casefold() for item in record.evidence}
             if len(evidence_views) != len(record.evidence) or len(evidence_views) < 2:
                 raise CordAuditError(

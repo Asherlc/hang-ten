@@ -100,11 +100,15 @@ def _manifest_path(
     if write_snapshots:
         for record in records:
             for evidence in record["evidence"]:  # type: ignore[index]
-                snapshot = tmp_path / evidence["snapshotPath"]  # type: ignore[index]
+                snapshot_path = evidence.get("snapshotPath")  # type: ignore[union-attr]
+                if not isinstance(snapshot_path, str):
+                    continue
+                snapshot = tmp_path / snapshot_path
                 snapshot.parent.mkdir(parents=True, exist_ok=True)
                 contents = f"fixture snapshot: {snapshot}".encode()
                 snapshot.write_bytes(contents)
-                evidence["snapshotSHA256"] = hashlib.sha256(contents).hexdigest()  # type: ignore[index]
+                if "snapshotSHA256" in evidence:  # type: ignore[operator]
+                    evidence["snapshotSHA256"] = hashlib.sha256(contents).hexdigest()  # type: ignore[index]
     path = tmp_path / "cord-audit.json"
     path.write_text(json.dumps({"schemaVersion": 1, "records": records}), encoding="utf-8")
     return path
@@ -248,6 +252,91 @@ def test_represented_record_rejects_duplicate_normalized_evidence_view_labels(
                 )
             ],
         )
+
+
+def test_represented_record_rejects_reused_retained_source_artifact(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(
+        _model_package(
+            "fixture.board",
+            suspension=BoardModelSingleCordSuspension(None, None, None, {}),  # type: ignore[arg-type]
+        )
+    )
+    record = _record(
+        "fixture.board",
+        decision="represented",
+        topology="singleCord",
+        evidence=[
+            {"view": "front", "url": "https://example.com/front"},
+            {"view": "oblique", "url": "https://example.com/oblique"},
+        ],
+    )
+    record["evidence"][1]["snapshotPath"] = record["evidence"][0]["snapshotPath"]  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="distinct retained source artifacts"):
+        _validate(tmp_path, inventory, [record])
+
+
+def test_represented_record_rejects_reused_retained_source_bytes(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(
+        _model_package(
+            "fixture.board",
+            suspension=BoardModelSingleCordSuspension(None, None, None, {}),  # type: ignore[arg-type]
+        )
+    )
+    record = _record(
+        "fixture.board",
+        decision="represented",
+        topology="singleCord",
+        evidence=[
+            {"view": "front", "url": "https://example.com/front"},
+            {"view": "oblique", "url": "https://example.com/oblique"},
+        ],
+    )
+    manifest_path = _manifest_path(tmp_path, [record])
+    first = tmp_path / record["evidence"][0]["snapshotPath"]  # type: ignore[index]
+    second = tmp_path / record["evidence"][1]["snapshotPath"]  # type: ignore[index]
+    second.write_bytes(first.read_bytes())
+    digest = hashlib.sha256(first.read_bytes()).hexdigest()
+    record["evidence"][0]["snapshotSHA256"] = digest  # type: ignore[index]
+    record["evidence"][1]["snapshotSHA256"] = digest  # type: ignore[index]
+    manifest_path.write_text(
+        json.dumps({"schemaVersion": 1, "records": [record]}), encoding="utf-8"
+    )
+
+    with pytest.raises(CordAuditError, match="distinct retained source artifacts"):
+        validate_cord_audit_manifest(load_cord_audit_manifest(manifest_path), inventory)
+
+
+def test_manifest_rejects_self_authored_markdown_ledger_as_snapshot(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    record["evidence"][0]["snapshotPath"] = "docs/source-audits/cord-evidence.md"  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="source artifact"):
+        _validate(tmp_path, inventory, [record])
+
+
+def test_excluded_record_may_conservatively_omit_unavailable_source_evidence(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+
+    report = _validate(
+        tmp_path,
+        inventory,
+        [_record("fixture.board", evidence=[])],
+    )
+
+    assert report.to_json() == {
+        "modelPackageIDs": ["fixture.board"],
+        "decisions": {"excluded": 1},
+    }
 
 
 def test_manifest_rejects_unknown_record_keys(tmp_path: Path) -> None:

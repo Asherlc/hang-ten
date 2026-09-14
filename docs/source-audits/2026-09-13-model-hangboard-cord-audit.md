@@ -22,27 +22,29 @@ The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](20
 
 ## Evidence review and approval
 
-The human review retained exact-revision evidence records for every discovered
-model package. Every evidence entry records its exact revision ID, source tier,
-retained snapshot SHA-256/path, and URL. Every record also carries an explicit
-`humanApproval` object; the validator rejects missing or incomplete provenance
-and approvals. The URLs below are the primary source entries recorded in the
-JSON manifest; query/fragment variants identify the reviewed gallery or
-attachment region, not a different product revision.
+The human review retained exact-revision source responses where the cited page
+was available. Every retained evidence entry records its exact revision ID,
+source tier, source URL, and the SHA-256/path of its own downloaded artifact.
+The validator rejects reuse of one artifact for two distinct represented views
+and rejects markdown audit ledgers as source snapshots. When a cited source
+could not be retained, the record has an empty evidence array and the board is
+conservatively excluded; no suspension metadata is promoted on that basis.
+Every record also carries an explicit `humanApproval` object; the validator
+rejects missing or incomplete provenance and approvals.
 
 ### Tension Flash Board — `twoBranchCord`
 
-- Exact-revision manufacturer view: [Tension Flash Board](https://tensionclimbing.com/products/flash-board-2).
-- Exact-revision hanging view: [Backcountry Flash Board](https://www.backcountry.com/tension-flash-board).
-- Attachment detail: [Flash Board listing](https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G).
+- Exact-revision manufacturer view: [Tension Flash Board](https://tensionclimbing.com/products/flash-board-2), retained as `tension-flash-product.html`.
+- Exact-revision training view: [Flash Board training article](https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board), retained as `tension-flash-training-blog.html`.
+- The Backcountry and Amazon responses were unavailable as usable source artifacts at audit time, so they are not represented as evidence.
 - The retained packet establishes the supplied portable cord, two ordered
   passage pairs, and four canonical positions. Existing suspension metadata and
   descriptor hashes were preserved byte-for-byte.
 
 ### YY Vertical Baguette Evo — excluded
 
-- Exact-revision manufacturer views: [manufacturer English listing](https://www.yyvertical.com/en/products/baguette-evo) and [manufacturer EU listing](https://www.yyvertical.com/en-eu/products/baguette-evo).
-- Attachment detail: [four-bore gallery region](https://www.yyvertical.com/en/products/baguette-evo#cord-passages).
+- Exact-revision manufacturer view: [manufacturer English listing](https://www.yyvertical.com/en/products/baguette-evo), retained as `yy-baguette.html`.
+- The EU and fragment-only variants were not retained as separate artifacts. Primary evidence establishes only optional use with rope or bungee; it does not establish that either accessory is supplied or integral.
 - The current **Baguette Evo, Turn & Pull version**, SKU `YY BAGUETTE EVO`,
   EAN `3760305271822`, is the retained revision. Primary evidence establishes
   only optional use with rope or bungee; it does not establish that either is
@@ -52,9 +54,9 @@ attachment region, not a different product revision.
 
 ### Lattice MXEdge Lift Large and Small — `pairedLeadCord`
 
-- Exact-revision product view: [MXEdge Lift](https://latticetraining.com/product/mxedge-lift/).
-- Exact-revision warning/configuration view: [MXEdge Lift warnings](https://latticetraining.com/warnings/mxedge-lift/).
-- Supplied-cord attachment view: [How to use the MXEdge Lift](https://latticetraining.com/app/uploads/2024/05/MXEdge-Lift-How-to.mp4).
+- Exact-revision product view: [MXEdge Lift](https://latticetraining.com/product/mxedge-lift/), retained as `lattice-mxedge-product.html`.
+- Exact-revision warning/configuration view: [MXEdge Lift warnings](https://latticetraining.com/warnings/mxedge-lift/), retained as `lattice-mxedge-warnings.html`.
+- The cited instruction MP4 was not retained in this audit, so the page and warning artifacts are the complete basis for the promotion.
 - The product and official instruction evidence establish the supplied cord
   arrangement and two exterior leads for both size-specific inventories. The
   Large remains MX22/MX16/MX12/28 mm mono; the Small remains
@@ -67,9 +69,9 @@ attachment region, not a different product revision.
 
 ### Nature Climbing Stone Hanger — `pairedLeadCord`
 
-- Exact-revision front gallery: [Stone Hanger — Granite](https://natureclimbing.com/products/stone-hanger-1).
-- Exact-revision oblique/gallery variant: [Granite Stone Hanger variant](https://natureclimbing.com/products/stone-hanger-1?variant=47783638597970).
-- Attachment detail: [lateral cord-port region](https://natureclimbing.com/products/stone-hanger-1#cord-ports).
+- Exact-revision front gallery: [Stone Hanger — Granite](https://natureclimbing.com/products/stone-hanger-1), retained as `nature-stone-hanger.html`.
+- Exact-revision oblique/gallery variant: [Granite Stone Hanger variant](https://natureclimbing.com/products/stone-hanger-1?variant=47783638597970), retained as `nature-stone-hanger-granite-variant.html`.
+- The fragment-only attachment URL was not treated as a separate artifact because it resolves to the same page response; the two retained page responses are the complete basis for the promotion.
 - The retained `current-gallery-2026-09-11` packet identifies the standard
   oak/Granite product, SKU `STONE_HANGER`, Shopify product `8768741048658`,
   variant `47783638597970`, and two observed lateral cord-port mouths.

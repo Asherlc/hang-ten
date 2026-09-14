@@ -1,19 +1,318 @@
 {
   "schemaVersion": 1,
   "records": [
-    {"packageID":"beastmaker-1000","decision":"excluded","topology":null,"ruling":"The current Beastmaker 1000 product evidence describes a fixed board with no supplied or integral cord system.","evidence":[{"view":"manufacturer product","url":"https://www.beastmaker.co.uk/products/beastmaker-1000-series","exactRevisionID":"beastmaker-1000-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"beastmaker-2000","decision":"excluded","topology":null,"ruling":"The current Beastmaker 2000 product evidence describes a fixed board with no supplied or integral cord system.","evidence":[{"view":"manufacturer product","url":"https://www.beastmaker.co.uk/products/beastmaker-2000-series","exactRevisionID":"beastmaker-2000-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"captain-fingerfood.dual","decision":"excluded","topology":null,"ruling":"The Captain Fingerfood DUAL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord.","evidence":[{"view":"manufacturer catalog","url":"https://www.captainfingerfood.com/","exactRevisionID":"captain-fingerfood-dual-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"captain-fingerfood.pocket","decision":"excluded","topology":null,"ruling":"The Captain Fingerfood POCKET is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord.","evidence":[{"view":"manufacturer catalog","url":"https://www.captainfingerfood.com/","exactRevisionID":"captain-fingerfood-pocket-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"captain-fingerfood.unlevel","decision":"excluded","topology":null,"ruling":"The Captain Fingerfood UNLEVEL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord.","evidence":[{"view":"manufacturer catalog","url":"https://www.captainfingerfood.com/","exactRevisionID":"captain-fingerfood-unlevel-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"lattice.mxedge-lift-large","decision":"represented","topology":"pairedLeadCord","ruling":"Approved current MXEdge Lift Large revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.","evidence":[{"view":"exact-revision product","url":"https://latticetraining.com/product/mxedge-lift/","exactRevisionID":"mxedge-lift-large-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"exact-revision warning","url":"https://latticetraining.com/warnings/mxedge-lift/","exactRevisionID":"mxedge-lift-large-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"supplied-cord configuration","url":"https://latticetraining.com/app/uploads/2024/05/MXEdge-Lift-How-to.mp4","exactRevisionID":"mxedge-lift-large-current","sourceTier":"manufacturer-instruction","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed exact large-revision product, warning, and supplied-cord views."}},
-    {"packageID":"lattice.mxedge-lift-small","decision":"represented","topology":"pairedLeadCord","ruling":"Approved current MXEdge Lift Small revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.","evidence":[{"view":"exact-revision product","url":"https://latticetraining.com/product/mxedge-lift/","exactRevisionID":"mxedge-lift-small-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"exact-revision warning","url":"https://latticetraining.com/warnings/mxedge-lift/","exactRevisionID":"mxedge-lift-small-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"supplied-cord configuration","url":"https://latticetraining.com/app/uploads/2024/05/MXEdge-Lift-How-to.mp4","exactRevisionID":"mxedge-lift-small-current","sourceTier":"manufacturer-instruction","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed exact small-revision product, warning, and supplied-cord views."}},
-    {"packageID":"lattice-triple-rung","decision":"excluded","topology":null,"ruling":"Lattice Triple Rung evidence describes a fixed mounted board and does not establish a supplied or integral cord.","evidence":[{"view":"manufacturer product","url":"https://latticetraining.com/product/triple-rung-wooden-hangboard/","exactRevisionID":"lattice-triple-rung-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"metolius.prime-rib","decision":"excluded","topology":null,"ruling":"Metolius Prime Rib evidence describes a fixed board with no supplied or integral cord system.","evidence":[{"view":"manufacturer catalog","url":"https://www.metoliusclimbing.com/products/prime-rib","exactRevisionID":"metolius-prime-rib-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"metolius.project","decision":"excluded","topology":null,"ruling":"Metolius Project evidence describes a fixed board with no supplied or integral cord system.","evidence":[{"view":"manufacturer catalog","url":"https://www.metoliusclimbing.com/products/project","exactRevisionID":"metolius-project-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"metolius.wood-grips-compact-ii","decision":"excluded","topology":null,"ruling":"Metolius Wood Grips Compact II evidence describes a fixed board with no supplied or integral cord system.","evidence":[{"view":"manufacturer product","url":"https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards","exactRevisionID":"metolius-wood-grips-compact-ii-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the exact current revision and retained evidence record."}},
-    {"packageID":"nature.stone-hanger","decision":"represented","topology":"pairedLeadCord","ruling":"Approved current Granite Stone Hanger evidence establishes one supplied cord with two external lateral leads; the interior route is explicitly unknown and is not modeled.","evidence":[{"view":"exact-revision front gallery","url":"https://natureclimbing.com/products/stone-hanger-1","exactRevisionID":"current-gallery-2026-09-11","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"exact-revision oblique gallery","url":"https://natureclimbing.com/products/stone-hanger-1?variant=47783638597970","exactRevisionID":"current-gallery-2026-09-11","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"lateral cord-port detail","url":"https://natureclimbing.com/products/stone-hanger-1#cord-ports","exactRevisionID":"current-gallery-2026-09-11","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed current Granite front, oblique, and lateral-port views."}},
-    {"packageID":"tension.flash-board","decision":"represented","topology":"twoBranchCord","ruling":"Retained approved Flash Board packet establishes the supplied portable cord and two ordered end passage pairs.","evidence":[{"view":"exact-revision manufacturer","url":"https://tensionclimbing.com/products/flash-board-2","exactRevisionID":"flash-board-2-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"exact-revision hanging view","url":"https://www.backcountry.com/tension-flash-board","exactRevisionID":"flash-board-2-current","sourceTier":"retailer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"attachment detail","url":"https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G","exactRevisionID":"flash-board-2-current","sourceTier":"retailer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Reviewed the retained Flash manufacturer, hanging, and attachment views."}},
-    {"packageID":"yy.baguette-evo","decision":"excluded","topology":null,"ruling":"Primary YY Vertical evidence establishes only optional use with rope or bungee; it does not establish that either accessory is supplied or integral, so no suspension is rendered.","evidence":[{"view":"exact-revision manufacturer","url":"https://www.yyvertical.com/en/products/baguette-evo","exactRevisionID":"baguette-evo-turn-pull-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"exact-revision gallery","url":"https://www.yyvertical.com/en-eu/products/baguette-evo","exactRevisionID":"baguette-evo-turn-pull-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"},{"view":"optional rope or bungee detail","url":"https://www.yyvertical.com/en/products/baguette-evo#cord-passages","exactRevisionID":"baguette-evo-turn-pull-current","sourceTier":"manufacturer","snapshotSHA256":"68cded31e35f2c1cf54b9ab1ab1215dea5dd1bc7a3a1fbf51e4e15e33f25b7cf","snapshotPath":"docs/source-audits/2026-09-13-model-hangboard-cord-evidence.md"}],"humanApproval":{"approved":true,"reviewer":"hang-ten-cord-audit","reviewedAt":"2026-09-13","notes":"Approved exclusion: primary evidence supports optional rope/bungee only."}}
+    {
+      "packageID": "beastmaker-1000",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The current Beastmaker 1000 product evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://www.beastmaker.co.uk/products/beastmaker-1000-series",
+          "exactRevisionID": "beastmaker-1000-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "b363ad8df93e6a5b8e7245204ca45a45bdc03fb67b945f6dde5f0673dedeb7f8",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/beastmaker-1000.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "beastmaker-2000",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The current Beastmaker 2000 product evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
+          "exactRevisionID": "beastmaker-2000-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "763005ef73a5d7bd37a611177e2c902dcc90a4a27b37a85b94ef4a6d84b5dcdf",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/beastmaker-2000.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.dual",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The Captain Fingerfood DUAL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord; no retained source artifact was available, so the board remains conservatively excluded.",
+      "evidence": [],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "No retained source artifact was available; conservative exclusion approved."
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.pocket",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The Captain Fingerfood POCKET is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord; no retained source artifact was available, so the board remains conservatively excluded.",
+      "evidence": [],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "No retained source artifact was available; conservative exclusion approved."
+      }
+    },
+    {
+      "packageID": "captain-fingerfood.unlevel",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The Captain Fingerfood UNLEVEL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord; no retained source artifact was available, so the board remains conservatively excluded.",
+      "evidence": [],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "No retained source artifact was available; conservative exclusion approved."
+      }
+    },
+    {
+      "packageID": "lattice.mxedge-lift-large",
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "Approved current MXEdge Lift Large revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.",
+      "evidence": [
+        {
+          "view": "exact-revision product",
+          "url": "https://latticetraining.com/product/mxedge-lift/",
+          "exactRevisionID": "mxedge-lift-large-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "b4572306d27c21349a6ecfa3f64688d9f84c68b9b8488ebc14099f476ed53808",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mxedge-product.html"
+        },
+        {
+          "view": "exact-revision warning",
+          "url": "https://latticetraining.com/warnings/mxedge-lift/",
+          "exactRevisionID": "mxedge-lift-large-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "86729ea2e3d75cdb4fdcff4ed2ee8d6c40dc3cb8fcff30d7fc3b2bbfbe3cd699",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mxedge-warnings.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "lattice.mxedge-lift-small",
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "Approved current MXEdge Lift Small revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.",
+      "evidence": [
+        {
+          "view": "exact-revision product",
+          "url": "https://latticetraining.com/product/mxedge-lift/",
+          "exactRevisionID": "mxedge-lift-small-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "b4572306d27c21349a6ecfa3f64688d9f84c68b9b8488ebc14099f476ed53808",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mxedge-product.html"
+        },
+        {
+          "view": "exact-revision warning",
+          "url": "https://latticetraining.com/warnings/mxedge-lift/",
+          "exactRevisionID": "mxedge-lift-small-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "86729ea2e3d75cdb4fdcff4ed2ee8d6c40dc3cb8fcff30d7fc3b2bbfbe3cd699",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mxedge-warnings.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "lattice-triple-rung",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Lattice Triple Rung evidence describes a fixed mounted board and does not establish a supplied or integral cord.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+          "exactRevisionID": "lattice-triple-rung-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "115daad45ddb5750d9de2f4ce44735dfded807a0e30a004f4aada8b9688ae9fa",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-triple-rung.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "metolius.prime-rib",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Metolius Prime Rib evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer catalog",
+          "url": "https://www.metoliusclimbing.com/products/prime-rib",
+          "exactRevisionID": "metolius-prime-rib-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "00c04e2365b092d48a3cc6a5c5fef74d6a4d22c7994b8a7cebb589244f7a1984",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-prime-rib.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "metolius.project",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Metolius Project evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer catalog",
+          "url": "https://www.metoliusclimbing.com/products/project",
+          "exactRevisionID": "metolius-project-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "991ccc436631105a08c4f8b5554834a805f6b64b3f89e627900ebf9837605f86",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-project.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "metolius.wood-grips-compact-ii",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Metolius Wood Grips Compact II evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+          "exactRevisionID": "metolius-wood-grips-compact-ii-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "526e267855dab2cea663f68e29831b0d3048ae537a25916a8b79e956dbf92a64",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-wood-grips.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "nature.stone-hanger",
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "Approved current Granite Stone Hanger evidence establishes one supplied cord with two external lateral leads; the interior route is explicitly unknown and is not modeled.",
+      "evidence": [
+        {
+          "view": "exact-revision front gallery",
+          "url": "https://natureclimbing.com/products/stone-hanger-1",
+          "exactRevisionID": "current-gallery-2026-09-11",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "9724da3a1145da00c4d0e11afc268eb6f638d5ef5daf62e3e40bef7e7dde66ea",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/nature-stone-hanger.html"
+        },
+        {
+          "view": "exact-revision Granite variant",
+          "url": "https://natureclimbing.com/products/stone-hanger-1?variant=47783638597970",
+          "exactRevisionID": "current-gallery-2026-09-11",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "2154d6b87ae40bc5f4ad93b73122f2a732f777f6985fbd8ee79eedf22d93ef0a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/nature-stone-hanger-granite-variant.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "tension.flash-board",
+      "decision": "represented",
+      "topology": "twoBranchCord",
+      "ruling": "Retained approved Flash Board packet establishes the supplied portable cord and two ordered end passage pairs.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer",
+          "url": "https://tensionclimbing.com/products/flash-board-2",
+          "exactRevisionID": "flash-board-2-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "f2e1c2474d7c29b069a6061b04524a2b7df61e33dedbbcb0cd8111b0b7bafca1",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/tension-flash-product.html"
+        },
+        {
+          "view": "exact-revision training article",
+          "url": "https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board",
+          "exactRevisionID": "flash-board-2-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c9692ca8f898ae65449aa2340d82e9040ed77d643b618217bd7c287ac737ff28",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/tension-flash-training-blog.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained manufacturer product and training-article source artifacts."
+      }
+    },
+    {
+      "packageID": "yy.baguette-evo",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Primary YY Vertical evidence establishes only optional use with rope or bungee; it does not establish that either accessory is supplied or integral, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer",
+          "url": "https://www.yyvertical.com/en/products/baguette-evo",
+          "exactRevisionID": "baguette-evo-turn-pull-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "23ea747dda552429fe9bb1606e47812113ae062b0457941634a37831eeff3af1",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    }
   ]
 }
