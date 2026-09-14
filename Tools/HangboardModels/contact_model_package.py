@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 import tempfile
+import unicodedata
 import zipfile
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -377,25 +378,46 @@ def _export_temporary_copies(
 
 
 def _canonicalize_usdz(model_path: Path) -> None:
-    """Sort USD specs and write a byte-stable, 64-byte-aligned USDZ archive."""
-    from pxr import Sdf
+    """Sort USD specs and write a byte-stable, aligned USDZ archive.
 
+    Text layers retain the historical ``.usda`` output name. Existing binary
+    ``.usdc`` layers remain binary so canonicalization does not force a format
+    change.
+    """
     path = Path(model_path)
     with tempfile.TemporaryDirectory(
         prefix=f".{path.stem}.canonical-", dir=path.parent
     ) as raw_directory:
         directory = Path(raw_directory)
         with zipfile.ZipFile(path) as archive:
-            members = sorted(archive.namelist())
-            if any(
-                name.startswith("/") or ".." in Path(name).parts
+            members = archive.namelist()
+            if len(members) != len(set(members)) or any(
+                not name
+                or "\x00" in name
+                or "\\" in name
+                or Path(name).as_posix() != name
+                or name.startswith("/")
+                or name.endswith("/")
+                or ".." in Path(name).parts
                 for name in members
             ):
                 raise ValueError("USDZ export contains unsafe member paths")
-            for name in members:
-                destination = directory / name
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                destination.write_bytes(archive.read(name))
+            if len(
+                {
+                    unicodedata.normalize("NFD", name).casefold()
+                    for name in members
+                }
+            ) != len(members):
+                raise ValueError("USDZ export contains unsafe member paths")
+            members = sorted(members)
+            try:
+                for name in members:
+                    destination = directory / name
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    with destination.open("xb") as extracted:
+                        extracted.write(archive.read(name))
+            except FileExistsError as error:
+                raise ValueError("USDZ export contains unsafe member paths") from error
         layers = [
             name
             for name in members
@@ -403,13 +425,17 @@ def _canonicalize_usdz(model_path: Path) -> None:
         ]
         if len(layers) != 1:
             raise ValueError("USDZ export must contain exactly one USD layer")
+        from pxr import Sdf
+
         source_layer = Sdf.Layer.FindOrOpen(str(directory / layers[0]))
         if source_layer is None:
             raise ValueError("USDZ export layer is unreadable")
         source_layer_path = directory / layers[0]
-        canonical_layer = source_layer_path.with_suffix(".usda")
+        canonical_layer = source_layer_path.with_suffix(
+            _canonical_output_layer_suffix(source_layer_path.suffix)
+        )
         temporary_layer = canonical_layer.with_name(
-            f"canonical{canonical_layer.suffix}"
+            f".canonical-{canonical_layer.name}"
         )
         destination_layer = Sdf.Layer.CreateNew(str(temporary_layer))
         if destination_layer is None:
@@ -425,11 +451,9 @@ def _canonicalize_usdz(model_path: Path) -> None:
         if source_layer_path != canonical_layer:
             source_layer_path.unlink()
         os.replace(temporary_layer, canonical_layer)
-        members = sorted(
-            canonical_layer.relative_to(directory).as_posix()
-            if name == layers[0]
-            else name
-            for name in members
+        canonical_layer_name = canonical_layer.relative_to(directory).as_posix()
+        members = [canonical_layer_name] + sorted(
+            name for name in members if name != layers[0]
         )
 
         temporary_archive = path.with_name(f".{path.name}.canonical")
@@ -455,6 +479,11 @@ def _canonicalize_usdz(model_path: Path) -> None:
             os.replace(temporary_archive, path)
         finally:
             temporary_archive.unlink(missing_ok=True)
+
+
+def _canonical_output_layer_suffix(source_suffix: str) -> str:
+    """Keep an existing binary layer binary; retain legacy text output otherwise."""
+    return source_suffix if source_suffix == ".usdc" else ".usda"
 
 
 def _copy_usd_specs_sorted(

@@ -277,15 +277,17 @@ final class BoardModelTests: XCTestCase {
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
     }
 
-    func testFlashBoardNativeSceneUsesOrientationWithoutLegacySuspension() async throws {
+    func testFlashBoardNativeSceneUsesSuspensionAndBindsSmallCrimpContacts() async throws {
         let (board, media, model) = try await loadMigratedModel("tension.flash-board")
-        XCTAssertNil(media.suspension)
-        XCTAssertNotNil(media.orientation)
+        XCTAssertNotNil(media.suspension)
+        XCTAssertNil(media.orientation)
+        XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(board.contacts.map(\.id)))
+        XCTAssertTrue(Set(media.descriptor.contacts.keys).isSuperset(of: ["small-crimp-left", "small-crimp-right"]))
         for position in board.positions {
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
             XCTAssertEqual(model.activePositionID, position.id)
-            XCTAssertNil(model.transientCordNode, position.id)
+            XCTAssertNotNil(model.transientCordNode, position.id)
         }
     }
 

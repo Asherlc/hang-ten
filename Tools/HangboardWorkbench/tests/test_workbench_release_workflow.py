@@ -19,6 +19,9 @@ RELEASE_README_PATHS = (
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
 )
+APP_STORE_RELEASE_WORKFLOW_PATH = (
+    REPOSITORY_ROOT / ".github" / "workflows" / "release.yml"
+)
 PR_WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-pr.yml"
 )
@@ -427,6 +430,13 @@ def test_generated_bundle_is_built_before_signed_release_packaging():
     assert steps.index(bundle) < steps.index(
         _step(release, "Build, sign, and archive workbench app")
     )
+
+
+def test_app_store_release_checkout_downloads_git_lfs_content():
+    release = _workflow(APP_STORE_RELEASE_WORKFLOW_PATH)
+    checkout = _step(release["jobs"]["release"], "Check out tested commit")
+
+    assert checkout["with"]["lfs"] is True
 
 
 def test_native_bundle_is_built_before_native_packaging():

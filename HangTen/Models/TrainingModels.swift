@@ -1489,7 +1489,7 @@ enum BoardCatalog {
 
     static let packageStore: BoardPackageStore = {
         do {
-            return try BoardPackageStore()
+            return try BoardPackageStore(modelAssetMode: .onDemand)
         } catch {
             fatalError("Bundled board packages could not be loaded: \(error.localizedDescription)")
         }

@@ -1,3 +1,4 @@
+import CryptoKit
 import SceneKit
 import SwiftUI
 
@@ -7,6 +8,118 @@ struct BoardModelKey: Hashable {
     let boardID: String
     let presentationID: String
     let modelSHA256: String
+}
+
+protocol BoardModelResourceRequesting: AnyObject {
+    var progress: Progress { get }
+    func beginAccessingResources() async throws
+    func endAccessingResources()
+}
+
+extension NSBundleResourceRequest: BoardModelResourceRequesting {}
+
+final class BoardModelResourceLease {
+    let url: URL
+    private var request: BoardModelResourceRequesting?
+
+    init(url: URL, request: BoardModelResourceRequesting? = nil) {
+        self.url = url
+        self.request = request
+    }
+
+    deinit {
+        request?.endAccessingResources()
+    }
+}
+
+private final class BoardModelResourceRequestAccess: @unchecked Sendable {
+    private let lock = NSLock()
+    private var request: BoardModelResourceRequesting?
+    private var isCancelled = false
+
+    init(request: BoardModelResourceRequesting) {
+        self.request = request
+    }
+
+    func cancel() {
+        lock.lock()
+        isCancelled = true
+        let request = request
+        lock.unlock()
+        // Cancellation signals the pending request; only a completed successful
+        // begin (or its transferred lease) may balance resource access.
+        request?.progress.cancel()
+    }
+
+    func endAccessingResources() {
+        lock.lock()
+        let request = request
+        self.request = nil
+        lock.unlock()
+        request?.endAccessingResources()
+    }
+
+    func lease(for url: URL) -> BoardModelResourceLease? {
+        lock.lock()
+        guard !isCancelled else {
+            lock.unlock()
+            return nil
+        }
+        let request = request
+        self.request = nil
+        lock.unlock()
+        return request.map { BoardModelResourceLease(url: url, request: $0) }
+    }
+}
+
+struct BoardModelResourceAccess {
+    typealias RequestFactory = (Set<String>, Bundle) -> BoardModelResourceRequesting
+    typealias URLResolver = (Bundle, BoardModelResource) -> URL?
+
+    static let live = BoardModelResourceAccess(
+        requestFactory: { tags, bundle in
+            NSBundleResourceRequest(tags: tags, bundle: bundle)
+        },
+        urlResolver: { bundle, resource in
+            bundle.url(
+                forResource: resource.resourceName,
+                withExtension: resource.resourceExtension,
+                subdirectory: resource.bundleSubdirectory
+            )
+        }
+    )
+
+    let requestFactory: RequestFactory
+    let urlResolver: URLResolver
+
+    func acquire(
+        _ resource: BoardModelResource,
+        bundle: Bundle
+    ) async -> BoardModelResourceLease? {
+        guard !Task.isCancelled else { return nil }
+        let request = requestFactory([resource.tag], bundle)
+        let access = BoardModelResourceRequestAccess(request: request)
+        return await withTaskCancellationHandler {
+            guard !Task.isCancelled else { return nil }
+            do {
+                try await request.beginAccessingResources()
+            } catch {
+                return nil
+            }
+            // Begin has succeeded. Keep ownership through URL resolution;
+            // lease transfer and cancellation choose an owner under one lock.
+            defer { access.endAccessingResources() }
+            guard !Task.isCancelled,
+                  let url = urlResolver(bundle, resource),
+                  let lease = access.lease(for: url),
+                  !Task.isCancelled else {
+                return nil
+            }
+            return lease
+        } onCancel: {
+            access.cancel()
+        }
+    }
 }
 
 enum BoardModelSolvedSuspension {
@@ -29,32 +142,151 @@ enum BoardModelSolvedSuspension {
 }
 
 enum BoardModelAsset {
-    static func load(media _: BoardModelMedia, packageURL: URL) -> SCNScene? {
+    #if DEBUG
+    // Task-scoped synchronization for the decode lifetime regression. The
+    // production decoder and model source remain unchanged by the test hook.
+    @TaskLocal static var willDecodeForTesting: (@Sendable (URL) -> Void)?
+    #endif
+
+    static func load(media: BoardModelMedia, packageURL: URL) -> SCNScene? {
         guard packageURL.isFileURL,
               let values = try? packageURL.resourceValues(forKeys: [.isRegularFileKey]),
-              values.isRegularFile == true else {
+              values.isRegularFile == true,
+              sha256(of: packageURL) == media.descriptor.modelSHA256 else {
             return nil
         }
         // SceneKit can otherwise return an empty scene for a missing asset.
         return try? SCNScene(url: packageURL, options: [.convertToYUp: true])
     }
+
+    private static func sha256(of url: URL) -> String? {
+        do {
+            let handle = try FileHandle(forReadingFrom: url)
+            defer { try? handle.close() }
+            var hash = SHA256()
+            while let data = try handle.read(upToCount: 1_048_576), !data.isEmpty {
+                hash.update(data: data)
+            }
+            return hash.finalize().map { String(format: "%02x", $0) }.joined()
+        } catch {
+            return nil
+        }
+    }
+}
+
+private final class BoardModelLoadedAsset {
+    let scene: SCNScene
+    let resourceLease: BoardModelResourceLease
+
+    init(scene: SCNScene, resourceLease: BoardModelResourceLease) {
+        self.scene = scene
+        self.resourceLease = resourceLease
+    }
 }
 
 @MainActor
 private enum BoardModelCache {
-    static var loading: [BoardModelKey: Task<SCNScene?, Never>] = [:]
+    private final class InFlight {
+        var task: Task<Void, Never>?
+        var waiters: [UUID: CheckedContinuation<BoardModelLoadedAsset?, Never>] = [:]
+    }
+
+    private static var loading: [BoardModelKey: InFlight] = [:]
 
     static func source(
         for key: BoardModelKey,
         media: BoardModelMedia,
-        packageURL: URL
-    ) async -> SCNScene? {
-        if let task = loading[key] { return await task.value }
-        let task = Task.detached(priority: .userInitiated) { () -> SCNScene? in
-            BoardModelAsset.load(media: media, packageURL: packageURL)
+        board: TrainingBoard,
+        presentationID: String,
+        store: BoardPackageStore,
+        resourceAccess: BoardModelResourceAccess
+    ) async -> BoardModelLoadedAsset? {
+        let waiterID = UUID()
+        return await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                guard !Task.isCancelled else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                if let entry = loading[key] {
+                    entry.waiters[waiterID] = continuation
+                    return
+                }
+                let entry = InFlight()
+                entry.waiters[waiterID] = continuation
+                loading[key] = entry
+                entry.task = Task {
+                    let loaded = await loadSource(
+                        media: media,
+                        board: board,
+                        presentationID: presentationID,
+                        store: store,
+                        resourceAccess: resourceAccess
+                    )
+                    // A canceled acquisition may finish after a replacement
+                    // load has started for the same model identity.
+                    guard loading[key] === entry else { return }
+                    loading[key] = nil
+                    let waiters = entry.waiters
+                    entry.waiters.removeAll()
+                    for waiter in waiters.values {
+                        waiter.resume(returning: loaded)
+                    }
+                }
+            }
+        } onCancel: {
+            Task { @MainActor in
+                guard let entry = loading[key],
+                      let waiter = entry.waiters.removeValue(forKey: waiterID) else { return }
+                if entry.waiters.isEmpty {
+                    loading[key] = nil
+                    entry.task?.cancel()
+                }
+                // Release the view task immediately. The resource request still
+                // balances any successful access when its completion arrives.
+                waiter.resume(returning: nil)
+            }
         }
-        loading[key] = task
-        return await task.value
+    }
+
+    private static func loadSource(
+        media: BoardModelMedia,
+        board: TrainingBoard,
+        presentationID: String,
+        store: BoardPackageStore,
+        resourceAccess: BoardModelResourceAccess
+    ) async -> BoardModelLoadedAsset? {
+        let resourceLease: BoardModelResourceLease?
+        if let bundledURL = store.presentationAssetURL(
+            for: board,
+            presentationID: presentationID
+        ) {
+            resourceLease = BoardModelResourceLease(url: bundledURL)
+        } else if let resource = store.modelResource(
+            for: board,
+            presentationID: presentationID
+        ) {
+            resourceLease = await resourceAccess.acquire(
+                resource,
+                bundle: store.resourceBundle
+            )
+        } else {
+            resourceLease = nil
+        }
+        guard let resourceLease, !Task.isCancelled else { return nil }
+        #if DEBUG
+        let willDecodeForTesting = BoardModelAsset.willDecodeForTesting
+        #endif
+        let scene = await Task.detached(priority: .userInitiated) {
+            withExtendedLifetime(resourceLease) {
+                #if DEBUG
+                willDecodeForTesting?(resourceLease.url)
+                #endif
+                return BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+            }
+        }.value
+        guard let scene, !Task.isCancelled else { return nil }
+        return BoardModelLoadedAsset(scene: scene, resourceLease: resourceLease)
     }
 }
 
@@ -63,10 +295,10 @@ enum BoardModelLoader {
     static func load(
         board: BoardRevision,
         presentation: BoardPresentation,
-        store: BoardPackageStore
+        store: BoardPackageStore,
+        resourceAccess: BoardModelResourceAccess = .live
     ) async -> BoardModelScene? {
-        guard case .model(let media) = presentation.media,
-              let packageURL = store.presentationAssetURL(for: board, presentationID: presentation.id) else {
+        guard case .model(let media) = presentation.media else {
             return nil
         }
         let key = BoardModelKey(
@@ -77,19 +309,23 @@ enum BoardModelLoader {
         guard let source = await BoardModelCache.source(
             for: key,
             media: media,
-            packageURL: packageURL
+            board: board,
+            presentationID: presentation.id,
+            store: store,
+            resourceAccess: resourceAccess
         ), !Task.isCancelled else {
             return nil
         }
         return BoardModelScene(
-            source: source,
+            source: source.scene,
             descriptor: media.descriptor,
             display: media.display,
             suspension: media.suspension,
             orientation: media.orientation,
             allowedPositionIDs: Set(board.positions.filter {
                 $0.presentationID == presentation.id
-            }.map(\.id))
+            }.map(\.id)),
+            resourceLease: source.resourceLease
         )
     }
 }
@@ -101,6 +337,11 @@ struct BoardModelSurface: View {
         case loading
         case ready(BoardModelScene)
         case unavailable
+
+        var loadingMessage: String? {
+            guard case .loading = self else { return nil }
+            return "Downloading 3D model…"
+        }
     }
 
     let board: BoardRevision
@@ -155,15 +396,27 @@ struct BoardModelSurface: View {
                 )
                 .accessibilityIdentifier("boardModel.3d")
                 .allowsHitTesting(Self.permitsContactSelection(for: .ready, onContactTap: onContactTap))
-            } else if case .loading = result {
-                ProgressView()
-                    .accessibilityHidden(true)
+            } else if let loadingMessage = result.loadingMessage {
+                HStack(spacing: 12) {
+                    ProgressView()
+                    Text(loadingMessage)
+                        .font(.subheadline)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+                .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .ignore)
+                .accessibilityIdentifier("boardModel.loading")
+                .accessibilityLabel(loadingMessage)
                     .allowsHitTesting(false)
             } else {
                 BoardModelUnavailableView()
             }
         }
         .task(id: loadIdentity) {
+            guard !Task.isCancelled else { return }
             guard case .model = presentation.media else {
                 result = .unavailable
                 return
@@ -178,6 +431,9 @@ struct BoardModelSurface: View {
                 return
             }
             result = .ready(model)
+        }
+        .onDisappear {
+            result = .loading
         }
     }
 
@@ -209,6 +465,11 @@ final class BoardModelScene {
     static let modelPickCategory = 1
     static let cordCategory = 2
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
+
+    private struct PreparedCameraState {
+        let transform: simd_float4x4
+        let orthographicScale: Double?
+    }
 
     let scene = SCNScene()
     let camera = SCNNode()
@@ -242,6 +503,7 @@ final class BoardModelScene {
     private(set) var isUnavailable = false
     private(set) var isTransientCordAccessible = false
     private let allowedPositionIDs: Set<String>
+    private let resourceLease: BoardModelResourceLease?
 
     init?(
         source: SCNScene,
@@ -249,9 +511,9 @@ final class BoardModelScene {
         display: BoardModelDisplay,
         suspension: BoardModelSuspension? = nil,
         orientation: BoardModelOrientation? = nil,
-        allowedPositionIDs: Set<String>? = nil
+        allowedPositionIDs: Set<String>? = nil,
+        resourceLease: BoardModelResourceLease? = nil
     ) {
-        guard !(suspension != nil && orientation != nil) else { return nil }
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -340,9 +602,10 @@ final class BoardModelScene {
         self.suspension = suspension
         self.orientation = orientation
         self.allowedPositionIDs = allowedPositionIDs
-            ?? orientation.map { Set($0.rotations.keys) }
             ?? suspension.map { Set($0.canonicalPoses.keys) }
+            ?? orientation.map { Set($0.rotations.keys) }
             ?? []
+        self.resourceLease = resourceLease
         self.geometryByNodeID = geometryByNodeID
         contactNodes = boundContactNodes
         contactIDsByNode = boundContactIDsByNode
@@ -376,7 +639,7 @@ final class BoardModelScene {
             enterUnavailable()
             return false
         }
-        if let orientation {
+        if suspension == nil, let orientation {
             guard let components = orientation.rotations[positionID],
                   orientation.pivot == "modelBoundsCenter",
                   let quaternion = Self.quaternion(from: components) else {
@@ -393,10 +656,10 @@ final class BoardModelScene {
                 enterUnavailable()
                 return false
             }
-            transitionToOrientation(
+            guard transitionToOrientation(
                 transform: Self.transform(rotating: quaternion, about: pivot),
                 framing: framing
-            )
+            ) else { return false }
             canonicalFraming = framing
             activePositionID = positionID
             isUnavailable = false
@@ -438,7 +701,7 @@ final class BoardModelScene {
                 cord = makeCordNode(for: solved)
                 verifiedPresentations[positionID] = (solved, cord)
             }
-            transitionToCanonicalPresentation(solved, cord: cord)
+            guard transitionToCanonicalPresentation(solved, cord: cord) else { return false }
             canonicalFraming = solved.cameraFraming
             activePositionID = positionID
             isUnavailable = false
@@ -488,22 +751,31 @@ final class BoardModelScene {
         guard let framing = canonicalFraming,
               azimuth.isFinite, elevation.isFinite,
               zoomScale.isFinite, zoomScale > 0 else { return }
-        orbitAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
-        orbitElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
-        orbitZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+        let nextAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
+        let nextElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
+        let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
         let baseOffset = -framing.direction * framing.distance
-        let yaw = simd_quatf(angle: orbitAzimuth, axis: SIMD3<Float>(0, 1, 0))
+        let yaw = simd_quatf(angle: nextAzimuth, axis: SIMD3<Float>(0, 1, 0))
         let pitchAxis = framing.right
-        let pitch = simd_quatf(angle: orbitElevation, axis: pitchAxis)
+        let pitch = simd_quatf(angle: nextElevation, axis: pitchAxis)
         let offset = (pitch * yaw).act(baseOffset)
-        let distance = max(0.01, framing.distance / orbitZoom)
+        let distance = max(0.01, framing.distance / nextZoom)
         let normalizedOffset = simd_length(offset) > 1e-6
             ? simd_normalize(offset) * distance
             : baseOffset
         let position = framing.target + normalizedOffset
-        camera.position = SCNVector3(position)
-        camera.camera?.orthographicScale = Double(cameraScale(for: framing) / orbitZoom)
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        let scale = Double(cameraScale(for: framing) / nextZoom)
+        guard position.x.isFinite, position.y.isFinite, position.z.isFinite,
+              scale.isFinite, scale > 0,
+              applyCamera(
+                  position: position,
+                  target: framing.target,
+                  up: framing.up,
+                  orthographicScale: scale
+              ) else { return }
+        orbitAzimuth = nextAzimuth
+        orbitElevation = nextElevation
+        orbitZoom = nextZoom
         currentFraming = framing
     }
 
@@ -527,10 +799,16 @@ final class BoardModelScene {
     }
 
     private func cameraScale(for framing: SuspendedCameraFraming) -> Float {
-        let aspect = viewportSize.width > 0 && viewportSize.height > 0
-            ? Float(viewportSize.width / viewportSize.height)
-            : 1
-        return max(framing.height, framing.width / aspect) * framing.fitPadding / 2
+        let aspect: Float
+        if viewportSize.width.isFinite, viewportSize.height.isFinite,
+           viewportSize.width > 0, viewportSize.height > 0 {
+            aspect = Float(viewportSize.width / viewportSize.height)
+        } else {
+            aspect = 1
+        }
+        guard aspect.isFinite, aspect > 0 else { return .nan }
+        let scale = max(framing.height, framing.width / aspect) * framing.fitPadding / 2
+        return scale.isFinite && scale > 0 ? scale : .nan
     }
 
     private func enterUnavailable() {
@@ -544,7 +822,10 @@ final class BoardModelScene {
     private func transitionToCanonicalPresentation(
         _ solved: BoardModelSolvedSuspension,
         cord: SCNNode
-    ) {
+    ) -> Bool {
+        guard let cameraState = preparedCanonicalCameraState(for: solved.cameraFraming) else {
+            return false
+        }
         // Commit the board, destination-solved cord, and camera together.
         // Cached cords are detached before reuse, so no visible frame can
         // combine the destination cord with the previous board transform.
@@ -555,7 +836,7 @@ final class BoardModelScene {
         scene.rootNode.addChildNode(cord)
         isTransientCordAccessible = false
         boardContainer.simdTransform = solved.boardTransform
-        applyCanonicalCamera(solved.cameraFraming)
+        applyPreparedCameraState(cameraState)
         SCNTransaction.commit()
 
         boardTransform = solved.boardTransform
@@ -563,12 +844,16 @@ final class BoardModelScene {
             transformedAttachment = single.transformedAttachment
         }
         currentFraming = solved.cameraFraming
+        return true
     }
 
     private func transitionToOrientation(
         transform: simd_float4x4,
         framing: SuspendedCameraFraming
-    ) {
+    ) -> Bool {
+        guard let cameraState = preparedCanonicalCameraState(for: framing) else {
+            return false
+        }
         transientCordNode?.removeFromParentNode()
         transientCordNode = nil
         isTransientCordAccessible = false
@@ -583,11 +868,12 @@ final class BoardModelScene {
         if boardMoves {
             boardContainer.simdTransform = transform
         }
-        applyCanonicalCamera(framing)
+        applyPreparedCameraState(cameraState)
         SCNTransaction.commit()
 
         boardTransform = transform
         currentFraming = framing
+        return true
     }
 
     private static func transformsMatch(
@@ -603,14 +889,120 @@ final class BoardModelScene {
         return true
     }
 
-    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) {
+    @discardableResult
+    private func applyCanonicalCamera(_ framing: SuspendedCameraFraming) -> Bool {
+        let position = framing.target - framing.direction * framing.distance
+        let scale = Double(cameraScale(for: framing))
+        guard let cameraState = Self.preparedCameraState(
+            position: position,
+            target: framing.target,
+            up: framing.up,
+            orthographicScale: scale
+        ) else { return false }
+        applyPreparedCameraState(cameraState)
         orbitAzimuth = 0
         orbitElevation = 0
         orbitZoom = 1
-        camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
-        camera.camera?.orthographicScale = Double(cameraScale(for: framing))
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
         currentFraming = framing
+        return true
+    }
+
+    private func preparedCanonicalCameraState(
+        for framing: SuspendedCameraFraming
+    ) -> PreparedCameraState? {
+        let position = framing.target - framing.direction * framing.distance
+        let scale = Double(cameraScale(for: framing))
+        return Self.preparedCameraState(
+            position: position,
+            target: framing.target,
+            up: framing.up,
+            orthographicScale: scale
+        )
+    }
+
+    @discardableResult
+    func orientCamera(at target: SIMD3<Float>, up requestedUp: SIMD3<Float>) -> Bool {
+        applyCamera(position: camera.simdPosition, target: target, up: requestedUp)
+    }
+
+    @discardableResult
+    private func applyCamera(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up requestedUp: SIMD3<Float>,
+        orthographicScale: Double? = nil
+    ) -> Bool {
+        guard let state = Self.preparedCameraState(
+            position: position,
+            target: target,
+            up: requestedUp,
+            orthographicScale: orthographicScale
+        ) else {
+            return false
+        }
+        applyPreparedCameraState(state)
+        return true
+    }
+
+    private func applyPreparedCameraState(_ state: PreparedCameraState) {
+        camera.simdTransform = state.transform
+        if let orthographicScale = state.orthographicScale {
+            camera.camera?.orthographicScale = orthographicScale
+        }
+    }
+
+    private static func preparedCameraState(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up: SIMD3<Float>,
+        orthographicScale: Double? = nil
+    ) -> PreparedCameraState? {
+        guard orthographicScale.map({ $0.isFinite && $0 > 0 }) ?? true,
+              let transform = cameraTransform(
+                  position: position,
+                  target: target,
+                  up: up
+              ) else {
+            return nil
+        }
+        return PreparedCameraState(transform: transform, orthographicScale: orthographicScale)
+    }
+
+    private static func cameraTransform(
+        position: SIMD3<Float>,
+        target: SIMD3<Float>,
+        up requestedUp: SIMD3<Float>
+    ) -> simd_float4x4? {
+        let direction = target - position
+        let directionLength = simd_length(direction)
+        let requestedUpLength = simd_length(requestedUp)
+        guard [position, target, requestedUp, direction].allSatisfy({ vector in
+            vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+        }),
+              directionLength.isFinite, directionLength > 1e-6,
+              requestedUpLength.isFinite, requestedUpLength > 1e-6 else {
+            return nil
+        }
+
+        let forward = direction / directionLength
+        let normalizedRequestedUp = requestedUp / requestedUpLength
+        let rightVector = simd_cross(forward, normalizedRequestedUp)
+        let rightLength = simd_length(rightVector)
+        guard rightLength.isFinite, rightLength > 1e-6 else { return nil }
+        let right = rightVector / rightLength
+        let up = simd_cross(right, forward)
+        guard [forward, right, up].allSatisfy({ vector in
+            vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
+        }),
+              abs(simd_length(up) - 1) <= 1e-4 else {
+            return nil
+        }
+        var transform = matrix_identity_float4x4
+        transform.columns.0 = SIMD4<Float>(right.x, right.y, right.z, 0)
+        transform.columns.1 = SIMD4<Float>(up.x, up.y, up.z, 0)
+        transform.columns.2 = SIMD4<Float>(-forward.x, -forward.y, -forward.z, 0)
+        transform.columns.3 = SIMD4<Float>(position.x, position.y, position.z, 1)
+        return transform
     }
 
     private func makeCordNode(for solved: BoardModelSolvedSuspension) -> SCNNode {
@@ -1022,14 +1414,26 @@ final class BoardModelScene {
     }
 
     func frame(in size: CGSize) {
-        guard size.width > 0, size.height > 0 else { return }
-        viewportSize = size
-        let aspect = Float(size.width / size.height)
+        guard size.width.isFinite, size.height.isFinite,
+              size.width > 0, size.height > 0 else { return }
+        let aspect = size.width / size.height
+        guard aspect.isFinite, aspect > 0 else { return }
+        let aspectFloat = Float(aspect)
+        guard aspectFloat.isFinite, aspectFloat > 0 else { return }
+
+        let candidateScale: Double
         if let framing = currentFraming {
-            camera.camera?.orthographicScale = Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom / 2)
+            candidateScale = Double(
+                max(framing.height, framing.width / aspectFloat)
+                    * framing.fitPadding / orbitZoom / 2
+            )
         } else {
-            camera.camera?.orthographicScale = Double(max(projectedHeight, projectedWidth / aspect) / 2)
+            candidateScale = Double(max(projectedHeight, projectedWidth / aspectFloat) / 2)
         }
+        guard candidateScale.isFinite, candidateScale > 0 else { return }
+
+        viewportSize = size
+        camera.camera?.orthographicScale = candidateScale
     }
 
     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
@@ -1275,7 +1679,7 @@ final class BoardModelScene {
         camera.camera?.screenSpaceAmbientOcclusionBias = 0.001
         camera.camera?.screenSpaceAmbientOcclusionDepthThreshold = 0.03
         camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
-        camera.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
+        guard orientCamera(at: framing.target, up: framing.up) else { return }
         scene.rootNode.addChildNode(camera)
 
         let ambient = SCNNode()
@@ -1384,7 +1788,7 @@ private struct BoardModelView: UIViewRepresentable {
         view.highlightedContactIDs = highlightedContactIDs
         view.isUserInteractionEnabled = onContactTap != nil
         view.needsAccessibilityProjection = true
-        model.highlight(highlightedContactIDs, mode: highlightMode)
+        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
         view.updateAccessibility()
     }
@@ -1408,7 +1812,7 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
     }
 }
 
-final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
+class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var model: BoardModelScene?
     var boardName = "hangboard"
     var contacts: [PhysicalContact] = []
@@ -1420,6 +1824,11 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityContactIDs: [String] = []
 
+    private func requestPausedRedraw() {
+        guard !rendersContinuously, !isPlaying else { return }
+        setNeedsDisplay()
+    }
+
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
@@ -1427,23 +1836,27 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         pointOfView = model.camera
         model.frame(in: bounds.size)
         needsAccessibilityProjection = true
+        requestPausedRedraw()
     }
 
     func selectPositionIfNeeded() {
         guard let model else { return }
-        guard model.select(positionID: positionID) else {
-            onUnavailable?()
-            return
-        }
+        let didSelect = model.select(positionID: positionID)
         scene = model.scene
         pointOfView = model.camera
         needsAccessibilityProjection = true
+        requestPausedRedraw()
+        guard didSelect else {
+            onUnavailable?()
+            return
+        }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         model?.frame(in: bounds.size)
         needsAccessibilityProjection = true
+        requestPausedRedraw()
         updateAccessibility()
     }
 
@@ -1469,6 +1882,7 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
         onContactTap?(contact)
         _ = model.select(positionID: model.activePositionID)
         model.resetCamera(animated: true)
+        requestPausedRedraw()
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
@@ -1481,12 +1895,20 @@ final class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
             elevation: Float(-translation.y / height) * 0.65
         )
         recognizer.setTranslation(.zero, in: self)
+        requestPausedRedraw()
     }
 
     @objc func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
         guard let model, recognizer.state == .changed else { return }
         model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(recognizer.scale))
         recognizer.scale = 1
+        requestPausedRedraw()
+    }
+
+    func applyHighlights(_ ids: Set<String>, mode: BoardHighlightMode) {
+        highlightedHoldIDs = ids
+        model?.highlight(ids, mode: mode)
+        requestPausedRedraw()
     }
 
     func updateAccessibility() {

@@ -72,6 +72,15 @@ def _xcode_resource_root() -> Path:
     return _absolute_lexical(Path(target_build_directory) / relative_resource_folder)
 
 
+def _xcode_odr_staging_root() -> Path:
+    derived_file_directory = os.environ.get("DERIVED_FILE_DIR")
+    if not derived_file_directory:
+        raise ValueError("ODR staging requires Xcode DERIVED_FILE_DIR")
+    root = _absolute_lexical(Path(derived_file_directory))
+    _reject_symlinked_ancestors(root, "Xcode derived file directory")
+    return root / "HangTenModelODR"
+
+
 def _validate_destination(repository_root: Path, destination: Path) -> None:
     resource_root = _xcode_resource_root()
     _reject_symlinked_ancestors(resource_root, "Xcode resource root")
@@ -128,13 +137,26 @@ def _validate_regular_tree(source: Path) -> None:
             )
 
 
-def _copy_regular_tree(source: Path, destination: Path) -> None:
+def _copy_regular_tree(
+    source: Path,
+    destination: Path,
+    excluded_paths: frozenset[Path] = frozenset(),
+    relative_path: Path = Path(),
+) -> None:
     _regular_directory(source)
     destination.mkdir()
     for source_child, mode in _iter_regular_children(source):
+        child_relative_path = relative_path / source_child.name
+        if child_relative_path in excluded_paths:
+            continue
         destination_child = destination / source_child.name
         if stat.S_ISDIR(mode):
-            _copy_regular_tree(source_child, destination_child)
+            _copy_regular_tree(
+                source_child,
+                destination_child,
+                excluded_paths,
+                child_relative_path,
+            )
         elif stat.S_ISREG(mode):
             _copy_regular_file(source_child, destination_child)
         else:
@@ -172,11 +194,17 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     _reject_symlinked_ancestors(repository_root, "repository root")
     _regular_directory(repository_root)
     _validate_destination(repository_root, destination)
+    odr_destination = _xcode_odr_staging_root()
+    _reject_symlinked_ancestors(odr_destination, "ODR staging destination")
+    for checkout_path in (repository_root / "Hangboards", repository_root / "HangTen"):
+        if _is_within(odr_destination, checkout_path):
+            raise ValueError(f"ODR staging must not write into source paths: {odr_destination}")
 
     hangboards_root = repository_root / "Hangboards"
     _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
     _regular_directory(hangboards_root)
-    inventory = load_board_package_module(repository_root).discover_board_packages(
+    package_module = load_board_package_module(repository_root)
+    inventory = package_module.discover_board_packages(
         hangboards_root
     )
     package_sources = tuple(package.root for package in inventory.packages)
@@ -185,20 +213,54 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
             raise ValueError(f"package must remain beneath Hangboards: {package_source}")
         _validate_regular_tree(package_source)
 
+    model_asset_paths_by_slug: dict[str, frozenset[Path]] = {}
+    for package in inventory.packages:
+        model_asset_paths_by_slug[package.root.name] = frozenset(
+            Path(presentation.media.asset_path)
+            for presentation in package.board.presentations
+            if isinstance(presentation.media, package_module.PresentationMediaModel)
+        )
+
     destination.parent.mkdir(parents=True, exist_ok=True)
+    odr_destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
+    odr_staging = odr_destination.with_name(
+        f".{odr_destination.name}.staging-{uuid.uuid4().hex}"
+    )
     try:
         staging.mkdir()
+        odr_staging.mkdir()
         staged_paths: list[Path] = []
         for package, package_source in zip(inventory.packages, package_sources, strict=True):
             package_destination = staging / package.root.name
-            _copy_regular_tree(package_source, package_destination)
+            model_asset_paths = model_asset_paths_by_slug[package.root.name]
+            _copy_regular_tree(
+                package_source,
+                package_destination,
+                excluded_paths=model_asset_paths,
+            )
+            for model_asset_path in sorted(model_asset_paths):
+                odr_model_destination = (
+                    odr_staging
+                    / package.root.name
+                    / "Hangboards"
+                    / package.root.name
+                    / model_asset_path
+                )
+                odr_model_destination.parent.mkdir(parents=True, exist_ok=True)
+                _copy_regular_file(
+                    package_source / model_asset_path,
+                    odr_model_destination,
+                )
             staged_paths.append(destination / package.root.name)
         _replace_destination(staging, destination)
+        _replace_destination(odr_staging, odr_destination)
         return tuple(staged_paths)
     except BaseException:
         if staging.exists():
             shutil.rmtree(staging)
+        if odr_staging.exists():
+            shutil.rmtree(odr_staging)
         raise
 
 

@@ -212,6 +212,7 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Build, test, and release Android](docs/ANDROID_RELEASE.md)
 - [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
+- [Apple On-Demand Resources for board models](docs/IOS_ON_DEMAND_RESOURCES.md)
 
 Canonical hangboard packages are checked by the read-only validator in
 `Tools/HangboardPackages`. Validate the final inventory or inspect its status
@@ -222,27 +223,15 @@ rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository has 61 directly discovered, complete packages and zero drafts:
-59 raster packages plus the Beastmaker 1000 and Compact II model-only
-packages. Model packages declare no PNG or raster presentation and keep their
+The repository directly discovers complete raster and model-only packages.
+Model packages declare no PNG or raster presentation and keep their
 USDZ and generated descriptor beside `board.json` in the package tree.
 The Xcode build phase runs
 `scripts/stage-board-packages.py` after parser-approved discovery. It
-recursively copies each regular, non-symlinked package tree into app resources,
-so staged declared assets remain byte-identical to their package sources; it
-does not substitute separately bundled model resources or rewrite geometry or
-presentation bytes.
-
-The two model packages share one self-contained warm-white/light-neutral
-display material and were human-approved in the actual app renderer after the
-final front-lighting correction. Focused SceneKit checks cover both shipped
-inventories, material binding, nearest-hit selection, body nonselection, and
-the key-light direction. The complete migration review also covered all 41
-physical hold taps, normal/preview/active/restored states, both orientations,
-the picker interaction, and the explicit unavailable state on an isolated iOS
-Simulator. These captures establish Simulator integration only; SceneKit may
-fall back from physically based shading where Metal is unavailable, so they do
-not claim physical-device PBR pixel parity.
+keeps `board.json`, raster assets, and model descriptors in normal app
+resources. Model USDZ bytes are copied without modification into one tagged
+Apple On-Demand Resources asset pack per package and are omitted from the base
+resource tree. The staging step never rewrites geometry or presentation bytes.
 
 For a new model package, after geometry has been authored and reviewed, compile
 

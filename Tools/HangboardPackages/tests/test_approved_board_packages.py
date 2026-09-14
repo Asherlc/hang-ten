@@ -560,7 +560,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert board["id"] == "tension.flash-board"
     assert "dimensions" not in board
     assert _presentation_summary(board) == [
-        ("primary", "Primary", "assets/primary.usdz", 6.333333302712162, True, None, False),
+        ("primary", "Primary suspended model", "assets/primary.usdz", 1.5, True, None, False),
     ]
     assert [(contact["id"], contact["name"], contact["kind"]) for contact in board["contacts"]] == [
         ("three-edge-left", "Left edge on three-edge surface", "edge"),
@@ -568,10 +568,12 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ("three-edge-right", "Right edge on three-edge surface", "edge"),
         ("two-edge-left", "Left edge on two-edge surface", "edge"),
         ("two-edge-right", "Right edge on two-edge surface", "edge"),
+        ("small-crimp-left", "Left small crimp", "edge"),
+        ("small-crimp-right", "Right small crimp", "edge"),
     ]
     assert all("sizeMillimeters" not in contact for contact in board["contacts"])
     # Four positions over the shared model: upright/inverted for each usable face.
-    # The unbound small-crimp legacy IDs are intentionally gone.
+    # The small-crimp contacts are independently modeled on the suspended asset.
     assert board["positions"] == [
         {
             "id": "three-edge-upright",
@@ -586,12 +588,12 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         {
             "id": "two-edge-upright",
             "presentationID": "primary",
-            "contactIDs": ["two-edge-left", "two-edge-right"],
+            "contactIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"],
         },
         {
             "id": "two-edge-inverted",
             "presentationID": "primary",
-            "contactIDs": ["two-edge-left", "two-edge-right"],
+            "contactIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"],
         },
     ]
 
@@ -599,16 +601,10 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "contactGeometry" not in media
-    assert media["orientation"] == {
-        "pivot": "modelBoundsCenter",
-        "rotations": {
-            "three-edge-upright": [0.0, 0.0, 0.0, 1.0],
-            "three-edge-inverted": [0.0, 0.0, 1.0, 0.0],
-            "two-edge-inverted": [1.0, 0.0, 0.0, 0.0],
-            "two-edge-upright": [0.0, 1.0, 0.0, 0.0],
-        },
-    }
-    _assert_model_descriptor(FLASH_BOARD_ROOT, board, "body_surface_001")
+    assert media.get("orientation") is None
+    assert media["suspension"]["type"] == "twoBranchCord"
+    assert [branch["id"] for branch in media["suspension"]["branches"]] == ["left-branch", "right-branch"]
+    _assert_model_descriptor(FLASH_BOARD_ROOT, board, "flash_board_body_008")
 
 
 def test_project_package_freezes_the_official_numbered_inventory_as_model() -> None:

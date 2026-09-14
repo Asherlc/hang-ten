@@ -11580,6 +11580,118 @@
       "reason": "The official source does not publish an exact package feature-tag set for this contact."
     },
     {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "reason": "The official product page says Small Crimps but gives no exact per-contact depth; the separate overview's approximately 6 mm category is not an exact value."
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this contact."
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this contact."
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
+      },
+      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+    },
+    {
       "boardID": "tension.grindstone",
       "contactIDs": [
         "top-jug"
@@ -38049,6 +38161,22 @@
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/flash-board-2",
         "label": "Edges: 8 mm, 10 mm, 15 mm, and 20 mm; official two-edge gallery views"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "tension.flash-board",
+      "holdIDs": [
+        "small-crimp-left",
+        "small-crimp-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/flash-board-2",
+        "label": "Edges: Small Crimps; official two-edge gallery views"
       },
       "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
     },

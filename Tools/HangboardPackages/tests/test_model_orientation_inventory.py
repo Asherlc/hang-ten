@@ -292,12 +292,12 @@ def test_discovered_model_inventory_is_exactly_the_fourteen_current_packages() -
     assert set(model_packages) == MODEL_PACKAGE_IDS
 
 
-def test_flash_board_uses_orientation_with_overlapping_face_inventories() -> None:
+def test_flash_board_uses_suspension_with_corrected_small_crimp_contacts() -> None:
     board = _discovered_model_packages()["tension.flash-board"].board
     media = board.presentations[0].media
     assert isinstance(media, BOARD_CATALOG.PresentationMediaModel)
-    assert media.suspension is None
-    assert media.orientation is not None
+    assert media.suspension is not None
+    assert media.orientation is None
     positions = {position.id: position for position in board.positions}
     assert set(positions) == {
         "three-edge-upright",
@@ -305,11 +305,14 @@ def test_flash_board_uses_orientation_with_overlapping_face_inventories() -> Non
         "two-edge-upright",
         "two-edge-inverted",
     }
-    assert set(media.orientation.rotations) == set(positions)
+    assert set(media.suspension.canonical_poses) == set(positions)
     assert all(position.presentation_id == "primary" for position in board.positions)
     _assert_model_position_union_coverage(board)
     assert positions["three-edge-upright"].contact_ids == positions["three-edge-inverted"].contact_ids
     assert positions["two-edge-upright"].contact_ids == positions["two-edge-inverted"].contact_ids
+    assert set(positions["two-edge-upright"].contact_ids) == {
+        "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"
+    }
     assert set(positions["three-edge-upright"].contact_ids).isdisjoint(
         positions["two-edge-upright"].contact_ids
     )
@@ -410,12 +413,14 @@ def test_flash_board_allows_upright_inverted_overlap() -> None:
     two_edge_upright = next(p for p in board.positions if p.id == "two-edge-upright")
     two_edge_inverted = next(p for p in board.positions if p.id == "two-edge-inverted")
     assert two_edge_upright.contact_ids == two_edge_inverted.contact_ids
-    assert set(two_edge_upright.contact_ids) == {"two-edge-left", "two-edge-right"}
+    assert set(two_edge_upright.contact_ids) == {
+        "two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"
+    }
 
-    # Orientation metadata
-    assert media.orientation is not None
-    assert media.orientation.pivot == "modelBoundsCenter"
-    assert set(media.orientation.rotations) == expected_positions
+    # Suspension metadata covers each corrected position.
+    assert media.orientation is None
+    assert media.suspension is not None
+    assert set(media.suspension.canonical_poses) == expected_positions
 
 
 def test_orientation_audit_records_all_model_packages_and_review_fields() -> None:

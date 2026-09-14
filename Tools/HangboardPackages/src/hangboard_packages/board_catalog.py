@@ -823,8 +823,6 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
     if media_type == "model":
         _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension", "orientation"})
         orientation = None
-        if "orientation" in payload and "suspension" in payload:
-            raise ValueError("orientation and suspension are mutually exclusive")
         if "orientation" in payload:
             orientation = _load_model_orientation(payload["orientation"], f"{source}.orientation")
         return PresentationMediaModel(

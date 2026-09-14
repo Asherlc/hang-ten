@@ -234,9 +234,7 @@ class AssetBoardRepository(
             fail("$path.media.type must be model.")
         }
         val orientation = media.optional("orientation")?.let { decodeOrientation(it, "$path.media.orientation") }
-        if (orientation != null && media.optional("suspension") != null) {
-            fail("orientation and suspension are mutually exclusive.")
-        }
+        val suspension = media.optional("suspension")?.let { decodeSuspension(it, "$path.media.suspension") }
         return BoardPresentation(
             id = objectValue.requiredString("id", path),
             name = objectValue.requiredString("name", path),
@@ -245,7 +243,27 @@ class AssetBoardRepository(
             isDefault = (objectValue.required("isDefault", path) as? JsonValue.BooleanValue)?.value
                 ?: fail("$path.isDefault must be a boolean."),
             orientation = orientation,
+            suspension = suspension,
         )
+    }
+
+    private fun decodeSuspension(value: JsonValue, path: String): BoardSuspension {
+        val objectValue = value.asObject(path)
+        val type = objectValue.requiredString("type", path)
+        val allowedKeys = when (type) {
+            "singleCord" -> setOf("type", "attachment", "anchor", "cord", "canonicalPoses")
+            "twoBranchCord" -> setOf("type", "passages", "branches", "anchor", "canonicalPoses")
+            else -> fail("$path.type is unsupported: $type.")
+        }
+        objectValue.rejectUnknownKeys(path, allowedKeys)
+        val incompatibleKeys = when (type) {
+            "singleCord" -> setOf("passages", "branches")
+            else -> setOf("attachment", "cord")
+        }
+        if (objectValue.fields.keys.any { it in incompatibleKeys }) {
+            fail("$path has fields for an incompatible suspension type.")
+        }
+        return BoardSuspension(type = type)
     }
 
     private fun decodeOrientation(value: JsonValue, path: String): BoardOrientation {

@@ -44,6 +44,7 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
           fetch-depth: 1
+          lfs: true
           persist-credentials: false
 
       # actions/cache v4.2.3
