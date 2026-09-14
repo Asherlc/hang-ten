@@ -45,10 +45,13 @@ pull-ups and 3:35 plus final hang.
 ## Simulator 3D
 
 Board classification: `metolius.simulator-3d` (package slug `metolius-simulator-3d`); numbered targets are resolved
-only against the Simulator 3D package. Target key: `1` jug L/R; `2` and `3`
+only against the Simulator 3D package. Target key: `1` outer jug L/R resolves
+through the factual `outerJug` feature to exactly `jug-1-left/right`; `2` and `3`
 share `round-sloper-3-left/right`; `4` pocket L/R; `5`–`7` edge L/R; `8`–`10`
 pocket L/R; `11` edge L/R; `12`–`13` pocket L/R; `14` center jug; `15`–`18`
-center pockets.
+center pockets. Position `14` remains omitted from contact requirements because
+the current model cannot express the center-only jug fact without broadening to
+all jugs.
 
 | Minute | Entry source task(s) → catalog target | Intermediate source task(s) → catalog target | Advanced source task(s) → catalog target |
 | --- | --- | --- | --- |

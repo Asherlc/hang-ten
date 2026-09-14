@@ -6717,14 +6717,16 @@
         "jug-1-right"
       ],
       "field": "features",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-13",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
         "label": "1 — outer jugs"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "value": [
+        "outerJug"
+      ]
     },
     {
       "boardID": "metolius.simulator-3d",

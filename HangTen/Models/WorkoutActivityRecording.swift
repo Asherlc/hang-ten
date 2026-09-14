@@ -569,6 +569,7 @@ struct WorkoutActivityRecorder {
     ) -> Bool {
         plan.provenance != .custom
             && plan.sourceURL != nil
+            && plan.boardID == nil
             && step.phase != .rest
             && step.phase != .conditioning
             && segment.kind == .work

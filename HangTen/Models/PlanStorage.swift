@@ -1081,6 +1081,7 @@ enum PlanLibraryValidator {
     ) -> Bool {
         plan.metadata.provenance != .custom
             && plan.metadata.sourceURL != nil
+            && plan.boardID == nil
             && step.phase != .rest
             && step.phase != .conditioning
     }

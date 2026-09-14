@@ -275,6 +275,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     private func plan(
         instruction: String = "Use the named board feature",
+        boardID: String? = "fixture.board",
+        provenance: RoutineProvenance = .adapted,
+        sourceURL: URL? = URL(string: "https://example.com/plan"),
         _ segments: [WorkoutSegment]
     ) -> TrainingPlan {
         return TrainingPlan(
@@ -283,9 +286,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             subtitle: "",
             level: "",
             sourceLabel: "",
-            sourceURL: URL(string: "https://example.com/plan")!,
-            provenance: .adapted,
-            boardID: board.id,
+            sourceURL: sourceURL,
+            provenance: provenance,
+            boardID: boardID,
             steps: [
                 WorkoutStep(
                     id: "step",
@@ -531,8 +534,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(workRecords.map(\.durationSeconds), Array(repeating: 7, count: 7))
     }
 
-    func testSourceLinkedTargetlessWorkRecordsWithoutFabricatedHoldMetadata() throws {
-        let workout = plan([
+    func testGenericSourceLinkedTargetlessWorkRecordsSelfSelected() throws {
+        let workout = plan(boardID: nil, [
             WorkoutSegment(
                 kind: .work,
                 target: nil,
@@ -561,6 +564,56 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             try WorkoutActivityRecorder().json(for: decoded),
             json
         )
+    }
+
+    func testBoardBoundSourceLinkedTargetlessWorkFailsClosedWithoutRecordingSelfSelected() {
+        let workout = plan(boardID: board.id, [
+            WorkoutSegment(
+                kind: .work,
+                target: nil,
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        do {
+            let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+            XCTAssertFalse(
+                records.contains { $0.target == .selfSelected },
+                "Board-bound source work must never record a self-selected target."
+            )
+            XCTFail("Expected board-bound targetless work to fail closed.")
+        } catch {
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "step", segmentIndex: 0)
+            )
+        }
+    }
+
+    func testCustomTargetlessWorkFailsClosed() {
+        let workout = plan(
+            boardID: nil,
+            provenance: .custom,
+            sourceURL: nil,
+            [
+                WorkoutSegment(
+                    kind: .work,
+                    target: nil,
+                    timing: .fixed,
+                    duration: 7
+                )
+            ]
+        )
+
+        XCTAssertThrowsError(
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+        ) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "step", segmentIndex: 0)
+            )
+        }
     }
 
     func testGenericMetoliusWorkIsExplicitlySelfSelectedOnCompactII() throws {

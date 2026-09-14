@@ -384,6 +384,18 @@ def test_board_schema_exposes_sloper_shape_as_a_contact_feature(feature: str) ->
     assert board.contacts[0].features == frozenset({feature})
 
 
+def test_board_schema_exposes_outer_jug_as_a_contact_feature() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    hold = document["contacts"][0]
+    hold["kind"] = "jug"
+    hold["features"] = ["outerJug"]
+
+    board = module._load_board(document)
+
+    assert board.contacts[0].features == frozenset({"outerJug"})
+
+
 def test_board_schema_allows_sloper_without_shape_feature() -> None:
     module = load_board_catalog_module()
     document = board_document()

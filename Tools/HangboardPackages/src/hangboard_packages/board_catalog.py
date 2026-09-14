@@ -50,6 +50,7 @@ _GRIP_TYPES = frozenset(
 _HOLD_FEATURES = frozenset(
     {
         "jug",
+        "outerJug",
         "flatSloper",
         "roundSloper",
         "largeSlope",

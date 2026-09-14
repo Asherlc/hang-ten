@@ -3314,14 +3314,26 @@
             {
               "kind" : "work",
               "targets" : [
-
+                {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
+                }
               ],
               "timing" : "undefined"
             }
           ],
           "side" : "both",
           "targets" : [
-
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
+              "selection" : "allMatching"
+            }
           ],
           "title" : "Minute 2"
         },
@@ -3418,6 +3430,13 @@
                 {
                   "kind" : "sloper",
                   "selection" : "allMatching"
+                },
+                {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
                 }
               ],
               "timing" : "undefined"
@@ -3427,6 +3446,13 @@
           "targets" : [
             {
               "kind" : "sloper",
+              "selection" : "allMatching"
+            },
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
               "selection" : "allMatching"
             }
           ],
@@ -3499,14 +3525,26 @@
             {
               "kind" : "work",
               "targets" : [
-
+                {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
+                }
               ],
               "timing" : "undefined"
             }
           ],
           "side" : "both",
           "targets" : [
-
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
+              "selection" : "allMatching"
+            }
           ],
           "title" : "Minute 7"
         },
@@ -3702,6 +3740,13 @@
                   },
                   "kind" : "edge",
                   "selection" : "allMatching"
+                },
+                {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
                 }
               ],
               "timing" : "undefined"
@@ -3715,6 +3760,13 @@
                 "minimum" : 19
               },
               "kind" : "edge",
+              "selection" : "allMatching"
+            },
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
               "selection" : "allMatching"
             }
           ],
@@ -3762,6 +3814,13 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
+                },
+                {
                   "depthRangeMillimeters" : {
                     "maximum" : 28,
                     "minimum" : 28
@@ -3776,6 +3835,13 @@
           ],
           "side" : "both",
           "targets" : [
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
+              "selection" : "allMatching"
+            },
             {
               "depthRangeMillimeters" : {
                 "maximum" : 28,
@@ -3937,14 +4003,26 @@
             {
               "kind" : "work",
               "targets" : [
-
+                {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
+                }
               ],
               "timing" : "undefined"
             }
           ],
           "side" : "both",
           "targets" : [
-
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
+              "selection" : "allMatching"
+            }
           ],
           "title" : "Minute 9"
         },
@@ -4322,6 +4400,13 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
+                },
+                {
                   "depthRangeMillimeters" : {
                     "maximum" : 30,
                     "minimum" : 30
@@ -4336,6 +4421,13 @@
           ],
           "side" : "both",
           "targets" : [
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
+              "selection" : "allMatching"
+            },
             {
               "depthRangeMillimeters" : {
                 "maximum" : 30,
@@ -4475,6 +4567,13 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "kind" : "jug",
+                  "requiredFeatures" : [
+                    "outerJug"
+                  ],
+                  "selection" : "allMatching"
+                },
+                {
                   "kind" : "sloper",
                   "selection" : "allMatching"
                 }
@@ -4484,6 +4583,13 @@
           ],
           "side" : "both",
           "targets" : [
+            {
+              "kind" : "jug",
+              "requiredFeatures" : [
+                "outerJug"
+              ],
+              "selection" : "allMatching"
+            },
             {
               "kind" : "sloper",
               "selection" : "allMatching"

@@ -360,6 +360,18 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testBundledPlanLibraryValidatesAgainstPackagedBoards() throws {
+        let definition = try JSONDecoder().decode(
+            PlanLibraryDefinition.self,
+            from: bundledPlanLibraryData()
+        )
+
+        XCTAssertEqual(
+            definition.validationIssues(availableBoards: BoardCatalog.all),
+            []
+        )
+    }
+
     func testBuiltInPlanPresentationFieldsUseAthleteFacingCopy() throws {
         let store = try PlanLibraryStore(
             builtInData: bundledPlanLibraryData(),
@@ -1356,7 +1368,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testPlanLibraryAllowsSourceLinkedUntargetedTimedHang() {
+    func testPlanLibraryAllowsGenericSourceLinkedUntargetedTimedHang() {
         let selfSelectedHang = WorkoutStepDefinition(
             id: "self-selected-hang",
             title: "Self-selected hang",
@@ -1370,12 +1382,83 @@ final class PlanStorageTests: XCTestCase {
 
         let issues = makeLibrary(
             steps: [selfSelectedHang],
+            boardID: nil,
             provenance: .official
         ).validationIssues(availableBoards: BoardCatalog.all)
 
         XCTAssertFalse(issues.contains {
             $0.path == "blocks[0].steps[0].targets" &&
                 $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryRejectsBoardBoundSourceLinkedUntargetedTimedHang() {
+        let untargetedHang = WorkoutStepDefinition(
+            id: "board-bound-untargeted-hang",
+            title: "Board-bound untargeted hang",
+            instruction: "Hang.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+
+        let issues = makeLibrary(
+            steps: [untargetedHang],
+            boardID: BoardCatalog.defaultBoard.id,
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryAllowsGenericSourceLinkedUntargetedCompoundSegment() {
+        let compound = makeStep(
+            id: "generic-compound",
+            duration: 10,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [], timing: .fixed, duration: 5),
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5)
+            ]
+        )
+
+        let issues = makeLibrary(
+            steps: [compound],
+            boardID: nil,
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertFalse(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].targets" &&
+                $0.message == "Work segments require a target."
+        })
+    }
+
+    func testPlanLibraryRejectsBoardBoundSourceLinkedUntargetedCompoundSegment() {
+        let compound = makeStep(
+            id: "board-bound-compound",
+            duration: 10,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [], timing: .fixed, duration: 5),
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5)
+            ]
+        )
+
+        let issues = makeLibrary(
+            steps: [compound],
+            boardID: BoardCatalog.defaultBoard.id,
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].targets" &&
+                $0.message == "Work segments require a target."
         })
     }
 
@@ -1400,6 +1483,30 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(issues.contains {
             $0.path == "blocks[0].steps[0].targets" &&
                 $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryRejectsUntargetedCustomCompoundSegment() {
+        let compound = makeStep(
+            id: "custom-compound",
+            duration: 10,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [], timing: .fixed, duration: 5),
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5)
+            ]
+        )
+
+        let issues = makeLibrary(
+            steps: [compound],
+            boardID: nil,
+            provenance: .custom,
+            sourceURL: nil
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].targets" &&
+                $0.message == "Work segments require a target."
         })
     }
 
@@ -1531,24 +1638,82 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testSimulator3DPlansOmitUnexpressibleOuterAndCenterJugTargets() throws {
+    func testSimulator3DPlansUseContactFirstOuterJugsWhileCenterJugRemainsOmitted() throws {
         let simulatorPlans = LegacyPlanSeedCatalog.all.filter {
             $0.id.hasPrefix("metolius.simulator-3d.")
         }
         XCTAssertEqual(simulatorPlans.count, 3)
-        XCTAssertTrue(
-            simulatorPlans.flatMap(\.steps).flatMap(\.targets).allSatisfy {
-                $0.kind != .jug
-            }
-        )
 
         let entry = try XCTUnwrap(
             simulatorPlans.first { $0.id == "metolius.simulator-3d.entry" }
         )
-        XCTAssertTrue(entry.steps[1].targets.isEmpty)
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+        let outerJugs = ContactRequirement.feature(
+            outerJug,
+            selection: .allMatching
+        )
+
+        XCTAssertEqual(entry.steps[1].targets, [outerJugs])
         XCTAssertEqual(entry.steps[2].targets.count, 1)
         XCTAssertEqual(entry.steps[2].targets[0].kind, .pocket)
-        XCTAssertTrue(entry.steps[6].targets.isEmpty)
+        XCTAssertEqual(entry.steps[6].targets, [outerJugs])
+    }
+
+    func testSimulator3DOuterJugRequirementResolvesExactlyTheNumberOnePair() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
+        )
+        let sourceStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+                $0.id == "metolius.simulator-3d.entry.minute-2"
+            }
+        )
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+        let requirement = ContactRequirement.feature(
+            outerJug,
+            selection: .allMatching
+        )
+
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(requirement, step: sourceStep, board: board).map(\.id)),
+            ["jug-1-left", "jug-1-right"]
+        )
+    }
+
+    func testSimulator3DPreviouslyTargetlessOuterJugStepsAreContactFirst() throws {
+        let expectedStepIDs = [
+            "metolius.simulator-3d.entry.minute-2",
+            "metolius.simulator-3d.entry.minute-7",
+            "metolius.simulator-3d.intermediate.minute-9",
+        ]
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
+        )
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+        let requirement = ContactRequirement.feature(
+            outerJug,
+            selection: .allMatching
+        )
+
+        for stepID in expectedStepIDs {
+            let step = try XCTUnwrap(
+                LegacyPlanSeedCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID }
+            )
+
+            XCTAssertEqual(step.targets, [requirement], "\(stepID) must target outer jugs.")
+            let workSegments = step.segments.filter { $0.kind == .work }
+            XCTAssertFalse(workSegments.isEmpty, "\(stepID) must retain its work segment.")
+            XCTAssertTrue(
+                workSegments.allSatisfy {
+                    $0.targets == [requirement]
+                },
+                "\(stepID) work segments must retain the outer-jug requirement."
+            )
+            XCTAssertEqual(
+                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
+                ["jug-1-left", "jug-1-right"]
+            )
+        }
     }
 
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {

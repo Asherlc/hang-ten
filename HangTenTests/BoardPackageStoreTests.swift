@@ -1218,6 +1218,29 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreDecodesOuterJugFeatureWithJugPhysicality() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                holds[0]["kind"] = "jug"
+                holds[0]["features"] = ["outerJug"]
+                board["contacts"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let hold = try XCTUnwrap(
+            BoardPackageStore(bundle: fixture.bundle).boards.first?.contacts.first
+        )
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+
+        XCTAssertEqual(hold.features, [outerJug])
+        XCTAssertEqual(outerJug.label, "Outer jug")
+        XCTAssertEqual(outerJug.holdKind, .jug)
+    }
+
     func testStoreRejectsInvalidSloperMetadataCombinations() throws {
         let invalidHolds: [(kind: String, metadata: [String: Any])] = [
             ("jug", ["type": "flat", "angleDegrees": 20]),

@@ -2882,14 +2882,16 @@
       }
     }
   ],
-  "revisionID": "2026-09-contact-first",
+  "revisionID": "2026-09-outer-jug-contact-first",
   "contacts": [
     {
       "id": "jug-1-left",
       "equipmentObjectID": "primary",
       "name": "Left #1 outer jug",
       "kind": "jug",
-      "features": [],
+      "features": [
+        "outerJug"
+      ],
       "gripTypes": []
     },
     {
@@ -2921,7 +2923,9 @@
       "equipmentObjectID": "primary",
       "name": "Right #1 outer jug",
       "kind": "jug",
-      "features": [],
+      "features": [
+        "outerJug"
+      ],
       "gripTypes": []
     },
     {

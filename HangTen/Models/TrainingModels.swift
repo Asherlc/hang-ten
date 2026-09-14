@@ -588,6 +588,7 @@ enum HoldCueStyle: String, Codable, Hashable {
 /// routine content unchanged as more boards are added.
 enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
+    case outerJug
     case flatSloper
     case roundSloper
     case largeSlope
@@ -608,6 +609,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     var label: String {
         switch self {
         case .jug: "Jug"
+        case .outerJug: "Outer jug"
         case .flatSloper: "Flat sloper"
         case .roundSloper: "Round sloper"
         case .largeSlope: "Large sloper"
@@ -647,6 +649,8 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
         switch self {
         case .jug:
             Physicality(holdKind: .sloper, featureGroup: .sloper)
+        case .outerJug:
+            Physicality(holdKind: .jug, featureGroup: .other)
         case .flatSloper:
             Physicality(holdKind: .sloper, featureGroup: .sloper)
         case .roundSloper:
@@ -1805,7 +1809,9 @@ enum BundledPlanContactRequirements {
             switch self {
             case .anyHold:
                 ContactRequirement(selection: .allMatching)
-            case .outerJugs, .centerJug:
+            case .outerJugs:
+                .feature(.outerJug, selection: .allMatching)
+            case .centerJug:
                 nil
             case .roundSlopers:
                 .kind(.sloper, selection: .allMatching)
