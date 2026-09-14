@@ -252,8 +252,27 @@ runs:
           exit 1
         fi
 
-        curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/api/health" \
-          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
+        if ! listener_belongs_to_app_tree; then
+          echo "Unsigned app health listener is no longer owned by the app." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
+        if ! health_payload="$(curl --fail --silent --show-error "${curl_timeout_args[@]}" "$health_url")"; then
+          echo "Unsigned app health probe failed after readiness." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
+        if ! python -c 'import json,sys; payload=json.load(sys.stdin); sys.exit(0 if isinstance(payload, dict) and payload == {"ok": True} and type(payload["ok"]) is bool else 1)' \
+          <<<"$health_payload" 2>/dev/null; then
+          echo "Unsigned app health check failed after readiness." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
+        if ! listener_belongs_to_app_tree; then
+          echo "Unsigned app health listener is no longer owned by the app." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
         curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/" >/dev/null
         while IFS= read -r asset_path; do
           curl --fail --silent --show-error "${curl_timeout_args[@]}" \
