@@ -45,9 +45,14 @@ const INITIAL_STATE: WorkbenchState = {
 const MAX_DOCUMENT_HISTORY = 100;
 const AUTOSAVE_DELAY_MS = 750;
 const AUTOSAVE_STORAGE_KEY = "hangboard-workbench:autosave-enabled";
+interface DocumentHistoryEntry {
+  document: EditorDocument;
+  selectedKey: string | null;
+  selectedKeys: string[];
+}
 interface DocumentHistory {
-  undo: EditorDocument[];
-  redo: EditorDocument[];
+  undo: DocumentHistoryEntry[];
+  redo: DocumentHistoryEntry[];
 }
 
 function resetHistory(history: DocumentHistory): void {
@@ -55,8 +60,20 @@ function resetHistory(history: DocumentHistory): void {
   history.redo = [];
 }
 
-function recordHistory(history: DocumentHistory, document: EditorDocument): void {
-  history.undo.push(cloneEditorDocument(document));
+function historyEntry(
+  document: EditorDocument,
+  selectedKeys: readonly string[],
+  selectedKey: string | null,
+): DocumentHistoryEntry {
+  return {
+    document: cloneEditorDocument(document),
+    selectedKeys: [...selectedKeys],
+    selectedKey,
+  };
+}
+
+function recordHistory(history: DocumentHistory, entry: DocumentHistoryEntry): void {
+  history.undo.push(entry);
   if (history.undo.length > MAX_DOCUMENT_HISTORY) history.undo.shift();
   history.redo = [];
 }
@@ -791,8 +808,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
 
   const replaceDocument = useCallback<WorkbenchActions["replaceDocument"]>((document, options = {}) => {
     const nextDocument = cloneEditorDocument(document);
-    if (options.historySnapshot) recordHistory(historyRef.current, options.historySnapshot);
     const current = stateRef.current;
+    if (options.historySnapshot) {
+      recordHistory(historyRef.current, historyEntry(
+        options.historySnapshot,
+        current.selectedKeys,
+        current.selectedKey,
+      ));
+    }
     const selection = validSelection(
       nextDocument,
       Object.hasOwn(options, "selectedKeys") ? options.selectedKeys ?? [] : current.selectedKeys,
@@ -840,9 +863,9 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       if (snapshot) historyRef.current.undo.push(snapshot);
       return false;
     }
-    historyRef.current.redo.push(cloneEditorDocument(current.document));
-    const document = cloneEditorDocument(snapshot);
-    const selection = validSelection(document, current.selectedKeys, current.selectedKey);
+    historyRef.current.redo.push(historyEntry(current.document, current.selectedKeys, current.selectedKey));
+    const document = cloneEditorDocument(snapshot.document);
+    const selection = validSelection(document, snapshot.selectedKeys, snapshot.selectedKey);
     updateState((latest) => ({
       ...latest,
       document,
@@ -861,9 +884,9 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       if (snapshot) historyRef.current.redo.push(snapshot);
       return false;
     }
-    historyRef.current.undo.push(cloneEditorDocument(current.document));
-    const document = cloneEditorDocument(snapshot);
-    const selection = validSelection(document, current.selectedKeys, current.selectedKey);
+    historyRef.current.undo.push(historyEntry(current.document, current.selectedKeys, current.selectedKey));
+    const document = cloneEditorDocument(snapshot.document);
+    const selection = validSelection(document, snapshot.selectedKeys, snapshot.selectedKey);
     updateState((latest) => ({
       ...latest,
       document,

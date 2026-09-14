@@ -382,12 +382,16 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 return;
               }
               const selected = new Set(selectedContactIDs);
+              const recategorized = new Set(selectedContactIDs);
+              for (const contact of state.document.contacts) {
+                if (selected.has(contact.id) && contact.pairedContactID) {
+                  recategorized.add(contact.pairedContactID);
+                }
+              }
               actions.editDocument((candidate) => {
                 for (const contact of candidate.contacts) {
-                  if (selected.has(contact.id)) {
+                  if (recategorized.has(contact.id)) {
                     contact.kind = updated.kind;
-                    delete contact.pairedContactID;
-                  } else if (contact.pairedContactID && selected.has(contact.pairedContactID)) {
                     delete contact.pairedContactID;
                   }
                 }

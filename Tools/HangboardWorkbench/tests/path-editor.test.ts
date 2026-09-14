@@ -30,16 +30,39 @@ import {
   moveEditableControl,
   serializeEditablePath,
 } from "../src/editable-path.ts";
+import { validateEditorDocument } from "../src/workbench-controller.ts";
 import type { EditablePath } from "../src/editable-path.ts";
 import type {
   Bounds,
   ConstrainedHandle,
+  EditorDocument,
   OutlinePreset,
   PathCommand,
   Point,
   PathEditor,
   ShapeConstraint,
 } from "../src/types.ts";
+
+function documentWithContactPath(displayPath: string): EditorDocument {
+  return {
+    presentationID: "primary",
+    contacts: [{
+      id: "contact-1",
+      equipmentObjectID: "primary",
+      name: "Contact 1",
+      kind: "jug",
+      features: [],
+      gripTypes: [],
+    }],
+    canvas: { width: 200, height: 150 },
+    regions: [{
+      id: 1,
+      key: "contact-1-piece-0",
+      displayPath,
+      metadata: { contactID: "contact-1", pieceIndex: 0, presentationID: "primary" },
+    }],
+  };
+}
 
 const pathEditor: PathEditor = {
   parsePath,
@@ -451,7 +474,7 @@ test("createOutlineShapePath generates every preset as a valid closed contour", 
     const displayPath = createOutlineShapePath(source, preset);
     assert.equal(displayPath, expectedPath, preset);
     assert.equal(parsePath(displayPath).at(-1)?.type, "Z", preset);
-    assert.doesNotThrow(() => parsePath(displayPath), preset);
+    assert.doesNotThrow(() => validateEditorDocument(documentWithContactPath(displayPath)), preset);
   }
 });
 
@@ -858,7 +881,7 @@ test("removing a quadratic inflection point remains finite when its drag reaches
 
   assert.equal(commands[1]?.type, "Q");
   assert.ok(commands[1]?.controls.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y)));
-  assert.doesNotThrow(() => parsePath(serializePath(commands)));
+  assert.doesNotThrow(() => validateEditorDocument(documentWithContactPath(serializePath(commands))));
 });
 
 test("removing a cubic inflection point remains finite when its drag nearly reaches the outgoing control", () => {
@@ -875,7 +898,7 @@ test("removing a cubic inflection point remains finite when its drag nearly reac
     commands[1]?.controls.every((point) => Math.max(Math.abs(point.x), Math.abs(point.y)) <= 1_000),
     "near-overlap removal must not amplify controls far beyond the surrounding geometry",
   );
-  assert.doesNotThrow(() => parsePath(serializePath(commands)));
+  assert.doesNotThrow(() => validateEditorDocument(documentWithContactPath(serializePath(commands))));
 });
 
 test("addVertex inserts on the segment after afterIndex, not before it", () => {

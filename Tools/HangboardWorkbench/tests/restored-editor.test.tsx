@@ -27,6 +27,7 @@ import type {
   PullRequestResult,
   PushResult,
   ContactRegion,
+  PhysicalContact,
   WorkbenchClient,
   WorkbenchDependencies,
 } from "../src/types.ts";
@@ -36,71 +37,66 @@ const FIRST_PATH = "M 10 10 L 20 10 L 20 20 Z";
 const SECOND_PATH = "M 30 10 L 40 10 L 40 20 Z";
 const OTHER_PATH = "M 70 10 L 80 10 L 80 20 Z";
 
-interface ContactPieceFixture extends Omit<Partial<ContactRegion>, "metadata"> {
-  key: string;
-  displayPath: string;
-  kind?: string;
-  equipmentObjectID?: string;
-  pairedContactID?: string;
-  fingerCapacity?: number;
-  handCapacity?: number;
-  fixedDepthMillimeters?: number;
-  depthRangeMillimeters?: { lowerBound: number; upperBound: number };
-  metadata?: {
-    contactID?: string;
-    pieceIndex?: number;
-    presentationID?: string;
+function contactFixture(id: string, overrides: Partial<Omit<PhysicalContact, "id">> = {}): PhysicalContact {
+  return {
+    id,
+    equipmentObjectID: "primary",
+    name: id,
+    kind: "jug",
+    features: [],
+    gripTypes: [],
+    ...overrides,
   };
 }
 
-function documentFixture(regions: ContactPieceFixture[] = [
-  { id: 1, key: "a-piece-0", kind: "jug", displayPath: FIRST_PATH, metadata: { contactID: "a", pieceIndex: 0 } },
-  { id: 2, key: "a-piece-1", kind: "jug", displayPath: SECOND_PATH, metadata: { contactID: "a", pieceIndex: 1 } },
-  { id: 3, key: "b-piece-0", kind: "edge", displayPath: OTHER_PATH, metadata: { contactID: "b", pieceIndex: 0 } },
-], options: {
+function regionFixture(
+  id: number,
+  key: string,
+  displayPath: string,
+  contactID: string,
+  pieceIndex = 0,
+  presentationID = "primary",
+  overrides: Partial<Omit<ContactRegion, "id" | "key" | "displayPath" | "metadata">> = {},
+): ContactRegion {
+  return {
+    id,
+    key,
+    displayPath,
+    metadata: { contactID, pieceIndex, presentationID },
+    ...overrides,
+  };
+}
+
+const DEFAULT_CONTACTS = [
+  contactFixture("a"),
+  contactFixture("b", { kind: "edge" }),
+];
+const DEFAULT_REGIONS = [
+  regionFixture(1, "a-piece-0", FIRST_PATH, "a", 0),
+  regionFixture(2, "a-piece-1", SECOND_PATH, "a", 1),
+  regionFixture(3, "b-piece-0", OTHER_PATH, "b", 0),
+];
+
+function documentFixture(options: {
+  contacts?: readonly PhysicalContact[];
+  regions?: readonly ContactRegion[];
   presentationID?: string;
   canvas?: EditorDocument["canvas"];
 } = {}): EditorDocument {
   const presentationID = options.presentationID ?? "primary";
-  const contactInputs = new Map<string, ContactPieceFixture>();
-  for (const region of regions) {
-    const contactID = region.metadata?.contactID ?? region.key;
-    if (!contactInputs.has(contactID)) contactInputs.set(contactID, region);
-  }
   return {
     presentationID,
-    contacts: [...contactInputs].map(([id, region]) => ({
-      id,
-      equipmentObjectID: region.equipmentObjectID ?? "primary",
-      name: id,
-      kind: region.kind ?? "jug",
-      features: [],
-      gripTypes: [],
-      ...(region.depthRangeMillimeters
-        ? { depthRangeMillimeters: { ...region.depthRangeMillimeters } }
-        : region.fixedDepthMillimeters !== undefined
-          ? { depthRangeMillimeters: { lowerBound: region.fixedDepthMillimeters, upperBound: region.fixedDepthMillimeters } }
-          : {}),
-      ...(region.fingerCapacity !== undefined ? { fingerCapacity: region.fingerCapacity } : {}),
-      ...(region.handCapacity !== undefined ? { handCapacity: region.handCapacity } : {}),
-      ...(region.pairedContactID ? { pairedContactID: region.pairedContactID } : {}),
-    })),
+    contacts: [...structuredClone(options.contacts ?? DEFAULT_CONTACTS)],
     canvas: options.canvas ?? { width: 100, height: 50 },
-    regions: regions.map((region, index) => ({
-      id: region.id ?? index + 1,
-      key: region.key,
-      displayPath: region.displayPath,
-      metadata: {
-        contactID: region.metadata?.contactID ?? region.key,
-        pieceIndex: region.metadata?.pieceIndex ?? 0,
-        presentationID: region.metadata?.presentationID ?? presentationID,
-      },
-      ...(region.treatment ? { treatment: { ...region.treatment } } : {}),
-      ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
-      ...(region.bendableCommandIndexes ? { bendableCommandIndexes: [...region.bendableCommandIndexes] } : {}),
-      ...(region.smoothAnchorIndexes ? { smoothAnchorIndexes: [...region.smoothAnchorIndexes] } : {}),
+    regions: structuredClone(options.regions ?? DEFAULT_REGIONS).map((region) => ({
+      ...region,
+      metadata: { ...region.metadata, presentationID },
     })),
   };
+}
+
+function singleContactDocument(contact: PhysicalContact, region: ContactRegion): EditorDocument {
+  return documentFixture({ contacts: [contact], regions: [region], presentationID: region.metadata.presentationID });
 }
 
 function boardFixture(document = documentFixture()): Board {
@@ -245,11 +241,14 @@ function rotate(path: string, degrees: number, pivot: { x: number; y: number }):
 }
 
 test("model helpers group physical contacts and derive collision-free region identifiers", () => {
-  const document = documentFixture([
-    { id: 2, key: "hold-1-piece-0", displayPath: FIRST_PATH, metadata: { contactID: "hold-1", pieceIndex: 0 } },
-    { id: 9, key: "hold-3-piece-0", displayPath: SECOND_PATH, metadata: { contactID: "hold-3", pieceIndex: 0 } },
-    { key: "legacy", displayPath: OTHER_PATH },
-  ]);
+  const document = documentFixture({
+    contacts: [contactFixture("hold-1"), contactFixture("hold-3"), contactFixture("legacy")],
+    regions: [
+      regionFixture(2, "hold-1-piece-0", FIRST_PATH, "hold-1"),
+      regionFixture(9, "hold-3-piece-0", SECOND_PATH, "hold-3"),
+      regionFixture(3, "legacy", OTHER_PATH, "legacy"),
+    ],
+  });
   assert.deepEqual(contactSiblings(document, document.regions[0]!).map((region) => region.key), ["hold-1-piece-0"]);
   assert.deepEqual(contactSiblings(document, document.regions[2]!).map((region) => region.key), ["legacy"]);
   assert.deepEqual(contactCentroid(document.regions, pathEditor), { x: 130 / 3, y: 40 / 3 });
@@ -257,10 +256,16 @@ test("model helpers group physical contacts and derive collision-free region ide
 });
 
 test("multi-object boards assign new contacts and allow deliberate object reassignment", async () => {
-  const document = documentFixture([
-    { id: 1, key: "left-piece-0", kind: "pocket", equipmentObjectID: "left-ring", displayPath: FIRST_PATH, metadata: { contactID: "left", pieceIndex: 0 } },
-    { id: 2, key: "right-piece-0", kind: "pocket", equipmentObjectID: "right-ring", displayPath: OTHER_PATH, metadata: { contactID: "right", pieceIndex: 0 } },
-  ]);
+  const document = documentFixture({
+    contacts: [
+      contactFixture("left", { kind: "pocket", equipmentObjectID: "left-ring" }),
+      contactFixture("right", { kind: "pocket", equipmentObjectID: "right-ring" }),
+    ],
+    regions: [
+      regionFixture(1, "left-piece-0", FIRST_PATH, "left"),
+      regionFixture(2, "right-piece-0", OTHER_PATH, "right"),
+    ],
+  });
   const client = clientFixture([boardFixture(document)]);
   const answers = ["new-contact", "New contact", "left-ring", "pocket", "", ""];
 
@@ -284,15 +289,26 @@ test("every raster region must resolve to one factual contact", () => {
 });
 
 test("depth is optional for every contact kind and remains fact-owned", () => {
-  const document = documentFixture([
-    { id: 1, key: "jug-piece-0", kind: "jug", displayPath: FIRST_PATH, metadata: { contactID: "jug", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
-    { id: 2, key: "sloper-piece-0", kind: "sloper", displayPath: SECOND_PATH, metadata: { contactID: "sloper", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
-    { id: 3, key: "pinch-piece-0", kind: "pinch", displayPath: OTHER_PATH, metadata: { contactID: "pinch", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
-    { id: 4, key: "fixed-edge-piece-0", kind: "edge", displayPath: FIRST_PATH, metadata: { contactID: "fixed-edge", pieceIndex: 0 }, fingerCapacity: 1, fixedDepthMillimeters: 12, handCapacity: 1 },
-    { id: 5, key: "ranged-pocket-piece-0", kind: "pocket", displayPath: SECOND_PATH, metadata: { contactID: "ranged-pocket", pieceIndex: 0 }, fingerCapacity: 1, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
-    { id: 6, key: "missing-edge-piece-0", kind: "edge", displayPath: OTHER_PATH, metadata: { contactID: "missing-edge", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
-    { id: 7, key: "missing-pocket-piece-0", kind: "pocket", displayPath: FIRST_PATH, metadata: { contactID: "missing-pocket", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
-  ]);
+  const document = documentFixture({
+    contacts: [
+      contactFixture("jug", { fingerCapacity: 1, handCapacity: 1 }),
+      contactFixture("sloper", { kind: "sloper", fingerCapacity: 1, handCapacity: 1 }),
+      contactFixture("pinch", { kind: "pinch", fingerCapacity: 1, handCapacity: 1 }),
+      contactFixture("fixed-edge", { kind: "edge", fingerCapacity: 1, handCapacity: 1, depthRangeMillimeters: { lowerBound: 12, upperBound: 12 } }),
+      contactFixture("ranged-pocket", { kind: "pocket", fingerCapacity: 1, handCapacity: 1, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 } }),
+      contactFixture("missing-edge", { kind: "edge", fingerCapacity: 1, handCapacity: 1 }),
+      contactFixture("missing-pocket", { kind: "pocket", fingerCapacity: 1, handCapacity: 1 }),
+    ],
+    regions: [
+      regionFixture(1, "jug-piece-0", FIRST_PATH, "jug"),
+      regionFixture(2, "sloper-piece-0", SECOND_PATH, "sloper"),
+      regionFixture(3, "pinch-piece-0", OTHER_PATH, "pinch"),
+      regionFixture(4, "fixed-edge-piece-0", FIRST_PATH, "fixed-edge"),
+      regionFixture(5, "ranged-pocket-piece-0", SECOND_PATH, "ranged-pocket"),
+      regionFixture(6, "missing-edge-piece-0", OTHER_PATH, "missing-edge"),
+      regionFixture(7, "missing-pocket-piece-0", FIRST_PATH, "missing-pocket"),
+    ],
+  });
 
   assert.doesNotThrow(() => controller.validateEditorDocument(document));
   assert.equal(document.regions.some((region) => Object.hasOwn(region, "depthRangeMillimeters")), false);
@@ -303,10 +319,13 @@ test("depth is optional for every contact kind and remains fact-owned", () => {
 });
 
 test("editing a contact fact updates its single owner without duplicating it across media pieces", async () => {
-  const document = documentFixture([
-    { id: 1, key: "a-piece-0", kind: "jug", displayPath: FIRST_PATH, metadata: { contactID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
-    { id: 2, key: "a-piece-1", kind: "jug", displayPath: SECOND_PATH, metadata: { contactID: "a", pieceIndex: 1 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
-  ]);
+  const document = documentFixture({
+    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 })],
+    regions: [
+      regionFixture(1, "a-piece-0", FIRST_PATH, "a", 0),
+      regionFixture(2, "a-piece-1", SECOND_PATH, "a", 1),
+    ],
+  });
 
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
@@ -331,20 +350,18 @@ test("switching presentations changes the focused canvas and scopes new contacts
       default: false,
     },
   ];
-  const frontDocument = documentFixture([{
-      id: 1,
-      key: "front-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "front", pieceIndex: 0, presentationID: "front" },
-    }], { presentationID: "front" });
-  const backDocument = documentFixture([{
-      id: 1,
-      key: "back-piece-0",
-      kind: "edge",
-      displayPath: "M 10 30 L 20 30 L 20 40 Z",
-      metadata: { contactID: "back", pieceIndex: 0, presentationID: "back" },
-    }], { presentationID: "back", canvas: { width: 80, height: 120 } });
+  const sharedContacts = [contactFixture("front"), contactFixture("back", { kind: "edge" })];
+  const frontDocument = documentFixture({
+    presentationID: "front",
+    contacts: sharedContacts,
+    regions: [regionFixture(1, "front-piece-0", FIRST_PATH, "front", 0, "front")],
+  });
+  const backDocument = documentFixture({
+    presentationID: "back",
+    contacts: sharedContacts,
+    regions: [regionFixture(1, "back-piece-0", "M 10 30 L 20 30 L 20 40 Z", "back", 0, "back")],
+    canvas: { width: 80, height: 120 },
+  });
   const focusedBoard = (presentationID: "front" | "back"): Board => ({
     boardId: "board-a",
     displayName: "Board A",
@@ -404,13 +421,13 @@ test("deleting the selected surface confirms and focuses the server-selected rep
     { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
   ];
   const front: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "front" })),
+    ...boardFixture(documentFixture({ presentationID: "front" })),
     selectedPresentationID: "front",
     presentations,
     imageUrl: presentations[0]!.imageUrl,
   };
   const back: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "back", canvas: { width: 80, height: 120 } })),
+    ...boardFixture(documentFixture({ presentationID: "back", canvas: { width: 80, height: 120 } })),
     selectedPresentationID: "back",
     presentations: [{ ...presentations[1]!, default: true }],
     imageUrl: presentations[1]!.imageUrl,
@@ -447,7 +464,7 @@ test("an alias surface explains that it is removed with its canonical source", a
     { presentationID: "front", displayName: "Front", imageUrl: "/api/boards/board-a/image?presentationID=front", default: true },
   ];
   const board: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "front-inverted" })),
+    ...boardFixture(documentFixture({ presentationID: "front-inverted" })),
     selectedPresentationID: "front-inverted",
     presentations,
     imageUrl: presentations[0]!.imageUrl,
@@ -475,7 +492,7 @@ test("surface controls are disabled while a board save is in flight", async () =
     { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
   ];
   const board: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "front" })),
+    ...boardFixture(documentFixture({ presentationID: "front" })),
     selectedPresentationID: "front",
     presentations,
     imageUrl: presentations[0]!.imageUrl,
@@ -507,7 +524,7 @@ test("deleting a surface refreshes its library attention summary", async () => {
     { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
   ];
   const front = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "front" })),
+    ...boardFixture(documentFixture({ presentationID: "front" })),
     selectedPresentationID: "front",
     presentations,
     imageUrl: presentations[0]!.imageUrl,
@@ -543,7 +560,7 @@ test("a delete authentication failure keeps the reauthentication link", async ()
     { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
   ];
   const board: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "front" })),
+    ...boardFixture(documentFixture({ presentationID: "front" })),
     selectedPresentationID: "front",
     presentations,
     imageUrl: presentations[0]!.imageUrl,
@@ -569,13 +586,13 @@ test("deleting a surface keeps the server-selected replacement when its image ca
     { presentationID: "back", displayName: "Back", imageUrl: "/api/boards/board-a/image?presentationID=back", default: false },
   ];
   const front: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "front" })),
+    ...boardFixture(documentFixture({ presentationID: "front" })),
     selectedPresentationID: "front",
     presentations,
     imageUrl: presentations[0]!.imageUrl,
   };
   const back: Board = {
-    ...boardFixture(documentFixture(undefined, { presentationID: "back", canvas: { width: 80, height: 120 } })),
+    ...boardFixture(documentFixture({ presentationID: "back", canvas: { width: 80, height: 120 } })),
     selectedPresentationID: "back",
     presentations: [{ ...presentations[1]!, default: true }],
     imageUrl: presentations[1]!.imageUrl,
@@ -1039,54 +1056,77 @@ test("a cancelled Command-click does not suppress the next normal click", async 
   });
 });
 
-test("batch inspector actions change every selected physical contact and invalid empty deletion rolls back", async () => {
+test("batch inspector actions change every selected physical contact and undo restores a valid batch deletion", async () => {
+  const fourthPath = "M 50 30 L 60 30 L 60 40 Z";
+  const board = boardFixture(documentFixture({
+    contacts: [...DEFAULT_CONTACTS, contactFixture("c", { kind: "pocket" })],
+    regions: [...DEFAULT_REGIONS, regionFixture(4, "c-piece-0", fourthPath, "c")],
+  }));
+  const client = clientFixture([board]);
+  const validatedDocuments: EditorDocument[] = [];
+
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
     await app.mouse('[data-contact-key="b-piece-0"]', "click", { ctrlKey: true });
 
     await app.change("#contact-kind-select", "pinch");
-    assert.deepEqual([...app.document.querySelectorAll<SVGPathElement>(".region-shape")].map((path) => path.getAttribute("fill")), ["#f2c94c", "#f2c94c", "#f2c94c"]);
+    assert.deepEqual([...app.document.querySelectorAll<SVGPathElement>(".region-shape")].slice(0, 3).map((path) => path.getAttribute("fill")), ["#f2c94c", "#f2c94c", "#f2c94c"]);
 
     await app.change("#contact-outline-shape-select", "rectangle");
-    assert.deepEqual([...app.document.querySelectorAll<SVGPathElement>(".region-shape")].map((path) => path.getAttribute("d")), [
+    const preDeletionPaths = [
       "M 10 10 L 20 10 L 20 20 L 10 20 Z",
       "M 30 10 L 40 10 L 40 20 L 30 20 Z",
       "M 70 10 L 80 10 L 80 20 L 70 20 Z",
-    ]);
+      fourthPath,
+    ];
+    assert.deepEqual(paths(app), preDeletionPaths);
 
     await app.click("#contact-rotate-cw-button");
-    assert.notDeepEqual(paths(app), [
-      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
-      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
-      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
-    ]);
+    assert.notDeepEqual(paths(app), preDeletionPaths);
     assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
-    assert.deepEqual(paths(app), [
-      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
-      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
-      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
-    ]);
+    assert.deepEqual(paths(app), preDeletionPaths);
 
     await app.input("#contact-rotate-input", "23.5");
     await app.click("#contact-rotate-apply-button");
-    assert.notDeepEqual(paths(app), [
-      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
-      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
-      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
-    ]);
+    assert.notDeepEqual(paths(app), preDeletionPaths);
     assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
-    assert.deepEqual(paths(app), [
-      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
-      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
-      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
-    ]);
+    assert.deepEqual(paths(app), preDeletionPaths);
 
     await app.click("#delete-contact-button");
-    assert.deepEqual(paths(app), [
-      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
-      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
-      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
+    assert.deepEqual(paths(app), [fourthPath]);
+    assert.equal(app.text("#contact-heading"), "No selection");
+    assert.deepEqual(validatedDocuments.at(-1)!.contacts.map((contact) => [contact.id, contact.kind]), [["c", "pocket"]]);
+    assert.deepEqual(validatedDocuments.at(-1)!.regions.map((region) => region.metadata.contactID), ["c"]);
+
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.deepEqual(paths(app), preDeletionPaths);
+    assert.equal(app.document.querySelector('[data-contact-key="a-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-contact-key="a-piece-1"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-contact-key="b-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    await app.click("#save-button");
+    assert.deepEqual(client.saveCalls[0]!.document.contacts.map((contact) => [contact.id, contact.kind]), [
+      ["a", "pinch"],
+      ["b", "pinch"],
+      ["c", "pocket"],
     ]);
+    assert.deepEqual(client.saveCalls[0]!.document.regions.map((region) => region.metadata.contactID), ["a", "a", "b", "c"]);
+  }, dependenciesFixture(board, {
+    client,
+    validate(document) {
+      const validated = controller.validateEditorDocument(document);
+      validatedDocuments.push(structuredClone(validated));
+      return validated;
+    },
+  }));
+});
+
+test("deleting every contact rolls the invalid empty document back", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-contact-key="a-piece-0"]');
+    await app.mouse('[data-contact-key="b-piece-0"]', "click", { ctrlKey: true });
+    await app.click("#delete-contact-button");
+
+    assert.deepEqual(paths(app), [FIRST_PATH, SECOND_PATH, OTHER_PATH]);
     assert.match(app.text("#validation-list"), /valid factual contacts/i);
   });
 });
@@ -1142,11 +1182,18 @@ test("changing exactly two selected physical contacts to gastons creates a recip
 });
 
 test("converting a selected gaston would orphan its unselected counterpart, so it leaves the pair unchanged", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "left-piece-0", kind: "gaston", pairedContactID: "outside", displayPath: FIRST_PATH, metadata: { contactID: "left", pieceIndex: 0 } },
-    { id: 2, key: "right-piece-0", kind: "jug", displayPath: SECOND_PATH, metadata: { contactID: "right", pieceIndex: 0 } },
-    { id: 3, key: "outside-piece-0", kind: "gaston", pairedContactID: "left", displayPath: OTHER_PATH, metadata: { contactID: "outside", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [
+      contactFixture("left", { kind: "gaston", pairedContactID: "outside" }),
+      contactFixture("right"),
+      contactFixture("outside", { kind: "gaston", pairedContactID: "left" }),
+    ],
+    regions: [
+      regionFixture(1, "left-piece-0", FIRST_PATH, "left"),
+      regionFixture(2, "right-piece-0", SECOND_PATH, "right"),
+      regionFixture(3, "outside-piece-0", OTHER_PATH, "outside"),
+    ],
+  }));
   const client = clientFixture([board]);
   await withEditor(async (app) => {
     await app.click('[data-contact-key="left-piece-0"]');
@@ -1167,10 +1214,13 @@ test("converting a selected gaston would orphan its unselected counterpart, so i
 });
 
 test("converting two pieces of one contact to gastons leaves the fact unchanged with validation", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "same-a-piece-0", kind: "jug", displayPath: FIRST_PATH, metadata: { contactID: "same", pieceIndex: 0 } },
-    { id: 2, key: "same-b-piece-0", kind: "edge", displayPath: SECOND_PATH, metadata: { contactID: "same", pieceIndex: 1 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("same")],
+    regions: [
+      regionFixture(1, "same-a-piece-0", FIRST_PATH, "same", 0),
+      regionFixture(2, "same-b-piece-0", SECOND_PATH, "same", 1),
+    ],
+  }));
   const client = clientFixture([board]);
   await withEditor(async (app) => {
     await app.click('[data-contact-key="same-a-piece-0"]');
@@ -1188,13 +1238,22 @@ test("converting two pieces of one contact to gastons leaves the fact unchanged 
 });
 
 test("an unpaired gaston offers only actionable pairing candidates and saves the initial reciprocal pair", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "left-piece-0", kind: "gaston", displayPath: FIRST_PATH, metadata: { contactID: "left", pieceIndex: 0 } },
-    { id: 2, key: "right-piece-0", kind: "gaston", displayPath: SECOND_PATH, metadata: { contactID: "right", pieceIndex: 0 } },
-    { id: 3, key: "jug-piece-0", kind: "jug", displayPath: OTHER_PATH, metadata: { contactID: "jug", pieceIndex: 0 } },
-    { id: 4, key: "other-a-piece-0", kind: "gaston", pairedContactID: "other-b", displayPath: "M 10 30 L 20 30 L 20 40 Z", metadata: { contactID: "other-a", pieceIndex: 0 } },
-    { id: 5, key: "other-b-piece-0", kind: "gaston", pairedContactID: "other-a", displayPath: "M 30 30 L 40 30 L 40 40 Z", metadata: { contactID: "other-b", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [
+      contactFixture("left", { kind: "gaston" }),
+      contactFixture("right", { kind: "gaston" }),
+      contactFixture("jug"),
+      contactFixture("other-a", { kind: "gaston", pairedContactID: "other-b" }),
+      contactFixture("other-b", { kind: "gaston", pairedContactID: "other-a" }),
+    ],
+    regions: [
+      regionFixture(1, "left-piece-0", FIRST_PATH, "left"),
+      regionFixture(2, "right-piece-0", SECOND_PATH, "right"),
+      regionFixture(3, "jug-piece-0", OTHER_PATH, "jug"),
+      regionFixture(4, "other-a-piece-0", "M 10 30 L 20 30 L 20 40 Z", "other-a"),
+      regionFixture(5, "other-b-piece-0", "M 30 30 L 40 30 L 40 40 Z", "other-b"),
+    ],
+  }));
   const client = clientFixture([board]);
 
   await withEditor(async (app) => {
@@ -1217,9 +1276,10 @@ test("an unpaired gaston offers only actionable pairing candidates and saves the
 });
 
 test("saving an unpaired gaston stays local and explains that it needs a pair", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "left-piece-0", kind: "gaston", displayPath: FIRST_PATH, metadata: { contactID: "left", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("left", { kind: "gaston" })],
+    regions: [regionFixture(1, "left-piece-0", FIRST_PATH, "left")],
+  }));
   const client = clientFixture([board]);
 
   await withEditor(async (app) => {
@@ -1231,11 +1291,18 @@ test("saving an unpaired gaston stays local and explains that it needs a pair", 
 });
 
 test("an established gaston pair shows its counterpart without offering reassignment or unset", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "left-piece-0", kind: "gaston", pairedContactID: "right", displayPath: FIRST_PATH, metadata: { contactID: "left", pieceIndex: 0 } },
-    { id: 2, key: "right-piece-0", kind: "gaston", pairedContactID: "left", displayPath: SECOND_PATH, metadata: { contactID: "right", pieceIndex: 0 } },
-    { id: 3, key: "other-piece-0", kind: "gaston", displayPath: OTHER_PATH, metadata: { contactID: "other", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [
+      contactFixture("left", { kind: "gaston", pairedContactID: "right" }),
+      contactFixture("right", { kind: "gaston", pairedContactID: "left" }),
+      contactFixture("other", { kind: "gaston" }),
+    ],
+    regions: [
+      regionFixture(1, "left-piece-0", FIRST_PATH, "left"),
+      regionFixture(2, "right-piece-0", SECOND_PATH, "right"),
+      regionFixture(3, "other-piece-0", OTHER_PATH, "other"),
+    ],
+  }));
 
   await withEditor(async (app) => {
     await app.click('[data-contact-key="left-piece-0"]');
@@ -1247,10 +1314,16 @@ test("an established gaston pair shows its counterpart without offering reassign
 });
 
 test("changing a gaston contact to another kind clears its pair metadata", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "left-piece-0", kind: "gaston", pairedContactID: "right", displayPath: FIRST_PATH, metadata: { contactID: "left", pieceIndex: 0 } },
-    { id: 2, key: "right-piece-0", kind: "gaston", pairedContactID: "left", displayPath: SECOND_PATH, metadata: { contactID: "right", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [
+      contactFixture("left", { kind: "gaston", pairedContactID: "right" }),
+      contactFixture("right", { kind: "gaston", pairedContactID: "left" }),
+    ],
+    regions: [
+      regionFixture(1, "left-piece-0", FIRST_PATH, "left"),
+      regionFixture(2, "right-piece-0", SECOND_PATH, "right"),
+    ],
+  }));
   const client = clientFixture([board]);
 
   await withEditor(async (app) => {
@@ -1258,8 +1331,17 @@ test("changing a gaston contact to another kind clears its pair metadata", async
     await app.change("#contact-kind-select", "jug");
     await app.click("#save-button");
 
-    assert.equal(client.saveCalls[0]?.document.contacts[0]?.pairedContactID, undefined);
-    assert.equal(client.saveCalls[0]?.document.contacts[1]?.pairedContactID, undefined);
+    assert.equal(client.saveCalls.length, 1);
+    const savedDocument = client.saveCalls[0]!.document;
+    assert.doesNotThrow(() => controller.validateEditorDocumentForSave(savedDocument));
+    const left = savedDocument.contacts.find((contact) => contact.id === "left");
+    const right = savedDocument.contacts.find((contact) => contact.id === "right");
+    assert.ok(left);
+    assert.ok(right);
+    assert.equal(left.kind, "jug");
+    assert.equal(right.kind, "jug");
+    assert.equal("pairedContactID" in left, false);
+    assert.equal("pairedContactID" in right, false);
   }, dependenciesFixture(board, { client }));
 });
 
@@ -1317,10 +1399,13 @@ test("delete and type changes apply to every piece sharing contactID", async () 
 });
 
 test("changing a sloper contact kind preserves independently-owned raster treatment", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "a-piece-0", kind: "sloper", treatment: { type: "surface" }, displayPath: FIRST_PATH, metadata: { contactID: "a", pieceIndex: 0 } },
-    { id: 2, key: "a-piece-1", kind: "sloper", treatment: { type: "surface" }, displayPath: SECOND_PATH, metadata: { contactID: "a", pieceIndex: 1 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { kind: "sloper" })],
+    regions: [
+      regionFixture(1, "a-piece-0", FIRST_PATH, "a", 0, "primary", { treatment: { type: "surface" } }),
+      regionFixture(2, "a-piece-1", SECOND_PATH, "a", 1, "primary", { treatment: { type: "surface" } }),
+    ],
+  }));
   const saved: EditorDocument[] = [];
   const client = {
     ...clientFixture([board]),
@@ -1341,11 +1426,14 @@ test("changing a sloper contact kind preserves independently-owned raster treatm
 });
 
 test("duplicate and mirror reflects every selected physical contact with fresh contact identities", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "a-piece-0", kind: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z", metadata: { contactID: "a", pieceIndex: 0 }, shapeConstraint: { shape: "oval", rotationDegrees: 15 } },
-    { id: 2, key: "a-piece-1", kind: "jug", displayPath: "M 30 10 L 40 10 L 40 20 Z", metadata: { contactID: "a", pieceIndex: 1 } },
-    { id: 3, key: "b-piece-0", kind: "edge", displayPath: "M 70 10 L 80 10 L 80 20 Z", metadata: { contactID: "b", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a"), contactFixture("b", { kind: "edge" })],
+    regions: [
+      regionFixture(1, "a-piece-0", "M 10 10 Q 15 5 20 10 L 20 20 Z", "a", 0, "primary", { shapeConstraint: { shape: "oval", rotationDegrees: 15 } }),
+      regionFixture(2, "a-piece-1", "M 30 10 L 40 10 L 40 20 Z", "a", 1),
+      regionFixture(3, "b-piece-0", "M 70 10 L 80 10 L 80 20 Z", "b"),
+    ],
+  }));
   const saved: EditorDocument[] = [];
   const client: WorkbenchClient = {
     ...clientFixture([board]),
@@ -1387,14 +1475,18 @@ test("duplicate and mirror reflects every selected physical contact with fresh c
 });
 
 test("duplicate and mirror regenerates bendable indexes from mirrored cubic commands", async () => {
-  const board = boardFixture(documentFixture([{
-    id: 1,
-    key: "curve-piece-0",
-    kind: "jug",
-    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
-    metadata: { contactID: "curve", pieceIndex: 0 },
-    bendableCommandIndexes: [1, 2],
-  }]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("curve")],
+    regions: [regionFixture(
+      1,
+      "curve-piece-0",
+      "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+      "curve",
+      0,
+      "primary",
+      { bendableCommandIndexes: [1, 2] },
+    )],
+  }));
   const saved: EditorDocument[] = [];
   const client: WorkbenchClient = {
     ...clientFixture([board]),
@@ -1417,13 +1509,11 @@ test("duplicate and mirror regenerates bendable indexes from mirrored cubic comm
 });
 
 test("duplicate and mirror preserves the selected presentation on the new contact", async () => {
-  const document = documentFixture([{
-      id: 1,
-      key: "front-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "front", pieceIndex: 0, presentationID: "front" },
-    }], { presentationID: "front" });
+  const document = documentFixture({
+    presentationID: "front",
+    contacts: [contactFixture("front")],
+    regions: [regionFixture(1, "front-piece-0", FIRST_PATH, "front", 0, "front")],
+  });
   const board: Board = {
     ...boardFixture(document),
     selectedPresentationID: "front",
@@ -1451,17 +1541,15 @@ test("duplicate and mirror preserves the selected presentation on the new contac
   }, dependenciesFixture(board, { client }));
 });
 
-test("duplicate and mirror uses the operator-provided contact identity", async () => {
-  const document = documentFixture([{
-      id: 1,
-      key: "front-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "front", pieceIndex: 0, presentationID: "front" },
-    }], { presentationID: "front" });
+test("duplicate and mirror reserves contact identities owned by other presentations", async () => {
+  const document = documentFixture({
+    presentationID: "front",
+    contacts: [contactFixture("front"), contactFixture("new-contact-1")],
+    regions: [regionFixture(1, "front-piece-0", FIRST_PATH, "front", 0, "front")],
+  });
   const board: Board = {
     ...boardFixture(document),
-    contactIDs: ["front", "reserved-contact"],
+    contactIDs: ["front", "new-contact-1"],
     selectedPresentationID: "front",
   };
   const saved: EditorDocument[] = [];
@@ -1476,19 +1564,24 @@ test("duplicate and mirror uses the operator-provided contact identity", async (
   await withEditor(async (app) => {
     await app.click('[data-contact-key="front-piece-0"]');
     await app.click("#duplicate-mirror-contact-button");
+    assert.equal(app.document.querySelectorAll("#contact-overlay .region-shape").length, 1);
+
+    await app.click("#duplicate-mirror-contact-button");
 
     assert.equal(app.text("#contact-heading"), "New contact");
     await app.click("#save-button");
-    assert.equal(saved[0]?.regions[1]?.metadata?.contactID, "new-contact-1");
+    assert.equal(saved.length, 1);
+    assert.equal(saved[0]?.contacts.some((contact) => contact.id === "new-contact-2"), true);
+    assert.equal(saved[0]?.regions[1]?.metadata.contactID, "new-contact-2");
+    assert.equal(saved[0]?.regions[1]?.metadata.presentationID, "front");
   }, dependenciesFixture(board, { client }));
 });
 
 test("finger capacity loads in the inspector, applies to every physical piece, and new contacts are unset", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "a-piece-0", kind: "jug", displayPath: FIRST_PATH, metadata: { contactID: "a", pieceIndex: 0 }, fingerCapacity: 2 },
-    { id: 2, key: "a-piece-1", kind: "jug", displayPath: SECOND_PATH, metadata: { contactID: "a", pieceIndex: 1 }, fingerCapacity: 2 },
-    { id: 3, key: "b-piece-0", kind: "edge", displayPath: OTHER_PATH, metadata: { contactID: "b", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { fingerCapacity: 2 }), contactFixture("b", { kind: "edge" })],
+    regions: DEFAULT_REGIONS,
+  }));
   const saved: EditorDocument[] = [];
   const client = {
     ...clientFixture([board]),
@@ -1512,25 +1605,13 @@ test("finger capacity loads in the inspector, applies to every physical piece, a
 });
 
 test("contact depth ranges load, update atomically, and save on factual contacts", async () => {
-  const board = boardFixture(documentFixture([
-    {
-      id: 1,
-      key: "a-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "a", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
-    },
-    {
-      id: 2,
-      key: "a-piece-1",
-      kind: "jug",
-      displayPath: SECOND_PATH,
-      metadata: { contactID: "a", pieceIndex: 1 },
-      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
-    },
-    { id: 3, key: "b-piece-0", kind: "edge", displayPath: OTHER_PATH, metadata: { contactID: "b", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [
+      contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } }),
+      contactFixture("b", { kind: "edge" }),
+    ],
+    regions: DEFAULT_REGIONS,
+  }));
   const saved: EditorDocument[] = [];
   const client = {
     ...clientFixture([board]),
@@ -1559,15 +1640,10 @@ test("contact depth ranges load, update atomically, and save on factual contacts
 });
 
 test("equal contact depth bounds reopen and can become a range or be cleared", async () => {
-  const scalarRegion = {
-    id: 1,
-    key: "a-piece-0",
-    kind: "jug",
-    displayPath: FIRST_PATH,
-    metadata: { contactID: "a", pieceIndex: 0 },
-    fixedDepthMillimeters: 10,
-  };
-  const board = boardFixture(documentFixture([scalarRegion]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 10, upperBound: 10 } })],
+    regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
+  }));
   const saved: EditorDocument[] = [];
   const client = {
     ...clientFixture([board]),
@@ -1594,16 +1670,10 @@ test("equal contact depth bounds reopen and can become a range or be cleared", a
 });
 
 test("zero depth clears the optional factual range", async () => {
-  const board = boardFixture(documentFixture([
-    {
-      id: 1,
-      key: "a-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "a", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
-    },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } })],
+    regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
+  }));
 
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
@@ -1625,16 +1695,10 @@ test("clearing one equal depth bound clears the optional factual range", async (
 });
 
 test("clearing an optional depth saves without a factual range", async () => {
-  const board = boardFixture(documentFixture([
-    {
-      id: 1,
-      key: "a-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "a", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
-    },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } })],
+    regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
+  }));
   const saved: EditorDocument[] = [];
   const client = {
     ...clientFixture([board]),
@@ -1653,24 +1717,16 @@ test("clearing an optional depth saves without a factual range", async () => {
 });
 
 test("changing the selected contact replaces the visible factual depth range", async () => {
-  const board = boardFixture(documentFixture([
-    {
-      id: 1,
-      key: "a-piece-0",
-      kind: "jug",
-      displayPath: FIRST_PATH,
-      metadata: { contactID: "a", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
-    },
-    {
-      id: 2,
-      key: "b-piece-0",
-      kind: "edge",
-      displayPath: OTHER_PATH,
-      metadata: { contactID: "b", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 12.5, upperBound: 15 },
-    },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [
+      contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } }),
+      contactFixture("b", { kind: "edge", depthRangeMillimeters: { lowerBound: 12.5, upperBound: 15 } }),
+    ],
+    regions: [
+      regionFixture(1, "a-piece-0", FIRST_PATH, "a"),
+      regionFixture(2, "b-piece-0", OTHER_PATH, "b"),
+    ],
+  }));
 
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
@@ -1699,11 +1755,10 @@ test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavio
 });
 
 test("hand capacity loads in the inspector, applies to every physical piece, and new contacts are unset", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "a-piece-0", kind: "jug", displayPath: FIRST_PATH, metadata: { contactID: "a", pieceIndex: 0 }, handCapacity: 1 },
-    { id: 2, key: "a-piece-1", kind: "jug", displayPath: SECOND_PATH, metadata: { contactID: "a", pieceIndex: 1 }, handCapacity: 1 },
-    { id: 3, key: "b-piece-0", kind: "edge", displayPath: OTHER_PATH, metadata: { contactID: "b", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { handCapacity: 1 }), contactFixture("b", { kind: "edge" })],
+    regions: DEFAULT_REGIONS,
+  }));
   const saved: EditorDocument[] = [];
   const client = {
     ...clientFixture([board]),
@@ -1929,12 +1984,10 @@ test("a freeform anchor keeps its local target ID while it is dragged", async ()
 });
 
 test("saving a stable editable path sends no local geometry IDs", async () => {
-  const document = documentFixture([{
-    id: 1,
-    key: "stable-piece-0",
-    kind: "jug",
-    displayPath: "M 10 10 Q 20 5 30 10 L 30 30 Z",
-  }]);
+  const document = singleContactDocument(
+    contactFixture("stable"),
+    regionFixture(1, "stable-piece-0", "M 10 10 Q 20 5 30 10 L 30 30 Z", "stable"),
+  );
   const board = boardFixture(document);
   const client = clientFixture([board]);
 
@@ -1961,12 +2014,10 @@ test("saving a stable editable path sends no local geometry IDs", async () => {
 });
 
 test("insertion retains unrelated local target IDs while undo and redo keep canonical paths", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -1989,12 +2040,10 @@ test("insertion retains unrelated local target IDs while undo and redo keep cano
 });
 
 test("an inserted vertex stays selected through drag and rotation so Delete removes that vertex", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2028,12 +2077,10 @@ test("an inserted vertex stays selected through drag and rotation so Delete remo
 });
 
 test("deleting then inserting in one edit session never reuses a local vertex ID", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2066,12 +2113,10 @@ test("deleting then inserting in one edit session never reuses a local vertex ID
 });
 
 test("vertex accessibility labels follow current rendered order after insertion", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2084,12 +2129,10 @@ test("vertex accessibility labels follow current rendered order after insertion"
 });
 
 test("guide controls create horizontal and vertical guides at the selected contact center", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     assert.equal(app.disabled("#add-horizontal-guide-button"), true);
     assert.equal(app.disabled("#add-vertical-guide-button"), true);
@@ -2107,10 +2150,13 @@ test("guide controls create horizontal and vertical guides at the selected conta
 });
 
 test("whole-path dragging snaps its horizontal and vertical bounds edges to nearby guides", async () => {
-  const document = documentFixture([
-    { id: 1, key: "guide-source", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
-    { id: 2, key: "snap-target", kind: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
-  ]);
+  const document = documentFixture({
+    contacts: [contactFixture("guide-source"), contactFixture("snap-target", { kind: "edge" })],
+    regions: [
+      regionFixture(1, "guide-source", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "guide-source"),
+      regionFixture(2, "snap-target", "M 30 30 L 50 30 L 50 50 L 30 50 Z", "snap-target"),
+    ],
+  });
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
     await app.click('[data-contact-key="guide-source"]');
@@ -2126,10 +2172,13 @@ test("whole-path dragging snaps its horizontal and vertical bounds edges to near
 });
 
 test("whole-path dragging does not snap when only its center is near a guide", async () => {
-  const document = documentFixture([
-    { id: 1, key: "guide-source", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
-    { id: 2, key: "snap-target", kind: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
-  ]);
+  const document = documentFixture({
+    contacts: [contactFixture("guide-source"), contactFixture("snap-target", { kind: "edge" })],
+    regions: [
+      regionFixture(1, "guide-source", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "guide-source"),
+      regionFixture(2, "snap-target", "M 30 30 L 50 30 L 50 50 L 30 50 Z", "snap-target"),
+    ],
+  });
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
     await app.click('[data-contact-key="guide-source"]');
@@ -2143,10 +2192,13 @@ test("whole-path dragging does not snap when only its center is near a guide", a
 });
 
 test("Alt bypasses guide snapping during a whole-path drag", async () => {
-  const document = documentFixture([
-    { id: 1, key: "guide-source", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
-    { id: 2, key: "snap-target", kind: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
-  ]);
+  const document = documentFixture({
+    contacts: [contactFixture("guide-source"), contactFixture("snap-target", { kind: "edge" })],
+    regions: [
+      regionFixture(1, "guide-source", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "guide-source"),
+      regionFixture(2, "snap-target", "M 30 30 L 50 30 L 50 50 L 30 50 Z", "snap-target"),
+    ],
+  });
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
     await app.click('[data-contact-key="guide-source"]');
@@ -2162,12 +2214,10 @@ test("Alt bypasses guide snapping during a whole-path drag", async () => {
 });
 
 test("guides drag on their own axis and clear without changing the document", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
     await app.click('[data-contact-key="square"]');
@@ -2193,12 +2243,10 @@ test("guides drag on their own axis and clear without changing the document", as
 });
 
 test("starting a touch pinch stops an active guide drag", async () => {
-  const square = documentFixture([{
-    id: 1,
-    key: "square",
-    kind: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
     await app.click('[data-contact-key="square"]');
@@ -2217,9 +2265,10 @@ test("starting a touch pinch stops an active guide drag", async () => {
 });
 
 test("vertex, control, and whole-path drags derive every move from pointer-down geometry", async () => {
-  const curved = documentFixture([
-    { id: 1, key: "curve", kind: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z" },
-  ]);
+  const curved = singleContactDocument(
+    contactFixture("curve"),
+    regionFixture(1, "curve", "M 10 10 Q 15 5 20 10 L 20 20 Z", "curve"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="curve"]');
@@ -2283,7 +2332,7 @@ test("rotation drag rotates every Command-selected physical contact around its o
 });
 
 test("double-click inserts a vertex while right-click selects it and waits for an explicit Delete action", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2308,13 +2357,10 @@ test("double-click inserts a vertex while right-click selects it and waits for a
 });
 
 test("double-click adds a smooth point at the clicked location on a bendable cubic", async () => {
-  const curve = documentFixture([{
-    id: 1,
-    key: "curve",
-    kind: "jug",
-    displayPath: "M 0 0 C 0 10 10 10 10 0 L 10 10 Z",
-    bendableCommandIndexes: [1],
-  }]);
+  const curve = singleContactDocument(
+    contactFixture("curve"),
+    regionFixture(1, "curve", "M 0 0 C 0 10 10 10 10 0 L 10 10 Z", "curve", 0, "primary", { bendableCommandIndexes: [1] }),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="curve"]');
@@ -2325,7 +2371,7 @@ test("double-click adds a smooth point at the clicked location on a bendable cub
 });
 
 test("vertex menu rounds a corner as a persisted quadratic", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="square"]');
 
@@ -2339,7 +2385,7 @@ test("vertex menu rounds a corner as a persisted quadratic", async () => {
 });
 
 test("straight-segment menu converts a segment to a bendable curve with controls at both endpoints", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2362,7 +2408,7 @@ test("straight-segment menu converts a segment to a bendable curve with controls
 });
 
 test("the second cubic control stays independently draggable after Make bendable", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2386,9 +2432,7 @@ test("the second cubic control stays independently draggable after Make bendable
 });
 
 test("dragging a cubic made bendable by its menu action pulls its midpoint to the pointer", async () => {
-  const square = documentFixture([
-    { id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
-  ]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2402,9 +2446,7 @@ test("dragging a cubic made bendable by its menu action pulls its midpoint to th
 });
 
 test("a saved bendable segment reloads as pullable with unchanged endpoint anchors", async () => {
-  const square = documentFixture([
-    { id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
-  ]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   let persistedBoard = boardFixture(square);
   const client: WorkbenchClient = {
     ...clientFixture([persistedBoard]),
@@ -2440,13 +2482,10 @@ test("a saved bendable segment reloads as pullable with unchanged endpoint ancho
 });
 
 test("splitting a marked cubic leaves either descendant pullable", async () => {
-  const markedCurve = documentFixture([{
-    id: 1,
-    key: "curve",
-    kind: "jug",
-    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
-    bendableCommandIndexes: [1],
-  }]);
+  const markedCurve = singleContactDocument(
+    contactFixture("curve"),
+    regionFixture(1, "curve", "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z", "curve", 0, "primary", { bendableCommandIndexes: [1] }),
+  );
   for (const { start, end, commandIndex, expectedControl } of [
     {
       start: { x: 15, y: 10 },
@@ -2481,9 +2520,7 @@ test("splitting a marked cubic leaves either descendant pullable", async () => {
 });
 
 test("a bendable segment remains opt-in after undo and redo", async () => {
-  const square = documentFixture([
-    { id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
-  ]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2501,16 +2538,13 @@ test("a bendable segment remains opt-in after undo and redo", async () => {
 });
 
 test("dragging a constrained cubic moves its whole path instead of bending it", async () => {
-  const oval = documentFixture([
-    {
-      id: 1,
-      key: "oval",
-      kind: "jug",
-      displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+  const oval = singleContactDocument(
+    contactFixture("oval"),
+    regionFixture(1, "oval", "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z", "oval", 0, "primary", {
       shapeConstraint: { shape: "oval", rotationDegrees: 0 },
       bendableCommandIndexes: [1],
-    },
-  ]);
+    }),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="oval"]');
@@ -2522,9 +2556,10 @@ test("dragging a constrained cubic moves its whole path instead of bending it", 
 });
 
 test("dragging an imported custom cubic moves its whole path instead of bending it", async () => {
-  const custom = documentFixture([
-    { id: 1, key: "custom", kind: "jug", displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z" },
-  ]);
+  const custom = singleContactDocument(
+    contactFixture("custom"),
+    regionFixture(1, "custom", "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z", "custom"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="custom"]');
@@ -2536,7 +2571,7 @@ test("dragging an imported custom cubic moves its whole path instead of bending 
 });
 
 test("controls stay uniquely addressable after converting two segments to bendable curves", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2577,9 +2612,10 @@ test("line menu snaps a diagonal custom-outline segment to the chosen axis", asy
     ["#make-horizontal-action", "M 10 10 L 30 10 L 30 40 L 10 40 Z", "Line made horizontal. Save when ready."],
     ["#make-vertical-action", "M 10 10 L 10 20 L 30 40 L 10 40 Z", "Line made vertical. Save when ready."],
   ] as const) {
-    const diagonal = documentFixture([
-      { id: 1, key: "diagonal", kind: "jug", displayPath: "M 10 10 L 30 20 L 30 40 L 10 40 Z" },
-    ]);
+    const diagonal = singleContactDocument(
+      contactFixture("diagonal"),
+      regionFixture(1, "diagonal", "M 10 10 L 30 20 L 30 40 L 10 40 Z", "diagonal"),
+    );
     await withEditor(async (app) => {
       app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
       await app.click('[data-contact-key="diagonal"]');
@@ -2597,7 +2633,7 @@ test("line menu snaps a diagonal custom-outline segment to the chosen axis", asy
 });
 
 test("curved-segment menu makes a quadratic segment straight and removes its control", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 Q 20 0 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 Q 20 0 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2613,9 +2649,7 @@ test("curved-segment menu makes a quadratic segment straight and removes its con
 });
 
 test("curved-segment menu presents adding a smooth point at the right-click location", async () => {
-  const square = documentFixture([
-    { id: 1, key: "square", kind: "jug", displayPath: "M 10 10 Q 10 50 50 50 L 50 10 Z" },
-  ]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 Q 10 50 50 50 L 50 10 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2633,9 +2667,10 @@ test("curved-segment menu presents adding a smooth point at the right-click loca
 });
 
 test("a serialized and dragged quadratic inflection point remains removable", async () => {
-  const square = documentFixture([
-    { id: 1, key: "square", kind: "jug", displayPath: "M 0 0 Q 37.1234567 98.7654321 123.4567891 4.5678912 L 0 100 Z" },
-  ]);
+  const square = singleContactDocument(
+    contactFixture("square"),
+    regionFixture(1, "square", "M 0 0 Q 37.1234567 98.7654321 123.4567891 4.5678912 L 0 100 Z", "square"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 200, height: 150 } });
     await app.click('[data-contact-key="square"]');
@@ -2660,7 +2695,7 @@ test("a serialized and dragged quadratic inflection point remains removable", as
 
 test("straight-segment context menu chooses the closest eligible edge", async () => {
   const path = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: path }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", path, "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2675,10 +2710,13 @@ test("straight-segment context menu chooses the closest eligible edge", async ()
 test("changing contacts closes a stale line menu before it can edit the new selection", async () => {
   const firstPath = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
   const secondPath = "M 60 10 L 80 10 L 80 30 L 60 30 Z";
-  const document = documentFixture([
-    { id: 1, key: "first", kind: "jug", displayPath: firstPath },
-    { id: 2, key: "second", kind: "edge", displayPath: secondPath },
-  ]);
+  const document = documentFixture({
+    contacts: [contactFixture("first"), contactFixture("second", { kind: "edge" })],
+    regions: [
+      regionFixture(1, "first", firstPath, "first"),
+      regionFixture(2, "second", secondPath, "second"),
+    ],
+  });
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="first"]');
@@ -2694,7 +2732,7 @@ test("changing contacts closes a stale line menu before it can edit the new sele
 
 test("vertex menu arrow navigation moves between actions without editing the selected contact", async () => {
   const squarePath = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: squarePath }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", squarePath, "square"));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="square"]');
     await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
@@ -2719,7 +2757,7 @@ test("vertex menu arrow navigation moves between actions without editing the sel
 });
 
 test("left pointer-down selects a vertex and secondary-button movement never starts a drag", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2748,7 +2786,7 @@ test("left pointer-down selects a vertex and secondary-button movement never sta
 });
 
 test("left pointer-up preserves a valid vertex selection for keyboard deletion", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2768,12 +2806,10 @@ test("left pointer-up preserves a valid vertex selection for keyboard deletion",
 });
 
 test("focusing another vertex selects it before keyboard deletion", async () => {
-  const polygon = documentFixture([{
-    id: 1,
-    key: "polygon",
-    kind: "jug",
-    displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const polygon = singleContactDocument(
+    contactFixture("polygon"),
+    regionFixture(1, "polygon", "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z", "polygon"),
+  );
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="polygon"]');
@@ -2797,7 +2833,7 @@ test("focusing another vertex selects it before keyboard deletion", async () => 
 });
 
 test("vertex button Enter and Space activation select the targeted point", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="square"]');
 
@@ -2810,7 +2846,7 @@ test("vertex button Enter and Space activation select the targeted point", async
 });
 
 test("four-vertex start vertices expose an enabled Delete action and are removed", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="square"]');
     await app.mouse('.path-editor-vertex[data-index="0"]', "contextmenu", { button: 2 });
@@ -2832,12 +2868,10 @@ test("minimum-contour vertices expose a disabled Delete action without dirtying"
 });
 
 test("Delete and Backspace remove only the selected eligible vertex and ignore form targets", async () => {
-  const polygon = documentFixture([{
-    id: 1,
-    key: "polygon",
-    kind: "jug",
-    displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const polygon = singleContactDocument(
+    contactFixture("polygon"),
+    regionFixture(1, "polygon", "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z", "polygon"),
+  );
   await withEditor(async (app) => {
     await app.click('[data-contact-key="polygon"]');
     await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
@@ -2868,7 +2902,7 @@ test("Delete and Backspace remove only the selected eligible vertex and ignore f
 });
 
 test("Escape returns focus to the selected vertex and outside pointer-down preserves target focus", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="square"]');
     await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
@@ -2892,7 +2926,7 @@ test("Escape returns focus to the selected vertex and outside pointer-down prese
 });
 
 test("the vertex menu measures and flips within the viewport edges", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     const windowValue = app.document.defaultView!;
     Object.defineProperty(windowValue, "innerWidth", { configurable: true, value: 200 });
@@ -2932,7 +2966,7 @@ test("the vertex menu measures and flips within the viewport edges", async () =>
 });
 
 test("double-click insertion preserves prior status while clearing validation and marking dirty", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-contact-key="square"]');
@@ -2952,7 +2986,7 @@ test("double-click insertion preserves prior status while clearing validation an
 });
 
 test("menu deletion preserves prior status while clearing validation and marking dirty", async () => {
-  const square = documentFixture([{ id: 1, key: "square", kind: "jug", displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  const square = singleContactDocument(contactFixture("square"), regionFixture(1, "square", "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z", "square"));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="square"]');
     await app.input("#contact-rotate-input", "0");
@@ -2973,12 +3007,10 @@ test("menu deletion preserves prior status while clearing validation and marking
 });
 
 test("failed menu deletion preserves the selected vertex and menu while exposing validation", async () => {
-  const polygon = documentFixture([{
-    id: 1,
-    key: "polygon",
-    kind: "jug",
-    displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z",
-  }]);
+  const polygon = singleContactDocument(
+    contactFixture("polygon"),
+    regionFixture(1, "polygon", "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z", "polygon"),
+  );
   await withEditor(async (app) => {
     await app.click('[data-contact-key="polygon"]');
     await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
@@ -3001,9 +3033,10 @@ test("failed menu deletion preserves the selected vertex and menu while exposing
 });
 
 test("replacing the document cancels an active gesture without letting later pointer events clobber it", async () => {
-  const replacementDocument = documentFixture([
-    { id: 40, key: "replacement", kind: "edge", displayPath: "M 60 5 L 90 5 L 90 35 Z" },
-  ]);
+  const replacementDocument = singleContactDocument(
+    contactFixture("replacement", { kind: "edge" }),
+    regionFixture(40, "replacement", "M 60 5 L 90 5 L 90 35 Z", "replacement"),
+  );
   const replacementBoard: Board = {
     ...boardFixture(replacementDocument),
     boardId: "board-b",
@@ -3076,9 +3109,10 @@ test("invalid pointer geometry rolls back the path and dirty state", async () =>
 });
 
 test("malformed selected paths report interaction failures instead of throwing", async () => {
-  const malformedBoard = boardFixture(documentFixture([
-    { id: 1, key: "malformed-piece-0", kind: "jug", displayPath: "M 1 2 L 3 Z" },
-  ]));
+  const malformedBoard = boardFixture(singleContactDocument(
+    contactFixture("malformed"),
+    regionFixture(1, "malformed-piece-0", "M 1 2 L 3 Z", "malformed"),
+  ));
 
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
@@ -3100,31 +3134,19 @@ test("malformed selected paths report interaction failures instead of throwing",
 });
 
 function constrainedBoardFixture(): Board {
-  const document = documentFixture([
-      {
-        id: 1,
-        key: "a-piece-0",
-        kind: "jug",
-        displayPath: "M 10 10 L 50 10 L 50 30 L 10 30 Z",
-        metadata: { contactID: "a", pieceIndex: 0 },
+  const document = documentFixture({
+    contacts: DEFAULT_CONTACTS,
+    regions: [
+      regionFixture(1, "a-piece-0", "M 10 10 L 50 10 L 50 30 L 10 30 Z", "a", 0, "primary", {
         shapeConstraint: { shape: "rectangle", rotationDegrees: 0 },
-      },
-      {
-        id: 2,
-        key: "a-piece-1",
-        kind: "jug",
-        displayPath: "M 60 10 L 80 10 L 80 30 L 60 30 Z",
-        metadata: { contactID: "a", pieceIndex: 1 },
+      }),
+      regionFixture(2, "a-piece-1", "M 60 10 L 80 10 L 80 30 L 60 30 Z", "a", 1, "primary", {
         shapeConstraint: { shape: "oval", rotationDegrees: 0 },
-      },
-      {
-        id: 3,
-        key: "b-piece-0",
-        kind: "edge",
-        displayPath: "M 90 10 L 110 10 L 110 30 L 90 30 Z",
-        metadata: { contactID: "b", pieceIndex: 0 },
-      },
-    ], { canvas: { width: 120, height: 80 } });
+      }),
+      regionFixture(3, "b-piece-0", "M 90 10 L 110 10 L 110 30 L 90 30 Z", "b"),
+    ],
+    canvas: { width: 120, height: 80 },
+  });
   return {
     boardId: "board-a",
     displayName: "Board A",
@@ -3135,11 +3157,16 @@ function constrainedBoardFixture(): Board {
 }
 
 test("outline picker reflects persisted constraints and changes every piece of the selected physical contact", async () => {
-  const board = boardFixture(documentFixture([
-    { id: 1, key: "a-piece-0", kind: "jug", displayPath: "M 10 20 L 50 20 L 50 40 L 10 40 Z", metadata: { contactID: "a", pieceIndex: 0 } },
-    { id: 2, key: "a-piece-1", kind: "jug", displayPath: SECOND_PATH, metadata: { contactID: "a", pieceIndex: 1 }, shapeConstraint: { shape: "roundedRectangle", rotationDegrees: 15 } },
-    { id: 3, key: "b-piece-0", kind: "edge", displayPath: OTHER_PATH, metadata: { contactID: "b", pieceIndex: 0 } },
-  ]));
+  const board = boardFixture(documentFixture({
+    contacts: DEFAULT_CONTACTS,
+    regions: [
+      regionFixture(1, "a-piece-0", "M 10 20 L 50 20 L 50 40 L 10 40 Z", "a"),
+      regionFixture(2, "a-piece-1", SECOND_PATH, "a", 1, "primary", {
+        shapeConstraint: { shape: "roundedRectangle", rotationDegrees: 15 },
+      }),
+      regionFixture(3, "b-piece-0", OTHER_PATH, "b"),
+    ],
+  }));
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
     assert.equal(app.documentValue("#contact-outline-shape-select"), "custom");

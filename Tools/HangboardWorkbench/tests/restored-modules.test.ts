@@ -20,6 +20,7 @@ import type {
   EditorDocument,
   LoadedBoard,
   PathEditor,
+  PhysicalContact,
   WorkbenchClient,
   WorkbenchController,
   WorkbenchDependencies,
@@ -61,69 +62,57 @@ function runtimeFixture(fetchImplementation: BrowserRuntime["fetch"]): RuntimeFi
   return { runtime, assignedUrls };
 }
 
-interface ContactPieceFixture extends Omit<Partial<ContactRegion>, "metadata"> {
-  key: string;
-  displayPath: string;
-  kind?: string;
-  pairedContactID?: string;
-  fingerCapacity?: number;
-  handCapacity?: number;
-  fixedDepthMillimeters?: number;
-  depthRangeMillimeters?: { lowerBound: number; upperBound: number };
-  metadata?: {
-    contactID?: string;
-    pieceIndex?: number;
-    presentationID?: string;
+function contactFixture(id: string, overrides: Partial<Omit<PhysicalContact, "id">> = {}): PhysicalContact {
+  return {
+    id,
+    equipmentObjectID: "primary",
+    name: id,
+    kind: "jug",
+    features: [],
+    gripTypes: [],
+    ...overrides,
   };
 }
 
-function editorDocument(
-  regions: ContactPieceFixture[] = [{
-    id: 1,
-    key: "contact-1-piece-0",
-    displayPath: "M 1 1 L 20 1 L 20 20 Z",
-    metadata: { contactID: "contact-1", pieceIndex: 0, presentationID: "primary" },
-  }],
+function regionFixture(
+  id: number,
+  key: string,
+  displayPath: string,
+  contactID: string,
+  pieceIndex = 0,
   presentationID = "primary",
-): EditorDocument {
-  const contactInputs = new Map<string, ContactPieceFixture>();
+  overrides: Partial<Omit<ContactRegion, "id" | "key" | "displayPath" | "metadata">> = {},
+): ContactRegion {
+  return {
+    id,
+    key,
+    displayPath,
+    metadata: { contactID, pieceIndex, presentationID },
+    ...overrides,
+  };
+}
+
+const DEFAULT_CONTACTS = [contactFixture("contact-1")];
+const DEFAULT_REGIONS = [regionFixture(1, "contact-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "contact-1")];
+
+function editorDocument(options: {
+  contacts?: readonly PhysicalContact[];
+  regions?: readonly ContactRegion[];
+  presentationID?: string;
+} = {}): EditorDocument {
+  const presentationID = options.presentationID ?? "primary";
+  const contacts = [...structuredClone(options.contacts ?? DEFAULT_CONTACTS)];
+  const regions = [...structuredClone(options.regions ?? DEFAULT_REGIONS)];
   for (const region of regions) {
-    const contactID = region.metadata?.contactID ?? region.key;
-    if (!contactInputs.has(contactID)) contactInputs.set(contactID, region);
+    if (region.metadata.presentationID !== presentationID) {
+      throw new Error(`Region ${region.key} must belong to focused presentation ${presentationID}`);
+    }
   }
   return {
     presentationID,
-    contacts: [...contactInputs].map(([id, region]) => ({
-      id,
-      equipmentObjectID: "primary",
-      name: id,
-      kind: region.kind ?? "jug",
-      features: [],
-      gripTypes: [],
-      ...(region.depthRangeMillimeters
-        ? { depthRangeMillimeters: { ...region.depthRangeMillimeters } }
-        : region.fixedDepthMillimeters !== undefined
-          ? { depthRangeMillimeters: { lowerBound: region.fixedDepthMillimeters, upperBound: region.fixedDepthMillimeters } }
-          : {}),
-      ...(region.fingerCapacity !== undefined ? { fingerCapacity: region.fingerCapacity } : {}),
-      ...(region.handCapacity !== undefined ? { handCapacity: region.handCapacity } : {}),
-      ...(region.pairedContactID ? { pairedContactID: region.pairedContactID } : {}),
-    })),
+    contacts,
     canvas: { width: 100, height: 50 },
-    regions: regions.map((region, index) => ({
-      id: region.id ?? index + 1,
-      key: region.key,
-      displayPath: region.displayPath,
-      metadata: {
-        contactID: region.metadata?.contactID ?? region.key,
-        pieceIndex: region.metadata?.pieceIndex ?? 0,
-        presentationID: region.metadata?.presentationID ?? presentationID,
-      },
-      ...(region.treatment ? { treatment: { ...region.treatment } } : {}),
-      ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
-      ...(region.bendableCommandIndexes ? { bendableCommandIndexes: [...region.bendableCommandIndexes] } : {}),
-      ...(region.smoothAnchorIndexes ? { smoothAnchorIndexes: [...region.smoothAnchorIndexes] } : {}),
-    })),
+    regions,
   };
 }
 
@@ -175,12 +164,11 @@ test("the browser client lists and opens direct boards", async () => {
 
 test("the browser client requests and validates a selected presentation", async () => {
   const calls: string[] = [];
-  const document = editorDocument([{
-      id: 1,
-      key: "back-contact-piece-0",
-      displayPath: "M 1 1 L 20 1 L 20 20 Z",
-      metadata: { contactID: "back-contact", pieceIndex: 0, presentationID: "back" },
-    }], "back");
+  const document = editorDocument({
+    presentationID: "back",
+    contacts: [contactFixture("back-contact")],
+    regions: [regionFixture(1, "back-contact-piece-0", "M 1 1 L 20 1 L 20 20 Z", "back-contact", 0, "back")],
+  });
   document.canvas = { width: 80, height: 120 };
   const { runtime } = runtimeFixture(async (input) => {
     calls.push(String(input));
@@ -230,12 +218,11 @@ test("the browser client deletes a selected presentation and returns the next fo
           imageUrl: "/api/boards/compact/image?presentationID=back",
           default: true,
         }],
-        document: editorDocument([{
-          id: 1,
-          key: "back-contact-piece-0",
-          displayPath: "M 1 1 L 20 1 L 20 20 Z",
-          metadata: { contactID: "back-contact", pieceIndex: 0, presentationID: "back" },
-        }], "back"),
+        document: editorDocument({
+          presentationID: "back",
+          contacts: [contactFixture("back-contact")],
+          regions: [regionFixture(1, "back-contact-piece-0", "M 1 1 L 20 1 L 20 20 Z", "back-contact", 0, "back")],
+        }),
       }),
     });
   });
@@ -328,12 +315,10 @@ test("the browser client rejects invalid optional contact-region fields", async 
 });
 
 test("the browser client preserves an equal-bound factual depth range", async () => {
-  const document = editorDocument([{
-    key: "hold-1-piece-0",
-    displayPath: "M 1 1 L 20 1 L 20 20 Z",
-    metadata: { contactID: "hold-1", pieceIndex: 0 },
-    fixedDepthMillimeters: 7.25,
-  }]);
+  const document = editorDocument({
+    contacts: [contactFixture("hold-1", { depthRangeMillimeters: { lowerBound: 7.25, upperBound: 7.25 } })],
+    regions: [regionFixture(1, "hold-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "hold-1")],
+  });
   const { runtime } = runtimeFixture(async () => response({
     ok: true,
     board: boardFixture({ contactCount: 1, document }),
@@ -348,13 +333,12 @@ test("the browser client preserves an equal-bound factual depth range", async ()
 });
 
 test("the browser client preserves valid contact kind and raster treatment metadata", async () => {
-  const document = editorDocument([{
-    key: "hold-1-piece-0",
-    kind: "sloper",
-    displayPath: "M 1 1 L 20 1 L 20 20 Z",
-    metadata: { contactID: "hold-1", pieceIndex: 0 },
-    treatment: { type: "surface" },
-  }]);
+  const document = editorDocument({
+    contacts: [contactFixture("hold-1", { kind: "sloper" })],
+    regions: [regionFixture(1, "hold-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "hold-1", 0, "primary", {
+      treatment: { type: "surface" },
+    })],
+  });
   const { runtime } = runtimeFixture(async () => response({
     ok: true,
     board: boardFixture({ contactCount: 1, document }),
@@ -610,9 +594,10 @@ test("direct board loading commits image and contacts together and preserves the
 
   const candidate = boardFixture({
     contactCount: 1,
-    document: editorDocument([
-      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
-    ]),
+    document: editorDocument({
+      contacts: [contactFixture("hold-1")],
+      regions: [regionFixture(1, "hold-1", "M 1 1 L 2 1 L 2 2 Z", "hold-1")],
+    }),
   });
   const committed: Array<LoadedBoard<LoadedImage>> = [];
   const success = await loadBoardAtomically({
@@ -642,9 +627,10 @@ test("direct board loading commits image and contacts together and preserves the
 
 test("direct board loading uses a matching preloaded image promise", async () => {
   const candidate = boardFixture({
-    document: editorDocument([
-      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
-    ]),
+    document: editorDocument({
+      contacts: [contactFixture("hold-1")],
+      regions: [regionFixture(1, "hold-1", "M 1 1 L 2 1 L 2 2 Z", "hold-1")],
+    }),
   });
   const image = { href: candidate.imageUrl, naturalWidth: 100, naturalHeight: 50 };
 
@@ -661,9 +647,10 @@ test("direct board loading uses a matching preloaded image promise", async () =>
 
 test("direct board loading ignores a preloaded image from a different URL", async () => {
   const candidate = boardFixture({
-    document: editorDocument([
-      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
-    ]),
+    document: editorDocument({
+      contacts: [contactFixture("hold-1")],
+      regions: [regionFixture(1, "hold-1", "M 1 1 L 2 1 L 2 2 Z", "hold-1")],
+    }),
   });
   const expectedImage = { href: candidate.imageUrl, naturalWidth: 100, naturalHeight: 50 };
 
@@ -705,10 +692,13 @@ test("direct board loading rejects malformed shape constraints before image load
 });
 
 test("the direct editor model rejects duplicate and open contact paths before saving", () => {
-  const duplicate = editorDocument([
-    { key: "contact-1-piece-0", displayPath: "M 1 1 L 20 1 L 20 20 Z", metadata: { contactID: "contact-1", pieceIndex: 0 } },
-    { key: "contact-1-piece-0", displayPath: "M 30 1 L 40 1 L 40 20 Z", metadata: { contactID: "contact-1", pieceIndex: 1 } },
-  ]);
+  const duplicate = editorDocument({
+    contacts: DEFAULT_CONTACTS,
+    regions: [
+      regionFixture(1, "contact-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "contact-1", 0),
+      regionFixture(2, "contact-1-piece-0", "M 30 1 L 40 1 L 40 20 Z", "contact-1", 1),
+    ],
+  });
   assert.throws(() => validateEditorDocument(duplicate), /region keys must be unique/i);
   const open = editorDocument();
   open.regions[0]!.displayPath = "M 1 1 L 20 1 L 20 20";
@@ -741,11 +731,12 @@ test("the direct editor model rejects malformed gaston pair identifiers before s
 });
 
 test("the editor document clones and validates bendable curve command indexes", () => {
-  const document = editorDocument([{
-    key: "contact-1-piece-0",
-    displayPath: "M 1 1 C 5 1 15 1 20 1 L 20 20 Z",
-    bendableCommandIndexes: [1],
-  }]);
+  const document = editorDocument({
+    contacts: DEFAULT_CONTACTS,
+    regions: [regionFixture(1, "contact-1-piece-0", "M 1 1 C 5 1 15 1 20 1 L 20 20 Z", "contact-1", 0, "primary", {
+      bendableCommandIndexes: [1],
+    })],
+  });
   assert.doesNotThrow(() => validateEditorDocument(document));
   const cloned = cloneEditorDocument(document);
   cloned.regions[0]?.bendableCommandIndexes?.push(2);
@@ -759,11 +750,12 @@ test("the editor document clones and validates bendable curve command indexes", 
 });
 
 test("the direct editor model validates and deeply clones raster treatment metadata", () => {
-  const document = editorDocument([{
-    key: "contact-1-piece-0",
-    displayPath: "M 1 1 L 20 1 L 20 20 Z",
-    treatment: { type: "shelf", rimInsetFraction: 0.2 },
-  }]);
+  const document = editorDocument({
+    contacts: DEFAULT_CONTACTS,
+    regions: [regionFixture(1, "contact-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "contact-1", 0, "primary", {
+      treatment: { type: "shelf", rimInsetFraction: 0.2 },
+    })],
+  });
   assert.doesNotThrow(() => validateEditorDocument(document));
   const cloned = cloneEditorDocument(document);
   if (cloned.regions[0]?.treatment?.type === "shelf") cloned.regions[0].treatment.rimInsetFraction = 0.3;
@@ -803,25 +795,40 @@ test("the direct editor model accepts equal bounds for source-backed fixed depth
   assert.doesNotThrow(() => validateEditorDocument(document));
 });
 
-test("the direct editor model rejects invalid contact depth-range values", () => {
+test("the direct editor model rejects nonpositive contact depth-range values", () => {
   for (const depthRangeMillimeters of [
     { lowerBound: 0, upperBound: 8 },
     { lowerBound: -1, upperBound: 8 },
+  ] as unknown[]) {
+    const document = editorDocument();
+    (document.contacts[0] as unknown as { depthRangeMillimeters: unknown }).depthRangeMillimeters = depthRangeMillimeters;
+    assert.throws(() => validateEditorDocument(document), /valid factual contacts/i);
+  }
+});
+
+test("the direct editor model rejects malformed, non-finite, missing, and reversed contact depth ranges", () => {
+  for (const depthRangeMillimeters of [
+    {},
+    { lowerBound: 8 },
+    { upperBound: 8 },
     { lowerBound: Number.NaN, upperBound: 8 },
     { lowerBound: 8, upperBound: Number.POSITIVE_INFINITY },
     { lowerBound: 12, upperBound: 8 },
-  ]) {
+  ] as unknown[]) {
     const document = editorDocument();
-    document.contacts[0]!.depthRangeMillimeters = depthRangeMillimeters;
+    (document.contacts[0] as unknown as { depthRangeMillimeters: unknown }).depthRangeMillimeters = depthRangeMillimeters;
     assert.throws(() => validateEditorDocument(document), /valid factual contacts/i);
   }
 });
 
 test("contact facts have one owner regardless of how many media pieces reference them", () => {
-  const document = editorDocument([
-    { key: "contact-1-piece-0", displayPath: "M 1 1 L 20 1 L 20 20 Z", metadata: { contactID: "contact-1", pieceIndex: 0 }, fingerCapacity: 2 },
-    { key: "contact-1-piece-1", displayPath: "M 30 1 L 40 1 L 40 20 Z", metadata: { contactID: "contact-1", pieceIndex: 1 }, fingerCapacity: 3 },
-  ]);
+  const document = editorDocument({
+    contacts: [contactFixture("contact-1", { fingerCapacity: 2 })],
+    regions: [
+      regionFixture(1, "contact-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "contact-1", 0),
+      regionFixture(2, "contact-1-piece-1", "M 30 1 L 40 1 L 40 20 Z", "contact-1", 1),
+    ],
+  });
   assert.equal(document.contacts.length, 1);
   assert.equal(document.contacts[0]?.fingerCapacity, 2);
   assert.doesNotThrow(() => validateEditorDocument(document));
@@ -845,9 +852,10 @@ test("the direct editor model rejects invalid factual hand capacities", () => {
 });
 
 test("a rejected save keeps the editor document untouched", async () => {
-  const document = editorDocument([
-    { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20 Z" },
-  ]);
+  const document = editorDocument({
+    contacts: [contactFixture("hold-1")],
+    regions: [regionFixture(1, "hold-1", "M 1 1 L 20 1 L 20 20 Z", "hold-1")],
+  });
   let commits = 0;
   await assert.rejects(
     saveBoardAtomically({
