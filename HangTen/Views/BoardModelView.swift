@@ -196,7 +196,7 @@ private enum BoardModelCache {
     static func source(
         for key: BoardModelKey,
         media: BoardModelMedia,
-        board: TrainingBoard,
+        board: BoardRevision,
         presentationID: String,
         store: BoardPackageStore,
         resourceAccess: BoardModelResourceAccess
@@ -251,7 +251,7 @@ private enum BoardModelCache {
 
     private static func loadSource(
         media: BoardModelMedia,
-        board: TrainingBoard,
+        board: BoardRevision,
         presentationID: String,
         store: BoardPackageStore,
         resourceAccess: BoardModelResourceAccess

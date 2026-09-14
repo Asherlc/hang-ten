@@ -277,10 +277,18 @@ final class BoardModelTests: XCTestCase {
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
     }
 
-    func testFlashBoardNativeSceneUsesSuspensionAndBindsSmallCrimpContacts() async throws {
+    func testFlashBoardNativeSceneUsesApprovedTwoBranchSuspensionAndBindsSmallCrimpContacts() async throws {
         let (board, media, model) = try await loadMigratedModel("tension.flash-board")
-        XCTAssertNotNil(media.suspension)
         XCTAssertNil(media.orientation)
+        XCTAssertEqual(
+            media.descriptor.modelSHA256,
+            "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524"
+        )
+        XCTAssertEqual(media.descriptor.contacts.count, 7)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+        XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(board.contacts.map(\.id)))
         XCTAssertTrue(Set(media.descriptor.contacts.keys).isSuperset(of: ["small-crimp-left", "small-crimp-right"]))
         for position in board.positions {

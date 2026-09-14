@@ -281,6 +281,10 @@ final class BoardPackageStoreTests: XCTestCase {
 
     func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+        XCTAssertEqual(board.contacts.count, 7)
+        XCTAssertTrue(
+            Set(board.contacts.map(\.id)).isSuperset(of: ["small-crimp-left", "small-crimp-right"])
+        )
 
         XCTAssertEqual(
             board.positions.map(\.id),
@@ -323,13 +327,18 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertEqual(position.presentationID, "primary")
         }
 
-        // The corrected downloaded model uses the tested two-branch suspension.
+        // The approved ODR model uses the tested two-branch suspension.
         let presentation = try XCTUnwrap(board.presentations.first)
-        guard case .model(let media) = presentation.media else {
+        guard case .model(let media) = presentation.media,
+              case .twoBranchCord(let suspension) = media.suspension else {
             XCTFail("Expected model media"); return
         }
         XCTAssertNil(media.orientation)
-        let suspension = try XCTUnwrap(media.suspension)
+        XCTAssertEqual(
+            media.descriptor.modelSHA256,
+            "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524"
+        )
+        XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(expectedHoldIDsByPosition.keys))
     }
 

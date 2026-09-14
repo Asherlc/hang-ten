@@ -226,7 +226,7 @@ struct BoardPackageStore {
     }
 
     func modelResource(
-        for board: TrainingBoard,
+        for board: BoardRevision,
         presentationID: String? = nil
     ) -> BoardModelResource? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
