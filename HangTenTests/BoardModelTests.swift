@@ -356,6 +356,57 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testBaguetteEvoUsesFourOrderedThroughBoresAcrossEveryPosition() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Baguette Evo must load the approved twoBranchCord suspension")
+        }
+
+        XCTAssertEqual(
+            suspension.passages.left.map(\.id) + suspension.passages.right.map(\.id),
+            ["cord-passage-1", "cord-passage-2", "cord-passage-3", "cord-passage-4"]
+        )
+        XCTAssertTrue((suspension.passages.left + suspension.passages.right).allSatisfy(\.isThroughBore))
+        XCTAssertEqual(suspension.branches.map(\.passageIDs), [
+            ["cord-passage-1", "cord-passage-2"],
+            ["cord-passage-3", "cord-passage-4"]
+        ])
+        XCTAssertEqual(Set((suspension.passages.left + suspension.passages.right).map(\.nodeID)), ["body_mesh_001"])
+
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            XCTAssertFalse(model.isUnavailable, position.id)
+            XCTAssertEqual(model.activePositionID, position.id)
+            XCTAssertNotNil(model.transientCordNode, position.id)
+            XCTAssertFalse(model.isTransientCordAccessible, position.id)
+        }
+    }
+
+    func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {
+        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+            let (board, media, model) = try await loadMigratedModel(boardID)
+            guard case .pairedLeadCord(let suspension) = media.suspension else {
+                return XCTFail("(boardID) must load the approved pairedLeadCord suspension")
+            }
+
+            XCTAssertEqual(suspension.attachments.count, 2, boardID)
+            XCTAssertEqual(suspension.attachments.map(\.nodeID), [suspension.attachments[0].nodeID, suspension.attachments[0].nodeID], boardID)
+            XCTAssertNotEqual(suspension.attachments[0].pointInModel, suspension.attachments[1].pointInModel, boardID)
+
+            for position in board.positions {
+                XCTAssertTrue(model.select(positionID: position.id), "(boardID)/(position.id)")
+                XCTAssertFalse(model.isUnavailable, "(boardID)/(position.id)")
+                XCTAssertFalse(model.isTransientCordAccessible, "(boardID)/(position.id)")
+                let cord = try XCTUnwrap(model.transientCordNode, "(boardID)/(position.id)")
+                XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "(boardID)/(position.id)")
+                XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "(boardID)/(position.id)")
+                XCTAssertTrue(cord.childNodes.allSatisfy { node in
+                    node.categoryBitMask == BoardModelScene.cordCategory && model.holdID(for: node) == nil
+                }, "(boardID)/(position.id)")
+            }
+        }
+    }
+
     func testPairedLeadSceneRendersTwoTransientNonPickableCylinderGroupsAndRejectsOneBadLead() throws {
         let selectedPose = BoardModelCanonicalPose(
             rotation: [0, 0, 0, 1],

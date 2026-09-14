@@ -34,6 +34,19 @@
         "up": [0, 1, 0],
         "fitPadding": 0.08
       }},
+      "suspension": {
+        "type": "pairedLeadCord",
+        "attachments": [
+          {"id": "left-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [-0.052499998, 0, -0.0024], "provenance": "approved Nature front/oblique/lateral-port views; displayEstimate; observed left external lead mouth"},
+          {"id": "right-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [0.052499998, 0, -0.0024], "provenance": "approved Nature front/oblique/lateral-port views; displayEstimate; observed right external lead mouth"}
+        ],
+        "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
+        "cord": {"restLength": 0.55, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate; supplied cord diameter"},
+        "canonicalPoses": {
+          "front": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+          "reverse": {"rotation": [0, 1, 0, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
+        }
+      },
       "orientation": {
         "pivot": "modelBoundsCenter",
         "rotations": {

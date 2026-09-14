@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "packageID": "beastmaker-1000",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The current Beastmaker 1000 product evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [{"view": "manufacturer product", "url": "https://www.beastmaker.co.uk/products/beastmaker-1000-series"}]
+    },
+    {
+      "packageID": "beastmaker-2000",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The current Beastmaker 2000 product evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [{"view": "manufacturer product", "url": "https://www.beastmaker.co.uk/products/beastmaker-2000-series"}]
+    },
+    {
+      "packageID": "captain-fingerfood.dual",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The Captain Fingerfood DUAL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord.",
+      "evidence": [{"view": "manufacturer catalog", "url": "https://www.captainfingerfood.com/"}]
+    },
+    {
+      "packageID": "captain-fingerfood.pocket",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The Captain Fingerfood POCKET is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord.",
+      "evidence": [{"view": "manufacturer catalog", "url": "https://www.captainfingerfood.com/"}]
+    },
+    {
+      "packageID": "captain-fingerfood.unlevel",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "The Captain Fingerfood UNLEVEL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord.",
+      "evidence": [{"view": "manufacturer catalog", "url": "https://www.captainfingerfood.com/"}]
+    },
+    {
+      "packageID": "lattice.mxedge-lift-large",
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "Approved current MXEdge Lift Large revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.",
+      "evidence": [
+        {"view": "exact-revision product", "url": "https://latticetraining.com/product/mxedge-lift/"},
+        {"view": "exact-revision warning", "url": "https://latticetraining.com/warnings/mxedge-lift/"},
+        {"view": "supplied-cord configuration", "url": "https://latticetraining.com/app/uploads/2024/05/MXEdge-Lift-How-to.mp4"}
+      ]
+    },
+    {
+      "packageID": "lattice.mxedge-lift-small",
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "Approved current MXEdge Lift Small revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.",
+      "evidence": [
+        {"view": "exact-revision product", "url": "https://latticetraining.com/product/mxedge-lift/"},
+        {"view": "exact-revision warning", "url": "https://latticetraining.com/warnings/mxedge-lift/"},
+        {"view": "supplied-cord configuration", "url": "https://latticetraining.com/app/uploads/2024/05/MXEdge-Lift-How-to.mp4"}
+      ]
+    },
+    {
+      "packageID": "lattice-triple-rung",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Lattice Triple Rung evidence describes a fixed mounted board and does not establish a supplied or integral cord.",
+      "evidence": [{"view": "manufacturer product", "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/"}]
+    },
+    {
+      "packageID": "metolius.prime-rib",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Metolius Prime Rib evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [{"view": "manufacturer catalog", "url": "https://www.metoliusclimbing.com/products/prime-rib"}]
+    },
+    {
+      "packageID": "metolius.project",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Metolius Project evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [{"view": "manufacturer catalog", "url": "https://www.metoliusclimbing.com/products/project"}]
+    },
+    {
+      "packageID": "metolius.wood-grips-compact-ii",
+      "decision": "excluded",
+      "topology": null,
+      "ruling": "Metolius Wood Grips Compact II evidence describes a fixed board with no supplied or integral cord system.",
+      "evidence": [{"view": "manufacturer product", "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards"}]
+    },
+    {
+      "packageID": "nature.stone-hanger",
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "Approved current Granite Stone Hanger evidence establishes one supplied cord with two external lateral leads; the interior route is explicitly unknown and is not modeled.",
+      "evidence": [
+        {"view": "exact-revision front gallery", "url": "https://natureclimbing.com/products/stone-hanger-1"},
+        {"view": "exact-revision oblique gallery", "url": "https://natureclimbing.com/products/stone-hanger-1?variant=47783638597970"},
+        {"view": "lateral cord-port detail", "url": "https://natureclimbing.com/products/stone-hanger-1#cord-ports"}
+      ]
+    },
+    {
+      "packageID": "tension.flash-board",
+      "decision": "represented",
+      "topology": "twoBranchCord",
+      "ruling": "Retained approved Flash Board packet establishes the supplied portable cord and two ordered end passage pairs.",
+      "evidence": [
+        {"view": "exact-revision manufacturer", "url": "https://tensionclimbing.com/products/flash-board-2"},
+        {"view": "exact-revision hanging view", "url": "https://www.backcountry.com/tension-flash-board"},
+        {"view": "attachment detail", "url": "https://www.amazon.com/Tension-Climbing-Flash-Board/dp/B07H8JYQ5G"}
+      ]
+    },
+    {
+      "packageID": "yy.baguette-evo",
+      "decision": "represented",
+      "topology": "twoBranchCord",
+      "ruling": "Approved current Baguette Evo Turn & Pull evidence establishes the supplied continuous cord and four ordered bore openings; exact hidden traversal remains unclaimed.",
+      "evidence": [
+        {"view": "exact-revision manufacturer", "url": "https://www.yyvertical.com/en/products/baguette-evo"},
+        {"view": "exact-revision gallery", "url": "https://www.yyvertical.com/en-eu/products/baguette-evo"},
+        {"view": "four-bore attachment detail", "url": "https://www.yyvertical.com/en/products/baguette-evo#cord-passages"}
+      ]
+    }
+  ]
+}
