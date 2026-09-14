@@ -960,21 +960,20 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board, presentationID: presentation.id))
     }
 
-    // The package has two observed external cord-port mouths, but its source
-    // does not establish the hidden route, cord dimensions, anchor, or poses.
-    // Keep that unsupported suspension contract explicitly unavailable instead
-    // of inventing enough inputs to invoke Task 1's deterministic solver.
-    func testNatureStoneHangerLeavesUnsupportedSuspensionRoutingUnavailable() throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
-        guard case .model(let media) = board.defaultPresentation.media else {
+    func testNatureStoneHangerUsesApprovedPairedLeadSuspension() async throws {
+        let (loadedBoard, media, model) = try await loadMigratedModel("nature.stone-hanger")
+        guard case .model = loadedBoard.defaultPresentation.media else {
             return XCTFail("Nature Stone Hanger must route through model media")
         }
 
-        XCTAssertNil(media.suspension)
-        XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
-            for: .unavailable,
-            onHoldTap: { _ in XCTFail("unavailable routing must not select a hold") }
-        ))
+        guard case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("Nature Stone Hanger must load the approved pairedLeadCord suspension")
+        }
+        XCTAssertEqual(suspension.attachments.count, 2)
+        XCTAssertTrue(model.select(positionID: "front"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertFalse(model.isTransientCordAccessible)
+        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
     }
 
     func testNatureStoneHangerHighlightsNativeHoldMaterialsAndClearsThem() async throws {
@@ -1321,7 +1320,7 @@ final class BoardModelTests: XCTestCase {
 
         XCTAssertTrue(model.select(positionID: "primary"))
         XCTAssertFalse(model.isUnavailable)
-        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2)
+        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
     }
 
     // This catches a renderer that silently renders nodes the descriptor did
