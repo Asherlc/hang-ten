@@ -11581,7 +11581,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -11597,7 +11597,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -11613,7 +11613,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -11629,7 +11629,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -11645,7 +11645,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -11661,7 +11661,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -11677,7 +11677,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
@@ -38166,7 +38166,7 @@
     },
     {
       "boardID": "tension.flash-board",
-      "holdIDs": [
+      "contactIDs": [
         "small-crimp-left",
         "small-crimp-right"
       ],
