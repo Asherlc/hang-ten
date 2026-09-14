@@ -1517,7 +1517,7 @@ enum BuiltInPlanLibraryDefinition {
                     "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
                     "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
-                    "Plans describe source-backed physical contact requirements without board contact IDs."
+                    "Board-specific plans use source-backed factual contact requirements; source-generic work remains self-selected."
                 ]
             ),
             blocks: blocks,

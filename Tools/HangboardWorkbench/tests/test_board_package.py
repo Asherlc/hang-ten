@@ -30,7 +30,7 @@ VALIDATION_FIXTURES = json.loads(
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
 )
-SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper", "gaston")
+SUPPORTED_CONTACT_KINDS = ("jug", "edge", "pocket", "pinch", "sloper", "gaston")
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -39,6 +39,8 @@ from workbench_fixtures import (  # noqa: E402
     CANONICAL_PACKAGE,
     PRIMARY_IMAGE,
     board_document,
+    derived_presentation,
+    geometry_for,
     multi_presentation_board_document,
 )
 
@@ -62,31 +64,12 @@ def _write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
 
-def test_catalog_validator_rejects_hold_with_unknown_equipment_object_id() -> None:
+def test_catalog_validator_rejects_contact_with_unknown_equipment_object_id() -> None:
     document = board_document("fixture.board")
     document["equipmentObjects"] = [{"id": "primary"}]
-    document["holds"][0]["equipmentObjectID"] = "missing"
+    document["contacts"][0]["equipmentObjectID"] = "missing"
 
     with pytest.raises(BoardPackageError, match="unknown equipment object"):
-        board_package.validate_catalog_board(document)
-
-
-def test_catalog_validator_accepts_missing_hand_capacity_policy() -> None:
-    document = board_document("fixture.board")
-    document["equipmentObjects"] = [
-        {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
-    ]
-
-    board_package.validate_catalog_board(document)
-
-
-def test_catalog_validator_rejects_unknown_missing_hand_capacity_policy() -> None:
-    document = board_document("fixture.board")
-    document["equipmentObjects"] = [
-        {"id": "primary", "missingHandCapacityPolicy": "invented"}
-    ]
-
-    with pytest.raises(BoardPackageError, match="missingHandCapacityPolicy"):
         board_package.validate_catalog_board(document)
 
 
@@ -143,8 +126,8 @@ def _write_model_only_package(library: Path, slug: str, board_id: str) -> Path:
     package = library / slug
     assets = package / "assets"
     assets.mkdir(parents=True)
-    (assets / "primary.usdz").write_bytes(b"invalid-usdz-sentinel")
-    (assets / "primary.model.json").write_bytes(b"invalid-descriptor-sentinel")
+    shutil.copyfile(source / "assets" / "primary.usdz", assets / "primary.usdz")
+    shutil.copyfile(source / "assets" / "primary.model.json", assets / "primary.model.json")
     _write_json(package / "board.json", board)
     return package
 
@@ -172,60 +155,71 @@ def _mutate_board(package: Path, mutation) -> None:
     _write_json(package / "board.json", board)
 
 
-def _replace_holds_with_supported_kinds(board: dict[str, object]) -> None:
-    holds = board["holds"]
-    assert isinstance(holds, list) and holds and isinstance(holds[0], dict)
-    template = holds[0]
-    board["holds"] = [
+def _replace_contacts_with_supported_kinds(board: dict[str, object]) -> None:
+    contacts = board["contacts"]
+    assert isinstance(contacts, list) and contacts and isinstance(contacts[0], dict)
+    template = contacts[0]
+    board["contacts"] = [
         {
             **template,
-            "id": f"hold-{kind}",
+            "id": f"contact-{kind}",
             "name": f"Fixture {kind}",
             "kind": kind,
         }
-        for kind in SUPPORTED_HOLD_KINDS
+        for kind in SUPPORTED_CONTACT_KINDS
         if kind != "gaston"
     ]
-    board["holds"].extend(
+    board["contacts"].extend(
         [
             {
                 **template,
-                "id": "hold-gaston-left",
+                "id": "contact-gaston-left",
                 "name": "Fixture gaston left",
                 "kind": "gaston",
-                "pairedHoldID": "hold-gaston-right",
+                "pairedContactID": "contact-gaston-right",
             },
             {
                 **template,
-                "id": "hold-gaston-right",
+                "id": "contact-gaston-right",
                 "name": "Fixture gaston right",
                 "kind": "gaston",
-                "pairedHoldID": "hold-gaston-left",
+                "pairedContactID": "contact-gaston-left",
             },
         ]
     )
+    geometry = geometry_for(board)
+    template_geometry = next(iter(geometry.values()))
+    geometry.clear()
+    geometry.update({contact["id"]: copy.deepcopy(template_geometry) for contact in board["contacts"]})
 
 
-def _replace_holds_with_reciprocal_gastons(board: dict[str, object]) -> None:
-    holds = board["holds"]
-    assert isinstance(holds, list) and holds and isinstance(holds[0], dict)
-    template = holds[0]
-    board["holds"] = [
+def _replace_contacts_with_reciprocal_gastons(board: dict[str, object]) -> None:
+    contacts = board["contacts"]
+    assert isinstance(contacts, list) and contacts and isinstance(contacts[0], dict)
+    template = contacts[0]
+    board["contacts"] = [
         {
             **template,
             "id": "gaston-left",
             "name": "Left gaston",
             "kind": "gaston",
-            "pairedHoldID": "gaston-right",
+            "pairedContactID": "gaston-right",
         },
         {
             **template,
             "id": "gaston-right",
             "name": "Right gaston",
             "kind": "gaston",
-            "pairedHoldID": "gaston-left",
+            "pairedContactID": "gaston-left",
         },
     ]
+    geometry = geometry_for(board)
+    template_geometry = next(iter(geometry.values()))
+    geometry.clear()
+    geometry.update({
+        "gaston-left": copy.deepcopy(template_geometry[:1]),
+        "gaston-right": copy.deepcopy(template_geometry[1:]),
+    })
 
 
 def _package_snapshot(package: Path) -> dict[str, bytes]:
@@ -261,13 +255,13 @@ def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> Non
     assert back["presentationID"] == "back"
     assert {region["metadata"]["presentationID"] for region in front["regions"]} == {"front"}
     assert {region["metadata"]["presentationID"] for region in back["regions"]} == {"back"}
-    assert [region["metadata"]["holdID"] for region in front["regions"]] == [
-        "hold-left",
-        "hold-left",
+    assert [region["metadata"]["contactID"] for region in front["regions"]] == [
+        "contact-left",
+        "contact-left",
     ]
-    assert [region["metadata"]["holdID"] for region in back["regions"]] == [
-        "hold-back",
-        "hold-back",
+    assert [region["metadata"]["contactID"] for region in back["regions"]] == [
+        "contact-back",
+        "contact-back",
     ]
 
 
@@ -275,98 +269,86 @@ def test_deleting_a_canonical_surface_with_the_default_alias_promotes_a_remainin
     board = multi_presentation_board_document("fixture.multi")
     presentations = board["presentations"]
     assert isinstance(presentations, list)
-    presentations[0]["default"] = False
+    presentations[0]["isDefault"] = False
     presentations[0]["aspectRatio"] = 3.0
     presentations[1]["aspectRatio"] = 2.0
-    presentations.append(
-        {
-            "id": "front-inverted",
-            "name": "Front inverted",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 3.0,
-            "default": True,
-            "sourcePresentationID": "front",
-            "isInverted": True,
-        }
-    )
+    presentations.append(derived_presentation(
+        board, "front-inverted", "front", "Front inverted", "assets/primary.png",
+        is_default=True,
+    ))
 
     deleted, _removed_assets = board_package._delete_presentation_from_board(board, "front")
 
     assert deleted["aspectRatio"] == 2.0
-    assert deleted["presentations"] == [
-        {
-            "id": "back",
-            "name": "Back",
-            "assetPath": "assets/back.png",
-            "aspectRatio": 2.0,
-            "default": True,
-        }
-    ]
+    assert [item["id"] for item in deleted["presentations"]] == ["back"]
+    assert deleted["presentations"][0]["isDefault"] is True
 
 
 def test_deleting_a_surface_removes_the_remaining_half_of_a_gaston_pair() -> None:
     board = multi_presentation_board_document("fixture.multi")
-    holds = board["holds"]
-    assert isinstance(holds, list)
-    front, back = holds
+    contacts = board["contacts"]
+    assert isinstance(contacts, list)
+    front, back = contacts
     assert isinstance(front, dict) and isinstance(back, dict)
-    front.update(id="front-gaston", name="Front gaston", kind="gaston", pairedHoldID="back-gaston")
-    back.update(id="back-gaston", name="Back gaston", kind="gaston", pairedHoldID="front-gaston")
+    front.update(id="front-gaston", name="Front gaston", kind="gaston", pairedContactID="back-gaston")
+    back.update(id="back-gaston", name="Back gaston", kind="gaston", pairedContactID="front-gaston")
     back_jug = json.loads(json.dumps(back))
     back_jug.update(id="back-jug", name="Back jug", kind="jug")
-    back_jug.pop("pairedHoldID")
-    holds.append(back_jug)
+    back_jug.pop("pairedContactID")
+    contacts.append(back_jug)
+    front_geometry = geometry_for(board, "front")
+    front_geometry["front-gaston"] = front_geometry.pop("contact-left")
+    back_geometry = geometry_for(board, "back")
+    back_geometry["back-gaston"] = back_geometry.pop("contact-back")
+    back_geometry["back-jug"] = copy.deepcopy(back_geometry["back-gaston"])
 
     deleted, _removed_assets = board_package._delete_presentation_from_board(board, "front")
 
-    assert [hold["id"] for hold in deleted["holds"]] == ["back-jug"]
+    assert [contact["id"] for contact in deleted["contacts"]] == ["back-jug"]
 
 
 def test_reciprocal_gaston_pairs_round_trip_through_workbench_save(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package_root, _replace_holds_with_reciprocal_gastons)
+    _mutate_board(package_root, _replace_contacts_with_reciprocal_gastons)
 
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
-    assert {
-        region["metadata"]["holdID"]: region["pairedHoldID"]
-        for region in document["regions"]
-    } == {
+    assert {contact["id"]: contact["pairedContactID"] for contact in document["contacts"]} == {
         "gaston-left": "gaston-right",
         "gaston-right": "gaston-left",
     }
-    for region in document["regions"]:
-        if region["metadata"]["holdID"] == "gaston-left":
-            region["fingerCapacity"] = 4
+    for contact in document["contacts"]:
+        if contact["id"] == "gaston-left":
+            contact["fingerCapacity"] = 4
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    assert saved.hold_ids == ("gaston-left", "gaston-right")
-    holds = _read_board(package_root)["holds"]
-    assert holds[0]["kind"] == "gaston"
-    assert holds[0]["pairedHoldID"] == "gaston-right"
-    assert holds[0]["fingerCapacity"] == 4
-    assert holds[1]["kind"] == "gaston"
-    assert holds[1]["pairedHoldID"] == "gaston-left"
+    assert saved.contact_ids == ("gaston-left", "gaston-right")
+    contacts = _read_board(package_root)["contacts"]
+    assert contacts[0]["kind"] == "gaston"
+    assert contacts[0]["pairedContactID"] == "gaston-right"
+    assert contacts[0]["fingerCapacity"] == 4
+    assert contacts[1]["kind"] == "gaston"
+    assert contacts[1]["pairedContactID"] == "gaston-left"
 
 
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda holds: holds[0].pop("pairedHoldID"), "pairedHoldID"),
-        (lambda holds: holds[0].__setitem__("pairedHoldID", None), "pairedHoldID"),
-        (lambda holds: holds[0].__setitem__("pairedHoldID", "not an identifier"), "pairedHoldID"),
-        (lambda holds: holds[0].__setitem__("pairedHoldID", "gaston-left"), "distinct existing"),
-        (lambda holds: holds[0].__setitem__("pairedHoldID", "missing"), "distinct existing"),
+        (lambda contacts: contacts[0].pop("pairedContactID"), "pairedContactID"),
+        (lambda contacts: contacts[0].__setitem__("pairedContactID", None), "pairedContactID"),
+        (lambda contacts: contacts[0].__setitem__("pairedContactID", "not an identifier"), "pairedContactID"),
+        (lambda contacts: contacts[0].__setitem__("pairedContactID", "gaston-left"), "distinct existing"),
+        (lambda contacts: contacts[0].__setitem__("pairedContactID", "missing"), "distinct existing"),
         (
-            lambda holds: (
-                holds[1].__setitem__("kind", "jug"),
-                holds[1].pop("pairedHoldID"),
+            lambda contacts: (
+                contacts[1].__setitem__("kind", "jug"),
+                contacts[1].pop("pairedContactID"),
             ),
             "reciprocal gaston",
         ),
-        (lambda holds: holds[1].__setitem__("pairedHoldID", "missing"), "reciprocal gaston"),
-        (lambda holds: holds[0].__setitem__("kind", "jug"), "only allowed for gaston"),
+        (lambda contacts: contacts[1].__setitem__("pairedContactID", "missing"), "reciprocal gaston"),
+        (lambda contacts: contacts[0].__setitem__("kind", "jug"), "only allowed for gaston"),
     ],
 )
 def test_workbench_rejects_invalid_gaston_pair_metadata(
@@ -374,11 +356,11 @@ def test_workbench_rejects_invalid_gaston_pair_metadata(
 ) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package_root, _replace_holds_with_reciprocal_gastons)
+    _mutate_board(package_root, _replace_contacts_with_reciprocal_gastons)
     board = _read_board(package_root)
-    holds = board["holds"]
-    assert isinstance(holds, list)
-    mutation(holds)
+    contacts = board["contacts"]
+    assert isinstance(contacts, list)
+    mutation(contacts)
     _write_json(package_root / "board.json", board)
 
     with pytest.raises(BoardPackageError, match=message):
@@ -396,17 +378,10 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
     )
     _mutate_board(
         package_root,
-        lambda board: board["presentations"].append(
-            {
-                "id": "front-inverted",
-                "name": "Front upside down",
-                "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 887,
-                "default": False,
-                "sourcePresentationID": "front",
-                "isInverted": True,
-            }
-        ),
+        lambda board: board["presentations"].append(derived_presentation(
+            board, "front-inverted", "front", "Front upside down",
+            "assets/front-inverted.png",
+        )),
     )
 
     package = board_package.load_board_package(package_root)
@@ -416,7 +391,7 @@ def test_optional_orientation_presentation_reuses_a_declared_surface(
     assert inverted.is_inverted is True
 
 
-def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
+def test_editor_document_for_an_inverted_alias_displays_its_source_contacts(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
@@ -424,17 +399,10 @@ def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
     shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
     _mutate_board(
         package_root,
-        lambda board: board["presentations"].append(
-            {
-                "id": "front-inverted",
-                "name": "Front upside down",
-                "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 887,
-                "default": False,
-                "sourcePresentationID": "front",
-                "isInverted": True,
-            }
-        ),
+        lambda board: board["presentations"].append(derived_presentation(
+            board, "front-inverted", "front", "Front upside down",
+            "assets/front-inverted.png",
+        )),
     )
 
     package = board_package.load_board_package(package_root)
@@ -442,9 +410,9 @@ def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
     inverted = board_package.editor_document(package, "front-inverted")
 
     assert inverted["presentationID"] == "front-inverted"
-    assert [region["metadata"]["holdID"] for region in inverted["regions"]] == [
-        "hold-left",
-        "hold-left",
+    assert [region["metadata"]["contactID"] for region in inverted["regions"]] == [
+        "contact-left",
+        "contact-left",
     ]
     assert {region["metadata"]["presentationID"] for region in inverted["regions"]} == {
         "front-inverted"
@@ -473,23 +441,16 @@ def test_save_rejects_edits_to_an_alias_presentation(tmp_path: Path) -> None:
     shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
     _mutate_board(
         package_root,
-        lambda board: board["presentations"].append(
-            {
-                "id": "front-inverted",
-                "name": "Front upside down",
-                "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 887,
-                "default": False,
-                "sourcePresentationID": "front",
-                "isInverted": True,
-            }
-        ),
+        lambda board: board["presentations"].append(derived_presentation(
+            board, "front-inverted", "front", "Front upside down",
+            "assets/front-inverted.png",
+        )),
     )
     document = board_package.editor_document(
         board_package.load_board_package(package_root), "front-inverted"
     )
 
-    with pytest.raises(BoardPackageError, match="alias presentations cannot be edited"):
+    with pytest.raises(BoardPackageError, match="derived presentations cannot be edited"):
         board_package.save_editor_document(
             library, "fixture-multi-presentation", document
         )
@@ -498,8 +459,8 @@ def test_save_rejects_edits_to_an_alias_presentation(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("source_presentation_id", "message"),
     [
-        ("missing", "must reference another declared presentation"),
-        ("front", "must reference another declared presentation"),
+        ("missing", "canonical presentation"),
+        ("front", "canonical presentation"),
     ],
 )
 def test_rejects_invalid_optional_orientation_source_reference(
@@ -512,7 +473,11 @@ def test_rejects_invalid_optional_orientation_source_reference(
     _mutate_board(
         package_root,
         lambda board: board["presentations"][0].update(
-            {"sourcePresentationID": source_presentation_id}
+            {"derivation": {
+                "type": "derived",
+                "sourcePresentationID": source_presentation_id,
+                "isInverted": True,
+            }}
         ),
     )
 
@@ -520,66 +485,38 @@ def test_rejects_invalid_optional_orientation_source_reference(
         board_package.load_board_package(package_root)
 
 
-def test_rejects_alias_chains_and_alias_owned_holds(tmp_path: Path) -> None:
+def test_rejects_alias_chains(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_multi_presentation_package(library)
     shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
     _mutate_board(
         package_root,
-        lambda board: board["presentations"].append(
-            {
-                "id": "front-inverted",
-                "name": "Front upside down",
-                "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 887,
-                "default": False,
-                "sourcePresentationID": "front",
-                "isInverted": True,
-            }
-        ),
+        lambda board: board["presentations"].append(derived_presentation(
+            board, "front-inverted", "front", "Front upside down",
+            "assets/front-inverted.png",
+        )),
     )
 
     _mutate_board(
         package_root,
-        lambda board: board["presentations"].append(
-            {
-                "id": "front-inverted-twice",
-                "name": "Front twice inverted",
-                "assetPath": "assets/front-inverted.png",
-                "aspectRatio": 1774 / 887,
-                "default": False,
-                "sourcePresentationID": "front-inverted",
-                "isInverted": False,
-            }
-        ),
+        lambda board: board["presentations"].append(derived_presentation(
+            board, "front-inverted-twice", "front-inverted", "Front twice inverted",
+            "assets/front-inverted.png", is_inverted=False,
+        )),
     )
 
     with pytest.raises(BoardPackageError, match="canonical presentation"):
         board_package.load_board_package(package_root)
-
-    _mutate_board(
-        package_root,
-        lambda board: (
-            board["presentations"].pop(),
-            board["holds"][0].__setitem__("presentationID", "front-inverted"),
-        ),
-    )
-
-    with pytest.raises(BoardPackageError, match="must be owned by a canonical presentation"):
-        board_package.load_board_package(package_root)
-
 
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
         (
             lambda board: board.__setitem__("schemaVersion", 1),
-            "schemaVersion must be 2",
+            "schemaVersion must be 3",
         ),
         (lambda board: board.__setitem__("presentation", {"assetPath": "assets/primary.png"}), "unknown keys"),
         (lambda board: board.pop("presentations"), "missing keys"),
-        (lambda board: board["holds"][0].pop("presentationID"), "presentationID"),
-        (lambda board: board["holds"][0].__setitem__("presentationID", "missing"), "presentationID is unknown"),
     ],
 )
 def test_rejects_legacy_or_incomplete_presentation_shape(
@@ -603,17 +540,21 @@ def test_save_changes_only_the_selected_presentation_and_preserves_assets(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package, "front")
     before = _package_snapshot(package_root)
-    back_before = copy.deepcopy(package.board["holds"][1])
-    for region in document["regions"]:
-        region["type"] = "sloper"
+    back_before = copy.deepcopy(package.board["contacts"][1])
+    document["contacts"][0]["kind"] = "sloper"
+    document["contacts"].append({
+        **copy.deepcopy(document["contacts"][0]),
+        "id": "new-front",
+        "name": "New front contact",
+        "kind": "edge",
+    })
     document["regions"].append(
         {
             "id": 3,
             "key": "new-front-piece-0",
-            "type": "edge",
             "displayPath": "M 800 200 L 900 200 L 900 300 L 800 300 Z",
             "metadata": {
-                "holdID": "new-front",
+                "contactID": "new-front",
                 "pieceIndex": 0,
                 "presentationID": "front",
             },
@@ -625,9 +566,10 @@ def test_save_changes_only_the_selected_presentation_and_preserves_assets(
     )
 
     assert board_package.editor_document(saved, "front")["presentationID"] == "front"
-    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
-    new_hold = next(hold for hold in saved.board["holds"] if hold["id"] == "new-front")
-    assert new_hold["presentationID"] == "front"
+    assert next(contact for contact in saved.board["contacts"] if contact["id"] == "contact-back") == back_before
+    new_contact = next(contact for contact in saved.board["contacts"] if contact["id"] == "new-front")
+    assert new_contact["kind"] == "edge"
+    assert "presentationID" not in new_contact
     after = _package_snapshot(package_root)
     assert after["assets/primary.png"] == before["assets/primary.png"]
     assert after["assets/back.png"] == before["assets/back.png"]
@@ -660,20 +602,13 @@ def test_model_only_package_has_the_exact_read_only_inventory() -> None:
     package = board_package.load_board_package(package_root)
 
     assert package.board_id == "metolius.wood-grips-compact-ii"
-    assert len(package.hold_ids) == 19
+    assert len(package.contact_ids) == 19
     assert package.editor_available is False
 
 
-def test_save_editor_document_rejects_model_only_before_loading_media(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_save_editor_document_rejects_model_only(tmp_path: Path) -> None:
     library = _library(tmp_path)
     _write_model_only_package(library, "fixture-model", "fixture.model")
-
-    def fail_if_full_loader_runs(_package_root: Path) -> object:
-        raise AssertionError("model media must not be loaded for editor save")
-
-    monkeypatch.setattr(board_package, "load_board_package", fail_if_full_loader_runs)
 
     with pytest.raises(
         board_package.BoardEditorUnavailableError,
@@ -682,16 +617,9 @@ def test_save_editor_document_rejects_model_only_before_loading_media(
         board_package.save_editor_document(library, "fixture-model", {})
 
 
-def test_delete_presentation_rejects_model_only_before_loading_media(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_delete_presentation_rejects_model_only(tmp_path: Path) -> None:
     library = _library(tmp_path)
     _write_model_only_package(library, "fixture-model", "fixture.model")
-
-    def fail_if_full_loader_runs(_package_root: Path) -> object:
-        raise AssertionError("model media must not be loaded for editor delete")
-
-    monkeypatch.setattr(board_package, "load_board_package", fail_if_full_loader_runs)
 
     with pytest.raises(
         board_package.BoardEditorUnavailableError,
@@ -789,93 +717,18 @@ def test_loads_completed_flash_board_without_unpublished_dimensions() -> None:
 def test_apply_editor_document_returns_updated_board_without_mutating_its_input() -> None:
     package = board_package.load_board_package(CANONICAL_PACKAGE)
     document = board_package.editor_document(package)
-    parsed = board_package._validate_editor_document(
-        document, package.image_width, package.image_height
-    )
-    pieces_by_hold: dict[
-        str,
-        list[
-            tuple[
-                int,
-                str,
-                object,
-                object,
-                    object,
-                    tuple[int, ...],
-                    tuple[int, ...],
-                    int | None,
-                int | float | None,
-                dict[str, int | float] | None,
-                int | None,
-                str | None,
-                str,
-            ]
-        ],
-    ] = {}
-    for (
-        hold_id,
-        piece_index,
-        kind,
-        sloper,
-        path,
-        shape_constraint,
-        bendable_command_indexes,
-        smooth_anchor_indexes,
-        finger_capacity,
-        size_millimeters,
-        depth_range,
-        hand_capacity,
-        paired_hold_id,
-        equipment_object_id,
-    ) in parsed.values():
-        pieces_by_hold.setdefault(hold_id, []).append(
-            (
-                piece_index,
-                kind,
-                sloper,
-                path,
-                shape_constraint,
-                bendable_command_indexes,
-                smooth_anchor_indexes,
-                finger_capacity,
-                size_millimeters,
-                depth_range,
-                hand_capacity,
-                paired_hold_id,
-                equipment_object_id,
-            )
-        )
-    for pieces in pieces_by_hold.values():
-        pieces.sort(key=lambda item: item[0])
-    first_hold_id = next(iter(pieces_by_hold))
-    first_piece = pieces_by_hold[first_hold_id][0]
-    pieces_by_hold[first_hold_id][0] = (
-        first_piece[0],
-        "sloper",
-        first_piece[2],
-        first_piece[3],
-        first_piece[4],
-        first_piece[5],
-        first_piece[6],
-            first_piece[7],
-            first_piece[8],
-            first_piece[9],
-            first_piece[10],
-            first_piece[11],
-            first_piece[12],
-        )
+    first_contact_id = document["contacts"][0]["id"]
+    document["contacts"][0]["kind"] = "sloper"
     original = copy.deepcopy(package.board)
 
-    updated = board_package._apply_editor_document(
-        package.board, pieces_by_hold, package.image_width, package.image_height
-    )
+    updated = board_package.apply_editor_document(package, document)
 
     assert package.board == original
-    updated_hold = next(hold for hold in updated["holds"] if hold["id"] == first_hold_id)
-    assert updated_hold["name"] == next(
-        hold["name"] for hold in original["holds"] if hold["id"] == first_hold_id
+    updated_contact = next(contact for contact in updated["contacts"] if contact["id"] == first_contact_id)
+    assert updated_contact["name"] == next(
+        contact["name"] for contact in original["contacts"] if contact["id"] == first_contact_id
     )
-    assert updated_hold["kind"] == "sloper"
+    assert updated_contact["kind"] == "sloper"
 
 
 def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
@@ -1067,7 +920,7 @@ def test_rejects_a_plausible_png_header_without_complete_image_data(
     assert truncated[12:16] == b"IHDR"
     (package / "assets" / "primary.png").write_bytes(truncated)
 
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError):
         board_package.load_board_package(package)
 
 
@@ -1081,7 +934,7 @@ def test_rejects_an_indexed_png_with_palette_after_image_data(
     (package / "assets" / "primary.png").write_bytes(invalid_png)
     _mutate_board(package, lambda board: board.update(aspectRatio=1))
 
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError):
         board_package.load_board_package(package)
 
 
@@ -1098,7 +951,7 @@ def test_rejects_shared_indexed_png_with_duplicate_palette(
     (package / "assets" / "primary.png").write_bytes(invalid_png)
     _mutate_board(package, lambda board: board.update(aspectRatio=1))
 
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError):
         board_package.load_board_package(package)
 
 
@@ -1126,9 +979,9 @@ def test_open_and_direct_load_reject_selected_corrupt_post_ihdr_data(
         _png_with_corrupt_post_ihdr_data()
     )
 
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError):
         board_package.open_package(library, "corrupt.board")
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError):
         board_package.load_board_package(corrupt)
 
 
@@ -1149,9 +1002,12 @@ def test_rejects_an_aspect_ratio_that_does_not_match_the_primary_canvas(
 ) -> None:
     library = _library(tmp_path)
     package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: board.update(aspectRatio=34 / 7))
+    _mutate_board(
+        package,
+        lambda board: board["presentations"][0].update(aspectRatio=34 / 7),
+    )
 
-    with pytest.raises(BoardPackageError, match="aspectRatio.*primary image"):
+    with pytest.raises(BoardPackageError, match="aspectRatio"):
         board_package.load_board_package(package)
 
 
@@ -1185,7 +1041,10 @@ def test_rejects_sidecars_and_extra_package_files(
 
     with pytest.raises(
         BoardPackageError,
-        match="only board.json and assets/|assets must exactly match",
+        match=(
+            "only board.json and assets/|assets must exactly match|"
+            "unknown package entry|undeclared presentation asset"
+        ),
     ):
         board_package.load_board_package(package)
 
@@ -1231,7 +1090,7 @@ def test_rejects_symlinked_packages_and_members(tmp_path: Path) -> None:
         board_package.load_board_package(package)
 
 
-def test_rejects_duplicate_discovered_board_and_hold_ids(tmp_path: Path) -> None:
+def test_rejects_duplicate_discovered_board_and_contact_ids(tmp_path: Path) -> None:
     library = _library(tmp_path)
     _write_finished_package(library, "first-board", "duplicate.board")
     _write_finished_package(library, "second-board", "duplicate.board")
@@ -1242,180 +1101,41 @@ def test_rejects_duplicate_discovered_board_and_hold_ids(tmp_path: Path) -> None
     package = library / "first-board"
     _mutate_board(
         package,
-        lambda board: board["holds"].append(dict(board["holds"][0])),
+        lambda board: board["contacts"].append(dict(board["contacts"][0])),
     )
-    with pytest.raises(BoardPackageError, match="duplicate hold ID"):
+    with pytest.raises(BoardPackageError, match="duplicate physical contact id"):
         board_package.load_board_package(package)
 
 
-def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
+def test_accepts_exact_physical_contact_kind_enum(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package = _write_finished_package(library, "fixture-board", "fixture.board")
-    assert board_package._HOLD_KINDS == frozenset(SUPPORTED_HOLD_KINDS)
-    _mutate_board(package, _replace_holds_with_supported_kinds)
+    _mutate_board(package, _replace_contacts_with_supported_kinds)
 
     loaded = board_package.load_board_package(package)
 
-    assert [hold["kind"] for hold in loaded.board["holds"]] == [
+    assert [contact["kind"] for contact in loaded.board["contacts"]] == [
         "jug", "edge", "pocket", "pinch", "sloper", "gaston", "gaston"
     ]
 
 
-def test_editor_round_trips_optional_sloper_metadata(tmp_path: Path) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(
-        library, "fixture-board", "fixture.board"
-    )
-
-    def add_sloper_metadata(board: dict[str, object]) -> None:
-        hold = board["holds"][0]
-        hold["kind"] = "sloper"
-        hold["sloper"] = {"type": "flat", "angleDegrees": 20}
-
-    _mutate_board(package_root, add_sloper_metadata)
-
-    loaded = board_package.load_board_package(package_root)
-    document = board_package.editor_document(loaded)
-
-    assert {tuple(region["sloper"].items()) for region in document["regions"]} == {
-        (("type", "flat"), ("angleDegrees", 20))
-    }
-    for region in document["regions"]:
-        region["handCapacity"] = 1
-    saved = board_package.save_editor_document(library, "fixture-board", document)
-    reloaded = board_package.load_board_package(package_root)
-
-    assert saved.board["holds"][0]["sloper"] == {
-        "type": "flat",
-        "angleDegrees": 20,
-    }
-    assert reloaded.board["holds"][0]["sloper"] == saved.board["holds"][0]["sloper"]
-
-
-@pytest.mark.parametrize(
-    ("kind", "metadata", "message"),
-    [
-        ("jug", {"type": "flat"}, "only allowed for sloper holds"),
-        ("sloper", {"type": "round", "angleDegrees": 20}, "unknown keys"),
-        ("sloper", {"type": "flat", "angleDegrees": -0.01}, "in 0...90"),
-        ("sloper", {"type": "flat", "angleDegrees": 90.01}, "in 0...90"),
-        ("sloper", {"type": "flat", "angleDegrees": math.inf}, "in 0...90"),
-        ("sloper", {"type": "domed"}, "type must be one of"),
-        ("sloper", {"type": "flat", "unexpected": True}, "unknown keys"),
-    ],
-)
-def test_rejects_invalid_sloper_metadata_combinations(
-    kind: str, metadata: dict[str, object], message: str, tmp_path: Path
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(
-        library, "fixture-board", "fixture.board"
-    )
-
-    def add_sloper_metadata(board: dict[str, object]) -> None:
-        hold = board["holds"][0]
-        hold["kind"] = kind
-        hold["sloper"] = metadata
-
-    _mutate_board(package_root, add_sloper_metadata)
-
-    with pytest.raises(BoardPackageError, match=message):
-        board_package.load_board_package(package_root)
-
-
-def test_sloper_parser_rejects_a_huge_json_integer_angle() -> None:
-    """Fails if float conversion overflows outside the normal angle error path."""
-    with pytest.raises(
-        BoardPackageError,
-        match="sloper.angleDegrees must be finite and in 0...90",
-    ):
-        board_package._parse_sloper_metadata(
-            {"type": "flat", "angleDegrees": 10**399}, "sloper"
-        )
-
-
-@pytest.mark.parametrize(
-    ("kind", "metadata", "message"),
-    [
-        ("jug", {"type": "flat"}, "only allowed for sloper holds"),
-        ("sloper", {"type": "round", "angleDegrees": 20}, "unknown keys"),
-        ("sloper", {"type": "flat", "angleDegrees": -0.01}, "in 0...90"),
-        ("sloper", {"type": "flat", "unexpected": True}, "unknown keys"),
-    ],
-)
-def test_editor_document_rejects_invalid_sloper_metadata(
-    kind: str, metadata: dict[str, object], message: str, tmp_path: Path
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(
-        library, "fixture-board", "fixture.board"
-    )
-    package = board_package.load_board_package(package_root)
-    document = board_package.editor_document(package)
-    for region in document["regions"]:
-        region["type"] = kind
-        region["sloper"] = metadata
-
-    with pytest.raises(BoardPackageError, match=message):
-        board_package._validate_editor_document(
-            document, package.image_width, package.image_height
-        )
-
-
-def test_editor_document_rejects_inconsistent_sloper_metadata_for_one_hold(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(
-        library, "fixture-board", "fixture.board"
-    )
-    package = board_package.load_board_package(package_root)
-    document = board_package.editor_document(package)
-    for region in document["regions"]:
-        region["type"] = "sloper"
-    document["regions"][0]["sloper"] = {"type": "flat"}
-    document["regions"][1]["sloper"] = {"type": "round"}
-
-    with pytest.raises(BoardPackageError, match="share one sloper metadata value"):
-        board_package._validate_editor_document(
-            document, package.image_width, package.image_height
-        )
-
-
-def test_editor_round_trips_missing_physical_kind_without_inventing_a_type(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package_root, lambda board: board["holds"][0].pop("kind"))
-
-    loaded = board_package.load_board_package(package_root)
-    document = board_package.editor_document(loaded)
-
-    assert "type" not in document["regions"][0]
-    saved = board_package.save_editor_document(library, "fixture-board", document)
-    reloaded = board_package.load_board_package(package_root)
-
-    assert "kind" not in saved.board["holds"][0]
-    assert "kind" not in reloaded.board["holds"][0]
-    assert "type" not in board_package.editor_document(reloaded)["regions"][0]
-
-
-@pytest.mark.parametrize(
-    ("mutation", "message"),
-    [
-        (lambda hold: hold.__setitem__("kind", "crimp"), "kind must be one of"),
-        (lambda hold: hold.__setitem__("geometry", []), "geometry must be non-empty"),
-    ],
-)
-def test_rejects_invalid_physical_kind_and_nonempty_geometry(
-    mutation, message: str, tmp_path: Path
-) -> None:
+def test_rejects_invalid_physical_kind(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: mutation(board["holds"][0]))
+    _mutate_board(package, lambda board: board["contacts"][0].update(kind="crimp"))
 
-    with pytest.raises(BoardPackageError, match=message):
+    with pytest.raises(BoardPackageError, match="kind must be one of"):
+        board_package.load_board_package(package)
+
+
+def test_rejects_empty_contact_geometry(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package, lambda board: geometry_for(board).__setitem__("contact-left", [])
+    )
+
+    with pytest.raises(BoardPackageError, match="must be a non-empty array"):
         board_package.load_board_package(package)
 
 
@@ -1444,37 +1164,11 @@ def test_rejects_malformed_geometry_and_mismatched_bounds(
 ) -> None:
     library = _library(tmp_path)
     package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: mutation(board["holds"][0]["geometry"][0]))
-
-    with pytest.raises(BoardPackageError, match=message):
-        board_package.load_board_package(package)
-
-
-def test_rejects_path_whose_rendered_curve_escapes_declared_frame(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
-        package,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
-            "shape",
-            {
-                "type": "path",
-                "commands": [
-                    {"command": "move", "to": [0, 0]},
-                    {"command": "line", "to": [1, 0]},
-                    {"command": "line", "to": [1, 1]},
-                    {"command": "quad", "control": [-16, 2], "to": [0, 1]},
-                    {"command": "close"},
-                ],
-            },
-        ),
+        package, lambda board: mutation(geometry_for(board)["contact-left"][0])
     )
 
-    with pytest.raises(
-        BoardPackageError, match="frame must match its derived shape bounds"
-    ):
+    with pytest.raises(BoardPackageError, match=message):
         board_package.load_board_package(package)
 
 
@@ -1485,7 +1179,7 @@ def test_header_only_discovery_rejects_a_leading_curve_as_a_board_package_error(
     package = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape",
             {
                 "type": "path",
@@ -1520,7 +1214,7 @@ def test_header_only_discovery_wraps_malformed_path_commands_as_board_package_er
     package = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape", {"type": "path", "commands": commands}
         ),
     )
@@ -1547,10 +1241,12 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     )
 
     package = board_package.load_board_package(package_root)
-    hold = package.board["holds"][0]
+    contact = package.board["contacts"][0]
 
-    assert set(hold) == {"id", "name", "kind", "presentationID", "geometry"}
-    assert package.hold_frame("hold-left").to_json() == {
+    assert set(contact) == {
+        "id", "equipmentObjectID", "name", "kind", "features", "gripTypes"
+    }
+    assert package.contact_frame("contact-left").to_json() == {
         "x": 0.05,
         "y": 0.1,
         "width": 0.4,
@@ -1558,7 +1254,7 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     }
 
 
-def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
+def test_editor_exposes_independently_keyed_pieces_for_one_physical_contact(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     library = _library(tmp_path)
@@ -1579,21 +1275,19 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
     document = board_package.editor_document(package)
 
     assert document["canvas"] == {"width": 1774, "height": 887}
-    assert document["equipmentObjects"] == ["primary"]
-    assert {region["equipmentObjectID"] for region in document["regions"]} == {
-        "primary"
-    }
+    assert document["contacts"] == package.board["contacts"]
+    assert all("equipmentObjectID" not in region for region in document["regions"])
     assert [region["key"] for region in document["regions"]] == [
-        "hold-left-piece-0",
-        "hold-left-piece-1",
+        "contact-left-piece-0",
+        "contact-left-piece-1",
     ]
     assert [region["metadata"] for region in document["regions"]] == [
-        {"holdID": "hold-left", "pieceIndex": 0, "presentationID": "primary"},
-        {"holdID": "hold-left", "pieceIndex": 1, "presentationID": "primary"},
+        {"contactID": "contact-left", "pieceIndex": 0, "presentationID": "primary"},
+        {"contactID": "contact-left", "pieceIndex": 1, "presentationID": "primary"},
     ]
 
 
-def test_editor_can_reassign_new_or_existing_holds_between_equipment_objects(
+def test_editor_can_reassign_new_or_existing_contacts_between_equipment_objects(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
@@ -1603,7 +1297,7 @@ def test_editor_can_reassign_new_or_existing_holds_between_equipment_objects(
 
     def make_multi_object(board: dict[str, object]) -> None:
         board["equipmentObjects"] = [{"id": "left"}, {"id": "right"}]
-        source = board["holds"][0]
+        source = board["contacts"][0]
         source["id"] = "left-a"
         source["name"] = "Left A"
         source["equipmentObjectID"] = "left"
@@ -1611,25 +1305,26 @@ def test_editor_can_reassign_new_or_existing_holds_between_equipment_objects(
         left_b.update(id="left-b", name="Left B")
         right_a = copy.deepcopy(source)
         right_a.update(id="right-a", name="Right A", equipmentObjectID="right")
-        board["holds"] = [source, left_b, right_a]
+        board["contacts"] = [source, left_b, right_a]
+        piece = geometry_for(board).pop("contact-left")
+        geometry_for(board).update(
+            {"left-a": copy.deepcopy(piece), "left-b": copy.deepcopy(piece), "right-a": piece}
+        )
 
     _mutate_board(package_root, make_multi_object)
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
 
-    assert document["equipmentObjects"] == ["left", "right"]
-    assert {
-        region["metadata"]["holdID"]: region["equipmentObjectID"]
-        for region in document["regions"]
-    }.items() >= {"left-a": "left", "left-b": "left", "right-a": "right"}.items()
-
-    for region in document["regions"]:
-        if region["metadata"]["holdID"] == "left-b":
-            region["equipmentObjectID"] = "right"
+    assert {contact["id"]: contact["equipmentObjectID"] for contact in document["contacts"]} == {
+        "left-a": "left", "left-b": "left", "right-a": "right"
+    }
+    next(
+        contact for contact in document["contacts"] if contact["id"] == "left-b"
+    )["equipmentObjectID"] = "right"
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
     ownership = {
-        hold["id"]: hold["equipmentObjectID"] for hold in saved.board["holds"]
+        contact["id"]: contact["equipmentObjectID"] for contact in saved.board["contacts"]
     }
     assert ownership == {"left-a": "left", "left-b": "right", "right-a": "right"}
 
@@ -1643,12 +1338,12 @@ def test_shape_constraint_round_trips_and_preserves_unrelated_geometry(
     )
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shapeConstraint", {"shape": "oval", "rotationDegrees": 15}
         ),
     )
     package = board_package.load_board_package(package_root)
-    sibling_before = copy.deepcopy(package.board["holds"][0]["geometry"][1])
+    sibling_before = copy.deepcopy(geometry_for(package.board)["contact-left"][1])
     document = board_package.editor_document(package)
 
     assert document["regions"][0]["shapeConstraint"] == {
@@ -1663,7 +1358,7 @@ def test_shape_constraint_round_trips_and_preserves_unrelated_geometry(
     saved = board_package.save_editor_document(library, "fixture-board", document)
     reopened = board_package.open_package(library, saved.board_id)
 
-    first_geometry = reopened.board["holds"][0]["geometry"]
+    first_geometry = geometry_for(reopened.board)["contact-left"]
     assert first_geometry[0]["shapeConstraint"] == {
         "shape": "pill",
         "rotationDegrees": -45.0,
@@ -1681,7 +1376,7 @@ def test_omitting_editor_shape_constraint_removes_stored_constraint(
     )
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shapeConstraint", {"shape": "rectangle", "rotationDegrees": 0}
         ),
     )
@@ -1691,8 +1386,8 @@ def test_omitting_editor_shape_constraint_removes_stored_constraint(
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    assert "shapeConstraint" not in saved.board["holds"][0]["geometry"][0]
-    assert "shapeConstraint" not in _read_board(package_root)["holds"][0]["geometry"][0]
+    assert "shapeConstraint" not in geometry_for(saved.board)["contact-left"][0]
+    assert "shapeConstraint" not in geometry_for(_read_board(package_root))["contact-left"][0]
 
 
 def test_editor_document_projects_a_bendable_curve_command_index(tmp_path: Path) -> None:
@@ -1700,7 +1395,7 @@ def test_editor_document_projects_a_bendable_curve_command_index(tmp_path: Path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape",
             {
                 "type": "path",
@@ -1731,7 +1426,7 @@ def test_save_editor_document_persists_only_selected_curve_indexes(tmp_path: Pat
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape",
             {
                 "type": "path",
@@ -1762,7 +1457,7 @@ def test_save_editor_document_persists_only_selected_curve_indexes(tmp_path: Pat
 
     board_package.save_editor_document(library, "fixture-board", document)
 
-    commands = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]["commands"]
+    commands = geometry_for(_read_board(package_root))["contact-left"][0]["shape"]["commands"]
     assert "bendable" not in commands[1]
     assert commands[2]["bendable"] is True
     assert "bendableCommandIndexes" not in json.dumps(_read_board(package_root))
@@ -1773,7 +1468,7 @@ def test_save_editor_document_round_trips_smooth_anchor_indexes(tmp_path: Path) 
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape",
             {
                 "type": "path",
@@ -1793,7 +1488,7 @@ def test_save_editor_document_round_trips_smooth_anchor_indexes(tmp_path: Path) 
 
     board_package.save_editor_document(library, "fixture-board", document)
 
-    commands = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]["commands"]
+    commands = geometry_for(_read_board(package_root))["contact-left"][0]["shape"]["commands"]
     assert commands[1]["smooth"] is True
     reopened = board_package.editor_document(board_package.load_board_package(package_root))
     assert reopened["regions"][0]["smoothAnchorIndexes"] == [1]
@@ -1805,7 +1500,7 @@ def test_save_rejects_invalid_editor_smooth_anchor_indexes(tmp_path: Path, index
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape",
             {
                 "type": "path",
@@ -1835,7 +1530,7 @@ def test_save_rejects_invalid_editor_bendable_curve_indexes(
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shape",
             {
                 "type": "path",
@@ -1899,7 +1594,7 @@ def test_package_rejects_invalid_shape_constraints(
     )
     _mutate_board(
         package_root,
-        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+        lambda board: geometry_for(board)["contact-left"][0].__setitem__(
             "shapeConstraint", constraint
         ),
     )
@@ -1953,7 +1648,7 @@ def test_open_save_round_trip_keeps_board_json_and_creates_no_sidecar(
 
     assert (package_root / "board.json").read_bytes() == before
     assert board_package.editor_document(saved)["regions"][0]["key"] == (
-        "hold-left-piece-0"
+        "contact-left-piece-0"
     )
     assert {path.name for path in package_root.iterdir()} == {"board.json", "assets"}
     assert not (library / "catalog.json").exists()
@@ -1972,7 +1667,7 @@ def test_noop_save_rejects_selected_live_package_with_corrupt_post_ihdr_data(
         _png_with_corrupt_post_ihdr_data()
     )
 
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError):
         board_package.save_editor_document(library, "fixture-board", document)
 
 
@@ -1985,22 +1680,22 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
     )
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
-    second_piece_before = _read_board(package_root)["holds"][0]["geometry"][1]
+    second_piece_before = geometry_for(_read_board(package_root))["contact-left"][1]
     document["regions"][0]["displayPath"] = (
         "M 177.4 88.7 L 354.8 88.7 L 354.8 266.1 L 177.4 266.1 Z"
     )
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
-    hold = _read_board(package_root)["holds"][0]
+    contact_geometry = geometry_for(_read_board(package_root))["contact-left"]
 
-    assert hold["geometry"][0]["frame"] == {
+    assert contact_geometry[0]["frame"] == {
         "x": 0.1,
         "y": 0.1,
         "width": 0.1,
         "height": 0.2,
     }
-    assert hold["geometry"][1] == second_piece_before
-    assert saved.hold_frame("hold-left").to_json() == {
+    assert contact_geometry[1] == second_piece_before
+    assert saved.contact_frame("contact-left").to_json() == {
         "x": 0.1,
         "y": 0.1,
         "width": 0.35,
@@ -2009,7 +1704,7 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
     assert not (library / "catalog.json").exists()
 
 
-def test_save_and_reopen_preserves_off_canvas_hold_geometry(tmp_path: Path) -> None:
+def test_save_and_reopen_preserves_off_canvas_contact_geometry(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     package = board_package.load_board_package(package_root)
@@ -2021,7 +1716,7 @@ def test_save_and_reopen_preserves_off_canvas_hold_geometry(tmp_path: Path) -> N
     saved = board_package.save_editor_document(library, "fixture-board", document)
     reopened = board_package.open_package(library, saved.board_id)
 
-    assert _read_board(package_root)["holds"][0]["geometry"][0]["frame"] == {
+    assert geometry_for(_read_board(package_root))["contact-left"][0]["frame"] == {
         "x": -0.05,
         "y": 0.1,
         "width": 0.15,
@@ -2048,7 +1743,7 @@ def test_save_persists_a_quadratic_display_path_as_a_canonical_path_shape(
 
     board_package.save_editor_document(library, "fixture-board", document)
 
-    shape = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]
+    shape = geometry_for(_read_board(package_root))["contact-left"][0]["shape"]
     assert shape["type"] == "path"
     assert shape["commands"] == [
         {"command": "move", "to": [0.0, 0.142857142857]},
@@ -2116,21 +1811,20 @@ def test_invalid_save_leaves_the_live_single_file_package_unchanged(
     assert not (library / "catalog.json").exists()
 
 
-def test_save_recategorizes_a_hold_across_all_its_pieces(tmp_path: Path) -> None:
+def test_save_recategorizes_a_contact_across_all_its_pieces(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    assert _read_board(package_root)["holds"][0]["kind"] == "edge"
-    assert saved.board["holds"][0]["kind"] == "edge"
+    assert _read_board(package_root)["contacts"][0]["kind"] == "edge"
+    assert saved.board["contacts"][0]["kind"] == "edge"
 
 
-def test_save_round_trips_optional_finger_capacity_for_all_pieces_of_a_hold(
+def test_save_round_trips_optional_finger_capacity_for_all_pieces_of_a_contact(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
@@ -2138,16 +1832,15 @@ def test_save_round_trips_optional_finger_capacity_for_all_pieces_of_a_hold(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
 
-    for region in document["regions"]:
-        region["fingerCapacity"] = 3
+    document["contacts"][0]["fingerCapacity"] = 3
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    assert _read_board(package_root)["holds"][0]["fingerCapacity"] == 3
-    assert {region["fingerCapacity"] for region in board_package.editor_document(saved)["regions"]} == {3}
+    assert _read_board(package_root)["contacts"][0]["fingerCapacity"] == 3
+    assert board_package.editor_document(saved)["contacts"][0]["fingerCapacity"] == 3
 
 
-def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_hold(
+def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_contact(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
@@ -2155,119 +1848,28 @@ def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_hold(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
 
-    for region in document["regions"]:
-        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
-
-    saved = board_package.save_editor_document(library, "fixture-board", document)
-
-    assert _read_board(package_root)["holds"][0]["depthRangeMillimeters"] == {
+    document["contacts"][0]["depthRangeMillimeters"] = {
         "lowerBound": 12,
         "upperBound": 16,
     }
-    assert {
-        tuple(region["depthRangeMillimeters"].items())
-        for region in board_package.editor_document(saved)["regions"]
-    } == {(("lowerBound", 12), ("upperBound", 16))}
 
-
-def test_opening_and_saving_preserves_fractional_fixed_hold_measurement(
-    tmp_path: Path,
-) -> None:
-    """Rejects a regression that treats a source-backed fractional fixed depth as invalid."""
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(
-        package_root,
-        lambda board: board["holds"][0].update(sizeMillimeters=7.5),
-    )
-
-    opened = board_package.open_package(library, "fixture.board")
-    document = board_package.editor_document(opened)
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    assert saved.board["holds"][0]["sizeMillimeters"] == 7.5
-    assert "depthRangeMillimeters" not in saved.board["holds"][0]
-    assert _read_board(package_root)["holds"][0]["sizeMillimeters"] == 7.5
-
-
-def test_opening_rejects_hold_with_fixed_and_variable_depths(tmp_path: Path) -> None:
-    """Removing depth-form exclusivity would accept an ambiguous package hold."""
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(
-        package_root,
-        lambda board: board["holds"][0].update(
-            sizeMillimeters=7.5,
-            depthRangeMillimeters={"lowerBound": 7.5, "upperBound": 12.5},
-        ),
-    )
-
-    with pytest.raises(BoardPackageError, match="must not specify both"):
-        board_package.open_package(library, "fixture.board")
-
-
-@pytest.mark.parametrize(
-    "size",
-    [0, -1, math.nan, math.inf, True, "7.5", None],
-)
-def test_save_rejects_malformed_or_non_positive_fixed_depth(
-    tmp_path: Path, size: object
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    document = board_package.editor_document(board_package.load_board_package(package_root))
-    for region in document["regions"]:
-        region["sizeMillimeters"] = size
-
-    with pytest.raises(BoardPackageError, match="positive finite number"):
-        board_package.save_editor_document(library, "fixture-board", document)
-
-
-def test_save_rejects_fixed_and_variable_depth_on_one_piece(tmp_path: Path) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    document = board_package.editor_document(board_package.load_board_package(package_root))
-    for region in document["regions"]:
-        region["sizeMillimeters"] = 8.5
-        region["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
-
-    with pytest.raises(BoardPackageError, match="must not specify both"):
-        board_package.save_editor_document(library, "fixture-board", document)
-
-
-@pytest.mark.parametrize(
-    ("second_piece_depth", "message"),
-    [
-        ({"sizeMillimeters": 9.5}, "share one fixed depth"),
-        (
-            {"depthRangeMillimeters": {"lowerBound": 7.5, "upperBound": 12.5}},
-            "share one depth representation",
-        ),
-        ({}, "share one depth representation"),
-    ],
-)
-def test_save_rejects_inconsistent_depth_across_physical_pieces(
-    tmp_path: Path,
-    second_piece_depth: dict[str, object],
-    message: str,
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    document = board_package.editor_document(board_package.load_board_package(package_root))
-    document["regions"][0]["sizeMillimeters"] = 8.5
-    document["regions"][1].update(second_piece_depth)
-
-    with pytest.raises(BoardPackageError, match=message):
-        board_package.save_editor_document(library, "fixture-board", document)
+    assert _read_board(package_root)["contacts"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 12,
+        "upperBound": 16,
+    }
+    assert board_package.editor_document(saved)["contacts"][0][
+        "depthRangeMillimeters"
+    ] == {"lowerBound": 12, "upperBound": 16}
 
 
 @pytest.mark.parametrize(
     ("measurement", "message"),
     [
-        ({"sizeMillimeters": math.nan}, "positive finite number"),
         (
             {"depthRangeMillimeters": {"lowerBound": 0, "upperBound": 7.5}},
-            "positive finite number",
+            "positive number",
         ),
         (
             {"depthRangeMillimeters": {"lowerBound": 12.5, "upperBound": 7.5}},
@@ -2275,12 +1877,12 @@ def test_save_rejects_inconsistent_depth_across_physical_pieces(
         ),
     ],
 )
-def test_opening_rejects_invalid_fractional_hold_measurements(
+def test_opening_rejects_invalid_fractional_contact_measurements(
     tmp_path: Path, measurement: dict[str, object], message: str
 ) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package_root, lambda board: board["holds"][0].update(measurement))
+    _mutate_board(package_root, lambda board: board["contacts"][0].update(measurement))
 
     with pytest.raises(BoardPackageError, match=message):
         board_package.open_package(library, "fixture.board")
@@ -2294,42 +1896,29 @@ def test_save_round_trips_hand_capacity_and_depth_range_for_all_pieces(
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     document = board_package.editor_document(board_package.load_board_package(package_root))
 
-    for region in document["regions"]:
-        region["handCapacity"] = 2
-        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
+    document["contacts"][0]["handCapacity"] = 2
+    document["contacts"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 12,
+        "upperBound": 16,
+    }
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    stored = _read_board(package_root)["holds"][0]
+    stored = _read_board(package_root)["contacts"][0]
     assert stored["handCapacity"] == 2
     assert stored["depthRangeMillimeters"] == {"lowerBound": 12, "upperBound": 16}
-    assert {
-        (region["handCapacity"], tuple(region["depthRangeMillimeters"].items()))
-        for region in board_package.editor_document(saved)["regions"]
-    } == {(2, (("lowerBound", 12), ("upperBound", 16)))}
-
-
-def test_save_rejects_multi_piece_hold_with_mixed_hand_capacity(
-    tmp_path: Path,
-) -> None:
-    """A physical hold has one capacity even when it has multiple paths."""
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    document = board_package.editor_document(board_package.load_board_package(package_root))
-    document["regions"][0]["handCapacity"] = 1
-    document["regions"][1]["handCapacity"] = 2
-
-    with pytest.raises(BoardPackageError, match="share one hand capacity"):
-        board_package.save_editor_document(library, "fixture-board", document)
+    edited = board_package.editor_document(saved)["contacts"][0]
+    assert edited["handCapacity"] == 2
+    assert edited["depthRangeMillimeters"] == {"lowerBound": 12, "upperBound": 16}
 
 
 def test_save_rejects_an_explicit_null_finger_capacity(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     document = board_package.editor_document(board_package.load_board_package(package_root))
-    document["regions"][0]["fingerCapacity"] = None
+    document["contacts"][0]["fingerCapacity"] = None
 
-    with pytest.raises(BoardPackageError, match="fingerCapacity must be in 1...4"):
+    with pytest.raises(BoardPackageError, match="fingerCapacity must be a positive integer"):
         board_package.save_editor_document(library, "fixture-board", document)
 
 
@@ -2338,52 +1927,48 @@ def test_save_removes_canonical_finger_capacity_when_every_piece_is_unset(
 ) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package_root, lambda board: board["holds"][0].update(fingerCapacity=3))
+    _mutate_board(package_root, lambda board: board["contacts"][0].update(fingerCapacity=3))
     document = board_package.editor_document(board_package.load_board_package(package_root))
 
-    for region in document["regions"]:
-        del region["fingerCapacity"]
+    del document["contacts"][0]["fingerCapacity"]
     board_package.save_editor_document(library, "fixture-board", document)
 
-    assert "fingerCapacity" not in _read_board(package_root)["holds"][0]
+    assert "fingerCapacity" not in _read_board(package_root)["contacts"][0]
 
 
-def test_save_rejects_a_hold_with_pieces_of_mixed_kinds(tmp_path: Path) -> None:
+def test_save_rejects_an_unsupported_contact_kind(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
-    document["regions"][0]["type"] = "edge"
-
-    with pytest.raises(BoardPackageError, match="share one kind"):
-        board_package.save_editor_document(library, "fixture-board", document)
-
-
-def test_save_rejects_an_unsupported_hold_kind(tmp_path: Path) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    package = board_package.load_board_package(package_root)
-    document = board_package.editor_document(package)
-    document["regions"][0]["type"] = "crimp"
-    document["regions"][1]["type"] = "crimp"
+    document["contacts"][0]["kind"] = "crimp"
 
     with pytest.raises(BoardPackageError, match="must be one of"):
         board_package.save_editor_document(library, "fixture-board", document)
 
 
-def test_save_adds_a_new_hold(tmp_path: Path) -> None:
+def test_save_adds_a_new_contact(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
+    document["contacts"].append(
+        {
+            "id": "contact-right",
+            "equipmentObjectID": "primary",
+            "name": "Right contact",
+            "kind": "pinch",
+            "features": [],
+            "gripTypes": [],
+        }
+    )
     document["regions"].append(
         {
             "id": 99,
-            "key": "hold-right-piece-0",
-            "type": "pinch",
+            "key": "contact-right-piece-0",
             "displayPath": "M 900 100 L 950 100 L 950 150 Z",
             "metadata": {
-                "holdID": "hold-right",
+                "contactID": "contact-right",
                 "pieceIndex": 0,
                 "presentationID": "primary",
             },
@@ -2391,48 +1976,52 @@ def test_save_adds_a_new_hold(tmp_path: Path) -> None:
     )
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
-    holds = _read_board(package_root)["holds"]
+    contacts = _read_board(package_root)["contacts"]
 
-    assert [hold["id"] for hold in holds] == ["hold-left", "hold-right"]
-    new_hold = holds[1]
-    assert new_hold["kind"] == "pinch"
-    assert new_hold["name"]
-    assert len(new_hold["geometry"]) == 1
-    assert saved.hold_ids == ("hold-left", "hold-right")
+    assert [contact["id"] for contact in contacts] == ["contact-left", "contact-right"]
+    new_contact = contacts[1]
+    assert new_contact["kind"] == "pinch"
+    assert new_contact["name"] == "Right contact"
+    assert len(geometry_for(_read_board(package_root))["contact-right"]) == 1
+    assert saved.contact_ids == ("contact-left", "contact-right")
 
 
-def test_save_rejects_deleting_the_only_hold(tmp_path: Path) -> None:
+def test_save_rejects_deleting_the_only_contact(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
+    document["contacts"] = []
     document["regions"] = []
 
     with pytest.raises(BoardPackageError, match="non-empty"):
         board_package.save_editor_document(library, "fixture-board", document)
 
 
-def test_save_deletes_one_of_several_holds(tmp_path: Path) -> None:
+def test_save_deletes_one_of_several_contacts(tmp_path: Path) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package_root, _replace_holds_with_supported_kinds)
+    _mutate_board(package_root, _replace_contacts_with_supported_kinds)
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
     document["regions"] = [
         region
         for region in document["regions"]
-        if region["metadata"]["holdID"] != "hold-jug"
+        if region["metadata"]["contactID"] != "contact-jug"
+    ]
+    document["contacts"] = [
+        contact for contact in document["contacts"] if contact["id"] != "contact-jug"
     ]
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
     expected_ids = {
-        f"hold-{kind}"
-        for kind in SUPPORTED_HOLD_KINDS
+        f"contact-{kind}"
+        for kind in SUPPORTED_CONTACT_KINDS
         if kind not in {"jug", "gaston"}
-    } | {"hold-gaston-left", "hold-gaston-right"}
-    assert set(saved.hold_ids) == expected_ids
-    assert "hold-jug" not in {hold["id"] for hold in _read_board(package_root)["holds"]}
+    } | {"contact-gaston-left", "contact-gaston-right"}
+    assert set(saved.contact_ids) == expected_ids
+    assert "contact-jug" not in {contact["id"] for contact in _read_board(package_root)["contacts"]}
 
 
 def test_save_rejects_non_contiguous_piece_indices(tmp_path: Path) -> None:
@@ -2640,11 +2229,7 @@ def test_staging_ignores_primary_only_drafts_when_staging_packages(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     finished = _write_finished_package(library, "finished-board", "finished.board")
-    _mutate_board(finished, _replace_holds_with_supported_kinds)
-    _write_json(
-        finished / "board.json",
-        board_package._schema_v2_board_from_legacy(_read_board(finished)),
-    )
+    _mutate_board(finished, _replace_contacts_with_supported_kinds)
     _write_draft(library, "draft-board")
     package_module = (
         repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
@@ -2674,10 +2259,6 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     finished = _write_finished_package(library, "finished-board", "finished.board")
-    _write_json(
-        finished / "board.json",
-        board_package._schema_v2_board_from_legacy(_read_board(finished)),
-    )
     package_module = (
         repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
     )

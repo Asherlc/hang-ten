@@ -451,7 +451,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       }));
       return;
     }
-    if (!dialogs.confirm(`Delete the ${presentation.displayName} surface and all of its holds? This cannot be undone.`)) {
+    if (!dialogs.confirm(`Delete the ${presentation.displayName} surface and all of its contacts? This cannot be undone.`)) {
       updateState((value) => ({ ...value, status: "Surface deletion cancelled." }));
       return;
     }
@@ -482,7 +482,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         boards: value.boards.map((item) => item.boardId === deleted.boardId
           ? {
             ...item,
-            holdCount: deleted.holdCount,
+            contactCount: deleted.contactCount,
             imageUrl: deleted.imageUrl,
             needsAttention: deleted.needsAttention ?? item.needsAttention,
           }
@@ -972,7 +972,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     openPullRequest,
     selectPresentation,
     deletePresentation,
-    selectHold(key, toggle = false) {
+    selectContact(key, toggle = false) {
       updateState((current) => {
         if (!key || !current.document?.regions.some((region) => region.key === key)) {
           return { ...current, selectedKey: null, selectedKeys: [] };

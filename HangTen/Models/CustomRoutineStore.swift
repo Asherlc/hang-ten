@@ -145,7 +145,6 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case missingTargets(stepIndex: Int)
     case restStepHasTargets(stepIndex: Int)
     case unknownBoard(boardID: String)
-    case unknownHoldID(stepIndex: Int, holdID: String)
     case unresolvableTargets(stepIndex: Int)
     case missingWorkSegmentTargets(stepIndex: Int, segmentIndex: Int)
     case restSegmentHasTargets(stepIndex: Int, segmentIndex: Int)

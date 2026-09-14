@@ -52,7 +52,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(store.board(for: custom).id, BoardCatalog.defaultBoard.id)
         XCTAssertEqual(
             store.contactIDs(for: custom.steps[0], on: BoardCatalog.defaultBoard),
-            ["edge-19-left", "edge-19-right"] as Set
+            ["edge-19-left", "edge-19-right", "edge-29-left", "edge-29-right"] as Set
         )
     }
 
@@ -89,7 +89,10 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
-        let source = try XCTUnwrap(store.plans.first)
+        try store.saveCustomRoutine(makeRoutine(id: "custom.duplicate-source"))
+        let source = try XCTUnwrap(
+            store.plans.first { $0.id == "custom.duplicate-source" }
+        )
 
         let duplicate = try store.duplicateRoutine(source)
 
@@ -106,7 +109,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
-    func testSavedForceFeedbackDuplicateRemainsUnavailableToStart() throws {
+    func testTargetlessForceFeedbackPlanCannotBecomeAnUnsourcedCustomRoutine() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
@@ -114,24 +117,15 @@ final class CustomRoutineAppStoreTests: XCTestCase {
             store.plans.first { $0.id == "research.force-feedback-f80" }
         )
 
-        let duplicate = try store.duplicateRoutine(source)
-        try store.saveCustomRoutine(duplicate)
-        let reconstitutedPlan = try XCTUnwrap(
-            store.plans.first { $0.id == duplicate.id }
-        )
-
-        XCTAssertEqual(
-            PlanStartAvailabilityPolicy.availability(
-                for: reconstitutedPlan,
-                metadata: store.metadata(for: reconstitutedPlan)
-            ),
-            .unavailable(
-                requirement: "Requires real-time force feedback from an instrumented 12 mm edge."
-            )
-        )
+        XCTAssertThrowsError(try store.duplicateRoutine(source)) { error in
+            guard case let CustomRoutineStoreError.validationFailed(issues) = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+            XCTAssertTrue(issues.contains(.missingTargets(stepIndex: 0)))
+        }
     }
 
-    func testSavedOrdinaryDuplicateRemainsAvailableToStart() throws {
+    func testTargetlessOrdinaryPlanCannotBecomeAnUnsourcedCustomRoutine() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
@@ -139,19 +133,12 @@ final class CustomRoutineAppStoreTests: XCTestCase {
             store.plans.first { $0.id == "research.max-hangs" }
         )
 
-        let duplicate = try store.duplicateRoutine(source)
-        try store.saveCustomRoutine(duplicate)
-        let reconstitutedPlan = try XCTUnwrap(
-            store.plans.first { $0.id == duplicate.id }
-        )
-
-        XCTAssertEqual(
-            PlanStartAvailabilityPolicy.availability(
-                for: reconstitutedPlan,
-                metadata: store.metadata(for: reconstitutedPlan)
-            ),
-            .available
-        )
+        XCTAssertThrowsError(try store.duplicateRoutine(source)) { error in
+            guard case let CustomRoutineStoreError.validationFailed(issues) = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+            XCTAssertTrue(issues.contains(.missingTargets(stepIndex: 0)))
+        }
     }
 
     func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {

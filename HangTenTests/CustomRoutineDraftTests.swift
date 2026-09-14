@@ -170,7 +170,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(retargeted.steps.map(\.id), ["hang", "rest"])
         XCTAssertEqual(retargeted.steps.map(\.title), ["Exact hang", "Rest"])
         XCTAssertEqual(retargeted.steps.map(\.timing), [.stopwatch, .fixed])
-        XCTAssertEqual(retargeted.steps.map(\.targets), [[], []])
+        XCTAssertEqual(retargeted.steps.map(\.targets), [[.kind(.edge)], []])
     }
 
     func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {

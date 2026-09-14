@@ -29,7 +29,7 @@ class ContactModelPackageTests(unittest.TestCase):
                 compiler.load_logical_contact_ids(current),
                 frozenset({"left", "right"}),
             )
-            with self.assertRaisesRegex(ValueError, "contacts"):
+            with self.assertRaisesRegex(ValueError, "schemaVersion must be 3"):
                 compiler.load_logical_contact_ids(legacy)
 
 

@@ -38,22 +38,22 @@ def _single_grip_type(contact: object) -> str | None:
     return next(iter(contact.grip_types)) if len(contact.grip_types) == 1 else None
 
 
-def _rename_fixture_geometry(document: dict[str, Any], hold_id: str) -> list[dict[str, Any]]:
+def _rename_fixture_geometry(document: dict[str, Any], contact_id: str) -> list[dict[str, Any]]:
     geometry = document["presentations"][0]["media"]["contactGeometry"]
     pieces = geometry.pop("hold-left")
-    geometry[hold_id] = pieces
+    geometry[contact_id] = pieces
     return pieces
 
 
 def _copy_fixture_geometry(
-    document: dict[str, Any], hold_id: str, pieces: list[dict[str, Any]]
+    document: dict[str, Any], contact_id: str, pieces: list[dict[str, Any]]
 ) -> None:
-    document["presentations"][0]["media"]["contactGeometry"][hold_id] = pieces
+    document["presentations"][0]["media"]["contactGeometry"][contact_id] = pieces
 
 
 def _record(
     board_id: str,
-    hold_id: str,
+    contact_id: str,
     field: str,
     outcome: str,
     *,
@@ -62,7 +62,7 @@ def _record(
 ) -> dict[str, object]:
     record: dict[str, object] = {
         "boardID": board_id,
-        "holdIDs": [hold_id],
+        "contactIDs": [contact_id],
         "field": field,
         "outcome": outcome,
         "reviewedAt": "2026-08-25",
@@ -79,16 +79,16 @@ def _record(
     return record
 
 
-def verified(board_id: str, hold_id: str, field: str, value: object) -> dict[str, object]:
-    return _record(board_id, hold_id, field, "verified", value=value)
+def verified(board_id: str, contact_id: str, field: str, value: object) -> dict[str, object]:
+    return _record(board_id, contact_id, field, "verified", value=value)
 
 
-def unavailable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
-    return _record(board_id, hold_id, field, "unavailable")
+def unavailable(board_id: str, contact_id: str, field: str) -> dict[str, object]:
+    return _record(board_id, contact_id, field, "unavailable")
 
 
-def not_applicable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
-    return _record(board_id, hold_id, field, "notApplicable")
+def not_applicable(board_id: str, contact_id: str, field: str) -> dict[str, object]:
+    return _record(board_id, contact_id, field, "notApplicable")
 
 
 def test_adapted_record_matches_board_value(tmp_path: Path) -> None:
@@ -128,6 +128,14 @@ def test_parser_rejects_adapted_record_without_reason(tmp_path: Path) -> None:
     records[0].pop("reason")
 
     with pytest.raises(MetadataAuditError, match=r"missing keys: \['reason'\]"):
+        load_metadata_ledger(_write_ledger(tmp_path, records))
+
+
+def test_parser_rejects_legacy_hold_ids_field(tmp_path: Path) -> None:
+    records = _complete_records("fixture.board", "hold-left")
+    records[0]["holdIDs"] = records[0].pop("contactIDs")
+
+    with pytest.raises(MetadataAuditError, match="holdIDs"):
         load_metadata_ledger(_write_ledger(tmp_path, records))
 
 
@@ -187,7 +195,7 @@ def test_validator_rejects_mismatched_adapted_value(tmp_path: Path) -> None:
 
 def _complete_records(
     board_id: str,
-    hold_id: str,
+    contact_id: str,
     *,
     verified_values: dict[str, object] | None = None,
 ) -> list[dict[str, object]]:
@@ -195,11 +203,11 @@ def _complete_records(
     records: list[dict[str, object]] = []
     for field in _FIELDS:
         if field in values:
-            records.append(verified(board_id, hold_id, field, values[field]))
+            records.append(verified(board_id, contact_id, field, values[field]))
         elif field == "sloper" and values["kind"] != "sloper":
-            records.append(not_applicable(board_id, hold_id, field))
+            records.append(not_applicable(board_id, contact_id, field))
         else:
-            records.append(unavailable(board_id, hold_id, field))
+            records.append(unavailable(board_id, contact_id, field))
     return records
 
 
@@ -401,10 +409,10 @@ def test_reviewed_scope_rejects_sloper_outcomes_swapped_with_hold_kind(
     for record in records:
         if record["field"] != "sloper":
             continue
-        hold_id = record["holdIDs"][0]
-        outcome = sloper_outcome if hold_id == "sloper-left" else edge_outcome
+        contact_id = record["contactIDs"][0]
+        outcome = sloper_outcome if contact_id == "sloper-left" else edge_outcome
         record.clear()
-        record.update(_record("fixture.board", hold_id, "sloper", outcome))
+        record.update(_record("fixture.board", contact_id, "sloper", outcome))
     ledger_path = _write_ledger(tmp_path, records)
 
     with pytest.raises(MetadataAuditError, match=message):
@@ -519,7 +527,7 @@ def _sloper_ledger_records(
     records = [
         {
             "boardID": "fixture.board",
-            "holdIDs": ["hold-left"],
+            "contactIDs": ["hold-left"],
             "field": "kind",
             "outcome": "verified",
             "reviewedAt": "2026-08-25",
@@ -532,7 +540,7 @@ def _sloper_ledger_records(
         },
         {
             "boardID": "fixture.board",
-            "holdIDs": ["hold-left"],
+            "contactIDs": ["hold-left"],
             "field": "sloper",
             "outcome": "verified",
             "reviewedAt": "2026-08-25",
@@ -598,7 +606,7 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
         [
             {
                 "boardID": "fixture.board",
-                "holdIDs": ["hold-left"],
+                "contactIDs": ["hold-left"],
                 "field": "kind",
                 "outcome": "verified",
                 "reviewedAt": "2026-08-25",
@@ -870,9 +878,9 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         if record["boardID"] == "soill.training-tiles" and record["field"] == "kind"
     ]
     assert {
-        hold_id
+        contact_id
         for record in training_tile_kind_records
-        for hold_id in record["holdIDs"]
+        for contact_id in record["contactIDs"]
     } == expected_training_tile_ids
     assert all(
         record["outcome"] == "adapted"
@@ -885,7 +893,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     )
 
     expected_adaptations = {
-        ("soill.training-tiles", hold_id) for hold_id in expected_training_tile_ids
+        ("soill.training-tiles", contact_id) for contact_id in expected_training_tile_ids
     } | {
         ("soill.split-palm", "lower-pinch-left"),
         ("soill.split-palm", "lower-pinch-right"),
@@ -895,10 +903,10 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         ("tension.honestone", "macro-sloper-right"),
     }
     adapted_kind_ids = {
-        (record["boardID"], hold_id)
+        (record["boardID"], contact_id)
         for record in records
         if record["field"] == "kind" and record["outcome"] == "adapted"
-        for hold_id in record["holdIDs"]
+        for contact_id in record["contactIDs"]
     }
     assert adapted_kind_ids == expected_adaptations
     assert len(adapted_kind_ids) == 26
@@ -908,7 +916,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         for record in records
         if record["boardID"] == "soill.training-tiles"
         and record["field"] == "sloper"
-        and "top-pocket-outer-left" in record["holdIDs"]
+        and "top-pocket-outer-left" in record["contactIDs"]
     )
     assert "non-pocket" not in training_tile_pocket_sloper["reason"]
     assert "adapted pocket contact role" in training_tile_pocket_sloper["reason"]
@@ -1278,9 +1286,9 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
         for hold in pivot.contacts
         if hold.id.startswith(("upper-sloped-crimp-", "outer-sloped-crimp-"))
     } == {
-        f"{hold_id}{suffix}": size
+        f"{contact_id}{suffix}": size
         for suffix in pivot_suffixes
-        for hold_id, size in base_crimp_sizes.items()
+        for contact_id, size in base_crimp_sizes.items()
     }
     base_pocket_grip_types = {
         "two-finger-pocket-left": "twoFingerPocket",
@@ -1291,9 +1299,9 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
     assert {
         hold.id: _single_grip_type(hold) for hold in pivot.contacts if hold.kind == "pocket"
     } == {
-        f"{hold_id}{suffix}": grip_type
+        f"{contact_id}{suffix}": grip_type
         for suffix in pivot_suffixes
-        for hold_id, grip_type in base_pocket_grip_types.items()
+        for contact_id, grip_type in base_pocket_grip_types.items()
     }
 
     training_center = packages["trango.rock-prodigy-training-center"]
@@ -1333,11 +1341,11 @@ def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:
         )
 
 
-def test_rejects_an_unknown_hold_id(tmp_path: Path) -> None:
+def test_rejects_an_unknown_contact_id(tmp_path: Path) -> None:
     write_board_package(tmp_path / "boards" / "fixture")
     ledger = _write_ledger(tmp_path, _complete_records("fixture.board", "unknown-hold"))
 
-    with pytest.raises(MetadataAuditError, match="unknown hold ID: unknown-hold"):
+    with pytest.raises(MetadataAuditError, match="unknown contact ID: unknown-hold"):
         validate_metadata_ledger(
             load_metadata_ledger(ledger), discover_board_packages(tmp_path / "boards")
         )

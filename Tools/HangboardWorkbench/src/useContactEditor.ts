@@ -7,9 +7,8 @@ import type {
 
 import {
   cloneEditorDocument,
-  holdCentroid,
-  holdSiblings,
-  nextHoldId,
+  contactCentroid,
+  contactSiblings,
   nextRegionId,
   normalizedConstraintRotation,
   normalizedRotationDegrees,
@@ -42,8 +41,7 @@ import type {
   ConstrainedHandle,
   EditorDocument,
   EditablePath,
-  HoldRegion,
-  MillimeterRange,
+  ContactRegion,
   PathCommand,
   PathEditor,
   Point,
@@ -55,7 +53,7 @@ import type {
 interface DragState {
   active: boolean;
   type: "vertex" | "control" | "path" | "bend" | "rotation" | "constrained-resize" | null;
-  holdKey: string | null;
+  contactKey: string | null;
   segmentID: string | null;
   anchorID: string | null;
   controlID: string | null;
@@ -84,13 +82,13 @@ interface DragState {
 }
 
 interface VertexSelection {
-  holdKey: string;
+  contactKey: string;
   anchorID: string;
 }
 
 interface VertexMenuState {
   document: EditorDocument;
-  holdKey: string;
+  contactKey: string;
   x: number;
   y: number;
   kind: "vertex" | "segment";
@@ -101,7 +99,7 @@ interface VertexMenuState {
 
 interface EditablePathState {
   document: EditorDocument;
-  holdKey: string;
+  contactKey: string;
   displayPath: string;
   path: EditablePath;
 }
@@ -109,7 +107,7 @@ interface EditablePathState {
 const EMPTY_DRAG: DragState = {
   active: false,
   type: null,
-  holdKey: null,
+  contactKey: null,
   segmentID: null,
   anchorID: null,
   controlID: null,
@@ -132,9 +130,9 @@ const EMPTY_DRAG: DragState = {
 
 const GUIDE_SNAP_TOLERANCE = 6;
 
-export interface UseHoldEditorOptions {
+export interface UseContactEditorOptions {
   document: EditorDocument | null;
-  selectedHold: HoldRegion | null;
+  selectedRegion: ContactRegion | null;
   selectedKeys: readonly string[];
   dirty: boolean;
   status: string;
@@ -146,10 +144,9 @@ export interface UseHoldEditorOptions {
   dialogs: Dialogs;
   horizontalGuideYs: readonly number[];
   verticalGuideXs: readonly number[];
-  reservedHoldIDs?: readonly string[];
 }
 
-export interface HoldEditorActions {
+export interface ContactEditorActions {
   editablePath: EditablePath | null;
   selectedAnchorID: string | null;
   vertexMenu: { x: number; y: number; kind: "vertex" | "segment" } | null;
@@ -161,10 +158,10 @@ export interface HoldEditorActions {
   canMakeSelectedSegmentStraight: boolean;
   canMakeSelectedSegmentHorizontal: boolean;
   canMakeSelectedSegmentVertical: boolean;
-  addHold(): void;
-  addHoldSegment(): void;
-  duplicateAndMirrorHold(): void;
-  deleteHold(): void;
+  addContact(): void;
+  addContactPiece(): void;
+  duplicateAndMirrorContact(): void;
+  deleteContact(): void;
   selectAnchor(anchorID: string): void;
   deleteSelectedVertex(): void;
   roundSelectedVertex(): void;
@@ -174,16 +171,10 @@ export interface HoldEditorActions {
   makeSelectedSegmentHorizontal(): void;
   makeSelectedSegmentVertical(): void;
   dismissVertexMenu(restoreFocus?: boolean): void;
-  changeHoldType(type: string): void;
-  changePairedHoldID(pairedHoldID: string | undefined): void;
-  changeFingerCapacity(capacity: number | undefined): void;
-  changeHoldDepthMeasurement(mode: "unset" | "fixed" | "variable"): void;
-  changeHoldSizeMillimeters(size: number | undefined): void;
-  changeHoldDepthRange(depthRange: MillimeterRange | undefined): void;
-  changeHandCapacity(capacity: number | undefined): void;
-  changeEquipmentObjectID(equipmentObjectID: string): void;
+  changeDisplayPath(displayPath: string): void;
+  changeTreatment(treatment: ContactRegion["treatment"]): void;
   changeOutlineShape(shape: string): void;
-  rotateHold(degrees: number): void;
+  rotateContact(degrees: number): void;
   applyRotation(): void;
   cancelActiveEdit(): boolean;
   onPointerDown(event: ReactPointerEvent<SVGSVGElement>): void;
@@ -205,7 +196,7 @@ function translateCommands(commands: PathCommand[], deltaX: number, deltaY: numb
   }
 }
 
-function writeBendableCommandIndexes(region: HoldRegion, commands: readonly PathCommand[]): void {
+function writeBendableCommandIndexes(region: ContactRegion, commands: readonly PathCommand[]): void {
   const bendableCommandIndexes = commands.flatMap((command, index) => (
     command.type === "C" && command.bendable === true ? [index] : []
   ));
@@ -213,13 +204,13 @@ function writeBendableCommandIndexes(region: HoldRegion, commands: readonly Path
   else delete region.bendableCommandIndexes;
 }
 
-function writeSmoothAnchorIndexes(region: HoldRegion, commands: readonly PathCommand[]): void {
+function writeSmoothAnchorIndexes(region: ContactRegion, commands: readonly PathCommand[]): void {
   const smoothAnchorIndexes = commands.flatMap((command, index) => command.smooth === true ? [index] : []);
   if (smoothAnchorIndexes.length > 0) region.smoothAnchorIndexes = smoothAnchorIndexes;
   else delete region.smoothAnchorIndexes;
 }
 
-function writeEditablePathMetadata(region: HoldRegion, path: EditablePath): void {
+function writeEditablePathMetadata(region: ContactRegion, path: EditablePath): void {
   const commands = path.segments.map((segment) => ({
     type: segment.type,
     ...(segment.bendable === true ? { bendable: true } : {}),
@@ -231,7 +222,7 @@ function writeEditablePathMetadata(region: HoldRegion, path: EditablePath): void
   writeSmoothAnchorIndexes(region, commands);
 }
 
-function pathCommandsForHold(region: HoldRegion, pathEditor: PathEditor): PathCommand[] {
+function pathCommandsForContact(region: ContactRegion, pathEditor: PathEditor): PathCommand[] {
   const commands = pathEditor.parsePath(region.displayPath);
   for (const index of region.bendableCommandIndexes ?? []) {
     const command = commands[index];
@@ -345,7 +336,7 @@ function draggedRegionsMatch(
 ): boolean {
   const keys = drag.type === "rotation"
     ? (drag.originalPaths ?? []).map((original) => original.key)
-    : drag.holdKey ? [drag.holdKey] : [];
+    : drag.contactKey ? [drag.contactKey] : [];
   return keys.every((key) => {
     const leftRegion = left.regions.find((region) => region.key === key);
     const rightRegion = right.regions.find((region) => region.key === key);
@@ -364,7 +355,7 @@ function dragMatchesOriginal(drag: DragState, document: EditorDocument): boolean
         && constraintsMatch(region.shapeConstraint, original.shapeConstraint);
     });
   }
-  const region = document.regions.find((candidate) => candidate.key === drag.holdKey);
+  const region = document.regions.find((candidate) => candidate.key === drag.contactKey);
   return !!region
     && region.displayPath === drag.originalPath
     && constraintsMatch(region.shapeConstraint, drag.originalConstraint);
@@ -382,24 +373,24 @@ function canDeleteEditableAnchor(path: EditablePath, anchorID: string): boolean 
   return path.segments.length > 3 && editablePathAnchor(path, anchorID) !== undefined;
 }
 
-function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly string[]): HoldRegion[][] {
+function selectedPhysicalContacts(document: EditorDocument, selectedKeys: readonly string[]): ContactRegion[][] {
   const selected = new Set(selectedKeys);
-  const groups = new Map<string, HoldRegion[]>();
+  const groups = new Map<string, ContactRegion[]>();
   for (const region of document.regions) {
     if (!selected.has(region.key)) continue;
-    const siblings = holdSiblings(document, region);
+    const siblings = contactSiblings(document, region);
     groups.set(siblings.map((sibling) => sibling.key).join("\u0000"), siblings);
   }
   return [...groups.values()];
 }
 
-function mirrorHoldPath(
-  source: HoldRegion,
-  target: HoldRegion,
+function mirrorContactPath(
+  source: ContactRegion,
+  target: ContactRegion,
   canvasWidth: number,
   pathEditor: PathEditor,
 ): void {
-  const commands = pathCommandsForHold(source, pathEditor);
+  const commands = pathCommandsForContact(source, pathEditor);
   for (const command of commands) {
     for (const point of [...command.points, ...command.controls]) point.x = canvasWidth - point.x;
   }
@@ -456,10 +447,10 @@ function editableSegmentAfter(
   };
 }
 
-export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
+export function useContactEditor(options: UseContactEditorOptions): ContactEditorActions {
   const {
     document,
-    selectedHold,
+    selectedRegion,
     selectedKeys,
     dirty,
     status,
@@ -471,7 +462,6 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     dialogs,
     horizontalGuideYs,
     verticalGuideXs,
-    reservedHoldIDs = [],
   } = options;
   const dragRef = useRef<DragState>({ ...EMPTY_DRAG });
   const previewDocumentRef = useRef<EditorDocument | null>(null);
@@ -482,11 +472,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const [vertexSelection, setVertexSelection] = useState<VertexSelection | null>(null);
   const [vertexMenuState, setVertexMenuState] = useState<VertexMenuState | null>(null);
   let editablePath: EditablePath | null = null;
-  if (document && selectedHold && !selectedHold.shapeConstraint) {
+  if (document && selectedRegion && !selectedRegion.shapeConstraint) {
     const current = editablePathRef.current;
     try {
-      const matchesSelection = current?.holdKey === selectedHold.key
-        && current.displayPath === selectedHold.displayPath;
+      const matchesSelection = current?.contactKey === selectedRegion.key
+        && current.displayPath === selectedRegion.displayPath;
       const localUpdate = locallyUpdatedEditablePathRef.current;
       if (matchesSelection && (current.document === document || localUpdate || dragRef.current.active)) {
         editablePath = current.path;
@@ -496,16 +486,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         }
       } else {
         editablePath = createEditablePath(
-          selectedHold.key,
-          selectedHold.displayPath,
+          selectedRegion.key,
+          selectedRegion.displayPath,
           pathEditor,
-          selectedHold.bendableCommandIndexes,
-          selectedHold.smoothAnchorIndexes,
+          selectedRegion.bendableCommandIndexes,
+          selectedRegion.smoothAnchorIndexes,
         );
         editablePathRef.current = {
           document,
-          holdKey: selectedHold.key,
-          displayPath: selectedHold.displayPath,
+          contactKey: selectedRegion.key,
+          displayPath: selectedRegion.displayPath,
           path: editablePath,
         };
         locallyUpdatedEditablePathRef.current = false;
@@ -520,8 +510,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   }
   const reportInvalidPath = useCallback((error: unknown): void => {
     actions.editDocument(() => { throw error; }, {
-      failureStatus: "Could not edit — selected hold has an invalid path.",
-      failureMessage: errorMessage(error, "Selected hold path is invalid."),
+      failureStatus: "Could not edit — selected contact has an invalid path.",
+      failureMessage: errorMessage(error, "Selected contact path is invalid."),
     });
   }, [actions]);
 
@@ -534,8 +524,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   let canMakeSelectedSegmentStraight = false;
   let canMakeSelectedSegmentHorizontal = false;
   let canMakeSelectedSegmentVertical = false;
-  if (!busy && document && selectedHold && !selectedHold.shapeConstraint && editablePath) {
-    if (vertexSelection?.holdKey === selectedHold.key) {
+  if (!busy && document && selectedRegion && !selectedRegion.shapeConstraint && editablePath) {
+    if (vertexSelection?.contactKey === selectedRegion.key) {
       selectionIsCurrent = editablePathAnchor(editablePath, vertexSelection.anchorID) !== undefined;
       canDeleteSelectedVertex = selectionIsCurrent
         && canDeleteEditableAnchor(editablePath, vertexSelection.anchorID);
@@ -547,7 +537,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       canRoundSelectedVertex = roundEditableAnchor(candidate, vertexSelection.anchorID, pathEditor);
     }
     if (vertexMenuState?.document === document
-      && vertexMenuState.holdKey === selectedHold.key
+      && vertexMenuState.contactKey === selectedRegion.key
       && vertexMenuState.segmentID !== null) {
       const { segmentID, segmentPoint } = vertexMenuState;
       const inflectionCandidate = cloneEditablePath(editablePath);
@@ -565,33 +555,33 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   }
   const selectedAnchorID = selectionIsCurrent ? vertexSelection!.anchorID : null;
   const menuIsCurrent = vertexMenuState?.document === document
-    && vertexMenuState.holdKey === selectedHold?.key
+    && vertexMenuState.contactKey === selectedRegion?.key
     && (selectionIsCurrent || vertexMenuState.segmentID !== null);
   const vertexMenu = menuIsCurrent
     ? { x: vertexMenuState.x, y: vertexMenuState.y, kind: vertexMenuState.kind }
     : null;
 
   const selectAnchor = useCallback((anchorID: string): void => {
-    if (busy || !selectedHold || selectedHold.shapeConstraint || !editablePath) return;
+    if (busy || !selectedRegion || selectedRegion.shapeConstraint || !editablePath) return;
     if (editablePathAnchor(editablePath, anchorID) === undefined) return;
-    setVertexSelection({ holdKey: selectedHold.key, anchorID });
+    setVertexSelection({ contactKey: selectedRegion.key, anchorID });
     setVertexMenuState(null);
-  }, [busy, editablePath, selectedHold]);
+  }, [busy, editablePath, selectedRegion]);
 
   const commitEditablePath = useCallback((path: EditablePath, displayPath: string, nextStatus: string): boolean => {
-    if (!document || !selectedHold) return false;
+    if (!document || !selectedRegion) return false;
     const edited = actions.editDocument((candidate) => {
-      const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-      if (hold && !hold.shapeConstraint) {
-        hold.displayPath = displayPath;
-        writeEditablePathMetadata(hold, path);
+      const contact = candidate.regions.find((region) => region.key === selectedRegion.key);
+      if (contact && !contact.shapeConstraint) {
+        contact.displayPath = displayPath;
+        writeEditablePathMetadata(contact, path);
       }
     }, { status: nextStatus });
     if (!edited) return false;
-    editablePathRef.current = { document, holdKey: selectedHold.key, displayPath, path };
+    editablePathRef.current = { document, contactKey: selectedRegion.key, displayPath, path };
     locallyUpdatedEditablePathRef.current = true;
     return true;
-  }, [actions, document, selectedHold]);
+  }, [actions, document, selectedRegion]);
 
   const deleteSelectedVertex = useCallback((): void => {
     if (!canDeleteSelectedVertex || !editablePath || selectedAnchorID === null) return;
@@ -616,8 +606,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   ]);
 
   const roundSelectedVertex = useCallback((): void => {
-    if (!canRoundSelectedVertex || !editablePath || selectedAnchorID === null || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || vertexMenuState.segmentID !== null) return;
+    if (!canRoundSelectedVertex || !editablePath || selectedAnchorID === null || !selectedRegion
+      || vertexMenuState?.contactKey !== selectedRegion.key || vertexMenuState.segmentID !== null) return;
     try {
       const candidate = cloneEditablePath(editablePath);
       if (!roundEditableAnchor(candidate, selectedAnchorID, pathEditor)) return;
@@ -627,13 +617,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
-  }, [canRoundSelectedVertex, commitEditablePath, editablePath, pathEditor, reportInvalidPath, selectedAnchorID, selectedHold, vertexMenuState]);
+  }, [canRoundSelectedVertex, commitEditablePath, editablePath, pathEditor, reportInvalidPath, selectedAnchorID, selectedRegion, vertexMenuState]);
 
   const addInflectionPoint = useCallback((): void => {
     const segmentID = vertexMenuState?.segmentID;
     const point = vertexMenuState?.segmentPoint;
-    if (!canAddInflectionPoint || !editablePath || !selectedHold || !point
-      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
+    if (!canAddInflectionPoint || !editablePath || !selectedRegion || !point
+      || vertexMenuState?.contactKey !== selectedRegion.key || segmentID === null || segmentID === undefined) return;
     try {
       const candidate = cloneEditablePath(editablePath);
       if (!insertEditableInflectionPoint(candidate, segmentID, point, pathEditor)) return;
@@ -649,15 +639,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     editablePath,
     pathEditor,
     reportInvalidPath,
-    selectedHold,
+    selectedRegion,
     vertexMenuState?.segmentID,
     vertexMenuState?.segmentPoint,
   ]);
 
   const makeSelectedSegmentBendable = useCallback((): void => {
     const segmentID = vertexMenuState?.segmentID;
-    if (!canMakeSelectedSegmentBendable || !editablePath || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
+    if (!canMakeSelectedSegmentBendable || !editablePath || !selectedRegion
+      || vertexMenuState?.contactKey !== selectedRegion.key || segmentID === null || segmentID === undefined) return;
     try {
       const candidate = cloneEditablePath(editablePath);
       if (!makeEditableSegmentBendable(candidate, segmentID, pathEditor)) return;
@@ -673,14 +663,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     editablePath,
     pathEditor,
     reportInvalidPath,
-    selectedHold,
+    selectedRegion,
     vertexMenuState?.segmentID,
   ]);
 
   const makeSelectedSegmentStraight = useCallback((): void => {
     const segmentID = vertexMenuState?.segmentID;
-    if (!canMakeSelectedSegmentStraight || !editablePath || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
+    if (!canMakeSelectedSegmentStraight || !editablePath || !selectedRegion
+      || vertexMenuState?.contactKey !== selectedRegion.key || segmentID === null || segmentID === undefined) return;
     try {
       const candidate = cloneEditablePath(editablePath);
       if (!makeEditableSegmentStraight(candidate, segmentID, pathEditor)) return;
@@ -696,7 +686,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     editablePath,
     pathEditor,
     reportInvalidPath,
-    selectedHold,
+    selectedRegion,
     vertexMenuState?.segmentID,
   ]);
 
@@ -705,8 +695,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const canSnap = axis === "horizontal"
       ? canMakeSelectedSegmentHorizontal
       : canMakeSelectedSegmentVertical;
-    if (!canSnap || !editablePath || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
+    if (!canSnap || !editablePath || !selectedRegion
+      || vertexMenuState?.contactKey !== selectedRegion.key || segmentID === null || segmentID === undefined) return;
     try {
       const candidate = cloneEditablePath(editablePath);
       const snapped = axis === "horizontal"
@@ -726,7 +716,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     editablePath,
     pathEditor,
     reportInvalidPath,
-    selectedHold,
+    selectedRegion,
     vertexMenuState?.segmentID,
   ]);
 
@@ -748,21 +738,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     });
   }, []);
 
-  const rotateHold = useCallback((degrees: number): void => {
-    if (busy || !document || !selectedHold) return;
-    const holds = selectedPhysicalHolds(document, selectedKeys);
+  const rotateContact = useCallback((degrees: number): void => {
+    if (busy || !document || !selectedRegion) return;
+    const contacts = selectedPhysicalContacts(document, selectedKeys);
     const angleRadians = ((degrees % 360) * Math.PI) / 180;
-    const selectedPhysicalHold = holds.find((hold) => (
-      hold.some((region) => region.key === selectedHold.key)
+    const selectedPhysicalContact = contacts.find((contact) => (
+      contact.some((region) => region.key === selectedRegion.key)
     ));
-    const rotatedEditablePath = editablePath && selectedPhysicalHold
+    const rotatedEditablePath = editablePath && selectedPhysicalContact
       ? cloneEditablePath(editablePath)
       : null;
-    if (rotatedEditablePath && selectedPhysicalHold) {
+    if (rotatedEditablePath && selectedPhysicalContact) {
       rotateEditablePath(
         rotatedEditablePath,
         angleRadians,
-        holdCentroid(selectedPhysicalHold, pathEditor),
+        contactCentroid(selectedPhysicalContact, pathEditor),
         pathEditor,
       );
     }
@@ -770,12 +760,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       ? serializeEditablePath(rotatedEditablePath, pathEditor)
       : null;
     const edited = actions.editDocument((candidate) => {
-      for (const hold of holds) {
-        const siblingKeys = new Set(hold.map((region) => region.key));
-        const pivot = holdCentroid(hold, pathEditor);
+      for (const contact of contacts) {
+        const siblingKeys = new Set(contact.map((region) => region.key));
+        const pivot = contactCentroid(contact, pathEditor);
         for (const region of candidate.regions) {
           if (!siblingKeys.has(region.key)) continue;
-          if (region.key === selectedHold.key && rotatedDisplayPath !== null) {
+          if (region.key === selectedRegion.key && rotatedDisplayPath !== null) {
             region.displayPath = rotatedDisplayPath;
           } else {
             const commands = pathEditor.parsePath(region.displayPath);
@@ -791,65 +781,80 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         }
       }
     }, {
-      status: "Hold rotated. Save when ready.",
+      status: "Contact rotated. Save when ready.",
       failureStatus: "Rotation reverted — contour is invalid.",
     });
     if (edited && rotatedEditablePath && rotatedDisplayPath !== null) {
       editablePathRef.current = {
         document,
-        holdKey: selectedHold.key,
+        contactKey: selectedRegion.key,
         displayPath: rotatedDisplayPath,
         path: rotatedEditablePath,
       };
       locallyUpdatedEditablePathRef.current = true;
     }
-  }, [actions, busy, document, editablePath, pathEditor, selectedHold, selectedKeys]);
+  }, [actions, busy, document, editablePath, pathEditor, selectedRegion, selectedKeys]);
 
-  const addHold = useCallback((): void => {
+  const addContact = useCallback((): void => {
     if (busy || !document) return;
+    const contactID = dialogs.prompt("Enter the source-backed contact ID.", "")?.trim();
+    if (!contactID || document.contacts.some((contact) => contact.id === contactID)) return;
+    const name = dialogs.prompt("Enter the source-backed contact name.", "")?.trim();
+    if (!name) return;
+    const equipmentObjectID = dialogs.prompt("Enter the source-backed equipment object ID.", "")?.trim();
+    if (!equipmentObjectID) return;
+    const kind = dialogs.prompt("Enter the factual kind: jug, edge, pocket, pinch, sloper, or gaston.", "")?.trim();
+    if (!kind) return;
+    const features = dialogs.prompt("Enter source-backed features as comma-separated values; leave blank when none are stated.", "");
+    if (features === null) return;
+    const gripTypes = dialogs.prompt("Enter source-backed grip types as comma-separated values; leave blank when none are stated.", "");
+    if (gripTypes === null) return;
     const { width, height } = document.canvas;
     const size = Math.max(20, Math.min(60, width * 0.06, height * 0.06));
     const centerX = width / 2;
     const centerY = height / 2;
-    const holdId = nextHoldId(document, reservedHoldIDs);
-    const key = `${holdId}-piece-0`;
+    const key = uniqueRegionKey(document, `${contactID}-piece-0`);
     actions.editDocument((candidate) => {
+      candidate.contacts.push({
+        id: contactID,
+        equipmentObjectID,
+        name,
+        kind,
+        features: [...new Set(features.split(",").map((value) => value.trim()).filter(Boolean))],
+        gripTypes: [...new Set(gripTypes.split(",").map((value) => value.trim()).filter(Boolean))],
+      });
       candidate.regions.push({
         id: nextRegionId(candidate),
         key,
-        type: "edge",
-        ...(candidate.equipmentObjects?.[0]
-          ? { equipmentObjectID: candidate.equipmentObjects[0] }
-          : {}),
         displayPath: `M ${centerX - size} ${centerY - size} L ${centerX + size} ${centerY - size} L ${centerX + size} ${centerY + size} L ${centerX - size} ${centerY + size} Z`,
         metadata: {
-          holdID: holdId,
+          contactID,
           pieceIndex: 0,
-          ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+          presentationID: document.presentationID,
         },
       });
     }, {
       selectedKey: key,
       selectedKeys: [key],
-      status: "Hold added. Drag it into place and save when ready.",
-      failureMessage: "Could not add hold.",
+      status: "Contact added. Drag it into place and save when ready.",
+      failureMessage: "Could not add contact.",
     });
-  }, [actions, busy, document, reservedHoldIDs]);
+  }, [actions, busy, dialogs, document]);
 
-  const addHoldSegment = useCallback((): void => {
-    if (busy || !document || !selectedHold) return;
-    const source = selectedHold;
+  const addContactPiece = useCallback((): void => {
+    if (busy || !document || !selectedRegion) return;
+    const source = selectedRegion;
     const sourceMetadata = source.metadata;
-    if (!sourceMetadata?.holdID) return;
-    const holdId = sourceMetadata.holdID;
+    if (!sourceMetadata?.contactID) return;
+    const contactID = sourceMetadata.contactID;
     const pieceIndex = Math.max(
       -1,
       ...document.regions.flatMap((region) => (
-        region.metadata?.holdID === holdId ? [region.metadata.pieceIndex] : []
+        region.metadata?.contactID === contactID ? [region.metadata.pieceIndex] : []
       )),
     ) + 1;
-    const key = uniqueRegionKey(document, `${holdId}-piece-${pieceIndex}`);
-    const commands = pathCommandsForHold(source, pathEditor);
+    const key = uniqueRegionKey(document, `${contactID}-piece-${pieceIndex}`);
+    const commands = pathCommandsForContact(source, pathEditor);
     const bounds = pathEditor.pathBounds(commands);
     const width = Math.max(1, bounds.maxX - bounds.minX);
     const height = Math.max(1, bounds.maxY - bounds.minY);
@@ -871,61 +876,77 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         displayPath,
         metadata: {
           ...sourceMetadata,
-          holdID: holdId,
+          contactID,
           pieceIndex,
-          ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+          presentationID: document.presentationID,
         },
       });
     }, {
       selectedKey: key,
       selectedKeys: [key],
-      status: "Hold segment added. Drag it into place and save when ready.",
-      failureMessage: "Could not add hold segment.",
+      status: "Contact piece added. Drag it into place and save when ready.",
+      failureMessage: "Could not add contact piece.",
     });
     if (!added) return;
     setVertexSelection(null);
     setVertexMenuState(null);
-  }, [actions, busy, document, pathEditor, selectedHold]);
+  }, [actions, busy, document, pathEditor, selectedRegion]);
 
-  const duplicateAndMirrorHold = useCallback((): void => {
-    if (busy || !document || !selectedHold) return;
-    const holds = selectedPhysicalHolds(document, selectedKeys);
+  const duplicateAndMirrorContact = useCallback((): void => {
+    if (busy || !document || !selectedRegion) return;
+    const contacts = selectedPhysicalContacts(document, selectedKeys);
+    if (contacts.length !== 1) {
+      actions.replaceDocument(document, {
+        dirty,
+        validation: "Select exactly one physical contact to duplicate and mirror.",
+        status: "Mirroring needs one physical contact.",
+      });
+      return;
+    }
+    const sourceContactID = contacts[0]?.[0]?.metadata.contactID;
+    const sourceFacts = document.contacts.find((contact) => contact.id === sourceContactID);
+    if (!sourceFacts) return;
+    const contactID = dialogs.prompt("Enter the source-backed ID for the mirrored contact.", "")?.trim();
+    if (!contactID || document.contacts.some((contact) => contact.id === contactID)) return;
+    const name = dialogs.prompt("Enter the source-backed name for the mirrored contact.", "")?.trim();
+    if (!name) return;
     const planningDocument = cloneEditorDocument(document);
-    const duplicates: Array<{ source: HoldRegion; id: number; key: string; holdId: string; pieceIndex: number }> = [];
+    const duplicates: Array<{ source: ContactRegion; id: number; key: string; pieceIndex: number }> = [];
     const duplicateKeyBySourceKey = new Map<string, string>();
-    for (const hold of holds) {
-      const holdId = nextHoldId(planningDocument, reservedHoldIDs);
-      for (let index = 0; index < hold.length; index += 1) {
-        const source = hold[index]!;
+    for (const contact of contacts) {
+      for (let index = 0; index < contact.length; index += 1) {
+        const source = contact[index]!;
         const pieceIndex = source.metadata?.pieceIndex ?? index;
-        const key = uniqueRegionKey(planningDocument, `${holdId}-piece-${pieceIndex}`);
+        const key = uniqueRegionKey(planningDocument, `${contactID}-piece-${pieceIndex}`);
         const id = nextRegionId(planningDocument);
         planningDocument.regions.push({
           ...source,
           id,
           key,
           metadata: {
-            holdID: holdId,
+            contactID,
             pieceIndex,
-            ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+            presentationID: document.presentationID,
           },
         });
-        duplicates.push({ source, id, key, holdId, pieceIndex });
+        duplicates.push({ source, id, key, pieceIndex });
         duplicateKeyBySourceKey.set(source.key, key);
       }
     }
     const duplicateKeys = duplicates.map((duplicate) => duplicate.key);
     const edited = actions.editDocument((candidate) => {
+      const { pairedContactID: _pair, side: _side, ...mirroredFacts } = sourceFacts;
+      candidate.contacts.push({ ...mirroredFacts, id: contactID, name });
       for (const duplicate of duplicates) {
-        const { source, id, key, holdId, pieceIndex } = duplicate;
-        const mirrored: HoldRegion = {
+        const { source, id, key, pieceIndex } = duplicate;
+        const mirrored: ContactRegion = {
           ...source,
           id,
           key,
           metadata: {
-            holdID: holdId,
+            contactID,
             pieceIndex,
-            ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+            presentationID: document.presentationID,
           },
           ...(source.shapeConstraint ? {
             shapeConstraint: {
@@ -934,232 +955,86 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             },
           } : {}),
         };
-        mirrorHoldPath(source, mirrored, candidate.canvas.width, pathEditor);
+        mirrorContactPath(source, mirrored, candidate.canvas.width, pathEditor);
         candidate.regions.push(mirrored);
       }
     }, {
-      selectedKey: duplicateKeyBySourceKey.get(selectedHold.key) ?? duplicateKeys[0] ?? null,
+      selectedKey: duplicateKeyBySourceKey.get(selectedRegion.key) ?? duplicateKeys[0] ?? null,
       selectedKeys: duplicateKeys,
-      status: "Hold duplicated and mirrored. Save when ready.",
+      status: "Contact duplicated and mirrored. Save when ready.",
       failureStatus: "Duplicate reverted — contour is invalid.",
     });
     if (!edited) return;
     setVertexSelection(null);
     setVertexMenuState(null);
-  }, [actions, busy, document, pathEditor, reservedHoldIDs, selectedHold, selectedKeys]);
+  }, [actions, busy, dialogs, dirty, document, pathEditor, selectedRegion, selectedKeys]);
 
-  const deleteHold = useCallback((): void => {
-    if (busy || !document || !selectedHold) return;
-    const holds = selectedPhysicalHolds(document, selectedKeys);
-    const confirmation = holds.length === 1
-      ? `Delete hold "${selectedHold.key}"?`
-      : `Delete ${holds.length} selected holds and all of their pieces?`;
+  const deleteContact = useCallback((): void => {
+    if (busy || !document || !selectedRegion) return;
+    const contacts = selectedPhysicalContacts(document, selectedKeys);
+    const confirmation = contacts.length === 1
+      ? `Delete contact "${selectedRegion.key}"?`
+      : `Delete ${contacts.length} selected contacts and all of their pieces?`;
     if (!dialogs.confirm(confirmation)) return;
-    const siblingKeys = new Set(holds.flatMap((hold) => hold.map((region) => region.key)));
+    const siblingKeys = new Set(contacts.flatMap((contact) => contact.map((region) => region.key)));
+    const contactIDs = new Set(contacts.flatMap((contact) => contact.map((region) => region.metadata.contactID)));
     actions.editDocument((candidate) => {
       candidate.regions = candidate.regions.filter((region) => !siblingKeys.has(region.key));
+      candidate.contacts = candidate.contacts
+        .filter((contact) => !contactIDs.has(contact.id))
+        .map((contact) => contact.pairedContactID && contactIDs.has(contact.pairedContactID)
+          ? (() => { const next = { ...contact }; delete next.pairedContactID; return next; })()
+          : contact);
     }, {
       selectedKey: null,
       selectedKeys: [],
-      status: "Hold deleted. Save when ready.",
+      status: "Contact deleted. Save when ready.",
       failureMessage: "Document is invalid after deletion.",
     });
-  }, [actions, busy, dialogs, document, selectedHold, selectedKeys]);
+  }, [actions, busy, dialogs, document, selectedRegion, selectedKeys]);
 
-  const changeHoldType = useCallback((type: string): void => {
-    if (busy || !document || !selectedHold) return;
-    const selectedHolds = selectedPhysicalHolds(document, selectedKeys);
-    const siblingKeys = new Set(selectedHolds.flatMap((hold) => hold.map((region) => region.key)));
-    const gastonPairHoldIDs = type === "gaston" ? selectedHolds.map((hold) => hold[0]?.metadata?.holdID) : [];
-    const [firstGastonHoldID, secondGastonHoldID] = gastonPairHoldIDs;
-    const createsGastonPair = selectedHolds.length === 2
-      && firstGastonHoldID !== undefined
-      && secondGastonHoldID !== undefined
-      && firstGastonHoldID !== secondGastonHoldID;
-    if (type === "gaston" && !createsGastonPair) {
-      actions.replaceDocument(document, {
-        dirty,
-        validation: "Select exactly two physical holds with two distinct hold IDs to create a Gaston pair.",
-        status: "Gaston conversion needs two distinct hold IDs.",
-      });
-      return;
-    }
-    const selectedGastonHoldIDs = new Set([firstGastonHoldID, secondGastonHoldID]);
-    const displacedGaston = type === "gaston" ? document.regions.find((region) => (
-      !selectedGastonHoldIDs.has(region.metadata?.holdID)
-      && region.pairedHoldID !== undefined
-      && selectedGastonHoldIDs.has(region.pairedHoldID)
-    )) : undefined;
-    if (displacedGaston) {
-      const displacedHoldID = displacedGaston.metadata?.holdID ?? displacedGaston.key;
-      actions.replaceDocument(document, {
-        dirty,
-        validation: `Creating this Gaston pair would orphan paired Gaston hold ${displacedHoldID}. Select it instead or recategorize it first.`,
-        status: "Gaston conversion would orphan an existing pair.",
-      });
-      return;
-    }
+  const changeDisplayPath = useCallback((displayPath: string): void => {
+    if (busy || !document || !selectedRegion) return;
     actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        region.type = type;
-        if (type !== "sloper") delete region.sloper;
-        if (type !== "gaston") delete region.pairedHoldID;
-        if (createsGastonPair && region.metadata?.holdID === firstGastonHoldID) {
-          region.pairedHoldID = secondGastonHoldID;
-        }
-        if (createsGastonPair && region.metadata?.holdID === secondGastonHoldID) {
-          region.pairedHoldID = firstGastonHoldID;
-        }
-      }
-      if (type !== "gaston") {
-        const selectedHoldIDs = new Set([...siblingKeys]
-          .map((key) => candidate.regions.find((region) => region.key === key)?.metadata?.holdID)
-          .filter((holdID): holdID is string => holdID !== undefined));
-        for (const region of candidate.regions) {
-          if (region.pairedHoldID && selectedHoldIDs.has(region.pairedHoldID)) delete region.pairedHoldID;
-        }
-      }
+      const region = candidate.regions.find((item) => item.key === selectedRegion.key);
+      if (!region) return;
+      region.displayPath = displayPath;
+      delete region.bendableCommandIndexes;
+      delete region.smoothAnchorIndexes;
+      delete region.shapeConstraint;
     }, {
-      status: "Hold recategorized. Save when ready.",
-      failureMessage: "Hold type is invalid.",
+      status: "Canonical path changed. Save when ready.",
+      failureStatus: "Path change reverted — contour is invalid.",
     });
-  }, [actions, busy, dirty, document, selectedHold, selectedKeys]);
+  }, [actions, busy, document, selectedRegion]);
 
-  const changePairedHoldID = useCallback((pairedHoldID: string | undefined): void => {
-    if (busy || !document || !selectedHold || selectedHold.type !== "gaston") return;
-    const holdID = selectedHold.metadata?.holdID;
-    if (!holdID || !pairedHoldID || pairedHoldID === holdID) return;
-    const pairedHold = document.regions.find((region) => (
-      region.metadata?.holdID === pairedHoldID && region.type === "gaston"
-    ));
-    if (!pairedHold
-      || (selectedHold.pairedHoldID !== undefined && selectedHold.pairedHoldID !== pairedHoldID)
-      || (pairedHold.pairedHoldID !== undefined && pairedHold.pairedHoldID !== holdID)) return;
+  const changeTreatment = useCallback((treatment: ContactRegion["treatment"]): void => {
+    if (busy || !document || !selectedRegion) return;
     actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (region.metadata?.holdID === holdID) region.pairedHoldID = pairedHoldID;
-        if (region.metadata?.holdID === pairedHoldID) region.pairedHoldID = holdID;
-      }
+      const region = candidate.regions.find((item) => item.key === selectedRegion.key);
+      if (!region) return;
+      if (treatment) region.treatment = { ...treatment };
+      else delete region.treatment;
     }, {
-      status: "Gaston pair changed. Save when ready.",
-      failureMessage: "Gaston pair is invalid.",
+      status: "Contact treatment changed. Save when ready.",
+      failureMessage: "Contact treatment is invalid.",
     });
-  }, [actions, busy, document, selectedHold]);
-
-  const changeFingerCapacity = useCallback((capacity: number | undefined): void => {
-    if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 4))) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
-    actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        if (capacity === undefined) delete region.fingerCapacity;
-        else region.fingerCapacity = capacity;
-      }
-    }, {
-      status: "Finger capacity changed. Save when ready.",
-      failureMessage: "Finger capacity is invalid.",
-    });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
-
-  const changeHoldDepthMeasurement = useCallback((mode: "unset" | "fixed" | "variable"): void => {
-    if (busy || !document || !selectedHold) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
-    actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        if (mode !== "fixed") delete region.sizeMillimeters;
-        if (mode !== "variable") delete region.depthRangeMillimeters;
-      }
-    }, {
-      status: "Depth measurement changed. Save when ready.",
-      failureMessage: "Depth measurement is invalid.",
-    });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
-
-  const changeHoldSizeMillimeters = useCallback((size: number | undefined): void => {
-    if (busy || !document || !selectedHold
-      || (size !== undefined && (!Number.isFinite(size) || size <= 0))) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
-    actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        delete region.depthRangeMillimeters;
-        if (size === undefined) delete region.sizeMillimeters;
-        else region.sizeMillimeters = size;
-      }
-    }, {
-      status: "Hold depth changed. Save when ready.",
-      failureMessage: "Hold depth is invalid.",
-    });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
-
-  const changeHoldDepthRange = useCallback((depthRange: MillimeterRange | undefined): void => {
-    if (busy || !document || !selectedHold
-      || (depthRange !== undefined
-        && (!Number.isFinite(depthRange.lowerBound)
-          || !Number.isFinite(depthRange.upperBound)
-          || depthRange.lowerBound <= 0
-          || depthRange.upperBound < depthRange.lowerBound))) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
-    actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        delete region.sizeMillimeters;
-        if (depthRange === undefined) delete region.depthRangeMillimeters;
-        else region.depthRangeMillimeters = { ...depthRange };
-      }
-    }, {
-      status: "Depth range changed. Save when ready.",
-      failureMessage: "Depth range is invalid.",
-    });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
-
-  const changeHandCapacity = useCallback((capacity: number | undefined): void => {
-    if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 2))) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
-    actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        if (capacity === undefined) delete region.handCapacity;
-        else region.handCapacity = capacity;
-      }
-    }, {
-      status: "Hand capacity changed. Save when ready.",
-      failureMessage: "Hand capacity is invalid.",
-    });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
-
-  const changeEquipmentObjectID = useCallback((equipmentObjectID: string): void => {
-    if (busy || !document || !selectedHold
-      || !document.equipmentObjects?.includes(equipmentObjectID)) return;
-    const siblingKeys = new Set(
-      selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)),
-    );
-    actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (siblingKeys.has(region.key)) region.equipmentObjectID = equipmentObjectID;
-      }
-    }, {
-      status: "Equipment object changed. Save when ready.",
-      failureMessage: "Equipment object is invalid.",
-    });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
+  }, [actions, busy, document, selectedRegion]);
 
   const changeOutlineShape = useCallback((shape: string): void => {
-    if (busy || !document || !selectedHold || (shape !== "custom" && !isShapeConstraintShape(shape))) return;
+    if (busy || !document || !selectedRegion || (shape !== "custom" && !isShapeConstraintShape(shape))) return;
     const label = shape === "roundedRectangle" ? "rounded rectangle" : shape;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    const siblingKeys = new Set(selectedPhysicalContacts(document, selectedKeys).flatMap((contact) => contact.map((region) => region.key)));
     actions.editDocument((candidate) => {
-      for (const hold of candidate.regions) {
-        if (!siblingKeys.has(hold.key)) continue;
+      for (const contact of candidate.regions) {
+        if (!siblingKeys.has(contact.key)) continue;
         if (shape === "custom") {
-          delete hold.shapeConstraint;
+          delete contact.shapeConstraint;
         } else {
-          hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
-          delete hold.bendableCommandIndexes;
-          delete hold.smoothAnchorIndexes;
-          hold.shapeConstraint = { shape, rotationDegrees: 0 };
+          contact.displayPath = pathEditor.createOutlineShapePath(contact.displayPath, outlinePreset(shape));
+          delete contact.bendableCommandIndexes;
+          delete contact.smoothAnchorIndexes;
+          contact.shapeConstraint = { shape, rotationDegrees: 0 };
         }
       }
     }, {
@@ -1168,7 +1043,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         : `Outline changed to ${label}. Save when ready.`,
       failureStatus: "Outline change reverted — contour is invalid.",
     });
-  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
+  }, [actions, busy, document, pathEditor, selectedRegion, selectedKeys]);
 
   const applyRotation = useCallback((): void => {
     if (busy) return;
@@ -1181,8 +1056,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       });
       return;
     }
-    rotateHold(degrees);
-  }, [actions, busy, dirty, document, rotateHold, rotationDegrees]);
+    rotateContact(degrees);
+  }, [actions, busy, dirty, document, rotateContact, rotationDegrees]);
 
   const restoreDrag = useCallback((status: string, validation = ""): void => {
     const drag = dragRef.current;
@@ -1209,9 +1084,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         }
       }
     } else {
-      const region = restored.regions.find((candidate) => candidate.key === drag.holdKey);
+      const region = restored.regions.find((candidate) => candidate.key === drag.contactKey);
       if (region && drag.originalPath !== null) {
-        const originalRegion = drag.originalDocument?.regions.find((candidate) => candidate.key === drag.holdKey);
+        const originalRegion = drag.originalDocument?.regions.find((candidate) => candidate.key === drag.contactKey);
         region.displayPath = drag.originalPath;
         if (originalRegion?.bendableCommandIndexes) {
           region.bendableCommandIndexes = [...originalRegion.bendableCommandIndexes];
@@ -1309,19 +1184,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const onPointerDown = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
-    if (busy || drag.active || !document || !selectedHold) return;
+    if (busy || drag.active || !document || !selectedRegion) return;
     const target = targetElement(event);
     if (!target) return;
     if (event.button !== 0) return;
-    if (!selectedHold.shapeConstraint) {
+    if (!selectedRegion.shapeConstraint) {
       try {
-        createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+        createEditablePath(selectedRegion.key, selectedRegion.displayPath, pathEditor);
       } catch (error: unknown) {
         reportInvalidPath(error);
         return;
       }
     }
-    if (target.classList.contains("path-editor-vertex") && !selectedHold.shapeConstraint) {
+    if (target.classList.contains("path-editor-vertex") && !selectedRegion.shapeConstraint) {
       const anchorID = target.getAttribute("data-anchor-id");
       if (!anchorID) return;
       selectAnchor(anchorID);
@@ -1329,20 +1204,20 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const point = svgPoint(event.currentTarget, event);
     let next: DragState | null = null;
     if (target.classList.contains("path-editor-rotation-handle")) {
-      const siblings = holdSiblings(document, selectedHold);
-      const pivot = holdCentroid(siblings, pathEditor);
-      const holds = selectedPhysicalHolds(document, selectedKeys);
+      const siblings = contactSiblings(document, selectedRegion);
+      const pivot = contactCentroid(siblings, pathEditor);
+      const contacts = selectedPhysicalContacts(document, selectedKeys);
       next = {
         ...EMPTY_DRAG,
         active: true,
         type: "rotation",
-        holdKey: selectedHold.key,
-        originalPaths: holds.flatMap((hold) => {
-          const holdPivot = holdCentroid(hold, pathEditor);
-          return hold.map((region) => ({
+        contactKey: selectedRegion.key,
+        originalPaths: contacts.flatMap((contact) => {
+          const contactPivot = contactCentroid(contact, pathEditor);
+          return contact.map((region) => ({
             key: region.key,
             path: region.displayPath,
-            pivot: holdPivot,
+            pivot: contactPivot,
             ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
           ...(region.bendableCommandIndexes ? {
             bendableCommandIndexes: [...region.bendableCommandIndexes],
@@ -1358,32 +1233,32 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         lastAngle: Math.atan2(point.y - pivot.y, point.x - pivot.x),
         pointerId: event.pointerId,
       };
-    } else if (target.classList.contains("path-editor-resize-handle") && selectedHold.shapeConstraint) {
+    } else if (target.classList.contains("path-editor-resize-handle") && selectedRegion.shapeConstraint) {
       const resizeHandle = target.getAttribute("data-handle");
       if (!isConstrainedHandle(resizeHandle)) return;
       next = {
         ...EMPTY_DRAG,
         active: true,
         type: "constrained-resize",
-        holdKey: selectedHold.key,
-        originalPath: selectedHold.displayPath,
-        originalConstraint: { ...selectedHold.shapeConstraint },
+        contactKey: selectedRegion.key,
+        originalPath: selectedRegion.displayPath,
+        originalConstraint: { ...selectedRegion.shapeConstraint },
         resizeHandle,
         originalDirty: dirty,
         pointerId: event.pointerId,
       };
     } else if (target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")
-      || (target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key)) {
+      || (target.classList.contains("region-shape") && target.getAttribute("data-contact-key") === selectedRegion.key)) {
       let dragEditablePath = editablePath;
       if (!dragEditablePath) {
         try {
           dragEditablePath = createEditablePath(
-            selectedHold.key,
-            selectedHold.displayPath,
+            selectedRegion.key,
+            selectedRegion.displayPath,
             pathEditor,
-            selectedHold.bendableCommandIndexes,
-            selectedHold.smoothAnchorIndexes,
+            selectedRegion.bendableCommandIndexes,
+            selectedRegion.smoothAnchorIndexes,
           );
         } catch (error: unknown) {
           reportInvalidPath(error);
@@ -1396,7 +1271,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (target.classList.contains("path-editor-vertex") && !anchorID) return;
       if (target.classList.contains("path-editor-control") && !controlID) return;
       const originalEditablePath = cloneEditablePath(dragEditablePath);
-      const bendableSegmentID = !selectedHold.shapeConstraint && target.classList.contains("region-shape")
+      const bendableSegmentID = !selectedRegion.shapeConstraint && target.classList.contains("region-shape")
         ? closestEditableSegmentID(dragEditablePath, point)
         : null;
       const bendsSegment = bendableSegmentID !== null
@@ -1407,15 +1282,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         type: target.classList.contains("path-editor-vertex")
           ? "vertex"
           : target.classList.contains("path-editor-control") ? "control" : bendsSegment ? "bend" : "path",
-        holdKey: selectedHold.key,
+        contactKey: selectedRegion.key,
         anchorID,
         controlID,
         ...(bendsSegment ? { segmentID: bendableSegmentID } : {}),
         startX: point.x,
         startY: point.y,
         editablePath: originalEditablePath,
-        originalPath: selectedHold.displayPath,
-        originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
+        originalPath: selectedRegion.displayPath,
+        originalConstraint: cloneConstraint(selectedRegion.shapeConstraint) ?? null,
         originalDirty: dirty,
         pointerId: event.pointerId,
         pathBounds: target.classList.contains("region-shape")
@@ -1435,7 +1310,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [busy, dirty, document, editablePath, pathEditor, reportInvalidPath, selectAnchor, selectedHold, selectedKeys]);
+  }, [busy, dirty, document, editablePath, pathEditor, reportInvalidPath, selectAnchor, selectedRegion, selectedKeys]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -1444,9 +1319,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const point = svgPoint(event.currentTarget, event);
     const preview = previewDocumentRef.current ?? document;
     const candidate = cloneEditorDocument(preview);
-    const hold = candidate.regions.find((region) => region.key === drag.holdKey);
-    if (!hold) {
-      restoreDrag("Edit cancelled because the selected hold is no longer available.");
+    const contact = candidate.regions.find((region) => region.key === drag.contactKey);
+    if (!contact) {
+      restoreDrag("Edit cancelled because the selected contact is no longer available.");
       drag.active = false;
       releasePointer(event.currentTarget);
       return;
@@ -1461,7 +1336,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       for (const original of drag.originalPaths) {
         const region = candidate.regions.find((value) => value.key === original.key);
         if (!region) continue;
-        if (original.key === drag.holdKey && drag.editablePath && !original.shapeConstraint) {
+        if (original.key === drag.contactKey && drag.editablePath && !original.shapeConstraint) {
           const rotatedEditablePath = cloneEditablePath(drag.editablePath);
           rotateEditablePath(
             rotatedEditablePath,
@@ -1473,7 +1348,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           writeEditablePathMetadata(region, rotatedEditablePath);
           editablePathRef.current = {
             document: candidate,
-            holdKey: original.key,
+            contactKey: original.key,
             displayPath: region.displayPath,
             path: rotatedEditablePath,
           };
@@ -1513,10 +1388,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           drag.resizeHandle,
           point,
         );
-        hold.displayPath = resized.displayPath;
-        delete hold.bendableCommandIndexes;
-        delete hold.smoothAnchorIndexes;
-        hold.shapeConstraint = resized.shapeConstraint;
+        contact.displayPath = resized.displayPath;
+        delete contact.bendableCommandIndexes;
+        delete contact.smoothAnchorIndexes;
+        contact.shapeConstraint = resized.shapeConstraint;
       } catch (error: unknown) {
         restoreDrag(
           "Edit reverted — contour is invalid.",
@@ -1551,12 +1426,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         }
         translateEditablePath(editable, deltaX, deltaY);
       }
-      hold.displayPath = serializeEditablePath(editable, pathEditor);
-      writeEditablePathMetadata(hold, editable);
+      contact.displayPath = serializeEditablePath(editable, pathEditor);
+      writeEditablePathMetadata(contact, editable);
       editablePathRef.current = {
         document: candidate,
-        holdKey: drag.holdKey ?? selectedHold?.key ?? "",
-        displayPath: hold.displayPath,
+        contactKey: drag.contactKey ?? selectedRegion?.key ?? "",
+        displayPath: contact.displayPath,
         path: editable,
       };
       locallyUpdatedEditablePathRef.current = true;
@@ -1567,7 +1442,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     pendingPreviewRef.current = actions.replaceDocument(candidate, {
       dirty: drag.originalDirty || drag.changed,
     });
-  }, [actions, document, horizontalGuideYs, pathEditor, releasePointer, restoreDrag, selectedHold, verticalGuideXs]);
+  }, [actions, document, horizontalGuideYs, pathEditor, releasePointer, restoreDrag, selectedRegion, verticalGuideXs]);
 
   const completeDrag = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -1580,9 +1455,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!drag.changed) return;
     try {
       if (drag.type === "constrained-resize") {
-        const hold = candidate.regions.find((region) => region.key === drag.holdKey);
-        if (!hold?.shapeConstraint) throw new Error("Constrained outline is unavailable.");
-        const model = pathEditor.constrainedOutlineModel(hold.displayPath, hold.shapeConstraint);
+        const contact = candidate.regions.find((region) => region.key === drag.contactKey);
+        if (!contact?.shapeConstraint) throw new Error("Constrained outline is unavailable.");
+        const model = pathEditor.constrainedOutlineModel(contact.displayPath, contact.shapeConstraint);
         if (!Object.values(model.handles).every(({ x, y }) => (
           Number.isFinite(x) && Number.isFinite(y)
         ))) {
@@ -1595,14 +1470,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         historySnapshot: drag.originalDocument ?? undefined,
         validation: "",
         status: drag.type === "rotation"
-          ? "Hold rotated. Save when ready."
+          ? "Contact rotated. Save when ready."
           : "Contour updated. Save when ready.",
       });
       const currentEditablePath = editablePathRef.current;
-      const committedHold = committedDocument.regions.find((region) => region.key === drag.holdKey);
-      if (currentEditablePath && committedHold
-        && currentEditablePath.holdKey === committedHold.key
-        && currentEditablePath.displayPath === committedHold.displayPath) {
+      const committedContact = committedDocument.regions.find((region) => region.key === drag.contactKey);
+      if (currentEditablePath && committedContact
+        && currentEditablePath.contactKey === committedContact.key
+        && currentEditablePath.displayPath === committedContact.displayPath) {
         currentEditablePath.document = committedDocument;
         locallyUpdatedEditablePathRef.current = false;
       }
@@ -1639,9 +1514,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const onDoubleClick = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
-    if (busy || !document || !selectedHold || selectedHold.shapeConstraint || !target) return;
+    if (busy || !document || !selectedRegion || selectedRegion.shapeConstraint || !target) return;
     try {
-      createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+      createEditablePath(selectedRegion.key, selectedRegion.displayPath, pathEditor);
     } catch (error: unknown) {
       reportInvalidPath(error);
       return;
@@ -1665,13 +1540,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
-  }, [busy, commitEditablePath, document, editablePath, pathEditor, reportInvalidPath, selectedHold, status]);
+  }, [busy, commitEditablePath, document, editablePath, pathEditor, reportInvalidPath, selectedRegion, status]);
 
   const onContextMenu = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
-    if (busy || !document || !selectedHold || selectedHold.shapeConstraint || !target) return;
+    if (busy || !document || !selectedRegion || selectedRegion.shapeConstraint || !target) return;
     try {
-      createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+      createEditablePath(selectedRegion.key, selectedRegion.displayPath, pathEditor);
     } catch (error: unknown) {
       reportInvalidPath(error);
       return;
@@ -1686,7 +1561,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       selectAnchor(anchorID);
       setVertexMenuState({
         document,
-        holdKey: selectedHold.key,
+        contactKey: selectedRegion.key,
         x: event.clientX,
         y: event.clientY,
         kind: "vertex",
@@ -1696,7 +1571,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       });
       return;
     }
-    if (!target.classList.contains("region-shape") || target.getAttribute("data-hold-key") !== selectedHold.key) return;
+    if (!target.classList.contains("region-shape") || target.getAttribute("data-contact-key") !== selectedRegion.key) return;
     try {
       const point = svgPoint(event.currentTarget, event);
       const segmentID = closestEditableSegmentID(editablePath, point);
@@ -1715,7 +1590,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       setVertexSelection(null);
       setVertexMenuState({
         document,
-        holdKey: selectedHold.key,
+        contactKey: selectedRegion.key,
         x: event.clientX,
         y: event.clientY,
         kind: "segment",
@@ -1726,7 +1601,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
-  }, [busy, document, editablePath, pathEditor, reportInvalidPath, selectAnchor, selectedHold]);
+  }, [busy, document, editablePath, pathEditor, reportInvalidPath, selectAnchor, selectedRegion]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
@@ -1764,12 +1639,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         return;
       }
       if (event.key === "[" || event.key === "]") {
-        if (!selectedHold) return;
+        if (!selectedRegion) return;
         event.preventDefault();
-        rotateHold(event.key === "]" ? (event.shiftKey ? 45 : 15) : (event.shiftKey ? -45 : -15));
+        rotateContact(event.key === "]" ? (event.shiftKey ? 45 : 15) : (event.shiftKey ? -45 : -15));
         return;
       }
-      if (!document || !selectedHold
+      if (!document || !selectedRegion
         || !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
       const step = event.shiftKey ? 10 : 1;
@@ -1780,30 +1655,30 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         translateEditablePath(next, deltaX, deltaY);
         const nextPath = serializeEditablePath(next, pathEditor);
         const edited = actions.editDocument((candidate) => {
-          const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-          if (hold) {
-            hold.displayPath = nextPath;
-            writeEditablePathMetadata(hold, next);
+          const contact = candidate.regions.find((region) => region.key === selectedRegion.key);
+          if (contact) {
+            contact.displayPath = nextPath;
+            writeEditablePathMetadata(contact, next);
           }
         }, {
-          status: "Hold nudged. Save when ready.",
+          status: "Contact nudged. Save when ready.",
           failureStatus: "Nudge reverted — contour is invalid.",
         });
         if (edited) {
-          editablePathRef.current = { document, holdKey: selectedHold.key, displayPath: nextPath, path: next };
+          editablePathRef.current = { document, contactKey: selectedRegion.key, displayPath: nextPath, path: next };
           locallyUpdatedEditablePathRef.current = true;
         }
         return;
       }
       actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (!hold) return;
-        const commands = pathCommandsForHold(hold, pathEditor);
+        const contact = candidate.regions.find((region) => region.key === selectedRegion.key);
+        if (!contact) return;
+        const commands = pathCommandsForContact(contact, pathEditor);
         translateCommands(commands, deltaX, deltaY);
-        hold.displayPath = pathEditor.serializePath(commands);
-        writeBendableCommandIndexes(hold, commands);
+        contact.displayPath = pathEditor.serializePath(commands);
+        writeBendableCommandIndexes(contact, commands);
       }, {
-        status: "Hold nudged. Save when ready.",
+        status: "Contact nudged. Save when ready.",
         failureStatus: "Nudge reverted — contour is invalid.",
       });
     };
@@ -1819,8 +1694,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     document,
     editablePath,
     pathEditor,
-    rotateHold,
-    selectedHold,
+    rotateContact,
+    selectedRegion,
     selectedAnchorID,
     vertexMenu,
   ]);
@@ -1837,10 +1712,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     canMakeSelectedSegmentStraight,
     canMakeSelectedSegmentHorizontal,
     canMakeSelectedSegmentVertical,
-    addHold,
-    addHoldSegment,
-    duplicateAndMirrorHold,
-    deleteHold,
+    addContact,
+    addContactPiece,
+    duplicateAndMirrorContact,
+    deleteContact,
     selectAnchor,
     deleteSelectedVertex,
     roundSelectedVertex,
@@ -1850,16 +1725,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     makeSelectedSegmentHorizontal,
     makeSelectedSegmentVertical,
     dismissVertexMenu,
-    changeHoldType,
-    changePairedHoldID,
-    changeFingerCapacity,
-    changeHoldDepthMeasurement,
-    changeHoldSizeMillimeters,
-    changeHoldDepthRange,
-    changeHandCapacity,
-    changeEquipmentObjectID,
+    changeDisplayPath,
+    changeTreatment,
     changeOutlineShape,
-    rotateHold,
+    rotateContact,
     applyRotation,
     cancelActiveEdit,
     onPointerDown,

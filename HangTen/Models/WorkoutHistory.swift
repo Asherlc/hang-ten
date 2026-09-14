@@ -38,6 +38,47 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
         self.shouldUploadToHealthKit = shouldUploadToHealthKit
     }
 
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case id
+        case planTitle
+        case startDate
+        case endDate
+        case healthUploadAttempted
+        case healthWorkoutUUID
+        case activityContext
+        case shouldUploadToHealthKit
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: WorkoutHistoryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported pending workout field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        planTitle = try container.decode(String.self, forKey: .planTitle)
+        startDate = try container.decode(Date.self, forKey: .startDate)
+        endDate = try container.decode(Date.self, forKey: .endDate)
+        healthUploadAttempted = try container.decode(Bool.self, forKey: .healthUploadAttempted)
+        healthWorkoutUUID = try container.decodeIfPresent(UUID.self, forKey: .healthWorkoutUUID)
+        activityContext = try container.decodeIfPresent(
+            PendingWorkoutActivityContext.self,
+            forKey: .activityContext
+        )
+        shouldUploadToHealthKit = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .shouldUploadToHealthKit
+        ) ?? true
+    }
+
 }
 
 struct PendingWorkoutActivityContext: Codable, Equatable {
@@ -55,6 +96,47 @@ struct PendingWorkoutActivityContext: Codable, Equatable {
         self.boardID = boardID
         self.boardName = boardName
         self.activityMetadata = activityMetadata
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case boardID, boardName, activityMetadata
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: WorkoutHistoryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported pending workout activity context field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        boardName = try container.decode(String.self, forKey: .boardName)
+        activityMetadata = try container.decode(
+            WorkoutActivityMetadata.self,
+            forKey: .activityMetadata
+        )
+    }
+}
+
+private struct WorkoutHistoryCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
     }
 }
 

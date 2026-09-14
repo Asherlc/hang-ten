@@ -3113,7 +3113,11 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        assertStoreRejects(fixture.bundle, reasonContaining: "orientation must contain")
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case BoardPackageStoreError.malformedJSON = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+        }
     }
 
     func testStoreRejectsOrientationAndSuspensionTogether() throws {

@@ -53,10 +53,6 @@ export interface MillimeterRange {
   upperBound: number;
 }
 
-export type SloperMetadata =
-  | { type: "flat"; angleDegrees?: number }
-  | { type: "round" };
-
 export type OutlinePreset = Exclude<ShapeConstraintShape, "roundedRectangle"> | "rounded-rectangle";
 export type ConstrainedHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
@@ -79,36 +75,46 @@ export interface ConstrainedResizeResult {
   shapeConstraint: ShapeConstraint;
 }
 
-export interface HoldRegion {
+export interface ContactRegion {
   id?: number;
   key: string;
-  type?: string;
-  equipmentObjectID?: string;
-  pairedHoldID?: string;
   displayPath: string;
-  metadata?: {
-    holdID: string;
+  metadata: {
+    contactID: string;
     pieceIndex: number;
-    presentationID?: string;
+    presentationID: string;
   };
-  sloper?: SloperMetadata;
-  fingerCapacity?: number;
-  sizeMillimeters?: number;
-  depthRangeMillimeters?: MillimeterRange;
-  handCapacity?: number;
+  treatment?:
+    | { type: "surface" }
+    | { type: "shelf"; rimInsetFraction: number }
+    | { type: "recess"; rimInsetFraction: number; depth: "shallow" | "deep" };
   shapeConstraint?: ShapeConstraint;
   bendableCommandIndexes?: number[];
   smoothAnchorIndexes?: number[];
 }
 
+export interface PhysicalContact {
+  id: string;
+  equipmentObjectID: string;
+  name: string;
+  kind: string;
+  features: string[];
+  gripTypes: string[];
+  depthRangeMillimeters?: MillimeterRange;
+  fingerCapacity?: number;
+  handCapacity?: number;
+  side?: "left" | "right";
+  pairedContactID?: string;
+}
+
 export interface EditorDocument {
-  presentationID?: string;
-  equipmentObjects?: string[];
+  presentationID: string;
+  contacts: PhysicalContact[];
   canvas: {
     width: number;
     height: number;
   };
-  regions: HoldRegion[];
+  regions: ContactRegion[];
 }
 
 export interface BoardPresentation {
@@ -117,12 +123,13 @@ export interface BoardPresentation {
   imageUrl: string;
   default: boolean;
   sourcePresentationID?: string;
+  contactIDs?: string[];
 }
 
 export interface BoardSummary {
   boardId: string;
   displayName: string;
-  holdCount: number;
+  contactCount: number;
   needsAttention: boolean;
   href?: string;
   imageUrl?: string;
@@ -133,11 +140,11 @@ export interface BoardSummary {
 export interface Board {
   boardId: string;
   displayName: string;
-  holdCount: number;
+  contactCount: number;
   needsAttention?: boolean;
   href?: string;
   imageUrl: string;
-  holdIDs?: string[];
+  contactIDs?: string[];
   saveUrl?: string;
   selectedPresentationID?: string;
   presentations?: BoardPresentation[];
@@ -365,7 +372,7 @@ export interface WorkbenchActions {
   commitChanges(): Promise<void>;
   pushBranch(): Promise<void>;
   openPullRequest(): Promise<void>;
-  selectHold(key: string | null, toggle?: boolean): void;
+  selectContact(key: string | null, toggle?: boolean): void;
   selectPresentation(presentationID: string): Promise<void>;
   deletePresentation(): Promise<void>;
   setRotationDegrees(value: string): void;

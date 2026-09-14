@@ -41,7 +41,7 @@ class _SceneSnapshot:
 
 
 def load_logical_contact_ids(board_json_path: Path) -> frozenset[str]:
-    """Read only logical ``contacts[].id`` values from either package schema version."""
+    """Read the logical ``contacts[].id`` inventory from a schema-v3 package."""
     path = Path(board_json_path)
     if path.is_symlink() or not path.is_file():
         raise ValueError(f"board JSON must be a regular file: {path}")
@@ -51,6 +51,8 @@ def load_logical_contact_ids(board_json_path: Path) -> frozenset[str]:
         raise ValueError(f"board JSON is not readable valid JSON: {path}") from error
     if not isinstance(document, Mapping):
         raise ValueError("board JSON must be an object")
+    if document.get("schemaVersion") != 3:
+        raise ValueError("board JSON schemaVersion must be 3")
     contacts = document.get("contacts")
     if not isinstance(contacts, list) or not contacts:
         raise ValueError("board JSON contacts must be a non-empty array")

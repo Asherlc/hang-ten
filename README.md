@@ -4,19 +4,16 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-Each supported board is a complete schema-v2 package with typed presentation
-media. The package contract supports raster-only presentations, which own a PNG
-and `media.holdGeometry`, and model-only presentations, which own a USDZ and a
-generated hash-bound `.model.json` descriptor. Logical holds retain identity and
-metadata without spatial fields; the selected presentation supplies rendering,
-highlighting, and interaction data. The live inventory contains 59 raster
-packages and two model-only packages: Beastmaker 1000 and Metolius Wood Grips
-Compact II. Both migrated packages own package-local model trees (`board.json`,
-`assets/primary.usdz`, and `assets/primary.model.json`).
+Each supported board is a complete schema-v3 contact-first package with typed
+presentation media. Raster presentations own a PNG and
+`media.contactGeometry`; model presentations own a USDZ and generated,
+hash-bound contact descriptor. `contacts[]` owns sourced physical facts without
+presentation geometry. The selected presentation supplies rendering,
+highlighting, and interaction data.
 
 ## Included
 
-- Audited board packages with source-backed logical inventories and
+- Audited board packages with source-backed contact inventories and
   presentation-specific media; raster packages use normalized, manually
   authored geometry, exact mirroring where the physical product is symmetric,
   and exact-path highlights.
@@ -44,10 +41,10 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-identity and conservative hold metadata, plus each presentation's typed media,
+identity and conservative contact facts, plus each presentation's typed media,
 live in directly discovered `Hangboards/<board-folder>/board.json` packages.
-Raster packages store canonical geometry in `media.holdGeometry`; model
-packages store their USDZ and generated descriptor. Logical hold records do not
+Raster packages store canonical geometry in `media.contactGeometry`; model
+packages store their USDZ and generated descriptor. Contact records do not
 carry spatial geometry. The app loads validated package bytes without
 rewriting geometry or maintaining another geometry source.
 
@@ -247,43 +244,22 @@ Simulator. These captures establish Simulator integration only; SceneKit may
 fall back from physically based shading where Metal is unavailable, so they do
 not claim physical-device PBR pixel parity.
 
-Validate a retained Stage 0 evidence packet with:
-
-```sh
-python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
-```
-
-Before Astra receives a geometry task, each Stage 0 packet must retain at
-least two complete exact-revision images per board: one manufacturer-published
-image and, when available, a materially different oblique/side/back/profile
-view. Record local paths, SHA-256 hashes, pixel dimensions, retrieval
-date/locale, angle labels, page linkage, provenance tier, and the geometric
-facts each view can and cannot support. Use authorized retailer/distributor
-images only for a documented manufacturer gap and label them commerce-gap
-evidence; crops, duplicates, search thumbnails, reviews/forums, generated
-renders, and ambiguous revisions do not count. Diagrams supplement the packet
-but do not count as a distinct-angle photograph unless they expose
-side/profile geometry.
-
 For a new model package, after geometry has been authored and reviewed, compile
-tagged Blender meshes with:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
-  --python Tools/HangboardModels/compile_model_package.py -- \
+  --python Tools/HangboardModels/contact_model_package.py -- \
   --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
   --output-directory PATH/compiled-package
 ```
 
 The compiler reimports the exact USDZ export and generates the read-only,
-hash-bound descriptor; it does not repair or redesign geometry. A model package
-must contain only its declared USDZ and descriptor media, with no raster
-fallback. See [model tooling](Tools/HangboardModels/README.md) and the
-[package contract](Tools/HangboardPackages/README.md) for the v2 fields and
-validation rules. Remote GitHub model-package sync remains deferred and
-unsupported by the current PNG/default-oriented GitHub sync. iOS model editing
-and Workbench model editing remain deferred/read-only/unavailable; raster
-Workbench editing continues to be supported.
+hash-bound contact descriptor; it does not repair or redesign geometry. A model
+package contains only its declared USDZ and descriptor media, with no raster
+fallback. See the [package contract](Tools/HangboardPackages/README.md) for
+schema-v3 validation. Remote model editing is unsupported; iOS and Workbench
+treat model packages as read-only, while raster Workbench editing remains
+contact-native.
 
 Use the packaged macOS Hangboard Workbench for direct local visual editing.
 Browser-hosted Workbench deployments must use the GitHub-backed
@@ -303,11 +279,12 @@ rtk scripts/export-plan-library.sh --check
 
 ## Routine scope
 
-Metolius publishes a generic ten-minute guide whose tasks name semantic hold
-types such as “Round Sloper” and “Large Edge.” Hang Ten preserves those three
-source sequences as ten 60-second cycles and resolves each named type to the
-selected board's audited hold metadata. The app expands each cycle into
-guided task and rest steps; when the source gives no duration, the app-defined
+Metolius publishes a generic ten-minute guide whose tasks name hold types such
+as “Round Sloper” and “Large Edge,” without defining a Compact II contact map.
+Hang Ten preserves those three source sequences as ten 60-second cycles and
+records their work as the athlete's explicit self-selection. It does not turn
+generic wording into a board-specific requirement. The app expands each cycle
+into guided task and rest steps; when the source gives no duration, the app-defined
 adaptation uses five seconds per pull-up and one second per other counted
 repetition. Those timing defaults are app guidance, not Metolius prescriptions.
 

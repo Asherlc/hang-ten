@@ -563,6 +563,35 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testGenericMetoliusWorkIsExplicitlySelfSelectedOnCompactII() throws {
+        let compactII = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.wood-grips-compact-ii" }
+        )
+        let plans = [
+            LegacyPlanSeedCatalog.metoliusEntry,
+            LegacyPlanSeedCatalog.metoliusIntermediate,
+            LegacyPlanSeedCatalog.metoliusAdvanced
+        ]
+
+        for plan in plans {
+            let workSegments = plan.steps.flatMap(\.segments).filter { $0.kind == .work }
+            XCTAssertFalse(workSegments.isEmpty, "Missing source work for \(plan.id).")
+            XCTAssertTrue(
+                workSegments.allSatisfy(\.targets.isEmpty),
+                "Generic source work must not synthesize board-resolved requirements for \(plan.id)."
+            )
+
+            let recordedWork = try WorkoutActivityRecorder()
+                .segments(for: plan, on: compactII)
+                .filter { $0.kind == .work }
+            XCTAssertEqual(recordedWork.count, workSegments.count)
+            XCTAssertTrue(
+                recordedWork.allSatisfy { $0.target == .selfSelected },
+                "Generic source work must preserve the athlete's explicit selection for \(plan.id)."
+            )
+        }
+    }
+
     func testStopwatchWorkUsesSuppliedObservedDuration() throws {
         let workout = plan([
             WorkoutSegment(
@@ -1318,6 +1347,54 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 return XCTFail("Expected strict segment-field rejection, got \(error)")
             }
             XCTAssertTrue(context.debugDescription.contains("Unsupported recorded activity field"))
+        }
+    }
+
+    func testVersionTwoPayloadRejectsUnknownTopLevelLegacyField() {
+        let json = #"{"segments":[],"version":2,"holdIDs":[]}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict metadata-field rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("Unsupported workout activity metadata field holdIDs"))
+        }
+    }
+
+    func testVersionTwoPayloadRejectsLegacyFieldNestedInContactSnapshot() {
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"selection":"allMatching"},"contactIDs":["edge"],"holdID":"edge"}}}],"version":2}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict contact-snapshot rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("Unsupported resolved contact snapshot field holdID"))
+        }
+    }
+
+    func testVersionTwoPayloadRejectsLegacyFieldNestedInMeasurement() {
+        let json = #"{"measurements":[{"stepID":"step","holdName":"Legacy edge"}],"segments":[],"version":2}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict measurement-field rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("Unsupported activity measurement field holdName"))
         }
     }
 

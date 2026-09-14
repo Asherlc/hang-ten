@@ -6,6 +6,45 @@ struct ResolvedContactSnapshot: Codable, Hashable {
     let modelSHA256: String?
     let requirement: ContactRequirement
     let contactIDs: [String]
+
+    init(
+        boardID: String,
+        revisionID: String,
+        modelSHA256: String?,
+        requirement: ContactRequirement,
+        contactIDs: [String]
+    ) {
+        self.boardID = boardID
+        self.revisionID = revisionID
+        self.modelSHA256 = modelSHA256
+        self.requirement = requirement
+        self.contactIDs = contactIDs
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case boardID, revisionID, modelSHA256, requirement, contactIDs
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported resolved contact snapshot field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        revisionID = try container.decode(String.self, forKey: .revisionID)
+        modelSHA256 = try container.decodeIfPresent(String.self, forKey: .modelSHA256)
+        requirement = try container.decode(ContactRequirement.self, forKey: .requirement)
+        contactIDs = try container.decode([String].self, forKey: .contactIDs)
+    }
 }
 
 enum RecordedActivityTarget: Codable, Hashable {
@@ -169,6 +208,42 @@ struct RecordedActivityStepMeasurement: Codable, Hashable {
     let stepID: String
     let peakLoadKGF: Double?
     let actualLoadedDurationSeconds: TimeInterval?
+
+    init(
+        stepID: String,
+        peakLoadKGF: Double?,
+        actualLoadedDurationSeconds: TimeInterval?
+    ) {
+        self.stepID = stepID
+        self.peakLoadKGF = peakLoadKGF
+        self.actualLoadedDurationSeconds = actualLoadedDurationSeconds
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case stepID, peakLoadKGF, actualLoadedDurationSeconds
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported activity measurement field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stepID = try container.decode(String.self, forKey: .stepID)
+        peakLoadKGF = try container.decodeIfPresent(Double.self, forKey: .peakLoadKGF)
+        actualLoadedDurationSeconds = try container.decodeIfPresent(
+            TimeInterval.self,
+            forKey: .actualLoadedDurationSeconds
+        )
+    }
 }
 
 struct WorkoutActivityMetadata: Codable, Hashable {
@@ -187,11 +262,23 @@ struct WorkoutActivityMetadata: Codable, Hashable {
         self.measurements = measurements
     }
 
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey, CaseIterable {
         case version, segments, measurements
     }
 
     init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported workout activity metadata field \(unknownKey.stringValue)."
+            )
+        }
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
         version = try container.decode(Int.self, forKey: .version)
         guard version == Self.currentVersion else {

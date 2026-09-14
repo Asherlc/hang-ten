@@ -1,4 +1,4 @@
-import type { EditorDocument, HoldRegion, PathEditor, Point } from "./types.ts";
+import type { EditorDocument, ContactRegion, PathEditor, Point } from "./types.ts";
 
 export const ROTATION_HANDLE_RADIUS = 6;
 export const ROTATION_HANDLE_OFFSET = 24;
@@ -6,35 +6,6 @@ export const ROTATION_HANDLE_OFFSET = 24;
 interface CanvasSize {
   width: number;
   height: number;
-}
-
-export interface HoldMetadataWarnings {
-  count: number;
-  incompleteRegionKeys: ReadonlySet<string>;
-}
-
-function regionHasMissingRequiredMetadata(region: HoldRegion): boolean {
-  const needsDepth = region.type === "edge" || region.type === "pocket";
-  return region.type === undefined
-    || region.fingerCapacity === undefined
-    || (needsDepth && region.sizeMillimeters === undefined && region.depthRangeMillimeters === undefined)
-    || region.handCapacity === undefined;
-}
-
-/** Groups multi-piece holds while retaining every canvas region to mark. */
-export function holdMetadataWarnings(document: EditorDocument): HoldMetadataWarnings {
-  const incompleteHoldKeys = new Set<string>();
-  for (const region of document.regions) {
-    if (regionHasMissingRequiredMetadata(region)) {
-      incompleteHoldKeys.add(region.metadata?.holdID ?? region.key);
-    }
-  }
-  return {
-    count: incompleteHoldKeys.size,
-    incompleteRegionKeys: new Set(document.regions
-      .filter((region) => incompleteHoldKeys.has(region.metadata?.holdID ?? region.key))
-      .map((region) => region.key)),
-  };
 }
 
 interface SvgCoordinateSpace {
@@ -50,15 +21,20 @@ interface ClientPoint {
 
 export function cloneEditorDocument(document: EditorDocument): EditorDocument {
   return {
-    ...(document.presentationID ? { presentationID: document.presentationID } : {}),
-    ...(document.equipmentObjects ? { equipmentObjects: [...document.equipmentObjects] } : {}),
+    presentationID: document.presentationID,
+    contacts: document.contacts.map((contact) => ({
+      ...contact,
+      features: [...contact.features],
+      gripTypes: [...contact.gripTypes],
+      ...(contact.depthRangeMillimeters
+        ? { depthRangeMillimeters: { ...contact.depthRangeMillimeters } }
+        : {}),
+    })),
     canvas: { ...document.canvas },
     regions: document.regions.map((region) => ({
       ...region,
-      ...(region.metadata ? { metadata: { ...region.metadata } } : {}),
-      ...(region.sloper ? { sloper: { ...region.sloper } } : {}),
-      ...(region.sizeMillimeters !== undefined ? { sizeMillimeters: region.sizeMillimeters } : {}),
-      ...(region.depthRangeMillimeters ? { depthRangeMillimeters: { ...region.depthRangeMillimeters } } : {}),
+      metadata: { ...region.metadata },
+      ...(region.treatment ? { treatment: { ...region.treatment } } : {}),
       ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
       ...(region.bendableCommandIndexes ? { bendableCommandIndexes: [...region.bendableCommandIndexes] } : {}),
       ...(region.smoothAnchorIndexes ? { smoothAnchorIndexes: [...region.smoothAnchorIndexes] } : {}),
@@ -71,14 +47,14 @@ export function normalizedConstraintRotation(degrees: number): number {
   return Object.is(normalized, -0) ? 0 : normalized;
 }
 
-export function holdSiblings(document: EditorDocument, hold: HoldRegion): HoldRegion[] {
-  const holdId = hold.metadata?.holdID;
-  return holdId === undefined
-    ? [hold]
-    : document.regions.filter((region) => region.metadata?.holdID === holdId);
+export function contactSiblings(document: EditorDocument, region: ContactRegion): ContactRegion[] {
+  const contactId = region.metadata.contactID;
+  return contactId === undefined
+    ? [region]
+    : document.regions.filter((candidate) => candidate.metadata.contactID === contactId);
 }
 
-export function holdCentroid(regions: readonly HoldRegion[], pathEditor: PathEditor): Point {
+export function contactCentroid(regions: readonly ContactRegion[], pathEditor: PathEditor): Point {
   let sumX = 0;
   let sumY = 0;
   let count = 0;
@@ -174,19 +150,6 @@ export function svgPoint(svg: SvgCoordinateSpace, event: ClientPoint): Point {
     x: viewX + (event.clientX - offsetX) / scale,
     y: viewY + (event.clientY - offsetY) / scale,
   };
-}
-
-export function nextHoldId(
-  document: EditorDocument,
-  reservedHoldIDs: readonly string[] = [],
-): string {
-  const ids = new Set([
-    ...document.regions.map((region) => region.metadata?.holdID),
-    ...reservedHoldIDs,
-  ]);
-  let number = ids.size + 1;
-  while (ids.has(`hold-${number}`)) number += 1;
-  return `hold-${number}`;
 }
 
 export function nextRegionId(document: EditorDocument): number {

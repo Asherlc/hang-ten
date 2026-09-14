@@ -409,6 +409,34 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testSelfSelectedWorkKeepsItsSourceBackedGripCueWithoutInventingAContact() {
+        let fingers = FingerConfiguration(
+            engagedFingers: [.index, .middle, .ring, .pinky]
+        )
+        let step = WorkoutStep(
+            id: "self-selected-cue",
+            number: 1,
+            title: "Self-selected",
+            instruction: "Use the prescribed grip on your selected contact.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [],
+            gripType: .halfCrimp,
+            fingerConfiguration: fingers
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(
+            step: step,
+            hold: nil,
+            on: board(containing: [])
+        )
+
+        XCTAssertNil(cue?.hold)
+        XCTAssertEqual(cue?.gripType, .halfCrimp)
+        XCTAssertEqual(cue?.fingerConfiguration, fingers)
+    }
+
     func testSourceBackedHoldCueRemainsVisibleAtCountdownZero() {
         let hold = PhysicalContact(
             id: "cue-edge",
@@ -2746,8 +2774,8 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
             ["Round sloper pull-ups", "Medium-edge hang", "Minute 2 rest"]
         )
         XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
-        XCTAssertEqual(steps[0].targets, [.feature(.roundSloper)])
-        XCTAssertEqual(steps[1].targets, [.feature(.mediumEdge)])
+        XCTAssertTrue(steps[0].targets.isEmpty)
+        XCTAssertTrue(steps[1].targets.isEmpty)
         XCTAssertEqual(steps[2].phase, .rest)
     }
 
@@ -2757,13 +2785,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         }
 
         XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
-        XCTAssertEqual(
-            steps.prefix(2).map(\.targets),
-            [
-                [.kind(.jug), .feature(.smallEdge)],
-                [.kind(.jug), .feature(.smallEdge)]
-            ]
-        )
+        XCTAssertTrue(steps.prefix(2).allSatisfy(\.targets.isEmpty))
         XCTAssertTrue(steps[1].instruction.lowercased().contains("change hands"))
         XCTAssertTrue(steps[1].instruction.lowercased().contains("repeat"))
         XCTAssertEqual(steps[2].phase, .rest)
@@ -2777,7 +2799,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(step.segments, [
             WorkoutSegment(
                 kind: .work,
-                target: .feature(.roundSloper),
+                target: nil,
                 timing: .stopwatch,
                 duration: nil
             )
@@ -2819,8 +2841,8 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 
         let entryMinuteSix = entry.filter { $0.id.hasPrefix("entry.minute-6.") }
         XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
-        XCTAssertEqual(entryMinuteSix[0].targets, [.feature(.roundSloper)])
-        XCTAssertEqual(entryMinuteSix[1].targets, [.kind(.pocket)])
+        XCTAssertTrue(entryMinuteSix[0].targets.isEmpty)
+        XCTAssertTrue(entryMinuteSix[1].targets.isEmpty)
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
         XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])

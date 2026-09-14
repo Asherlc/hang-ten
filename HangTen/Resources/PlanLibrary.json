@@ -17,20 +17,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Jug hang"
         }
@@ -78,26 +72,14 @@
               "duration" : 5,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Round sloper pull-up"
         },
@@ -139,26 +121,14 @@
               "duration" : 10,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "mediumEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "mediumEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Medium-edge hang"
         },
@@ -200,20 +170,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Pocket hang + shrugs"
         },
@@ -255,26 +219,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "largeEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "largeEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Large edge + pull-ups"
         },
@@ -316,26 +268,14 @@
               "duration" : 10,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Round-sloper hang"
         },
@@ -353,20 +293,14 @@
               "duration" : 5,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Pocket knee raises"
         },
@@ -408,26 +342,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "largeEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "largeEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Large-edge pull-ups"
         },
@@ -469,26 +391,14 @@
               "duration" : 10,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "mediumEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "mediumEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Medium-edge hang"
         },
@@ -530,20 +440,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Jug pull-ups"
         },
@@ -583,26 +487,14 @@
             {
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "stopwatch"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Maximum sloper hang"
         }
@@ -626,26 +518,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "largeEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "largeEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Large-edge hang"
         }
@@ -669,26 +549,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "largeEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "largeEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Large-edge pull-ups"
         },
@@ -730,26 +598,14 @@
               "duration" : 10,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Round sloper pull-ups"
         },
@@ -767,26 +623,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "mediumEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "mediumEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Medium-edge hang"
         },
@@ -828,26 +672,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "smallEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "smallEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Small-edge hang"
         },
@@ -865,20 +697,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Bent-arm pocket hang"
         },
@@ -920,26 +746,14 @@
               "duration" : 30,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Round-sloper hang"
         },
@@ -981,26 +795,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "largeEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "largeEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Large-edge hang"
         },
@@ -1018,20 +820,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Pocket pull-ups"
         },
@@ -1073,34 +869,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                },
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "smallEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            },
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "smallEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Offset pulls"
         },
@@ -1118,34 +894,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                },
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "smallEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            },
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "smallEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Offset pulls · other side"
         },
@@ -1187,20 +943,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Jug knee raises"
         },
@@ -1218,26 +968,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "mediumEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "mediumEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Medium-edge hang"
         },
@@ -1279,26 +1017,14 @@
               "duration" : 25,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "mediumEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "mediumEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Medium-edge hang"
         },
@@ -1340,26 +1066,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Slope hang"
         },
@@ -1377,20 +1091,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Jug pull-ups"
         },
@@ -1430,26 +1138,14 @@
             {
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "stopwatch"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Maximum sloper hang"
         }
@@ -1473,26 +1169,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Large-slope hang"
         }
@@ -1516,28 +1200,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 4,
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "flatEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 4,
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "flatEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Four-finger flat-edge pull-ups"
         },
@@ -1579,26 +1249,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Bent-arm large-slope hang"
         },
@@ -1616,26 +1274,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "L-sit or hanging knee curls"
         },
@@ -1677,22 +1323,14 @@
               "duration" : 25,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Three-finger-pocket pull-ups"
         },
@@ -1710,22 +1348,14 @@
               "duration" : 25,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Straight-arm three-finger-pocket hang"
         },
@@ -1767,44 +1397,14 @@
               "duration" : 40,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                },
-                {
-                  "kind" : "edge",
-                  "selection" : "allMatching"
-                },
-                {
-                  "kind" : "sloper",
-                  "selection" : "allMatching"
-                },
-                {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            },
-            {
-              "kind" : "edge",
-              "selection" : "allMatching"
-            },
-            {
-              "kind" : "sloper",
-              "selection" : "allMatching"
-            },
-            {
-              "kind" : "jug",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Hold ladder"
         },
@@ -1846,28 +1446,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 4,
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "flatEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 4,
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "flatEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Single-arm flat-edge hang"
         },
@@ -1885,28 +1471,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 4,
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "flatEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 4,
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "flatEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Single-arm flat-edge hang · other hand"
         },
@@ -1948,36 +1520,14 @@
               "duration" : 25,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                },
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            },
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Offset pull-ups"
         },
@@ -1995,36 +1545,14 @@
               "duration" : 25,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                },
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            },
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Offset pull-ups · other side"
         },
@@ -2066,28 +1594,14 @@
               "duration" : 30,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 4,
-                  "kind" : "edge",
-                  "requiredFeatures" : [
-                    "incutEdge"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 4,
-              "kind" : "edge",
-              "requiredFeatures" : [
-                "incutEdge"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Incut-edge bent-arm hang"
         },
@@ -2105,22 +1619,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Straight-arm three-finger-pocket hang"
         },
@@ -2162,26 +1668,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "L-sit pull-ups"
         },
@@ -2197,26 +1691,14 @@
             {
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "undefined"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Choose one: front lever or straight-arm hang"
         },
@@ -2258,22 +1740,14 @@
               "duration" : 20,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Two-finger three-finger-pocket hang"
         },
@@ -2291,22 +1765,14 @@
               "duration" : 15,
               "kind" : "work",
               "targets" : [
-                {
-                  "fingerCapacity" : 3,
-                  "kind" : "pocket",
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "fixed"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "fingerCapacity" : 3,
-              "kind" : "pocket",
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Power pull-ups"
         },
@@ -2346,26 +1812,14 @@
             {
               "kind" : "work",
               "targets" : [
-                {
-                  "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "largeSlope"
-                  ],
-                  "selection" : "allMatching"
-                }
+
               ],
               "timing" : "stopwatch"
             }
           ],
           "side" : "both",
           "targets" : [
-            {
-              "kind" : "sloper",
-              "requiredFeatures" : [
-                "largeSlope"
-              ],
-              "selection" : "allMatching"
-            }
+
           ],
           "title" : "Maximum slope hangs"
         }
@@ -18588,7 +18042,7 @@
       "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
       "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
       "All research and coach routines are explicitly marked as adapted.",
-      "Plans describe source-backed physical contact requirements without board contact IDs."
+      "Board-specific plans use source-backed factual contact requirements; source-generic work remains self-selected."
     ],
     "title" : "Hang Ten training plans"
   },

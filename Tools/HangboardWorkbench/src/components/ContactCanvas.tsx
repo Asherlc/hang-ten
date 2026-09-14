@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
-import type { HoldEditorActions } from "../useHoldEditor.ts";
+import { contactCentroid, contactSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
+import type { ContactEditorActions } from "../useContactEditor.ts";
 import type {
   Board,
   ConstrainedOutlineModel,
@@ -47,15 +47,15 @@ function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number)
   return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
 }
 
-export interface HoldCanvasProps {
+export interface ContactCanvasProps {
   board: Board | null;
   document: EditorDocument | null;
   selectedKey: string | null;
   selectedKeys: readonly string[];
   busy: boolean;
-  onSelectHold(key: string, toggle: boolean): void;
+  onSelectContact(key: string, toggle: boolean): void;
   pathEditor: PathEditor;
-  editor: HoldEditorActions;
+  editor: ContactEditorActions;
   zoomPercent: number;
   backgroundColor?: string;
   onZoomChange(direction: number): boolean | void;
@@ -66,13 +66,13 @@ export interface HoldCanvasProps {
   onMoveGuide(id: string, coordinate: number): void;
 }
 
-export function HoldCanvas({
+export function ContactCanvas({
   board,
   document,
   selectedKey,
   selectedKeys,
   busy,
-  onSelectHold,
+  onSelectContact,
   pathEditor,
   editor,
   zoomPercent,
@@ -83,7 +83,7 @@ export function HoldCanvas({
   canPinchZoomChange,
   guides,
   onMoveGuide,
-}: HoldCanvasProps) {
+}: ContactCanvasProps) {
   const vertexMenuRef = useRef<HTMLDivElement>(null);
   const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -205,28 +205,30 @@ export function HoldCanvas({
       viewport.removeEventListener("wheel", handleWheel);
     };
   }, [document]);
-  const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
-  const metadataWarnings = document ? holdMetadataWarnings(document) : null;
-  const selectedEditablePath = selectedHold?.shapeConstraint ? null : editor.editablePath;
+  const selectedContact = document?.regions.find((region) => region.key === selectedKey) ?? null;
+  const contactByID = new Map(document?.contacts.map((contact) => [contact.id, contact]) ?? []);
+  const selectedEditablePath = selectedContact?.shapeConstraint ? null : editor.editablePath;
   let selectedCommands: PathCommand[] | null = null;
-  if (selectedHold) {
+  if (selectedContact) {
     try {
-      selectedCommands = pathEditor.parsePath(selectedHold.displayPath);
+      selectedCommands = pathEditor.parsePath(selectedContact.displayPath);
     } catch {
       selectedCommands = null;
     }
   }
-  const pivot = document && selectedHold && selectedCommands
-    ? holdCentroid(holdSiblings(document, selectedHold), pathEditor)
+  const pivot = document && selectedContact && selectedCommands
+    ? contactCentroid(contactSiblings(document, selectedContact), pathEditor)
     : null;
   const rotationHandle = document && pivot ? rotationHandlePosition(pivot, document.canvas) : null;
-  const selectedColor = selectedHold ? TYPE_COLORS[selectedHold.type ?? ""] ?? "#ff754f" : "#ff754f";
+  const selectedColor = selectedContact
+    ? TYPE_COLORS[contactByID.get(selectedContact.metadata.contactID)?.kind ?? ""] ?? "#ff754f"
+    : "#ff754f";
   let constrainedModel: ConstrainedOutlineModel | null = null;
-  if (selectedHold?.shapeConstraint) {
+  if (selectedContact?.shapeConstraint) {
     try {
       constrainedModel = pathEditor.constrainedOutlineModel(
-        selectedHold.displayPath,
-        selectedHold.shapeConstraint,
+        selectedContact.displayPath,
+        selectedContact.shapeConstraint,
       );
     } catch {
       constrainedModel = null;
@@ -308,7 +310,7 @@ export function HoldCanvas({
         <svg
           id="editor-svg"
           xmlns="http://www.w3.org/2000/svg"
-          aria-label="Hangboard hold editor"
+          aria-label="Hangboard contact editor"
           viewBox={document ? `0 0 ${document.canvas.width} ${document.canvas.height}` : undefined}
           width={document?.canvas.width}
           height={document?.canvas.height}
@@ -385,43 +387,42 @@ export function HoldCanvas({
               />
             ))}
           </g>
-          <g id="hold-overlay">
-            {document?.regions.map((hold) => {
-              const isMetadataIncomplete = metadataWarnings?.incompleteRegionKeys.has(hold.key) ?? false;
+          <g id="contact-overlay">
+            {document?.regions.map((contact) => {
+              const color = TYPE_COLORS[contactByID.get(contact.metadata.contactID)?.kind ?? ""] ?? "#ff754f";
               return <path
-                key={hold.key}
-                className={`region-shape${isMetadataIncomplete ? " region-missing-metadata" : ""}`}
-                data-hold-key={hold.key}
-                d={hold.displayPath}
-                fill={TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
-                fillOpacity={selectedKeys.includes(hold.key) ? "0.58" : "0.3"}
-                stroke={selectedKeys.includes(hold.key) ? "#fff7dc" : isMetadataIncomplete ? "#9a3d00" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
-                strokeWidth={selectedKeys.includes(hold.key) ? "2.2" : isMetadataIncomplete ? "3" : "1.4"}
-                strokeDasharray={isMetadataIncomplete ? "5 3" : undefined}
+                key={contact.key}
+                className="region-shape"
+                data-contact-key={contact.key}
+                d={contact.displayPath}
+                fill={color}
+                fillOpacity={selectedKeys.includes(contact.key) ? "0.58" : "0.3"}
+                stroke={selectedKeys.includes(contact.key) ? "#fff7dc" : color}
+                strokeWidth={selectedKeys.includes(contact.key) ? "2.2" : "1.4"}
                 role="button"
                 tabIndex={0}
-                aria-label={`Select hold ${hold.key}${isMetadataIncomplete ? " (missing required metadata)" : ""}`}
-                aria-pressed={selectedKeys.includes(hold.key)}
+                aria-label={`Select contact ${contact.key}`}
+                aria-pressed={selectedKeys.includes(contact.key)}
                 onPointerDown={(event) => {
                   if (busy || event.button !== 0 || (!event.metaKey && !event.ctrlKey)) return;
-                  modifierSelectionRef.current = hold.key;
+                  modifierSelectionRef.current = contact.key;
                   event.stopPropagation();
-                  onSelectHold(hold.key, true);
+                  onSelectContact(contact.key, true);
                 }}
-                onPointerCancel={() => clearModifierSelection(hold.key)}
-                onContextMenu={() => clearModifierSelection(hold.key)}
+                onPointerCancel={() => clearModifierSelection(contact.key)}
+                onContextMenu={() => clearModifierSelection(contact.key)}
                 onClick={(event) => {
                   if (busy) return;
-                  if (modifierSelectionRef.current === hold.key) {
-                    clearModifierSelection(hold.key);
+                  if (modifierSelectionRef.current === contact.key) {
+                    clearModifierSelection(contact.key);
                     return;
                   }
-                  onSelectHold(hold.key, event.metaKey || event.ctrlKey);
+                  onSelectContact(contact.key, event.metaKey || event.ctrlKey);
                 }}
                 onKeyDown={(event) => {
                   if (busy || (event.key !== "Enter" && event.key !== " ")) return;
                   if (event.key === " ") event.preventDefault();
-                  onSelectHold(hold.key, event.metaKey || event.ctrlKey);
+                  onSelectContact(contact.key, event.metaKey || event.ctrlKey);
                 }}
               />
             })}
@@ -622,7 +623,7 @@ export function HoldCanvas({
         )}
         <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">
           <strong>Select a board</strong>
-          <span>Its image and holds load together.</span>
+          <span>Its image and contacts load together.</span>
         </div>
       </div>
     </div>

@@ -64,12 +64,15 @@ enum BoardSourceBoundaryAudit {
             "HangTen/Models/TrainingModels.swift"
         ]
         var findings: [String] = []
-        let sourceWithoutOwnedPlanRequirements = removingDisplayModelBoardID(
-            from: removingOwnedDeclaration(
-                from: source,
-                relativePath: relativePath,
-                ownerPath: planRequirementOwnerPath,
-                declaration: planRequirementOwnerDeclaration
+        let sourceWithoutOwnedPlanRequirements = removingCatalogDefaultBoardID(
+            from: removingDisplayModelBoardID(
+                from: removingOwnedDeclaration(
+                    from: source,
+                    relativePath: relativePath,
+                    ownerPath: planRequirementOwnerPath,
+                    declaration: planRequirementOwnerDeclaration
+                ),
+                relativePath: relativePath
             ),
             relativePath: relativePath
         )
@@ -132,6 +135,20 @@ enum BoardSourceBoundaryAudit {
         guard relativePath == "HangTen/Views/BoardModelView.swift" else { return source }
         return source.replacingOccurrences(
             of: #"(enum BoardModelIdentity \{\s*)static let boardID = "metolius\.wood-grips-compact-ii""#,
+            with: "$1",
+            options: .regularExpression
+        )
+    }
+
+    /// The initial UI selection is an app preference, not a plan target or a
+    /// second copy of package content. Only this exact declaration is exempt.
+    private static func removingCatalogDefaultBoardID(
+        from source: String,
+        relativePath: String
+    ) -> String {
+        guard relativePath == "HangTen/Models/TrainingModels.swift" else { return source }
+        return source.replacingOccurrences(
+            of: #"(static let defaultBoard: BoardRevision = \{\s*)let boardID = "[^"]+""#,
             with: "$1",
             options: .regularExpression
         )

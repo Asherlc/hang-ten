@@ -65,7 +65,10 @@ final class CustomRoutineStoreTests: XCTestCase {
         let steps = try XCTUnwrap(routines[0]["steps"] as? [[String: Any]])
         let segments = try XCTUnwrap(steps[0]["segments"] as? [[String: Any]])
 
-        XCTAssertEqual(segments[0]["targets"] as? [[String: String]], [["kind": "edge"]])
+        XCTAssertEqual(
+            segments[0]["targets"] as? [[String: String]],
+            [["kind": "edge", "selection": "allMatching"]]
+        )
         XCTAssertNil(segments[0]["target"])
     }
 
@@ -112,9 +115,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
-        XCTAssertNil(oneFingerPocket.features)
+        XCTAssertTrue(oneFingerPocket.features.isEmpty)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertNil(fourFingerPocket.features)
+        XCTAssertTrue(fourFingerPocket.features.isEmpty)
     }
 
     func testPlanResolutionRetainsExactFingerConfiguration() throws {
@@ -158,63 +161,6 @@ final class CustomRoutineStoreTests: XCTestCase {
         let resolved = try PlanDefinitionResolver(library: library).resolve(library.plans[0])
 
         XCTAssertEqual(resolved.steps.map(\.fingerConfiguration), [expectedConfiguration])
-    }
-
-    func testCustomRoutineLoadAndSaveStripLegacyGripAndFingerCueFields() throws {
-        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
-        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
-        defer { defaults.removePersistentDomain(forName: suite) }
-        defaults.set(
-            Data(
-                #"""
-                {
-                  "routines": [{
-                    "id": "custom.legacy-cues",
-                    "title": "Legacy cues",
-                    "subtitle": "",
-                    "tags": [],
-                    "targetMode": { "kind": "generic" },
-                    "steps": [{
-                      "id": "legacy-step",
-                      "title": "Legacy hang",
-                      "instruction": "Use index and ring fingers.",
-                      "accessory": "10s",
-                      "duration": 10,
-                      "phase": "hang",
-                      "targets": [{ "feature": "pocket", "fingerCapacity": 3 }],
-                      "segments": [{
-                        "kind": "work",
-                        "targets": [{ "feature": "pocket", "fingerCapacity": 3 }],
-                        "timing": "fixed",
-                        "duration": 10
-                      }],
-                      "gripType": "openHand",
-                      "fingerConfiguration": { "engagedFingers": ["index", "ring"] },
-                      "activeDuration": 10
-                    }]
-                  }]
-                }
-                """#.utf8
-            ),
-            forKey: CustomRoutineStore.defaultKey
-        )
-        let store = CustomRoutineStore(defaults: defaults)
-
-        let loaded = try XCTUnwrap(store.routines.first)
-        XCTAssertNil(loaded.steps.first?.gripType)
-        XCTAssertNil(loaded.steps.first?.fingerConfiguration)
-
-        try store.save(loaded)
-
-        let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
-        let persistedJSON = try XCTUnwrap(
-            try JSONSerialization.jsonObject(with: persistedData) as? [String: Any]
-        )
-        let persistedRoutines = try XCTUnwrap(persistedJSON["routines"] as? [[String: Any]])
-        let persistedSteps = try XCTUnwrap(persistedRoutines.first?["steps"] as? [[String: Any]])
-
-        XCTAssertNil(persistedSteps.first?["gripType"])
-        XCTAssertNil(persistedSteps.first?["fingerConfiguration"])
     }
 
     func testBoardSpecificDefinitionRoundTripsAndResolvesToTrainingPlan() throws {
@@ -293,7 +239,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
     }
 
-    func testDoubleHandCustomStepRejectsSingleHandPortABoardContact() throws {
+    func testDoubleHandCustomStepAcceptsTwoPortableBoardContacts() throws {
         let board = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "frictitious.port-a-board" }
         )
@@ -325,7 +271,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             availableBoards: [board]
         )
 
-        XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
+        XCTAssertFalse(issues.contains(.unresolvableTargets(stepIndex: 0)))
     }
 
     func testSaveAndResolveAllowsEmptyOptionalSubtitle() throws {
@@ -354,7 +300,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             difficulty: nil,
             category: nil,
             tags: [],
-            targetMode: .generic,
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [
                 WorkoutStepDefinition(
                     id: "step-1",
@@ -452,7 +398,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(store.routines.first?.tags, ["edges", "custom"])
     }
 
-    func testValidationRejectsUnknownBoardAndHoldIDsForBoardSpecificRoutine() {
+    func testValidationRejectsUnknownBoardForBoardSpecificRoutine() {
         let definition = CustomRoutineDefinition(
             id: "custom.unknown-board",
             title: "Unknown board",
@@ -467,7 +413,6 @@ final class CustomRoutineStoreTests: XCTestCase {
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
 
         XCTAssertTrue(issues.contains(.unknownBoard(boardID: "unknown-board")))
-        XCTAssertTrue(issues.contains(.unknownHoldID(stepIndex: 0, holdID: "missing-hold")))
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
@@ -615,7 +560,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         }
     }
 
-    func testValidationRejectsTargetStorageThatDoesNotMatchRoutineMode() {
+    func testFactualRequirementsUseTheSameGrammarInEveryRoutineMode() {
         let boardSpecific = CustomRoutineDefinition(
             id: "custom.board-mode-mismatch",
             title: "Board mismatch",
@@ -657,10 +602,10 @@ final class CustomRoutineStoreTests: XCTestCase {
             availableBoards: BoardCatalog.all
         )
 
-        XCTAssertTrue(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
-        XCTAssertTrue(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
-        XCTAssertTrue(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
-        XCTAssertTrue(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+        XCTAssertFalse(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertFalse(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+        XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
     }
 
     func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {

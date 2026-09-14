@@ -1243,7 +1243,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.roundSloper),
+                    target: nil,
                     timing: .fixed,
                     duration: 10
                 )
@@ -1254,7 +1254,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .kind(.pocket),
+                    target: nil,
                     timing: .fixed,
                     duration: 5
                 )
@@ -1265,7 +1265,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.roundSloper),
+                    target: nil,
                     timing: .stopwatch,
                     duration: nil
                 )
@@ -1656,7 +1656,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.largeSlope),
+                    target: nil,
                     timing: .fixed,
                     duration: 15
                 )
@@ -1667,7 +1667,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.largeSlope),
+                    target: nil,
                     timing: .undefined,
                     duration: nil
                 )

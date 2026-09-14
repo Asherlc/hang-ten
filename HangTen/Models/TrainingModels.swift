@@ -1422,6 +1422,23 @@ struct MetoliusTaskDefinition: Hashable {
         self.fingerConfiguration = fingerConfiguration
         self.timing = timing
     }
+
+    /// Generic source plans name the athlete's chosen hold in their visible
+    /// instruction. They do not authorize the app to resolve that wording to
+    /// a board contact, so the persisted target must remain self-selected.
+    func usingSelfSelectedContacts() -> MetoliusTaskDefinition {
+        MetoliusTaskDefinition(
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: [],
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
+            timing: timing
+        )
+    }
 }
 
 enum RoutineProvenance: String, Codable, Hashable {
@@ -1640,7 +1657,7 @@ enum MetoliusCycleBuilder {
                 duration: task.duration,
                 phase: task.phase,
                 targets: task.targets,
-                segments: task.targets.isEmpty ? [] : [
+                segments: [
                     WorkoutSegment(
                         kind: .work,
                         targets: task.targets,
@@ -1868,7 +1885,7 @@ enum LegacyPlanSeedCatalog {
                 steps += try MetoliusCycleBuilder.expand(
                     planID: planID,
                     minute: index + 1,
-                    tasks: tasks
+                    tasks: tasks.map { $0.usingSelfSelectedContacts() }
                 )
             } catch {
                 preconditionFailure("Invalid Metolius plan \(planID) minute \(index + 1): \(error)")
@@ -3231,7 +3248,9 @@ enum LegacyPlanSeedCatalog {
                         return step.targets.isEmpty && step.timedWorkDuration == nil
                     }
                     let timing = step.segments.first?.timing ?? .fixed
-                    return !step.targets.isEmpty && (
+                    return step.targets.isEmpty
+                        && step.segments.allSatisfy(\.targets.isEmpty)
+                        && (
                         timing == .fixed
                             ? step.timedWorkDuration == step.duration
                             : step.timedWorkDuration == nil

@@ -141,7 +141,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
-    func testBundledBoardContentUsesSchemaVersionTwo() throws {
+    func testBundledBoardContentUsesSchemaVersionThree() throws {
         let repositoryRoot = repositoryRootURL()
         let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
             at: repositoryRoot
@@ -154,8 +154,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             XCTAssertEqual(
                 boardDocument["schemaVersion"] as? Int,
-                2,
-                "Every bundled board package must use schema version 2: \(boardURL.path)."
+                3,
+                "Every bundled board package must use schema version 3: \(boardURL.path)."
             )
         }
 
@@ -455,6 +455,34 @@ final class BoardSourceBoundaryTests: XCTestCase {
         XCTAssertFalse(BoardSourceBoundaryAudit.findings(
             relativePath: "HangTen/Views/BoardModelView.swift",
             source: "enum BoardModelIdentity { let hold = PhysicalContact() }", packageOwnedLiterals: literals
+        ).isEmpty)
+    }
+
+    func testBoundaryAuditAllowsOnlyTheScopedCatalogDefaultBoardBinding() {
+        let binding = """
+        enum BoardCatalog {
+            static let defaultBoard: BoardRevision = {
+                let boardID = "metolius.wood-grips-compact-ii"
+                return packageStore.board(id: boardID)!
+            }()
+        }
+        """
+        let literals: Set<String> = ["metolius.wood-grips-compact-ii"]
+
+        XCTAssertTrue(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/TrainingModels.swift",
+            source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/OtherView.swift",
+            source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/TrainingModels.swift",
+            source: binding + "\nlet planTarget = \"metolius.wood-grips-compact-ii\"",
+            packageOwnedLiterals: literals
         ).isEmpty)
     }
 

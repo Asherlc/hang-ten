@@ -19,13 +19,22 @@ retain them. F80 and F100 still require real-time force measurement/feedback,
 and F100 retains its alternating right/left instruction without inventing a
 board target or side mapping.
 
+The three generic Metolius 10 Minute Sequences are source-generic rather than
+board-specific. The linked manufacturer guide supplies the visible hold
+wording retained in each task's instruction, but it supplies no Hang Ten
+contact fact or contact ID. Their work steps therefore emit no factual target;
+when recorded against any selected board, including Compact II, that explicit
+absence persists as `selfSelected`. This is a representation of the source's
+generic choice, not a semantic mapping, a board-specific fallback, or invented
+training content.
+
 ## Field decisions for all built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
-| `metolius.generic-ten-minute.entry` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, target, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration |
-| `metolius.generic-ten-minute.intermediate` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, target, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration |
-| `metolius.generic-ten-minute.advanced` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, target, count, including source finger-count phrases, switches, stay-on transitions, choices, and failure/max qualifiers | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration; finger phrases remain in source-backed instructions rather than inferred structured cues |
+| `metolius.generic-ten-minute.entry` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.intermediate` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.advanced` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count, including source finger-count phrases, switches, stay-on transitions, choices, and failure/max qualifiers | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration; finger phrases remain in source-backed instructions rather than inferred structured cues |
 | `research.max-hangs` | research | [Lattice max hang protocol](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | title, instruction, gripType, fingerConfiguration: 7-second, near-maximal, 20 mm, half-crimp, four-finger hangs | subtitle, accessory, count, duration, interval: five-set/three-minute app timer structure | target, warmUp, cooldown |
 | `research.megos-one-arm-7-3` | research | [Alex Megos finger-training power-endurance protocol, reported by Eric Hörst](https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/) | title, instruction, accessory, count, duration, interval, gripType: four 7/3 cycles per arm, left then right, two-minute recovery, six sets, 20–24 mm edge, and half-crimp | subtitle: source sequence expanded into side-specific timer steps | target, warmUp, cooldown, fingerConfiguration |
 | `research.force-feedback-f80` | research | [Frontiers force-feedback hangboard study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | title, subtitle, instruction, accessory, count, duration, interval: 80% MFSi, 10/6 between repetitions, up to 12 repetitions, three sets, eight-minute recovery, real-time force measurement/feedback, instrumented 12 mm study hold, and stopping a set below 70% MFSi | the final post-routine 6-second rest is omitted by Hang Ten's terminal-work policy | target, warmUp, cooldown, gripType, fingerConfiguration |
@@ -115,42 +124,16 @@ grip/finger cue.
     {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"},
     {"planID":"rptc.seven-three-repeaters","sourceType":"manufacturer","sourceLabel":"Rock Prodigy Training Center Use Instructions","sourceURL":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"}
   ],
-  "targetFallbackRules": [
-    {
-      "planID":"coach.horst-seven-fifty-three",
-      "primaryKind":"pocket",
-      "fingerCapacity":2,
-      "fallbackFeatures":["mediumEdge","largeEdge","largeOpenHandRail"],
-      "decision":"adapt",
-      "sourcePrescription":false,
-      "fingerCapacitySourcePrescription":true,
-      "adaptationType":"availability",
-      "sourceURL":"https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/",
-      "sourceBasis":"The source prescribes 20–30 mm two-finger pockets, supporting fingerCapacity: 2. It does not prescribe a fallback order, so the ordered availability ladder is an app availability adaptation."
-    },
-    {
-      "planID":"coach.density-hangs",
-      "primaryKind":"pocket",
-      "fingerCapacity":4,
-      "fallbackFeatures":["mediumEdge","largeEdge","largeOpenHandRail"],
-      "decision":"adapt",
-      "sourcePrescription":false,
-      "fingerCapacitySourcePrescription":false,
-      "adaptationType":"availability",
-      "sourceURL":"https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/",
-      "sourceBasis":"The source supports density-hang timing and recovery ranges, not a four-finger pocket or fallback order. The ordered availability ladder is an app availability adaptation of the app's adapted board target, not a source prescription."
-    }
-  ],
   "planFieldRules": [
-    {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.entry","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.entry","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-    {"planID":"metolius.generic-ten-minute.intermediate","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.entry","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.intermediate","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.intermediate","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.intermediate","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-    {"planID":"metolius.generic-ten-minute.advanced","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.intermediate","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.advanced","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.advanced","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.advanced","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.advanced","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"metolius.contact.entry","fields":["title","subtitle","instruction","accessory","target","count","duration","interval"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.contact.entry","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},

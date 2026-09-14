@@ -944,9 +944,9 @@ struct PlanDetailView: View {
                 activeHoldID: firstStepHold?.id
             )
                 .padding(.horizontal, 12)
-            if let firstStepHoldCue {
+            if let firstStepHoldCue, let hold = firstStepHoldCue.hold {
                 GripDiagramView(
-                    hold: firstStepHoldCue.hold,
+                    hold: hold,
                     gripType: firstStepHoldCue.gripType,
                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
@@ -2019,7 +2019,7 @@ struct WorkoutView: View {
 					board: board,
 					highlightedHoldIDs: highlightedHoldIDs,
 					highlightMode: highlightMode,
-					activeHoldID: holdCue?.hold.id
+					activeHoldID: holdCue?.hold?.id
 				)
 					.padding(.horizontal, 2)
 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
@@ -2028,11 +2028,30 @@ struct WorkoutView: View {
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown
 				) {
-					GripDiagramView(
-						hold: holdCue.hold,
-						gripType: holdCue.gripType,
-						fingerConfiguration: holdCue.fingerConfiguration
-					)
+					if let hold = holdCue.hold {
+						GripDiagramView(
+							hold: hold,
+							gripType: holdCue.gripType,
+							fingerConfiguration: holdCue.fingerConfiguration
+						)
+					} else {
+						HStack(spacing: 12) {
+							if step.side != .right {
+								GripHandCueCard(
+									posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration,
+									side: .left
+								)
+							}
+							if step.side != .left {
+								GripHandCueCard(
+									posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration,
+									side: .right
+								)
+							}
+						}
+					}
 				}
 				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
 					step: step,
@@ -2103,7 +2122,7 @@ struct WorkoutView: View {
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
 						highlightMode: highlightMode,
-						activeHoldID: holdCue?.hold.id
+						activeHoldID: holdCue?.hold?.id
 					)
 						.frame(maxWidth: .infinity)
 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)

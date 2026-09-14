@@ -72,12 +72,12 @@ struct WorkoutBoardCue: Equatable {
 }
 
 struct WorkoutHoldCue: Equatable {
-    let hold: PhysicalContact
+    let hold: PhysicalContact?
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
 
     init(
-        hold: PhysicalContact,
+        hold: PhysicalContact? = nil,
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) {
@@ -107,12 +107,20 @@ enum WorkoutHoldCuePolicy {
         on board: BoardRevision
     ) -> WorkoutHoldCue? {
         guard let step,
-              step.targets.count == 1,
+              step.gripType != nil || step.fingerConfiguration != nil else {
+            return nil
+        }
+        if step.targets.isEmpty {
+            return WorkoutHoldCue(
+                gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration
+            )
+        }
+        guard step.targets.count == 1,
               let target = step.targets.first,
               let hold,
               (try? ContactResolver.resolve(target, step: step, board: board))?
-                .contains(where: { $0.id == hold.id }) == true,
-              step.gripType != nil || step.fingerConfiguration != nil
+                .contains(where: { $0.id == hold.id }) == true
         else {
             return nil
         }
