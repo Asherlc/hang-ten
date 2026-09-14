@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import stat
+from datetime import date
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -143,26 +144,39 @@ def _verify_snapshot(
     base = _snapshot_base(manifest_path)
     snapshot_candidate = base / evidence.snapshot_path
     try:
-        snapshot = snapshot_candidate.resolve()
-        snapshot.relative_to(base)
+        snapshot_candidate.relative_to(base)
     except ValueError as error:
         raise CordAuditError(
             f"{source}.snapshotPath must remain beneath the repository base"
         ) from error
+    component = base
+    parts = Path(evidence.snapshot_path).parts
+    for index, part in enumerate(parts):
+        component /= part
+        try:
+            mode = component.lstat().st_mode
+        except OSError as error:
+            raise CordAuditError(
+                f"{source}.snapshot path does not name a regular file: "
+                f"{evidence.snapshot_path}"
+            ) from error
+        if stat.S_ISLNK(mode):
+            raise CordAuditError(
+                f"{source}.snapshotPath must not contain a symbolic link: "
+                f"{evidence.snapshot_path}"
+            )
+        if index < len(parts) - 1 and not stat.S_ISDIR(mode):
+            raise CordAuditError(
+                f"{source}.snapshot path does not name a regular file: "
+                f"{evidence.snapshot_path}"
+            )
+        if index == len(parts) - 1 and not stat.S_ISREG(mode):
+            raise CordAuditError(
+                f"{source}.snapshot path does not name a regular file: "
+                f"{evidence.snapshot_path}"
+            )
     try:
-        mode = snapshot_candidate.lstat().st_mode
-    except OSError as error:
-        raise CordAuditError(
-            f"{source}.snapshot path does not name a regular file: "
-            f"{evidence.snapshot_path}"
-        ) from error
-    if stat.S_ISLNK(mode) or not stat.S_ISREG(mode):
-        raise CordAuditError(
-            f"{source}.snapshot path does not name a regular file: "
-            f"{evidence.snapshot_path}"
-        )
-    try:
-        digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+        digest = hashlib.sha256(snapshot_candidate.read_bytes()).hexdigest()
     except OSError as error:
         raise CordAuditError(
             f"{source}.snapshot could not be read: {evidence.snapshot_path}"
@@ -232,6 +246,10 @@ def _load_human_approval(value: Any, source: str) -> CordAuditHumanApproval:
     reviewed_at = _nonempty_string(payload["reviewedAt"], f"{source}.reviewedAt")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", reviewed_at):
         raise CordAuditError(f"{source}.reviewedAt must be an ISO date")
+    try:
+        date.fromisoformat(reviewed_at)
+    except ValueError as error:
+        raise CordAuditError(f"{source}.reviewedAt must be an ISO calendar date") from error
     return CordAuditHumanApproval(
         approved=True,
         reviewer=_nonempty_string(payload["reviewer"], f"{source}.reviewer"),

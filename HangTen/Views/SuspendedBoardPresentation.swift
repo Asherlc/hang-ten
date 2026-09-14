@@ -149,7 +149,7 @@ enum SuspendedBoardPresentation {
         let tubeRadius = Float(suspension.cord.radius)
         try validatePairedLeadClearance(
             leads,
-            requiredClearance: tubeRadius + additionalClearance
+            requiredClearance: 2 * tubeRadius + additionalClearance
         )
 
         let framing = try makeCameraFraming(

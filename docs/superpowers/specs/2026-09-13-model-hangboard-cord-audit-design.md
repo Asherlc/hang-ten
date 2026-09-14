@@ -68,8 +68,11 @@ unrendered interior section is not established by evidence.
 
 1. Add a deterministic catalog audit/test that discovers every model package
    and requires a source-backed `represented`, `excluded`, or `pending`
-   classification. `pending` fails promotion, so no qualifying board can be
-   silently omitted.
+   classification. `pending` is a planning-only, non-serialized state: it
+   blocks package promotion and must be resolved to a retained-evidence
+   `represented` or conservative `excluded` record before the shipped closed
+   manifest is written. The shipped manifest intentionally has no `pending`
+   value, so no qualifying board can be silently omitted.
 2. Gather and retain the primary evidence packets, obtain human approval of
    the multi-angle views, and document topology and attachment facts separately
    from display estimates.

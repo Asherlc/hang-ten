@@ -211,6 +211,19 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testPairedLeadRejectsLeadsCloserThanTheirTwoTubeDiameterClearance() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: pairedLeadSuspension(
+                left: [-0.0075, 0.4, 0],
+                right: [0.0075, 0.4, 0]
+            ),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
     func testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),

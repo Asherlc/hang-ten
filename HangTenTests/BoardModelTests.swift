@@ -533,7 +533,7 @@ final class BoardModelTests: XCTestCase {
 
         let invalidModel = try XCTUnwrap(BoardModelScene(
             source: source(), descriptor: descriptor, display: display(),
-            suspension: .pairedLeadCord(suspension(right: [1, -0.5, 0]))
+            suspension: .pairedLeadCord(suspension(right: [1.01, -0.5, 0]))
         ))
         XCTAssertFalse(invalidModel.select(positionID: "primary"))
         XCTAssertTrue(invalidModel.isUnavailable)

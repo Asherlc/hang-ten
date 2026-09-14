@@ -361,8 +361,40 @@ def test_manifest_rejects_symlink_snapshot(tmp_path: Path) -> None:
     snapshot.unlink()
     snapshot.symlink_to(retained)
 
-    with pytest.raises(CordAuditError, match="snapshot path does not name a regular file"):
+    with pytest.raises(CordAuditError, match="must not contain a symbolic link"):
         validate_cord_audit_manifest(load_cord_audit_manifest(manifest_path), inventory)
+
+
+def test_manifest_rejects_symlinked_snapshot_directory(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    manifest_path = _manifest_path(tmp_path, [record])
+    snapshot = tmp_path / record["evidence"][0]["snapshotPath"]  # type: ignore[index]
+    retained = snapshot.parent / "retained"
+    retained.mkdir()
+    snapshot.rename(retained / snapshot.name)
+    snapshot.parent.joinpath("linked").symlink_to(retained, target_is_directory=True)
+    record["evidence"][0]["snapshotPath"] = (  # type: ignore[index]
+        "docs/source-audits/2026-09-13-model-cord-snapshots/linked/fixture-front.html"
+    )
+    manifest_path.write_text(
+        json.dumps({"schemaVersion": 1, "records": [record]}), encoding="utf-8"
+    )
+
+    with pytest.raises(CordAuditError, match="must not contain a symbolic link"):
+        validate_cord_audit_manifest(load_cord_audit_manifest(manifest_path), inventory)
+
+
+@pytest.mark.parametrize("reviewed_at", ["2026-02-30", "2026-13-01", "2026-00-01"])
+def test_manifest_rejects_non_calendar_human_review_date(
+    tmp_path: Path, reviewed_at: str
+) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    record["humanApproval"]["reviewedAt"] = reviewed_at  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="reviewedAt must be an ISO calendar date"):
+        _validate(tmp_path, inventory, [record])
 
 
 def test_excluded_record_may_conservatively_omit_unavailable_source_evidence(
