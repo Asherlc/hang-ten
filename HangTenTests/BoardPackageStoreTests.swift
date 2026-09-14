@@ -949,6 +949,8 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(
             matrix.compactMap { $0["name"] as? String },
             [
+                "paired-pose-mouths-null", "paired-pose-mouths-missing-lead",
+                "paired-pose-mouths-coincident", "paired-pose-mouths-outside-bounds",
                 "wrong-schema-version", "unknown-media-type", "escaped-typed-path",
                 "extra-asset", "stale-sha", "omitted-node", "extra-node",
                 "body-with-hold-id", "unbound-geometry", "invalid-camera",

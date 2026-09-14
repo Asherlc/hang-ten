@@ -121,6 +121,28 @@ Nature's hanging cord similarly exits the upper corners, rather than the
 mid-height side hardware. Its front/reverse poses share those top mouths.
 No new internal route is claimed.
 
+Verification used `Hang Ten Paseo gorgeous-dugong Review`, UUID
+`5D2208DF-CC17-4EDC-9749-A7C3232E07CF`, iPhone 17 Pro / iOS 26.5, with
+`xcodebuild test -project HangTen.xcodeproj -scheme HangTen -configuration Debug
+-destination platform=iOS Simulator,id=5D2208DF-CC17-4EDC-9749-A7C3232E07CF
+-derivedDataPath .context/DerivedData -parallel-testing-enabled NO` and explicit
+focused test selectors. All real paired packages passed every canonical pose
+with two visible non-pickable cylinder groups; the former invalid side route
+remained unavailable. Parser preservation and pose-mouth solving passed (five
+focused tests). The full suspension solver class plus existing Flash/native
+and synthetic paired-lead regressions passed (43 tests). The shared malformed
+parser matrix passed after registering the four new fixture names. Python
+model/parser/audit suites passed 147 tests, with 63 packages valid and the cord
+audit retaining 4 represented / 10 excluded.
+
+Actual DEBUG app detail screens were launched with
+`HANGTEN_REVIEW_BOARD_DETAIL=1` and each `HANGTEN_REVIEW_BOARD_ID`. The four
+workspace captures `gorgeous-dugong-lattice-large-cords.png`,
+`gorgeous-dugong-lattice-small-cords.png`, `gorgeous-dugong-nature-cords.png`,
+and `gorgeous-dugong-flash-cords.png` were visually inspected: all show a loaded
+3D board, visible hanging leads, and an active highlighted hold. These are
+simulator app-integration evidence, not physical-device PBR parity proof.
+
 ## Package changes
 
 All promoted package edits are limited to `board.json` suspension metadata.
