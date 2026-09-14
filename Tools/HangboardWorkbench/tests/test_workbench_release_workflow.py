@@ -1040,7 +1040,11 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
         "Contents/MacOS/HangboardWorkbench",
         '"$app_executable" --headless',
         '--repository-root "$GITHUB_WORKSPACE"',
-        "--port 41739",
+        "select_free_loopback_port() {",
+        'port="$(select_free_loopback_port)"',
+        '--port "$port"',
+        'health_url="http://127.0.0.1:${port}/api/health"',
+        '"$health_url"',
     ):
         assert required_fragment in script
     assert "http://127.0.0.1:${port}/api/health" in script
@@ -1061,7 +1065,7 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
     assert 'kill -0 "$app_child_pid"' in script
 
     manifest_program = re.search(
-        r"python - <<'PY'\n(?P<program>.*?)\nPY",
+        r"done < <\(\n\s*python - <<'PY'\n(?P<program>.*?)\n\s*PY",
         script,
         re.DOTALL,
     )
