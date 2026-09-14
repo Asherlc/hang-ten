@@ -509,7 +509,14 @@ enum SuspendedBoardPresentation {
                         secondSegment,
                         sharedAnchor: sharedAnchor
                     )
-                if !isSharedAnchorContact {
+                // Two physical leads converge at this single authored anchor.
+                // With discretized taut centerlines, their first spans remain
+                // within two tube diameters for a short distance after that
+                // knot. Allow only that bounded anchor neighborhood; every
+                // later approach must maintain the full two-tube clearance.
+                let isWithinSharedAnchorKnot = simd_length(firstPoint - sharedAnchor) <= requiredClearance
+                    && simd_length(secondPoint - sharedAnchor) <= requiredClearance
+                if !isSharedAnchorContact && !isWithinSharedAnchorKnot {
                     throw SuspendedPresentationError.selfIntersection
                 }
             }

@@ -224,6 +224,24 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testPairedLeadAllowsTwoTubeClearanceOnlyInsideTheSharedAnchorKnot() throws {
+        let radius = 0.002
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: pairedLeadSuspension(
+                left: [-0.048, 0.0525, 0],
+                right: [0.048, 0.0525, 0],
+                anchor: [0, 0.3525, 0],
+                restLength: 0.55,
+                radius: radius
+            ),
+            bounds: bounds
+        )
+
+        XCTAssertEqual(result.leads.count, 2)
+        XCTAssertEqual(result.requiredClearance, radius + SuspendedBoardPresentation.additionalClearance, accuracy: 1e-6)
+    }
+
     func testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),
