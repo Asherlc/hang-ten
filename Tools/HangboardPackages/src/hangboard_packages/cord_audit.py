@@ -26,7 +26,8 @@ _DECISIONS = frozenset({"represented", "excluded"})
 _TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord"})
 _SOURCE_TIERS = frozenset({"manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
-_SELF_AUTHORED_LEDGER_SUFFIXES = frozenset({".md", ".markdown"})
+_SNAPSHOT_ROOT = Path("docs/source-audits/2026-09-13-model-cord-snapshots")
+_SELF_AUTHORED_LEDGER_SUFFIXES = frozenset({".json", ".md", ".markdown"})
 
 
 class CordAuditError(ValueError):
@@ -118,6 +119,12 @@ def _relative_snapshot_path(value: Any, source: str) -> str:
     candidate = Path(path)
     if candidate.is_absolute() or any(part in {"", ".", ".."} for part in candidate.parts):
         raise CordAuditError(f"{source} must be a relative retained path")
+    try:
+        candidate.relative_to(_SNAPSHOT_ROOT)
+    except ValueError as error:
+        raise CordAuditError(
+            f"{source} must remain beneath {_SNAPSHOT_ROOT.as_posix()}"
+        ) from error
     return path
 
 
@@ -134,21 +141,22 @@ def _verify_snapshot(
     evidence: CordAuditEvidence, *, manifest_path: Path, source: str
 ) -> None:
     base = _snapshot_base(manifest_path)
-    snapshot = (base / evidence.snapshot_path).resolve()
+    snapshot_candidate = base / evidence.snapshot_path
     try:
+        snapshot = snapshot_candidate.resolve()
         snapshot.relative_to(base)
     except ValueError as error:
         raise CordAuditError(
             f"{source}.snapshotPath must remain beneath the repository base"
         ) from error
     try:
-        mode = snapshot.stat().st_mode
+        mode = snapshot_candidate.lstat().st_mode
     except OSError as error:
         raise CordAuditError(
             f"{source}.snapshot path does not name a regular file: "
             f"{evidence.snapshot_path}"
         ) from error
-    if not stat.S_ISREG(mode):
+    if stat.S_ISLNK(mode) or not stat.S_ISREG(mode):
         raise CordAuditError(
             f"{source}.snapshot path does not name a regular file: "
             f"{evidence.snapshot_path}"

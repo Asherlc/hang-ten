@@ -57,7 +57,10 @@ def _record(
                 "exactRevisionID": "fixture-revision-2026",
                 "sourceTier": "manufacturer",
                 "snapshotSHA256": f"{index + 1:x}" * 64,
-                "snapshotPath": f"snapshots/fixture-{index}.html",
+                "snapshotPath": (
+                    "docs/source-audits/2026-09-13-model-cord-snapshots/"
+                    f"fixture-{index}.html"
+                ),
                 **item,
             }
             for index, item in enumerate(evidence_value)
@@ -74,7 +77,9 @@ def _record(
                 "exactRevisionID": "fixture-revision-2026",
                 "sourceTier": "manufacturer",
                 "snapshotSHA256": "a" * 64,
-                "snapshotPath": "snapshots/fixture-front.html",
+                "snapshotPath": (
+                    "docs/source-audits/2026-09-13-model-cord-snapshots/fixture-front.html"
+                ),
             },
             {
                 "view": "side",
@@ -82,7 +87,9 @@ def _record(
                 "exactRevisionID": "fixture-revision-2026",
                 "sourceTier": "manufacturer",
                 "snapshotSHA256": "b" * 64,
-                "snapshotPath": "snapshots/fixture-side.html",
+                "snapshotPath": (
+                    "docs/source-audits/2026-09-13-model-cord-snapshots/fixture-side.html"
+                ),
             },
         ],
         "humanApproval": {
@@ -316,10 +323,46 @@ def test_manifest_rejects_self_authored_markdown_ledger_as_snapshot(
 ) -> None:
     inventory = _inventory(_model_package("fixture.board"))
     record = _record("fixture.board")
-    record["evidence"][0]["snapshotPath"] = "docs/source-audits/cord-evidence.md"  # type: ignore[index]
+    record["evidence"][0]["snapshotPath"] = (  # type: ignore[index]
+        "docs/source-audits/2026-09-13-model-cord-snapshots/cord-evidence.md"
+    )
 
     with pytest.raises(CordAuditError, match="source artifact"):
         _validate(tmp_path, inventory, [record])
+
+
+def test_manifest_rejects_self_authored_json_ledger_as_snapshot(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    record["evidence"][0]["snapshotPath"] = (  # type: ignore[index]
+        "docs/source-audits/2026-09-13-model-hangboard-cord-audit.json"
+    )
+
+    with pytest.raises(CordAuditError, match="beneath docs/source-audits/2026-09-13-model-cord-snapshots"):
+        _validate(tmp_path, inventory, [record])
+
+
+def test_manifest_rejects_snapshot_outside_canonical_snapshot_root(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    record["evidence"][0]["snapshotPath"] = "docs/source-audits/other.html"  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="beneath docs/source-audits/2026-09-13-model-cord-snapshots"):
+        _validate(tmp_path, inventory, [record])
+
+
+def test_manifest_rejects_symlink_snapshot(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    manifest_path = _manifest_path(tmp_path, [record])
+    snapshot = tmp_path / record["evidence"][0]["snapshotPath"]  # type: ignore[index]
+    retained = snapshot.with_name("retained-source.html")
+    retained.write_bytes(snapshot.read_bytes())
+    snapshot.unlink()
+    snapshot.symlink_to(retained)
+
+    with pytest.raises(CordAuditError, match="snapshot path does not name a regular file"):
+        validate_cord_audit_manifest(load_cord_audit_manifest(manifest_path), inventory)
 
 
 def test_excluded_record_may_conservatively_omit_unavailable_source_evidence(
