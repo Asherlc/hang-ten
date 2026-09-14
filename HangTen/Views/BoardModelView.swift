@@ -1164,7 +1164,12 @@ final class BoardModelScene {
                         $0.segmentIndex == segmentIndex &&
                         $0.nodeID == nodeID &&
                         abs(approach.segmentParameter - $0.segmentParameter) <= 1e-5 &&
-                        simd_length(approach.trianglePoint - $0.point) <= 1e-5
+                        // Attachment points are display estimates of the
+                        // external lead mouths. USDZ tessellation can place
+                        // the nearest triangle a small amount away from the
+                        // authored point; permit only that designated
+                        // endpoint contact, bounded by the cord clearance.
+                        simd_length(approach.trianglePoint - $0.point) <= requiredDistance
                     }) {
                         continue
                     }
