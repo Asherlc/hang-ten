@@ -527,10 +527,50 @@ enum SuspendedBoardPresentation {
                 // two-tube clearance.
                 let isWithinInitialCommonTrunk = firstIndex < forkIndex
                     && secondIndex < forkIndex
-                if !isSharedAnchorContact && !isWithinInitialCommonTrunk {
+                // Sampled leads that leave the same anchor can yield their
+                // closest approach on different early segments. That contact
+                // is part of the anchor knot only while both segments are in
+                // their contiguous, anchor-contained prefixes. In particular,
+                // do not use this exception for a later segment that returns
+                // to the anchor after the leads have forked.
+                let isCrossSegmentInsideInitialAnchorKnot = firstIndex != secondIndex
+                    && simd_length_squared(firstPoint - sharedAnchor) <= clearanceSquared
+                    && simd_length_squared(secondPoint - sharedAnchor) <= clearanceSquared
+                    && isInitialAnchorKnotSegment(
+                        firstIndex,
+                        in: firstPath,
+                        sharedAnchor: sharedAnchor,
+                        clearanceSquared: clearanceSquared
+                    )
+                    && isInitialAnchorKnotSegment(
+                        secondIndex,
+                        in: secondPath,
+                        sharedAnchor: sharedAnchor,
+                        clearanceSquared: clearanceSquared
+                    )
+                if !isSharedAnchorContact
+                    && !isWithinInitialCommonTrunk
+                    && !isCrossSegmentInsideInitialAnchorKnot {
                     throw SuspendedPresentationError.selfIntersection
                 }
             }
+        }
+    }
+
+    /// Returns whether a segment belongs to the leading anchor knot. Every
+    /// sample through that segment's endpoint must remain inside the knot;
+    /// this makes the exception impossible to re-enter after a real fork.
+    private static func isInitialAnchorKnotSegment(
+        _ segmentIndex: Int,
+        in path: [SIMD3<Float>],
+        sharedAnchor: SIMD3<Float>,
+        clearanceSquared: Float
+    ) -> Bool {
+        guard segmentIndex >= 0, segmentIndex + 1 < path.count else {
+            return false
+        }
+        return path.prefix(segmentIndex + 2).allSatisfy {
+            simd_length_squared($0 - sharedAnchor) <= clearanceSquared
         }
     }
 

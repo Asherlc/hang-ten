@@ -331,6 +331,22 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testPairedLeadRejectsAReapproachToTheSharedAnchorAfterLeavingItsKnot() {
+        let first = solvedLead([
+            [0, 0, 0], [0, -0.005, 0], [-0.05, -0.08, 0], [0, 0, 0]
+        ])
+        let second = solvedLead([
+            [0, 0, 0], [0, -0.005, 0], [0.05, -0.08, 0], [0, 0, 0]
+        ])
+
+        XCTAssertThrowsError(try SuspendedBoardPresentation.validatePairedLeadClearance(
+            [first, second],
+            requiredClearance: 0.02
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
     func testPairedLeadAllowsAdjacentInitialSegmentsInsideTheSharedAnchorKnot() throws {
         let result = try SuspendedBoardPresentation.solve(
             pose: pose(),
