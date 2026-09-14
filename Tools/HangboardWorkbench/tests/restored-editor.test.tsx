@@ -342,12 +342,14 @@ test("switching presentations changes the focused canvas and scopes new contacts
       displayName: "Front",
       imageUrl: "/api/boards/board-a/image?presentationID=front",
       default: true,
+      contactIDs: ["front"],
     },
     {
       presentationID: "back",
       displayName: "Back",
       imageUrl: "/api/boards/board-a/image?presentationID=back",
       default: false,
+      contactIDs: ["back"],
     },
   ];
   const sharedContacts = [contactFixture("front"), contactFixture("back", { kind: "edge" })];
@@ -365,26 +367,55 @@ test("switching presentations changes the focused canvas and scopes new contacts
   const focusedBoard = (presentationID: "front" | "back"): Board => ({
     boardId: "board-a",
     displayName: "Board A",
-    contactCount: 2,
-    contactIDs: ["front", "back", "hold-1"],
+    contactCount: sharedContacts.length,
+    contactIDs: sharedContacts.map((contact) => contact.id),
     selectedPresentationID: presentationID,
     presentations,
     imageUrl: `/api/boards/board-a/image?presentationID=${presentationID}`,
     document: presentationID === "front" ? frontDocument : backDocument,
   });
   let savedDocument: EditorDocument | null = null;
+  let savedBoard: Board | null = null;
   const client: WorkbenchClient = {
     ...clientFixture([focusedBoard("front")]),
     async getBoard(_boardID, presentationID): Promise<Board> {
       return focusedBoard(presentationID === "back" ? "back" : "front");
     },
     async saveBoard(_boardID, document): Promise<Board> {
-      savedDocument = document;
-      return { ...focusedBoard("back"), document };
+      savedDocument = structuredClone(document);
+      savedBoard = {
+        ...focusedBoard("back"),
+        contactCount: document.contacts.length,
+        contactIDs: document.contacts.map((contact) => contact.id),
+        presentations: presentations.map((presentation) => presentation.presentationID === document.presentationID
+          ? {
+            ...presentation,
+            contactIDs: [...new Set(document.regions.map((region) => region.metadata.contactID))],
+          }
+          : presentation),
+        document,
+      };
+      return savedBoard;
     },
   };
 
   await withEditor(async (app) => {
+    const focusedBoards = [focusedBoard("front"), focusedBoard("back")];
+    for (const board of focusedBoards) {
+      assert.equal(board.contactCount, board.document.contacts.length);
+      assert.deepEqual(board.contactIDs, board.document.contacts.map((contact) => contact.id));
+      assert.deepEqual(
+        board.presentations?.find((presentation) => presentation.presentationID === board.selectedPresentationID)?.contactIDs,
+        board.document.regions.map((region) => region.metadata.contactID),
+      );
+    }
+    assert.deepEqual(focusedBoards[0]?.presentations?.map((presentation) => ({
+      presentationID: presentation.presentationID,
+      contactIDs: presentation.contactIDs,
+    })), [
+      { presentationID: "front", contactIDs: ["front"] },
+      { presentationID: "back", contactIDs: ["back"] },
+    ]);
     assert.equal(app.documentValue("#presentation-select"), "front");
     assert.equal(app.document.querySelectorAll("#contact-overlay .region-shape").length, 1);
     assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), presentations[0]?.imageUrl);
@@ -408,10 +439,21 @@ test("switching presentations changes the focused canvas and scopes new contacts
     await app.flush();
 
     assert.equal(savedDocument?.presentationID, "back");
+    assert.deepEqual(savedDocument?.contacts.map((contact) => contact.id), ["front", "back", "new-contact-1"]);
     const added = savedDocument?.regions.find((region) => region.metadata?.contactID === "new-contact-1");
     assert.equal(added?.metadata?.contactID, "new-contact-1");
     assert.equal(added?.metadata?.presentationID, "back");
     assert.ok(savedDocument?.regions.every((region) => region.metadata?.presentationID === "back"));
+    assert.deepEqual(savedDocument?.regions.map((region) => region.metadata.contactID), ["back", "new-contact-1"]);
+    assert.equal(savedBoard?.contactCount, 3);
+    assert.deepEqual(savedBoard?.contactIDs, ["front", "back", "new-contact-1"]);
+    assert.deepEqual(savedBoard?.presentations?.map((presentation) => ({
+      presentationID: presentation.presentationID,
+      contactIDs: presentation.contactIDs,
+    })), [
+      { presentationID: "front", contactIDs: ["front"] },
+      { presentationID: "back", contactIDs: ["back", "new-contact-1"] },
+    ]);
   }, dependenciesFixture(focusedBoard("front"), { client }));
 });
 
@@ -1669,29 +1711,62 @@ test("equal contact depth bounds reopen and can become a range or be cleared", a
   }, dependenciesFixture(board, { client }));
 });
 
-test("zero depth clears the optional factual range", async () => {
+test("zero ranged-contact depth stays visibly invalid without replacing the valid factual range", async () => {
   const board = boardFixture(documentFixture({
     contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } })],
     regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
   }));
+  const client = clientFixture([board]);
 
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
+    await app.change("#contact-name", "Renamed contact");
     await app.change("#contact-depth-lower-input", "0");
-    assert.equal(app.documentValue("#contact-depth-lower-input"), "");
-    assert.equal(app.documentValue("#contact-depth-upper-input"), "");
-  }, dependenciesFixture(board));
+
+    const input = app.document.querySelector<HTMLInputElement>("#contact-depth-lower-input");
+    assert.ok(input);
+    assert.equal(input.value, "0");
+    assert.equal(input.min, Number.MIN_VALUE.toString());
+    assert.equal(input.checkValidity(), false);
+    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+
+    await app.click("#save-button");
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.contacts[0]?.depthRangeMillimeters, {
+      lowerBound: 7.5,
+      upperBound: 10,
+    });
+    assert.doesNotThrow(() => controller.validateEditorDocument(client.saveCalls[0]?.document));
+  }, dependenciesFixture(board, { client }));
 });
 
-test("clearing one equal depth bound clears the optional factual range", async () => {
+test("zero equal-bound contact depth stays visibly invalid without replacing the valid fixed-depth fact", async () => {
+  const board = boardFixture(documentFixture({
+    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 10, upperBound: 10 } })],
+    regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
+  }));
+  const client = clientFixture([board]);
+
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
-    await app.change("#contact-depth-lower-input", "10");
-    await app.change("#contact-depth-upper-input", "10");
-    await app.change("#contact-depth-upper-input", "");
-    assert.equal(app.documentValue("#contact-depth-lower-input"), "");
-    assert.equal(app.documentValue("#contact-depth-upper-input"), "");
-  });
+    await app.change("#contact-name", "Renamed contact");
+    await app.change("#contact-depth-upper-input", "0");
+
+    const input = app.document.querySelector<HTMLInputElement>("#contact-depth-upper-input");
+    assert.ok(input);
+    assert.equal(input.value, "0");
+    assert.equal(input.min, Number.MIN_VALUE.toString());
+    assert.equal(input.checkValidity(), false);
+    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+
+    await app.click("#save-button");
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.contacts[0]?.depthRangeMillimeters, {
+      lowerBound: 10,
+      upperBound: 10,
+    });
+    assert.doesNotThrow(() => controller.validateEditorDocument(client.saveCalls[0]?.document));
+  }, dependenciesFixture(board, { client }));
 });
 
 test("clearing an optional depth saves without a factual range", async () => {
@@ -1710,7 +1785,11 @@ test("clearing an optional depth saves without a factual range", async () => {
 
   await withEditor(async (app) => {
     await app.click('[data-contact-key="a-piece-0"]');
+    await app.change("#contact-depth-lower-input", "0");
     await app.change("#contact-depth-lower-input", "");
+    const input = app.document.querySelector<HTMLInputElement>("#contact-depth-lower-input");
+    assert.ok(input);
+    assert.equal(input.checkValidity(), true);
     await app.click("#save-button");
     assert.equal(Object.hasOwn(saved[0]?.contacts[0] ?? {}, "depthRangeMillimeters"), false);
   }, dependenciesFixture(board, { client }));

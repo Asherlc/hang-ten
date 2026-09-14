@@ -54,6 +54,24 @@ export function ContactInspector({
   onMobileCollapse,
   className = "",
 }: ContactInspectorProps) {
+  const lowerDepthInputRef = React.useRef<HTMLInputElement>(null);
+  const upperDepthInputRef = React.useRef<HTMLInputElement>(null);
+  const [lowerDepthDraft, setLowerDepthDraft] = React.useState(
+    contact?.depthRangeMillimeters?.lowerBound.toString() ?? "",
+  );
+  const [upperDepthDraft, setUpperDepthDraft] = React.useState(
+    contact?.depthRangeMillimeters?.upperBound.toString() ?? "",
+  );
+  React.useEffect(() => {
+    setLowerDepthDraft(contact?.depthRangeMillimeters?.lowerBound.toString() ?? "");
+    setUpperDepthDraft(contact?.depthRangeMillimeters?.upperBound.toString() ?? "");
+    lowerDepthInputRef.current?.setCustomValidity("");
+    upperDepthInputRef.current?.setCustomValidity("");
+  }, [
+    contact?.id,
+    contact?.depthRangeMillimeters?.lowerBound,
+    contact?.depthRangeMillimeters?.upperBound,
+  ]);
   const update = (patch: Partial<PhysicalContact>): void => {
     if (contact) onContactChange({ ...contact, ...patch });
   };
@@ -127,16 +145,44 @@ export function ContactInspector({
         </label>
         <fieldset className="depth-range-inputs">
           <legend>Depth range (mm)</legend>
-          <label>Minimum <input id="contact-depth-lower-input" type="number" min="0" step="any" disabled={busy} value={contact?.depthRangeMillimeters?.lowerBound ?? ""} onChange={(event) => {
+          <label>Minimum <input id="contact-depth-lower-input" type="number" min={Number.MIN_VALUE} step="any" disabled={busy} ref={lowerDepthInputRef} value={lowerDepthDraft} onChange={(event) => {
             if (!contact) return;
-            const lowerBound = Number(event.currentTarget.value);
-            if (!lowerBound) { const next = { ...contact }; delete next.depthRangeMillimeters; onContactChange(next); return; }
+            const value = event.currentTarget.value;
+            setLowerDepthDraft(value);
+            if (!value) {
+              event.currentTarget.setCustomValidity("");
+              const next = { ...contact };
+              delete next.depthRangeMillimeters;
+              onContactChange(next);
+              return;
+            }
+            const lowerBound = Number(value);
+            if (!Number.isFinite(lowerBound) || lowerBound <= 0) {
+              event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+              event.currentTarget.reportValidity();
+              return;
+            }
+            event.currentTarget.setCustomValidity("");
             update({ depthRangeMillimeters: { lowerBound, upperBound: Math.max(lowerBound, contact.depthRangeMillimeters?.upperBound ?? lowerBound) } });
           }} /></label>
-          <label>Maximum <input id="contact-depth-upper-input" type="number" min="0" step="any" disabled={busy} value={contact?.depthRangeMillimeters?.upperBound ?? ""} onChange={(event) => {
+          <label>Maximum <input id="contact-depth-upper-input" type="number" min={Number.MIN_VALUE} step="any" disabled={busy} ref={upperDepthInputRef} value={upperDepthDraft} onChange={(event) => {
             if (!contact) return;
-            const upperBound = Number(event.currentTarget.value);
-            if (!upperBound) { const next = { ...contact }; delete next.depthRangeMillimeters; onContactChange(next); return; }
+            const value = event.currentTarget.value;
+            setUpperDepthDraft(value);
+            if (!value) {
+              event.currentTarget.setCustomValidity("");
+              const next = { ...contact };
+              delete next.depthRangeMillimeters;
+              onContactChange(next);
+              return;
+            }
+            const upperBound = Number(value);
+            if (!Number.isFinite(upperBound) || upperBound <= 0) {
+              event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+              event.currentTarget.reportValidity();
+              return;
+            }
+            event.currentTarget.setCustomValidity("");
             update({ depthRangeMillimeters: { lowerBound: Math.min(upperBound, contact.depthRangeMillimeters?.lowerBound ?? upperBound), upperBound } });
           }} /></label>
         </fieldset>
