@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild src/main.tsx --bundle --format=iife --platform=browser --target=es2020 --outfile=app.js",
     "typecheck": "tsc --noEmit",
-    "test:modules": "tsx --test tests/path-editor.test.ts tests/contact-contract.test.ts tests/contact-editor.test.tsx tests/contact-app.test.tsx",
+    "test:modules": "tsx --test --test-timeout=15000 tests/path-editor.test.ts tests/contact-contract.test.ts tests/contact-editor.test.tsx tests/contact-app.test.tsx tests/restored-modules.test.ts tests/restored-app.test.tsx tests/restored-editor.test.tsx",
     "test": "npm run typecheck && npm run test:modules",
     "check:bundle": "npm run build"
   },

@@ -65,15 +65,15 @@ export function ContactInspector({
           <h2 id="contact-heading">{contact?.name ?? "No selection"}</h2>
           {selectedCount > 1 && <span id="selected-contact-count">{selectedCount} selected</span>}
         </div>
-        <button className="tool-button mobile-sheet-collapse" type="button" onClick={onMobileCollapse}>Collapse</button>
+        <button id="mobile-collapse-contact-sheet-button" className="tool-button mobile-sheet-collapse" type="button" onClick={onMobileCollapse}>Collapse</button>
       </div>
-      <div className={`inspector-empty${region && contact ? " hidden" : ""}`}>Select a contact to edit its facts and contour.</div>
-      <form className={`inspector-form${region && contact ? "" : " hidden"}`}>
-        <label>Contact ID <input type="text" readOnly value={contact?.id ?? ""} /></label>
-        <label>Canonical SVG path <textarea disabled={busy} value={region?.displayPath ?? ""} onChange={(event) => onDisplayPathChange(event.currentTarget.value)} /></label>
+      <div id="contact-empty" className={`inspector-empty${region && contact ? " hidden" : ""}`}>Select a contact to edit its facts and contour.</div>
+      <form id="contact-form" className={`inspector-form${region && contact ? "" : " hidden"}`}>
+        <label>Contact ID <input id="contact-id" type="text" readOnly value={contact?.id ?? ""} /></label>
+        <label>Canonical SVG path <textarea id="contact-display-path" disabled={busy} value={region?.displayPath ?? ""} onChange={(event) => onDisplayPathChange(event.currentTarget.value)} /></label>
         <label>Name <input id="contact-name" type="text" disabled={busy} value={contact?.name ?? ""} onChange={(event) => update({ name: event.currentTarget.value })} /></label>
         <label>Kind
-          <select disabled={busy} value={contact?.kind ?? ""} onChange={(event) => {
+          <select id="contact-kind-select" disabled={busy} value={contact?.kind ?? ""} onChange={(event) => {
             const kind = event.currentTarget.value;
             if (kind === "gaston") update({ kind });
             else if (contact) {
@@ -84,17 +84,22 @@ export function ContactInspector({
             {CONTACT_KINDS.map((kind) => <option key={kind} value={kind}>{kind}</option>)}
           </select>
         </label>
-        <label>Equipment object <input type="text" disabled={busy} value={contact?.equipmentObjectID ?? ""} onChange={(event) => update({ equipmentObjectID: event.currentTarget.value })} /></label>
-        {contact?.kind === "gaston" && <label>Paired gaston contact
-          <select disabled={busy} value={contact.pairedContactID ?? ""} onChange={(event) => update({ pairedContactID: event.currentTarget.value })}>
+        <label>Equipment object <input id="contact-equipment-object-input" type="text" disabled={busy} value={contact?.equipmentObjectID ?? ""} onChange={(event) => update({ equipmentObjectID: event.currentTarget.value })} /></label>
+        {contact?.kind === "gaston" && contact.pairedContactID === undefined && <label>Paired gaston contact
+          <select id="contact-gaston-pair-select" disabled={busy} value={contact.pairedContactID ?? ""} onChange={(event) => update({ pairedContactID: event.currentTarget.value })}>
             <option value="">Choose a contact</option>
             {gastonPairCandidates.map((contactID) => <option key={contactID} value={contactID}>{contactID}</option>)}
           </select>
         </label>}
-        <label>Features <input type="text" disabled={busy} value={contact?.features.join(", ") ?? ""} onChange={(event) => update({ features: commaSeparated(event.currentTarget.value) })} /></label>
-        <label>Grip types <input type="text" disabled={busy} value={contact?.gripTypes.join(", ") ?? ""} onChange={(event) => update({ gripTypes: commaSeparated(event.currentTarget.value) })} /></label>
+        {contact?.kind === "gaston" && contact.pairedContactID !== undefined && (
+          <span id="gaston-pair-current" aria-label={`Paired gaston contact: ${contact.pairedContactID}`}>
+            {contact.pairedContactID}
+          </span>
+        )}
+        <label>Features <input id="contact-features-input" type="text" disabled={busy} value={contact?.features.join(", ") ?? ""} onChange={(event) => update({ features: commaSeparated(event.currentTarget.value) })} /></label>
+        <label>Grip types <input id="contact-grip-types-input" type="text" disabled={busy} value={contact?.gripTypes.join(", ") ?? ""} onChange={(event) => update({ gripTypes: commaSeparated(event.currentTarget.value) })} /></label>
         <label>Finger capacity
-          <select disabled={busy} value={contact?.fingerCapacity?.toString() ?? ""} onChange={(event) => {
+          <select id="contact-finger-capacity-select" disabled={busy} value={contact?.fingerCapacity?.toString() ?? ""} onChange={(event) => {
             if (!contact) return;
             const value = event.currentTarget.value;
             const next = { ...contact };
@@ -103,7 +108,7 @@ export function ContactInspector({
           }}><option value="">Unset</option>{[1, 2, 3, 4].map((value) => <option key={value}>{value}</option>)}</select>
         </label>
         <label>Hand capacity
-          <select disabled={busy} value={contact?.handCapacity?.toString() ?? ""} onChange={(event) => {
+          <select id="contact-hand-capacity-select" disabled={busy} value={contact?.handCapacity?.toString() ?? ""} onChange={(event) => {
             if (!contact) return;
             const value = event.currentTarget.value;
             const next = { ...contact };
@@ -112,7 +117,7 @@ export function ContactInspector({
           }}><option value="">Unset</option>{[1, 2].map((value) => <option key={value}>{value}</option>)}</select>
         </label>
         <label>Side
-          <select disabled={busy} value={contact?.side ?? ""} onChange={(event) => {
+          <select id="contact-side-select" disabled={busy} value={contact?.side ?? ""} onChange={(event) => {
             if (!contact) return;
             const next = { ...contact };
             if (event.currentTarget.value) next.side = event.currentTarget.value as "left" | "right";
@@ -122,13 +127,13 @@ export function ContactInspector({
         </label>
         <fieldset className="depth-range-inputs">
           <legend>Depth range (mm)</legend>
-          <label>Minimum <input type="number" min="0" step="any" disabled={busy} value={contact?.depthRangeMillimeters?.lowerBound ?? ""} onChange={(event) => {
+          <label>Minimum <input id="contact-depth-lower-input" type="number" min="0" step="any" disabled={busy} value={contact?.depthRangeMillimeters?.lowerBound ?? ""} onChange={(event) => {
             if (!contact) return;
             const lowerBound = Number(event.currentTarget.value);
             if (!lowerBound) { const next = { ...contact }; delete next.depthRangeMillimeters; onContactChange(next); return; }
             update({ depthRangeMillimeters: { lowerBound, upperBound: Math.max(lowerBound, contact.depthRangeMillimeters?.upperBound ?? lowerBound) } });
           }} /></label>
-          <label>Maximum <input type="number" min="0" step="any" disabled={busy} value={contact?.depthRangeMillimeters?.upperBound ?? ""} onChange={(event) => {
+          <label>Maximum <input id="contact-depth-upper-input" type="number" min="0" step="any" disabled={busy} value={contact?.depthRangeMillimeters?.upperBound ?? ""} onChange={(event) => {
             if (!contact) return;
             const upperBound = Number(event.currentTarget.value);
             if (!upperBound) { const next = { ...contact }; delete next.depthRangeMillimeters; onContactChange(next); return; }
@@ -136,7 +141,7 @@ export function ContactInspector({
           }} /></label>
         </fieldset>
         <label>Outline shape
-          <select disabled={busy} value={region?.shapeConstraint?.shape ?? "custom"} onChange={(event) => onOutlineShapeChange(event.currentTarget.value)}>
+          <select id="contact-outline-shape-select" disabled={busy} value={region?.shapeConstraint?.shape ?? "custom"} onChange={(event) => onOutlineShapeChange(event.currentTarget.value)}>
             {OUTLINE_SHAPES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </label>
@@ -174,15 +179,15 @@ export function ContactInspector({
         </label>}
         <div className="rotate-controls">
           <div className="button-row">
-            <button type="button" className="tool-button" disabled={busy} onClick={(event) => onRotate(-1, event.shiftKey)}>⟲ CCW</button>
-            <button type="button" className="tool-button" disabled={busy} onClick={(event) => onRotate(1, event.shiftKey)}>⟳ CW</button>
+            <button id="contact-rotate-ccw-button" type="button" className="tool-button" disabled={busy} onClick={(event) => onRotate(-1, event.shiftKey)}>⟲ CCW</button>
+            <button id="contact-rotate-cw-button" type="button" className="tool-button" disabled={busy} onClick={(event) => onRotate(1, event.shiftKey)}>⟳ CW</button>
           </div>
-          <input type="number" step="any" placeholder="Degrees" disabled={busy} value={rotationDegrees} onInput={(event) => onRotationDegreesChange(event.currentTarget.value)} />
-          <button type="button" className="tool-button" disabled={busy} onClick={onApplyRotation}>Apply rotation</button>
+          <input id="contact-rotate-input" type="number" step="any" placeholder="Degrees" disabled={busy} value={rotationDegrees} onInput={(event) => onRotationDegreesChange(event.currentTarget.value)} />
+          <button id="contact-rotate-apply-button" type="button" className="tool-button" disabled={busy} onClick={onApplyRotation}>Apply rotation</button>
         </div>
-        <button type="button" className="tool-button" disabled={busy || !region} onClick={onAddSegment}>Add piece</button>
-        <button type="button" className="tool-button" disabled={busy || !region} onClick={onDuplicateAndMirror}>Duplicate &amp; mirror</button>
-        <button type="button" className="tool-button danger" disabled={busy} onClick={onDelete}>Delete contact</button>
+        <button id="add-contact-piece-button" type="button" className="tool-button" disabled={busy || !region} onClick={onAddSegment}>Add piece</button>
+        <button id="duplicate-mirror-contact-button" type="button" className="tool-button" disabled={busy || !region} onClick={onDuplicateAndMirror}>Duplicate &amp; mirror</button>
+        <button id="delete-contact-button" type="button" className="tool-button danger" disabled={busy} onClick={onDelete}>Delete contact</button>
       </form>
     </aside>
   );

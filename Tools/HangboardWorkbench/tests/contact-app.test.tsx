@@ -126,6 +126,10 @@ function dependencies(client: WorkbenchClient, runtime: BrowserRuntime): Workben
   };
 }
 
+function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => { setTimeout(resolve, milliseconds); });
+}
+
 async function openFirstBoard(harness: Awaited<ReturnType<typeof renderReact>>, succeedImage: () => void) {
   await harness.flush();
   assert.equal(harness.text("#board-list"), "Fixture Board1 contacts");
@@ -182,6 +186,35 @@ test("WorkbenchApp keeps contact edits dirty and reports a failed save", async (
     assert.equal(harness.text("#save-state"), "Unsaved changes");
     assert.match(harness.container.textContent ?? "", /write conflict/u);
     assert.equal(harness.documentValue("#contact-name"), "Edited edge");
+  } finally {
+    await harness.cleanup();
+  }
+});
+
+test("autosave waits for a quiet window and persists the latest native contact document once", async () => {
+  const savedDocuments: EditorDocument[] = [];
+  const client = clientFixture({
+    async saveBoard(_boardID, document) {
+      savedDocuments.push(document);
+      return boardFixture(document);
+    },
+  });
+  const image = runtimeFixture();
+  const harness = await renderReact(
+    <WorkbenchApp dependencies={dependencies(client, image.runtime)} />,
+  );
+  try {
+    await openFirstBoard(harness, image.succeedImage);
+    await harness.click("[data-contact-key='edge-left-piece-0']");
+    await harness.input("#contact-name", "First edit");
+    await harness.flush(() => wait(500));
+    await harness.input("#contact-name", "Latest edit");
+    await harness.flush(() => wait(500));
+    assert.equal(savedDocuments.length, 0);
+
+    await harness.flush(() => wait(300));
+    assert.equal(savedDocuments.length, 1);
+    assert.equal(savedDocuments[0]?.contacts[0]?.name, "Latest edit");
   } finally {
     await harness.cleanup();
   }

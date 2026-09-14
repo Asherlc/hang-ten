@@ -74,7 +74,11 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     : null;
   const gastonPairCandidates = state.document && selectedContact
     ? state.document.contacts
-      .filter((contact) => contact.kind === "gaston" && contact.id !== selectedContact.id)
+      .filter((contact) => (
+        contact.kind === "gaston"
+        && contact.id !== selectedContact.id
+        && contact.pairedContactID === undefined
+      ))
       .map((contact) => contact.id)
     : [];
   const selectedContactCenter = state.document && selectedRegion
@@ -338,6 +342,58 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           onRotationDegreesChange={actions.setRotationDegrees}
           onContactChange={(updated) => {
             if (!state.document) return;
+            const previous = state.document.contacts.find((contact) => contact.id === updated.id);
+            if (!previous) return;
+            if (previous.kind !== updated.kind) {
+              const selectedContactIDs = [...new Set(state.selectedKeys.flatMap((key) => {
+                const region = state.document?.regions.find((candidate) => candidate.key === key);
+                return region ? [region.metadata.contactID] : [];
+              }))];
+              if (updated.kind === "gaston") {
+                if (selectedContactIDs.length !== 2) {
+                  actions.replaceDocument(state.document, {
+                    dirty: state.dirty,
+                    validation: "Select exactly two physical contacts with two distinct contact IDs to create a Gaston pair.",
+                    status: "Gaston conversion needs two distinct contact IDs.",
+                  });
+                  return;
+                }
+                const selected = new Set(selectedContactIDs);
+                const displaced = state.document.contacts.find((contact) => (
+                  !selected.has(contact.id)
+                  && contact.pairedContactID !== undefined
+                  && selected.has(contact.pairedContactID)
+                ));
+                if (displaced) {
+                  actions.replaceDocument(state.document, {
+                    dirty: state.dirty,
+                    validation: `Creating this Gaston pair would orphan paired Gaston contact ${displaced.id}. Select it instead or recategorize it first.`,
+                    status: "Gaston conversion would orphan an existing pair.",
+                  });
+                  return;
+                }
+                actions.editDocument((candidate) => {
+                  const [firstID, secondID] = selectedContactIDs as [string, string];
+                  for (const contact of candidate.contacts) {
+                    if (contact.id === firstID) Object.assign(contact, { kind: "gaston", pairedContactID: secondID });
+                    if (contact.id === secondID) Object.assign(contact, { kind: "gaston", pairedContactID: firstID });
+                  }
+                }, { status: "Contacts recategorized. Save when ready." });
+                return;
+              }
+              const selected = new Set(selectedContactIDs);
+              actions.editDocument((candidate) => {
+                for (const contact of candidate.contacts) {
+                  if (selected.has(contact.id)) {
+                    contact.kind = updated.kind;
+                    delete contact.pairedContactID;
+                  } else if (contact.pairedContactID && selected.has(contact.pairedContactID)) {
+                    delete contact.pairedContactID;
+                  }
+                }
+              }, { status: "Contacts recategorized. Save when ready." });
+              return;
+            }
             actions.editDocument((candidate) => {
               const index = candidate.contacts.findIndex((contact) => contact.id === updated.id);
               if (index < 0) return;
