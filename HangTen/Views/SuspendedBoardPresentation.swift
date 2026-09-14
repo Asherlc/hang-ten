@@ -463,7 +463,7 @@ enum SuspendedBoardPresentation {
         }
     }
 
-    private static func validatePairedLeadClearance(
+    static func validatePairedLeadClearance(
         _ leads: [SolvedCordBranch],
         requiredClearance: Float
     ) throws {
@@ -479,18 +479,18 @@ enum SuspendedBoardPresentation {
         guard sharedAnchor == secondPath[0] else {
             throw SuspendedPresentationError.invalidSuspension
         }
-        // A paired lead has one intentional shared point: the authored
-        // anchor. Its taut, discretized centerlines may be closer than their
-        // tube clearance for several early segments while they leave that
-        // anchor. That exception is strictly an initial, radial neighborhood:
-        // once either lead has left it, no later return or re-approach is
-        // permitted. Collinear/same-ray leads are never eligible.
-        let hasDivergentInitialTrajectories = firstSegmentsContactOnlyAtSharedAnchor(
-            (firstPath[0], firstPath[1]),
-            (secondPath[0], secondPath[1]),
-            sharedAnchor: sharedAnchor
-        )
         let clearanceSquared = requiredClearance * requiredClearance
+        // A paired lead may have an authored common trunk before it forks,
+        // and a pair that immediately diverges can still be within tube
+        // clearance for one or two discretized samples at the anchor. Both
+        // are one initial topology: a contiguous prefix ending at the first
+        // aligned pair that has full clearance. A pair that never reaches
+        // that state is two overlapping leads, not a valid suspension.
+        guard let forkIndex = zip(firstPath, secondPath).indices.first(where: {
+            $0 > 0 && simd_length_squared(firstPath[$0] - secondPath[$0]) >= clearanceSquared
+        }) else {
+            throw SuspendedPresentationError.selfIntersection
+        }
         for (firstIndex, firstSegment) in zip(firstPath, firstPath.dropFirst()).enumerated() {
             for (secondIndex, secondSegment) in zip(secondPath, secondPath.dropFirst()).enumerated() {
                 let approach = segmentClosestApproach(
@@ -520,74 +520,17 @@ enum SuspendedBoardPresentation {
                         secondSegment,
                         sharedAnchor: sharedAnchor
                     )
-                // Two physical leads converge at this single authored anchor.
-                // With discretized taut centerlines, their first spans remain
-                // within two tube diameters for a short distance after that
-                // knot. Allow only that bounded anchor neighborhood; every
-                // later approach must maintain the full two-tube clearance.
-                let isWithinSharedAnchorKnot = hasDivergentInitialTrajectories
-                    && isInitialAnchorKnotSegment(
-                        firstIndex,
-                        path: firstPath,
-                        sharedAnchor: sharedAnchor,
-                        radiusSquared: clearanceSquared
-                    )
-                    && isInitialAnchorKnotSegment(
-                        secondIndex,
-                        path: secondPath,
-                        sharedAnchor: sharedAnchor,
-                        radiusSquared: clearanceSquared
-                    )
-                    && simd_length(firstPoint - sharedAnchor) <= requiredClearance
-                    && simd_length(secondPoint - sharedAnchor) <= requiredClearance
-                if !isSharedAnchorContact && !isWithinSharedAnchorKnot {
+                // Before the verified fork, both leads are one intentional
+                // anchor-to-fork assembly. Once either segment is past that
+                // fork, even a return to the anchor area must have the full
+                // two-tube clearance.
+                let isWithinInitialCommonTrunk = firstIndex < forkIndex
+                    && secondIndex < forkIndex
+                if !isSharedAnchorContact && !isWithinInitialCommonTrunk {
                     throw SuspendedPresentationError.selfIntersection
                 }
             }
         }
-    }
-
-    /// True only for a segment in the first contiguous path prefix contained
-    /// in the anchor knot. A later inward segment is deliberately excluded,
-    /// even if it happens to enter the same radius again.
-    private static func isInitialAnchorKnotSegment(
-        _ segmentIndex: Int,
-        path: [SIMD3<Float>],
-        sharedAnchor: SIMD3<Float>,
-        radiusSquared: Float
-    ) -> Bool {
-        guard segmentIndex >= 0,
-              segmentIndex + 1 < path.count,
-              radiusSquared.isFinite,
-              radiusSquared > 0 else {
-            return false
-        }
-        return path[...segmentIndex].allSatisfy {
-            simd_length_squared($0 - sharedAnchor) <= radiusSquared
-        }
-    }
-
-    private static func firstSegmentsContactOnlyAtSharedAnchor(
-        _ firstSegment: (SIMD3<Float>, SIMD3<Float>),
-        _ secondSegment: (SIMD3<Float>, SIMD3<Float>),
-        sharedAnchor: SIMD3<Float>
-    ) -> Bool {
-        guard firstSegment.0 == sharedAnchor,
-              secondSegment.0 == sharedAnchor else {
-            return false
-        }
-        let firstDirection = firstSegment.1 - firstSegment.0
-        let secondDirection = secondSegment.1 - secondSegment.0
-        let firstLengthSquared = simd_length_squared(firstDirection)
-        let secondLengthSquared = simd_length_squared(secondDirection)
-        guard firstLengthSquared > 1e-12, secondLengthSquared > 1e-12 else {
-            return false
-        }
-        let crossLengthSquared = simd_length_squared(simd_cross(firstDirection, secondDirection))
-        let collinearTolerance = 1e-10 * firstLengthSquared * secondLengthSquared
-        let pointsAlongSameRay = crossLengthSquared <= collinearTolerance
-            && simd_dot(firstDirection, secondDirection) > 0
-        return !pointsAlongSameRay
     }
 
     private static func segmentClosestApproach(

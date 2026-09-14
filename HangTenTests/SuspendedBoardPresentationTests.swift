@@ -101,6 +101,16 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
     }
 
+    private func solvedLead(_ samples: [SIMD3<Float>]) -> SolvedCordBranch {
+        SolvedCordBranch(
+            samples: samples,
+            tangents: Array(repeating: SIMD3<Float>(0, -1, 0), count: samples.count),
+            arcLength: 0,
+            polylineArcLength: 0,
+            isTaut: true
+        )
+    }
+
     private func twoBranchSuspension(
         left: [[Double]] = [[-0.6, 0.4, -0.05], [-0.4, 0.4, 0.05]],
         right: [[Double]] = [[0.4, 0.4, -0.05], [0.6, 0.4, 0.05]],
@@ -262,8 +272,8 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
-    func testPairedLeadAllowsDivergingLeadsContainedInTheSharedAnchorKnot() throws {
-        let result = try SuspendedBoardPresentation.solve(
+    func testPairedLeadRejectsDivergingLeadsThatNeverReachFullClearance() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),
             suspension: pairedLeadSuspension(
                 left: [-0.001, 0.402, 0],
@@ -273,9 +283,52 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 radius: 0.01
             ),
             bounds: bounds
-        )
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
 
-        XCTAssertEqual(result.leads.count, 2)
+    func testPairedLeadAllowsACommonInitialTrunkThatGenuinelyForks() throws {
+        let first = solvedLead([
+            [0, 0, 0], [0, -0.03, 0], [-0.05, -0.08, 0], [-0.1, -0.18, 0]
+        ])
+        let second = solvedLead([
+            [0, 0, 0], [0, -0.03, 0], [0.05, -0.08, 0], [0.1, -0.18, 0]
+        ])
+
+        try SuspendedBoardPresentation.validatePairedLeadClearance(
+            [first, second],
+            requiredClearance: 0.02
+        )
+    }
+
+    func testPairedLeadRejectsACommonTrunkThatNeverForks() {
+        let samples: [SIMD3<Float>] = [
+            [0, 0, 0], [0, -0.03, 0], [0, -0.08, 0], [0, -0.18, 0]
+        ]
+
+        XCTAssertThrowsError(try SuspendedBoardPresentation.validatePairedLeadClearance(
+            [solvedLead(samples), solvedLead(samples)],
+            requiredClearance: 0.02
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
+    func testPairedLeadRejectsAReapproachAfterItsCommonTrunkForks() {
+        let first = solvedLead([
+            [0, 0, 0], [0, -0.03, 0], [-0.05, -0.08, 0], [0, -0.13, 0], [-0.05, -0.18, 0]
+        ])
+        let second = solvedLead([
+            [0, 0, 0], [0, -0.03, 0], [0.05, -0.08, 0], [0, -0.13, 0], [0.05, -0.18, 0]
+        ])
+
+        XCTAssertThrowsError(try SuspendedBoardPresentation.validatePairedLeadClearance(
+            [first, second],
+            requiredClearance: 0.02
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
     }
 
     func testPairedLeadAllowsAdjacentInitialSegmentsInsideTheSharedAnchorKnot() throws {
