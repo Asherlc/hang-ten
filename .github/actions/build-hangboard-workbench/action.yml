@@ -132,7 +132,7 @@ runs:
           local listener_pids
           local listener_pid
           local parent_pid
-          listener_pids="$(lsof -nP -t -iTCP:"$port" -sTCP:LISTEN 2>/dev/null | sort -u || true)"
+          listener_pids="$(lsof -nP -t -iTCP@127.0.0.1:"$port" -sTCP:LISTEN 2>/dev/null | sort -u || true)"
           if [[ -z "$listener_pids" || "$listener_pids" == *$'\n'* || ! "$listener_pids" =~ ^[0-9]+$ ]]; then
             return 1
           fi
