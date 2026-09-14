@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -21,6 +22,8 @@ from .board_catalog import (
 
 _DECISIONS = frozenset({"represented", "excluded"})
 _TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord"})
+_SOURCE_TIERS = frozenset({"manufacturer", "manufacturer-instruction", "retailer"})
+_SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 
 
 class CordAuditError(ValueError):
@@ -31,6 +34,18 @@ class CordAuditError(ValueError):
 class CordAuditEvidence:
     view: str
     url: str
+    exact_revision_id: str
+    source_tier: str
+    snapshot_sha256: str
+    snapshot_path: str
+
+
+@dataclass(frozen=True)
+class CordAuditHumanApproval:
+    approved: bool
+    reviewer: str
+    reviewed_at: str
+    notes: str
 
 
 @dataclass(frozen=True)
@@ -40,6 +55,7 @@ class CordAuditRecord:
     topology: str | None
     ruling: str
     evidence: tuple[CordAuditEvidence, ...]
+    human_approval: CordAuditHumanApproval
 
 
 @dataclass(frozen=True)
@@ -88,6 +104,20 @@ def _package_id(value: Any, source: str) -> str:
     return package_id
 
 
+def _sha256(value: Any, source: str) -> str:
+    if not isinstance(value, str) or not _SHA256.fullmatch(value):
+        raise CordAuditError(f"{source} must be a 64-character SHA-256 digest")
+    return value.lower()
+
+
+def _relative_snapshot_path(value: Any, source: str) -> str:
+    path = _nonempty_string(value, source)
+    candidate = Path(path)
+    if candidate.is_absolute() or any(part in {"", ".", ".."} for part in candidate.parts):
+        raise CordAuditError(f"{source} must be a relative retained path")
+    return path
+
+
 def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
     if not isinstance(value, list) or not value:
         raise CordAuditError(f"{source} must be a non-empty array")
@@ -95,7 +125,11 @@ def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
     for index, raw_evidence in enumerate(value):
         evidence_source = f"{source}[{index}]"
         payload = _mapping(raw_evidence, evidence_source)
-        _closed(payload, {"view", "url"}, evidence_source)
+        _closed(
+            payload,
+            {"view", "url", "exactRevisionID", "sourceTier", "snapshotSHA256", "snapshotPath"},
+            evidence_source,
+        )
         url = _nonempty_string(payload["url"], f"{evidence_source}.url")
         parsed = urlsplit(url)
         if parsed.scheme != "https" or not parsed.hostname:
@@ -104,14 +138,51 @@ def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
             CordAuditEvidence(
                 view=_nonempty_string(payload["view"], f"{evidence_source}.view"),
                 url=url,
+                exact_revision_id=_nonempty_string(
+                    payload["exactRevisionID"], f"{evidence_source}.exactRevisionID"
+                ),
+                source_tier=_source_tier(payload["sourceTier"], f"{evidence_source}.sourceTier"),
+                snapshot_sha256=_sha256(
+                    payload["snapshotSHA256"], f"{evidence_source}.snapshotSHA256"
+                ),
+                snapshot_path=_relative_snapshot_path(
+                    payload["snapshotPath"], f"{evidence_source}.snapshotPath"
+                ),
             )
         )
     return tuple(evidence)
 
 
+def _source_tier(value: Any, source: str) -> str:
+    tier = _nonempty_string(value, source)
+    if tier not in _SOURCE_TIERS:
+        raise CordAuditError(f"{source} must be one of {sorted(_SOURCE_TIERS)}")
+    return tier
+
+
+def _load_human_approval(value: Any, source: str) -> CordAuditHumanApproval:
+    payload = _mapping(value, source)
+    _closed(payload, {"approved", "reviewer", "reviewedAt", "notes"}, source)
+    if payload["approved"] is not True:
+        raise CordAuditError(f"{source}.approved must be true")
+    reviewed_at = _nonempty_string(payload["reviewedAt"], f"{source}.reviewedAt")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", reviewed_at):
+        raise CordAuditError(f"{source}.reviewedAt must be an ISO date")
+    return CordAuditHumanApproval(
+        approved=True,
+        reviewer=_nonempty_string(payload["reviewer"], f"{source}.reviewer"),
+        reviewed_at=reviewed_at,
+        notes=_nonempty_string(payload["notes"], f"{source}.notes"),
+    )
+
+
 def _load_record(value: Any, source: str) -> CordAuditRecord:
     payload = _mapping(value, source)
-    _closed(payload, {"packageID", "decision", "topology", "ruling", "evidence"}, source)
+    _closed(
+        payload,
+        {"packageID", "decision", "topology", "ruling", "evidence", "humanApproval"},
+        source,
+    )
     decision = _nonempty_string(payload["decision"], f"{source}.decision")
     if decision not in _DECISIONS:
         raise CordAuditError(f"{source}.decision must be one of {sorted(_DECISIONS)}")
@@ -130,6 +201,7 @@ def _load_record(value: Any, source: str) -> CordAuditRecord:
         topology=topology_value,
         ruling=_nonempty_string(payload["ruling"], f"{source}.ruling"),
         evidence=_load_evidence(payload["evidence"], f"{source}.evidence"),
+        human_approval=_load_human_approval(payload["humanApproval"], f"{source}.humanApproval"),
     )
 
 
@@ -224,6 +296,11 @@ def validate_cord_audit_manifest(
 
     for package_id, record in records_by_package.items():
         package_topology = topologies_by_package[package_id]
+        revision_ids = {item.exact_revision_id for item in record.evidence}
+        if len(revision_ids) != 1:
+            raise CordAuditError(
+                f"evidence must agree on one exact revision ID: {package_id}"
+            )
         if record.decision == "represented":
             evidence_views = {item.view.strip().casefold() for item in record.evidence}
             if len(evidence_views) != len(record.evidence) or len(evidence_views) < 2:

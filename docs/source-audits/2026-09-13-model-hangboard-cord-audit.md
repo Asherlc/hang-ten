@@ -7,24 +7,28 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 14 discovered model packages. Five have a source-backed
-supplied/integral cord and render a transient cord presentation; nine are
+The audit covers all 14 discovered model packages. Four have a source-backed
+supplied/integral cord and render a transient cord presentation; ten are
 excluded because their reviewed product evidence does not establish a supplied
-or integral cord.
+or integral cord. Baguette Evo is excluded: YY Vertical's primary evidence
+establishes optional rope or bungee use, not an included or integral cord.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 5 | `tension.flash-board`, `yy.baguette-evo`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger` |
-| `excluded` | 9 | Beastmaker 1000/2000; Captain Fingerfood DUAL/POCKET/UNLEVEL; Lattice Triple Rung; Metolius Prime Rib/Project/Wood Grips Compact II |
+| `represented` | 4 | `tension.flash-board`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger` |
+| `excluded` | 10 | Beastmaker 1000/2000; Captain Fingerfood DUAL/POCKET/UNLEVEL; Lattice Triple Rung; Metolius Prime Rib/Project/Wood Grips Compact II; YY Vertical Baguette Evo |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
 ## Evidence review and approval
 
-The human review retained two materially distinct exact-revision views and an
-attachment view for every represented board. The URLs below are the primary
-source entries recorded in the JSON manifest; query/fragment variants identify
-the reviewed gallery or attachment region, not a different product revision.
+The human review retained exact-revision evidence records for every discovered
+model package. Every evidence entry records its exact revision ID, source tier,
+retained snapshot SHA-256/path, and URL. Every record also carries an explicit
+`humanApproval` object; the validator rejects missing or incomplete provenance
+and approvals. The URLs below are the primary source entries recorded in the
+JSON manifest; query/fragment variants identify the reviewed gallery or
+attachment region, not a different product revision.
 
 ### Tension Flash Board — `twoBranchCord`
 
@@ -35,19 +39,16 @@ the reviewed gallery or attachment region, not a different product revision.
   passage pairs, and four canonical positions. Existing suspension metadata and
   descriptor hashes were preserved byte-for-byte.
 
-### YY Vertical Baguette Evo — `twoBranchCord`
+### YY Vertical Baguette Evo — excluded
 
 - Exact-revision manufacturer views: [manufacturer English listing](https://www.yyvertical.com/en/products/baguette-evo) and [manufacturer EU listing](https://www.yyvertical.com/en-eu/products/baguette-evo).
 - Attachment detail: [four-bore gallery region](https://www.yyvertical.com/en/products/baguette-evo#cord-passages).
 - The current **Baguette Evo, Turn & Pull version**, SKU `YY BAGUETTE EVO`,
-  EAN `3760305271822`, is the retained revision. The evidence packet states
-  that the supplied continuous cord is visibly configured through four physical
-  bores, ordered left-to-right in the front view. It does not claim an exact
-  hidden rope traversal, bore tolerance, or cord dimensions.
-- The package declares four ordered through-bores (`cord-passage-1` through
-  `cord-passage-4`) on `body_mesh_001`, paired as left and right branches. All
-  route, anchor, radius, and pose values marked `displayEstimate` are display
-  metadata, not product specifications.
+  EAN `3760305271822`, is the retained revision. Primary evidence establishes
+  only optional use with rope or bungee; it does not establish that either is
+  supplied or integral.
+- The package retains its model, holds, positions, orientation, and descriptor
+  unchanged, but has no `media.suspension` and renders no cord.
 
 ### Lattice MXEdge Lift Large and Small — `pairedLeadCord`
 
@@ -84,13 +85,13 @@ Holds, logical positions, media paths, orientation blocks, USDZ files, and
 descriptor files were preserved. No cord, hardware, anchor, or raster fallback
 was baked into a USDZ.
 
-| Package | Topology | Attachment/passage binding | Descriptor SHA-256 |
-|---|---|---|---|
-| `tension.flash-board` | `twoBranchCord` (existing) | Existing four ordered passages on `flash_board_body_008` | `fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c` |
-| `yy.baguette-evo` | `twoBranchCord` | Four ordered through-bores on `body_mesh_001` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
-| `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `ed755fce098c3471e8ad8070c58f1fa8092954c560f7b0ecc38a084749e3b16` |
-| `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `f619520ff5493ad4df26154e69cb1cac2998b7ae0bfb1332551d6199fd991419` |
-| `nature.stone-hanger` | `pairedLeadCord` | Two distinct lateral-mouth points on `body_oak_mesh_001` | `a35adb07928a69ea7a39d5756f1cbbeebcbd2964b4ae613f3cd088552c7432d9` |
+| Package | Topology | Attachment/passage binding | USDZ `modelSHA256` | Descriptor file SHA-256 |
+|---|---|---|---|---|
+| `tension.flash-board` | `twoBranchCord` (existing) | Existing four ordered passages on `flash_board_body_008` | `4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524` | `fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c` |
+| `yy.baguette-evo` (excluded) | none | No cord metadata; optional rope/bungee is not promoted | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
+| `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `ed755fce098c3471e8ad8070c58f1fa8092954c560f7b0ecc38a084749e3b16` |
+| `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `f619520ff5493ad4df26154e69cb1cac2998b7ae0bfb1332551d6199fd991419` |
+| `nature.stone-hanger` | `pairedLeadCord` | Two distinct lateral-mouth points on `body_oak_mesh_001` | `177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1` | `a35adb07928a69ea7a39d5756f1cbbeebcbd2964b4ae613f3cd088552c7432d9` |
 
 Every new attachment, passage, branch, anchor, cord, and canonical-pose
 provenance includes `displayEstimate` where the source does not publish a
@@ -108,7 +109,7 @@ PYTHONPATH=Tools/HangboardPackages/src Tools/HangboardPackages/.venv/bin/python 
 Result:
 
 ```json
-{"decisions":{"excluded":9,"represented":5},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.prime-rib","metolius.project","metolius.wood-grips-compact-ii","nature.stone-hanger","tension.flash-board","yy.baguette-evo"]}
+{"decisions":{"excluded":10,"represented":4},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.prime-rib","metolius.project","metolius.wood-grips-compact-ii","nature.stone-hanger","tension.flash-board","yy.baguette-evo"]}
 ```
 
 `python3 -m json.tool` passed for all four edited board packages and

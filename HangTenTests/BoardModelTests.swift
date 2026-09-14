@@ -356,29 +356,15 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testBaguetteEvoUsesFourOrderedThroughBoresAcrossEveryPosition() async throws {
+    func testBaguetteEvoDoesNotRenderOptionalRopeOrBungee() async throws {
         let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
-        guard case .twoBranchCord(let suspension) = media.suspension else {
-            return XCTFail("Baguette Evo must load the approved twoBranchCord suspension")
-        }
-
-        XCTAssertEqual(
-            suspension.passages.left.map(\.id) + suspension.passages.right.map(\.id),
-            ["cord-passage-1", "cord-passage-2", "cord-passage-3", "cord-passage-4"]
-        )
-        XCTAssertTrue((suspension.passages.left + suspension.passages.right).allSatisfy(\.isThroughBore))
-        XCTAssertEqual(suspension.branches.map(\.passageIDs), [
-            ["cord-passage-1", "cord-passage-2"],
-            ["cord-passage-3", "cord-passage-4"]
-        ])
-        XCTAssertEqual(Set((suspension.passages.left + suspension.passages.right).map(\.nodeID)), ["body_mesh_001"])
+        XCTAssertNil(media.suspension)
 
         for position in board.positions {
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
             XCTAssertEqual(model.activePositionID, position.id)
-            XCTAssertNotNil(model.transientCordNode, position.id)
-            XCTAssertFalse(model.isTransientCordAccessible, position.id)
+            XCTAssertNil(model.transientCordNode, position.id)
         }
     }
 

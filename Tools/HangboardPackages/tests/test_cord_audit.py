@@ -49,17 +49,47 @@ def _record(
     ruling: str = "The primary product listing does not establish a supplied cord.",
     evidence: list[dict[str, str]] | None = None,
 ) -> dict[str, object]:
+    evidence_value = evidence
+    if evidence_value is not None:
+        evidence_value = [
+            {
+                "exactRevisionID": "fixture-revision-2026",
+                "sourceTier": "manufacturer",
+                "snapshotSHA256": f"{index + 1:x}" * 64,
+                "snapshotPath": f"snapshots/fixture-{index}.html",
+                **item,
+            }
+            for index, item in enumerate(evidence_value)
+        ]
     return {
         "packageID": package_id,
         "decision": decision,
         "topology": topology,
         "ruling": ruling,
-        "evidence": evidence
-        if evidence is not None
-        else [
-            {"view": "front", "url": "https://example.com/front"},
-            {"view": "side", "url": "https://example.com/side"},
+        "evidence": evidence_value if evidence_value is not None else [
+            {
+                "view": "front",
+                "url": "https://example.com/front",
+                "exactRevisionID": "fixture-revision-2026",
+                "sourceTier": "manufacturer",
+                "snapshotSHA256": "a" * 64,
+                "snapshotPath": "snapshots/fixture-front.html",
+            },
+            {
+                "view": "side",
+                "url": "https://example.com/side",
+                "exactRevisionID": "fixture-revision-2026",
+                "sourceTier": "manufacturer",
+                "snapshotSHA256": "b" * 64,
+                "snapshotPath": "snapshots/fixture-side.html",
+            },
         ],
+        "humanApproval": {
+            "approved": True,
+            "reviewer": "fixture-reviewer",
+            "reviewedAt": "2026-09-13",
+            "notes": "Exact revision and retained views approved.",
+        },
     }
 
 
@@ -215,6 +245,44 @@ def test_manifest_rejects_unknown_record_keys(tmp_path: Path) -> None:
     record["unreviewed"] = True
 
     with pytest.raises(CordAuditError, match="has unknown keys"):
+        _validate(tmp_path, inventory, [record])
+
+
+@pytest.mark.parametrize(
+    ("field", "evidence_index"),
+    [
+        ("exactRevisionID", 0),
+        ("sourceTier", 0),
+        ("snapshotSHA256", 0),
+        ("snapshotPath", 0),
+    ],
+)
+def test_manifest_rejects_incomplete_evidence_provenance(
+    tmp_path: Path, field: str, evidence_index: int
+) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    del record["evidence"][evidence_index][field]  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match=field):
+        _validate(tmp_path, inventory, [record])
+
+
+def test_manifest_rejects_incomplete_human_approval(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    del record["humanApproval"]["reviewer"]  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="humanApproval"):
+        _validate(tmp_path, inventory, [record])
+
+
+def test_manifest_rejects_unapproved_human_review(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    record["humanApproval"]["approved"] = False  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="approved"):
         _validate(tmp_path, inventory, [record])
 
 

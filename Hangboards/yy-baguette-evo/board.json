@@ -24,31 +24,6 @@
         "up": [0, 1, 0],
         "fitPadding": 0.08
       }},
-      "suspension": {
-        "type": "twoBranchCord",
-        "passages": {
-          "left": [
-            {"id": "cord-passage-1", "nodeID": "body_mesh_001", "entryPointInModel": [-0.246, -0.025, 0], "exitPointInModel": [-0.246, 0.025, 0], "provenance": "approved manufacturer gallery; displayEstimate; ordered left-to-right through-bore"},
-            {"id": "cord-passage-2", "nodeID": "body_mesh_001", "entryPointInModel": [-0.231, -0.025, 0], "exitPointInModel": [-0.231, 0.025, 0], "provenance": "approved manufacturer gallery; displayEstimate; ordered left-to-right through-bore"}
-          ],
-          "right": [
-            {"id": "cord-passage-3", "nodeID": "body_mesh_001", "entryPointInModel": [0.231, -0.025, 0], "exitPointInModel": [0.231, 0.025, 0], "provenance": "approved manufacturer gallery; displayEstimate; ordered left-to-right through-bore"},
-            {"id": "cord-passage-4", "nodeID": "body_mesh_001", "entryPointInModel": [0.246, -0.025, 0], "exitPointInModel": [0.246, 0.025, 0], "provenance": "approved manufacturer gallery; displayEstimate; ordered left-to-right through-bore"}
-          ]
-        },
-        "branches": [
-          {"id": "left-branch", "passageIDs": ["cord-passage-1", "cord-passage-2"], "entryContactPoints": [[-0.259, -0.02, 0.01]], "exteriorContactPoints": [[-0.25, 0.025, 0.02], [-0.227, 0.025, 0.02]], "exitContactPoints": [[-0.218, -0.02, 0.01]], "restLength": 1.4, "radius": 0.002, "material": "matteCord", "provenance": "approved manufacturer gallery; displayEstimate; bounded left exterior wrap"},
-          {"id": "right-branch", "passageIDs": ["cord-passage-3", "cord-passage-4"], "entryContactPoints": [[0.218, -0.02, 0.01]], "exteriorContactPoints": [[0.227, 0.025, 0.02], [0.25, 0.025, 0.02]], "exitContactPoints": [[0.259, -0.02, 0.01]], "restLength": 1.4, "radius": 0.002, "material": "matteCord", "provenance": "approved manufacturer gallery; displayEstimate; bounded right exterior wrap"}
-        ],
-        "anchor": {"offsetFromBoardBounds": [0, 0.4, 0], "visibility": "invisible", "provenance": "displayEstimate; invisible overhead convergence for presentation"},
-        "canonicalPoses": {
-          "central-20-6": {"rotation": [0.5, 0, 0, 0.866025404], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-          "central-30-25": {"rotation": [1, 0, 0, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-          "paired-12-8-6": {"rotation": [0.707106781, 0, 0, 0.707106781], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-          "paired-25-20-15-10": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-          "rounded-tray": {"rotation": [-0.707106781, 0, 0, 0.707106781], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
-        }
-      },
       "orientation": {
         "pivot": "modelBoundsCenter",
         "rotations": {
