@@ -1906,7 +1906,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     }
 
     func applyHighlights(_ ids: Set<String>, mode: BoardHighlightMode) {
-        highlightedHoldIDs = ids
+        highlightedContactIDs = ids
         model?.highlight(ids, mode: mode)
         requestPausedRedraw()
     }
