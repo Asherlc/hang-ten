@@ -1077,7 +1077,7 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
     assert 'assert isinstance(payload["boards"], list)' in script
     assert 'assert payload["boards"]' in script
     assert 'assert all(isinstance(board.get("boardId"), str)' in script
-    assert 'board["holdCount"] > 0' in script
+    assert 'board["contactCount"] > 0' in script
     assert 'payload["diagnostics"]' not in script
     assert 'board.get("status")' not in script
     assert 'curl_timeout_args=(--connect-timeout 5 --max-time 15)' in script
