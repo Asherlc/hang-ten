@@ -128,6 +128,27 @@ runs:
         print(port)
         PY
         }
+        listener_belongs_to_app_tree() {
+          local listener_pids
+          local listener_pid
+          local parent_pid
+          listener_pids="$(lsof -nP -t -iTCP:"$port" -sTCP:LISTEN 2>/dev/null | sort -u || true)"
+          if [[ -z "$listener_pids" || "$listener_pids" == *$'\n'* || ! "$listener_pids" =~ ^[0-9]+$ ]]; then
+            return 1
+          fi
+          listener_pid="$listener_pids"
+          while [[ -n "$listener_pid" && "$listener_pid" != "1" ]]; do
+            if [[ "$listener_pid" == "$app_pid" ]]; then
+              return 0
+            fi
+            parent_pid="$(ps -o ppid= -p "$listener_pid" 2>/dev/null | tr -d ' ' || true)"
+            if [[ -z "$parent_pid" || "$parent_pid" == "$listener_pid" ]]; then
+              return 1
+            fi
+            listener_pid="$parent_pid"
+          done
+          return 1
+        }
         print_readiness_diagnostics() {
           local child_pid
           echo "Unsigned app readiness diagnostics:" >&2
@@ -214,10 +235,14 @@ runs:
             print_readiness_diagnostics
             exit 1
           fi
-          if curl --fail --silent --show-error "${readiness_curl_timeout_args[@]}" "$health_url" 2>/dev/null \
-            | python -c 'import json,sys; payload=json.load(sys.stdin); sys.exit(0 if isinstance(payload, dict) and payload == {"ok": True} and type(payload["ok"]) is bool else 1)' 2>/dev/null; then
-            ready=true
-            break
+          if listener_belongs_to_app_tree; then
+            health_payload="$(curl --fail --silent --show-error "${readiness_curl_timeout_args[@]}" "$health_url" 2>/dev/null || true)"
+            if python -c 'import json,sys; payload=json.load(sys.stdin); sys.exit(0 if isinstance(payload, dict) and payload == {"ok": True} and type(payload["ok"]) is bool else 1)' \
+              <<<"$health_payload" 2>/dev/null \
+              && listener_belongs_to_app_tree; then
+              ready=true
+              break
+            fi
           fi
           sleep 1
         done
