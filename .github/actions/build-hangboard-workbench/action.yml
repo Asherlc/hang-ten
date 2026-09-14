@@ -107,6 +107,7 @@ runs:
         smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
         app_pid=""
         app_child_pid=""
+        port=""
         curl_timeout_args=(--connect-timeout 5 --max-time 15)
         readiness_curl_timeout_args=(--connect-timeout 1 --max-time 2)
         process_is_active() {
@@ -115,9 +116,28 @@ runs:
           state="$(ps -o stat= -p "$pid" 2>/dev/null || true)"
           [[ -n "$state" && "$state" != *Z* ]]
         }
+        select_free_loopback_port() {
+          python - <<'PY'
+        import socket
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_:
+            socket_.bind(("127.0.0.1", 0))
+            port = socket_.getsockname()[1]
+        if not 1024 <= port <= 65535:
+            raise SystemExit(f"OS selected invalid loopback port: {port}")
+        print(port)
+        PY
+        }
         print_readiness_diagnostics() {
           local child_pid
           echo "Unsigned app readiness diagnostics:" >&2
+          if [[ -n "$port" ]]; then
+            echo "--- listeners on smoke port $port ---" >&2
+            lsof -nP -iTCP:"$port" -sTCP:LISTEN >&2 || true
+            netstat -anv -p tcp 2>/dev/null \
+              | awk -v endpoint "127.0.0.1.${port}" '$4 == endpoint && $6 == "LISTEN" { print }' >&2 || true
+            echo "--- end listeners on smoke port $port ---" >&2
+          fi
           if [[ -n "$app_pid" ]]; then
             ps -o pid=,ppid=,stat=,command= -p "$app_pid" >&2 || true
             while IFS= read -r child_pid; do
@@ -179,11 +199,11 @@ runs:
         }
         trap cleanup EXIT
 
-        port=41739
         cd "$GITHUB_WORKSPACE"
+        port="$(select_free_loopback_port)"
         "$app_executable" --headless \
           --repository-root "$GITHUB_WORKSPACE" \
-          --port 41739 >"$smoke_log" 2>&1 &
+          --port "$port" >"$smoke_log" 2>&1 &
         app_pid=$!
         health_url="http://127.0.0.1:${port}/api/health"
         readiness_deadline=$((SECONDS + 60))
