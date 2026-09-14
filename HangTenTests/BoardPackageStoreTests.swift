@@ -56,6 +56,37 @@ final class BoardPackageStoreTests: XCTestCase {
         })
     }
 
+    func testDebugSimulatorPackagedURLFindsOnlyTheExpectedODRAsset() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(
+            packageSlug: "fixture-model",
+            assetPath: "assets/primary.usdz"
+        )
+        let packagedURL = fixture.rootURL.appendingPathComponent(
+            "OnDemandResources/fixture.assetpack/Hangboards/fixture-model/assets/primary.usdz"
+        )
+        try FileManager.default.createDirectory(
+            at: packagedURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("packaged-model".utf8).write(to: packagedURL)
+        let unrelatedURL = fixture.rootURL.appendingPathComponent(
+            "OnDemandResources/unrelated.assetpack/Hangboards/other-board/assets/primary.usdz"
+        )
+        try FileManager.default.createDirectory(
+            at: unrelatedURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("unrelated-model".utf8).write(to: unrelatedURL)
+
+        #if DEBUG
+        XCTAssertEqual(resource.debugSimulatorPackagedURL(in: fixture.bundle), packagedURL)
+        #else
+        XCTAssertNil(resource.debugSimulatorPackagedURL(in: fixture.bundle))
+        #endif
+    }
+
     @MainActor
     func testOnDemandModelLoaderRetainsAccessForSceneLifetimeAndSupportsRepeatedLoads() async throws {
         let fixture = try makeSceneModelFixtureBundle(

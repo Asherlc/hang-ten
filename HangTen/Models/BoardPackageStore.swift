@@ -90,6 +90,41 @@ struct BoardModelResource: Equatable {
     var resourceExtension: String {
         (assetPath as NSString).pathExtension
     }
+
+    /// XcodeBuildMCP installs a simulator app with its ODR asset packs nested
+    /// inside the app bundle, but does not register those packs with the
+    /// simulator's ODR service. Resolve the already signed, packaged resource
+    /// directly for DEBUG simulator review. Production continues to acquire
+    /// the resource through `NSBundleResourceRequest`.
+    func debugSimulatorPackagedURL(in bundle: Bundle) -> URL? {
+        #if DEBUG
+        guard packageSlug.isBoardPackageSlug,
+              let resourceRoot = bundle.resourceURL else {
+            return nil
+        }
+        let expectedSuffix = ["Hangboards", packageSlug] + assetPath.split(separator: "/").map(String.init)
+        guard expectedSuffix.count >= 4,
+              !expectedSuffix.contains(where: { $0.isEmpty || $0 == "." || $0 == ".." }) else {
+            return nil
+        }
+        let packsRoot = resourceRoot.appendingPathComponent("OnDemandResources", isDirectory: true)
+        guard let enumerator = FileManager.default.enumerator(
+            at: packsRoot,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+        ) else {
+            return nil
+        }
+        for case let candidate as URL in enumerator {
+            guard candidate.pathComponents.suffix(expectedSuffix.count) == expectedSuffix,
+                  (try? candidate.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true else {
+                continue
+            }
+            return candidate
+        }
+        #endif
+        return nil
+    }
 }
 
 enum BoardPackageStoreError: Error, Equatable, LocalizedError {

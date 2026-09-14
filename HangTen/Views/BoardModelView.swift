@@ -269,10 +269,14 @@ private enum BoardModelCache {
             for: board,
             presentationID: presentationID
         ) {
-            resourceLease = await resourceAccess.acquire(
-                resource,
-                bundle: store.resourceBundle
-            )
+            if let packagedURL = resource.debugSimulatorPackagedURL(in: store.resourceBundle) {
+                resourceLease = BoardModelResourceLease(url: packagedURL)
+            } else {
+                resourceLease = await resourceAccess.acquire(
+                    resource,
+                    bundle: store.resourceBundle
+                )
+            }
         } else {
             resourceLease = nil
         }
