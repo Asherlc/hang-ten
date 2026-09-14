@@ -446,7 +446,8 @@ test("the browser client keeps the current tab on an unauthenticated save and ex
   );
 
   assert.deepEqual(assignedUrls, []);
-  assert.equal(Object.hasOwn(requestOptions ?? {}, "redirectOnUnauthorized"), false);
+  assert.ok(requestOptions);
+  assert.equal(Object.hasOwn(requestOptions, "redirectOnUnauthorized"), false);
 });
 
 test("the browser client saves one direct editor document with PUT", async () => {

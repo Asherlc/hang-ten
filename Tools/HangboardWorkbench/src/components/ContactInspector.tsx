@@ -110,9 +110,11 @@ export function ContactInspector({
           </select>
         </label>}
         {contact?.kind === "gaston" && contact.pairedContactID !== undefined && (
-          <span id="gaston-pair-current" aria-label={`Paired gaston contact: ${contact.pairedContactID}`}>
-            {contact.pairedContactID}
-          </span>
+          <label>Paired gaston contact{" "}
+            <output id="gaston-pair-current" aria-label={`Paired gaston contact: ${contact.pairedContactID}`}>
+              {contact.pairedContactID}
+            </output>
+          </label>
         )}
         <label>Features <input id="contact-features-input" type="text" disabled={busy} value={contact?.features.join(", ") ?? ""} onChange={(event) => update({ features: commaSeparated(event.currentTarget.value) })} /></label>
         <label>Grip types <input id="contact-grip-types-input" type="text" disabled={busy} value={contact?.gripTypes.join(", ") ?? ""} onChange={(event) => update({ gripTypes: commaSeparated(event.currentTarget.value) })} /></label>

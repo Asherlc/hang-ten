@@ -1350,8 +1350,14 @@ test("an established gaston pair shows its counterpart without offering reassign
     await app.click('[data-contact-key="left-piece-0"]');
 
     assert.equal(app.document.querySelector("#contact-gaston-pair-select"), null);
-    assert.equal(app.text("#gaston-pair-current"), "right");
-    assert.equal(app.document.querySelector("#gaston-pair-current")?.getAttribute("aria-label"), "Paired gaston contact: right");
+    const output = app.document.querySelector<HTMLOutputElement>("#gaston-pair-current");
+    assert.ok(output);
+    const label = output.closest("label");
+    assert.ok(label, "an established Gaston pair should have a visible label");
+    assert.equal(label.textContent?.replace(/\s+/gu, " ").trim(), "Paired gaston contact right");
+    assert.equal(output.tagName, "OUTPUT");
+    assert.equal(output.value, "right");
+    assert.equal(output.getAttribute("aria-label"), "Paired gaston contact: right");
   }, dependenciesFixture(board));
 });
 
@@ -1638,8 +1644,15 @@ test("finger capacity loads in the inspector, applies to every physical piece, a
     assert.equal(app.documentValue("#contact-finger-capacity-select"), "2");
     await app.change("#contact-finger-capacity-select", "4");
     await app.click("#save-button");
-    assert.equal(saved[0]?.contacts.find((contact) => contact.id === "a")?.fingerCapacity, 4);
-    assert.equal(Object.hasOwn(saved[0]?.contacts.find((contact) => contact.id === "b") ?? {}, "fingerCapacity"), false);
+    assert.equal(saved.length, 1);
+    const savedDocument = saved[0];
+    assert.ok(savedDocument);
+    const editedContact = savedDocument.contacts.find((contact) => contact.id === "a");
+    assert.ok(editedContact);
+    assert.equal(editedContact.fingerCapacity, 4);
+    const untouchedContact = savedDocument.contacts.find((contact) => contact.id === "b");
+    assert.ok(untouchedContact);
+    assert.equal(Object.hasOwn(untouchedContact, "fingerCapacity"), false);
 
     await app.click("#add-contact-button");
     assert.equal(app.documentValue("#contact-finger-capacity-select"), "");
@@ -1669,11 +1682,18 @@ test("contact depth ranges load, update atomically, and save on factual contacts
     assert.equal(app.documentValue("#contact-depth-upper-input"), "10");
     await app.change("#contact-depth-lower-input", "12.5");
     await app.click("#save-button");
-    assert.deepEqual(saved[0]?.contacts.find((contact) => contact.id === "a")?.depthRangeMillimeters, {
+    assert.equal(saved.length, 1);
+    const savedDocument = saved[0];
+    assert.ok(savedDocument);
+    const editedContact = savedDocument.contacts.find((contact) => contact.id === "a");
+    assert.ok(editedContact);
+    assert.deepEqual(editedContact.depthRangeMillimeters, {
       lowerBound: 12.5,
       upperBound: 12.5,
     });
-    assert.equal(Object.hasOwn(saved[0]?.contacts.find((contact) => contact.id === "b") ?? {}, "depthRangeMillimeters"), false);
+    const untouchedContact = savedDocument.contacts.find((contact) => contact.id === "b");
+    assert.ok(untouchedContact);
+    assert.equal(Object.hasOwn(untouchedContact, "depthRangeMillimeters"), false);
 
     await app.click("#add-contact-button");
     assert.equal(app.documentValue("#contact-depth-lower-input"), "");
@@ -1703,11 +1723,21 @@ test("equal contact depth bounds reopen and can become a range or be cleared", a
     await app.change("#contact-depth-lower-input", "7.5");
     await app.change("#contact-depth-upper-input", "12.5");
     await app.click("#save-button");
-    assert.deepEqual(saved[0]?.contacts[0]?.depthRangeMillimeters, { lowerBound: 7.5, upperBound: 12.5 });
+    assert.equal(saved.length, 1);
+    const rangedDocument = saved[0];
+    assert.ok(rangedDocument);
+    const rangedContact = rangedDocument.contacts[0];
+    assert.ok(rangedContact);
+    assert.deepEqual(rangedContact.depthRangeMillimeters, { lowerBound: 7.5, upperBound: 12.5 });
 
     await app.change("#contact-depth-lower-input", "");
     await app.click("#save-button");
-    assert.equal(Object.hasOwn(saved[1]?.contacts[0] ?? {}, "depthRangeMillimeters"), false);
+    assert.equal(saved.length, 2);
+    const clearedDocument = saved[1];
+    assert.ok(clearedDocument);
+    const clearedContact = clearedDocument.contacts[0];
+    assert.ok(clearedContact);
+    assert.equal(Object.hasOwn(clearedContact, "depthRangeMillimeters"), false);
   }, dependenciesFixture(board, { client }));
 });
 
@@ -1732,11 +1762,15 @@ test("zero ranged-contact depth stays visibly invalid without replacing the vali
 
     await app.click("#save-button");
     assert.equal(client.saveCalls.length, 1);
-    assert.deepEqual(client.saveCalls[0]?.document.contacts[0]?.depthRangeMillimeters, {
+    const savedDocument = client.saveCalls[0]?.document;
+    assert.ok(savedDocument);
+    const savedContact = savedDocument.contacts[0];
+    assert.ok(savedContact);
+    assert.deepEqual(savedContact.depthRangeMillimeters, {
       lowerBound: 7.5,
       upperBound: 10,
     });
-    assert.doesNotThrow(() => controller.validateEditorDocument(client.saveCalls[0]?.document));
+    assert.doesNotThrow(() => controller.validateEditorDocument(savedDocument));
   }, dependenciesFixture(board, { client }));
 });
 
@@ -1761,11 +1795,15 @@ test("zero equal-bound contact depth stays visibly invalid without replacing the
 
     await app.click("#save-button");
     assert.equal(client.saveCalls.length, 1);
-    assert.deepEqual(client.saveCalls[0]?.document.contacts[0]?.depthRangeMillimeters, {
+    const savedDocument = client.saveCalls[0]?.document;
+    assert.ok(savedDocument);
+    const savedContact = savedDocument.contacts[0];
+    assert.ok(savedContact);
+    assert.deepEqual(savedContact.depthRangeMillimeters, {
       lowerBound: 10,
       upperBound: 10,
     });
-    assert.doesNotThrow(() => controller.validateEditorDocument(client.saveCalls[0]?.document));
+    assert.doesNotThrow(() => controller.validateEditorDocument(savedDocument));
   }, dependenciesFixture(board, { client }));
 });
 
@@ -1791,7 +1829,12 @@ test("clearing an optional depth saves without a factual range", async () => {
     assert.ok(input);
     assert.equal(input.checkValidity(), true);
     await app.click("#save-button");
-    assert.equal(Object.hasOwn(saved[0]?.contacts[0] ?? {}, "depthRangeMillimeters"), false);
+    assert.equal(saved.length, 1);
+    const savedDocument = saved[0];
+    assert.ok(savedDocument);
+    const savedContact = savedDocument.contacts[0];
+    assert.ok(savedContact);
+    assert.equal(Object.hasOwn(savedContact, "depthRangeMillimeters"), false);
   }, dependenciesFixture(board, { client }));
 });
 
@@ -1852,8 +1895,15 @@ test("hand capacity loads in the inspector, applies to every physical piece, and
     assert.equal(app.documentValue("#contact-hand-capacity-select"), "1");
     await app.change("#contact-hand-capacity-select", "2");
     await app.click("#save-button");
-    assert.equal(saved[0]?.contacts.find((contact) => contact.id === "a")?.handCapacity, 2);
-    assert.equal(Object.hasOwn(saved[0]?.contacts.find((contact) => contact.id === "b") ?? {}, "handCapacity"), false);
+    assert.equal(saved.length, 1);
+    const savedDocument = saved[0];
+    assert.ok(savedDocument);
+    const editedContact = savedDocument.contacts.find((contact) => contact.id === "a");
+    assert.ok(editedContact);
+    assert.equal(editedContact.handCapacity, 2);
+    const untouchedContact = savedDocument.contacts.find((contact) => contact.id === "b");
+    assert.ok(untouchedContact);
+    assert.equal(Object.hasOwn(untouchedContact, "handCapacity"), false);
 
     await app.click("#add-contact-button");
     assert.equal(app.documentValue("#contact-hand-capacity-select"), "");
@@ -3282,11 +3332,21 @@ test("primitive selection saves an exact zero-degree constraint and Custom remov
     await app.change("#contact-outline-shape-select", "pill");
     const constrainedPath = paths(app)[0];
     await app.click("#save-button");
-    assert.deepEqual(saved[0]?.regions[0]?.shapeConstraint, { shape: "pill", rotationDegrees: 0 });
+    assert.equal(saved.length, 1);
+    const constrainedDocument = saved[0];
+    assert.ok(constrainedDocument);
+    const constrainedRegion = constrainedDocument.regions[0];
+    assert.ok(constrainedRegion);
+    assert.deepEqual(constrainedRegion.shapeConstraint, { shape: "pill", rotationDegrees: 0 });
     await app.change("#contact-outline-shape-select", "custom");
     assert.equal(paths(app)[0], constrainedPath);
     await app.click("#save-button");
-    assert.equal(Object.hasOwn(saved[1]?.regions[0] ?? {}, "shapeConstraint"), false);
+    assert.equal(saved.length, 2);
+    const customDocument = saved[1];
+    assert.ok(customDocument);
+    const customRegion = customDocument.regions[0];
+    assert.ok(customRegion);
+    assert.equal(Object.hasOwn(customRegion, "shapeConstraint"), false);
   }, dependenciesFixture(board, { client }));
 });
 
@@ -3454,8 +3514,13 @@ test("constrained movement preserves metadata while every rotation mode updates 
       y: pivot.y + radius * Math.sin(angle),
     }]);
     await app.click("#save-button");
-    assert.deepEqual(saved[0]?.regions.slice(0, 2).map((region) => region.shapeConstraint?.rotationDegrees), [120, 120]);
-    assert.equal(Object.hasOwn(saved[0]?.regions[2] ?? {}, "shapeConstraint"), false);
+    assert.equal(saved.length, 1);
+    const savedDocument = saved[0];
+    assert.ok(savedDocument);
+    assert.deepEqual(savedDocument.regions.slice(0, 2).map((region) => region.shapeConstraint?.rotationDegrees), [120, 120]);
+    const unconstrainedRegion = savedDocument.regions[2];
+    assert.ok(unconstrainedRegion);
+    assert.equal(Object.hasOwn(unconstrainedRegion, "shapeConstraint"), false);
   }, dependenciesFixture(board, { client }));
 });
 
