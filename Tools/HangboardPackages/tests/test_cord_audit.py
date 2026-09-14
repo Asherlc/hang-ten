@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -93,7 +94,17 @@ def _record(
     }
 
 
-def _manifest_path(tmp_path: Path, records: list[dict[str, object]]) -> Path:
+def _manifest_path(
+    tmp_path: Path, records: list[dict[str, object]], *, write_snapshots: bool = True
+) -> Path:
+    if write_snapshots:
+        for record in records:
+            for evidence in record["evidence"]:  # type: ignore[index]
+                snapshot = tmp_path / evidence["snapshotPath"]  # type: ignore[index]
+                snapshot.parent.mkdir(parents=True, exist_ok=True)
+                contents = f"fixture snapshot: {snapshot}".encode()
+                snapshot.write_bytes(contents)
+                evidence["snapshotSHA256"] = hashlib.sha256(contents).hexdigest()  # type: ignore[index]
     path = tmp_path / "cord-audit.json"
     path.write_text(json.dumps({"schemaVersion": 1, "records": records}), encoding="utf-8")
     return path
@@ -284,6 +295,29 @@ def test_manifest_rejects_unapproved_human_review(tmp_path: Path) -> None:
 
     with pytest.raises(CordAuditError, match="approved"):
         _validate(tmp_path, inventory, [record])
+
+
+def test_manifest_rejects_nonexistent_snapshot(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    manifest_path = _manifest_path(tmp_path, [record])
+    (tmp_path / record["evidence"][0]["snapshotPath"]).unlink()  # type: ignore[index]
+
+    with pytest.raises(CordAuditError, match="snapshot path does not name a regular file"):
+        validate_cord_audit_manifest(load_cord_audit_manifest(manifest_path), inventory)
+
+
+def test_manifest_rejects_mismatched_snapshot_digest(tmp_path: Path) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+    record = _record("fixture.board")
+    manifest_path = _manifest_path(tmp_path, [record])
+    record["evidence"][0]["snapshotSHA256"] = "a" * 64  # type: ignore[index]
+    manifest_path.write_text(
+        json.dumps({"schemaVersion": 1, "records": [record]}), encoding="utf-8"
+    )
+
+    with pytest.raises(CordAuditError, match="snapshot SHA-256 does not match"):
+        validate_cord_audit_manifest(load_cord_audit_manifest(manifest_path), inventory)
 
 
 def test_manifest_rejects_non_string_topology_without_leaking_type_errors(

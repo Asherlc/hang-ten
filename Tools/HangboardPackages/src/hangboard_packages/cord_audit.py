@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import stat
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -118,6 +120,50 @@ def _relative_snapshot_path(value: Any, source: str) -> str:
     return path
 
 
+def _snapshot_base(manifest_path: Path) -> Path:
+    """Use the repository root for repository manifests, or their directory for fixtures."""
+    resolved_manifest = manifest_path.resolve()
+    for candidate in (resolved_manifest.parent, *resolved_manifest.parent.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return resolved_manifest.parent
+
+
+def _verify_snapshot(
+    evidence: CordAuditEvidence, *, manifest_path: Path, source: str
+) -> None:
+    base = _snapshot_base(manifest_path)
+    snapshot = (base / evidence.snapshot_path).resolve()
+    try:
+        snapshot.relative_to(base)
+    except ValueError as error:
+        raise CordAuditError(
+            f"{source}.snapshotPath must remain beneath the repository base"
+        ) from error
+    try:
+        mode = snapshot.stat().st_mode
+    except OSError as error:
+        raise CordAuditError(
+            f"{source}.snapshot path does not name a regular file: "
+            f"{evidence.snapshot_path}"
+        ) from error
+    if not stat.S_ISREG(mode):
+        raise CordAuditError(
+            f"{source}.snapshot path does not name a regular file: "
+            f"{evidence.snapshot_path}"
+        )
+    try:
+        digest = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    except OSError as error:
+        raise CordAuditError(
+            f"{source}.snapshot could not be read: {evidence.snapshot_path}"
+        ) from error
+    if digest != evidence.snapshot_sha256:
+        raise CordAuditError(
+            f"{source}.snapshot SHA-256 does not match: {evidence.snapshot_path}"
+        )
+
+
 def _load_evidence(value: Any, source: str) -> tuple[CordAuditEvidence, ...]:
     if not isinstance(value, list) or not value:
         raise CordAuditError(f"{source} must be a non-empty array")
@@ -230,12 +276,20 @@ def load_cord_audit_manifest(path: Path) -> CordAuditManifest:
         raise CordAuditError("cord audit manifest schemaVersion must be 1")
     if not isinstance(payload["records"], list):
         raise CordAuditError("cord audit manifest records must be an array")
+    records = tuple(
+        _load_record(record, f"cord audit manifest records[{index}]")
+        for index, record in enumerate(payload["records"])
+    )
+    for record_index, record in enumerate(records):
+        for evidence_index, evidence in enumerate(record.evidence):
+            _verify_snapshot(
+                evidence,
+                manifest_path=path,
+                source=f"cord audit manifest records[{record_index}].evidence[{evidence_index}]",
+            )
     return CordAuditManifest(
         schema_version=1,
-        records=tuple(
-            _load_record(record, f"cord audit manifest records[{index}]")
-            for index, record in enumerate(payload["records"])
-        ),
+        records=records,
     )
 
 
