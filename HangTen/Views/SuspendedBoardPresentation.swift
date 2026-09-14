@@ -557,9 +557,11 @@ enum SuspendedBoardPresentation {
         }
     }
 
-    /// Returns whether a segment belongs to the leading anchor knot. Every
-    /// sample through that segment's endpoint must remain inside the knot;
-    /// this makes the exception impossible to re-enter after a real fork.
+    /// Returns whether a segment enters from the leading anchor knot. Every
+    /// preceding sample through the segment's start must remain inside the
+    /// knot; the caller separately verifies that the closest contact itself
+    /// is inside it. This permits the contact portion of the one segment that
+    /// exits the knot, without allowing a re-entry after a real fork.
     private static func isInitialAnchorKnotSegment(
         _ segmentIndex: Int,
         in path: [SIMD3<Float>],
@@ -569,7 +571,7 @@ enum SuspendedBoardPresentation {
         guard segmentIndex >= 0, segmentIndex + 1 < path.count else {
             return false
         }
-        return path.prefix(segmentIndex + 2).allSatisfy {
+        return path.prefix(segmentIndex + 1).allSatisfy {
             simd_length_squared($0 - sharedAnchor) <= clearanceSquared
         }
     }
