@@ -1680,11 +1680,16 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSimulator3DPreviouslyTargetlessOuterJugStepsAreContactFirst() throws {
-        let expectedStepIDs = [
-            "metolius.simulator-3d.entry.minute-2",
-            "metolius.simulator-3d.entry.minute-7",
-            "metolius.simulator-3d.intermediate.minute-9",
+    func testSimulator3DManufacturerPrescribedOuterJugStepsAreContactFirst() throws {
+        let expectedSteps: [(id: String, targetCount: Int, resolvedContactIDs: Set<String>)] = [
+            ("metolius.simulator-3d.entry.minute-2", 1, ["jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.entry.minute-5", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.entry.minute-7", 1, ["jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.intermediate.minute-3", 2, ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.intermediate.minute-5", 2, ["jug-1-left", "jug-1-right", "pocket-17-center"]),
+            ("metolius.simulator-3d.intermediate.minute-9", 1, ["jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.advanced.minute-7", 2, ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
+            ("metolius.simulator-3d.advanced.minute-10", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
         ]
         let board = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
@@ -1695,23 +1700,38 @@ final class PlanStorageTests: XCTestCase {
             selection: .allMatching
         )
 
-        for stepID in expectedStepIDs {
+        for expected in expectedSteps {
             let step = try XCTUnwrap(
-                LegacyPlanSeedCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID }
+                LegacyPlanSeedCatalog.all.lazy.flatMap(\.steps).first { $0.id == expected.id }
             )
 
-            XCTAssertEqual(step.targets, [requirement], "\(stepID) must target outer jugs.")
-            let workSegments = step.segments.filter { $0.kind == .work }
-            XCTAssertFalse(workSegments.isEmpty, "\(stepID) must retain its work segment.")
+            XCTAssertEqual(
+                step.targets.count,
+                expected.targetCount,
+                "\(expected.id) must retain every manufacturer-prescribed target."
+            )
             XCTAssertTrue(
-                workSegments.allSatisfy {
-                    $0.targets == [requirement]
-                },
-                "\(stepID) work segments must retain the outer-jug requirement."
+                step.targets.contains(requirement),
+                "\(expected.id) must target outer jugs."
+            )
+            let workSegments = step.segments.filter { $0.kind == .work }
+            let workSegment = try XCTUnwrap(
+                workSegments.only,
+                "\(expected.id) must retain exactly one work segment."
+            )
+            XCTAssertEqual(
+                workSegment.targets.count,
+                expected.targetCount,
+                "\(expected.id) work must retain every manufacturer-prescribed target."
+            )
+            XCTAssertTrue(
+                workSegment.targets.contains(requirement),
+                "\(expected.id) work must retain the outer-jug requirement."
             )
             XCTAssertEqual(
                 Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
-                ["jug-1-left", "jug-1-right"]
+                expected.resolvedContactIDs,
+                "\(expected.id) must resolve every manufacturer-prescribed contact."
             )
         }
     }
@@ -1930,6 +1950,13 @@ final class PlanStorageTests: XCTestCase {
             ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "round-sloper-3-left", "round-sloper-3-right"]),
             ("metolius.simulator-3d.advanced.minute-8", ["pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right"])
         ]
+        let expectedExactTargets: [(String, Set<String>)] = [
+            ("metolius.simulator-3d.entry.minute-5", ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.intermediate.minute-3", ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.intermediate.minute-5", ["jug-1-left", "jug-1-right", "pocket-17-center"]),
+            ("metolius.simulator-3d.advanced.minute-7", ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
+            ("metolius.simulator-3d.advanced.minute-10", ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"])
+        ]
         let anyHoldCycles = [
             "metolius.contact.entry.minute-4",
             "metolius.contact.entry.minute-10",
@@ -1948,6 +1975,18 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertTrue(
                 expectedTargets.isSubset(of: Set(resolvedIDs)),
                 "\(stepID) must retain every numbered target in its compound source task."
+            )
+        }
+
+        for (stepID, expectedTargets) in expectedExactTargets {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
+
+            XCTAssertEqual(
+                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
+                expectedTargets,
+                "\(stepID) must resolve every contact in its compound source task."
             )
         }
 
