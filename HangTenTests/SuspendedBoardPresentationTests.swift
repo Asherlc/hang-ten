@@ -246,6 +246,22 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
     }
 
+    func testPairedLeadRejectsFullyOverlappingLeadsThatNeverExitTheSharedAnchorKnot() {
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose(),
+            suspension: pairedLeadSuspension(
+                left: [0, 0.402, 0],
+                right: [0, 0.402, 0],
+                anchor: [0, 0.4, 0],
+                restLength: 0.01,
+                radius: 0.01
+            ),
+            bounds: bounds
+        )) { error in
+            XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
+        }
+    }
+
     func testPairedLeadRejectsCoincidentAttachmentsBeyondItsSharedAnchor() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),
