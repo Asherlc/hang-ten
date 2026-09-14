@@ -479,6 +479,17 @@ enum SuspendedBoardPresentation {
         guard sharedAnchor == secondPath[0] else {
             throw SuspendedPresentationError.invalidSuspension
         }
+        // A paired lead has one intentional shared point: the authored
+        // anchor. Its taut, discretized centerlines may be closer than their
+        // tube clearance for several early segments while they leave that
+        // anchor. That exception is strictly an initial, radial neighborhood:
+        // once either lead has left it, no later return or re-approach is
+        // permitted. Collinear/same-ray leads are never eligible.
+        let hasDivergentInitialTrajectories = firstSegmentsContactOnlyAtSharedAnchor(
+            (firstPath[0], firstPath[1]),
+            (secondPath[0], secondPath[1]),
+            sharedAnchor: sharedAnchor
+        )
         let clearanceSquared = requiredClearance * requiredClearance
         for (firstIndex, firstSegment) in zip(firstPath, firstPath.dropFirst()).enumerated() {
             for (secondIndex, secondSegment) in zip(secondPath, secondPath.dropFirst()).enumerated() {
@@ -514,12 +525,18 @@ enum SuspendedBoardPresentation {
                 // within two tube diameters for a short distance after that
                 // knot. Allow only that bounded anchor neighborhood; every
                 // later approach must maintain the full two-tube clearance.
-                let isWithinSharedAnchorKnot = firstIndex == 0
-                    && secondIndex == 0
-                    && firstSegmentsContactOnlyAtSharedAnchor(
-                        firstSegment,
-                        secondSegment,
-                        sharedAnchor: sharedAnchor
+                let isWithinSharedAnchorKnot = hasDivergentInitialTrajectories
+                    && isInitialAnchorKnotSegment(
+                        firstIndex,
+                        path: firstPath,
+                        sharedAnchor: sharedAnchor,
+                        radiusSquared: clearanceSquared
+                    )
+                    && isInitialAnchorKnotSegment(
+                        secondIndex,
+                        path: secondPath,
+                        sharedAnchor: sharedAnchor,
+                        radiusSquared: clearanceSquared
                     )
                     && simd_length(firstPoint - sharedAnchor) <= requiredClearance
                     && simd_length(secondPoint - sharedAnchor) <= requiredClearance
@@ -527,6 +544,26 @@ enum SuspendedBoardPresentation {
                     throw SuspendedPresentationError.selfIntersection
                 }
             }
+        }
+    }
+
+    /// True only for a segment in the first contiguous path prefix contained
+    /// in the anchor knot. A later inward segment is deliberately excluded,
+    /// even if it happens to enter the same radius again.
+    private static func isInitialAnchorKnotSegment(
+        _ segmentIndex: Int,
+        path: [SIMD3<Float>],
+        sharedAnchor: SIMD3<Float>,
+        radiusSquared: Float
+    ) -> Bool {
+        guard segmentIndex >= 0,
+              segmentIndex + 1 < path.count,
+              radiusSquared.isFinite,
+              radiusSquared > 0 else {
+            return false
+        }
+        return path[...segmentIndex].allSatisfy {
+            simd_length_squared($0 - sharedAnchor) <= radiusSquared
         }
     }
 
