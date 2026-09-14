@@ -1435,6 +1435,60 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
     }
 
+    func testVersionTwoPayloadRejectsUnknownFieldNestedInRequirementDepthRange() {
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depthRangeMillimeters":{"maximum":22,"minimum":18,"unexpected":true},"selection":"allMatching"},"contactIDs":["edge"]}}}],"version":2}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict millimeter-range rejection, got \(error)")
+            }
+            XCTAssertEqual(
+                context.debugDescription,
+                "Unsupported millimeter range field unexpected."
+            )
+            XCTAssertEqual(
+                context.codingPath.map(\.stringValue),
+                [
+                    "segments",
+                    "Index 0",
+                    "target",
+                    "resolution",
+                    "requirement",
+                    "depthRangeMillimeters",
+                    "unexpected"
+                ]
+            )
+        }
+    }
+
+    func testVersionTwoPayloadRejectsLegacySizeFieldNestedInRequirementDepthRange() {
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depthRangeMillimeters":{"maximum":22,"minimum":18,"sizeMillimeters":20},"selection":"allMatching"},"contactIDs":["edge"]}}}],"version":2}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected legacy millimeter-range field rejection, got \(error)")
+            }
+            XCTAssertEqual(
+                context.debugDescription,
+                "Unsupported millimeter range field sizeMillimeters."
+            )
+            XCTAssertEqual(
+                context.codingPath.suffix(2).map(\.stringValue),
+                ["depthRangeMillimeters", "sizeMillimeters"]
+            )
+        }
+    }
+
     func testVersionTwoPayloadRejectsLegacyFieldNestedInMeasurement() {
         let json = #"{"measurements":[{"stepID":"step","holdName":"Legacy edge"}],"segments":[],"version":2}"#
 

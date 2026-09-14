@@ -166,6 +166,10 @@ struct MillimeterRange: Codable, Hashable {
     let minimum: Double
     let maximum: Double
 
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case minimum, maximum
+    }
+
     init(minimum: Double, maximum: Double) {
         precondition(Self.isValid(minimum: minimum, maximum: maximum))
         self.minimum = minimum
@@ -173,6 +177,18 @@ struct MillimeterRange: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported millimeter range field \(unknownKey.stringValue)."
+            )
+        }
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
         minimum = try container.decode(Double.self, forKey: .minimum)
         maximum = try container.decode(Double.self, forKey: .maximum)
