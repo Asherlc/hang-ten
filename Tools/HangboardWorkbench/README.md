@@ -26,8 +26,8 @@ otherwise edit a model package.
 
 ## Run and build
 
-The checked-in `app.js` is generated from `src/` and required by both local and
-hosted workflows:
+`app.js` is an ignored build artifact generated from `src/` locally and in CI.
+It is required by both local and hosted workflows, but is not checked in:
 
 ```sh
 cd Tools/HangboardWorkbench

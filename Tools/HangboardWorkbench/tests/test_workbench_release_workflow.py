@@ -336,6 +336,21 @@ def test_workbench_readme_documents_only_direct_board_authoring():
         assert obsolete_fragment not in readme
 
 
+def test_workbench_readme_documents_generated_bundle_lifecycle():
+    readme = " ".join(
+        (EDITOR_ROOT / "README.md").read_text(encoding="utf-8").lower().split()
+    )
+
+    for required_fragment in (
+        "`app.js` is an ignored build artifact",
+        "generated from `src/` locally and in ci",
+        "is not checked in",
+    ):
+        assert required_fragment in readme
+
+    assert "checked-in `app.js`" not in readme
+
+
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
     jobs = {
         **_workflow()["jobs"],
