@@ -486,8 +486,9 @@ enum SuspendedBoardPresentation {
         // are one initial topology: a contiguous prefix ending at the first
         // aligned pair that has full clearance. A pair that never reaches
         // that state is two overlapping leads, not a valid suspension.
-        guard let forkIndex = zip(firstPath, secondPath).indices.first(where: {
-            $0 > 0 && simd_length_squared(firstPath[$0] - secondPath[$0]) >= clearanceSquared
+        guard let forkIndex = firstPath.indices.first(where: {
+            $0 > 0 && $0 < secondPath.count
+                && simd_length_squared(firstPath[$0] - secondPath[$0]) >= clearanceSquared
         }) else {
             throw SuspendedPresentationError.selfIntersection
         }
@@ -604,6 +605,31 @@ enum SuspendedBoardPresentation {
         parameter: Float
     ) -> SIMD3<Float> {
         start + (end - start) * parameter
+    }
+
+    private static func firstSegmentsContactOnlyAtSharedAnchor(
+        _ firstSegment: (SIMD3<Float>, SIMD3<Float>),
+        _ secondSegment: (SIMD3<Float>, SIMD3<Float>),
+        sharedAnchor: SIMD3<Float>
+    ) -> Bool {
+        let firstDirection = firstSegment.1 - firstSegment.0
+        let secondDirection = secondSegment.1 - secondSegment.0
+        let firstLengthSquared = simd_length_squared(firstDirection)
+        let secondLengthSquared = simd_length_squared(secondDirection)
+        guard firstSegment.0 == sharedAnchor,
+              secondSegment.0 == sharedAnchor,
+              firstLengthSquared.isFinite,
+              secondLengthSquared.isFinite,
+              firstLengthSquared > 1e-12,
+              secondLengthSquared > 1e-12 else {
+            return false
+        }
+
+        // Non-collinear rays intersect only at their shared origin. Collinear
+        // rays are deliberately excluded so a same-ray pair cannot masquerade
+        // as a valid fork.
+        return simd_length_squared(simd_cross(firstDirection, secondDirection))
+            > 1e-12 * firstLengthSquared * secondLengthSquared
     }
 
     private static func transformedBoundsCorners(
