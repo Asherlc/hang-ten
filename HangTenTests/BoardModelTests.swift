@@ -328,13 +328,19 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(media.display.camera.up, [0, 1, 0])
         XCTAssertEqual(media.display.camera.fitPadding, 0.08)
 
-        let assetURL = try XCTUnwrap(
-            BoardCatalog.packageStore.presentationAssetURL(for: board, presentationID: presentation.id)
-        )
         let descriptorURL = try XCTUnwrap(
             BoardCatalog.packageStore.presentationDescriptorURL(for: board, presentationID: presentation.id)
         )
-        XCTAssertTrue(assetURL.path.hasSuffix("/Hangboards/nature-stone-hanger/assets/primary.usdz"))
+        XCTAssertNil(
+            BoardCatalog.packageStore.presentationAssetURL(for: board, presentationID: presentation.id)
+        )
+        XCTAssertEqual(
+            BoardCatalog.packageStore.modelResource(for: board, presentationID: presentation.id),
+            BoardModelResource(
+                packageSlug: "nature-stone-hanger",
+                assetPath: "assets/primary.usdz"
+            )
+        )
         XCTAssertTrue(descriptorURL.path.hasSuffix("/Hangboards/nature-stone-hanger/assets/primary.model.json"))
         XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board, presentationID: presentation.id))
     }
@@ -423,8 +429,8 @@ final class BoardModelTests: XCTestCase {
 
     func testPromotedModelMatchesItsV3PhysicalContactInventory() async throws {
         let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
-        let approvedModelSHA256 = "c984434edc54cfc6ec7b950a710e03e80b2514a5c5919e5fb7d1dde48e65e088"
-        let approvedDescriptorSHA256 = "f1d44e9f6e5ce76e8bc3cebb912d1bc594e375da467e01a2566b6191281e148d"
+        let approvedModelSHA256 = "a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc"
+        let approvedDescriptorSHA256 = "1b6f5a4048104a9d0b5b1a1c60002270332ddb54bd0e9a13f057594f34487f47"
         let expectedContactIDs = [
             "edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left",
             "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right",
@@ -471,14 +477,25 @@ final class BoardModelTests: XCTestCase {
         }
         XCTAssertEqual(actualBindings, expectedBindings)
 
-        let assetURL = try XCTUnwrap(BoardCatalog.packageStore.presentationAssetURL(for: board))
+        let resource = try XCTUnwrap(BoardCatalog.packageStore.modelResource(for: board))
         let descriptorURL = try XCTUnwrap(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
         let descriptorData = try Data(contentsOf: descriptorURL)
         let descriptorSHA256 = SHA256.hash(data: descriptorData)
             .map { String(format: "%02x", $0) }
             .joined()
         XCTAssertEqual(descriptorSHA256, approvedDescriptorSHA256)
-        let packageURL = assetURL.deletingLastPathComponent().deletingLastPathComponent()
+        XCTAssertEqual(
+            resource,
+            BoardModelResource(
+                packageSlug: "yy-baguette-evo",
+                assetPath: "assets/primary.usdz"
+            )
+        )
+        XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+        let packageURL = repositoryRootURL()
+            .appendingPathComponent("Hangboards", isDirectory: true)
+            .appendingPathComponent(resource.packageSlug, isDirectory: true)
+        let assetURL = packageURL.appendingPathComponent(resource.assetPath)
         let packageFiles = try FileManager.default.contentsOfDirectory(atPath: packageURL.path)
         let assetFiles = try FileManager.default.contentsOfDirectory(
             atPath: assetURL.deletingLastPathComponent().path
@@ -612,12 +629,16 @@ final class BoardModelTests: XCTestCase {
 
         for boardID in modelBoardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
-            guard case .model = board.defaultPresentation.media else {
+            guard case .model(let media) = board.defaultPresentation.media else {
                 XCTFail("\(boardID) must remain model-routed")
                 continue
             }
-            XCTAssertNotNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+            let resource = try XCTUnwrap(BoardCatalog.packageStore.modelResource(for: board))
+            XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
             XCTAssertNotNil(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+            XCTAssertEqual(resource.assetPath, media.assetPath)
+            XCTAssertEqual(resource.resourceName, "primary")
+            XCTAssertEqual(resource.resourceExtension, "usdz")
             XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
         }
 

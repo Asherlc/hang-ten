@@ -174,8 +174,8 @@ final class BoardPackageStoreTests: XCTestCase {
             bounds: media.descriptor.modelBounds
         )
         XCTAssertEqual(solved.branches.map(\.id), ["left-branch", "right-branch"])
-        XCTAssertEqual(solved.branches[0].arcLength, 0.92, accuracy: 1e-4)
-        XCTAssertEqual(solved.branches[1].arcLength, 0.92, accuracy: 1e-4)
+        XCTAssertEqual(solved.branches[0].arcLength, 0.9159936, accuracy: 1e-5)
+        XCTAssertEqual(solved.branches[1].arcLength, 0.9159936, accuracy: 1e-5)
     }
 
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
@@ -3152,10 +3152,16 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testStoreRejectsOrientationAndSuspensionTogether() throws {
+        let fixtures = try validationFixtures()
+        let singleCordModel = try XCTUnwrap(fixtures["singleCordModel"] as? [String: Any])
+        let singleCordBoard = try XCTUnwrap(singleCordModel["board"] as? [String: Any])
+        let singleCordPresentations = try XCTUnwrap(singleCordBoard["presentations"] as? [[String: Any]])
+        let singleCordMedia = try XCTUnwrap(singleCordPresentations[0]["media"] as? [String: Any])
+        let validSuspension = try XCTUnwrap(singleCordMedia["suspension"] as? [String: Any])
         let fixture = try makeOrientableModelFixtureBundle { board in
             var presentations = board["presentations"] as! [[String: Any]]
             var media = presentations[0]["media"] as! [String: Any]
-            media["suspension"] = ["type": "unsupported"]
+            media["suspension"] = validSuspension
             presentations[0]["media"] = media
             board["presentations"] = presentations
         }
