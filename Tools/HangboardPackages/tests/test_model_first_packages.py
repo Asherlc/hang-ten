@@ -548,6 +548,31 @@ def test_v2_model_accepts_valid_paired_lead_cord_suspension(tmp_path: Path) -> N
     assert set(suspension.canonical_poses) == {"primary"}
 
 
+def test_v2_paired_leads_preserve_distinct_points_when_sharing_node(tmp_path: Path) -> None:
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "shared-paired-lead-node",
+        {
+            "base": "pairedLeadCordModel",
+            "mutations": [{
+                "target": "board",
+                "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "attachments", 1, "nodeID"],
+                "value": "Body",
+            }],
+        },
+    )
+
+    suspension = load_board_catalog_module().load_board_package(
+        package_root
+    ).board.presentations[0].media.suspension
+    assert suspension is not None
+    assert [attachment.id for attachment in suspension.attachments] == ["left-lead", "right-lead"]
+    assert [attachment.node_id for attachment in suspension.attachments] == ["Body", "Body"]
+    assert [attachment.point_in_model for attachment in suspension.attachments] == [
+        (0.2, 0.5, 0.1), (0.8, 0.5, 0.1)
+    ]
+
+
 def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
     for fixture in _shared_model_parser_parity_fixtures():
         expected = fixture.get("pythonError")

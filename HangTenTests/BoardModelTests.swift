@@ -1264,6 +1264,29 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(BoardModelScene(source: source, descriptor: mismatched, display: display()))
     }
 
+    func testPairedLeadSceneBindingAllowsDistinctPointsOnOneBodyNode() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Body", role: .body, holdID: nil),
+            .init(nodeID: "Hold", role: .hold, holdID: "hold")
+        ])
+        let suspension = BoardModelPairedLeadCord(
+            attachments: [
+                .init(id: "left", nodeID: "Body", pointInModel: [0.2, 0.4, 0.1], provenance: "test"),
+                .init(id: "right", nodeID: "Body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")
+            ],
+            anchor: .init(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+            cord: .init(restLength: 2, radius: 0.01, material: "test", provenance: "test"),
+            canonicalPoses: ["primary": BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0], camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1))]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Body", "Hold"]), descriptor: descriptor, display: display(), suspension: .pairedLeadCord(suspension)
+        ))
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2)
+    }
+
     // This catches a renderer that silently renders nodes the descriptor did
     // not bind, which would make body geometry or arbitrary importer meshes tappable.
     func testGenericModelBindingRejectsUnlistedGeometryAndInvalidMeshInputs() {

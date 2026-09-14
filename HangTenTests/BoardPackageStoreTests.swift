@@ -1035,6 +1035,28 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary"])
     }
 
+    func testStoreLoadsPairedLeadCordWithDistinctPointsOnSharedBodyNode() throws {
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "pairedLeadCordModel",
+            "mutations": [[
+                "target": "board",
+                "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "attachments", 1, "nodeID"],
+                "value": "Body"
+            ]]
+        ])
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("expected pairedLeadCord model suspension")
+        }
+        XCTAssertEqual(suspension.attachments.map(\.id), ["left-lead", "right-lead"])
+        XCTAssertEqual(suspension.attachments.map(\.nodeID), ["Body", "Body"])
+        XCTAssertEqual(suspension.attachments.map(\.pointInModel), [[0.2, 0.5, 0.1], [0.8, 0.5, 0.1]])
+    }
+
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "directedTwoBranchModel",

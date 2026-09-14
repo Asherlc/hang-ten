@@ -723,7 +723,7 @@ final class BoardModelScene {
             nodeIDs = [single.attachment.nodeID]
         case .pairedLeadCord(let pairedLead):
             nodeIDs = pairedLead.attachments.map(\.nodeID)
-            guard nodeIDs.count == 2, Set(nodeIDs).count == nodeIDs.count else { return false }
+            guard nodeIDs.count == 2 else { return false }
         case .twoBranchCord(let twoBranch):
             nodeIDs = (twoBranch.passages.left + twoBranch.passages.right).map(\.nodeID)
             guard nodeIDs.count == 4 else { return false }
