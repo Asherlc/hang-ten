@@ -78,6 +78,15 @@ enum SuspendedBoardPresentation {
     ) throws -> SuspendedPairedLeadSolvedPresentation {
         let transform = try boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
+        if let points = pose.attachmentPoints {
+            guard Set(points.keys) == Set(suspension.attachments.map(\.id)),
+                  Set(points.values).count == 2,
+                  points.values.allSatisfy({ point in
+                      point.count == 3 && point.allSatisfy(\.isFinite)
+                          && zip(point, bounds.minimum).allSatisfy({ $0 >= $1 })
+                          && zip(point, bounds.maximum).allSatisfy({ $0 <= $1 })
+                  }) else { throw SuspendedPresentationError.invalidSuspension }
+        }
         guard suspension.attachments.count == 2,
               Set(suspension.attachments.map(\.id)).count == suspension.attachments.count,
               suspension.attachments.allSatisfy({
@@ -107,12 +116,13 @@ enum SuspendedBoardPresentation {
             throw SuspendedPresentationError.invalidSuspension
         }
         let transformedAttachments = suspension.attachments.map { attachment in
-            transformPoint(
+            let point = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
+            return transformPoint(
                 transform,
                 SIMD3<Float>(
-                    Float(attachment.pointInModel[0]),
-                    Float(attachment.pointInModel[1]),
-                    Float(attachment.pointInModel[2])
+                    Float(point[0]),
+                    Float(point[1]),
+                    Float(point[2])
                 )
             )
         }

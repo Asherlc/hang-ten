@@ -74,11 +74,52 @@ rejects missing or incomplete provenance and approvals.
 - The fragment-only attachment URL was not treated as a separate artifact because it resolves to the same page response; the two retained page responses are the complete basis for the promotion.
 - The retained `current-gallery-2026-09-11` packet identifies the standard
   oak/Granite product, SKU `STONE_HANGER`, Shopify product `8768741048658`,
-  variant `47783638597970`, and two observed lateral cord-port mouths.
+  variant `47783638597970`. The earlier identification of side hardware as
+  hanging-cord mouths was incorrect; the manufacturer front image visibly
+  places the hanging leads at the two upper corners.
 - The interior route is explicitly **unknown**. The source technical drawing
   is not sectional engineering evidence; the model intentionally retains only
-  the observed lateral mouths and short display sleeves. The package therefore
+  the existing lateral hardware/sleeves, which do not determine the hanging
+  cord endpoints. The package therefore
   uses `pairedLeadCord`, not a fabricated through-bore or central attachment.
+
+## 2026-09-14 native route correction
+
+Native SceneKit clearance rejected the old Lattice side-midpoint estimate
+56 mm from its declared attachment (segment 26 of 31, 2.826 mm from wood with
+3 mm required clearance). This was a real body crossing, not endpoint rounding.
+After correcting the route, residual terminal contacts lie 1.17–1.52 mm along
+the cord from its mouth, with nearby wood within the tube's clearance envelope.
+Paired leads permit this contact only on the last segment, on the explicitly
+bound nonselectable body, within a terminal span of one tube radius plus its
+required clearance (5 mm in these packages). The entire remaining free span is
+rechecked against the same triangle, and neighboring segments and other nodes
+retain full clearance. A regression keeps the former 56 mm body-crossing
+route unavailable. Conservative expanded triangle bounds skip only pairs that
+cannot contact, reducing native loading time without changing the threshold.
+
+Direct visual review of these manufacturer images establishes the exterior
+mouth locations. Coordinates remain manually authored display estimates, not
+pixel measurements or recovered model geometry:
+
+| Retained image | Manufacturer URL | SHA-256 |
+| --- | --- | --- |
+| `2026-09-13-model-cord-snapshots/lattice-mxl-front.jpg` | https://latticetraining.com/app/uploads/2024/04/MXL-Front.jpg | `0811e08f36674e305d7c31c56a78bc3c77225b28ac41fa999170f9e55ec9aee8` |
+| `2026-09-13-model-cord-snapshots/lattice-mxs-front.jpg` | https://latticetraining.com/app/uploads/2024/04/MXS-Front.jpg | `c2cac22888cc13ddf5f90054f52006db1c934ac7caccd3f19cafd71ecfead59c` |
+| `2026-09-13-model-cord-snapshots/nature-granite-front.jpg` | https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_1.jpg?v=1760101291 | `8e8df7719638e42d4018a43254b3dac0bf3bfb5ac0d6ba149e9c92f634254f40` |
+
+Both Lattice images show the upper pair of lead exits and the opposite bottom
+cord return. Upright poses use the upper mouths; inverted poses explicitly
+select the opposite mouths using `canonicalPoses.<position>.attachmentPoints`.
+That optional map must provide both existing lead IDs and two distinct finite
+points inside the model bounds. It is accepted only for `pairedLeadCord`.
+Bindings, invisible anchor, board transforms, and exported meshes are unchanged.
+The unseen internal route and visible bottom return
+remain deliberately omitted by this two-exterior-lead display contract.
+
+Nature's hanging cord similarly exits the upper corners, rather than the
+mid-height side hardware. Its front/reverse poses share those top mouths.
+No new internal route is claimed.
 
 ## Package changes
 
@@ -93,7 +134,7 @@ was baked into a USDZ.
 | `yy.baguette-evo` (excluded) | none | No cord metadata; optional rope/bungee is not promoted | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
 | `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `ed755fce098c3471e8ad8070c58f1fa8092954c560f7b0ecc38a084749e3b16` |
 | `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `f619520ff5493ad4df26154e69cb1cac2998b7ae0bfb1332551d6199fd991419` |
-| `nature.stone-hanger` | `pairedLeadCord` | Two distinct lateral-mouth points on `body_oak_mesh_001` | `177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1` | `a35adb07928a69ea7a39d5756f1cbbeebcbd2964b4ae613f3cd088552c7432d9` |
+| `nature.stone-hanger` | `pairedLeadCord` | Two distinct upper-corner mouths on `body_oak_mesh_001` | `177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1` | `a35adb07928a69ea7a39d5756f1cbbeebcbd2964b4ae613f3cd088552c7432d9` |
 
 Every new attachment, passage, branch, anchor, cord, and canonical-pose
 provenance includes `displayEstimate` where the source does not publish a

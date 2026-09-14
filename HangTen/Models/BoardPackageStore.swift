@@ -1360,7 +1360,8 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
-        guard document.attachment.nodeID.isEmpty == false,
+        guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
+              document.attachment.nodeID.isEmpty == false,
               document.attachment.pointInModel.count == 3,
               document.attachment.pointInModel.allSatisfy(\.isFinite),
               zip(document.attachment.pointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
@@ -1503,6 +1504,17 @@ struct BoardPackageStore {
         }
         var poses: [String: BoardModelCanonicalPose] = [:]
         for (positionID, pose) in document.canonicalPoses {
+            if let points = pose.attachmentPoints {
+                guard Set(points.keys) == Set(document.attachments.map(\.id)),
+                      Set(points.values).count == 2,
+                      points.values.allSatisfy({ point in
+                          point.count == 3 && point.allSatisfy(\.isFinite)
+                              && zip(point, bounds.minimum).allSatisfy({ $0 >= $1 })
+                              && zip(point, bounds.maximum).allSatisfy({ $0 <= $1 })
+                      }) else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "paired lead pose attachmentPoints must name both distinct, finite, in-bounds mouths")
+                }
+            }
             guard pose.rotation.count == 4,
                   pose.rotation.allSatisfy(\.isFinite),
                   pose.translation.count == 3,
@@ -1519,7 +1531,7 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "canonical pose \(positionID) rotation must be normalized")
             }
             for attachment in document.attachments {
-                let p = attachment.pointInModel
+                let p = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
                 let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
                 let tx = 2 * (qy * p[2] - qz * p[1])
                 let ty = 2 * (qz * p[0] - qx * p[2])
@@ -1543,7 +1555,8 @@ struct BoardPackageStore {
                 camera: BoardModelCanonicalCamera(
                     viewDirection: pose.camera.viewDirection,
                     fitPadding: pose.camera.fitPadding
-                )
+                ),
+                attachmentPoints: pose.attachmentPoints
             )
         }
         return .pairedLeadCord(BoardModelPairedLeadCord(
@@ -1577,7 +1590,8 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
-        guard document.passages.left.count == 2,
+        guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
+              document.passages.left.count == 2,
               document.passages.right.count == 2 else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
         }
@@ -1845,7 +1859,9 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                           case .object(let camera)? = poseObject.value(named: "camera") else {
                         throw BoardPackageRawJSONError.invalid
                     }
-                    try poseObject.requireCanonicalOrder(["rotation", "translation", "camera"])
+                    try poseObject.requireCanonicalOrder(poseObject.value(named: "attachmentPoints") == nil
+                        ? ["rotation", "translation", "camera"]
+                        : ["rotation", "translation", "camera", "attachmentPoints"])
                     try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
                 }
                 continue
@@ -2587,13 +2603,16 @@ private struct BoardPackageCanonicalPoseDocument: Decodable {
     let translation: [Double]
     let camera: BoardPackageCanonicalCameraDocument
 
-    private enum CodingKeys: String, CodingKey { case rotation, translation, camera }
+    let attachmentPoints: [String: [Double]]?
+    private enum CodingKeys: String, CodingKey { case rotation, translation, camera, attachmentPoints }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["rotation", "translation", "camera"])
+        try decoder.rejectUnknownKeys(["rotation", "translation", "camera", "attachmentPoints"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         rotation = try container.decode([Double].self, forKey: .rotation)
         translation = try container.decode([Double].self, forKey: .translation)
         camera = try container.decode(BoardPackageCanonicalCameraDocument.self, forKey: .camera)
+        attachmentPoints = container.contains(.attachmentPoints)
+            ? try container.decode([String: [Double]].self, forKey: .attachmentPoints) : nil
     }
 }
 

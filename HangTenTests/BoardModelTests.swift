@@ -372,23 +372,27 @@ final class BoardModelTests: XCTestCase {
         for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
-                return XCTFail("(boardID) must load the approved pairedLeadCord suspension")
+                return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
             }
 
             XCTAssertEqual(suspension.attachments.count, 2, boardID)
-            XCTAssertEqual(Set(suspension.attachments.map(\.nodeID)).count, 2, boardID)
+            XCTAssertEqual(Set(suspension.attachments.map(\.id)).count, 2, boardID)
+            for attachment in suspension.attachments {
+                let binding = try XCTUnwrap(media.descriptor.nodes.first { $0.nodeID == attachment.nodeID })
+                XCTAssertNotEqual(binding.role, .hold, boardID)
+            }
             XCTAssertNotEqual(suspension.attachments[0].pointInModel, suspension.attachments[1].pointInModel, boardID)
 
             for position in board.positions {
-                XCTAssertTrue(model.select(positionID: position.id), "(boardID)/(position.id)")
-                XCTAssertFalse(model.isUnavailable, "(boardID)/(position.id)")
-                XCTAssertFalse(model.isTransientCordAccessible, "(boardID)/(position.id)")
-                let cord = try XCTUnwrap(model.transientCordNode, "(boardID)/(position.id)")
-                XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "(boardID)/(position.id)")
-                XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "(boardID)/(position.id)")
+                XCTAssertTrue(model.select(positionID: position.id), "\(boardID)/\(position.id)")
+                XCTAssertFalse(model.isUnavailable, "\(boardID)/\(position.id)")
+                XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
+                let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
+                XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "\(boardID)/\(position.id)")
+                XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
                     node.categoryBitMask == BoardModelScene.cordCategory && model.holdID(for: node) == nil
-                }, "(boardID)/(position.id)")
+                }, "\(boardID)/\(position.id)")
             }
         }
     }
@@ -420,6 +424,24 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isUnavailable)
             }
         }
+    }
+
+    func testLatticeStillRejectsFormerSideMidpointRouteThatCrossesBody() async throws {
+        let (board, media, _) = try await loadMigratedModel("lattice.mxedge-lift-large")
+        guard case .pairedLeadCord(let profile) = media.suspension else { return XCTFail("missing paired leads") }
+        let wrongProfile = BoardModelPairedLeadCord(
+            attachments: zip(profile.attachments, [-0.083, 0.083]).map { attachment, x in
+                BoardModelPairedLeadAttachment(id: attachment.id, nodeID: attachment.nodeID,
+                    pointInModel: [x, 0, 0.012], provenance: "deliberately invalid former route")
+            }, anchor: profile.anchor, cord: profile.cord, canonicalPoses: profile.canonicalPoses
+        )
+        let sourceURL = repositoryRootURL().appendingPathComponent("Hangboards/lattice-mxedge-lift-large/assets/primary.usdz")
+        let model = try XCTUnwrap(BoardModelScene(source: try SCNScene(url: sourceURL),
+            descriptor: media.descriptor, display: media.display, suspension: .pairedLeadCord(wrongProfile),
+            allowedPositionIDs: Set(board.positions.map(\.id))))
+        XCTAssertFalse(model.select(positionID: "lower-lips-front"))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.transientCordNode)
     }
 
     func testTemporaryLatticePairedLeadRenderCapture() async throws {

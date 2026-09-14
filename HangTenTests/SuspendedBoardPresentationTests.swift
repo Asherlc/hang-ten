@@ -185,6 +185,19 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testPairedLeadUsesExplicitPoseMouthsInsteadOfRotatingTheOtherFaceMouths() throws {
+        let suspension = pairedLeadSuspension()
+        var selectedPose = pose()
+        selectedPose.attachmentPoints = Dictionary(uniqueKeysWithValues: zip(
+            suspension.attachments.map(\.id), [[-0.6, 0.3, 0.05], [0.6, 0.3, -0.05]]
+        ))
+        let result = try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: suspension, bounds: bounds)
+        XCTAssertEqual(result.leads[0].samples.last, SIMD3<Float>(-0.6, 0.3, 0.05))
+        XCTAssertEqual(result.leads[1].samples.last, SIMD3<Float>(0.6, 0.3, -0.05))
+        selectedPose.attachmentPoints?.removeValue(forKey: suspension.attachments[0].id)
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: suspension, bounds: bounds))
+    }
+
     func testPairedLeadRejectsDistinctLeadsThatAreTooCloseAfterTheirSharedAnchor() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),

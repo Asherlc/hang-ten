@@ -446,6 +446,7 @@ class BoardModelCanonicalPose:
     rotation: tuple[float, float, float, float]
     translation: tuple[float, float, float]
     camera: Mapping[str, Any]
+    attachment_points: Mapping[str, tuple[float, float, float]] | None = None
 
 
 @dataclass(frozen=True)
@@ -584,7 +585,7 @@ def _load_model_anchor(value: Any, source: str) -> BoardModelInvisibleAnchor:
 
 
 def _load_model_poses(
-    value: Any, source: str, *, canonical_order: bool = False
+    value: Any, source: str, *, canonical_order: bool = False, paired_leads: bool = False
 ) -> Mapping[str, BoardModelCanonicalPose]:
     poses_payload = _mapping(value, source)
     if not poses_payload:
@@ -594,10 +595,12 @@ def _load_model_poses(
         position_source = f"{source}[{position_id}]"
         position_id = _identifier(position_id, f"{position_source} positionID")
         pose_payload = _mapping(raw_pose, position_source)
-        _closed(pose_payload, {"rotation", "translation", "camera"}, position_source)
+        _closed(pose_payload, {"rotation", "translation", "camera"}, position_source,
+                optional={"attachmentPoints"} if paired_leads else set())
         if canonical_order:
             _canonical_member_order(
-                pose_payload, ("rotation", "translation", "camera"), position_source
+                pose_payload, ("rotation", "translation", "camera", "attachmentPoints")
+                if "attachmentPoints" in pose_payload else ("rotation", "translation", "camera"), position_source
             )
         rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
         if len(rotation) != 4:
@@ -619,6 +622,10 @@ def _load_model_poses(
             tuple(rotation),
             translation,
             MappingProxyType({"viewDirection": view_direction, "fitPadding": fit_padding}),
+            MappingProxyType({
+                _identifier(key, f"{position_source}.attachmentPoints"): _finite_vector3(point, f"{position_source}.attachmentPoints.{key}")
+                for key, point in _mapping(pose_payload["attachmentPoints"], f"{position_source}.attachmentPoints").items()
+            }) if "attachmentPoints" in pose_payload else None,
         )
     return MappingProxyType(poses)
 
@@ -813,7 +820,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             anchor,
             cord,
             _load_model_poses(
-                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
+                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True, paired_leads=True
             ),
         )
 
@@ -1718,6 +1725,12 @@ def _validate_model_suspension(
             ):
                 raise ValueError("paired lead attachment point must be inside model bounds")
     for position_id, pose in suspension.canonical_poses.items():
+        if pose.attachment_points is not None:
+            if not isinstance(suspension, BoardModelPairedLeadCord) or set(pose.attachment_points) != {a.id for a in suspension.attachments} or len(set(pose.attachment_points.values())) != 2:
+                raise ValueError("paired lead pose attachmentPoints must name both distinct mouths")
+            if any(coordinate < minimum[index] or coordinate > maximum[index]
+                   for point in pose.attachment_points.values() for index, coordinate in enumerate(point)):
+                raise ValueError("paired lead pose attachmentPoints must be inside model bounds")
         qx, qy, qz, qw = pose.rotation
         endpoints_by_branch = (
             (((suspension.attachment,), suspension.cord),)
@@ -1733,7 +1746,7 @@ def _validate_model_suspension(
         )
         for branch_endpoints, branch_data in endpoints_by_branch:
             if isinstance(branch_data, BoardModelCord):
-                endpoints = tuple(endpoint.point_in_model for endpoint in branch_endpoints)
+                endpoints = tuple(pose.attachment_points[endpoint.id] if pose.attachment_points is not None else endpoint.point_in_model for endpoint in branch_endpoints)
                 rest_length = branch_data.rest_length
                 rigid_route_length = 0.0
             else:

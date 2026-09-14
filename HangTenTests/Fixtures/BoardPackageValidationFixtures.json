@@ -367,6 +367,26 @@
   },
   "modelParserParity": [
     {
+      "name": "paired-pose-mouths-null", "base": "pairedLeadCordModel",
+      "pythonException": "ValueError", "pythonError": "attachmentPoints.*object", "swiftError": "malformedJSON",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": null}]
+    },
+    {
+      "name": "paired-pose-mouths-missing-lead", "base": "pairedLeadCordModel",
+      "pythonException": "ValueError", "pythonError": "both distinct mouths", "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [0.2, 0.45, 0.1]}}]
+    },
+    {
+      "name": "paired-pose-mouths-coincident", "base": "pairedLeadCordModel",
+      "pythonException": "ValueError", "pythonError": "both distinct mouths", "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [0.2, 0.45, 0.1], "right-lead": [0.2, 0.45, 0.1]}}]
+    },
+    {
+      "name": "paired-pose-mouths-outside-bounds", "base": "pairedLeadCordModel",
+      "pythonException": "ValueError", "pythonError": "inside model bounds", "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [-10, 0.45, 0.1], "right-lead": [0.8, 0.45, 0.1]}}]
+    },
+    {
       "name": "wrong-schema-version",
       "pythonException": "ValueError",
       "pythonError": "schemaVersion",

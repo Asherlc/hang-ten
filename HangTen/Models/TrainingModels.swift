@@ -124,6 +124,8 @@ struct BoardModelCanonicalPose: Hashable {
     let rotation: [Double]
     let translation: [Double]
     let camera: BoardModelCanonicalCamera
+    // External mouths used in this pose; never an inferred interior route.
+    var attachmentPoints: [String: [Double]]? = nil
 }
 
 struct BoardModelSingleCordSuspension: Hashable {

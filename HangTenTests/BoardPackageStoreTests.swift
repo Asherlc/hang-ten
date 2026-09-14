@@ -1066,6 +1066,21 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary"])
     }
 
+    func testStorePreservesPoseSpecificPairedLeadMouths() throws {
+        let points = ["left-lead": [0.2, 0.45, 0.1], "right-lead": [0.8, 0.45, 0.1]]
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "pairedLeadCordModel",
+            "mutations": [["target": "board", "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"],
+                "value": points]]
+        ])
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .pairedLeadCord(let suspension) = media.suspension else { return XCTFail("missing paired leads") }
+        XCTAssertEqual(suspension.canonicalPoses["primary"]?.attachmentPoints, points)
+    }
+
     func testStoreLoadsPairedLeadCordWithDistinctPointsOnSharedBodyNode() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "pairedLeadCordModel",
@@ -4799,7 +4814,7 @@ final class BoardPackageStoreTests: XCTestCase {
         let camera = try XCTUnwrap(pose["camera"] as? [String: Any])
         return try orderedJSONObjectData(
             pose,
-            keys: ["rotation", "translation", "camera"],
+            keys: pose["attachmentPoints"] == nil ? ["rotation", "translation", "camera"] : ["rotation", "translation", "camera", "attachmentPoints"],
             serializedValues: ["camera": try orderedJSONObjectData(
                 camera,
                 keys: ["viewDirection", "fitPadding"]
