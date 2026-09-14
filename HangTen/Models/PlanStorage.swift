@@ -179,9 +179,10 @@ struct MillimeterRange: Codable, Hashable {
     init(from decoder: Decoder) throws {
         let rawContainer = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
         let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
-        if let unknownKey = rawContainer.allKeys.first(where: {
-            !allowedKeys.contains($0.stringValue)
-        }) {
+        let unsupportedKeys = rawContainer.allKeys
+            .filter { !allowedKeys.contains($0.stringValue) }
+            .sorted { $0.stringValue < $1.stringValue }
+        if let unknownKey = unsupportedKeys.first {
             throw DecodingError.dataCorruptedError(
                 forKey: unknownKey,
                 in: rawContainer,

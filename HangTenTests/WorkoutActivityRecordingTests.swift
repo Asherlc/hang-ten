@@ -5,6 +5,11 @@ import Combine
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    private enum CodingPathComponent: Equatable {
+        case key(String)
+        case index(Int)
+    }
+
     private var sessionStoreDirectory: URL!
     private var sessionStores: [WorkoutSessionStore] = []
 
@@ -1452,15 +1457,15 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 "Unsupported millimeter range field unexpected."
             )
             XCTAssertEqual(
-                context.codingPath.map(\.stringValue),
+                normalizedCodingPath(context.codingPath),
                 [
-                    "segments",
-                    "Index 0",
-                    "target",
-                    "resolution",
-                    "requirement",
-                    "depthRangeMillimeters",
-                    "unexpected"
+                    .key("segments"),
+                    .index(0),
+                    .key("target"),
+                    .key("resolution"),
+                    .key("requirement"),
+                    .key("depthRangeMillimeters"),
+                    .key("unexpected")
                 ]
             )
         }
@@ -1483,8 +1488,47 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 "Unsupported millimeter range field sizeMillimeters."
             )
             XCTAssertEqual(
-                context.codingPath.suffix(2).map(\.stringValue),
-                ["depthRangeMillimeters", "sizeMillimeters"]
+                normalizedCodingPath(context.codingPath),
+                [
+                    .key("segments"),
+                    .index(0),
+                    .key("target"),
+                    .key("resolution"),
+                    .key("requirement"),
+                    .key("depthRangeMillimeters"),
+                    .key("sizeMillimeters")
+                ]
+            )
+        }
+    }
+
+    func testVersionTwoPayloadRejectsAlphabeticallyFirstUnknownDepthRangeField() {
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depthRangeMillimeters":{"maximum":22,"minimum":18,"zetaUnknown":true,"alphaUnknown":true},"selection":"allMatching"},"contactIDs":["edge"]}}}],"version":2}"#
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: Data(json.utf8)
+            )
+        ) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected deterministic millimeter-range rejection, got \(error)")
+            }
+            XCTAssertEqual(
+                context.debugDescription,
+                "Unsupported millimeter range field alphaUnknown."
+            )
+            XCTAssertEqual(
+                normalizedCodingPath(context.codingPath),
+                [
+                    .key("segments"),
+                    .index(0),
+                    .key("target"),
+                    .key("resolution"),
+                    .key("requirement"),
+                    .key("depthRangeMillimeters"),
+                    .key("alphaUnknown")
+                ]
             )
         }
     }
@@ -1518,6 +1562,15 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let conditionMet = condition()
         XCTAssertTrue(conditionMet, file: file, line: line)
         return conditionMet
+    }
+
+    private func normalizedCodingPath(_ codingPath: [CodingKey]) -> [CodingPathComponent] {
+        codingPath.map { key in
+            if let index = key.intValue {
+                return .index(index)
+            }
+            return .key(key.stringValue)
+        }
     }
 
     func testHealthKitMetadataEncodingFailureUsesLocalizedWriteError() {
