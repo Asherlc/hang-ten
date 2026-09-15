@@ -266,6 +266,37 @@ func hasVisibleHangingBranches(_ solved: BoardModelSolvedSuspension, bounds: Boa
     }
 }
 
+func pairedLeadTerminalsUseUpperChannel(
+    _ leads: [SolvedCordBranch],
+    boardTransform: simd_float4x4
+) -> Bool {
+    let determinant = simd_determinant(boardTransform)
+    guard !leads.isEmpty,
+          boardTransform.columns.0.allFinite,
+          boardTransform.columns.1.allFinite,
+          boardTransform.columns.2.allFinite,
+          boardTransform.columns.3.allFinite,
+          determinant.isFinite,
+          abs(determinant) > 1e-7 else {
+        return false
+    }
+    let transformedOrigin = boardTransform * SIMD4<Float>(0, 0, 0, 1)
+    guard transformedOrigin.allFinite, abs(transformedOrigin.w) > 1e-7 else { return false }
+    let boardOrigin = SIMD3<Float>(
+        transformedOrigin.x / transformedOrigin.w,
+        transformedOrigin.y / transformedOrigin.w,
+        transformedOrigin.z / transformedOrigin.w
+    )
+    return leads.allSatisfy { lead in
+        guard let terminal = lead.samples.last, terminal.allFinite else { return false }
+        // "Upper" is presentation/world-up. Side and inverted poses deliberately
+        // select a different model-local axis, so inverse-transforming to model Y
+        // would reject their valid upper channels. Subtracting the transformed
+        // board origin keeps that selected axis while removing pose translation.
+        return (terminal - boardOrigin).y > 0
+    }
+}
+
 // Exercise the production gate itself, not a parallel clearance approximation.
 // The package-level regression below covers the real boards; this focused case
 // protects the distinction between a pose-resolved surface route and its free
@@ -367,7 +398,53 @@ func runPoseOnlyRouteClearanceRegression() throws {
     print("PASS pose-only routed bearing and free-span clearance regression")
 }
 
+func runBoardLocalUpperChannelRegression() {
+    let unshiftedTransform = simd_float4x4(
+        simd_quatf(angle: .pi / 2, axis: SIMD3<Float>(0, 1, 0))
+    )
+    var boardTransform = unshiftedTransform
+    boardTransform.columns.3 = SIMD4<Float>(0.7, -0.4, 0.2, 1)
+
+    let localTerminals = [
+        SIMD3<Float>(-0.1, 0.005, -0.1),
+        SIMD3<Float>(0.1, 0.05, 0.1),
+    ]
+    func leads(transformedBy transform: simd_float4x4) -> [SolvedCordBranch] {
+        localTerminals.map { terminal in
+            let transformed = transform * SIMD4<Float>(terminal, 1)
+            let worldTerminal = SIMD3<Float>(transformed.x, transformed.y, transformed.z)
+            return SolvedCordBranch(
+                samples: [worldTerminal],
+                tangents: [SIMD3<Float>(0, -1, 0)],
+                arcLength: 0,
+                polylineArcLength: 0,
+                isTaut: true
+            )
+        }
+    }
+    let unshiftedLeads = leads(transformedBy: unshiftedTransform)
+    let translatedLeads = leads(transformedBy: boardTransform)
+    precondition(
+        translatedLeads.allSatisfy { $0.samples.last?.y ?? 1 <= 0 },
+        "Regression pose must put the valid board-local terminals below world-space zero"
+    )
+    let unshiftedVerdict = pairedLeadTerminalsUseUpperChannel(
+        unshiftedLeads,
+        boardTransform: unshiftedTransform
+    )
+    let translatedVerdict = pairedLeadTerminalsUseUpperChannel(
+        translatedLeads,
+        boardTransform: boardTransform
+    )
+    precondition(
+        unshiftedVerdict && translatedVerdict == unshiftedVerdict,
+        "The Captain upper-channel threshold must be invariant under board rotation and translation"
+    )
+    print("PASS board-local upper-channel terminal regression")
+}
+
 try runPoseOnlyRouteClearanceRegression()
+runBoardLocalUpperChannelRegression()
 
 var failures: [String] = []
 var count = 0
@@ -394,7 +471,10 @@ for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fi
             review.suspension = suspension
             let clear = review.hasClearance(for: solved)
             if case .pairedLead(let paired) = solved,
-               paired.leads.contains(where: { $0.samples.last!.y <= 0 }) {
+               !pairedLeadTerminalsUseUpperChannel(
+                   paired.leads,
+                   boardTransform: paired.boardTransform
+               ) {
                 failures.append("\(slug)/\(poseID): visible cord terminal must tuck into the selected upper channel")
             }
             if !hasVisibleHangingBranches(solved, bounds: bounds) {
