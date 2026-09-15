@@ -53,23 +53,6 @@
             "inverted-upper-lip": {"rotation": [7e-09, 0.156434415, -0.987688349, 4.3e-08], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [-0.068, -0.048999998, 0], "right-lead": [0.068, -0.048999998, 0]}},
             "lower-lips-and-mono": {"rotation": [0.156434415, 0.0, 0.0, 0.987688349], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
           }
-        },
-        "orientation": {
-          "pivot": "modelBoundsCenter",
-          "rotations": {
-            "inverted-upper-lip": [
-              7E-9,
-              0.156434415,
-              -0.987688349,
-              4.3E-8
-            ],
-            "lower-lips-and-mono": [
-              0.156434415,
-              0.0,
-              0.0,
-              0.987688349
-            ]
-          }
         }
       }
     }
