@@ -12,55 +12,44 @@
       "id": "primary"
     }
   ],
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "aspectRatio": 1.0,
-      "isDefault": true,
-      "derivation": {
-        "type": "original"
+  "presentations": [{
+    "id": "primary",
+    "name": "Primary",
+    "aspectRatio": 1.0,
+    "isDefault": true,
+    "derivation": {"type": "original"},
+    "media": {
+      "type": "model",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "display": {"camera": {
+        "type": "orthographic",
+        "viewDirection": [0, 0, -1],
+        "up": [0, 1, 0],
+        "fitPadding": 0.08
+      }},
+      "suspension": {
+        "type": "pairedLeadCord",
+        "attachments": [
+          {"id": "left-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [-0.048, 0.052499997, 0], "provenance": "Nature Stone_Hanger_Granite_1.jpg; displayEstimate; upper left external cord mouth; side hardware is not the hanging lead"},
+          {"id": "right-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [0.048, 0.052499997, 0], "provenance": "Nature Stone_Hanger_Granite_1.jpg; displayEstimate; upper right external cord mouth; side hardware is not the hanging lead"}
+        ],
+        "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
+        "cord": {"restLength": 0.55, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate; supplied cord diameter"},
+        "canonicalPoses": {
+          "front": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+          "reverse": {"rotation": [0, 1, 0, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
+        }
       },
-      "media": {
-        "type": "model",
-        "assetPath": "assets/primary.usdz",
-        "descriptorPath": "assets/primary.model.json",
-        "display": {
-          "camera": {
-            "type": "orthographic",
-            "viewDirection": [
-              0,
-              0,
-              -1
-            ],
-            "up": [
-              0,
-              1,
-              0
-            ],
-            "fitPadding": 0.08
-          }
-        },
-        "orientation": {
-          "pivot": "modelBoundsCenter",
-          "rotations": {
-            "front": [
-              0,
-              0,
-              0,
-              1
-            ],
-            "reverse": [
-              0,
-              1,
-              0,
-              0
-            ]
-          }
+      "orientation": {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+          "front": [0, 0, 0, 1],
+          "reverse": [0, 1, 0, 0]
         }
       }
     }
-  ],
+  }],
   "positions": [
     {
       "id": "front",

@@ -115,7 +115,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     }
 
     func geometry(forContactID contactID: String) -> [BoardEditablePiece]? {
-        guard let presentationIndex = editableRasterPresentationIndex,
+        guard let presentationIndex = defaultRasterPresentationIndex,
               case .raster(_, let contactGeometry) = presentations[presentationIndex].media else {
             return nil
         }
@@ -126,7 +126,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         forContactID contactID: String,
         with pieces: [BoardEditablePiece]
     ) {
-        guard let presentationIndex = editableRasterPresentationIndex else { return }
+        guard let presentationIndex = originalDefaultRasterPresentationIndex else { return }
         guard case .raster(let assetPath, var contactGeometry) = presentations[presentationIndex].media else {
             return
         }
@@ -138,9 +138,23 @@ struct BoardEditableDocument: Equatable, Decodable {
         )
     }
 
-    private var editableRasterPresentationIndex: Int? {
+    private var defaultRasterPresentationIndex: Int? {
         presentations.firstIndex { presentation in
-            guard presentation.isDefault, case .raster = presentation.media else { return false }
+            guard presentation.isDefault,
+                  case .raster = presentation.media else {
+                return false
+            }
+            return true
+        }
+    }
+
+    private var originalDefaultRasterPresentationIndex: Int? {
+        presentations.firstIndex { presentation in
+            guard presentation.isDefault,
+                  presentation.derivation == .original,
+                  case .raster = presentation.media else {
+                return false
+            }
             return true
         }
     }

@@ -299,6 +299,635 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testFlashBoardNativeSceneBuildsVisibleThreeDCordBranchesForSelectedPosition() async throws {
+        let (_, media, model) = try await loadMigratedModel("tension.flash-board")
+
+        XCTAssertEqual(media.descriptor.modelSHA256, "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524")
+        XCTAssertEqual(media.descriptor.holds.count, 7)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+        XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(suspension.passages.left.map(\.id), ["left-outer-passage", "left-inner-passage"])
+        XCTAssertEqual(suspension.passages.right.map(\.id), ["right-inner-passage", "right-outer-passage"])
+        XCTAssertEqual(Set((suspension.passages.left + suspension.passages.right).map(\.nodeID)), ["flash_board_body_008"])
+        XCTAssertEqual(suspension.branches[0].exteriorContactPoints, [[0.014, 0.048526, -0.001], [0.034, 0.048526, -0.001]])
+        XCTAssertEqual(suspension.branches[1].exteriorContactPoints, [[0.466, 0.048526, -0.001], [0.486, 0.048526, -0.001]])
+
+        XCTAssertTrue(model.select(positionID: "three-edge-upright"))
+        let cord = try XCTUnwrap(model.transientCordNode)
+        XCTAssertFalse(cord.isHidden)
+        XCTAssertFalse(model.isTransientCordAccessible)
+        for branchIndex in 0..<2 {
+            let segments = cord.childNodes.filter {
+                $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+            }
+            XCTAssertFalse(segments.isEmpty, "branch \(branchIndex) must contain visible 3D segments")
+            XCTAssertTrue(segments.allSatisfy {
+                !$0.isHidden && $0.geometry is SCNCylinder && $0.categoryBitMask == BoardModelScene.cordCategory
+            })
+        }
+    }
+
+    func testBaguetteEvoDoesNotRenderOptionalRopeOrBungee() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        XCTAssertNil(media.suspension)
+
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            XCTAssertFalse(model.isUnavailable, position.id)
+            XCTAssertEqual(model.activePositionID, position.id)
+            XCTAssertNil(model.transientCordNode, position.id)
+        }
+    }
+
+    func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {
+        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+            let (board, media, model) = try await loadMigratedModel(boardID)
+            guard case .pairedLeadCord(let suspension) = media.suspension else {
+                return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
+            }
+
+            XCTAssertEqual(suspension.attachments.count, 2, boardID)
+            XCTAssertEqual(Set(suspension.attachments.map(\.id)).count, 2, boardID)
+            for attachment in suspension.attachments {
+                let binding = try XCTUnwrap(media.descriptor.nodes.first { $0.nodeID == attachment.nodeID })
+                XCTAssertNotEqual(binding.role, .hold, boardID)
+            }
+            XCTAssertNotEqual(suspension.attachments[0].pointInModel, suspension.attachments[1].pointInModel, boardID)
+
+            for position in board.positions {
+                XCTAssertTrue(model.select(positionID: position.id), "\(boardID)/\(position.id)")
+                XCTAssertFalse(model.isUnavailable, "\(boardID)/\(position.id)")
+                XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
+                let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
+                XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "\(boardID)/\(position.id)")
+                XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
+                XCTAssertTrue(cord.childNodes.allSatisfy { node in
+                    node.categoryBitMask == BoardModelScene.cordCategory && model.holdID(for: node) == nil
+                }, "\(boardID)/\(position.id)")
+            }
+        }
+    }
+
+    func testPairedLeadModelHangboardsReserveCordAwareCanonicalCameraMargin() async throws {
+        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+            let (board, media, model) = try await loadMigratedModel(boardID)
+            guard case .pairedLeadCord(let suspension) = media.suspension else {
+                return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
+            }
+
+            // The generic model padding only proves that a centerline reaches
+            // the frame edge. A paired hanging lead needs enough surrounding
+            // view space to remain visibly distinct from the board in detail.
+            for position in board.positions {
+                let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
+                let solved = try BoardModelScene.solveSuspension(
+                    pose: pose,
+                    suspension: .pairedLeadCord(suspension),
+                    bounds: media.descriptor.modelBounds
+                )
+                XCTAssertGreaterThanOrEqual(
+                    solved.cameraFraming.fitPadding,
+                    1.4,
+                    "\(boardID)/\(position.id) needs a cord-aware camera margin"
+                )
+                model.frame(in: CGSize(width: 390, height: 228))
+                XCTAssertTrue(model.select(positionID: position.id))
+                XCTAssertFalse(model.isUnavailable)
+            }
+        }
+    }
+
+    func testLatticeStillRejectsFormerSideMidpointRouteThatCrossesBody() async throws {
+        let (board, media, _) = try await loadMigratedModel("lattice.mxedge-lift-large")
+        guard case .pairedLeadCord(let profile) = media.suspension else { return XCTFail("missing paired leads") }
+        let wrongProfile = BoardModelPairedLeadCord(
+            attachments: zip(profile.attachments, [-0.083, 0.083]).map { attachment, x in
+                BoardModelPairedLeadAttachment(id: attachment.id, nodeID: attachment.nodeID,
+                    pointInModel: [x, 0, 0.012], provenance: "deliberately invalid former route")
+            }, anchor: profile.anchor, cord: profile.cord, canonicalPoses: profile.canonicalPoses
+        )
+        let sourceURL = repositoryRootURL().appendingPathComponent("Hangboards/lattice-mxedge-lift-large/assets/primary.usdz")
+        let model = try XCTUnwrap(BoardModelScene(source: try SCNScene(url: sourceURL),
+            descriptor: media.descriptor, display: media.display, suspension: .pairedLeadCord(wrongProfile),
+            allowedPositionIDs: Set(board.positions.map(\.id))))
+        XCTAssertFalse(model.select(positionID: "lower-lips-front"))
+        XCTAssertTrue(model.isUnavailable)
+        XCTAssertNil(model.transientCordNode)
+    }
+
+    func testPairedLeadSceneRendersTwoTransientNonPickableCylinderGroupsAndRejectsOneBadLead() throws {
+        let selectedPose = BoardModelCanonicalPose(
+            rotation: [0, 0, 0, 1],
+            translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.08)
+        )
+        func suspension(right: [Double]) -> BoardModelPairedLeadCord {
+            BoardModelPairedLeadCord(
+                attachments: [
+                    BoardModelPairedLeadAttachment(id: "left", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test"),
+                    BoardModelPairedLeadAttachment(id: "right", nodeID: "Lead/Right", pointInModel: right, provenance: "test"),
+                ],
+                anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+                cord: BoardModelCord(restLength: 2, radius: 0.01, material: "test-cord", provenance: "test"),
+                canonicalPoses: ["primary": selectedPose]
+            )
+        }
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Body", role: .body, holdID: nil),
+                .init(nodeID: "Hold", role: .hold, holdID: "hold"),
+                .init(nodeID: "Lead/Left", role: .attachment, holdID: nil),
+                .init(nodeID: "Lead/Right", role: .attachment, holdID: nil),
+            ],
+            minimum: [-1, -0.5, -0.2],
+            maximum: [1, 0.5, 0.2]
+        )
+        func source() -> SCNScene {
+            let source = scene(nodes: ["Body", "Hold", "Lead/Left", "Lead/Right"])
+            for path in ["Body", "Hold", "Lead/Left", "Lead/Right"] {
+                node(at: path, in: source)?.simdPosition = SIMD3<Float>(10, 10, 10)
+            }
+            return source
+        }
+
+        let valid = suspension(right: [0.6, 0.4, -0.05])
+        let validModel = try XCTUnwrap(BoardModelScene(
+            source: source(), descriptor: descriptor, display: display(), suspension: .pairedLeadCord(valid)
+        ))
+        XCTAssertTrue(validModel.select(positionID: "primary"))
+        let cord = try XCTUnwrap(validModel.transientCordNode)
+        XCTAssertFalse(cord.isHidden)
+        XCTAssertFalse(validModel.isTransientCordAccessible)
+        XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory)
+        XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
+        for branchIndex in 0..<2 {
+            let segments = cord.childNodes.filter {
+                $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+            }
+            XCTAssertEqual(segments.count, SuspendedCordSolver.sampleCount - 1)
+            XCTAssertTrue(segments.allSatisfy {
+                !$0.isHidden && $0.geometry is SCNCylinder && $0.categoryBitMask == BoardModelScene.cordCategory
+                    && validModel.holdID(for: $0) == nil
+            })
+        }
+
+        let invalidModel = try XCTUnwrap(BoardModelScene(
+            source: source(), descriptor: descriptor, display: display(),
+            suspension: .pairedLeadCord(suspension(right: [1.01, -0.5, 0]))
+        ))
+        XCTAssertFalse(invalidModel.select(positionID: "primary"))
+        XCTAssertTrue(invalidModel.isUnavailable)
+        XCTAssertNil(invalidModel.transientCordNode)
+    }
+
+    func testFlashBoardCordCenterlinesAreTautAcrossEveryCanonicalPose() async throws {
+        let (_, media, model) = try await loadMigratedModel("tension.flash-board")
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+
+        for (positionID, pose) in suspension.canonicalPoses.sorted(by: { $0.key < $1.key }) {
+            let solved = try BoardModelScene.solveSuspension(
+                pose: pose,
+                suspension: .twoBranchCord(suspension),
+                bounds: media.descriptor.modelBounds
+            )
+            guard case .twoBranch(let presentation) = solved else {
+                return XCTFail("Flash \(positionID) must solve as two branches")
+            }
+            let passagesByID = Dictionary(uniqueKeysWithValues: (suspension.passages.left + suspension.passages.right).map {
+                ($0.id, $0)
+            })
+            XCTAssertTrue(model.select(positionID: positionID), "Flash \(positionID) must render its solved presentation")
+            assertRenderedCordSegments(
+                model.transientCordNode,
+                paths: presentation.branches.map(\.centerlineSamples),
+                label: "Flash \(positionID)"
+            )
+            for branch in presentation.branches {
+                XCTAssertEqual(branch.spans.count, 3, "\(positionID)/\(branch.id)")
+                let authoredBranch = try XCTUnwrap(suspension.branches.first { $0.id == branch.id })
+                let firstPassage = try XCTUnwrap(passagesByID[authoredBranch.passageIDs[0]])
+                let secondPassage = try XCTUnwrap(passagesByID[authoredBranch.passageIDs[1]])
+                func transformed(_ point: [Double]) -> SIMD3<Float> {
+                    let modelPoint = SIMD3<Float>(
+                        Float(point[0]), Float(point[1]), Float(point[2])
+                    )
+                    let worldPoint = presentation.boardTransform * SIMD4(modelPoint, 1)
+                    return SIMD3(worldPoint.x, worldPoint.y, worldPoint.z)
+                }
+                let expectedRoute = authoredBranch.entryContactPoints.map(transformed)
+                    + [transformed(firstPassage.entryPointInModel), transformed(firstPassage.exitPointInModel)]
+                    + authoredBranch.exteriorContactPoints.map(transformed)
+                    + [transformed(secondPassage.exitPointInModel), transformed(secondPassage.entryPointInModel)]
+                    + authoredBranch.exitContactPoints.map(transformed)
+                XCTAssertEqual(
+                    branch.spans[1],
+                    expectedRoute,
+                    "Flash \(positionID)/\(branch.id) must preserve authored route points in order"
+                )
+                assertStraightSamples(
+                    branch.spans[0],
+                    label: "Flash \(positionID)/\(branch.id) incoming free span"
+                )
+                assertStraightSamples(
+                    branch.spans[2],
+                    label: "Flash \(positionID)/\(branch.id) outgoing free span"
+                )
+                for (index, pair) in zip(branch.spans[1], branch.spans[1].dropFirst()).enumerated() {
+                    XCTAssertGreaterThan(
+                        simd_length(pair.1 - pair.0),
+                        1e-7,
+                        "Flash \(positionID)/\(branch.id) authored route segment \(index)"
+                    )
+                }
+                let declaredLength = suspension.branches.first { $0.id == branch.id }!.restLength
+                XCTAssertLessThanOrEqual(
+                    branch.arcLength,
+                    Float(declaredLength) + SuspendedCordSolver.tautTolerance,
+                    "Flash \(positionID)/\(branch.id) exceeds declared cord length"
+                )
+            }
+        }
+    }
+
+    private func assertRenderedCordSegments(
+        _ cord: SCNNode?,
+        paths: [[SIMD3<Float>]],
+        label: String
+    ) {
+        guard let cord else {
+            return XCTFail("\(label) must have rendered cord geometry")
+        }
+        for (branchIndex, path) in paths.enumerated() {
+            let segments = cord.childNodes
+                .filter { $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true }
+                .sorted { segmentIndex($0) < segmentIndex($1) }
+            XCTAssertEqual(
+                segments.count,
+                max(path.count - 1, 0),
+                "\(label) branch \(branchIndex) must render one segment per consecutive centerline pair"
+            )
+            for (index, pair) in zip(path, path.dropFirst()).enumerated() {
+                guard index < segments.count,
+                      let cylinder = segments[index].geometry as? SCNCylinder else {
+                    XCTFail("\(label) branch \(branchIndex) segment \(index) must be a cylinder")
+                    continue
+                }
+                let start = pair.0
+                let end = pair.1
+                let direction = end - start
+                let length = simd_length(direction)
+                XCTAssertEqual(
+                    Float(cylinder.height),
+                    length,
+                    accuracy: 1e-5,
+                    "\(label) branch \(branchIndex) segment \(index) height must equal its direct span"
+                )
+                XCTAssertEqual(
+                    segments[index].simdPosition,
+                    (start + end) / 2,
+                    "\(label) branch \(branchIndex) segment \(index) must be centered on its direct span"
+                )
+                if length > 1e-7 {
+                    let axis = segments[index].simdOrientation.act(SIMD3<Float>(0, 1, 0))
+                    XCTAssertLessThan(
+                        simd_length(axis - direction / length),
+                        1e-5,
+                        "\(label) branch \(branchIndex) segment \(index) must point along its direct span"
+                    )
+                }
+            }
+        }
+    }
+
+    private func segmentIndex(_ node: SCNNode) -> Int {
+        Int(node.name?.split(separator: ".").last ?? "") ?? -1
+    }
+
+    func testFlashBoardCanonicalCameraFacesSelectedSurfaceAcrossEveryPose() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash must declare its two-branch canonical poses")
+        }
+        XCTAssertEqual(suspension.canonicalPoses.count, 4)
+        for (positionID, pose) in suspension.canonicalPoses {
+            let solved = try BoardModelScene.solveSuspension(
+                pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
+            )
+            // The verified source faces are +Z (three-edge) and -Z (two-edge).
+            // The authored X/Y half-turns bring the two-edge face toward +Z;
+            // the three-edge Z half-turn preserves +Z. All four posed faces
+            // therefore require a camera looking toward -Z in world space.
+            XCTAssertLessThan(
+                simd_length(solved.cameraFraming.direction - SIMD3<Float>(0, 0, -1)),
+                1e-5,
+                "\(positionID) camera must face the selected physical surface"
+            )
+        }
+    }
+
+    func testFlashBoardCameraBasisIsFiniteOrthonormalAndRightHanded() async throws {
+        let (_, media, model) = try await loadMigratedModel("tension.flash-board")
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Flash Board must load the approved twoBranchCord suspension")
+        }
+        let pose = try XCTUnwrap(suspension.canonicalPoses["two-edge-upright"])
+        let solved = try BoardModelScene.solveSuspension(
+            pose: pose,
+            suspension: .twoBranchCord(suspension),
+            bounds: media.descriptor.modelBounds
+        )
+        let framing = solved.cameraFraming
+
+        XCTAssertTrue(model.select(positionID: "two-edge-upright"))
+        SCNTransaction.flush()
+        assertCameraBasis(
+            model.camera,
+            expectedFront: framing.direction,
+            expectedUp: framing.up,
+            expectedRight: framing.right,
+            label: "two-edge canonical"
+        )
+
+        let azimuth: Float = 0.3
+        let elevation: Float = -0.2
+        let zoomScale: Float = 1.2
+        model.orbit(azimuth: azimuth, elevation: elevation, zoomScale: zoomScale)
+        SCNTransaction.flush()
+
+        let baseOffset = -framing.direction * framing.distance
+        let yaw = simd_quatf(angle: azimuth, axis: SIMD3<Float>(0, 1, 0))
+        let pitch = simd_quatf(angle: elevation, axis: framing.right)
+        let offset = (pitch * yaw).act(baseOffset)
+        let expectedPosition = framing.target + simd_normalize(offset) * (framing.distance / zoomScale)
+        let expectedFront = simd_normalize(framing.target - expectedPosition)
+        let expectedRight = simd_normalize(simd_cross(expectedFront, framing.up))
+        let expectedUp = simd_cross(expectedRight, expectedFront)
+        assertCameraBasis(
+            model.camera,
+            expectedFront: expectedFront,
+            expectedUp: expectedUp,
+            expectedRight: expectedRight,
+            label: "two-edge orbit"
+        )
+    }
+
+    func testCameraOrientationRejectsDegenerateBasisWithoutMovingCamera() async throws {
+        let (_, _, model) = try await loadMigratedModel("tension.flash-board")
+        XCTAssertTrue(model.select(positionID: "two-edge-upright"))
+        SCNTransaction.flush()
+
+        let originalPosition = model.camera.simdPosition
+        let originalTransform = model.camera.simdTransform
+        let originalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        let degenerateTarget = originalPosition + SIMD3<Float>(0, 1, 0)
+
+        XCTAssertFalse(model.orientCamera(at: degenerateTarget, up: SIMD3<Float>(0, 1, 0)))
+        XCTAssertEqual(model.camera.simdPosition, originalPosition)
+        XCTAssertEqual(model.camera.simdTransform, originalTransform)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, originalScale)
+
+        XCTAssertFalse(model.orientCamera(
+            at: originalPosition + SIMD3<Float>(0, 0, -1),
+            up: SIMD3<Float>(.nan, 1, 0)
+        ))
+        XCTAssertEqual(model.camera.simdPosition, originalPosition)
+        XCTAssertEqual(model.camera.simdTransform, originalTransform)
+    }
+
+    func testFrameRejectsInvalidSizesWithoutChangingCameraOrCanonicalSelection() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ],
+            minimum: [0, 0, 0],
+            maximum: [4, 2, 1]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: [
+                "front": SIMD4<Double>(0, 0, 0, 1),
+                "reverse": SIMD4<Double>(0, 1, 0, 0)
+            ]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front", "reverse"]
+        ))
+
+        let validSize = CGSize(width: 386, height: 100)
+        model.frame(in: validSize)
+        XCTAssertTrue(model.select(positionID: "front"))
+        let originalPosition = model.camera.simdPosition
+        let originalTransform = model.camera.simdTransform
+        let originalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+
+        for invalidSize in [
+            CGSize(width: CGFloat.nan, height: 100),
+            CGSize(width: 100, height: CGFloat.infinity),
+            CGSize(width: 0, height: 100),
+            CGSize(width: 100, height: 0),
+            CGSize(width: -1, height: 100),
+            CGSize(width: 100, height: -1)
+        ] {
+            model.frame(in: invalidSize)
+            XCTAssertEqual(model.camera.simdPosition, originalPosition, invalidSize.debugDescription)
+            XCTAssertEqual(model.camera.simdTransform, originalTransform, invalidSize.debugDescription)
+            XCTAssertEqual(model.camera.camera?.orthographicScale, originalScale, invalidSize.debugDescription)
+        }
+
+        XCTAssertTrue(model.select(positionID: "reverse"))
+        let expected = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front", "reverse"]
+        ))
+        expected.frame(in: validSize)
+        XCTAssertTrue(expected.select(positionID: "front"))
+        XCTAssertTrue(expected.select(positionID: "reverse"))
+
+        XCTAssertEqual(model.camera.simdPosition, expected.camera.simdPosition)
+        XCTAssertEqual(model.camera.simdTransform, expected.camera.simdTransform)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, expected.camera.camera?.orthographicScale)
+    }
+
+    func testOrbitRejectsInvalidInputsWithoutChangingCameraOrNextValidOrbit() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, holdID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            ]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: ["front": SIMD4<Double>(0, 0, 0, 1)]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front"]
+        ))
+        model.frame(in: CGSize(width: 386, height: 100))
+        XCTAssertTrue(model.select(positionID: "front"))
+
+        let originalPosition = model.camera.simdPosition
+        let originalTransform = model.camera.simdTransform
+        let originalScale = try XCTUnwrap(model.camera.camera?.orthographicScale)
+        let invalidInputs: [(Float, Float, Float)] = [
+            (.nan, 0, 1),
+            (0, .infinity, 1),
+            (0, 0, 0),
+            (0, 0, -1)
+        ]
+        for (azimuth, elevation, zoomScale) in invalidInputs {
+            model.orbit(azimuth: azimuth, elevation: elevation, zoomScale: zoomScale)
+            XCTAssertEqual(model.camera.simdPosition, originalPosition)
+            XCTAssertEqual(model.camera.simdTransform, originalTransform)
+            XCTAssertEqual(model.camera.camera?.orthographicScale, originalScale)
+        }
+
+        let validOrbit = (azimuth: Float(0.3), elevation: Float(-0.2), zoomScale: Float(1.2))
+        model.orbit(
+            azimuth: validOrbit.azimuth,
+            elevation: validOrbit.elevation,
+            zoomScale: validOrbit.zoomScale
+        )
+
+        let expected = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front"]
+        ))
+        expected.frame(in: CGSize(width: 386, height: 100))
+        XCTAssertTrue(expected.select(positionID: "front"))
+        expected.orbit(
+            azimuth: validOrbit.azimuth,
+            elevation: validOrbit.elevation,
+            zoomScale: validOrbit.zoomScale
+        )
+
+        XCTAssertEqual(model.camera.simdPosition, expected.camera.simdPosition)
+        XCTAssertEqual(model.camera.simdTransform, expected.camera.simdTransform)
+        XCTAssertEqual(model.camera.camera?.orthographicScale, expected.camera.camera?.orthographicScale)
+    }
+
+    func testFlashBoardTwoEdgeSceneProjectsOrbitsAndRendersEachComponentSeparately() async throws {
+        let (_, _, model) = try await loadMigratedModel("tension.flash-board")
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
+        view.backgroundColor = .white
+        view.isOpaque = true
+        view.rendersContinuously = false
+        view.isPlaying = false
+        view.display(model)
+        view.scene = model.scene
+        view.scene?.background.contents = UIColor.white
+        view.pointOfView = model.camera
+
+        func projectedCorners(for node: SCNNode) -> [SCNVector3] {
+            let bounds = node.boundingBox
+            let corners = [bounds.min.x, bounds.max.x].flatMap { x in
+                [bounds.min.y, bounds.max.y].flatMap { y in
+                    [bounds.min.z, bounds.max.z].map { z in SCNVector3(x, y, z) }
+                }
+            }
+            return corners.map { view.projectPoint(node.convertPosition($0, to: nil)) }
+        }
+
+        func assertProjected(_ nodes: [SCNNode], _ label: String) {
+            let points = nodes.flatMap(projectedCorners)
+            XCTAssertFalse(points.isEmpty, "\(label) must have projected geometry")
+            let visible = points.filter { point in
+                point.x >= 0 && point.x <= Float(view.bounds.width) &&
+                point.y >= 0 && point.y <= Float(view.bounds.height) &&
+                point.z >= 0 && point.z <= 1
+            }
+            let xValues = points.map(\.x)
+            let yValues = points.map(\.y)
+            let zValues = points.map(\.z)
+            XCTAssertFalse(
+                visible.isEmpty,
+                "\(label) must intersect the viewport with visible depth; " +
+                "x=\(xValues.min() ?? .nan)...\(xValues.max() ?? .nan), " +
+                "y=\(yValues.min() ?? .nan)...\(yValues.max() ?? .nan), " +
+                "z=\(zValues.min() ?? .nan)...\(zValues.max() ?? .nan), " +
+                "cameraPosition=\(model.camera.position), cameraFront=\(model.camera.simdWorldFront)"
+            )
+        }
+
+        func assertProjectedPresentation(_ positionID: String, _ label: String, orbit: Bool = false) throws {
+            view.positionID = positionID
+            view.selectPositionIfNeeded()
+            SCNTransaction.flush()
+
+            if orbit {
+                model.orbit(azimuth: 0.3, elevation: -0.2, zoomScale: 1.2)
+                SCNTransaction.flush()
+            }
+
+            assertProjected(model.geometryNodes, "\(label) board")
+            guard let cord = model.transientCordNode else {
+                XCTFail("\(label) must create a cord node")
+                return
+            }
+            for branchIndex in 0..<2 {
+                let segments = cord.childNodes.filter {
+                    $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+                }
+                XCTAssertFalse(segments.isEmpty, "\(label) branch \(branchIndex) must contain cord geometry")
+                assertProjected(segments, "\(label) cord branch \(branchIndex)")
+            }
+
+            func capture(_ label: String, only predicate: (SCNNode) -> Bool) throws -> CGImage {
+                let nodes = model.geometryNodes + [cord] + cord.childNodes
+                let visibility = nodes.map { ($0, $0.isHidden) }
+                defer {
+                    for (node, isHidden) in visibility {
+                        node.isHidden = isHidden
+                    }
+                }
+                for node in nodes {
+                    node.isHidden = !predicate(node)
+                }
+                SCNTransaction.flush()
+                view.layoutIfNeeded()
+                guard let image = view.snapshot().cgImage else {
+                    throw XCTSkip("\(label) snapshot did not produce a CGImage")
+                }
+                XCTAssertTrue(
+                    hasNonBackgroundPixels(image),
+                    "\(label) isolated snapshot must contain rendered pixels"
+                )
+                return image
+            }
+
+            _ = try capture("\(label) board", only: { node in
+                model.geometryNodes.contains { $0 === node }
+            })
+            for branchIndex in 0..<2 {
+                _ = try capture("\(label) cord branch \(branchIndex)", only: { node in
+                    node === cord || node.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
+                })
+            }
+        }
+
+        try assertProjectedPresentation("three-edge-upright", "three-edge control")
+        try assertProjectedPresentation("two-edge-upright", "two-edge", orbit: true)
+    }
+
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
@@ -345,21 +974,20 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board, presentationID: presentation.id))
     }
 
-    // The package has two observed external cord-port mouths, but its source
-    // does not establish the hidden route, cord dimensions, anchor, or poses.
-    // Keep that unsupported suspension contract explicitly unavailable instead
-    // of inventing enough inputs to invoke Task 1's deterministic solver.
-    func testNatureStoneHangerLeavesUnsupportedSuspensionRoutingUnavailable() throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
-        guard case .model(let media) = board.defaultPresentation.media else {
+    func testNatureStoneHangerUsesApprovedPairedLeadSuspension() async throws {
+        let (loadedBoard, media, model) = try await loadMigratedModel("nature.stone-hanger")
+        guard case .model = loadedBoard.defaultPresentation.media else {
             return XCTFail("Nature Stone Hanger must route through model media")
         }
 
-        XCTAssertNil(media.suspension)
-        XCTAssertFalse(BoardModelSurface.permitsContactSelection(
-            for: .unavailable,
-            onContactTap: { _ in XCTFail("unavailable routing must not select a contact") }
-        ))
+        guard case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("Nature Stone Hanger must load the approved pairedLeadCord suspension")
+        }
+        XCTAssertEqual(suspension.attachments.count, 2)
+        XCTAssertTrue(model.select(positionID: "front"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertFalse(model.isTransientCordAccessible)
+        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
     }
 
     func testNatureStoneHangerHighlightsNativeContactMaterialsAndClearsThem() async throws {
@@ -781,6 +1409,29 @@ final class BoardModelTests: XCTestCase {
             .init(nodeID: "left", role: .contact, contactID: "left")
         ])
         XCTAssertNil(BoardModelScene(source: source, descriptor: mismatched, display: display()))
+    }
+
+    func testPairedLeadSceneBindingAllowsDistinctPointsOnOneBodyNode() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Body", role: .body, holdID: nil),
+            .init(nodeID: "Hold", role: .hold, holdID: "hold")
+        ])
+        let suspension = BoardModelPairedLeadCord(
+            attachments: [
+                .init(id: "left", nodeID: "Body", pointInModel: [0.2, 0.4, 0.1], provenance: "test"),
+                .init(id: "right", nodeID: "Body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")
+            ],
+            anchor: .init(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+            cord: .init(restLength: 2, radius: 0.01, material: "test", provenance: "test"),
+            canonicalPoses: ["primary": BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0], camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1))]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Body", "Hold"]), descriptor: descriptor, display: display(), suspension: .pairedLeadCord(suspension)
+        ))
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
     }
 
     // This catches a renderer that silently renders nodes the descriptor did

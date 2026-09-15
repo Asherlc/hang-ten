@@ -1211,6 +1211,8 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "contactGeometry" not in media
+    assert "suspension" not in media
+    assert "holdGeometry" not in media
     assert {path.relative_to(YY_BAGUETTE_EVO_ROOT).as_posix()
             for path in YY_BAGUETTE_EVO_ROOT.rglob("*") if path.is_file()} == {
         "board.json", "assets/primary.usdz", "assets/primary.model.json",

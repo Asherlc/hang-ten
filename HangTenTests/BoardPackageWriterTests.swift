@@ -237,6 +237,32 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(document.geometry(forContactID: "hold-one")?[0], replacement)
     }
 
+    func testReplacingGeometryDoesNotMutateADerivedDefaultRasterPresentation() throws {
+        var document = makeDocument()
+        document.presentations[0].derivation = .derived(
+            sourcePresentationID: "source",
+            isInverted: false
+        )
+        guard case .raster(_, let originalGeometry) = document.presentations[0].media else {
+            return XCTFail("fixture must use raster media")
+        }
+        XCTAssertEqual(document.geometry(forContactID: "hold-one"), originalGeometry["hold-one"])
+
+        var replacement = makePiece()
+        replacement.frame = BoardPackageFrameDocument(
+            x: 0.7,
+            y: 0.2,
+            width: 0.2,
+            height: 0.3
+        )
+        document.replaceGeometry(forContactID: "hold-one", with: [replacement])
+
+        guard case .raster(_, let geometry) = document.presentations[0].media else {
+            return XCTFail("expected raster media")
+        }
+        XCTAssertEqual(geometry, originalGeometry)
+    }
+
     func testWriterRejectsGeometryForUnknownContact() throws {
         var document = makeDocument()
         guard case .raster(let assetPath, var geometry) = document.presentations[0].media else {

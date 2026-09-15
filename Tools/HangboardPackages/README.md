@@ -36,6 +36,66 @@ scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
 scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight
+```
+
+`validate` and `status` print the discovered complete packages and draft paths;
+`audit-metadata` prints its coverage report. Add `--final-inventory` to reject
+any primary-only draft:
+
+```sh
+scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+```
+
+`audit-metadata` requires a complete final package inventory, cross-checks a
+source-audited ledger against its hold metadata, and prints a sorted coverage
+report. Like the other package commands, it is source-only and read-only: it
+does not alter packages or the ledger.
+
+`audit-cords` requires one closed record for every discovered model package.
+Each evidence entry must retain `exactRevisionID`, a controlled `sourceTier`,
+`snapshotSHA256`, and a relative `snapshotPath` to a retained source response
+or media file. Snapshot paths and SHA-256 values must be distinct for every
+distinct evidence view in a represented record; markdown audit ledgers are
+rejected as snapshots. A conservative excluded record may carry an empty
+evidence array when its source artifact could not be retained, but it must
+have no package suspension. Every record must also contain an explicit
+approved `humanApproval` object with reviewer, date, and notes. Incomplete
+provenance or approval is rejected before topology coverage is checked.
+Baguette Evo is recorded as excluded unless primary evidence proves that a
+rope or bungee is supplied or integral.
+
+Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
+must have one outcome for each supported metadata field. Boards in the
+disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`
+outcome for every hold and may not have records for unrelated fields. This
+supplemental scope records a complete sloper audit without claiming that the
+board's other metadata fields have been source-audited.
+
+`audit-presentations` requires a complete final inventory and cross-checks the
+closed remediation manifest against every declared presentation's package ID,
+asset path, PNG hash, and dimensions. It prints a sorted decision report. A
+repeatable `--package-id BOARD_ID` selects a validation lane for required
+presentation coverage and report counts; the manifest's root `packageIDs` must
+still cover the entire inventory, and every record it does contain is still
+fully validated against real package assets.
+
+Use `--final-validation` only for the completed Phase 1 ledger. It rejects lane
+selection and requires all four root `phase1Checks` entries to be
+`passed` with their exact non-empty commands; omit it for skeleton and
+intermediate-lane validation while those checks are still pending.
+
+Schema 2 uses three mutually exclusive lifecycle modes:
+
+```sh
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-partial --batch-id nonwood-fixed
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
   --phase2-final
 ```
 
