@@ -7,16 +7,17 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 14 discovered model packages. Four have a source-backed
-supplied/integral cord and render a transient cord presentation; ten are
-excluded because their reviewed product evidence does not establish a supplied
-or integral cord. Baguette Evo is excluded: YY Vertical's primary evidence
-establishes optional rope or bungee use, not an included or integral cord.
+The audit covers all 14 discovered model packages. Eight have documented
+suspended presentation evidence and render transient cord geometry; six remain
+excluded because their reviewed product evidence does not establish a
+suspended presentation. Optional user-provided rope or bungee is sufficient
+for documented suspended presentation, but it is never described as supplied
+or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 4 | `tension.flash-board`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger` |
-| `excluded` | 10 | Beastmaker 1000/2000; Captain Fingerfood DUAL/POCKET/UNLEVEL; Lattice Triple Rung; Metolius Prime Rib/Project/Wood Grips Compact II; YY Vertical Baguette Evo |
+| `represented` | 8 | `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `excluded` | 6 | Beastmaker 1000/2000; Lattice Triple Rung; Metolius Prime Rib/Project/Wood Grips Compact II |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
@@ -27,8 +28,10 @@ was available. Every retained evidence entry records its exact revision ID,
 source tier, source URL, and the SHA-256/path of its own downloaded artifact.
 The validator rejects reuse of one artifact for two distinct represented views
 and rejects markdown audit ledgers as source snapshots. When a cited source
-could not be retained, the record has an empty evidence array and the board is
-conservatively excluded; no suspension metadata is promoted on that basis.
+cannot be retained, the record remains blocked from representation until the
+evidence is retained; it is not silently treated as proof that a documented
+optional suspension does not exist. A package with documented suspension
+metadata cannot receive an `excluded` decision.
 Every record also carries an explicit `humanApproval` object; the validator
 rejects missing or incomplete provenance and approvals.
 
@@ -41,16 +44,32 @@ rejects missing or incomplete provenance and approvals.
   passage pairs, and four canonical positions. Existing suspension metadata and
   descriptor hashes were preserved byte-for-byte.
 
-### YY Vertical Baguette Evo — excluded
+### Captain Fingerfood DUAL, POCKET Lines, and UNLEVEL — `pairedLeadCord`
+
+- Current DUAL, POCKET Lines, and UNLEVEL manufacturer product pages publish
+  total rope length (1 m for DUAL and UNLEVEL; 1 m for POCKET Lines).
+- The retained title images show the two external cord holes for each exact
+  revision. The source pages and images establish the external mouths but do
+  not establish the complete hidden interior route.
+- Each package therefore binds two distinct points on its existing importer
+  visible body node and renders two independent leads from one invisible
+  anchor. No internal rope route, knot, hardware, or safety claim is made.
+- Attachment coordinates, anchor offsets, cord radius, and pose camera values
+  are explicitly display estimates. Existing hold IDs, positions, model bytes,
+  descriptor bytes, and orientation values are unchanged.
+
+### YY Vertical Baguette Evo — `twoBranchCord`
 
 - Exact-revision manufacturer view: [manufacturer English listing](https://www.yyvertical.com/en/products/baguette-evo), retained as `yy-baguette.html`.
-- The EU and fragment-only variants were not retained as separate artifacts. Primary evidence establishes only optional use with rope or bungee; it does not establish that either accessory is supplied or integral.
+- Exact-revision manufacturer product image: [Baguette Evo product image](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_02_FG.webp?v=1751469206), retained as `yy-baguette-evo-image.webp`.
 - The current **Baguette Evo, Turn & Pull version**, SKU `YY BAGUETTE EVO`,
-  EAN `3760305271822`, is the retained revision. Primary evidence establishes
-  only optional use with rope or bungee; it does not establish that either is
-  supplied or integral.
-- The package retains its model, holds, positions, orientation, and descriptor
-  unchanged, but has no `media.suspension` and renders no cord.
+  EAN `3760305271822`, is the retained revision. Primary evidence explicitly
+  supports suspended use with rope or bungee; this is represented as a
+  documented presentation and does not claim either accessory is supplied.
+- The prior source-reviewed `twoBranchCord` metadata is restored with its
+  four ordered through-bores, two branches, invisible anchor, and all five
+  canonical poses. All route, anchor, radius, and pose values marked
+  `displayEstimate` remain presentation estimates.
 
 ### Lattice MXEdge Lift Large and Small — `pairedLeadCord`
 
@@ -132,8 +151,11 @@ remained unavailable. Parser preservation and pose-mouth solving passed (five
 focused tests). The full suspension solver class plus existing Flash/native
 and synthetic paired-lead regressions passed (43 tests). The shared malformed
 parser matrix passed after registering the four new fixture names. Python
-model/parser/audit suites passed 147 tests, with 63 packages valid and the cord
-audit retaining 4 represented / 10 excluded.
+model/parser/audit validation was rerun after this correction: all 63 packages
+remain valid and the cord audit now retains 8 represented / 6 excluded. The
+focused Python test command remains unavailable in this checkout because the
+`pytest` module is not installed; the equivalent package validation, JSON
+parsing, audit, and bytecode checks passed.
 
 Actual DEBUG app detail screens were launched with
 `HANGTEN_REVIEW_BOARD_DETAIL=1` and each `HANGTEN_REVIEW_BOARD_ID`. The four
@@ -153,7 +175,10 @@ was baked into a USDZ.
 | Package | Topology | Attachment/passage binding | USDZ `modelSHA256` | Descriptor file SHA-256 |
 |---|---|---|---|---|
 | `tension.flash-board` | `twoBranchCord` (existing) | Existing four ordered passages on `flash_board_body_008` | `4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524` | `fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c` |
-| `yy.baguette-evo` (excluded) | none | No cord metadata; optional rope/bungee is not promoted | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
+| `captain-fingerfood.dual` | `pairedLeadCord` | Two distinct external cord holes on `DUAL_skin_body_001`; interior route omitted | unchanged | unchanged |
+| `captain-fingerfood.pocket` | `pairedLeadCord` | Two distinct external cord holes on `body_skin_001`; interior route omitted | unchanged | unchanged |
+| `captain-fingerfood.unlevel` | `pairedLeadCord` | Two distinct external cord holes on `Body_EditableSkin_001`; interior route omitted | unchanged | unchanged |
+| `yy.baguette-evo` | `twoBranchCord` | Four ordered through-bores on `body_mesh_001` | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
 | `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `ed755fce098c3471e8ad8070c58f1fa8092954c560f7b0ecc38a084749e3b16` |
 | `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `f619520ff5493ad4df26154e69cb1cac2998b7ae0bfb1332551d6199fd991419` |
 | `nature.stone-hanger` | `pairedLeadCord` | Two distinct upper-corner mouths on `body_oak_mesh_001` | `177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1` | `a35adb07928a69ea7a39d5756f1cbbeebcbd2964b4ae613f3cd088552c7432d9` |
@@ -174,7 +199,7 @@ PYTHONPATH=Tools/HangboardPackages/src Tools/HangboardPackages/.venv/bin/python 
 Result:
 
 ```json
-{"decisions":{"excluded":10,"represented":4},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.prime-rib","metolius.project","metolius.wood-grips-compact-ii","nature.stone-hanger","tension.flash-board","yy.baguette-evo"]}
+{"decisions":{"excluded":6,"represented":8},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.prime-rib","metolius.project","metolius.wood-grips-compact-ii","nature.stone-hanger","tension.flash-board","yy.baguette-evo"]}
 ```
 
 `python3 -m json.tool` passed for all four edited board packages and
@@ -189,7 +214,7 @@ environment.
 
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli validate --root Hangboards --final-inventory` passed: 63 complete boards, zero drafts.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli status --root Hangboards` passed with the same complete inventory.
-- `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed: 14 model packages, 4 represented, 10 excluded.
+- `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed: 14 model packages, 8 represented, 6 excluded.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m compileall -q Tools/HangboardPackages/src` passed, and `git diff --check` passed.
 - `python3 -m pytest Tools/HangboardPackages/tests -q` was unavailable because pytest is not installed. The repository wrapper could not bootstrap its virtual environment because restricted networking could not resolve the package index (`setuptools>=84.0.0`).
 - `xcodebuild build-for-testing ...` was blocked before compilation: CoreSimulatorService was unavailable and uncached Swift packages could not be cloned because `github.com` could not resolve. The focused and full XCTest suites therefore could not run in this environment.

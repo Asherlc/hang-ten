@@ -22,6 +22,33 @@ from hangboard_packages.cord_audit import (
 )
 
 
+def test_current_four_documented_suspension_packages_are_represented() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = cli.discover_board_packages(
+        repository_root / "Hangboards", require_complete_inventory=True
+    )
+    manifest = load_cord_audit_manifest(
+        repository_root
+        / "docs/source-audits/2026-09-13-model-hangboard-cord-audit.json"
+    )
+
+    report = validate_cord_audit_manifest(manifest, inventory)
+    records = {record.package_id: record for record in manifest.records}
+
+    expected_topologies = {
+        "captain-fingerfood.dual": "pairedLeadCord",
+        "captain-fingerfood.pocket": "pairedLeadCord",
+        "captain-fingerfood.unlevel": "pairedLeadCord",
+        "yy.baguette-evo": "twoBranchCord",
+    }
+    assert {
+        package_id: records[package_id].topology
+        for package_id in expected_topologies
+    } == expected_topologies
+    assert all(records[package_id].decision == "represented" for package_id in expected_topologies)
+    assert report.decisions == {"excluded": 6, "represented": 8}
+
+
 def _model_package(package_id: str, *, suspension: object | None = None) -> BoardPackage:
     media = PresentationMediaModel(
         "assets/primary.usdz", "assets/primary.model.json", {}, suspension

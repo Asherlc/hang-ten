@@ -47,41 +47,92 @@
     },
     {
       "packageID": "captain-fingerfood.dual",
-      "decision": "excluded",
-      "topology": null,
-      "ruling": "The Captain Fingerfood DUAL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord; no retained source artifact was available, so the board remains conservatively excluded.",
-      "evidence": [],
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "The current DUAL product page publishes a total rope length of 1 m and the retained title image shows the two external cord holes; the interior route is not reconstructed.",
+      "evidence": [
+        {
+          "view": "exact-revision product",
+          "url": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+          "exactRevisionID": "captain-fingerfood-dual-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c93df995f581f2a731e45f38a8504744ee393059d7a714019dc679b702e3ffb2",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-dual.html"
+        },
+        {
+          "view": "exact-revision title image",
+          "url": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/DualTitelbild.jpg?v=1739704755",
+          "exactRevisionID": "captain-fingerfood-dual-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "f57fb751f63c5258e8cb85a9d0f0ad27f6b9cb5eede94b5e1caccc496ec9468e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-dual-title.jpg"
+        }
+      ],
       "humanApproval": {
         "approved": true,
         "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-13",
-        "notes": "No retained source artifact was available; conservative exclusion approved."
+        "reviewedAt": "2026-09-14",
+        "notes": "Reviewed the current exact-revision product page and title image; rope length and external-hole presentation approved for transient display."
       }
     },
     {
       "packageID": "captain-fingerfood.pocket",
-      "decision": "excluded",
-      "topology": null,
-      "ruling": "The Captain Fingerfood POCKET is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord; no retained source artifact was available, so the board remains conservatively excluded.",
-      "evidence": [],
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "The current POCKET Lines product page publishes a rope length of 1 m and the retained title image shows the two external cord holes; the interior route is not reconstructed.",
+      "evidence": [
+        {
+          "view": "exact-revision product",
+          "url": "https://en.captainfingerfood.rocks/products/lines-hangboard",
+          "exactRevisionID": "captain-fingerfood-pocket-lines-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "19e9f8947addddea373942cba845ba4226eacb3b323e05ef20bef490efb49378",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-pocket.html"
+        },
+        {
+          "view": "exact-revision title image",
+          "url": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/LinesTitelbild.jpg?v=1712656791",
+          "exactRevisionID": "captain-fingerfood-pocket-lines-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "624ad076ba3ad96e69edbb0e3ab6f60dca44551e68fea143977cf791f5bd773a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-pocket-title.jpg"
+        }
+      ],
       "humanApproval": {
         "approved": true,
         "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-13",
-        "notes": "No retained source artifact was available; conservative exclusion approved."
+        "reviewedAt": "2026-09-14",
+        "notes": "Reviewed the current exact-revision Lines product page and title image; rope length and external-hole presentation approved for transient display."
       }
     },
     {
       "packageID": "captain-fingerfood.unlevel",
-      "decision": "excluded",
-      "topology": null,
-      "ruling": "The Captain Fingerfood UNLEVEL is a fixed compact board; reviewed product evidence does not establish a supplied or integral cord; no retained source artifact was available, so the board remains conservatively excluded.",
-      "evidence": [],
+      "decision": "represented",
+      "topology": "pairedLeadCord",
+      "ruling": "The current UNLEVEL product page publishes a total rope length of 1 m and the retained title image shows the two external cord holes; the interior route is not reconstructed.",
+      "evidence": [
+        {
+          "view": "exact-revision product",
+          "url": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+          "exactRevisionID": "captain-fingerfood-unlevel-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d129f6c637beac8eca88e0b9f3a8fa5f1682b669842d0ab0cbfef448842ad31b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-unlevel.html"
+        },
+        {
+          "view": "exact-revision title image",
+          "url": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/Titelbild.jpg?v=1739704654",
+          "exactRevisionID": "captain-fingerfood-unlevel-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7eb711b6b28284a86835b7a460559f5ec80f9816bc691e2823982d98e1b0d813",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-unlevel-title.jpg"
+        }
+      ],
       "humanApproval": {
         "approved": true,
         "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-13",
-        "notes": "No retained source artifact was available; conservative exclusion approved."
+        "reviewedAt": "2026-09-14",
+        "notes": "Reviewed the current exact-revision product page and title image; rope length and external-hole presentation approved for transient display."
       }
     },
     {
@@ -294,9 +345,9 @@
     },
     {
       "packageID": "yy.baguette-evo",
-      "decision": "excluded",
-      "topology": null,
-      "ruling": "Primary YY Vertical evidence establishes only optional use with rope or bungee; it does not establish that either accessory is supplied or integral, so no suspension is rendered.",
+      "decision": "represented",
+      "topology": "twoBranchCord",
+      "ruling": "The current YY Vertical Baguette Evo Turn & Pull product evidence explicitly supports suspended use with rope or bungee; the reviewed presentation is therefore represented as transient display geometry without claiming that an accessory is supplied.",
       "evidence": [
         {
           "view": "exact-revision manufacturer",
@@ -305,13 +356,21 @@
           "sourceTier": "manufacturer",
           "snapshotSHA256": "23ea747dda552429fe9bb1606e47812113ae062b0457941634a37831eeff3af1",
           "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette.html"
+        },
+        {
+          "view": "exact-revision product image",
+          "url": "https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_02_FG.webp?v=1751469206",
+          "exactRevisionID": "baguette-evo-turn-pull-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c42f96ebed2b58d1a287f5b125fd3607cc9244a651a92e2731fe4b589e80ea3e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette-evo-image.webp"
         }
       ],
       "humanApproval": {
         "approved": true,
         "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-13",
-        "notes": "Reviewed the retained exact-revision source artifacts."
+        "reviewedAt": "2026-09-14",
+        "notes": "Reviewed current exact-revision manufacturer evidence and approved documented suspended presentation; optional rope/bungee remains explicitly non-supplied metadata."
       }
     }
   ]

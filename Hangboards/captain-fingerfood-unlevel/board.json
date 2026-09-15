@@ -42,6 +42,21 @@
             "fitPadding": 0.08
           }
         },
+        "suspension": {
+          "type": "pairedLeadCord",
+          "attachments": [
+            {"id": "left-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0, -0.0075], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate aligned to the source-visible recess floor mouth; interior route omitted"},
+            {"id": "right-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0, -0.0075], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate aligned to the source-visible recess floor mouth; interior route omitted"}
+          ],
+          "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
+          "cord": {"restLength": 1.0, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; radius is displayEstimate"},
+          "canonicalPoses": {
+            "edge20-front": {"rotation": [0.207911694, 0.0, 0.0, 0.9781476], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "edge25-inverted": {"rotation": [9e-09, 0.207911694, -0.9781476, 4.3e-08], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "jug-reverse": {"rotation": [9e-09, 0.9781476, 0.207911694, 4.3e-08], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "pocket-right-end": {"rotation": [0.147015774, 0.147015759, -0.691654772, 0.691654831], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
+          }
+        },
         "orientation": {
           "pivot": "modelBoundsCenter",
           "rotations": {

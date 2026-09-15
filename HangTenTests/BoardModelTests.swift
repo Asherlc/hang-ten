@@ -356,20 +356,24 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testBaguetteEvoDoesNotRenderOptionalRopeOrBungee() async throws {
+    func testBaguetteEvoRendersDocumentedSuspendedPresentationForEveryPosition() async throws {
         let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
-        XCTAssertNil(media.suspension)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Baguette Evo must load the documented twoBranchCord suspension")
+        }
+        XCTAssertEqual(suspension.branches.count, 2)
 
         for position in board.positions {
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
             XCTAssertEqual(model.activePositionID, position.id)
-            XCTAssertNil(model.transientCordNode, position.id)
+            XCTAssertFalse(model.isTransientCordAccessible, position.id)
+            XCTAssertFalse(try XCTUnwrap(model.transientCordNode, position.id).childNodes.isEmpty, position.id)
         }
     }
 
     func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {
-        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
                 return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
@@ -398,7 +402,7 @@ final class BoardModelTests: XCTestCase {
     }
 
     func testPairedLeadModelHangboardsReserveCordAwareCanonicalCameraMargin() async throws {
-        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
                 return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")

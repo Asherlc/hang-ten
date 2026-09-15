@@ -42,6 +42,21 @@
             "fitPadding": 0.08
           }
         },
+        "suspension": {
+          "type": "pairedLeadCord",
+          "attachments": [
+            {"id": "left-lead", "nodeID": "DUAL_skin_body_001", "pointInModel": [-0.026, 0.001, -0.005], "provenance": "Captain Fingerfood DUAL title image; displayEstimate aligned to the source-visible recess floor mouth; interior route omitted"},
+            {"id": "right-lead", "nodeID": "DUAL_skin_body_001", "pointInModel": [0.026, 0.001, -0.005], "provenance": "Captain Fingerfood DUAL title image; displayEstimate aligned to the source-visible recess floor mouth; interior route omitted"}
+          ],
+          "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
+          "cord": {"restLength": 1.0, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood DUAL product page publishes total rope length 1 m; radius is displayEstimate"},
+          "canonicalPoses": {
+            "curved-lip-front": {"rotation": [0.173648148, 0.0, 0.0, 0.984807758], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "exterior-jug-back": {"rotation": [-0.984807767, 0.0, 0.0, 0.1736481], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "left-pocket-vertical": {"rotation": [0.122787789, -0.122787789, 0.696364243, 0.696364243], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "straight-lip-inverted": {"rotation": [8e-09, 0.173648148, -0.984807758, 4.3e-08], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
+          }
+        },
         "orientation": {
           "pivot": "modelBoundsCenter",
           "rotations": {
