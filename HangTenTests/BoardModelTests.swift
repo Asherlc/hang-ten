@@ -1451,25 +1451,78 @@ final class BoardModelTests: XCTestCase {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "left-body", role: .body, contactID: nil),
             .init(nodeID: "left-edge-node", role: .contact, contactID: "left-edge"),
+            .init(nodeID: "mounting-plate", role: .attachment, contactID: nil),
             .init(nodeID: "right-body", role: .body, contactID: nil),
             .init(nodeID: "right-edge-node", role: .contact, contactID: "right-edge")
         ])
         let model = try XCTUnwrap(BoardModelScene(
-            source: scene(nodes: ["left-body", "left-edge-node", "right-body", "right-edge-node"]),
+            source: scene(nodes: ["left-body", "left-edge-node", "mounting-plate", "right-body", "right-edge-node"]),
             descriptor: descriptor,
             display: display()
         ))
 
         XCTAssertEqual(model.contactNodes.keys.sorted(), ["left-edge", "right-edge"])
-        for bodyName in ["left-body", "right-body"] {
-            let body = try XCTUnwrap(model.geometryNodes.first { $0.name == bodyName })
-            XCTAssertEqual(body.categoryBitMask, 0)
-            XCTAssertNil(model.contactID(for: body))
+        for nonContactName in ["left-body", "mounting-plate", "right-body"] {
+            let nonContact = try XCTUnwrap(model.geometryNodes.first { $0.name == nonContactName })
+            XCTAssertEqual(nonContact.categoryBitMask, BoardModelScene.modelVisibleCategory)
+            XCTAssertNotEqual(nonContact.categoryBitMask, BoardModelScene.modelPickCategory)
+            XCTAssertNil(model.contactID(for: nonContact))
         }
         for contactID in ["left-edge", "right-edge"] {
             let contact = try XCTUnwrap(model.contactNodes[contactID]?.first)
             XCTAssertEqual(contact.categoryBitMask, BoardModelScene.modelPickCategory)
             XCTAssertEqual(model.contactID(for: contact), contactID)
+        }
+    }
+
+    func testModelLightsIlluminateEveryRenderedBoardCategory() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "body", role: .body, contactID: nil),
+            .init(nodeID: "hold", role: .contact, contactID: "hold"),
+            .init(nodeID: "attachment", role: .attachment, contactID: nil)
+        ])
+        let suspension = BoardModelPairedLeadCord(
+            attachments: [
+                .init(id: "left", nodeID: "body", pointInModel: [0.2, 0.4, 0.1], provenance: "test"),
+                .init(id: "right", nodeID: "body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")
+            ],
+            anchor: .init(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+            cord: .init(restLength: 2, radius: 0.01, material: "test", provenance: "test"),
+            canonicalPoses: ["primary": BoardModelCanonicalPose(
+                rotation: [0, 0, 0, 1], translation: [0, 0, 0],
+                camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1)
+            )]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["body", "hold", "attachment"]),
+            descriptor: descriptor,
+            display: display(),
+            suspension: .pairedLeadCord(suspension)
+        ))
+        XCTAssertTrue(model.select(positionID: "primary"))
+
+        var lights: [SCNLight] = []
+        model.scene.rootNode.enumerateChildNodes { node, _ in
+            if let light = node.light { lights.append(light) }
+        }
+        XCTAssertFalse(lights.isEmpty)
+        let body = try XCTUnwrap(model.geometryNodes.first { $0.name == "body" })
+        let contact = try XCTUnwrap(model.geometryNodes.first { $0.name == "hold" })
+        let attachment = try XCTUnwrap(model.geometryNodes.first { $0.name == "attachment" })
+        let cord = try XCTUnwrap(model.transientCordNode?.childNodes.first)
+        XCTAssertEqual(contact.categoryBitMask, 1)
+        XCTAssertEqual(cord.categoryBitMask, 2)
+        XCTAssertEqual(body.categoryBitMask, 4)
+        XCTAssertEqual(attachment.categoryBitMask, 4)
+        XCTAssertNotEqual(contact.categoryBitMask, cord.categoryBitMask)
+        XCTAssertNotEqual(contact.categoryBitMask, body.categoryBitMask)
+        XCTAssertNotEqual(cord.categoryBitMask, body.categoryBitMask)
+        let renderedNodes = [contact, cord, body, attachment]
+        for light in lights {
+            for node in renderedNodes {
+                XCTAssertNotEqual(light.categoryBitMask & node.categoryBitMask, 0,
+                                  "Every model light must illuminate every rendered board category")
+            }
         }
     }
 
@@ -2008,10 +2061,11 @@ final class BoardModelTests: XCTestCase {
             from: ray.from,
             to: ray.to,
             options: [
+                SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
                 SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
             ]
         )
-        XCTAssertTrue(hits.isEmpty, "\(boardID): body geometry must be nonpickable")
+        XCTAssertTrue(hits.isEmpty, "\(boardID): body geometry must not be selectable")
     }
 
     private func headOnRay(
