@@ -402,3 +402,68 @@ The explicit mapping preserves two independent body nodes; two jugs; each bilate
 | Promoted descriptor | `026573be4eb702f64d8a807e7a2685356949e381ddab73ff3e49aa486d90bda6` | Generated from importer-visible USDZ triangles and hash-binds the shipped model. |
 
 `Tools/HangboardModels/verify_trango_rock_prodigy_training_center.py` checks the exact shipped package inventory and model hash, starts with an empty Blender scene, imports the shipped USDZ, validates 26 tagged nodes (two body, 24 contact), rebuilds the descriptor from material-bearing triangulated meshes, and requires the exact 24-contact keyset plus four distinct bilateral-pinch bindings. Its retained report is `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/shipped-usdz-verification.json`. The package contains only `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; the raster asset, canonical paths, cached frames, and fallback geometry are removed.
+
+## Task 7 final validation attempt — BLOCKED by the host iOS toolchain
+
+Reviewed 2026-09-15 in workspace `lumpy-liger`. This record makes no package
+or source-fact change. The six-package final inventory and retained
+model/package suites passed, but isolated Simulator review and focused XCTest
+execution could not start because the host CoreSimulator framework is
+incompatible with Xcode. No app-code correction was made.
+
+| Command | Result |
+| --- | --- |
+| `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory` | Passed; valid final inventory, no drafts. |
+| `rtk scripts/hangboard-packages.sh status --root Hangboards` | Passed; `drafts: []`. |
+| `rtk Tools/HangboardPackages/.venv/bin/python -m pytest Tools/HangboardModels/test_contact_model_descriptor.py Tools/HangboardModels/test_contact_model_package.py Tools/HangboardModels/test_import_contact_model_source.py Tools/HangboardModels/test_verify_metolius_climbers_edge.py Tools/HangboardModels/test_verify_the_hangboard.py Tools/HangboardModels/test_verify_trango_rock_prodigy_training_center.py -q` | 12 passed. |
+| `rtk Tools/HangboardPackages/.venv/bin/python -m pytest Tools/HangboardPackages/tests/test_model_first_packages.py Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py -q` | 119 passed. |
+
+Fresh SHA-256 reads are retained in
+`.context/lumpy-liger-hangboard-collection/final-validation.json`; the passing
+model-first/package suites check that each USDZ is descriptor-bound.
+
+| Package | USDZ SHA-256 | Descriptor SHA-256 |
+| --- | --- | --- |
+| `metolius.climbers-edge` | `b17ea53a25d2050ab1424748ceab10fb7da0ba15faddcede8ec39c256b9c5fe3` | `d2805c4735239508e6bf9b3b146cc06a3f4d0ace22130e8c79013cb2716d0952` |
+| `metolius.contact` | `b944c78e1621bb0fece926e2f8d45608c2d391c6311e8557010ad153b8bcaa59` | `2ada55e49a8fe951aed6205cd0e5a206af98b1d4f684ace0ba1b4177aec9ff41` |
+| `metolius.simulator-3d` | `3372f4d2b42a967d3ca65c2d1a0f56bd7762b32f9c1a80f79897841b020fbc94` | `783e0a0e808a31d8f4d11c69c15477e6ef70c93eed2da9c195639ef014b302ee` |
+| `soill.training-tiles` | `4cb007105f5c70d57e739c884964d130f6ccf524d4c4adb974892bda4f670ebf` | `fa3e18d155a9ba3f808fef2ce9c1c4e6a076cd141f1d842440cf6dcb192395b8` |
+| `the-hangboard.the-hangboard` | `212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f` | `a106a3710d354244a73664fc95faac0db5fe9700b0b46482a4d49c2c328b36a8` |
+| `trango.rock-prodigy-training-center` | `bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d` | `026573be4eb702f64d8a807e7a2685356949e381ddab73ff3e49aa486d90bda6` |
+
+### Simulator/XCTest blocker and omissions
+
+Sandbox simulator discovery reported a disconnected `CoreSimulatorService`.
+Host-context `simctl` discovery and XcodeBuildMCP simulator listing did not
+yield a usable runtime/device. The compile-only attempt was:
+
+```sh
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath .context/DerivedData CODE_SIGNING_ALLOWED=NO build-for-testing
+```
+
+It identified the root cause: Xcode 27.0 (`27A266a`) requires CoreSimulator
+build `1171.7.0`, but macOS 26.6.2 (`25G83`) supplies `1051.55.0`.
+`DVTCoreDeviceCore` also failed to load the required
+`CoreDevice.DetailedOperation.metrics` symbol, and Xcode reported `Simulator
+device support disabled`. Build-for-testing produced a runner but no owned UUID
+existed, so focused `BoardModelTests`/`BoardPackageStoreTests` were not
+launched.
+
+No simulator was created, booted, installed, or launched; no pending/owned
+manifest record and no screenshot exists. Thus all six normal and
+selected-contact states, picking alignment, model-unavailable behavior,
+landscape review, and HealthKit permission flow remain unperformed. The
+physical-device HealthKit limitations in `docs/IOS_RUNTIME_SERVICES.md` also
+remain outside this attempt.
+
+### Cleanup
+
+The exact workspace-owned `.context/DerivedData`, raw/landscape screenshot
+paths, and temporary discovery files were removed. Archive cleanup ran with
+`PASEO_WORKTREE_PATH` set to this workspace; both owned and pending simulator
+manifests were absent afterward, as expected because creation never succeeded.
+No shared or unknown simulator was addressed. Re-run the simulator and focused
+XCTest portions after installing a CoreSimulator version compatible with Xcode
+27.0, then obtain the plan's final broad review.
