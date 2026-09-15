@@ -15,6 +15,7 @@ from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
+CONTACT_ROOT = HANGBOARDS_ROOT / "metolius-contact"
 DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
@@ -1067,6 +1068,35 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+
+
+def test_contact_is_a_bore_free_model_only_package_with_its_existing_contacts() -> None:
+    board = json.loads((CONTACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    media = board["presentations"][0]["media"]
+
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in media
+    assert {
+        path.relative_to(CONTACT_ROOT).as_posix()
+        for path in CONTACT_ROOT.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    descriptor = json.loads((CONTACT_ROOT / media["descriptorPath"]).read_text(encoding="utf-8"))
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert len(contact_ids) == 33
+    assert set(descriptor["contacts"]) == contact_ids
+    assert {
+        node["contactID"] for node in descriptor["nodes"] if node["role"] == "contact"
+    } == contact_ids
+    assert [node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"] == [
+        "body_001",
+        "bore_free_body_caps_001",
+    ]
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (CONTACT_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
 
 
 def test_compact_package_loader_preserves_identity_inventory_and_model_frames() -> None:
