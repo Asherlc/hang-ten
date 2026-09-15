@@ -1,3 +1,4 @@
+import SceneKit
 import XCTest
 @testable import HangTen
 
