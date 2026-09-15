@@ -129,7 +129,11 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(display.camera.viewDirection, [0, 0, -1])
         XCTAssertEqual(display.camera.up, [0, 1, 0])
         XCTAssertEqual(display.camera.fitPadding, 0.08)
-        XCTAssertNil(suspension)
+        guard case .pairedLeadCord(let pairedLeadCord)? = suspension else {
+            return XCTFail("expected typed pairedLeadCord suspension")
+        }
+        XCTAssertEqual(pairedLeadCord.attachments.map(\.id), ["left-lead", "right-lead"])
+        XCTAssertEqual(pairedLeadCord.cord.restLength, 0.27)
         XCTAssertEqual(orientation?.pivot, "modelBoundsCenter")
         XCTAssertEqual(
             orientation?.rotations["edge-20-front"],

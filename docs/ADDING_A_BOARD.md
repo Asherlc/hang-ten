@@ -5,6 +5,13 @@ the exact revision, record source mappings, author canonical geometry directly,
 validate the package, and visually review it. Never invent training content or
 derive a contact fact from the image or model.
 
+This document describes direct raster-board authoring. For model-media
+migration or refinement, use `migrate-hangboard-to-3d`. For a portable 3D
+board's cord, attachment, suspension audit, or suspected Apple offline/ODR
+cache issue, use `audit-3d-hangboard-suspension` and read
+[`3D_SUSPENSION_AND_ODR.md`](3D_SUSPENSION_AND_ODR.md); that model-specific
+contract supersedes the raster-only package examples below.
+
 ## 1. Establish factual evidence
 
 Collect primary manufacturer evidence for the current revision: product page,

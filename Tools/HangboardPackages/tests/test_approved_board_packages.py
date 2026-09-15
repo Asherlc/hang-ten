@@ -1210,8 +1210,15 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
+    suspension = media["suspension"]
+    assert suspension["type"] == "twoBranchCord"
+    assert len(suspension["passages"]["left"]) == 2
+    assert len(suspension["passages"]["right"]) == 2
+    assert [branch["id"] for branch in suspension["branches"]] == [
+        "left-branch",
+        "right-branch",
+    ]
     assert "contactGeometry" not in media
-    assert "suspension" not in media
     assert "holdGeometry" not in media
     assert {path.relative_to(YY_BAGUETTE_EVO_ROOT).as_posix()
             for path in YY_BAGUETTE_EVO_ROOT.rglob("*") if path.is_file()} == {

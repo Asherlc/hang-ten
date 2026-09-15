@@ -997,7 +997,7 @@
         "media": {
           "type": "model", "assetPath": "assets/primary.usdz", "descriptorPath": "assets/primary.model.json",
           "display": { "camera": { "type": "orthographic", "viewDirection": [0, 0, -1], "up": [0, 1, 0], "fitPadding": 0.08 } },
-          "suspension": {"type":"pairedLeadCord","attachments":[{"id":"left-lead","nodeID":"Body","pointInModel":[0.2,0.5,0.1],"provenance":"displayEstimate"},{"id":"right-lead","nodeID":"Body","pointInModel":[0.8,0.5,0.1],"provenance":"displayEstimate"}],"anchor":{"offsetFromBoardBounds":[0,0.4,0],"visibility":"invisible","provenance":"displayEstimate"},"cord":{"restLength":0.8,"radius":0.002,"material":"matteCord","provenance":"displayEstimate"},"canonicalPoses":{"primary":{"rotation":[0,0,0,1],"translation":[0,0,0],"camera":{"viewDirection":[0,0,-1],"fitPadding":0.1}}}}
+          "suspension": {"type":"pairedLeadCord","attachments":[{"id":"left-lead","nodeID":"Body","pointInModel":[0.2,0.5,0.1],"contactPointsInModel":[[0.2,0.5,0.05],[0.2,0.45,0.05]],"provenance":"displayEstimate"},{"id":"right-lead","nodeID":"Body","pointInModel":[0.8,0.5,0.1],"contactPointsInModel":[[0.8,0.5,0.05],[0.8,0.45,0.05]],"provenance":"displayEstimate"}],"anchor":{"offsetFromBoardBounds":[0,0.4,0],"visibility":"invisible","provenance":"displayEstimate"},"cord":{"restLength":0.8,"radius":0.002,"material":"matteCord","provenance":"displayEstimate"},"canonicalPoses":{"primary":{"rotation":[0,0,0,1],"translation":[0,0,0],"camera":{"viewDirection":[0,0,-1],"fitPadding":0.1}}}}
         }
       }],
       "positions": [{ "id": "primary", "presentationID": "primary" }],
@@ -1034,6 +1034,11 @@
       "name": "paired-pose-mouths-outside-bounds", "base": "pairedLeadCordModel",
       "pythonException": "ValueError", "pythonError": "inside model bounds", "swiftError": "invalidPackage",
       "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [-10, 0.45, 0.1], "right-lead": [0.8, 0.45, 0.1]}}]
+    },
+    {
+      "name": "paired-pose-mouth-coincident-with-default-contact", "base": "pairedLeadCordModel",
+      "pythonException": "ValueError", "pythonError": "cordContactPoints resolved route points must be distinct", "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [0.2, 0.45, 0.05], "right-lead": [0.8, 0.45, 0.1]}}]
     },
     {
       "name": "wrong-schema-version",
@@ -2787,6 +2792,38 @@
       "pythonError": "shorter than endpoint distance",
       "swiftError": "invalidPackage",
       "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0.4}]
+    },
+    {
+      "name": "paired-lead-contact-points-null",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "contactPointsInModel must be an array",
+      "swiftError": "malformedJSON",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachments", 0, "contactPointsInModel"], "value": null}]
+    },
+    {
+      "name": "paired-lead-contact-point-nonfinite",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "must be finite",
+      "swiftError": "malformedJSON",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachments", 0, "contactPointsInModel", 0], "value": [0.2, 0.5, "__raw_nonfinite_number_1e999__"]}]
+    },
+    {
+      "name": "paired-lead-contact-points-coincident",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "route points must be distinct",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "attachments", 0, "contactPointsInModel", 1], "value": [0.2, 0.5, 0.05]}]
+    },
+    {
+      "name": "paired-lead-routed-lead-too-short",
+      "base": "pairedLeadCordModel",
+      "pythonException": "ValueError",
+      "pythonError": "shorter than routed lead",
+      "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "cord", "restLength"], "value": 0.55}]
     },
     {
       "name": "paired-lead-suspension-member-order",

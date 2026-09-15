@@ -7,78 +7,60 @@
   "subtitle": "Portable rotating bar with twelve documented grip types",
   "dimensions": "52 × 5 × 5 cm",
   "aspectRatio": 2.0,
-  "equipmentObjects": [
-    {
-      "id": "primary"
-    }
-  ],
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "aspectRatio": 10.4,
-      "isDefault": true,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "model",
-        "assetPath": "assets/primary.usdz",
-        "descriptorPath": "assets/primary.model.json",
-        "display": {
-          "camera": {
-            "type": "orthographic",
-            "viewDirection": [
-              0,
-              0,
-              -1
-            ],
-            "up": [
-              0,
-              1,
-              0
-            ],
-            "fitPadding": 0.08
-          }
+  "equipmentObjects": [{"id": "primary"}],
+  "presentations": [{
+    "id": "primary",
+    "name": "Primary",
+    "aspectRatio": 10.4,
+    "isDefault": true,
+    "derivation": {"type": "original"},
+    "media": {
+      "type": "model",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "display": {"camera": {
+        "type": "orthographic",
+        "viewDirection": [0, 0, -1],
+        "up": [0, 1, 0],
+        "fitPadding": 0.08
+      }},
+      "suspension": {
+        "type": "twoBranchCord",
+        "passages": {
+          "left": [
+            {"id": "cord-passage-1", "nodeID": "body_mesh_001", "entryPointInModel": [-0.246, 0, 0.025], "exitPointInModel": [-0.246, 0, -0.025], "provenance": "YY Vertical Baguette Evo manufacturer gallery; displayEstimate; ordered left-to-right through-bore; source Z-up front -Y coordinates converted to importer Y-up front +Z as (x,z,-y)"},
+            {"id": "cord-passage-2", "nodeID": "body_mesh_001", "entryPointInModel": [-0.231, 0, 0.025], "exitPointInModel": [-0.231, 0, -0.025], "provenance": "YY Vertical Baguette Evo manufacturer gallery; displayEstimate; ordered left-to-right through-bore; source Z-up front -Y coordinates converted to importer Y-up front +Z as (x,z,-y)"}
+          ],
+          "right": [
+            {"id": "cord-passage-3", "nodeID": "body_mesh_001", "entryPointInModel": [0.231, 0, 0.025], "exitPointInModel": [0.231, 0, -0.025], "provenance": "YY Vertical Baguette Evo manufacturer gallery; displayEstimate; ordered left-to-right through-bore; source Z-up front -Y coordinates converted to importer Y-up front +Z as (x,z,-y)"},
+            {"id": "cord-passage-4", "nodeID": "body_mesh_001", "entryPointInModel": [0.246, 0, 0.025], "exitPointInModel": [0.246, 0, -0.025], "provenance": "YY Vertical Baguette Evo manufacturer gallery; displayEstimate; ordered left-to-right through-bore; source Z-up front -Y coordinates converted to importer Y-up front +Z as (x,z,-y)"}
+          ]
         },
-        "orientation": {
-          "pivot": "modelBoundsCenter",
-          "rotations": {
-            "central-20-6": [
-              0.5,
-              0,
-              0,
-              0.866025404
-            ],
-            "central-30-25": [
-              1,
-              0,
-              0,
-              0
-            ],
-            "paired-12-8-6": [
-              0.707106781,
-              0,
-              0,
-              0.707106781
-            ],
-            "paired-25-20-15-10": [
-              0,
-              0,
-              0,
-              1
-            ],
-            "rounded-tray": [
-              -0.707106781,
-              0,
-              0,
-              0.707106781
-            ]
-          }
+        "branches": [
+          {"id": "left-branch", "passageIDs": ["cord-passage-1", "cord-passage-2"], "entryContactPoints": [[-0.246, 0.032, 0.032], [-0.246, 0, 0.03]], "exteriorContactPoints": [[-0.246, 0, -0.03], [-0.231, 0, -0.03]], "exitContactPoints": [[-0.231, 0, 0.03], [-0.231, 0.032, 0.032]], "restLength": 0.945, "radius": 0.002, "material": "matteCord", "provenance": "YY Vertical Baguette Evo suspended-use gallery; displayEstimate exterior contact routes in importer Y-up coordinates, including pose cordContactPoints around the cylinder; 0.945 m is rounded capacity for the longest 0.944143 m route, with the user-approved 50% shorter anchor; four evidenced bores remain fixed"},
+          {"id": "right-branch", "passageIDs": ["cord-passage-3", "cord-passage-4"], "entryContactPoints": [[0.231, 0.032, 0.032], [0.231, 0, 0.03]], "exteriorContactPoints": [[0.231, 0, -0.03], [0.246, 0, -0.03]], "exitContactPoints": [[0.246, 0, 0.03], [0.246, 0.032, 0.032]], "restLength": 0.945, "radius": 0.002, "material": "matteCord", "provenance": "YY Vertical Baguette Evo suspended-use gallery; displayEstimate exterior contact routes in importer Y-up coordinates, including pose cordContactPoints around the cylinder; 0.945 m is rounded capacity for the longest 0.944143 m route, with the user-approved 50% shorter anchor; four evidenced bores remain fixed"}
+        ],
+        "anchor": {"offsetFromBoardBounds": [0, 0.2, 0], "visibility": "invisible", "provenance": "displayEstimate; compact invisible overhead convergence shortened 50% after user visual review"},
+        "canonicalPoses": {
+          "central-20-6": {"rotation": [0.5, 0, 0, 0.866025404], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+          "central-30-25": {"rotation": [1, 0, 0, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "cordContactPoints": {"cord-passage-1": [[-0.246, -0.032, 0.032], [-0.246, 0, 0.03]], "cord-passage-2": [[-0.231, 0, 0.03], [-0.231, -0.032, 0.032]], "cord-passage-3": [[0.231, -0.032, 0.032], [0.231, 0, 0.03]], "cord-passage-4": [[0.246, 0, 0.03], [0.246, -0.032, 0.032]]}},
+          "paired-12-8-6": {"rotation": [0.707106781, 0, 0, 0.707106781], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0.5, -0.866025404], "fitPadding": 0.1}, "cordContactPoints": {"cord-passage-1": [[-0.246, 0.032, -0.032], [-0.246, 0.032, 0.032], [-0.246, 0, 0.03]], "cord-passage-2": [[-0.231, 0, 0.03], [-0.231, 0.032, 0.032], [-0.231, 0.032, -0.032]], "cord-passage-3": [[0.231, 0.032, -0.032], [0.231, 0.032, 0.032], [0.231, 0, 0.03]], "cord-passage-4": [[0.246, 0, 0.03], [0.246, 0.032, 0.032], [0.246, 0.032, -0.032]]}},
+          "paired-25-20-15-10": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+          "rounded-tray": {"rotation": [-0.707106781, 0, 0, 0.707106781], "translation": [0, 0, 0], "camera": {"viewDirection": [0, -0.5, -0.866025404], "fitPadding": 0.1}, "cordContactPoints": {"cord-passage-1": [[-0.246, 0, 0.03]], "cord-passage-2": [[-0.231, 0, 0.03]], "cord-passage-3": [[0.231, 0, 0.03]], "cord-passage-4": [[0.246, 0, 0.03]]}}
+        }
+      },
+      "orientation": {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+          "central-20-6": [0.5, 0, 0, 0.866025404],
+          "central-30-25": [1, 0, 0, 0],
+          "paired-12-8-6": [0.707106781, 0, 0, 0.707106781],
+          "paired-25-20-15-10": [0, 0, 0, 1],
+          "rounded-tray": [-0.707106781, 0, 0, 0.707106781]
         }
       }
     }
-  ],
+  }],
   "positions": [
     {
       "id": "paired-25-20-15-10",

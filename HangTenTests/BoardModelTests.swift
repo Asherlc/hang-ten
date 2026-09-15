@@ -200,7 +200,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(framing.height, 6, accuracy: 0.000_001)
     }
 
-    func testOrientationSelectionResetsOrbitAndRejectsSuspensionAtRuntime() throws {
+    func testOrientationSelectionResetsOrbitAndAllowsSuspensionAtRuntime() throws {
         let descriptor = modelDescriptor(
             nodes: [
                 .init(nodeID: "Board/Body", role: .body, contactID: nil),
@@ -235,7 +235,7 @@ final class BoardModelTests: XCTestCase {
 
         let suspension = BoardModelSuspension(
             attachment: .init(nodeID: "Board/Body", pointInModel: [1, 2, 3], provenance: "test"),
-            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "hidden", provenance: "test", position: [1, 10, 3]),
+            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "invisible", provenance: "test", position: [1, 10, 3]),
             cord: .init(restLength: 10, radius: 0.01, material: "test", provenance: "test"),
             canonicalPoses: [
                 "reverse": .init(
@@ -245,7 +245,7 @@ final class BoardModelTests: XCTestCase {
                 )
             ]
         )
-        XCTAssertNil(BoardModelScene(
+        let suspendedModel = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
             descriptor: descriptor,
             display: display(),
@@ -253,6 +253,9 @@ final class BoardModelTests: XCTestCase {
             orientation: orientation,
             allowedPositionIDs: ["reverse"]
         ))
+        XCTAssertTrue(suspendedModel.select(positionID: "reverse"))
+        XCTAssertNotNil(suspendedModel.transientCordNode)
+        XCTAssertEqual(suspendedModel.transformedAttachment, SIMD3<Float>(1, 2, 3))
     }
 
     func testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms() throws {
@@ -329,20 +332,24 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testBaguetteEvoDoesNotRenderOptionalRopeOrBungee() async throws {
+    func testBaguetteEvoRendersDocumentedSuspendedPresentationForEveryPosition() async throws {
         let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
-        XCTAssertNil(media.suspension)
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Baguette Evo must load the documented twoBranchCord suspension")
+        }
+        XCTAssertEqual(suspension.branches.count, 2)
 
         for position in board.positions {
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
             XCTAssertEqual(model.activePositionID, position.id)
-            XCTAssertNil(model.transientCordNode, position.id)
+            XCTAssertFalse(model.isTransientCordAccessible, position.id)
+            XCTAssertFalse(try XCTUnwrap(model.transientCordNode, position.id).childNodes.isEmpty, position.id)
         }
     }
 
     func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {
-        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
                 return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
@@ -361,7 +368,11 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isUnavailable, "\(boardID)/\(position.id)")
                 XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
                 let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
-                XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "\(boardID)/\(position.id)")
+                let expectedSegmentCount = suspension.attachments.reduce(0) {
+                    $0 + SuspendedCordSolver.sampleCount - 1
+                        + (suspension.canonicalPoses[position.id]?.cordContactPoints?[$1.id]?.count ?? $1.contactPointsInModel.count)
+                }
+                XCTAssertEqual(cord.childNodes.count, expectedSegmentCount, "\(boardID)/\(position.id)")
                 XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
                     node.categoryBitMask == BoardModelScene.cordCategory && model.contactID(for: node) == nil
@@ -371,7 +382,7 @@ final class BoardModelTests: XCTestCase {
     }
 
     func testPairedLeadModelHangboardsReserveCordAwareCanonicalCameraMargin() async throws {
-        for boardID in ["lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
                 return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")

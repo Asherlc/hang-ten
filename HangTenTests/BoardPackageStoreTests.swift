@@ -4,6 +4,35 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testOnDemandStoreLoadsEveryCorrectedBundledSuspensionPackage() throws {
+        let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
+        let expected: [(id: String, slug: String)] = [
+            ("captain-fingerfood.dual", "captain-fingerfood-dual"),
+            ("captain-fingerfood.pocket", "captain-fingerfood-pocket"),
+            ("captain-fingerfood.unlevel", "captain-fingerfood-unlevel"),
+            ("yy.baguette-evo", "yy-baguette-evo"),
+        ]
+
+        for item in expected {
+            let board = try XCTUnwrap(store.board(id: item.id), item.id)
+            let presentation = board.defaultPresentation
+            guard case .model(let media) = presentation.media else {
+                return XCTFail("\(item.id) must load as model media")
+            }
+            XCTAssertNotNil(media.suspension, item.id)
+            XCTAssertNotNil(media.orientation, item.id)
+            XCTAssertEqual(
+                store.modelResource(for: board, presentationID: presentation.id),
+                BoardModelResource(packageSlug: item.slug, assetPath: "assets/primary.usdz"),
+                item.id
+            )
+            XCTAssertNil(
+                store.presentationAssetURL(for: board, presentationID: presentation.id),
+                "on-demand USDZ must not be treated as an ordinary bundled asset"
+            )
+        }
+    }
+
     func testStoreRejectsV2AndLoadsV3ContactsWithMultipleBodies() throws {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixtureBundle(schemaVersion: 2)).boards)
         let board = try XCTUnwrap(BoardPackageStore(bundle: v3TwoBodyFixtureBundle()).boards.first)
@@ -221,6 +250,7 @@ final class BoardPackageStoreTests: XCTestCase {
             [
                 "paired-pose-mouths-null", "paired-pose-mouths-missing-lead",
                 "paired-pose-mouths-coincident", "paired-pose-mouths-outside-bounds",
+                "paired-pose-mouth-coincident-with-default-contact",
                 "wrong-schema-version", "unknown-media-type", "escaped-typed-path",
                 "extra-asset", "stale-sha", "omitted-node", "extra-node",
                 "body-with-hold-id", "unbound-geometry", "invalid-camera",
@@ -250,6 +280,8 @@ final class BoardPackageStoreTests: XCTestCase {
                 "paired-lead-three-attachments", "paired-lead-duplicate-id",
                 "paired-lead-hold-node", "paired-lead-visible-anchor",
                 "paired-lead-unknown-pose", "paired-lead-short-lead",
+                "paired-lead-contact-points-null", "paired-lead-contact-point-nonfinite",
+                "paired-lead-contact-points-coincident", "paired-lead-routed-lead-too-short",
                 "paired-lead-suspension-member-order",
                 "paired-lead-anchor-member-order", "paired-lead-cord-member-order",
                 "paired-lead-empty-attachment-provenance", "paired-lead-empty-anchor-provenance",
@@ -330,6 +362,10 @@ final class BoardPackageStoreTests: XCTestCase {
             return XCTFail("expected pairedLeadCord model suspension")
         }
         XCTAssertEqual(suspension.attachments.map(\.id), ["left-lead", "right-lead"])
+        XCTAssertEqual(suspension.attachments.map(\.contactPointsInModel), [
+            [[0.2, 0.5, 0.05], [0.2, 0.45, 0.05]],
+            [[0.8, 0.5, 0.05], [0.8, 0.45, 0.05]],
+        ])
         XCTAssertEqual(suspension.cord.restLength, 0.8)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary"])
     }
@@ -369,6 +405,49 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.attachments.map(\.id), ["left-lead", "right-lead"])
         XCTAssertEqual(suspension.attachments.map(\.nodeID), ["Body", "Body"])
         XCTAssertEqual(suspension.attachments.map(\.pointInModel), [[0.2, 0.5, 0.1], [0.8, 0.5, 0.1]])
+    }
+
+    func testStorePreservesPoseCordContactsAndRejectsIncompleteOrTooLongRoutes() throws {
+        let valid = ["left-lead": [[0.2, 0.6, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]]
+        let acceptedFixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "pairedLeadCordModel",
+            "mutations": [["target": "board", "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "cordContactPoints"],
+                "value": valid]]
+        ])
+        defer { acceptedFixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: acceptedFixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("missing paired-lead suspension")
+        }
+        XCTAssertEqual(suspension.canonicalPoses["primary"]?.cordContactPoints, valid)
+
+        let rejectedCases: [([String: [[Double]]], String)] = [
+            (["left-lead": [[0.2, 0.6, 0.1]]],
+             "cordContactPoints must name every attachment or passage with a nonempty finite distinct route"),
+            (["left-lead": [], "right-lead": [[0.8, 0.6, 0.1]]],
+             "cordContactPoints must name every attachment or passage with a nonempty finite distinct route"),
+            (["left-lead": [[0.2, 5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]],
+             "pairedLeadCord pose primary restLength is shorter than routed lead"),
+            (["left-lead": [[0.2, 0.5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]],
+             "cordContactPoints resolved route points must be distinct"),
+        ]
+        for (routes, reason) in rejectedCases {
+            let fixture = try makeSharedModelParserParityFixtureBundle([
+                "base": "pairedLeadCordModel",
+                "mutations": [["target": "board", "op": "replace",
+                    "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "cordContactPoints"],
+                    "value": routes]]
+            ])
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .invalidPackage(boardID: "fixture.paired-lead", reason: reason)
+                )
+            }
+        }
     }
 
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
@@ -3317,8 +3396,8 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(media.orientation?.rotations["reverse"], SIMD4(0, 1, 0, 0))
     }
 
-    // This catches permissive orientation parsing, partial inventories, and
-    // accidental coexistence with the mutually-exclusive suspension metadata.
+    // This catches permissive orientation parsing and partial inventories.
+    // Orientation may coexist with suspension; suspension canonical poses govern rendering.
     func testStoreRejectsInvalidModelOrientationAndPositionInventory() throws {
         let mutations: [(String, (inout [String: Any]) throws -> Void, String)] = [
             ("wrong pivot", { board in
@@ -3373,23 +3452,48 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreRejectsOrientationAndSuspensionTogether() throws {
-        let fixtures = try validationFixtures()
-        let singleCordModel = try XCTUnwrap(fixtures["singleCordModel"] as? [String: Any])
-        let singleCordBoard = try XCTUnwrap(singleCordModel["board"] as? [String: Any])
-        let singleCordPresentations = try XCTUnwrap(singleCordBoard["presentations"] as? [[String: Any]])
-        let singleCordMedia = try XCTUnwrap(singleCordPresentations[0]["media"] as? [String: Any])
-        let validSuspension = try XCTUnwrap(singleCordMedia["suspension"] as? [String: Any])
+    func testStoreParsesOrientationAndSuspensionIndependently() throws {
         let fixture = try makeOrientableModelFixtureBundle { board in
             var presentations = board["presentations"] as! [[String: Any]]
             var media = presentations[0]["media"] as! [String: Any]
-            media["suspension"] = validSuspension
+            media["suspension"] = [
+                "type": "singleCord",
+                "attachment": [
+                    "nodeID": "Body", "pointInModel": [0.5, 1.0, 0.05],
+                    "provenance": "test",
+                ],
+                "anchor": [
+                    "offsetFromBoardBounds": [0.0, 0.4, 0.0],
+                    "visibility": "invisible", "provenance": "test",
+                ],
+                "cord": [
+                    "restLength": 2.0, "radius": 0.002,
+                    "material": "matteCord", "provenance": "test",
+                ],
+                "canonicalPoses": [
+                    "front": [
+                        "rotation": [0.0, 0.0, 0.0, 1.0],
+                        "translation": [0.0, 0.0, 0.0],
+                        "camera": ["viewDirection": [0.0, 0.0, -1.0], "fitPadding": 0.1],
+                    ],
+                    "reverse": [
+                        "rotation": [0.0, 1.0, 0.0, 0.0],
+                        "translation": [0.0, 0.0, 0.0],
+                        "camera": ["viewDirection": [0.0, 0.0, -1.0], "fitPadding": 0.1],
+                    ],
+                ],
+            ]
             presentations[0]["media"] = media
             board["presentations"] = presentations
         }
         defer { fixture.remove() }
 
-        assertStoreRejects(fixture.bundle, reasonContaining: "orientation and suspension")
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected model media")
+        }
+        XCTAssertNotNil(media.orientation)
+        XCTAssertNotNil(media.suspension)
     }
 
     func testStoreRejectsInvalidPositionsAndTransitions() throws {
@@ -4050,9 +4154,12 @@ final class BoardPackageStoreTests: XCTestCase {
             keys: memberOrder,
             serializedValues: [
                 "attachments": try serializedJSONArray(attachments.map {
-                    try orderedJSONObjectData(
-                        try XCTUnwrap($0 as? [String: Any]),
-                        keys: ["id", "nodeID", "pointInModel", "provenance"]
+                    let attachment = try XCTUnwrap($0 as? [String: Any])
+                    return try orderedJSONObjectData(
+                        attachment,
+                        keys: attachment["contactPointsInModel"] == nil
+                            ? ["id", "nodeID", "pointInModel", "provenance"]
+                            : ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
                     )
                 }),
                 "anchor": try orderedJSONObjectData(
@@ -4127,7 +4234,7 @@ final class BoardPackageStoreTests: XCTestCase {
         let camera = try XCTUnwrap(pose["camera"] as? [String: Any])
         return try orderedJSONObjectData(
             pose,
-            keys: pose["attachmentPoints"] == nil ? ["rotation", "translation", "camera"] : ["rotation", "translation", "camera", "attachmentPoints"],
+            keys: ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"].filter { pose[$0] != nil },
             serializedValues: ["camera": try orderedJSONObjectData(
                 camera,
                 keys: ["viewDirection", "fitPadding"]

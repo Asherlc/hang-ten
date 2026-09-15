@@ -22,6 +22,73 @@ from hangboard_packages.cord_audit import (
 )
 
 
+def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = cli.discover_board_packages(
+        repository_root / "Hangboards", require_complete_inventory=True
+    )
+    manifest = load_cord_audit_manifest(
+        repository_root
+        / "docs/source-audits/2026-09-13-model-hangboard-cord-audit.json"
+    )
+
+    report = validate_cord_audit_manifest(manifest, inventory)
+    records = {record.package_id: record for record in manifest.records}
+
+    expected_topologies = {
+        "captain-fingerfood.dual": "pairedLeadCord",
+        "captain-fingerfood.pocket": "pairedLeadCord",
+        "captain-fingerfood.unlevel": "pairedLeadCord",
+        "yy.baguette-evo": "twoBranchCord",
+    }
+    assert {
+        package_id: records[package_id].topology
+        for package_id in expected_topologies
+    } == expected_topologies
+    assert all(records[package_id].decision == "represented" for package_id in expected_topologies)
+    assert all(
+        records[package_id].source_fact == "documentedSuspension"
+        for package_id in expected_topologies
+    )
+    assert report.decisions == {"excluded": 6, "represented": 8}
+
+    captain_rest_lengths = {
+        "captain-fingerfood.dual": 0.275,
+        "captain-fingerfood.pocket": 0.27,
+        "captain-fingerfood.unlevel": 0.28,
+    }
+    captain_recess_terminals = {
+        "captain-fingerfood.dual": ((-0.026, 0.013, -0.005), (0.026, 0.013, -0.005)),
+        "captain-fingerfood.pocket": ((-0.022, 0.01, -0.001), (0.022, 0.01, -0.001)),
+        "captain-fingerfood.unlevel": ((-0.029, 0.013, -0.01), (0.029, 0.013, -0.01)),
+    }
+    for package_id, rest_length in captain_rest_lengths.items():
+        board = next(
+            package.board
+            for package in inventory.packages
+            if package.board.id == package_id
+        )
+        media = board.presentations[0].media
+        assert media.suspension.anchor.offset_from_board_bounds == (0.0, 0.15, 0.0)
+        assert media.suspension.cord.rest_length == rest_length
+        assert all(
+            len(attachment.contact_points_in_model) == 2
+            for attachment in media.suspension.attachments
+        )
+        assert tuple(
+            attachment.point_in_model for attachment in media.suspension.attachments
+        ) == captain_recess_terminals[package_id]
+
+    baguette = next(
+        package.board
+        for package in inventory.packages
+        if package.board.id == "yy.baguette-evo"
+    )
+    baguette_suspension = baguette.presentations[0].media.suspension
+    assert baguette_suspension.anchor.offset_from_board_bounds == (0.0, 0.2, 0.0)
+    assert [branch.rest_length for branch in baguette_suspension.branches] == [0.945, 0.945]
+
+
 def _model_package(package_id: str, *, suspension: object | None = None) -> BoardPackage:
     media = PresentationMediaModel(
         "assets/primary.usdz", "assets/primary.model.json", {}, suspension
@@ -47,6 +114,7 @@ def _record(
     *,
     decision: str = "excluded",
     topology: str | None = None,
+    source_fact: str | None = None,
     ruling: str = "The primary product listing does not establish a supplied cord.",
     evidence: list[dict[str, str]] | None = None,
 ) -> dict[str, object]:
@@ -68,6 +136,12 @@ def _record(
     return {
         "packageID": package_id,
         "decision": decision,
+        "sourceFact": source_fact
+        or (
+            "documentedSuspension"
+            if decision == "represented"
+            else "noDocumentedSuspension"
+        ),
         "topology": topology,
         "ruling": ruling,
         "evidence": evidence_value if evidence_value is not None else [
@@ -397,21 +471,28 @@ def test_manifest_rejects_non_calendar_human_review_date(
         _validate(tmp_path, inventory, [record])
 
 
-def test_excluded_record_may_conservatively_omit_unavailable_source_evidence(
+def test_excluded_record_requires_retained_source_evidence(
     tmp_path: Path,
 ) -> None:
     inventory = _inventory(_model_package("fixture.board"))
 
-    report = _validate(
-        tmp_path,
-        inventory,
-        [_record("fixture.board", evidence=[])],
-    )
+    with pytest.raises(CordAuditError, match="requires retained source evidence"):
+        _validate(tmp_path, inventory, [_record("fixture.board", evidence=[])])
 
-    assert report.to_json() == {
-        "modelPackageIDs": ["fixture.board"],
-        "decisions": {"excluded": 1},
-    }
+
+def test_excluded_record_rejects_documented_suspension_source_fact_without_metadata(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+
+    with pytest.raises(
+        CordAuditError, match="source fact documents suspended presentation"
+    ):
+        _validate(
+            tmp_path,
+            inventory,
+            [_record("fixture.board", source_fact="documentedSuspension")],
+        )
 
 
 def test_manifest_rejects_unknown_record_keys(tmp_path: Path) -> None:
