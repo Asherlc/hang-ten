@@ -482,6 +482,7 @@ struct BoardModelUnavailableView: View {
 final class BoardModelScene {
     static let modelPickCategory = 1
     static let cordCategory = 2
+    static let modelVisibleCategory = 4
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
 
     private struct PreparedCameraState {
@@ -592,7 +593,7 @@ final class BoardModelScene {
             switch binding.role {
             case .body:
                 guard binding.contactID == nil else { return nil }
-                node.categoryBitMask = 0
+                node.categoryBitMask = Self.modelVisibleCategory
             case .contact:
                 guard let contactID = binding.contactID, !contactID.isEmpty else { return nil }
                 boundContactNodes[contactID, default: []].append(node)
@@ -601,7 +602,7 @@ final class BoardModelScene {
                 node.categoryBitMask = Self.modelPickCategory
             case .attachment:
                 guard binding.contactID == nil else { return nil }
-                node.categoryBitMask = 0
+                node.categoryBitMask = Self.modelVisibleCategory
             }
         }
 

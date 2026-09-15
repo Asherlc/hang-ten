@@ -1440,20 +1440,22 @@ final class BoardModelTests: XCTestCase {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "left-body", role: .body, contactID: nil),
             .init(nodeID: "left-edge-node", role: .contact, contactID: "left-edge"),
+            .init(nodeID: "mounting-plate", role: .attachment, contactID: nil),
             .init(nodeID: "right-body", role: .body, contactID: nil),
             .init(nodeID: "right-edge-node", role: .contact, contactID: "right-edge")
         ])
         let model = try XCTUnwrap(BoardModelScene(
-            source: scene(nodes: ["left-body", "left-edge-node", "right-body", "right-edge-node"]),
+            source: scene(nodes: ["left-body", "left-edge-node", "mounting-plate", "right-body", "right-edge-node"]),
             descriptor: descriptor,
             display: display()
         ))
 
         XCTAssertEqual(model.contactNodes.keys.sorted(), ["left-edge", "right-edge"])
-        for bodyName in ["left-body", "right-body"] {
-            let body = try XCTUnwrap(model.geometryNodes.first { $0.name == bodyName })
-            XCTAssertEqual(body.categoryBitMask, 0)
-            XCTAssertNil(model.contactID(for: body))
+        for nonContactName in ["left-body", "mounting-plate", "right-body"] {
+            let nonContact = try XCTUnwrap(model.geometryNodes.first { $0.name == nonContactName })
+            XCTAssertEqual(nonContact.categoryBitMask, BoardModelScene.modelVisibleCategory)
+            XCTAssertNotEqual(nonContact.categoryBitMask, BoardModelScene.modelPickCategory)
+            XCTAssertNil(model.contactID(for: nonContact))
         }
         for contactID in ["left-edge", "right-edge"] {
             let contact = try XCTUnwrap(model.contactNodes[contactID]?.first)
