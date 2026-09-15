@@ -50,10 +50,10 @@ class CatalogBoard:
 
 @dataclass(frozen=True)
 class RegionBounds:
-    """One rendered editor-region bounding box paired with its API hold identity."""
+    """One rendered editor-region bounding box paired with its API contact identity."""
 
     region_key: str
-    hold_id: str | None
+    contact_id: str | None
     x: float
     y: float
     width: float
@@ -61,8 +61,8 @@ class RegionBounds:
 
 
 @dataclass(frozen=True)
-class HoldIDLabel:
-    hold_id: str
+class ContactIDLabel:
+    contact_id: str
     x: float
     y: float
 
@@ -171,27 +171,27 @@ def _board_document(base_url: str, board_id: str) -> dict[str, Any]:
     return document
 
 
-def hold_id_label_positions(regions: tuple[RegionBounds, ...]) -> tuple[HoldIDLabel, ...]:
-    """Place one review label at the union center of every logical editor hold."""
-    bounds_by_hold: dict[str, tuple[float, float, float, float]] = {}
+def contact_id_label_positions(regions: tuple[RegionBounds, ...]) -> tuple[ContactIDLabel, ...]:
+    """Place one review label at the union center of every logical editor contact."""
+    bounds_by_contact: dict[str, tuple[float, float, float, float]] = {}
     for region in regions:
-        if not isinstance(region.hold_id, str) or not region.hold_id:
-            raise CaptureError("capture", f"region {region.region_key} is missing metadata.holdID")
+        if not isinstance(region.contact_id, str) or not region.contact_id:
+            raise CaptureError("capture", f"region {region.region_key} is missing metadata.contactID")
         minimum_x, minimum_y = region.x, region.y
         maximum_x, maximum_y = region.x + region.width, region.y + region.height
-        existing = bounds_by_hold.get(region.hold_id)
+        existing = bounds_by_contact.get(region.contact_id)
         if existing is None:
-            bounds_by_hold[region.hold_id] = (minimum_x, minimum_y, maximum_x, maximum_y)
+            bounds_by_contact[region.contact_id] = (minimum_x, minimum_y, maximum_x, maximum_y)
         else:
-            bounds_by_hold[region.hold_id] = (
+            bounds_by_contact[region.contact_id] = (
                 min(existing[0], minimum_x),
                 min(existing[1], minimum_y),
                 max(existing[2], maximum_x),
                 max(existing[3], maximum_y),
             )
     return tuple(
-        HoldIDLabel(hold_id, (bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2)
-        for hold_id, bounds in bounds_by_hold.items()
+        ContactIDLabel(contact_id, (bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2)
+        for contact_id, bounds in bounds_by_contact.items()
     )
 
 
@@ -223,7 +223,7 @@ def _readiness_expression() -> str:
         return {
           primaryImageLoaded,
           imageURL: href ? new URL(href, document.baseURI).href : null,
-          regionCount: document.querySelectorAll('#hold-overlay path.region-shape').length,
+          regionCount: document.querySelectorAll('#contact-overlay path.region-shape').length,
         };
       })()
     """
@@ -491,14 +491,14 @@ def _rendered_region_bounds(
         connection,
         f"""(() => {{
           const apiRegions = {json.dumps(regions)};
-          const paths = [...document.querySelectorAll('#hold-overlay path.region-shape')];
+          const paths = [...document.querySelectorAll('#contact-overlay path.region-shape')];
           return apiRegions.map((region) => {{
-            const path = paths.find((candidate) => candidate.dataset.holdKey === region.key);
+            const path = paths.find((candidate) => candidate.dataset.contactKey === region.key);
             if (!path) return {{ regionKey: region.key, missingPath: true }};
             const bounds = path.getBBox();
             return {{
               regionKey: region.key,
-              holdID: region.metadata?.holdID,
+              contactID: region.metadata?.contactID,
               x: bounds.x,
               y: bounds.y,
               width: bounds.width,
@@ -520,12 +520,12 @@ def _rendered_region_bounds(
         if not all(isinstance(item, (int, float)) for item in bounds):
             raise CaptureError("capture", f"region {region_key} has invalid rendered bounds", board_id=board_id)
         x, y, width, height = bounds
-        result.append(RegionBounds(region_key, region.get("holdID"), float(x), float(y), float(width), float(height)))
+        result.append(RegionBounds(region_key, region.get("contactID"), float(x), float(y), float(width), float(height)))
     return tuple(result)
 
 
-def _inject_hold_id_labels(
-    connection: _DevToolsConnection, labels: tuple[HoldIDLabel, ...]
+def _inject_contact_id_labels(
+    connection: _DevToolsConnection, labels: tuple[ContactIDLabel, ...]
 ) -> None:
     value = _evaluate(
         connection,
@@ -534,7 +534,7 @@ def _inject_hold_id_labels(
           if (!(svg instanceof SVGSVGElement)) return false;
           for (const label of {json.dumps([asdict(label) for label in labels])}) {{
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('data-audit-hold-id', label.hold_id);
+            text.setAttribute('data-audit-contact-id', label.contact_id);
             text.setAttribute('x', String(label.x));
             text.setAttribute('y', String(label.y));
             text.setAttribute('text-anchor', 'middle');
@@ -547,26 +547,26 @@ def _inject_hold_id_labels(
             text.setAttribute('paint-order', 'stroke');
             text.setAttribute('pointer-events', 'none');
             text.setAttribute('aria-hidden', 'true');
-            text.textContent = label.hold_id;
+            text.textContent = label.contact_id;
             svg.appendChild(text);
           }}
           return true;
         }})()""",
     )
     if value is not True:
-        raise CaptureError("capture", "editor SVG is unavailable for hold ID labels")
+        raise CaptureError("capture", "editor SVG is unavailable for contact ID labels")
 
 
-def _remove_hold_id_labels(connection: _DevToolsConnection) -> None:
+def _remove_contact_id_labels(connection: _DevToolsConnection) -> None:
     value = _evaluate(
         connection,
         """(() => {
-          document.querySelectorAll('#editor-svg text[data-audit-hold-id]').forEach((label) => label.remove());
+          document.querySelectorAll('#editor-svg text[data-audit-contact-id]').forEach((label) => label.remove());
           return true;
         })()""",
     )
     if value is not True:
-        raise CaptureError("capture", "editor SVG is unavailable while removing hold ID labels")
+        raise CaptureError("capture", "editor SVG is unavailable while removing contact ID labels")
 
 
 def _write_labeled_capture(raw_png: bytes, output_path: Path, label: str) -> None:
@@ -655,7 +655,7 @@ def capture_catalog(
     chrome_path: Path,
     port: int,
     *,
-    hold_id_labels: bool = False,
+    contact_id_labels: bool = False,
 ) -> CaptureManifest:
     """Capture all completed boards in API order through one Chrome DevTools page."""
     repository_root = Path(repository_root).resolve()
@@ -717,15 +717,15 @@ def capture_catalog(
                             board_id=board.board_id,
                         )
                         labels_injected = False
-                        if hold_id_labels:
-                            labels = hold_id_label_positions(
+                        if contact_id_labels:
+                            labels = contact_id_label_positions(
                                 _rendered_region_bounds(
                                     connection,
                                     _board_document(base_url, board.board_id),
                                     board_id=board.board_id,
                                 )
                             )
-                            _inject_hold_id_labels(connection, labels)
+                            _inject_contact_id_labels(connection, labels)
                             labels_injected = True
                         try:
                             screenshot = connection.call(
@@ -733,7 +733,7 @@ def capture_catalog(
                             ).get("data")
                         finally:
                             if labels_injected:
-                                _remove_hold_id_labels(connection)
+                                _remove_contact_id_labels(connection)
                         if not isinstance(screenshot, str):
                             raise CaptureError("capture", "Chrome returned no PNG data", board_id=board.board_id)
                         filename = capture_filename(board.board_id)
@@ -759,9 +759,9 @@ def argument_parser() -> ArgumentParser:
     parser.add_argument("--chrome-path", type=Path, required=True, help="Google Chrome executable")
     parser.add_argument("--port", type=int, default=4173, help="Loopback Workbench server port (default: 4173)")
     parser.add_argument(
-        "--hold-id-labels",
+        "--contact-id-labels",
         action="store_true",
-        help="Overlay one review-only stable hold ID label per logical hold",
+        help="Overlay one review-only stable contact ID label per logical contact",
     )
     return parser
 
@@ -773,7 +773,7 @@ def main() -> None:
         arguments.output_root,
         arguments.chrome_path,
         arguments.port,
-        hold_id_labels=arguments.hold_id_labels,
+        contact_id_labels=arguments.contact_id_labels,
     )
     print(json.dumps({"boards": len(manifest.entries), "output": str(arguments.output_root)}, sort_keys=True))
 
@@ -783,7 +783,7 @@ __all__ = [
     "CaptureError",
     "CaptureManifest",
     "CatalogBoard",
-    "HoldIDLabel",
+    "ContactIDLabel",
     "RegionBounds",
     "capture_catalog",
     "capture_filename",
@@ -792,7 +792,7 @@ __all__ = [
     "contact_sheet_entries",
     "create_contact_sheet",
     "fetch_catalog",
-    "hold_id_label_positions",
+    "contact_id_label_positions",
     "argument_parser",
     "page_websocket_url",
 ]

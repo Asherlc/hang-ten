@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import pytest
+from hangboard_packages.board_catalog import load_board_package
 
 from conftest import (
     PRIMARY_PNG_BYTES,
@@ -14,16 +15,6 @@ from conftest import (
     multi_presentation_board_document,
 )
 
-
-def _load_migration_module():
-    import importlib.util
-
-    path = Path(__file__).parents[1] / "scripts" / "migrate_to_schema_v2.py"
-    spec = importlib.util.spec_from_file_location("migrate_to_schema_v2", path)
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 MODEL_BYTES = b"fixed model package bytes"
@@ -183,8 +174,15 @@ def _write_shared_model_parser_parity_package(
     return root
 
 
-def _logical_hold(hold_id: str, name: str) -> dict[str, object]:
-    return {"id": hold_id, "name": name, "kind": "jug"}
+def _physical_contact(contact_id: str, name: str) -> dict[str, object]:
+    return {
+        "id": contact_id,
+        "equipmentObjectID": "primary",
+        "name": name,
+        "kind": "jug",
+        "features": [],
+        "gripTypes": [],
+    }
 
 
 def _descriptor() -> dict[str, object]:
@@ -195,10 +193,10 @@ def _descriptor() -> dict[str, object]:
         "modelBounds": {"min": [0, 0, 0], "max": [1, 1, 0.1]},
         "nodes": [
             {"nodeID": "Body", "role": "body"},
-            {"nodeID": "Left", "role": "hold", "holdID": "hold-left"},
-            {"nodeID": "Right", "role": "hold", "holdID": "hold-right"},
+            {"nodeID": "Left", "role": "contact", "contactID": "hold-left"},
+            {"nodeID": "Right", "role": "contact", "contactID": "hold-right"},
         ],
-        "holds": {
+        "contacts": {
             "hold-left": {
                 "nodeIDs": ["Left"],
                 "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]},
@@ -215,13 +213,15 @@ def _descriptor() -> dict[str, object]:
 
 def _model_document() -> dict[str, object]:
     return {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "id": "fixture.model-first",
+        "revisionID": "2026-09-contact-first",
         "manufacturer": "Fixture Maker",
         "name": "Model-first fixture",
         "subtitle": "A parser fixture.",
         "productURL": "https://example.com/model-first",
         "aspectRatio": 2,
+        "equipmentObjects": [{"id": "primary"}],
         "presentations": [
             {
                 "id": "primary",
@@ -244,9 +244,9 @@ def _model_document() -> dict[str, object]:
                 },
             }
         ],
-        "holds": [
-            _logical_hold("hold-left", "Left hold"),
-            _logical_hold("hold-right", "Right hold"),
+        "contacts": [
+            _physical_contact("hold-left", "Left hold"),
+            _physical_contact("hold-right", "Right hold"),
         ],
     }
 
@@ -277,6 +277,56 @@ def write_model_package(
 _write_model_package = write_model_package
 
 
+def write_v3_model_package(
+    root: Path,
+    *,
+    contacts: tuple[str, ...],
+    body_nodes: tuple[str, ...],
+) -> Path:
+    document = _model_document()
+    document["contacts"] = [
+        {
+            "id": contact_id,
+            "equipmentObjectID": "primary",
+            "name": contact_id.replace("-", " ").title(),
+            "kind": "edge",
+            "features": [],
+            "gripTypes": [],
+        }
+        for contact_id in contacts
+    ]
+
+    descriptor = _descriptor()
+    descriptor["nodes"] = sorted([
+        *({"nodeID": node_id, "role": "body"} for node_id in body_nodes),
+        *(
+            {
+                "nodeID": f"{contact_id}-node",
+                "role": "contact",
+                "contactID": contact_id,
+            }
+            for contact_id in contacts
+        ),
+    ], key=lambda node: node["nodeID"])
+    descriptor["contacts"] = {
+        contact_id: {
+            "nodeIDs": [f"{contact_id}-node"],
+            "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]},
+            "center": [0.25, 0.4],
+        }
+        for contact_id in contacts
+    }
+
+    assets = root / "assets"
+    assets.mkdir(parents=True)
+    (assets / "primary.usdz").write_bytes(MODEL_BYTES)
+    (assets / "primary.model.json").write_text(
+        json.dumps(descriptor), encoding="utf-8"
+    )
+    (root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+    return root
+
+
 def _rewrite(path: Path, document: dict[str, object]) -> None:
     path.write_text(json.dumps(document), encoding="utf-8")
 
@@ -294,7 +344,7 @@ def _write_raster_package(root: Path) -> Path:
     presentation["media"] = {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
             "hold-left": [_raster_piece(0.1), _raster_piece(0.35)],
             "hold-right": [_raster_piece(0.7)],
         },
@@ -318,7 +368,7 @@ def _raster_presentation(
         "media": {
             "type": "raster",
             "assetPath": asset_path,
-            "holdGeometry": {
+            "contactGeometry": {
                 "hold-left": [_raster_piece(0.1)],
                 "hold-right": [_raster_piece(0.7)],
             },
@@ -326,149 +376,46 @@ def _raster_presentation(
     }
 
 
-def test_migrate_v1_raster_moves_only_geometry_and_presentation_ownership() -> None:
-    before = {
-        "id": "fixture.board",
-        "manufacturer": "Fixture Maker",
-        "name": "Fixture Board",
-        "subtitle": "A parser fixture.",
-        "productURL": "https://example.com/fixture",
-        "aspectRatio": 2,
-        "presentations": [
-            {
-                "id": "primary",
-                "name": "Primary",
-                "assetPath": "assets/primary.png",
-                "aspectRatio": 2,
-                "default": True,
-            },
-            {
-                "id": "inverted",
-                "name": "Inverted",
-                "assetPath": "assets/inverted.png",
-                "aspectRatio": 2,
-                "default": False,
-                "sourcePresentationID": "primary",
-                "isInverted": True,
-            },
-        ],
-        "holds": [
-            {
-                "id": "hold-left",
-                "name": "Left hold",
-                "kind": "jug",
-                "presentationID": "primary",
-                "geometry": [_raster_piece(0.1)],
-            }
-        ],
-    }
-
-    after = _load_migration_module().migrate_document(before)
-
-    assert after["schemaVersion"] == 2
-    assert after["presentations"][0]["isDefault"] is True
-    assert "default" not in after["presentations"][0]
-    assert "geometry" not in after["holds"][0]
-    assert "presentationID" not in after["holds"][0]
-    assert (
-        after["presentations"][0]["media"]["holdGeometry"]["hold-left"]
-        == before["holds"][0]["geometry"]
-    )
-    assert after["presentations"][0]["derivation"] == {"type": "original"}
-    assert after["presentations"][1]["derivation"] == {
-        "type": "derived",
-        "sourcePresentationID": "primary",
-        "isInverted": True,
-    }
-    assert after["presentations"][1]["media"]["holdGeometry"] == {
-        "hold-left": before["holds"][0]["geometry"]
-    }
-    assert _load_migration_module().migrate_document(after) == after
-
-
-def test_migrate_v1_rejects_unknown_ownership_and_non_raster_media() -> None:
-    module = _load_migration_module()
-    document = {
-        "id": "fixture.board",
-        "manufacturer": "Fixture Maker",
-        "name": "Fixture Board",
-        "subtitle": "A parser fixture.",
-        "productURL": "https://example.com/fixture",
-        "aspectRatio": 2,
-        "presentations": [
-            {
-                "id": "primary",
-                "name": "Primary",
-                "assetPath": "assets/primary.usdz",
-                "aspectRatio": 2,
-                "default": True,
-            }
-        ],
-        "holds": [
-            {
-                "id": "hold-left",
-                "name": "Left hold",
-                "kind": "jug",
-                "presentationID": "primary",
-                "geometry": [_raster_piece(0.1)],
-            }
-        ],
-    }
-
-    with pytest.raises(ValueError, match="PNG"):
-        module.migrate_document(document)
-
-
-def test_migrate_v1_preserves_disjoint_multi_presentation_hold_ownership() -> None:
-    after = _load_migration_module().migrate_document(
-        multi_presentation_board_document()
-    )
-
-    assert [
-        sorted(presentation["media"]["holdGeometry"])
-        for presentation in after["presentations"]
-    ] == [["hold-left"], ["hold-right"]]
-
-
-def test_migrate_v1_rejects_unknown_presentation_members() -> None:
-    document = {
-        "id": "fixture.board",
-        "manufacturer": "Fixture Maker",
-        "name": "Fixture Board",
-        "subtitle": "A parser fixture.",
-        "productURL": "https://example.com/fixture",
-        "aspectRatio": 2,
-        "presentations": [{
-            "id": "primary",
-            "name": "Primary",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 2,
-            "default": True,
-        }],
-        "holds": [{
-            "id": "hold-left",
-            "name": "Left hold",
-            "kind": "jug",
-            "presentationID": "primary",
-            "geometry": [_raster_piece(0.1)],
-        }],
-    }
-    document["presentations"][0]["extensionScalar"] = "retain-or-reject"
-
-    with pytest.raises(ValueError, match="unknown keys.*extensionScalar"):
-        _load_migration_module().migrate_document(document)
-
 
 def test_catalog_rejects_unversioned_documents_after_migration() -> None:
-    module = _load_migration_module()
+    module = load_board_catalog_module()
     document = multi_presentation_board_document()
     document.pop("schemaVersion")
 
     with pytest.raises(ValueError, match="schemaVersion"):
-        module.board_catalog._load_board(document)
+        module._load_board(document)
 
 
-def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> None:
+def test_v3_model_descriptor_binds_contacts_and_allows_two_bodies(tmp_path):
+    package = write_v3_model_package(tmp_path, contacts=("left-edge", "right-edge"), body_nodes=("left-body", "right-body"))
+    loaded = load_board_package(package)
+    assert loaded.board.revision_id == "2026-09-contact-first"
+    assert tuple(contact.id for contact in loaded.board.contacts) == ("left-edge", "right-edge")
+
+
+@pytest.mark.parametrize("missing_contact", ["left-edge", "right-edge"])
+def test_v3_model_descriptor_requires_exact_contact_node_coverage(
+    tmp_path: Path, missing_contact: str
+) -> None:
+    package = write_v3_model_package(
+        tmp_path,
+        contacts=("left-edge", "right-edge"),
+        body_nodes=("left-body", "right-body"),
+    )
+    descriptor_path = package / "assets" / "primary.model.json"
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
+    descriptor["nodes"] = [
+        node
+        for node in descriptor["nodes"]
+        if node.get("contactID") != missing_contact
+    ]
+    _rewrite(descriptor_path, descriptor)
+
+    with pytest.raises(ValueError, match="node contact IDs must equal physical contacts"):
+        load_board_package(package)
+
+
+def test_v3_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = _write_model_package(tmp_path / "fixture-model")
 
@@ -476,15 +423,15 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
 
     presentation = package.board.presentations[0]
     assert isinstance(presentation.media, module.PresentationMediaModel)
-    assert not hasattr(package.board.holds[0], "geometry")
-    assert not hasattr(package.board.holds[0], "presentation_id")
+    assert not hasattr(package.board.contacts[0], "geometry")
+    assert not hasattr(package.board.contacts[0], "presentation_id")
     assert presentation.media.asset_path == "assets/primary.usdz"
     assert presentation.media.descriptor_path == "assets/primary.model.json"
     assert presentation.media.suspension is None
-    assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
+    assert package.board.contact_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.3, 0.4
     )
-    assert package.board.hold_ids_for_position("primary") == (
+    assert package.board.contact_ids_for_position("primary") == (
         "hold-left",
         "hold-right",
     )
@@ -498,7 +445,7 @@ def test_v2_model_requires_hash_bound_complete_descriptor(tmp_path: Path) -> Non
 
 
 @pytest.mark.parametrize("base,rest_length", [("twoBranchModel", 0.92), ("directedTwoBranchModel", 1.5)])
-def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path, base: str, rest_length: float) -> None:
+def test_v3_model_accepts_valid_two_branch_suspension(tmp_path: Path, base: str, rest_length: float) -> None:
     fixture = {"base": base, "mutations": []}
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / "valid-two-branch", fixture
@@ -518,7 +465,7 @@ def test_v2_model_accepts_valid_two_branch_suspension(tmp_path: Path, base: str,
     assert all(passage.is_through_bore == (base == "directedTwoBranchModel") for passage in suspension.passages.left + suspension.passages.right)
 
 
-def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
+def test_v3_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / "valid-single-cord", {"base": "singleCordModel", "mutations": []}
     )
@@ -683,7 +630,7 @@ def test_two_branch_declared_member_order_loads_without_sorting(tmp_path: Path) 
     _shared_model_parser_parity_fixtures(),
     ids=lambda fixture: str(fixture["name"]),
 )
-def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
+def test_v3_model_rejects_shared_cross_parser_malformed_fixture_matrix(
     tmp_path: Path, fixture: dict[str, object]
 ) -> None:
     """Catches a parser accepting a model document rejected by the shared matrix."""
@@ -699,7 +646,7 @@ def test_v2_model_rejects_shared_cross_parser_malformed_fixture_matrix(
         module.load_board_package(package_root)
 
 
-def test_v2_raster_owns_geometry_and_unions_hold_frame(tmp_path: Path) -> None:
+def test_v3_raster_owns_geometry_and_unions_hold_frame(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package = module.load_board_package(
         _write_raster_package(tmp_path / "fixture-raster")
@@ -707,13 +654,13 @@ def test_v2_raster_owns_geometry_and_unions_hold_frame(tmp_path: Path) -> None:
 
     presentation = package.board.presentations[0]
     assert isinstance(presentation.media, module.PresentationMediaRaster)
-    assert set(presentation.media.hold_geometry) == {"hold-left", "hold-right"}
-    assert package.board.hold_frame("hold-left", "primary") == module.NormalizedFrame(
+    assert set(presentation.media.contact_geometry) == {"hold-left", "hold-right"}
+    assert package.board.contact_frame("hold-left", "primary") == module.NormalizedFrame(
         0.1, 0.2, 0.45, 0.4
     )
 
 
-def test_v2_rejects_original_model_plus_original_raster_fallback(
+def test_v3_rejects_original_model_plus_original_raster_fallback(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -730,7 +677,7 @@ def test_v2_rejects_original_model_plus_original_raster_fallback(
         module.load_board_package(package_root)
 
 
-def test_v2_rejects_raster_derivation_from_model_presentation(
+def test_v3_rejects_raster_derivation_from_model_presentation(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -755,7 +702,7 @@ def test_v2_rejects_raster_derivation_from_model_presentation(
         module.load_board_package(package_root)
 
 
-def test_v2_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
+def test_v3_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
@@ -769,8 +716,8 @@ def test_v2_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
                 "isInverted": True,
             },
         )
-    derived["media"]["holdGeometry"] = json.loads(
-        json.dumps(board["presentations"][0]["media"]["holdGeometry"])
+    derived["media"]["contactGeometry"] = json.loads(
+        json.dumps(board["presentations"][0]["media"]["contactGeometry"])
     )
     board["presentations"].append(derived)
     (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
@@ -784,7 +731,7 @@ def test_v2_preserves_raster_only_derived_presentations(tmp_path: Path) -> None:
     ]
 
 
-def test_v2_raster_originals_exactly_partition_logical_holds(tmp_path: Path) -> None:
+def test_v3_raster_originals_exactly_partition_physical_contacts(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
@@ -799,7 +746,7 @@ def test_v2_raster_originals_exactly_partition_logical_holds(tmp_path: Path) -> 
         module.load_board_package(package_root)
 
 
-def test_v2_raster_rejects_hold_owned_only_by_derived_media(tmp_path: Path) -> None:
+def test_v3_raster_rejects_hold_owned_only_by_derived_media(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
@@ -815,7 +762,7 @@ def test_v2_raster_rejects_hold_owned_only_by_derived_media(tmp_path: Path) -> N
             },
         )
     )
-    del board["presentations"][0]["media"]["holdGeometry"]["hold-left"]
+    del board["presentations"][0]["media"]["contactGeometry"]["hold-left"]
     (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
     _rewrite(board_path, board)
 
@@ -839,14 +786,14 @@ def test_v2_raster_rejects_hold_owned_only_by_derived_media(tmp_path: Path) -> N
         ),
     ],
 )
-def test_v2_derived_raster_geometry_must_exactly_equal_source(
+def test_v3_derived_raster_geometry_must_exactly_equal_source(
     tmp_path: Path, mutation
 ) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
     board = json.loads(board_path.read_text(encoding="utf-8"))
-    source_geometry = board["presentations"][0]["media"]["holdGeometry"]
+    source_geometry = board["presentations"][0]["media"]["contactGeometry"]
     derived_geometry = json.loads(json.dumps(source_geometry))
     mutation(derived_geometry)
     board["presentations"].append(
@@ -863,7 +810,7 @@ def test_v2_derived_raster_geometry_must_exactly_equal_source(
             "media": {
                 "type": "raster",
                 "assetPath": "assets/inverted.png",
-                "holdGeometry": derived_geometry,
+                "contactGeometry": derived_geometry,
             },
         }
     )
@@ -874,14 +821,14 @@ def test_v2_derived_raster_geometry_must_exactly_equal_source(
         module.load_board_package(package_root)
 
 
-def test_v2_derived_raster_geometry_preserves_numeric_scalar_types(
+def test_v3_derived_raster_geometry_preserves_numeric_scalar_types(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
     board = json.loads(board_path.read_text(encoding="utf-8"))
-    source_geometry = board["presentations"][0]["media"]["holdGeometry"]
+    source_geometry = board["presentations"][0]["media"]["contactGeometry"]
     source_geometry["hold-left"][0]["shape"]["cornerRadiusFraction"] = 0.0
     derived_geometry = json.loads(json.dumps(source_geometry))
     derived_geometry["hold-left"][0]["shape"]["cornerRadiusFraction"] = 0
@@ -894,7 +841,7 @@ def test_v2_derived_raster_geometry_preserves_numeric_scalar_types(
             "isInverted": True,
         },
     )
-    derived["media"]["holdGeometry"] = derived_geometry
+    derived["media"]["contactGeometry"] = derived_geometry
     board["presentations"].append(derived)
     (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
     _rewrite(board_path, board)
@@ -903,14 +850,14 @@ def test_v2_derived_raster_geometry_preserves_numeric_scalar_types(
         module.load_board_package(package_root)
 
 
-def test_v2_derived_raster_geometry_preserves_path_command_order(
+def test_v3_derived_raster_geometry_preserves_path_command_order(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
     board = json.loads(board_path.read_text(encoding="utf-8"))
-    source_geometry = board["presentations"][0]["media"]["holdGeometry"]
+    source_geometry = board["presentations"][0]["media"]["contactGeometry"]
     source_geometry["hold-left"] = [{
         "frame": {"x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4},
         "shape": {
@@ -941,7 +888,7 @@ def test_v2_derived_raster_geometry_preserves_path_command_order(
             "isInverted": True,
         },
     )
-    derived["media"]["holdGeometry"] = derived_geometry
+    derived["media"]["contactGeometry"] = derived_geometry
     board["presentations"].append(derived)
     (package_root / "assets" / "inverted.png").write_bytes(PRIMARY_PNG_BYTES)
     _rewrite(board_path, board)
@@ -966,14 +913,14 @@ def test_v2_derived_raster_geometry_preserves_path_command_order(
             "descriptorPath",
         ),
         (
-            lambda root, board, descriptor: descriptor["holds"].pop("hold-right"),
-            "holds",
+            lambda root, board, descriptor: descriptor["contacts"].pop("hold-right"),
+            "contacts",
         ),
         (
-            lambda root, board, descriptor: descriptor["nodes"].append(
-                {"nodeID": "Extra", "role": "body"}
+            lambda root, board, descriptor: descriptor["nodes"][0].__setitem__(
+                "role", "attachment"
             ),
-            "body",
+            "at least one body",
         ),
         (
             lambda root, board, descriptor: board["presentations"][0].__setitem__(
@@ -987,14 +934,14 @@ def test_v2_derived_raster_geometry_preserves_path_command_order(
             "model.*derived",
         ),
         (
-            lambda root, board, descriptor: board["holds"][0].__setitem__(
+            lambda root, board, descriptor: board["contacts"][0].__setitem__(
                 "geometry", [_raster_piece(0.1)]
             ),
             "unknown keys",
         ),
     ],
 )
-def test_v2_model_rejects_mixed_or_incomplete_package_shapes(
+def test_v3_model_rejects_mixed_or_incomplete_package_shapes(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -1038,7 +985,7 @@ def test_v2_model_rejects_mixed_or_incomplete_package_shapes(
         ),
     ],
 )
-def test_v2_tagged_union_rejects_fields_outside_their_variant(
+def test_v3_tagged_union_rejects_fields_outside_their_variant(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -1060,22 +1007,22 @@ def test_v2_tagged_union_rejects_fields_outside_their_variant(
         lambda geometry: geometry.__setitem__("hold-left", []),
     ],
 )
-def test_v2_raster_requires_exact_nonempty_logical_hold_ownership(
+def test_v3_raster_requires_exact_nonempty_logical_hold_ownership(
     tmp_path: Path, mutation
 ) -> None:
     module = load_board_catalog_module()
     package_root = _write_raster_package(tmp_path / "fixture-raster")
     board_path = package_root / "board.json"
     board = json.loads(board_path.read_text(encoding="utf-8"))
-    geometry = board["presentations"][0]["media"]["holdGeometry"]
+    geometry = board["presentations"][0]["media"]["contactGeometry"]
     mutation(geometry)
     _rewrite(board_path, board)
 
-    with pytest.raises(ValueError, match="holdGeometry"):
+    with pytest.raises(ValueError, match="contactGeometry"):
         module.load_board_package(package_root)
 
 
-def test_v2_descriptor_rejects_finite_bounds_whose_span_overflows(
+def test_v3_descriptor_rejects_finite_bounds_whose_span_overflows(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()

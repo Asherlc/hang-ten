@@ -26,6 +26,8 @@ from github_client import GitHubForbiddenError, GitHubNotFoundError
 from workbench_fixtures import (
     PRIMARY_IMAGE,
     board_document,
+    derived_presentation,
+    geometry_for,
     multi_presentation_board_document,
 )
 
@@ -38,10 +40,14 @@ def _encoded_board(board: dict[str, object]) -> bytes:
 
 
 def _complete_package(slug: str, board: dict[str, object]) -> dict[str, bytes]:
-    return {
-        f"Hangboards/{slug}/board.json": _encoded_board(board),
-        f"Hangboards/{slug}/assets/primary.png": PRIMARY_IMAGE.read_bytes(),
-    }
+    files = {f"Hangboards/{slug}/board.json": _encoded_board(board)}
+    for presentation in board.get("presentations", []):
+        media = presentation["media"]
+        if media["type"] == "raster":
+            files[f"Hangboards/{slug}/{media['assetPath']}"] = PRIMARY_IMAGE.read_bytes()
+    if len(files) == 1:
+        files[f"Hangboards/{slug}/assets/primary.png"] = PRIMARY_IMAGE.read_bytes()
+    return files
 
 
 def _model_only_package(slug: str, board_id: str) -> dict[str, bytes]:
@@ -372,8 +378,8 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
     opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
 
     assert [
-        (package.slug, package.board_id, package.hold_ids) for package in discovered
-    ] == [("fixture-board", "fixture.board", ("hold-left",))]
+        (package.slug, package.board_id, package.contact_ids) for package in discovered
+    ] == [("fixture-board", "fixture.board", ("contact-left",))]
     assert (opened.image_width, opened.image_height) == (1774, 887)
     assert board_package.editor_document(opened)["canvas"] == {
         "width": 1774,
@@ -429,15 +435,13 @@ def test_remote_package_preserves_orientation_alias_presentations() -> None:
     presentations = board["presentations"]
     assert isinstance(presentations, list)
     presentations.append(
-        {
-            "id": "primary-inverted",
-            "name": "Primary inverted",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 1774 / 887,
-            "default": False,
-            "sourcePresentationID": "primary",
-            "isInverted": True,
-        }
+        derived_presentation(
+            board,
+            "primary-inverted",
+            "primary",
+            "Primary inverted",
+            "assets/primary.png",
+        )
     )
     client = _client(("fixture-board", board))
 
@@ -477,34 +481,32 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert len(client.calls_named("get_blob")) == 2
 
 
-def test_hosted_catalog_lists_unversioned_boards_without_loading_presentation_images() -> None:
+def test_hosted_catalog_lists_v3_boards_without_loading_presentation_images() -> None:
     """Fails if catalog validation rejects metadata or fetches image assets."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    files = _complete_package("fixture-multi", board)
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(client)
 
     listings = store.discover_packages(TOKEN, BRANCH)
 
     assert [(listing.slug, listing.board_id) for listing in listings] == [
-        ("fixture-v2", "fixture.multi")
+        ("fixture-multi", "fixture.multi")
     ]
     assert len(client.calls_named("get_blob")) == 1
 
 
-def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
-    """Fails if catalog listing accepts a hold outside the declared presentations."""
+def test_hosted_catalog_rejects_geometry_for_unknown_contact() -> None:
+    """Fails if catalog listing accepts media geometry without a factual contact."""
     board = multi_presentation_board_document("fixture.multi")
-    hold = board["holds"][0]
-    assert isinstance(hold, dict)
-    hold["presentationID"] = "missing"
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    geometry_for(board, "front")["missing"] = copy.deepcopy(
+        geometry_for(board, "front")["contact-left"]
+    )
+    files = _complete_package("fixture-multi", board)
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(client)
 
-    with pytest.raises(board_package.BoardPackageError, match="presentationID is unknown"):
+    with pytest.raises(board_package.BoardPackageError, match="physical contacts"):
         store.discover_packages(TOKEN, BRANCH)
 
     assert len(client.calls_named("get_blob")) == 1
@@ -515,7 +517,7 @@ def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
     [
         (
             lambda board: board.__setitem__("schemaVersion", 1),
-            "schemaVersion must be 2",
+            "schemaVersion must be 3",
         ),
         (
             lambda board: board.__setitem__(
@@ -525,15 +527,15 @@ def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
         ),
         (lambda board: board.pop("presentations"), "missing keys"),
         (
-            lambda board: board["holds"][0].pop("presentationID"),
-            "presentationID",
+            lambda board: board["contacts"][0].pop("kind"),
+            "missing keys",
         ),
     ],
     ids=[
         "schema-version",
         "legacy-presentation",
         "missing-presentations",
-        "missing-hold-presentation-id",
+        "missing-contact-kind",
     ],
 )
 def test_hosted_catalog_rejects_legacy_or_incomplete_presentation_shape(
@@ -583,27 +585,36 @@ def test_cold_discovery_bounds_nested_presentation_blob_concurrency() -> None:
     for package_index, slug in enumerate(("alpha", "bravo", "charlie", "delta")):
         board = multi_presentation_board_document(f"{slug}.board")
         presentations = board["presentations"]
-        holds = board["holds"]
+        contacts = board["contacts"]
         assert isinstance(presentations, list)
-        assert isinstance(holds, list)
+        assert isinstance(contacts, list)
         for presentation_id in ("profile", "detail"):
+            contact_id = f"contact-{presentation_id}"
             presentations.append(
                 {
                     "id": presentation_id,
                     "name": presentation_id.title(),
-                    "assetPath": f"assets/{presentation_id}.png",
                     "aspectRatio": 1774 / 887,
-                    "default": False,
+                    "isDefault": False,
+                    "derivation": {"type": "original"},
+                    "media": {
+                        "type": "raster",
+                        "assetPath": f"assets/{presentation_id}.png",
+                        "contactGeometry": {
+                            contact_id: copy.deepcopy(
+                                geometry_for(board, "front")["contact-left"]
+                            )
+                        },
+                    },
                 }
             )
-            hold = copy.deepcopy(holds[0])
-            assert isinstance(hold, dict)
-            hold.update(
-                id=f"hold-{presentation_id}",
-                name=f"{presentation_id.title()} hold",
-                presentationID=presentation_id,
+            contact = copy.deepcopy(contacts[0])
+            assert isinstance(contact, dict)
+            contact.update(
+                id=contact_id,
+                name=f"{presentation_id.title()} contact",
             )
-            holds.append(hold)
+            contacts.append(contact)
         files.update(_complete_package(slug, board))
         for asset_index, asset_name in enumerate(("back", "profile", "detail")):
             files[f"Hangboards/{slug}/assets/{asset_name}.png"] = (
@@ -808,8 +819,8 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
 def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open() -> None:
     """Fails if an image read does not make its requested blob most recent."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    files = _complete_package("fixture-multi", board)
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = FakeGitHubClient({BRANCH: files})
@@ -821,22 +832,22 @@ def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open(
     store.primary_image_bytes(TOKEN, BRANCH, "fixture.multi")
 
     assert tuple(store._blobs.values()) == (
-        files["Hangboards/fixture-v2/assets/primary.png"],
+        files["Hangboards/fixture-multi/assets/primary.png"],
     )
 
 
 def test_cached_multi_presentation_open_reuses_presentation_blob_cache() -> None:
     """Fails if staged presentation reads bypass cache hits on a later open."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    files = _complete_package("fixture-multi", board)
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(client)
     image_shas = {
-        FakeGitHubClient._sha(files["Hangboards/fixture-v2/assets/primary.png"]),
-        FakeGitHubClient._sha(files["Hangboards/fixture-v2/assets/back.png"]),
+        FakeGitHubClient._sha(files["Hangboards/fixture-multi/assets/primary.png"]),
+        FakeGitHubClient._sha(files["Hangboards/fixture-multi/assets/back.png"]),
     }
 
     store.open_package(TOKEN, BRANCH, "fixture.multi")
@@ -854,8 +865,8 @@ def test_cached_multi_presentation_open_reuses_presentation_blob_cache() -> None
 def test_hosted_presentation_image_reads_only_the_requested_asset() -> None:
     """Fails if an image route downloads sibling presentation blobs."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    files = _complete_package("fixture-multi", board)
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = FakeGitHubClient({BRANCH: files})
@@ -863,7 +874,7 @@ def test_hosted_presentation_image_reads_only_the_requested_asset() -> None:
     image_shas = {
         path: FakeGitHubClient._sha(content)
         for path, content in files.items()
-        if path.startswith("Hangboards/fixture-v2/assets/")
+        if path.startswith("Hangboards/fixture-multi/assets/")
     }
 
     image = store.presentation_image_bytes(TOKEN, BRANCH, "fixture.multi", "back")
@@ -873,9 +884,9 @@ def test_hosted_presentation_image_reads_only_the_requested_asset() -> None:
         for call in client.calls_named("get_blob")
         if call.args[1] in image_shas.values()
     }
-    assert image == files["Hangboards/fixture-v2/assets/back.png"]
+    assert image == files["Hangboards/fixture-multi/assets/back.png"]
     assert loaded_image_shas == {
-        image_shas["Hangboards/fixture-v2/assets/back.png"]
+        image_shas["Hangboards/fixture-multi/assets/back.png"]
     }
 
 
@@ -979,26 +990,22 @@ def test_open_validates_presentation_assets_before_loading_nonprimary_images() -
     """Fails if an invalid presentation inventory downloads its extra image."""
     board = multi_presentation_board_document("fixture.multi")
     presentations = board["presentations"]
-    holds = board["holds"]
     assert isinstance(presentations, list)
-    assert isinstance(holds, list)
     presentations[:] = [presentations[0]]
-    back_hold = holds[1]
-    assert isinstance(back_hold, dict)
-    back_hold["presentationID"] = "front"
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    board["contacts"] = [board["contacts"][0]]
+    files = _complete_package("fixture-multi", board)
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(client)
     nonprimary_sha = FakeGitHubClient._sha(
-        files["Hangboards/fixture-v2/assets/back.png"]
+        files["Hangboards/fixture-multi/assets/back.png"]
     )
 
     with pytest.raises(
         board_package.BoardPackageError,
-        match="assets must exactly match its presentations",
+        match="undeclared presentation asset",
     ):
         store.open_package(TOKEN, BRANCH, "fixture.multi")
 
@@ -1010,15 +1017,15 @@ def test_open_validates_presentation_assets_before_loading_nonprimary_images() -
 def test_failed_multi_presentation_open_does_not_cache_sibling_image_blobs() -> None:
     """Fails if a concurrent image failure leaves nondeterministic sibling cache entries."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    files = _complete_package("fixture-multi", board)
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = _FailingPresentationBlobClient(
-        files, "Hangboards/fixture-v2/assets/back.png"
+        files, "Hangboards/fixture-multi/assets/back.png"
     )
     store = github_board_store.GitHubBoardStore(client)
-    board_sha = FakeGitHubClient._sha(files["Hangboards/fixture-v2/board.json"])
+    board_sha = FakeGitHubClient._sha(files["Hangboards/fixture-multi/board.json"])
 
     with pytest.raises(board_package.BoardPackageError, match="primary image is missing"):
         store.open_package(TOKEN, BRANCH, "fixture.multi")
@@ -1029,13 +1036,13 @@ def test_failed_multi_presentation_open_does_not_cache_sibling_image_blobs() -> 
 def test_failed_multi_presentation_open_preserves_cached_sibling_recency() -> None:
     """Fails if a staged cache hit changes LRU order before package success."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    primary_path = "Hangboards/fixture-v2/assets/primary.png"
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    files = _complete_package("fixture-multi", board)
+    primary_path = "Hangboards/fixture-multi/assets/primary.png"
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = _FailingPresentationBlobClient(
-        files, "Hangboards/fixture-v2/assets/back.png"
+        files, "Hangboards/fixture-multi/assets/back.png"
     )
     store = github_board_store.GitHubBoardStore(client)
     store.discover_packages(TOKEN, BRANCH)
@@ -1113,8 +1120,7 @@ def test_cached_opened_package_saves_with_only_conditional_put_across_commits() 
     store = github_board_store.GitHubBoardStore(client)
     opened = store.open_package(TOKEN, BRANCH, "fixture.board")
     first_document = copy.deepcopy(board_package.editor_document(opened))
-    for region in first_document["regions"]:
-        region["type"] = "edge"
+    first_document["contacts"][0]["kind"] = "edge"
     before_first_save = len(client.calls)
 
     first_saved, _first_commit = store.save_editor_document(
@@ -1126,8 +1132,7 @@ def test_cached_opened_package_saves_with_only_conditional_put_across_commits() 
     )
     first_save_calls = client.calls[before_first_save:]
     second_document = copy.deepcopy(board_package.editor_document(first_saved))
-    for region in second_document["regions"]:
-        region["type"] = "jug"
+    second_document["contacts"][0]["kind"] = "jug"
     before_second_save = len(client.calls)
 
     saved, _second_commit = store.save_editor_document(
@@ -1140,7 +1145,7 @@ def test_cached_opened_package_saves_with_only_conditional_put_across_commits() 
 
     assert [call.method for call in first_save_calls] == ["put_file"]
     assert [call.method for call in client.calls[before_second_save:]] == ["put_file"]
-    assert saved.board["holds"][0]["kind"] == "jug"
+    assert saved.board["contacts"][0]["kind"] == "jug"
 
 
 def test_cached_store_direct_board_save_opens_the_live_package_before_writing() -> None:
@@ -1151,8 +1156,7 @@ def test_cached_store_direct_board_save_opens_the_live_package_before_writing() 
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
     document = copy.deepcopy(document)
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
     client.calls.clear()
 
     saved, _commit = store.save_board_editor_document(
@@ -1162,7 +1166,7 @@ def test_cached_store_direct_board_save_opens_the_live_package_before_writing() 
         document,
     )
 
-    assert saved.board["holds"][0]["kind"] == "edge"
+    assert saved.board["contacts"][0]["kind"] == "edge"
     assert len(client.calls_named("get_branch_head_sha")) == 1
     assert len(client.calls_named("get_tree")) == 1
     assert len(client.calls_named("get_blob")) == 2
@@ -1172,8 +1176,8 @@ def test_cached_store_direct_board_save_opens_the_live_package_before_writing() 
 def test_cached_store_direct_multi_presentation_save_reuses_catalog_board_blob() -> None:
     """Fails if the cache-enabled save fallback re-downloads catalog metadata."""
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+    files = _complete_package("fixture-multi", board)
+    files["Hangboards/fixture-multi/assets/back.png"] = _primary_image_with_text_chunk(
         b"back"
     )
     client = FakeGitHubClient({BRANCH: files})
@@ -1182,17 +1186,18 @@ def test_cached_store_direct_multi_presentation_save_reuses_catalog_board_blob()
             github_board_store.open_package(client, TOKEN, BRANCH, "fixture.multi")
         )
     )
-    for region in document["regions"]:
-        region["type"] = "edge"
+    next(
+        contact for contact in document["contacts"] if contact["id"] == "contact-left"
+    )["kind"] = "edge"
     client.calls.clear()
     store = github_board_store.GitHubBoardStore(client)
-    board_sha = FakeGitHubClient._sha(files["Hangboards/fixture-v2/board.json"])
+    board_sha = FakeGitHubClient._sha(files["Hangboards/fixture-multi/board.json"])
 
     saved, _commit = store.save_board_editor_document(
         TOKEN, BRANCH, "fixture.multi", document
     )
 
-    assert saved.board["holds"][0]["kind"] == "edge"
+    assert saved.board["contacts"][0]["kind"] == "edge"
     assert [
         call.args[1] for call in client.calls_named("get_blob")
     ].count(board_sha) == 1
@@ -1207,8 +1212,7 @@ def test_cached_opened_package_save_rejects_a_concurrent_board_json_change() -> 
     document = copy.deepcopy(
         board_package.editor_document(store.open_package(TOKEN, BRANCH, "fixture.board"))
     )
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
 
     with pytest.raises(board_package.BoardSaveConflictError, match="file changed"):
         store.save_editor_document(
@@ -1369,9 +1373,7 @@ def test_discovery_rejects_a_completed_package_with_extra_remote_files() -> None
 
 def test_open_rejects_geometry_that_header_only_discovery_defers() -> None:
     board = board_document("fixture.board")
-    hold = board["holds"][0]
-    assert isinstance(hold, dict)
-    piece = hold["geometry"][0]
+    piece = geometry_for(board)["contact-left"][0]
     assert isinstance(piece, dict)
     piece["shape"] = {
         "type": "path",
@@ -1389,7 +1391,7 @@ def test_open_rejects_geometry_that_header_only_discovery_defers() -> None:
         == "fixture.board"
     )
     with pytest.raises(
-        board_package.BoardPackageError, match="must enclose area"
+        board_package.BoardPackageError, match="invalid geometry"
     ):
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
 
@@ -1410,9 +1412,9 @@ def test_header_only_discovery_defers_post_ihdr_png_corruption() -> None:
         github_board_store.discover_packages(client, TOKEN, BRANCH)[0].board_id
         == "fixture.board"
     )
-    with pytest.raises(board_package.BoardPackageError, match="decodable PNG"):
+    with pytest.raises(board_package.BoardPackageError):
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
-    with pytest.raises(board_package.BoardPackageError, match="decodable PNG"):
+    with pytest.raises(board_package.BoardPackageError):
         github_board_store.primary_image_bytes(client, TOKEN, BRANCH, "fixture.board")
 
 
@@ -1432,14 +1434,16 @@ def test_noop_save_uses_the_live_sha_without_writing_to_github() -> None:
 
 def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None:
     board = board_document("fixture.board")
-    board["holds"][0]["sizeMillimeters"] = 20
+    board["contacts"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 20,
+        "upperBound": 20,
+    }
     client = _client(("fixture-board", board))
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
     document = copy.deepcopy(document)
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
 
     saved, commit_sha = github_board_store.save_editor_document(
         client, TOKEN, BRANCH, "fixture-board", document
@@ -1448,9 +1452,12 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     stored = json.loads(
         client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
     )
-    assert saved.board["holds"][0]["kind"] == "edge"
-    assert stored["holds"][0]["name"] == "Left hold"
-    assert stored["holds"][0]["sizeMillimeters"] == 20
+    assert saved.board["contacts"][0]["kind"] == "edge"
+    assert stored["contacts"][0]["name"] == "Left contact"
+    assert stored["contacts"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 20,
+        "upperBound": 20,
+    }
     assert commit_sha != saved.board_json_sha
     assert (
         saved.board_json_sha
@@ -1469,23 +1476,27 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     assert saved.board_json_sha == expected_sha
 
 
-def test_changed_hosted_save_reassigns_a_hold_between_equipment_objects() -> None:
+def test_changed_hosted_save_reassigns_a_contact_between_equipment_objects() -> None:
     board = board_document("fixture.board")
     board["equipmentObjects"] = [{"id": "left"}, {"id": "right"}]
-    left_a = board["holds"][0]
+    left_a = board["contacts"][0]
     left_a.update(id="left-a", name="Left A", equipmentObjectID="left")
     left_b = copy.deepcopy(left_a)
     left_b.update(id="left-b", name="Left B")
     right_a = copy.deepcopy(left_a)
     right_a.update(id="right-a", name="Right A", equipmentObjectID="right")
-    board["holds"] = [left_a, left_b, right_a]
+    board["contacts"] = [left_a, left_b, right_a]
+    piece = geometry_for(board).pop("contact-left")
+    geometry_for(board).update(
+        {"left-a": copy.deepcopy(piece), "left-b": copy.deepcopy(piece), "right-a": piece}
+    )
     client = _client(("fixture-board", board))
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
-    for region in document["regions"]:
-        if region["metadata"]["holdID"] == "left-b":
-            region["equipmentObjectID"] = "right"
+    next(contact for contact in document["contacts"] if contact["id"] == "left-b")[
+        "equipmentObjectID"
+    ] = "right"
 
     saved, _commit_sha = github_board_store.save_editor_document(
         client, TOKEN, BRANCH, "fixture-board", document
@@ -1496,21 +1507,23 @@ def test_changed_hosted_save_reassigns_a_hold_between_equipment_objects() -> Non
     )
     assert saved.board["equipmentObjects"] == [{"id": "left"}, {"id": "right"}]
     assert {
-        hold["id"]: hold["equipmentObjectID"] for hold in saved.board["holds"]
+        contact["id"]: contact["equipmentObjectID"] for contact in saved.board["contacts"]
     } == {"left-a": "left", "left-b": "right", "right-a": "right"}
     assert {
-        hold["id"]: hold["equipmentObjectID"] for hold in stored["holds"]
+        contact["id"]: contact["equipmentObjectID"] for contact in stored["contacts"]
     } == {"left-a": "left", "left-b": "right", "right-a": "right"}
 
 
 def test_hosted_save_rejects_changed_equipment_object_inventory() -> None:
     board = board_document("fixture.board")
     board["equipmentObjects"] = [{"id": "left"}, {"id": "right"}]
-    left = board["holds"][0]
+    left = board["contacts"][0]
     left.update(equipmentObjectID="left")
     right = copy.deepcopy(left)
-    right.update(id="hold-right", name="Right hold", equipmentObjectID="right")
-    board["holds"] = [left, right]
+    right.update(id="contact-right", name="Right contact", equipmentObjectID="right")
+    board["contacts"] = [left, right]
+    piece = geometry_for(board).pop("contact-left")
+    geometry_for(board).update({"contact-left": copy.deepcopy(piece), "contact-right": piece})
     client = _client(("fixture-board", board))
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
@@ -1519,7 +1532,7 @@ def test_hosted_save_rejects_changed_equipment_object_inventory() -> None:
 
     with pytest.raises(
         board_package.BoardPackageError,
-        match="equipment objects do not match the board package",
+        match="unknown keys",
     ):
         github_board_store.save_editor_document(
             client, TOKEN, BRANCH, "fixture-board", document
@@ -1530,22 +1543,26 @@ def test_hosted_save_rejects_changed_equipment_object_inventory() -> None:
 
 def test_changed_hosted_save_preserves_reciprocal_gaston_pair_metadata() -> None:
     board = board_document("fixture.board")
-    left = board["holds"][0]
+    left = board["contacts"][0]
     assert isinstance(left, dict)
     right = copy.deepcopy(left)
     left.update(
         id="gaston-left",
         name="Left gaston",
         kind="gaston",
-        pairedHoldID="gaston-right",
+        pairedContactID="gaston-right",
     )
     right.update(
         id="gaston-right",
         name="Right gaston",
         kind="gaston",
-        pairedHoldID="gaston-left",
+        pairedContactID="gaston-left",
     )
-    board["holds"] = [left, right]
+    board["contacts"] = [left, right]
+    piece = geometry_for(board).pop("contact-left")
+    geometry_for(board).update(
+        {"gaston-left": copy.deepcopy(piece), "gaston-right": piece}
+    )
     client = _client(("fixture-board", board))
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
@@ -1558,11 +1575,11 @@ def test_changed_hosted_save_preserves_reciprocal_gaston_pair_metadata() -> None
     stored = json.loads(
         client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
     )
-    assert [hold["pairedHoldID"] for hold in saved.board["holds"]] == [
+    assert [contact["pairedContactID"] for contact in saved.board["contacts"]] == [
         "gaston-right",
         "gaston-left",
     ]
-    assert [hold["pairedHoldID"] for hold in stored["holds"]] == [
+    assert [contact["pairedContactID"] for contact in stored["contacts"]] == [
         "gaston-right",
         "gaston-left",
     ]
@@ -1570,7 +1587,7 @@ def test_changed_hosted_save_preserves_reciprocal_gaston_pair_metadata() -> None
 
 def test_changed_hosted_save_persists_a_bendable_curve_marker() -> None:
     board = board_document("fixture.board")
-    board["holds"][0]["geometry"][0]["shape"] = {
+    geometry_for(board)["contact-left"][0]["shape"] = {
         "type": "path",
         "commands": [
             {"command": "move", "to": [0, 0]},
@@ -1595,7 +1612,7 @@ def test_changed_hosted_save_persists_a_bendable_curve_marker() -> None:
         client, TOKEN, BRANCH, "fixture-board", document
     )
 
-    commands = saved.board["holds"][0]["geometry"][0]["shape"]["commands"]
+    commands = geometry_for(saved.board)["contact-left"][0]["shape"]["commands"]
     assert commands[1]["bendable"] is True
     stored = json.loads(
         client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
@@ -1603,41 +1620,40 @@ def test_changed_hosted_save_persists_a_bendable_curve_marker() -> None:
     assert "bendableCommandIndexes" not in json.dumps(stored)
 
 
-def test_hosted_save_preserves_unselected_holds_and_presentation_assets() -> None:
+def test_hosted_save_preserves_unselected_contacts_and_presentation_assets() -> None:
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    files = _complete_package("fixture-multi", board)
     client = FakeGitHubClient({BRANCH: files})
     opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.multi")
     document = board_package.editor_document(opened, "front")
-    back_before = copy.deepcopy(opened.board["holds"][1])
+    back_before = copy.deepcopy(opened.board["contacts"][1])
     assets_before = {
         path: client.file_bytes(BRANCH, path)
         for path in (
-            "Hangboards/fixture-v2/assets/primary.png",
-            "Hangboards/fixture-v2/assets/back.png",
+            "Hangboards/fixture-multi/assets/primary.png",
+            "Hangboards/fixture-multi/assets/back.png",
         )
     }
-    for region in document["regions"]:
-        region["type"] = "sloper"
+    next(
+        contact for contact in document["contacts"] if contact["id"] == "contact-left"
+    )["kind"] = "sloper"
 
     saved, _commit_sha = github_board_store.save_editor_document(
-        client, TOKEN, BRANCH, "fixture-v2", document
+        client, TOKEN, BRANCH, "fixture-multi", document
     )
 
-    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
+    assert next(contact for contact in saved.board["contacts"] if contact["id"] == "contact-back") == back_before
     assert github_board_store.presentation_image_bytes(
         client, TOKEN, BRANCH, "fixture.multi", "back"
-    ) == assets_before["Hangboards/fixture-v2/assets/back.png"]
+    ) == assets_before["Hangboards/fixture-multi/assets/back.png"]
     assert {
         path: client.file_bytes(BRANCH, path) for path in assets_before
     } == assets_before
 
 
-def test_hosted_delete_presentation_removes_holds_and_only_its_unshared_asset() -> None:
+def test_hosted_delete_presentation_removes_contacts_and_only_its_unshared_asset() -> None:
     board = multi_presentation_board_document("fixture.multi")
-    files = _complete_package("fixture-v2", board)
-    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    files = _complete_package("fixture-multi", board)
     client = FakeGitHubClient({BRANCH: files})
     store = github_board_store.GitHubBoardStore(client)
     mutations_before_delete = len(client.calls)
@@ -1648,32 +1664,27 @@ def test_hosted_delete_presentation_removes_holds_and_only_its_unshared_asset() 
 
     assert [presentation.id for presentation in deleted.presentations] == ["back"]
     assert deleted.presentation().id == "back"
-    assert [hold["id"] for hold in deleted.board["holds"]] == ["hold-back"]
-    assert client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/back.png")
+    assert [contact["id"] for contact in deleted.board["contacts"]] == ["contact-back"]
+    assert client.file_bytes(BRANCH, "Hangboards/fixture-multi/assets/back.png")
     with pytest.raises(KeyError):
-        client.file_bytes(BRANCH, "Hangboards/fixture-v2/assets/primary.png")
+        client.file_bytes(BRANCH, "Hangboards/fixture-multi/assets/primary.png")
     assert client.calls_named("put_file") == ()
     assert [call.method for call in client.calls[mutations_before_delete:]][-1:] == [
         "commit_files"
     ]
-    board_package._validate_board(
-        deleted.board,
-        deleted.image_width,
-        deleted.image_height,
-        presentations=deleted.presentations,
-        allow_missing_kind=True,
-    )
+    board_package.validate_catalog_board(deleted.board)
 
 
-def test_changed_hosted_save_persists_optional_hold_metadata() -> None:
+def test_changed_hosted_save_persists_optional_contact_metadata() -> None:
     client = _client(("fixture-board", board_document("fixture.board")))
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
-    for region in document["regions"]:
-        region["fingerCapacity"] = 3
-        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
-        region["handCapacity"] = 2
+    document["contacts"][0].update(
+        fingerCapacity=3,
+        depthRangeMillimeters={"lowerBound": 12, "upperBound": 16},
+        handCapacity=2,
+    )
 
     saved, _commit_sha = github_board_store.save_editor_document(
         client, TOKEN, BRANCH, "fixture-board", document
@@ -1682,18 +1693,18 @@ def test_changed_hosted_save_persists_optional_hold_metadata() -> None:
     stored = json.loads(
         client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
     )
-    assert saved.board["holds"][0]["fingerCapacity"] == 3
-    assert stored["holds"][0]["fingerCapacity"] == 3
-    assert saved.board["holds"][0]["depthRangeMillimeters"] == {
+    assert saved.board["contacts"][0]["fingerCapacity"] == 3
+    assert stored["contacts"][0]["fingerCapacity"] == 3
+    assert saved.board["contacts"][0]["depthRangeMillimeters"] == {
         "lowerBound": 12,
         "upperBound": 16,
     }
-    assert stored["holds"][0]["depthRangeMillimeters"] == {
+    assert stored["contacts"][0]["depthRangeMillimeters"] == {
         "lowerBound": 12,
         "upperBound": 16,
     }
-    assert saved.board["holds"][0]["handCapacity"] == 2
-    assert stored["holds"][0]["handCapacity"] == 2
+    assert saved.board["contacts"][0]["handCapacity"] == 2
+    assert stored["contacts"][0]["handCapacity"] == 2
 
 
 def test_changed_hosted_save_persists_optional_hand_capacity() -> None:
@@ -1701,8 +1712,7 @@ def test_changed_hosted_save_persists_optional_hand_capacity() -> None:
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
-    for region in document["regions"]:
-        region["handCapacity"] = 2
+    document["contacts"][0]["handCapacity"] = 2
 
     saved, _commit_sha = github_board_store.save_editor_document(
         client, TOKEN, BRANCH, "fixture-board", document
@@ -1711,8 +1721,8 @@ def test_changed_hosted_save_persists_optional_hand_capacity() -> None:
     stored = json.loads(
         client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
     )
-    assert saved.board["holds"][0]["handCapacity"] == 2
-    assert stored["holds"][0]["handCapacity"] == 2
+    assert saved.board["contacts"][0]["handCapacity"] == 2
+    assert stored["contacts"][0]["handCapacity"] == 2
 
 
 def test_stale_sha_conflict_becomes_a_board_save_conflict() -> None:
@@ -1723,8 +1733,7 @@ def test_stale_sha_conflict_becomes_a_board_save_conflict() -> None:
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
     document = copy.deepcopy(document)
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
     with pytest.raises(board_package.BoardSaveConflictError, match="file changed"):
         github_board_store.save_editor_document(
             client, TOKEN, BRANCH, "fixture-board", document
@@ -1740,8 +1749,7 @@ def test_save_rejects_a_replaced_slug_identity_before_writing() -> None:
             )
         )
     )
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
     replaced = _client(("fixture-board", board_document("different.board")))
 
     with pytest.raises(
@@ -1768,8 +1776,7 @@ def test_save_propagates_non_conflict_github_errors() -> None:
             github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
         )
     )
-    for region in document["regions"]:
-        region["type"] = "edge"
+    document["contacts"][0]["kind"] = "edge"
 
     with pytest.raises(GitHubForbiddenError, match="write denied"):
         github_board_store.save_editor_document(

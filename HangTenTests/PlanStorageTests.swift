@@ -3,6 +3,57 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testPlanDecodesRequirementWithoutContactIDs() throws {
+        let target = try JSONDecoder().decode(
+            ContactRequirement.self,
+            from: Data(
+                #"{"kind":"edge","depthRangeMillimeters":{"minimum":18,"maximum":22},"selection":"bilateralPair"}"#.utf8
+            )
+        )
+
+        XCTAssertEqual(target.kind, .edge)
+        XCTAssertEqual(
+            target.depthRangeMillimeters,
+            MillimeterRange(minimum: 18, maximum: 22)
+        )
+        XCTAssertEqual(target.selection, .bilateralPair)
+    }
+
+    func testContactRequirementRejectsEveryFormerTargetKey() throws {
+        let formerKeys = [
+            "semantic",
+            "semantics",
+            "hold" + "IDs",
+            "fallback" + "Features"
+        ]
+
+        for formerKey in formerKeys {
+            let data = try JSONSerialization.data(withJSONObject: [
+                formerKey: [],
+                "selection": "allMatching"
+            ])
+            XCTAssertThrowsError(
+                try JSONDecoder().decode(ContactRequirement.self, from: data),
+                formerKey
+            )
+        }
+    }
+
+    func testPlanLibraryRejectsFormerBoardMappingRoot() throws {
+        let data = try JSONSerialization.data(withJSONObject: [
+            "metadata": [
+                "id": "fixture",
+                "title": "Fixture",
+                "generatedAt": "2026-09-12"
+            ],
+            "blocks": [],
+            "plans": [],
+            "board" + "Mappings": []
+        ])
+
+        XCTAssertThrowsError(try JSONDecoder().decode(PlanLibraryDefinition.self, from: data))
+    }
+
     func testMegosRepeaterPlanPreservesStructuredSideSequence() throws {
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
         // The composed plan starts with source-provided warm-up hangs. The
@@ -119,83 +170,6 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertEqual(decoded.title, "Test plan")
         XCTAssertEqual(decoded.category, "test")
-    }
-
-    func testSemanticHoldMappingsDecodeAndValidatePositionIDs() throws {
-        let mapped = try JSONDecoder().decode(
-            SemanticHoldMappingDefinition.self,
-            from: Data(#"{"holdIDs":["fixture.edge"],"positionIDs":["front"]}"#.utf8)
-        )
-        let legacy = try JSONDecoder().decode(
-            SemanticHoldMappingDefinition.self,
-            from: Data(#"{"holdIDs":["fixture.edge"]}"#.utf8)
-        )
-        let board = TrainingBoard(
-            id: "fixture.board",
-            manufacturer: "Fixture Maker",
-            name: "Fixture Board",
-            subtitle: "Fixture",
-            dimensions: nil,
-            aspectRatio: 2,
-            holds: [
-                BoardHold(
-                    id: "fixture.edge",
-                    name: "Edge",
-                    kind: .edge,
-                ),
-            ],
-            productURL: URL(string: "https://example.com/fixture")!,
-            photoAssetName: nil,
-            presentations: [
-                rasterPresentation(
-                    id: "front",
-                    frames: ["fixture.edge": CGRect(x: 0, y: 0, width: 1, height: 1)]
-                ),
-            ],
-            positions: [BoardPosition(id: "front", presentationID: "front")]
-        )
-        let library = makeLibrary(
-            steps: [makeStep(id: "positioned", duration: 10, targets: [.semantic("edge")], segments: [])],
-            boardID: board.id,
-            boardMappings: [
-                BoardMappingDefinition(
-                    boardID: board.id,
-                    semanticHolds: [
-                        "edge": mapped,
-                        "duplicate": SemanticHoldMappingDefinition(
-                            holdIDs: ["fixture.edge"],
-                            positionIDs: ["front", "front"]
-                        ),
-                        "unknown": SemanticHoldMappingDefinition(
-                            holdIDs: ["fixture.edge"],
-                            positionIDs: ["missing"]
-                        ),
-                    ]
-                ),
-            ]
-        )
-        let decodedLibrary = try JSONDecoder().decode(
-            PlanLibraryDefinition.self,
-            from: JSONEncoder().encode(library)
-        )
-
-        XCTAssertEqual(mapped.positionIDs, ["front"])
-        XCTAssertEqual(legacy.positionIDs, [])
-        XCTAssertEqual(
-            decodedLibrary.boardMappings[0].semanticHolds["edge"]?.positionIDs,
-            ["front"]
-        )
-        XCTAssertTrue(decodedLibrary.validationIssues(availableBoards: [board]).contains {
-            $0.message == "Position IDs must be unique."
-        })
-        XCTAssertTrue(decodedLibrary.validationIssues(availableBoards: [board]).contains {
-            $0.message == "Unknown position ID \"missing\" for board \"fixture.board\"."
-        })
-        let encodedLegacy = try JSONEncoder().encode(legacy)
-        let encodedLegacyObject = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: encodedLegacy) as? [String: Any]
-        )
-        XCTAssertNil(encodedLegacyObject["positionIDs"])
     }
 
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
@@ -316,7 +290,6 @@ final class PlanStorageTests: XCTestCase {
                 "generatedAt": "2026-08-24",
                 "notes": []
               },
-              "boardMappings": [],
               "blocks": [],
               "plans": []
             }
@@ -337,7 +310,6 @@ final class PlanStorageTests: XCTestCase {
                 "generatedAt": "2026-08-24",
                 "notes": []
               },
-              "boardMappings": [],
               "blocks": [],
               "plans": []
             }
@@ -370,7 +342,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(metadata["version"])
     }
 
-    func testBundledPlanLibraryLoadsWithoutFormerFeatureAliases() throws {
+    func testBundledPlanLibraryContainsOnlyContactRequirements() throws {
         let data = try bundledPlanLibraryData()
         let document = try XCTUnwrap(
             JSONSerialization.jsonObject(with: data) as? [String: Any]
@@ -379,12 +351,24 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertNil(document["schemaVersion"])
         XCTAssertNil(metadata["version"])
-        XCTAssertEqual(fallbackFeatureAliases(in: document), [])
+        XCTAssertEqual(legacyPlanTargetKeys(in: document), [])
         XCTAssertNoThrow(
             try PlanLibraryStore(
                 builtInData: data,
                 packageStore: BoardCatalog.packageStore
             )
+        )
+    }
+
+    func testBundledPlanLibraryValidatesAgainstPackagedBoards() throws {
+        let definition = try JSONDecoder().decode(
+            PlanLibraryDefinition.self,
+            from: bundledPlanLibraryData()
+        )
+
+        XCTAssertEqual(
+            definition.validationIssues(availableBoards: BoardCatalog.all),
+            []
         )
     }
 
@@ -517,46 +501,6 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Lattice max hang protocol")
     }
 
-    func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
-        let packageStore = BoardCatalog.packageStore
-        let store = try PlanLibraryStore(
-            builtInData: bundledPlanLibraryData(),
-            packageStore: packageStore
-        )
-        let compactMapping = try XCTUnwrap(
-            store.definition.boardMappings.first {
-                $0.boardID == "metolius.wood-grips-compact-ii"
-            }
-        )
-        let expectedHoldIDs = ["edge-19-left", "edge-19-right"]
-
-        XCTAssertEqual(
-            compactMapping.semanticHolds["edge-19"]?.holdIDs,
-            expectedHoldIDs
-        )
-        XCTAssertEqual(packageStore.semantics(for: compactMapping.boardID), [:])
-        XCTAssertEqual(
-            store.plan(id: "research.max-hangs")?.steps.first?.targets,
-            [.feature(.mediumEdge, fallback: .largeEdge)]
-        )
-    }
-
-    func testBuiltInMigrationDefinitionKeepsThePlanOwnedFallbackMapping() throws {
-        let generated = BuiltInPlanLibraryDefinition.document
-        let bundled = try JSONDecoder().decode(
-            PlanLibraryDefinition.self,
-            from: bundledPlanLibraryData()
-        )
-
-        XCTAssertEqual(generated.boardMappings, bundled.boardMappings)
-        XCTAssertNoThrow(
-            try PlanLibraryStore(
-                builtInDefinition: generated,
-                packageStore: BoardCatalog.packageStore
-            )
-        )
-    }
-
     func testGripTypeRoundTripsDistinctCurrentRawValues() throws {
         for gripType in GripType.allCases {
             let encoded = try JSONEncoder().encode(gripType)
@@ -572,104 +516,6 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertThrowsError(
             try JSONDecoder().decode(GripType.self, from: Data(#""campusing""#.utf8))
         )
-    }
-
-    func testLegacyPocketFeatureTargetDecodesAndReencodesAsKindTarget() throws {
-        let legacy = Data(#"{ "feature": "pocket", "fingerCapacity": 3 }"#.utf8)
-
-        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
-        let encoded = try JSONEncoder().encode(target)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-
-        XCTAssertEqual(object["kind"] as? String, "pocket")
-        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
-        XCTAssertNil(object["feature"])
-    }
-
-    func testJugFeatureTargetEncodesAsCanonicalKindTarget() throws {
-        let target = WorkoutTargetDefinition.feature(.jug, fallbacks: [])
-        let encoded = try JSONEncoder().encode(target)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-
-        XCTAssertEqual(object["kind"] as? String, "jug")
-        XCTAssertNil(object["feature"])
-    }
-
-    func testLegacyDuplicateFallbackFeaturesAreDroppedWhenEncodingKindTarget() throws {
-        let legacy = Data(
-            #"{ "feature": "pocket", "fingerCapacity": 3, "fallbackFeatures": ["jug", "pocket"] }"#.utf8
-        )
-
-        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
-        let encoded = try JSONEncoder().encode(target)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-
-        XCTAssertEqual(object["kind"] as? String, "pocket")
-        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
-        XCTAssertNil(object["fallbackFeatures"])
-    }
-
-    func testLegacyDuplicateFallbackFeaturesAreDroppedWhileValidFeatureFallbacksRemain() throws {
-        let legacy = Data(
-            #"{ "feature": "mediumEdge", "fallbackFeatures": ["jug", "largeEdge", "pocket"] }"#.utf8
-        )
-
-        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
-        let encoded = try JSONEncoder().encode(target)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-
-        XCTAssertEqual(object["feature"] as? String, "mediumEdge")
-        XCTAssertEqual(object["fallbackFeatures"] as? [String], ["largeEdge"])
-    }
-
-    func testUnknownFallbackFeatureIsRejected() {
-        let invalid = Data(#"{ "feature": "mediumEdge", "fallbackFeatures": ["unknownFeature"] }"#.utf8)
-
-        XCTAssertThrowsError(
-            try JSONDecoder().decode(WorkoutTargetDefinition.self, from: invalid)
-        )
-    }
-
-    func testCanonicalPocketKindTargetRetainsFingerCapacityWhenEncoded() throws {
-        let canonical = Data(#"{ "kind": "pocket", "fingerCapacity": 3 }"#.utf8)
-
-        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: canonical)
-        let encoded = try JSONEncoder().encode(target)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-
-        XCTAssertEqual(object["kind"] as? String, "pocket")
-        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
-    }
-
-    func testWorkoutTargetDefinitionRejectsOutOfRangeDecodedFingerCapacities() {
-        for invalidCapacity in [0, 5] {
-            let payload = Data(#"{ "kind": "pocket", "fingerCapacity": \#(invalidCapacity) }"#.utf8)
-
-            XCTAssertThrowsError(
-                try JSONDecoder().decode(WorkoutTargetDefinition.self, from: payload)
-            ) { error in
-                guard case let DecodingError.dataCorrupted(context) = error else {
-                    return XCTFail("Expected invalid finger capacity to produce a data-corrupted decoding error, got: \(error)")
-                }
-
-                XCTAssertEqual(context.codingPath.last?.stringValue, "fingerCapacity")
-            }
-        }
-    }
-
-    func testWorkoutTargetDefinitionAcceptsValidAndAbsentDecodedFingerCapacities() throws {
-        let cases: [(Data, WorkoutTargetDefinition)] = [
-            (Data(#"{ "kind": "pocket", "fingerCapacity": 1 }"#.utf8), .kind(.pocket, fingerCapacity: 1)),
-            (Data(#"{ "kind": "pocket", "fingerCapacity": 4 }"#.utf8), .kind(.pocket, fingerCapacity: 4)),
-            (Data(#"{ "kind": "pocket" }"#.utf8), .kind(.pocket))
-        ]
-
-        for (payload, expectedTarget) in cases {
-            XCTAssertEqual(
-                try JSONDecoder().decode(WorkoutTargetDefinition.self, from: payload),
-                expectedTarget
-            )
-        }
     }
 
     func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
@@ -766,7 +612,7 @@ final class PlanStorageTests: XCTestCase {
     func testUnversionedDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
-            targets: [.feature(.mediumEdge, fallbacks: [])],
+            targets: [.feature(.mediumEdge)],
             timing: .fixed,
             duration: 20
         )
@@ -780,17 +626,17 @@ final class PlanStorageTests: XCTestCase {
             makeStep(
                 id: "fixed",
                 duration: 60,
-                targets: [.feature(.mediumEdge, fallbacks: [])],
+                targets: [.feature(.mediumEdge)],
                 segments: [fixedWork, fixedRest]
             ),
             makeStep(
                 id: "stopwatch",
                 duration: 60,
-                targets: [.feature(.roundSloper, fallbacks: [])],
+                targets: [.feature(.roundSloper)],
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.roundSloper, fallbacks: [])],
+                        targets: [.feature(.roundSloper)],
                         timing: .stopwatch,
                         duration: nil
                     )
@@ -847,7 +693,6 @@ final class PlanStorageTests: XCTestCase {
                 "generatedAt": "2026-08-03",
                 "notes": []
               },
-              "boardMappings": [],
               "blocks": [{
                 "id": "segment.block",
                 "title": "Segment fixture",
@@ -858,17 +703,17 @@ final class PlanStorageTests: XCTestCase {
                   "accessory": "10s",
                   "duration": 20,
                   "phase": "hang",
-                  "targets": [{ "feature": "mediumEdge" }, { "kind": "jug" }],
+                  "targets": [{ "kind": "edge", "requiredFeatures": ["mediumEdge"], "selection": "allMatching" }, { "kind": "jug", "selection": "allMatching" }],
                   "segments": [
                     {
                       "kind": "work",
-                      "targets": [{ "feature": "mediumEdge" }, { "kind": "jug" }],
+                      "targets": [{ "kind": "edge", "requiredFeatures": ["mediumEdge"], "selection": "allMatching" }, { "kind": "jug", "selection": "allMatching" }],
                       "timing": "fixed",
                       "duration": 10
                     },
                     {
                       "kind": "work",
-                      "targets": [{ "feature": "mediumEdge" }],
+                      "targets": [{ "kind": "edge", "requiredFeatures": ["mediumEdge"], "selection": "allMatching" }],
                       "timing": "fixed",
                       "duration": 10
                     }
@@ -920,9 +765,9 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolvedSegments[1].target, .feature(.mediumEdge))
         XCTAssertEqual(
             persistedSegments[0].targets,
-            [.feature(.mediumEdge, fallbacks: []), .kind(.jug)]
+            [.feature(.mediumEdge), .kind(.jug)]
         )
-        XCTAssertEqual(persistedSegments[1].targets, [.feature(.mediumEdge, fallbacks: [])])
+        XCTAssertEqual(persistedSegments[1].targets, [.feature(.mediumEdge)])
     }
 
     func testPlanLibraryStoreRejectsFormerSingularSegmentTarget() {
@@ -935,7 +780,6 @@ final class PlanStorageTests: XCTestCase {
                 "generatedAt": "2026-08-24",
                 "notes": []
               },
-              "boardMappings": [],
               "blocks": [{
                 "id": "segment.block",
                 "title": "Segment block",
@@ -973,7 +817,6 @@ final class PlanStorageTests: XCTestCase {
                 "generatedAt": "2026-08-02",
                 "notes": []
               },
-              "boardMappings": [],
               "blocks": [{
                 "id": "legacy.block",
                 "title": "Legacy",
@@ -1000,11 +843,11 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "10s",
                     "duration": 30,
                     "phase": "hang",
-                    "targets": [{ "kind": "edge" }],
+                    "targets": [{ "kind": "edge", "selection": "allMatching" }],
                     "segments": [
                       {
                         "kind": "work",
-                        "targets": [{ "kind": "edge" }],
+                        "targets": [{ "kind": "edge", "selection": "allMatching" }],
                         "timing": "fixed",
                         "duration": 10
                       },
@@ -1023,10 +866,10 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "Repetitions",
                     "duration": 60,
                     "phase": "pull",
-                    "targets": [{ "kind": "jug" }],
+                    "targets": [{ "kind": "jug", "selection": "allMatching" }],
                     "segments": [{
                       "kind": "work",
-                        "targets": [{ "kind": "jug" }],
+                        "targets": [{ "kind": "jug", "selection": "allMatching" }],
                       "timing": "undefined"
                     }]
                   }
@@ -1087,7 +930,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testWorkSegmentRequiresTarget() {
+    func testCustomWorkSegmentRequiresTarget() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
             targets: [],
@@ -1095,7 +938,20 @@ final class PlanStorageTests: XCTestCase {
             duration: nil
         )
 
-        XCTAssertTrue(validationIssues(for: segment).contains {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "validation",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [segment]
+                )
+            ],
+            provenance: .custom,
+            sourceURL: nil
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
             $0.path == "blocks[0].steps[0].segments[0].targets"
         })
     }
@@ -1399,7 +1255,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.roundSloper),
+                    target: nil,
                     timing: .fixed,
                     duration: 10
                 )
@@ -1410,7 +1266,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .kind(.pocket),
+                    target: nil,
                     timing: .fixed,
                     duration: 5
                 )
@@ -1421,7 +1277,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.roundSloper),
+                    target: nil,
                     timing: .stopwatch,
                     duration: nil
                 )
@@ -1512,7 +1368,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testPlanLibraryRejectsUntargetedTimedHangOutsideOfficialRPTCImporter() {
+    func testPlanLibraryAllowsGenericSourceLinkedUntargetedTimedHang() {
         let selfSelectedHang = WorkoutStepDefinition(
             id: "self-selected-hang",
             title: "Self-selected hang",
@@ -1526,12 +1382,131 @@ final class PlanStorageTests: XCTestCase {
 
         let issues = makeLibrary(
             steps: [selfSelectedHang],
+            boardID: nil,
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertFalse(issues.contains {
+            $0.path == "blocks[0].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryRejectsBoardBoundSourceLinkedUntargetedTimedHang() {
+        let untargetedHang = WorkoutStepDefinition(
+            id: "board-bound-untargeted-hang",
+            title: "Board-bound untargeted hang",
+            instruction: "Hang.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+
+        let issues = makeLibrary(
+            steps: [untargetedHang],
+            boardID: BoardCatalog.defaultBoard.id,
             provenance: .official
         ).validationIssues(availableBoards: BoardCatalog.all)
 
         XCTAssertTrue(issues.contains {
             $0.path == "blocks[0].steps[0].targets" &&
                 $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryAllowsGenericSourceLinkedUntargetedCompoundSegment() {
+        let compound = makeStep(
+            id: "generic-compound",
+            duration: 10,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [], timing: .fixed, duration: 5),
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5)
+            ]
+        )
+
+        let issues = makeLibrary(
+            steps: [compound],
+            boardID: nil,
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertFalse(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].targets" &&
+                $0.message == "Work segments require a target."
+        })
+    }
+
+    func testPlanLibraryRejectsBoardBoundSourceLinkedUntargetedCompoundSegment() {
+        let compound = makeStep(
+            id: "board-bound-compound",
+            duration: 10,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [], timing: .fixed, duration: 5),
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5)
+            ]
+        )
+
+        let issues = makeLibrary(
+            steps: [compound],
+            boardID: BoardCatalog.defaultBoard.id,
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].targets" &&
+                $0.message == "Work segments require a target."
+        })
+    }
+
+    func testPlanLibraryRejectsUntargetedCustomHang() {
+        let step = WorkoutStepDefinition(
+            id: "custom-untargeted-hang",
+            title: "Custom hang",
+            instruction: "Hang.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+
+        let issues = makeLibrary(
+            steps: [step],
+            provenance: .custom,
+            sourceURL: nil
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryRejectsUntargetedCustomCompoundSegment() {
+        let compound = makeStep(
+            id: "custom-compound",
+            duration: 10,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [], timing: .fixed, duration: 5),
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5)
+            ]
+        )
+
+        let issues = makeLibrary(
+            steps: [compound],
+            boardID: nil,
+            provenance: .custom,
+            sourceURL: nil
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].targets" &&
+                $0.message == "Work segments require a target."
         })
     }
 
@@ -1558,7 +1533,6 @@ final class PlanStorageTests: XCTestCase {
         )
         library = PlanLibraryDefinition(
             metadata: library.metadata,
-            boardMappings: library.boardMappings,
             blocks: library.blocks + [
                 WorkoutBlockDefinition(id: "unreferenced.block", steps: [untargetedHang])
             ],
@@ -1573,7 +1547,7 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testOfficialRPTCImporterRejectsUntargetedRepeaterWithUnknownIDOrTiming() {
+    func testSourceLinkedUntargetedWorkDoesNotDependOnPlanSpecificIdentifiers() {
         let cases = [
             (id: "rptc-repeaters-set-rep-extra", duration: 10.0, activeDuration: 7.0),
             (id: "rptc-repeaters-set-rep-1", duration: 11.0, activeDuration: 7.0),
@@ -1598,10 +1572,10 @@ final class PlanStorageTests: XCTestCase {
                 sourceURL: URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155")
             ).validationIssues(availableBoards: BoardCatalog.all)
 
-            XCTAssertTrue(issues.contains {
+            XCTAssertFalse(issues.contains {
                 $0.path == "blocks[0].steps[0].targets" &&
                     $0.message == "Non-rest steps need at least one target."
-            }, "Expected \(testCase.id) with timing \(testCase.activeDuration)s/\(testCase.duration)s to be rejected.")
+            }, "Expected source-linked targetless work to remain valid without a plan-specific exception.")
         }
     }
 
@@ -1631,6 +1605,137 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.provenance, .official)
     }
 
+    func testBundledPlansOmitEveryTargetMarkedAsNonPrescribedBySourceLedger() throws {
+        let targetlessPlanIDs: Set<String> = [
+            "research.max-hangs",
+            "research.megos-one-arm-7-3",
+            "research.force-feedback-f80",
+            "research.force-feedback-f100",
+            "research.eva-int-hangs",
+            "research.seven-three-repeaters",
+            "research.abrahangs",
+            "coach.horst-seven-fifty-three",
+            "coach.bechtel-three-six-nine",
+            "coach.density-hangs",
+            "device.zlagboard-sixty-sixty",
+            "hoopers-beta.introductory-home-hangboard",
+            "method.intermediate-hangboarding.repeaters",
+            "method.intermediate-hangboarding.emom",
+            "rei.hangboard-sample-workout"
+        ]
+
+        for planID in targetlessPlanIDs {
+            let plan = try XCTUnwrap(
+                LegacyPlanSeedCatalog.all.first { $0.id == planID },
+                "Missing bundled plan \(planID)."
+            )
+            XCTAssertTrue(
+                plan.steps.allSatisfy {
+                    $0.targets.isEmpty && $0.segments.allSatisfy(\.targets.isEmpty)
+                },
+                "\(planID) emitted an app-selected target requirement."
+            )
+        }
+    }
+
+    func testSimulator3DPlansUseContactFirstOuterJugsWhileCenterJugRemainsOmitted() throws {
+        let simulatorPlans = LegacyPlanSeedCatalog.all.filter {
+            $0.id.hasPrefix("metolius.simulator-3d.")
+        }
+        XCTAssertEqual(simulatorPlans.count, 3)
+
+        let entry = try XCTUnwrap(
+            simulatorPlans.first { $0.id == "metolius.simulator-3d.entry" }
+        )
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+        let outerJugs = ContactRequirement.feature(
+            outerJug,
+            selection: .allMatching
+        )
+
+        XCTAssertEqual(entry.steps[1].targets, [outerJugs])
+        XCTAssertEqual(entry.steps[2].targets.count, 1)
+        XCTAssertEqual(entry.steps[2].targets[0].kind, .pocket)
+        XCTAssertEqual(entry.steps[6].targets, [outerJugs])
+    }
+
+    func testSimulator3DOuterJugRequirementResolvesExactlyTheNumberOnePair() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
+        )
+        let sourceStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+                $0.id == "metolius.simulator-3d.entry.minute-2"
+            }
+        )
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+        let requirement = ContactRequirement.feature(
+            outerJug,
+            selection: .allMatching
+        )
+
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(requirement, step: sourceStep, board: board).map(\.id)),
+            ["jug-1-left", "jug-1-right"]
+        )
+    }
+
+    func testSimulator3DManufacturerPrescribedOuterJugStepsAreContactFirst() throws {
+        let expectedSteps: [(id: String, targetCount: Int, resolvedContactIDs: Set<String>)] = [
+            ("metolius.simulator-3d.entry.minute-2", 1, ["jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.entry.minute-5", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.entry.minute-7", 1, ["jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.intermediate.minute-3", 2, ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.intermediate.minute-5", 2, ["jug-1-left", "jug-1-right", "pocket-17-center"]),
+            ("metolius.simulator-3d.intermediate.minute-9", 1, ["jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.advanced.minute-7", 2, ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
+            ("metolius.simulator-3d.advanced.minute-10", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+        ]
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
+        )
+        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
+        let requirement = ContactRequirement.feature(
+            outerJug,
+            selection: .allMatching
+        )
+
+        for expected in expectedSteps {
+            let step = try XCTUnwrap(
+                LegacyPlanSeedCatalog.all.lazy.flatMap(\.steps).first { $0.id == expected.id }
+            )
+
+            XCTAssertEqual(
+                step.targets.count,
+                expected.targetCount,
+                "\(expected.id) must retain every manufacturer-prescribed target."
+            )
+            XCTAssertTrue(
+                step.targets.contains(requirement),
+                "\(expected.id) must target outer jugs."
+            )
+            let workSegments = step.segments.filter { $0.kind == .work }
+            let workSegment = try XCTUnwrap(
+                workSegments.only,
+                "\(expected.id) must retain exactly one work segment."
+            )
+            XCTAssertEqual(
+                workSegment.targets.count,
+                expected.targetCount,
+                "\(expected.id) work must retain every manufacturer-prescribed target."
+            )
+            XCTAssertTrue(
+                workSegment.targets.contains(requirement),
+                "\(expected.id) work must retain the outer-jug requirement."
+            )
+            XCTAssertEqual(
+                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
+                expected.resolvedContactIDs,
+                "\(expected.id) must resolve every manufacturer-prescribed contact."
+            )
+        }
+    }
+
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
         let terminalSteps = try LegacyPlanSeedCatalog.all
             .filter {
@@ -1652,16 +1757,13 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
-    func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
+    func testAbrahangsSecondGripKeepsSourceBackedCueWithoutAppSelectedTarget() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
         )
 
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
-        XCTAssertEqual(
-            step.targets,
-            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)]
-        )
+        XCTAssertTrue(step.targets.isEmpty)
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
@@ -1739,7 +1841,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.largeSlope),
+                    target: nil,
                     timing: .fixed,
                     duration: 15
                 )
@@ -1750,7 +1852,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.largeSlope),
+                    target: nil,
                     timing: .undefined,
                     duration: nil
                 )
@@ -1797,8 +1899,14 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertTrue(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
             let numberedTargets = plan.steps.flatMap(\.targets)
             XCTAssertFalse(numberedTargets.isEmpty)
-            XCTAssertTrue(numberedTargets.allSatisfy {
-                !$0.holdIDs.isEmpty && Set($0.holdIDs).isSubset(of: Set(board.holds.map(\.id)))
+            XCTAssertTrue(plan.steps.allSatisfy { step in
+                guard !step.targets.isEmpty else { return true }
+                guard let resolved = try? ContactResolver.resolve(
+                    step.targets,
+                    step: step,
+                    board: board
+                ) else { return false }
+                return !resolved.isEmpty && Set(resolved.map(\.id)).isSubset(of: Set(board.contacts.map(\.id)))
             })
             for otherBoard in BoardCatalog.all where otherBoard.id != boardID {
                 XCTAssertFalse(
@@ -1842,6 +1950,13 @@ final class PlanStorageTests: XCTestCase {
             ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "round-sloper-3-left", "round-sloper-3-right"]),
             ("metolius.simulator-3d.advanced.minute-8", ["pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right"])
         ]
+        let expectedExactTargets: [(String, Set<String>)] = [
+            ("metolius.simulator-3d.entry.minute-5", ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.intermediate.minute-3", ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
+            ("metolius.simulator-3d.intermediate.minute-5", ["jug-1-left", "jug-1-right", "pocket-17-center"]),
+            ("metolius.simulator-3d.advanced.minute-7", ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
+            ("metolius.simulator-3d.advanced.minute-10", ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"])
+        ]
         let anyHoldCycles = [
             "metolius.contact.entry.minute-4",
             "metolius.contact.entry.minute-10",
@@ -1854,9 +1969,24 @@ final class PlanStorageTests: XCTestCase {
 
         for (stepID, expectedTargets) in expectedNumberedTargets {
             let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
+            let resolvedIDs = try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)
             XCTAssertTrue(
-                expectedTargets.isSubset(of: Set(step.targets.flatMap(\.holdIDs))),
+                expectedTargets.isSubset(of: Set(resolvedIDs)),
                 "\(stepID) must retain every numbered target in its compound source task."
+            )
+        }
+
+        for (stepID, expectedTargets) in expectedExactTargets {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
+
+            XCTAssertEqual(
+                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
+                expectedTargets,
+                "\(stepID) must resolve every contact in its compound source task."
             )
         }
 
@@ -1866,8 +1996,8 @@ final class PlanStorageTests: XCTestCase {
             let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
 
             XCTAssertEqual(
-                Set(step.targets.flatMap(\.holdIDs)),
-                Set(board.holds.map(\.id)),
+                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
+                Set(board.contacts.map(\.id)),
                 "\(stepID) must keep the source's any-hold option unconstrained."
             )
         }
@@ -1886,7 +2016,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.mediumEdge, fallback: .largeEdge),
+                    target: nil,
                     timing: .fixed,
                     duration: 7
                 ),
@@ -2137,153 +2267,6 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testCompactIIStillSubstitutesGenericNonPinchPlans() throws {
-        let compact = BoardCatalog.defaultBoard
-        let genericPlans = LegacyPlanSeedCatalog.all.filter {
-            $0.boardID == nil && $0.id != LegacyPlanSeedCatalog.reiHangboardSample.id
-        }
-
-        XCTAssertTrue(
-            genericPlans.allSatisfy { plan in
-                plan.steps.flatMap(\.targets).allSatisfy {
-                    !BoardTargetResolver.substituteHoldIDs(for: $0, on: compact).isEmpty
-                }
-            }
-        )
-        XCTAssertTrue(
-            LegacyPlanSeedCatalog.reiHangboardSample.steps.flatMap(\.targets).contains {
-                $0.feature == .mediumPinch
-            }
-        )
-        let reiMediumPinch = try XCTUnwrap(
-            LegacyPlanSeedCatalog.reiHangboardSample.steps
-                .flatMap(\.targets)
-                .first { $0.feature == .mediumPinch }
-        )
-        XCTAssertFalse(BoardTargetResolver.substituteHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
-    }
-
-    @MainActor
-    func testCapacityQualifiedPocketPlansRetainTheirAvailabilityFallbacks() throws {
-        let expectedFallbacks: [HoldFeature] = [.mediumEdge, .largeEdge, .largeOpenHandRail]
-        let pocketTargets = [
-            (planID: "coach.horst-seven-fifty-three", fingerCapacity: 2, capacitySourceBacked: true),
-            (planID: "coach.density-hangs", fingerCapacity: 4, capacitySourceBacked: false)
-        ]
-        let audit = try loadPlanCueAudit()
-
-        for expected in pocketTargets {
-            let plan = try XCTUnwrap(LegacyPlanSeedCatalog.all.first { $0.id == expected.planID })
-            let target = try XCTUnwrap(
-                plan.steps
-                    .flatMap(\.targets)
-                    .first { $0.kind == .pocket && $0.fingerCapacity == expected.fingerCapacity }
-            )
-
-            XCTAssertEqual(target.fallbackFeatures, expectedFallbacks)
-
-            let fallbackAudit = try XCTUnwrap(
-                audit.targetFallbackRules.filter { rule in
-                    rule.planID == expected.planID &&
-                        rule.primaryKind == .pocket &&
-                        rule.fingerCapacity == expected.fingerCapacity
-                }.only,
-                "Expected one explicit fallback audit mapping for \(expected.planID)."
-            )
-            XCTAssertEqual(fallbackAudit.fallbackFeatures, expectedFallbacks)
-            XCTAssertEqual(fallbackAudit.decision, "adapt")
-            XCTAssertFalse(fallbackAudit.sourcePrescription)
-            XCTAssertEqual(
-                fallbackAudit.fingerCapacitySourcePrescription,
-                expected.capacitySourceBacked,
-                "The capacity provenance must be distinct from the fallback availability adaptation."
-            )
-            XCTAssertEqual(fallbackAudit.adaptationType, "availability")
-            XCTAssertTrue(fallbackAudit.sourceBasis.contains("app availability adaptation"))
-            XCTAssertEqual(
-                fallbackAudit.sourceURL,
-                try XCTUnwrap(audit.planSources.first { $0.planID == expected.planID }).sourceURL
-            )
-
-            let presentation = rasterPresentation(frames: [
-                "fixture.large-edge": CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.1)
-            ])
-            let edgeOnlyBoard = TrainingBoard(
-                id: "fixture.edge-only.\(expected.fingerCapacity)",
-                manufacturer: "Fixture Maker",
-                name: "Edge-only Board",
-                subtitle: "A test board without pockets.",
-                dimensions: "10 × 5",
-                aspectRatio: 2,
-                holds: [
-                    BoardHold(
-                        id: "fixture.large-edge",
-                        name: "Large edge",
-                        kind: .edge,
-                        features: [.largeEdge]
-                    )
-                ],
-                productURL: URL(string: "https://example.com/edge-only")!,
-                photoAssetName: nil,
-                presentations: [presentation]
-            )
-            XCTAssertEqual(
-                BoardTargetResolver.substituteHoldIDs(for: target, on: edgeOnlyBoard),
-                ["fixture.large-edge"]
-            )
-        }
-    }
-
-    @MainActor
-    func testAuditedPlansAreBoardFlexibleAndSubstituteOnEveryRegisteredBoard() throws {
-        let auditedPlanIDs: Set<String> = [
-            "research.force-feedback-f80",
-            "research.force-feedback-f100",
-            "research.eva-int-hangs",
-            "research.seven-three-repeaters",
-            "research.abrahangs",
-            "coach.horst-seven-fifty-three",
-            "coach.bechtel-three-six-nine",
-            "coach.density-hangs",
-            "device.zlagboard-sixty-sixty"
-        ]
-        let auditedPlans = LegacyPlanSeedCatalog.all.filter { auditedPlanIDs.contains($0.id) }
-
-        XCTAssertEqual(auditedPlans.map(\.id).count, auditedPlanIDs.count)
-        XCTAssertTrue(auditedPlans.allSatisfy { $0.boardID == nil })
-        XCTAssertTrue(auditedPlans.allSatisfy { plan in
-            plan.steps.flatMap(\.targets).allSatisfy(\.holdIDs.isEmpty)
-        })
-
-        let suiteName = "PlanStorageTests.boardFlexiblePlans.\(UUID().uuidString)"
-        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
-        defer { defaults.removePersistentDomain(forName: suiteName) }
-        let store = AppStore(defaults: defaults)
-        let nonCompactBoard = try XCTUnwrap(
-            BoardCatalog.all.first { $0.id != BoardCatalog.defaultBoard.id }
-        )
-        store.selectBoard(nonCompactBoard)
-
-        XCTAssertTrue(auditedPlanIDs.isSubset(of: Set(store.plans.map(\.id))))
-
-        for board in BoardCatalog.all {
-            for plan in auditedPlans {
-                let workTargets = plan.steps.flatMap { step in
-                    step.segments
-                        .filter { $0.kind == .work }
-                        .flatMap(\.targets)
-                }
-                XCTAssertFalse(workTargets.isEmpty, "\(plan.id) must include work targets")
-                XCTAssertTrue(
-                    workTargets.allSatisfy {
-                        !BoardTargetResolver.substituteHoldIDs(for: $0, on: board).isEmpty
-                    },
-                    "\(plan.id) must substitute every work target on \(board.id)"
-                )
-            }
-        }
-    }
-
     func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
         let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
         let recruitment = steps.filter { $0.id.contains("hoopers-intro-round-2-set-") && $0.id.contains("-rep-") }
@@ -2303,74 +2286,77 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(hollow.allSatisfy { $0.instruction.contains("2–4 total paired sets") })
     }
 
-    func testFeatureTargetValidationAcceptsRuntimeResolvableUntaggedSameKindHold() {
-        let board = TrainingBoard(
+    func testFeatureTargetValidationRejectsUntaggedSameKindHold() {
+        let board = BoardRevision(
             id: "fixture.untagged-edge",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Untagged Edge",
             subtitle: "A test board whose edge has no feature metadata.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.edge",
                     name: "Fixture edge",
                     kind: .edge
                 )
             ],
             productURL: URL(string: "https://example.com/untagged-edge")!,
-            photoAssetName: nil,
-            presentations: [rasterPresentation(frames: [
-                "fixture.edge": CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
-            ])]
+            photoAssetName: nil
         )
-        let target = HoldTarget.feature(.mediumEdge)
+        let target = ContactRequirement.feature(.mediumEdge)
         let step = makeStep(
             id: "feature-target",
             duration: 10,
-            targets: [.feature(.mediumEdge, fallbacks: [])],
+            targets: [.feature(.mediumEdge)],
             segments: []
         )
 
-        XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
-            ["fixture.edge"]
+        let runtimeStep = WorkoutStep(
+            id: step.id,
+            number: 1,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets
         )
-        XCTAssertFalse(
+        XCTAssertThrowsError(try ContactResolver.resolve(target, step: runtimeStep, board: board))
+        XCTAssertTrue(
             makeLibrary(steps: [step], boardID: board.id)
                 .validationIssues(availableBoards: [board])
                 .contains {
                     $0.path == "plans[0].blocks[0].steps[0].targets[0]" &&
-                        $0.message == "No compatible board exposes feature \"mediumEdge\" or its fallbacks."
+                        $0.message == "The contact requirement cannot resolve on declared board \"fixture.untagged-edge\"."
                 }
         )
     }
 
     func testFeatureTargetValidationRejectsTargetRuntimeCannotResolve() {
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: "fixture.jug-only",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Jug Only",
             subtitle: "A test board with no edge or pocket holds.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.jug",
                     name: "Fixture jug",
                     kind: .jug
                 )
             ],
             productURL: URL(string: "https://example.com/jug-only")!,
-            photoAssetName: nil,
-            presentations: [rasterPresentation(frames: [
-                "fixture.jug": CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
-            ])]
+            photoAssetName: nil
         )
         let step = makeStep(
             id: "feature-target",
             duration: 10,
-            targets: [.feature(.mediumEdge, fallbacks: [])],
+            targets: [.feature(.mediumEdge)],
             segments: []
         )
 
@@ -2379,171 +2365,8 @@ final class PlanStorageTests: XCTestCase {
                 .validationIssues(availableBoards: [board])
                 .contains {
                     $0.path == "plans[0].blocks[0].steps[0].targets[0]" &&
-                        $0.message == "No compatible board exposes feature \"mediumEdge\" or its fallbacks."
+                        $0.message == "The contact requirement cannot resolve on declared board \"fixture.jug-only\"."
                 }
-        )
-    }
-
-    func testPlanSemanticMappingsRemainAuthoritativeDuringValidation() {
-        let edgeOnlyBoard = TrainingBoard(
-            id: "fixture.edge-only",
-            manufacturer: "Fixture Maker",
-            name: "Edge Only",
-            subtitle: "A test board with only an edge.",
-            dimensions: "10 × 5",
-            aspectRatio: 2,
-            holds: [
-                BoardHold(
-                    id: "fixture.edge",
-                    name: "Fixture edge",
-                    kind: .edge,
-                )
-            ],
-            semanticHolds: [
-                "fixture-board-owned": SemanticHoldMappingDefinition(kind: .pinch),
-                "fixture-overridden": SemanticHoldMappingDefinition(kind: .pinch)
-            ],
-            productURL: URL(string: "https://example.com/edge-only")!,
-            photoAssetName: nil
-        )
-        let step = makeStep(
-            id: "semantic-target",
-            duration: 10,
-            targets: [.semantic("fixture-overridden")],
-            segments: []
-        )
-
-        let library = makeLibrary(
-            steps: [step],
-            boardID: edgeOnlyBoard.id,
-            boardMappings: [
-                BoardMappingDefinition(
-                    boardID: edgeOnlyBoard.id,
-                    semanticHolds: [
-                        "fixture-plan": SemanticHoldMappingDefinition(kind: .pinch),
-                        "fixture-overridden": SemanticHoldMappingDefinition(kind: .edge)
-                    ]
-                )
-            ]
-        )
-        let issues = library.validationIssues(availableBoards: [edgeOnlyBoard])
-
-        XCTAssertFalse(issues.contains { $0.path.hasPrefix("boards[0].semanticHolds") })
-        XCTAssertTrue(issues.contains {
-            $0.path == "boardMappings[0].semanticHolds.fixture-plan" &&
-                $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
-        })
-        XCTAssertFalse(issues.contains { $0.message.contains("fixture-overridden") })
-    }
-
-    func testPlanMappingsOverrideBoardLoadedSemanticMappings() throws {
-        func hold(id: String, name: String, kind: HoldKind) -> BoardHold {
-            BoardHold(
-                id: id,
-                name: name,
-                kind: kind
-            )
-        }
-        let board = TrainingBoard(
-            id: "fixture.board",
-            manufacturer: "Fixture Maker",
-            name: "Fixture Board",
-            subtitle: "A test board.",
-            dimensions: "10 × 5",
-            aspectRatio: 2,
-            holds: [
-                hold(id: "fixture.edge", name: "Fixture edge", kind: .edge),
-                hold(id: "fixture.pinch", name: "Fixture pinch", kind: .pinch),
-                hold(id: "fixture.jug", name: "Fixture jug", kind: .jug)
-            ],
-            semanticHolds: [
-                "fixture-target": SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"]),
-                "fixture-fallback": SemanticHoldMappingDefinition(kind: .pinch)
-            ],
-            productURL: URL(string: "https://example.com/fixture-board")!,
-            photoAssetName: nil,
-            presentations: [rasterPresentation(frames: [
-                "fixture.edge": CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
-                "fixture.pinch": CGRect(x: 0.4, y: 0.2, width: 0.2, height: 0.4),
-                "fixture.jug": CGRect(x: 0.7, y: 0.2, width: 0.2, height: 0.4)
-            ])]
-        )
-        let step = makeStep(
-            id: "semantic-target",
-            duration: 10,
-            targets: [.semantics(["fixture-target", "fixture-fallback"])],
-            segments: []
-        )
-        let boardOnlyLibrary = makeLibrary(steps: [step], boardID: "fixture.board")
-
-        XCTAssertEqual(
-            board.semanticHolds["fixture-target"],
-            SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"])
-        )
-        XCTAssertEqual(
-            board.semanticHolds["fixture-fallback"],
-            SemanticHoldMappingDefinition(kind: .pinch)
-        )
-        XCTAssertTrue(
-            boardOnlyLibrary.validationIssues(availableBoards: [board]).contains {
-                $0.message == "Missing board mapping for \"fixture.board\"."
-            }
-        )
-
-        let planMappingLibrary = makeLibrary(
-            steps: [step],
-            boardID: "fixture.board",
-            boardMappings: [
-                BoardMappingDefinition(
-                    boardID: "fixture.board",
-                    semanticHolds: [
-                        "fixture-target": SemanticHoldMappingDefinition(kind: .jug),
-                        "fixture-fallback": SemanticHoldMappingDefinition(kind: .edge)
-                    ]
-                )
-            ]
-        )
-
-        XCTAssertEqual(planMappingLibrary.validationIssues(availableBoards: [board]), [])
-
-        let planMappingStore = try PlanLibraryStore(
-            definition: planMappingLibrary,
-            availableBoards: [board]
-        )
-        let planMappingTargets = try XCTUnwrap(
-            planMappingStore.plan(id: "test.plan")?.steps.first?.targets
-        )
-
-        XCTAssertEqual(planMappingTargets, [.kind(.jug), .kind(.edge)])
-        XCTAssertEqual(
-            BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[0], on: board),
-            ["fixture.jug"]
-        )
-        XCTAssertEqual(
-            BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[1], on: board),
-            ["fixture.edge"]
-        )
-    }
-
-    private func rasterPresentation(
-        id: String = "primary",
-        frames: [String: CGRect]
-    ) -> BoardPresentation {
-        let geometry = Dictionary(uniqueKeysWithValues: frames.map { holdID, frame in
-            (holdID, [BoardHoldPiece(
-                id: "\(holdID)-piece",
-                holdID: holdID,
-                frame: frame,
-                shape: .roundedRect(cornerRadiusFraction: 0),
-                treatment: .surface
-            )])
-        })
-        return BoardPresentation(
-            id: id,
-            name: id,
-            aspectRatio: 2,
-            isDefault: true,
-            media: .raster(BoardRasterMedia(assetPath: "", holdGeometry: geometry))
         )
     }
 
@@ -2567,7 +2390,7 @@ final class PlanStorageTests: XCTestCase {
         id: String,
         duration: TimeInterval,
         phase: WorkoutPhase = .hang,
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         segments: [WorkoutSegmentDefinition]
     ) -> WorkoutStepDefinition {
         WorkoutStepDefinition(
@@ -2585,7 +2408,6 @@ final class PlanStorageTests: XCTestCase {
     private func makeLibrary(
         steps: [WorkoutStepDefinition],
         boardID: String? = nil,
-        boardMappings: [BoardMappingDefinition] = [],
         provenance: RoutineProvenance = .adapted,
         planID: String = "test.plan",
         sourceURL: URL? = URL(string: "https://example.com/test")
@@ -2596,7 +2418,6 @@ final class PlanStorageTests: XCTestCase {
                 title: "Test library",
                 generatedAt: "2026-08-02"
             ),
-            boardMappings: boardMappings,
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: steps)],
             plans: [
                 PlanDefinition(
@@ -2845,7 +2666,6 @@ final class PlanStorageTests: XCTestCase {
     private func unilateralTestLibrary(step: WorkoutStepDefinition) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(id: "test", title: "Test", generatedAt: "local"),
-            boardMappings: [],
             blocks: [WorkoutBlockDefinition(id: "block", steps: [step])],
             plans: [PlanDefinition(
                 id: "plan",
@@ -2907,14 +2727,20 @@ final class PlanStorageTests: XCTestCase {
         return try Data(contentsOf: url)
     }
 
-    private func fallbackFeatureAliases(in value: Any) -> [String] {
+    private func legacyPlanTargetKeys(in value: Any) -> [String] {
         if let object = value as? [String: Any] {
-            let aliases = (object["fallbackFeatures"] as? [String] ?? [])
-                .filter { $0 == "jug" || $0 == "pocket" }
-            return aliases + object.values.flatMap(fallbackFeatureAliases)
+            let prohibited = Set([
+                "semantic",
+                "semantics",
+                "hold" + "IDs",
+                "fallback" + "Features",
+                "board" + "Mappings"
+            ])
+            return object.keys.filter(prohibited.contains)
+                + object.values.flatMap(legacyPlanTargetKeys)
         }
         if let array = value as? [Any] {
-            return array.flatMap(fallbackFeatureAliases)
+            return array.flatMap(legacyPlanTargetKeys)
         }
         return []
     }
@@ -2975,20 +2801,6 @@ private struct CueAuditDocument: Decodable {
     let planSources: [PlanSourceManifestEntry]
     let planFieldRules: [PlanFieldRule]
     let stepFieldRules: [StepFieldRule]
-    let targetFallbackRules: [TargetFallbackAuditRule]
-}
-
-private struct TargetFallbackAuditRule: Decodable {
-    let planID: String
-    let primaryKind: HoldKind
-    let fingerCapacity: Int
-    let fallbackFeatures: [HoldFeature]
-    let decision: String
-    let sourcePrescription: Bool
-    let fingerCapacitySourcePrescription: Bool
-    let adaptationType: String
-    let sourceURL: String
-    let sourceBasis: String
 }
 
 private struct PlanSourceManifestEntry: Decodable {

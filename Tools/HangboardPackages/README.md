@@ -1,55 +1,36 @@
 # Hangboard package validator
 
-This package provides fail-closed schema validation and direct discovery for
-the repository's canonical hangboard packages. It is read-only: it validates
-package bytes and reports inventory metadata without changing any package.
+This package provides fail-closed, read-only validation and direct discovery
+for the repository's schema-v3 hangboard packages.
 
 ## Package contract
 
-Each direct child of `Hangboards/` is either a complete package or an exact
-primary-only draft. A complete raster package has this shape:
+Every completed package is a direct child of `Hangboards/` containing exactly
+`board.json` and its declared files below `assets/`. A package may contain one
+or more presentations, but exactly one is the default.
 
-```text
-Hangboards/<package>/
-  board.json
-  assets/
-    primary.png
-```
+`contacts[]` is the only physical-fact inventory. Each contact has a stable ID,
+an equipment object, a sourced name and kind, and only those optional facts that
+the cited evidence supports. Contacts do not own presentation geometry.
 
-A complete model package has the same `board.json` root and instead declares:
+Each raster presentation declares a PNG and canonical normalized paths under
+`media.contactGeometry`, keyed by contact ID. Each geometry piece contains its
+frame, closed shape, treatment, and optional operator-selected constraint.
+Each model presentation instead declares a confined USDZ, hash-bound contact
+descriptor, and orthographic display configuration. Model packages contain no
+raster stand-in or fallback geometry.
 
-```text
-Hangboards/<package>/
-  board.json
-  assets/
-    primary.usdz
-    primary.model.json
-```
-
-`board.json` uses schema version 2: board identity and sourced physical facts
-remain logical, while each presentation owns typed raster or model media. A
-raster presentation stores exact normalized hold geometry in
-`media.holdGeometry`; a model presentation stores a confined USDZ,
-`descriptorPath`, and orthographic display configuration. Logical hold records
-contain no presentation ownership or spatial fields. Derived presentations are
-raster-only; model media cannot be derived or inverted, and a model package may
-not carry a raster fallback. The validator rejects unknown package entries,
-symlinks, malformed JSON or PNG data, duplicate identifiers, unsupported hold
-metadata, and invalid frames or shapes. Primary PNGs may use either transparent
-or fully opaque backgrounds; the validator checks decoded primary image data
-with the Python standard library so the bare build-time interpreter does not
-need Pillow.
-
-Direct discovery sorts complete packages by manufacturer, board name, board
-ID, and package path. Exact primary-only directories are reported separately
-as drafts. Any other incomplete directory fails validation.
+The validator rejects older or unversioned schemas, unknown package entries,
+symlinks, undeclared or missing assets, malformed JSON or PNG data, duplicate
+identifiers, unsupported factual fields, invalid contact references, and
+invalid frames or paths. It never upgrades or writes a package.
 
 ## Commands
 
-Run the repository wrapper from the checkout root:
+From the repository root:
 
 ```sh
-scripts/hangboard-packages.sh validate --root Hangboards
+scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 scripts/hangboard-packages.sh status --root Hangboards
 scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
@@ -121,59 +102,23 @@ scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --phase2-final
 ```
 
-Preflight validates the 20 exact canvas classes, 22 disposable behavior probes,
-and capability-artifact deletion/production-disjointness. Partial mode validates
-truthful intermediate package bytes and may select one declared `--batch-id`.
-Final mode accepts no batch or transient files and requires the complete terminal
-catalog. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH`
-pairs are accepted only in preflight or partial mode and only for declarations
-owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
+`--final-inventory` rejects incomplete direct children. The metadata and
+presentation audits cross-check tracked source decisions and declared asset
+hashes without changing either input.
 
-The current repository inventory contains 61 complete packages and zero drafts:
-59 raster v2 packages and two model-only v2 packages (`beastmaker-1000` and
-`metolius-wood-grips-compact-ii`). Model packages declare only their USDZ and
-hash-bound descriptor assets; they do not carry raster fallbacks.
+## Model workflow
 
-## Schema migration
-
-The one-way migration utility discovers direct-child packages at execution
-time. It preserves legacy raster scalars, hold ordering, and path command
-ordering while moving geometry into typed raster media. Run a write followed by
-the idempotent check before committing package changes:
-
-```sh
-python3 Tools/HangboardPackages/scripts/migrate_to_schema_v2.py \
-  --root Hangboards --write
-python3 Tools/HangboardPackages/scripts/migrate_to_schema_v2.py \
-  --root Hangboards --check
-```
-
-After migration, both the Python catalog parser and the iOS loader require
-`schemaVersion: 2`; unversioned v1 documents are intentionally rejected.
-
-## Model tooling boundary
-
-The Stage 0 evidence packet is validated before any future model work. The
-packet contains source provenance and logical inventory only; it contains no
-coordinates, contours, masks, vectors, alignment, or numeric shape
-prescriptions:
-
-```sh
-python3 -B Tools/HangboardModels/validate_evidence_packet.py PATH
-```
-
-The later compiler consumes a reviewed Blender file and the logical inventory,
-then emits exactly `assets/primary.usdz` and
-`assets/primary.model.json`:
+The only model compiler is contact-native. It consumes a human-reviewed Blender
+file and the exact `contacts[]` inventory, then writes only a USDZ and its
+hash-bound contact descriptor:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \
-  --python Tools/HangboardModels/compile_model_package.py -- \
+  --python Tools/HangboardModels/contact_model_package.py -- \
   --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
   --output-directory PATH/compiled-package
 ```
 
-The descriptor is generated from the actual reimported USDZ, rounded to nine
-decimal places, and hash-bound to its exact bytes. The compiler never repairs
-or redesigns shape. See `Tools/HangboardModels/README.md` for the descriptor
-fields and model-only package rules.
+`import_contact_model_source.py` performs the reviewed source import, and the
+board-specific Baguette verifier checks the shipped promotion. No raster/contact
+migration utility or older-schema reader/writer is supported.

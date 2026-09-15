@@ -1,8 +1,8 @@
 import Foundation
 
 enum BoardSourceBoundaryAudit {
-    private static let planMappingOwnerPath = "HangTen/Models/TrainingModels.swift"
-    private static let planMappingOwnerDeclaration = "enum LegacyPlanSeedBoardMappings {"
+    private static let planRequirementOwnerPath = "HangTen/Models/TrainingModels.swift"
+    private static let planRequirementOwnerDeclaration = "enum BundledPlanContactRequirements {"
     private static let genericPresentationVocabularyOwnerPaths: Set<String> = [
         "HangTen/Models/BoardPackageStore.swift",
         "HangTen/Models/BoardPackageWriter.swift",
@@ -53,8 +53,8 @@ enum BoardSourceBoundaryAudit {
         // Retain the audit for every nonempty source literal.
         let presentationMappingPattern = #"(?:assetPath|photoAssetName)\s*:\s*\"(?!\")"#
         let boardSpecificGeometryConstructs = [
-            "TrainingBoard(",
-            "BoardHold(",
+            "BoardRevision(",
+            "PhysicalContact(",
             "HoldFrame(",
             "BoardNormalizedPath(commands:"
         ]
@@ -64,12 +64,15 @@ enum BoardSourceBoundaryAudit {
             "HangTen/Models/TrainingModels.swift"
         ]
         var findings: [String] = []
-        let sourceWithoutOwnedPlanMappings = removingDisplayModelBoardID(
-            from: removingOwnedDeclaration(
-                from: source,
-                relativePath: relativePath,
-                ownerPath: planMappingOwnerPath,
-                declaration: planMappingOwnerDeclaration
+        let sourceWithoutOwnedPlanRequirements = removingCatalogDefaultBoardID(
+            from: removingDisplayModelBoardID(
+                from: removingOwnedDeclaration(
+                    from: source,
+                    relativePath: relativePath,
+                    ownerPath: planRequirementOwnerPath,
+                    declaration: planRequirementOwnerDeclaration
+                ),
+                relativePath: relativePath
             ),
             relativePath: relativePath
         )
@@ -88,7 +91,7 @@ enum BoardSourceBoundaryAudit {
         }
         // Index all consecutive quote pairs once. Quotes are raw UTF-8 bytes so
         // escaped quotes and quote-adjacent combining marks remain candidates.
-        let quotedSegments = Set(sourceWithoutOwnedPlanMappings.utf8
+        let quotedSegments = Set(sourceWithoutOwnedPlanRequirements.utf8
             .split(separator: 34, omittingEmptySubsequences: false)
             .dropFirst().dropLast()
             .map { String(decoding: $0, as: UTF8.self) })
@@ -97,10 +100,10 @@ enum BoardSourceBoundaryAudit {
             && (quotedSegments.contains(literal) || literal.utf8.contains(34))
             // Retain the original search for candidates and quote-bearing
             // literals, including its Unicode/grapheme-boundary semantics.
-            && sourceWithoutOwnedPlanMappings.contains("\"\(literal)\"") {
+            && sourceWithoutOwnedPlanRequirements.contains("\"\(literal)\"") {
             findings.append("\(relativePath): package-owned literal \(literal)")
         }
-        if sourceWithoutOwnedPlanMappings.range(
+        if sourceWithoutOwnedPlanRequirements.range(
             of: semanticMappingPattern,
             options: .regularExpression
         ) != nil {
@@ -132,6 +135,20 @@ enum BoardSourceBoundaryAudit {
         guard relativePath == "HangTen/Views/BoardModelView.swift" else { return source }
         return source.replacingOccurrences(
             of: #"(enum BoardModelIdentity \{\s*)static let boardID = "metolius\.wood-grips-compact-ii""#,
+            with: "$1",
+            options: .regularExpression
+        )
+    }
+
+    /// The initial UI selection is an app preference, not a plan target or a
+    /// second copy of package content. Only this exact declaration is exempt.
+    private static func removingCatalogDefaultBoardID(
+        from source: String,
+        relativePath: String
+    ) -> String {
+        guard relativePath == "HangTen/Models/TrainingModels.swift" else { return source }
+        return source.replacingOccurrences(
+            of: #"(static let defaultBoard: BoardRevision = \{\s*)let boardID = "[^"]+""#,
             with: "$1",
             options: .regularExpression
         )

@@ -1,195 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "moon.armstrong",
   "manufacturer": "Moon Climbing",
   "name": "Armstrong Fingerboard Beech",
   "subtitle": "Beech fingerboard with jugs, 35-degree slopers, five paired edge depths, two-finger pockets, monos, and central one-arm holds.",
   "productURL": "https://moonclimbing.com/moon-armstrong-fingerboard-beech.html",
-  "dimensions": "65 \u00d7 16.5 \u00d7 5.5 cm",
+  "dimensions": "65 × 16.5 × 5.5 cm",
   "aspectRatio": 1.4141666666666666,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "sloper-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 35-degree sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "sloper-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 35-degree sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "jug-left",
-      "equipmentObjectID": "primary",
-      "name": "Left in-cut jug",
-      "kind": "jug"
-    },
-    {
-      "id": "jug-right",
-      "equipmentObjectID": "primary",
-      "name": "Right in-cut jug",
-      "kind": "jug"
-    },
-    {
-      "id": "center-jug",
-      "equipmentObjectID": "primary",
-      "name": "Center one-arm jug",
-      "kind": "jug"
-    },
-    {
-      "id": "edge-25-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 25 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 25,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-25-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 25 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 25,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-20-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-20-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-15-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-15-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-10-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-10-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-8-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 8 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 8,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "edge-8-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 8 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 8,
-      "features": [
-        "slot"
-      ]
-    },
-    {
-      "id": "two-finger-pocket-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 22 mm two-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 22,
-      "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
-    },
-    {
-      "id": "two-finger-pocket-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 22 mm two-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 22,
-      "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
-    },
-    {
-      "id": "mono-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 22 mm mono pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 22,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "mono-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 22 mm mono pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 22,
-      "fingerCapacity": 1
-    },
-    {
-      "id": "center-edge-22",
-      "equipmentObjectID": "primary",
-      "name": "Center 22 mm one-arm edge",
-      "kind": "edge",
-      "sizeMillimeters": 22
-    },
-    {
-      "id": "center-edge-18",
-      "equipmentObjectID": "primary",
-      "name": "Center 18 mm one-arm edge",
-      "kind": "edge",
-      "sizeMillimeters": 18
     }
   ],
   "presentations": [
@@ -204,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "sloper-left": [
             {
               "frame": {
@@ -2551,6 +2371,269 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "sloper-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 35-degree sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 35-degree sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "jug-left",
+      "equipmentObjectID": "primary",
+      "name": "Left in-cut jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "jug-right",
+      "equipmentObjectID": "primary",
+      "name": "Right in-cut jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "center-jug",
+      "equipmentObjectID": "primary",
+      "name": "Center one-arm jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 25 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 25 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 10 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 10 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 8 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 8 mm edge",
+      "kind": "edge",
+      "features": [
+        "slot"
+      ],
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "two-finger-pocket-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 22 mm two-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "two-finger-pocket-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 22 mm two-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "mono-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 22 mm mono pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 22 mm mono pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "center-edge-22",
+      "equipmentObjectID": "primary",
+      "name": "Center 22 mm one-arm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "center-edge-18",
+      "equipmentObjectID": "primary",
+      "name": "Center 18 mm one-arm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 18,
+        "upperBound": 18
+      },
+      "gripTypes": []
     }
   ]
 }

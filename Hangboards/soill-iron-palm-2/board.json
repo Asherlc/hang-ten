@@ -1,68 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "soill.iron-palm-2",
   "manufacturer": "So iLL",
   "name": "Iron Palm 2.0",
   "subtitle": "Molded training board with slopers, pinches, an incut top rung, and graduated edges.",
   "productURL": "https://soillholds.com/products/iron-palm-2-0",
-  "dimensions": "27 \u00d7 11.5 \u00d7 4 in",
+  "dimensions": "27 × 11.5 × 4 in",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "sloper-left",
-      "equipmentObjectID": "primary",
-      "name": "Left sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "sloper-right",
-      "equipmentObjectID": "primary",
-      "name": "Right sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "pinch-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 3-inch pinch",
-      "kind": "pinch"
-    },
-    {
-      "id": "top-incut-jug",
-      "equipmentObjectID": "primary",
-      "name": "Incut top jug rail",
-      "kind": "jug"
-    },
-    {
-      "id": "rounded-edge-40",
-      "equipmentObjectID": "primary",
-      "name": "40 mm rounded rail",
-      "kind": "edge",
-      "sizeMillimeters": 40
-    },
-    {
-      "id": "flat-edge-25",
-      "equipmentObjectID": "primary",
-      "name": "25 mm flat rail",
-      "kind": "edge",
-      "sizeMillimeters": 25
-    },
-    {
-      "id": "flat-edge-15",
-      "equipmentObjectID": "primary",
-      "name": "15 mm flat rail",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "pinch-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 3-inch pinch",
-      "kind": "pinch"
     }
   ],
   "presentations": [
@@ -77,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "sloper-left": [
             {
               "frame": {
@@ -684,6 +631,85 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "sloper-left",
+      "equipmentObjectID": "primary",
+      "name": "Left sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-right",
+      "equipmentObjectID": "primary",
+      "name": "Right sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 3-inch pinch",
+      "kind": "pinch",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-incut-jug",
+      "equipmentObjectID": "primary",
+      "name": "Incut top jug rail",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "rounded-edge-40",
+      "equipmentObjectID": "primary",
+      "name": "40 mm rounded rail",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "flat-edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm flat rail",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "flat-edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm flat rail",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 3-inch pinch",
+      "kind": "pinch",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

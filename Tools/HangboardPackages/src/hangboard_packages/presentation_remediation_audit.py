@@ -3786,7 +3786,13 @@ def _validate_mini_bar_state(
     if removal.phase2_action is not None and removal.phase2_action.state == "completed":
         if tuple(presentation.id for presentation in package.board.presentations) != ("primary",):
             raise PresentationRemediationAuditError("completed Mini Bar removal requires one primary presentation")
-        assignments = {hold.id: hold.presentation_id for hold in package.board.holds}
+        assignments = {
+            contact_id: presentation.id
+            for presentation in package.board.presentations
+            if presentation.source_presentation_id is None
+            and hasattr(presentation.media, "contact_geometry")
+            for contact_id in presentation.media.contact_geometry
+        }
         for hold_id in ("ergonomic-jug", "edge-10", "edge-20", "mini-pinch"):
             if assignments.get(hold_id) != "primary":
                 raise PresentationRemediationAuditError("Mini Bar retained holds must all use primary presentation")

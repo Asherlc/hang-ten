@@ -188,7 +188,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
-    func testBundledBoardContentUsesSchemaVersionTwo() throws {
+    func testBundledBoardContentUsesSchemaVersionThree() throws {
         let repositoryRoot = repositoryRootURL()
         let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
             at: repositoryRoot
@@ -201,8 +201,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             XCTAssertEqual(
                 boardDocument["schemaVersion"] as? Int,
-                2,
-                "Every bundled board package must use schema version 2: \(boardURL.path)."
+                3,
+                "Every bundled board package must use schema version 3: \(boardURL.path)."
             )
         }
 
@@ -224,7 +224,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             for step in plan.steps {
                 for target in step.targets {
                     XCTAssertFalse(
-                        BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty,
+                        (try? ContactResolver.resolve(target, step: step, board: board))?.isEmpty ?? true,
                         "Expected target in \(plan.id)/\(step.id) to resolve on \(board.id)."
                     )
                 }
@@ -308,14 +308,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     with: Data(contentsOf: packageURL.appendingPathComponent("board.json"))
                 ) as? [String: Any]
             )
-            let holds = try XCTUnwrap(boardDocument["holds"] as? [[String: Any]])
+            let holds = try XCTUnwrap(boardDocument["contacts"] as? [[String: Any]])
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 2)
+            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 3)
             XCTAssertNil(boardDocument["presentation"])
             let presentations = try XCTUnwrap(
                 boardDocument["presentations"] as? [[String: Any]]
@@ -342,7 +342,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     migratedModelBoardIDs.contains(board.id),
                     "Migrated board \(board.id) must not retain raster media."
                 )
-                XCTAssertFalse(media.holdGeometry.isEmpty)
+                XCTAssertFalse(media.contactGeometry.isEmpty)
                 let logicalHoldIDs = Set(holds.compactMap { $0["id"] as? String })
                 var originalRasterHoldIDs = Set<String>()
                 XCTAssertTrue(
@@ -356,7 +356,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 for presentation in presentations {
                     guard let presentationMedia = presentation["media"] as? [String: Any],
                           presentationMedia["type"] as? String == "raster",
-                          let holdGeometry = presentationMedia["holdGeometry"] as? [String: Any]
+                          let holdGeometry = presentationMedia["contactGeometry"] as? [String: Any]
                     else {
                         continue
                     }
@@ -405,7 +405,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 XCTAssertTrue(holds.allSatisfy {
                     $0["geometry"] == nil && $0["presentationID"] == nil
                 })
-                XCTAssertEqual(Set(media.descriptor.holds.keys), Set(holds.compactMap {
+                XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(holds.compactMap {
                     $0["id"] as? String
                 }))
             }
@@ -442,7 +442,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
         XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: pieces)"))
+        XCTAssertTrue(source.contains("BoardContactPathShape(pieces: pieces)"))
         XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
         XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
         XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
@@ -501,7 +501,35 @@ final class BoardSourceBoundaryTests: XCTestCase {
         ).isEmpty)
         XCTAssertFalse(BoardSourceBoundaryAudit.findings(
             relativePath: "HangTen/Views/BoardModelView.swift",
-            source: "enum BoardModelIdentity { let hold = BoardHold() }", packageOwnedLiterals: literals
+            source: "enum BoardModelIdentity { let hold = PhysicalContact() }", packageOwnedLiterals: literals
+        ).isEmpty)
+    }
+
+    func testBoundaryAuditAllowsOnlyTheScopedCatalogDefaultBoardBinding() {
+        let binding = """
+        enum BoardCatalog {
+            static let defaultBoard: BoardRevision = {
+                let boardID = "metolius.wood-grips-compact-ii"
+                return packageStore.board(id: boardID)!
+            }()
+        }
+        """
+        let literals: Set<String> = ["metolius.wood-grips-compact-ii"]
+
+        XCTAssertTrue(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/TrainingModels.swift",
+            source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Views/OtherView.swift",
+            source: binding,
+            packageOwnedLiterals: literals
+        ).isEmpty)
+        XCTAssertFalse(BoardSourceBoundaryAudit.findings(
+            relativePath: "HangTen/Models/TrainingModels.swift",
+            source: binding + "\nlet planTarget = \"metolius.wood-grips-compact-ii\"",
+            packageOwnedLiterals: literals
         ).isEmpty)
     }
 
@@ -581,49 +609,16 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testBoundaryAuditAllowsPlanMappingsOnlyInDedicatedOwner() {
-        let mapping = """
-        enum LegacyPlanSeedBoardMappings {
-            static let all = [BoardMappingDefinition(
-                boardID: "metolius.wood-grips-compact-ii",
-                semanticHolds: [
-                    "edge-19": SemanticHoldMappingDefinition(
-                        holdIDs: ["edge-19-left", "edge-19-right"]
-                    )
-                ]
-            )]
-        }
-        """
-        let packageOwnedLiterals: Set<String> = [
-            "metolius.wood-grips-compact-ii",
-            "edge-19-left",
-            "edge-19-right"
-        ]
+    func testBoundaryAuditAllowsFactualPlanRequirements() {
+        let requirement = "ContactRequirement(kind: .edge, selection: .bilateralPair)"
 
         XCTAssertEqual(
             BoardSourceBoundaryAudit.findings(
                 relativePath: "HangTen/Models/TrainingModels.swift",
-                source: mapping,
-                packageOwnedLiterals: packageOwnedLiterals
+                source: requirement,
+                packageOwnedLiterals: []
             ),
             []
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/UnauthorizedMappings.swift",
-                source: mapping,
-                packageOwnedLiterals: packageOwnedLiterals
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/TrainingModels.swift",
-                source: mapping + "\n" + mapping.replacingOccurrences(
-                    of: "LegacyPlanSeedBoardMappings",
-                    with: "UnauthorizedPlanMappings"
-                ),
-                packageOwnedLiterals: packageOwnedLiterals
-            ).isEmpty
         )
         XCTAssertFalse(
             BoardSourceBoundaryAudit.findings(
@@ -768,7 +763,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let boardObject = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
             )
-            let holds = try XCTUnwrap(boardObject["holds"] as? [[String: Any]])
+            let holds = try XCTUnwrap(boardObject["contacts"] as? [[String: Any]])
             identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
 
             for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {

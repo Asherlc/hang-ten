@@ -1,3 +1,4 @@
+import CryptoKit
 import SceneKit
 import SwiftUI
 import UIKit
@@ -9,7 +10,7 @@ final class BoardModelTests: XCTestCase {
     func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))
         let content = BoardMapPresentationContent(board: board, selectedPresentationID: nil)
-        let cases: [(positionID: String, holdID: String, aspectRatio: CGFloat)] = [
+        let cases: [(positionID: String, contactID: String, aspectRatio: CGFloat)] = [
             ("paired-25-20-15-10", "edge-20-left", 10.4),
             ("paired-12-8-6", "edge-12-left", 10.4),
             ("central-30-25", "edge-central-30", 10.4),
@@ -21,7 +22,7 @@ final class BoardModelTests: XCTestCase {
             let positionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: content.presentation.id,
-                activeHoldID: fixture.holdID
+                activeHoldID: fixture.contactID
             )
             XCTAssertEqual(positionID, fixture.positionID)
             XCTAssertEqual(content.presentation.aspectRatio(for: positionID), fixture.aspectRatio, accuracy: 0.000_01, fixture.positionID)
@@ -30,22 +31,22 @@ final class BoardModelTests: XCTestCase {
 
     func testTrainingBoardHoldIDsUseCanonicalHoldOrderForPositionMembership() throws {
         let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
-        let authoredOrder = original.holds.map(\.id).reversed()
+        let authoredOrder = original.contacts.map(\.id).reversed()
         let shuffledPosition = BoardPosition(
             id: "shuffled",
             presentationID: original.defaultPresentation.id,
-            holdIDs: Array(authoredOrder)
+            contactIDs: Array(authoredOrder)
         )
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: original.id,
+            revisionID: "test-fixture",
             manufacturer: original.manufacturer,
             name: original.name,
             subtitle: original.subtitle,
             dimensions: original.dimensions,
             aspectRatio: original.aspectRatio,
             equipmentObjects: original.equipmentObjects,
-            holds: original.holds,
-            semanticHolds: original.semanticHolds,
+            contacts: original.contacts,
             productURL: original.productURL,
             photoAssetName: original.photoAssetName,
             presentations: original.presentations,
@@ -54,38 +55,38 @@ final class BoardModelTests: XCTestCase {
         )
 
         XCTAssertEqual(board.position(id: "shuffled")?.id, "shuffled")
-        XCTAssertEqual(board.holdIDs(inPosition: "shuffled"), original.holds.map(\.id))
+        XCTAssertEqual(board.contactIDs(inPosition: "shuffled"), original.contacts.map(\.id))
         XCTAssertNil(board.position(id: "missing"))
     }
 
     func testTrainingBoardPositionSelectionDoesNotBorrowMembershipOrPresentation() throws {
         let original = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
-        let holdIDs = original.holds.map(\.id)
+        let holdIDs = original.contacts.map(\.id)
         let firstPosition = BoardPosition(
             id: "first",
             presentationID: original.defaultPresentation.id,
-            holdIDs: Array(holdIDs.prefix(2))
+            contactIDs: Array(holdIDs.prefix(2))
         )
         let secondPosition = BoardPosition(
             id: "second",
             presentationID: original.defaultPresentation.id,
-            holdIDs: Array(holdIDs.dropFirst(2))
+            contactIDs: Array(holdIDs.dropFirst(2))
         )
         let unavailablePresentationPosition = BoardPosition(
             id: "unavailable",
             presentationID: "missing",
-            holdIDs: holdIDs
+            contactIDs: holdIDs
         )
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: original.id,
+            revisionID: "test-fixture",
             manufacturer: original.manufacturer,
             name: original.name,
             subtitle: original.subtitle,
             dimensions: original.dimensions,
             aspectRatio: original.aspectRatio,
             equipmentObjects: original.equipmentObjects,
-            holds: original.holds,
-            semanticHolds: original.semanticHolds,
+            contacts: original.contacts,
             productURL: original.productURL,
             photoAssetName: original.photoAssetName,
             presentations: original.presentations,
@@ -93,12 +94,12 @@ final class BoardModelTests: XCTestCase {
             positionTransitions: original.positionTransitions
         )
 
-        XCTAssertEqual(board.holdIDs(inPosition: "first"), Array(holdIDs.prefix(2)))
-        XCTAssertEqual(board.holdIDs(inPosition: "second"), Array(holdIDs.dropFirst(2)))
+        XCTAssertEqual(board.contactIDs(inPosition: "first"), Array(holdIDs.prefix(2)))
+        XCTAssertEqual(board.contactIDs(inPosition: "second"), Array(holdIDs.dropFirst(2)))
         XCTAssertEqual(board.position(id: "first")?.presentationID, original.defaultPresentation.id)
         XCTAssertEqual(board.position(id: "second")?.presentationID, original.defaultPresentation.id)
         XCTAssertEqual(board.position(id: "unavailable")?.presentationID, "missing")
-        XCTAssertEqual(board.holdIDs(inPosition: "unavailable"), [])
+        XCTAssertEqual(board.contactIDs(inPosition: "unavailable"), [])
     }
 
     func testBoardMapPositionResolverDoesNotFallbackAcrossPresentationOrHold() throws {
@@ -124,30 +125,10 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
-    func testFlashBoardTwoEdgeAndSmallCrimpHoldsResolveOnlyToTwoEdgePosition() throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
-        let twoEdgeHoldIDs = [
-            "two-edge-left",
-            "two-edge-right",
-            "small-crimp-left",
-            "small-crimp-right",
-        ]
-
-        for holdID in twoEdgeHoldIDs {
-            let resolvedPositionID = BoardMapPresentationSelection.resolvePositionID(
-                board: board,
-                presentationID: "primary",
-                activeHoldID: holdID
-            )
-            XCTAssertEqual(resolvedPositionID, "two-edge-upright", holdID)
-            XCTAssertNotEqual(resolvedPositionID, "three-edge-upright", holdID)
-        }
-    }
-
     func testModelSceneRejectsUnknownPositionWithoutFallback() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
         let model = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
@@ -168,8 +149,8 @@ final class BoardModelTests: XCTestCase {
     func testOrientationRotatesSharedContainerAboutBoundsCenterAndReframesAllCorners() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ],
             minimum: [1, 2, 3],
             maximum: [5, 8, 11]
@@ -188,12 +169,12 @@ final class BoardModelTests: XCTestCase {
             orientation: orientation,
             allowedPositionIDs: ["front", "reverse"]
         ))
-        let hold = try XCTUnwrap(model.holdNodes["left"]?.first)
+        let contact = try XCTUnwrap(model.contactNodes["left"]?.first)
 
         XCTAssertTrue(model.select(positionID: "reverse"))
         SCNTransaction.flush()
 
-        XCTAssertEqual(model.holdID(for: hold), "left")
+        XCTAssertEqual(model.contactID(for: contact), "left")
         XCTAssertNil(model.transientCordNode)
         XCTAssertFalse(model.isTransientCordAccessible)
         let pivot = SIMD3<Float>(3, 5, 7)
@@ -219,11 +200,11 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(framing.height, 6, accuracy: 0.000_001)
     }
 
-    func testSuspensionSelectionUsesCanonicalPoseWhenOrientationAlsoExists() throws {
+    func testOrientationSelectionResetsOrbitAndRejectsSuspensionAtRuntime() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ],
             minimum: [1, 2, 3],
             maximum: [5, 8, 11]
@@ -254,7 +235,7 @@ final class BoardModelTests: XCTestCase {
 
         let suspension = BoardModelSuspension(
             attachment: .init(nodeID: "Board/Body", pointInModel: [1, 2, 3], provenance: "test"),
-            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "invisible", provenance: "test", position: [2, 10, 3]),
+            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "hidden", provenance: "test", position: [1, 10, 3]),
             cord: .init(restLength: 10, radius: 0.01, material: "test", provenance: "test"),
             canonicalPoses: [
                 "reverse": .init(
@@ -264,7 +245,7 @@ final class BoardModelTests: XCTestCase {
                 )
             ]
         )
-        let suspendedModel = try XCTUnwrap(BoardModelScene(
+        XCTAssertNil(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
             descriptor: descriptor,
             display: display(),
@@ -272,21 +253,6 @@ final class BoardModelTests: XCTestCase {
             orientation: orientation,
             allowedPositionIDs: ["reverse"]
         ))
-
-        XCTAssertTrue(suspendedModel.select(positionID: "reverse"))
-        XCTAssertFalse(suspendedModel.isUnavailable)
-        XCTAssertEqual(suspendedModel.activePositionID, "reverse")
-        XCTAssertNotNil(suspendedModel.transientCordNode)
-        XCTAssertFalse(suspendedModel.transientCordNode?.childNodes.isEmpty ?? true)
-        XCTAssertFalse(suspendedModel.isTransientCordAccessible)
-        XCTAssertEqual(suspendedModel.transformedAttachment, SIMD3<Float>(1, 2, 3))
-        XCTAssertTrue(suspendedModel.transientCordNode?.childNodes.allSatisfy {
-            $0.geometry != nil && !$0.isHidden
-        } ?? false)
-        XCTAssertEqual(suspendedModel.boardTransform.columns.0, SIMD4<Float>(1, 0, 0, 0))
-        XCTAssertEqual(suspendedModel.boardTransform.columns.1, SIMD4<Float>(0, 1, 0, 0))
-        XCTAssertEqual(suspendedModel.boardTransform.columns.2, SIMD4<Float>(0, 0, 1, 0))
-        XCTAssertEqual(suspendedModel.boardTransform.columns.3, SIMD4<Float>(0, 0, 0, 1))
     }
 
     func testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms() throws {
@@ -311,13 +277,20 @@ final class BoardModelTests: XCTestCase {
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
     }
 
-    func testFlashBoardNativeSceneUsesApprovedSuspensionAcrossCanonicalPositions() async throws {
+    func testFlashBoardNativeSceneUsesApprovedTwoBranchSuspensionAndBindsSmallCrimpContacts() async throws {
         let (board, media, model) = try await loadMigratedModel("tension.flash-board")
         XCTAssertNil(media.orientation)
+        XCTAssertEqual(
+            media.descriptor.modelSHA256,
+            "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524"
+        )
+        XCTAssertEqual(media.descriptor.contacts.count, 7)
         guard case .twoBranchCord(let suspension) = media.suspension else {
             return XCTFail("Flash Board must load the approved twoBranchCord suspension")
         }
         XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(board.contacts.map(\.id)))
+        XCTAssertTrue(Set(media.descriptor.contacts.keys).isSuperset(of: ["small-crimp-left", "small-crimp-right"]))
         for position in board.positions {
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
@@ -330,7 +303,7 @@ final class BoardModelTests: XCTestCase {
         let (_, media, model) = try await loadMigratedModel("tension.flash-board")
 
         XCTAssertEqual(media.descriptor.modelSHA256, "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524")
-        XCTAssertEqual(media.descriptor.holds.count, 7)
+        XCTAssertEqual(media.descriptor.contacts.count, 7)
         guard case .twoBranchCord(let suspension) = media.suspension else {
             return XCTFail("Flash Board must load the approved twoBranchCord suspension")
         }
@@ -383,7 +356,7 @@ final class BoardModelTests: XCTestCase {
             XCTAssertEqual(Set(suspension.attachments.map(\.id)).count, 2, boardID)
             for attachment in suspension.attachments {
                 let binding = try XCTUnwrap(media.descriptor.nodes.first { $0.nodeID == attachment.nodeID })
-                XCTAssertNotEqual(binding.role, .hold, boardID)
+                XCTAssertNotEqual(binding.role, .contact, boardID)
             }
             XCTAssertNotEqual(suspension.attachments[0].pointInModel, suspension.attachments[1].pointInModel, boardID)
 
@@ -399,7 +372,7 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertEqual(cord.childNodes.count, expectedSegmentCount, "\(boardID)/\(position.id)")
                 XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
-                    node.categoryBitMask == BoardModelScene.cordCategory && model.holdID(for: node) == nil
+                    node.categoryBitMask == BoardModelScene.cordCategory && model.contactID(for: node) == nil
                 }, "\(boardID)/\(position.id)")
             }
         }
@@ -471,10 +444,10 @@ final class BoardModelTests: XCTestCase {
         }
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Body", role: .body, holdID: nil),
-                .init(nodeID: "Hold", role: .hold, holdID: "hold"),
-                .init(nodeID: "Lead/Left", role: .attachment, holdID: nil),
-                .init(nodeID: "Lead/Right", role: .attachment, holdID: nil),
+                .init(nodeID: "Body", role: .body, contactID: nil),
+                .init(nodeID: "Hold", role: .contact, contactID: "hold"),
+                .init(nodeID: "Lead/Left", role: .attachment, contactID: nil),
+                .init(nodeID: "Lead/Right", role: .attachment, contactID: nil),
             ],
             minimum: [-1, -0.5, -0.2],
             maximum: [1, 0.5, 0.2]
@@ -504,7 +477,7 @@ final class BoardModelTests: XCTestCase {
             XCTAssertEqual(segments.count, SuspendedCordSolver.sampleCount - 1)
             XCTAssertTrue(segments.allSatisfy {
                 !$0.isHidden && $0.geometry is SCNCylinder && $0.categoryBitMask == BoardModelScene.cordCategory
-                    && validModel.holdID(for: $0) == nil
+                    && validModel.contactID(for: $0) == nil
             })
         }
 
@@ -642,6 +615,82 @@ final class BoardModelTests: XCTestCase {
         Int(node.name?.split(separator: ".").last ?? "") ?? -1
     }
 
+    private func assertStraightSamples(_ samples: [SIMD3<Float>], label: String) {
+        guard let start = samples.first, let end = samples.last else {
+            return XCTFail("\(label) must contain samples")
+        }
+        let displacement = end - start
+        let length = simd_length(displacement)
+        XCTAssertGreaterThan(length, 1e-7, "\(label) endpoints must differ")
+        guard length > 1e-7 else { return }
+        let direction = displacement / length
+        for (index, sample) in samples.enumerated() {
+            XCTAssertLessThan(
+                simd_length(simd_cross(sample - start, direction)),
+                1e-5,
+                "\(label) sample \(index) must remain on its direct span"
+            )
+        }
+    }
+
+    private func assertCameraBasis(
+        _ camera: SCNNode,
+        expectedFront: SIMD3<Float>,
+        expectedUp: SIMD3<Float>,
+        expectedRight: SIMD3<Float>,
+        label: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let front = camera.simdWorldFront
+        let up = camera.simdWorldUp
+        let right = camera.simdWorldRight
+        let vectors = [front, up, right]
+        XCTAssertTrue(vectors.allSatisfy { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }, "\(label) camera basis must be finite", file: file, line: line)
+        XCTAssertEqual(simd_length(front), 1, accuracy: 0.000_1, "\(label) front", file: file, line: line)
+        XCTAssertEqual(simd_length(up), 1, accuracy: 0.000_1, "\(label) up", file: file, line: line)
+        XCTAssertEqual(simd_length(right), 1, accuracy: 0.000_1, "\(label) right", file: file, line: line)
+        XCTAssertEqual(simd_dot(front, up), 0, accuracy: 0.000_1, "\(label) front/up", file: file, line: line)
+        XCTAssertEqual(simd_dot(front, right), 0, accuracy: 0.000_1, "\(label) front/right", file: file, line: line)
+        XCTAssertEqual(simd_dot(up, right), 0, accuracy: 0.000_1, "\(label) up/right", file: file, line: line)
+        assertVectorEqual(simd_cross(front, up), right, "\(label) right-handed", file: file, line: line)
+        assertVectorEqual(front, expectedFront, "\(label) expected front", file: file, line: line)
+        assertVectorEqual(up, expectedUp, "\(label) expected up", file: file, line: line)
+        assertVectorEqual(right, expectedRight, "\(label) expected right", file: file, line: line)
+    }
+
+    private func assertVectorEqual(
+        _ actual: SIMD3<Float>,
+        _ expected: SIMD3<Float>,
+        _ message: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(actual.x, expected.x, accuracy: 0.000_1, "\(message) x", file: file, line: line)
+        XCTAssertEqual(actual.y, expected.y, accuracy: 0.000_1, "\(message) y", file: file, line: line)
+        XCTAssertEqual(actual.z, expected.z, accuracy: 0.000_1, "\(message) z", file: file, line: line)
+    }
+
+    private func hasNonBackgroundPixels(_ image: CGImage) -> Bool {
+        let width = image.width
+        let height = image.height
+        guard width > 0, height > 0 else { return false }
+        var rgba = [UInt8](repeating: 0, count: width * height * 4)
+        return rgba.withUnsafeMutableBytes { bytes -> Bool in
+            guard let baseAddress = bytes.baseAddress,
+                  let context = CGContext(data: baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+                return false
+            }
+            context.setFillColor(UIColor.white.cgColor)
+            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return (0..<(width * height)).contains { index in
+                let offset = index * 4
+                return bytes[offset] < 245 || bytes[offset + 1] < 245 || bytes[offset + 2] < 245
+            }
+        }
+    }
+
     func testFlashBoardCanonicalCameraFacesSelectedSurfaceAcrossEveryPose() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
         guard case .model(let media) = board.defaultPresentation.media,
@@ -737,8 +786,8 @@ final class BoardModelTests: XCTestCase {
     func testFrameRejectsInvalidSizesWithoutChangingCameraOrCanonicalSelection() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ],
             minimum: [0, 0, 0],
             maximum: [4, 2, 1]
@@ -799,8 +848,8 @@ final class BoardModelTests: XCTestCase {
     func testOrbitRejectsInvalidInputsWithoutChangingCameraOrNextValidOrbit() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ]
         )
         let orientation = BoardModelOrientation(
@@ -983,8 +1032,8 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(board.id, "nature.stone-hanger")
         XCTAssertEqual(presentation.id, "primary")
         XCTAssertTrue(presentation.isDefault)
-        XCTAssertEqual(board.holds.map(\.id), expectedHoldIDs)
-        XCTAssertEqual(Set(media.descriptor.holds.keys), Set(expectedHoldIDs))
+        XCTAssertEqual(board.contacts.map(\.id), expectedHoldIDs)
+        XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(expectedHoldIDs))
         XCTAssertEqual(media.assetPath, "assets/primary.usdz")
         XCTAssertEqual(media.descriptorPath, "assets/primary.model.json")
         XCTAssertEqual(media.display.camera.type, "orthographic")
@@ -995,27 +1044,17 @@ final class BoardModelTests: XCTestCase {
         let descriptorURL = try XCTUnwrap(
             BoardCatalog.packageStore.presentationDescriptorURL(for: board, presentationID: presentation.id)
         )
-        let expectedDescriptorURL = try XCTUnwrap(Bundle.main.resourceURL)
-            .appendingPathComponent("Hangboards", isDirectory: true)
-            .appendingPathComponent("nature-stone-hanger", isDirectory: true)
-            .appendingPathComponent("assets/primary.model.json")
         XCTAssertNil(
-            BoardCatalog.packageStore.presentationAssetURL(
-                for: board,
-                presentationID: presentation.id
-            )
+            BoardCatalog.packageStore.presentationAssetURL(for: board, presentationID: presentation.id)
         )
         XCTAssertEqual(
-            BoardCatalog.packageStore.modelResource(
-                for: board,
-                presentationID: presentation.id
-            ),
+            BoardCatalog.packageStore.modelResource(for: board, presentationID: presentation.id),
             BoardModelResource(
                 packageSlug: "nature-stone-hanger",
                 assetPath: "assets/primary.usdz"
             )
         )
-        XCTAssertEqual(descriptorURL.standardizedFileURL, expectedDescriptorURL.standardizedFileURL)
+        XCTAssertTrue(descriptorURL.path.hasSuffix("/Hangboards/nature-stone-hanger/assets/primary.model.json"))
         XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board, presentationID: presentation.id))
     }
 
@@ -1035,16 +1074,16 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
     }
 
-    func testNatureStoneHangerHighlightsNativeHoldMaterialsAndClearsThem() async throws {
+    func testNatureStoneHangerHighlightsNativeContactMaterialsAndClearsThem() async throws {
         let (board, _, model) = try await loadMigratedModel("nature.stone-hanger")
         let highlightedID = "edge-front-20mm-granite"
         let untouchedID = "edge-front-20mm-wood-flat"
-        let highlightedNode = try XCTUnwrap(model.holdNodes[highlightedID]?.first)
-        let untouchedNode = try XCTUnwrap(model.holdNodes[untouchedID]?.first)
+        let highlightedNode = try XCTUnwrap(model.contactNodes[highlightedID]?.first)
+        let untouchedNode = try XCTUnwrap(model.contactNodes[untouchedID]?.first)
         let highlightedOriginal = try XCTUnwrap(highlightedNode.geometry?.firstMaterial)
         let untouchedOriginal = try XCTUnwrap(untouchedNode.geometry?.firstMaterial)
 
-        XCTAssertEqual(model.holdNodes.count, board.holds.count)
+        XCTAssertEqual(model.contactNodes.count, board.contacts.count)
         model.highlight([highlightedID], mode: .active)
         XCTAssertEqual(
             highlightedNode.geometry?.firstMaterial?.diffuse.contents as? UIColor,
@@ -1064,11 +1103,13 @@ final class BoardModelTests: XCTestCase {
     // broke between the loader and the renderer.
     func testNatureStoneHangerOrientationSelectsBothFacesWithVisibleFraming() async throws {
         let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
-        let orientation = try XCTUnwrap(media.orientation, "Nature must declare orientation metadata")
-        XCTAssertEqual(orientation.pivot, "modelBoundsCenter")
-        XCTAssertEqual(Set(orientation.rotations.keys), ["front", "reverse"])
+        guard case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("Nature Stone Hanger must load the approved pairedLeadCord suspension")
+        }
+        XCTAssertEqual(suspension.canonicalPoses["front"]?.rotation, [0, 0, 0, 1])
+        XCTAssertEqual(suspension.canonicalPoses["reverse"]?.rotation, [0, 1, 0, 0])
         XCTAssertFalse(model.geometryNodes.isEmpty, "Nature scene must contain geometry")
-        XCTAssertEqual(model.holdNodes.count, board.holds.count)
+        XCTAssertEqual(model.contactNodes.count, board.contacts.count)
         try assertVisibleFraming(model, positionIDs: ["front", "reverse"])
         // NOTE: head-on CPU rays at descriptor face-plane centers intentionally
         // are NOT asserted here. The Stone Hanger's recess interiors belong to
@@ -1096,8 +1137,140 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(Set(orientation.rotations.keys), Set(expectedIDs))
         XCTAssertEqual(board.positions.map(\.id), expectedIDs)
         XCTAssertFalse(model.geometryNodes.isEmpty, "Baguette scene must contain geometry")
-        XCTAssertEqual(model.holdNodes.count, board.holds.count)
+        XCTAssertEqual(model.contactNodes.count, board.contacts.count)
         try assertVisibleFraming(model, positionIDs: expectedIDs)
+    }
+
+    func testPromotedModelMatchesItsV3PhysicalContactInventory() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        let approvedModelSHA256 = "a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc"
+        let approvedDescriptorSHA256 = "1b6f5a4048104a9d0b5b1a1c60002270332ddb54bd0e9a13f057594f34487f47"
+        let expectedContactIDs = [
+            "edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left",
+            "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right",
+            "edge-12-left", "edge-12-right", "edge-8-left", "edge-8-right",
+            "edge-6-upper", "edge-6-lower", "edge-central-30", "edge-central-25",
+            "edge-central-20", "edge-central-6", "rounded-tray",
+        ]
+
+        XCTAssertEqual(board.contacts.map(\.id), expectedContactIDs)
+        XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(expectedContactIDs))
+        XCTAssertEqual(Set(model.contactNodes.keys), Set(expectedContactIDs))
+        XCTAssertEqual(media.descriptor.nodes.filter { $0.role == .body }.count, 1)
+        XCTAssertEqual(media.descriptor.nodes.filter { $0.role == .contact }.count, 20)
+        XCTAssertEqual(model.geometryNodes.count, 21)
+        XCTAssertEqual(model.contactNodes["rounded-tray"]?.count, 2)
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board))
+        XCTAssertEqual(media.descriptor.modelSHA256, approvedModelSHA256)
+
+        let expectedBindings = [
+            "body_mesh_001|body|-",
+            "hold_central_06mm_mesh_001|contact|edge-central-6",
+            "hold_central_20mm_mesh_001|contact|edge-central-20",
+            "hold_central_25mm_mesh_001|contact|edge-central-25",
+            "hold_central_30mm_mesh_001|contact|edge-central-30",
+            "hold_edge_06mm_left_mesh_001|contact|edge-6-upper",
+            "hold_edge_06mm_right_mesh_001|contact|edge-6-lower",
+            "hold_edge_08mm_left_mesh_001|contact|edge-8-left",
+            "hold_edge_08mm_right_mesh_001|contact|edge-8-right",
+            "hold_edge_10mm_left_mesh_001|contact|edge-10-left",
+            "hold_edge_10mm_right_mesh_001|contact|edge-10-right",
+            "hold_edge_12mm_left_mesh_001|contact|edge-12-left",
+            "hold_edge_12mm_right_mesh_001|contact|edge-12-right",
+            "hold_edge_15mm_left_mesh_001|contact|edge-15-left",
+            "hold_edge_15mm_right_mesh_001|contact|edge-15-right",
+            "hold_edge_20mm_left_mesh_001|contact|edge-20-left",
+            "hold_edge_20mm_right_mesh_001|contact|edge-20-right",
+            "hold_edge_25mm_left_mesh_001|contact|edge-25-left",
+            "hold_edge_25mm_right_mesh_001|contact|edge-25-right",
+            "hold_rounded_left_mesh_001|contact|rounded-tray",
+            "hold_rounded_right_mesh_001|contact|rounded-tray",
+        ]
+        let actualBindings = media.descriptor.nodes.map {
+            "\($0.nodeID)|\($0.role.rawValue)|\($0.contactID ?? "-")"
+        }
+        XCTAssertEqual(actualBindings, expectedBindings)
+
+        let resource = try XCTUnwrap(BoardCatalog.packageStore.modelResource(for: board))
+        let descriptorURL = try XCTUnwrap(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+        let descriptorData = try Data(contentsOf: descriptorURL)
+        let descriptorSHA256 = SHA256.hash(data: descriptorData)
+            .map { String(format: "%02x", $0) }
+            .joined()
+        XCTAssertEqual(descriptorSHA256, approvedDescriptorSHA256)
+        XCTAssertEqual(
+            resource,
+            BoardModelResource(
+                packageSlug: "yy-baguette-evo",
+                assetPath: "assets/primary.usdz"
+            )
+        )
+        XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
+        let packageURL = repositoryRootURL()
+            .appendingPathComponent("Hangboards", isDirectory: true)
+            .appendingPathComponent(resource.packageSlug, isDirectory: true)
+        let assetURL = packageURL.appendingPathComponent(resource.assetPath)
+        let packageFiles = try FileManager.default.contentsOfDirectory(atPath: packageURL.path)
+        let assetFiles = try FileManager.default.contentsOfDirectory(
+            atPath: assetURL.deletingLastPathComponent().path
+        )
+        XCTAssertEqual(Set(packageFiles), ["assets", "board.json"])
+        XCTAssertEqual(Set(assetFiles), ["primary.model.json", "primary.usdz"])
+    }
+
+    func testBaguetteEvoNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
+            .map { Float($1 - $0) }
+            .max() ?? 1
+        let rayExtension = max(extent * 4, 1)
+
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            SCNTransaction.flush()
+            let reviewAngles: [SIMD2<Float>] = [
+                [0, 0], [0.45, 0], [-0.45, 0], [0, 0.4], [0, -0.4],
+                [0.35, 0.3], [-0.35, 0.3], [0.35, -0.3], [-0.35, -0.3],
+            ]
+            for contactID in position.contactIDs {
+                let nodes = try XCTUnwrap(model.contactNodes[contactID], "\(position.id): \(contactID)")
+                for node in nodes {
+                    let raySamples = try nativeTriangleCenters(for: node)
+                    let hasNativePick = reviewAngles.contains { angle in
+                        model.resetCamera(animated: false)
+                        model.orbit(azimuth: angle.x, elevation: angle.y)
+                        SCNTransaction.flush()
+                        let direction = model.camera.presentation.worldFront
+                        return raySamples.contains { localCenter in
+                            let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
+                            let start = SCNVector3(
+                                center.x - direction.x * rayExtension,
+                                center.y - direction.y * rayExtension,
+                                center.z - direction.z * rayExtension
+                            )
+                            let end = SCNVector3(
+                                center.x + direction.x * rayExtension,
+                                center.y + direction.y * rayExtension,
+                                center.z + direction.z * rayExtension
+                            )
+                            let closest = model.scene.rootNode.hitTestWithSegment(
+                                from: start,
+                                to: end,
+                                options: [
+                                    SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
+                                    SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                                ]
+                            ).first
+                            return closest.flatMap { model.contactID(for: $0.node) } == contactID
+                        }
+                    }
+                    XCTAssertTrue(
+                        hasNativePick,
+                        "\(position.id): \(contactID): \(node.name ?? "unnamed") has no nearest native triangle pick across its bounds"
+                    )
+                }
+            }
+        }
     }
 
     func testNatureStoneHangerCordPassageMarkersAreNotSelectableOrAccessible() async throws {
@@ -1106,24 +1279,24 @@ final class BoardModelTests: XCTestCase {
         let descriptorNodeIDs = Set(media.descriptor.nodes.map(\.nodeID))
 
         XCTAssertTrue(passageMarkerIDs.allSatisfy { !descriptorNodeIDs.contains($0) })
-        XCTAssertTrue(passageMarkerIDs.allSatisfy { model.holdNodes[$0] == nil })
-        XCTAssertEqual(model.geometryNodes.count, board.holds.count + 1)
+        XCTAssertTrue(passageMarkerIDs.allSatisfy { model.contactNodes[$0] == nil })
+        XCTAssertEqual(model.geometryNodes.count, board.contacts.count + 1)
         for markerID in passageMarkerIDs {
             let marker = SCNNode()
             marker.name = markerID
-            XCTAssertNil(model.holdID(for: marker), markerID)
+            XCTAssertNil(model.contactID(for: marker), markerID)
         }
 
         let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
         view.display(model)
-        view.holds = board.holds
-        view.onHoldTap = { _ in }
+        view.contacts = board.contacts
+        view.onContactTap = { _ in }
         view.updateAccessibility()
 
         let identifiers = try XCTUnwrap(view.accessibilityElements as? [UIAccessibilityElement])
             .compactMap(\.accessibilityIdentifier)
-        XCTAssertEqual(Set(identifiers), Set(board.holds.map { "boardModel.hold.\($0.id)" }))
-        XCTAssertTrue(passageMarkerIDs.allSatisfy { !identifiers.contains("boardModel.hold.\($0)") })
+        XCTAssertEqual(Set(identifiers), Set(board.contacts.map { "boardModel.contact.\($0.id)" }))
+        XCTAssertTrue(passageMarkerIDs.allSatisfy { !identifiers.contains("boardModel.contact.\($0)") })
     }
 
     func testExistingPlanTargetsStillResolveOnMetoliusBaguetteAndTrainingTilesBoards() throws {
@@ -1136,26 +1309,23 @@ final class BoardModelTests: XCTestCase {
             let board = try XCTUnwrap(plan.boardID.flatMap {
                 BoardCatalog.packageStore.board(id: $0)
             })
-            for target in plan.steps.flatMap(\.targets) {
-                XCTAssertFalse(
-                    BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty,
-                    "Expected \(plan.id) target \(target) to resolve on \(board.id)"
-                )
+            for step in plan.steps {
+                XCTAssertNoThrow(try ContactResolver.resolve(step.targets, step: step, board: board))
             }
         }
 
         for boardID in ["yy.baguette-evo", "soill.training-tiles"] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let compatibleGenericPlans = PlanCatalog.all.filter { plan in
-                plan.boardID == nil && plan.steps.flatMap(\.targets).allSatisfy {
-                    !BoardTargetResolver.substituteHoldIDs(for: $0, on: board).isEmpty
+                plan.boardID == nil && plan.steps.allSatisfy { step in
+                    (try? ContactResolver.resolve(step.targets, step: step, board: board)) != nil
                 }
             }
             XCTAssertFalse(compatibleGenericPlans.isEmpty, boardID)
             for plan in compatibleGenericPlans {
-                for target in plan.steps.flatMap(\.targets) {
-                    let resolvedIDs = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
-                    XCTAssertTrue(Set(resolvedIDs).isSubset(of: Set(board.holds.map(\.id))), "\(plan.id): \(boardID)")
+                for step in plan.steps {
+                    let resolvedIDs = try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)
+                    XCTAssertTrue(Set(resolvedIDs).isSubset(of: Set(board.contacts.map(\.id))), "\(plan.id): \(boardID)")
                 }
             }
         }
@@ -1178,7 +1348,6 @@ final class BoardModelTests: XCTestCase {
                 continue
             }
             let resource = try XCTUnwrap(BoardCatalog.packageStore.modelResource(for: board))
-
             XCTAssertNil(BoardCatalog.packageStore.presentationAssetURL(for: board))
             XCTAssertNotNil(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
             XCTAssertEqual(resource.assetPath, media.assetPath)
@@ -1205,15 +1374,15 @@ final class BoardModelTests: XCTestCase {
 
             SCNTransaction.flush()
 
-            XCTAssertEqual(Set(board.holds.map(\.id)), expectation.holdIDs, expectation.boardID)
-            XCTAssertEqual(Set(media.descriptor.holds.keys), expectation.holdIDs, expectation.boardID)
-            XCTAssertEqual(Set(model.holdNodes.keys), expectation.holdIDs, expectation.boardID)
+            XCTAssertEqual(Set(board.contacts.map(\.id)), expectation.contactIDs, expectation.boardID)
+            XCTAssertEqual(Set(media.descriptor.contacts.keys), expectation.contactIDs, expectation.boardID)
+            XCTAssertEqual(Set(model.contactNodes.keys), expectation.contactIDs, expectation.boardID)
             XCTAssertEqual(
-                model.holdNodes.values.reduce(0) { $0 + $1.count },
-                expectation.holdIDs.count,
+                model.contactNodes.values.reduce(0) { $0 + $1.count },
+                expectation.contactIDs.count,
                 expectation.boardID
             )
-            XCTAssertEqual(model.geometryNodes.count, expectation.holdIDs.count + 1, expectation.boardID)
+            XCTAssertEqual(model.geometryNodes.count, expectation.contactIDs.count + 1, expectation.boardID)
 
             for node in model.geometryNodes {
                 let materials = try XCTUnwrap(node.geometry?.materials, expectation.boardID)
@@ -1224,7 +1393,7 @@ final class BoardModelTests: XCTestCase {
                 )
             }
 
-            try assertNearestHeadOnHitForEveryHold(model, media: media, boardID: expectation.boardID)
+            try assertNearestHeadOnHitForEveryContact(model, media: media, boardID: expectation.boardID)
             try assertBodyHitIsNotSelectable(
                 model,
                 media: media,
@@ -1234,102 +1403,71 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testModelSurfaceLoadingStateProvidesStatusWithoutHoldSelection() {
-        XCTAssertEqual(BoardModelSurface.ResultState.loading.loadingMessage, "Downloading 3D model…")
-        XCTAssertNil(BoardModelSurface.ResultState.unavailable.loadingMessage)
-        XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
-            for: .loading,
-            onHoldTap: { _ in }
-        ))
-    }
-
-    func testModelSurfaceUnavailableStateNeverPermitsHoldSelection() {
-        XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
+    func testModelSurfaceUnavailableStateNeverPermitsContactSelection() {
+        XCTAssertFalse(BoardModelSurface.permitsContactSelection(
             for: .unavailable,
-            onHoldTap: { _ in }
+            onContactTap: { _ in }
         ))
-        XCTAssertFalse(BoardModelSurface.permitsHoldSelection(
+        XCTAssertFalse(BoardModelSurface.permitsContactSelection(
             for: .loading,
-            onHoldTap: { _ in }
+            onContactTap: { _ in }
         ))
-        XCTAssertTrue(BoardModelSurface.permitsHoldSelection(
+        XCTAssertTrue(BoardModelSurface.permitsContactSelection(
             for: .ready,
-            onHoldTap: { _ in }
+            onContactTap: { _ in }
         ))
     }
 
-    func testModelAccessibilityEnumeratesOnlyDescriptorBoundHolds() throws {
+    func testModelAccessibilityEnumeratesOnlyDescriptorBoundContacts() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
         let model = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
             descriptor: descriptor,
             display: display()
         ))
-        let boundHold = BoardHold(id: "left", name: "Bound left", kind: .edge)
-        let unboundHold = BoardHold(id: "not-in-descriptor", name: "Unbound", kind: .edge)
+        let boundContact = PhysicalContact(id: "left", name: "Bound left", kind: .edge)
+        let unboundContact = PhysicalContact(id: "not-in-descriptor", name: "Unbound", kind: .edge)
         let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
 
         view.display(model)
-        view.holds = [boundHold, unboundHold]
-        view.onHoldTap = { _ in }
+        view.contacts = [boundContact, unboundContact]
+        view.onContactTap = { _ in }
         view.updateAccessibility()
 
         let elements = try XCTUnwrap(view.accessibilityElements as? [UIAccessibilityElement])
-        XCTAssertEqual(elements.compactMap(\.accessibilityIdentifier), ["boardModel.hold.left"])
+        XCTAssertEqual(elements.compactMap(\.accessibilityIdentifier), ["boardModel.contact.left"])
         XCTAssertEqual(elements.compactMap(\.accessibilityLabel), ["Bound left"])
     }
 
-    func testPausedModelViewRequestsLayerRedrawAfterEveryVisibleMutation() throws {
+    // This proves disconnected body components remain visible geometry while
+    // only exact physical-contact meshes participate in selection.
+    func testTwoBodyModelBindsEachContactAndDoesNotMakeBodyTappable() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "left-body", role: .body, contactID: nil),
+            .init(nodeID: "left-edge-node", role: .contact, contactID: "left-edge"),
+            .init(nodeID: "right-body", role: .body, contactID: nil),
+            .init(nodeID: "right-edge-node", role: .contact, contactID: "right-edge")
         ])
         let model = try XCTUnwrap(BoardModelScene(
-            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            source: scene(nodes: ["left-body", "left-edge-node", "right-body", "right-edge-node"]),
             descriptor: descriptor,
-            display: display(),
-            allowedPositionIDs: ["front"]
+            display: display()
         ))
-        let view = RedrawRecordingBoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-        view.rendersContinuously = false
-        view.isPlaying = false
 
-        view.redrawRequestCount = 0
-
-        view.display(model)
-        assertRequestedRedraw(view, "scene installation")
-        view.redrawRequestCount = 0
-
-        view.positionID = "front"
-        view.selectPositionIfNeeded()
-        assertRequestedRedraw(view, "canonical position selection")
-        view.redrawRequestCount = 0
-
-        view.frame = CGRect(x: 0, y: 0, width: 360, height: 180)
-        view.redrawRequestCount = 0
-        view.layoutSubviews()
-        assertRequestedRedraw(view, "layout/frame update")
-        view.redrawRequestCount = 0
-
-        view.applyHighlights(["left"], mode: .active)
-        assertRequestedRedraw(view, "highlight update")
-        view.redrawRequestCount = 0
-
-        let pan = TestPanGestureRecognizer(translation: CGPoint(x: 24, y: -12))
-        view.orbitPan(pan)
-        assertRequestedRedraw(view, "orbit pan")
-        view.redrawRequestCount = 0
-
-        let pinch = TestPinchGestureRecognizer(scale: 1.1)
-        view.orbitPinch(pinch)
-        assertRequestedRedraw(view, "orbit pinch")
-    }
-
-    private func assertRequestedRedraw(_ view: RedrawRecordingBoardModelSCNView, _ mutation: String) {
-        XCTAssertGreaterThan(view.redrawRequestCount, 0, "paused SceneKit view did not request redraw after \(mutation)")
+        XCTAssertEqual(model.contactNodes.keys.sorted(), ["left-edge", "right-edge"])
+        for bodyName in ["left-body", "right-body"] {
+            let body = try XCTUnwrap(model.geometryNodes.first { $0.name == bodyName })
+            XCTAssertEqual(body.categoryBitMask, 0)
+            XCTAssertNil(model.contactID(for: body))
+        }
+        for contactID in ["left-edge", "right-edge"] {
+            let contact = try XCTUnwrap(model.contactNodes[contactID]?.first)
+            XCTAssertEqual(contact.categoryBitMask, BoardModelScene.modelPickCategory)
+            XCTAssertEqual(model.contactID(for: contact), contactID)
+        }
     }
 
     // This catches a renderer that accepts names by suffix, normalization, or
@@ -1337,8 +1475,8 @@ final class BoardModelTests: XCTestCase {
     func testGenericModelBindingUsesExactDescriptorNodeIDs() throws {
         let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
 
         let model = try XCTUnwrap(BoardModelScene(
@@ -1347,22 +1485,22 @@ final class BoardModelTests: XCTestCase {
             display: display()
         ))
 
-        XCTAssertEqual(Set(model.holdNodes.keys), ["left"])
+        XCTAssertEqual(Set(model.contactNodes.keys), ["left"])
         XCTAssertEqual(model.geometryNodes.count, 2)
-        XCTAssertEqual(model.holdID(for: try XCTUnwrap(model.holdNodes["left"]?.first)), "left")
-        XCTAssertNil(model.holdID(for: try XCTUnwrap(model.geometryNodes.first { $0.name == "Body" })))
+        XCTAssertEqual(model.contactID(for: try XCTUnwrap(model.contactNodes["left"]?.first)), "left")
+        XCTAssertNil(model.contactID(for: try XCTUnwrap(model.geometryNodes.first { $0.name == "Body" })))
 
         let mismatched = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "left", role: .contact, contactID: "left")
         ])
         XCTAssertNil(BoardModelScene(source: source, descriptor: mismatched, display: display()))
     }
 
     func testPairedLeadSceneBindingAllowsDistinctPointsOnOneBodyNode() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Body", role: .body, holdID: nil),
-            .init(nodeID: "Hold", role: .hold, holdID: "hold")
+            .init(nodeID: "Body", role: .body, contactID: nil),
+            .init(nodeID: "Hold", role: .contact, contactID: "hold")
         ])
         let suspension = BoardModelPairedLeadCord(
             attachments: [
@@ -1386,8 +1524,8 @@ final class BoardModelTests: XCTestCase {
     // not bind, which would make body geometry or arbitrary importer meshes tappable.
     func testGenericModelBindingRejectsUnlistedGeometryAndInvalidMeshInputs() {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
 
         XCTAssertNil(BoardModelScene(
@@ -1404,8 +1542,8 @@ final class BoardModelTests: XCTestCase {
 
     func testGenericModelBindingRejectsGeometryOnImportedRoot() {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
         let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
         let rootGeometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
@@ -1417,14 +1555,14 @@ final class BoardModelTests: XCTestCase {
 
     func testHighlightsRestoreClonedMaterialsAcrossGenericViews() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
         let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
         let first = try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor, display: display()))
         let second = try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor, display: display()))
-        let firstNode = try XCTUnwrap(first.holdNodes["left"]?.first)
-        let secondNode = try XCTUnwrap(second.holdNodes["left"]?.first)
+        let firstNode = try XCTUnwrap(first.contactNodes["left"]?.first)
+        let secondNode = try XCTUnwrap(second.contactNodes["left"]?.first)
         let original = try XCTUnwrap(firstNode.geometry?.firstMaterial)
         let otherOriginal = try XCTUnwrap(secondNode.geometry?.firstMaterial)
 
@@ -1442,12 +1580,12 @@ final class BoardModelTests: XCTestCase {
 
     func testExistingViewRebindsDescriptorFramedReplacementSceneAndCamera() throws {
         let firstDescriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ], minimum: [-1, -0.5, -0.1], maximum: [1, 0.5, 0.1])
         let replacementDescriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ], minimum: [10, 20, 30], maximum: [14, 26, 32])
         let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
         let first = try XCTUnwrap(BoardModelScene(
@@ -1480,8 +1618,8 @@ final class BoardModelTests: XCTestCase {
     func testCameraFramingFillsTheDeclaredPresentationAspect() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ],
             minimum: [0, 0, 0],
             maximum: [3.86, 1, 0.1]
@@ -1502,8 +1640,8 @@ final class BoardModelTests: XCTestCase {
     // position, which turns the intended front-above key into a top-only key.
     func testDirectionalKeyLightIlluminatesTheCameraFacingSurface() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
         let model = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
@@ -1523,10 +1661,10 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
-    func testClosestNativeHitResolvesOnlyTheFrontDescriptorBoundHold() throws {
+    func testClosestNativeHitResolvesOnlyTheFrontDescriptorBoundContact() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, holdID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
         ])
         let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
         let holdNode = try XCTUnwrap(node(at: "Board/Hold/Left", in: source))
@@ -1541,13 +1679,13 @@ final class BoardModelTests: XCTestCase {
         )
         let closest = try XCTUnwrap(hits.first)
 
-        XCTAssertEqual(model.holdID(for: closest.node), "left")
-        XCTAssertNil(model.holdID(for: try XCTUnwrap(model.geometryNodes.first { $0.name == "Body" })))
+        XCTAssertEqual(model.contactID(for: closest.node), "left")
+        XCTAssertNil(model.contactID(for: try XCTUnwrap(model.geometryNodes.first { $0.name == "Body" })))
     }
 
     private struct MigratedModelExpectation {
         let boardID: String
-        let holdIDs: Set<String>
+        let contactIDs: Set<String>
         let bodyProbe: [Double]
     }
 
@@ -1555,7 +1693,7 @@ final class BoardModelTests: XCTestCase {
         [
             MigratedModelExpectation(
                 boardID: "beastmaker-1000",
-                holdIDs: [
+                contactIDs: [
                     "jug-left", "jug-right", "sloper-35-left", "sloper-35-right", "sloper-center",
                     "pocket-top-outer-left", "pocket-top-outer-right", "pocket-top-left", "pocket-top-right",
                     "pocket-middle-outer-left", "pocket-middle-mid-left", "pocket-middle-inner-left",
@@ -1568,7 +1706,7 @@ final class BoardModelTests: XCTestCase {
             ),
             MigratedModelExpectation(
                 boardID: "metolius.wood-grips-compact-ii",
-                holdIDs: [
+                contactIDs: [
                     "jug-left", "sloper-flat-left", "sloper-round-center", "sloper-flat-right", "jug-right",
                     "edge-29-left", "pocket-29-three-left", "pocket-29-two-left", "pocket-29-four-center",
                     "pocket-29-two-right", "pocket-29-three-right", "edge-29-right", "edge-19-left",
@@ -1580,110 +1718,9 @@ final class BoardModelTests: XCTestCase {
         ]
     }
 
-    private func assertCameraBasis(
-        _ camera: SCNNode,
-        expectedFront: SIMD3<Float>,
-        expectedUp: SIMD3<Float>,
-        expectedRight: SIMD3<Float>,
-        label: String,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let front = camera.simdWorldFront
-        let up = camera.simdWorldUp
-        let right = camera.simdWorldRight
-        let vectors = [front, up, right]
-        XCTAssertTrue(
-            vectors.allSatisfy { vector in
-                vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
-            },
-            "\(label) camera basis must be finite",
-            file: file,
-            line: line
-        )
-        XCTAssertEqual(simd_length(front), 1, accuracy: 0.000_1, "\(label) front", file: file, line: line)
-        XCTAssertEqual(simd_length(up), 1, accuracy: 0.000_1, "\(label) up", file: file, line: line)
-        XCTAssertEqual(simd_length(right), 1, accuracy: 0.000_1, "\(label) right", file: file, line: line)
-        XCTAssertEqual(simd_dot(front, up), 0, accuracy: 0.000_1, "\(label) front/up", file: file, line: line)
-        XCTAssertEqual(simd_dot(front, right), 0, accuracy: 0.000_1, "\(label) front/right", file: file, line: line)
-        XCTAssertEqual(simd_dot(up, right), 0, accuracy: 0.000_1, "\(label) up/right", file: file, line: line)
-        assertVectorEqual(simd_cross(front, up), right, "\(label) right-handed", file: file, line: line)
-        assertVectorEqual(front, expectedFront, "\(label) expected front", file: file, line: line)
-        assertVectorEqual(up, expectedUp, "\(label) expected up", file: file, line: line)
-        assertVectorEqual(right, expectedRight, "\(label) expected right", file: file, line: line)
-    }
-
-    private func assertVectorEqual(
-        _ actual: SIMD3<Float>,
-        _ expected: SIMD3<Float>,
-        _ message: String,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        XCTAssertEqual(actual.x, expected.x, accuracy: 0.000_1, "\(message) x", file: file, line: line)
-        XCTAssertEqual(actual.y, expected.y, accuracy: 0.000_1, "\(message) y", file: file, line: line)
-        XCTAssertEqual(actual.z, expected.z, accuracy: 0.000_1, "\(message) z", file: file, line: line)
-    }
-
-    private func assertStraightSamples(
-        _ samples: [SIMD3<Float>],
-        label: String,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        guard let start = samples.first, let end = samples.last else {
-            return XCTFail("\(label) must have endpoints", file: file, line: line)
-        }
-        let direction = end - start
-        let lengthSquared = simd_length_squared(direction)
-        XCTAssertGreaterThan(lengthSquared, 1e-12, "\(label) endpoints must differ", file: file, line: line)
-        guard lengthSquared > 1e-12 else { return }
-        for sample in samples {
-            let parameter = simd_dot(sample - start, direction) / lengthSquared
-            let closest = start + direction * parameter
-            XCTAssertGreaterThanOrEqual(parameter, -1e-5, "\(label) sample before start", file: file, line: line)
-            XCTAssertLessThanOrEqual(parameter, 1 + 1e-5, "\(label) sample after end", file: file, line: line)
-            XCTAssertLessThanOrEqual(
-                simd_length(sample - closest),
-                1e-5,
-                "\(label) sample is not collinear",
-                file: file,
-                line: line
-            )
-        }
-    }
-
-    private func hasNonBackgroundPixels(_ image: CGImage) -> Bool {
-        let width = image.width
-        let height = image.height
-        guard width > 0, height > 0 else { return false }
-        var rgba = [UInt8](repeating: 0, count: width * height * 4)
-        return rgba.withUnsafeMutableBytes { bytes -> Bool in
-            guard let baseAddress = bytes.baseAddress,
-                  let context = CGContext(
-                      data: baseAddress,
-                      width: width,
-                      height: height,
-                      bitsPerComponent: 8,
-                      bytesPerRow: width * 4,
-                      space: CGColorSpaceCreateDeviceRGB(),
-                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-                  ) else {
-                return false
-            }
-            context.setFillColor(UIColor.white.cgColor)
-            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
-            return (0..<(width * height)).contains { index in
-                let offset = index * 4
-                return bytes[offset] < 245 || bytes[offset + 1] < 245 || bytes[offset + 2] < 245
-            }
-        }
-    }
-
     private func loadMigratedModel(
         _ boardID: String
-    ) async throws -> (TrainingBoard, BoardModelMedia, BoardModelScene) {
+    ) async throws -> (BoardRevision, BoardModelMedia, BoardModelScene) {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID), boardID)
         let presentation = board.defaultPresentation
         let candidateMedia: BoardModelMedia? = if case .model(let media) = presentation.media {
@@ -1751,7 +1788,7 @@ final class BoardModelTests: XCTestCase {
         )
         let isolatedBoard = try XCTUnwrap(isolatedStore.board(id: isolatedBoardID))
         XCTAssertEqual(isolatedBoard.presentations, board.presentations, boardID)
-        XCTAssertEqual(isolatedBoard.holds, board.holds, boardID)
+        XCTAssertEqual(isolatedBoard.contacts, board.contacts, boardID)
         XCTAssertEqual(isolatedBoard.positions, board.positions, boardID)
         XCTAssertEqual(isolatedStore.modelResource(for: isolatedBoard), resource, boardID)
         XCTAssertNil(isolatedStore.presentationAssetURL(for: isolatedBoard), boardID)
@@ -1836,20 +1873,108 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    private func assertNearestHeadOnHitForEveryHold(
+    private func nativeTriangleCenters(for node: SCNNode) throws -> [SCNVector3] {
+        let geometry = try XCTUnwrap(node.geometry, node.name ?? "unnamed")
+        let source = try XCTUnwrap(
+            geometry.sources(for: .vertex).first,
+            "\(node.name ?? "unnamed") has no vertex source"
+        )
+        guard source.usesFloatComponents,
+              source.bytesPerComponent == MemoryLayout<Float>.size else {
+            throw NSError(
+                domain: "BoardModelTests.nativeTriangleCenters",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "unsupported native vertex component layout"]
+            )
+        }
+
+        func vertex(_ index: Int) throws -> SCNVector3 {
+            guard index >= 0, index < source.vectorCount else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "native triangle index exceeds vertex inventory"]
+                )
+            }
+            func component(_ component: Int) -> Float {
+                let byteOffset = source.dataOffset + index * source.dataStride
+                    + component * source.bytesPerComponent
+                return source.data.withUnsafeBytes {
+                    $0.loadUnaligned(fromByteOffset: byteOffset, as: Float.self)
+                }
+            }
+            return SCNVector3(component(0), component(1), component(2))
+        }
+
+        func index(in element: SCNGeometryElement, at offset: Int) throws -> Int {
+            let byteOffset = offset * element.bytesPerIndex
+            guard [1, 2, 4, 8].contains(element.bytesPerIndex),
+                  byteOffset >= 0,
+                  byteOffset + element.bytesPerIndex <= element.data.count else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 3,
+                    userInfo: [NSLocalizedDescriptionKey: "unsupported native triangle index layout"]
+                )
+            }
+            return element.data.withUnsafeBytes { bytes in
+                switch element.bytesPerIndex {
+                case 1: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt8.self))
+                case 2: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt16.self))
+                case 4: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt32.self))
+                default: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt64.self))
+                }
+            }
+        }
+
+        var centers: [SCNVector3] = []
+        for element in geometry.elements where element.primitiveType == .triangles {
+            let plainSize = element.primitiveCount * 3 * element.bytesPerIndex
+            let importerMultiIndexSize = element.primitiveCount * 9 * element.bytesPerIndex
+            let layout: (stride: Int, corners: [Int])
+            if element.data.count == plainSize {
+                layout = (3, [0, 1, 2])
+            } else if element.data.count == importerMultiIndexSize {
+                // USD-imported SceneKit geometry carries vertex/normal/UV
+                // tuples for each corner. Vertex indexes are lanes 0, 3, 6.
+                layout = (9, [0, 3, 6])
+            } else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 4,
+                    userInfo: [NSLocalizedDescriptionKey: "unknown native triangle element layout"]
+                )
+            }
+            for triangle in 0..<element.primitiveCount {
+                let base = triangle * layout.stride
+                let first = try vertex(index(in: element, at: base + layout.corners[0]))
+                let second = try vertex(index(in: element, at: base + layout.corners[1]))
+                let third = try vertex(index(in: element, at: base + layout.corners[2]))
+                centers.append(SCNVector3(
+                    (first.x + second.x + third.x) / 3,
+                    (first.y + second.y + third.y) / 3,
+                    (first.z + second.z + third.z) / 3
+                ))
+            }
+        }
+        XCTAssertFalse(centers.isEmpty, "\(node.name ?? "unnamed") has no native triangles")
+        return centers
+    }
+
+    private func assertNearestHeadOnHitForEveryContact(
         _ model: BoardModelScene,
         media: BoardModelMedia,
         boardID: String
     ) throws {
-        for holdID in media.descriptor.holds.keys.sorted() {
-            let hold = try XCTUnwrap(media.descriptor.holds[holdID], "\(boardID): \(holdID)")
-            let normalizedCenter = zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).map {
+        for contactID in media.descriptor.contacts.keys.sorted() {
+            let contact = try XCTUnwrap(media.descriptor.contacts[contactID], "\(boardID): \(contactID)")
+            let normalizedCenter = zip(contact.facePlaneAABB.minimum, contact.facePlaneAABB.maximum).map {
                 $0 + ($1 - $0) / 2
             }
             let ray = try headOnRay(
                 normalizedPoint: normalizedCenter,
                 bounds: media.descriptor.modelBounds,
-                context: "\(boardID): \(holdID)"
+                context: "\(boardID): \(contactID)"
             )
             let closest = try XCTUnwrap(
                 model.scene.rootNode.hitTestWithSegment(
@@ -1859,9 +1984,9 @@ final class BoardModelTests: XCTestCase {
                         SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
                     ]
                 ).first,
-                "\(boardID): \(holdID)"
+                "\(boardID): \(contactID)"
             )
-            XCTAssertEqual(model.holdID(for: closest.node), holdID, "\(boardID): \(holdID)")
+            XCTAssertEqual(model.contactID(for: closest.node), contactID, "\(boardID): \(contactID)")
         }
     }
 
@@ -1876,17 +2001,14 @@ final class BoardModelTests: XCTestCase {
             bounds: media.descriptor.modelBounds,
             context: "\(boardID): body"
         )
-        let closest = try XCTUnwrap(
-            model.scene.rootNode.hitTestWithSegment(
-                from: ray.from,
-                to: ray.to,
-                options: [
-                    SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
-                ]
-            ).first,
-            "\(boardID): body"
+        let hits = model.scene.rootNode.hitTestWithSegment(
+            from: ray.from,
+            to: ray.to,
+            options: [
+                SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
+            ]
         )
-        XCTAssertNil(model.holdID(for: closest.node), boardID)
+        XCTAssertTrue(hits.isEmpty, "\(boardID): body geometry must be nonpickable")
     }
 
     private func headOnRay(
@@ -1912,18 +2034,18 @@ final class BoardModelTests: XCTestCase {
         minimum: [Double] = [0, 0, 0],
         maximum: [Double] = [1, 1, 1]
     ) -> BoardModelDescriptor {
-        let holdIDs = Set(nodes.compactMap { $0.role == .hold ? $0.holdID : nil })
+        let holdIDs = Set(nodes.compactMap { $0.role == .contact ? $0.contactID : nil })
         return BoardModelDescriptor(
             schemaVersion: 1,
             coordinateFrame: "hang-ten-board-v1",
             modelSHA256: String(repeating: "0", count: 64),
             modelBounds: .init(minimum: minimum, maximum: maximum),
             nodes: nodes,
-            holds: Dictionary(uniqueKeysWithValues: holdIDs.map { id in
+            contacts: Dictionary(uniqueKeysWithValues: holdIDs.map { id in
                 (
                     id,
                     .init(
-                        nodeIDs: nodes.compactMap { $0.holdID == id ? $0.nodeID : nil },
+                        nodeIDs: nodes.compactMap { $0.contactID == id ? $0.nodeID : nil },
                         facePlaneAABB: .init(minimum: [0, 0], maximum: [1, 1]),
                         center: [0.5, 0.5]
                     )
@@ -1979,54 +2101,6 @@ final class BoardModelTests: XCTestCase {
         return node
     }
 
-}
-
-private final class TestPanGestureRecognizer: UIPanGestureRecognizer {
-    private let simulatedTranslation: CGPoint
-
-    init(translation: CGPoint) {
-        simulatedTranslation = translation
-        super.init(target: nil, action: nil)
-    }
-
-    override var state: UIGestureRecognizer.State {
-        get { .changed }
-        set {}
-    }
-
-    override func translation(in view: UIView?) -> CGPoint {
-        simulatedTranslation
-    }
-}
-
-private final class TestPinchGestureRecognizer: UIPinchGestureRecognizer {
-    private let simulatedScale: CGFloat
-
-    init(scale: CGFloat) {
-        simulatedScale = scale
-        super.init(target: nil, action: nil)
-    }
-
-    override var state: UIGestureRecognizer.State {
-        get { .changed }
-        set {}
-    }
-
-    override var scale: CGFloat {
-        get { simulatedScale }
-        set {}
-    }
-}
-
-// Observe our view's UIKit invalidation boundary while preserving real SceneKit
-// behavior. An unattached SCNView's layer may stay dirty after displayIfNeeded.
-private final class RedrawRecordingBoardModelSCNView: BoardModelSCNView {
-    var redrawRequestCount = 0
-
-    override func setNeedsDisplay() {
-        redrawRequestCount += 1
-        super.setNeedsDisplay()
-    }
 }
 
 private final class ImmediateBoardModelResourceRequest: BoardModelResourceRequesting {

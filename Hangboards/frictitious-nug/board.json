@@ -1,16 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "frictitious.nug",
   "manufacturer": "Frictitious Climbing",
   "name": "The NUG",
   "subtitle": "Portable block with four edges, jug, and pinch.",
   "productURL": "https://frictitiousclimbing.com/products/the-nug",
-  "dimensions": "130 \u00d7 60 \u00d7 40 mm",
+  "dimensions": "130 × 60 × 40 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
-      "id": "primary",
-      "missingHandCapacityPolicy": "unavailable"
+      "id": "primary"
     }
   ],
   "presentations": [
@@ -25,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-20": [
             {
               "frame": {
@@ -390,7 +389,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/reverse.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-8": [
             {
               "frame": {
@@ -560,54 +559,85 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "edge-20",
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 20
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-25",
       "equipmentObjectID": "primary",
       "name": "25 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 25
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-8",
       "equipmentObjectID": "primary",
       "name": "8 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 8
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-13",
       "equipmentObjectID": "primary",
       "name": "13 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 13
+      "depthRangeMillimeters": {
+        "lowerBound": 13,
+        "upperBound": 13
+      },
+      "gripTypes": []
     },
     {
       "id": "jug-40",
       "equipmentObjectID": "primary",
       "name": "40 mm jug",
       "kind": "jug",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 40
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
     },
     {
       "id": "pinch-60",
       "equipmentObjectID": "primary",
       "name": "60 mm pinch",
       "kind": "pinch",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 60
+      "depthRangeMillimeters": {
+        "lowerBound": 60,
+        "upperBound": 60
+      },
+      "gripTypes": []
     }
   ]
 }

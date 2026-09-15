@@ -4,7 +4,7 @@ import SwiftUI
 @MainActor
 final class BoardEditorSession: ObservableObject {
     struct PieceSelection: Equatable {
-        let holdID: String
+        let contactID: String
         let pieceIndex: Int
     }
 
@@ -25,8 +25,6 @@ final class BoardEditorSession: ObservableObject {
         case pieceNotEditable
         case invalidGeometry(String)
         case segmentNotEditable
-        case sloperMetadataUnavailable
-        case invalidSloperAngle
 
         var errorDescription: String? {
             switch self {
@@ -38,10 +36,6 @@ final class BoardEditorSession: ObservableObject {
                 reason
             case .segmentNotEditable:
                 "Choose a vertex first."
-            case .sloperMetadataUnavailable:
-                "Select a sloper with flat-surface metadata first."
-            case .invalidSloperAngle:
-                "Sloper angle must be between 0 and 90 degrees."
             }
         }
     }
@@ -81,18 +75,18 @@ final class BoardEditorSession: ObservableObject {
         CGFloat(6) / CGFloat(max(pixelHeight, 1))
     }
 
-    func hold(id: String) -> BoardEditableHold? {
-        document.holds.first { $0.id == id }
+    func contact(id: String) -> BoardEditableContact? {
+        document.contacts.first { $0.id == id }
     }
 
-    var selectedHold: BoardEditableHold? {
+    var selectedContact: BoardEditableContact? {
         guard let selectedPiece else { return nil }
-        return hold(id: selectedPiece.holdID)
+        return contact(id: selectedPiece.contactID)
     }
 
     /// Editable packages may omit a hold kind while metadata is being completed.
-    var incompleteMetadataHoldIDs: [String] {
-        document.holds.compactMap { hold in
+    var incompleteMetadataContactIDs: [String] {
+        document.contacts.compactMap { hold in
             hold.kind == nil
                 || hold.fingerCapacity == nil
                 || hasMissingRequiredDepth(hold)
@@ -102,7 +96,7 @@ final class BoardEditorSession: ObservableObject {
         }
     }
 
-    func missingRequiredMetadata(for hold: BoardEditableHold) -> [String] {
+    func missingRequiredMetadata(for hold: BoardEditableContact) -> [String] {
         var missing: [String] = []
         if hold.kind == nil { missing.append("kind") }
         if hold.fingerCapacity == nil { missing.append("finger capacity") }
@@ -111,44 +105,44 @@ final class BoardEditorSession: ObservableObject {
         return missing
     }
 
-    private func hasMissingRequiredDepth(_ hold: BoardEditableHold) -> Bool {
+    private func hasMissingRequiredDepth(_ hold: BoardEditableContact) -> Bool {
         guard hold.kind == .edge || hold.kind == .pocket else { return false }
-        return hold.sizeMillimeters == nil && hold.depthRangeMillimeters == nil
+        return hold.depthRangeMillimeters == nil
     }
 
     var metadataWarningText: String? {
-        let count = incompleteMetadataHoldIDs.count
+        let count = incompleteMetadataContactIDs.count
         guard count > 0 else { return nil }
         return "\(count) \(count == 1 ? "hold needs" : "holds need") metadata"
     }
 
     var metadataWarningAccessibilityLabel: String {
-        let count = incompleteMetadataHoldIDs.count
+        let count = incompleteMetadataContactIDs.count
         guard count > 0 else { return "Hangboard hold editor" }
         return "Hangboard hold editor. \(count) \(count == 1 ? "hold is" : "holds are") missing required metadata."
     }
 
     var metadataWarningAccessibilityValue: String? {
-        let ids = incompleteMetadataHoldIDs
+        let ids = incompleteMetadataContactIDs
         guard !ids.isEmpty else { return nil }
         return "Incomplete \(ids.count == 1 ? "hold" : "holds"): \(ids.joined(separator: ", "))"
     }
 
     var selectedPieceDocument: BoardEditablePiece? {
         guard let selectedPiece,
-              let selectedHold,
-              selectedHold.geometry.indices.contains(selectedPiece.pieceIndex) else {
+              let geometry = document.geometry(forContactID: selectedPiece.contactID),
+              geometry.indices.contains(selectedPiece.pieceIndex) else {
             return nil
         }
-        return selectedHold.geometry[selectedPiece.pieceIndex]
+        return geometry[selectedPiece.pieceIndex]
     }
 
     var isRoundedRectPiece: Bool {
         selectedPieceDocument?.shape.type == "roundedRect"
     }
 
-    func select(holdID: String?, pieceIndex: Int = 0) {
-        selectedPiece = holdID.map { PieceSelection(holdID: $0, pieceIndex: pieceIndex) }
+    func select(contactID: String?, pieceIndex: Int = 0) {
+        selectedPiece = contactID.map { PieceSelection(contactID: $0, pieceIndex: pieceIndex) }
         selectedHandle = nil
     }
 
@@ -295,43 +289,6 @@ final class BoardEditorSession: ObservableObject {
     }
 
     // MARK: - Discrete edits
-
-    func setSelectedSloperType(_ type: SloperType?) throws {
-        guard let selection = selectedPiece,
-              let holdIndex = document.holds.firstIndex(where: { $0.id == selection.holdID }),
-              document.holds[holdIndex].kind == .sloper else {
-            throw SessionError.sloperMetadataUnavailable
-        }
-        let current = document.holds[holdIndex].sloper
-        if current?.type == type || (current == nil && type == nil) {
-            return
-        }
-        let updated = type.map { SloperMetadata(type: $0, angleDegrees: nil) }
-        pushHistory()
-        document.holds[holdIndex].sloper = updated
-        isSaved = false
-    }
-
-    func setSelectedSloperAngleDegrees(_ angleDegrees: Double?) throws {
-        guard let selection = selectedPiece,
-              let holdIndex = document.holds.firstIndex(where: { $0.id == selection.holdID }),
-              document.holds[holdIndex].kind == .sloper,
-              let current = document.holds[holdIndex].sloper,
-              current.type == .flat else {
-            throw SessionError.sloperMetadataUnavailable
-        }
-        if let angleDegrees,
-           !angleDegrees.isFinite || !(0...90).contains(angleDegrees) {
-            throw SessionError.invalidSloperAngle
-        }
-        guard current.angleDegrees != angleDegrees else { return }
-        pushHistory()
-        document.holds[holdIndex].sloper = SloperMetadata(
-            type: .flat,
-            angleDegrees: angleDegrees
-        )
-        isSaved = false
-    }
 
     func addVertexAfterAnchor(index: Int) throws {
         try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
@@ -502,11 +459,11 @@ final class BoardEditorSession: ObservableObject {
         recordsHistory: Bool
     ) throws {
         guard let selection = selectedPiece else { throw SessionError.noSelection }
-        guard let hold = self.hold(id: selection.holdID),
-              hold.geometry.indices.contains(selection.pieceIndex) else {
+        guard let geometry = document.geometry(forContactID: selection.contactID),
+              geometry.indices.contains(selection.pieceIndex) else {
             throw SessionError.noSelection
         }
-        let piece = hold.geometry[selection.pieceIndex]
+        let piece = geometry[selection.pieceIndex]
         try ensurePathPiece(piece)
         guard let constraint = piece.shapeConstraint else { return }
         let result = try HoldPathEngine.resizeConstrainedOutline(
@@ -538,11 +495,11 @@ final class BoardEditorSession: ObservableObject {
         recordsHistory: Bool
     ) throws {
         guard let selection = selectedPiece else { throw SessionError.noSelection }
-        guard let hold = self.hold(id: selection.holdID),
-              hold.geometry.indices.contains(selection.pieceIndex) else {
+        guard let geometry = document.geometry(forContactID: selection.contactID),
+              geometry.indices.contains(selection.pieceIndex) else {
             throw SessionError.noSelection
         }
-        let piece = hold.geometry[selection.pieceIndex]
+        let piece = geometry[selection.pieceIndex]
         try ensurePathPiece(piece)
         let updated = try canonicalWriteBack(
             boardPath,
@@ -614,11 +571,11 @@ final class BoardEditorSession: ObservableObject {
         _ transform: (inout [BoardPathCommand], inout [Bool]) throws -> Void
     ) throws {
         guard let selection = selectedPiece else { throw SessionError.noSelection }
-        guard let hold = self.hold(id: selection.holdID),
-              hold.geometry.indices.contains(selection.pieceIndex) else {
+        guard let geometry = document.geometry(forContactID: selection.contactID),
+              geometry.indices.contains(selection.pieceIndex) else {
             throw SessionError.noSelection
         }
-        let piece = hold.geometry[selection.pieceIndex]
+        let piece = geometry[selection.pieceIndex]
         try ensurePathPiece(piece)
         var boardPath = try boardCommands(for: piece)
         var bendableFlags = bendableFlags(for: piece)
@@ -637,19 +594,17 @@ final class BoardEditorSession: ObservableObject {
 
     private func replaceSelectedPieceInPlace(_ transform: (BoardEditablePiece) -> BoardEditablePiece) {
         guard let selection = selectedPiece else { return }
-        guard let hold = self.hold(id: selection.holdID),
-              hold.geometry.indices.contains(selection.pieceIndex) else { return }
+        guard let geometry = document.geometry(forContactID: selection.contactID),
+              geometry.indices.contains(selection.pieceIndex) else { return }
         pushHistory()
-        replaceGeometry(at: selection, with: transform(hold.geometry[selection.pieceIndex]))
+        replaceGeometry(at: selection, with: transform(geometry[selection.pieceIndex]))
     }
 
     private func replaceGeometry(at selection: PieceSelection, with piece: BoardEditablePiece) {
-        guard var hold = self.hold(id: selection.holdID),
-              hold.geometry.indices.contains(selection.pieceIndex) else { return }
-        hold.geometry[selection.pieceIndex] = piece
-        if let index = document.holds.firstIndex(where: { $0.id == selection.holdID }) {
-            document.holds[index] = hold
-        }
+        guard var geometry = document.geometry(forContactID: selection.contactID),
+              geometry.indices.contains(selection.pieceIndex) else { return }
+        geometry[selection.pieceIndex] = piece
+        document.replaceGeometry(forContactID: selection.contactID, with: geometry)
         isSaved = false
     }
 }

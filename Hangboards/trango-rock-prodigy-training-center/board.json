@@ -1,163 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "trango.rock-prodigy-training-center",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Training Center",
   "subtitle": "Two-piece symmetric hangboard with variable-depth edge rails, pockets, pinches, jug, and sloper.",
   "productURL": "https://trango.com/products/rock-prodigy-training-center",
-  "dimensions": "9.1 \u00d7 12.1 in",
+  "dimensions": "9.1 × 12.1 in",
   "aspectRatio": 2.8344827586206898,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "jug-left",
-      "equipmentObjectID": "primary",
-      "name": "Left jug",
-      "kind": "jug"
-    },
-    {
-      "id": "jug-right",
-      "equipmentObjectID": "primary",
-      "name": "Right jug",
-      "kind": "jug"
-    },
-    {
-      "id": "edge-large-vder-left",
-      "equipmentObjectID": "primary",
-      "name": "Left large variable-depth edge rail",
-      "kind": "edge"
-    },
-    {
-      "id": "edge-shallow-vder-left",
-      "equipmentObjectID": "primary",
-      "name": "Left shallow variable-depth edge rail",
-      "kind": "edge"
-    },
-    {
-      "id": "edge-thin-crimp-left",
-      "equipmentObjectID": "primary",
-      "name": "Left thin crimp",
-      "kind": "edge"
-    },
-    {
-      "id": "edge-thin-crimp-right",
-      "equipmentObjectID": "primary",
-      "name": "Right thin crimp",
-      "kind": "edge"
-    },
-    {
-      "id": "pocket-three-finger-slot-left",
-      "equipmentObjectID": "primary",
-      "name": "Left shallow three-finger slot",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-three-finger-slot-right",
-      "equipmentObjectID": "primary",
-      "name": "Right shallow three-finger slot",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-index-middle-deep-left",
-      "equipmentObjectID": "primary",
-      "name": "Left index-middle deep pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-index-middle-deep-right",
-      "equipmentObjectID": "primary",
-      "name": "Right index-middle deep pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-middle-ring-deep-left",
-      "equipmentObjectID": "primary",
-      "name": "Left middle-ring deep pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-middle-ring-deep-right",
-      "equipmentObjectID": "primary",
-      "name": "Right middle-ring deep pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-index-middle-medium-shallow-left",
-      "equipmentObjectID": "primary",
-      "name": "Left index-middle medium/shallow pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-index-middle-medium-shallow-right",
-      "equipmentObjectID": "primary",
-      "name": "Right index-middle medium/shallow pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-middle-ring-shallow-left",
-      "equipmentObjectID": "primary",
-      "name": "Left middle-ring shallow pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pocket-middle-ring-shallow-right",
-      "equipmentObjectID": "primary",
-      "name": "Right middle-ring shallow pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "pinch-medium-left",
-      "equipmentObjectID": "primary",
-      "name": "Left medium pinch",
-      "kind": "pinch"
-    },
-    {
-      "id": "pinch-wide-left",
-      "equipmentObjectID": "primary",
-      "name": "Left wide pinch",
-      "kind": "pinch"
-    },
-    {
-      "id": "edge-large-vder-right",
-      "equipmentObjectID": "primary",
-      "name": "Right large variable-depth edge rail",
-      "kind": "edge"
-    },
-    {
-      "id": "edge-shallow-vder-right",
-      "equipmentObjectID": "primary",
-      "name": "Right shallow variable-depth edge rail",
-      "kind": "edge"
-    },
-    {
-      "id": "pinch-medium-right",
-      "equipmentObjectID": "primary",
-      "name": "Right medium pinch",
-      "kind": "pinch"
-    },
-    {
-      "id": "pinch-wide-right",
-      "equipmentObjectID": "primary",
-      "name": "Right wide pinch",
-      "kind": "pinch"
-    },
-    {
-      "id": "sloper-left",
-      "equipmentObjectID": "primary",
-      "name": "Left sloper",
-      "kind": "sloper",
-      "gripType": "sloper"
-    },
-    {
-      "id": "sloper-right",
-      "equipmentObjectID": "primary",
-      "name": "Right sloper",
-      "kind": "sloper",
-      "gripType": "sloper"
     }
   ],
   "presentations": [
@@ -172,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "jug-left": [
             {
               "frame": {
@@ -1282,7 +1134,7 @@
                       0.17
                     ],
                     "to": [
-                      1.521561397e-06,
+                      0.000001521561397,
                       0.27
                     ]
                   },
@@ -1297,7 +1149,7 @@
                       0.43
                     ],
                     "to": [
-                      1.521561397e-06,
+                      0.000001521561397,
                       0.64
                     ]
                   },
@@ -1387,7 +1239,7 @@
                       0.604166666666667
                     ],
                     "to": [
-                      6.18101e-10,
+                      6.18101E-10,
                       0.8125
                     ]
                   },
@@ -2029,6 +1881,205 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "jug-left",
+      "equipmentObjectID": "primary",
+      "name": "Left jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "jug-right",
+      "equipmentObjectID": "primary",
+      "name": "Right jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-large-vder-left",
+      "equipmentObjectID": "primary",
+      "name": "Left large variable-depth edge rail",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-shallow-vder-left",
+      "equipmentObjectID": "primary",
+      "name": "Left shallow variable-depth edge rail",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-thin-crimp-left",
+      "equipmentObjectID": "primary",
+      "name": "Left thin crimp",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-thin-crimp-right",
+      "equipmentObjectID": "primary",
+      "name": "Right thin crimp",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-three-finger-slot-left",
+      "equipmentObjectID": "primary",
+      "name": "Left shallow three-finger slot",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-three-finger-slot-right",
+      "equipmentObjectID": "primary",
+      "name": "Right shallow three-finger slot",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-index-middle-deep-left",
+      "equipmentObjectID": "primary",
+      "name": "Left index-middle deep pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-index-middle-deep-right",
+      "equipmentObjectID": "primary",
+      "name": "Right index-middle deep pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-middle-ring-deep-left",
+      "equipmentObjectID": "primary",
+      "name": "Left middle-ring deep pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-middle-ring-deep-right",
+      "equipmentObjectID": "primary",
+      "name": "Right middle-ring deep pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-index-middle-medium-shallow-left",
+      "equipmentObjectID": "primary",
+      "name": "Left index-middle medium/shallow pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-index-middle-medium-shallow-right",
+      "equipmentObjectID": "primary",
+      "name": "Right index-middle medium/shallow pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-middle-ring-shallow-left",
+      "equipmentObjectID": "primary",
+      "name": "Left middle-ring shallow pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-middle-ring-shallow-right",
+      "equipmentObjectID": "primary",
+      "name": "Right middle-ring shallow pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-medium-left",
+      "equipmentObjectID": "primary",
+      "name": "Left medium pinch",
+      "kind": "pinch",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-wide-left",
+      "equipmentObjectID": "primary",
+      "name": "Left wide pinch",
+      "kind": "pinch",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-large-vder-right",
+      "equipmentObjectID": "primary",
+      "name": "Right large variable-depth edge rail",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-shallow-vder-right",
+      "equipmentObjectID": "primary",
+      "name": "Right shallow variable-depth edge rail",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-medium-right",
+      "equipmentObjectID": "primary",
+      "name": "Right medium pinch",
+      "kind": "pinch",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-wide-right",
+      "equipmentObjectID": "primary",
+      "name": "Right wide pinch",
+      "kind": "pinch",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "sloper-left",
+      "equipmentObjectID": "primary",
+      "name": "Left sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": [
+        "sloper"
+      ]
+    },
+    {
+      "id": "sloper-right",
+      "equipmentObjectID": "primary",
+      "name": "Right sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": [
+        "sloper"
+      ]
     }
   ]
 }

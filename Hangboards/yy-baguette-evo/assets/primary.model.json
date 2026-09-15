@@ -1,6 +1,5 @@
 {
-  "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "contacts": {
     "edge-10-left": {
       "center": [
         0.161538451,
@@ -364,6 +363,7 @@
       ]
     }
   },
+  "coordinateFrame": "hang-ten-board-v1",
   "modelBounds": {
     "max": [
       0.25999999,
@@ -383,104 +383,104 @@
       "role": "body"
     },
     {
-      "holdID": "edge-central-6",
+      "contactID": "edge-central-6",
       "nodeID": "hold_central_06mm_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-central-20",
+      "contactID": "edge-central-20",
       "nodeID": "hold_central_20mm_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-central-25",
+      "contactID": "edge-central-25",
       "nodeID": "hold_central_25mm_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-central-30",
+      "contactID": "edge-central-30",
       "nodeID": "hold_central_30mm_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-6-upper",
+      "contactID": "edge-6-upper",
       "nodeID": "hold_edge_06mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-6-lower",
+      "contactID": "edge-6-lower",
       "nodeID": "hold_edge_06mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-8-left",
+      "contactID": "edge-8-left",
       "nodeID": "hold_edge_08mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-8-right",
+      "contactID": "edge-8-right",
       "nodeID": "hold_edge_08mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-10-left",
+      "contactID": "edge-10-left",
       "nodeID": "hold_edge_10mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-10-right",
+      "contactID": "edge-10-right",
       "nodeID": "hold_edge_10mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-12-left",
+      "contactID": "edge-12-left",
       "nodeID": "hold_edge_12mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-12-right",
+      "contactID": "edge-12-right",
       "nodeID": "hold_edge_12mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-15-left",
+      "contactID": "edge-15-left",
       "nodeID": "hold_edge_15mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-15-right",
+      "contactID": "edge-15-right",
       "nodeID": "hold_edge_15mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-20-left",
+      "contactID": "edge-20-left",
       "nodeID": "hold_edge_20mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-20-right",
+      "contactID": "edge-20-right",
       "nodeID": "hold_edge_20mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-25-left",
+      "contactID": "edge-25-left",
       "nodeID": "hold_edge_25mm_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "edge-25-right",
+      "contactID": "edge-25-right",
       "nodeID": "hold_edge_25mm_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "rounded-tray",
+      "contactID": "rounded-tray",
       "nodeID": "hold_rounded_left_mesh_001",
-      "role": "hold"
+      "role": "contact"
     },
     {
-      "holdID": "rounded-tray",
+      "contactID": "rounded-tray",
       "nodeID": "hold_rounded_right_mesh_001",
-      "role": "hold"
+      "role": "contact"
     }
   ],
   "schemaVersion": 1

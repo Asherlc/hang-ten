@@ -162,25 +162,25 @@ def test_capture_command_accepts_explicit_repository_output_and_chrome_paths() -
     assert arguments.port == 4183
 
 
-def test_hold_id_labels_use_the_union_center_for_every_piece_of_one_logical_hold() -> None:
-    labels = capture_catalog.hold_id_label_positions(
+def test_contact_id_labels_use_the_union_center_for_every_piece_of_one_contact() -> None:
+    labels = capture_catalog.contact_id_label_positions(
         (
             capture_catalog.RegionBounds("two-piece-0", "two-piece", 0, 0, 10, 10),
             capture_catalog.RegionBounds("two-piece-1", "two-piece", 20, 10, 10, 10),
         )
     )
 
-    assert labels == (capture_catalog.HoldIDLabel("two-piece", 15, 10),)
+    assert labels == (capture_catalog.ContactIDLabel("two-piece", 15, 10),)
 
 
-def test_hold_id_labels_reject_a_region_without_an_editor_hold_id() -> None:
-    with pytest.raises(capture_catalog.CaptureError, match="missing metadata.holdID"):
-        capture_catalog.hold_id_label_positions(
+def test_contact_id_labels_reject_a_region_without_an_editor_contact_id() -> None:
+    with pytest.raises(capture_catalog.CaptureError, match="missing metadata.contactID"):
+        capture_catalog.contact_id_label_positions(
             (capture_catalog.RegionBounds("unmapped-piece", None, 0, 0, 10, 10),)
         )
 
 
-def test_capture_command_accepts_hold_id_labels() -> None:
+def test_capture_command_accepts_contact_id_labels() -> None:
     arguments = capture_catalog.argument_parser().parse_args(
         [
             "--repository-root",
@@ -189,11 +189,20 @@ def test_capture_command_accepts_hold_id_labels() -> None:
             "/captures",
             "--chrome-path",
             "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-            "--hold-id-labels",
+            "--contact-id-labels",
         ]
     )
 
-    assert arguments.hold_id_labels is True
+    assert arguments.contact_id_labels is True
+
+
+def test_capture_javascript_reads_contact_native_dom_attributes() -> None:
+    source = Path(capture_catalog.__file__).read_text(encoding="utf-8")
+
+    assert "#contact-overlay path.region-shape" in source
+    assert "dataset.contactKey" in source
+    assert "metadata.contactID" in source
+    assert "holdID" not in source
 
 
 def test_capture_uses_its_dedicated_local_only_server_launcher() -> None:

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlsplit
 
-from .board_catalog import BoardHold, BoardInventory, is_board_identifier
+from .board_catalog import PhysicalContact, BoardInventory, is_board_identifier
 
 
 _FIELDS = frozenset(
@@ -43,7 +43,7 @@ class MetadataSource:
 @dataclass(frozen=True)
 class MetadataRecord:
     board_id: str
-    hold_ids: tuple[str, ...]
+    contact_ids: tuple[str, ...]
     field: str
     outcome: str
     reviewed_at: date
@@ -184,16 +184,16 @@ def _load_date(value: Any, source: str) -> date:
     return parsed
 
 
-def _load_hold_ids(value: Any, source: str) -> tuple[str, ...]:
+def _load_contact_ids(value: Any, source: str) -> tuple[str, ...]:
     if not isinstance(value, list) or not value:
         raise MetadataAuditError(f"{source} must be a non-empty array")
-    hold_ids = tuple(
-        _identifier(hold_id, f"{source}[{index}]")
-        for index, hold_id in enumerate(value)
+    contact_ids = tuple(
+        _identifier(contact_id, f"{source}[{index}]")
+        for index, contact_id in enumerate(value)
     )
-    if len(hold_ids) != len(set(hold_ids)):
-        raise MetadataAuditError(f"{source} must not contain duplicate hold IDs")
-    return hold_ids
+    if len(contact_ids) != len(set(contact_ids)):
+        raise MetadataAuditError(f"{source} must not contain duplicate contact IDs")
+    return contact_ids
 
 
 def _load_verified_value(value: Any, field: str, source: str) -> object:
@@ -238,7 +238,7 @@ def _load_record(value: Any, source: str) -> MetadataRecord:
     payload = _mapping(value, source)
     base_keys = {
         "boardID",
-        "holdIDs",
+        "contactIDs",
         "field",
         "outcome",
         "reviewedAt",
@@ -262,7 +262,7 @@ def _load_record(value: Any, source: str) -> MetadataRecord:
         raise MetadataAuditError(f"{source}.kind must be verified or adapted")
     return MetadataRecord(
         board_id=_identifier(payload["boardID"], f"{source}.boardID"),
-        hold_ids=_load_hold_ids(payload["holdIDs"], f"{source}.holdIDs"),
+        contact_ids=_load_contact_ids(payload["contactIDs"], f"{source}.contactIDs"),
         field=field,
         outcome=outcome,
         reviewed_at=_load_date(payload["reviewedAt"], f"{source}.reviewedAt"),
@@ -358,45 +358,55 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
     )
 
 
-def _hold_value(hold: BoardHold, field: str) -> object | None:
+def _contact_value(contact: PhysicalContact, field: str) -> object | None:
     if field == "kind":
-        return hold.kind
+        return contact.kind
     if field == "sizeMillimeters":
-        return hold.size_millimeters
+        depth = contact.depth_range_millimeters
+        if depth is None or depth.lower_bound != depth.upper_bound:
+            return None
+        return depth.lower_bound
     if field == "depthRangeMillimeters":
-        if hold.depth_range_millimeters is None:
+        if contact.depth_range_millimeters is None or (
+            contact.depth_range_millimeters.lower_bound
+            == contact.depth_range_millimeters.upper_bound
+        ):
             return None
         return {
-            "lowerBound": hold.depth_range_millimeters.lower_bound,
-            "upperBound": hold.depth_range_millimeters.upper_bound,
+            "lowerBound": contact.depth_range_millimeters.lower_bound,
+            "upperBound": contact.depth_range_millimeters.upper_bound,
         }
     if field == "fingerCapacity":
-        return hold.finger_capacity
+        return contact.finger_capacity
     if field == "handCapacity":
-        return hold.hand_capacity
+        return contact.hand_capacity
     if field == "gripType":
-        return hold.grip_type
+        return next(iter(contact.grip_types)) if len(contact.grip_types) == 1 else None
     if field == "sloper":
-        if hold.sloper is None:
+        if "flatSloper" in contact.features:
+            return {"type": "flat"}
+        if "roundSloper" in contact.features:
+            return {"type": "round"}
+        if contact.kind != "sloper":
             return None
-        value: dict[str, object] = {"type": hold.sloper.type}
-        if hold.sloper.angle_degrees is not None:
-            value["angleDegrees"] = hold.sloper.angle_degrees
-        return value
+        return None
     assert field == "features"
-    return list(hold.features) if hold.features is not None else None
+    source_features = contact.features - {"flatSloper", "roundSloper"}
+    return sorted(source_features) if source_features else None
 
 
 def _values_match(expected: object, actual: object) -> bool:
     if isinstance(expected, bool) or isinstance(actual, bool):
         return False
+    if isinstance(expected, list) and isinstance(actual, list):
+        return len(expected) == len(actual) and set(expected) == set(actual)
     return expected == actual
 
 
 def validate_metadata_ledger(
     ledger: MetadataLedger, inventory: BoardInventory
 ) -> MetadataCoverageReport:
-    """Cross-check every scoped source record against its discovered package hold."""
+    """Cross-check every scoped source record against its discovered package contact."""
     packages = {package.board.id: package.board for package in inventory.packages}
     unknown_boards = sorted(set(ledger.reviewed_board_ids) - set(packages))
     if unknown_boards:
@@ -410,16 +420,16 @@ def validate_metadata_ledger(
         )
 
     records_by_key: dict[tuple[str, str, str], MetadataRecord] = {}
-    holds_by_board = {
-        board_id: {hold.id: hold for hold in packages[board_id].holds}
+    contacts_by_board = {
+        board_id: {contact.id: contact for contact in packages[board_id].contacts}
         for board_id in ledger.reviewed_board_ids + ledger.sloper_only_board_ids
     }
     for record in ledger.records:
-        holds = holds_by_board[record.board_id]
-        for hold_id in record.hold_ids:
-            if hold_id not in holds:
-                raise MetadataAuditError(f"unknown hold ID: {hold_id}")
-            key = (record.board_id, hold_id, record.field)
+        contacts = contacts_by_board[record.board_id]
+        for contact_id in record.contact_ids:
+            if contact_id not in contacts:
+                raise MetadataAuditError(f"unknown contact ID: {contact_id}")
+            key = (record.board_id, contact_id, record.field)
             if key in records_by_key:
                 raise MetadataAuditError(
                     "duplicate record for " + "/".join(key)
@@ -452,41 +462,41 @@ def validate_metadata_ledger(
             "unavailable": 0,
             "notApplicable": 0,
         }
-        for hold_id, hold in sorted(holds_by_board[board_id].items()):
+        for contact_id, contact in sorted(contacts_by_board[board_id].items()):
             for field in sorted(fields_by_board[board_id]):
-                key = (board_id, hold_id, field)
+                key = (board_id, contact_id, field)
                 record = records_by_key.get(key)
                 if record is None:
                     raise MetadataAuditError(f"missing record for {'/'.join(key)}")
                 if field == "sloper":
-                    if hold.kind == "sloper":
+                    if contact.kind == "sloper":
                         if record.outcome not in {
                             "verified",
                             "adapted",
                             "unavailable",
                         }:
                             raise MetadataAuditError(
-                                f"sloper {board_id}/{hold_id} must be verified, adapted, or unavailable"
+                                f"sloper {board_id}/{contact_id} must be verified, adapted, or unavailable"
                             )
                     elif record.outcome != "notApplicable":
                         raise MetadataAuditError(
-                            f"non-sloper {board_id}/{hold_id} must be notApplicable"
+                            f"non-sloper {board_id}/{contact_id} must be notApplicable"
                         )
-                actual = _hold_value(hold, field)
+                actual = _contact_value(contact, field)
                 if record.outcome in {"verified", "adapted"}:
                     if actual is None:
                         raise MetadataAuditError(
-                            f"{field} is absent for {board_id}/{hold_id}"
+                            f"{field} is absent for {board_id}/{contact_id}"
                         )
                     if not _values_match(record.value, actual):
                         raise MetadataAuditError(
-                            f"{field} does not match for {board_id}/{hold_id}"
+                            f"{field} does not match for {board_id}/{contact_id}"
                         )
                     outcome = record.outcome
                 else:
                     if actual is not None:
                         raise MetadataAuditError(
-                            f"{field} must be absent for {board_id}/{hold_id}"
+                            f"{field} must be absent for {board_id}/{contact_id}"
                         )
                     outcome = record.outcome
                 field_totals[field]["populated"] += actual is not None

@@ -6,7 +6,8 @@ protocol WorkoutHistoryPersistence: AnyObject {
 }
 
 final class LocalWorkoutHistoryStore: WorkoutHistoryPersistence {
-    static let defaultKey = "HangTen.pendingWorkoutHistory.v1"
+    static let defaultKey = "HangTen.pendingWorkoutHistory.v2"
+    static let legacyKey = "HangTen.pendingWorkoutHistory.v1"
 
     private let defaults: UserDefaults
     private let key: String
@@ -17,6 +18,7 @@ final class LocalWorkoutHistoryStore: WorkoutHistoryPersistence {
     ) {
         self.defaults = defaults
         self.key = key
+        defaults.removeObject(forKey: Self.legacyKey)
     }
 
     deinit {}

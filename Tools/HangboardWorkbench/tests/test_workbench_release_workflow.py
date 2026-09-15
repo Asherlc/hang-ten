@@ -339,6 +339,21 @@ def test_workbench_readme_documents_only_direct_board_authoring():
         assert obsolete_fragment not in readme
 
 
+def test_workbench_readme_documents_generated_bundle_lifecycle():
+    readme = " ".join(
+        (EDITOR_ROOT / "README.md").read_text(encoding="utf-8").lower().split()
+    )
+
+    for required_fragment in (
+        "`app.js` is an ignored build artifact",
+        "generated from `src/` locally and in ci",
+        "is not checked in",
+    ):
+        assert required_fragment in readme
+
+    assert "checked-in `app.js`" not in readme
+
+
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
     jobs = {
         **_workflow()["jobs"],
@@ -1025,17 +1040,44 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
         "Contents/MacOS/HangboardWorkbench",
         '"$app_executable" --headless',
         '--repository-root "$GITHUB_WORKSPACE"',
-        "--port 41739",
+        "select_free_loopback_port() {",
+        'port="$(select_free_loopback_port)"',
+        '--port "$port"',
+        'health_url="http://127.0.0.1:${port}/api/health"',
+        '"$health_url"',
     ):
         assert required_fragment in script
     assert "http://127.0.0.1:${port}/api/health" in script
     assert "http://127.0.0.1:${port}/" in script
     assert "http://127.0.0.1:${port}/api/boards" in script
-    assert 'payload == {"ok": True}' in script
+    assert script.count(
+        'payload == {"ok": True} and type(payload["ok"]) is bool'
+    ) == 2
+    assert script.count('health_payload="$(curl --fail --silent --show-error') == 2
+    final_validation_start = script.index(
+        "if ! listener_belongs_to_app_tree; then"
+    )
+    final_validation_end = script.index(
+        'curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/"',
+        final_validation_start,
+    )
+    final_validation = script[final_validation_start:final_validation_end]
+    final_health_curl = final_validation.index(
+        'health_payload="$(curl --fail --silent --show-error'
+    )
+    exact_health_gate = final_validation.index(
+        'payload == {"ok": True} and type(payload["ok"]) is bool'
+    )
+    assert final_validation.index("listener_belongs_to_app_tree") < final_health_curl
+    assert final_health_curl < exact_health_gate
+    assert final_validation.count("if ! listener_belongs_to_app_tree; then") == 2
+    assert final_validation.index(
+        "if ! listener_belongs_to_app_tree; then", exact_health_gate
+    ) > exact_health_gate
     assert 'assert isinstance(payload["boards"], list)' in script
     assert 'assert payload["boards"]' in script
     assert 'assert all(isinstance(board.get("boardId"), str)' in script
-    assert 'board["holdCount"] > 0' in script
+    assert 'board["contactCount"] > 0' in script
     assert 'payload["diagnostics"]' not in script
     assert 'board.get("status")' not in script
     assert 'curl_timeout_args=(--connect-timeout 5 --max-time 15)' in script
@@ -1046,7 +1088,7 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
     assert 'kill -0 "$app_child_pid"' in script
 
     manifest_program = re.search(
-        r"python - <<'PY'\n(?P<program>.*?)\nPY",
+        r"done < <\(\n\s*python - <<'PY'\n(?P<program>.*?)\n\s*PY",
         script,
         re.DOTALL,
     )

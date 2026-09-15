@@ -1,6 +1,61 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.5,
+      0.075999998,
+      0.075999998
+    ],
+    "min": [
+      0,
+      0,
+      0
+    ]
+  },
+  "modelSHA256": "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524",
+  "nodes": [
+    {
+      "nodeID": "flash_board_body_008",
+      "role": "body"
+    },
+    {
+      "nodeID": "flash_board_body_009",
+      "role": "contact",
+      "contactID": "small-crimp-left"
+    },
+    {
+      "nodeID": "flash_board_body_010",
+      "role": "contact",
+      "contactID": "small-crimp-right"
+    },
+    {
+      "nodeID": "flash_board_body_011",
+      "role": "contact",
+      "contactID": "three-edge-center"
+    },
+    {
+      "nodeID": "flash_board_body_012",
+      "role": "contact",
+      "contactID": "three-edge-left"
+    },
+    {
+      "nodeID": "flash_board_body_013",
+      "role": "contact",
+      "contactID": "three-edge-right"
+    },
+    {
+      "nodeID": "flash_board_body_014",
+      "role": "contact",
+      "contactID": "two-edge-left"
+    },
+    {
+      "nodeID": "flash_board_body_015",
+      "role": "contact",
+      "contactID": "two-edge-right"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "small-crimp-left": {
       "center": [
         0.328000009,
@@ -134,60 +189,5 @@
         "flash_board_body_015"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.5,
-      0.075999998,
-      0.075999998
-    ],
-    "min": [
-      0.0,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524",
-  "nodes": [
-    {
-      "nodeID": "flash_board_body_008",
-      "role": "body"
-    },
-    {
-      "holdID": "small-crimp-left",
-      "nodeID": "flash_board_body_009",
-      "role": "hold"
-    },
-    {
-      "holdID": "small-crimp-right",
-      "nodeID": "flash_board_body_010",
-      "role": "hold"
-    },
-    {
-      "holdID": "three-edge-center",
-      "nodeID": "flash_board_body_011",
-      "role": "hold"
-    },
-    {
-      "holdID": "three-edge-left",
-      "nodeID": "flash_board_body_012",
-      "role": "hold"
-    },
-    {
-      "holdID": "three-edge-right",
-      "nodeID": "flash_board_body_013",
-      "role": "hold"
-    },
-    {
-      "holdID": "two-edge-left",
-      "nodeID": "flash_board_body_014",
-      "role": "hold"
-    },
-    {
-      "holdID": "two-edge-right",
-      "nodeID": "flash_board_body_015",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

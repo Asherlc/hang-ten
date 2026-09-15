@@ -1,283 +1,167 @@
 import type {
   BoardOperationCoordinator,
+  ContactRegion,
   EditorDocument,
-  HoldRegion,
   LoadedBoard,
+  PhysicalContact,
   SavedBoard,
 } from "./types.ts";
-import { isShapeConstraint, validateShapeConstraint } from "./shape-constraints.ts";
+import { validateShapeConstraint } from "./shape-constraints.ts";
 
 const IDENTIFIER = /^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$/;
+const CONTACT_KINDS = new Set(["jug", "edge", "pocket", "pinch", "sloper", "gaston"]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isFingerCapacity(value: unknown): value is number {
-  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
+function exactKeys(value: Record<string, unknown>, required: readonly string[], optional: readonly string[] = []): boolean {
+  const keys = Object.keys(value);
+  return required.every((key) => keys.includes(key))
+    && keys.every((key) => required.includes(key) || optional.includes(key));
 }
 
-function isPositiveFiniteNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value) && value > 0;
+function isIdentifier(value: unknown): value is string {
+  return typeof value === "string" && IDENTIFIER.test(value);
 }
 
-function isSloperMetadata(value: unknown): boolean {
-  if (!isRecord(value) || (value.type !== "flat" && value.type !== "round")) return false;
-  const allowedKeys = value.type === "flat" ? ["type", "angleDegrees"] : ["type"];
-  if (!Object.keys(value).every((key) => allowedKeys.includes(key))) return false;
-  if (value.type === "round") return true;
-  return value.angleDegrees === undefined
-    || (typeof value.angleDegrees === "number"
-      && Number.isFinite(value.angleDegrees)
-      && value.angleDegrees >= 0
-      && value.angleDegrees <= 90);
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
 
-function sameSloperMetadata(left: unknown, right: unknown): boolean {
-  if (left === undefined || right === undefined) return left === right;
-  if (!isRecord(left) || !isRecord(right)) return false;
-  return left.type === right.type && left.angleDegrees === right.angleDegrees;
+function isMillimeterRange(value: unknown): boolean {
+  if (!isRecord(value) || !exactKeys(value, ["lowerBound", "upperBound"])) return false;
+  return typeof value.lowerBound === "number" && Number.isFinite(value.lowerBound)
+    && typeof value.upperBound === "number" && Number.isFinite(value.upperBound)
+    && value.lowerBound > 0 && value.upperBound >= value.lowerBound;
 }
 
-function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
-  if (!isRecord(value)) return false;
-  const { lowerBound, upperBound } = value;
-  return typeof lowerBound === "number"
-    && typeof upperBound === "number"
-    && Number.isFinite(lowerBound)
-    && Number.isFinite(upperBound)
-    && lowerBound > 0
-    && upperBound >= lowerBound;
+function isPhysicalContact(value: unknown): value is PhysicalContact {
+  if (!isRecord(value) || !exactKeys(
+    value,
+    ["id", "equipmentObjectID", "name", "kind", "features", "gripTypes"],
+    ["depthRangeMillimeters", "fingerCapacity", "handCapacity", "side", "pairedContactID"],
+  )) return false;
+  if (!isIdentifier(value.id) || !isIdentifier(value.equipmentObjectID)
+    || typeof value.name !== "string" || value.name.length === 0
+    || typeof value.kind !== "string" || !CONTACT_KINDS.has(value.kind)
+    || !isStringArray(value.features) || new Set(value.features).size !== value.features.length
+    || !isStringArray(value.gripTypes) || new Set(value.gripTypes).size !== value.gripTypes.length) return false;
+  if (value.depthRangeMillimeters !== undefined && !isMillimeterRange(value.depthRangeMillimeters)) return false;
+  if (value.fingerCapacity !== undefined
+    && (typeof value.fingerCapacity !== "number" || !Number.isInteger(value.fingerCapacity)
+      || value.fingerCapacity < 1 || value.fingerCapacity > 4)) return false;
+  if (value.handCapacity !== undefined
+    && (typeof value.handCapacity !== "number" || !Number.isInteger(value.handCapacity)
+      || value.handCapacity < 1 || value.handCapacity > 2)) return false;
+  if (value.side !== undefined && value.side !== "left" && value.side !== "right") return false;
+  if (value.kind === "gaston") {
+    if (value.pairedContactID !== undefined
+      && (!isIdentifier(value.pairedContactID) || value.pairedContactID === value.id)) return false;
+  } else if (value.pairedContactID !== undefined) return false;
+  return true;
 }
 
-function isHandCapacity(value: unknown): value is number {
-  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
+function isTreatment(value: unknown): boolean {
+  if (!isRecord(value) || typeof value.type !== "string") return false;
+  if (value.type === "surface") return exactKeys(value, ["type"]);
+  if (value.type === "shelf") {
+    return exactKeys(value, ["type", "rimInsetFraction"])
+      && typeof value.rimInsetFraction === "number"
+      && value.rimInsetFraction >= 0 && value.rimInsetFraction <= 0.5;
+  }
+  if (value.type === "recess") {
+    return exactKeys(value, ["type", "rimInsetFraction", "depth"])
+      && typeof value.rimInsetFraction === "number"
+      && value.rimInsetFraction >= 0 && value.rimInsetFraction <= 0.5
+      && (value.depth === "shallow" || value.depth === "deep");
+  }
+  return false;
 }
 
-function isBendableCommandIndexes(value: unknown): value is number[] {
+function isIndexArray(value: unknown): value is number[] {
   return Array.isArray(value)
-    && value.every((index) => typeof index === "number" && Number.isInteger(index) && index >= 0)
+    && value.every((item) => Number.isInteger(item) && item >= 0)
     && new Set(value).size === value.length;
 }
 
-function isHoldRegion(value: unknown): value is HoldRegion {
-  if (!isRecord(value)) return false;
-  const metadata = value.metadata;
-  return typeof value.key === "string"
-    && typeof value.displayPath === "string"
-    && (value.id === undefined || typeof value.id === "number")
-    && (value.type === undefined || typeof value.type === "string")
-    && (value.equipmentObjectID === undefined || typeof value.equipmentObjectID === "string")
-    && (value.pairedHoldID === undefined || typeof value.pairedHoldID === "string")
-    && (value.sloper === undefined
-      || (value.type === "sloper" && isSloperMetadata(value.sloper)))
-    && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
-    && (value.sizeMillimeters === undefined || isPositiveFiniteNumber(value.sizeMillimeters))
-    && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
-    && !(value.sizeMillimeters !== undefined && value.depthRangeMillimeters !== undefined)
-    && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
-    && (value.bendableCommandIndexes === undefined
-      || isBendableCommandIndexes(value.bendableCommandIndexes))
-    && (value.smoothAnchorIndexes === undefined
-      || isBendableCommandIndexes(value.smoothAnchorIndexes))
-    && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
-    && (metadata === undefined
-      || (isRecord(metadata)
-        && typeof metadata.holdID === "string"
-        && typeof metadata.pieceIndex === "number"
-        && (metadata.presentationID === undefined || typeof metadata.presentationID === "string")));
-}
-
-function isEditorDocument(value: unknown): value is EditorDocument {
-  return isRecord(value)
-    && Object.keys(value).every((key) => key === "presentationID" || key === "equipmentObjects" || key === "canvas" || key === "regions")
-    && (value.presentationID === undefined || typeof value.presentationID === "string")
-    && (value.equipmentObjects === undefined
-      || (Array.isArray(value.equipmentObjects)
-        && value.equipmentObjects.every((equipmentObjectID) => typeof equipmentObjectID === "string")))
-    && isRecord(value.canvas)
-    && typeof value.canvas.width === "number"
-    && typeof value.canvas.height === "number"
-    && Array.isArray(value.regions)
-    && value.regions.every(isHoldRegion);
+function isContactRegion(value: unknown, presentationID: string, contactIDs: Set<string>): value is ContactRegion {
+  if (!isRecord(value) || !exactKeys(
+    value,
+    ["id", "key", "displayPath", "metadata"],
+    ["treatment", "shapeConstraint", "bendableCommandIndexes", "smoothAnchorIndexes"],
+  )) return false;
+  if (!Number.isInteger(value.id) || typeof value.key !== "string" || !value.key
+    || typeof value.displayPath !== "string" || !/^\s*M\s+[^MZ]+\s+Z\s*$/u.test(value.displayPath)
+    || !isRecord(value.metadata)
+    || !exactKeys(value.metadata, ["contactID", "pieceIndex", "presentationID"])
+    || !isIdentifier(value.metadata.contactID)
+    || !contactIDs.has(value.metadata.contactID)
+    || typeof value.metadata.pieceIndex !== "number"
+    || !Number.isInteger(value.metadata.pieceIndex) || value.metadata.pieceIndex < 0
+    || value.metadata.presentationID !== presentationID) return false;
+  if (value.treatment !== undefined && !isTreatment(value.treatment)) return false;
+  if (value.shapeConstraint !== undefined) {
+    try { validateShapeConstraint(value.shapeConstraint, `Contact ${value.key} shape constraint`); }
+    catch { return false; }
+  }
+  return (value.bendableCommandIndexes === undefined || isIndexArray(value.bendableCommandIndexes))
+    && (value.smoothAnchorIndexes === undefined || isIndexArray(value.smoothAnchorIndexes));
 }
 
 export function validateEditorDocument(document: unknown): EditorDocument {
-  if (!isRecord(document)) {
-    throw new TypeError("Hold document is required");
+  if (!isRecord(document) || !exactKeys(document, ["presentationID", "contacts", "canvas", "regions"])) {
+    throw new TypeError("Contact editor document is required");
   }
-  const unknownKey = Object.keys(document).find(
-    (key) => key !== "presentationID" && key !== "equipmentObjects" && key !== "canvas" && key !== "regions",
-  );
-  if (unknownKey) throw new Error(`Hold document has unknown field ${unknownKey}`);
-  const canvas = document.canvas;
-  if (!isRecord(canvas)
-    || !Number.isFinite(canvas.width)
-    || !Number.isFinite(canvas.height)
-    || Number(canvas.width) <= 0
-    || Number(canvas.height) <= 0) {
-    throw new Error("Hold document needs a valid canvas");
+  if (!isIdentifier(document.presentationID)) throw new Error("Contact editor needs a valid presentation");
+  if (!isRecord(document.canvas) || !exactKeys(document.canvas, ["width", "height"])
+    || typeof document.canvas.width !== "number" || document.canvas.width <= 0
+    || typeof document.canvas.height !== "number" || document.canvas.height <= 0) {
+    throw new Error("Contact editor needs a valid canvas");
   }
-  if (!Array.isArray(document.regions)) throw new Error("Hold document needs holds");
-  const presentationID = typeof document.presentationID === "string"
-    ? document.presentationID
-    : null;
-  if (document.presentationID !== undefined && !presentationID) {
-    throw new Error("Hold document needs a valid presentation");
+  if (!Array.isArray(document.contacts) || document.contacts.length === 0
+    || !document.contacts.every(isPhysicalContact)) {
+    throw new Error("Contact editor needs valid factual contacts");
   }
-  let equipmentObjectIDs: Set<string> | null = null;
-  if (document.equipmentObjects !== undefined) {
-    if (!Array.isArray(document.equipmentObjects) || document.equipmentObjects.length === 0) {
-      throw new Error("Hold document needs at least one equipment object");
+  const contactIDs = new Set(document.contacts.map((contact) => contact.id));
+  if (contactIDs.size !== document.contacts.length) throw new Error("Contact IDs must be unique");
+  for (const contact of document.contacts) {
+    if (contact.pairedContactID !== undefined) {
+      const pair = document.contacts.find((candidate) => candidate.id === contact.pairedContactID);
+      if (!pair || pair.kind !== "gaston" || pair.pairedContactID !== contact.id) {
+        throw new Error(`Contact ${contact.id} needs a reciprocal gaston pair`);
+      }
     }
-    if (!document.equipmentObjects.every((equipmentObjectID) => (
-      typeof equipmentObjectID === "string" && IDENTIFIER.test(equipmentObjectID)
-    ))) {
-      throw new Error("Equipment object IDs must be identifier-shaped");
-    }
-    equipmentObjectIDs = new Set(document.equipmentObjects);
-    if (equipmentObjectIDs.size !== document.equipmentObjects.length) {
-      throw new Error("Equipment object IDs must be unique");
-    }
+  }
+  if (!Array.isArray(document.regions) || document.regions.length === 0
+    || !document.regions.every((region) => isContactRegion(region, document.presentationID as string, contactIDs))) {
+    throw new Error("Contact editor needs valid media regions");
   }
   const keys = new Set<string>();
-  const fingerCapacityByHoldId = new Map<string, number | undefined>();
-  const sloperByHoldId = new Map<string, unknown>();
-  const sizeMillimetersByHoldId = new Map<string, number | undefined>();
-  const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
-  const depthRepresentationByHoldId = new Map<string, "fixed" | "variable" | "unset">();
-  const handCapacityByHoldId = new Map<string, number | undefined>();
-  const equipmentObjectByHoldId = new Map<string, string | undefined>();
-  for (const region of document.regions) {
-    if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
-      throw new Error("Every hold needs a key");
-    }
-    if (keys.has(region.key)) throw new Error("Every hold needs a unique hold key");
+  const indexes = new Map<string, Set<number>>();
+  for (const region of document.regions as ContactRegion[]) {
+    if (keys.has(region.key)) throw new Error("Contact region keys must be unique");
     keys.add(region.key);
-    if (typeof region.displayPath !== "string"
-      || !/^\s*M\s+[^MZ]+\s+Z\s*$/u.test(region.displayPath)) {
-      throw new Error(`Hold ${region.key} needs one closed contour`);
+    const contactIndexes = indexes.get(region.metadata.contactID) ?? new Set<number>();
+    if (contactIndexes.has(region.metadata.pieceIndex)) {
+      throw new Error(`Contact ${region.metadata.contactID} has a duplicate piece index`);
     }
-    if (Object.hasOwn(region, "shapeConstraint")) {
-      validateShapeConstraint(region.shapeConstraint, `Hold ${region.key} shape constraint`);
-    }
-    if (Object.hasOwn(region, "sloper")
-      && (region.type !== "sloper" || !isSloperMetadata(region.sloper))) {
-      throw new Error(`Hold ${region.key} needs valid sloper metadata only on sloper holds`);
-    }
-    if (Object.hasOwn(region, "pairedHoldID")
-      && (region.type !== "gaston" || typeof region.pairedHoldID !== "string" || !region.pairedHoldID)) {
-      throw new Error(`Hold ${region.key} needs paired hold metadata only on gaston holds`);
-    }
-    if (Object.hasOwn(region, "fingerCapacity")
-      && !isFingerCapacity(region.fingerCapacity)) {
-      throw new Error(`Hold ${region.key} finger capacity must be between 1 and 4`);
-    }
-    if (Object.hasOwn(region, "sizeMillimeters")
-      && !isPositiveFiniteNumber(region.sizeMillimeters)) {
-      throw new Error(`Hold ${region.key} fixed depth must be a positive finite number`);
-    }
-    if (Object.hasOwn(region, "depthRangeMillimeters")
-      && !isMillimeterRange(region.depthRangeMillimeters)) {
-      throw new Error(`Hold ${region.key} depth range must be positive and ordered`);
-    }
-    if (Object.hasOwn(region, "sizeMillimeters")
-      && Object.hasOwn(region, "depthRangeMillimeters")) {
-      throw new Error(`Hold ${region.key} depth representation must be fixed or variable, not both`);
-    }
-    if (Object.hasOwn(region, "handCapacity")
-      && !isHandCapacity(region.handCapacity)) {
-      throw new Error(`Hold ${region.key} hand capacity must be between 1 and 2`);
-    }
-    if (equipmentObjectIDs
-      && (typeof region.equipmentObjectID !== "string"
-        || !equipmentObjectIDs.has(region.equipmentObjectID))) {
-      throw new Error(`Hold ${region.key} needs a valid equipment object`);
-    }
-    if (!isHoldRegion(region)) {
-      throw new Error(`Hold ${region.key} needs valid hold fields`);
-    }
-    if (presentationID && region.metadata?.presentationID !== presentationID) {
-      throw new Error(`Hold ${region.key} must belong to the selected presentation`);
-    }
-    if (region.metadata) {
-      const { holdID } = region.metadata;
-      if (sloperByHoldId.has(holdID)
-        && !sameSloperMetadata(sloperByHoldId.get(holdID), region.sloper)) {
-        throw new Error(`Hold ${holdID} pieces must share one sloper metadata value`);
-      }
-      sloperByHoldId.set(holdID, region.sloper);
-      if (fingerCapacityByHoldId.has(holdID)
-        && fingerCapacityByHoldId.get(holdID) !== region.fingerCapacity) {
-        throw new Error(`Hold ${holdID} pieces must share one finger capacity`);
-      }
-      fingerCapacityByHoldId.set(holdID, region.fingerCapacity);
-      const depthRepresentation = region.sizeMillimeters !== undefined
-        ? "fixed"
-        : region.depthRangeMillimeters !== undefined ? "variable" : "unset";
-      if (depthRepresentationByHoldId.has(holdID)
-        && depthRepresentationByHoldId.get(holdID) !== depthRepresentation) {
-        throw new Error(`Hold ${holdID} pieces must share one depth representation`);
-      }
-      depthRepresentationByHoldId.set(holdID, depthRepresentation);
-      if (sizeMillimetersByHoldId.has(holdID)
-        && sizeMillimetersByHoldId.get(holdID) !== region.sizeMillimeters) {
-        throw new Error(`Hold ${holdID} pieces must share one fixed depth`);
-      }
-      sizeMillimetersByHoldId.set(holdID, region.sizeMillimeters);
-      const depthRange = region.depthRangeMillimeters;
-      const existingDepthRange = depthRangeByHoldId.get(holdID);
-      if (depthRangeByHoldId.has(holdID)
-        && (existingDepthRange?.lowerBound !== depthRange?.lowerBound
-          || existingDepthRange?.upperBound !== depthRange?.upperBound)) {
-        throw new Error(`Hold ${holdID} pieces must share one depth range`);
-      }
-      depthRangeByHoldId.set(holdID, depthRange);
-      if (handCapacityByHoldId.has(holdID)
-        && handCapacityByHoldId.get(holdID) !== region.handCapacity) {
-        throw new Error(`Hold ${holdID} pieces must share one hand capacity`);
-      }
-      handCapacityByHoldId.set(holdID, region.handCapacity);
-      if (equipmentObjectByHoldId.has(holdID)
-        && equipmentObjectByHoldId.get(holdID) !== region.equipmentObjectID) {
-        throw new Error(`Hold ${holdID} pieces must share one equipment object`);
-      }
-      equipmentObjectByHoldId.set(holdID, region.equipmentObjectID);
+    contactIndexes.add(region.metadata.pieceIndex);
+    indexes.set(region.metadata.contactID, contactIndexes);
+  }
+  for (const [contactID, contactIndexes] of indexes) {
+    if ([...contactIndexes].some((_, index) => !contactIndexes.has(index))) {
+      throw new Error(`Contact ${contactID} piece indexes must be contiguous`);
     }
   }
-  if (!isEditorDocument(document)) {
-    throw new TypeError("Hold document is required");
-  }
-  return document;
+  return document as unknown as EditorDocument;
 }
 
 export function validateEditorDocumentForSave(document: unknown): EditorDocument {
   const validated = validateEditorDocument(document);
-  const pairedHoldIdByGastonHoldId = new Map<string, string>();
-  for (const region of validated.regions) {
-    if (region.type !== "gaston") continue;
-    const holdID = region.metadata?.holdID;
-    if (!holdID) throw new Error(`Gaston hold ${region.key} needs a hold ID to pair`);
-    if (!region.pairedHoldID) throw new Error(`Gaston hold ${holdID} needs a paired gaston hold`);
-    if (!IDENTIFIER.test(region.pairedHoldID)) {
-      throw new Error(`Gaston hold ${holdID} paired gaston hold ID must be identifier-shaped`);
-    }
-    if (region.pairedHoldID === holdID) {
-      throw new Error(`Gaston hold ${holdID} must pair with a distinct gaston hold`);
-    }
-    const existingPair = pairedHoldIdByGastonHoldId.get(holdID);
-    if (existingPair !== undefined && existingPair !== region.pairedHoldID) {
-      throw new Error(`Gaston hold ${holdID} pieces must share one paired gaston hold`);
-    }
-    pairedHoldIdByGastonHoldId.set(holdID, region.pairedHoldID);
-  }
-  for (const [holdID, pairedHoldID] of pairedHoldIdByGastonHoldId) {
-    const reciprocalPair = pairedHoldIdByGastonHoldId.get(pairedHoldID);
-    if (reciprocalPair === undefined) {
-      throw new Error(`Gaston hold ${holdID} needs paired gaston hold ${pairedHoldID}`);
-    }
-    if (reciprocalPair !== holdID) {
-      throw new Error(`Gaston hold ${holdID} needs a reciprocal gaston pair`);
+  for (const contact of validated.contacts) {
+    if (contact.kind === "gaston" && !contact.pairedContactID) {
+      throw new Error(`Contact ${contact.id} needs a paired gaston contact`);
     }
   }
   return validated;
@@ -287,24 +171,19 @@ export async function loadBoardAtomically<ImageType>(options: {
   boardId: string;
   getBoard(boardId: string): Promise<import("./types.ts").Board>;
   loadImage(href: string): Promise<ImageType>;
-  preloadedImage?: {
-    href: string;
-    promise: Promise<ImageType>;
-  };
+  preloadedImage?: { href: string; promise: Promise<ImageType> };
   commit(value: LoadedBoard<ImageType>): void;
 }): Promise<LoadedBoard<ImageType>> {
   const { boardId, getBoard, loadImage, preloadedImage, commit } = options;
   if (!boardId) throw new TypeError("Board ID is required");
   const preparedPreloadedImage = preloadedImage && Promise.resolve(preloadedImage.promise).then(
-    (image) => ({ image }),
-    (error: unknown) => ({ error }),
+    (image) => ({ image }), (error: unknown) => ({ error }),
   );
   const board = await getBoard(boardId);
   if (!board || board.boardId !== boardId || !board.imageUrl) {
     throw new Error("Workbench returned an invalid board");
   }
-  if (board.selectedPresentationID
-    && board.document.presentationID !== board.selectedPresentationID) {
+  if (board.selectedPresentationID && board.document.presentationID !== board.selectedPresentationID) {
     throw new Error("Workbench returned a mismatched presentation");
   }
   validateEditorDocument(board.document);
@@ -313,9 +192,7 @@ export async function loadBoardAtomically<ImageType>(options: {
     const preparedImage = await preparedPreloadedImage;
     if ("error" in preparedImage) throw preparedImage.error;
     image = preparedImage.image;
-  } else {
-    image = await loadImage(board.imageUrl);
-  }
+  } else image = await loadImage(board.imageUrl);
   if (!image) throw new Error("Board image is unavailable");
   const loaded = Object.freeze({ board, image, document: board.document });
   commit(loaded);
@@ -347,7 +224,6 @@ export function createBoardOperationCoordinator(options: {
   const onBusyChange = options.onBusyChange ?? (() => {});
   let activeToken: number | null = null;
   let nextToken = 0;
-
   return Object.freeze({
     async perform<T>(operation: (context: { isCurrent(): boolean }) => Promise<T>) {
       if (activeToken !== null) return { started: false, value: undefined };
@@ -364,8 +240,6 @@ export function createBoardOperationCoordinator(options: {
         }
       }
     },
-    get isBusy(): boolean {
-      return activeToken !== null;
-    },
+    get isBusy(): boolean { return activeToken !== null; },
   });
 }

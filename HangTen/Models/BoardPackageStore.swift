@@ -136,7 +136,7 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
     case missingPresentationAsset(boardID: String, path: String)
     case boardIDMismatch(expected: String, actual: String, resource: String)
     case duplicateBoardID(String)
-    case duplicateHoldID(boardID: String, holdID: String)
+    case duplicateContactID(boardID: String, contactID: String)
     case invalidPackage(boardID: String, reason: String)
 
     var errorDescription: String? {
@@ -157,8 +157,8 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
             "Expected board ID \(expected) in \(resource), got \(actual)."
         case .duplicateBoardID(let boardID):
             "The bundled board packages contain duplicate board ID \(boardID)."
-        case let .duplicateHoldID(boardID, holdID):
-            "Board \(boardID) contains duplicate hold ID \(holdID)."
+        case let .duplicateContactID(boardID, contactID):
+            "Board \(boardID) contains duplicate contact ID \(contactID)."
         case let .invalidPackage(boardID, reason):
             "Board \(boardID) is invalid: \(reason)"
         }
@@ -168,9 +168,9 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
 struct BoardPackageStore {
     private static let presentationAspectRatioRelativeTolerance = 0.001
 
-    let boards: [TrainingBoard]
+    let boards: [BoardRevision]
 
-    private let boardsByID: [String: TrainingBoard]
+    private let boardsByID: [String: BoardRevision]
     private let presentationURLsByBoardID: [String: [String: URL]]
     private let descriptorURLsByBoardID: [String: [String: URL]]
     private let modelResourcesByBoardID: [String: [String: BoardModelResource]]
@@ -185,7 +185,7 @@ struct BoardPackageStore {
         }
         let hangboardsURL = resourceURL.appendingPathComponent("Hangboards", isDirectory: true)
         try Self.validateHangboardsRoot(hangboardsURL)
-        var loadedBoards: [TrainingBoard] = []
+        var loadedBoards: [BoardRevision] = []
         var loadedPresentationURLs: [String: [String: URL]] = [:]
         var loadedDescriptorURLs: [String: [String: URL]] = [:]
         var loadedModelResources: [String: [String: BoardModelResource]] = [:]
@@ -208,7 +208,7 @@ struct BoardPackageStore {
             }
             try Self.validatePackageContainer(packageURL, boardID: slug)
             let resourcePrefix = "Hangboards/\(slug)"
-            let loaded = try Self.loadV2Package(
+            let loaded = try Self.loadPackage(
                 at: packageURL,
                 resource: "\(resourcePrefix)/board.json",
                 modelAssetMode: modelAssetMode
@@ -231,16 +231,12 @@ struct BoardPackageStore {
         self.resourceBundle = bundle
     }
 
-    func board(id: String) -> TrainingBoard? {
+    func board(id: String) -> BoardRevision? {
         boardsByID[id]
     }
 
-    func semantics(for _: String) -> [String: [String]] {
-        [:]
-    }
-
     func presentationImageURL(
-        for board: TrainingBoard,
+        for board: BoardRevision,
         presentationID: String? = nil
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
@@ -249,7 +245,7 @@ struct BoardPackageStore {
     }
 
     func presentationAssetURL(
-        for board: TrainingBoard,
+        for board: BoardRevision,
         presentationID: String? = nil
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
@@ -257,7 +253,7 @@ struct BoardPackageStore {
     }
 
     func presentationDescriptorURL(
-        for board: TrainingBoard,
+        for board: BoardRevision,
         presentationID: String? = nil
     ) -> URL? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
@@ -265,7 +261,7 @@ struct BoardPackageStore {
     }
 
     func modelResource(
-        for board: TrainingBoard,
+        for board: BoardRevision,
         presentationID: String? = nil
     ) -> BoardModelResource? {
         let resolvedID = presentationID ?? board.defaultPresentation.id
@@ -498,7 +494,7 @@ struct BoardPackageStore {
         return values.isDirectory == true && values.isSymbolicLink != true
     }
 
-    private static func boardComesBefore(_ lhs: TrainingBoard, _ rhs: TrainingBoard) -> Bool {
+    private static func boardComesBefore(_ lhs: BoardRevision, _ rhs: BoardRevision) -> Bool {
         let lhsKey = [lhs.manufacturer.lowercased(), lhs.manufacturer, lhs.name.lowercased(), lhs.name, lhs.id]
         let rhsKey = [rhs.manufacturer.lowercased(), rhs.manufacturer, rhs.name.lowercased(), rhs.name, rhs.id]
         for (left, right) in zip(lhsKey, rhsKey) where left != right {
@@ -507,22 +503,22 @@ struct BoardPackageStore {
         return false
     }
 
-    private static func loadV2Package(
+    private static func loadPackage(
         at packageURL: URL,
         resource: String,
         modelAssetMode: BoardPackageModelAssetMode
     ) throws -> (
-        board: TrainingBoard,
+        board: BoardRevision,
         presentationURLs: [String: URL],
         descriptorURLs: [String: URL],
         modelResources: [String: BoardModelResource]
     ) {
         let boardURL = packageURL.appendingPathComponent("board.json")
-        let document: BoardPackageV2BoardDocument
+        let document: BoardPackageBoardDocument
         let rawRasterGeometryByPresentationID: [String: BoardPackageRawJSONValue]
         do {
             let data = try Data(contentsOf: boardURL)
-            document = try JSONDecoder().decode(BoardPackageV2BoardDocument.self, from: data)
+            document = try JSONDecoder().decode(BoardPackageBoardDocument.self, from: data)
         } catch {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
@@ -539,13 +535,14 @@ struct BoardPackageStore {
         } catch {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
-        guard document.schemaVersion == 2 else {
+        guard document.schemaVersion == 3 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "schemaVersion must be 2"
+                reason: "schemaVersion must be 3"
             )
         }
         guard document.id.isBoardPackageIdentifier,
+              document.revisionID.isBoardPackageIdentifier,
               !document.manufacturer.isEmpty,
               !document.name.isEmpty,
               !document.subtitle.isEmpty,
@@ -581,126 +578,112 @@ struct BoardPackageStore {
             }
         }
 
-        guard !document.holds.isEmpty else {
+        guard !document.contacts.isEmpty else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "holds must not be empty"
+                reason: "contacts must not be empty"
             )
         }
-        var holdIDs = Set<String>()
-        var holds: [BoardHold] = []
-        for hold in document.holds {
-            guard hold.id.isBoardPackageIdentifier,
-                  !hold.name.isEmpty,
-                  holdIDs.insert(hold.id).inserted else {
+        var contactIDs = Set<String>()
+        var contacts: [PhysicalContact] = []
+        for contact in document.contacts {
+            guard contact.id.isBoardPackageIdentifier,
+                  !contact.name.isEmpty,
+                  contactIDs.insert(contact.id).inserted else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "logical hold IDs must be unique and identifier-shaped"
+                    reason: "physical contact IDs must be unique and identifier-shaped"
                 )
             }
-            guard equipmentObjectIDs.contains(hold.equipmentObjectID) else {
+            guard equipmentObjectIDs.contains(contact.equipmentObjectID) else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)"
+                    reason: "contact \(contact.id) references unknown equipment object \(contact.equipmentObjectID)"
                 )
             }
-            if hold.sloper != nil && hold.kind != .sloper {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has sloper metadata but is not a sloper"
-                )
-            }
-            if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) must not specify both a size and depth range"
-                )
-            }
-            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has a non-positive size"
-                )
-            }
-            if let range = hold.depthRangeMillimeters,
+            if let range = contact.depthRangeMillimeters,
                !range.lowerBound.isFinite || !range.upperBound.isFinite ||
                range.lowerBound <= 0 || range.upperBound <= 0 ||
                range.lowerBound > range.upperBound {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid depth range"
+                    reason: "contact \(contact.id) has an invalid depth range"
                 )
             }
-            if let capacity = hold.fingerCapacity,
-               !BoardHold.validFingerCapacityRange.contains(capacity) {
+            if let capacity = contact.fingerCapacity,
+               !PhysicalContact.validFingerCapacityRange.contains(capacity) {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid finger capacity"
+                    reason: "contact \(contact.id) has an invalid finger capacity"
                 )
             }
-            if let capacity = hold.handCapacity,
-               !BoardHold.validHandCapacityRange.contains(capacity) {
+            if let capacity = contact.handCapacity,
+               !PhysicalContact.validHandCapacityRange.contains(capacity) {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid hand capacity"
+                    reason: "contact \(contact.id) has an invalid hand capacity"
                 )
             }
-            if let features = hold.features, Set(features).count != features.count {
+            if Set(contact.features).count != contact.features.count {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "hold \(hold.id) has duplicate features"
+                    reason: "contact \(contact.id) has duplicate features"
                 )
             }
-            if hold.kind == .gaston {
-                guard let pairedHoldID = hold.pairedHoldID,
-                      pairedHoldID.isBoardPackageIdentifier else {
+            if Set(contact.gripTypes).count != contact.gripTypes.count {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "contact \(contact.id) has duplicate grip types"
+                )
+            }
+            if let pairedContactID = contact.pairedContactID {
+                guard pairedContactID.isBoardPackageIdentifier else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "gaston hold \(hold.id) must declare a pairedHoldID"
+                        reason: "contact \(contact.id) has an invalid pairedContactID"
                     )
                 }
-            } else if hold.declaresPairedHoldID {
+            } else if contact.kind == .gaston {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "non-gaston hold \(hold.id) must not declare pairedHoldID"
+                    reason: "gaston contact \(contact.id) must declare a pairedContactID"
                 )
             }
-            holds.append(
-                BoardHold(
-                    id: hold.id,
-                    equipmentObjectID: hold.equipmentObjectID,
-                    name: hold.name,
-                    kind: hold.kind,
-                    sloper: hold.sloper,
-                    sizeMillimeters: hold.sizeMillimeters,
-                    gripType: hold.gripType,
-                    fingerCapacity: hold.fingerCapacity,
-                    handCapacity: hold.handCapacity,
-                    depthRangeMillimeters: hold.depthRangeMillimeters.map {
+            contacts.append(
+                PhysicalContact(
+                    id: contact.id,
+                    equipmentObjectID: contact.equipmentObjectID,
+                    name: contact.name,
+                    kind: contact.kind,
+                    features: Set(contact.features),
+                    fingerCapacity: contact.fingerCapacity,
+                    handCapacity: contact.handCapacity,
+                    depthRangeMillimeters: contact.depthRangeMillimeters.map {
                         $0.lowerBound...$0.upperBound
                     },
-                    features: hold.features.map(Set.init),
-                    pairedHoldID: hold.pairedHoldID
+                    gripTypes: Set(contact.gripTypes),
+                    side: contact.side,
+                    pairedContactID: contact.pairedContactID
                 )
             )
         }
-        let holdDocumentsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
-        for hold in document.holds where hold.kind == .gaston {
-            guard let pairedID = hold.pairedHoldID,
-                  pairedID != hold.id,
-                  let paired = holdDocumentsByID[pairedID],
-                  paired.kind == .gaston,
-                  paired.pairedHoldID == hold.id else {
+        let contactDocumentsByID = Dictionary(uniqueKeysWithValues: document.contacts.map { ($0.id, $0) })
+        for contact in document.contacts where contact.declaresPairedContactID {
+            guard let pairedID = contact.pairedContactID,
+                  pairedID != contact.id,
+                  let paired = contactDocumentsByID[pairedID],
+                  paired.kind == contact.kind,
+                  paired.pairedContactID == contact.id else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "gaston hold \(hold.id) must have a reciprocal gaston pair"
+                    reason: "contact \(contact.id) must have a reciprocal same-kind pair"
                 )
             }
         }
-        for objectID in equipmentObjectIDs where !holds.contains(where: { $0.equipmentObjectID == objectID }) {
+        for objectID in equipmentObjectIDs where !contacts.contains(where: { $0.equipmentObjectID == objectID }) {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "equipment object \(objectID) must own at least one hold"
+                reason: "equipment object \(objectID) must own at least one contact"
             )
         }
 
@@ -731,18 +714,24 @@ struct BoardPackageStore {
             switch presentation.media {
             case .raster(let assetPath, _):
                 hasRaster = true
-                try validateV2AssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
+                try validateAssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
             case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation):
                 hasModel = true
+                guard !(suspension != nil && orientation != nil) else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "orientation and suspension are mutually exclusive"
+                    )
+                }
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
                         reason: "model media may not be derived or inverted"
                     )
                 }
-                try validateV2AssetPath(assetPath, suffix: ".usdz", boardID: document.id, packageURL: packageURL)
-                try validateV2AssetPath(descriptorPath, suffix: ".model.json", boardID: document.id, packageURL: packageURL)
+                try validateAssetPath(assetPath, suffix: ".usdz", boardID: document.id, packageURL: packageURL)
+                try validateAssetPath(descriptorPath, suffix: ".model.json", boardID: document.id, packageURL: packageURL)
                 try validateModelDisplay(display, boardID: document.id)
                 declaredAssetPaths.formUnion([assetPath, descriptorPath])
                 if modelAssetMode == .onDemand {
@@ -759,7 +748,7 @@ struct BoardPackageStore {
         guard !(hasRaster && hasModel) else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "v2 packages may not mix model and raster presentations"
+                reason: "packages may not mix model and raster presentations"
             )
         }
         guard document.presentations.filter({
@@ -768,7 +757,7 @@ struct BoardPackageStore {
         }).count <= 1 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "v2 packages may contain only one model presentation"
+                reason: "packages may contain only one model presentation"
             )
         }
         let documentsByPresentationID = Dictionary(
@@ -816,7 +805,7 @@ struct BoardPackageStore {
         var descriptorURLs: [String: URL] = [:]
         var modelResources: [String: BoardModelResource] = [:]
         var originalRasterOwnershipCounts = Dictionary(
-            uniqueKeysWithValues: holdIDs.map { ($0, 0) }
+            uniqueKeysWithValues: contactIDs.map { ($0, 0) }
         )
         let declaredPositionIDs = Set(
             (document.positions?.map(\.id) ?? document.presentations.map(\.id))
@@ -825,31 +814,31 @@ struct BoardPackageStore {
             let media: BoardPresentationMedia
             switch presentation.media {
             case .raster(let assetPath, let geometryDocuments):
-                let presentationHoldIDs = Set(geometryDocuments.keys)
-                guard !presentationHoldIDs.isEmpty else {
+                let presentationContactIDs = Set(geometryDocuments.keys)
+                guard !presentationContactIDs.isEmpty else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "presentation \(presentation.id) media.holdGeometry must own at least one logical hold"
+                        reason: "presentation \(presentation.id) media.contactGeometry must own at least one physical contact"
                     )
                 }
-                guard presentationHoldIDs.isSubset(of: holdIDs) else {
+                guard presentationContactIDs.isSubset(of: contactIDs) else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "presentation \(presentation.id) media.holdGeometry must own only logical holds"
+                        reason: "presentation \(presentation.id) media.contactGeometry must own only physical contacts"
                     )
                 }
                 if case .original = presentation.derivation {
-                    for holdID in presentationHoldIDs {
-                        originalRasterOwnershipCounts[holdID, default: 0] += 1
+                    for contactID in presentationContactIDs {
+                        originalRasterOwnershipCounts[contactID, default: 0] += 1
                     }
                 }
-                var holdGeometry: [String: [BoardHoldPiece]] = [:]
-                for holdID in presentationHoldIDs.sorted() {
-                    let geometry = geometryDocuments[holdID] ?? []
-                    let validation = BoardHoldGeometryValidator.validate(
-                        geometry.map(\.holdPieceDocument),
-                        holdID: holdID,
-                        pieceID: { "\(holdID)-piece-\($0)" }
+                var contactGeometry: [String: [BoardContactPiece]] = [:]
+                for contactID in presentationContactIDs.sorted() {
+                    let geometry = geometryDocuments[contactID] ?? []
+                    let validation = BoardContactGeometryValidator.validate(
+                        geometry.map(\.contactPieceDocument),
+                        contactID: contactID,
+                        pieceID: { "\(contactID)-piece-\($0)" }
                     )
                     guard !validation.isEmpty,
                           validation.pieces.allSatisfy({ $0.packageFailureReason == nil }),
@@ -857,10 +846,10 @@ struct BoardPackageStore {
                         let failures = validation.pieces.compactMap(\.packageFailureReason).joined(separator: "; ")
                         throw BoardPackageStoreError.invalidPackage(
                             boardID: document.id,
-                            reason: "presentation \(presentation.id) has invalid holdGeometry for \(holdID): \(failures)"
+                            reason: "presentation \(presentation.id) has invalid contactGeometry for contact \(contactID): \(failures)"
                         )
                     }
-                    holdGeometry[holdID] = validation.pieces.compactMap(\.piece)
+                    contactGeometry[contactID] = validation.pieces.compactMap(\.piece)
                 }
                 let imageSize = try validatePNG(
                     at: packageURL.appendingPathComponent(assetPath),
@@ -881,14 +870,14 @@ struct BoardPackageStore {
                         boardID: document.id
                     )
                 }
-                media = .raster(BoardRasterMedia(assetPath: assetPath, holdGeometry: holdGeometry))
+                media = .raster(BoardRasterMedia(assetPath: assetPath, contactGeometry: contactGeometry))
             case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument):
                 let descriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: modelAssetMode == .bundled
                         ? packageURL.appendingPathComponent(assetPath)
                         : nil,
-                    logicalHoldIDs: holdIDs,
+                    physicalContactIDs: contactIDs,
                     boardID: document.id,
                     resource: descriptorPath,
                     suspensionDocument: suspensionDocument
@@ -965,7 +954,7 @@ struct BoardPackageStore {
         if hasRaster && originalRasterOwnershipCounts.values.contains(where: { $0 != 1 }) {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
-                reason: "v2 original raster media.holdGeometry must own every logical hold exactly once"
+                reason: "original raster media.contactGeometry must own every physical contact exactly once"
             )
         }
         for relationship in derivedRasterSources {
@@ -973,7 +962,7 @@ struct BoardPackageStore {
                     == rawRasterGeometryByPresentationID[relationship.sourceID] else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "derived presentation \(relationship.derivedID) media.holdGeometry must exactly equal its source geometry"
+                    reason: "derived presentation \(relationship.derivedID) media.contactGeometry must exactly equal its source geometry"
                 )
             }
         }
@@ -996,28 +985,28 @@ struct BoardPackageStore {
             }).first else {
                 throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: "model presentation is missing media")
             }
-            let descriptorHoldIDs = Set(modelMedia.descriptor.holds.keys)
-            let hasAuthoredInventory = positions.contains(where: \.holdIDsWereExplicitlyAuthored)
-            let hasLegacyInventory = positions.contains { !$0.holdIDsWereExplicitlyAuthored }
-            guard !(hasAuthoredInventory && hasLegacyInventory) else {
+            let descriptorContactIDs = Set(modelMedia.descriptor.contacts.keys)
+            let hasAuthoredInventory = positions.contains(where: \.contactIDsWereExplicitlyAuthored)
+            let hasImplicitInventory = positions.contains { !$0.contactIDsWereExplicitlyAuthored }
+            guard !(hasAuthoredInventory && hasImplicitInventory) else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "positions holdIDs must be explicitly provided for every model position"
+                    reason: "positions contactIDs must be explicitly provided for every model position"
                 )
             }
             positions = positions.map { position in
-                position.holdIDsWereExplicitlyAuthored
+                position.contactIDsWereExplicitlyAuthored
                     ? position
                     : BoardPosition(
                         id: position.id,
                         presentationID: position.presentationID,
-                        holdIDs: holds.map(\.id)
+                        contactIDs: contacts.map(\.id)
                     )
             }
             try validateModelPositionInventories(
                 positions,
-                descriptorHoldIDs: descriptorHoldIDs,
-                canonicalHoldIDs: holds.map(\.id),
+                descriptorContactIDs: descriptorContactIDs,
+                canonicalContactIDs: contacts.map(\.id),
                 orientation: modelMedia.orientation,
                 requiresExactPartition: hasAuthoredInventory || modelMedia.orientation != nil,
                 boardID: document.id
@@ -1037,16 +1026,16 @@ struct BoardPackageStore {
                 )
             }
         }
-        let board = TrainingBoard(
+        let board = BoardRevision(
             id: document.id,
+            revisionID: document.revisionID,
             manufacturer: document.manufacturer,
             name: document.name,
             subtitle: document.subtitle,
             dimensions: document.dimensions,
             aspectRatio: document.aspectRatio,
             equipmentObjects: document.equipmentObjects.map(\.equipmentObject),
-            holds: holds,
-            semanticHolds: [:],
+            contacts: contacts,
             productURL: document.productURL,
             photoAssetName: nil,
             presentations: presentations,
@@ -1056,7 +1045,7 @@ struct BoardPackageStore {
         return (board, presentationURLs, descriptorURLs, modelResources)
     }
 
-    private static func validateV2AssetPath(
+    private static func validateAssetPath(
         _ path: String,
         suffix: String,
         boardID: String,
@@ -1103,20 +1092,20 @@ struct BoardPackageStore {
     private static func loadModelDescriptor(
         at url: URL,
         modelURL: URL?,
-        logicalHoldIDs: Set<String>,
+        physicalContactIDs: Set<String>,
         boardID: String,
         resource: String,
         suspensionDocument: BoardPackageSuspensionDocument?
     ) throws -> BoardModelDescriptor {
         let data: Data
         let document: BoardPackageModelDescriptorDocument
-        let orderedHoldIDs: [String]
+        let orderedContactIDs: [String]
         do {
             data = try Data(contentsOf: url)
             var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
             _ = try rawDescriptorParser.parseDocument()
             var memberOrder = BoardPackageJSONMemberOrder(data: data)
-            orderedHoldIDs = try memberOrder.memberNames(inRootObjectNamed: "holds")
+            orderedContactIDs = try memberOrder.memberNames(inRootObjectNamed: "contacts")
             document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
         } catch {
             throw BoardPackageStoreError.invalidPackage(
@@ -1167,7 +1156,7 @@ struct BoardPackageStore {
         var nodes: [BoardModelNodeDescriptor] = []
         var bodyCount = 0
         var attachmentCount = 0
-        var nodeIDsByHold: [String: [String]] = [:]
+        var nodeIDsByContact: [String: [String]] = [:]
         for node in document.nodes {
             guard !node.nodeID.isEmpty else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor nodeID must not be empty")
@@ -1175,17 +1164,17 @@ struct BoardPackageStore {
             switch node.role {
             case "body":
                 bodyCount += 1
-                nodes.append(.init(nodeID: node.nodeID, role: .body, holdID: nil))
-            case "hold":
-                guard let holdID = node.holdID,
-                      holdID.isBoardPackageIdentifier else {
-                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor hold node has invalid holdID")
+                nodes.append(.init(nodeID: node.nodeID, role: .body, contactID: nil))
+            case "contact":
+                guard let contactID = node.contactID,
+                      contactID.isBoardPackageIdentifier else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact node has invalid contactID")
                 }
-                nodeIDsByHold[holdID, default: []].append(node.nodeID)
-                nodes.append(.init(nodeID: node.nodeID, role: .hold, holdID: holdID))
+                nodeIDsByContact[contactID, default: []].append(node.nodeID)
+                nodes.append(.init(nodeID: node.nodeID, role: .contact, contactID: contactID))
             case "attachment":
-                guard node.holdID == nil else {
-                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare holdID")
+                guard node.contactID == nil else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare contactID")
                 }
                 let maximumAttachmentCount: Int = {
                     guard let suspension = suspensionDocument else { return 1 }
@@ -1199,49 +1188,49 @@ struct BoardPackageStore {
                 guard attachmentCount <= maximumAttachmentCount else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor has too many attachment nodes")
                 }
-                nodes.append(.init(nodeID: node.nodeID, role: .attachment, holdID: nil))
+                nodes.append(.init(nodeID: node.nodeID, role: .attachment, contactID: nil))
             default:
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, hold, or attachment")
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, contact, or attachment")
             }
         }
-        guard bodyCount == 1, Set(nodeIDsByHold.keys) == logicalHoldIDs,
-              Set(document.holds.keys) == logicalHoldIDs else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor inventory must equal logical holds")
+        guard bodyCount >= 1, Set(nodeIDsByContact.keys) == physicalContactIDs,
+              Set(document.contacts.keys) == physicalContactIDs else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor inventory must equal physical contacts")
         }
-        guard orderedHoldIDs == orderedHoldIDs.sorted() else {
+        guard orderedContactIDs == orderedContactIDs.sorted() else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
-                reason: "model descriptor hold IDs must be sorted"
+                reason: "model descriptor contact IDs must be sorted"
             )
         }
-        var holds: [String: BoardModelHoldDescriptor] = [:]
-        for holdID in logicalHoldIDs.sorted() {
-            guard let hold = document.holds[holdID] else { continue }
-            let expectedNodes = (nodeIDsByHold[holdID] ?? []).sorted()
-            guard !hold.nodeIDs.isEmpty, hold.nodeIDs == expectedNodes else {
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor hold nodeIDs do not match bound nodes")
+        var contacts: [String: BoardModelContactDescriptor] = [:]
+        for contactID in physicalContactIDs.sorted() {
+            guard let contact = document.contacts[contactID] else { continue }
+            let expectedNodes = (nodeIDsByContact[contactID] ?? []).sorted()
+            guard !contact.nodeIDs.isEmpty, contact.nodeIDs == expectedNodes else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact nodeIDs do not match bound nodes")
             }
-            try validateDescriptorVector(hold.facePlaneAABB.minimum, length: 2, boardID: boardID)
-            try validateDescriptorVector(hold.facePlaneAABB.maximum, length: 2, boardID: boardID)
-            try validateDescriptorVector(hold.center, length: 2, boardID: boardID)
-            guard zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).allSatisfy({
+            try validateDescriptorVector(contact.facePlaneAABB.minimum, length: 2, boardID: boardID)
+            try validateDescriptorVector(contact.facePlaneAABB.maximum, length: 2, boardID: boardID)
+            try validateDescriptorVector(contact.center, length: 2, boardID: boardID)
+            guard zip(contact.facePlaneAABB.minimum, contact.facePlaneAABB.maximum).allSatisfy({
                 $0 >= 0 && $0 <= $1 && $1 <= 1
             }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor facePlaneAABB must be normalized")
             }
-            let expectedCenter = zip(hold.facePlaneAABB.minimum, hold.facePlaneAABB.maximum).map {
+            let expectedCenter = zip(contact.facePlaneAABB.minimum, contact.facePlaneAABB.maximum).map {
                 boardDescriptorRoundedToNinePlaces($0 + ($1 - $0) / 2)
             }
-            guard hold.center == expectedCenter else {
+            guard contact.center == expectedCenter else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor center must derive from facePlaneAABB")
             }
-            holds[holdID] = BoardModelHoldDescriptor(
-                nodeIDs: hold.nodeIDs,
+            contacts[contactID] = BoardModelContactDescriptor(
+                nodeIDs: contact.nodeIDs,
                 facePlaneAABB: BoardModelFacePlaneAABB(
-                    minimum: hold.facePlaneAABB.minimum,
-                    maximum: hold.facePlaneAABB.maximum
+                    minimum: contact.facePlaneAABB.minimum,
+                    maximum: contact.facePlaneAABB.maximum
                 ),
-                center: hold.center
+                center: contact.center
             )
         }
         return BoardModelDescriptor(
@@ -1253,7 +1242,7 @@ struct BoardPackageStore {
                 maximum: document.modelBounds.maximum
             ),
             nodes: nodes,
-            holds: holds
+            contacts: contacts
         )
     }
 
@@ -1304,8 +1293,8 @@ struct BoardPackageStore {
 
     private static func validateModelPositionInventories(
         _ positions: [BoardPosition],
-        descriptorHoldIDs: Set<String>,
-        canonicalHoldIDs: [String],
+        descriptorContactIDs: Set<String>,
+        canonicalContactIDs: [String],
         orientation: BoardModelOrientation?,
         requiresExactPartition: Bool,
         boardID: String
@@ -1318,19 +1307,19 @@ struct BoardPackageStore {
         guard requiresExactPartition else { return }
         var seen = Set<String>()
         for (index, position) in positions.enumerated() {
-            guard !position.holdIDs.isEmpty,
-                  position.holdIDs.allSatisfy(\.isBoardPackageIdentifier),
-                  Set(position.holdIDs).count == position.holdIDs.count,
-                  Set(position.holdIDs).isSubset(of: descriptorHoldIDs) else {
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs must be non-empty, unique, and reference descriptor holds")
+            guard !position.contactIDs.isEmpty,
+                  position.contactIDs.allSatisfy(\.isBoardPackageIdentifier),
+                  Set(position.contactIDs).count == position.contactIDs.count,
+                  Set(position.contactIDs).isSubset(of: descriptorContactIDs) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].contactIDs must be non-empty, unique, and reference descriptor contacts")
             }
-            guard position.holdIDs == canonicalHoldIDs.filter({ position.holdIDs.contains($0) }) else {
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].holdIDs must follow canonical board hold order")
+            guard position.contactIDs == canonicalContactIDs.filter({ position.contactIDs.contains($0) }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "positions[\(index)].contactIDs must follow canonical board contact order")
             }
-            seen.formUnion(position.holdIDs)
+            seen.formUnion(position.contactIDs)
         }
-        guard seen == descriptorHoldIDs else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model positions holdIDs must cover all descriptor holds (union coverage)")
+        guard seen == descriptorContactIDs else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model positions contactIDs must cover all descriptor contacts (union coverage)")
         }
     }
 
@@ -1864,7 +1853,7 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                 throw BoardPackageRawJSONError.invalid
             }
             guard mediaType == "raster" else { continue }
-            guard let geometry = mediaMembers.value(named: "holdGeometry"),
+            guard let geometry = mediaMembers.value(named: "contactGeometry"),
                   result.updateValue(geometry, forKey: presentationID) == nil else {
                 throw BoardPackageRawJSONError.invalid
             }
@@ -2246,9 +2235,10 @@ struct BoardPackageJSONMemberOrder {
     private enum ParseError: Error { case invalid }
 }
 
-private struct BoardPackageV2BoardDocument: Decodable {
+private struct BoardPackageBoardDocument: Decodable {
     let schemaVersion: Int
     let id: String
+    let revisionID: String
     let manufacturer: String
     let name: String
     let subtitle: String
@@ -2256,25 +2246,26 @@ private struct BoardPackageV2BoardDocument: Decodable {
     let dimensions: String?
     let aspectRatio: Double
     let equipmentObjects: [BoardPackageEquipmentObjectDocument]
-    let presentations: [BoardPackageV2PresentationDocument]
+    let presentations: [BoardPackagePresentationDocument]
     let positions: [BoardPackagePositionDocument]?
     let positionTransitions: [BoardPackagePositionTransitionDocument]?
-    let holds: [BoardPackageV2HoldDocument]
+    let contacts: [BoardPackageContactDocument]
 
     private enum CodingKeys: String, CodingKey {
-        case schemaVersion, id, manufacturer, name, subtitle, productURL, dimensions
-        case aspectRatio, equipmentObjects, presentations, positions, positionTransitions, holds
+        case schemaVersion, id, revisionID, manufacturer, name, subtitle, productURL, dimensions
+        case aspectRatio, equipmentObjects, presentations, positions, positionTransitions, contacts
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
-            "schemaVersion", "id", "manufacturer", "name", "subtitle", "productURL",
+            "schemaVersion", "id", "revisionID", "manufacturer", "name", "subtitle", "productURL",
             "dimensions", "aspectRatio", "equipmentObjects", "presentations", "positions",
-            "positionTransitions", "holds"
+            "positionTransitions", "contacts"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
         id = try container.decode(String.self, forKey: .id)
+        revisionID = try container.decode(String.self, forKey: .revisionID)
         manufacturer = try container.decode(String.self, forKey: .manufacturer)
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
@@ -2286,24 +2277,24 @@ private struct BoardPackageV2BoardDocument: Decodable {
         equipmentObjects = container.contains(.equipmentObjects)
             ? try container.decode([BoardPackageEquipmentObjectDocument].self, forKey: .equipmentObjects)
             : [.init(id: "primary")]
-        presentations = try container.decode([BoardPackageV2PresentationDocument].self, forKey: .presentations)
+        presentations = try container.decode([BoardPackagePresentationDocument].self, forKey: .presentations)
         positions = container.contains(.positions)
             ? try container.decode([BoardPackagePositionDocument].self, forKey: .positions)
             : nil
         positionTransitions = container.contains(.positionTransitions)
             ? try container.decode([BoardPackagePositionTransitionDocument].self, forKey: .positionTransitions)
             : nil
-        holds = try container.decode([BoardPackageV2HoldDocument].self, forKey: .holds)
+        contacts = try container.decode([BoardPackageContactDocument].self, forKey: .contacts)
     }
 }
 
-private struct BoardPackageV2PresentationDocument: Decodable {
+private struct BoardPackagePresentationDocument: Decodable {
     let id: String
     let name: String
     let aspectRatio: Double
     let isDefault: Bool
-    let derivation: BoardPackageV2DerivationDocument
-    let media: BoardPackageV2MediaDocument
+    let derivation: BoardPackageDerivationDocument
+    let media: BoardPackageMediaDocument
 
     private enum CodingKeys: String, CodingKey {
         case id, name, aspectRatio, isDefault, derivation, media
@@ -2316,12 +2307,12 @@ private struct BoardPackageV2PresentationDocument: Decodable {
         name = try container.decode(String.self, forKey: .name)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         isDefault = try container.decode(Bool.self, forKey: .isDefault)
-        derivation = try container.decode(BoardPackageV2DerivationDocument.self, forKey: .derivation)
-        media = try container.decode(BoardPackageV2MediaDocument.self, forKey: .media)
+        derivation = try container.decode(BoardPackageDerivationDocument.self, forKey: .derivation)
+        media = try container.decode(BoardPackageMediaDocument.self, forKey: .media)
     }
 }
 
-private enum BoardPackageV2DerivationDocument: Decodable {
+private enum BoardPackageDerivationDocument: Decodable {
     case original
     case derived(sourcePresentationID: String, isInverted: Bool)
 
@@ -2350,12 +2341,12 @@ private enum BoardPackageV2DerivationDocument: Decodable {
     }
 }
 
-private enum BoardPackageV2MediaDocument: Decodable {
-    case raster(assetPath: String, holdGeometry: [String: [BoardPackageGeometryDocument]])
+private enum BoardPackageMediaDocument: Decodable {
+    case raster(assetPath: String, contactGeometry: [String: [BoardPackageGeometryDocument]])
     case model(assetPath: String, descriptorPath: String, display: BoardPackageModelDisplayDocument, suspension: BoardPackageSuspensionDocument?, orientation: BoardPackageModelOrientationDocument?)
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, holdGeometry, descriptorPath, display, suspension, orientation
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation
     }
 
     init(from decoder: Decoder) throws {
@@ -2363,12 +2354,12 @@ private enum BoardPackageV2MediaDocument: Decodable {
         let type = try container.decode(String.self, forKey: .type)
         switch type {
         case "raster":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "holdGeometry"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "contactGeometry"])
             self = .raster(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
-                holdGeometry: try container.decode(
+                contactGeometry: try container.decode(
                     [String: [BoardPackageGeometryDocument]].self,
-                    forKey: .holdGeometry
+                    forKey: .contactGeometry
                 )
             )
         case "model":
@@ -2400,20 +2391,21 @@ private enum BoardPackageV2MediaDocument: Decodable {
     }
 }
 
-private struct BoardPackageModelOrientationDocument: Decodable {
+struct BoardPackageModelOrientationDocument: Decodable, Equatable {
     let pivot: String
     let rotations: [String: [Double]]
 
     private enum CodingKeys: String, CodingKey { case pivot, rotations }
 
     init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["pivot", "rotations"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         pivot = try container.decode(String.self, forKey: .pivot)
         rotations = try container.decode([String: [Double]].self, forKey: .rotations)
     }
 }
 
-private enum BoardPackageSuspensionDocument: Decodable {
+enum BoardPackageSuspensionDocument: Decodable, Equatable {
     case singleCord(BoardPackageSingleCordSuspensionDocument)
     case pairedLeadCord(BoardPackagePairedLeadCordSuspensionDocument)
     case twoBranchCord(BoardPackageTwoBranchSuspensionDocument)
@@ -2458,7 +2450,7 @@ private enum BoardPackageSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackageSingleCordSuspensionDocument: Decodable {
+struct BoardPackageSingleCordSuspensionDocument: Decodable, Equatable {
     let type: String
     let attachment: BoardPackageAttachmentDocument
     let anchor: BoardPackageAnchorDocument
@@ -2480,7 +2472,7 @@ private struct BoardPackageSingleCordSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackagePairedLeadAttachmentDocument: Decodable {
+struct BoardPackagePairedLeadAttachmentDocument: Decodable, Equatable {
     let id: String
     let nodeID: String
     let pointInModel: [Double]
@@ -2501,7 +2493,7 @@ private struct BoardPackagePairedLeadAttachmentDocument: Decodable {
     }
 }
 
-private struct BoardPackagePairedLeadCordSuspensionDocument: Decodable {
+struct BoardPackagePairedLeadCordSuspensionDocument: Decodable, Equatable {
     let attachments: [BoardPackagePairedLeadAttachmentDocument]
     let anchor: BoardPackageAnchorDocument
     let cord: BoardPackageCordDocument
@@ -2519,7 +2511,7 @@ private struct BoardPackagePairedLeadCordSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackagePassageDocument: Decodable {
+struct BoardPackagePassageDocument: Decodable, Equatable {
     let id: String
     let nodeID: String
     let entryPointInModel: [Double]
@@ -2545,7 +2537,7 @@ private struct BoardPackagePassageDocument: Decodable {
     }
 }
 
-private struct BoardPackagePassagePairsDocument: Decodable {
+struct BoardPackagePassagePairsDocument: Decodable, Equatable {
     let left: [BoardPackagePassageDocument]
     let right: [BoardPackagePassageDocument]
 
@@ -2558,7 +2550,7 @@ private struct BoardPackagePassagePairsDocument: Decodable {
     }
 }
 
-private struct BoardPackageCordBranchDocument: Decodable {
+struct BoardPackageCordBranchDocument: Decodable, Equatable {
     let id: String
     let passageIDs: [String]
     let entryContactPoints: [[Double]]
@@ -2587,7 +2579,7 @@ private struct BoardPackageCordBranchDocument: Decodable {
     }
 }
 
-private struct BoardPackageTwoBranchSuspensionDocument: Decodable {
+struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
     let passages: BoardPackagePassagePairsDocument
     let branches: [BoardPackageCordBranchDocument]
     let anchor: BoardPackageAnchorDocument
@@ -2605,7 +2597,7 @@ private struct BoardPackageTwoBranchSuspensionDocument: Decodable {
     }
 }
 
-private struct BoardPackageAttachmentDocument: Decodable {
+struct BoardPackageAttachmentDocument: Decodable, Equatable {
     let nodeID: String
     let pointInModel: [Double]
     let provenance: String
@@ -2620,7 +2612,7 @@ private struct BoardPackageAttachmentDocument: Decodable {
     }
 }
 
-private struct BoardPackageAnchorDocument: Decodable {
+struct BoardPackageAnchorDocument: Decodable, Equatable {
     let offsetFromBoardBounds: [Double]
     let visibility: String
     let provenance: String
@@ -2635,7 +2627,7 @@ private struct BoardPackageAnchorDocument: Decodable {
     }
 }
 
-private struct BoardPackageCordDocument: Decodable {
+struct BoardPackageCordDocument: Decodable, Equatable {
     let restLength: Double
     let radius: Double
     let material: String
@@ -2652,7 +2644,7 @@ private struct BoardPackageCordDocument: Decodable {
     }
 }
 
-private struct BoardPackageCanonicalPoseDocument: Decodable {
+struct BoardPackageCanonicalPoseDocument: Decodable, Equatable {
     let rotation: [Double]
     let translation: [Double]
     let camera: BoardPackageCanonicalCameraDocument
@@ -2673,7 +2665,7 @@ private struct BoardPackageCanonicalPoseDocument: Decodable {
     }
 }
 
-private struct BoardPackageCanonicalCameraDocument: Decodable {
+struct BoardPackageCanonicalCameraDocument: Decodable, Equatable {
     let viewDirection: [Double]
     let fitPadding: Double
 
@@ -2686,7 +2678,7 @@ private struct BoardPackageCanonicalCameraDocument: Decodable {
     }
 }
 
-private struct BoardPackageModelDisplayDocument: Decodable {
+struct BoardPackageModelDisplayDocument: Decodable, Equatable {
     let camera: BoardPackageModelCameraDocument
 
     private enum CodingKeys: String, CodingKey { case camera }
@@ -2698,7 +2690,7 @@ private struct BoardPackageModelDisplayDocument: Decodable {
     }
 }
 
-private struct BoardPackageModelCameraDocument: Decodable {
+struct BoardPackageModelCameraDocument: Decodable, Equatable {
     let type: String
     let viewDirection: [Double]
     let up: [Double]
@@ -2716,44 +2708,42 @@ private struct BoardPackageModelCameraDocument: Decodable {
     }
 }
 
-private struct BoardPackageV2HoldDocument: Decodable {
+private struct BoardPackageContactDocument: Decodable {
     let id: String
     let equipmentObjectID: String
     let name: String
     let kind: HoldKind
-    let sloper: SloperMetadata?
-    let sizeMillimeters: Double?
-    let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
-    let gripType: GripType?
+    let features: [HoldFeature]
     let fingerCapacity: Int?
     let handCapacity: Int?
-    let features: [HoldFeature]?
-    let pairedHoldID: String?
-    let declaresPairedHoldID: Bool
+    let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
+    let gripTypes: [GripType]
+    let side: ContactSide?
+    let pairedContactID: String?
+    let declaresPairedContactID: Bool
 
     private enum CodingKeys: String, CodingKey {
-        case id, equipmentObjectID, name, kind, sloper, sizeMillimeters, depthRangeMillimeters
-        case gripType, fingerCapacity, handCapacity, features, pairedHoldID
+        case id, equipmentObjectID, name, kind, features, fingerCapacity, handCapacity
+        case depthRangeMillimeters, gripTypes, side, pairedContactID
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
-            "id", "equipmentObjectID", "name", "kind", "sloper", "sizeMillimeters",
-            "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "pairedHoldID"
+            "id", "equipmentObjectID", "name", "kind", "features", "fingerCapacity",
+            "handCapacity", "depthRangeMillimeters", "gripTypes", "side",
+            "pairedContactID"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        equipmentObjectID = container.contains(.equipmentObjectID)
-            ? try container.decode(String.self, forKey: .equipmentObjectID)
-            : "primary"
+        equipmentObjectID = try container.decode(String.self, forKey: .equipmentObjectID)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-        sloper = container.contains(.sloper)
-            ? try container.decode(SloperMetadata.self, forKey: .sloper)
+        features = try container.decode([HoldFeature].self, forKey: .features)
+        fingerCapacity = container.contains(.fingerCapacity)
+            ? try container.decode(Int.self, forKey: .fingerCapacity)
             : nil
-        sizeMillimeters = container.contains(.sizeMillimeters)
-            ? try container.decode(Double.self, forKey: .sizeMillimeters)
+        handCapacity = container.contains(.handCapacity)
+            ? try container.decode(Int.self, forKey: .handCapacity)
             : nil
         depthRangeMillimeters = container.contains(.depthRangeMillimeters)
             ? try container.decode(
@@ -2761,20 +2751,14 @@ private struct BoardPackageV2HoldDocument: Decodable {
                 forKey: .depthRangeMillimeters
             )
             : nil
-        gripType = container.contains(.gripType)
-            ? try container.decode(GripType.self, forKey: .gripType)
+        gripTypes = try container.decode([GripType].self, forKey: .gripTypes)
+        side = container.contains(.side)
+            ? try container.decode(ContactSide.self, forKey: .side)
             : nil
-        fingerCapacity = container.contains(.fingerCapacity)
-            ? try container.decode(Int.self, forKey: .fingerCapacity)
+        declaresPairedContactID = container.contains(.pairedContactID)
+        pairedContactID = declaresPairedContactID
+            ? try container.decode(String.self, forKey: .pairedContactID)
             : nil
-        handCapacity = container.contains(.handCapacity)
-            ? try container.decode(Int.self, forKey: .handCapacity)
-            : nil
-        features = container.contains(.features)
-            ? try container.decode([HoldFeature].self, forKey: .features)
-            : nil
-        declaresPairedHoldID = container.contains(.pairedHoldID)
-        pairedHoldID = try container.decodeIfPresent(String.self, forKey: .pairedHoldID)
     }
 }
 
@@ -2784,15 +2768,15 @@ private struct BoardPackageModelDescriptorDocument: Decodable {
     let modelSHA256: String
     let modelBounds: BoardPackageModelBoundsDocument
     let nodes: [BoardPackageModelNodeDocument]
-    let holds: [String: BoardPackageModelHoldDocument]
+    let contacts: [String: BoardPackageModelContactDocument]
 
     private enum CodingKeys: String, CodingKey {
-        case schemaVersion, coordinateFrame, modelSHA256, modelBounds, nodes, holds
+        case schemaVersion, coordinateFrame, modelSHA256, modelBounds, nodes, contacts
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
-            "schemaVersion", "coordinateFrame", "modelSHA256", "modelBounds", "nodes", "holds"
+            "schemaVersion", "coordinateFrame", "modelSHA256", "modelBounds", "nodes", "contacts"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
@@ -2800,7 +2784,7 @@ private struct BoardPackageModelDescriptorDocument: Decodable {
         modelSHA256 = try container.decode(String.self, forKey: .modelSHA256)
         modelBounds = try container.decode(BoardPackageModelBoundsDocument.self, forKey: .modelBounds)
         nodes = try container.decode([BoardPackageModelNodeDocument].self, forKey: .nodes)
-        holds = try container.decode([String: BoardPackageModelHoldDocument].self, forKey: .holds)
+        contacts = try container.decode([String: BoardPackageModelContactDocument].self, forKey: .contacts)
     }
 }
 
@@ -2819,23 +2803,23 @@ private struct BoardPackageModelBoundsDocument: Decodable {
 private struct BoardPackageModelNodeDocument: Decodable {
     let nodeID: String
     let role: String
-    let holdID: String?
-    private enum CodingKeys: String, CodingKey { case nodeID, role, holdID }
+    let contactID: String?
+    private enum CodingKeys: String, CodingKey { case nodeID, role, contactID }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         role = try container.decode(String.self, forKey: .role)
-        if role == "hold" {
-            try decoder.rejectUnknownKeys(["nodeID", "role", "holdID"])
-            holdID = try container.decode(String.self, forKey: .holdID)
+        if role == "contact" {
+            try decoder.rejectUnknownKeys(["nodeID", "role", "contactID"])
+            contactID = try container.decode(String.self, forKey: .contactID)
         } else {
             try decoder.rejectUnknownKeys(["nodeID", "role"])
-            holdID = nil
+            contactID = nil
         }
         nodeID = try container.decode(String.self, forKey: .nodeID)
     }
 }
 
-private struct BoardPackageModelHoldDocument: Decodable {
+private struct BoardPackageModelContactDocument: Decodable {
     let nodeIDs: [String]
     let facePlaneAABB: BoardPackageModelBoundsDocument
     let center: [Double]
@@ -2852,29 +2836,29 @@ private struct BoardPackageModelHoldDocument: Decodable {
 private struct BoardPackagePositionDocument: Decodable {
     let id: String
     let presentationID: String
-    let holdIDs: [String]?
+    let contactIDs: [String]?
 
     private enum CodingKeys: String, CodingKey {
         case id
         case presentationID
-        case holdIDs
+        case contactIDs
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "presentationID", "holdIDs"])
+        try decoder.rejectUnknownKeys(["id", "presentationID", "contactIDs"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         presentationID = try container.decode(String.self, forKey: .presentationID)
-        holdIDs = container.contains(.holdIDs)
-            ? try container.decode([String].self, forKey: .holdIDs)
+        contactIDs = container.contains(.contactIDs)
+            ? try container.decode([String].self, forKey: .contactIDs)
             : nil
     }
 
     var boardPosition: BoardPosition {
-        guard let holdIDs else {
+        guard let contactIDs else {
             return BoardPosition(id: id, presentationID: presentationID)
         }
-        return BoardPosition(id: id, presentationID: presentationID, holdIDs: holdIDs)
+        return BoardPosition(id: id, presentationID: presentationID, contactIDs: contactIDs)
     }
 }
 
@@ -2908,36 +2892,23 @@ private struct BoardPackagePositionTransitionDocument: Decodable {
 
 private struct BoardPackageEquipmentObjectDocument: Decodable {
     let id: String
-    let missingHandCapacityPolicy: MissingHandCapacityPolicy
 
     private enum CodingKeys: String, CodingKey {
         case id
-        case missingHandCapacityPolicy
     }
 
-    init(
-        id: String,
-        missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
-    ) {
+    init(id: String) {
         self.id = id
-        self.missingHandCapacityPolicy = missingHandCapacityPolicy
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "missingHandCapacityPolicy"])
+        try decoder.rejectUnknownKeys(["id"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        missingHandCapacityPolicy = try container.decodeIfPresent(
-            MissingHandCapacityPolicy.self,
-            forKey: .missingHandCapacityPolicy
-        ) ?? .legacyBilateral
     }
 
     var equipmentObject: EquipmentObject {
-        EquipmentObject(
-            id: id,
-            missingHandCapacityPolicy: missingHandCapacityPolicy
-        )
+        EquipmentObject(id: id)
     }
 }
 
@@ -2970,12 +2941,12 @@ private struct BoardPackageGeometryDocument: Decodable {
         }
     }
 
-    func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
-        try holdPieceDocument.boardHoldPiece(id: id, holdID: holdID)
+    func boardContactPiece(id: String, contactID: String) throws -> BoardContactPiece {
+        try contactPieceDocument.boardContactPiece(id: id, contactID: contactID)
     }
 
-    var holdPieceDocument: BoardHoldPieceDocument {
-        BoardHoldPieceDocument(
+    var contactPieceDocument: BoardContactPieceDocument {
+        BoardContactPieceDocument(
             frame: frame,
             shape: shape,
             treatment: treatment
@@ -3283,20 +3254,20 @@ enum BoardGeometryAdaptationError: Error, CustomStringConvertible {
     }
 }
 
-extension BoardHoldPieceDocument {
-    func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
+extension BoardContactPieceDocument {
+    func boardContactPiece(id: String, contactID: String) throws -> BoardContactPiece {
         guard frame.isValid else {
             throw BoardGeometryAdaptationError.invalid(
                 "hold piece \(id) has an invalid frame"
             )
         }
-        return try BoardHoldPiece(
+        return try BoardContactPiece(
             id: id,
-            holdID: holdID,
+            contactID: contactID,
             frame: frame.cgRect,
             shape: shape.boardShape(),
             treatment: treatment.map {
-                try $0.boardHoldTreatment(pieceID: id)
+                try $0.boardContactTreatment(pieceID: id)
             } ?? .surface
         )
     }
@@ -3774,7 +3745,7 @@ private struct QuantizedBoardPoint: Hashable, Comparable {
 }
 
 private extension BoardGeometryTreatmentDocument {
-    func boardHoldTreatment(pieceID: String) throws -> BoardHoldTreatment {
+    func boardContactTreatment(pieceID: String) throws -> BoardContactTreatment {
         switch type {
         case "surface":
             guard rimInsetFraction == nil, depth == nil else {

@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "metolius.prime-rib",
   "manufacturer": "Metolius",
   "name": "Prime Rib",
   "subtitle": "Compact training board with three full-width edges.",
   "productURL": "https://www.metoliusclimbing.com/products/prime-rib",
-  "dimensions": "20 \u00d7 4.2 \u00d7 1.5 in",
+  "dimensions": "20 × 4.2 × 1.5 in",
   "aspectRatio": 4.7619050011605735,
   "equipmentObjects": [
     {
@@ -44,27 +44,43 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "edge-38",
       "equipmentObjectID": "primary",
       "name": "38 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 38
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 38,
+        "upperBound": 38
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-23",
       "equipmentObjectID": "primary",
       "name": "23 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 23
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 23,
+        "upperBound": 23
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 15
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     }
   ]
 }

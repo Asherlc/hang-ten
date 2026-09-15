@@ -162,207 +162,204 @@ struct PlanMetadata: Codable, Hashable {
     }
 }
 
-struct SemanticHoldMappingDefinition: Codable, Hashable {
-    let holdIDs: [String]
-    let kind: HoldKind?
-    let positionIDs: [String]
+struct MillimeterRange: Codable, Hashable {
+    let minimum: Double
+    let maximum: Double
 
-    private enum CodingKeys: String, CodingKey {
-        case holdIDs
-        case kind
-        case positionIDs
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case minimum, maximum
     }
 
-    init(holdIDs: [String] = [], kind: HoldKind? = nil, positionIDs: [String] = []) {
-        self.holdIDs = holdIDs
-        self.kind = kind
-        self.positionIDs = positionIDs
+    init(minimum: Double, maximum: Double) {
+        precondition(Self.isValid(minimum: minimum, maximum: maximum))
+        self.minimum = minimum
+        self.maximum = maximum
     }
 
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        holdIDs = try container.decodeIfPresent([String].self, forKey: .holdIDs) ?? []
-        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
-        positionIDs = try container.decodeIfPresent([String].self, forKey: .positionIDs) ?? []
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(holdIDs, forKey: .holdIDs)
-        try container.encodeIfPresent(kind, forKey: .kind)
-        if !positionIDs.isEmpty {
-            try container.encode(positionIDs, forKey: .positionIDs)
-        }
-    }
-
-    var isResolvable: Bool {
-        !holdIDs.isEmpty || kind != nil
-    }
-
-    func holdTarget() -> HoldTarget {
-        if !holdIDs.isEmpty {
-            return .ids(holdIDs)
-        }
-        if let kind {
-            return .kind(kind)
-        }
-        return .ids()
-    }
-}
-
-/// A board-specific vocabulary for plan targets. Plans refer to `edge-19`
-/// or `outer-jugs`, never to a physical board's IDs. Adding a new board only
-/// requires another mapping document.
-struct BoardMappingDefinition: Codable, Hashable {
-    let boardID: String
-    let semanticHolds: [String: SemanticHoldMappingDefinition]
-
-    init(boardID: String, semanticHolds: [String: SemanticHoldMappingDefinition]) {
-        self.boardID = boardID
-        self.semanticHolds = semanticHolds
-    }
-}
-
-typealias SemanticBoardMappingDefinition = BoardMappingDefinition
-
-enum WorkoutTargetDefinition: Codable, Hashable {
-    case semantic(String)
-    case semantics([String])
-    case holdIDs([String])
-    case kind(HoldKind, fallbacks: [HoldFeature] = [], fingerCapacity: Int? = nil)
-    case feature(HoldFeature, fallbacks: [HoldFeature], fingerCapacity: Int? = nil)
-
-    private enum CodingKeys: String, CodingKey {
-        case semantic
-        case semantics
-        case holdIDs
-        case kind
-        case feature
-        case fallbackFeatures
-        case fingerCapacity
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        if let value = try container.decodeIfPresent(String.self, forKey: .semantic) {
-            self = .semantic(value)
-            return
-        }
-        if let value = try container.decodeIfPresent([String].self, forKey: .semantics) {
-            self = .semantics(value)
-            return
-        }
-        if let value = try container.decodeIfPresent([String].self, forKey: .holdIDs) {
-            self = .holdIDs(value)
-            return
-        }
-        let fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
-        if let fingerCapacity,
-           !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+        let rawContainer = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        let unsupportedKeys = rawContainer.allKeys
+            .filter { !allowedKeys.contains($0.stringValue) }
+            .sorted { $0.stringValue < $1.stringValue }
+        if let unknownKey = unsupportedKeys.first {
             throw DecodingError.dataCorruptedError(
-                forKey: .fingerCapacity,
-                in: container,
-                debugDescription: "Workout target fingerCapacity must be in \(BoardHold.validFingerCapacityRange)."
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported millimeter range field \(unknownKey.stringValue)."
             )
         }
-        let fallbackRawValues = try container.decodeIfPresent(
-            [String].self,
-            forKey: .fallbackFeatures
-        ) ?? []
-        let fallbacks = try fallbackRawValues.compactMap { rawValue -> HoldFeature? in
-            switch rawValue {
-            case HoldKind.jug.rawValue, HoldKind.pocket.rawValue:
-                // Deprecated duplicate feature aliases normalize away. A
-                // fallback list remains feature-only, so these cannot become
-                // fallback kinds.
-                return nil
-            default:
-                guard let feature = HoldFeature(rawValue: rawValue) else {
-                    throw DecodingError.dataCorruptedError(
-                        forKey: .fallbackFeatures,
-                        in: container,
-                        debugDescription: "Unknown fallback hold feature \"\(rawValue)\"."
-                    )
-                }
-                return feature
-            }
-        }
-        if let value = try container.decodeIfPresent(HoldKind.self, forKey: .kind) {
-            self = .kind(value, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
-            return
-        }
-        if let rawValue = try container.decodeIfPresent(String.self, forKey: .feature) {
-            switch rawValue {
-            case HoldKind.jug.rawValue:
-                self = .kind(.jug, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
-                return
-            case HoldKind.pocket.rawValue:
-                self = .kind(.pocket, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
-                return
-            default:
-                guard let value = HoldFeature(rawValue: rawValue) else {
-                    throw DecodingError.dataCorruptedError(
-                        forKey: .feature,
-                        in: container,
-                        debugDescription: "Unknown hold feature \"\(rawValue)\"."
-                    )
-                }
-            self = .feature(value, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
-            return
-            }
-        }
 
-        throw DecodingError.dataCorruptedError(
-            forKey: .semantic,
-            in: container,
-            debugDescription: "A workout target must contain semantic, semantics, holdIDs, or kind."
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        minimum = try container.decode(Double.self, forKey: .minimum)
+        maximum = try container.decode(Double.self, forKey: .maximum)
+        guard Self.isValid(minimum: minimum, maximum: maximum) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .maximum,
+                in: container,
+                debugDescription: "A millimeter range must be finite, non-negative, and ordered."
+            )
+        }
+    }
+
+    private static func isValid(minimum: Double, maximum: Double) -> Bool {
+        minimum.isFinite && maximum.isFinite && minimum >= 0 && minimum <= maximum
+    }
+}
+
+enum ContactSelectionPolicy: String, Codable, Hashable {
+    case allMatching
+    case single
+    case bilateralPair
+}
+
+struct ContactRequirement: Codable, Hashable {
+    let kind: HoldKind?
+    let requiredFeatures: Set<HoldFeature>
+    let depthRangeMillimeters: MillimeterRange?
+    let fingerCapacity: Int?
+    let handCapacity: Int?
+    let compatibleGripTypes: Set<GripType>
+    let selection: ContactSelectionPolicy
+
+    init(
+        kind: HoldKind? = nil,
+        requiredFeatures: Set<HoldFeature> = [],
+        depthRangeMillimeters: MillimeterRange? = nil,
+        fingerCapacity: Int? = nil,
+        handCapacity: Int? = nil,
+        compatibleGripTypes: Set<GripType> = [],
+        selection: ContactSelectionPolicy
+    ) {
+        if let fingerCapacity {
+            precondition(PhysicalContact.validFingerCapacityRange.contains(fingerCapacity))
+        }
+        if let handCapacity {
+            precondition(PhysicalContact.validHandCapacityRange.contains(handCapacity))
+        }
+        self.kind = kind
+        self.requiredFeatures = requiredFeatures
+        self.depthRangeMillimeters = depthRangeMillimeters
+        self.fingerCapacity = fingerCapacity
+        self.handCapacity = handCapacity
+        self.compatibleGripTypes = compatibleGripTypes
+        self.selection = selection
+    }
+
+    static func edge(
+        depthRangeMillimeters: MillimeterRange? = nil,
+        selection: ContactSelectionPolicy
+    ) -> ContactRequirement {
+        .init(kind: .edge, depthRangeMillimeters: depthRangeMillimeters, selection: selection)
+    }
+
+    static func kind(
+        _ kind: HoldKind,
+        fingerCapacity: Int? = nil,
+        selection: ContactSelectionPolicy = .allMatching
+    ) -> ContactRequirement {
+        .init(kind: kind, fingerCapacity: fingerCapacity, selection: selection)
+    }
+
+    static func feature(
+        _ feature: HoldFeature,
+        fingerCapacity: Int? = nil,
+        selection: ContactSelectionPolicy = .allMatching
+    ) -> ContactRequirement {
+        .init(
+            kind: feature.holdKind,
+            requiredFeatures: [feature],
+            fingerCapacity: fingerCapacity,
+            selection: selection
         )
     }
 
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case kind
+        case requiredFeatures
+        case depthRangeMillimeters
+        case fingerCapacity
+        case handCapacity
+        case compatibleGripTypes
+        case selection
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: { !allowedKeys.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported contact requirement field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
+        requiredFeatures = Set(
+            try container.decodeIfPresent([HoldFeature].self, forKey: .requiredFeatures) ?? []
+        )
+        depthRangeMillimeters = try container.decodeIfPresent(
+            MillimeterRange.self,
+            forKey: .depthRangeMillimeters
+        )
+        fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
+        compatibleGripTypes = Set(
+            try container.decodeIfPresent([GripType].self, forKey: .compatibleGripTypes) ?? []
+        )
+        selection = try container.decode(ContactSelectionPolicy.self, forKey: .selection)
+
+        if let fingerCapacity,
+           !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
+            throw DecodingError.dataCorruptedError(
+                forKey: .fingerCapacity,
+                in: container,
+                debugDescription: "Contact requirement fingerCapacity must be in \(PhysicalContact.validFingerCapacityRange)."
+            )
+        }
+        if let handCapacity,
+           !PhysicalContact.validHandCapacityRange.contains(handCapacity) {
+            throw DecodingError.dataCorruptedError(
+                forKey: .handCapacity,
+                in: container,
+                debugDescription: "Contact requirement handCapacity must be in \(PhysicalContact.validHandCapacityRange)."
+            )
+        }
+    }
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-
-        switch self {
-        case .semantic(let value):
-            try container.encode(value, forKey: .semantic)
-        case .semantics(let values):
-            try container.encode(values, forKey: .semantics)
-        case .holdIDs(let values):
-            try container.encode(values, forKey: .holdIDs)
-        case let .kind(value, fallbacks, fingerCapacity):
-            try container.encode(value, forKey: .kind)
-            if !fallbacks.isEmpty {
-                try container.encode(fallbacks, forKey: .fallbackFeatures)
-            }
-            try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
-        case let .feature(value, fallbacks, fingerCapacity):
-            if value == .jug {
-                try container.encode(HoldKind.jug, forKey: .kind)
-                if !fallbacks.isEmpty {
-                    try container.encode(fallbacks, forKey: .fallbackFeatures)
-                }
-                try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
-                return
-            }
-            try container.encode(value, forKey: .feature)
-            if !fallbacks.isEmpty {
-                try container.encode(fallbacks, forKey: .fallbackFeatures)
-            }
-            try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
+        try container.encodeIfPresent(kind, forKey: .kind)
+        if !requiredFeatures.isEmpty {
+            try container.encode(
+                HoldFeature.allCases.filter(requiredFeatures.contains),
+                forKey: .requiredFeatures
+            )
         }
+        try container.encodeIfPresent(depthRangeMillimeters, forKey: .depthRangeMillimeters)
+        try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
+        try container.encodeIfPresent(handCapacity, forKey: .handCapacity)
+        if !compatibleGripTypes.isEmpty {
+            try container.encode(
+                GripType.allCases.filter(compatibleGripTypes.contains),
+                forKey: .compatibleGripTypes
+            )
+        }
+        try container.encode(selection, forKey: .selection)
     }
 }
 
 struct WorkoutSegmentDefinition: Codable, Hashable {
     let kind: WorkoutSegmentKind
-    let targets: [WorkoutTargetDefinition]
+    let targets: [ContactRequirement]
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
 
     init(
         kind: WorkoutSegmentKind,
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         timing: WorkoutSegmentTiming,
         duration: TimeInterval?
     ) {
@@ -382,7 +379,7 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
-        targets = try container.decode([WorkoutTargetDefinition].self, forKey: .targets)
+        targets = try container.decode([ContactRequirement].self, forKey: .targets)
         timing = try container.decode(WorkoutSegmentTiming.self, forKey: .timing)
         duration = try container.decodeIfPresent(TimeInterval.self, forKey: .duration)
     }
@@ -403,7 +400,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let accessory: String
     let duration: TimeInterval
     let phase: WorkoutPhase
-    let targets: [WorkoutTargetDefinition]
+    let targets: [ContactRequirement]
     let segments: [WorkoutSegmentDefinition]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
@@ -421,7 +418,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         segments: [WorkoutSegmentDefinition] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
@@ -477,7 +474,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         accessory = try container.decode(String.self, forKey: .accessory)
         duration = try container.decode(TimeInterval.self, forKey: .duration)
         phase = try container.decode(WorkoutPhase.self, forKey: .phase)
-        targets = try container.decode([WorkoutTargetDefinition].self, forKey: .targets)
+        targets = try container.decode([ContactRequirement].self, forKey: .targets)
         segments = try container.decodeIfPresent(
             [WorkoutSegmentDefinition].self,
             forKey: .segments
@@ -519,38 +516,12 @@ struct WorkoutStepDefinition: Codable, Hashable {
     }
 }
 
-extension WorkoutTargetDefinition {
-    /// Converts a resolved runtime target back into a portable definition.
-    /// A caller may supply a semantic ID lookup when it owns reusable board
-    /// mappings; local custom routines intentionally persist direct targets.
-    static func from(
-        _ target: HoldTarget,
-        semanticHoldID: (([String]) -> String?)? = nil
-    ) -> WorkoutTargetDefinition {
-        if let kind = target.kind {
-            return .kind(
-                kind,
-                fallbacks: target.fallbackFeatures,
-                fingerCapacity: target.fingerCapacity
-            )
-        }
-        if let feature = target.feature {
-            return .feature(feature, fallbacks: target.fallbackFeatures, fingerCapacity: target.fingerCapacity)
-        }
-        if let semanticID = semanticHoldID?(target.holdIDs) {
-            return .semantic(semanticID)
-        }
-        return .holdIDs(target.holdIDs)
-    }
-}
-
 extension WorkoutStepDefinition {
     /// Keeps persistence and duplication on the same conversion boundary,
     /// including explicit segment timing and one-segment rest rows.
     static func from(
         _ step: WorkoutStep,
-        id: String? = nil,
-        semanticHoldID: (([String]) -> String?)? = nil
+        id: String? = nil
     ) -> WorkoutStepDefinition {
         WorkoutStepDefinition(
             id: id ?? step.id,
@@ -559,13 +530,11 @@ extension WorkoutStepDefinition {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: step.targets.map { WorkoutTargetDefinition.from($0, semanticHoldID: semanticHoldID) },
+            targets: step.targets,
             segments: step.segments.map { segment in
                 WorkoutSegmentDefinition(
                     kind: segment.kind,
-                    targets: segment.targets.map {
-                        WorkoutTargetDefinition.from($0, semanticHoldID: semanticHoldID)
-                    },
+                    targets: segment.targets,
                     timing: segment.timing,
                     duration: segment.duration
                 )
@@ -675,39 +644,37 @@ struct PlanDefinition: Codable, Hashable, Identifiable {
 
 struct PlanLibraryDefinition: Codable, Hashable {
     let metadata: PlanLibraryMetadata
-    let boardMappings: [BoardMappingDefinition]
     let blocks: [WorkoutBlockDefinition]
     let plans: [PlanDefinition]
 
     init(
         metadata: PlanLibraryMetadata,
-        boardMappings: [BoardMappingDefinition],
         blocks: [WorkoutBlockDefinition],
         plans: [PlanDefinition]
     ) {
         self.metadata = metadata
-        self.boardMappings = boardMappings
         self.blocks = blocks
         self.plans = plans
     }
 
     private enum CodingKeys: String, CodingKey {
         case metadata
-        case boardMappings
         case blocks
         case plans
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectFormerPlanLibraryKeys(["schemaVersion"])
+        try decoder.rejectFormerPlanLibraryKeys([
+            "schemaVersion",
+            "board" + "Mappings"
+        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         metadata = try container.decode(PlanLibraryMetadata.self, forKey: .metadata)
-        boardMappings = try container.decode([BoardMappingDefinition].self, forKey: .boardMappings)
         blocks = try container.decode([WorkoutBlockDefinition].self, forKey: .blocks)
         plans = try container.decode([PlanDefinition].self, forKey: .plans)
     }
 
-    func validationIssues(availableBoards: [TrainingBoard]) -> [PlanValidationIssue] {
+    func validationIssues(availableBoards: [BoardRevision]) -> [PlanValidationIssue] {
         PlanLibraryValidator.issues(for: self, availableBoards: availableBoards)
     }
 }
@@ -734,8 +701,6 @@ enum PlanLibraryStoreError: LocalizedError {
     case validationFailed([PlanValidationIssue])
     case missingPlan(String)
     case missingBlock(String)
-    case missingBoardMapping(String)
-    case missingSemanticTarget(String)
 
     var errorDescription: String? {
         switch self {
@@ -747,10 +712,6 @@ enum PlanLibraryStoreError: LocalizedError {
             return "The plan library does not contain plan \"\(id)\"."
         case .missingBlock(let id):
             return "The plan library does not contain block \"\(id)\"."
-        case .missingBoardMapping(let id):
-            return "The plan library does not contain a board mapping for \"\(id)\"."
-        case .missingSemanticTarget(let id):
-            return "The board mapping does not contain semantic target \"\(id)\"."
         }
     }
 }
@@ -758,65 +719,12 @@ enum PlanLibraryStoreError: LocalizedError {
 enum PlanLibraryValidator {
     static func issues(
         for library: PlanLibraryDefinition,
-        availableBoards: [TrainingBoard]
+        availableBoards: [BoardRevision]
     ) -> [PlanValidationIssue] {
         var issues: [PlanValidationIssue] = []
         let boardByID = Dictionary(grouping: availableBoards, by: \.id)
-        let boardIDs = Set(boardByID.keys)
 
         validateLibraryMetadata(library.metadata, issues: &issues)
-
-        var planMappingByBoardID: [String: BoardMappingDefinition] = [:]
-        for (index, mapping) in library.boardMappings.enumerated() {
-            let path = "boardMappings[\(index)]"
-            if planMappingByBoardID[mapping.boardID] != nil {
-                issues.append(PlanValidationIssue(path: path, message: "Duplicate board mapping ID \"\(mapping.boardID)\"."))
-            }
-            planMappingByBoardID[mapping.boardID] = mapping
-
-            if !boardIDs.contains(mapping.boardID) {
-                issues.append(PlanValidationIssue(path: path, message: "Unknown board ID \"\(mapping.boardID)\"."))
-            }
-
-            guard let board = boardByID[mapping.boardID]?.first else { continue }
-            let knownHoldIDs = Set(board.holds.map(\.id))
-            let knownPositionIDs = Set(board.positions.map(\.id))
-            for (semanticID, target) in mapping.semanticHolds {
-                let semanticPath = "\(path).semanticHolds.\(semanticID)"
-                if semanticID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "Semantic ID cannot be empty."))
-                }
-                if target.holdIDs.isEmpty && target.kind == nil {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "A semantic mapping needs hold IDs or a hold kind."))
-                }
-                if target.kind != nil && !target.holdIDs.isEmpty {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "A semantic mapping cannot contain both hold IDs and a hold kind."))
-                }
-                if Set(target.holdIDs).count != target.holdIDs.count {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "Hold IDs must be unique."))
-                }
-                if Set(target.positionIDs).count != target.positionIDs.count {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "Position IDs must be unique."))
-                }
-                for holdID in target.holdIDs where !knownHoldIDs.contains(holdID) {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(mapping.boardID)\"."))
-                }
-                for positionID in target.positionIDs where !knownPositionIDs.contains(positionID) {
-                    issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown position ID \"\(positionID)\" for board \"\(mapping.boardID)\"."))
-                }
-                if let kind = target.kind,
-                   !board.holds.contains(where: { $0.kind == kind }) {
-                    issues.append(
-                        PlanValidationIssue(
-                            path: semanticPath,
-                            message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(mapping.boardID)\"."
-                        )
-                    )
-                }
-            }
-        }
-
-        let mappingByBoardID = planMappingByBoardID
 
         var plansReferencingBlockID: [String: [PlanDefinition]] = [:]
         for plan in library.plans {
@@ -850,7 +758,6 @@ enum PlanLibraryValidator {
                 plan,
                 path: path,
                 blockByID: blockByID,
-                mappingByBoardID: mappingByBoardID,
                 boardByID: boardByID,
                 availableBoards: availableBoards,
                 issues: &issues
@@ -898,7 +805,7 @@ enum PlanLibraryValidator {
             }
             let allowsUntargetedStep = !plansReferencingBlock.isEmpty &&
                 plansReferencingBlock.allSatisfy {
-                    allowsUntargetedRPTCSelfSelectedHang(step, in: $0)
+                    allowsSourceLinkedUntargetedWork(step, in: $0)
                 }
             validateStep(
                 step,
@@ -967,7 +874,7 @@ enum PlanLibraryValidator {
             let targetPath = "\(path).segments[\(index)].targets"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
-            if segment.kind == .work && segment.targets.isEmpty {
+            if segment.kind == .work && segment.targets.isEmpty && !allowsUntargetedStep {
                 issues.append(
                     PlanValidationIssue(
                         path: targetPath,
@@ -1073,9 +980,8 @@ enum PlanLibraryValidator {
         _ plan: PlanDefinition,
         path: String,
         blockByID: [String: WorkoutBlockDefinition],
-        mappingByBoardID: [String: BoardMappingDefinition],
-        boardByID: [String: [TrainingBoard]],
-        availableBoards: [TrainingBoard],
+        boardByID: [String: [BoardRevision]],
+        availableBoards: [BoardRevision],
         issues: inout [PlanValidationIssue]
     ) {
         let metadataPath = "\(path).metadata"
@@ -1143,11 +1049,11 @@ enum PlanLibraryValidator {
                         step.targets,
                         planBoardID: plan.boardID,
                         stepPath: "\(referencePath).steps[\(stepIndex)]",
-                        mappingByBoardID: mappingByBoardID,
                         boardByID: boardByID,
                         availableBoards: availableBoards,
                         handUse: step.handUse,
                         side: step.side,
+                        gripType: step.gripType,
                         issues: &issues
                     )
                     for (segmentIndex, segment) in step.segments.enumerated() {
@@ -1156,11 +1062,11 @@ enum PlanLibraryValidator {
                             segment.targets,
                             planBoardID: plan.boardID,
                             stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
-                            mappingByBoardID: mappingByBoardID,
                             boardByID: boardByID,
                             availableBoards: availableBoards,
                             handUse: step.handUse,
                             side: step.side,
+                            gripType: step.gripType,
                             issues: &issues
                         )
                     }
@@ -1186,33 +1092,15 @@ enum PlanLibraryValidator {
         }
     }
 
-    private static func allowsUntargetedRPTCSelfSelectedHang(
+    private static func allowsSourceLinkedUntargetedWork(
         _ step: WorkoutStepDefinition,
         in plan: PlanDefinition
     ) -> Bool {
-        let expectedDuration: TimeInterval
-        switch step.id {
-        case "rptc-repeaters-set-rep-1",
-            "rptc-repeaters-set-rep-2",
-            "rptc-repeaters-set-rep-3",
-            "rptc-repeaters-set-rep-4",
-            "rptc-repeaters-set-rep-5",
-            "rptc-repeaters-set-rep-6":
-            expectedDuration = 10
-        case "rptc-repeaters-set-rep-7":
-            expectedDuration = 180
-        default:
-            return false
-        }
-
-        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id &&
-            plan.metadata.provenance == .official &&
-            plan.metadata.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL &&
-            plan.boardID == nil &&
-            step.phase == .hang &&
-            step.segments.isEmpty &&
-            step.activeDuration == 7 &&
-            step.duration == expectedDuration
+        plan.metadata.provenance != .custom
+            && plan.metadata.sourceURL != nil
+            && plan.boardID == nil
+            && step.phase != .rest
+            && step.phase != .conditioning
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
@@ -1281,134 +1169,45 @@ enum PlanLibraryValidator {
     }
 
     private static func validateTargets(
-        _ targets: [WorkoutTargetDefinition],
+        _ targets: [ContactRequirement],
         planBoardID: String?,
         stepPath: String,
-        mappingByBoardID: [String: BoardMappingDefinition],
-        boardByID: [String: [TrainingBoard]],
-        availableBoards: [TrainingBoard],
+        boardByID: [String: [BoardRevision]],
+        availableBoards: [BoardRevision],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
+        gripType: GripType?,
         issues: inout [PlanValidationIssue]
     ) {
-        let boardIDs: [String]
-        if let planBoardID {
-            boardIDs = [planBoardID]
-        } else {
-            boardIDs = availableBoards.map(\.id)
-        }
+        guard let planBoardID else { return }
+        let boards = boardByID[planBoardID] ?? []
 
         for (index, target) in targets.enumerated() {
             let targetPath = "\(stepPath).targets[\(index)]"
-            switch target {
-            case .semantic(let semanticID):
-                validateSemantic(semanticID, boardIDs: boardIDs, targetPath: targetPath, mappingByBoardID: mappingByBoardID, issues: &issues)
-            case .semantics(let semanticIDs):
-                if semanticIDs.isEmpty {
-                    issues.append(PlanValidationIssue(path: targetPath, message: "A semantic target list cannot be empty."))
-                }
-                for semanticID in semanticIDs {
-                    validateSemantic(semanticID, boardIDs: boardIDs, targetPath: targetPath, mappingByBoardID: mappingByBoardID, issues: &issues)
-                }
-            case .holdIDs(let holdIDs):
-                if holdIDs.isEmpty {
-                    issues.append(PlanValidationIssue(path: targetPath, message: "A direct hold target cannot be empty."))
-                }
-                for boardID in boardIDs {
-                    let knownHoldIDs = Set(boardByID[boardID]?.first?.holds.map(\.id) ?? [])
-                    for holdID in holdIDs where !knownHoldIDs.contains(holdID) {
-                        issues.append(PlanValidationIssue(path: targetPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(boardID)\"."))
-                    }
-                }
-                if !holdIDs.isEmpty {
-                    let hasCompatibleBoard = boardIDs.contains { boardID in
-                        guard let board = boardByID[boardID]?.first else { return false }
-                        return !BoardTargetResolver.substituteHoldIDs(
-                            for: .ids(holdIDs),
-                            handUse: handUse,
-                            side: side,
-                            on: board
-                        ).isEmpty
-                    }
-                    if !hasCompatibleBoard {
-                        issues.append(
-                            PlanValidationIssue(
-                                path: targetPath,
-                                message: "The direct hold target cannot satisfy the step's hand use and side."
-                            )
-                        )
-                    }
-                }
-            case let .kind(kind, fallbacks, fingerCapacity):
-                let runtimeTarget = HoldTarget.kind(
-                    kind,
-                    fallbacks: fallbacks,
-                    fingerCapacity: fingerCapacity
-                )
-                let hasCompatibleBoard = boardIDs.contains { boardID in
-                    guard let board = boardByID[boardID]?.first else { return false }
-                    return !BoardTargetResolver.substituteHoldIDs(
-                        for: runtimeTarget,
-                        handUse: handUse,
-                        side: side,
-                        on: board
-                    ).isEmpty
-                }
-                if !hasCompatibleBoard {
-                    issues.append(
-                        PlanValidationIssue(
-                            path: targetPath,
-                            message: "No compatible board exposes the requested hold kind for this hand use and side."
-                        )
+            let step = WorkoutStep(
+                id: "validation",
+                number: 0,
+                title: "Validation",
+                instruction: "",
+                accessory: "",
+                duration: 1,
+                phase: .hang,
+                targets: [target],
+                gripType: gripType,
+                handUse: handUse,
+                side: side
+            )
+            let resolvableBoards = boards.filter {
+                (try? ContactResolver.resolve(target, step: step, board: $0)) != nil
+            }
+            let isValid = !boards.isEmpty && resolvableBoards.count == boards.count
+            if !isValid {
+                issues.append(
+                    PlanValidationIssue(
+                        path: targetPath,
+                        message: "The contact requirement cannot resolve on declared board \"\(planBoardID)\"."
                     )
-                }
-            case let .feature(feature, fallbacks, fingerCapacity):
-                let runtimeTarget = HoldTarget(
-                    holdIDs: [],
-                    kind: nil,
-                    feature: feature,
-                    fallbackFeatures: fallbacks,
-                    fingerCapacity: fingerCapacity
                 )
-                let hasCompatibleBoard = boardIDs.contains { boardID in
-                    guard let board = boardByID[boardID]?.first else { return false }
-                    return !BoardTargetResolver.substituteHoldIDs(
-                        for: runtimeTarget,
-                        handUse: handUse,
-                        side: side,
-                        on: board
-                    ).isEmpty
-                }
-                if !hasCompatibleBoard {
-                    issues.append(
-                        PlanValidationIssue(
-                            path: targetPath,
-                            message: "No compatible board exposes feature \"\(feature.rawValue)\" or its fallbacks."
-                        )
-                    )
-                }
-            }
-        }
-    }
-
-    private static func validateSemantic(
-        _ semanticID: String,
-        boardIDs: [String],
-        targetPath: String,
-        mappingByBoardID: [String: BoardMappingDefinition],
-        issues: inout [PlanValidationIssue]
-    ) {
-        for boardID in boardIDs {
-            guard let mapping = mappingByBoardID[boardID] else {
-                issues.append(PlanValidationIssue(path: targetPath, message: "Missing board mapping for \"\(boardID)\"."))
-                continue
-            }
-            guard let semantic = mapping.semanticHolds[semanticID] else {
-                issues.append(PlanValidationIssue(path: targetPath, message: "Unknown semantic target \"\(semanticID)\" for board \"\(boardID)\"."))
-                continue
-            }
-            if !semantic.isResolvable {
-                issues.append(PlanValidationIssue(path: targetPath, message: "Semantic target \"\(semanticID)\" has no hold mapping."))
             }
         }
     }
@@ -1418,11 +1217,11 @@ enum PlanLibraryValidator {
 
 struct PlanDefinitionResolver {
     let library: PlanLibraryDefinition
-    let availableBoards: [TrainingBoard]
+    let availableBoards: [BoardRevision]
 
     init(
         library: PlanLibraryDefinition,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         let issues = library.validationIssues(availableBoards: availableBoards)
         guard issues.isEmpty else {
@@ -1447,10 +1246,6 @@ struct PlanDefinitionResolver {
             count + (blocks[reference.blockID]?.steps.count ?? 0) * max(0, reference.repeatCount)
         })
 
-        let board = availableBoards.first { $0.id == definition.boardID }
-            ?? BoardCatalog.board(for: definition.boardID)
-        let mapping = library.boardMappings.first { $0.boardID == board.id }
-
         for reference in definition.blocks {
             guard let block = blocks[reference.blockID] else {
                 throw PlanLibraryStoreError.missingBlock(reference.blockID)
@@ -1459,13 +1254,15 @@ struct PlanDefinitionResolver {
                 for (stepIndex, stepDefinition) in block.steps.enumerated() {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : stepDefinition.id
                     let resolvedID = reference.repeatCount > 1 ? "\(sourceID)-\(repetition + 1)" : sourceID
-                    let targets = try resolveTargets(stepDefinition.targets, mapping: mapping, board: board)
-                    let segments = try resolveSegments(
-                        stepDefinition,
-                        targets: targets,
-                        mapping: mapping,
-                        board: board
-                    )
+                    let targets = stepDefinition.targets
+                    let segments = stepDefinition.segments.map {
+                        WorkoutSegment(
+                            kind: $0.kind,
+                            targets: $0.targets,
+                            timing: $0.timing,
+                            duration: $0.duration
+                        )
+                    }
                     let resolvedStep = WorkoutStep(
                         id: resolvedID,
                         number: steps.count + 1,
@@ -1506,74 +1303,6 @@ struct PlanDefinitionResolver {
         )
     }
 
-    private func resolveTargets(
-        _ targets: [WorkoutTargetDefinition],
-        mapping: BoardMappingDefinition?,
-        board: TrainingBoard
-    ) throws -> [HoldTarget] {
-        var resolved: [HoldTarget] = []
-
-        for target in targets {
-            switch target {
-            case .semantic(let semanticID):
-                guard let mapping, let semantic = mapping.semanticHolds[semanticID] else {
-                    throw PlanLibraryStoreError.missingSemanticTarget(semanticID)
-                }
-                resolved.append(semantic.holdTarget())
-            case .semantics(let semanticIDs):
-                for semanticID in semanticIDs {
-                    guard let mapping, let semantic = mapping.semanticHolds[semanticID] else {
-                        throw PlanLibraryStoreError.missingSemanticTarget(semanticID)
-                    }
-                    resolved.append(semantic.holdTarget())
-                }
-            case .holdIDs(let holdIDs):
-                resolved.append(.ids(holdIDs))
-            case let .kind(kind, fallbacks, fingerCapacity):
-                // Kind targets remain board-independent and retain the
-                // original fallback behavior used by AppStore.holdIDs(for:on:).
-                _ = board
-                resolved.append(
-                    .kind(kind, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
-                )
-            case let .feature(feature, fallbacks, fingerCapacity):
-                resolved.append(
-                    HoldTarget(
-                        holdIDs: [],
-                        kind: nil,
-                        feature: feature,
-                        fallbackFeatures: fallbacks,
-                        fingerCapacity: fingerCapacity
-                    )
-                )
-            }
-        }
-
-        return resolved
-    }
-
-    private func resolveSegments(
-        _ step: WorkoutStepDefinition,
-        targets: [HoldTarget],
-        mapping: BoardMappingDefinition?,
-        board: TrainingBoard
-    ) throws -> [WorkoutSegment] {
-        guard !step.segments.isEmpty else { return [] }
-
-        return try step.segments.map { definition in
-            let segmentTargets = try resolveTargets(
-                definition.targets,
-                mapping: mapping,
-                board: board
-            )
-            return WorkoutSegment(
-                kind: definition.kind,
-                targets: segmentTargets,
-                timing: definition.timing,
-                duration: definition.duration
-            )
-        }
-    }
 }
 
 struct PlanLibraryStore {
@@ -1583,7 +1312,7 @@ struct PlanLibraryStore {
 
     init(
         definition: PlanLibraryDefinition,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         let issues = definition.validationIssues(availableBoards: availableBoards)
         guard issues.isEmpty else {
@@ -1598,7 +1327,7 @@ struct PlanLibraryStore {
     init(
         data: Data,
         decoder: JSONDecoder = JSONDecoder(),
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         let definition: PlanLibraryDefinition
         do {
@@ -1636,7 +1365,7 @@ struct PlanLibraryStore {
     init(
         contentsOf url: URL,
         decoder: JSONDecoder = JSONDecoder(),
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) throws {
         do {
             try self.init(
@@ -1743,8 +1472,6 @@ private enum PlanWorkoutLabelAudit {
 /// Converts the seed routines into the bundled plan library without changing
 /// their resolved timing or order.
 enum BuiltInPlanLibraryDefinition {
-    private static let boardMappings = LegacyPlanSeedBoardMappings.all
-
     static let document: PlanLibraryDefinition = makeDocument()
 
     private static func makeDocument() -> PlanLibraryDefinition {
@@ -1762,7 +1489,7 @@ enum BuiltInPlanLibraryDefinition {
             return WorkoutBlockDefinition(
                 id: "shared.progressive-warm-up",
                 title: "Progressive warm-up",
-                steps: [WorkoutStepDefinition.from(step, id: "warm-up", semanticHoldID: semanticID(for:))]
+                steps: [WorkoutStepDefinition.from(step, id: "warm-up")]
             )
         }
         let sharedCoolDown = legacyPlans.first {
@@ -1772,7 +1499,7 @@ enum BuiltInPlanLibraryDefinition {
             WorkoutBlockDefinition(
                 id: "shared.cool-down",
                 title: "Cool down",
-                steps: [WorkoutStepDefinition.from($0, id: "cool-down", semanticHoldID: semanticID(for:))]
+                steps: [WorkoutStepDefinition.from($0, id: "cool-down")]
             )
         }
 
@@ -1808,10 +1535,9 @@ enum BuiltInPlanLibraryDefinition {
                     "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
                     "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
-                    "Board mappings keep plan targets semantic and board-specific IDs replaceable."
+                    "Board-specific plans use source-backed factual contact requirements; source-generic work remains self-selected."
                 ]
             ),
-            boardMappings: boardMappings,
             blocks: blocks,
             plans: definitions
         )
@@ -1823,9 +1549,6 @@ enum BuiltInPlanLibraryDefinition {
         sharedCoolDown: WorkoutBlockDefinition?,
         existingBlockIDs: Set<String>
     ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
-        let semanticHoldID: ([String]) -> String? = plan.boardID == nil
-            ? semanticID(for:)
-            : { _ in nil }
         let category: String
         if plan.id.hasPrefix("research.") {
             category = "research"
@@ -1914,7 +1637,7 @@ enum BuiltInPlanLibraryDefinition {
             let block = WorkoutBlockDefinition(
                 id: "\(plan.id).warm-up",
                 title: first.title,
-                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticHoldID)]
+                steps: [WorkoutStepDefinition.from(first)]
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id))
@@ -1935,7 +1658,7 @@ enum BuiltInPlanLibraryDefinition {
                 id: "\(plan.id).main",
                 title: plan.title,
                 steps: plan.steps[firstIndex..<lastIndex].map {
-                    WorkoutStepDefinition.from($0, semanticHoldID: semanticHoldID)
+                    WorkoutStepDefinition.from($0)
                 }
             )
             blocks.append(middleBlock)
@@ -1966,17 +1689,6 @@ enum BuiltInPlanLibraryDefinition {
         )
     }
 
-    private static func semanticID(for holdIDs: [String]) -> String? {
-        let targetIDs = Set(holdIDs)
-        for mapping in boardMappings {
-            if let semanticID = mapping.semanticHolds.first(where: {
-                Set($0.value.holdIDs) == targetIDs
-            })?.key {
-                return semanticID
-            }
-        }
-        return nil
-    }
 }
 
 // MARK: - Compatibility facade

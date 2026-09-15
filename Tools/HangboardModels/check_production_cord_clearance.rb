@@ -12,7 +12,7 @@ FileUtils.mkdir_p(".context")
 models = File.read("HangTen/Models/TrainingModels.swift")
 view = File.read("HangTen/Views/BoardModelView.swift")
 types = models[/struct BoardModelBounds:.*?(?=struct BoardModelFacePlaneAABB)/m] +
-        models[/struct BoardModelAttachment:.*?(?=struct BoardModelHoldDescriptor)/m]
+        models[/struct BoardModelAttachment:.*?(?=struct BoardModelContactDescriptor)/m]
 source = "import Foundation\nimport SceneKit\nimport simd\n" + types +
          File.read("HangTen/Models/SuspensionProfiles.swift").split("private extension SIMD3").first +
          File.read("HangTen/Views/SuspendedBoardPresentation.swift") +

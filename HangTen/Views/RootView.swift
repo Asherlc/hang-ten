@@ -618,7 +618,7 @@ private struct NoMatchingPlansCard: View {
 
 private struct PlanCard: View {
     let plan: TrainingPlan
-    let board: TrainingBoard
+    let board: BoardRevision
     let labels: [String]
     var isIncompatible: Bool = false
 
@@ -679,7 +679,7 @@ private struct PlanCard: View {
 
 struct FavoritePlanCard: View {
     let plan: TrainingPlan
-    let board: TrainingBoard
+    let board: BoardRevision
     var labels: [String] = []
     let isFavorite: Bool
     var isIncompatible: Bool = false
@@ -923,8 +923,8 @@ struct PlanDetailView: View {
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
         let board = store.board(for: currentPlan)
         let firstStep = currentPlan.steps.first
-        let firstStepHoldIDs = firstStep.map { store.holdIDs(for: $0, on: board) } ?? []
-        let firstStepHold = board.holds.first { firstStepHoldIDs.contains($0.id) }
+        let firstStepHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
+        let firstStepHold = board.contacts.first { firstStepHoldIDs.contains($0.id) }
         let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
             step: firstStep,
             hold: firstStepHold,
@@ -944,19 +944,13 @@ struct PlanDetailView: View {
                 activeHoldID: firstStepHold?.id
             )
                 .padding(.horizontal, 12)
-            if let firstStepHoldCue {
+            if let firstStepHoldCue, let hold = firstStepHoldCue.hold {
                 GripDiagramView(
-                    hold: firstStepHoldCue.hold,
+                    hold: hold,
                     gripType: firstStepHoldCue.gripType,
                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
             }
-			if store.usesFallbackMapping(currentPlan, on: board) {
-				Text("Uses the closest available hold on this board.")
-					.font(.system(size: 12, weight: .medium, design: .rounded))
-					.foregroundStyle(Color.hangMuted)
-					.fixedSize(horizontal: false, vertical: true)
-			}
         }
         .hangCard()
     }
@@ -1717,7 +1711,7 @@ struct WorkoutView: View {
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
 
-    private var board: TrainingBoard {
+    private var board: BoardRevision {
         store.board(for: plan)
     }
 
@@ -1743,11 +1737,11 @@ struct WorkoutView: View {
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
-				let previewHoldIDs = highlightedStep.map { WorkoutHighlightResolver.holdIDs(for: $0, on: board) } ?? []
+				let previewHoldIDs = highlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
+				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
 				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
@@ -2025,7 +2019,7 @@ struct WorkoutView: View {
 					board: board,
 					highlightedHoldIDs: highlightedHoldIDs,
 					highlightMode: highlightMode,
-					activeHoldID: holdCue?.hold.id
+					activeHoldID: holdCue?.hold?.id
 				)
 					.padding(.horizontal, 2)
 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
@@ -2034,11 +2028,30 @@ struct WorkoutView: View {
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown
 				) {
-					GripDiagramView(
-						hold: holdCue.hold,
-						gripType: holdCue.gripType,
-						fingerConfiguration: holdCue.fingerConfiguration
-					)
+					if let hold = holdCue.hold {
+						GripDiagramView(
+							hold: hold,
+							gripType: holdCue.gripType,
+							fingerConfiguration: holdCue.fingerConfiguration
+						)
+					} else {
+						HStack(spacing: 12) {
+							if step.side != .right {
+								GripHandCueCard(
+									posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration,
+									side: .left
+								)
+							}
+							if step.side != .left {
+								GripHandCueCard(
+									posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration,
+									side: .right
+								)
+							}
+						}
+					}
 				}
 				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
 					step: step,
@@ -2109,7 +2122,7 @@ struct WorkoutView: View {
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
 						highlightMode: highlightMode,
-						activeHoldID: holdCue?.hold.id
+						activeHoldID: holdCue?.hold?.id
 					)
 						.frame(maxWidth: .infinity)
 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)

@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "metolius.light-rail-2",
   "manufacturer": "Metolius",
   "name": "Light Rail 2.0",
   "subtitle": "Portable reversible training rail with four holds.",
   "productURL": "https://www.metoliusclimbing.com/products/light-rail",
-  "dimensions": "18 \u00d7 3 \u00d7 1.5 in",
+  "dimensions": "18 × 3 × 1.5 in",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -24,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "jug-40-20mm-side": [
             {
               "frame": {
@@ -276,7 +276,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/15mm-surface.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "jug-40-15mm-side": [
             {
               "frame": {
@@ -518,34 +518,55 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "jug-40-20mm-side",
       "equipmentObjectID": "primary",
       "name": "40 mm rounded jug on 20 mm side",
       "kind": "jug",
-      "sizeMillimeters": 40
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-20",
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 20
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "jug-40-15mm-side",
       "equipmentObjectID": "primary",
       "name": "40 mm rounded jug on 15 mm side",
       "kind": "jug",
-      "sizeMillimeters": 40
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 15
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     }
   ]
 }

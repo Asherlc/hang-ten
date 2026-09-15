@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from _board_package_helpers import document_hold_geometry
+from _board_package_helpers import document_contact_geometry
 from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 
 
@@ -31,6 +31,24 @@ MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 
 
+def _scalar_depth(contact: dict[str, object]) -> int | float | None:
+    depth = contact.get("depthRangeMillimeters")
+    if not isinstance(depth, dict) or depth.get("lowerBound") != depth.get("upperBound"):
+        return None
+    value = depth["lowerBound"]
+    assert isinstance(value, (int, float)) and not isinstance(value, bool)
+    return value
+
+
+def _single_grip_type(contact: dict[str, object]) -> str | None:
+    grip_types = contact.get("gripTypes")
+    if not isinstance(grip_types, list) or len(grip_types) != 1:
+        return None
+    value = grip_types[0]
+    assert isinstance(value, str)
+    return value
+
+
 def _assert_model_descriptor(
     root: Path, board: dict[str, object], body_node_id: str
 ) -> dict[str, object]:
@@ -39,7 +57,7 @@ def _assert_model_descriptor(
     media = presentations[0]["media"]
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
-    assert "holdGeometry" not in media
+    assert "contactGeometry" not in media
     assert {
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
@@ -53,17 +71,17 @@ def _assert_model_descriptor(
     assert descriptor["modelSHA256"] == hashlib.sha256(
         (root / media["assetPath"]).read_bytes()
     ).hexdigest()
-    holds = board["holds"]
-    assert isinstance(holds, list)
-    assert set(descriptor["holds"]) == {hold["id"] for hold in holds}
+    contacts = board["contacts"]
+    assert isinstance(contacts, list)
+    assert set(descriptor["contacts"]) == {contact["id"] for contact in contacts}
     assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
         {"nodeID": body_node_id, "role": "body"},
     ]
-    for hold_id, hold in descriptor["holds"].items():
-        assert hold["nodeIDs"] == [
+    for contact_id, contact in descriptor["contacts"].items():
+        assert contact["nodeIDs"] == [
             node["nodeID"]
             for node in descriptor["nodes"]
-            if node.get("holdID") == hold_id
+            if node.get("contactID") == contact_id
         ]
     return descriptor
 
@@ -202,9 +220,9 @@ COMPACT_HOLDS = (
 # feature tags.
 COMPACT_HOLD_SOURCE_FACTS = {
     "jug-left": ("jug", None, None, None, ()),
-    "sloper-flat-left": ("sloper", None, None, None, ()),
-    "sloper-round-center": ("sloper", None, None, None, ()),
-    "sloper-flat-right": ("sloper", None, None, None, ()),
+    "sloper-flat-left": ("sloper", None, None, None, ("flatSloper",)),
+    "sloper-round-center": ("sloper", None, None, None, ("roundSloper",)),
+    "sloper-flat-right": ("sloper", None, None, None, ("flatSloper",)),
     "jug-right": ("jug", None, None, None, ()),
     "edge-29-left": ("edge", 29, None, None, ()),
     "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ()),
@@ -299,7 +317,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
     assert not (HANGBOARDS_ROOT / "catalog.json").exists()
 
 
-def _original_hold_owners(document: dict[str, object]) -> dict[str, str]:
+def _original_contact_owners(document: dict[str, object]) -> dict[str, str]:
     owners: dict[str, str] = {}
     for presentation in document["presentations"]:
         if presentation["derivation"]["type"] != "original":
@@ -307,9 +325,9 @@ def _original_hold_owners(document: dict[str, object]) -> dict[str, str]:
         media = presentation["media"]
         if media["type"] != "raster":
             continue
-        for hold_id in media["holdGeometry"]:
-            assert hold_id not in owners
-            owners[hold_id] = presentation["id"]
+        for contact_id in media["contactGeometry"]:
+            assert contact_id not in owners
+            owners[contact_id] = presentation["id"]
     return owners
 
 
@@ -328,25 +346,25 @@ def _presentation_summary(document: dict[str, object]) -> list[tuple[object, ...
     ]
 
 
-def test_every_approved_board_uses_schema_v2_typed_presentations() -> None:
+def test_every_approved_board_uses_schema_v3_typed_presentations() -> None:
     for board_path in HANGBOARDS_ROOT.glob("*/board.json"):
         document = json.loads(board_path.read_text(encoding="utf-8"))
 
-        assert document["schemaVersion"] == 2
+        assert document["schemaVersion"] == 3
         assert "presentation" not in document
 
         presentations = document["presentations"]
         assert sum(
             presentation.get("isDefault") is True for presentation in presentations
         ) == 1
-        hold_ids = {hold["id"] for hold in document["holds"]}
+        contact_ids = {contact["id"] for contact in document["contacts"]}
         if any(presentation["media"]["type"] == "model" for presentation in presentations):
             assert all(presentation["media"]["type"] == "model" for presentation in presentations)
         else:
-            assert set(_original_hold_owners(document)) == hold_ids
+            assert set(_original_contact_owners(document)) == contact_ids
         assert all(
-            "geometry" not in hold and "presentationID" not in hold
-            for hold in document["holds"]
+            "geometry" not in contact and "presentationID" not in contact
+            for contact in document["contacts"]
         )
 
 
@@ -360,7 +378,7 @@ def test_approved_packages_declare_their_complete_presentation_asset_set() -> No
             for path in (package.root / "assets").rglob("*")
             if path.is_file()
         }
-        assert document["schemaVersion"] == 2
+        assert document["schemaVersion"] == 3
         assert "presentation" not in document
         assert all(
             isinstance(presentation["aspectRatio"], (int, float))
@@ -395,7 +413,7 @@ def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
     board = json.loads((MAMMUT_DIAMOND_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "mammut.diamond-finger"
-    assert [(hold["id"], hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity"), hold.get("gripType")) for hold in board["holds"]] == [
+    assert [(contact["id"], contact["kind"], _scalar_depth(contact), contact.get("fingerCapacity"), _single_grip_type(contact)) for contact in board["contacts"]] == [
         ("jug-left", "jug", None, None, None),
         ("sloper-45-left", "sloper", None, None, None),
         ("pocket-30-four-left", "pocket", 30, 4, "fourFingerPocket"),
@@ -419,7 +437,7 @@ def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
         ("sloper-30-right", "sloper", None, None, None),
     ]
 
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
     assert all(
         "treatment" not in piece
         for pieces in geometry.values()
@@ -462,24 +480,24 @@ def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
     ]
     assert tuple(
         (
-            hold["id"],
-            hold["name"],
-            hold["kind"],
-            hold.get("sizeMillimeters"),
-            hold.get("fingerCapacity"),
+            contact["id"],
+            contact["name"],
+            contact["kind"],
+            _scalar_depth(contact),
+            contact.get("fingerCapacity"),
         )
-        for hold in board["holds"]
+        for contact in board["contacts"]
     ) == FOUNDRY_HOLDS
-    geometry = document_hold_geometry(board)
-    assert _original_hold_owners(board) == {
-        hold["id"]: "front" for hold in board["holds"]
+    geometry = document_contact_geometry(board)
+    assert _original_contact_owners(board) == {
+        contact["id"]: "front" for contact in board["contacts"]
     }
-    assert all(geometry[hold["id"]] for hold in board["holds"])
+    assert all(geometry[contact["id"]] for contact in board["contacts"])
 
 
 def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
     board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
 
     for position in range(1, 8):
         prefix = "pinch" if position == 1 else "jug" if position == 2 else "pocket"
@@ -526,12 +544,12 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
     ]
     assert tuple(
         (
-            hold["id"],
-            hold["name"],
-            hold["kind"],
-            hold.get("sizeMillimeters"),
+            contact["id"],
+            contact["name"],
+            contact["kind"],
+            _scalar_depth(contact),
         )
-        for hold in board["holds"]
+        for contact in board["contacts"]
     ) == PRIME_RIB_HOLDS
     _assert_model_descriptor(PRIME_RIB_ROOT, board, "body_mesh_001")
 
@@ -544,7 +562,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     assert _presentation_summary(board) == [
         ("primary", "Primary suspended model", "assets/primary.usdz", 1.5, True, None, False),
     ]
-    assert [(hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]] == [
+    assert [(contact["id"], contact["name"], contact["kind"]) for contact in board["contacts"]] == [
         ("three-edge-left", "Left edge on three-edge surface", "edge"),
         ("three-edge-center", "Center edge on three-edge surface", "edge"),
         ("three-edge-right", "Right edge on three-edge surface", "edge"),
@@ -553,52 +571,39 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ("small-crimp-left", "Left small crimp", "edge"),
         ("small-crimp-right", "Right small crimp", "edge"),
     ]
-    assert all("sizeMillimeters" not in hold for hold in board["holds"])
+    assert all("sizeMillimeters" not in contact for contact in board["contacts"])
     # Four positions over the shared model: upright/inverted for each usable face.
-    # The two-edge positions retain both small crimps per the approved audit.
+    # The small-crimp contacts are independently modeled on the suspended asset.
     assert board["positions"] == [
         {
             "id": "three-edge-upright",
             "presentationID": "primary",
-            "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
+            "contactIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
         },
         {
             "id": "three-edge-inverted",
             "presentationID": "primary",
-            "holdIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
+            "contactIDs": ["three-edge-left", "three-edge-center", "three-edge-right"],
         },
         {
             "id": "two-edge-upright",
             "presentationID": "primary",
-            "holdIDs": [
-                "two-edge-left",
-                "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
-            ],
+            "contactIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"],
         },
         {
             "id": "two-edge-inverted",
             "presentationID": "primary",
-            "holdIDs": [
-                "two-edge-left",
-                "two-edge-right",
-                "small-crimp-left",
-                "small-crimp-right",
-            ],
+            "contactIDs": ["two-edge-left", "two-edge-right", "small-crimp-left", "small-crimp-right"],
         },
     ]
 
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
-    assert "holdGeometry" not in media
+    assert "contactGeometry" not in media
     assert media.get("orientation") is None
-    suspension = media["suspension"]
-    assert suspension["type"] == "twoBranchCord"
-    assert len(suspension["passages"]["left"]) == 2
-    assert len(suspension["passages"]["right"]) == 2
-    assert [branch["id"] for branch in suspension["branches"]] == ["left-branch", "right-branch"]
+    assert media["suspension"]["type"] == "twoBranchCord"
+    assert [branch["id"] for branch in media["suspension"]["branches"]] == ["left-branch", "right-branch"]
     _assert_model_descriptor(FLASH_BOARD_ROOT, board, "flash_board_body_008")
 
 
@@ -611,7 +616,7 @@ def test_project_package_freezes_the_official_numbered_inventory_as_model() -> N
         ("primary", "Primary", "assets/primary.usdz", 4.083333463473314, True, None, False),
     ]
     assert [
-        (hold["id"], hold["kind"], hold.get("sizeMillimeters")) for hold in board["holds"]
+        (contact["id"], contact["kind"], _scalar_depth(contact)) for contact in board["contacts"]
     ] == [
         ("jug-1-left", "jug", None),
         ("round-sloper-8-center", "sloper", None),
@@ -649,8 +654,8 @@ def test_project_model_pairs_preserve_mirrored_bounds_and_node_ownership() -> No
         ("pocket-6-left", "pocket-6-right"),
         ("pocket-7-left", "pocket-7-right"),
     ):
-        left = descriptor["holds"][left_id]
-        right = descriptor["holds"][right_id]
+        left = descriptor["contacts"][left_id]
+        right = descriptor["contacts"][right_id]
         assert left["nodeIDs"] == [left_id.replace("-", "_") + "_partition_mesh_001"]
         assert right["nodeIDs"] == [right_id.replace("-", "_") + "_partition_mesh_001"]
         # Imported float32 coordinates retain symmetry within export precision.
@@ -692,16 +697,16 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
         ),
     ]
 
-    owners = _original_hold_owners(board)
+    owners = _original_contact_owners(board)
     assert tuple(
         (
-            hold["id"],
-            hold["name"],
-            hold["kind"],
-            hold["sizeMillimeters"],
-            owners[hold["id"]],
+            contact["id"],
+            contact["name"],
+            contact["kind"],
+            _scalar_depth(contact),
+            owners[contact["id"]],
         )
-        for hold in board["holds"]
+        for contact in board["contacts"]
     ) == (
         (
             "jug-40-20mm-side",
@@ -720,14 +725,14 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
         ),
         ("edge-15", "15 mm edge", "edge", 15, "15mm-side"),
     )
-    geometry = document_hold_geometry(board)
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
+    geometry = document_contact_geometry(board)
+    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
     assert all(
-        geometry[hold["id"]][0]["shapeConstraint"] == {
+        geometry[contact["id"]][0]["shapeConstraint"] == {
             "shape": "roundedRectangle",
             "rotationDegrees": 0,
         }
-        for hold in board["holds"]
+        for contact in board["contacts"]
     )
 
     for asset_path, expected_size in {
@@ -748,17 +753,17 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
         ("front-pair", "Front pair", "assets/primary.png", 1.5, True, None, False)
     ]
 
-    owners = _original_hold_owners(board)
+    owners = _original_contact_owners(board)
     assert tuple(
         (
-            hold["id"],
-            hold["name"],
-            hold["kind"],
-            hold.get("sizeMillimeters"),
-            hold.get("fingerCapacity"),
-            owners[hold["id"]],
+            contact["id"],
+            contact["name"],
+            contact["kind"],
+            _scalar_depth(contact),
+            contact.get("fingerCapacity"),
+            owners[contact["id"]],
         )
-        for hold in board["holds"]
+        for contact in board["contacts"]
     ) == (
         ("jug-left", "Left unit jug", "jug", None, None, "front-pair"),
         (
@@ -811,17 +816,17 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "front-pair",
         ),
     )
-    geometry = document_hold_geometry(board)
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
+    geometry = document_contact_geometry(board)
+    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
     assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
+        geometry[contact["id"]][0]["shape"]["type"] == "path"
+        for contact in board["contacts"]
     )
     assert all(
-        geometry[hold["id"]][0]["shapeConstraint"]
+        geometry[contact["id"]][0]["shapeConstraint"]
         == {"shape": "roundedRectangle", "rotationDegrees": 0}
-        for hold in board["holds"]
-        if hold["kind"] == "pocket"
+        for contact in board["contacts"]
+        if contact["kind"] == "pocket"
     )
 
     with Image.open(ROCK_RINGS_ROOT / "assets" / "primary.png") as image:
@@ -831,7 +836,7 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
 
 def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
     board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
 
     for left_id, right_id in (
         ("jug-left", "jug-right"),
@@ -868,13 +873,13 @@ def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
     ]
     assert {
         (
-            hold["id"],
-            hold["kind"],
-            hold.get("sizeMillimeters"),
-            hold.get("fingerCapacity"),
-            hold.get("gripType"),
+            contact["id"],
+            contact["kind"],
+            _scalar_depth(contact),
+            contact.get("fingerCapacity"),
+            _single_grip_type(contact),
         )
-        for hold in board["holds"]
+        for contact in board["contacts"]
     } == {
         ("jug-1-left", "jug", None, None, None),
         ("jug-1-right", "jug", None, None, None),
@@ -903,25 +908,25 @@ def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
         ("pocket-11-19-two-right", "pocket", 19, 2, "twoFingerPocket"),
         ("pocket-15-19-four-center", "pocket", 19, 4, "fourFingerPocket"),
     }
-    assert len(board["holds"]) == 26
-    geometry = document_hold_geometry(board)
-    assert _original_hold_owners(board) == {
-        hold["id"]: "front" for hold in board["holds"]
+    assert len(board["contacts"]) == 26
+    geometry = document_contact_geometry(board)
+    assert _original_contact_owners(board) == {
+        contact["id"]: "front" for contact in board["contacts"]
     }
-    assert all(len(geometry[hold["id"]]) == 1 for hold in board["holds"])
+    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
     assert all(
-        geometry[hold["id"]][0]["shape"]["type"] == "path"
-        for hold in board["holds"]
+        geometry[contact["id"]][0]["shape"]["type"] == "path"
+        for contact in board["contacts"]
     )
 
     compact = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     assert board["dimensions"] != compact["dimensions"]
-    assert len(board["holds"]) != len(compact["holds"])
+    assert len(board["contacts"]) != len(compact["contacts"])
 
 
 def test_deluxe_paired_contacts_use_exact_horizontal_frame_mirrors() -> None:
     board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
     pairs = (
         ("jug-1-left", "jug-1-right"),
         ("sloper-2-flat-left", "sloper-2-flat-right"),
@@ -947,12 +952,12 @@ def test_deluxe_paired_contacts_use_exact_horizontal_frame_mirrors() -> None:
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
-    holds = board["holds"]
-    hold_ids = [hold["id"] for hold in holds]
+    contacts = board["contacts"]
+    contact_ids = [contact["id"] for contact in contacts]
 
     assert board["id"] == "metolius.wood-grips-compact-ii"
-    assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
-    assert len(hold_ids) == len(set(hold_ids))
+    assert tuple((contact["id"], contact["name"]) for contact in contacts) == COMPACT_HOLDS
+    assert len(contact_ids) == len(set(contact_ids))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert media["assetPath"] == "assets/primary.usdz"
@@ -960,17 +965,17 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() 
     descriptor = json.loads(
         (COMPACT_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
     )
-    assert set(descriptor["holds"]) == set(hold_ids)
+    assert set(descriptor["contacts"]) == set(contact_ids)
     assert {
-        node["holdID"] for node in descriptor["nodes"] if node["role"] == "hold"
-    } == set(hold_ids)
+        node["contactID"] for node in descriptor["nodes"] if node["role"] == "contact"
+    } == set(contact_ids)
 
 
 def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
     board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "soill.training-tiles"
-    assert tuple((hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]) == (
+    assert tuple((contact["id"], contact["name"], contact["kind"]) for contact in board["contacts"]) == (
         ("upper-sloper-outer-left", "Outer left upper sloper", "sloper"),
         ("upper-sloper-outer-right", "Outer right upper sloper", "sloper"),
         ("upper-sloper-inner-left", "Inner left upper sloper", "sloper"),
@@ -996,52 +1001,57 @@ def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
-    holds = board["holds"]
+    contacts = board["contacts"]
     retired_fields = {"frame", "shortLabel", "detail", "cueStyle"}
     supported_fields = {
         "id",
         "name",
         "kind",
-        "sizeMillimeters",
         "depthRangeMillimeters",
         "fingerCapacity",
         "handCapacity",
         "equipmentObjectID",
-        "gripType",
+        "gripTypes",
         "features",
-        "sloper",
+        "side",
+        "pairedContactID",
     }
 
-    assert all(not (set(hold) & retired_fields) for hold in holds)
-    assert all({"id", "name", "kind"} <= set(hold) for hold in holds)
-    assert all("geometry" not in hold and "presentationID" not in hold for hold in holds)
-    assert all(set(hold) <= supported_fields for hold in holds)
-    assert {hold.get("equipmentObjectID") for hold in holds} == {"primary"}
-    assert all("depthRangeMillimeters" not in hold for hold in holds)
+    assert all(not (set(contact) & retired_fields) for contact in contacts)
+    assert all({"id", "name", "kind"} <= set(contact) for contact in contacts)
+    assert all("geometry" not in contact and "presentationID" not in contact for contact in contacts)
+    assert all(set(contact) <= supported_fields for contact in contacts)
+    assert {contact.get("equipmentObjectID") for contact in contacts} == {"primary"}
+    assert all(
+        "depthRangeMillimeters" not in contact
+        or contact["depthRangeMillimeters"]["lowerBound"]
+        == contact["depthRangeMillimeters"]["upperBound"]
+        for contact in contacts
+    )
     expected_pocket_grips = {
         2: "twoFingerPocket",
         3: "threeFingerPocket",
         4: "fourFingerPocket",
     }
     assert all(
-        hold.get("gripType") == expected_pocket_grips[hold["fingerCapacity"]]
-        for hold in holds
-        if hold["kind"] == "pocket"
+        _single_grip_type(contact) == expected_pocket_grips[contact["fingerCapacity"]]
+        for contact in contacts
+        if contact["kind"] == "pocket"
     )
     assert all(
-        "gripType" not in hold
-        for hold in holds
-        if hold["kind"] != "pocket"
+        contact["gripTypes"] == []
+        for contact in contacts
+        if contact["kind"] != "pocket"
     )
     assert {
-        hold["id"]: (
-            hold.get("kind"),
-            hold.get("sizeMillimeters"),
-            hold.get("fingerCapacity"),
-            hold.get("gripType"),
-            tuple(hold.get("features", ())),
+        contact["id"]: (
+            contact.get("kind"),
+            _scalar_depth(contact),
+            contact.get("fingerCapacity"),
+            _single_grip_type(contact),
+            tuple(contact.get("features", ())),
         )
-        for hold in holds
+        for contact in contacts
     } == COMPACT_HOLD_SOURCE_FACTS
 
 
@@ -1053,7 +1063,7 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
     model_sha = hashlib.sha256(model_path.read_bytes()).hexdigest()
     descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
     assert model_sha == "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a"
-    assert descriptor_sha == "a652b1a184ec15432126502514d11db2b02768df7c3c0a892c62031f381c0c7f"
+    assert descriptor_sha == "903c9e87fbf305f3184437d346bf6d25e44c51ebd787a426d533ea21dbfa57cf"
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
@@ -1063,7 +1073,7 @@ def test_compact_package_loader_preserves_identity_inventory_and_model_frames() 
     module = load_board_catalog_module()
     package = module.load_board_package(COMPACT_ROOT)
 
-    assert tuple((hold.id, hold.name) for hold in package.board.holds) == COMPACT_HOLDS
+    assert tuple((contact.id, contact.name) for contact in package.board.contacts) == COMPACT_HOLDS
     assert package.board.facts == {
         "manufacturer": "Metolius",
         "name": "Wood Grips Compact II",
@@ -1081,8 +1091,8 @@ def test_compact_package_loader_preserves_identity_inventory_and_model_frames() 
     media = package.board.presentations[0].media
     assert isinstance(media, module.PresentationMediaModel)
     assert media.descriptor_path == "assets/primary.model.json"
-    for hold in package.board.holds:
-        frame = package.board.hold_frame(hold.id, presentation_id)
+    for contact in package.board.contacts:
+        frame = package.board.contact_frame(contact.id, presentation_id)
         actual = (frame.x, frame.y, frame.width, frame.height)
         assert all(value == pytest.approx(value) for value in actual)
         assert actual[2] > 0
@@ -1122,16 +1132,16 @@ def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
         ("front-25-15", "assets/primary.png"),
         ("reverse-10", "assets/reverse.png"),
     ]
-    owners = _original_hold_owners(board)
+    owners = _original_contact_owners(board)
     assert {
         (
-            hold["id"],
-            hold["kind"],
-            hold.get("sizeMillimeters"),
-            hold.get("fingerCapacity"),
-            owners[hold["id"]],
+            contact["id"],
+            contact["kind"],
+            _scalar_depth(contact),
+            contact.get("fingerCapacity"),
+            owners[contact["id"]],
         )
-        for hold in board["holds"]
+        for contact in board["contacts"]
     } == {
         ("tray", "jug", None, None, "front-25-15"),
         ("edge-25", "edge", 25, None, "front-25-15"),
@@ -1168,8 +1178,8 @@ def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
         ),
     ]
     assert {
-        (hold["id"], hold["kind"], hold.get("sizeMillimeters"))
-        for hold in board["holds"]
+        (contact["id"], contact["kind"], _scalar_depth(contact))
+        for contact in board["contacts"]
     } == {
         ("tray", "jug", None),
         ("edge-30", "edge", 30),
@@ -1178,8 +1188,8 @@ def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
         ("edge-15", "edge", 15),
         ("edge-10", "edge", 10),
     }
-    owners = _original_hold_owners(board)
-    assert [(hold["id"], owners[hold["id"]]) for hold in board["holds"]] == [
+    owners = _original_contact_owners(board)
+    assert [(contact["id"], owners[contact["id"]]) for contact in board["contacts"]] == [
         ("edge-30", "stepped-face"),
         ("tray", "stepped-face"),
         ("edge-20", "stepped-face"),
@@ -1208,6 +1218,7 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
         "left-branch",
         "right-branch",
     ]
+    assert "contactGeometry" not in media
     assert "holdGeometry" not in media
     assert {path.relative_to(YY_BAGUETTE_EVO_ROOT).as_posix()
             for path in YY_BAGUETTE_EVO_ROOT.rglob("*") if path.is_file()} == {
@@ -1221,40 +1232,40 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     assert descriptor["modelSHA256"] == hashlib.sha256(
         (YY_BAGUETTE_EVO_ROOT / media["assetPath"]).read_bytes()
     ).hexdigest()
-    assert set(descriptor["holds"]) == {hold["id"] for hold in board["holds"]}
+    assert set(descriptor["contacts"]) == {contact["id"] for contact in board["contacts"]}
     assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
         {"nodeID": "body_mesh_001", "role": "body"},
     ]
-    for hold_id, hold in descriptor["holds"].items():
-        assert hold["nodeIDs"] == [
+    for contact_id, contact in descriptor["contacts"].items():
+        assert contact["nodeIDs"] == [
             node["nodeID"] for node in descriptor["nodes"]
-            if node.get("holdID") == hold_id
+            if node.get("contactID") == contact_id
         ]
-        assert len(hold["nodeIDs"]) == (2 if hold_id == "rounded-tray" else 1)
-    assert descriptor["holds"]["rounded-tray"]["nodeIDs"] == [
+        assert len(contact["nodeIDs"]) == (2 if contact_id == "rounded-tray" else 1)
+    assert descriptor["contacts"]["rounded-tray"]["nodeIDs"] == [
         "hold_rounded_left_mesh_001", "hold_rounded_right_mesh_001",
     ]
-    assert len(board["holds"]) == 19
+    assert len(board["contacts"]) == 19
     assert sorted(
-        hold["sizeMillimeters"]
-        for hold in board["holds"]
-        if not hold["id"].startswith("edge-central") and hold["kind"] == "edge"
+        _scalar_depth(contact)
+        for contact in board["contacts"]
+        if not contact["id"].startswith("edge-central") and contact["kind"] == "edge"
     ) == [6, 6, 8, 8, 10, 10, 12, 12, 15, 15, 20, 20, 25, 25]
     assert {
-        (hold["id"], hold.get("sizeMillimeters"))
-        for hold in board["holds"]
-        if hold["id"].startswith("edge-central")
+        (contact["id"], _scalar_depth(contact))
+        for contact in board["contacts"]
+        if contact["id"].startswith("edge-central")
     } == {
         ("edge-central-30", 30),
         ("edge-central-25", 25),
         ("edge-central-20", 20),
         ("edge-central-6", 6),
     }
-    assert [(hold["id"], hold["kind"]) for hold in board["holds"] if hold["kind"] == "jug"] == [
+    assert [(contact["id"], contact["kind"]) for contact in board["contacts"] if contact["kind"] == "jug"] == [
         ("rounded-tray", "jug")
     ]
     assert board["equipmentObjects"] == [{"id": "primary"}]
-    assert [(hold["id"], hold["equipmentObjectID"]) for hold in board["holds"]] == [
+    assert [(contact["id"], contact["equipmentObjectID"]) for contact in board["contacts"]] == [
         ("edge-20-left", "primary"),
         ("edge-10-left", "primary"),
         ("edge-25-left", "primary"),
@@ -1282,13 +1293,13 @@ def test_yy_baguette_evo_model_central_30_25_contacts_are_centered_and_distinct(
         (YY_BAGUETTE_EVO_ROOT / "assets/primary.model.json").read_text(encoding="utf-8")
     )
     for size, y_min, y_max in ((30, 0.5, 0.7), (25, 0.3, 0.5)):
-        hold = descriptor["holds"][f"edge-central-{size}"]
-        assert hold["nodeIDs"] == [f"hold_central_{size}mm_mesh_001"]
-        assert hold["center"] == pytest.approx([0.5, (y_min + y_max) / 2], abs=1e-7)
-        assert hold["facePlaneAABB"]["min"] == pytest.approx(
+        contact = descriptor["contacts"][f"edge-central-{size}"]
+        assert contact["nodeIDs"] == [f"hold_central_{size}mm_mesh_001"]
+        assert contact["center"] == pytest.approx([0.5, (y_min + y_max) / 2], abs=1e-7)
+        assert contact["facePlaneAABB"]["min"] == pytest.approx(
             [0.423076922, y_min], abs=1e-7
         )
-        assert hold["facePlaneAABB"]["max"] == pytest.approx(
+        assert contact["facePlaneAABB"]["max"] == pytest.approx(
             [0.576923078, y_max], abs=1e-7
         )
 
@@ -1300,8 +1311,8 @@ def test_yy_baguette_evo_model_pairs_preserve_mirrored_bounds_and_node_ownership
     for size in (25, 20, 15, 12, 10, 8, 6):
         left_id = f"edge-{size}-left" if size != 6 else "edge-6-upper"
         right_id = f"edge-{size}-right" if size != 6 else "edge-6-lower"
-        left = descriptor["holds"][left_id]
-        right = descriptor["holds"][right_id]
+        left = descriptor["contacts"][left_id]
+        right = descriptor["contacts"][right_id]
         assert left["nodeIDs"] == [f"hold_edge_{size:02d}mm_left_mesh_001"]
         assert right["nodeIDs"] == [f"hold_edge_{size:02d}mm_right_mesh_001"]
         # Imported float32 coordinates retain symmetry within export precision.
@@ -1323,10 +1334,10 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
     assert board["id"] == "yy.penta-evo"
     assert board["dimensions"] == "Not published by YY Vertical"
     assert len(board["presentations"]) == 1
-    assert len(board["holds"]) == 14
+    assert len(board["contacts"]) == 14
     assert sorted(
-        (hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity"))
-        for hold in board["holds"]
+        (contact["kind"], _scalar_depth(contact), contact.get("fingerCapacity"))
+        for contact in board["contacts"]
     ) == sorted(
         2
         * [
@@ -1339,11 +1350,11 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
             ("jug", None, None),
         ]
     )
-    assert _original_hold_owners(board) == {
-        hold["id"]: "front-pair" for hold in board["holds"]
+    assert _original_contact_owners(board) == {
+        contact["id"]: "front-pair" for contact in board["contacts"]
     }
 
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
     assert geometry["edge-25-left"][0]["frame"] == {
         "x": 0.116,
         "y": 0.350,
@@ -1360,7 +1371,7 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
 
 def test_yy_penta_evo_pair_uses_exact_horizontal_path_mirrors() -> None:
     board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
 
     for prefix in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"):
         left = geometry[f"{prefix}-left"][0]

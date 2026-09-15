@@ -1,6 +1,41 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.254000008,
+      0.106679998,
+      0.0381
+    ],
+    "min": [
+      -0.254000008,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "b5d7a6c6895c2fc2854a629922c9d46f7e7925f0043be1e5e54af3b9a027b5fe",
+  "nodes": [
+    {
+      "nodeID": "body_mesh_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "edge_15_mesh_001",
+      "role": "contact",
+      "contactID": "edge-15"
+    },
+    {
+      "nodeID": "edge_23_mesh_001",
+      "role": "contact",
+      "contactID": "edge-23"
+    },
+    {
+      "nodeID": "edge_38_mesh_001",
+      "role": "contact",
+      "contactID": "edge-38"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "edge-15": {
       "center": [
         0.5,
@@ -58,40 +93,5 @@
         "edge_38_mesh_001"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.254000008,
-      0.106679998,
-      0.0381
-    ],
-    "min": [
-      -0.254000008,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "b5d7a6c6895c2fc2854a629922c9d46f7e7925f0043be1e5e54af3b9a027b5fe",
-  "nodes": [
-    {
-      "nodeID": "body_mesh_001",
-      "role": "body"
-    },
-    {
-      "holdID": "edge-15",
-      "nodeID": "edge_15_mesh_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-23",
-      "nodeID": "edge_23_mesh_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-38",
-      "nodeID": "edge_38_mesh_001",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

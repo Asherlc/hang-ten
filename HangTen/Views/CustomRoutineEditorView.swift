@@ -32,7 +32,7 @@ struct CustomRoutineEditorView: View {
         draft.id != nil
     }
 
-    private var selectedBoard: TrainingBoard {
+    private var selectedBoard: BoardRevision {
         BoardCatalog.board(for: selectedBoardID)
     }
 
@@ -259,7 +259,7 @@ private enum EditorTargetMode: String, CaseIterable, Identifiable {
 private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
     let targetMode: CustomRoutineTargetMode
-    let board: TrainingBoard
+    let board: BoardRevision
     let onAddPair: (CustomRoutineStepDraft) -> Void
 
     @State private var activeHoldID: String?
@@ -272,12 +272,21 @@ private struct CustomRoutineStepEditor: View {
     }
 
     private var selectedHoldIDs: Set<String> {
-        Set(step.targets.flatMap { target in
-            if case let .holdIDs(ids) = target {
-                return ids
-            }
-            return []
-        })
+        let workoutStep = WorkoutStep(
+            id: step.id,
+            number: 0,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets,
+            handUse: step.handUse,
+            side: step.side
+        )
+        return Set(
+            (try? ContactResolver.resolve(step.targets, step: workoutStep, board: board).map(\.id)) ?? []
+        )
     }
 
     var body: some View {
@@ -407,30 +416,55 @@ private struct CustomRoutineStepEditor: View {
         Binding(
             get: {
                 guard let target = step.targets.first else { return nil }
-                switch target {
-                case let .kind(kind, _, _):
+                if target.requiredFeatures.isEmpty, let kind = target.kind {
                     return .kind(kind)
-                case let .feature(feature, _, _):
-                    return .feature(feature)
-                default:
-                    return nil
                 }
+                if target.requiredFeatures.count == 1,
+                   let feature = target.requiredFeatures.first {
+                    return .feature(feature)
+                }
+                return nil
             },
             set: { choice in
-                step.targets = choice.map { [$0.target] } ?? []
+                let selection: ContactSelectionPolicy = step.handUse == .double
+                    ? .allMatching
+                    : .single
+                step.targets = choice.map { [$0.target(selection: selection)] } ?? []
             }
         )
     }
 
-    private func toggleHold(_ hold: BoardHold) {
+    private func toggleHold(_ hold: PhysicalContact) {
         activeHoldID = hold.id
         var holdIDs = selectedHoldIDs
         if !holdIDs.insert(hold.id).inserted {
             holdIDs.remove(hold.id)
         }
-        step.targets = holdIDs.isEmpty
-            ? []
-            : [.holdIDs(board.holds.compactMap { holdIDs.contains($0.id) ? $0.id : nil })]
+        guard !holdIDs.isEmpty else {
+            step.targets = []
+            return
+        }
+        let selectedContacts = board.contacts.filter { holdIDs.contains($0.id) }
+        guard let contact = selectedContacts.first else {
+            step.targets = []
+            return
+        }
+        let selection: ContactSelectionPolicy = step.handUse == .double
+            ? .bilateralPair
+            : .single
+        step.targets = [
+            ContactRequirement(
+                kind: contact.kind,
+                requiredFeatures: contact.features,
+                depthRangeMillimeters: contact.depthRangeMillimeters.map {
+                    MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound)
+                },
+                fingerCapacity: contact.fingerCapacity,
+                handCapacity: contact.handCapacity,
+                compatibleGripTypes: contact.gripTypes,
+                selection: selection
+            )
+        ]
     }
 }
 
@@ -438,12 +472,12 @@ private enum GenericTargetChoice: Hashable {
     case kind(HoldKind)
     case feature(HoldFeature)
 
-    var target: WorkoutTargetDefinition {
+    func target(selection: ContactSelectionPolicy) -> ContactRequirement {
         switch self {
         case let .kind(kind):
-            .kind(kind)
+            .kind(kind, selection: selection)
         case let .feature(feature):
-            .feature(feature, fallbacks: [])
+            .feature(feature, selection: selection)
         }
     }
 }

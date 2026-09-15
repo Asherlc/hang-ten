@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "yy.penta-evo",
   "manufacturer": "YY Vertical",
   "name": "Penta Evo",
@@ -24,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-25-left": [
             {
               "frame": {
@@ -1187,104 +1187,159 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "edge-25-left",
       "equipmentObjectID": "primary",
       "name": "Left unit 25 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 25
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-20-left",
       "equipmentObjectID": "primary",
       "name": "Left unit 20 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 20
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "mono-left",
       "equipmentObjectID": "primary",
       "name": "Left unit mono",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "duo-left",
       "equipmentObjectID": "primary",
       "name": "Left unit duo",
       "kind": "pocket",
+      "features": [],
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
     },
     {
       "id": "edge-15-left",
       "equipmentObjectID": "primary",
       "name": "Left unit 15 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 15
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-10-left",
       "equipmentObjectID": "primary",
       "name": "Left unit 10 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 10
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     },
     {
       "id": "tray-left",
       "equipmentObjectID": "primary",
       "name": "Left unit tray",
-      "kind": "jug"
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "edge-20-right",
       "equipmentObjectID": "primary",
       "name": "Right unit 20 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 20
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-25-right",
       "equipmentObjectID": "primary",
       "name": "Right unit 25 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 25
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-10-right",
       "equipmentObjectID": "primary",
       "name": "Right unit 10 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 10
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-15-right",
       "equipmentObjectID": "primary",
       "name": "Right unit 15 mm edge",
       "kind": "edge",
-      "sizeMillimeters": 15
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "mono-right",
       "equipmentObjectID": "primary",
       "name": "Right unit mono",
       "kind": "pocket",
-      "fingerCapacity": 1
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "duo-right",
       "equipmentObjectID": "primary",
       "name": "Right unit duo",
       "kind": "pocket",
+      "features": [],
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
     },
     {
       "id": "tray-right",
       "equipmentObjectID": "primary",
       "name": "Right unit tray",
-      "kind": "jug"
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

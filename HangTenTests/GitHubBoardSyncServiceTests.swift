@@ -349,9 +349,14 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
     }
 
     func testFetchBoardPackagePullsBothBlobsFromTree() async throws {
-        let boardBytes = Data(
-            "{\"presentations\": [{\"id\": \"front\", \"name\": \"Front\", \"assetPath\": \"assets/cover.png\", \"aspectRatio\": 2.0, \"default\": true}]}".utf8
+        var document = BoardEditorTestFixtures.sampleDocument()
+        document.presentations[0].media = .raster(
+            assetPath: "assets/cover.png",
+            contactGeometry: [
+                "hold-one": document.geometry(forContactID: "hold-one") ?? [],
+            ]
         )
+        let boardBytes = try BoardPackageWriter.data(for: document)
         let pngBytes = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
         StubState.lock.lock()
         StubState.handler = { [self] request in

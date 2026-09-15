@@ -145,7 +145,6 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case missingTargets(stepIndex: Int)
     case restStepHasTargets(stepIndex: Int)
     case unknownBoard(boardID: String)
-    case unknownHoldID(stepIndex: Int, holdID: String)
     case unresolvableTargets(stepIndex: Int)
     case missingWorkSegmentTargets(stepIndex: Int, segmentIndex: Int)
     case restSegmentHasTargets(stepIndex: Int, segmentIndex: Int)
@@ -163,7 +162,7 @@ enum CustomRoutineValidationIssue: Error, Equatable {
 enum CustomRoutineValidator {
     static func issues(
         for definition: CustomRoutineDefinition,
-        availableBoards: [TrainingBoard]
+        availableBoards: [BoardRevision]
     ) -> [CustomRoutineValidationIssue] {
         var issues = idIssues(for: definition.id)
         if definition.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -175,7 +174,7 @@ enum CustomRoutineValidator {
             issues.append(.terminalRestStep)
         }
 
-        let boards: [TrainingBoard]
+        let boards: [BoardRevision]
         switch definition.targetMode {
         case let .boardSpecific(boardID):
             if let board = availableBoards.first(where: { $0.id == boardID }) {
@@ -308,8 +307,8 @@ enum CustomRoutineValidator {
 
     static func compatibleBoards(
         for definition: CustomRoutineDefinition,
-        availableBoards: [TrainingBoard]
-    ) -> [TrainingBoard] {
+        availableBoards: [BoardRevision]
+    ) -> [BoardRevision] {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
                 (step.phase == .rest || targetsResolve(
@@ -342,10 +341,10 @@ enum CustomRoutineValidator {
     }
 
     private static func validate(
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         stepIndex: Int,
         segmentIndex: Int?,
-        boards: [TrainingBoard],
+        boards: [BoardRevision],
         targetMode: CustomRoutineTargetMode,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
@@ -354,16 +353,6 @@ enum CustomRoutineValidator {
         guard targets.allSatisfy({ targetMatchesMode($0, targetMode: targetMode) }) else {
             issues.append(.targetModeMismatch(stepIndex: stepIndex, segmentIndex: segmentIndex))
             return
-        }
-
-        if targetMode.isBoardSpecific {
-            let knownHoldIDs = Set(boards.flatMap(\.holds).map(\.id))
-            for target in targets {
-                guard case let .holdIDs(holdIDs) = target else { continue }
-                for holdID in holdIDs where !knownHoldIDs.contains(holdID) {
-                    issues.append(.unknownHoldID(stepIndex: stepIndex, holdID: holdID))
-                }
-            }
         }
 
         guard targets.allSatisfy({
@@ -379,22 +368,19 @@ enum CustomRoutineValidator {
     }
 
     private static func targetMatchesMode(
-        _ target: WorkoutTargetDefinition,
+        _ target: ContactRequirement,
         targetMode: CustomRoutineTargetMode
     ) -> Bool {
-        switch (targetMode, target) {
-        case (.boardSpecific, .holdIDs), (.generic, .kind), (.generic, .feature):
-            true
-        default:
-            false
-        }
+        _ = target
+        _ = targetMode
+        return true
     }
 
     private static func targetsResolve(
-        _ targets: [WorkoutTargetDefinition],
+        _ targets: [ContactRequirement],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) -> Bool {
         !targets.isEmpty && targets.allSatisfy {
             targetResolves($0, handUse: handUse, side: side, on: board)
@@ -402,10 +388,10 @@ enum CustomRoutineValidator {
     }
 
     private static func targetResolves(
-        _ target: WorkoutTargetDefinition,
+        _ target: ContactRequirement,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
-        onAny boards: [TrainingBoard]
+        onAny boards: [BoardRevision]
     ) -> Bool {
         boards.contains {
             targetResolves(target, handUse: handUse, side: side, on: $0)
@@ -413,40 +399,24 @@ enum CustomRoutineValidator {
     }
 
     private static func targetResolves(
-        _ target: WorkoutTargetDefinition,
+        _ target: ContactRequirement,
         handUse: WorkoutHandUse,
         side: WorkoutSide,
-        on board: TrainingBoard
+        on board: BoardRevision
     ) -> Bool {
-        switch target {
-        case .semantic, .semantics:
-            return false
-        case let .holdIDs(holdIDs):
-            return !holdIDs.isEmpty && !BoardTargetResolver.substituteHoldIDs(
-                for: .ids(holdIDs),
-                handUse: handUse,
-                side: side,
-                on: board
-            ).isEmpty
-        case let .kind(kind, fallbacks, fingerCapacity):
-            return !BoardTargetResolver.substituteHoldIDs(
-                for: .kind(kind, fallbacks: fallbacks, fingerCapacity: fingerCapacity),
-                handUse: handUse,
-                side: side,
-                on: board
-            ).isEmpty
-        case let .feature(feature, fallbacks, fingerCapacity):
-            return !BoardTargetResolver.substituteHoldIDs(
-                for: .feature(
-                    feature,
-                    fallbacks: fallbacks,
-                    fingerCapacity: fingerCapacity
-                ),
-                handUse: handUse,
-                side: side,
-                on: board
-            ).isEmpty
-        }
+        let step = WorkoutStep(
+            id: "custom-validation",
+            number: 0,
+            title: "Validation",
+            instruction: "",
+            accessory: "",
+            duration: 1,
+            phase: .hang,
+            targets: [target],
+            handUse: handUse,
+            side: side
+        )
+        return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
     }
 }
 
@@ -462,11 +432,12 @@ enum CustomRoutineStoreError: LocalizedError {
 }
 
 final class CustomRoutineStore: CustomRoutineStoring {
-    static let defaultKey = "HangTen.customRoutines"
+    static let defaultKey = "HangTen.customRoutines.v2"
+    static let legacyKeys = ["HangTen.customRoutines", "HangTen.customRoutines.v1"]
 
     private let defaults: UserDefaults
     private let key: String
-    private let availableBoards: [TrainingBoard]
+    private let availableBoards: [BoardRevision]
 
     private(set) var routines: [CustomRoutineDefinition]
     private(set) var persistenceError: String?
@@ -474,14 +445,19 @@ final class CustomRoutineStore: CustomRoutineStoring {
     init(
         defaults: UserDefaults = .standard,
         key: String = CustomRoutineStore.defaultKey,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) {
         self.defaults = defaults
         self.key = key
         self.availableBoards = availableBoards
         routines = []
         persistenceError = nil
+        Self.removeLegacyPersistence(from: defaults)
         load()
+    }
+
+    static func removeLegacyPersistence(from defaults: UserDefaults) {
+        legacyKeys.forEach(defaults.removeObject(forKey:))
     }
 
     func save(_ routine: CustomRoutineDefinition) throws {
@@ -515,7 +491,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         }
 
         let boardID: String?
-        let resolverBoards: [TrainingBoard]
+        let resolverBoards: [BoardRevision]
         switch definition.targetMode {
         case let .boardSpecific(id):
             boardID = id
@@ -545,7 +521,6 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 title: "Custom routine",
                 generatedAt: "local"
             ),
-            boardMappings: [],
             blocks: [block],
             plans: [planDefinition]
         )

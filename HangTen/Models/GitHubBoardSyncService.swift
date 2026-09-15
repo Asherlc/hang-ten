@@ -376,18 +376,17 @@ struct GitHubBoardSyncService {
     }
 
     private static func defaultPresentationAssetPath(_ boardJSON: Data) throws -> String {
-        let payload = try JSONSerialization.jsonObject(with: boardJSON)
-        guard let presentations = payload as? [String: Any],
-              let entries = presentations["presentations"] as? [[String: Any]] else {
-            throw GitHubSyncError.invalidResponse(
-                "board.json does not declare any presentations"
-            )
+        let document: BoardEditableDocument
+        do {
+            document = try BoardEditableDocument(data: boardJSON)
+        } catch {
+            throw GitHubSyncError.invalidResponse("board.json is not a schema v3 package")
         }
-        let declared = entries.first(where: { ($0["default"] as? Bool) == true })
-            ?? entries.first
-        guard let assetPath = declared?["assetPath"] as? String, !assetPath.isEmpty else {
+        guard let presentation = document.presentations.first(where: \.isDefault),
+              case .raster(let assetPath, _) = presentation.media,
+              !assetPath.isEmpty else {
             throw GitHubSyncError.invalidResponse(
-                "board.json presentations do not declare an asset path"
+                "board.json default presentation must use editable raster media"
             )
         }
         return assetPath

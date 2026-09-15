@@ -2,20 +2,23 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
-    func testStoreDoesNotLoadFormerVersionedStorageKey() throws {
+    func testStoreDeletesFormerStorageKeysWithoutDecoding() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
-        defaults.set(
-            try JSONEncoder().encode(
-                CustomRoutineLibrary(routines: [genericDefinition(id: "custom.former-key")])
-            ),
-            forKey: "HangTen.customRoutines.v1"
+        let formerPayload = try JSONEncoder().encode(
+            CustomRoutineLibrary(routines: [genericDefinition(id: "custom.former-key")])
         )
+        for key in CustomRoutineStore.legacyKeys {
+            defaults.set(formerPayload, forKey: key)
+        }
 
         let store = CustomRoutineStore(defaults: defaults)
 
         XCTAssertTrue(store.routines.isEmpty)
+        XCTAssertTrue(CustomRoutineStore.legacyKeys.allSatisfy {
+            defaults.object(forKey: $0) == nil
+        })
     }
 
     func testCustomRoutineLibraryEncodingContainsOnlyRoutines() throws {
@@ -62,7 +65,10 @@ final class CustomRoutineStoreTests: XCTestCase {
         let steps = try XCTUnwrap(routines[0]["steps"] as? [[String: Any]])
         let segments = try XCTUnwrap(steps[0]["segments"] as? [[String: Any]])
 
-        XCTAssertEqual(segments[0]["targets"] as? [[String: String]], [["kind": "edge"]])
+        XCTAssertEqual(
+            segments[0]["targets"] as? [[String: String]],
+            [["kind": "edge", "selection": "allMatching"]]
+        )
         XCTAssertNil(segments[0]["target"])
     }
 
@@ -77,31 +83,31 @@ final class CustomRoutineStoreTests: XCTestCase {
 
     func testCompactIIPocketsExposeCapacityWithDistinctGripSemantics() throws {
         let twoFingerPocket = try XCTUnwrap(
-            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-two-left" }
+            BoardCatalog.defaultBoard.contacts.first { $0.id == "pocket-29-two-left" }
         )
         let threeFingerPocket = try XCTUnwrap(
-            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-three-left" }
+            BoardCatalog.defaultBoard.contacts.first { $0.id == "pocket-29-three-left" }
         )
         let fourFingerPocket = try XCTUnwrap(
-            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-four-center" }
+            BoardCatalog.defaultBoard.contacts.first { $0.id == "pocket-29-four-center" }
         )
 
         XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
         XCTAssertEqual(threeFingerPocket.fingerCapacity, 3)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertEqual(twoFingerPocket.gripType, .twoFingerPocket)
-        XCTAssertEqual(threeFingerPocket.gripType, .threeFingerPocket)
-        XCTAssertEqual(fourFingerPocket.gripType, .fourFingerPocket)
+        XCTAssertEqual(twoFingerPocket.gripTypes, [.twoFingerPocket])
+        XCTAssertEqual(threeFingerPocket.gripTypes, [.threeFingerPocket])
+        XCTAssertEqual(fourFingerPocket.gripTypes, [.fourFingerPocket])
     }
 
     func testPocketCapacityDoesNotManufacturePhysicalFeatures() {
-        let oneFingerPocket = BoardHold(
+        let oneFingerPocket = PhysicalContact(
             id: "one-finger",
             name: "One finger",
             kind: .pocket,
             fingerCapacity: 1
         )
-        let fourFingerPocket = BoardHold(
+        let fourFingerPocket = PhysicalContact(
             id: "four-finger",
             name: "Four finger",
             kind: .pocket,
@@ -109,9 +115,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
-        XCTAssertNil(oneFingerPocket.features)
+        XCTAssertTrue(oneFingerPocket.features.isEmpty)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertNil(fourFingerPocket.features)
+        XCTAssertTrue(fourFingerPocket.features.isEmpty)
     }
 
     func testPlanResolutionRetainsExactFingerConfiguration() throws {
@@ -134,7 +140,6 @@ final class CustomRoutineStoreTests: XCTestCase {
                 title: "Exact fingers",
                 generatedAt: "2026-08-07"
             ),
-            boardMappings: [],
             blocks: [WorkoutBlockDefinition(id: "exact-finger-block", steps: [step])],
             plans: [
                 PlanDefinition(
@@ -158,63 +163,6 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(resolved.steps.map(\.fingerConfiguration), [expectedConfiguration])
     }
 
-    func testCustomRoutineLoadAndSaveStripLegacyGripAndFingerCueFields() throws {
-        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
-        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
-        defer { defaults.removePersistentDomain(forName: suite) }
-        defaults.set(
-            Data(
-                #"""
-                {
-                  "routines": [{
-                    "id": "custom.legacy-cues",
-                    "title": "Legacy cues",
-                    "subtitle": "",
-                    "tags": [],
-                    "targetMode": { "kind": "generic" },
-                    "steps": [{
-                      "id": "legacy-step",
-                      "title": "Legacy hang",
-                      "instruction": "Use index and ring fingers.",
-                      "accessory": "10s",
-                      "duration": 10,
-                      "phase": "hang",
-                      "targets": [{ "feature": "pocket", "fingerCapacity": 3 }],
-                      "segments": [{
-                        "kind": "work",
-                        "targets": [{ "feature": "pocket", "fingerCapacity": 3 }],
-                        "timing": "fixed",
-                        "duration": 10
-                      }],
-                      "gripType": "openHand",
-                      "fingerConfiguration": { "engagedFingers": ["index", "ring"] },
-                      "activeDuration": 10
-                    }]
-                  }]
-                }
-                """#.utf8
-            ),
-            forKey: CustomRoutineStore.defaultKey
-        )
-        let store = CustomRoutineStore(defaults: defaults)
-
-        let loaded = try XCTUnwrap(store.routines.first)
-        XCTAssertNil(loaded.steps.first?.gripType)
-        XCTAssertNil(loaded.steps.first?.fingerConfiguration)
-
-        try store.save(loaded)
-
-        let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
-        let persistedJSON = try XCTUnwrap(
-            try JSONSerialization.jsonObject(with: persistedData) as? [String: Any]
-        )
-        let persistedRoutines = try XCTUnwrap(persistedJSON["routines"] as? [[String: Any]])
-        let persistedSteps = try XCTUnwrap(persistedRoutines.first?["steps"] as? [[String: Any]])
-
-        XCTAssertNil(persistedSteps.first?["gripType"])
-        XCTAssertNil(persistedSteps.first?["fingerConfiguration"])
-    }
-
     func testBoardSpecificDefinitionRoundTripsAndResolvesToTrainingPlan() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -236,7 +184,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left", "edge-19-right"])],
+                    targets: [.kind(.edge)],
                     gripType: .halfCrimp,
                     activeDuration: 10
                 )
@@ -260,7 +208,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         let plan = try reloaded.plan(for: persisted)
         XCTAssertEqual(plan.id, definition.id)
         XCTAssertEqual(plan.title, definition.title)
-        XCTAssertEqual(plan.steps[0].targets, [.ids("edge-19-left", "edge-19-right")])
+        XCTAssertEqual(plan.steps[0].targets, [.kind(.edge)])
         XCTAssertEqual(plan.provenance, .custom)
         XCTAssertNil(plan.sourceURL)
     }
@@ -282,7 +230,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.feature(.mediumEdge, fallbacks: [])],
+                    targets: [.feature(.mediumEdge)],
                     activeDuration: 10
                 )
             ]
@@ -291,7 +239,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
     }
 
-    func testDoubleHandCustomStepRejectsSingleHandPortABoardContact() throws {
+    func testDoubleHandCustomStepAcceptsTwoPortableBoardContacts() throws {
         let board = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "frictitious.port-a-board" }
         )
@@ -311,7 +259,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .pull,
-                    targets: [.holdIDs(["edge-20"])],
+                    targets: [.kind(.edge)],
                     handUse: .double,
                     side: .both
                 )
@@ -323,7 +271,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             availableBoards: [board]
         )
 
-        XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
+        XCTAssertFalse(issues.contains(.unresolvableTargets(stepIndex: 0)))
     }
 
     func testSaveAndResolveAllowsEmptyOptionalSubtitle() throws {
@@ -352,7 +300,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             difficulty: nil,
             category: nil,
             tags: [],
-            targetMode: .generic,
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [
                 WorkoutStepDefinition(
                     id: "step-1",
@@ -450,7 +398,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(store.routines.first?.tags, ["edges", "custom"])
     }
 
-    func testValidationRejectsUnknownBoardAndHoldIDsForBoardSpecificRoutine() {
+    func testValidationRejectsUnknownBoardForBoardSpecificRoutine() {
         let definition = CustomRoutineDefinition(
             id: "custom.unknown-board",
             title: "Unknown board",
@@ -459,26 +407,26 @@ final class CustomRoutineStoreTests: XCTestCase {
             category: nil,
             tags: [],
             targetMode: .boardSpecific(boardID: "unknown-board"),
-            steps: [validStep(targets: [.holdIDs(["missing-hold"])])]
+            steps: [validStep(targets: [.kind(.edge)])]
         )
 
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
 
         XCTAssertTrue(issues.contains(.unknownBoard(boardID: "unknown-board")))
-        XCTAssertTrue(issues.contains(.unknownHoldID(stepIndex: 0, holdID: "missing-hold")))
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.flatEdge, fallbacks: [])])
-        let jugOnlyBoard = TrainingBoard(
+        let definition = genericDefinition(targets: [.feature(.flatEdge)])
+        let jugOnlyBoard = BoardRevision(
             id: "fixture.jug-only",
+            revisionID: "test-fixture",
             manufacturer: "Fixture Maker",
             name: "Jug Only",
             subtitle: "A board without edges.",
             dimensions: "10 × 5",
             aspectRatio: 2,
-            holds: [
-                BoardHold(
+            contacts: [
+                PhysicalContact(
                     id: "fixture.jug",
                     name: "Fixture jug",
                     kind: .jug
@@ -513,7 +461,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s hang · 4s rest",
                     duration: 12,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])],
+                    targets: [.kind(.edge)],
                     activeDuration: 8
                 )
             ]
@@ -539,7 +487,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             tags: [],
             targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [
-                validStep(targets: [.holdIDs(["edge-19-left"])]),
+                validStep(targets: [.kind(.edge)]),
                 WorkoutStepDefinition(
                     id: "rest",
                     title: "Rest",
@@ -582,11 +530,11 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s hang · 4s rest",
                     duration: 12,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])],
+                    targets: [.kind(.edge)],
                     segments: [
                         WorkoutSegmentDefinition(
                             kind: .work,
-                            targets: [.holdIDs(["edge-19-left"])],
+                            targets: [.kind(.edge)],
                             timing: .fixed,
                             duration: 8
                         ),
@@ -612,7 +560,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         }
     }
 
-    func testValidationRejectsTargetStorageThatDoesNotMatchRoutineMode() {
+    func testFactualRequirementsUseTheSameGrammarInEveryRoutineMode() {
         let boardSpecific = CustomRoutineDefinition(
             id: "custom.board-mode-mismatch",
             title: "Board mismatch",
@@ -626,7 +574,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.mediumEdge, fallbacks: [])],
+                        targets: [.feature(.mediumEdge)],
                         timing: .fixed,
                         duration: 10
                     )
@@ -634,11 +582,11 @@ final class CustomRoutineStoreTests: XCTestCase {
             )]
         )
         let generic = genericDefinition(
-            targets: [.holdIDs(["edge-19-left"])],
+            targets: [.kind(.edge)],
             segments: [
                 WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.holdIDs(["edge-19-right"])],
+                    targets: [.kind(.edge)],
                     timing: .fixed,
                     duration: 10
                 )
@@ -654,10 +602,10 @@ final class CustomRoutineStoreTests: XCTestCase {
             availableBoards: BoardCatalog.all
         )
 
-        XCTAssertTrue(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
-        XCTAssertTrue(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
-        XCTAssertTrue(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
-        XCTAssertTrue(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+        XCTAssertFalse(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertFalse(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+        XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
     }
 
     func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {
@@ -680,11 +628,11 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s · 4s",
                     duration: 12,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])],
+                    targets: [.kind(.edge)],
                     segments: [
                         WorkoutSegmentDefinition(
                             kind: .work,
-                            targets: [.holdIDs(["edge-19-right"])],
+                            targets: [.kind(.edge)],
                             timing: .fixed,
                             duration: 8
                         ),
@@ -704,7 +652,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "Up to 20s",
                     duration: 20,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-left"])]
+                    targets: [.kind(.edge)]
                 ),
                 WorkoutStepDefinition(
                     id: "stopwatch",
@@ -713,11 +661,11 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "Up to 30s",
                     duration: 30,
                     phase: .hang,
-                    targets: [.holdIDs(["edge-19-right"])],
+                    targets: [.kind(.edge)],
                     segments: [
                         WorkoutSegmentDefinition(
                             kind: .work,
-                            targets: [.holdIDs(["edge-19-right"])],
+                            targets: [.kind(.edge)],
                             timing: .stopwatch,
                             duration: nil
                         )
@@ -736,10 +684,10 @@ final class CustomRoutineStoreTests: XCTestCase {
         ])
         XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest, .hang, .hang])
         XCTAssertEqual(stored.steps.map(\.targets), [
-            [.holdIDs(["edge-19-right"])],
+            [.kind(.edge)],
             [],
-            [.holdIDs(["edge-19-left"])],
-            [.holdIDs(["edge-19-right"])]
+            [.kind(.edge)],
+            [.kind(.edge)]
         ])
         XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1, 1])
         let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
@@ -965,7 +913,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         difficulty: String? = nil,
         category: String? = nil,
         tags: [String] = [],
-        targets: [WorkoutTargetDefinition] = [.kind(.jug)],
+        targets: [ContactRequirement] = [.kind(.jug)],
         segments: [WorkoutSegmentDefinition] = []
     ) -> CustomRoutineDefinition {
         CustomRoutineDefinition(
@@ -981,7 +929,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     private func validStep(
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         segments: [WorkoutSegmentDefinition] = []
     ) -> WorkoutStepDefinition {
         WorkoutStepDefinition(
@@ -1004,7 +952,6 @@ final class CustomRoutineStoreTests: XCTestCase {
                 title: "Test library",
                 generatedAt: "2026-08-05"
             ),
-            boardMappings: [],
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: [validStep(targets: [.kind(.jug)])])],
             plans: [PlanDefinition(id: "test.plan", metadata: metadata, boardID: nil, blocks: [WorkoutBlockReference(blockID: "test.block")])]
         )

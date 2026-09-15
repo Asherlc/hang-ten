@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "lattice.mini-bar",
   "manufacturer": "Lattice",
   "name": "Mini Bar",
@@ -9,8 +9,7 @@
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
-      "id": "primary",
-      "missingHandCapacityPolicy": "unavailable"
+      "id": "primary"
     }
   ],
   "presentations": [
@@ -25,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/edge-10.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-10": [
             {
               "frame": {
@@ -112,7 +111,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/edge-20.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "edge-20": [
             {
               "frame": {
@@ -199,7 +198,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/ergonomic-jug.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "ergonomic-jug": [
             {
               "frame": {
@@ -316,7 +315,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/mini-pinch.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "mini-pinch": [
             {
               "frame": {
@@ -454,36 +453,51 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "ergonomic-jug",
       "equipmentObjectID": "primary",
       "name": "Ergonomic jug",
       "kind": "jug",
-      "handCapacity": 1
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "edge-10",
       "equipmentObjectID": "primary",
       "name": "10 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 10
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-20",
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 20
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     },
     {
       "id": "mini-pinch",
       "equipmentObjectID": "primary",
       "name": "Mini pinch",
       "kind": "pinch",
-      "handCapacity": 1
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
     }
   ]
 }

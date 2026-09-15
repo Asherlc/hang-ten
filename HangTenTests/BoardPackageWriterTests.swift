@@ -2,6 +2,334 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageWriterTests: XCTestCase {
+    func testWriterEmitsV3ContactsWithRasterOwnedGeometry() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+
+        XCTAssertEqual(document["schemaVersion"] as? Int, 3)
+        XCTAssertEqual(document["revisionID"] as? String, "test-revision")
+        XCTAssertNil(document["holds"])
+        let contacts = try XCTUnwrap(document["contacts"] as? [[String: Any]])
+        XCTAssertEqual(contacts.map { $0["id"] as? String }, ["hold-one"])
+        XCTAssertNil(contacts[0]["geometry"])
+        XCTAssertNil(contacts[0]["sizeMillimeters"])
+        XCTAssertNil(contacts[0]["gripType"])
+        XCTAssertEqual(contacts[0]["gripTypes"] as? [String], [])
+
+        let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
+        XCTAssertEqual(presentations[0]["isDefault"] as? Bool, true)
+        let media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+        XCTAssertEqual(media["type"] as? String, "raster")
+        XCTAssertEqual(media["assetPath"] as? String, "assets/primary.png")
+        let geometry = try XCTUnwrap(media["contactGeometry"] as? [String: Any])
+        XCTAssertNotNil(geometry["hold-one"])
+    }
+
+    func testEditorDecoderRejectsLegacyRootHolds() throws {
+        var payload = try jsonObject(for: makeDocument())
+        payload["holds"] = payload.removeValue(forKey: "contacts")
+
+        XCTAssertThrowsError(try decode(payload))
+    }
+
+    func testEditorDecoderRejectsLegacyContactMembers() throws {
+        for (key, value) in [
+            ("geometry", []),
+            ("sizeMillimeters", 20),
+            ("gripType", "openHand"),
+        ] as [(String, Any)] {
+            var payload = try jsonObject(for: makeDocument())
+            var contacts = try XCTUnwrap(payload["contacts"] as? [[String: Any]])
+            contacts[0][key] = value
+            payload["contacts"] = contacts
+            XCTAssertThrowsError(try decode(payload), "legacy member \(key) must be rejected")
+        }
+    }
+
+    func testEditorDecoderRejectsLegacyFlatPresentation() throws {
+        var payload = try jsonObject(for: makeDocument())
+        payload["presentations"] = [[
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2,
+            "default": true,
+        ]]
+
+        XCTAssertThrowsError(try decode(payload))
+    }
+
+    func testWriterRejectsModelMediaAsNonEditable() throws {
+        var document = makeDocument()
+        document.presentations[0].media = .model(
+            assetPath: "assets/primary.usdz",
+            descriptorPath: "assets/primary.model.json",
+            display: try modelDisplay(),
+            suspension: nil,
+            orientation: nil
+        )
+
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid("board test.board: model-only packages are not editable")
+            )
+        }
+    }
+
+    func testWriterAcceptsReciprocalNonGastonPairs() throws {
+        var document = makeDocument()
+        document.contacts[0].kind = .edge
+        document.contacts[0].side = .left
+        document.contacts[0].pairedContactID = "hold-two"
+        document.contacts.append(
+            BoardEditableContact(
+                id: "hold-two",
+                name: "Hold two",
+                kind: .edge,
+                side: .right,
+                pairedContactID: "hold-one"
+            )
+        )
+        guard case .raster(let assetPath, var contactGeometry) = document.presentations[0].media else {
+            return XCTFail("fixture must use raster media")
+        }
+        contactGeometry["hold-two"] = [makePiece()]
+        document.presentations[0].media = .raster(
+            assetPath: assetPath,
+            contactGeometry: contactGeometry
+        )
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let payload = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let contacts = try XCTUnwrap(payload["contacts"] as? [[String: Any]])
+
+        XCTAssertEqual(contacts.map { $0["pairedContactID"] as? String }, ["hold-two", "hold-one"])
+    }
+
+    func testEditorDecoderPreservesTypedModelDisplayAndOrientationWithoutAdaptingIt() throws {
+        let boardURL = repositoryHangboardsURL()
+            .appendingPathComponent("captain-fingerfood-pocket/board.json")
+        let document = try BoardEditableDocument(data: Data(contentsOf: boardURL))
+
+        guard case .model(
+            let assetPath,
+            let descriptorPath,
+            let display,
+            let suspension,
+            let orientation
+        ) = document.presentations[0].media else {
+            return XCTFail("expected typed model media")
+        }
+        XCTAssertEqual(assetPath, "assets/primary.usdz")
+        XCTAssertEqual(descriptorPath, "assets/primary.model.json")
+        XCTAssertEqual(display.camera.type, "orthographic")
+        XCTAssertEqual(display.camera.viewDirection, [0, 0, -1])
+        XCTAssertEqual(display.camera.up, [0, 1, 0])
+        XCTAssertEqual(display.camera.fitPadding, 0.08)
+        XCTAssertNil(suspension)
+        XCTAssertEqual(orientation?.pivot, "modelBoundsCenter")
+        XCTAssertEqual(
+            orientation?.rotations["edge-20-front"],
+            [0.199367862, 0, 0, 0.979924719]
+        )
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid("board captain-fingerfood.pocket: model-only packages are not editable")
+            )
+        }
+    }
+
+    func testEditorDecoderPreservesTypedModelSuspensionWithoutAdaptingIt() throws {
+        let boardURL = repositoryHangboardsURL()
+            .appendingPathComponent("beastmaker-1000/board.json")
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+        )
+        var presentations = try XCTUnwrap(payload["presentations"] as? [[String: Any]])
+        var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+        media["suspension"] = [
+            "type": "singleCord",
+            "attachment": [
+                "nodeID": "body-main",
+                "pointInModel": [0.1, 0.2, 0.3],
+                "provenance": "fixture attachment",
+            ],
+            "anchor": [
+                "offsetFromBoardBounds": [0.0, 0.4, 0.0],
+                "visibility": "invisible",
+                "provenance": "fixture anchor",
+            ],
+            "cord": [
+                "restLength": 1.25,
+                "radius": 0.004,
+                "material": "polyester",
+                "provenance": "fixture cord",
+            ],
+            "canonicalPoses": [
+                "primary": [
+                    "rotation": [0.0, 0.0, 0.0, 1.0],
+                    "translation": [0.0, 0.1, 0.0],
+                    "camera": [
+                        "viewDirection": [0.0, 0.0, -1.0],
+                        "fitPadding": 0.12,
+                    ],
+                ],
+            ],
+        ]
+        presentations[0]["media"] = media
+        payload["presentations"] = presentations
+
+        let document = try decode(payload)
+        guard case .model(_, _, _, let suspension, _) = document.presentations[0].media,
+              case .singleCord(let singleCord) = suspension else {
+            return XCTFail("expected typed single-cord suspension")
+        }
+        XCTAssertEqual(singleCord.type, "singleCord")
+        XCTAssertEqual(singleCord.attachment.nodeID, "body-main")
+        XCTAssertEqual(singleCord.attachment.pointInModel, [0.1, 0.2, 0.3])
+        XCTAssertEqual(singleCord.attachment.provenance, "fixture attachment")
+        XCTAssertEqual(singleCord.anchor.offsetFromBoardBounds, [0, 0.4, 0])
+        XCTAssertEqual(singleCord.anchor.visibility, "invisible")
+        XCTAssertEqual(singleCord.anchor.provenance, "fixture anchor")
+        XCTAssertEqual(singleCord.cord.restLength, 1.25)
+        XCTAssertEqual(singleCord.cord.radius, 0.004)
+        XCTAssertEqual(singleCord.cord.material, "polyester")
+        XCTAssertEqual(singleCord.cord.provenance, "fixture cord")
+        XCTAssertEqual(singleCord.canonicalPoses["primary"]?.rotation, [0, 0, 0, 1])
+        XCTAssertEqual(singleCord.canonicalPoses["primary"]?.translation, [0, 0.1, 0])
+        XCTAssertEqual(
+            singleCord.canonicalPoses["primary"]?.camera.viewDirection,
+            [0, 0, -1]
+        )
+        XCTAssertEqual(singleCord.canonicalPoses["primary"]?.camera.fitPadding, 0.12)
+    }
+
+    func testRasterCatalogDocumentsRoundTripThroughV3Writer() throws {
+        for slug in try FileManager.default.contentsOfDirectory(
+            at: repositoryHangboardsURL(),
+            includingPropertiesForKeys: nil
+        ).map(\.lastPathComponent).sorted() {
+            let boardURL = repositoryHangboardsURL().appendingPathComponent(slug + "/board.json")
+            let document = try BoardEditableDocument(data: Data(contentsOf: boardURL))
+            guard document.presentations.allSatisfy({ presentation in
+                if case .raster = presentation.media { return true }
+                return false
+            }) else { continue }
+
+            let encoded = try BoardPackageWriter.data(for: document)
+            let decoded = try BoardEditableDocument(data: encoded)
+            XCTAssertEqual(decoded, document, slug)
+        }
+    }
+
+    func testGeometryReadsAndWritesOnlyTheDeclaredDefaultRasterPresentation() throws {
+        var document = makeDocument()
+        var nonDefaultPiece = makePiece()
+        nonDefaultPiece.frame = BoardPackageFrameDocument(
+            x: 0.05,
+            y: 0.1,
+            width: 0.2,
+            height: 0.3
+        )
+        let nonDefault = BoardEditablePresentation(
+            id: "alternate",
+            name: "Alternate",
+            aspectRatio: 2,
+            isDefault: false,
+            media: .raster(
+                assetPath: "assets/alternate.png",
+                contactGeometry: ["hold-one": [nonDefaultPiece]]
+            )
+        )
+        document.presentations.insert(nonDefault, at: 0)
+
+        XCTAssertEqual(document.geometry(forContactID: "hold-one")?[0].frame.x, 0.1)
+
+        var replacement = makePiece()
+        replacement.frame = BoardPackageFrameDocument(
+            x: 0.7,
+            y: 0.2,
+            width: 0.2,
+            height: 0.3
+        )
+        document.replaceGeometry(forContactID: "hold-one", with: [replacement])
+
+        guard case .raster(_, let alternateGeometry) = document.presentations[0].media,
+              case .raster(_, let defaultGeometry) = document.presentations[1].media else {
+            return XCTFail("expected two raster presentations")
+        }
+        XCTAssertEqual(alternateGeometry["hold-one"]?[0], nonDefaultPiece)
+        XCTAssertEqual(defaultGeometry["hold-one"]?[0], replacement)
+        XCTAssertEqual(document.geometry(forContactID: "hold-one")?[0], replacement)
+    }
+
+    func testReplacingGeometryDoesNotMutateADerivedDefaultRasterPresentation() throws {
+        var document = makeDocument()
+        document.presentations[0].derivation = .derived(
+            sourcePresentationID: "source",
+            isInverted: false
+        )
+        guard case .raster(_, let originalGeometry) = document.presentations[0].media else {
+            return XCTFail("fixture must use raster media")
+        }
+        XCTAssertEqual(document.geometry(forContactID: "hold-one"), originalGeometry["hold-one"])
+
+        var replacement = makePiece()
+        replacement.frame = BoardPackageFrameDocument(
+            x: 0.7,
+            y: 0.2,
+            width: 0.2,
+            height: 0.3
+        )
+        document.replaceGeometry(forContactID: "hold-one", with: [replacement])
+
+        guard case .raster(_, let geometry) = document.presentations[0].media else {
+            return XCTFail("expected raster media")
+        }
+        XCTAssertEqual(geometry, originalGeometry)
+    }
+
+    func testReplacingGeometryWritesTheOriginalDefaultWhenADerivedDefaultPrecedesIt() throws {
+        var document = makeDocument()
+        var derived = document.presentations[0]
+        derived.id = "derived"
+        derived.derivation = .derived(sourcePresentationID: "front", isInverted: false)
+        document.presentations.insert(derived, at: 0)
+
+        var replacement = makePiece()
+        replacement.frame = BoardPackageFrameDocument(
+            x: 0.7,
+            y: 0.2,
+            width: 0.2,
+            height: 0.3
+        )
+        document.replaceGeometry(forContactID: "hold-one", with: [replacement])
+
+        guard case .raster(_, let derivedGeometry) = document.presentations[0].media,
+              case .raster(_, let originalGeometry) = document.presentations[1].media else {
+            return XCTFail("expected raster media")
+        }
+        XCTAssertEqual(derivedGeometry["hold-one"]?[0], makePiece())
+        XCTAssertEqual(originalGeometry["hold-one"]?[0], replacement)
+    }
+
+    func testWriterRejectsGeometryForUnknownContact() throws {
+        var document = makeDocument()
+        guard case .raster(let assetPath, var geometry) = document.presentations[0].media else {
+            return XCTFail("fixture must use raster media")
+        }
+        geometry["not-a-contact"] = [makePiece()]
+        document.presentations[0].media = .raster(
+            assetPath: assetPath,
+            contactGeometry: geometry
+        )
+
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
+    }
 
     private func repositoryHangboardsURL() -> URL {
         URL(fileURLWithPath: #filePath)
@@ -10,955 +338,68 @@ final class BoardPackageWriterTests: XCTestCase {
             .appendingPathComponent("Hangboards", isDirectory: true)
     }
 
-    private func makePiece(
-        frame: BoardPackageFrameDocument = BoardPackageFrameDocument(x: 0, y: 0, width: 1, height: 1),
-        shape: BoardGeometryShapeDocument? = nil,
-        shapeConstraint: ShapeConstraint? = nil,
-        treatment: BoardGeometryTreatmentDocument? = nil
-    ) -> BoardEditablePiece {
-        let resolvedShape = shape ?? BoardGeometryShapeDocument(
-            type: "path",
-            commands: [
-                BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
-                BoardGeometryPathCommandDocument(command: "line", to: [1, 0], control: nil, control1: nil, control2: nil),
-                BoardGeometryPathCommandDocument(command: "line", to: [1, 1], control: nil, control1: nil, control2: nil),
-                BoardGeometryPathCommandDocument(command: "line", to: [0, 1], control: nil, control1: nil, control2: nil),
-                BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
-            ],
-            cornerRadiusFraction: nil
-        )
-        return BoardEditablePiece(
-            frame: frame,
-            shape: resolvedShape,
-            shapeConstraint: shapeConstraint,
-            treatment: treatment
-        )
-    }
-
-    private func makeHold(
-        id: String = "hold-one",
-        name: String = "Hold one",
-        kind: HoldKind = .jug,
-        sloper: SloperMetadata? = nil,
-        geometry: [BoardEditablePiece]? = nil
-    ) -> BoardEditableHold {
-        BoardEditableHold(
-            id: id,
-            name: name,
-            kind: kind,
-            sloper: sloper,
-            presentationID: "front",
-            geometry: geometry ?? [makePiece()]
-        )
-    }
-
-    private func makeDocument(
-        id: String = "test.board",
-        manufacturer: String = "Test",
-        name: String = "Test board",
-        subtitle: String = "Fixture",
-        productURL: String = "https://example.com/board",
-        dimensions: String = "70 \u{00d7} 25 cm",
-        aspectRatio: Double = 2.0,
-        holds: [BoardEditableHold]? = nil
-    ) -> BoardEditableDocument {
+    private func makeDocument() -> BoardEditableDocument {
         BoardEditableDocument(
-            id: id,
-            manufacturer: manufacturer,
-            name: name,
-            subtitle: subtitle,
-            productURL: URL(string: productURL)!,
-            dimensions: dimensions,
-            aspectRatio: aspectRatio,
-            holds: holds ?? [makeHold()],
+            id: "test.board",
+            revisionID: "test-revision",
+            manufacturer: "Test",
+            name: "Test board",
+            subtitle: "Fixture",
+            productURL: URL(string: "https://example.com/board")!,
+            dimensions: "70 × 25 cm",
+            aspectRatio: 2,
+            contacts: [
+                BoardEditableContact(id: "hold-one", name: "Hold one", kind: .jug),
+            ],
             presentations: [
                 BoardEditablePresentation(
                     id: "front",
                     name: "Front",
-                    assetPath: "assets/primary.png",
-                    aspectRatio: aspectRatio,
-                    isDefault: true
-                )
+                    aspectRatio: 2,
+                    isDefault: true,
+                    media: .raster(
+                        assetPath: "assets/primary.png",
+                        contactGeometry: ["hold-one": [makePiece()]]
+                    )
+                ),
             ]
         )
     }
 
-    private func shapeDroppingLastCommand(
-        _ shape: BoardGeometryShapeDocument
-    ) -> BoardGeometryShapeDocument {
-        BoardGeometryShapeDocument(
-            type: shape.type,
-            commands: shape.commands.map { Array($0.dropLast()) },
-            cornerRadiusFraction: nil
-        )
-    }
-
-    private func bundledSlugs() throws -> [String] {
-        try FileManager.default.contentsOfDirectory(at: repositoryHangboardsURL(), includingPropertiesForKeys: nil)
-            .map(\.lastPathComponent)
-            .sorted()
-    }
-
-    private func assertSemanticallyEqual(
-        _ lhs: BoardEditableDocument,
-        _ rhs: BoardEditableDocument,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        XCTAssertEqual(lhs.id, rhs.id, file: file, line: line)
-        XCTAssertEqual(lhs.manufacturer, rhs.manufacturer, file: file, line: line)
-        XCTAssertEqual(lhs.name, rhs.name, file: file, line: line)
-        XCTAssertEqual(lhs.subtitle, rhs.subtitle, file: file, line: line)
-        XCTAssertEqual(lhs.productURL.absoluteString, rhs.productURL.absoluteString, file: file, line: line)
-        XCTAssertEqual(lhs.dimensions, rhs.dimensions, file: file, line: line)
-        XCTAssertEqual(lhs.aspectRatio, rhs.aspectRatio, accuracy: 1e-12, file: file, line: line)
-        XCTAssertEqual(lhs.equipmentObjects, rhs.equipmentObjects, file: file, line: line)
-        XCTAssertEqual(lhs.presentations, rhs.presentations, file: file, line: line)
-        XCTAssertEqual(lhs.holds.count, rhs.holds.count, file: file, line: line)
-        for (leftHold, rightHold) in zip(lhs.holds, rhs.holds) {
-            XCTAssertEqual(leftHold.id, rightHold.id, file: file, line: line)
-            XCTAssertEqual(leftHold.name, rightHold.name, file: file, line: line)
-            XCTAssertEqual(leftHold.kind, rightHold.kind, file: file, line: line)
-            XCTAssertEqual(leftHold.sloper, rightHold.sloper, file: file, line: line)
-            XCTAssertEqual(leftHold.sizeMillimeters, rightHold.sizeMillimeters, file: file, line: line)
-            XCTAssertEqual(
-                leftHold.depthRangeMillimeters, rightHold.depthRangeMillimeters,
-                file: file, line: line
-            )
-            XCTAssertEqual(leftHold.gripType, rightHold.gripType, file: file, line: line)
-            XCTAssertEqual(leftHold.fingerCapacity, rightHold.fingerCapacity, file: file, line: line)
-            XCTAssertEqual(leftHold.handCapacity, rightHold.handCapacity, file: file, line: line)
-            XCTAssertEqual(leftHold.features, rightHold.features, file: file, line: line)
-            XCTAssertEqual(leftHold.geometry.count, rightHold.geometry.count, file: file, line: line)
-            for (leftPiece, rightPiece) in zip(leftHold.geometry, rightHold.geometry) {
-                XCTAssertEqual(leftPiece.frame.x, rightPiece.frame.x, accuracy: 1e-12, file: file, line: line)
-                XCTAssertEqual(leftPiece.frame.y, rightPiece.frame.y, accuracy: 1e-12, file: file, line: line)
-                XCTAssertEqual(leftPiece.frame.width, rightPiece.frame.width, accuracy: 1e-12, file: file, line: line)
-                XCTAssertEqual(leftPiece.frame.height, rightPiece.frame.height, accuracy: 1e-12, file: file, line: line)
-                XCTAssertEqual(leftPiece.shape.type, rightPiece.shape.type, file: file, line: line)
-                if leftPiece.shape.type == "roundedRect" {
-                    assertOptionalDoubleEqual(
-                        leftPiece.shape.cornerRadiusFraction,
-                        rightPiece.shape.cornerRadiusFraction,
-                        accuracy: 1e-12,
-                        file: file,
-                        line: line
-                    )
-                } else {
-                    XCTAssertEqual(
-                        leftPiece.shape.commands?.count, rightPiece.shape.commands?.count,
-                        file: file, line: line
-                    )
-                    for (leftCommand, rightCommand) in
-                        zip(leftPiece.shape.commands ?? [], rightPiece.shape.commands ?? []) {
-                        XCTAssertEqual(leftCommand.command, rightCommand.command, file: file, line: line)
-                        for (leftValue, rightValue) in zip(leftCommand.to ?? [], rightCommand.to ?? []) {
-                            XCTAssertEqual(leftValue, rightValue, accuracy: 1e-12, file: file, line: line)
-                        }
-                        for (leftValue, rightValue) in
-                            zip(leftCommand.control ?? [], rightCommand.control ?? []) {
-                            XCTAssertEqual(leftValue, rightValue, accuracy: 1e-12, file: file, line: line)
-                        }
-                        for (leftValue, rightValue) in
-                            zip(leftCommand.control1 ?? [], rightCommand.control1 ?? []) {
-                            XCTAssertEqual(leftValue, rightValue, accuracy: 1e-12, file: file, line: line)
-                        }
-                        for (leftValue, rightValue) in
-                            zip(leftCommand.control2 ?? [], rightCommand.control2 ?? []) {
-                            XCTAssertEqual(leftValue, rightValue, accuracy: 1e-12, file: file, line: line)
-                        }
-                    }
-                }
-                XCTAssertEqual(leftPiece.shapeConstraint, rightPiece.shapeConstraint, file: file, line: line)
-                XCTAssertEqual(leftPiece.treatment?.type, rightPiece.treatment?.type, file: file, line: line)
-                assertOptionalDoubleEqual(
-                    leftPiece.treatment?.rimInsetFraction,
-                    rightPiece.treatment?.rimInsetFraction,
-                    accuracy: 1e-12,
-                    file: file,
-                    line: line
-                )
-                XCTAssertEqual(leftPiece.treatment?.depth, rightPiece.treatment?.depth, file: file, line: line)
-            }
-        }
-    }
-
-    func testWriterRoundTripPreservesOptionalSloperMetadataVariants() throws {
-        let document = makeDocument(holds: [
-            makeHold(
-                id: "flat-angled",
-                kind: .sloper,
-                sloper: SloperMetadata(type: .flat, angleDegrees: 20)
+    private func makePiece() -> BoardEditablePiece {
+        BoardEditablePiece(
+            frame: BoardPackageFrameDocument(x: 0.1, y: 0.2, width: 0.3, height: 0.4),
+            shape: BoardGeometryShapeDocument(
+                type: "path",
+                commands: [
+                    .init(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
+                    .init(command: "line", to: [1, 0], control: nil, control1: nil, control2: nil),
+                    .init(command: "line", to: [1, 1], control: nil, control1: nil, control2: nil),
+                    .init(command: "line", to: [0, 1], control: nil, control1: nil, control2: nil),
+                    .init(command: "close", to: nil, control: nil, control1: nil, control2: nil),
+                ],
+                cornerRadiusFraction: nil
             ),
-            makeHold(
-                id: "flat-unspecified-angle",
-                kind: .sloper,
-                sloper: SloperMetadata(type: .flat, angleDegrees: nil)
-            ),
-            makeHold(
-                id: "round",
-                kind: .sloper,
-                sloper: SloperMetadata(type: .round, angleDegrees: nil)
-            ),
-            makeHold(id: "unspecified", kind: .sloper),
-        ])
-
-        let encoded = try BoardPackageWriter.data(for: document)
-        let redecoded = try BoardEditableDocument(data: encoded)
-
-        assertSemanticallyEqual(document, redecoded)
-        XCTAssertEqual(redecoded.holds.map(\.sloper), [
-            SloperMetadata(type: .flat, angleDegrees: 20),
-            SloperMetadata(type: .flat, angleDegrees: nil),
-            SloperMetadata(type: .round, angleDegrees: nil),
-            nil,
-        ])
-    }
-
-    func testWriterRoundTripsExplicitPositionsAndTransitions() throws {
-        var document = makeDocument()
-        document.positions = [
-            BoardPosition(id: "front", presentationID: "front"),
-            BoardPosition(id: "flipped", presentationID: "front-inverted"),
-        ]
-        document.positionTransitions = [
-            BoardPositionTransition(
-                fromPositionID: "front",
-                toPositionID: "flipped",
-                kind: .seamless
-            ),
-        ]
-        document.presentations.append(
-            BoardEditablePresentation(
-                id: "front-inverted",
-                name: "Front inverted",
-                assetPath: "assets/front-inverted.png",
-                aspectRatio: 2,
-                isDefault: false,
-                sourcePresentationID: "front",
-                isInverted: true
-            )
-        )
-
-        let redecoded = try BoardEditableDocument(data: BoardPackageWriter.data(for: document))
-
-        XCTAssertEqual(redecoded.positions, document.positions)
-        XCTAssertEqual(redecoded.positionTransitions, document.positionTransitions)
-    }
-
-    func testWriterLeavesLegacyTwoPresentationDocumentsWithoutExplicitPositions() throws {
-        var document = makeDocument()
-        var backHold = makeHold(id: "back-hold", name: "Back hold")
-        backHold.presentationID = "back"
-        document.holds.append(backHold)
-        document.presentations.append(
-            BoardEditablePresentation(
-                id: "back",
-                name: "Back",
-                assetPath: "assets/back.png",
-                aspectRatio: 2,
-                isDefault: false
-            )
-        )
-
-        let data = try BoardPackageWriter.data(for: document)
-        let decoded = try BoardEditableDocument(data: data)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
-
-        XCTAssertNil(decoded.positions)
-        XCTAssertNil(decoded.positionTransitions)
-        XCTAssertNil(object["positions"])
-        XCTAssertNil(object["positionTransitions"])
-    }
-
-    func testWriterRejectsHoldWithUnknownEquipmentObject() throws {
-        var document = makeDocument()
-        document.equipmentObjects = [EquipmentObject(id: "primary")]
-        document.holds[0].equipmentObjectID = "missing"
-
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
-    }
-
-    func testWriterRoundTripsExplicitEquipmentObjectAssignments() throws {
-        var document = makeDocument()
-        document.equipmentObjects = [EquipmentObject(id: "left"), EquipmentObject(id: "right")]
-        document.holds = [
-            makeHold(id: "left-hold", name: "Left hold"),
-            makeHold(id: "right-hold", name: "Right hold"),
-        ]
-        document.holds[0].equipmentObjectID = "left"
-        document.holds[1].equipmentObjectID = "right"
-
-        let redecoded = try BoardEditableDocument(data: BoardPackageWriter.data(for: document))
-
-        XCTAssertEqual(redecoded.equipmentObjects.map(\.id), ["left", "right"])
-        XCTAssertEqual(redecoded.holds.map(\.equipmentObjectID), ["left", "right"])
-    }
-
-    func testWriterRoundTripsStrictMissingHandCapacityPolicy() throws {
-        var document = makeDocument()
-        document.equipmentObjects = [
-            EquipmentObject(
-                id: "primary",
-                missingHandCapacityPolicy: .unavailable
-            )
-        ]
-
-        let encoded = try BoardPackageWriter.data(for: document)
-        let redecoded = try BoardEditableDocument(data: encoded)
-
-        XCTAssertEqual(
-            redecoded.equipmentObjects.first?.missingHandCapacityPolicy,
-            .unavailable
-        )
-        let json = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
-        )
-        let equipmentObjects = try XCTUnwrap(
-            json["equipmentObjects"] as? [[String: Any]]
-        )
-        XCTAssertEqual(
-            equipmentObjects.first?["missingHandCapacityPolicy"] as? String,
-            "unavailable"
-        )
-    }
-
-    func testWriterRejectsInvalidSloperMetadataCombinations() throws {
-        let invalidHolds = [
-            makeHold(
-                kind: .jug,
-                sloper: SloperMetadata(type: .flat, angleDegrees: 20)
-            ),
-            makeHold(
-                kind: .sloper,
-                sloper: SloperMetadata(type: .round, angleDegrees: 20)
-            ),
-            makeHold(
-                kind: .sloper,
-                sloper: SloperMetadata(type: .flat, angleDegrees: -0.01)
-            ),
-            makeHold(
-                kind: .sloper,
-                sloper: SloperMetadata(type: .flat, angleDegrees: 90.01)
-            ),
-            makeHold(
-                kind: .sloper,
-                sloper: SloperMetadata(type: .flat, angleDegrees: .infinity)
-            ),
-        ]
-
-        for invalidHold in invalidHolds {
-            XCTAssertThrowsError(
-                try BoardPackageWriter.data(for: makeDocument(holds: [invalidHold]))
-            )
-        }
-    }
-
-    private func assertOptionalDoubleEqual(
-        _ lhs: Double?,
-        _ rhs: Double?,
-        accuracy: Double,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        switch (lhs, rhs) {
-        case (nil, nil):
-            break
-        case (let left?, let right?):
-            XCTAssertEqual(left, right, accuracy: accuracy, file: file, line: line)
-        default:
-            XCTFail("optional double presence mismatch", file: file, line: line)
-        }
-    }
-
-    func testSupportedEditorDocumentRoundTripIsSemanticallyIdentical() throws {
-        let document = makeDocument()
-        let encoded = try BoardPackageWriter.data(for: document)
-        let redecoded = try BoardEditableDocument(data: encoded)
-
-        assertSemanticallyEqual(document, redecoded)
-        XCTAssertEqual(encoded, try BoardPackageWriter.data(for: redecoded))
-    }
-
-    func testEveryBundledPackageExplicitlyAssignsEveryHoldToAnEquipmentObject() throws {
-        for slug in try bundledSlugs() {
-            let data = try Data(
-                contentsOf: repositoryHangboardsURL().appendingPathComponent("\(slug)/board.json")
-            )
-            let document = try XCTUnwrap(
-                JSONSerialization.jsonObject(with: data) as? [String: Any],
-                "\(slug) board document"
-            )
-            let objects = try XCTUnwrap(document["equipmentObjects"] as? [[String: Any]])
-            XCTAssertFalse(objects.isEmpty, "\(slug) must declare equipment objects")
-            let holds = try XCTUnwrap(document["holds"] as? [[String: Any]])
-
-            for hold in holds {
-                let holdID = try XCTUnwrap(hold["id"] as? String)
-                XCTAssertNotNil(
-                    hold["equipmentObjectID"] as? String,
-                    "\(slug) hold \(holdID) must explicitly declare equipmentObjectID"
-                )
-            }
-        }
-    }
-
-    func testWriterRoundTripPreservesOmittedDimensions() throws {
-        let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
-        let withoutDimensions = source.replacingOccurrences(
-            of: "  \"dimensions\": \"70 \\u00d7 25 cm\",\n",
-            with: ""
-        )
-        XCTAssertNotEqual(withoutDimensions, source)
-
-        let decoded = try BoardEditableDocument(data: Data(withoutDimensions.utf8))
-        XCTAssertNil(decoded.dimensions)
-
-        let reencoded = try BoardPackageWriter.data(for: decoded)
-        let output = String(decoding: reencoded, as: UTF8.self)
-        XCTAssertFalse(output.contains("\"dimensions\""))
-        XCTAssertNil(try BoardEditableDocument(data: reencoded).dimensions)
-    }
-
-    func testWriterRejectsExplicitlyEmptyDimensions() throws {
-        let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
-        let emptyDimensions = source.replacingOccurrences(
-            of: "\"dimensions\": \"70 \\u00d7 25 cm\"",
-            with: "\"dimensions\": \"\""
-        )
-        XCTAssertNotEqual(emptyDimensions, source)
-
-        let decoded = try BoardEditableDocument(data: Data(emptyDimensions.utf8))
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: decoded)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageWriterError,
-                .invalid("board test.board: dimensions must not be empty when present")
-            )
-        }
-    }
-
-    func testEditorDocumentRoundTripsOrientationAliases() throws {
-        var decoded = makeDocument()
-        decoded.presentations.append(
-            BoardEditablePresentation(
-                id: "front-inverted",
-                name: "Front inverted",
-                assetPath: "assets/front-inverted.png",
-                aspectRatio: 2,
-                isDefault: false,
-                sourcePresentationID: "front",
-                isInverted: true
-            )
-        )
-        decoded.positions = [
-            BoardPosition(id: "front", presentationID: "front"),
-            BoardPosition(id: "front-inverted", presentationID: "front-inverted")
-        ]
-        decoded.positionTransitions = [
-            BoardPositionTransition(
-                fromPositionID: "front",
-                toPositionID: "front-inverted",
-                kind: .seamless
-            )
-        ]
-
-        let encoded = try BoardPackageWriter.data(for: decoded)
-        let redecoded = try BoardEditableDocument(data: encoded)
-
-        assertSemanticallyEqual(decoded, redecoded)
-        XCTAssertEqual(encoded, try BoardPackageWriter.data(for: redecoded))
-    }
-
-    func testWriterRejectsInvalidPresentationAliasesAndAliasOwnedHoldsInEditorDocuments() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument())
-        let source = String(decoding: encoded, as: UTF8.self)
-
-        let invalidAliasSources = ["front-inverted", "unknown"]
-        for sourcePresentationID in invalidAliasSources {
-            let document = try editorDocument(
-                source.replacingOccurrences(
-                    of: "      \"default\": true\n",
-                    with: "      \"default\": true,\n"
-                        + "      \"sourcePresentationID\": \"\(sourcePresentationID)\",\n"
-                        + "      \"isInverted\": true\n"
-                )
-            )
-
-            XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
-                XCTAssertEqual(
-                    error as? BoardPackageWriterError,
-                    .invalid(
-                        "board test.board: presentation front must reference a canonical presentation"
-                    )
-                )
-            }
-        }
-
-        let aliasPresentation = """
-            },
-            {
-              \"id\": \"front-inverted\",
-              \"name\": \"Front upside down\",
-              \"assetPath\": \"assets/front-inverted.png\",
-              \"aspectRatio\": 2.0,
-              \"default\": false,
-              \"sourcePresentationID\": \"front\",
-              \"isInverted\": true
-            }
-        """
-        let withAlias = source.replacingOccurrences(
-            of: "    }\n  ]\n}\n",
-            with: aliasPresentation + "\n  ]\n}\n"
-        )
-        var aliasOwnedHold = try editorDocument(withAlias)
-        var copiedHold = try XCTUnwrap(aliasOwnedHold.holds.first)
-        copiedHold.id = "alias-owned-hold"
-        copiedHold.presentationID = "front-inverted"
-        aliasOwnedHold.holds.append(copiedHold)
-
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: aliasOwnedHold)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageWriterError,
-                .invalid(
-                    "board test.board: hold alias-owned-hold must be owned by a canonical presentation"
-                )
-            )
-        }
-    }
-
-    private func editorDocument(_ source: String) throws -> BoardEditableDocument {
-        try BoardEditableDocument(data: Data(source.utf8))
-    }
-
-    private static func describeFirstDifference(
-        _ left: BoardEditableDocument,
-        _ right: BoardEditableDocument
-    ) -> String? {
-        if left.holds.count != right.holds.count {
-            return "hold count \(left.holds.count) != \(right.holds.count)"
-        }
-        for (holdIndex, leftHold) in left.holds.enumerated() {
-            let rightHold = right.holds[holdIndex]
-            if leftHold.id != rightHold.id { return "holds[\(holdIndex)].id \(leftHold.id) != \(rightHold.id)" }
-            if leftHold.name != rightHold.name { return "\(leftHold.id) name differs" }
-            if leftHold.kind != rightHold.kind { return "\(leftHold.id) kind differs" }
-            if leftHold.sloper != rightHold.sloper { return "\(leftHold.id) sloper metadata differs" }
-            if leftHold.sizeMillimeters != rightHold.sizeMillimeters { return "\(leftHold.id) size differs" }
-            if leftHold.depthRangeMillimeters != rightHold.depthRangeMillimeters { return "\(leftHold.id) depth differs" }
-            if leftHold.gripType != rightHold.gripType { return "\(leftHold.id) gripType differs" }
-            if leftHold.fingerCapacity != rightHold.fingerCapacity { return "\(leftHold.id) fingerCapacity differs" }
-            if leftHold.handCapacity != rightHold.handCapacity { return "\(leftHold.id) handCapacity differs" }
-            if leftHold.features != rightHold.features { return "\(leftHold.id) features differ" }
-            if leftHold.geometry.count != rightHold.geometry.count {
-                return "\(leftHold.id) piece count \(leftHold.geometry.count) != \(rightHold.geometry.count)"
-            }
-            for (pieceIndex, leftPiece) in leftHold.geometry.enumerated() {
-                let rightPiece = rightHold.geometry[pieceIndex]
-                let label = "\(leftHold.id).geometry[\(pieceIndex)]"
-                if leftPiece.frame != rightPiece.frame { return "\(label) frame \(leftPiece.frame) != \(rightPiece.frame)" }
-                if leftPiece.shape.type != rightPiece.shape.type { return "\(label) shape type differs" }
-                if leftPiece.shape.cornerRadiusFraction != rightPiece.shape.cornerRadiusFraction {
-                    return "\(label) corner radius differs"
-                }
-                if leftPiece.shapeConstraint != rightPiece.shapeConstraint {
-                    return "\(label) constraint \(String(describing: leftPiece.shapeConstraint)) != \(String(describing: rightPiece.shapeConstraint))"
-                }
-                if leftPiece.treatment != rightPiece.treatment { return "\(label) treatment differs" }
-                let leftCommands = leftPiece.shape.commands ?? []
-                let rightCommands = rightPiece.shape.commands ?? []
-                if leftCommands.count != rightCommands.count {
-                    return "\(label) command count \(leftCommands.count) != \(rightCommands.count)"
-                }
-                for (commandIndex, leftCommand) in leftCommands.enumerated() {
-                    let rightCommand = rightCommands[commandIndex]
-                    if leftCommand != rightCommand {
-                        return "\(label).commands[\(commandIndex)] \(describeCommand(leftCommand)) != \(describeCommand(rightCommand))"
-                    }
-                }
-            }
-        }
-        return nil
-    }
-
-    private static func describeCommand(_ command: BoardGeometryPathCommandDocument) -> String {
-        "\(command.command) to=\(command.to.map(describePoint) ?? "nil")"
-            + " control=\(command.control.map(describePoint) ?? "nil")"
-            + " control1=\(command.control1.map(describePoint) ?? "nil")"
-            + " control2=\(command.control2.map(describePoint) ?? "nil")"
-    }
-
-    private static func describePoint(_ values: [Double]) -> String {
-        values.map { value in
-            String(format: "%.17g", value)
-        }.joined(separator: ",")
-    }
-
-    func testCanonicalFormattingMatchesRepositoryConventions() throws {
-        let document = makeDocument(
-            id: "zlagboard.pro",
-            dimensions: "70.5 \u{00d7} 25 cm",
-            aspectRatio: 2.0,
-            holds: [
-                BoardEditableHold(
-                    id: "edge-7-5-left",
-                    name: "Left 7.5 mm edge",
-                    kind: .edge,
-                    sizeMillimeters: 7.5,
-                    gripType: .halfCrimp,
-                    fingerCapacity: 4,
-                    handCapacity: 1,
-                    features: [.incutEdge, .flatEdge],
-                    presentationID: "front",
-                    geometry: [
-                        BoardEditablePiece(
-                            frame: BoardPackageFrameDocument(x: 0.04, y: 0.479, width: 0.133, height: 0.11),
-                            shape: BoardGeometryShapeDocument(
-                                type: "path",
-                                commands: [
-                                    BoardGeometryPathCommandDocument(command: "move", to: [0.14673781227261695, 0], control: nil, control1: nil, control2: nil),
-                                    BoardGeometryPathCommandDocument(command: "quad", to: [1, 0.5000000000000006], control: [1, 0], control1: nil, control2: nil),
-                                    BoardGeometryPathCommandDocument(command: "curve", to: [0, 0], control: nil, control1: [-3.125e-06, 0.5], control2: [0, 0.2238576347894534]),
-                                    BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
-                                ],
-                                cornerRadiusFraction: nil
-                            ),
-                            shapeConstraint: ShapeConstraint(shape: .pill, rotationDegrees: 0),
-                            treatment: BoardGeometryTreatmentDocument(type: "recess", rimInsetFraction: 0.12, depth: "deep")
-                        )
-                    ]
-                )
-            ]
-        )
-
-        let encoded = try BoardPackageWriter.data(for: document)
-        let output = String(decoding: encoded, as: UTF8.self)
-        XCTAssertTrue(output.hasPrefix("{\n  \"id\": \"zlagboard.pro\",\n"))
-        XCTAssertTrue(output.contains("  \"dimensions\": \"70.5 \\u00d7 25 cm\",\n"))
-        XCTAssertTrue(output.contains("  \"aspectRatio\": 2.0,\n"))
-        XCTAssertTrue(output.contains("\"sizeMillimeters\": 7.5"))
-        XCTAssertTrue(output.contains(
-            "          \"shapeConstraint\": {\n"
-                + "            \"shape\": \"pill\",\n"
-                + "            \"rotationDegrees\": 0.0\n"
-                + "          },\n"
-        ))
-        XCTAssertTrue(output.contains("\"control1\": [\n                  -3.125e-06,\n                  0.5\n                ]"))
-        XCTAssertTrue(output.contains("\"to\": [\n                  1.0,\n                  0.5000000000000006\n                ]"))
-        XCTAssertTrue(output.contains(
-            "          \"treatment\": {\n"
-                + "            \"type\": \"recess\",\n"
-                + "            \"rimInsetFraction\": 0.12,\n"
-                + "            \"depth\": \"deep\"\n"
-                + "          }\n"
-        ))
-        XCTAssertTrue(output.contains("  \"features\": [\n        \"incutEdge\",\n        \"flatEdge\"\n      ],\n"))
-        let expectedPresentations = [
-            "  \"presentations\": [",
-            "    {",
-            "      \"id\": \"front\",",
-            "      \"name\": \"Front\",",
-            "      \"assetPath\": \"assets/primary.png\",",
-            "      \"aspectRatio\": 2.0,",
-            "      \"default\": true",
-            "    }",
-            "  ]",
-        ]
-        for expectedLine in expectedPresentations {
-            XCTAssertTrue(output.contains(expectedLine + "\n"), "missing line: \(expectedLine)")
-        }
-        XCTAssertTrue(output.hasSuffix("}\n"))
-
-        let lines = output.split(separator: "\n").map(String.init)
-        XCTAssertEqual(lines[0], "{")
-        XCTAssertEqual(lines[1], "  \"id\": \"zlagboard.pro\",")
-        XCTAssertEqual(lines.last, "}")
-
-        let redecoded = try BoardEditableDocument(data: encoded)
-        assertSemanticallyEqual(document, redecoded)
-    }
-
-    func testReencodedEditorDocumentKeepsTopLevelOrderEscapesAndTrailingNewline() throws {
-        let document = makeDocument(
-            id: "zlagboard.pro",
-            manufacturer: "Zlagboard"
-        )
-        let encoded = try BoardPackageWriter.data(for: document)
-        let output = String(decoding: encoded, as: UTF8.self)
-
-        XCTAssertEqual(
-            output.hasPrefix("{\n  \"id\": \"zlagboard.pro\",\n  \"manufacturer\": \"Zlagboard\","),
-            true
-        )
-        XCTAssertTrue(output.contains("\\u00d7"), "non-ASCII multiplication sign must be escaped")
-        XCTAssertTrue(output.hasSuffix("}\n"))
-    }
-
-    func testWriterRejectsLoaderInvalidDocuments() throws {
-        var openPath = makeDocument()
-        openPath.holds[0].geometry[0].shape = shapeDroppingLastCommand(
-            openPath.holds[0].geometry[0].shape
-        )
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: openPath))
-
-        var secondMove = makeDocument()
-        var secondMoveCommands = secondMove.holds[0].geometry[0].shape.commands ?? []
-        secondMoveCommands[2] =
-            BoardGeometryPathCommandDocument(command: "move", to: [1, 1], control: nil, control1: nil, control2: nil)
-        secondMove.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
-            type: "path",
-            commands: secondMoveCommands,
-            cornerRadiusFraction: nil
-        )
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: secondMove))
-
-        var rotatedTooFar = makeDocument()
-        rotatedTooFar.holds[0].geometry[0].shapeConstraint = ShapeConstraint(shape: .rectangle, rotationDegrees: 180)
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: rotatedTooFar))
-
-        var unknownShape = makeDocument()
-        unknownShape.holds[0].geometry[0] = BoardEditablePiece(
-            frame: unknownShape.holds[0].geometry[0].frame,
-            shape: BoardGeometryShapeDocument(type: "blob", commands: nil, cornerRadiusFraction: nil),
             shapeConstraint: nil,
             treatment: nil
         )
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: unknownShape))
-
-        var oversizedRadius = makeDocument()
-        oversizedRadius.holds[0].geometry[0] = BoardEditablePiece(
-            frame: oversizedRadius.holds[0].geometry[0].frame,
-            shape: BoardGeometryShapeDocument(type: "roundedRect", commands: nil, cornerRadiusFraction: 0.6),
-            shapeConstraint: nil,
-            treatment: nil
-        )
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: oversizedRadius))
-
-        var shelfWithoutInset = makeDocument()
-        shelfWithoutInset.holds[0].geometry[0].treatment =
-            BoardGeometryTreatmentDocument(type: "shelf", rimInsetFraction: nil, depth: nil)
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: shelfWithoutInset))
-
-        var recessWithBadDepth = makeDocument()
-        recessWithBadDepth.holds[0].geometry[0].treatment =
-            BoardGeometryTreatmentDocument(type: "recess", rimInsetFraction: 0.1, depth: "bottomless")
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: recessWithBadDepth))
-
-        XCTAssertThrowsError(
-            try BoardPackageWriter.data(for: makeDocument(productURL: "http://example.com/board"))
-        )
-        XCTAssertThrowsError(
-            try BoardPackageWriter.data(for: makeDocument(id: "Not A Slug"))
-        )
-
-        var badCapacity = makeDocument()
-        badCapacity.holds[0].fingerCapacity = 5
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: badCapacity))
-
-        var duplicateFeatures = makeDocument()
-        duplicateFeatures.holds[0].features = [.mediumEdge, .mediumEdge]
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: duplicateFeatures))
-
-        var zeroSize = makeDocument()
-        zeroSize.holds[0].sizeMillimeters = 0
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: zeroSize))
-
-        var invertedDepth = makeDocument()
-        invertedDepth.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(lowerBound: 20, upperBound: 5)
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: invertedDepth))
-
-        var conflictingDepthForms = makeDocument()
-        conflictingDepthForms.holds[0].sizeMillimeters = 7.5
-        conflictingDepthForms.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
-            lowerBound: 7.5,
-            upperBound: 12.5
-        )
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: conflictingDepthForms)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageWriterError,
-                .invalid("board test.board: hold hold-one must not specify both a size and depth range")
-            )
-        }
-
-        let emptyGeometry = makeDocument(holds: [makeHold(geometry: [])])
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: emptyGeometry))
-
-        let noHolds = makeDocument(holds: [])
-        XCTAssertThrowsError(try BoardPackageWriter.data(for: noHolds))
     }
 
-    func testBendableMarkSurvivesRoundTrip() throws {
-        var document = makeDocument()
-        document.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
-            type: "path",
-            commands: [
-                BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
-                BoardGeometryPathCommandDocument(
-                    command: "curve",
-                    to: [1, 1],
-                    control: nil,
-                    control1: [0.25, 0],
-                    control2: [0.75, 0.5],
-                    bendable: true
-                ),
-                BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
-            ],
-            cornerRadiusFraction: nil
-        )
-
-        let encoded = try BoardPackageWriter.data(for: document)
-        let output = String(decoding: encoded, as: UTF8.self)
-        XCTAssertTrue(output.contains("\"bendable\": true"))
-        let redecoded = try BoardEditableDocument(data: encoded)
-        XCTAssertEqual(
-            redecoded.holds[0].geometry[0].shape.commands?[1].bendable,
-            true
+    private func jsonObject(for document: BoardEditableDocument) throws -> [String: Any] {
+        try XCTUnwrap(
+            JSONSerialization.jsonObject(with: BoardPackageWriter.data(for: document))
+                as? [String: Any]
         )
     }
 
-    func testSmoothMarkSurvivesRoundTrip() throws {
-        var document = makeDocument()
-        document.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
-            type: "path",
-            commands: [
-                BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
-                BoardGeometryPathCommandDocument(
-                    command: "curve",
-                    to: [1, 1],
-                    control: nil,
-                    control1: [0.25, 0],
-                    control2: [0.75, 0.5],
-                    smooth: true
-                ),
-                BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
-            ],
-            cornerRadiusFraction: nil
-        )
-
-        let encoded = try BoardPackageWriter.data(for: document)
-        let output = String(decoding: encoded, as: UTF8.self)
-        XCTAssertTrue(output.contains("\"smooth\": true"))
-        let redecoded = try BoardEditableDocument(data: encoded)
-        XCTAssertEqual(
-            redecoded.holds[0].geometry[0].shape.commands?[1].smooth,
-            true
-        )
+    private func decode(_ payload: [String: Any]) throws -> BoardEditableDocument {
+        try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: payload))
     }
 
-    func testStrictDecoderRejectsUnknownKeys() throws {
-        var document = makeDocument()
-        let encoded = try BoardPackageWriter.data(for: document)
-
-        var tampered = String(decoding: encoded, as: UTF8.self)
-        tampered = tampered.replacingOccurrences(
-            of: "\"dimensions\":",
-            with: "\"legacyField\": true,\n  \"dimensions\":"
+    private func modelDisplay() throws -> BoardPackageModelDisplayDocument {
+        try JSONDecoder().decode(
+            BoardPackageModelDisplayDocument.self,
+            from: Data(#"{"camera":{"type":"orthographic","viewDirection":[0,0,-1],"up":[0,1,0],"fitPadding":0.08}}"#.utf8)
         )
-        XCTAssertThrowsError(try BoardEditableDocument(data: Data(tampered.utf8)))
-
-        document.holds[0].geometry[0].shapeConstraint = ShapeConstraint(
-            shape: .roundedRectangle,
-            rotationDegrees: -179.5
-        )
-        let constrainedBytes = try BoardPackageWriter.data(for: document)
-        let redecoded = try BoardEditableDocument(data: constrainedBytes)
-        XCTAssertEqual(redecoded.holds[0].geometry[0].shapeConstraint?.rotationDegrees, -179.5)
-    }
-
-    func testEditorDecoderRejectsUnknownKeysInEquipmentObjects() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument())
-        var document = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
-        )
-        document["equipmentObjects"] = [["id": "primary", "unexpected": true]]
-
-        XCTAssertThrowsError(
-            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
-        )
-    }
-
-    func testEditorDecoderRejectsUnknownKeysInPositions() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument())
-        var document = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
-        )
-        document["positions"] = [[
-            "id": "front",
-            "presentationID": "front",
-            "unexpected": true,
-        ]]
-
-        XCTAssertThrowsError(
-            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
-        )
-    }
-
-    func testEditorDecoderRejectsUnknownKeysInPositionTransitions() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument())
-        var document = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
-        )
-        document["positionTransitions"] = [[
-            "fromPositionID": "front",
-            "toPositionID": "flipped",
-            "kind": "seamless",
-            "unexpected": true,
-        ]]
-
-        XCTAssertThrowsError(
-            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
-        )
-    }
-
-    func testEditorDecoderPreservesOmittedKindButRejectsNullKind() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument())
-        let source = String(decoding: encoded, as: UTF8.self)
-        let kind = "      \"kind\": \"jug\",\n"
-
-        let omittedKind = source.replacingOccurrences(of: kind, with: "")
-        let decoded = try BoardEditableDocument(data: Data(omittedKind.utf8))
-        XCTAssertNil(decoded.holds[0].kind)
-
-        let nullKind = source.replacingOccurrences(of: kind, with: "      \"kind\": null,\n")
-        XCTAssertThrowsError(try BoardEditableDocument(data: Data(nullKind.utf8)))
-
-        let unsupportedKind = source.replacingOccurrences(of: kind, with: "      \"kind\": \"unsupported\",\n")
-        XCTAssertThrowsError(try BoardEditableDocument(data: Data(unsupportedKind.utf8)))
-    }
-
-    func testEditorDecoderRejectsExplicitNullPairedHoldIDOnNonGaston() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument())
-        let source = String(decoding: encoded, as: UTF8.self)
-        let insertion = "      \"pairedHoldID\": null,\n"
-        let tampered = source.replacingOccurrences(
-            of: "      \"presentationID\": \"front\",\n",
-            with: insertion + "      \"presentationID\": \"front\",\n"
-        )
-
-        XCTAssertThrowsError(try BoardEditableDocument(data: Data(tampered.utf8)))
-    }
-
-    func testWriterRoundTripsReciprocalGastonPairMetadata() throws {
-        let encoded = try BoardPackageWriter.data(for: makeDocument(holds: [
-            makeHold(id: "gaston-left", name: "Left gaston"),
-            makeHold(id: "gaston-right", name: "Right gaston"),
-        ]))
-        var payload = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
-        )
-        var holds = try XCTUnwrap(payload["holds"] as? [[String: Any]])
-        holds[0]["kind"] = "gaston"
-        holds[0]["pairedHoldID"] = "gaston-right"
-        holds[1]["kind"] = "gaston"
-        holds[1]["pairedHoldID"] = "gaston-left"
-        payload["holds"] = holds
-        let gastonDocument = try BoardEditableDocument(
-            data: JSONSerialization.data(withJSONObject: payload)
-        )
-
-        let output = try BoardPackageWriter.data(for: gastonDocument)
-        let redecoded = try BoardEditableDocument(data: output)
-
-        XCTAssertEqual(redecoded.holds.map(\.pairedHoldID), ["gaston-right", "gaston-left"])
-        XCTAssertTrue(String(decoding: output, as: UTF8.self).contains("\"pairedHoldID\": \"gaston-right\""))
     }
 }

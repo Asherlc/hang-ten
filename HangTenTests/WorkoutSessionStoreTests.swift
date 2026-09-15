@@ -26,10 +26,29 @@ final class WorkoutSessionStoreTests: XCTestCase {
         emptyStore.flush()
         XCTAssertEqual(emptyStore.sessions, [])
 
-        defaults.set(Data("not JSON".utf8), forKey: "workout.sessionHistory")
+        defaults.set(Data("not JSON".utf8), forKey: WorkoutSessionStore.legacyKey)
         let malformedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         malformedStore.flush()
         XCTAssertEqual(malformedStore.sessions, [])
+    }
+
+    func testStoreDoesNotDecodeFormerSessionHistoryKey() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let formerRecord = session(
+            id: "00000000-0000-0000-0000-000000000001",
+            recordedAt: 20
+        )
+        defaults.set(
+            try JSONEncoder().encode([formerRecord]),
+            forKey: WorkoutSessionStore.legacyKey
+        )
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [])
+        XCTAssertNil(defaults.object(forKey: WorkoutSessionStore.legacyKey))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
     }
 
     func testInitializationReturnsBeforeHistoryReadCompletes() throws {
@@ -67,74 +86,79 @@ final class WorkoutSessionStoreTests: XCTestCase {
         )
     }
 
-    func testMigratesLegacyHistoryToIndividualSessionFilesAndClearsTheBlob() throws {
+    func testFormerSessionFilesAreRemovedWithoutDecoding() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let formerRecord = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let formerFile = directory.appendingPathComponent("session-\(formerRecord.id.uuidString).json")
+        try JSONEncoder().encode(formerRecord).write(to: formerFile)
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: formerFile.path))
+    }
+
+    func testStaleSessionDeletionFailureDoesNotPreventLoadingCurrentSessions() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let current = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
+        try JSONEncoder().encode(current).write(to: currentSessionFileURL(for: current))
+        try Data().write(to: directory.appendingPathComponent("session-obsolete.json"))
+        let fileManager = StaleDeletionFailingFileManager()
+
+        let store = WorkoutSessionStore(
+            defaults: defaults,
+            directory: directory,
+            fileManager: fileManager
+        )
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [current])
+        XCTAssertNil(store.persistenceError)
+        XCTAssertTrue(fileManager.didAttemptStaleDeletion)
+    }
+
+    func testFormerMigrationMarkerIsRemoved() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let marker = directory.appendingPathComponent("legacy-migration-complete")
+        try Data().write(to: marker)
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: marker.path))
+    }
+
+    func testCurrentV2FileLoadsWithoutConsultingFormerBlob() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let former = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        let current = session(id: "00000000-0000-0000-0000-000000000003", recordedAt: 30)
+        defaults.set(try JSONEncoder().encode([former]), forKey: WorkoutSessionStore.legacyKey)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try JSONEncoder().encode(current).write(to: currentSessionFileURL(for: current))
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [current])
+        XCTAssertNil(defaults.data(forKey: WorkoutSessionStore.legacyKey))
+    }
+
+    func testCurrentV2FilesUseStableNewestFirstOrdering() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let older = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
         let newer = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
-        defaults.set(try JSONEncoder().encode([older, newer]), forKey: "workout.sessionHistory")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try JSONEncoder().encode(older).write(to: currentSessionFileURL(for: older))
+        try JSONEncoder().encode(newer).write(to: currentSessionFileURL(for: newer))
 
         let store = WorkoutSessionStore(defaults: defaults, directory: directory)
         store.flush()
 
         XCTAssertEqual(store.sessions, [newer, older])
-        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
-        XCTAssertEqual(try sessionFiles().count, 2)
-        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
-        reloadedStore.flush()
-        XCTAssertEqual(reloadedStore.sessions, [newer, older])
-    }
-
-    func testImmediateFlushWaitsForInitialLegacyMigration() throws {
-        let defaults = UserDefaults(suiteName: suite)!
-        let record = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
-        defaults.set(try JSONEncoder().encode([record]), forKey: "workout.sessionHistory")
-
-        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
-        store.flush()
-
-        XCTAssertTrue(FileManager.default.fileExists(
-            atPath: directory.appendingPathComponent("legacy-migration-complete").path
-        ))
-        XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), ["session-\(record.id.uuidString).json"])
-        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
-    }
-
-    func testUnmarkedStoreRetriesMigrationFromValidLegacyHistory() throws {
-        let defaults = UserDefaults(suiteName: suite)!
-        let older = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
-        let newer = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
-        let partialExtra = session(id: "00000000-0000-0000-0000-000000000003", recordedAt: 30)
-        defaults.set(try JSONEncoder().encode([older, newer]), forKey: "workout.sessionHistory")
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try JSONEncoder().encode(partialExtra).write(
-            to: directory.appendingPathComponent("session-\(partialExtra.id.uuidString).json")
-        )
-
-        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
-        store.flush()
-
-        XCTAssertEqual(store.sessions, [partialExtra, newer, older])
-        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
-        XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), [
-            "session-\(newer.id.uuidString).json",
-            "session-\(older.id.uuidString).json",
-            "session-\(partialExtra.id.uuidString).json"
-        ].sorted())
-    }
-
-    func testLegacyMigrationDeduplicatesRepeatedSessionIDs() throws {
-        let defaults = UserDefaults(suiteName: suite)!
-        let olderCopy = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
-        let newerCopy = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
-        defaults.set(try JSONEncoder().encode([olderCopy, newerCopy]), forKey: "workout.sessionHistory")
-
-        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
-        store.flush()
-
-        XCTAssertEqual(store.sessions, [newerCopy])
-        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
-        reloadedStore.flush()
-        XCTAssertEqual(reloadedStore.sessions, [newerCopy])
     }
 
     func testAppendWritesOneRoundTrippableFilePerSession() throws {
@@ -146,7 +170,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.flush()
 
         let files = try sessionFiles()
-        XCTAssertEqual(files.map(\.lastPathComponent), ["session-\(record.id.uuidString).json"])
+        XCTAssertEqual(files.map(\.lastPathComponent), ["session-v2-\(record.id.uuidString).json"])
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: Data(contentsOf: files[0])), record)
         let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         reloadedStore.flush()
@@ -347,7 +371,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.flush()
 
         XCTAssertFalse(try sessionFiles().contains {
-            $0.lastPathComponent == "session-\(oldRecord.id.uuidString).json"
+            $0.lastPathComponent == "session-v2-\(oldRecord.id.uuidString).json"
         })
         let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         reloadedStore.flush()
@@ -372,7 +396,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.flush()
 
         XCTAssertTrue(try sessionFiles().contains {
-            $0.lastPathComponent == "session-\(reappended.id.uuidString).json"
+            $0.lastPathComponent == "session-v2-\(reappended.id.uuidString).json"
         })
         let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         reloadedStore.flush()
@@ -383,10 +407,12 @@ final class WorkoutSessionStoreTests: XCTestCase {
         let defaults = UserDefaults(suiteName: suite)!
         let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
         let second = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 20)
-        defaults.set(try JSONEncoder().encode([first]), forKey: "workout.sessionHistory")
         try Data("not a directory".utf8).write(to: directory)
         let store = WorkoutSessionStore(defaults: defaults, directory: directory)
 
+        store.flush()
+        XCTAssertNotNil(store.persistenceError)
+        store.append(first)
         store.flush()
         XCTAssertNotNil(store.persistenceError)
 
@@ -396,34 +422,6 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.flush()
 
         XCTAssertNil(store.persistenceError)
-        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
-        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
-        reloadedStore.flush()
-        XCTAssertEqual(reloadedStore.sessions, [second, first])
-    }
-
-    func testFailedLegacyMigrationKeepsCachedPendingStateForRetry() throws {
-        let defaults = UserDefaults(suiteName: suite)!
-        let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
-        let second = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 20)
-        defaults.set(try JSONEncoder().encode([first]), forKey: "workout.sessionHistory")
-        try Data("not a directory".utf8).write(to: directory)
-
-        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
-        store.flush()
-        XCTAssertNotNil(store.persistenceError)
-
-        try FileManager.default.removeItem(at: directory)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        defaults.set(Data("legacy payload changed after the first attempt".utf8), forKey: "workout.sessionHistory")
-
-        store.append(second)
-        store.flush()
-
-        XCTAssertNil(store.persistenceError)
-        XCTAssertTrue(FileManager.default.fileExists(
-            atPath: directory.appendingPathComponent("legacy-migration-complete").path
-        ))
         let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         reloadedStore.flush()
         XCTAssertEqual(reloadedStore.sessions, [second, first])
@@ -434,10 +432,10 @@ final class WorkoutSessionStoreTests: XCTestCase {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let valid = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
         try JSONEncoder().encode(valid).write(
-            to: directory.appendingPathComponent("session-\(valid.id.uuidString).json")
+            to: currentSessionFileURL(for: valid)
         )
         try Data("not JSON".utf8).write(
-            to: directory.appendingPathComponent("session-00000000-0000-0000-0000-000000000002.json")
+            to: directory.appendingPathComponent("session-v2-00000000-0000-0000-0000-000000000002.json")
         )
 
         let store = WorkoutSessionStore(defaults: defaults, directory: directory)
@@ -461,7 +459,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
         let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         reloadedStore.flush()
         XCTAssertEqual(reloadedStore.sessions, [second])
-        XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), ["session-\(second.id.uuidString).json"])
+        XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), ["session-v2-\(second.id.uuidString).json"])
     }
 
     func testReportsPersistenceErrorWhenStorageDirectoryCannotBeCreated() throws {
@@ -483,6 +481,10 @@ final class WorkoutSessionStoreTests: XCTestCase {
         )
         .filter { $0.pathExtension == "json" }
         .sorted { $0.lastPathComponent < $1.lastPathComponent }
+    }
+
+    private func currentSessionFileURL(for session: WorkoutSessionRecord) -> URL {
+        directory.appendingPathComponent("session-v2-\(session.id.uuidString).json")
     }
 
     private func session(id: String, recordedAt: TimeInterval) -> WorkoutSessionRecord {
@@ -516,6 +518,18 @@ private final class BlockingHistoryFileManager: FileManager {
             includingPropertiesForKeys: keys,
             options: mask
         )
+    }
+}
+
+private final class StaleDeletionFailingFileManager: FileManager {
+    private(set) var didAttemptStaleDeletion = false
+
+    override func removeItem(at URL: URL) throws {
+        if URL.lastPathComponent == "session-obsolete.json" {
+            didAttemptStaleDeletion = true
+            throw CocoaError(.fileWriteNoPermission)
+        }
+        try super.removeItem(at: URL)
     }
 }
 

@@ -1,4 +1,4 @@
-"""Exact, single-contour geometry used by the direct Workbench hold editor."""
+"""Exact, single-contour geometry used by the direct Workbench contact editor."""
 
 from __future__ import annotations
 

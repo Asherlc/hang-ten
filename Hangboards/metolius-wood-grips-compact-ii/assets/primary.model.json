@@ -1,6 +1,121 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.305000007,
+      0.157000005,
+      0.064000003
+    ],
+    "min": [
+      -0.305000007,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
+  "nodes": [
+    {
+      "nodeID": "Wood_Grips_Compact_II_020",
+      "role": "contact",
+      "contactID": "edge-19-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_021",
+      "role": "contact",
+      "contactID": "edge-19-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_022",
+      "role": "contact",
+      "contactID": "edge-29-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_023",
+      "role": "contact",
+      "contactID": "edge-29-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_024",
+      "role": "contact",
+      "contactID": "jug-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_025",
+      "role": "contact",
+      "contactID": "jug-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_026",
+      "role": "contact",
+      "contactID": "pocket-19-four-center"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_027",
+      "role": "contact",
+      "contactID": "pocket-19-three-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_028",
+      "role": "contact",
+      "contactID": "pocket-19-three-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_029",
+      "role": "contact",
+      "contactID": "pocket-19-two-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_030",
+      "role": "contact",
+      "contactID": "pocket-19-two-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_031",
+      "role": "contact",
+      "contactID": "pocket-29-four-center"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_032",
+      "role": "contact",
+      "contactID": "pocket-29-three-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_033",
+      "role": "contact",
+      "contactID": "pocket-29-three-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_034",
+      "role": "contact",
+      "contactID": "pocket-29-two-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_035",
+      "role": "contact",
+      "contactID": "pocket-29-two-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_036",
+      "role": "contact",
+      "contactID": "sloper-flat-left"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_037",
+      "role": "contact",
+      "contactID": "sloper-flat-right"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_038",
+      "role": "contact",
+      "contactID": "sloper-round-center"
+    },
+    {
+      "nodeID": "Wood_Grips_Compact_II_039",
+      "role": "body"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "edge-19-left": {
       "center": [
         0.110875568,
@@ -362,120 +477,5 @@
         "Wood_Grips_Compact_II_038"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.305000007,
-      0.157000005,
-      0.064000003
-    ],
-    "min": [
-      -0.305000007,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
-  "nodes": [
-    {
-      "holdID": "edge-19-left",
-      "nodeID": "Wood_Grips_Compact_II_020",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-19-right",
-      "nodeID": "Wood_Grips_Compact_II_021",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-29-left",
-      "nodeID": "Wood_Grips_Compact_II_022",
-      "role": "hold"
-    },
-    {
-      "holdID": "edge-29-right",
-      "nodeID": "Wood_Grips_Compact_II_023",
-      "role": "hold"
-    },
-    {
-      "holdID": "jug-left",
-      "nodeID": "Wood_Grips_Compact_II_024",
-      "role": "hold"
-    },
-    {
-      "holdID": "jug-right",
-      "nodeID": "Wood_Grips_Compact_II_025",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-19-four-center",
-      "nodeID": "Wood_Grips_Compact_II_026",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-19-three-left",
-      "nodeID": "Wood_Grips_Compact_II_027",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-19-three-right",
-      "nodeID": "Wood_Grips_Compact_II_028",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-19-two-left",
-      "nodeID": "Wood_Grips_Compact_II_029",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-19-two-right",
-      "nodeID": "Wood_Grips_Compact_II_030",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-29-four-center",
-      "nodeID": "Wood_Grips_Compact_II_031",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-29-three-left",
-      "nodeID": "Wood_Grips_Compact_II_032",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-29-three-right",
-      "nodeID": "Wood_Grips_Compact_II_033",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-29-two-left",
-      "nodeID": "Wood_Grips_Compact_II_034",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-29-two-right",
-      "nodeID": "Wood_Grips_Compact_II_035",
-      "role": "hold"
-    },
-    {
-      "holdID": "sloper-flat-left",
-      "nodeID": "Wood_Grips_Compact_II_036",
-      "role": "hold"
-    },
-    {
-      "holdID": "sloper-flat-right",
-      "nodeID": "Wood_Grips_Compact_II_037",
-      "role": "hold"
-    },
-    {
-      "holdID": "sloper-round-center",
-      "nodeID": "Wood_Grips_Compact_II_038",
-      "role": "hold"
-    },
-    {
-      "nodeID": "Wood_Grips_Compact_II_039",
-      "role": "body"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

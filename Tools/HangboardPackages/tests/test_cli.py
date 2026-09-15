@@ -43,7 +43,7 @@ def _json_output(output: str) -> dict[str, object]:
 
 
 def _write_audit_ledger(
-    path: Path, *, hold_id: str = "hold-left", kind_outcome: str = "verified"
+    path: Path, *, contact_id: str = "hold-left", kind_outcome: str = "verified"
 ) -> Path:
     ledger = path / "metadata-ledger.json"
     ledger.write_text(
@@ -55,7 +55,7 @@ def _write_audit_ledger(
                 "records": [
                     {
                         "boardID": "fixture.board",
-                        "holdIDs": [hold_id],
+                        "contactIDs": [contact_id],
                         "field": "kind",
                         "outcome": kind_outcome,
                         "reviewedAt": "2026-08-25",
@@ -74,7 +74,7 @@ def _write_audit_ledger(
                     *[
                         {
                             "boardID": "fixture.board",
-                            "holdIDs": [hold_id],
+                            "contactIDs": [contact_id],
                             "field": field,
                             "outcome": "unavailable",
                             "reviewedAt": "2026-08-25",
@@ -96,7 +96,7 @@ def _write_audit_ledger(
                     ],
                     {
                         "boardID": "fixture.board",
-                        "holdIDs": [hold_id],
+                        "contactIDs": [contact_id],
                         "field": "sloper",
                         "outcome": "notApplicable",
                         "reviewedAt": "2026-08-25",
@@ -105,7 +105,7 @@ def _write_audit_ledger(
                             "url": "https://example.com/fixture-source",
                             "label": "Fixture manufacturer source",
                         },
-                        "reason": "The hold is not a sloper.",
+                        "reason": "The contact is not a sloper.",
                     },
                 ],
             }
@@ -231,17 +231,17 @@ def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
     ]
 
 
-def test_package_cli_audit_metadata_rejects_unknown_hold(tmp_path: Path) -> None:
+def test_package_cli_audit_metadata_rejects_unknown_contact(tmp_path: Path) -> None:
     packages = tmp_path / "packages"
     write_board_package(packages / "package-board", board_id="fixture.board")
-    ledger = _write_audit_ledger(tmp_path, hold_id="unknown-hold")
+    ledger = _write_audit_ledger(tmp_path, contact_id="unknown-hold")
 
     result = _run_cli(
         "audit-metadata", "--root", str(packages), "--ledger", str(ledger)
     )
 
     assert result.returncode == 1
-    assert result.stderr == "error: unknown hold ID: unknown-hold\n"
+    assert result.stderr == "error: unknown contact ID: unknown-hold\n"
 
 
 def test_package_cli_audit_presentations_reports_selected_lane(tmp_path: Path) -> None:

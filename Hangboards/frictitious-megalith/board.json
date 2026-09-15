@@ -1,146 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "frictitious.megalith",
   "manufacturer": "Frictitious Climbing",
   "name": "The Megalith",
   "subtitle": "Poplar hangboard with a full-width jug, stepped shoulder-width edges, integrated pockets, and monos.",
   "productURL": "https://frictitiousclimbing.com/products/megalith",
-  "dimensions": "26.75 \u00d7 6.5 \u00d7 2.25 in",
+  "dimensions": "26.75 × 6.5 × 2.25 in",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "top-jug",
-      "equipmentObjectID": "primary",
-      "name": "Full-width top jug",
-      "kind": "jug"
-    },
-    {
-      "id": "center-edge-25",
-      "equipmentObjectID": "primary",
-      "name": "Center 25 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 25,
-      "handCapacity": 1,
-      "features": [
-        "incutEdge"
-      ]
-    },
-    {
-      "id": "mono-left",
-      "equipmentObjectID": "primary",
-      "name": "Left mono pocket",
-      "kind": "pocket",
-      "fingerCapacity": 1
-    },
-    {
-      "id": "mono-right",
-      "equipmentObjectID": "primary",
-      "name": "Right mono pocket",
-      "kind": "pocket",
-      "fingerCapacity": 1
-    },
-    {
-      "id": "edge-8-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 8 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 8
-    },
-    {
-      "id": "edge-10-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
-    },
-    {
-      "id": "edge-12-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 12 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 12
-    },
-    {
-      "id": "edge-12-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 12 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 12
-    },
-    {
-      "id": "edge-10-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 10 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 10
-    },
-    {
-      "id": "edge-8-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 8 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 8
-    },
-    {
-      "id": "edge-30-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 30 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 30
-    },
-    {
-      "id": "edge-40-pocket-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 40 mm edge with integrated two-finger pocket",
-      "kind": "edge",
-      "sizeMillimeters": 40
-    },
-    {
-      "id": "edge-40-pocket-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 40 mm edge with integrated two-finger pocket",
-      "kind": "edge",
-      "sizeMillimeters": 40
-    },
-    {
-      "id": "edge-30-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 30 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 30
-    },
-    {
-      "id": "edge-15-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-20-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-20-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-15-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 15 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 15
     }
   ],
   "presentations": [
@@ -155,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "top-jug": [
             {
               "frame": {
@@ -1689,6 +1558,218 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "top-jug",
+      "equipmentObjectID": "primary",
+      "name": "Full-width top jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "center-edge-25",
+      "equipmentObjectID": "primary",
+      "name": "Center 25 mm edge",
+      "kind": "edge",
+      "features": [
+        "incutEdge"
+      ],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-left",
+      "equipmentObjectID": "primary",
+      "name": "Left mono pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "mono-right",
+      "equipmentObjectID": "primary",
+      "name": "Right mono pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 8 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 10 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 12 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 12,
+        "upperBound": 12
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 12 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 12,
+        "upperBound": 12
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 10 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 8 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 8
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-30-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 30 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-40-pocket-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 40 mm edge with integrated two-finger pocket",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-40-pocket-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 40 mm edge with integrated two-finger pocket",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-30-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 30 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     }
   ]
 }

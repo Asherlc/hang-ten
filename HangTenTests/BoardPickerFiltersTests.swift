@@ -96,15 +96,16 @@ final class BoardPickerFiltersTests: XCTestCase {
         )
     }
 
-    private func board(id: String, manufacturer: String, name: String, subtitle: String) -> TrainingBoard {
-        TrainingBoard(
+    private func board(id: String, manufacturer: String, name: String, subtitle: String) -> BoardRevision {
+        BoardRevision(
             id: id,
+            revisionID: "test-fixture",
             manufacturer: manufacturer,
             name: name,
             subtitle: subtitle,
             dimensions: "10 in × 5 in",
             aspectRatio: 2,
-            holds: [],
+            contacts: [],
             productURL: URL(string: "https://example.com/\(id)")!,
             photoAssetName: nil
         )

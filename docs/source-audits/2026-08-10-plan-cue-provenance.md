@@ -10,58 +10,70 @@ timer structure, a value from a published range, or a semantic board target; the
 catalog labels that choice as an app adaptation. `remove` means the field is
 absent because the linked source did not support it.
 
-The ten plans below are board-flexible. Their former Compact II examples are
-now generic semantic target adaptations: source/example 20 mm and 19 mm edges
-use `mediumEdge`, 29 mm edges use `largeEdge`, and the Frontiers study's 12 mm
-instrumented hold uses `smallEdge`. Finger choices remain structured finger
-cues on edge targets; actual pocket prescriptions remain pocket targets with
-their factual capacity. Explicit semantic fallbacks prefer the nearest edge
-and then a large open-hand rail or jug only when a board has no compatible edge
-or pocket; a fallback is an app substitution and does not change the primary
-prescription.
-F80 and F100 still require real-time force
-measurement/feedback—the semantic target only highlights a suitable board
-feature and does not reproduce the study protocol. F100 retains its alternating
-right/left instruction without inventing board-side mappings.
+Board-flexible source tasks retain their exact hold wording in instructions,
+but emit a `ContactRequirement` only when this ledger marks the target itself
+as source-prescribed. Every former `adaptationType: board` target is omitted:
+an app-selected board feature is not a factual training-plan requirement.
+Finger and grip cues remain structured only where their own ledger decisions
+retain them. F80 and F100 still require real-time force measurement/feedback,
+and F100 retains its alternating right/left instruction without inventing a
+board target or side mapping.
+
+The three generic Metolius 10 Minute Sequences are source-generic rather than
+board-specific. The linked manufacturer guide supplies the visible hold
+wording retained in each task's instruction, but it supplies no Hang Ten
+contact fact or contact ID. Their work steps therefore emit no factual target;
+when recorded against any selected board, including Compact II, that explicit
+absence persists as `selfSelected`. This is a representation of the source's
+generic choice, not a semantic mapping, a board-specific fallback, or invented
+training content.
 
 ## Field decisions for all built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
-| `metolius.generic-ten-minute.entry` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, target, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration |
-| `metolius.generic-ten-minute.intermediate` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, target, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration |
-| `metolius.generic-ten-minute.advanced` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, target, count, including source finger-count phrases, switches, stay-on transitions, choices, and failure/max qualifiers | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration; finger phrases remain in source-backed instructions rather than inferred structured cues |
-| `research.max-hangs` | research | [Lattice max hang protocol](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | title, instruction, gripType, fingerConfiguration: 7-second, near-maximal, 20 mm, half-crimp, four-finger hangs | subtitle, accessory, target, count, duration, interval: generic `mediumEdge` target and five-set/three-minute app timer structure | warmUp, cooldown |
-| `research.megos-one-arm-7-3` | research | [Alex Megos finger-training power-endurance protocol, reported by Eric Hörst](https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/) | title, instruction, accessory, count, duration, interval, gripType: four 7/3 cycles per arm, left then right, two-minute recovery, six sets, 20–24 mm edge, and half-crimp | subtitle, target: source sequence expanded into side-specific timer steps and the measured edge represented by generic `mediumEdge` | warmUp, cooldown, fingerConfiguration |
-| `research.force-feedback-f80` | research | [Frontiers force-feedback hangboard study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | title, subtitle, instruction, accessory, count, duration, interval: 80% MFSi, 10/6 between repetitions, up to 12 repetitions, three sets, eight-minute recovery, real-time force measurement/feedback, instrumented 12 mm study hold, and stopping a set below 70% MFSi | target: generic `smallEdge` highlight is an adaptation and does not supply the required measurement/feedback; the final post-routine 6-second rest is omitted by Hang Ten's terminal-work policy | warmUp, cooldown, gripType, fingerConfiguration |
-| `research.force-feedback-f100` | research | [Frontiers force-feedback hangboard study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | title, subtitle, instruction, accessory, count, duration, interval: two sets of six 6-second maximal efforts per hand, alternating hands, three-minute intervals, five-minute recovery, real-time force measurement/feedback, and instrumented 12 mm study hold | target: generic `smallEdge` highlight; right/left instructions remain without board-side mapping | warmUp, cooldown, gripType, fingerConfiguration |
-| `research.eva-int-hangs` | research | [Eva López hangboard comparison](https://pubmed.ncbi.nlm.nih.gov/30988852/) | title: identifies the intermittent dead-hang comparison | subtitle, instruction, accessory, target, count, duration, interval: generic `mediumEdge` target and explicitly labeled app-guided realization; the linked record does not establish those exact values | warmUp, cooldown, gripType, fingerConfiguration |
-| `research.seven-three-repeaters` | research | [Beastmaker 7/3 study protocol](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full) | title, instruction, accessory, count, duration, interval: two sets, six progressive series, seven reps, 7/3, 2:30 series recovery, and six-minute set recovery | subtitle, target, gripType, fingerConfiguration: documented progression expressed with generic `largeEdge`/`mediumEdge` targets and structured cues; Beastmaker study context does not make the prescription product-specific | warmUp, cooldown |
-| `research.abrahangs` | research | [Lattice Abrahangs protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | title, instruction, count, gripType, fingerConfiguration: low-intensity feet-supported Half 4, F3 Open, M2 Open, F2 Open, B3 Half, and F3 Half variants | subtitle, accessory, target, duration, interval: generic `mediumEdge` target and 10/50 app timer; the final app-adapted 50-second recovery is omitted by Hang Ten's terminal-work policy, analogous to F80 | warmUp, cooldown |
-| `coach.horst-seven-fifty-three` | coach | [Eric Hörst fingerboard protocols](https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/) | title, instruction, accessory, duration, gripType: 7/53, three hangs, half/open options, and the 20–30 mm two-finger-pocket option | subtitle, target, count, interval: generic `largeEdge`/`mediumEdge`, the app availability fallback order for the source-backed two-finger-pocket capacity, plus three-minute selection from the 3–5 minute recovery range | warmUp, cooldown, fingerConfiguration |
-| `coach.bechtel-three-six-nine` | coach | [Steve Bechtel 3–6–9 ladder protocol](https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/) | title, instruction, duration: 3/6/9 sequence and source loading cue | subtitle, accessory, target, count, interval: three rounds and exact rest values selected from source ranges, plus generic `largeEdge` target | warmUp, cooldown, gripType, fingerConfiguration |
-| `coach.density-hangs` | coach | [Tyler Nelson density hang protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) | title, instruction: source ranges and 2:1 relationship remain identifiable | subtitle, accessory, target, count, duration, interval: 30/15, three reps, three-minute recoveries, set count, and generic `largeEdge`/an app-selected four-finger-pocket target plus its availability fallback order are app choices; the timing choices stay within the published ranges | warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.entry` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.intermediate` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.advanced` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count, including source finger-count phrases, switches, stay-on transitions, choices, and failure/max qualifiers | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration; finger phrases remain in source-backed instructions rather than inferred structured cues |
+| `research.max-hangs` | research | [Lattice max hang protocol](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | title, instruction, gripType, fingerConfiguration: 7-second, near-maximal, 20 mm, half-crimp, four-finger hangs | subtitle, accessory, count, duration, interval: five-set/three-minute app timer structure | target, warmUp, cooldown |
+| `research.megos-one-arm-7-3` | research | [Alex Megos finger-training power-endurance protocol, reported by Eric Hörst](https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/) | title, instruction, accessory, count, duration, interval, gripType: four 7/3 cycles per arm, left then right, two-minute recovery, six sets, 20–24 mm edge, and half-crimp | subtitle: source sequence expanded into side-specific timer steps | target, warmUp, cooldown, fingerConfiguration |
+| `research.force-feedback-f80` | research | [Frontiers force-feedback hangboard study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | title, subtitle, instruction, accessory, count, duration, interval: 80% MFSi, 10/6 between repetitions, up to 12 repetitions, three sets, eight-minute recovery, real-time force measurement/feedback, instrumented 12 mm study hold, and stopping a set below 70% MFSi | the final post-routine 6-second rest is omitted by Hang Ten's terminal-work policy | target, warmUp, cooldown, gripType, fingerConfiguration |
+| `research.force-feedback-f100` | research | [Frontiers force-feedback hangboard study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | title, subtitle, instruction, accessory, count, duration, interval: two sets of six 6-second maximal efforts per hand, alternating hands, three-minute intervals, five-minute recovery, real-time force measurement/feedback, and instrumented 12 mm study hold | right/left instructions remain without board-side mapping | target, warmUp, cooldown, gripType, fingerConfiguration |
+| `research.eva-int-hangs` | research | [Eva López hangboard comparison](https://pubmed.ncbi.nlm.nih.gov/30988852/) | title: identifies the intermittent dead-hang comparison | subtitle, instruction, accessory, count, duration, interval: explicitly labeled app-guided realization; the linked record does not establish those exact values | target, warmUp, cooldown, gripType, fingerConfiguration |
+| `research.seven-three-repeaters` | research | [Beastmaker 7/3 study protocol](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full) | title, instruction, accessory, count, duration, interval: two sets, six progressive series, seven reps, 7/3, 2:30 series recovery, and six-minute set recovery | subtitle, gripType, fingerConfiguration: documented progression expressed with structured cues; Beastmaker study context does not make the prescription product-specific | target, warmUp, cooldown |
+| `research.abrahangs` | research | [Lattice Abrahangs protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | title, instruction, count, gripType, fingerConfiguration: low-intensity feet-supported Half 4, F3 Open, M2 Open, F2 Open, B3 Half, and F3 Half variants | subtitle, accessory, duration, interval: 10/50 app timer; the final app-adapted 50-second recovery is omitted by Hang Ten's terminal-work policy, analogous to F80 | target, warmUp, cooldown |
+| `coach.horst-seven-fifty-three` | coach | [Eric Hörst fingerboard protocols](https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/) | title, instruction, accessory, duration, gripType: 7/53, three hangs, half/open options, and the 20–30 mm two-finger-pocket option | subtitle, count, interval: three-minute selection from the 3–5 minute recovery range | target, warmUp, cooldown, fingerConfiguration |
+| `coach.bechtel-three-six-nine` | coach | [Steve Bechtel 3–6–9 ladder protocol](https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/) | title, instruction, duration: 3/6/9 sequence and source loading cue | subtitle, accessory, count, interval: three rounds and exact rest values selected from source ranges | target, warmUp, cooldown, gripType, fingerConfiguration |
+| `coach.density-hangs` | coach | [Tyler Nelson density hang protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) | title, instruction: source ranges and 2:1 relationship remain identifiable | subtitle, accessory, count, duration, interval: 30/15, three reps, three-minute recoveries, and set count are app choices; the timing choices stay within the published ranges | target, warmUp, cooldown, gripType, fingerConfiguration |
 
-| `device.zlagboard-sixty-sixty` | device | [Zlagboard endurance protocol](https://strengthclimbing.com/zlagboard-forearm-endurance-workout/) | title, instruction, accessory, count, duration, interval: ten 60/60 sets | subtitle, target: generic `largeEdge` target | warmUp, cooldown, gripType, fingerConfiguration; unsupported feet-supported copy was removed |
-| `hoopers-beta.introductory-home-hangboard` | coach | [Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS](https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine) | title and identifiable routine order, counts, ranges, durations, and qualifiers | subtitle, instruction, accessory, target, count, duration, interval, gripType: the app splits the source routine into guided rows and semantic targets | warmUp, cooldown, fingerConfiguration |
-| `method.intermediate-hangboarding.repeaters` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies semantic targets/cues | warmUp, cooldown, fingerConfiguration |
-| `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
-| `rei.hangboard-sample-workout` | retailer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects preview/range defaults and semantic targets/cues | warmUp, cooldown, fingerConfiguration |
+| `device.zlagboard-sixty-sixty` | device | [Zlagboard endurance protocol](https://strengthclimbing.com/zlagboard-forearm-endurance-workout/) | title, instruction, accessory, count, duration, interval: ten 60/60 sets | subtitle | target, warmUp, cooldown, gripType, fingerConfiguration; unsupported feet-supported copy was removed |
+| `hoopers-beta.introductory-home-hangboard` | coach | [Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS](https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine) | title and identifiable routine order, counts, ranges, durations, and qualifiers | subtitle, instruction, accessory, count, duration, interval, gripType: the app splits the source routine into guided rows | target, warmUp, cooldown, fingerConfiguration |
+| `method.intermediate-hangboarding.repeaters` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies cues | target, warmUp, cooldown, fingerConfiguration |
+| `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, count, duration, interval, gripType: app defaults untimed counted work and supplies cues | target, warmUp, cooldown, fingerConfiguration |
+| `rei.hangboard-sample-workout` | retailer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, count, duration, interval, gripType: app selects preview/range defaults and cues | target, warmUp, cooldown, fingerConfiguration |
 | `rptc.seven-three-repeaters` | manufacturer | [Rock Prodigy Training Center Use Instructions](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155) | title, subtitle, instruction, accessory, count, duration, interval: self-selected 5–10 grips, 1–3 sets per grip, 7×(7s/3s), table 2:53 recovery to 4:00, separate three-minute between-set rest, two-handed/no-pull-up/no-lock-off, and loading guidance | none | warmUp, cooldown, target, gripType, fingerConfiguration |
 
-### Capacity-qualified pocket availability mappings
+### Removed app-selected target mappings
 
-The following two ordered fallback lists are app availability adaptations, not
-source-prescribed hold substitutions. They preserve the existing app target
-when a selected board has no pocket of the app-selected capacity: try the fixed
-availability ladder `mediumEdge`, then `largeEdge`, then
-`largeOpenHandRail`. The order is deliberate and regression-tested; neither
-linked source specifies a replacement hold or an order for replacements.
+Every target classified below as an app board adaptation is now omitted from
+the emitted plan. This includes the former capacity-qualified pocket targets
+and availability ladders in Hörst and Density Hangs. Source wording remains in
+the instruction where audited, but it is not converted into a board
+requirement unless the ledger classifies the target itself as prescribed.
 
-| Plan ID | Primary target | Ordered fallback features | Decision and source basis |
-| --- | --- | --- | --- |
-| `coach.horst-seven-fifty-three` | `kind: pocket`, `fingerCapacity: 2` | `mediumEdge` → `largeEdge` → `largeOpenHandRail` | The [Hörst protocol](https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/) prescribes 20–30 mm two-finger pockets, so the two-finger capacity is source-backed. `adapt` applies only to the app's availability ladder: the source does not prescribe substitutes or their order. |
-| `coach.density-hangs` | `kind: pocket`, `fingerCapacity: 4` | `mediumEdge` → `largeEdge` → `largeOpenHandRail` | `adapt` / not source-prescribed. The [Nelson density-hangs protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) supports the density method's work/rest and recovery ranges; it does not specify a four-finger pocket or replacements. The capacity and availability ladder are app availability adaptations of this already adapted board target, not a source claim. |
+### Simulator 3D jug-target omission
+
+The Simulator 3D source distinguishes outer jugs (1) from the center jug (14).
+The approved factual requirement fields do not include a contact name, number,
+or position selector. A broad `kind: jug` requirement would change either
+source target into all jugs, so these jug requirements are omitted while other
+source-backed targets in the same minute remain:
+
+| Plan | Source minutes | Emitted target treatment |
+| --- | --- | --- |
+| Entry | 2, 3, 5, 7 | omit outer/center jug; retain pocket/sloper requirements in compound minutes 3 and 5 |
+| Intermediate | 3, 5, 9 | omit outer jug; retain edge/pocket requirements in compound minutes 3 and 5 |
+| Advanced | 7, 10 | omit outer jug; retain pocket/sloper requirements |
 
 ## Removed catalog content
 
@@ -112,42 +124,16 @@ grip/finger cue.
     {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"},
     {"planID":"rptc.seven-three-repeaters","sourceType":"manufacturer","sourceLabel":"Rock Prodigy Training Center Use Instructions","sourceURL":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"}
   ],
-  "targetFallbackRules": [
-    {
-      "planID":"coach.horst-seven-fifty-three",
-      "primaryKind":"pocket",
-      "fingerCapacity":2,
-      "fallbackFeatures":["mediumEdge","largeEdge","largeOpenHandRail"],
-      "decision":"adapt",
-      "sourcePrescription":false,
-      "fingerCapacitySourcePrescription":true,
-      "adaptationType":"availability",
-      "sourceURL":"https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/",
-      "sourceBasis":"The source prescribes 20–30 mm two-finger pockets, supporting fingerCapacity: 2. It does not prescribe a fallback order, so the ordered availability ladder is an app availability adaptation."
-    },
-    {
-      "planID":"coach.density-hangs",
-      "primaryKind":"pocket",
-      "fingerCapacity":4,
-      "fallbackFeatures":["mediumEdge","largeEdge","largeOpenHandRail"],
-      "decision":"adapt",
-      "sourcePrescription":false,
-      "fingerCapacitySourcePrescription":false,
-      "adaptationType":"availability",
-      "sourceURL":"https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/",
-      "sourceBasis":"The source supports density-hang timing and recovery ranges, not a four-finger pocket or fallback order. The ordered availability ladder is an app availability adaptation of the app's adapted board target, not a source prescription."
-    }
-  ],
   "planFieldRules": [
-    {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.entry","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.entry","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-    {"planID":"metolius.generic-ten-minute.intermediate","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.entry","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.intermediate","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.intermediate","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.intermediate","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-    {"planID":"metolius.generic-ten-minute.advanced","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.intermediate","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.advanced","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.advanced","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.advanced","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.advanced","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"metolius.contact.entry","fields":["title","subtitle","instruction","accessory","target","count","duration","interval"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.contact.entry","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
@@ -164,77 +150,79 @@ grip/finger cue.
 
     {"planID":"research.max-hangs","fields":["title","instruction","gripType","fingerConfiguration"],"decision":"keep","sourcePrescription":true},
     {"planID":"research.max-hangs","fields":["subtitle","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"research.max-hangs","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.max-hangs","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.max-hangs","fields":["warmUp","cooldown"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"research.megos-one-arm-7-3","fields":["title","instruction","accessory","count","duration","interval","gripType"],"decision":"keep","sourcePrescription":true},
     {"planID":"research.megos-one-arm-7-3","fields":["subtitle"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"research.megos-one-arm-7-3","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.megos-one-arm-7-3","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.megos-one-arm-7-3","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"research.force-feedback-f80","fields":["title","subtitle","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
-    {"planID":"research.force-feedback-f80","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.force-feedback-f80","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.force-feedback-f80","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"research.force-feedback-f100","fields":["title","subtitle","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
-    {"planID":"research.force-feedback-f100","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.force-feedback-f100","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.force-feedback-f100","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"research.eva-int-hangs","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"research.eva-int-hangs","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"research.eva-int-hangs","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.eva-int-hangs","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.eva-int-hangs","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"research.seven-three-repeaters","fields":["title","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
-    {"planID":"research.seven-three-repeaters","fields":["subtitle","target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.seven-three-repeaters","fields":["subtitle"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.seven-three-repeaters","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.seven-three-repeaters","fields":["gripType","fingerConfiguration"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"research.seven-three-repeaters","fields":["warmUp","cooldown"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"research.abrahangs","fields":["title","instruction","count","gripType","fingerConfiguration"],"decision":"keep","sourcePrescription":true},
     {"planID":"research.abrahangs","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"research.abrahangs","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"research.abrahangs","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"research.abrahangs","fields":["warmUp","cooldown"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"coach.horst-seven-fifty-three","fields":["title","instruction","accessory","duration","gripType"],"decision":"keep","sourcePrescription":true},
     {"planID":"coach.horst-seven-fifty-three","fields":["subtitle","count","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"range"},
-    {"planID":"coach.horst-seven-fifty-three","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"coach.horst-seven-fifty-three","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"coach.horst-seven-fifty-three","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"coach.bechtel-three-six-nine","fields":["title","instruction","duration"],"decision":"keep","sourcePrescription":true},
     {"planID":"coach.bechtel-three-six-nine","fields":["subtitle","accessory","count","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"range"},
-    {"planID":"coach.bechtel-three-six-nine","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"coach.bechtel-three-six-nine","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"coach.bechtel-three-six-nine","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"coach.density-hangs","fields":["title","instruction"],"decision":"keep","sourcePrescription":true},
     {"planID":"coach.density-hangs","fields":["subtitle","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"range"},
-    {"planID":"coach.density-hangs","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"coach.density-hangs","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"coach.density-hangs","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"device.zlagboard-sixty-sixty","fields":["title","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
-    {"planID":"device.zlagboard-sixty-sixty","fields":["subtitle","target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"device.zlagboard-sixty-sixty","fields":["subtitle"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"device.zlagboard-sixty-sixty","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"device.zlagboard-sixty-sixty","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"hoopers-beta.introductory-home-hangboard","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"hoopers-beta.introductory-home-hangboard","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"hoopers-beta.introductory-home-hangboard","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"hoopers-beta.introductory-home-hangboard","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"method.intermediate-hangboarding.repeaters","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"method.intermediate-hangboarding.repeaters","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"method.intermediate-hangboarding.repeaters","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"method.intermediate-hangboarding.repeaters","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"method.intermediate-hangboarding.repeaters","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"method.intermediate-hangboarding.repeaters","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"method.intermediate-hangboarding.emom","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"method.intermediate-hangboarding.emom","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"method.intermediate-hangboarding.emom","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"method.intermediate-hangboarding.emom","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"method.intermediate-hangboarding.emom","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"method.intermediate-hangboarding.emom","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"rei.hangboard-sample-workout","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"rei.hangboard-sample-workout","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"rei.hangboard-sample-workout","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"rei.hangboard-sample-workout","fields":["target"],"decision":"remove","sourcePrescription":false},
     {"planID":"rei.hangboard-sample-workout","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
     {"planID":"rptc.seven-three-repeaters","fields":["title","subtitle","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},

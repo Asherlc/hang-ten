@@ -18,6 +18,7 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
     case missingBoardDocument(slug: String)
     case invalidEditedDocument(slug: String, reason: String = "")
     case unreadablePresentationImage(slug: String)
+    case modelPackageIsNotEditable(slug: String)
 
     var errorDescription: String? {
         switch self {
@@ -35,6 +36,8 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
                 : "Edited board package \(slug) contains an invalid board.json: \(reason)"
         case .unreadablePresentationImage(let slug):
             "Edited board package \(slug) has an unreadable presentation image."
+        case .modelPackageIsNotEditable(let slug):
+            "Board package \(slug) uses model media and is not editable."
         }
     }
 }
@@ -116,6 +119,18 @@ struct BoardEditorStore: Sendable {
               FileManager.default.fileExists(atPath: sourceAssetsURL.path) else {
             throw BoardEditorStoreError.missingSourcePackage(slug: slug)
         }
+        let sourceDocument: BoardEditableDocument
+        do {
+            sourceDocument = try BoardEditableDocument(data: Data(contentsOf: sourceBoardURL))
+        } catch {
+            throw BoardEditorStoreError.invalidEditedDocument(slug: slug)
+        }
+        guard sourceDocument.presentations.allSatisfy({ presentation in
+            if case .raster = presentation.media { return true }
+            return false
+        }) else {
+            throw BoardEditorStoreError.modelPackageIsNotEditable(slug: slug)
+        }
 
         let stagingURL = baseDirectory.appendingPathComponent(
             ".\(slug)-staging-\(UUID().uuidString)",
@@ -162,7 +177,10 @@ struct BoardEditorStore: Sendable {
             in: document,
             slug: slug
         )
-        let imageURL = packageURL.appendingPathComponent(defaultPresentation.assetPath)
+        guard case .raster(let assetPath, _) = defaultPresentation.media else {
+            throw BoardEditorStoreError.modelPackageIsNotEditable(slug: slug)
+        }
+        let imageURL = packageURL.appendingPathComponent(assetPath)
         let pixelDimensions = try Self.validatePNGDimensions(at: imageURL, slug: slug)
         return BoardEditedPackage(
             slug: slug,

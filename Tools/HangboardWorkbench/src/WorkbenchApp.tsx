@@ -1,12 +1,12 @@
 import React from "react";
 
-import { holdCentroid, holdMetadataWarnings } from "./editor-model.ts";
-import type { HoldRegion, WorkbenchDependencies } from "./types.ts";
+import { contactCentroid } from "./editor-model.ts";
+import type { ContactRegion, WorkbenchDependencies } from "./types.ts";
 import { useWorkbench } from "./useWorkbench.ts";
-import { useHoldEditor } from "./useHoldEditor.ts";
+import { useContactEditor } from "./useContactEditor.ts";
 import { BoardLibrary } from "./components/BoardLibrary.tsx";
-import { HoldCanvas, type Guide, type GuideAxis } from "./components/HoldCanvas.tsx";
-import { HoldInspector } from "./components/HoldInspector.tsx";
+import { ContactCanvas, type Guide, type GuideAxis } from "./components/ContactCanvas.tsx";
+import { ContactInspector } from "./components/ContactInspector.tsx";
 import { RepositoryToolbar } from "./components/RepositoryToolbar.tsx";
 import { ValidationPanel } from "./components/ValidationPanel.tsx";
 import { ApiErrorAlert } from "./components/ApiErrorAlert.tsx";
@@ -33,7 +33,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const [guides, setGuides] = React.useState<Guide[]>([]);
   const [mobileBoardsOpen, setMobileBoardsOpen] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [mobileHoldSheetOpen, setMobileHoldSheetOpen] = React.useState(false);
+  const [mobileContactSheetOpen, setMobileContactSheetOpen] = React.useState(false);
   const nextGuideId = React.useRef(1);
   const nextCanvasZoom = React.useCallback((direction: number, stepSize: number): number => {
     const step = Math.sign(direction) * stepSize;
@@ -66,43 +66,46 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const selectedPresentation = state.board?.presentations?.find(
     (presentation) => presentation.presentationID === state.board?.selectedPresentationID,
   );
-  const selectedHold: HoldRegion | null = state.document?.regions.find(
+  const selectedRegion: ContactRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
-  const gastonPairCandidates = state.document && selectedHold?.metadata?.holdID
-    ? [...new Set(state.document.regions
-      .filter((region) => region.type === "gaston"
-        && region.metadata?.holdID !== selectedHold.metadata?.holdID
-        && (region.pairedHoldID === undefined || region.metadata?.holdID === selectedHold.pairedHoldID))
-      .map((region) => region.metadata?.holdID)
-      .filter((holdID): holdID is string => holdID !== undefined))]
-    : [];
-  const selectedHoldCenter = state.document && selectedHold
-    ? holdCentroid([selectedHold], dependencies.pathEditor)
+  const selectedContact = state.document && selectedRegion
+    ? state.document.contacts.find((contact) => contact.id === selectedRegion.metadata.contactID) ?? null
     : null;
-  const metadataWarnings = state.document ? holdMetadataWarnings(state.document) : null;
+  const gastonPairCandidates = state.document && selectedContact
+    ? state.document.contacts
+      .filter((contact) => (
+        contact.kind === "gaston"
+        && contact.id !== selectedContact.id
+        && contact.pairedContactID === undefined
+      ))
+      .map((contact) => contact.id)
+    : [];
+  const selectedContactCenter = state.document && selectedRegion
+    ? contactCentroid([selectedRegion], dependencies.pathEditor)
+    : null;
   React.useEffect(() => {
     setGuides([]);
   }, [state.board?.boardId, state.board?.selectedPresentationID]);
   React.useEffect(() => {
-    setMobileHoldSheetOpen(false);
+    setMobileContactSheetOpen(false);
   }, [state.board?.boardId, state.board?.selectedPresentationID]);
   const addGuide = React.useCallback((axis: GuideAxis): void => {
-    if (!selectedHoldCenter) return;
+    if (!selectedContactCenter) return;
     setGuides((current) => [...current, {
       id: `guide-${nextGuideId.current++}`,
       axis,
-      coordinate: axis === "horizontal" ? selectedHoldCenter.y : selectedHoldCenter.x,
+      coordinate: axis === "horizontal" ? selectedContactCenter.y : selectedContactCenter.x,
     }]);
-  }, [selectedHoldCenter]);
+  }, [selectedContactCenter]);
   const moveGuide = React.useCallback((id: string, coordinate: number): void => {
     setGuides((current) => current.map((guide) => (
       guide.id === id ? { ...guide, coordinate } : guide
     )));
   }, []);
-  const editor = useHoldEditor({
+  const editor = useContactEditor({
     document: state.document,
-    selectedHold,
+    selectedRegion: selectedRegion,
     selectedKeys: state.selectedKeys,
     dirty: state.dirty,
     status: state.status,
@@ -114,7 +117,6 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     dialogs: dependencies.dialogs,
     horizontalGuideYs: guides.filter((guide) => guide.axis === "horizontal").map((guide) => guide.coordinate),
     verticalGuideXs: guides.filter((guide) => guide.axis === "vertical").map((guide) => guide.coordinate),
-    reservedHoldIDs: state.board?.holdIDs ?? [],
   });
   const saveFromShortcut = React.useCallback(() => {
     if (busy || !state.board) return;
@@ -143,7 +145,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     return () => window.document.removeEventListener("keydown", onKeyDown);
   }, [busy, changeCanvasZoom, saveFromShortcut, state.board, state.document]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
-    ? "Choose a board to edit its holds."
+    ? "Choose a board to edit its contacts."
     : state.currentBranch
     ? `Current branch: ${state.currentBranch}`
     : state.gitStatusKnown
@@ -204,16 +206,11 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           }}
         />
 
-        <section className="canvas-column" aria-label="Hold editor">
+        <section className="canvas-column" aria-label="Contact editor">
           <div className="canvas-header">
             <div className="editor-heading">
               <span className="eyebrow">Board</span>
               <strong id="board-name">{state.board?.displayName ?? "No board selected"}</strong>
-              {metadataWarnings && metadataWarnings.count > 0 && (
-                <output id="metadata-warning" className="metadata-warning" aria-live="polite">
-                  {metadataWarnings.count} {metadataWarnings.count === 1 ? "hold needs" : "holds need"} metadata
-                </output>
-              )}
             </div>
             <div className="canvas-controls" aria-label="Canvas controls">
               <label className="canvas-background-selector" htmlFor="canvas-background-select">
@@ -281,20 +278,20 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM}
                 onClick={() => changeCanvasZoom(1)}
               >+</button>
-              <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
-              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedHold || editorBusy} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
-              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedHold || editorBusy} onClick={() => addGuide("vertical")}>Vertical guide</button>
+              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedRegion || editorBusy} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
+              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedRegion || editorBusy} onClick={() => addGuide("vertical")}>Vertical guide</button>
               <button className="tool-button" id="clear-guides-button" type="button" disabled={guides.length === 0 || editorBusy} onClick={() => setGuides([])}>Clear guides</button>
+              <button className="tool-button accent" id="add-contact-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addContact}>Add contact</button>
             </div>
           </div>
-          <HoldCanvas
+          <ContactCanvas
             board={state.board}
             document={state.document}
             selectedKey={state.selectedKey}
             selectedKeys={state.selectedKeys}
             busy={editorBusy}
-            onSelectHold={(key, toggle) => {
-              actions.selectHold(key, toggle);
+            onSelectContact={(key, toggle) => {
+              actions.selectContact(key, toggle);
             }}
             pathEditor={dependencies.pathEditor}
             editor={editor}
@@ -330,35 +327,102 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             </label>
             <button className="tool-button" id="mobile-zoom-out-button" type="button" aria-label="Zoom out" disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM} onClick={() => changeCanvasZoom(-1)}>−</button>
             <button className="tool-button" id="mobile-zoom-in-button" type="button" aria-label="Zoom in" disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM} onClick={() => changeCanvasZoom(1)}>+</button>
-            <button className="tool-button" id="mobile-open-hold-sheet-button" type="button" disabled={!selectedHold} onClick={() => setMobileHoldSheetOpen(true)}>Edit hold</button>
-            <button className="tool-button accent" id="mobile-add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
+            <button className="tool-button accent" id="mobile-add-contact-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addContact}>Add contact</button>
+            <button className="tool-button" id="mobile-open-contact-sheet-button" type="button" disabled={!selectedRegion} onClick={() => setMobileContactSheetOpen(true)}>Edit contact</button>
           </div>
         </section>
 
-        <HoldInspector
-          className={selectedHold && mobileHoldSheetOpen ? "mobile-sheet-open" : ""}
-          hold={selectedHold}
+        <ContactInspector
+          className={selectedRegion && mobileContactSheetOpen ? "mobile-sheet-open" : ""}
+          region={selectedRegion}
+          contact={selectedContact}
           selectedCount={state.selectedKeys.length}
           busy={editorBusy}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
-          onTypeChange={editor.changeHoldType}
+          onContactChange={(updated) => {
+            if (!state.document) return;
+            const previous = state.document.contacts.find((contact) => contact.id === updated.id);
+            if (!previous) return;
+            if (previous.kind !== updated.kind) {
+              const selectedContactIDs = [...new Set(state.selectedKeys.flatMap((key) => {
+                const region = state.document?.regions.find((candidate) => candidate.key === key);
+                return region ? [region.metadata.contactID] : [];
+              }))];
+              if (updated.kind === "gaston") {
+                if (selectedContactIDs.length !== 2) {
+                  actions.replaceDocument(state.document, {
+                    dirty: state.dirty,
+                    validation: "Select exactly two physical contacts with two distinct contact IDs to create a Gaston pair.",
+                    status: "Gaston conversion needs two distinct contact IDs.",
+                  });
+                  return;
+                }
+                const selected = new Set(selectedContactIDs);
+                const displaced = state.document.contacts.find((contact) => (
+                  !selected.has(contact.id)
+                  && contact.pairedContactID !== undefined
+                  && selected.has(contact.pairedContactID)
+                ));
+                if (displaced) {
+                  actions.replaceDocument(state.document, {
+                    dirty: state.dirty,
+                    validation: `Creating this Gaston pair would orphan paired Gaston contact ${displaced.id}. Select it instead or recategorize it first.`,
+                    status: "Gaston conversion would orphan an existing pair.",
+                  });
+                  return;
+                }
+                actions.editDocument((candidate) => {
+                  const [firstID, secondID] = selectedContactIDs as [string, string];
+                  for (const contact of candidate.contacts) {
+                    if (contact.id === firstID) Object.assign(contact, { kind: "gaston", pairedContactID: secondID });
+                    if (contact.id === secondID) Object.assign(contact, { kind: "gaston", pairedContactID: firstID });
+                  }
+                }, { status: "Contacts recategorized. Save when ready." });
+                return;
+              }
+              const selected = new Set(selectedContactIDs);
+              const recategorized = new Set(selectedContactIDs);
+              for (const contact of state.document.contacts) {
+                if (selected.has(contact.id) && contact.pairedContactID) {
+                  recategorized.add(contact.pairedContactID);
+                }
+              }
+              actions.editDocument((candidate) => {
+                for (const contact of candidate.contacts) {
+                  if (recategorized.has(contact.id)) {
+                    contact.kind = updated.kind;
+                    delete contact.pairedContactID;
+                  }
+                }
+              }, { status: "Contacts recategorized. Save when ready." });
+              return;
+            }
+            actions.editDocument((candidate) => {
+              const index = candidate.contacts.findIndex((contact) => contact.id === updated.id);
+              if (index < 0) return;
+              const previous = candidate.contacts[index]!;
+              candidate.contacts[index] = updated;
+              if (previous.pairedContactID && previous.pairedContactID !== updated.pairedContactID) {
+                const previousPair = candidate.contacts.find((contact) => contact.id === previous.pairedContactID);
+                if (previousPair?.pairedContactID === updated.id) delete previousPair.pairedContactID;
+              }
+              if (updated.pairedContactID) {
+                const pair = candidate.contacts.find((contact) => contact.id === updated.pairedContactID);
+                if (pair) pair.pairedContactID = updated.id;
+              }
+            }, { status: "Contact facts changed. Save when ready." });
+          }}
           gastonPairCandidates={gastonPairCandidates}
-          onPairedHoldIDChange={editor.changePairedHoldID}
-          onFingerCapacityChange={editor.changeFingerCapacity}
-          onDepthMeasurementChange={editor.changeHoldDepthMeasurement}
-          onSizeMillimetersChange={editor.changeHoldSizeMillimeters}
-          onDepthRangeChange={editor.changeHoldDepthRange}
-          onHandCapacityChange={editor.changeHandCapacity}
-          equipmentObjects={state.document?.equipmentObjects ?? []}
-          onEquipmentObjectIDChange={editor.changeEquipmentObjectID}
+          onDisplayPathChange={editor.changeDisplayPath}
+          onTreatmentChange={editor.changeTreatment}
           onOutlineShapeChange={editor.changeOutlineShape}
-          onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
+          onRotate={(direction, shiftKey) => editor.rotateContact(direction * (shiftKey ? 45 : 15))}
           onApplyRotation={editor.applyRotation}
-          onAddSegment={editor.addHoldSegment}
-          onDuplicateAndMirror={editor.duplicateAndMirrorHold}
-          onDelete={editor.deleteHold}
-          onMobileCollapse={() => setMobileHoldSheetOpen(false)}
+          onAddSegment={editor.addContactPiece}
+          onDuplicateAndMirror={editor.duplicateAndMirrorContact}
+          onDelete={editor.deleteContact}
+          onMobileCollapse={() => setMobileContactSheetOpen(false)}
         />
       </section>
     </main>

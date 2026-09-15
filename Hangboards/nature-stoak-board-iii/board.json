@@ -1,77 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "nature.stoak-board-iii",
   "manufacturer": "Nature Climbing",
   "name": "Stoak Board III Oak",
   "subtitle": "FSC-certified oak and granite hangboard with adjustable edge depths and mixed wood-stone contacts.",
   "productURL": "https://natureclimbing.com/products/stoak-board-iii",
-  "dimensions": "57 \u00d7 12 \u00d7 5.5 cm",
+  "dimensions": "57 × 12 × 5.5 cm",
   "aspectRatio": 2.0,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "top-jug",
-      "equipmentObjectID": "primary",
-      "name": "Full-width top jug",
-      "kind": "jug"
-    },
-    {
-      "id": "edge-22-center",
-      "equipmentObjectID": "primary",
-      "name": "Center 22 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 22
-    },
-    {
-      "id": "gradient-edge-left",
-      "equipmentObjectID": "primary",
-      "name": "Left gradient 10\u201325 mm edge",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 25
-      }
-    },
-    {
-      "id": "gradient-edge-right",
-      "equipmentObjectID": "primary",
-      "name": "Right gradient 10\u201325 mm edge",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 25
-      }
-    },
-    {
-      "id": "lower-composite-left",
-      "equipmentObjectID": "primary",
-      "name": "Left continuous 30 mm wood / 20 mm granite contact",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 30
-      }
-    },
-    {
-      "id": "lower-composite-right",
-      "equipmentObjectID": "primary",
-      "name": "Right continuous 30 mm wood / 20 mm granite contact",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 30
-      }
-    },
-    {
-      "id": "lower-composite-center",
-      "equipmentObjectID": "primary",
-      "name": "Center continuous 30 mm granite / ergonomic wood contact",
-      "kind": "edge",
-      "sizeMillimeters": 30
     }
   ],
   "presentations": [
@@ -86,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "top-jug": [
             {
               "frame": {
@@ -850,6 +788,89 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "top-jug",
+      "equipmentObjectID": "primary",
+      "name": "Full-width top jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "edge-22-center",
+      "equipmentObjectID": "primary",
+      "name": "Center 22 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "gradient-edge-left",
+      "equipmentObjectID": "primary",
+      "name": "Left gradient 10–25 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "gradient-edge-right",
+      "equipmentObjectID": "primary",
+      "name": "Right gradient 10–25 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "lower-composite-left",
+      "equipmentObjectID": "primary",
+      "name": "Left continuous 30 mm wood / 20 mm granite contact",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "lower-composite-right",
+      "equipmentObjectID": "primary",
+      "name": "Right continuous 30 mm wood / 20 mm granite contact",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "lower-composite-center",
+      "equipmentObjectID": "primary",
+      "name": "Center continuous 30 mm granite / ergonomic wood contact",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
     }
   ]
 }
