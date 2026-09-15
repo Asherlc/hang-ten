@@ -2912,6 +2912,38 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.contacts.map(\.pairedContactID), ["gaston-right", "gaston-left"])
     }
 
+    func testStoreAcceptsReciprocalNonGastonPairs() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                let template = try XCTUnwrap((board["contacts"] as? [[String: Any]])?.first)
+                var left = template
+                left["id"] = "edge-left"
+                left["name"] = "Left edge"
+                left["kind"] = "edge"
+                left["side"] = "left"
+                left["pairedContactID"] = "edge-right"
+                var right = template
+                right["id"] = "edge-right"
+                right["name"] = "Right edge"
+                right["kind"] = "edge"
+                right["side"] = "right"
+                right["pairedContactID"] = "edge-left"
+                board["contacts"] = [left, right]
+                try self.replaceRasterHoldGeometry(
+                    in: &board,
+                    holdIDs: ["edge-left", "edge-right"]
+                )
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.contacts.map(\.pairedContactID), ["edge-right", "edge-left"])
+    }
+
     func testStoreRejectsInvalidGastonPairMetadata() throws {
         let invalidPairs: [(String, (inout [[String: Any]]) -> Void)] = [
             ("missing pair", { holds in
@@ -2920,9 +2952,6 @@ final class BoardPackageStoreTests: XCTestCase {
             ("invalid pair identifier", { holds in
                 holds[0]["kind"] = "gaston"
                 holds[0]["pairedContactID"] = "not a valid identifier"
-            }),
-            ("pair on another kind", { holds in
-                holds[0]["pairedContactID"] = "gaston-right"
             }),
             ("explicit null pair on another kind", { holds in
                 holds[0]["pairedContactID"] = NSNull()

@@ -636,18 +636,17 @@ struct BoardPackageStore {
                     reason: "contact \(contact.id) has duplicate grip types"
                 )
             }
-            if contact.kind == .gaston {
-                guard let pairedContactID = contact.pairedContactID,
-                      pairedContactID.isBoardPackageIdentifier else {
+            if let pairedContactID = contact.pairedContactID {
+                guard pairedContactID.isBoardPackageIdentifier else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "gaston contact \(contact.id) must declare a pairedContactID"
+                        reason: "contact \(contact.id) has an invalid pairedContactID"
                     )
                 }
-            } else if contact.declaresPairedContactID {
+            } else if contact.kind == .gaston {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "non-gaston contact \(contact.id) must not declare pairedContactID"
+                    reason: "gaston contact \(contact.id) must declare a pairedContactID"
                 )
             }
             contacts.append(
@@ -669,15 +668,15 @@ struct BoardPackageStore {
             )
         }
         let contactDocumentsByID = Dictionary(uniqueKeysWithValues: document.contacts.map { ($0.id, $0) })
-        for contact in document.contacts where contact.kind == .gaston {
+        for contact in document.contacts where contact.declaresPairedContactID {
             guard let pairedID = contact.pairedContactID,
                   pairedID != contact.id,
                   let paired = contactDocumentsByID[pairedID],
-                  paired.kind == .gaston,
+                  paired.kind == contact.kind,
                   paired.pairedContactID == contact.id else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
-                    reason: "gaston contact \(contact.id) must have a reciprocal gaston pair"
+                    reason: "contact \(contact.id) must have a reciprocal same-kind pair"
                 )
             }
         }

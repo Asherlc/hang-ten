@@ -79,6 +79,36 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testWriterAcceptsReciprocalNonGastonPairs() throws {
+        var document = makeDocument()
+        document.contacts[0].kind = .edge
+        document.contacts[0].side = .left
+        document.contacts[0].pairedContactID = "hold-two"
+        document.contacts.append(
+            BoardEditableContact(
+                id: "hold-two",
+                name: "Hold two",
+                kind: .edge,
+                side: .right,
+                pairedContactID: "hold-one"
+            )
+        )
+        guard case .raster(let assetPath, var contactGeometry) = document.presentations[0].media else {
+            return XCTFail("fixture must use raster media")
+        }
+        contactGeometry["hold-two"] = [makePiece()]
+        document.presentations[0].media = .raster(
+            assetPath: assetPath,
+            contactGeometry: contactGeometry
+        )
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let payload = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let contacts = try XCTUnwrap(payload["contacts"] as? [[String: Any]])
+
+        XCTAssertEqual(contacts.map { $0["pairedContactID"] as? String }, ["hold-two", "hold-one"])
+    }
+
     func testEditorDecoderPreservesTypedModelDisplayAndOrientationWithoutAdaptingIt() throws {
         let boardURL = repositoryHangboardsURL()
             .appendingPathComponent("captain-fingerfood-pocket/board.json")
@@ -261,6 +291,30 @@ final class BoardPackageWriterTests: XCTestCase {
             return XCTFail("expected raster media")
         }
         XCTAssertEqual(geometry, originalGeometry)
+    }
+
+    func testReplacingGeometryWritesTheOriginalDefaultWhenADerivedDefaultPrecedesIt() throws {
+        var document = makeDocument()
+        var derived = document.presentations[0]
+        derived.id = "derived"
+        derived.derivation = .derived(sourcePresentationID: "front", isInverted: false)
+        document.presentations.insert(derived, at: 0)
+
+        var replacement = makePiece()
+        replacement.frame = BoardPackageFrameDocument(
+            x: 0.7,
+            y: 0.2,
+            width: 0.2,
+            height: 0.3
+        )
+        document.replaceGeometry(forContactID: "hold-one", with: [replacement])
+
+        guard case .raster(_, let derivedGeometry) = document.presentations[0].media,
+              case .raster(_, let originalGeometry) = document.presentations[1].media else {
+            return XCTFail("expected raster media")
+        }
+        XCTAssertEqual(derivedGeometry["hold-one"]?[0], makePiece())
+        XCTAssertEqual(originalGeometry["hold-one"]?[0], replacement)
     }
 
     func testWriterRejectsGeometryForUnknownContact() throws {

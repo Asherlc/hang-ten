@@ -743,16 +743,15 @@ enum BoardPackageWriter {
                 validIDs: equipmentObjectIDs,
                 in: document
             )
-            if contact.kind == .gaston {
-                guard let pairedContactID = contact.pairedContactID,
-                      pairedContactID.isEditorBoardIdentifier else {
+            if let pairedContactID = contact.pairedContactID {
+                guard pairedContactID.isEditorBoardIdentifier else {
                     throw invalid(
-                        "gaston contact \(contact.id) must declare an identifier-shaped pairedContactID",
+                        "contact \(contact.id) must declare an identifier-shaped pairedContactID",
                         document
                     )
                 }
-            } else if contact.declaresPairedContactID {
-                throw invalid("non-gaston contact \(contact.id) must not declare pairedContactID", document)
+            } else if contact.kind == .gaston {
+                throw invalid("gaston contact \(contact.id) must declare a pairedContactID", document)
             }
             if let fingerCapacity = contact.fingerCapacity,
                !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
@@ -797,15 +796,15 @@ enum BoardPackageWriter {
         }
         try validateEquipmentObjectOwnership(in: document)
         let contactsByID = Dictionary(uniqueKeysWithValues: document.contacts.map { ($0.id, $0) })
-        for contact in document.contacts where contact.kind == .gaston {
-            let pairedContactID = contact.pairedContactID!
+        for contact in document.contacts where contact.declaresPairedContactID {
+            guard let pairedContactID = contact.pairedContactID else { continue }
             guard pairedContactID != contact.id,
                   let pairedContact = contactsByID[pairedContactID] else {
-                throw invalid("gaston contact \(contact.id) must pair with a distinct existing contact", document)
+                throw invalid("contact \(contact.id) must pair with a distinct existing contact", document)
             }
-            guard pairedContact.kind == .gaston,
+            guard pairedContact.kind == contact.kind,
                   pairedContact.pairedContactID == contact.id else {
-                throw invalid("gaston contact \(contact.id) must have a reciprocal gaston pair", document)
+                throw invalid("contact \(contact.id) must have a reciprocal same-kind pair", document)
             }
         }
     }

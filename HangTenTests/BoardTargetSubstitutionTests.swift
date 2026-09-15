@@ -26,7 +26,7 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    func testBilateralPairRequiresReciprocalDocumentedLeftRightPair() throws {
+    func testBilateralPairResolvesReciprocalNonGastonLeftRightPair() throws {
         let board = fixtureBoard(documentsPair: true, documentsSides: true)
         let requirement = ContactRequirement.edge(
             depthRangeMillimeters: .init(minimum: 19, maximum: 21),

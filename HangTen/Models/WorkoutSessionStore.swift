@@ -186,7 +186,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
             var loadError: String?
             for file in files where file.pathExtension == "json" {
                 guard isCurrentSessionFile(file) else {
-                    try fileManager.removeItem(at: file)
+                    try? fileManager.removeItem(at: file)
                     continue
                 }
                 do {

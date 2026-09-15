@@ -100,6 +100,26 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: formerFile.path))
     }
 
+    func testStaleSessionDeletionFailureDoesNotPreventLoadingCurrentSessions() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let current = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
+        try JSONEncoder().encode(current).write(to: currentSessionFileURL(for: current))
+        try Data().write(to: directory.appendingPathComponent("session-obsolete.json"))
+        let fileManager = StaleDeletionFailingFileManager()
+
+        let store = WorkoutSessionStore(
+            defaults: defaults,
+            directory: directory,
+            fileManager: fileManager
+        )
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [current])
+        XCTAssertNil(store.persistenceError)
+        XCTAssertTrue(fileManager.didAttemptStaleDeletion)
+    }
+
     func testFormerMigrationMarkerIsRemoved() throws {
         let defaults = UserDefaults(suiteName: suite)!
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -498,6 +518,18 @@ private final class BlockingHistoryFileManager: FileManager {
             includingPropertiesForKeys: keys,
             options: mask
         )
+    }
+}
+
+private final class StaleDeletionFailingFileManager: FileManager {
+    private(set) var didAttemptStaleDeletion = false
+
+    override func removeItem(at URL: URL) throws {
+        if URL.lastPathComponent == "session-obsolete.json" {
+            didAttemptStaleDeletion = true
+            throw CocoaError(.fileWriteNoPermission)
+        }
+        try super.removeItem(at: URL)
     }
 }
 
