@@ -394,7 +394,7 @@ final class BoardPackageStoreTests: XCTestCase {
                     "value": routes]]
             ])
             defer { fixture.remove() }
-            let store = BoardPackageStore(bundle: fixture.bundle)
+            let store = try BoardPackageStore(bundle: fixture.bundle)
             XCTAssertEqual(store.boards.count, accepted ? 1 : 0)
             if accepted {
                 let board = try XCTUnwrap(store.boards.first)
