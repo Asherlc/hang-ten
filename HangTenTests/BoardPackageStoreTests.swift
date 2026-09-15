@@ -408,14 +408,31 @@ final class BoardPackageStoreTests: XCTestCase {
 
     func testStorePreservesPoseCordContactsAndRejectsIncompleteOrTooLongRoutes() throws {
         let valid = ["left-lead": [[0.2, 0.6, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]]
-        let cases: [([String: [[Double]]], Bool)] = [
-            (valid, true),
-            (["left-lead": [[0.2, 0.6, 0.1]]], false),
-            (["left-lead": [], "right-lead": [[0.8, 0.6, 0.1]]], false),
-            (["left-lead": [[0.2, 5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]], false),
-            (["left-lead": [[0.2, 0.5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]], false),
+        let acceptedFixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "pairedLeadCordModel",
+            "mutations": [["target": "board", "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "cordContactPoints"],
+                "value": valid]]
+        ])
+        defer { acceptedFixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: acceptedFixture.bundle).boards.first)
+        guard case .model(let media) = board.presentations[0].media,
+              case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("missing paired-lead suspension")
+        }
+        XCTAssertEqual(suspension.canonicalPoses["primary"]?.cordContactPoints, valid)
+
+        let rejectedCases: [([String: [[Double]]], String)] = [
+            (["left-lead": [[0.2, 0.6, 0.1]]],
+             "cordContactPoints must name every attachment or passage with a nonempty finite distinct route"),
+            (["left-lead": [], "right-lead": [[0.8, 0.6, 0.1]]],
+             "cordContactPoints must name every attachment or passage with a nonempty finite distinct route"),
+            (["left-lead": [[0.2, 5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]],
+             "pairedLeadCord pose primary restLength is shorter than routed lead"),
+            (["left-lead": [[0.2, 0.5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]],
+             "cordContactPoints resolved route points must be distinct"),
         ]
-        for (routes, accepted) in cases {
+        for (routes, reason) in rejectedCases {
             let fixture = try makeSharedModelParserParityFixtureBundle([
                 "base": "pairedLeadCordModel",
                 "mutations": [["target": "board", "op": "replace",
@@ -423,15 +440,11 @@ final class BoardPackageStoreTests: XCTestCase {
                     "value": routes]]
             ])
             defer { fixture.remove() }
-            let store = try BoardPackageStore(bundle: fixture.bundle)
-            XCTAssertEqual(store.boards.count, accepted ? 1 : 0)
-            if accepted {
-                let board = try XCTUnwrap(store.boards.first)
-                guard case .model(let media) = board.presentations[0].media,
-                      case .pairedLeadCord(let suspension) = media.suspension else {
-                    return XCTFail("missing paired-lead suspension")
-                }
-                XCTAssertEqual(suspension.canonicalPoses["primary"]?.cordContactPoints, valid)
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .invalidPackage(boardID: "fixture.paired-lead", reason: reason)
+                )
             }
         }
     }
