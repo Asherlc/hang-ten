@@ -515,10 +515,12 @@ Data, then installed by explicit UUID. `xcodebuild ... test
 model and 132 package tests; zero failures).
 
 Each DEBUG `HANGTEN_REVIEW_BOARD_DETAIL=1` + `HANGTEN_REVIEW_BOARD_ID` route
-rendered its model and initial highlighted hold. An accessibility-targeted
-contact selection on the rendered `boardModel.contact.<id>` element then
-updated both the selected-hold card and the red SceneKit highlight. These were
-the reviewed normal/selected pairs:
+rendered its model and initial highlighted hold. The retained selected-state
+accessibility snapshots show matching `boardModel.contact.<id>` and
+`boardDetail.selectedHold.<id>` IDs, and the reviewed selected PNGs show the
+corresponding red model highlight. This records the model-linked selection end
+state; it is not a raw `SCNView.hitTest` event log or independent proof of
+triangle-picking input. These were the reviewed normal/selected pairs:
 
 | Board | Selected model contact |
 | --- | --- |
@@ -530,16 +532,18 @@ the reviewed normal/selected pairs:
 | Rock Prodigy Training Center | `pinch-medium-left` |
 
 The 12 reviewed PNGs, their accessibility snapshots, signed-build log, test
-log, installed-container path, and SHA-256 values are retained only under
-`.context/lumpy-liger-hangboard-collection/odr-retry/`. No snapshot exposed
-`boardModel.unavailable` or `3D model unavailable`. Training Tiles required a
-ten-second initial SceneKit paint wait before its normal capture; the
-subsequent rendered normal state and a distinct right-upper-sloper selection
-were both reviewed. This is simulator integration evidence, not physical-device
-PBR or HealthKit permission validation.
+log, installed-container path, and durable
+[`visual-sha256.txt`](../../.context/lumpy-liger-hangboard-collection/odr-retry/visual-sha256.txt)
+inventory are retained only under `.context/lumpy-liger-hangboard-collection/odr-retry/`.
+No snapshot exposed `boardModel.unavailable` or `3D model unavailable`.
+Training Tiles required a ten-second initial SceneKit paint wait before its
+normal capture; the subsequent rendered normal state and a distinct
+right-upper-sloper selection were both reviewed. This is simulator integration
+evidence, not physical-device PBR or HealthKit permission validation.
 
 The registered archive trap then deleted only UUID
-`AE29B039-BAA0-413B-89D4-C9EED2842834`; a post-cleanup UUID query returned no
-matching device. The pending manifest is absent, the owned manifest contains
-no records, and the workspace-local DerivedData path is absent. The retained
-review evidence is the only output left by this retry.
+`AE29B039-BAA0-413B-89D4-C9EED2842834`; the retained
+[`post-cleanup status`](../../.context/lumpy-liger-hangboard-collection/odr-retry/post-cleanup-status.md)
+records the no-match UUID query, an absent pending manifest, a zero-byte owned
+manifest, and an absent workspace-local DerivedData path. The retained review
+evidence is the only output left by this retry.
