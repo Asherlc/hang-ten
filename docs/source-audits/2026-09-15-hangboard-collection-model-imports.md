@@ -501,3 +501,45 @@ reported as a runtime packaging/provisioning blocker with no code change.
 Archive cleanup removed the exact UUID; the emptied owned/pending manifests,
 workspace Derived Data, and all temporary screenshots were removed and the
 UUID no longer appears in `simctl list devices`.
+
+### ODR-fix retry — six-board model rendering and picking passed
+
+After `9342db1cc` corrected the ODR provisioning, an independently owned
+`Hang Ten Paseo lumpy-liger Review` simulator
+(`AE29B039-BAA0-413B-89D4-C9EED2842834`, iPhone 16 / iOS 26.5) was recorded in
+the pending manifest before the owned manifest, booted to launch-service
+readiness, clean-built with its exact destination and workspace-local Derived
+Data, then installed by explicit UUID. `xcodebuild ... test
+-only-testing:HangTenTests/BoardModelTests
+-only-testing:HangTenTests/BoardPackageStoreTests` passed all 177 tests (45
+model and 132 package tests; zero failures).
+
+Each DEBUG `HANGTEN_REVIEW_BOARD_DETAIL=1` + `HANGTEN_REVIEW_BOARD_ID` route
+rendered its model and initial highlighted hold. An accessibility-targeted
+contact selection on the rendered `boardModel.contact.<id>` element then
+updated both the selected-hold card and the red SceneKit highlight. These were
+the reviewed normal/selected pairs:
+
+| Board | Selected model contact |
+| --- | --- |
+| Climber's Edge | `flat-sloper-left` |
+| Contact | `jug-left` |
+| Simulator 3-D | `round-sloper-3-left` |
+| Training Tiles | `upper-sloper-outer-right` |
+| The Hangboard | `edge-40-left` |
+| Rock Prodigy Training Center | `pinch-medium-left` |
+
+The 12 reviewed PNGs, their accessibility snapshots, signed-build log, test
+log, installed-container path, and SHA-256 values are retained only under
+`.context/lumpy-liger-hangboard-collection/odr-retry/`. No snapshot exposed
+`boardModel.unavailable` or `3D model unavailable`. Training Tiles required a
+ten-second initial SceneKit paint wait before its normal capture; the
+subsequent rendered normal state and a distinct right-upper-sloper selection
+were both reviewed. This is simulator integration evidence, not physical-device
+PBR or HealthKit permission validation.
+
+The registered archive trap then deleted only UUID
+`AE29B039-BAA0-413B-89D4-C9EED2842834`; a post-cleanup UUID query returned no
+matching device. The pending manifest is absent, the owned manifest contains
+no records, and the workspace-local DerivedData path is absent. The retained
+review evidence is the only output left by this retry.
