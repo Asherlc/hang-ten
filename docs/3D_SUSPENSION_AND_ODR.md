@@ -106,6 +106,28 @@ anchors. Cord guides, anchor placement, radius, rest length, material, pose,
 and camera values remain `displayEstimate` unless a source establishes the
 specific numeric fact.
 
+Canonical poses may provide `cordContactPoints`: complete, nonempty ordered
+exterior routes keyed by both paired-lead IDs or all four directed-passage IDs.
+For a branch, the first passage's override runs from the anchor toward the
+entry mouth, and the second runs from its entry mouth back toward the anchor.
+These override the branch's entry/exit contacts only; the bore and the fixed
+route between bore exits remain unchanged. Single cords and point-only
+passages cannot use these overrides. Parsers validate the resolved route,
+including full length and distinct adjacent points.
+
+Captain pose-specific `attachmentPoints` delimit the visible cord at the
+selected upper channel. They are clipped display endpoints, not evidence for
+additional physical mouths or a hidden interior connection. Keep their ordered
+over-lip routes clear of selectable lips and the white floor apertures.
+
+Convert retained source coordinates into the descriptor/importer basis before
+using them as model points. Baguette Evo's retained Blender markers are Z-up,
+front -Y; the imported model is Y-up, front +Z, so the correct mapping is
+`(x, y, z) → (x, z, -y)`. Its four evidenced bores therefore run along model Z.
+The Baguette `paired-12-8-6` and `rounded-tray` cameras use a 30° oblique
+display estimate: looking straight along the hanging spans hid the cord behind
+the board. The oblique views keep the selected face and a visible hanging V.
+
 A source's total rope length and the renderer's branch `restLength` answer
 different questions. For two equal exterior leads made from a published 1 m
 total, a 0.5 m per-lead value is acceptable only as an explicitly documented
@@ -175,6 +197,7 @@ change.
 Repository commands from the checkout root:
 
 ```sh
+rtk proxy ruby Tools/HangboardModels/check_production_cord_clearance.rb
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh audit-cords --root Hangboards \
   --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json
@@ -188,6 +211,15 @@ rtk .context/hangboard-packages-venv/bin/python -m pytest \
 rtk python3 -m compileall -q Tools/HangboardPackages/src
 rtk git diff --check
 ```
+
+The macOS clearance regression extracts the checked-out production model
+types, solver, and verbatim `BoardModelView.hasClearance` gate and helpers. It
+decodes every triangle from the four real, hash-checked USDZs and fails if any
+of their 17 poses is rejected. It also checks that Captain visible terminals
+stay in the selected upper channel and that each pose projects its anchor and
+at least 10% of board width of every branch above the entire board silhouette
+(with an eight-radius minimum). This is mesh/solver evidence; it does not
+replace current-source iOS selection, picking, or screenshot review.
 
 Also parse each edited JSON document directly and run the focused XCTest
 selectors for `SuspendedBoardPresentationTests`, `BoardModelTests`, and

@@ -32,3 +32,17 @@ accessories are supplied. The Captain packages use `pairedLeadCord` with an
 ordered, visible over-lip route and omit any unproven through-hole or hidden
 interior route; Baguette Evo restores the reviewed
 `twoBranchCord` route metadata.
+
+The production-clearance correction preserves those source decisions and
+retained snapshots. Captain visible endpoints and exterior contact paths are
+pose-specific display estimates within the selected upper channel; they do
+not establish extra physical mouths. Baguette's retained source package
+documents Blender Z-up/front -Y and the export conversion `(x,z,-y)`; applying
+that conversion to the four existing mouth pairs aligns them with the actual
+imported holes. Its 0.945 m branch capacity and 0.2 m anchor offset are display
+estimates. The real-USDZ regression in
+`Tools/HangboardModels/check_production_cord_clearance.rb` verifies every
+canonical pose against the unchanged production clearance gate and requires
+recognizable projected branches above the full board silhouette. The two
+formerly edge-on Baguette cameras (`paired-12-8-6` and `rounded-tray`) use 30°
+oblique display estimates; these are presentation choices, not source facts.

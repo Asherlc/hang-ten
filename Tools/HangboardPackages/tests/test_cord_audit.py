@@ -58,9 +58,9 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         "captain-fingerfood.unlevel": 0.28,
     }
     captain_recess_terminals = {
-        "captain-fingerfood.dual": ((-0.026, 0.024, 0.012), (0.026, 0.024, 0.012)),
-        "captain-fingerfood.pocket": ((-0.022, 0.022, 0.0115), (0.022, 0.022, 0.0115)),
-        "captain-fingerfood.unlevel": ((-0.029, 0.024, 0.012), (0.029, 0.024, 0.012)),
+        "captain-fingerfood.dual": ((-0.026, 0.013, -0.005), (0.026, 0.013, -0.005)),
+        "captain-fingerfood.pocket": ((-0.022, 0.01, -0.001), (0.022, 0.01, -0.001)),
+        "captain-fingerfood.unlevel": ((-0.029, 0.013, -0.01), (0.029, 0.013, -0.01)),
     }
     for package_id, rest_length in captain_rest_lengths.items():
         board = next(
@@ -86,7 +86,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
     )
     baguette_suspension = baguette.presentations[0].media.suspension
     assert baguette_suspension.anchor.offset_from_board_bounds == (0.0, 0.2, 0.0)
-    assert [branch.rest_length for branch in baguette_suspension.branches] == [0.885, 0.885]
+    assert [branch.rest_length for branch in baguette_suspension.branches] == [0.945, 0.945]
 
 
 def _model_package(package_id: str, *, suspension: object | None = None) -> BoardPackage:

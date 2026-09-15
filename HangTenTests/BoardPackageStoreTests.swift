@@ -1111,6 +1111,36 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(suspension.attachments.map(\.pointInModel), [[0.2, 0.5, 0.1], [0.8, 0.5, 0.1]])
     }
 
+    func testStorePreservesPoseCordContactsAndRejectsIncompleteOrTooLongRoutes() throws {
+        let valid = ["left-lead": [[0.2, 0.6, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]]
+        let cases: [([String: [[Double]]], Bool)] = [
+            (valid, true),
+            (["left-lead": [[0.2, 0.6, 0.1]]], false),
+            (["left-lead": [], "right-lead": [[0.8, 0.6, 0.1]]], false),
+            (["left-lead": [[0.2, 5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]], false),
+            (["left-lead": [[0.2, 0.5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]], false),
+        ]
+        for (routes, accepted) in cases {
+            let fixture = try makeSharedModelParserParityFixtureBundle([
+                "base": "pairedLeadCordModel",
+                "mutations": [["target": "board", "op": "replace",
+                    "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "cordContactPoints"],
+                    "value": routes]]
+            ])
+            defer { fixture.remove() }
+            let store = BoardPackageStore(bundle: fixture.bundle)
+            XCTAssertEqual(store.boards.count, accepted ? 1 : 0)
+            if accepted {
+                let board = try XCTUnwrap(store.boards.first)
+                guard case .model(let media) = board.presentations[0].media,
+                      case .pairedLeadCord(let suspension) = media.suspension else {
+                    return XCTFail("missing paired-lead suspension")
+                }
+                XCTAssertEqual(suspension.canonicalPoses["primary"]?.cordContactPoints, valid)
+            }
+        }
+    }
+
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "directedTwoBranchModel",
@@ -4825,7 +4855,7 @@ final class BoardPackageStoreTests: XCTestCase {
         let camera = try XCTUnwrap(pose["camera"] as? [String: Any])
         return try orderedJSONObjectData(
             pose,
-            keys: pose["attachmentPoints"] == nil ? ["rotation", "translation", "camera"] : ["rotation", "translation", "camera", "attachmentPoints"],
+            keys: ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"].filter { pose[$0] != nil },
             serializedValues: ["camera": try orderedJSONObjectData(
                 camera,
                 keys: ["viewDirection", "fitPadding"]

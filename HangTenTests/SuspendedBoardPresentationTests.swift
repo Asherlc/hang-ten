@@ -246,6 +246,27 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: suspension, bounds: bounds))
     }
 
+    func testPairedLeadUsesOrderedPoseContactsWithoutMovingItsTerminal() throws {
+        let profile = pairedLeadSuspension(restLength: 2.5)
+        var selectedPose = pose()
+        selectedPose.cordContactPoints = [
+            "left": [[-0.6, 0.6, 0.1], [-0.6, 0.5, 0.1]],
+            "right": [[0.6, 0.6, 0.1], [0.6, 0.5, 0.1]]
+        ]
+        let solved = try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: profile, bounds: bounds)
+        XCTAssertEqual(Array(solved.leads[0].samples.suffix(3)), [
+            SIMD3<Float>(-0.6, 0.6, 0.1), SIMD3<Float>(-0.6, 0.5, 0.1), SIMD3<Float>(-0.6, 0.4, 0.05)
+        ])
+        selectedPose.cordContactPoints?["left"] = [[-0.6, 3, 0.1]]
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: profile, bounds: bounds)) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .cordTooShort)
+        }
+        selectedPose.cordContactPoints?.removeValue(forKey: "left")
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: profile, bounds: bounds)) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .invalidSuspension)
+        }
+    }
+
     func testPairedLeadRejectsDistinctLeadsThatAreTooCloseAfterTheirSharedAnchor() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),

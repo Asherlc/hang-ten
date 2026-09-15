@@ -35,6 +35,15 @@ struct SuspendedPairedLeadSolvedPresentation {
 
 
 enum SuspendedBoardPresentation {
+    private static func validateContactOverrides(_ routes: [String: [[Double]]]?, ids: Set<String>) throws {
+        guard let routes else { return }
+        guard Set(routes.keys) == ids,
+              routes.values.allSatisfy({ route in
+                  !route.isEmpty && route.allSatisfy { $0.count == 3 && $0.allSatisfy(\.isFinite) }
+                      && zip(route, route.dropFirst()).allSatisfy { $0.0 != $0.1 }
+              }) else { throw SuspendedPresentationError.invalidSuspension }
+    }
+
     static let additionalClearance: Float = 0.001
     // Two independent hanging leads need more than the generic model edge
     // padding so the free span stays plainly visible in the detail view.
@@ -78,6 +87,7 @@ enum SuspendedBoardPresentation {
     ) throws -> SuspendedPairedLeadSolvedPresentation {
         let transform = try boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
+        try validateContactOverrides(pose.cordContactPoints, ids: Set(suspension.attachments.map(\.id)))
         if let points = pose.attachmentPoints {
             guard Set(points.keys) == Set(suspension.attachments.map(\.id)),
                   Set(points.values).count == 2,
@@ -120,7 +130,8 @@ enum SuspendedBoardPresentation {
         }
         let transformedRoutes = suspension.attachments.map { attachment in
             let terminal = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
-            return (attachment.contactPointsInModel + [terminal]).map { point in
+            let contacts = pose.cordContactPoints?[attachment.id] ?? attachment.contactPointsInModel
+            return (contacts + [terminal]).map { point in
                 transformPoint(
                     transform,
                     SIMD3<Float>(Float(point[0]), Float(point[1]), Float(point[2]))
@@ -231,6 +242,10 @@ enum SuspendedBoardPresentation {
         }
 
         let allPassages = suspension.passages.left + suspension.passages.right
+        try validateContactOverrides(pose.cordContactPoints, ids: Set(allPassages.map(\.id)))
+        guard pose.cordContactPoints == nil || allPassages.allSatisfy(\.isThroughBore) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
         guard allPassages.count == 4,
               Set(allPassages.map(\.id)).count == allPassages.count,
               allPassages.allSatisfy({
@@ -310,13 +325,13 @@ enum SuspendedBoardPresentation {
             let contactPoints: [SIMD3<Float>]
             let exitContacts: [SIMD3<Float>]
             if usesAuthoredRoute {
-                entryContacts = branch.entryContactPoints.map {
+                entryContacts = (pose.cordContactPoints?[branch.passageIDs[0]] ?? branch.entryContactPoints).map {
                     transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
                 }
                 contactPoints = branch.exteriorContactPoints.map {
                     transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
                 }
-                exitContacts = branch.exitContactPoints.map {
+                exitContacts = (pose.cordContactPoints?[branch.passageIDs[1]] ?? branch.exitContactPoints).map {
                     transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
                 }
             } else {
@@ -332,6 +347,9 @@ enum SuspendedBoardPresentation {
             let rigidRoute = usesAuthoredRoute
                 ? entryContacts + [firstEntry, firstExit] + contactPoints + [secondExit, secondEntry] + exitContacts
                 : [firstEntry, secondEntry]
+            guard zip(rigidRoute, rigidRoute.dropFirst()).allSatisfy({
+                simd_length($0.1 - $0.0) > 1e-7
+            }) else { throw SuspendedPresentationError.invalidPose }
             let rigidLength = zip(rigidRoute, rigidRoute.dropFirst()).reduce(Float.zero) {
                 $0 + simd_length($1.1 - $1.0)
             }

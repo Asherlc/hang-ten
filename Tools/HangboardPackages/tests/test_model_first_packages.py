@@ -603,10 +603,51 @@ def test_v2_paired_leads_preserve_pose_specific_mouths(tmp_path: Path) -> None:
     assert dict(suspension.canonical_poses["primary"].attachment_points) == {key: tuple(value) for key, value in points.items()}
 
 
+def test_v2_paired_leads_use_pose_contact_route_for_length_validation(tmp_path: Path) -> None:
+    package = _write_shared_model_parser_parity_package(tmp_path, {
+        "base": "pairedLeadCordModel", "mutations": [{
+            "target": "board", "op": "replace",
+            "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "cordContactPoints"],
+            "value": {"left-lead": [[0.2, 0.6, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]},
+        }],
+    })
+    module = load_board_catalog_module()
+    suspension = module.load_board_package(package).board.presentations[0].media.suspension
+    assert dict(suspension.canonical_poses["primary"].cord_contact_points) == {
+        "left-lead": ((0.2, 0.6, 0.1),), "right-lead": ((0.8, 0.6, 0.1),),
+    }
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["suspension"]["canonicalPoses"]["primary"]["cordContactPoints"]["left-lead"] = [[0.2, 5, 0.1]]
+    _rewrite(package / "board.json", document)
+    with pytest.raises(ValueError, match="restLength"):
+        module.load_board_package(package)
+
+
 def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
     for fixture in _shared_model_parser_parity_fixtures():
         expected = fixture.get("pythonError")
         assert isinstance(expected, str) and expected and expected != ".*", fixture["name"]
+
+
+@pytest.mark.parametrize("routes", [
+    {},
+    {"left-lead": [[0.2, 0.6, 0.1]]},
+    {"left-lead": [], "right-lead": [[0.8, 0.6, 0.1]]},
+    {"left-lead": [[0.2, 0.6]], "right-lead": [[0.8, 0.6, 0.1]]},
+    {"left-lead": [[0.2, 0.6, 0.1], [0.2, 0.6, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]},
+    {"left-lead": [[0.2, 0.5, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]},
+    {"unknown": [[0.2, 0.6, 0.1]], "right-lead": [[0.8, 0.6, 0.1]]},
+])
+def test_v2_rejects_incomplete_or_degenerate_pose_contact_routes(tmp_path: Path, routes: dict) -> None:
+    package = _write_shared_model_parser_parity_package(tmp_path, {
+        "base": "pairedLeadCordModel", "mutations": [{
+            "target": "board", "op": "replace",
+            "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "cordContactPoints"],
+            "value": routes,
+        }],
+    })
+    with pytest.raises(ValueError, match="cordContactPoints|distinct"):
+        load_board_catalog_module().load_board_package(package)
 
 
 def test_two_branch_order_and_segment_regressions_are_specific(tmp_path: Path) -> None:

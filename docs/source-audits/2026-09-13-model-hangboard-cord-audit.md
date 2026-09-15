@@ -62,9 +62,12 @@ rejects missing or incomplete provenance and approvals.
   through-hole or complete hidden interior route.
 - Each package therefore binds two distinct recess terminals on its existing
   importer-visible body node and preserves the visible upper-lip path with two
-  ordered `contactPointsInModel` per lead. The renderer draws the free span and
-  the authored exterior route without inventing a through-bore, knot, hardware,
-  or safety claim.
+  default ordered `contactPointsInModel` per lead. Selected inverted and end
+  poses use `attachmentPoints` and `cordContactPoints` to delimit the visible
+  cord in that pose's upper channel, avoiding a loop across the face and white
+  floor apertures. These are explicitly display estimates of the visible
+  portion, not newly asserted physical mouths or hidden interior routes.
+  All free spans and hold surfaces retain the production clearance gate.
 - The shared anchor offset is the user-approved compact 0.15 m display
   estimate, 50% below the prior presentation value.
 - Attachment coordinates, anchor offsets, cord radius, and pose camera values
@@ -82,11 +85,17 @@ rejects missing or incomplete provenance and approvals.
 - The prior source-reviewed `twoBranchCord` metadata is restored with its
   four ordered through-bores, two branches, invisible anchor, and all five
   canonical poses. The 0.2 m anchor offset makes the visible suspension 50%
-  shorter than the prior presentation. Its 0.885 m per-branch display estimate
-  is the minimum rounded capacity that keeps every fixed route solvable; the
-  originally proposed exact-half 0.7 m value is shorter than the directed
-  route. All route, anchor, radius, and pose values marked `displayEstimate`
-  remain presentation estimates.
+  shorter than the prior presentation. The source-marker Z-up coordinates are
+  converted into importer Y-up coordinates as `(x,z,-y)`, aligning all four
+  existing bores with the actual USDZ openings. Pose-specific exterior
+  `cordContactPoints` clear the cylinder while retaining the same four bores
+  and ordered pairs. Its 0.945 m per-branch display estimate covers the longest
+  0.944143 m route. This capacity does not set visible hanging height.
+  The `paired-12-8-6` and `rounded-tray` cameras are 30° oblique display
+  estimates, retaining the selected face while exposing the hanging V instead
+  of looking along the cord toward the board.
+  All route, anchor, radius, and pose values marked `displayEstimate` remain
+  presentation estimates.
 
 ### Lattice MXEdge Lift Large and Small — `pairedLeadCord`
 

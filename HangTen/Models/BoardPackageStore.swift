@@ -1360,7 +1360,7 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
-        guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
+        guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil && $0.cordContactPoints == nil }),
               document.attachment.nodeID.isEmpty == false,
               document.attachment.pointInModel.count == 3,
               document.attachment.pointInModel.allSatisfy(\.isFinite),
@@ -1517,6 +1517,7 @@ struct BoardPackageStore {
         }
         var poses: [String: BoardModelCanonicalPose] = [:]
         for (positionID, pose) in document.canonicalPoses {
+            try validateCordContactPoints(pose.cordContactPoints, ids: Set(document.attachments.map(\.id)), boardID: boardID)
             if let points = pose.attachmentPoints {
                 guard Set(points.keys) == Set(document.attachments.map(\.id)),
                       Set(points.values).count == 2,
@@ -1546,7 +1547,7 @@ struct BoardPackageStore {
             for attachment in document.attachments {
                 let p = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
                 let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
-                let transformedRoute = (attachment.contactPointsInModel + [p]).map { point in
+                let transformedRoute = ((pose.cordContactPoints?[attachment.id] ?? attachment.contactPointsInModel) + [p]).map { point in
                     let tx = 2 * (qy * point[2] - qz * point[1])
                     let ty = 2 * (qz * point[0] - qx * point[2])
                     let tz = 2 * (qx * point[1] - qy * point[0])
@@ -1557,6 +1558,11 @@ struct BoardPackageStore {
                     ]
                 }
                 let route = [anchorPosition] + transformedRoute
+                guard zip(transformedRoute, transformedRoute.dropFirst()).allSatisfy({ points in
+                    zip(points.0, points.1).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) } > 1e-14
+                }) else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cordContactPoints resolved route points must be distinct")
+                }
                 let routeLength = zip(route, route.dropFirst()).reduce(0) { partial, points in
                     partial + zip(points.0, points.1).reduce(0) { squared, pair in
                         squared + (pair.0 - pair.1) * (pair.0 - pair.1)
@@ -1574,7 +1580,8 @@ struct BoardPackageStore {
                     viewDirection: pose.camera.viewDirection,
                     fitPadding: pose.camera.fitPadding
                 ),
-                attachmentPoints: pose.attachmentPoints
+                attachmentPoints: pose.attachmentPoints,
+                cordContactPoints: pose.cordContactPoints
             )
         }
         return .pairedLeadCord(BoardModelPairedLeadCord(
@@ -1601,6 +1608,17 @@ struct BoardPackageStore {
             ),
             canonicalPoses: poses
         ))
+    }
+
+    private static func validateCordContactPoints(_ routes: [String: [[Double]]]?, ids: Set<String>, boardID: String) throws {
+        guard let routes else { return }
+        guard Set(routes.keys) == ids,
+              routes.values.allSatisfy({ route in
+                  !route.isEmpty && route.allSatisfy { $0.count == 3 && $0.allSatisfy(\.isFinite) }
+                      && zip(route, route.dropFirst()).allSatisfy { $0.0 != $0.1 }
+              }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cordContactPoints must name every attachment or passage with a nonempty finite distinct route")
+        }
     }
 
     private static func makeTwoBranchSuspension(
@@ -1682,6 +1700,10 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord anchor must be finite")
         }
         for (positionID, pose) in document.canonicalPoses {
+            if pose.cordContactPoints != nil && !throughBore {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cordContactPoints requires directed passages")
+            }
+            try validateCordContactPoints(pose.cordContactPoints, ids: Set(passages.map(\.id)), boardID: boardID)
             guard pose.rotation.count == 4, pose.rotation.allSatisfy(\.isFinite),
                   pose.translation.count == 3, pose.translation.allSatisfy(\.isFinite),
                   pose.camera.viewDirection.count == 3, pose.camera.viewDirection.allSatisfy(\.isFinite),
@@ -1695,13 +1717,20 @@ struct BoardPackageStore {
             }
             for (branchIndex, branch) in document.branches.enumerated() {
                 let side = branchIndex == 0 ? document.passages.left : document.passages.right
-                let modelRoute = !throughBore ? side.map(\.entryPointInModel) : branch.entryContactPoints + [
+                let entryContacts = pose.cordContactPoints?[side[0].id] ?? branch.entryContactPoints
+                let exitContacts = pose.cordContactPoints?[side[1].id] ?? branch.exitContactPoints
+                let modelRoute = !throughBore ? side.map(\.entryPointInModel) : entryContacts + [
                     side[0].entryPointInModel,
                     side[0].exitPointInModel,
                 ] + branch.exteriorContactPoints + [
                     side[1].exitPointInModel,
                     side[1].entryPointInModel,
-                ] + branch.exitContactPoints
+                ] + exitContacts
+                guard zip(modelRoute, modelRoute.dropFirst()).allSatisfy({ points in
+                    zip(points.0, points.1).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) } > 1e-14
+                }) else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cordContactPoints resolved route points must be distinct")
+                }
                 var transformedEndpoints: [[Double]] = []
                 for p in modelRoute {
                     let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
@@ -1735,7 +1764,7 @@ struct BoardPackageStore {
             }
         }
         let poseValues = document.canonicalPoses.mapValues {
-            BoardModelCanonicalPose(rotation: $0.rotation, translation: $0.translation, camera: BoardModelCanonicalCamera(viewDirection: $0.camera.viewDirection, fitPadding: $0.camera.fitPadding))
+            BoardModelCanonicalPose(rotation: $0.rotation, translation: $0.translation, camera: BoardModelCanonicalCamera(viewDirection: $0.camera.viewDirection, fitPadding: $0.camera.fitPadding), cordContactPoints: $0.cordContactPoints)
         }
         return .twoBranchCord(BoardModelTwoBranchSuspension(
             passages: BoardModelPassagePairs(
@@ -1878,9 +1907,9 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                           case .object(let camera)? = poseObject.value(named: "camera") else {
                         throw BoardPackageRawJSONError.invalid
                     }
-                    try poseObject.requireCanonicalOrder(poseObject.value(named: "attachmentPoints") == nil
-                        ? ["rotation", "translation", "camera"]
-                        : ["rotation", "translation", "camera", "attachmentPoints"])
+                    try poseObject.requireCanonicalOrder(
+                        ["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"]
+                            .filter { poseObject.value(named: $0) != nil })
                     try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
                 }
                 continue
@@ -1914,7 +1943,9 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                       case .object(let camera)? = poseObject.value(named: "camera") else {
                     throw BoardPackageRawJSONError.invalid
                 }
-                try poseObject.requireCanonicalOrder(["rotation", "translation", "camera"])
+                try poseObject.requireCanonicalOrder(
+                    ["rotation", "translation", "camera", "cordContactPoints"]
+                        .filter { poseObject.value(named: $0) != nil })
                 try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
             }
         }
@@ -2627,15 +2658,18 @@ private struct BoardPackageCanonicalPoseDocument: Decodable {
     let camera: BoardPackageCanonicalCameraDocument
 
     let attachmentPoints: [String: [Double]]?
-    private enum CodingKeys: String, CodingKey { case rotation, translation, camera, attachmentPoints }
+    let cordContactPoints: [String: [[Double]]]?
+    private enum CodingKeys: String, CodingKey { case rotation, translation, camera, attachmentPoints, cordContactPoints }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["rotation", "translation", "camera", "attachmentPoints"])
+        try decoder.rejectUnknownKeys(["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         rotation = try container.decode([Double].self, forKey: .rotation)
         translation = try container.decode([Double].self, forKey: .translation)
         camera = try container.decode(BoardPackageCanonicalCameraDocument.self, forKey: .camera)
         attachmentPoints = container.contains(.attachmentPoints)
             ? try container.decode([String: [Double]].self, forKey: .attachmentPoints) : nil
+        cordContactPoints = container.contains(.cordContactPoints)
+            ? try container.decode([String: [[Double]]].self, forKey: .cordContactPoints) : nil
     }
 }
 

@@ -447,6 +447,7 @@ class BoardModelCanonicalPose:
     translation: tuple[float, float, float]
     camera: Mapping[str, Any]
     attachment_points: Mapping[str, tuple[float, float, float]] | None = None
+    cord_contact_points: Mapping[str, tuple[tuple[float, float, float], ...]] | None = None
 
 
 @dataclass(frozen=True)
@@ -597,11 +598,10 @@ def _load_model_poses(
         position_id = _identifier(position_id, f"{position_source} positionID")
         pose_payload = _mapping(raw_pose, position_source)
         _closed(pose_payload, {"rotation", "translation", "camera"}, position_source,
-                optional={"attachmentPoints"} if paired_leads else set())
+                optional={"cordContactPoints"} | ({"attachmentPoints"} if paired_leads else set()))
         if canonical_order:
             _canonical_member_order(
-                pose_payload, ("rotation", "translation", "camera", "attachmentPoints")
-                if "attachmentPoints" in pose_payload else ("rotation", "translation", "camera"), position_source
+                pose_payload, tuple(key for key in ("rotation", "translation", "camera", "attachmentPoints", "cordContactPoints") if key in pose_payload), position_source
             )
         rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
         if len(rotation) != 4:
@@ -619,6 +619,17 @@ def _load_model_poses(
             )
         view_direction = _vector3(camera_payload["viewDirection"], f"{camera_source}.viewDirection")
         fit_padding = _positive_number(camera_payload["fitPadding"], f"{camera_source}.fitPadding")
+        contact_routes = None
+        if "cordContactPoints" in pose_payload:
+            contact_routes = {}
+            for key, route in _mapping(pose_payload["cordContactPoints"], f"{position_source}.cordContactPoints").items():
+                _identifier(key, f"{position_source}.cordContactPoints")
+                if not isinstance(route, list) or not route:
+                    raise ValueError(f"{position_source}.cordContactPoints routes must be nonempty arrays")
+                points = tuple(_finite_vector3(point, f"{position_source}.cordContactPoints.{key}") for point in route)
+                if any(math.dist(a, b) <= 1e-7 for a, b in zip(points, points[1:])):
+                    raise ValueError(f"{position_source}.cordContactPoints must be distinct")
+                contact_routes[key] = points
         poses[position_id] = BoardModelCanonicalPose(
             tuple(rotation),
             translation,
@@ -627,6 +638,7 @@ def _load_model_poses(
                 _identifier(key, f"{position_source}.attachmentPoints"): _finite_vector3(point, f"{position_source}.attachmentPoints.{key}")
                 for key, point in _mapping(pose_payload["attachmentPoints"], f"{position_source}.attachmentPoints").items()
             }) if "attachmentPoints" in pose_payload else None,
+            MappingProxyType(contact_routes) if contact_routes is not None else None,
         )
     return MappingProxyType(poses)
 
@@ -1757,6 +1769,15 @@ def _validate_model_suspension(
             if any(math.dist(start, end) <= 1e-7 for start, end in zip(route, route[1:])):
                 raise ValueError("paired lead route points must be distinct")
     for position_id, pose in suspension.canonical_poses.items():
+        if pose.cord_contact_points is not None:
+            if isinstance(suspension, BoardModelPairedLeadCord):
+                route_ids = {a.id for a in suspension.attachments}
+            elif isinstance(suspension, BoardModelTwoBranchSuspension) and all(p.is_through_bore for p in passages):
+                route_ids = {p.id for p in passages}
+            else:
+                raise ValueError("cordContactPoints requires paired leads or directed passages")
+            if set(pose.cord_contact_points) != route_ids:
+                raise ValueError("cordContactPoints must name every attachment or passage exactly")
         if pose.attachment_points is not None:
             if not isinstance(suspension, BoardModelPairedLeadCord) or set(pose.attachment_points) != {a.id for a in suspension.attachments} or len(set(pose.attachment_points.values())) != 2:
                 raise ValueError("paired lead pose attachmentPoints must name both distinct mouths")
@@ -1785,7 +1806,7 @@ def _validate_model_suspension(
                     else endpoint.point_in_model
                 )
                 contact_points = (
-                    endpoint.contact_points_in_model
+                    (pose.cord_contact_points[endpoint.id] if pose.cord_contact_points is not None else endpoint.contact_points_in_model)
                     if isinstance(suspension, BoardModelPairedLeadCord)
                     else ()
                 )
@@ -1795,13 +1816,13 @@ def _validate_model_suspension(
             else:
                 assert isinstance(branch_data, BoardModelCordBranch)
                 endpoints = (
-                    *branch_data.entry_contact_points,
+                    *(pose.cord_contact_points[branch_endpoints[0].id] if pose.cord_contact_points is not None else branch_data.entry_contact_points),
                     branch_endpoints[0].entry_point_in_model,
                     branch_endpoints[0].exit_point_in_model,
                     *branch_data.exterior_contact_points,
                     branch_endpoints[1].exit_point_in_model,
                     branch_endpoints[1].entry_point_in_model,
-                    *branch_data.exit_contact_points,
+                    *(pose.cord_contact_points[branch_endpoints[1].id] if pose.cord_contact_points is not None else branch_data.exit_contact_points),
                 )
                 rest_length = branch_data.rest_length
                 if not branch_endpoints[0].is_through_bore:
@@ -1809,6 +1830,10 @@ def _validate_model_suspension(
                 rigid_route_length = sum(
                     math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
                 ) + math.dist(endpoints[0], endpoints[1])
+            if pose.cord_contact_points is not None and any(
+                math.dist(start, end) <= 1e-7 for start, end in zip(endpoints, endpoints[1:])
+            ):
+                raise ValueError("cordContactPoints resolved route points must be distinct")
             transformed_endpoints: list[tuple[float, float, float]] = []
             for endpoint in endpoints:
                 px, py, pz = endpoint
