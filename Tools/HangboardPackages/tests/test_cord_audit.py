@@ -46,7 +46,24 @@ def test_current_four_documented_suspension_packages_are_represented() -> None:
         for package_id in expected_topologies
     } == expected_topologies
     assert all(records[package_id].decision == "represented" for package_id in expected_topologies)
+    assert all(
+        records[package_id].source_fact == "documentedSuspension"
+        for package_id in expected_topologies
+    )
     assert report.decisions == {"excluded": 6, "represented": 8}
+
+    for package_id in (
+        "captain-fingerfood.dual",
+        "captain-fingerfood.pocket",
+        "captain-fingerfood.unlevel",
+    ):
+        board = next(
+            package.board
+            for package in inventory.packages
+            if package.board.id == package_id
+        )
+        media = board.presentations[0].media
+        assert media.suspension.cord.rest_length == 0.5
 
 
 def _model_package(package_id: str, *, suspension: object | None = None) -> BoardPackage:
@@ -74,6 +91,7 @@ def _record(
     *,
     decision: str = "excluded",
     topology: str | None = None,
+    source_fact: str | None = None,
     ruling: str = "The primary product listing does not establish a supplied cord.",
     evidence: list[dict[str, str]] | None = None,
 ) -> dict[str, object]:
@@ -95,6 +113,12 @@ def _record(
     return {
         "packageID": package_id,
         "decision": decision,
+        "sourceFact": source_fact
+        or (
+            "documentedSuspension"
+            if decision == "represented"
+            else "noDocumentedSuspension"
+        ),
         "topology": topology,
         "ruling": ruling,
         "evidence": evidence_value if evidence_value is not None else [
@@ -424,21 +448,28 @@ def test_manifest_rejects_non_calendar_human_review_date(
         _validate(tmp_path, inventory, [record])
 
 
-def test_excluded_record_may_conservatively_omit_unavailable_source_evidence(
+def test_excluded_record_requires_retained_source_evidence(
     tmp_path: Path,
 ) -> None:
     inventory = _inventory(_model_package("fixture.board"))
 
-    report = _validate(
-        tmp_path,
-        inventory,
-        [_record("fixture.board", evidence=[])],
-    )
+    with pytest.raises(CordAuditError, match="requires retained source evidence"):
+        _validate(tmp_path, inventory, [_record("fixture.board", evidence=[])])
 
-    assert report.to_json() == {
-        "modelPackageIDs": ["fixture.board"],
-        "decisions": {"excluded": 1},
-    }
+
+def test_excluded_record_rejects_documented_suspension_source_fact_without_metadata(
+    tmp_path: Path,
+) -> None:
+    inventory = _inventory(_model_package("fixture.board"))
+
+    with pytest.raises(
+        CordAuditError, match="source fact documents suspended presentation"
+    ):
+        _validate(
+            tmp_path,
+            inventory,
+            [_record("fixture.board", source_fact="documentedSuspension")],
+        )
 
 
 def test_manifest_rejects_unknown_record_keys(tmp_path: Path) -> None:

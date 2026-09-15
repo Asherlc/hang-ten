@@ -9,8 +9,11 @@ the bytes against its SHA-256 digest.
 Every represented board has at least two materially distinct retained source
 artifacts. A single artifact cannot stand in for multiple evidence views, and
 markdown audit ledgers are rejected by the validator. When a cited page or
-media response could not be retained, the affected board is conservatively
-excluded rather than receiving invented evidence or suspension metadata.
+media response could not be retained, the affected record cannot be accepted:
+both represented and excluded decisions require retained source evidence.
+Source facts are recorded independently from rendering metadata so a
+documented optional suspension cannot be relabeled as absent by deleting its
+runtime cord block.
 
 The snapshots preserve source responses as fetched on 2026-09-13/14. They are
 provenance inputs only: they do not establish unpublished dimensions, load

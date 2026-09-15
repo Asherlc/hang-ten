@@ -4,6 +4,7 @@
     {
       "packageID": "beastmaker-1000",
       "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
       "topology": null,
       "ruling": "The current Beastmaker 1000 product evidence describes a fixed board with no supplied or integral cord system.",
       "evidence": [
@@ -26,6 +27,7 @@
     {
       "packageID": "beastmaker-2000",
       "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
       "topology": null,
       "ruling": "The current Beastmaker 2000 product evidence describes a fixed board with no supplied or integral cord system.",
       "evidence": [
@@ -48,6 +50,7 @@
     {
       "packageID": "captain-fingerfood.dual",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "pairedLeadCord",
       "ruling": "The current DUAL product page publishes a total rope length of 1 m and the retained title image shows the two external cord holes; the interior route is not reconstructed.",
       "evidence": [
@@ -78,6 +81,7 @@
     {
       "packageID": "captain-fingerfood.pocket",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "pairedLeadCord",
       "ruling": "The current POCKET Lines product page publishes a rope length of 1 m and the retained title image shows the two external cord holes; the interior route is not reconstructed.",
       "evidence": [
@@ -108,6 +112,7 @@
     {
       "packageID": "captain-fingerfood.unlevel",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "pairedLeadCord",
       "ruling": "The current UNLEVEL product page publishes a total rope length of 1 m and the retained title image shows the two external cord holes; the interior route is not reconstructed.",
       "evidence": [
@@ -138,6 +143,7 @@
     {
       "packageID": "lattice.mxedge-lift-large",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "pairedLeadCord",
       "ruling": "Approved current MXEdge Lift Large revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.",
       "evidence": [
@@ -168,6 +174,7 @@
     {
       "packageID": "lattice.mxedge-lift-small",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "pairedLeadCord",
       "ruling": "Approved current MXEdge Lift Small revision evidence establishes the supplied cord and two exterior leads; the hidden interior route is not reconstructed.",
       "evidence": [
@@ -198,6 +205,7 @@
     {
       "packageID": "lattice-triple-rung",
       "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
       "topology": null,
       "ruling": "Lattice Triple Rung evidence describes a fixed mounted board and does not establish a supplied or integral cord.",
       "evidence": [
@@ -220,6 +228,7 @@
     {
       "packageID": "metolius.prime-rib",
       "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
       "topology": null,
       "ruling": "Metolius Prime Rib evidence describes a fixed board with no supplied or integral cord system.",
       "evidence": [
@@ -242,6 +251,7 @@
     {
       "packageID": "metolius.project",
       "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
       "topology": null,
       "ruling": "Metolius Project evidence describes a fixed board with no supplied or integral cord system.",
       "evidence": [
@@ -264,6 +274,7 @@
     {
       "packageID": "metolius.wood-grips-compact-ii",
       "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
       "topology": null,
       "ruling": "Metolius Wood Grips Compact II evidence describes a fixed board with no supplied or integral cord system.",
       "evidence": [
@@ -286,6 +297,7 @@
     {
       "packageID": "nature.stone-hanger",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "pairedLeadCord",
       "ruling": "Approved current Granite Stone Hanger evidence establishes one supplied cord with two external lateral leads; the interior route is explicitly unknown and is not modeled.",
       "evidence": [
@@ -316,6 +328,7 @@
     {
       "packageID": "tension.flash-board",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "twoBranchCord",
       "ruling": "Retained approved Flash Board packet establishes the supplied portable cord and two ordered end passage pairs.",
       "evidence": [
@@ -346,6 +359,7 @@
     {
       "packageID": "yy.baguette-evo",
       "decision": "represented",
+      "sourceFact": "documentedSuspension",
       "topology": "twoBranchCord",
       "ruling": "The current YY Vertical Baguette Evo Turn & Pull product evidence explicitly supports suspended use with rope or bungee; the reviewed presentation is therefore represented as transient display geometry without claiming that an accessory is supplied.",
       "evidence": [

@@ -31,7 +31,11 @@ and rejects markdown audit ledgers as source snapshots. When a cited source
 cannot be retained, the record remains blocked from representation until the
 evidence is retained; it is not silently treated as proof that a documented
 optional suspension does not exist. A package with documented suspension
-metadata cannot receive an `excluded` decision.
+metadata cannot receive an `excluded` decision. Each record also carries the
+independent `sourceFact` (`documentedSuspension` or
+`noDocumentedSuspension`); both decisions require retained evidence, and the
+validator rejects a documented-suspension source fact classified as excluded
+even after rendering metadata is removed.
 Every record also carries an explicit `humanApproval` object; the validator
 rejects missing or incomplete provenance and approvals.
 
@@ -47,7 +51,10 @@ rejects missing or incomplete provenance and approvals.
 ### Captain Fingerfood DUAL, POCKET Lines, and UNLEVEL — `pairedLeadCord`
 
 - Current DUAL, POCKET Lines, and UNLEVEL manufacturer product pages publish
-  total rope length (1 m for DUAL and UNLEVEL; 1 m for POCKET Lines).
+  total rope length (1 m for DUAL and UNLEVEL; 1 m for POCKET Lines). The
+  renderer's `restLength` is per lead, so each package uses an explicitly
+  labeled 0.5 m display estimate derived from the shared 1 m total; this does
+  not claim that either individual lead is measured at 0.5 m.
 - The retained title images show the two external cord holes for each exact
   revision. The source pages and images establish the external mouths but do
   not establish the complete hidden interior route.
