@@ -467,3 +467,37 @@ manifests were absent afterward, as expected because creation never succeeded.
 No shared or unknown simulator was addressed. Re-run the simulator and focused
 XCTest portions after installing a CoreSimulator version compatible with Xcode
 27.0, then obtain the plan's final broad review.
+
+### Resumed isolated simulator validation — BLOCKED on ODR provisioning
+
+CoreSimulator became available later on 2026-09-15. An exact owned device,
+`Hang Ten Paseo lumpy-liger Review`
+(`87B3E8DF-B73E-4CDF-A0A3-5629F356F69B`), was created, written first to the
+pending and then to the owned manifest, booted, built with that exact
+destination, installed, and deleted through archive cleanup. No existing
+simulator was addressed.
+
+`xcodebuild ... test -only-testing:HangTenTests/BoardModelTests
+-only-testing:HangTenTests/BoardPackageStoreTests` on that UUID passed: 177
+tests, 0 failures (45 BoardModelTests and 132 BoardPackageStoreTests). Each of
+the six DEBUG board-detail routes exposed the expected board-specific hold
+legend; selecting the documented contact updated its selected-hold card. Normal
+and selected screenshots were captured and visually inspected for Climber's
+Edge/left jug, Contact/left pinch, Simulator 3-D/left #1 jug, Training
+Tiles/outer-left upper sloper, The Hangboard/left jug, and Training
+Center/left jug. Their hashes and paths are retained in the final-validation
+JSON; all temporary PNGs were deleted after review.
+
+The visual result is consistently the intended fail-closed unavailable state,
+not a rendered model: each screenshot says `3D model unavailable`. The device
+log identifies the common cause for all six: `NSBundleResourceRequest` fails
+with `NSCocoaErrorDomain` 4994, `The requested application data doesn’t
+exist`, for the exact `hang-ten-model-<board>` tag. An Xcode-managed
+build/install/relaunch produced the same result. This prevents validating
+normal 3D geometry, highlight alignment, or SceneKit picking; selected hold
+legend controls remain functional but are not model picking evidence. This is
+reported as a runtime packaging/provisioning blocker with no code change.
+
+Archive cleanup removed the exact UUID; the emptied owned/pending manifests,
+workspace Derived Data, and all temporary screenshots were removed and the
+UUID no longer appears in `simctl list devices`.
