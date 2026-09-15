@@ -444,37 +444,6 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(model.transientCordNode)
     }
 
-    func testTemporaryLatticePairedLeadRenderCapture() async throws {
-        let (_, _, model) = try await loadMigratedModel("lattice.mxedge-lift-large")
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 368, height: 180))
-        view.backgroundColor = .white
-        view.isOpaque = true
-        view.rendersContinuously = false
-        view.isPlaying = false
-        view.display(model)
-        view.scene = model.scene
-        view.scene?.background.contents = UIColor.white
-        view.pointOfView = model.camera
-        view.positionID = "lower-lips-front"
-        view.selectPositionIfNeeded()
-        SCNTransaction.flush()
-        let image = try XCTUnwrap(view.snapshot())
-        let attachment = XCTAttachment(image: image)
-        attachment.name = "temporary-lattice-paired-lead"
-        attachment.lifetime = .keepAlways
-        add(attachment)
-        let visibility = model.geometryNodes.map { ($0, $0.isHidden) }
-        for node in model.geometryNodes { node.isHidden = true }
-        defer {
-            for (node, wasHidden) in visibility { node.isHidden = wasHidden }
-        }
-        SCNTransaction.flush()
-        let isolated = XCTAttachment(image: try XCTUnwrap(view.snapshot()))
-        isolated.name = "temporary-lattice-paired-lead-only"
-        isolated.lifetime = .keepAlways
-        add(isolated)
-    }
-
     func testPairedLeadSceneRendersTwoTransientNonPickableCylinderGroupsAndRejectsOneBadLead() throws {
         let selectedPose = BoardModelCanonicalPose(
             rotation: [0, 0, 0, 1],
