@@ -27,22 +27,33 @@ _FIELDS = (
 )
 
 
-def _rename_fixture_geometry(document: dict[str, Any], hold_id: str) -> list[dict[str, Any]]:
-    geometry = document["presentations"][0]["media"]["holdGeometry"]
+def _scalar_depth(contact: object) -> int | float | None:
+    depth = contact.depth_range_millimeters
+    if depth is None or depth.lower_bound != depth.upper_bound:
+        return None
+    return depth.lower_bound
+
+
+def _single_grip_type(contact: object) -> str | None:
+    return next(iter(contact.grip_types)) if len(contact.grip_types) == 1 else None
+
+
+def _rename_fixture_geometry(document: dict[str, Any], contact_id: str) -> list[dict[str, Any]]:
+    geometry = document["presentations"][0]["media"]["contactGeometry"]
     pieces = geometry.pop("hold-left")
-    geometry[hold_id] = pieces
+    geometry[contact_id] = pieces
     return pieces
 
 
 def _copy_fixture_geometry(
-    document: dict[str, Any], hold_id: str, pieces: list[dict[str, Any]]
+    document: dict[str, Any], contact_id: str, pieces: list[dict[str, Any]]
 ) -> None:
-    document["presentations"][0]["media"]["holdGeometry"][hold_id] = pieces
+    document["presentations"][0]["media"]["contactGeometry"][contact_id] = pieces
 
 
 def _record(
     board_id: str,
-    hold_id: str,
+    contact_id: str,
     field: str,
     outcome: str,
     *,
@@ -51,7 +62,7 @@ def _record(
 ) -> dict[str, object]:
     record: dict[str, object] = {
         "boardID": board_id,
-        "holdIDs": [hold_id],
+        "contactIDs": [contact_id],
         "field": field,
         "outcome": outcome,
         "reviewedAt": "2026-08-25",
@@ -68,22 +79,22 @@ def _record(
     return record
 
 
-def verified(board_id: str, hold_id: str, field: str, value: object) -> dict[str, object]:
-    return _record(board_id, hold_id, field, "verified", value=value)
+def verified(board_id: str, contact_id: str, field: str, value: object) -> dict[str, object]:
+    return _record(board_id, contact_id, field, "verified", value=value)
 
 
-def unavailable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
-    return _record(board_id, hold_id, field, "unavailable")
+def unavailable(board_id: str, contact_id: str, field: str) -> dict[str, object]:
+    return _record(board_id, contact_id, field, "unavailable")
 
 
-def not_applicable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
-    return _record(board_id, hold_id, field, "notApplicable")
+def not_applicable(board_id: str, contact_id: str, field: str) -> dict[str, object]:
+    return _record(board_id, contact_id, field, "notApplicable")
 
 
 def test_adapted_record_matches_board_value(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update({"id": "edge-left", "kind": "edge"})
+    document["contacts"][0].update({"id": "edge-left", "kind": "edge"})
     _rename_fixture_geometry(document, "edge-left")
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     records = _complete_records("fixture.board", "edge-left")
@@ -117,6 +128,14 @@ def test_parser_rejects_adapted_record_without_reason(tmp_path: Path) -> None:
     records[0].pop("reason")
 
     with pytest.raises(MetadataAuditError, match=r"missing keys: \['reason'\]"):
+        load_metadata_ledger(_write_ledger(tmp_path, records))
+
+
+def test_parser_rejects_legacy_hold_ids_field(tmp_path: Path) -> None:
+    records = _complete_records("fixture.board", "hold-left")
+    records[0]["holdIDs"] = records[0].pop("contactIDs")
+
+    with pytest.raises(MetadataAuditError, match="holdIDs"):
         load_metadata_ledger(_write_ledger(tmp_path, records))
 
 
@@ -154,7 +173,7 @@ def test_parser_rejects_adapted_record_without_value(tmp_path: Path) -> None:
 def test_validator_rejects_mismatched_adapted_value(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update({"id": "edge-left", "kind": "edge"})
+    document["contacts"][0].update({"id": "edge-left", "kind": "edge"})
     _rename_fixture_geometry(document, "edge-left")
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     records = _complete_records("fixture.board", "edge-left")
@@ -176,7 +195,7 @@ def test_validator_rejects_mismatched_adapted_value(tmp_path: Path) -> None:
 
 def _complete_records(
     board_id: str,
-    hold_id: str,
+    contact_id: str,
     *,
     verified_values: dict[str, object] | None = None,
 ) -> list[dict[str, object]]:
@@ -184,11 +203,11 @@ def _complete_records(
     records: list[dict[str, object]] = []
     for field in _FIELDS:
         if field in values:
-            records.append(verified(board_id, hold_id, field, values[field]))
+            records.append(verified(board_id, contact_id, field, values[field]))
         elif field == "sloper" and values["kind"] != "sloper":
-            records.append(not_applicable(board_id, hold_id, field))
+            records.append(not_applicable(board_id, contact_id, field))
         else:
-            records.append(unavailable(board_id, hold_id, field))
+            records.append(unavailable(board_id, contact_id, field))
     return records
 
 
@@ -223,11 +242,11 @@ def _supplemental_sloper_package(tmp_path: Path) -> None:
         tmp_path / "boards" / "supplemental", board_id="supplemental.board"
     )
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update({"id": "sloper-left", "kind": "sloper"})
+    document["contacts"][0].update({"id": "sloper-left", "kind": "sloper"})
     pieces = _rename_fixture_geometry(document, "sloper-left")
-    non_sloper = dict(document["holds"][0])
+    non_sloper = dict(document["contacts"][0])
     non_sloper.update({"id": "edge-right", "kind": "edge"})
-    document["holds"].append(non_sloper)
+    document["contacts"].append(non_sloper)
     _copy_fixture_geometry(document, "edge-right", pieces)
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
@@ -371,11 +390,11 @@ def test_reviewed_scope_rejects_sloper_outcomes_swapped_with_hold_kind(
 ) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update({"id": "sloper-left", "kind": "sloper"})
+    document["contacts"][0].update({"id": "sloper-left", "kind": "sloper"})
     pieces = _rename_fixture_geometry(document, "sloper-left")
-    edge = dict(document["holds"][0])
+    edge = dict(document["contacts"][0])
     edge.update({"id": "edge-right", "kind": "edge"})
-    document["holds"].append(edge)
+    document["contacts"].append(edge)
     _copy_fixture_geometry(document, "edge-right", pieces)
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
@@ -390,10 +409,10 @@ def test_reviewed_scope_rejects_sloper_outcomes_swapped_with_hold_kind(
     for record in records:
         if record["field"] != "sloper":
             continue
-        hold_id = record["holdIDs"][0]
-        outcome = sloper_outcome if hold_id == "sloper-left" else edge_outcome
+        contact_id = record["contactIDs"][0]
+        outcome = sloper_outcome if contact_id == "sloper-left" else edge_outcome
         record.clear()
-        record.update(_record("fixture.board", hold_id, "sloper", outcome))
+        record.update(_record("fixture.board", contact_id, "sloper", outcome))
     ledger_path = _write_ledger(tmp_path, records)
 
     with pytest.raises(MetadataAuditError, match=message):
@@ -453,16 +472,16 @@ def test_sloper_only_scope_rejects_duplicate_record(tmp_path: Path) -> None:
 def _package_with_metadata(tmp_path: Path) -> Path:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update(
+    document["contacts"][0].update(
         {
-            "sizeMillimeters": 18,
+            "depthRangeMillimeters": {"lowerBound": 18, "upperBound": 18},
             "fingerCapacity": 2,
             "handCapacity": 1,
-            "gripType": "halfCrimp",
+            "gripTypes": ["halfCrimp"],
             "features": ["smallEdge", "incutEdge"],
         }
     )
-    range_hold = dict(document["holds"][0])
+    range_hold = dict(document["contacts"][0])
     range_hold.update(
         {
             "id": "hold-range",
@@ -470,12 +489,11 @@ def _package_with_metadata(tmp_path: Path) -> Path:
             "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
         }
     )
-    range_hold.pop("sizeMillimeters")
-    document["holds"].append(range_hold)
+    document["contacts"].append(range_hold)
     _copy_fixture_geometry(
         document,
         "hold-range",
-        document["presentations"][0]["media"]["holdGeometry"]["hold-left"],
+        document["presentations"][0]["media"]["contactGeometry"]["hold-left"],
     )
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return package
@@ -484,8 +502,12 @@ def _package_with_metadata(tmp_path: Path) -> Path:
 def _package_with_flat_sloper(tmp_path: Path, sloper: dict[str, object] | None = None) -> Path:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update(
-        {"kind": "sloper", "sloper": sloper or {"type": "flat", "angleDegrees": 20}}
+    sloper_type = (sloper or {"type": "flat"})["type"]
+    document["contacts"][0].update(
+        {
+            "kind": "sloper",
+            "features": ["flatSloper" if sloper_type == "flat" else "roundSloper"],
+        }
     )
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return package
@@ -494,7 +516,7 @@ def _package_with_flat_sloper(tmp_path: Path, sloper: dict[str, object] | None =
 def _package_with_sloper_without_subtype_metadata(tmp_path: Path) -> Path:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0]["kind"] = "sloper"
+    document["contacts"][0]["kind"] = "sloper"
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return package
 
@@ -505,7 +527,7 @@ def _sloper_ledger_records(
     records = [
         {
             "boardID": "fixture.board",
-            "holdIDs": ["hold-left"],
+            "contactIDs": ["hold-left"],
             "field": "kind",
             "outcome": "verified",
             "reviewedAt": "2026-08-25",
@@ -518,7 +540,7 @@ def _sloper_ledger_records(
         },
         {
             "boardID": "fixture.board",
-            "holdIDs": ["hold-left"],
+            "contactIDs": ["hold-left"],
             "field": "sloper",
             "outcome": "verified",
             "reviewedAt": "2026-08-25",
@@ -543,7 +565,7 @@ def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
     _package_with_flat_sloper(tmp_path)
     ledger_path = _write_ledger(
         tmp_path,
-        _sloper_ledger_records({"type": "flat", "angleDegrees": 20}),
+        _sloper_ledger_records({"type": "flat"}),
     )
 
     report = validate_metadata_ledger(
@@ -559,13 +581,13 @@ def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
     }
 
 
-def test_sloper_ledger_verified_value_matches_flat_hold_without_angle(
+def test_sloper_ledger_verified_value_matches_round_hold(
     tmp_path: Path,
 ) -> None:
-    _package_with_flat_sloper(tmp_path, {"type": "flat"})
+    _package_with_flat_sloper(tmp_path, {"type": "round"})
     ledger_path = _write_ledger(
         tmp_path,
-        _sloper_ledger_records({"type": "flat"}),
+        _sloper_ledger_records({"type": "round"}),
     )
 
     report = validate_metadata_ledger(
@@ -584,7 +606,7 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
         [
             {
                 "boardID": "fixture.board",
-                "holdIDs": ["hold-left"],
+                "contactIDs": ["hold-left"],
                 "field": "kind",
                 "outcome": "verified",
                 "reviewedAt": "2026-08-25",
@@ -616,7 +638,7 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
     }
 
 
-def test_sloper_ledger_rejects_angle_that_differs_from_hold(tmp_path: Path) -> None:
+def test_sloper_ledger_rejects_legacy_angle_absent_from_contact_features(tmp_path: Path) -> None:
     _package_with_flat_sloper(tmp_path)
     ledger_path = _write_ledger(
         tmp_path,
@@ -856,9 +878,9 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         if record["boardID"] == "soill.training-tiles" and record["field"] == "kind"
     ]
     assert {
-        hold_id
+        contact_id
         for record in training_tile_kind_records
-        for hold_id in record["holdIDs"]
+        for contact_id in record["contactIDs"]
     } == expected_training_tile_ids
     assert all(
         record["outcome"] == "adapted"
@@ -871,7 +893,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     )
 
     expected_adaptations = {
-        ("soill.training-tiles", hold_id) for hold_id in expected_training_tile_ids
+        ("soill.training-tiles", contact_id) for contact_id in expected_training_tile_ids
     } | {
         ("soill.split-palm", "lower-pinch-left"),
         ("soill.split-palm", "lower-pinch-right"),
@@ -881,10 +903,10 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         ("tension.honestone", "macro-sloper-right"),
     }
     adapted_kind_ids = {
-        (record["boardID"], hold_id)
+        (record["boardID"], contact_id)
         for record in records
         if record["field"] == "kind" and record["outcome"] == "adapted"
-        for hold_id in record["holdIDs"]
+        for contact_id in record["contactIDs"]
     }
     assert adapted_kind_ids == expected_adaptations
     assert len(adapted_kind_ids) == 26
@@ -894,7 +916,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         for record in records
         if record["boardID"] == "soill.training-tiles"
         and record["field"] == "sloper"
-        and "top-pocket-outer-left" in record["holdIDs"]
+        and "top-pocket-outer-left" in record["contactIDs"]
     )
     assert "non-pocket" not in training_tile_pocket_sloper["reason"]
     assert "adapted pocket contact role" in training_tile_pocket_sloper["reason"]
@@ -906,10 +928,10 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> N
     packages = {package.board.id: package.board for package in inventory.packages}
 
     board = packages["beastmaker-1000"]
-    assert len(board.holds) == 22
+    assert len(board.contacts) == 22
     assert {
-        hold.kind: {candidate.id for candidate in board.holds if candidate.kind == hold.kind}
-        for hold in board.holds
+        hold.kind: {candidate.id for candidate in board.contacts if candidate.kind == hold.kind}
+        for hold in board.contacts
     } == {
         "jug": {"jug-left", "jug-right"},
         "sloper": {"sloper-35-left", "sloper-center", "sloper-35-right"},
@@ -935,13 +957,18 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> N
             "pocket-bottom-mid-right",
         },
     }
-    assert next(hold for hold in board.holds if hold.id == "sloper-center").name == (
+    assert next(hold for hold in board.contacts if hold.id == "sloper-center").name == (
         "20 Degree Center Sloper"
     )
-    assert all(hold.depth_range_millimeters is None for hold in board.holds)
-    assert all(hold.hand_capacity is None for hold in board.holds)
-    assert all(hold.grip_type is None for hold in board.holds)
-    assert all(hold.features is None for hold in board.holds)
+    assert all(
+        hold.depth_range_millimeters is None
+        or hold.depth_range_millimeters.lower_bound
+        == hold.depth_range_millimeters.upper_bound
+        for hold in board.contacts
+    )
+    assert all(hold.hand_capacity is None for hold in board.contacts)
+    assert all(_single_grip_type(hold) is None for hold in board.contacts)
+    assert all(hold.features == frozenset() for hold in board.contacts)
 
 
 def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
@@ -950,10 +977,10 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     packages = {package.board.id: package.board for package in inventory.packages}
 
     moon = packages["moon.armstrong"]
-    assert len(moon.holds) == 21
+    assert len(moon.contacts) == 21
     assert {
-        hold.id: (hold.size_millimeters, hold.finger_capacity, hold.grip_type)
-        for hold in moon.holds
+        hold.id: (_scalar_depth(hold), hold.finger_capacity, _single_grip_type(hold))
+        for hold in moon.contacts
         if hold.kind == "pocket"
     } == {
         "two-finger-pocket-left": (22, 2, "twoFingerPocket"),
@@ -962,61 +989,75 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         "mono-right": (22, 1, None),
     }
     assert {
-        hold.id: hold.features for hold in moon.holds if hold.features is not None
+        hold.id: hold.features for hold in moon.contacts if hold.features
     } == {
-        "edge-25-left": ("slot",),
-        "edge-25-right": ("slot",),
-        "edge-20-left": ("slot",),
-        "edge-20-right": ("slot",),
-        "edge-15-left": ("slot",),
-        "edge-15-right": ("slot",),
-        "edge-10-left": ("slot",),
-        "edge-10-right": ("slot",),
-        "edge-8-left": ("slot",),
-        "edge-8-right": ("slot",),
+        "edge-25-left": frozenset({"slot"}),
+        "edge-25-right": frozenset({"slot"}),
+        "edge-20-left": frozenset({"slot"}),
+        "edge-20-right": frozenset({"slot"}),
+        "edge-15-left": frozenset({"slot"}),
+        "edge-15-right": frozenset({"slot"}),
+        "edge-10-left": frozenset({"slot"}),
+        "edge-10-right": frozenset({"slot"}),
+        "edge-8-left": frozenset({"slot"}),
+        "edge-8-right": frozenset({"slot"}),
     }
     assert all(
-        hold.depth_range_millimeters is None and hold.hand_capacity is None
-        for hold in moon.holds
+        (
+            hold.depth_range_millimeters is None
+            or hold.depth_range_millimeters.lower_bound
+            == hold.depth_range_millimeters.upper_bound
+        )
+        and hold.hand_capacity is None
+        for hold in moon.contacts
     )
 
     beta = packages["escape-beta-22"]
-    assert len(beta.holds) == 22
+    assert len(beta.contacts) == 22
     assert {
         hold.id: hold.features
-        for hold in beta.holds
-        if hold.features is not None
+        for hold in beta.contacts
+        if hold.features
     } == {
-        "hold-02-left": ("widePinch",),
-        "hold-02-right": ("widePinch",),
-        "hold-05-left": ("incutEdge",),
-        "hold-05-right": ("incutEdge",),
-        "hold-06-left": ("flatEdge",),
-        "hold-06-right": ("flatEdge",),
-        "hold-07-left": ("flatEdge",),
-        "hold-07-right": ("flatEdge",),
-        "hold-08-left": ("flatEdge",),
-        "hold-08-right": ("flatEdge",),
+        "hold-02-left": frozenset({"widePinch"}),
+        "hold-02-right": frozenset({"widePinch"}),
+        "hold-05-left": frozenset({"incutEdge"}),
+        "hold-05-right": frozenset({"incutEdge"}),
+        "hold-06-left": frozenset({"flatEdge"}),
+        "hold-06-right": frozenset({"flatEdge"}),
+        "hold-07-left": frozenset({"flatEdge"}),
+        "hold-07-right": frozenset({"flatEdge"}),
+        "hold-08-left": frozenset({"flatEdge"}),
+        "hold-08-right": frozenset({"flatEdge"}),
     }
     assert all(
-        hold.depth_range_millimeters is None
+        (
+            hold.depth_range_millimeters is None
+            or hold.depth_range_millimeters.lower_bound
+            == hold.depth_range_millimeters.upper_bound
+        )
         and hold.finger_capacity is None
         and hold.hand_capacity is None
-        and hold.grip_type is None
-        for hold in beta.holds
+        and _single_grip_type(hold) is None
+        for hold in beta.contacts
     )
 
     megalith = packages["frictitious.megalith"]
-    assert len(megalith.holds) == 18
+    assert len(megalith.contacts) == 18
     assert {
         hold.id: (hold.hand_capacity, hold.features)
-        for hold in megalith.holds
-        if hold.hand_capacity is not None or hold.features is not None
+        for hold in megalith.contacts
+        if hold.hand_capacity is not None or hold.features
     } == {
-        "center-edge-25": (1, ("incutEdge",)),
+        "center-edge-25": (1, frozenset({"incutEdge"})),
     }
-    assert all(hold.depth_range_millimeters is None for hold in megalith.holds)
-    assert all(hold.grip_type is None for hold in megalith.holds)
+    assert all(
+        hold.depth_range_millimeters is None
+        or hold.depth_range_millimeters.lower_bound
+        == hold.depth_range_millimeters.upper_bound
+        for hold in megalith.contacts
+    )
+    assert all(_single_grip_type(hold) is None for hold in megalith.contacts)
 
 
 def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() -> None:
@@ -1026,8 +1067,8 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
 
     lattice = packages["lattice-triple-rung"]
     assert {
-        hold.id: (hold.kind, hold.size_millimeters)
-        for hold in lattice.holds
+        hold.id: (hold.kind, _scalar_depth(hold))
+        for hold in lattice.contacts
     } == {
         "edge-45": ("edge", 45),
         "edge-10": ("edge", 10),
@@ -1037,7 +1078,7 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
     the_hangboard = packages["the-hangboard.the-hangboard"]
     assert {
         hold.id: hold.finger_capacity
-        for hold in the_hangboard.holds
+        for hold in the_hangboard.contacts
         if hold.kind == "edge"
     } == {
         f"edge-{depth}-{side}": 4
@@ -1045,14 +1086,14 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
         for side in ("left", "right")
     }
     assert next(
-        hold for hold in the_hangboard.holds if hold.id == "sloper-40-center"
-    ).grip_type == "openHand"
+        hold for hold in the_hangboard.contacts if hold.id == "sloper-40-center"
+    ).grip_types == frozenset({"openHand"})
 
     target = packages["target10a.linebreaker-base"]
-    assert len(target.holds) == 24
+    assert len(target.contacts) == 24
     assert {
-        hold.id: hold.grip_type
-        for hold in target.holds
+        hold.id: _single_grip_type(hold)
+        for hold in target.contacts
         if hold.kind == "pocket"
     } == {
         "pocket-28-left": "threeFingerPocket",
@@ -1070,27 +1111,29 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
     }
 
     nature = packages["nature.stoak-board-iii"]
-    assert len(nature.holds) == 7
-    top_jug = next(hold for hold in nature.holds if hold.id == "top-jug")
+    assert len(nature.contacts) == 7
+    top_jug = next(hold for hold in nature.contacts if hold.id == "top-jug")
     assert top_jug.kind == "jug"
-    assert top_jug.size_millimeters is None
-    assert top_jug.grip_type is None
+    assert _scalar_depth(top_jug) is None
+    assert _single_grip_type(top_jug) is None
     assert {
         hold.id: (
             hold.depth_range_millimeters.lower_bound,
             hold.depth_range_millimeters.upper_bound,
         )
-        for hold in nature.holds
+        for hold in nature.contacts
         if hold.depth_range_millimeters is not None
+        and hold.depth_range_millimeters.lower_bound
+        != hold.depth_range_millimeters.upper_bound
     } == {
         "gradient-edge-left": (10, 25),
         "gradient-edge-right": (10, 25),
         "lower-composite-left": (20, 30),
         "lower-composite-right": (20, 30),
     }
-    assert next(
-        hold for hold in nature.holds if hold.id == "lower-composite-center"
-    ).size_millimeters == 30
+    assert _scalar_depth(next(
+        hold for hold in nature.contacts if hold.id == "lower-composite-center"
+    )) == 30
 
 
 def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
@@ -1108,20 +1151,20 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
         "yy.verticalboard-light",
         "yy.verticalboard-one",
     )
-    yy_holds = [hold for board_id in yy_ids for hold in packages[board_id].holds]
+    yy_holds = [hold for board_id in yy_ids for hold in packages[board_id].contacts]
     zlag_holds = [
         hold
         for board_id in ("zlagboard.evo", "zlagboard.pro")
-        for hold in packages[board_id].holds
+        for hold in packages[board_id].contacts
     ]
 
-    assert sum(hold.grip_type == "sloper" for hold in yy_holds) == 14
-    assert sum(hold.grip_type == "sloper" for hold in zlag_holds) == 24
-    assert sum(hold.grip_type == "twoFingerPocket" for hold in yy_holds) == 10
+    assert sum(_single_grip_type(hold) == "sloper" for hold in yy_holds) == 14
+    assert sum(_single_grip_type(hold) == "sloper" for hold in zlag_holds) == 24
+    assert sum(_single_grip_type(hold) == "twoFingerPocket" for hold in yy_holds) == 10
     assert all(
         next(
             hold.hand_capacity
-            for hold in packages[board_id].holds
+            for hold in packages[board_id].contacts
             if hold.id == "center-handle"
         )
         is None
@@ -1131,23 +1174,23 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
     for board_id in ("zlagboard.evo", "zlagboard.pro"):
         sloper_jug = next(
             hold
-            for hold in packages[board_id].holds
+            for hold in packages[board_id].contacts
             if hold.id == "top-sloper-jug-center"
         )
         assert sloper_jug.kind == "sloper"
-        assert sloper_jug.grip_type == "sloper"
-        assert sloper_jug.features == ("jug",)
+        assert _single_grip_type(sloper_jug) == "sloper"
+        assert sloper_jug.features == frozenset({"jug"})
 
     assert {
         hold.id: hold.features
-        for hold in packages["zlagboard.pro"].holds
+        for hold in packages["zlagboard.pro"].contacts
         if hold.id.startswith("edge-incut-")
     } == {
-        "edge-incut-15-left": ("incutEdge",),
-        "edge-incut-30-left": ("incutEdge",),
-        "edge-incut-10-center": ("incutEdge",),
-        "edge-incut-30-right": ("incutEdge",),
-        "edge-incut-15-right": ("incutEdge",),
+        "edge-incut-15-left": frozenset({"incutEdge"}),
+        "edge-incut-30-left": frozenset({"incutEdge"}),
+        "edge-incut-10-center": frozenset({"incutEdge"}),
+        "edge-incut-30-right": frozenset({"incutEdge"}),
+        "edge-incut-15-right": frozenset({"incutEdge"}),
     }
 
 
@@ -1166,15 +1209,15 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
     )
 
     assert all(
-        hold.size_millimeters is None
+        _scalar_depth(hold) is None
         and hold.depth_range_millimeters is None
         and hold.finger_capacity is None
         and hold.hand_capacity is None
-        and hold.grip_type is None
-        and hold.features is None
-        for hold in package.board.holds
+        and _single_grip_type(hold) is None
+        and hold.features == frozenset()
+        for hold in package.board.contacts
     )
-    assert len(package.board.holds) == 20
+    assert len(package.board.contacts) == 20
     assert next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
     ).adapted == 20
@@ -1187,8 +1230,8 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
 
     forge = packages["trango.rock-prodigy-forge"]
     assert {
-        hold.id: hold.grip_type
-        for hold in forge.holds
+        hold.id: _single_grip_type(hold)
+        for hold in forge.contacts
         if hold.kind == "pocket"
     } == {
         f"{fingers}-{depth}-{side}": "twoFingerPocket"
@@ -1197,8 +1240,8 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
         for side in ("left", "right")
     }
     assert {
-        hold.id: hold.grip_type
-        for hold in forge.holds
+        hold.id: _single_grip_type(hold)
+        for hold in forge.contacts
         if hold.kind == "sloper"
     } == {
         f"sloper-{angle}-{side}": "sloper"
@@ -1206,14 +1249,14 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
         for side in ("left", "right")
     }
     assert next(
-        hold for hold in forge.holds if hold.id == "large-flat-edge-left"
-    ).features == ("largeEdge", "flatEdge")
+        hold for hold in forge.contacts if hold.id == "large-flat-edge-left"
+    ).features == frozenset({"largeEdge", "flatEdge"})
 
     natural = packages["trango.rock-prodigy-natural"]
-    assert all(hold.finger_capacity == 4 for hold in natural.holds[:8])
+    assert all(hold.finger_capacity == 4 for hold in natural.contacts[:8])
     assert {
-        hold.id: (hold.finger_capacity, hold.grip_type, hold.size_millimeters)
-        for hold in natural.holds
+        hold.id: (hold.finger_capacity, _single_grip_type(hold), _scalar_depth(hold))
+        for hold in natural.contacts
         if hold.kind == "pocket"
     } == {
         "upper-pocket-left": (3, "threeFingerPocket", 38),
@@ -1224,13 +1267,13 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
         "outer-supported-pocket-right": (3, "threeFingerPocket", None),
     }
     assert all(
-        hold.grip_type == "fullCrimp"
-        for hold in natural.holds
+        _single_grip_type(hold) == "fullCrimp"
+        for hold in natural.contacts
         if hold.id.startswith("closed-crimp-")
     )
 
     pivot = packages["trango.rock-prodigy-pivot"]
-    assert all(hold.finger_capacity is not None for hold in pivot.holds)
+    assert all(hold.finger_capacity is not None for hold in pivot.contacts)
     pivot_suffixes = ("", "-orientation-2", "-orientation-3", "-orientation-4")
     base_crimp_sizes = {
         "upper-sloped-crimp-left": 12.5,
@@ -1239,13 +1282,13 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
         "outer-sloped-crimp-right": 11.5,
     }
     assert {
-        hold.id: hold.size_millimeters
-        for hold in pivot.holds
+        hold.id: _scalar_depth(hold)
+        for hold in pivot.contacts
         if hold.id.startswith(("upper-sloped-crimp-", "outer-sloped-crimp-"))
     } == {
-        f"{hold_id}{suffix}": size
+        f"{contact_id}{suffix}": size
         for suffix in pivot_suffixes
-        for hold_id, size in base_crimp_sizes.items()
+        for contact_id, size in base_crimp_sizes.items()
     }
     base_pocket_grip_types = {
         "two-finger-pocket-left": "twoFingerPocket",
@@ -1254,38 +1297,41 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
         "three-finger-pocket-right": "threeFingerPocket",
     }
     assert {
-        hold.id: hold.grip_type for hold in pivot.holds if hold.kind == "pocket"
+        hold.id: _single_grip_type(hold) for hold in pivot.contacts if hold.kind == "pocket"
     } == {
-        f"{hold_id}{suffix}": grip_type
+        f"{contact_id}{suffix}": grip_type
         for suffix in pivot_suffixes
-        for hold_id, grip_type in base_pocket_grip_types.items()
+        for contact_id, grip_type in base_pocket_grip_types.items()
     }
 
     training_center = packages["trango.rock-prodigy-training-center"]
     assert all(
         hold.finger_capacity is None
-        and hold.grip_type is None
-        and hold.features is None
-        for hold in training_center.holds
+        and _single_grip_type(hold) is None
+        and hold.features == frozenset()
+        for hold in training_center.contacts
         if hold.kind == "pocket"
     )
     assert next(
-        hold for hold in training_center.holds if hold.id == "pinch-medium-left"
-    ).features is None
+        hold for hold in training_center.contacts if hold.id == "pinch-medium-left"
+    ).features == frozenset()
     large_edge = next(
-        hold for hold in training_center.holds if hold.id == "edge-large-vder-left"
+        hold for hold in training_center.contacts if hold.id == "edge-large-vder-left"
     )
-    assert large_edge.grip_type is None
-    assert large_edge.features is None
+    assert _single_grip_type(large_edge) is None
+    assert large_edge.features == frozenset()
     assert next(
-        hold for hold in training_center.holds if hold.id == "pinch-wide-left"
-    ).features is None
+        hold for hold in training_center.contacts if hold.id == "pinch-wide-left"
+    ).features == frozenset()
 
 
 def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0]["sizeMillimeters"] = 18
+    document["contacts"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 18,
+        "upperBound": 18,
+    }
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     ledger = _write_ledger(tmp_path, _complete_records("fixture.board", "hold-left"))
 
@@ -1295,11 +1341,11 @@ def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:
         )
 
 
-def test_rejects_an_unknown_hold_id(tmp_path: Path) -> None:
+def test_rejects_an_unknown_contact_id(tmp_path: Path) -> None:
     write_board_package(tmp_path / "boards" / "fixture")
     ledger = _write_ledger(tmp_path, _complete_records("fixture.board", "unknown-hold"))
 
-    with pytest.raises(MetadataAuditError, match="unknown hold ID: unknown-hold"):
+    with pytest.raises(MetadataAuditError, match="unknown contact ID: unknown-hold"):
         validate_metadata_ledger(
             load_metadata_ledger(ledger), discover_board_packages(tmp_path / "boards")
         )
@@ -1320,7 +1366,10 @@ def test_rejects_duplicate_expanded_record_keys(tmp_path: Path) -> None:
 def test_verified_scalar_must_equal_the_package_value(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture", board_id="fixture.board")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0]["sizeMillimeters"] = 20
+    document["contacts"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 20,
+        "upperBound": 20,
+    }
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     ledger = _write_ledger(
         tmp_path,

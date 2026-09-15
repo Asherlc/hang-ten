@@ -123,14 +123,14 @@ The promoted package roots must contain exactly `board.json`,
 ```sh
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
-rtk python3 -B Tools/HangboardModels/test_model_reports.py
-rtk .context/import-hangboard-model-packages/gray-horse-hangboard-packages-venv/bin/pytest \
-  -q Tools/HangboardModels/test_import_model_package.py
+rtk python3 -m pytest -q Tools/HangboardModels
 ```
 
-The exact command results are recorded in the Task 3 handoff report. Byte
-comparison against the committed converted outputs is required in addition to
-descriptor hash and logical-inventory validation.
+The historical Task 3 command results are recorded in its handoff report. The
+current contact-native suite validates the retained compiler/importer/report
+contract. Descriptor hashes and package contact inventories are checked from
+tracked inputs; a byte-for-byte source re-export cannot be claimed without the
+workspace-local source files identified below.
 
 ## Task 5 final validation
 
@@ -180,3 +180,62 @@ cleanup checks are recorded in
 simulators, their manifest entries, the stale validation process, DerivedData,
 and the result bundle were verified absent. No HTTP server or network action
 was used. No verifier defect was found, so the verifier was unchanged.
+
+## 2026-09-13 contact-first Baguette Evo re-audit
+
+Task 5 re-audited only `yy-baguette-evo` after the schema-v3 contact-first hard
+cut. The historical archive at
+`/Users/asherlc/Downloads/models/YY-Vertical-Baguette-Evo-Package.zip`
+(`e74609c64e65030c5a1011dee64e6cc6b4166d99821614929eaf391c97d5e92f`)
+was absent from the recorded path during Task 5. By explicit user ruling, the
+audited model source became the user-provided `baguette-evo.blend`, recorded at
+SHA-256
+`43ad5ab63b580aee09be458e1d10179dadf6adc80e5ff2eae1f72dea848b9131`.
+That ruling superseded only the missing ZIP as model-source provenance. It did
+not supersede YY Vertical evidence, which remains authoritative for revision
+identity and physical facts.
+
+The blend, manufacturer downloads, source register, evidence packet, mapping,
+Blender reports, approval records, and review images used during Task 5 live
+only in ignored workspace `.context` paths (or the user's external download
+tree). They are not tracked branch inputs and may disappear with the workspace.
+Consequently this tracked audit does not claim that a fresh checkout can
+reproduce the source blend, the 20-record register/12-source packet accounting,
+the two-export determinism run, or the human visual approval. Those are bounded
+records of the user-approved Task 5 workspace execution, not branch-retained
+evidence. The source mapping recorded by that execution treated
+`hold-rounded-left` and `hold-rounded-right` as two mesh pieces for the single
+continuous `rounded-tray` contact, kept source-left 6 mm as `edge-6-upper`, and
+kept source-right 6 mm as `edge-6-lower`; those names are display identities,
+not claimed manufacturer terminology.
+
+The promoted outputs that are tracked and directly hash-reproducible from a
+fresh checkout are:
+
+| Path | SHA-256 |
+| --- | --- |
+| `Hangboards/yy-baguette-evo/assets/primary.usdz` | `c984434edc54cfc6ec7b950a710e03e80b2514a5c5919e5fb7d1dde48e65e088` |
+| `Hangboards/yy-baguette-evo/assets/primary.model.json` | `f1d44e9f6e5ce76e8bc3cebb912d1bc594e375da467e01a2566b6191281e148d` |
+
+The ignored Task 5 actual-export report recorded clean USDZ reimport, exact
+descriptor regeneration, one body mesh, 20 contact meshes, all 19 physical
+contacts, positive triangles, image-backed native materials, one-to-one
+correspondence for all 21 source meshes, and four nonselectable cord-passage
+evidence records. Those source-run statements depend on workspace-local
+evidence and are not independently reproducible from this branch alone. The
+package-root statement is reproducible: it contains only `board.json`,
+`assets/primary.usdz`, and `assets/primary.model.json`; no raster asset,
+presentation, contact path, or fallback remains.
+
+Focused native SceneKit validation passes both the exact schema-v3 physical
+inventory test and exhaustive closest-triangle picking for every mapped
+contact mesh piece across its canonical position and bounded runtime orbit
+angles; that claim is reproducible from the tracked asset, descriptor, and
+native tests. Task 5's ignored workspace captures and approval record state
+that the user approved the hash-bound model-render set on 2026-09-13. The
+approval itself is not branch-contained. Its recorded bounded-orbit caveat is
+that paired 8 mm and central 25 mm
+meshes can be co-projected behind shallower contacts in the exact head-on view,
+but the native SceneKit test proves every mapped contact piece becomes the
+nearest selectable actual triangle within the app's normal orbit bounds. No
+geometry or correspondence was changed to mask that behavior.

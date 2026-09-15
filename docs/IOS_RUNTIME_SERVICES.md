@@ -173,17 +173,23 @@ without a stale cue continuing from the prior step.
 The completion handoff records the exact `TrainingBoard` selected for the
 session. `WorkoutView` passes that board together with the plan and finalized
 stopwatch values to `AppStore`; the recorder does not substitute a default
-board or infer one from the plan. Each work target is resolved against that
-board through the same semantic, ID, and fallback mapping used by the board
-highlights. Recorded work therefore carries the resolved physical hold IDs,
-the hold kind (`jug`, `edge`, `pocket`, `pinch`, `sloper`, or `gaston`), and the board's
-explicit `sizeMillimeters` value when present. Physical size is never parsed
-from a display name. Matching left/right holds are grouped only within their
-source segment; separate repetitions remain separate records.
+board or infer one from the plan. A factual `ContactRequirement` resolves
+strictly against the selected board's `contacts[]`; its explicit selection
+policy determines whether one contact, a documented bilateral pair, or all
+matches are recorded. There is no semantic alias, direct-contact-ID plan
+target, or fallback-feature lookup. Failure to resolve the exact factual
+requirement fails recording rather than broadening it.
+
+Resolved work stores an immutable `ResolvedContactSnapshot`: board and revision
+identity, optional model hash, the exact factual requirement, and resolved
+contact IDs. Source-linked generic work that does not prescribe a board target
+stores `.selfSelected`; the app does not translate source wording into a
+board-specific fact. Separate source segments and repetitions remain separate
+records.
 
 The recorder preserves the routine's ordered `RecordedActivitySegment` values.
 Work and rest are separate segments: rest carries its step identity and
-duration but no hold metadata. A fixed work duration is the prescribed active
+duration but no target metadata. A fixed work duration is the prescribed active
 duration and excludes rest. A stopwatch work duration is the athlete's
 observed active seconds, including any start/stop and pause/resume accumulation.
 If a stopwatch was never started, its duration is omitted. Genuinely untimed
@@ -200,9 +206,11 @@ dismisses the workout. A stopped value remains stable when revisiting the step.
 The completed `HKWorkout` keeps the existing title, functional-strength
 activity type, and session date interval. Its custom metadata includes
 `HangTen.PlanName`, `HangTen.BoardID`, `HangTen.BoardName`, and
-`HangTen.ActivitySegments`. The last value is versioned JSON with
-`{"version":1,"segments":[...]}`; optional fields are omitted rather than
-encoded as fabricated values. The metadata is attached during the existing
+`HangTen.ActivitySegments.v2`. The last value is strict version-2 JSON with
+ordered segments and optional measurements. Unknown fields are rejected at the
+metadata, segment, target, resolved-snapshot, measurement, pending-record, and
+pending-context boundaries, including legacy hold-named keys. Optional fields
+are omitted rather than encoded as fabricated values. The metadata is attached during the existing
 `HKWorkoutBuilder` sequence. There is no local activity database: the
 completed HealthKit workout metadata is the activity source of record. A
 metadata or HealthKit write failure keeps the local completion and surfaces the

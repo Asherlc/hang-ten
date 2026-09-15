@@ -58,14 +58,16 @@ def board_document(
     name: str = "Fixture Board",
 ) -> dict[str, Any]:
     return {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "id": board_id,
+        "revisionID": "2026-09-contact-first",
         "manufacturer": manufacturer,
         "name": name,
         "subtitle": "A physical fixture board.",
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 x 10 cm",
         "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
+        "equipmentObjects": [{"id": "primary"}],
         "presentations": [
             {
                 "id": "primary",
@@ -76,7 +78,7 @@ def board_document(
                 "media": {
                     "type": "raster",
                     "assetPath": "assets/primary.png",
-                    "holdGeometry": {
+                    "contactGeometry": {
                         "hold-left": [
                             {
                                 "frame": {
@@ -95,11 +97,14 @@ def board_document(
                 },
             }
         ],
-        "holds": [
+        "contacts": [
             {
                 "id": "hold-left",
+                "equipmentObjectID": "primary",
                 "name": "Left hold",
                 "kind": "jug",
+                "features": [],
+                "gripTypes": [],
             }
         ],
     }
@@ -123,9 +128,9 @@ def multi_presentation_board_document(
             "media": {
                 "type": "raster",
                 "assetPath": "assets/primary.png",
-                "holdGeometry": {
+                "contactGeometry": {
                     "hold-left": document["presentations"][0]["media"][
-                        "holdGeometry"
+                        "contactGeometry"
                     ]["hold-left"]
                 },
             },
@@ -139,7 +144,7 @@ def multi_presentation_board_document(
             "media": {
                 "type": "raster",
                 "assetPath": "assets/back.png",
-                "holdGeometry": {
+                "contactGeometry": {
                     "hold-right": [
                         {
                             "frame": {
@@ -158,11 +163,14 @@ def multi_presentation_board_document(
             },
         },
     ]
-    document["holds"].append(
+    document["contacts"].append(
         {
             "id": "hold-right",
+            "equipmentObjectID": "primary",
             "name": "Right hold",
             "kind": "jug",
+            "features": [],
+            "gripTypes": [],
         }
     )
     return document

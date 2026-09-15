@@ -179,6 +179,10 @@ maps to these visible stable IDs on presentation `front`:
 | `17 — 28 mm 2-finger pocket` | `pocket-17-center` | `pocket` |
 | `18 — 32 mm 2-finger pocket` | `pocket-18-center` | `pocket` |
 
+The manufacturer label `1 — outer jugs` establishes the narrow factual
+`outerJug` feature on exactly `jug-1-left` and `jug-1-right`. The distinct
+`14 — center jug` contact remains kind-only and does not carry that feature.
+
 The exact words `jug`, `sloper`, `edge`, `pocket`, and `pinch` in these
 manufacturer labels independently verify every declared `kind`; no type came
 from path shape or board metadata. Exact two-/three-/four-finger pocket labels

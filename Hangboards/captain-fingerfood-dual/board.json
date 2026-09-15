@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "captain-fingerfood.dual",
   "manufacturer": "Captain Fingerfood",
   "name": "DUAL",
@@ -9,8 +9,7 @@
   "aspectRatio": 1.7142857,
   "equipmentObjects": [
     {
-      "id": "primary",
-      "missingHandCapacityPolicy": "unavailable"
+      "id": "primary"
     }
   ],
   "presentations": [
@@ -64,77 +63,95 @@
               0.696364243
             ],
             "straight-lip-inverted": [
-              8e-09,
+              8E-9,
               0.173648148,
               -0.984807758,
-              4.3e-08
+              4.3E-8
             ]
           }
         }
       }
     }
   ],
-  "holds": [
-    {
-      "id": "straight-edge-20",
-      "equipmentObjectID": "primary",
-      "name": "20 mm straight edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "outer-jug",
-      "equipmentObjectID": "primary",
-      "name": "Outer jug",
-      "kind": "jug",
-      "handCapacity": 1
-    },
-    {
-      "id": "curved-edge-20",
-      "equipmentObjectID": "primary",
-      "name": "20 mm curved edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "pocket-end-wall-20",
-      "equipmentObjectID": "primary",
-      "name": "20 mm Pocket — short end-wall",
-      "kind": "pocket",
-      "handCapacity": 1,
-      "sizeMillimeters": 20
-    }
-  ],
   "positions": [
     {
       "id": "curved-lip-front",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "curved-edge-20"
       ]
     },
     {
       "id": "straight-lip-inverted",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "straight-edge-20"
       ]
     },
     {
       "id": "left-pocket-vertical",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "pocket-end-wall-20"
       ]
     },
     {
       "id": "exterior-jug-back",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "outer-jug"
       ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "straight-edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm straight edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "outer-jug",
+      "equipmentObjectID": "primary",
+      "name": "Outer jug",
+      "kind": "jug",
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "curved-edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm curved edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-end-wall-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm Pocket — short end-wall",
+      "kind": "pocket",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     }
   ]
 }

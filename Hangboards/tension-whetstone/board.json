@@ -1,104 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "tension.whetstone",
   "manufacturer": "Tension Climbing",
   "name": "Whetstone",
   "subtitle": "Wooden hangboard with an ergo-bump top jug, edges, and two-finger pockets.",
   "productURL": "https://tensionclimbing.com/products/whetstone",
-  "dimensions": "25 \u00d7 6 \u00d7 2 in",
+  "dimensions": "25 × 6 × 2 in",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "top-ergo-jug",
-      "equipmentObjectID": "primary",
-      "name": "Continuous ergo-bump top jug",
-      "kind": "jug"
-    },
-    {
-      "id": "pocket-40-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 40 mm two-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 40,
-      "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
-    },
-    {
-      "id": "edge-40-center",
-      "equipmentObjectID": "primary",
-      "name": "40 mm center incut edge",
-      "kind": "edge",
-      "sizeMillimeters": 40
-    },
-    {
-      "id": "edge-40-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 40 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 40
-    },
-    {
-      "id": "edge-30-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 30 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 30
-    },
-    {
-      "id": "edge-30-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 30 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 30
-    },
-    {
-      "id": "edge-40-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 40 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 40
-    },
-    {
-      "id": "edge-25-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 25 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 25
-    },
-    {
-      "id": "edge-20-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-20-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 20 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "edge-25-right",
-      "equipmentObjectID": "primary",
-      "name": "Right 25 mm edge",
-      "kind": "edge",
-      "sizeMillimeters": 25
-    },
-    {
-      "id": "pocket-40-left",
-      "equipmentObjectID": "primary",
-      "name": "Left 40 mm two-finger pocket",
-      "kind": "pocket",
-      "fingerCapacity": 2,
-      "sizeMillimeters": 40,
-      "gripType": "twoFingerPocket"
     }
   ],
   "presentations": [
@@ -113,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "top-ergo-jug": [
             {
               "frame": {
@@ -1272,6 +1183,155 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "top-ergo-jug",
+      "equipmentObjectID": "primary",
+      "name": "Continuous ergo-bump top jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-40-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 40 mm two-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "edge-40-center",
+      "equipmentObjectID": "primary",
+      "name": "40 mm center incut edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-40-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 40 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-30-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 30 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-30-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 30 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 30,
+        "upperBound": 30
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-40-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 40 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 25 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 25 mm edge",
+      "kind": "edge",
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-40-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 40 mm two-finger pocket",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 2,
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
     }
   ]
 }

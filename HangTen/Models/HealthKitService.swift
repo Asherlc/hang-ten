@@ -411,7 +411,6 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         do {
             activityJSON = try WorkoutActivityRecorder().json(
                 for: WorkoutActivityMetadata(
-                    version: 1,
                     segments: activitySegments,
                     measurements: activityMeasurements
                 )
@@ -425,7 +424,7 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
             HangTenHealthMetadata.planNameKey: title,
             "HangTen.BoardID": boardID,
             "HangTen.BoardName": boardName,
-            "HangTen.ActivitySegments": activityJSON
+            HangTenHealthMetadata.activitySegmentsKey: activityJSON
         ]
         if let sessionID {
             metadata[HangTenHealthMetadata.sessionIDKey] = sessionID.uuidString

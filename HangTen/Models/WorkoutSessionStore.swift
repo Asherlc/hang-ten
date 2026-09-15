@@ -34,17 +34,15 @@ extension WorkoutSessionStoring {
 }
 
 final class WorkoutSessionStore: WorkoutSessionStoring {
-    private enum Key {
-        static let sessionHistory = "workout.sessionHistory"
-        static let legacyMigrationComplete = "legacy-migration-complete"
-    }
+    static let legacyKey = "workout.sessionHistory"
 
     private static let maximumSessionCount = 20
+    private static let sessionFilePrefix = "session-v2-"
 
-    private let defaults: UserDefaults
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
     private let directory: URL
+    private let legacyDirectory: URL?
     private let fileManager: FileManager
     private let persistenceQueue = DispatchQueue(
         label: "com.hangten.workout-session-store",
@@ -53,14 +51,12 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
     private let persistenceQueueIdentity = DispatchSpecificKey<UInt8>()
     private let sessionsLock = NSLock()
     private let persistenceErrorLock = NSLock()
-    private let migrationStateLock = NSLock()
     private var persistenceErrorStorage: String?
     private var sessionsStorage: [WorkoutSessionRecord] = []
     private var didFinishLoading = false
     private var pendingMutations: [SessionMutation] = []
     private var loadResult: Result<Void, Error>?
     private var loadCompletions: [(Result<Void, Error>) -> Void] = []
-    private var migrationState: LegacyMigrationState = .unknown
 
     var sessions: [WorkoutSessionRecord] {
         sessionsLock.lock()
@@ -79,11 +75,12 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         directory: URL? = nil,
         fileManager: FileManager = .default
     ) {
-        self.defaults = defaults
         self.fileManager = fileManager
         encoder = JSONEncoder()
         decoder = JSONDecoder()
         self.directory = directory ?? Self.defaultDirectory(using: fileManager)
+        legacyDirectory = directory == nil ? Self.legacyDirectory(using: fileManager) : nil
+        defaults.removeObject(forKey: Self.legacyKey)
         persistenceQueue.setSpecific(key: persistenceQueueIdentity, value: 1)
 
         persistenceQueue.async { [self] in
@@ -119,11 +116,8 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         if !retainedIDs.contains(session.id) {
             removedIDs.insert(session.id)
         }
-        let completesLegacyMigration = hasPendingLegacyMigration
         enqueueWrite(
             removing: removedIDs,
-            markLegacyMigrationComplete: completesLegacyMigration,
-            removeLegacyHistoryOnSuccess: completesLegacyMigration,
             completion: completion
         )
     }
@@ -136,11 +130,8 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         }
         sessionsLock.unlock()
 
-        let completesLegacyMigration = hasPendingLegacyMigration
         enqueueWrite(
             removing: [session.id],
-            markLegacyMigrationComplete: completesLegacyMigration,
-            removeLegacyHistoryOnSuccess: completesLegacyMigration,
             completion: completion
         )
     }
@@ -163,6 +154,13 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         let applicationSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         return applicationSupport
             .appendingPathComponent("Hang Ten", isDirectory: true)
+            .appendingPathComponent("Workout Sessions v2", isDirectory: true)
+    }
+
+    private static func legacyDirectory(using fileManager: FileManager) -> URL {
+        let applicationSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        return applicationSupport
+            .appendingPathComponent("Hang Ten", isDirectory: true)
             .appendingPathComponent("Workout Sessions", isDirectory: true)
     }
 
@@ -170,13 +168,13 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         from directory: URL,
         decoder: JSONDecoder,
         fileManager: FileManager
-    ) -> (sessions: [WorkoutSessionRecord], fileStoreExists: Bool, errorDescription: String?) {
+    ) -> (sessions: [WorkoutSessionRecord], errorDescription: String?) {
         var isDirectory: ObjCBool = false
         guard fileManager.fileExists(atPath: directory.path, isDirectory: &isDirectory) else {
-            return ([], false, nil)
+            return ([], nil)
         }
         guard isDirectory.boolValue else {
-            return ([], true, "Workout session storage is not a directory.")
+            return ([], "Workout session storage is not a directory.")
         }
 
         do {
@@ -187,6 +185,10 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
             var storedSessions: [WorkoutSessionRecord] = []
             var loadError: String?
             for file in files where file.pathExtension == "json" {
+                guard isCurrentSessionFile(file) else {
+                    try? fileManager.removeItem(at: file)
+                    continue
+                }
                 do {
                     let data = try Data(contentsOf: file)
                     storedSessions.append(try decoder.decode(WorkoutSessionRecord.self, from: data))
@@ -194,18 +196,10 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                     loadError = loadError ?? "Could not load \(file.lastPathComponent): \(error.localizedDescription)"
                 }
             }
-            return (Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount)), true, loadError)
+            return (Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount)), loadError)
         } catch {
-            return ([], true, "Could not load workout sessions: \(error.localizedDescription)")
+            return ([], "Could not load workout sessions: \(error.localizedDescription)")
         }
-    }
-
-    private static func loadLegacy(from defaults: UserDefaults, decoder: JSONDecoder) -> [WorkoutSessionRecord]? {
-        guard let data = defaults.data(forKey: Key.sessionHistory),
-              let storedSessions = try? decoder.decode([WorkoutSessionRecord].self, from: data) else {
-            return nil
-        }
-        return Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
     }
 
     private static func appending(
@@ -233,46 +227,19 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         return lhs.id.uuidString < rhs.id.uuidString
     }
 
-    private static func merge(
-        _ granularSessions: [WorkoutSessionRecord],
-        with legacySessions: [WorkoutSessionRecord]
-    ) -> [WorkoutSessionRecord] {
-        var sessionsByID: [UUID: WorkoutSessionRecord] = [:]
-        for session in legacySessions + granularSessions {
-            guard let existing = sessionsByID[session.id] else {
-                sessionsByID[session.id] = session
-                continue
-            }
-            if session.recordedAt >= existing.recordedAt {
-                sessionsByID[session.id] = session
-            }
-        }
-        return Array(sessionsByID.values.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
-    }
-
     private func enqueueWrite(
         removing idsToRemove: Set<UUID>,
-        markLegacyMigrationComplete: Bool = false,
-        removeLegacyHistoryOnSuccess: Bool = false,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         persistenceQueue.async { [self] in
-            let result = write(
-                removing: idsToRemove,
-                markLegacyMigrationComplete: markLegacyMigrationComplete,
-                removeLegacyHistoryOnSuccess: removeLegacyHistoryOnSuccess
-            )
+            let result = write(removing: idsToRemove)
             DispatchQueue.main.async {
                 completion(result)
             }
         }
     }
 
-    private func write(
-        removing idsToRemove: Set<UUID>,
-        markLegacyMigrationComplete: Bool = false,
-        removeLegacyHistoryOnSuccess: Bool = false
-    ) -> Result<Void, Error> {
+    private func write(removing idsToRemove: Set<UUID>) -> Result<Void, Error> {
         do {
             let sessionsToWrite = sessions
             let retainedIDs = Set(sessionsToWrite.map(\.id))
@@ -287,15 +254,6 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                 try fileManager.removeItem(at: fileURL)
             }
             try removeUnretainedSessionFiles(except: retainedIDs)
-            if markLegacyMigrationComplete {
-                try Data().write(to: migrationMarkerURL, options: .atomic)
-            }
-            if removeLegacyHistoryOnSuccess {
-                defaults.removeObject(forKey: Key.sessionHistory)
-            }
-            if markLegacyMigrationComplete {
-                setMigrationState(.notPending)
-            }
             setPersistenceError(nil)
             return .success(())
         } catch {
@@ -306,52 +264,31 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
 
     private func removeUnretainedSessionFiles(except retainedIDs: Set<UUID>) throws {
         let files = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-        for file in files where file.pathExtension == "json" {
+        for file in files where Self.isCurrentSessionFile(file) {
             let filename = file.deletingPathExtension().lastPathComponent
-            guard filename.hasPrefix("session-"),
-                  let id = UUID(uuidString: String(filename.dropFirst("session-".count))),
+            guard let id = UUID(
+                uuidString: String(filename.dropFirst(Self.sessionFilePrefix.count))
+            ),
                   !retainedIDs.contains(id) else { continue }
             try fileManager.removeItem(at: file)
         }
     }
 
     private func fileURL(for id: UUID) -> URL {
-        directory.appendingPathComponent("session-\(id.uuidString).json")
+        directory.appendingPathComponent("\(Self.sessionFilePrefix)\(id.uuidString).json")
     }
 
-    private var migrationMarkerURL: URL {
-        directory.appendingPathComponent(Key.legacyMigrationComplete)
-    }
-
-    private var hasPendingLegacyMigration: Bool {
-        migrationStateLock.lock()
-        defer { migrationStateLock.unlock() }
-        if case .pending = migrationState {
-            return true
-        }
-        return false
+    private static func isCurrentSessionFile(_ file: URL) -> Bool {
+        file.pathExtension == "json"
+            && file.deletingPathExtension().lastPathComponent.hasPrefix(sessionFilePrefix)
     }
 
     private func loadPersistedState() {
+        let cleanupError = removeLegacyPersistence()
         let loaded = Self.load(from: directory, decoder: decoder, fileManager: fileManager)
-        setPersistenceError(loaded.errorDescription)
-
-        let legacySessions: [WorkoutSessionRecord]?
-        if fileManager.fileExists(atPath: migrationMarkerURL.path) {
-            legacySessions = nil
-            setMigrationState(.notPending)
-        } else if let decodedLegacySessions = Self.loadLegacy(from: defaults, decoder: decoder) {
-            legacySessions = decodedLegacySessions
-            setMigrationState(.pending(decodedLegacySessions))
-        } else {
-            legacySessions = nil
-            setMigrationState(.notPending)
-        }
+        setPersistenceError(cleanupError ?? loaded.errorDescription)
 
         var mergedSessions = loaded.sessions
-        if let legacySessions {
-            mergedSessions = Self.merge(mergedSessions, with: legacySessions)
-        }
 
         sessionsLock.lock()
         for mutation in pendingMutations {
@@ -367,28 +304,26 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         didFinishLoading = true
         sessionsLock.unlock()
 
-        let loadResult: Result<Void, Error> = loaded.errorDescription.map {
+        let loadResult: Result<Void, Error> = (cleanupError ?? loaded.errorDescription).map {
             .failure(PersistenceFailure(message: $0))
         } ?? .success(())
+        finishLoading(loadResult)
+    }
 
-        guard legacySessions != nil else {
-            finishLoading(loadResult)
-            return
-        }
-
-        let migrationResult = write(
-            removing: [],
-            markLegacyMigrationComplete: true,
-            removeLegacyHistoryOnSuccess: true
-        )
-        switch migrationResult {
-        case .success:
-            if case .failure(let error) = loadResult {
-                setPersistenceError(error.localizedDescription)
+    private func removeLegacyPersistence() -> String? {
+        do {
+            if let legacyDirectory,
+               fileManager.fileExists(atPath: legacyDirectory.path) {
+                try fileManager.removeItem(at: legacyDirectory)
             }
-            finishLoading(loadResult)
-        case .failure:
-            finishLoading(migrationResult)
+            guard fileManager.fileExists(atPath: directory.path) else { return nil }
+            let migrationMarker = directory.appendingPathComponent("legacy-migration-complete")
+            if fileManager.fileExists(atPath: migrationMarker.path) {
+                try fileManager.removeItem(at: migrationMarker)
+            }
+            return nil
+        } catch {
+            return "Could not remove former workout sessions: \(error.localizedDescription)"
         }
     }
 
@@ -420,12 +355,6 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         return .success(())
     }
 
-    private func setMigrationState(_ state: LegacyMigrationState) {
-        migrationStateLock.lock()
-        migrationState = state
-        migrationStateLock.unlock()
-    }
-
     private func setPersistenceError(_ error: String?) {
         persistenceErrorLock.lock()
         persistenceErrorStorage = error
@@ -443,9 +372,4 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         case remove(UUID)
     }
 
-    private enum LegacyMigrationState {
-        case unknown
-        case pending([WorkoutSessionRecord])
-        case notPending
-    }
 }

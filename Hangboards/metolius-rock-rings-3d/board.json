@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "metolius.rock-rings-3d",
   "manufacturer": "Metolius",
   "name": "Rock Rings 3D",
   "subtitle": "Portable pair with independent single-point suspension, one jug, and three pockets per unit.",
   "productURL": "https://www.metoliusclimbing.com/collections/training-equipment/products/rock-rings-3d",
-  "dimensions": "184 \u00d7 146 \u00d7 57 mm",
+  "dimensions": "184 × 146 × 57 mm",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -27,7 +27,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "jug-left": [
             {
               "frame": {
@@ -782,72 +782,113 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "jug-left",
       "equipmentObjectID": "left-ring",
       "name": "Left unit jug",
-      "kind": "jug"
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "pocket-40-four-left",
       "equipmentObjectID": "left-ring",
       "name": "Left unit 40 mm four-finger pocket",
       "kind": "pocket",
-      "sizeMillimeters": 40,
+      "features": [],
       "fingerCapacity": 4,
-      "gripType": "fourFingerPocket"
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": [
+        "fourFingerPocket"
+      ]
     },
     {
       "id": "pocket-32-three-left",
       "equipmentObjectID": "left-ring",
       "name": "Left unit 32 mm three-finger pocket",
       "kind": "pocket",
-      "sizeMillimeters": 32,
+      "features": [],
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
+      "depthRangeMillimeters": {
+        "lowerBound": 32,
+        "upperBound": 32
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
     },
     {
       "id": "pocket-25-two-left",
       "equipmentObjectID": "left-ring",
       "name": "Left unit 25 mm two-finger pocket",
       "kind": "pocket",
-      "sizeMillimeters": 25,
+      "features": [],
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
     },
     {
       "id": "jug-right",
       "equipmentObjectID": "right-ring",
       "name": "Right unit jug",
-      "kind": "jug"
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
     },
     {
       "id": "pocket-40-four-right",
       "equipmentObjectID": "right-ring",
       "name": "Right unit 40 mm four-finger pocket",
       "kind": "pocket",
-      "sizeMillimeters": 40,
+      "features": [],
       "fingerCapacity": 4,
-      "gripType": "fourFingerPocket"
+      "depthRangeMillimeters": {
+        "lowerBound": 40,
+        "upperBound": 40
+      },
+      "gripTypes": [
+        "fourFingerPocket"
+      ]
     },
     {
       "id": "pocket-32-three-right",
       "equipmentObjectID": "right-ring",
       "name": "Right unit 32 mm three-finger pocket",
       "kind": "pocket",
-      "sizeMillimeters": 32,
+      "features": [],
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
+      "depthRangeMillimeters": {
+        "lowerBound": 32,
+        "upperBound": 32
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
     },
     {
       "id": "pocket-25-two-right",
       "equipmentObjectID": "right-ring",
       "name": "Right unit 25 mm two-finger pocket",
       "kind": "pocket",
-      "sizeMillimeters": 25,
+      "features": [],
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 25
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
     }
   ]
 }

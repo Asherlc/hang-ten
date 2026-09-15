@@ -28,7 +28,7 @@ export function BoardLibrary({ boards, selectedBoardId, busy, error, onSelectBoa
             onClick={() => onSelectBoard(board.boardId)}
           >
             <span className="region-key">{board.displayName}</span>
-            <small className="region-type">{board.holdCount} holds</small>
+            <small className="region-type">{board.contactCount} contacts</small>
             {board.needsAttention && <small className="region-type">Needs attention</small>}
             {board.editorAvailable === false && (
               <small className="region-type">

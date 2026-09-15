@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from _board_package_helpers import document_hold_geometry
+from _board_package_helpers import document_contact_geometry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MIRRORED_PAIRS = {
@@ -96,7 +96,7 @@ def test_coderabbit_flagged_pairs_are_exact_mirrors(board_id: str) -> None:
     board = json.loads(
         (REPO_ROOT / "Hangboards" / board_id / "board.json").read_text(encoding="utf-8")
     )
-    geometry = document_hold_geometry(board)
+    geometry = document_contact_geometry(board)
     for left_id, right_id in MIRRORED_PAIRS[board_id]:
         left_geometry = geometry[left_id]
         right_geometry = geometry[right_id]

@@ -1,16 +1,15 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "nature.stone-hanger-mini",
   "manufacturer": "Nature Climbing",
   "name": "Stone Hanger Mini",
   "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
   "productURL": "https://natureclimbing.com/products/stone-hanger-mini-beech",
-  "dimensions": "10 \u00d7 6 \u00d7 2.5 cm",
+  "dimensions": "10 × 6 × 2.5 cm",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
-      "id": "primary",
-      "missingHandCapacityPolicy": "unavailable"
+      "id": "primary"
     }
   ],
   "presentations": [
@@ -25,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "pull-up-jug": [
             {
               "frame": {
@@ -321,7 +320,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/side.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "pinch-60": [
             {
               "frame": {
@@ -446,37 +445,55 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "pull-up-jug",
       "equipmentObjectID": "primary",
       "name": "Smooth pull-up jug",
       "kind": "jug",
-      "handCapacity": 1
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
     },
     {
       "id": "wood-edge-15-incut",
       "equipmentObjectID": "primary",
       "name": "15 mm incut wood edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 15
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "granite-edge-15",
       "equipmentObjectID": "primary",
       "name": "15 mm granite edge",
       "kind": "edge",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 15
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
     },
     {
       "id": "pinch-60",
       "equipmentObjectID": "primary",
       "name": "60 mm pinch",
       "kind": "pinch",
+      "features": [],
       "handCapacity": 1,
-      "sizeMillimeters": 60
+      "depthRangeMillimeters": {
+        "lowerBound": 60,
+        "upperBound": 60
+      },
+      "gripTypes": []
     }
   ]
 }

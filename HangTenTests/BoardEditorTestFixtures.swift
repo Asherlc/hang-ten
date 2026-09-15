@@ -54,28 +54,30 @@ enum BoardEditorTestFixtures {
         )
         return BoardEditableDocument(
             id: "fixture.board",
+            revisionID: "test-revision",
             manufacturer: "Fixture",
             name: "Fixture board",
             subtitle: "Editing fixture",
             productURL: URL(string: "https://example.com/fixture")!,
             dimensions: "50 × 25 cm",
             aspectRatio: 2,
-            holds: [
-                BoardEditableHold(
+            contacts: [
+                BoardEditableContact(
                     id: "hold-one",
                     name: "Hold one",
-                    kind: .jug,
-                    presentationID: "front",
-                    geometry: [piece]
+                    kind: .jug
                 ),
             ],
             presentations: [
                 BoardEditablePresentation(
                     id: "front",
                     name: "Front",
-                    assetPath: "assets/primary.png",
                     aspectRatio: 2,
-                    isDefault: true
+                    isDefault: true,
+                    media: .raster(
+                        assetPath: "assets/primary.png",
+                        contactGeometry: ["hold-one": [piece]]
+                    )
                 ),
             ]
         )
@@ -84,30 +86,41 @@ enum BoardEditorTestFixtures {
     static func sessionDocument() -> BoardEditableDocument {
         var document = sampleDocument()
         document.name = "Editor session fixture"
-        document.holds[0].geometry[0].shapeConstraint = ShapeConstraint(
+        var firstGeometry = document.geometry(forContactID: "hold-one")!
+        firstGeometry[0].shapeConstraint = ShapeConstraint(
             shape: .rectangle,
             rotationDegrees: 0
         )
+        document.replaceGeometry(forContactID: "hold-one", with: firstGeometry)
 
         for index in 2...7 {
-            var hold = document.holds[0]
+            var hold = document.contacts[0]
             hold.id = "hold-\(index)"
             hold.name = "Hold \(index)"
-            hold.geometry[0].frame = BoardPackageFrameDocument(
+            var geometry = firstGeometry
+            geometry[0].frame = BoardPackageFrameDocument(
                 x: 0.05 + Double(index - 2) * 0.12,
                 y: 0.65,
                 width: 0.08,
                 height: 0.16
             )
             if index == 2 {
-                hold.geometry[0].shape = BoardGeometryShapeDocument(
+                geometry[0].shape = BoardGeometryShapeDocument(
                     type: "roundedRect",
                     commands: nil,
                     cornerRadiusFraction: 0.2
                 )
-                hold.geometry[0].shapeConstraint = nil
+                geometry[0].shapeConstraint = nil
             }
-            document.holds.append(hold)
+            document.contacts.append(hold)
+            guard case .raster(let assetPath, var contactGeometry) = document.presentations[0].media else {
+                preconditionFailure("fixture must use raster media")
+            }
+            contactGeometry[hold.id] = geometry
+            document.presentations[0].media = .raster(
+                assetPath: assetPath,
+                contactGeometry: contactGeometry
+            )
         }
         return document
     }

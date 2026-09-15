@@ -164,11 +164,10 @@ def _presentation_image_url(board_id: str, presentation_id: str) -> str:
     return f"/api/boards/{board_id}/image?presentationID={presentation_id}"
 
 
-def _hold_needs_attention(hold: dict[str, object]) -> bool:
+def _contact_needs_attention(contact: dict[str, object]) -> bool:
     return (
-        hold["kind"] in {"edge", "pocket"}
-        and "sizeMillimeters" not in hold
-        and "depthRangeMillimeters" not in hold
+        contact["kind"] in {"edge", "pocket"}
+        and "depthRangeMillimeters" not in contact
     )
 
 
@@ -182,9 +181,9 @@ def _board_payload(
     payload: dict[str, object] = {
         "boardId": board_id,
         "displayName": _display_name(package),
-        "holdCount": len(package.hold_ids),
+        "contactCount": len(package.contact_ids),
         "needsAttention": any(
-            _hold_needs_attention(hold) for hold in package.board["holds"]
+            _contact_needs_attention(contact) for contact in package.board["contacts"]
         ),
         "href": f"/api/boards/{board_id}",
     }
@@ -199,7 +198,7 @@ def _board_payload(
         presentation = package.presentation(presentation_id)
         payload.update(
             imageUrl=_presentation_image_url(board_id, presentation.id),
-            holdIDs=list(package.hold_ids),
+            contactIDs=list(package.contact_ids),
             saveUrl=f"/api/boards/{board_id}",
             selectedPresentationID=presentation.id,
             presentations=[
@@ -208,6 +207,16 @@ def _board_payload(
                     "displayName": item.name,
                     "imageUrl": _presentation_image_url(board_id, item.id),
                     "default": item.is_default,
+                    "contactIDs": [
+                        contact_id
+                        for contact_id in package.contact_ids
+                        if contact_id
+                        in next(
+                            raw["media"]["contactGeometry"]
+                            for raw in package.board["presentations"]
+                            if raw["id"] == item.id
+                        )
+                    ],
                     **(
                         {"sourcePresentationID": item.source_presentation_id}
                         if item.source_presentation_id is not None

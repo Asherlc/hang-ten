@@ -1,18 +1,110 @@
 import Foundation
 
-extension HoldTarget {
-    static func feature(
-        _ feature: HoldFeature,
-        fallbacks: [HoldFeature],
-        fingerCapacity: Int? = nil
-    ) -> HoldTarget {
-        HoldTarget(
-            holdIDs: [],
-            kind: nil,
-            feature: feature,
-            fallbackFeatures: fallbacks,
-            fingerCapacity: fingerCapacity
-        )
+struct ResolvedContactSnapshot: Codable, Hashable {
+    let boardID: String
+    let revisionID: String
+    let modelSHA256: String?
+    let requirement: ContactRequirement
+    let contactIDs: [String]
+
+    init(
+        boardID: String,
+        revisionID: String,
+        modelSHA256: String?,
+        requirement: ContactRequirement,
+        contactIDs: [String]
+    ) {
+        self.boardID = boardID
+        self.revisionID = revisionID
+        self.modelSHA256 = modelSHA256
+        self.requirement = requirement
+        self.contactIDs = contactIDs
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case boardID, revisionID, modelSHA256, requirement, contactIDs
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported resolved contact snapshot field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        revisionID = try container.decode(String.self, forKey: .revisionID)
+        modelSHA256 = try container.decodeIfPresent(String.self, forKey: .modelSHA256)
+        requirement = try container.decode(ContactRequirement.self, forKey: .requirement)
+        contactIDs = try container.decode([String].self, forKey: .contactIDs)
+    }
+}
+
+enum RecordedActivityTarget: Codable, Hashable {
+    case resolvedContacts(ResolvedContactSnapshot)
+    case selfSelected
+
+    var resolvedContactSnapshot: ResolvedContactSnapshot? {
+        guard case .resolvedContacts(let snapshot) = self else { return nil }
+        return snapshot
+    }
+
+    private enum Kind: String, Codable {
+        case resolvedContacts
+        case selfSelected
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case kind, resolution
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported recorded activity target field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        switch try container.decode(Kind.self, forKey: .kind) {
+        case .resolvedContacts:
+            self = .resolvedContacts(
+                try container.decode(ResolvedContactSnapshot.self, forKey: .resolution)
+            )
+        case .selfSelected:
+            guard !container.contains(.resolution) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .resolution,
+                    in: container,
+                    debugDescription: "Self-selected activity targets cannot contain a contact resolution."
+                )
+            }
+            self = .selfSelected
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .resolvedContacts(let snapshot):
+            try container.encode(Kind.resolvedContacts, forKey: .kind)
+            try container.encode(snapshot, forKey: .resolution)
+        case .selfSelected:
+            try container.encode(Kind.selfSelected, forKey: .kind)
+        }
     }
 }
 
@@ -20,21 +112,94 @@ struct RecordedActivitySegment: Codable, Hashable {
     let stepID: String
     let stepNumber: Int
     let kind: WorkoutSegmentKind
-    let holdIDs: [String]
-    let holdType: String?
-    let sizeMillimeters: Double?
+    let target: RecordedActivityTarget?
     let durationSeconds: TimeInterval?
 
-    enum CodingKeys: String, CodingKey { case stepID, stepNumber, kind, holdIDs, holdType, sizeMillimeters, durationSeconds }
+    init(
+        stepID: String,
+        stepNumber: Int,
+        kind: WorkoutSegmentKind,
+        target: RecordedActivityTarget?,
+        durationSeconds: TimeInterval?
+    ) {
+        self.stepID = stepID
+        self.stepNumber = stepNumber
+        self.kind = kind
+        self.target = target
+        self.durationSeconds = durationSeconds
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case stepID, stepNumber, kind, target, durationSeconds
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported recorded activity field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stepID = try container.decode(String.self, forKey: .stepID)
+        stepNumber = try container.decode(Int.self, forKey: .stepNumber)
+        kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
+        target = try container.decodeIfPresent(RecordedActivityTarget.self, forKey: .target)
+        durationSeconds = try container.decodeIfPresent(
+            TimeInterval.self,
+            forKey: .durationSeconds
+        )
+        switch kind {
+        case .work where target == nil:
+            throw DecodingError.dataCorruptedError(
+                forKey: .target,
+                in: container,
+                debugDescription: "Recorded work activity requires an explicit target."
+            )
+        case .rest where target != nil:
+            throw DecodingError.dataCorruptedError(
+                forKey: .target,
+                in: container,
+                debugDescription: "Recorded rest activity cannot contain a target."
+            )
+        default:
+            break
+        }
+    }
 
     func encode(to encoder: Encoder) throws {
+        switch kind {
+        case .work where target == nil:
+            throw EncodingError.invalidValue(
+                self,
+                EncodingError.Context(
+                    codingPath: encoder.codingPath,
+                    debugDescription: "Recorded work activity requires an explicit target."
+                )
+            )
+        case .rest where target != nil:
+            throw EncodingError.invalidValue(
+                self,
+                EncodingError.Context(
+                    codingPath: encoder.codingPath,
+                    debugDescription: "Recorded rest activity cannot contain a target."
+                )
+            )
+        default:
+            break
+        }
+
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(stepID, forKey: .stepID)
         try container.encode(stepNumber, forKey: .stepNumber)
         try container.encode(kind, forKey: .kind)
-        try container.encode(holdIDs, forKey: .holdIDs)
-        try container.encodeIfPresent(holdType, forKey: .holdType)
-        try container.encodeIfPresent(sizeMillimeters, forKey: .sizeMillimeters)
+        try container.encodeIfPresent(target, forKey: .target)
         try container.encodeIfPresent(durationSeconds, forKey: .durationSeconds)
     }
 }
@@ -43,21 +208,106 @@ struct RecordedActivityStepMeasurement: Codable, Hashable {
     let stepID: String
     let peakLoadKGF: Double?
     let actualLoadedDurationSeconds: TimeInterval?
+
+    init(
+        stepID: String,
+        peakLoadKGF: Double?,
+        actualLoadedDurationSeconds: TimeInterval?
+    ) {
+        self.stepID = stepID
+        self.peakLoadKGF = peakLoadKGF
+        self.actualLoadedDurationSeconds = actualLoadedDurationSeconds
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case stepID, peakLoadKGF, actualLoadedDurationSeconds
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported activity measurement field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stepID = try container.decode(String.self, forKey: .stepID)
+        peakLoadKGF = try container.decodeIfPresent(Double.self, forKey: .peakLoadKGF)
+        actualLoadedDurationSeconds = try container.decodeIfPresent(
+            TimeInterval.self,
+            forKey: .actualLoadedDurationSeconds
+        )
+    }
 }
 
 struct WorkoutActivityMetadata: Codable, Hashable {
+    static let currentVersion = 2
+
     let version: Int
     let segments: [RecordedActivitySegment]
     let measurements: [RecordedActivityStepMeasurement]?
 
     init(
-        version: Int = 1,
         segments: [RecordedActivitySegment],
         measurements: [RecordedActivityStepMeasurement]? = nil
     ) {
-        self.version = version
+        version = Self.currentVersion
         self.segments = segments
         self.measurements = measurements
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case version, segments, measurements
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported workout activity metadata field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decode(Int.self, forKey: .version)
+        guard version == Self.currentVersion else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .version,
+                in: container,
+                debugDescription: "Unsupported workout activity version \(version)."
+            )
+        }
+        segments = try container.decode([RecordedActivitySegment].self, forKey: .segments)
+        measurements = try container.decodeIfPresent(
+            [RecordedActivityStepMeasurement].self,
+            forKey: .measurements
+        )
+    }
+}
+
+private struct ActivityCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
     }
 }
 
@@ -80,712 +330,140 @@ enum WorkoutActivityRecordingError: LocalizedError, Equatable {
     }
 }
 
-internal enum BoardTargetResolver {
-    static func resolveHoldIDs(
-        for target: HoldTarget,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [String] {
-        resolveHoldIDs(for: target, among: compatibleHolds(on: board, gripType: gripType), on: board)
+enum ContactResolutionError: LocalizedError, Equatable {
+    case noMatches
+    case ambiguousSingle(candidateCount: Int)
+    case invalidBilateralPair(candidateCount: Int)
+
+    var errorDescription: String? {
+        switch self {
+        case .noMatches:
+            "No physical contact satisfies the workout requirement."
+        case .ambiguousSingle:
+            "The workout requirement does not identify exactly one physical contact."
+        case .invalidBilateralPair:
+            "The workout requirement does not identify exactly one documented bilateral pair."
+        }
     }
+}
 
-    static func resolveHoldIDs(
-        for target: HoldTarget,
-        handUse: WorkoutHandUse,
-        side: WorkoutSide,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [String] {
-        let holds = compatibleHolds(on: board, gripType: gripType)
-        return selectHoldIDs(
-            resolveHoldIDs(
-                for: target,
-                among: holds,
-                on: board,
-                preserveGenericPocketCandidates: handUse == .single
-            ),
-            for: handUse,
-            side: side,
-            on: board
-        )
-    }
-
-    static func resolveObjects(
-        for target: HoldTarget,
-        handUse: WorkoutHandUse,
-        side: WorkoutSide,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [String] {
-        let selectedHoldIDs = Set(resolveHoldIDs(
-            for: target,
-            handUse: handUse,
-            side: side,
-            on: board,
-            gripType: gripType
-        ))
-        var objectIDs: [String] = []
-        for hold in board.holds where selectedHoldIDs.contains(hold.id) {
-            if !objectIDs.contains(hold.equipmentObjectID) {
-                objectIDs.append(hold.equipmentObjectID)
-            }
+enum ContactResolver {
+    static func resolve(
+        _ requirement: ContactRequirement,
+        step: WorkoutStep,
+        board: BoardRevision
+    ) throws -> [PhysicalContact] {
+        let positionContactIDs = contactIDsForDefaultPosition(on: board)
+        var candidates = board.contacts.filter { contact in
+            positionContactIDs.contains(contact.id)
+                && matches(requirement, contact: contact)
+                && matches(stepGripType: step.gripType, contact: contact)
         }
-        return objectIDs
-    }
+        candidates = applying(step.side, to: candidates)
 
-    private static func resolveHoldIDs(
-        for target: HoldTarget,
-        among holds: [BoardHold],
-        on board: TrainingBoard,
-        preserveGenericPocketCandidates: Bool = false
-    ) -> [String] {
-        if !target.holdIDs.isEmpty {
-            let available = Set(holds.map(\.id))
-            return target.holdIDs.filter(available.contains)
-        }
-        if let feature = target.feature {
-            let exact = matching(feature, fingerCapacity: target.fingerCapacity, among: holds)
-            let selectedExact = preserveGenericPocketCandidates
-                && feature.holdKind == .pocket
-                && target.fingerCapacity == nil
-                ? oneHoldPerEquipmentObject(from: exact)
-                : selectingGenericPocketPair(
-                    from: exact,
-                    feature: feature,
-                    fingerCapacity: target.fingerCapacity,
-                    on: board
-                )
-            if !selectedExact.isEmpty {
-                if feature.holdKind == .pocket, target.fingerCapacity != nil {
-                    return oneHoldPerHand(from: selectedExact, on: board).map(\.id)
-                }
-                return selectedExact.map(\.id)
-            }
-            for fallback in target.fallbackFeatures {
-                let matches = matching(fallback, fingerCapacity: target.fingerCapacity, among: holds)
-                let selectedMatches = preserveGenericPocketCandidates
-                    && fallback.holdKind == .pocket
-                    && target.fingerCapacity == nil
-                    ? oneHoldPerEquipmentObject(from: matches)
-                    : selectingGenericPocketPair(
-                        from: matches,
-                        feature: fallback,
-                        fingerCapacity: target.fingerCapacity,
-                        on: board
-                    )
-                if !selectedMatches.isEmpty { return selectedMatches.map(\.id) }
-
-                // A fallback identifies a physically available substitute, not
-                // the source-prescribed finger capacity. Preserve capacity for
-                // the primary target, but do not reject an explicit fallback
-                // merely because that substitute has no matching capacity.
-                let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, among: holds)
-                let selectedCapacityAgnosticMatches = preserveGenericPocketCandidates
-                    && fallback.holdKind == .pocket
-                    && target.fingerCapacity == nil
-                    ? oneHoldPerEquipmentObject(from: capacityAgnosticMatches)
-                    : selectingGenericPocketPair(
-                        from: capacityAgnosticMatches,
-                        feature: fallback,
-                        fingerCapacity: target.fingerCapacity,
-                        on: board
-                    )
-                if !selectedCapacityAgnosticMatches.isEmpty {
-                    return selectedCapacityAgnosticMatches.map(\.id)
-                }
-
-            }
-            return []
-        }
-        guard let kind = target.kind else { return [] }
-        let matches = holds.filter { hold in
-            guard hold.kind == kind else { return false }
-            guard let capacity = target.fingerCapacity else { return true }
-            return hold.fingerCapacity == capacity
-        }
-        if kind == .pocket {
-            if target.fingerCapacity != nil, !matches.isEmpty {
-                return oneHoldPerHand(from: matches, on: board).map(\.id)
-            }
-            if target.fingerCapacity == nil {
-                return (preserveGenericPocketCandidates
-                    ? oneHoldPerEquipmentObject(from: matches)
-                    : genericPocketSelection(from: matches, on: board)).map(\.id)
-            }
-        }
-        if !matches.isEmpty { return matches.map(\.id) }
-        for fallback in target.fallbackFeatures {
-            let fallbackMatches = matching(
-                fallback,
-                fingerCapacity: target.fingerCapacity,
-                among: holds
-            )
-            if !fallbackMatches.isEmpty { return fallbackMatches.map(\.id) }
-        }
-
-        // Only a capacity-qualified pocket target may relax a declared
-        // fallback's capacity. This is the documented availability ladder
-        // for pocket routines; doing it for every kind target would broaden
-        // unrelated targets and custom routines. Try every exact-capacity
-        // fallback above before accepting any capacity-agnostic substitute.
-        if kind == .pocket, target.fingerCapacity != nil {
-            for fallback in target.fallbackFeatures {
-                // A declared fallback is an available substitute, rather than a
-                // claim that it shares the source target's finger capacity.
-                let capacityAgnosticFallbackMatches = matching(
-                    fallback,
-                    fingerCapacity: nil,
-                    among: holds
-                )
-                if !capacityAgnosticFallbackMatches.isEmpty {
-                    return capacityAgnosticFallbackMatches.map(\.id)
-                }
-            }
-        }
-        return []
-    }
-
-    static func resolveHolds(
-        for target: HoldTarget,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [BoardHold] {
-        let ids = Set(resolveHoldIDs(for: target, on: board, gripType: gripType))
-        return board.holds.filter { ids.contains($0.id) }
-    }
-
-    static func resolveHolds(
-        for target: HoldTarget,
-        handUse: WorkoutHandUse,
-        side: WorkoutSide,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [BoardHold] {
-        let ids = Set(resolveHoldIDs(
-            for: target,
-            handUse: handUse,
-            side: side,
-            on: board,
-            gripType: gripType
-        ))
-        return board.holds.filter { ids.contains($0.id) }
-    }
-
-    static func substituteHoldIDs(
-        for target: HoldTarget,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [String] {
-        let holds = compatibleHolds(on: board, gripType: gripType)
-        let primary = resolveHoldIDs(for: target, among: holds, on: board)
-        if !primary.isEmpty { return primary }
-        let closestPrimary = closestMatch(for: target, among: holds, on: board)
-        if !closestPrimary.isEmpty { return closestPrimary }
-        guard target.feature?.holdKind == .pocket || target.kind == .pocket else { return [] }
-        for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
-            let fallbackTarget = HoldTarget.feature(
-                fallback,
-                fingerCapacity: target.fingerCapacity
-            )
-            let closestFallback = closestMatch(for: fallbackTarget, among: holds, on: board)
-            if !closestFallback.isEmpty { return closestFallback }
-        }
-        return []
-    }
-
-    static func substituteHoldIDs(
-        for target: HoldTarget,
-        handUse: WorkoutHandUse,
-        side: WorkoutSide,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [String] {
-        let holds = compatibleHolds(on: board, gripType: gripType)
-        let primary = resolveHoldIDs(
-            for: target,
-            among: holds,
-            on: board,
-            preserveGenericPocketCandidates: handUse == .single
-        )
-        if !primary.isEmpty {
-            return selectHoldIDs(primary, for: handUse, side: side, on: board)
-        }
-        let closestPrimary = closestMatch(for: target, among: holds, on: board)
-        if !closestPrimary.isEmpty {
-            return selectHoldIDs(closestPrimary, for: handUse, side: side, on: board)
-        }
-        guard target.feature?.holdKind == .pocket || target.kind == .pocket else { return [] }
-        for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
-            let fallbackTarget = HoldTarget.feature(
-                fallback,
-                fingerCapacity: target.fingerCapacity
-            )
-            let closestFallback = closestMatch(for: fallbackTarget, among: holds, on: board)
-            if !closestFallback.isEmpty {
-                return selectHoldIDs(closestFallback, for: handUse, side: side, on: board)
-            }
-        }
-        return []
-    }
-
-    static func substituteHolds(
-        for target: HoldTarget,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [BoardHold] {
-        let ids = Set(substituteHoldIDs(for: target, on: board, gripType: gripType))
-        return board.holds.filter { ids.contains($0.id) }
-    }
-
-    static func substituteHolds(
-        for target: HoldTarget,
-        handUse: WorkoutHandUse,
-        side: WorkoutSide,
-        on board: TrainingBoard,
-        gripType: GripType? = nil
-    ) -> [BoardHold] {
-        let ids = Set(substituteHoldIDs(
-            for: target,
-            handUse: handUse,
-            side: side,
-            on: board,
-            gripType: gripType
-        ))
-        return board.holds.filter { ids.contains($0.id) }
-    }
-
-    private static func selectHoldIDs(
-        _ candidateIDs: [String],
-        for handUse: WorkoutHandUse,
-        side: WorkoutSide,
-        on board: TrainingBoard
-    ) -> [String] {
-        let candidates = candidateIDs.compactMap { id in
-            board.holds.first { $0.id == id }
-        }
-        switch handUse {
+        switch requirement.selection {
+        case .allMatching:
+            guard !candidates.isEmpty else { throw ContactResolutionError.noMatches }
         case .single:
-            guard side != .both else { return [] }
-            let objectIDs = candidates.reduce(into: [String]()) { result, hold in
-                if !result.contains(hold.equipmentObjectID) {
-                    result.append(hold.equipmentObjectID)
-                }
+            guard candidates.count == 1 else {
+                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
             }
-            guard !objectIDs.isEmpty else { return [] }
-            let rankedObjectIDs = objectIDs.sorted { lhs, rhs in
-                let lhsCenter = horizontalCenter(of: lhs, among: candidates, on: board)
-                let rhsCenter = horizontalCenter(of: rhs, among: candidates, on: board)
-                if lhsCenter != rhsCenter { return lhsCenter < rhsCenter }
-                return lhs < rhs
-            }
-            let objectID = side == .left ? rankedObjectIDs.first! : rankedObjectIDs.last!
-            return candidates.first(where: { $0.equipmentObjectID == objectID })
-                .map { [$0.id] } ?? []
-        case .double:
-            guard side == .both else { return [] }
-            var selectedObjectIDs: [String] = []
-            for hold in candidates where !selectedObjectIDs.contains(hold.equipmentObjectID) {
-                selectedObjectIDs.append(hold.equipmentObjectID)
-                if selectedObjectIDs.count == 2 { break }
-            }
-            if selectedObjectIDs.count == 2 {
-                return candidates.filter { selectedObjectIDs.contains($0.equipmentObjectID) }.map(\.id)
-            }
-            if let bilateralHold = candidates.first(where: { $0.handCapacity == 2 }) {
-                return [bilateralHold.id]
-            }
-            guard let objectID = selectedObjectIDs.first,
-                  board.object(id: objectID)?.missingHandCapacityPolicy == .legacyBilateral else {
-                return []
-            }
-            guard !candidates.contains(where: { $0.handCapacity == 1 }) else { return [] }
-            return candidates.map(\.id)
-        }
-    }
-
-    private static func horizontalCenter(
-        of equipmentObjectID: String,
-        among holds: [BoardHold],
-        on board: TrainingBoard
-    ) -> Double {
-        let centers = holds
-            .filter { $0.equipmentObjectID == equipmentObjectID }
-            .compactMap { frame(of: $0, on: board).map { $0.x + $0.width / 2 } }
-        guard !centers.isEmpty else { return 0.5 }
-        return centers.reduce(0, +) / Double(centers.count)
-    }
-
-    private static func compatibleHolds(on board: TrainingBoard, gripType: GripType?) -> [BoardHold] {
-        let holds = board.holds(in: board.defaultPresentation)
-        guard gripType == .halfCrimp || gripType == .fullCrimp else { return holds }
-        return holds.filter {
-            $0.kind == .edge
-                && $0.gripType != .openHand
-                && $0.features?.contains(.largeOpenHandRail) != true
-        }
-    }
-
-    /// A target's feature must match exactly; its finger count (when
-    /// specified) must too, since `.pocket` alone no longer implies a count.
-    private static func matching(_ feature: HoldFeature, fingerCapacity: Int?, among holds: [BoardHold]) -> [BoardHold] {
-        holds.filter { hold in
-            guard hold.features?.contains(feature) == true else { return false }
-            guard let fingerCapacity else { return true }
-            return hold.fingerCapacity == fingerCapacity
-        }
-    }
-
-    private static func closestMatch(for target: HoldTarget, among holds: [BoardHold], on board: TrainingBoard) -> [String] {
-        if let feature = target.feature {
-            let primary = byFeatureGroup(feature, target: target, among: holds, on: board)
-            if !primary.isEmpty { return primary }
-            // resolveHoldIDs already tried each fallback as an exact tagged
-            // match; a board missing that tagging (or the primary feature's
-            // kind entirely, e.g. no pockets) still deserves a same-kind
-            // substitution for its declared fallbacks before giving up. This
-            // intentionally skips byFeatureGroup's own further rescues (edge
-            // boards standing in for pockets): a plan author who named one
-            // specific fallback feature didn't ask for that fallback's
-            // fallbacks too.
-            for fallback in target.fallbackFeatures {
-                let matches = sameKindOrGroup(fallback, target: target, among: holds, on: board)
-                if !matches.isEmpty { return matches }
-            }
-            return []
-        }
-        guard let kind = target.kind else { return [] }
-        let sameKindCandidates = holds.filter { $0.kind == kind }
-        let sameKind = preferringFingerCapacity(sameKindCandidates, target: target)
-        if !sameKind.isEmpty {
-            // A capacity-qualified pocket must not silently become a
-            // differently sized pocket when its plan declares an
-            // availability fallback. Exact-capacity pockets remain first;
-            // otherwise let the plan's stated fallback order decide before
-            // considering a mismatched pocket.
-            if kind == .pocket,
-               target.fingerCapacity != nil,
-               !target.fallbackFeatures.isEmpty,
-               !sameKindCandidates.contains(where: { $0.fingerCapacity == target.fingerCapacity }) {
-                for fallback in target.fallbackFeatures {
-                    let matches = sameKindOrGroup(fallback, target: target, among: holds, on: board)
-                    if !matches.isEmpty { return matches }
-                }
-            }
-            if kind == .pocket {
-                if target.fingerCapacity != nil {
-                    return oneHoldPerHand(from: sameKind, on: board).map(\.id)
-                }
-                return genericPocketSelection(from: sameKind, on: board).map(\.id)
-            }
-            return sameKind.map(\.id)
-        }
-        for fallback in target.fallbackFeatures {
-            let matches = sameKindOrGroup(fallback, target: target, among: holds, on: board)
-            if !matches.isEmpty { return matches }
-        }
-        if kind == .pocket, target.fingerCapacity != nil {
-            return crossKindEdges(for: target, among: holds).map(\.id)
-        }
-        guard kind == .edge else { return [] }
-        return crossKindPockets(for: target, among: holds, on: board).map(\.id)
-    }
-
-    private static func byFeatureGroup(_ feature: HoldFeature, target: HoldTarget, among holds: [BoardHold], on board: TrainingBoard) -> [String] {
-        let direct = sameKindOrGroup(feature, target: target, among: holds, on: board)
-        if !direct.isEmpty { return direct }
-
-        if feature.holdKind == .edge {
-            let pockets = crossKindPockets(for: target, among: holds, on: board)
-            if !pockets.isEmpty { return pockets.map(\.id) }
-        }
-
-        if let capacity = target.fingerCapacity {
-            let crossKind = holds.filter { $0.fingerCapacity == capacity }
-            if !crossKind.isEmpty { return crossKind.map(\.id) }
-        }
-
-        return []
-    }
-
-    /// A feature's own group tag, then its physical kind regardless of
-    /// tagging. Deliberately stops short of `byFeatureGroup`'s further
-    /// cross-kind rescues, which exist for a target's own declared feature,
-    /// not for stepping through a declared fallback's fallbacks.
-    private static func sameKindOrGroup(_ feature: HoldFeature, target: HoldTarget, among holds: [BoardHold], on board: TrainingBoard) -> [String] {
-        let group = feature.featureGroup
-        let groupFeatures = Set(HoldFeature.allCases.filter { $0.featureGroup == group })
-
-        let sameGroup = holds.filter { hold in
-            guard hold.kind == feature.holdKind,
-                  let features = hold.features else { return false }
-            return !features.isDisjoint(with: groupFeatures)
-        }
-        let preferredSameGroup = preferringFingerCapacity(sameGroup, target: target)
-        let selectedSameGroup = selectingGenericPocketPair(
-            from: preferredSameGroup,
-            feature: feature,
-            fingerCapacity: target.fingerCapacity,
-            on: board
-        )
-        if !selectedSameGroup.isEmpty { return selectedSameGroup.map(\.id) }
-
-        let sameKind = holds.filter { $0.kind == feature.holdKind }
-        if feature == .roundSloper {
-            let roundSlopers = sameKind.filter { $0.sloper?.type == .round }
-            if !roundSlopers.isEmpty { return roundSlopers.map(\.id) }
-        }
-        let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
-        if feature.holdKind == .pocket, target.fingerCapacity == nil {
-            return genericPocketSelection(from: preferredSameKind, on: board).map(\.id)
-        }
-        // Untagged holds are only a physical-kind fallback, so they cannot
-        // identify every same-kind hold as the source-prescribed target. When
-        // the plan feature has a source-backed depth adaptation, prefer the
-        // nearest documented measurement before falling back to board order.
-        let rankedRepresentative = preferredSameKind
-            .min { depthDistance(of: $0, from: feature) < depthDistance(of: $1, from: feature) }
-        guard let representative = rankedRepresentative else { return [] }
-
-        if feature.holdKind == .pocket {
-            let pairedPockets = oneHoldPerHand(from: preferredSameKind, on: board)
-            if pairedPockets.count == 2 { return pairedPockets.map(\.id) }
-        }
-
-        if feature.holdKind == .edge {
-            if let pairedEdges = matchingEdgePair(from: preferredSameKind, feature: feature, on: board) {
-                return pairedEdges.map(\.id)
+        case .bilateralPair:
+            guard step.handUse == .double,
+                  step.side == .both,
+                  candidates.count == 2,
+                  isDocumentedPair(candidates[0], candidates[1]) else {
+                throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
         }
 
-        return [representative.id]
+        return candidates
     }
 
-    /// When the target specifies a finger count, prefer candidates that
-    /// match it; if none do, fall back to the unfiltered set rather than
-    /// losing the substitution entirely over a capacity mismatch.
-    private static func preferringFingerCapacity(_ holds: [BoardHold], target: HoldTarget) -> [BoardHold] {
-        guard let capacity = target.fingerCapacity else { return holds }
-        let matching = holds.filter { $0.fingerCapacity == capacity }
-        return matching.isEmpty ? holds : matching
-    }
-
-    /// These are semantic-plan adaptations documented in
-    /// `docs/source-audits/2026-08-10-plan-cue-provenance.md`, not inferred
-    /// board metadata. Features without a documented measurement stay order
-    /// based so unknown source facts are never fabricated.
-    private static func targetDepthMillimeters(for feature: HoldFeature) -> Int? {
-        switch feature {
-        case .largeEdge: 29
-        case .mediumEdge: 20
-        case .smallEdge: 12
-        default: nil
+    static func resolve(
+        _ requirements: [ContactRequirement],
+        step: WorkoutStep,
+        board: BoardRevision
+    ) throws -> [PhysicalContact] {
+        let resolvedIDs = try requirements.reduce(into: Set<String>()) { result, requirement in
+            result.formUnion(try resolve(requirement, step: step, board: board).map(\.id))
         }
+        return board.contacts.filter { resolvedIDs.contains($0.id) }
     }
 
-    private static func depthDistance(of hold: BoardHold, from feature: HoldFeature) -> Double {
-        guard let sourceTargetDepth = targetDepthMillimeters(for: feature) else { return .infinity }
-        let targetDepth = Double(sourceTargetDepth)
-        if let range = hold.depthRangeMillimeters {
-            if range.contains(targetDepth) { return 0 }
-            return min(abs(range.lowerBound - targetDepth), abs(range.upperBound - targetDepth))
-        }
-        if let size = hold.sizeMillimeters {
-            return abs(size - targetDepth)
-        }
-        return .infinity
-    }
-
-    /// Generic edge cues may use a bilateral pair only when the two holds
-    /// share their documented physical descriptor and compatible geometry.
-    /// Rank viable pairs by the source-backed depth adaptation before visual
-    /// symmetry so a farther pair cannot win merely through board order.
-    private static func matchingEdgePair(
-        from holds: [BoardHold],
-        feature: HoldFeature,
-        on board: TrainingBoard
-    ) -> [BoardHold]? {
-        let left = holds.filter { frame(of: $0, on: board).map { $0.x + $0.width <= 0.5 } == true }
-        let right = holds.filter { frame(of: $0, on: board).map { $0.x >= 0.5 } == true }
-        let pairs = left.flatMap { leftHold in
-            right.compactMap { rightHold -> (BoardHold, BoardHold)? in
-                let pair = (leftHold, rightHold)
-                guard hasMatchingEdgeDescriptor(pair), isMatchingPocketPair(pair, on: board) else {
-                    return nil
-                }
-                return pair
+    private static func contactIDsForDefaultPosition(on board: BoardRevision) -> Set<String> {
+        if let position = board.positions.first(where: {
+            $0.presentationID == board.defaultPresentation.id
+        }) {
+            if !position.contactIDsWereExplicitlyAuthored {
+                return board.defaultPresentation.contactIDs
             }
+            return Set(position.contactIDs)
         }
-        guard let pair = pairs.min(by: {
-            let leftDistance = depthDistance(of: $0.0, from: feature)
-            let rightDistance = depthDistance(of: $1.0, from: feature)
-            if leftDistance != rightDistance { return leftDistance < rightDistance }
-            return prefersSymmetry(of: $0, over: $1, on: board)
-        }) else {
-            return nil
-        }
-        return [pair.0, pair.1]
+        return board.defaultPresentation.contactIDs
     }
 
-    private static func hasMatchingEdgeDescriptor(_ pair: (BoardHold, BoardHold)) -> Bool {
-        let leftHasMeasurement = pair.0.sizeMillimeters != nil || pair.0.depthRangeMillimeters != nil
-        let rightHasMeasurement = pair.1.sizeMillimeters != nil || pair.1.depthRangeMillimeters != nil
-        guard pair.0.gripType == pair.1.gripType,
-              pair.0.fingerCapacity == pair.1.fingerCapacity,
-              pair.0.handCapacity == pair.1.handCapacity else {
+    private static func matches(
+        _ requirement: ContactRequirement,
+        contact: PhysicalContact
+    ) -> Bool {
+        if let kind = requirement.kind, contact.kind != kind { return false }
+        if !requirement.requiredFeatures.isSubset(of: contact.features) { return false }
+        if let fingerCapacity = requirement.fingerCapacity,
+           contact.fingerCapacity != fingerCapacity { return false }
+        if let handCapacity = requirement.handCapacity,
+           contact.handCapacity != handCapacity { return false }
+        if !requirement.compatibleGripTypes.isEmpty,
+           requirement.compatibleGripTypes.isDisjoint(with: contact.gripTypes) {
             return false
         }
-        if !leftHasMeasurement && !rightHasMeasurement {
-            return true
-        }
-        guard leftHasMeasurement && rightHasMeasurement else { return false }
-        return pair.0.sizeMillimeters == pair.1.sizeMillimeters
-            && pair.0.depthRangeMillimeters == pair.1.depthRangeMillimeters
-    }
-
-    private static func crossKindPockets(for target: HoldTarget, among holds: [BoardHold], on board: TrainingBoard) -> [BoardHold] {
-        let pockets = holds.filter { $0.kind == .pocket }
-        guard let capacity = target.fingerCapacity else {
-            return oneHoldPerHand(from: pockets, on: board)
-        }
-        return pockets.filter { $0.fingerCapacity == capacity }
-    }
-
-    /// A capacity-qualified pocket request may use same-capacity edges only
-    /// when the board has no pocket candidate. An unqualified pocket request
-    /// must not broaden into an arbitrary edge selection.
-    private static func crossKindEdges(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
-        guard let capacity = target.fingerCapacity else { return [] }
-        return holds.filter { $0.kind == .edge && $0.fingerCapacity == capacity }
-    }
-
-    private static func selectingGenericPocketPair(
-        from holds: [BoardHold],
-        feature: HoldFeature,
-        fingerCapacity: Int?,
-        on board: TrainingBoard
-    ) -> [BoardHold] {
-        guard feature.holdKind == .pocket, fingerCapacity == nil else { return holds }
-        return genericPocketSelection(from: holds, on: board)
-    }
-
-    /// Generic pocket cues prefer a geometry-backed bilateral pair. A lone
-    /// pocket remains usable only when its frame is wholly on one board side;
-    /// a centered or midline-crossing contact is not a hand-specific fallback.
-    private static func genericPocketSelection(from holds: [BoardHold], on board: TrainingBoard) -> [BoardHold] {
-        if let pair = matchingPocketPair(from: holds, on: board) { return pair }
-        return holds.first(where: { isWhollyOnOneSide($0, on: board) }).map { [$0] } ?? []
-    }
-
-    private static func oneHoldPerEquipmentObject(from holds: [BoardHold]) -> [BoardHold] {
-        var selectedObjectIDs: Set<String> = []
-        return holds.filter { selectedObjectIDs.insert($0.equipmentObjectID).inserted }
-    }
-
-    private static func isWhollyOnOneSide(_ hold: BoardHold, on board: TrainingBoard) -> Bool {
-        guard let frame = frame(of: hold, on: board) else { return false }
-        return frame.x + frame.width <= 0.5 || frame.x >= 0.5
-    }
-
-    /// Generic pocket cues need a usable two-handed pair. Choose known,
-    /// matching-capacity pockets with compatible rows and frames. Horizontal
-    /// reflection ranks those matches, but asymmetric board layouts remain
-    /// eligible.
-    private static func matchingPocketPair(from holds: [BoardHold], on board: TrainingBoard) -> [BoardHold]? {
-        let left = holds.filter { frame(of: $0, on: board).map { $0.x + $0.width <= 0.5 } == true }
-        let right = holds.filter { frame(of: $0, on: board).map { $0.x >= 0.5 } == true }
-        let pairs = left.flatMap { leftHold in
-            right.compactMap { rightHold -> (BoardHold, BoardHold)? in
-                guard let capacity = leftHold.fingerCapacity,
-                      rightHold.fingerCapacity == capacity else { return nil }
-                let pair = (leftHold, rightHold)
-                return isMatchingPocketPair(pair, on: board) ? pair : nil
+        if let requiredDepth = requirement.depthRangeMillimeters {
+            guard let contactDepth = contact.depthRangeMillimeters,
+                  contactDepth.upperBound >= requiredDepth.minimum,
+                  contactDepth.lowerBound <= requiredDepth.maximum else {
+                return false
             }
         }
-        guard let pair = pairs.min(by: { prefersSymmetry(of: $0, over: $1, on: board) }) else {
-            return nil
-        }
-        return [pair.0, pair.1]
+        return true
     }
 
-    private static func isMatchingPocketPair(_ pair: (BoardHold, BoardHold), on board: TrainingBoard) -> Bool {
-        guard let leftFrame = frame(of: pair.0, on: board),
-              let rightFrame = frame(of: pair.1, on: board) else { return false }
-        let differences = symmetryDifferences(of: pair, on: board)
-        let referenceWidth = max(leftFrame.width, rightFrame.width)
-        let referenceHeight = max(leftFrame.height, rightFrame.height)
-        guard referenceWidth > 0, referenceHeight > 0 else { return false }
-        let tolerance = 0.25
-        return differences.verticalAlignment <= referenceHeight * tolerance
-            && differences.width <= referenceWidth * tolerance
-            && differences.height <= referenceHeight * tolerance
-    }
-
-    private static func symmetryScore(of pair: (BoardHold, BoardHold), on board: TrainingBoard) -> Double {
-        guard let leftFrame = frame(of: pair.0, on: board),
-              let rightFrame = frame(of: pair.1, on: board) else { return .infinity }
-        let differences = symmetryDifferences(of: pair, on: board)
-        let referenceWidth = max(leftFrame.width, rightFrame.width)
-        let referenceHeight = max(leftFrame.height, rightFrame.height)
-        return differences.horizontalReflection / referenceWidth
-            + differences.verticalAlignment / referenceHeight
-            + differences.width / referenceWidth
-            + differences.height / referenceHeight
-    }
-
-    /// Descriptor bounds are serialized to nine decimal places. Treat
-    /// smaller score differences as equal so import-floating-point residue
-    /// cannot reorder physically indistinguishable candidates; `min` then
-    /// retains the package's source-backed hold order as the tie-breaker.
-    private static func prefersSymmetry(
-        of lhs: (BoardHold, BoardHold),
-        over rhs: (BoardHold, BoardHold),
-        on board: TrainingBoard
+    private static func matches(
+        stepGripType: GripType?,
+        contact: PhysicalContact
     ) -> Bool {
-        let lhsScore = symmetryScore(of: lhs, on: board)
-        let rhsScore = symmetryScore(of: rhs, on: board)
-        guard abs(lhsScore - rhsScore) > 1e-9 else { return false }
-        return lhsScore < rhsScore
+        guard let stepGripType else { return true }
+        return contact.gripTypes.contains(stepGripType)
     }
 
-    private static func symmetryDifferences(of pair: (BoardHold, BoardHold), on board: TrainingBoard) -> (
-        verticalAlignment: Double,
-        horizontalReflection: Double,
-        width: Double,
-        height: Double
-    ) {
-        guard let leftFrame = frame(of: pair.0, on: board),
-              let rightFrame = frame(of: pair.1, on: board) else {
-            return (.infinity, .infinity, .infinity, .infinity)
-        }
-        let leftCenter = leftFrame.x + leftFrame.width / 2
-        let rightCenter = rightFrame.x + rightFrame.width / 2
-        let leftVerticalCenter = leftFrame.y + leftFrame.height / 2
-        let rightVerticalCenter = rightFrame.y + rightFrame.height / 2
-        return (
-            abs(leftVerticalCenter - rightVerticalCenter),
-            abs(leftCenter - (1 - rightCenter)),
-            abs(leftFrame.width - rightFrame.width),
-            abs(leftFrame.height - rightFrame.height)
-        )
+    private static func applying(
+        _ side: WorkoutSide,
+        to candidates: [PhysicalContact]
+    ) -> [PhysicalContact] {
+        guard side != .both else { return candidates }
+        let requiredSide: ContactSide = side == .left ? .left : .right
+        return candidates.filter { $0.side == requiredSide }
     }
 
-    /// A bilateral target represents a two-handed hang, so highlight one
-    /// eligible hold on each half of the board rather than every candidate.
-    private static func oneHoldPerHand(from holds: [BoardHold], on board: TrainingBoard) -> [BoardHold] {
-        let left = holds.first { frame(of: $0, on: board).map { $0.x + $0.width / 2 < 0.5 } == true }
-        let right = holds.first { frame(of: $0, on: board).map { $0.x + $0.width / 2 >= 0.5 } == true }
-        return [left, right].compactMap { $0 }
-    }
-
-    private static func frame(of hold: BoardHold, on board: TrainingBoard) -> HoldFrame? {
-        hold.resolvedFrame(in: board.defaultPresentation)
+    private static func isDocumentedPair(
+        _ first: PhysicalContact,
+        _ second: PhysicalContact
+    ) -> Bool {
+        first.pairedContactID == second.id
+            && second.pairedContactID == first.id
+            && Set([first.side, second.side]) == Set([.left, .right])
+            && first.kind == second.kind
+            && first.features == second.features
+            && first.fingerCapacity == second.fingerCapacity
+            && first.handCapacity == second.handCapacity
+            && first.depthRangeMillimeters == second.depthRangeMillimeters
+            && first.gripTypes == second.gripTypes
     }
 }
 
 struct WorkoutActivityRecorder {
     func segments(
         for plan: TrainingPlan,
-        on board: TrainingBoard,
+        on board: BoardRevision,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
     ) throws -> [RecordedActivitySegment] {
         var result: [RecordedActivitySegment] = []
@@ -802,21 +480,29 @@ struct WorkoutActivityRecorder {
                     case .undefined: duration = nil
                     case .stopwatch:
                         if let observed = stopwatchDurations[key] {
-                            guard observed.isFinite, observed >= 0 else { throw WorkoutActivityRecordingError.invalidObservedDuration(key) }
+                            guard observed.isFinite, observed >= 0 else {
+                                throw WorkoutActivityRecordingError.invalidObservedDuration(key)
+                            }
                             duration = observed
-                        } else { duration = nil }
+                        } else {
+                            duration = nil
+                        }
                     }
                 }
                 if segment.kind == .rest {
-                    result.append(RecordedActivitySegment(stepID: step.id, stepNumber: step.number, kind: .rest, holdIDs: [], holdType: nil, sizeMillimeters: nil, durationSeconds: duration))
+                    result.append(
+                        RecordedActivitySegment(
+                            stepID: step.id,
+                            stepNumber: step.number,
+                            kind: .rest,
+                            target: nil,
+                            durationSeconds: duration
+                        )
+                    )
                     continue
                 }
                 guard !segment.targets.isEmpty else {
-                    guard allowsUntargetedRPTCSelfSelectedWork(
-                        segment,
-                        in: step,
-                        plan: plan
-                    ) else {
+                    guard allowsSourceLinkedUntargetedWork(segment, in: step, plan: plan) else {
                         throw WorkoutActivityRecordingError.unresolvedTarget(
                             stepID: step.id,
                             segmentIndex: index
@@ -827,55 +513,43 @@ struct WorkoutActivityRecorder {
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .work,
-                            holdIDs: [],
-                            holdType: nil,
-                            sizeMillimeters: nil,
+                            target: .selfSelected,
                             durationSeconds: duration
                         )
                     )
                     continue
                 }
-                let holdsByTarget = segment.targets.map {
-                    BoardTargetResolver.substituteHolds(
-                        for: $0,
-                        handUse: step.handUse,
-                        side: step.side,
-                        on: board,
-                        gripType: step.gripType
-                    )
-                }
-                guard holdsByTarget.allSatisfy({ !$0.isEmpty }) else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
-                let holds = holdsByTarget.flatMap { $0 }
-                guard !holds.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
-                if segment.targets.count > 1 {
+
+                for requirement in segment.targets {
+                    let contacts: [PhysicalContact]
+                    do {
+                        contacts = try ContactResolver.resolve(
+                            requirement,
+                            step: step,
+                            board: board
+                        )
+                    } catch {
+                        throw WorkoutActivityRecordingError.unresolvedTarget(
+                            stepID: step.id,
+                            segmentIndex: index
+                        )
+                    }
                     result.append(
                         RecordedActivitySegment(
                             stepID: step.id,
                             stepNumber: step.number,
                             kind: .work,
-                            holdIDs: holds.map(\.id),
-                            holdType: nil,
-                            sizeMillimeters: nil,
+                            target: .resolvedContacts(
+                                ResolvedContactSnapshot(
+                                    boardID: board.id,
+                                    revisionID: board.revisionID,
+                                    modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                    requirement: requirement,
+                                    contactIDs: contacts.map(\.id)
+                                )
+                            ),
                             durationSeconds: duration
                         )
-                    )
-                    continue
-                }
-                var groups: [(HoldKind, Double?, [String])] = []
-                for hold in holds {
-                    let descriptor = (hold.kind, hold.sizeMillimeters)
-                    if let i = groups.firstIndex(where: { $0.0 == descriptor.0 && $0.1 == descriptor.1 }) { groups[i].2.append(hold.id) }
-                    else { groups.append((hold.kind, hold.sizeMillimeters, [hold.id])) }
-                }
-                result += groups.map { kind, size, ids in
-                    RecordedActivitySegment(
-                        stepID: step.id,
-                        stepNumber: step.number,
-                        kind: .work,
-                        holdIDs: ids,
-                        holdType: kind.rawValue,
-                        sizeMillimeters: size,
-                        durationSeconds: duration
                     )
                 }
             }
@@ -883,32 +557,28 @@ struct WorkoutActivityRecorder {
         return result
     }
 
-    private func allowsUntargetedRPTCSelfSelectedWork(
+    private func modelSHA256(for presentation: BoardPresentation) -> String? {
+        guard case .model(let media) = presentation.media else { return nil }
+        return media.descriptor.modelSHA256
+    }
+
+    private func allowsSourceLinkedUntargetedWork(
         _ segment: WorkoutSegment,
         in step: WorkoutStep,
         plan: TrainingPlan
     ) -> Bool {
-        let expectedStepIDs = Set((1...7).map { "rptc-repeaters-set-rep-\($0).segment-1" })
-        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id &&
-            plan.provenance == .official &&
-            plan.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL &&
-            plan.boardID == nil &&
-            plan.steps.count == 15 &&
-            expectedStepIDs.contains(step.id) &&
-            step.phase == .hang &&
-            step.targets.isEmpty &&
-            step.duration == 7 &&
-            step.timedWorkDuration == 7 &&
-            step.segments == [segment] &&
-            segment.kind == .work &&
-            segment.targets.isEmpty &&
-            segment.timing == .fixed &&
-            segment.duration == 7
+        plan.provenance != .custom
+            && plan.sourceURL != nil
+            && plan.boardID == nil
+            && step.phase != .rest
+            && step.phase != .conditioning
+            && segment.kind == .work
+            && segment.targets.isEmpty
     }
 
     func metadata(
         for plan: TrainingPlan,
-        on board: TrainingBoard,
+        on board: BoardRevision,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
         stepMeasurements: [WorkoutStepMeasurement] = []
     ) throws -> WorkoutActivityMetadata {

@@ -191,26 +191,26 @@ struct TrainView: View {
 }
 
 struct BoardDetailView: View {
-    let board: TrainingBoard
+    let board: BoardRevision
     @State private var selectedHoldID: String?
 
-    init(board: TrainingBoard) {
+    init(board: BoardRevision) {
         self.board = board
-        var initialHoldID = board.holds.first(where: {
-            board.defaultPresentation.containsHold(id: $0.id)
+        var initialHoldID = board.contacts.first(where: {
+            board.defaultPresentation.containsContact(id: $0.id)
         })?.id
         #if DEBUG
         if let reviewHoldID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HOLD_ID"],
-           board.holds.contains(where: { $0.id == reviewHoldID }) {
+           board.contacts.contains(where: { $0.id == reviewHoldID }) {
             initialHoldID = reviewHoldID
         }
         #endif
         _selectedHoldID = State(initialValue: initialHoldID)
     }
 
-    private var selectedHold: BoardHold? {
+    private var selectedHold: PhysicalContact? {
         guard let selectedHoldID else { return nil }
-        return board.holds.first { $0.id == selectedHoldID }
+        return board.contacts.first { $0.id == selectedHoldID }
     }
 
     var body: some View {
@@ -244,7 +244,7 @@ struct BoardDetailView: View {
         .accessibilityIdentifier("boardDetail.screen")
     }
 
-    private func selectedHoldCard(_ hold: BoardHold) -> some View {
+    private func selectedHoldCard(_ hold: PhysicalContact) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             SectionLabel(title: "Selected hold", tint: .holdActiveDeep)
             Text(hold.name)
@@ -274,7 +274,7 @@ struct BoardPickerView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var filters = BoardPickerFilters()
 
-    private var filteredBoards: [TrainingBoard] {
+    private var filteredBoards: [BoardRevision] {
         filters.filteredBoards(
             from: BoardCatalog.all,
             favoriteBoardIDs: store.favoriteBoardIDs
@@ -358,7 +358,7 @@ struct BoardPickerFilters {
         searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && manufacturer == nil
     }
 
-    static func manufacturerOptions(from boards: [TrainingBoard]) -> [String] {
+    static func manufacturerOptions(from boards: [BoardRevision]) -> [String] {
         var manufacturerByNormalizedName: [String: String] = [:]
         for board in boards {
             let normalizedName = normalized(board.manufacturer)
@@ -372,9 +372,9 @@ struct BoardPickerFilters {
     }
 
     func filteredBoards(
-        from boards: [TrainingBoard],
+        from boards: [BoardRevision],
         favoriteBoardIDs: Set<String> = []
-    ) -> [TrainingBoard] {
+    ) -> [BoardRevision] {
         let filteredBoards = boards.filter(matches)
         return filteredBoards.filter { favoriteBoardIDs.contains($0.id) }
             + filteredBoards.filter { !favoriteBoardIDs.contains($0.id) }
@@ -385,7 +385,7 @@ struct BoardPickerFilters {
         manufacturer = nil
     }
 
-    private func matches(_ board: TrainingBoard) -> Bool {
+    private func matches(_ board: BoardRevision) -> Bool {
         let matchesManufacturer = manufacturer.map {
             Self.normalized(board.manufacturer) == Self.normalized($0)
         } ?? true
@@ -404,7 +404,7 @@ struct BoardPickerFilters {
 }
 
 private struct BoardPickerCard: View {
-    let board: TrainingBoard
+    let board: BoardRevision
     let isSelected: Bool
     let isFavorite: Bool
     let onSelect: () -> Void

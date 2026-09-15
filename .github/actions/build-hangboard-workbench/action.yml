@@ -107,12 +107,69 @@ runs:
         smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
         app_pid=""
         app_child_pid=""
+        port=""
         curl_timeout_args=(--connect-timeout 5 --max-time 15)
+        readiness_curl_timeout_args=(--connect-timeout 1 --max-time 2)
         process_is_active() {
           local pid="$1"
           local state
           state="$(ps -o stat= -p "$pid" 2>/dev/null || true)"
           [[ -n "$state" && "$state" != *Z* ]]
+        }
+        select_free_loopback_port() {
+          python - <<'PY'
+        import socket
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_:
+            socket_.bind(("127.0.0.1", 0))
+            port = socket_.getsockname()[1]
+        if not 1024 <= port <= 65535:
+            raise SystemExit(f"OS selected invalid loopback port: {port}")
+        print(port)
+        PY
+        }
+        listener_belongs_to_app_tree() {
+          local listener_pids
+          local listener_pid
+          local parent_pid
+          listener_pids="$(lsof -nP -t -iTCP@127.0.0.1:"$port" -sTCP:LISTEN 2>/dev/null | sort -u || true)"
+          if [[ -z "$listener_pids" || "$listener_pids" == *$'\n'* || ! "$listener_pids" =~ ^[0-9]+$ ]]; then
+            return 1
+          fi
+          listener_pid="$listener_pids"
+          while [[ -n "$listener_pid" && "$listener_pid" != "1" ]]; do
+            if [[ "$listener_pid" == "$app_pid" ]]; then
+              return 0
+            fi
+            parent_pid="$(ps -o ppid= -p "$listener_pid" 2>/dev/null | tr -d ' ' || true)"
+            if [[ -z "$parent_pid" || "$parent_pid" == "$listener_pid" ]]; then
+              return 1
+            fi
+            listener_pid="$parent_pid"
+          done
+          return 1
+        }
+        print_readiness_diagnostics() {
+          local child_pid
+          echo "Unsigned app readiness diagnostics:" >&2
+          if [[ -n "$port" ]]; then
+            echo "--- listeners on smoke port $port ---" >&2
+            lsof -nP -iTCP:"$port" -sTCP:LISTEN >&2 || true
+            netstat -anv -p tcp 2>/dev/null \
+              | awk -v endpoint "127.0.0.1.${port}" '$4 == endpoint && $6 == "LISTEN" { print }' >&2 || true
+            echo "--- end listeners on smoke port $port ---" >&2
+          fi
+          if [[ -n "$app_pid" ]]; then
+            ps -o pid=,ppid=,stat=,command= -p "$app_pid" >&2 || true
+            while IFS= read -r child_pid; do
+              ps -o pid=,ppid=,stat=,command= -p "$child_pid" >&2 || true
+            done < <(pgrep -P "$app_pid" || true)
+          fi
+          if [[ -f "$smoke_log" ]]; then
+            echo "--- unsigned app smoke log ---" >&2
+            cat "$smoke_log" >&2
+            echo "--- end unsigned app smoke log ---" >&2
+          fi
         }
         stop_owned_process() {
           local pid="$1"
@@ -163,32 +220,59 @@ runs:
         }
         trap cleanup EXIT
 
-        port=41739
         cd "$GITHUB_WORKSPACE"
+        port="$(select_free_loopback_port)"
         "$app_executable" --headless \
           --repository-root "$GITHUB_WORKSPACE" \
-          --port 41739 >"$smoke_log" 2>&1 &
+          --port "$port" >"$smoke_log" 2>&1 &
         app_pid=$!
+        health_url="http://127.0.0.1:${port}/api/health"
+        readiness_deadline=$((SECONDS + 60))
         ready=false
-        for _ in {1..30}; do
-          if ! kill -0 "$app_pid" 2>/dev/null; then
+        while (( SECONDS < readiness_deadline )); do
+          if ! process_is_active "$app_pid"; then
             echo "Unsigned app exited before becoming ready." >&2
+            print_readiness_diagnostics
             exit 1
           fi
-          if curl --fail --silent --show-error "${curl_timeout_args[@]}" \
-            "http://127.0.0.1:${port}/api/health" >/dev/null; then
-            ready=true
-            break
+          if listener_belongs_to_app_tree; then
+            health_payload="$(curl --fail --silent --show-error "${readiness_curl_timeout_args[@]}" "$health_url" 2>/dev/null || true)"
+            if python -c 'import json,sys; payload=json.load(sys.stdin); sys.exit(0 if isinstance(payload, dict) and payload == {"ok": True} and type(payload["ok"]) is bool else 1)' \
+              <<<"$health_payload" 2>/dev/null \
+              && listener_belongs_to_app_tree; then
+              ready=true
+              break
+            fi
           fi
           sleep 1
         done
         if [[ "$ready" != "true" ]]; then
-          echo "Unsigned app did not become ready within 30 seconds." >&2
+          echo "Unsigned app did not become ready at $health_url within 60 seconds." >&2
+          print_readiness_diagnostics
           exit 1
         fi
 
-        curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/api/health" \
-          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
+        if ! listener_belongs_to_app_tree; then
+          echo "Unsigned app health listener is no longer owned by the app." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
+        if ! health_payload="$(curl --fail --silent --show-error "${curl_timeout_args[@]}" "$health_url")"; then
+          echo "Unsigned app health probe failed after readiness." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
+        if ! python -c 'import json,sys; payload=json.load(sys.stdin); sys.exit(0 if isinstance(payload, dict) and payload == {"ok": True} and type(payload["ok"]) is bool else 1)' \
+          <<<"$health_payload" 2>/dev/null; then
+          echo "Unsigned app health check failed after readiness." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
+        if ! listener_belongs_to_app_tree; then
+          echo "Unsigned app health listener is no longer owned by the app." >&2
+          print_readiness_diagnostics
+          exit 1
+        fi
         curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/" >/dev/null
         while IFS= read -r asset_path; do
           curl --fail --silent --show-error "${curl_timeout_args[@]}" \
@@ -205,7 +289,7 @@ runs:
         PY
         )
         curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/api/boards" \
-          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True; assert isinstance(payload["boards"], list); assert payload["boards"]; assert all(isinstance(board.get("boardId"), str) and board["boardId"] and isinstance(board.get("displayName"), str) and board["displayName"] and isinstance(board.get("holdCount"), int) and board["holdCount"] > 0 and board.get("href") == "/api/boards/" + board["boardId"] for board in payload["boards"])'
+          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True; assert isinstance(payload["boards"], list); assert payload["boards"]; assert all(isinstance(board.get("boardId"), str) and board["boardId"] and isinstance(board.get("displayName"), str) and board["displayName"] and isinstance(board.get("contactCount"), int) and board["contactCount"] > 0 and board.get("href") == "/api/boards/" + board["boardId"] for board in payload["boards"])'
 
         app_child_pid="$(pgrep -P "$app_pid" || true)"
         if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then

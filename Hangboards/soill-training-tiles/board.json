@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "soill.training-tiles",
   "manufacturer": "So iLL",
-  "name": "Training Tiles \u2022 So iLL x Meagan Martin",
+  "name": "Training Tiles • So iLL x Meagan Martin",
   "subtitle": "Two-piece molded training set with pockets, slopers, and graduated edges.",
   "productURL": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
   "dimensions": "Not published by manufacturer",
@@ -10,128 +10,6 @@
   "equipmentObjects": [
     {
       "id": "primary"
-    }
-  ],
-  "holds": [
-    {
-      "id": "upper-sloper-outer-left",
-      "equipmentObjectID": "primary",
-      "name": "Outer left upper sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "upper-sloper-outer-right",
-      "equipmentObjectID": "primary",
-      "name": "Outer right upper sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "upper-sloper-inner-left",
-      "equipmentObjectID": "primary",
-      "name": "Inner left upper sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "upper-sloper-inner-right",
-      "equipmentObjectID": "primary",
-      "name": "Inner right upper sloper",
-      "kind": "sloper"
-    },
-    {
-      "id": "middle-edge-outer-left",
-      "equipmentObjectID": "primary",
-      "name": "Outer left middle edge",
-      "kind": "edge"
-    },
-    {
-      "id": "middle-edge-outer-right",
-      "equipmentObjectID": "primary",
-      "name": "Outer right middle edge",
-      "kind": "edge"
-    },
-    {
-      "id": "middle-edge-inner-left",
-      "equipmentObjectID": "primary",
-      "name": "Inner left middle edge",
-      "kind": "edge"
-    },
-    {
-      "id": "middle-edge-inner-right",
-      "equipmentObjectID": "primary",
-      "name": "Inner right middle edge",
-      "kind": "edge"
-    },
-    {
-      "id": "bottom-edge-center-left",
-      "equipmentObjectID": "primary",
-      "name": "Center left bottom edge",
-      "kind": "edge"
-    },
-    {
-      "id": "bottom-edge-center-right",
-      "equipmentObjectID": "primary",
-      "name": "Center right bottom edge",
-      "kind": "edge"
-    },
-    {
-      "id": "top-pocket-outer-left",
-      "equipmentObjectID": "primary",
-      "name": "Outer left top pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "top-pocket-outer-right",
-      "equipmentObjectID": "primary",
-      "name": "Outer right top pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "bottom-edge-inner-left",
-      "equipmentObjectID": "primary",
-      "name": "Inner left bottom edge",
-      "kind": "edge"
-    },
-    {
-      "id": "bottom-edge-inner-right",
-      "equipmentObjectID": "primary",
-      "name": "Inner right bottom edge",
-      "kind": "edge"
-    },
-    {
-      "id": "bottom-edge-outer-left",
-      "equipmentObjectID": "primary",
-      "name": "Outer left bottom edge",
-      "kind": "edge"
-    },
-    {
-      "id": "bottom-edge-outer-right",
-      "equipmentObjectID": "primary",
-      "name": "Outer right bottom edge",
-      "kind": "edge"
-    },
-    {
-      "id": "top-pocket-inner-left",
-      "equipmentObjectID": "primary",
-      "name": "Inner left top pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "top-pocket-inner-right",
-      "equipmentObjectID": "primary",
-      "name": "Inner right top pocket",
-      "kind": "pocket"
-    },
-    {
-      "id": "top-jug-left",
-      "equipmentObjectID": "primary",
-      "name": "Left top jug",
-      "kind": "jug"
-    },
-    {
-      "id": "top-jug-right",
-      "equipmentObjectID": "primary",
-      "name": "Right top jug",
-      "kind": "jug"
     }
   ],
   "presentations": [
@@ -146,7 +24,7 @@
       "media": {
         "type": "raster",
         "assetPath": "assets/primary.png",
-        "holdGeometry": {
+        "contactGeometry": {
           "upper-sloper-outer-left": [
             {
               "frame": {
@@ -2135,6 +2013,169 @@
           ]
         }
       }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "upper-sloper-outer-left",
+      "equipmentObjectID": "primary",
+      "name": "Outer left upper sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "upper-sloper-outer-right",
+      "equipmentObjectID": "primary",
+      "name": "Outer right upper sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "upper-sloper-inner-left",
+      "equipmentObjectID": "primary",
+      "name": "Inner left upper sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "upper-sloper-inner-right",
+      "equipmentObjectID": "primary",
+      "name": "Inner right upper sloper",
+      "kind": "sloper",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "middle-edge-outer-left",
+      "equipmentObjectID": "primary",
+      "name": "Outer left middle edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "middle-edge-outer-right",
+      "equipmentObjectID": "primary",
+      "name": "Outer right middle edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "middle-edge-inner-left",
+      "equipmentObjectID": "primary",
+      "name": "Inner left middle edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "middle-edge-inner-right",
+      "equipmentObjectID": "primary",
+      "name": "Inner right middle edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-edge-center-left",
+      "equipmentObjectID": "primary",
+      "name": "Center left bottom edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-edge-center-right",
+      "equipmentObjectID": "primary",
+      "name": "Center right bottom edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-pocket-outer-left",
+      "equipmentObjectID": "primary",
+      "name": "Outer left top pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-pocket-outer-right",
+      "equipmentObjectID": "primary",
+      "name": "Outer right top pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-edge-inner-left",
+      "equipmentObjectID": "primary",
+      "name": "Inner left bottom edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-edge-inner-right",
+      "equipmentObjectID": "primary",
+      "name": "Inner right bottom edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-edge-outer-left",
+      "equipmentObjectID": "primary",
+      "name": "Outer left bottom edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "bottom-edge-outer-right",
+      "equipmentObjectID": "primary",
+      "name": "Outer right bottom edge",
+      "kind": "edge",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-pocket-inner-left",
+      "equipmentObjectID": "primary",
+      "name": "Inner left top pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-pocket-inner-right",
+      "equipmentObjectID": "primary",
+      "name": "Inner right top pocket",
+      "kind": "pocket",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-jug-left",
+      "equipmentObjectID": "primary",
+      "name": "Left top jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
+    },
+    {
+      "id": "top-jug-right",
+      "equipmentObjectID": "primary",
+      "name": "Right top jug",
+      "kind": "jug",
+      "features": [],
+      "gripTypes": []
     }
   ]
 }

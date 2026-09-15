@@ -20,7 +20,7 @@ from conftest import (
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
-from _board_package_helpers import board_hold_geometry, board_positions_document
+from _board_package_helpers import board_contact_geometry, board_positions_document
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
@@ -55,7 +55,7 @@ def test_board_schema_loads_positions_and_directed_transitions() -> None:
         ),
     )
     assert [position.id for position in board.positions] == ["front", "flipped"]
-    assert board.hold_ids_for_position("flipped") == board.hold_ids_for_position("front")
+    assert board.contact_ids_for_position("flipped") == board.contact_ids_for_position("front")
     assert board.transition_kind("front", "front") == "same"
     assert board.transition_kind("front", "flipped") == "seamless"
     assert board.transition_kind("flipped", "front") == "setupRequired"
@@ -184,7 +184,7 @@ def test_board_schema_rejects_invalid_positions_and_transitions(mutation, messag
         module._load_board(document)
 
 
-def test_board_schema_rejects_position_without_canonical_presentation_holds() -> None:
+def test_board_schema_rejects_position_without_canonical_presentation_contacts() -> None:
     module = load_board_catalog_module()
     document = board_positions_document(board_document())
     document["presentations"].append(
@@ -197,13 +197,13 @@ def test_board_schema_rejects_position_without_canonical_presentation_holds() ->
             "media": {
                 "type": "raster",
                 "assetPath": "assets/unused.png",
-                "holdGeometry": {},
+                "contactGeometry": {},
             },
         }
     )
     document["positions"].append({"id": "unused", "presentationID": "unused"})
 
-    with pytest.raises(ValueError, match="must own at least one logical hold"):
+    with pytest.raises(ValueError, match="must own at least one physical contact"):
         module._load_board(document)
 
 
@@ -268,45 +268,33 @@ def test_discovery_reads_direct_child_packages_without_a_catalog_and_sorts_them(
     assert not (tmp_path / "catalog.json").exists()
 
 
-def test_board_schema_accepts_fractional_fixed_millimeter_measurement() -> None:
+def test_board_schema_accepts_equal_bound_fractional_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()
-    hold = document["holds"][0]
-    hold["sizeMillimeters"] = 7.5
+    hold = document["contacts"][0]
+    hold["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 7.5}
 
     board = module._load_board(document)
 
-    assert board.holds[0].size_millimeters == 7.5
-    assert board.holds[0].depth_range_millimeters is None
+    assert board.contacts[0].depth_range_millimeters == module.MillimeterRange(7.5, 7.5)
 
 
 def test_board_schema_rejects_hold_with_unknown_equipment_object_id() -> None:
     module = load_board_catalog_module()
     document = board_document()
     document["equipmentObjects"] = [{"id": "primary"}]
-    document["holds"][0]["equipmentObjectID"] = "missing"
+    document["contacts"][0]["equipmentObjectID"] = "missing"
 
     with pytest.raises(ValueError, match="unknown equipment object"):
         module._load_board(document)
 
 
-def test_board_schema_accepts_missing_hand_capacity_policy() -> None:
+@pytest.mark.parametrize("policy", ["unavailable", "invented"])
+def test_board_schema_rejects_legacy_missing_hand_capacity_policy(policy: str) -> None:
     module = load_board_catalog_module()
     document = board_document()
     document["equipmentObjects"] = [
-        {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
-    ]
-
-    board = module._load_board(document)
-
-    assert board.equipment_objects == ("primary",)
-
-
-def test_board_schema_rejects_unknown_missing_hand_capacity_policy() -> None:
-    module = load_board_catalog_module()
-    document = board_document()
-    document["equipmentObjects"] = [
-        {"id": "primary", "missingHandCapacityPolicy": "invented"}
+        {"id": "primary", "missingHandCapacityPolicy": policy}
     ]
 
     with pytest.raises(ValueError, match="missingHandCapacityPolicy"):
@@ -316,48 +304,47 @@ def test_board_schema_rejects_unknown_missing_hand_capacity_policy() -> None:
 def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()
-    hold = document["holds"][0]
+    hold = document["contacts"][0]
     hold["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
 
     board = module._load_board(document)
 
-    assert board.holds[0].size_millimeters is None
-    assert board.holds[0].depth_range_millimeters == module.MillimeterRange(7.5, 12.5)
+    assert board.contacts[0].depth_range_millimeters == module.MillimeterRange(7.5, 12.5)
 
 
 def test_board_schema_accepts_reciprocal_gaston_pairs() -> None:
     module = load_board_catalog_module()
     document = board_document()
-    template = document["holds"][0]
-    left = {**template, "id": "gaston-left", "name": "Left gaston", "kind": "gaston", "pairedHoldID": "gaston-right"}
-    right = {**template, "id": "gaston-right", "name": "Right gaston", "kind": "gaston", "pairedHoldID": "gaston-left"}
-    document["holds"] = [left, right]
-    geometry = document["presentations"][0]["media"]["holdGeometry"].pop(
+    template = document["contacts"][0]
+    left = {**template, "id": "gaston-left", "name": "Left gaston", "kind": "gaston", "pairedContactID": "gaston-right"}
+    right = {**template, "id": "gaston-right", "name": "Right gaston", "kind": "gaston", "pairedContactID": "gaston-left"}
+    document["contacts"] = [left, right]
+    geometry = document["presentations"][0]["media"]["contactGeometry"].pop(
         "hold-left"
     )
-    document["presentations"][0]["media"]["holdGeometry"] = {
+    document["presentations"][0]["media"]["contactGeometry"] = {
         "gaston-left": geometry,
         "gaston-right": geometry,
     }
 
     board = module._load_board(document)
 
-    assert [hold.kind for hold in board.holds] == ["gaston", "gaston"]
-    assert [hold.paired_hold_id for hold in board.holds] == ["gaston-right", "gaston-left"]
+    assert [hold.kind for hold in board.contacts] == ["gaston", "gaston"]
+    assert [hold.paired_contact_id for hold in board.contacts] == ["gaston-right", "gaston-left"]
 
 
 @pytest.mark.parametrize(
     "mutate",
     [
         lambda holds: holds[0].__setitem__("kind", "gaston"),
-        lambda holds: holds[0].update(kind="gaston", pairedHoldID="not a valid identifier"),
-        lambda holds: holds[0].__setitem__("pairedHoldID", "gaston-right"),
-        lambda holds: holds[0].update(kind="gaston", pairedHoldID="gaston-left"),
-        lambda holds: holds[0].update(kind="gaston", pairedHoldID="missing"),
-        lambda holds: holds[0].update(kind="gaston", pairedHoldID="gaston-right"),
+        lambda holds: holds[0].update(kind="gaston", pairedContactID="not a valid identifier"),
+        lambda holds: holds[0].__setitem__("pairedContactID", "gaston-right"),
+        lambda holds: holds[0].update(kind="gaston", pairedContactID="gaston-left"),
+        lambda holds: holds[0].update(kind="gaston", pairedContactID="missing"),
+        lambda holds: holds[0].update(kind="gaston", pairedContactID="gaston-right"),
         lambda holds: (
-            holds[0].update(kind="gaston", pairedHoldID="gaston-right"),
-            holds[1].update(kind="gaston", pairedHoldID="another-gaston"),
+            holds[0].update(kind="gaston", pairedContactID="gaston-right"),
+            holds[1].update(kind="gaston", pairedContactID="another-gaston"),
         ),
     ],
     ids=[
@@ -373,98 +360,70 @@ def test_board_schema_accepts_reciprocal_gaston_pairs() -> None:
 def test_board_schema_rejects_invalid_gaston_pair_metadata(mutate) -> None:
     module = load_board_catalog_module()
     document = board_document()
-    template = document["holds"][0]
-    document["holds"] = [
+    template = document["contacts"][0]
+    document["contacts"] = [
         {**template, "id": "gaston-left", "name": "Left gaston"},
         {**template, "id": "gaston-right", "name": "Right gaston"},
     ]
-    mutate(document["holds"])
+    mutate(document["contacts"])
 
     with pytest.raises(ValueError):
         module._load_board(document)
 
 
-@pytest.mark.parametrize(
-    ("sloper", "expected"),
-    [
-        ({"type": "flat", "angleDegrees": 20}, ("flat", 20.0)),
-        ({"type": "flat"}, ("flat", None)),
-        ({"type": "round"}, ("round", None)),
-    ],
-)
-def test_board_schema_exposes_strict_sloper_metadata(
-    sloper: dict[str, object], expected: tuple[str, float | None]
-) -> None:
+@pytest.mark.parametrize("feature", ["flatSloper", "roundSloper"])
+def test_board_schema_exposes_sloper_shape_as_a_contact_feature(feature: str) -> None:
     module = load_board_catalog_module()
     document = board_document()
-    hold = document["holds"][0]
+    hold = document["contacts"][0]
     hold["kind"] = "sloper"
-    hold["sloper"] = sloper
+    hold["features"] = [feature]
 
     board = module._load_board(document)
 
-    assert board.holds[0].sloper == module.SloperMetadata(*expected)
+    assert board.contacts[0].features == frozenset({feature})
 
 
-def test_board_schema_allows_sloper_without_subtype_metadata() -> None:
+def test_board_schema_exposes_outer_jug_as_a_contact_feature() -> None:
     module = load_board_catalog_module()
     document = board_document()
-    document["holds"][0]["kind"] = "sloper"
+    hold = document["contacts"][0]
+    hold["kind"] = "jug"
+    hold["features"] = ["outerJug"]
 
     board = module._load_board(document)
 
-    assert board.holds[0].sloper is None
+    assert board.contacts[0].features == frozenset({"outerJug"})
 
 
-@pytest.mark.parametrize(
-    ("kind", "sloper", "path"),
-    [
-        ("jug", {"type": "round"}, "board.json.holds[0].sloper"),
-        (
-            "sloper",
-            {"type": "round", "angleDegrees": 20},
-            "board.json.holds[0].sloper",
-        ),
-        (
-            "sloper",
-            {"type": "flat", "angleDegrees": -1},
-            "board.json.holds[0].sloper.angleDegrees",
-        ),
-        (
-            "sloper",
-            {"type": "flat", "angleDegrees": 91},
-            "board.json.holds[0].sloper.angleDegrees",
-        ),
-        (
-            "sloper",
-            {"type": "flat", "angleDegrees": float("inf")},
-            "board.json.holds[0].sloper.angleDegrees",
-        ),
-        ("sloper", {"type": "angled"}, "board.json.holds[0].sloper.type"),
-    ],
-)
-def test_board_schema_rejects_invalid_strict_sloper_metadata(
-    kind: str, sloper: dict[str, object] | None, path: str
-) -> None:
+def test_board_schema_allows_sloper_without_shape_feature() -> None:
     module = load_board_catalog_module()
     document = board_document()
-    hold = document["holds"][0]
-    hold["kind"] = kind
-    if sloper is not None:
-        hold["sloper"] = sloper
+    document["contacts"][0]["kind"] = "sloper"
 
-    with pytest.raises(ValueError, match=re.escape(path)):
+    board = module._load_board(document)
+
+    assert board.contacts[0].features == frozenset()
+
+
+def test_board_schema_rejects_legacy_sloper_metadata() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    hold = document["contacts"][0]
+    hold["kind"] = "sloper"
+    hold["sloper"] = {"type": "round"}
+
+    with pytest.raises(ValueError, match=r"board\.json\.contacts\[0\] has unknown keys"):
         module._load_board(document)
 
 
-def test_board_schema_rejects_hold_with_fixed_and_variable_depths() -> None:
+def test_board_schema_rejects_legacy_fixed_depth_member() -> None:
     module = load_board_catalog_module()
     document = board_document()
-    hold = document["holds"][0]
+    hold = document["contacts"][0]
     hold["sizeMillimeters"] = 7.5
-    hold["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
 
-    with pytest.raises(ValueError, match="must not specify both"):
+    with pytest.raises(ValueError, match=r"board\.json\.contacts\[0\] has unknown keys"):
         module._load_board(document)
 
 
@@ -653,7 +612,7 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["presentations"][0]["media"]["holdGeometry"]["hold-left"].append(
+    document["presentations"][0]["media"]["contactGeometry"]["hold-left"].append(
         {
             "frame": {"x": 0.4, "y": 0.1, "width": 0.1, "height": 0.2},
             "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
@@ -662,17 +621,17 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     package = module.load_board_package(package_root)
-    geometry = board_hold_geometry(package.board)["hold-left"]
+    geometry = board_contact_geometry(package.board)["hold-left"]
 
     assert len(geometry) == 2
-    frame = package.board.hold_frame("hold-left", "primary")
+    frame = package.board.contact_frame("hold-left", "primary")
     assert (frame.x, frame.y, frame.width, frame.height) == pytest.approx(
         (0.1, 0.1, 0.4, 0.4)
     )
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_v2_board_loads_its_declared_primary_presentation(tmp_path: Path) -> None:
+def test_v3_board_loads_its_declared_primary_presentation(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_board_package(tmp_path / "fixture-model")
     package = module.load_board_package(package_root)
@@ -687,10 +646,10 @@ def test_v2_board_loads_its_declared_primary_presentation(tmp_path: Path) -> Non
         presentation.is_default,
         presentation.source_presentation_id,
     ) == ("primary", "Primary", "assets/primary.png", 2, True, None)
-    assert set(presentation.media.hold_geometry) == {"hold-left"}
+    assert set(presentation.media.contact_geometry) == {"hold-left"}
 
 
-def test_v2_board_loads_declared_presentations_and_scoped_holds(
+def test_v3_board_loads_declared_presentations_and_scoped_contacts(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -702,12 +661,12 @@ def test_v2_board_loads_declared_presentations_and_scoped_holds(
         "front",
         "back",
     ]
-    assert package.board.hold_ids_for_position("front") == ("hold-left",)
-    assert package.board.hold_ids_for_position("back") == ("hold-right",)
+    assert package.board.contact_ids_for_position("front") == ("hold-left",)
+    assert package.board.contact_ids_for_position("back") == ("hold-right",)
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_v2_board_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
+def test_v3_board_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -768,7 +727,7 @@ def test_package_loader_reports_missing_required_top_level_fields_as_value_error
         ),
     ],
 )
-def test_v2_board_rejects_invalid_presentation_identifiers_and_defaults(
+def test_v3_board_rejects_invalid_presentation_identifiers_and_defaults(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -781,21 +740,21 @@ def test_v2_board_rejects_invalid_presentation_identifiers_and_defaults(
         module.load_board_package(package_root)
 
 
-def test_v2_board_rejects_geometry_with_an_unknown_hold_id(tmp_path: Path) -> None:
+def test_v3_board_rejects_geometry_with_an_unknown_contact_id(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
     document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
-    geometry = document["presentations"][0]["media"]["holdGeometry"].pop(
+    geometry = document["presentations"][0]["media"]["contactGeometry"].pop(
         "hold-left"
     )
-    document["presentations"][0]["media"]["holdGeometry"]["missing"] = geometry
+    document["presentations"][0]["media"]["contactGeometry"]["missing"] = geometry
     (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="only own logical holds"):
+    with pytest.raises(ValueError, match="only own physical contacts"):
         module.load_board_package(package_root)
 
 
-def test_v2_board_rejects_derived_presentation_chains(
+def test_v3_board_rejects_derived_presentation_chains(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -816,8 +775,8 @@ def test_v2_board_rejects_derived_presentation_chains(
             "media": {
                 "type": "raster",
                 "assetPath": "assets/front-inverted.png",
-                "holdGeometry": document["presentations"][0]["media"][
-                    "holdGeometry"
+                "contactGeometry": document["presentations"][0]["media"][
+                    "contactGeometry"
                 ],
             },
         }
@@ -836,8 +795,8 @@ def test_v2_board_rejects_derived_presentation_chains(
             "media": {
                 "type": "raster",
                 "assetPath": "assets/front-inverted.png",
-                "holdGeometry": document["presentations"][0]["media"][
-                    "holdGeometry"
+                "contactGeometry": document["presentations"][0]["media"][
+                    "contactGeometry"
                 ],
             },
         }
@@ -872,7 +831,7 @@ def test_v2_board_rejects_derived_presentation_chains(
         ),
     ],
 )
-def test_v2_board_rejects_undeclared_missing_and_escaping_assets(
+def test_v3_board_rejects_undeclared_missing_and_escaping_assets(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -890,7 +849,7 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+    document["presentations"][0]["media"]["contactGeometry"]["hold-left"][0][
         "shapeConstraint"
     ] = {
         "shape": "roundedRectangle",
@@ -900,7 +859,7 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
 
     package = module.load_board_package(package_root)
 
-    constraint = board_hold_geometry(package.board)["hold-left"][0].shape_constraint
+    constraint = board_contact_geometry(package.board)["hold-left"][0].shape_constraint
     assert constraint is not None
     assert constraint.shape == "roundedRectangle"
     assert constraint.rotation_degrees == -17.5
@@ -913,13 +872,13 @@ def test_package_loader_accepts_optional_hand_capacity_and_rejects_invalid_value
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["holds"][0]["handCapacity"] = 2
+    document["contacts"][0]["handCapacity"] = 2
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     package = module.load_board_package(package_root)
-    assert package.board.holds[0].hand_capacity == 2
+    assert package.board.contacts[0].hand_capacity == 2
 
-    document["holds"][0]["handCapacity"] = 3
+    document["contacts"][0]["handCapacity"] = 3
     board_path.write_text(json.dumps(document), encoding="utf-8")
 
     with pytest.raises(ValueError, match="handCapacity must be in 1...2"):
@@ -933,7 +892,7 @@ def test_package_loader_rejects_path_that_does_not_fill_its_declared_frame(
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+    document["presentations"][0]["media"]["contactGeometry"]["hold-left"][0][
         "shape"
     ] = {
         "type": "path",
@@ -972,7 +931,7 @@ def test_package_loader_rejects_invalid_shape_constraints(
     package_root = write_board_package(tmp_path / "fixture-model")
     board_path = package_root / "board.json"
     document = json.loads(board_path.read_text(encoding="utf-8"))
-    document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+    document["presentations"][0]["media"]["contactGeometry"]["hold-left"][0][
         "shapeConstraint"
     ] = constraint
     board_path.write_text(json.dumps(document), encoding="utf-8")
@@ -992,9 +951,9 @@ def test_package_loader_rejects_unknown_board_hold_and_geometry_keys(
         if location == "board":
             document["unexpected"] = True
         elif location == "hold":
-            document["holds"][0]["unexpected"] = True
+            document["contacts"][0]["unexpected"] = True
         else:
-            document["presentations"][0]["media"]["holdGeometry"]["hold-left"][0][
+            document["presentations"][0]["media"]["contactGeometry"]["hold-left"][0][
                 "unexpected"
             ] = True
         board_path.write_text(json.dumps(document), encoding="utf-8")

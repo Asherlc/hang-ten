@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "captain-fingerfood.pocket",
   "manufacturer": "Captain Fingerfood",
   "name": "POCKET Hangboard | Lines Edition",
@@ -9,8 +9,7 @@
   "aspectRatio": 1.6666667,
   "equipmentObjects": [
     {
-      "id": "primary",
-      "missingHandCapacityPolicy": "unavailable"
+      "id": "primary"
     }
   ],
   "presentations": [
@@ -46,10 +45,10 @@
           "pivot": "modelBoundsCenter",
           "rotations": {
             "edge-15-inverted": [
-              9e-09,
+              9E-9,
               0.199367862,
               -0.979924719,
-              4.3e-08
+              4.3E-8
             ],
             "edge-20-front": [
               0.199367862,
@@ -58,10 +57,10 @@
               0.979924719
             ],
             "jug-reverse": [
-              9e-09,
+              9E-9,
               0.979924719,
               0.199367862,
-              4.3e-08
+              4.3E-8
             ],
             "pocket-short-end": [
               0.14097438,
@@ -74,71 +73,86 @@
       }
     }
   ],
-  "holds": [
-    {
-      "id": "edge-15",
-      "equipmentObjectID": "primary",
-      "name": "15 mm edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 15
-    },
-    {
-      "id": "edge-20",
-      "equipmentObjectID": "primary",
-      "name": "20 mm edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 20
-    },
-    {
-      "id": "jug-outer-rim",
-      "equipmentObjectID": "primary",
-      "name": "Outer jug rim",
-      "kind": "jug",
-      "handCapacity": 1
-    },
-    {
-      "id": "pocket-end-wall-15-20",
-      "equipmentObjectID": "primary",
-      "name": "15/20 mm Pocket — short end-wall",
-      "kind": "pocket",
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 20
-      },
-      "fingerCapacity": 1,
-      "handCapacity": 1
-    }
-  ],
   "positions": [
     {
       "id": "edge-20-front",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "edge-20"
       ]
     },
     {
       "id": "edge-15-inverted",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "edge-15"
       ]
     },
     {
       "id": "pocket-short-end",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "pocket-end-wall-15-20"
       ]
     },
     {
       "id": "jug-reverse",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "jug-outer-rim"
       ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 15
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "jug-outer-rim",
+      "equipmentObjectID": "primary",
+      "name": "Outer jug rim",
+      "kind": "jug",
+      "features": [],
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-end-wall-15-20",
+      "equipmentObjectID": "primary",
+      "name": "15/20 mm Pocket — short end-wall",
+      "kind": "pocket",
+      "features": [],
+      "fingerCapacity": 1,
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 20
+      },
+      "gripTypes": []
     }
   ]
 }

@@ -1,23 +1,23 @@
 import Foundation
 
-struct BoardHoldPieceDocument: Codable, Hashable {
+struct BoardContactPieceDocument: Codable, Hashable {
     let frame: BoardPackageFrameDocument
     let shape: BoardGeometryShapeDocument
     let treatment: BoardGeometryTreatmentDocument?
 }
 
-enum BoardHoldFrameComponent: CaseIterable, Hashable {
+enum BoardContactFrameComponent: CaseIterable, Hashable {
     case x
     case y
     case width
     case height
 }
 
-struct BoardHoldPieceValidationResult {
-    let invalidFrameComponents: Set<BoardHoldFrameComponent>
+struct BoardContactPieceValidationResult {
+    let invalidFrameComponents: Set<BoardContactFrameComponent>
     let conversionFailureReason: String?
     let usesDeclaredFrame: Bool
-    let piece: BoardHoldPiece?
+    let piece: BoardContactPiece?
 
     var packageFailureReason: String? {
         if !invalidFrameComponents.isEmpty {
@@ -33,21 +33,21 @@ struct BoardHoldPieceValidationResult {
     }
 }
 
-struct BoardHoldGeometryValidationResult {
+struct BoardContactGeometryValidationResult {
     let isEmpty: Bool
-    let pieces: [BoardHoldPieceValidationResult]
+    let pieces: [BoardContactPieceValidationResult]
 }
 
-enum BoardHoldGeometryValidator {
+enum BoardContactGeometryValidator {
     static func validate(
-        _ geometry: [BoardHoldPieceDocument],
-        holdID: String,
+        _ geometry: [BoardContactPieceDocument],
+        contactID: String,
         pieceID: (Int) -> String
-    ) -> BoardHoldGeometryValidationResult {
-        BoardHoldGeometryValidationResult(
+    ) -> BoardContactGeometryValidationResult {
+        BoardContactGeometryValidationResult(
             isEmpty: geometry.isEmpty,
             pieces: geometry.enumerated().map { index, piece in
-                var invalidFrameComponents = Set<BoardHoldFrameComponent>()
+                var invalidFrameComponents = Set<BoardContactFrameComponent>()
                 let frame = piece.frame
                 if !frame.x.isFinite {
                     invalidFrameComponents.insert(.x)
@@ -63,15 +63,15 @@ enum BoardHoldGeometryValidator {
                 }
 
                 var conversionFailureReason: String?
-                var validatedPiece: BoardHoldPiece?
+                var validatedPiece: BoardContactPiece?
                 do {
-                    validatedPiece = try piece.boardHoldPiece(id: pieceID(index), holdID: holdID)
+                    validatedPiece = try piece.boardContactPiece(id: pieceID(index), contactID: contactID)
                     conversionFailureReason = nil
                 } catch {
                     conversionFailureReason = String(describing: error)
                 }
 
-                return BoardHoldPieceValidationResult(
+                return BoardContactPieceValidationResult(
                     invalidFrameComponents: invalidFrameComponents,
                     conversionFailureReason: conversionFailureReason,
                     usesDeclaredFrame: piece.shape.usesDeclaredFrame,

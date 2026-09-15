@@ -9,11 +9,8 @@ struct HoldInspectorView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20) {
                 header
-                if let hold = session.selectedHold {
+                if let hold = session.selectedContact {
                     pieceTabs(hold)
-                    if hold.kind == .sloper {
-                        sloperSection
-                    }
                     if session.isRoundedRectPiece {
                         roundedRectNotice
                     } else if let piece = session.selectedPieceDocument {
@@ -45,60 +42,13 @@ struct HoldInspectorView: View {
         }
     }
 
-    private var sloperSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionLabel(title: "Sloper")
-            Picker("Sloper type", selection: Binding<SloperType?>(
-                get: { session.selectedHold?.sloper?.type },
-                set: { type in
-                    perform { try session.setSelectedSloperType(type) }
-                }
-            )) {
-                Text("Unspecified").tag(SloperType?.none)
-                Text("Flat").tag(SloperType?.some(.flat))
-                Text("Round").tag(SloperType?.some(.round))
-            }
-            .pickerStyle(.segmented)
-
-            if session.selectedHold?.sloper?.type == .flat {
-                HStack(spacing: 10) {
-                    TextField(
-                        "Unspecified",
-                        value: Binding<Double?>(
-                            get: { session.selectedHold?.sloper?.angleDegrees },
-                            set: { angle in
-                                perform { try session.setSelectedSloperAngleDegrees(angle) }
-                            }
-                        ),
-                        format: .number.precision(.fractionLength(0...2))
-                    )
-                    .keyboardType(.decimalPad)
-                    .textFieldStyle(.roundedBorder)
-                    .accessibilityLabel("Sloper angle")
-
-                    Text("degrees")
-                        .font(.system(size: 13, weight: .semibold, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-
-                    if session.selectedHold?.sloper?.angleDegrees != nil {
-                        Button("Clear") {
-                            perform { try session.setSelectedSloperAngleDegrees(nil) }
-                        }
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
-                    }
-                }
-            }
-        }
-        .hangCard(padding: 14)
-    }
-
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(session.selectedHold?.name ?? "No hold selected")
+            Text(session.selectedContact?.name ?? "No hold selected")
                 .font(.system(size: 19, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
             HStack(spacing: 8) {
-                if let kind = session.selectedHold?.kind {
+                if let kind = session.selectedContact?.kind {
                     Pill(title: kind.rawValue, tint: .hangGreenDark, fill: .hangGreen.opacity(0.2))
                 }
                 if let piece = session.selectedPieceDocument, let constraint = piece.shapeConstraint {
@@ -114,14 +64,15 @@ struct HoldInspectorView: View {
         }
     }
 
-    private func pieceTabs(_ hold: BoardEditableHold) -> some View {
+    private func pieceTabs(_ hold: BoardEditableContact) -> some View {
         Group {
-            if hold.geometry.count > 1, let selection = session.selectedPiece {
+            let geometry = session.document.geometry(forContactID: hold.id) ?? []
+            if geometry.count > 1, let selection = session.selectedPiece {
                 Picker("Piece", selection: Binding(
                     get: { selection.pieceIndex },
-                    set: { session.select(holdID: hold.id, pieceIndex: $0) }
+                    set: { session.select(contactID: hold.id, pieceIndex: $0) }
                 )) {
-                    ForEach(hold.geometry.indices, id: \.self) { index in
+                    ForEach(geometry.indices, id: \.self) { index in
                         Text("Piece \(index + 1)").tag(index)
                     }
                 }

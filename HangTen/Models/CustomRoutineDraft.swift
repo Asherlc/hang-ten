@@ -7,7 +7,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var accessory: String
     var duration: TimeInterval
     var phase: WorkoutPhase
-    var targets: [WorkoutTargetDefinition]
+    var targets: [ContactRequirement]
     var timing: WorkoutSegmentTiming
     let activeDuration: TimeInterval?
     var handUse: WorkoutHandUse
@@ -23,7 +23,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [WorkoutTargetDefinition],
+        targets: [ContactRequirement],
         timing: WorkoutSegmentTiming,
         activeDuration: TimeInterval? = nil,
         handUse: WorkoutHandUse = .double,
@@ -184,7 +184,7 @@ struct CustomRoutineDraft: Equatable {
 
     func retargeted(
         to targetMode: CustomRoutineTargetMode,
-        availableBoards: [TrainingBoard] = BoardCatalog.all
+        availableBoards: [BoardRevision] = BoardCatalog.all
     ) -> CustomRoutineDraft {
         guard id == nil, targetMode != self.targetMode else {
             return self
@@ -276,30 +276,15 @@ struct CustomRoutineDraft: Equatable {
     }
 
     private static func compatibleTargets(
-        _ targets: [WorkoutTargetDefinition],
+        _ targets: [ContactRequirement],
         for targetMode: CustomRoutineTargetMode,
-        availableBoards: [TrainingBoard]
-    ) -> [WorkoutTargetDefinition] {
+        availableBoards: [BoardRevision]
+    ) -> [ContactRequirement] {
         switch targetMode {
         case let .boardSpecific(boardID):
-            guard let board = availableBoards.first(where: { $0.id == boardID }) else {
-                return []
-            }
-            let knownHoldIDs = Set(board.holds.map(\.id))
-            return targets.compactMap { target in
-                guard case let .holdIDs(holdIDs) = target else { return nil }
-                let compatibleIDs = holdIDs.filter(knownHoldIDs.contains)
-                return compatibleIDs.isEmpty ? nil : .holdIDs(compatibleIDs)
-            }
+            return availableBoards.contains(where: { $0.id == boardID }) ? targets : []
         case .generic:
-            return targets.filter { target in
-                switch target {
-                case .kind, .feature:
-                    true
-                default:
-                    false
-                }
-            }
+            return targets
         }
     }
 

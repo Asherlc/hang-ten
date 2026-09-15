@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "lattice-triple-rung",
   "manufacturer": "Lattice Training",
   "name": "Triple Rung",
   "subtitle": "Three continuous rounded wooden edges.",
   "productURL": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
-  "dimensions": "55 \u00d7 13 \u00d7 5 cm",
+  "dimensions": "55 × 13 × 5 cm",
   "aspectRatio": 4.2307694857988265,
   "equipmentObjects": [
     {
@@ -44,27 +44,43 @@
       }
     }
   ],
-  "holds": [
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
     {
       "id": "edge-45",
       "equipmentObjectID": "primary",
       "name": "45 mm upper edge",
       "kind": "edge",
-      "sizeMillimeters": 45
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 45,
+        "upperBound": 45
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-10",
       "equipmentObjectID": "primary",
       "name": "10 mm middle edge",
       "kind": "edge",
-      "sizeMillimeters": 10
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 10
+      },
+      "gripTypes": []
     },
     {
       "id": "edge-20",
       "equipmentObjectID": "primary",
       "name": "20 mm lower edge",
       "kind": "edge",
-      "sizeMillimeters": 20
+      "features": [],
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 20
+      },
+      "gripTypes": []
     }
   ]
 }

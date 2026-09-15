@@ -8,6 +8,22 @@ final class WorkoutHistoryServiceTests: XCTestCase {
 
     deinit {}
 
+    func testHistoryDoesNotReadTheFormerActivityStorageKey() throws {
+        let suite = "WorkoutHistoryServiceTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let legacyRecord = pendingRecord(title: "Former activity")
+        defaults.set(
+            try JSONEncoder().encode([legacyRecord]),
+            forKey: LocalWorkoutHistoryStore.legacyKey
+        )
+
+        let store = LocalWorkoutHistoryStore(defaults: defaults)
+
+        XCTAssertEqual(store.load(), [])
+        XCTAssertNil(defaults.object(forKey: LocalWorkoutHistoryStore.legacyKey))
+    }
+
     func testEmptyHealthKitFallsBackToLocalRecords() {
         let local = pendingRecord(
             title: "Local Plan",
@@ -481,9 +497,18 @@ final class WorkoutHistoryServiceTests: XCTestCase {
                     stepID: "step-a",
                     stepNumber: 1,
                     kind: .work,
-                    holdIDs: ["a1", "a2"],
-                    holdType: "edge",
-                    sizeMillimeters: 20,
+                    target: .resolvedContacts(
+                        ResolvedContactSnapshot(
+                            boardID: "board-a",
+                            revisionID: "2026-09-contact-first",
+                            modelSHA256: nil,
+                            requirement: .edge(
+                                depthRangeMillimeters: .init(minimum: 20, maximum: 20),
+                                selection: .bilateralPair
+                            ),
+                            contactIDs: ["a1", "a2"]
+                        )
+                    ),
                     durationSeconds: 7
                 )
             ])

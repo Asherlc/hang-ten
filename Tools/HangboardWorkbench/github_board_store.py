@@ -10,11 +10,11 @@ from collections.abc import Callable, Hashable, Iterator, Mapping
 from concurrent.futures import Executor, Future, ThreadPoolExecutor
 from contextlib import contextmanager
 from copy import deepcopy
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace as dataclass_replace
+from pathlib import Path
 from typing import Any, Literal, ParamSpec, Protocol, TypeVar, overload
 
 import board_package
-from board_geometry import NormalizedFrame, union_normalized_frames
 from github_client import GitHubConflictError, GitHubNotFoundError, TreeEntry
 
 _BOARD_LIBRARY_PATH = "Hangboards"
@@ -801,8 +801,8 @@ class GitHubBoardListing:
         return self.board["id"]
 
     @property
-    def hold_ids(self) -> tuple[str, ...]:
-        return tuple(hold["id"] for hold in self.board["holds"])
+    def contact_ids(self) -> tuple[str, ...]:
+        return tuple(contact["id"] for contact in self.board["contacts"])
 
     @property
     def editor_available(self) -> bool:
@@ -817,15 +817,15 @@ class GitHubBoardPackage:
     image_height: int
     board_json_sha: str
     presentations: tuple[board_package.BoardPresentation, ...] = ()
-    schema_version: int | None = None
+    schema_version: int = 3
 
     @property
     def board_id(self) -> str:
         return self.board["id"]
 
     @property
-    def hold_ids(self) -> tuple[str, ...]:
-        return tuple(hold["id"] for hold in self.board["holds"])
+    def contact_ids(self) -> tuple[str, ...]:
+        return tuple(contact["id"] for contact in self.board["contacts"])
 
     @property
     def editor_available(self) -> bool:
@@ -843,26 +843,12 @@ class GitHubBoardPackage:
             raise board_package.BoardPackageError("presentation is not available")
         return selected
 
-    def hold_frame(self, hold_id: str) -> NormalizedFrame:
-        hold = next(
-            (
-                candidate
-                for candidate in self.board["holds"]
-                if candidate["id"] == hold_id
-            ),
-            None,
+    def contact_frame(self, contact_id: str) -> board_package.NormalizedFrame:
+        local_view = board_package.BoardPackage(
+            Path("."), self.board, self.image_width, self.image_height,
+            self.presentations,
         )
-        if hold is None:
-            raise board_package.BoardPackageError("hold is not available")
-        try:
-            return union_normalized_frames(
-                NormalizedFrame.from_json(piece["frame"], f"hold {hold_id}.geometry")
-                for piece in hold["geometry"]
-            )
-        except (board_package.GeometryError, KeyError, TypeError) as error:
-            raise board_package.BoardPackageError(
-                f"hold {hold_id} has invalid geometry"
-            ) from error
+        return local_view.contact_frame(contact_id)
 
 
 def discover_packages(
@@ -1026,31 +1012,15 @@ def _delete_loaded_presentation(
     board, removed_assets = board_package._delete_presentation_from_board(
         live.board, presentation_id
     )
-    presentation_values = board_package._parse_board_presentations(board)
+    remaining_ids = {item["id"] for item in board["presentations"]}
+    default_id = next(item["id"] for item in board["presentations"] if item["isDefault"])
     remaining_presentations = tuple(
-        replace(
-            presentation,
-            is_default=next(
-                item[4] for item in presentation_values if item[0] == presentation.id
-            ),
-        )
+        dataclass_replace(presentation, is_default=presentation.id == default_id)
         for presentation in live.presentations
-        if any(item[0] == presentation.id for item in presentation_values)
+        if presentation.id in remaining_ids
     )
     default = next(item for item in remaining_presentations if item.is_default)
-    board_package._validate_board(
-        board,
-        default.image_width,
-        default.image_height,
-        presentations=remaining_presentations,
-        allow_missing_kind=True,
-    )
-    saved_board = (
-        board_package._schema_v2_board_from_legacy(board)
-        if live.schema_version == 2
-        else board
-    )
-    content = (json.dumps(saved_board, indent=2) + "\n").encode("utf-8")
+    content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
     changes: dict[str, bytes | None] = {
         f"{_BOARD_LIBRARY_PATH}/{live.slug}/board.json": content,
     }
@@ -1077,7 +1047,7 @@ def _delete_loaded_presentation(
             default.image_height,
             _git_blob_sha(content),
             remaining_presentations,
-            schema_version=live.schema_version,
+            schema_version=3,
         ),
         commit_sha,
     )
@@ -1104,100 +1074,10 @@ def _save_loaded_editor_document(
             raise board_package.BoardSaveConflictError(
                 "board identity changed; reload and try again"
             )
-    requested_presentation_id = document.get("presentationID")
-    presentation = live.presentation(
-        requested_presentation_id if isinstance(requested_presentation_id, str) else None
-    )
-    if presentation.source_presentation_id is not None:
-        raise board_package.BoardPackageError("alias presentations cannot be edited")
-    width, height = presentation.image_width, presentation.image_height
-    expected_equipment_objects = [
-        item["id"] for item in live.board.get("equipmentObjects", [{"id": "primary"}])
-    ]
-    if document.get("equipmentObjects", ["primary"]) != expected_equipment_objects:
-        raise board_package.BoardPackageError(
-            "editor document equipment objects do not match the board package"
-        )
-    parsed_regions = board_package._validate_editor_document(
-        document,
-        width,
-        height,
-        presentation.id,
-        require_presentation_id=True,
-    )
-
-    pieces_by_hold: dict[
-        str, list[board_package._EditorPiece]
-    ] = {}
-    for (
-        hold_id,
-        piece_index,
-        kind,
-        sloper,
-        path,
-        shape_constraint,
-        bendable_command_indexes,
-        smooth_anchor_indexes,
-        finger_capacity,
-        size_millimeters,
-        depth_range,
-        hand_capacity,
-        paired_hold_id,
-        equipment_object_id,
-    ) in parsed_regions.values():
-        pieces_by_hold.setdefault(hold_id, []).append(
-            (
-                piece_index,
-                kind,
-                sloper,
-                path,
-                shape_constraint,
-                bendable_command_indexes,
-                smooth_anchor_indexes,
-                finger_capacity,
-                size_millimeters,
-                depth_range,
-                hand_capacity,
-                paired_hold_id,
-                equipment_object_id,
-            )
-        )
-    for pieces in pieces_by_hold.values():
-        pieces.sort(key=lambda item: item[0])
-
-    current_holds = {
-        hold["id"]: hold
-        for hold in live.board["holds"]
-        if hold["presentationID"] == presentation.id
-    }
-    current_paths = board_package._current_display_paths(
-        pieces_by_hold, current_holds, width, height
-    )
-    if not board_package._editor_document_is_dirty(
-        pieces_by_hold, current_holds, current_paths
-    ):
+    board = board_package.apply_editor_document(live, document)
+    if board_package._json_values_are_exactly_equal(board, live.board):
         return live, live.board_json_sha
-
-    board = board_package._apply_editor_document(
-        live.board,
-        board_package._EditorPiecesByHold(pieces_by_hold, current_paths),
-        width,
-        height,
-        presentation_id=presentation.id,
-    )
-    board_package._validate_board(
-        board,
-        width,
-        height,
-        presentations=live.presentations,
-        allow_missing_kind=True,
-    )
-    saved_board = (
-        board_package._schema_v2_board_from_legacy(board)
-        if live.schema_version == 2
-        else board
-    )
-    content = (json.dumps(saved_board, indent=2) + "\n").encode("utf-8")
+    content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
     try:
         commit_sha = client.put_file(
             token,
@@ -1216,7 +1096,7 @@ def _save_loaded_editor_document(
         live.image_height,
         _git_blob_sha(content),
         live.presentations,
-        schema_version=live.schema_version,
+        schema_version=3,
     ), commit_sha
 
 
@@ -1340,66 +1220,45 @@ def _load_selected_presentation(
     expected_assets = {
         presentation["media"]["assetPath"]
         for presentation in board["presentations"]
-    } if "schemaVersion" in board else {
-        presentation["assetPath"] for presentation in board["presentations"]
     }
-    if set(asset_entries) != expected_assets:
-        raise board_package.BoardPackageError(
-            "board package assets must exactly match its presentations"
-        )
-    schema_version = board.get("schemaVersion")
-    if schema_version == 2:
-        board = board_package._legacy_editor_board_from_v2(board)
-    presentation_values = board_package._parse_board_presentations(board)
+    _validate_remote_asset_inventory(set(asset_entries), expected_assets)
     selected_value = (
-        next(item for item in presentation_values if item[4])
+        next(item for item in board["presentations"] if item["isDefault"])
         if presentation_id is None
         else next(
-            (item for item in presentation_values if item[0] == presentation_id),
+            (item for item in board["presentations"] if item["id"] == presentation_id),
             None,
         )
     )
     if selected_value is None:
         raise board_package.BoardPackageError("presentation is not available")
-    selected_asset = selected_value[2]
+    selected_asset = selected_value["media"]["assetPath"]
     image = _get_blob(
         client, token, asset_entries[selected_asset], "package presentation image"
     )
     width, height = board_package._png_dimensions_from_bytes(image)
     image_aspect_ratio = width / height
-    relative_error = abs(selected_value[3] - image_aspect_ratio) / image_aspect_ratio
+    relative_error = abs(selected_value["aspectRatio"] - image_aspect_ratio) / image_aspect_ratio
     if relative_error > board_package._ASPECT_RATIO_RELATIVE_TOLERANCE:
         raise board_package.BoardPackageError(
-            f"board.json presentation {selected_value[0]}.aspectRatio must match its image width/height within 0.1%"
-        )
-    source_presentation_id = selected_value[5] or selected_value[0]
-    for index, hold in enumerate(board["holds"]):
-        if hold["presentationID"] != source_presentation_id:
-            continue
-        board_package._validate_hold(
-            hold,
-            width,
-            height,
-            f"board.json.holds[{index}]",
-            requires_presentation_id=True,
-            allow_missing_kind=True,
+            f"board.json presentation {selected_value['id']}.aspectRatio must match its image width/height within 0.1%"
         )
 
     # Only the selected presentation reaches the editor document.  Sibling
     # dimensions are deliberately deferred to their own image request or save.
     presentations = tuple(
         board_package.BoardPresentation(
-            id=item[0],
-            name=item[1],
-            asset_path=item[2],
-            aspect_ratio=item[3],
-            is_default=item[4],
+            id=item["id"],
+            name=item["name"],
+            asset_path=item["media"]["assetPath"],
+            aspect_ratio=item["aspectRatio"],
+            is_default=item["isDefault"],
             image_width=width,
             image_height=height,
-            source_presentation_id=item[5],
-            is_inverted=item[6],
+            source_presentation_id=item["derivation"].get("sourcePresentationID"),
+            is_inverted=item["derivation"].get("isInverted", False),
         )
-        for item in presentation_values
+        for item in board["presentations"]
     )
     return (
         GitHubBoardPackage(
@@ -1409,7 +1268,7 @@ def _load_selected_presentation(
             height,
             board_entry.sha,
             presentations,
-            schema_version=schema_version,
+            schema_version=3,
         ),
         image,
     )
@@ -1551,17 +1410,6 @@ def _load_package_from_entries(
     prevalidated_board: dict[str, Any] | None = None,
     blob_slots: threading.BoundedSemaphore | None = None,
 ) -> GitHubBoardPackage | tuple[GitHubBoardPackage, dict[str, bytes]]:
-    if prevalidated_board is not None and len(
-        {
-            (
-                item["media"]["assetPath"]
-                if "schemaVersion" in prevalidated_board
-                else item["assetPath"]
-            )
-            for item in prevalidated_board["presentations"]
-        }
-    ) == 1:
-        prevalidated_board = None
     asset_entries = {
         path: entry
         for path, entry in entries.items()
@@ -1569,127 +1417,71 @@ def _load_package_from_entries(
     }
     images: dict[str, bytes] = {}
     dimensions: dict[str, tuple[int, int]] = {}
-    primary_entry = asset_entries.get("assets/primary.png")
     board_entry = entries["board.json"]
-    board_blob: bytes
     if prevalidated_board is None:
-        if primary_entry is not None:
-            primary_image = _get_blob(
-                client,
-                token,
-                primary_entry,
-                "package primary image",
-                blob_slots=blob_slots,
-            )
-            images["assets/primary.png"] = primary_image
-            dimensions["assets/primary.png"] = (
-                board_package._png_header_dimensions_from_bytes(primary_image[:33])
-                if inspect_png_header_only
-                else board_package._png_dimensions_from_bytes(primary_image)
-            )
         board_blob = _get_blob(
             client, token, board_entry, "board.json", blob_slots=blob_slots
         )
         board = _load_board_json(board_blob)
-        concurrent_assets = {
-            path: entry
-            for path, entry in asset_entries.items()
-            if path != "assets/primary.png"
-        }
     else:
         board = deepcopy(prevalidated_board)
-        concurrent_assets = asset_entries
-    schema_version = board.get("schemaVersion")
-    if schema_version == 2:
-        parsed_v2 = board_package._parse_schema_v2_board(board)
-        model_only = not board_package._board_editor_available(board)
-        expected_assets = {
-            path
-            for presentation in board["presentations"]
-            for path in (
-                presentation["media"]["assetPath"],
-                *(
-                    (presentation["media"]["descriptorPath"],)
-                    if presentation["media"]["type"] == "model"
-                    else ()
-                ),
-            )
-        }
-    else:
-        parsed_v2 = None
-        model_only = False
-        expected_assets = {
-            presentation["assetPath"] for presentation in board["presentations"]
-        }
-    if set(asset_entries) != expected_assets:
-        raise board_package.BoardPackageError(
-            "board package assets must exactly match its presentations"
+        board_blob = _get_blob(
+            client, token, board_entry, "board.json", blob_slots=blob_slots
         )
+        if _load_board_json(board_blob) != board:
+            raise board_package.BoardPackageError("board.json changed during loading")
+    board_package.validate_catalog_board(board)
+    model_only = not board_package._board_editor_available(board)
+    expected_assets = {
+        path
+        for presentation in board["presentations"]
+        for path in (
+            presentation["media"]["assetPath"],
+            *((presentation["media"]["descriptorPath"],)
+              if presentation["media"]["type"] == "model" else ()),
+        )
+    }
+    _validate_remote_asset_inventory(set(asset_entries), expected_assets)
     if model_only:
-        assert parsed_v2 is not None
         presentations = tuple(
             board_package.BoardPresentation(
-                id=item.id,
-                name=item.name,
-                asset_path=item.asset_path,
-                aspect_ratio=item.aspect_ratio,
-                is_default=item.is_default,
+                id=item["id"],
+                name=item["name"],
+                asset_path=item["media"]["assetPath"],
+                aspect_ratio=item["aspectRatio"],
+                is_default=item["isDefault"],
                 image_width=0,
                 image_height=0,
-                source_presentation_id=item.source_presentation_id,
-                is_inverted=item.is_inverted,
                 media_type="model",
-                descriptor_path=item.media.descriptor_path,
+                descriptor_path=item["media"]["descriptorPath"],
             )
-            for item in parsed_v2.presentations
+            for item in board["presentations"]
         )
         package = GitHubBoardPackage(
-            slug,
-            board,
-            0,
-            0,
-            board_entry.sha,
-            presentations,
-            schema_version=2,
+            slug, board, 0, 0, board_entry.sha, presentations, schema_version=3,
         )
         return (package, {}) if include_image else package
-    if schema_version == 2:
-        board = board_package._legacy_editor_board_from_v2(board)
-    presentation_values = board_package._parse_board_presentations(board)
+
+    raster_entries = {
+        presentation["media"]["assetPath"]: asset_entries[presentation["media"]["assetPath"]]
+        for presentation in board["presentations"]
+    }
     with ThreadPoolExecutor(
-        max_workers=min(
-            _MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(concurrent_assets) + 1)
-        )
+        max_workers=min(_MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(raster_entries)))
     ) as executor:
-        board_future = (
-            executor.submit(
-                _get_blob,
-                client,
-                token,
-                board_entry,
-                "board.json",
-                blob_slots=blob_slots,
-            )
-            if prevalidated_board is not None
-            else None
-        )
         image_futures = {
             asset_path: executor.submit(
                 _get_blob,
                 client,
                 token,
                 image_entry,
-                (
-                    "package primary image"
-                    if asset_path == "assets/primary.png"
-                    else "package presentation image"
-                ),
+                "package presentation image",
                 stage_cache_miss=True,
                 blob_slots=blob_slots,
             )
-            for asset_path, image_entry in concurrent_assets.items()
+            for asset_path, image_entry in raster_entries.items()
         }
-        for asset_path in sorted(concurrent_assets):
+        for asset_path in sorted(raster_entries):
             image = image_futures[asset_path].result()
             images[asset_path] = image
             dimensions[asset_path] = (
@@ -1697,60 +1489,60 @@ def _load_package_from_entries(
                 if inspect_png_header_only
                 else board_package._png_dimensions_from_bytes(image)
             )
-        if board_future is not None:
-            board_blob = board_future.result()
-    if isinstance(client, _CachedSnapshotClient):
-        cache_order: list[tuple[str, bytes]] = []
-        if primary_entry is not None:
-            cache_order.append((primary_entry.sha, images["assets/primary.png"]))
-        cache_order.append((board_entry.sha, board_blob))
-        cache_order.extend(
-            (asset_entries[asset_path].sha, images[asset_path])
-            for asset_path in sorted(asset_entries)
-            if asset_path != "assets/primary.png"
-        )
-        client.cache_blobs_in_order(tuple(cache_order))
     presentations = tuple(
         board_package.BoardPresentation(
-            id=presentation_id,
-            name=name,
-            asset_path=asset_path,
-            aspect_ratio=aspect_ratio,
-            is_default=is_default,
-            image_width=dimensions[asset_path][0],
-            image_height=dimensions[asset_path][1],
-            source_presentation_id=source_presentation_id,
-            is_inverted=is_inverted,
+            id=item["id"],
+            name=item["name"],
+            asset_path=item["media"]["assetPath"],
+            aspect_ratio=item["aspectRatio"],
+            is_default=item["isDefault"],
+            image_width=dimensions[item["media"]["assetPath"]][0],
+            image_height=dimensions[item["media"]["assetPath"]][1],
+            source_presentation_id=item["derivation"].get("sourcePresentationID"),
+            is_inverted=item["derivation"].get("isInverted", False),
         )
-        for (
-            presentation_id,
-            name,
-            asset_path,
-            aspect_ratio,
-            is_default,
-            source_presentation_id,
-            is_inverted,
-        ) in presentation_values
+        for item in board["presentations"]
     )
+    for item in board["presentations"]:
+        width, height = dimensions[item["media"]["assetPath"]]
+        image_aspect_ratio = width / height
+        relative_error = abs(item["aspectRatio"] - image_aspect_ratio) / image_aspect_ratio
+        if relative_error > board_package._ASPECT_RATIO_RELATIVE_TOLERANCE:
+            raise board_package.BoardPackageError(
+                f"board.json presentation {item['id']}.aspectRatio must match "
+                "its image width/height within 0.1%"
+            )
     default = next(item for item in presentations if item.is_default)
-    board_package._validate_board(
-        board,
-        default.image_width,
-        default.image_height,
-        presentations=presentations,
-        validate_geometry=not inspect_png_header_only,
-        allow_missing_kind=True,
-    )
     package = GitHubBoardPackage(
-        slug,
-        board,
-        default.image_width,
-        default.image_height,
-        board_entry.sha,
-        presentations,
-        schema_version=schema_version,
+        slug, board, default.image_width, default.image_height, board_entry.sha,
+        presentations, schema_version=3,
     )
+    if not inspect_png_header_only:
+        for presentation in presentations:
+            board_package.editor_document(package, presentation.id)
+    if isinstance(client, _CachedSnapshotClient):
+        client.cache_blobs_in_order(
+            tuple(
+                (raster_entries[asset_path].sha, images[asset_path])
+                for asset_path in sorted(raster_entries)
+            )
+        )
     return (package, images) if include_image else package
+
+
+def _validate_remote_asset_inventory(
+    actual_assets: set[str], expected_assets: set[str]
+) -> None:
+    missing = expected_assets - actual_assets
+    if missing:
+        raise board_package.BoardPackageError(
+            f"missing declared presentation asset: {sorted(missing)[0]}"
+        )
+    unknown = actual_assets - expected_assets
+    if unknown:
+        raise board_package.BoardPackageError(
+            f"undeclared presentation asset: {sorted(unknown)[0]}"
+        )
 
 
 def _package_groups(tree: tuple[TreeEntry, ...]) -> dict[str, dict[str, TreeEntry]]:
@@ -1807,7 +1599,7 @@ def _raise_for_incomplete_layout(slug: str, entries: Mapping[str, TreeEntry]) ->
             and entries["assets/primary.png"].type != "blob"
         ):
             raise board_package.BoardPackageError(
-                "board package assets must exactly match its presentations"
+                "missing declared presentation asset: assets/primary.png"
             )
         if entries["board.json"].type != "blob":
             raise board_package.BoardPackageError("board.json is missing")

@@ -48,9 +48,9 @@ final class BoardEditorStoreTests: XCTestCase {
         var board = try XCTUnwrap(
             JSONSerialization.jsonObject(with: encodedDocument) as? [String: Any]
         )
-        var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
-        holds[0].removeValue(forKey: "kind")
-        board["holds"] = holds
+        var contacts = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+        contacts[0].removeValue(forKey: "kind")
+        board["contacts"] = contacts
         try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys])
             .write(to: packageURL.appendingPathComponent("board.json"))
         try pngBytes().write(to: packageURL.appendingPathComponent("assets/primary.png"))
@@ -96,7 +96,7 @@ final class BoardEditorStoreTests: XCTestCase {
 
         XCTAssertEqual(loaded.slug, "fixture-board")
         XCTAssertEqual(loaded.document.id, "fixture.board")
-        XCTAssertEqual(loaded.document.holds.first?.id, "hold-one")
+        XCTAssertEqual(loaded.document.contacts.first?.id, "hold-one")
         XCTAssertEqual(loaded.pixelWidth, 2)
         XCTAssertEqual(loaded.pixelHeight, 1)
         XCTAssertEqual(loaded.imageURL.lastPathComponent, "primary.png")
@@ -227,29 +227,21 @@ final class BoardEditorStoreTests: XCTestCase {
     }
 
     @MainActor
-    func testMissingHoldKindLoadsWithWarningAndRoundTripsWithoutInventingKind() throws {
+    func testMissingContactKindLoadsWithWarningButCannotEmitInvalidV3() throws {
         let sourceLibraryURL = try makeSourceLibraryWithMissingHoldKind()
         let store = makeStore(sourceLibraryURL: sourceLibraryURL)
         try store.startEditing(slug: "missing-kind-board")
 
         let loaded = try store.loadDocument(slug: "missing-kind-board")
-        XCTAssertNil(loaded.document.holds[0].kind)
+        XCTAssertNil(loaded.document.contacts[0].kind)
 
         let session = BoardEditorSession(package: loaded, store: store)
-        XCTAssertEqual(session.incompleteMetadataHoldIDs, ["hold-one"])
+        XCTAssertEqual(session.incompleteMetadataContactIDs, ["hold-one"])
         XCTAssertEqual(session.metadataWarningAccessibilityValue, "Incomplete hold: hold-one")
 
-        try store.save(document: loaded.document, slug: "missing-kind-board")
-        let reloaded = try store.loadDocument(slug: "missing-kind-board")
-        XCTAssertNil(reloaded.document.holds[0].kind)
-
-        let savedJSON = try XCTUnwrap(
-            JSONSerialization.jsonObject(
-                with: Data(contentsOf: reloaded.packageURL.appendingPathComponent("board.json"))
-            ) as? [String: Any]
+        XCTAssertThrowsError(
+            try store.save(document: loaded.document, slug: "missing-kind-board")
         )
-        let savedHold = try XCTUnwrap(savedJSON["holds"] as? [[String: Any]])[0]
-        XCTAssertNil(savedHold["kind"])
     }
 
     func testSaveRoundTripsEditedDocumentWithoutStaleCaches() throws {
@@ -260,11 +252,11 @@ final class BoardEditorStoreTests: XCTestCase {
         var document = loaded.document
         let originalBytes = try Data(contentsOf: loaded.packageURL.appendingPathComponent("board.json"))
 
-        document.holds[0].name = "Renamed hold"
+        document.contacts[0].name = "Renamed hold"
         try store.save(document: document, slug: "fixture-board")
 
         let reloaded = try store.loadDocument(slug: "fixture-board")
-        XCTAssertEqual(reloaded.document.holds[0].name, "Renamed hold")
+        XCTAssertEqual(reloaded.document.contacts[0].name, "Renamed hold")
         XCTAssertEqual(reloaded.document, document)
         XCTAssertNotEqual(
             try Data(contentsOf: reloaded.packageURL.appendingPathComponent("board.json")),
@@ -300,11 +292,13 @@ final class BoardEditorStoreTests: XCTestCase {
         var document = loaded.document
         let previousBytes = try Data(contentsOf: loaded.packageURL.appendingPathComponent("board.json"))
 
-        document.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
+        var geometry = try XCTUnwrap(document.geometry(forContactID: document.contacts[0].id))
+        geometry[0].shape = BoardGeometryShapeDocument(
             type: "path",
-            commands: Array((document.holds[0].geometry[0].shape.commands ?? []).dropLast()),
+            commands: Array((geometry[0].shape.commands ?? []).dropLast()),
             cornerRadiusFraction: nil
         )
+        document.replaceGeometry(forContactID: document.contacts[0].id, with: geometry)
 
         XCTAssertThrowsError(try store.save(document: document, slug: "fixture-board"))
         XCTAssertEqual(
@@ -327,6 +321,24 @@ final class BoardEditorStoreTests: XCTestCase {
             XCTAssertEqual(error as? BoardEditorStoreError, .missingSourcePackage(slug: "missing-board"))
         }
         XCTAssertFalse(store.hasEdits(slug: "UPPER-CASE"))
+    }
+
+    func testModelOnlyPackageIsNonEditableAndIsNotCopied() throws {
+        let repositoryRoot = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+        let store = BoardEditorStore(
+            baseDirectory: storeDirectory,
+            sourceLibraryURL: repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        )
+
+        XCTAssertThrowsError(try store.startEditing(slug: "beastmaker-1000")) { error in
+            XCTAssertEqual(
+                error as? BoardEditorStoreError,
+                .modelPackageIsNotEditable(slug: "beastmaker-1000")
+            )
+        }
+        XCTAssertFalse(store.hasEdits(slug: "beastmaker-1000"))
     }
 }
 

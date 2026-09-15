@@ -5,6 +5,7 @@ enum HangTenHealthMetadata {
     static let brandName = "Hang Ten"
     static let planNameKey = "HangTen.PlanName"
     static let sessionIDKey = "HangTen.SessionID"
+    static let activitySegmentsKey = "HangTen.ActivitySegments.v2"
 }
 
 struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
@@ -37,7 +38,7 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
         self.shouldUploadToHealthKit = shouldUploadToHealthKit
     }
 
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey, CaseIterable {
         case id
         case planTitle
         case startDate
@@ -49,6 +50,18 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
     }
 
     init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: WorkoutHistoryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported pending workout field \(unknownKey.stringValue)."
+            )
+        }
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         planTitle = try container.decode(String.self, forKey: .planTitle)
@@ -65,6 +78,7 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
             forKey: .shouldUploadToHealthKit
         ) ?? true
     }
+
 }
 
 struct PendingWorkoutActivityContext: Codable, Equatable {
@@ -73,10 +87,6 @@ struct PendingWorkoutActivityContext: Codable, Equatable {
     let activityMetadata: WorkoutActivityMetadata
 
     var activitySegments: [RecordedActivitySegment] { activityMetadata.segments }
-
-    private enum CodingKeys: String, CodingKey {
-        case boardID, boardName, activityMetadata, activitySegments
-    }
 
     init(
         boardID: String,
@@ -88,23 +98,45 @@ struct PendingWorkoutActivityContext: Codable, Equatable {
         self.activityMetadata = activityMetadata
     }
 
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case boardID, boardName, activityMetadata
+    }
+
     init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: WorkoutHistoryCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported pending workout activity context field \(unknownKey.stringValue)."
+            )
+        }
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
         boardID = try container.decode(String.self, forKey: .boardID)
         boardName = try container.decode(String.self, forKey: .boardName)
-        activityMetadata = try container.decodeIfPresent(
+        activityMetadata = try container.decode(
             WorkoutActivityMetadata.self,
             forKey: .activityMetadata
-        ) ?? WorkoutActivityMetadata(
-            segments: try container.decode([RecordedActivitySegment].self, forKey: .activitySegments)
         )
     }
+}
 
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(boardID, forKey: .boardID)
-        try container.encode(boardName, forKey: .boardName)
-        try container.encode(activityMetadata, forKey: .activityMetadata)
+private struct WorkoutHistoryCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
     }
 }
 

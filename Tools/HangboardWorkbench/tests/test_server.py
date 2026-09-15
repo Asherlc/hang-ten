@@ -50,6 +50,8 @@ from server import (  # noqa: E402
 from workbench_fixtures import (  # noqa: E402
     PRIMARY_IMAGE,
     board_document,
+    derived_presentation,
+    geometry_for,
     multi_presentation_board_document,
 )
 
@@ -84,7 +86,7 @@ def _write_library(root: Path) -> Path:
 
 def _write_multi_presentation_library(root: Path) -> Path:
     library = root / "Hangboards"
-    package = library / "fixture-v2"
+    package = library / "fixture-multi"
     assets = package / "assets"
     assets.mkdir(parents=True)
     shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
@@ -248,7 +250,7 @@ class _BlockingPresentationBlobClient(FakeGitHubClient):
         self._presentation_blob_shas = {
             self._branches[HOSTED_BRANCH][path][1]
             for path in files
-            if path.startswith("Hangboards/fixture-v2/assets/")
+            if path.startswith("Hangboards/fixture-multi/assets/")
         }
         self._lock = threading.Lock()
         self._all_presentation_reads_started = threading.Event()
@@ -402,7 +404,7 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
                 {
                     "boardId": "fixture.board",
                     "displayName": "Fixture Maker Fixture Board",
-                    "holdCount": 1,
+                    "contactCount": 1,
                     "needsAttention": False,
                     "href": "/api/boards/fixture.board",
                     "imageUrl": "/api/boards/fixture.board/image",
@@ -419,8 +421,8 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
         )
         assert board["saveUrl"] == "/api/boards/fixture.board"
         assert [region["key"] for region in board["document"]["regions"]] == [
-            "hold-left-piece-0",
-            "hold-left-piece-1",
+            "contact-left-piece-0",
+            "contact-left-piece-1",
         ]
 
         with urlopen(base + board["imageUrl"]) as response:
@@ -452,7 +454,7 @@ def test_model_only_package_is_listed_as_unavailable_without_reading_model_blobs
         assert model == {
             "boardId": "metolius.wood-grips-compact-ii",
             "displayName": "Metolius Wood Grips Compact II",
-            "holdCount": 19,
+            "contactCount": 19,
             "needsAttention": False,
             "href": "/api/boards/metolius.wood-grips-compact-ii",
             "editorAvailable": False,
@@ -487,34 +489,36 @@ def test_model_only_package_is_listed_as_unavailable_without_reading_model_blobs
         }
 
 
-def test_opening_a_board_exposes_fractional_fixed_depth_on_every_piece(
+def test_opening_a_board_exposes_factual_depth_range_on_the_contact(
     tmp_path: Path,
 ) -> None:
     """Dropping fixed depth from the GET payload makes the inspector show Unset."""
     library = _write_library(tmp_path)
     package = library / "fixture-board"
     board = board_document("fixture.board")
-    board["holds"][0]["sizeMillimeters"] = 7.5
+    board["contacts"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 7.5,
+        "upperBound": 12.5,
+    }
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
     with running_server(library) as base:
         status, opened = request_json(base, "GET", "/api/boards/fixture.board")
 
     assert status == 200
-    assert [
-        region["sizeMillimeters"]
-        for region in opened["board"]["document"]["regions"]
-    ] == [7.5, 7.5]
+    assert opened["board"]["document"]["contacts"][0][
+        "depthRangeMillimeters"
+    ] == {"lowerBound": 7.5, "upperBound": 12.5}
 
 
-def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
+def test_server_opens_and_saves_contact_facts_without_geometry_duplication(
     tmp_path: Path,
 ) -> None:
     library = _write_library(tmp_path)
     package = library / "fixture-board"
     board = board_document("fixture.board")
-    board["holds"][0]["kind"] = "sloper"
-    board["holds"][0]["sloper"] = {"type": "flat"}
+    board["contacts"][0]["kind"] = "sloper"
+    board["contacts"][0]["side"] = "left"
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
     with running_server(library) as base:
@@ -523,14 +527,10 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
         )
         assert status == 200
         document = opened["board"]["document"]
-        slopers = {
-            region["metadata"]["holdID"]: region["sloper"]
-            for region in document["regions"]
-            if "sloper" in region
-        }
-        assert slopers == {"hold-left": {"type": "flat"}}
-        for region in document["regions"]:
-            region["handCapacity"] = 1
+        assert document["contacts"][0]["kind"] == "sloper"
+        assert document["contacts"][0]["side"] == "left"
+        assert all("kind" not in region and "side" not in region for region in document["regions"])
+        document["contacts"][0]["handCapacity"] = 1
 
         status, saved = request_json(
             base,
@@ -540,11 +540,7 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
         )
 
     assert status == 200
-    assert {
-        region["metadata"]["holdID"]: region["sloper"]
-        for region in saved["board"]["document"]["regions"]
-        if "sloper" in region
-    } == slopers
+    assert saved["board"]["document"]["contacts"][0]["handCapacity"] == 1
     stored = json.loads(
         (
             library
@@ -552,37 +548,30 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
             / "board.json"
         ).read_text(encoding="utf-8")
     )
-    assert {
-        hold["id"]: hold["sloper"] for hold in stored["holds"] if "sloper" in hold
-    } == slopers
+    assert stored["contacts"][0]["kind"] == "sloper"
+    assert stored["contacts"][0]["side"] == "left"
 
 
-def test_put_rejects_a_huge_json_integer_sloper_angle_with_bad_request(
+def test_put_rejects_removed_sloper_metadata_with_bad_request(
     tmp_path: Path,
 ) -> None:
-    """Fails if a sloper angle overflow escapes BoardPackageError as a 500."""
+    """The v3 editor rejects removed v2 factual fields instead of adapting them."""
     library = _write_library(tmp_path)
 
     with running_server(library) as base:
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
-        document["regions"][0]["type"] = "sloper"
-        document["regions"][0]["sloper"] = {
-            "type": "flat",
-            "angleDegrees": 10**399,
-        }
+        document["contacts"][0]["sloper"] = {"type": "flat"}
         status, result = request_json(
             base, "PUT", "/api/boards/fixture.board", document
         )
 
     assert status == 400
-    assert result == {
-        "ok": False,
-        "error": "editor region hold-left-piece-0.sloper.angleDegrees must be finite and in 0...90",
-    }
+    assert result["ok"] is False
+    assert "unknown keys" in result["error"]
 
 
-def test_saving_and_clearing_fractional_fixed_depth_round_trips_through_the_server(
+def test_saving_and_clearing_depth_range_round_trips_through_the_server(
     tmp_path: Path,
 ) -> None:
     """A fixed-depth edit must persist, reopen, and clear through the HTTP API."""
@@ -592,46 +581,41 @@ def test_saving_and_clearing_fractional_fixed_depth_round_trips_through_the_serv
     with running_server(library) as base:
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
-        for region in document["regions"]:
-            region["sizeMillimeters"] = 7.25
+        document["contacts"][0]["depthRangeMillimeters"] = {
+            "lowerBound": 7.25,
+            "upperBound": 9.5,
+        }
 
-        status, fixed = request_json(
+        status, saved = request_json(
             base, "PUT", "/api/boards/fixture.board", document
         )
         assert status == 200
-        assert [
-            region["sizeMillimeters"]
-            for region in fixed["board"]["document"]["regions"]
-        ] == [7.25, 7.25]
+        assert saved["board"]["document"]["contacts"][0][
+            "depthRangeMillimeters"
+        ] == {"lowerBound": 7.25, "upperBound": 9.5}
 
-        cleared_document = fixed["board"]["document"]
-        for region in cleared_document["regions"]:
-            del region["sizeMillimeters"]
+        cleared_document = saved["board"]["document"]
+        del cleared_document["contacts"][0]["depthRangeMillimeters"]
         status, cleared = request_json(
             base, "PUT", "/api/boards/fixture.board", cleared_document
         )
 
     assert status == 200
-    assert all(
-        "sizeMillimeters" not in region
-        and "depthRangeMillimeters" not in region
-        for region in cleared["board"]["document"]["regions"]
-    )
-    stored_hold = json.loads(
+    assert "depthRangeMillimeters" not in cleared["board"]["document"]["contacts"][0]
+    stored_contact = json.loads(
         (package / "board.json").read_text(encoding="utf-8")
-    )["holds"][0]
-    assert "sizeMillimeters" not in stored_hold
-    assert "depthRangeMillimeters" not in stored_hold
+    )["contacts"][0]
+    assert "depthRangeMillimeters" not in stored_contact
 
 
-def test_saving_switches_atomically_between_variable_and_fixed_depth(
+def test_saving_replaces_a_depth_range_atomically(
     tmp_path: Path,
 ) -> None:
     """Switching modes must remove the opposite canonical depth representation."""
     library = _write_library(tmp_path)
     package = library / "fixture-board"
     board = board_document("fixture.board")
-    board["holds"][0]["depthRangeMillimeters"] = {
+    board["contacts"][0]["depthRangeMillimeters"] = {
         "lowerBound": 7.5,
         "upperBound": 12.5,
     }
@@ -640,27 +624,28 @@ def test_saving_switches_atomically_between_variable_and_fixed_depth(
     with running_server(library) as base:
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
-        for region in document["regions"]:
-            del region["depthRangeMillimeters"]
-            region["sizeMillimeters"] = 8.75
+        document["contacts"][0]["depthRangeMillimeters"] = {
+            "lowerBound": 8.75,
+            "upperBound": 8.75,
+        }
 
-        status, fixed = request_json(
+        status, first = request_json(
             base, "PUT", "/api/boards/fixture.board", document
         )
         assert status == 200
         stored_fixed = json.loads(
             (package / "board.json").read_text(encoding="utf-8")
-        )["holds"][0]
-        assert stored_fixed["sizeMillimeters"] == 8.75
-        assert "depthRangeMillimeters" not in stored_fixed
+        )["contacts"][0]
+        assert stored_fixed["depthRangeMillimeters"] == {
+            "lowerBound": 8.75,
+            "upperBound": 8.75,
+        }
 
-        variable_document = fixed["board"]["document"]
-        for region in variable_document["regions"]:
-            del region["sizeMillimeters"]
-            region["depthRangeMillimeters"] = {
-                "lowerBound": 9.5,
-                "upperBound": 14.25,
-            }
+        variable_document = first["board"]["document"]
+        variable_document["contacts"][0]["depthRangeMillimeters"] = {
+            "lowerBound": 9.5,
+            "upperBound": 14.25,
+        }
         status, variable = request_json(
             base, "PUT", "/api/boards/fixture.board", variable_document
         )
@@ -668,41 +653,39 @@ def test_saving_switches_atomically_between_variable_and_fixed_depth(
     assert status == 200
     stored_variable = json.loads(
         (package / "board.json").read_text(encoding="utf-8")
-    )["holds"][0]
+    )["contacts"][0]
     assert stored_variable["depthRangeMillimeters"] == {
         "lowerBound": 9.5,
         "upperBound": 14.25,
     }
-    assert "sizeMillimeters" not in stored_variable
-    assert all(
-        region["depthRangeMillimeters"] == {
-            "lowerBound": 9.5,
-            "upperBound": 14.25,
-        }
-        and "sizeMillimeters" not in region
-        for region in variable["board"]["document"]["regions"]
-    )
+    assert variable["board"]["document"]["contacts"][0][
+        "depthRangeMillimeters"
+    ] == {"lowerBound": 9.5, "upperBound": 14.25}
 
 
-def test_board_list_marks_only_edge_and_pocket_holds_without_depth_for_attention(
+def test_board_list_marks_only_edge_and_pocket_contacts_without_depth_for_attention(
     tmp_path: Path,
 ) -> None:
     library = _write_library(tmp_path)
     package = library / "fixture-board"
     board = board_document("fixture.board")
-    template_hold = board["holds"][0]
-    assert isinstance(template_hold, dict)
+    template_contact = board["contacts"][0]
+    assert isinstance(template_contact, dict)
 
-    def hold(hold_id: str, kind: str, **depth: object) -> dict[str, object]:
-        return {**template_hold, "id": hold_id, "name": hold_id, "kind": kind, **depth}
+    def contact(contact_id: str, kind: str, **depth: object) -> dict[str, object]:
+        return {**template_contact, "id": contact_id, "name": contact_id, "kind": kind, **depth}
 
-    board["holds"] = [
-        hold("jug", "jug"),
-        hold("sloper", "sloper"),
-        hold("pinch", "pinch"),
-        hold("edge", "edge"),
-        hold("pocket", "pocket"),
+    board["contacts"] = [
+        contact("jug", "jug"),
+        contact("sloper", "sloper"),
+        contact("pinch", "pinch"),
+        contact("edge", "edge"),
+        contact("pocket", "pocket"),
     ]
+    template_geometry = geometry_for(board).pop("contact-left")
+    geometry_for(board).update(
+        {item["id"]: copy.deepcopy(template_geometry) for item in board["contacts"]}
+    )
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
     with running_server(library) as base:
@@ -710,12 +693,16 @@ def test_board_list_marks_only_edge_and_pocket_holds_without_depth_for_attention
         assert status == 200
         assert listed["boards"][0]["needsAttention"] is True
 
-        board["holds"] = [
-            hold("jug", "jug"),
-            hold("sloper", "sloper"),
-            hold("pinch", "pinch"),
-            hold("edge", "edge", sizeMillimeters=20),
-            hold(
+        board["contacts"] = [
+            contact("jug", "jug"),
+            contact("sloper", "sloper"),
+            contact("pinch", "pinch"),
+            contact(
+                "edge",
+                "edge",
+                depthRangeMillimeters={"lowerBound": 20, "upperBound": 20},
+            ),
+            contact(
                 "pocket",
                 "pocket",
                 depthRangeMillimeters={"lowerBound": 10, "upperBound": 15},
@@ -738,19 +725,21 @@ def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
         assert status == 200
         board = opened["board"]
         assert board["selectedPresentationID"] == "front"
-        assert board["holdIDs"] == ["hold-left", "hold-back"]
+        assert board["contactIDs"] == ["contact-left", "contact-back"]
         assert board["presentations"] == [
             {
                 "presentationID": "front",
                 "displayName": "Front",
                 "imageUrl": "/api/boards/fixture.multi/image?presentationID=front",
                 "default": True,
+                "contactIDs": ["contact-left"],
             },
             {
                 "presentationID": "back",
                 "displayName": "Back",
                 "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
                 "default": False,
+                "contactIDs": ["contact-back"],
             },
         ]
         assert {region["metadata"]["presentationID"] for region in board["document"]["regions"]} == {"front"}
@@ -775,18 +764,16 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
     tmp_path: Path,
 ) -> None:
     library = _write_multi_presentation_library(tmp_path)
-    package = library / "fixture-v2"
+    package = library / "fixture-multi"
     board = json.loads((package / "board.json").read_text(encoding="utf-8"))
     board["presentations"].append(
-        {
-            "id": "front-inverted",
-            "name": "Front Inverted",
-            "assetPath": "assets/primary.png",
-            "aspectRatio": 1774 / 887,
-            "default": False,
-            "sourcePresentationID": "front",
-            "isInverted": True,
-        }
+        derived_presentation(
+            board,
+            "front-inverted",
+            "front",
+            "Front Inverted",
+            "assets/primary.png",
+        )
     )
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
@@ -802,12 +789,12 @@ def test_board_payload_marks_alias_presentations_with_their_canonical_source(
     assert alias["sourcePresentationID"] == "front"
 
 
-def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default(
+def test_delete_surface_removes_its_contacts_unused_asset_and_selects_a_new_default(
     tmp_path: Path,
 ) -> None:
     """Deleting the default must leave a valid, focused canonical surface."""
     library = _write_multi_presentation_library(tmp_path)
-    package = library / "fixture-v2"
+    package = library / "fixture-multi"
 
     with running_server(library) as base:
         status, deleted = request_json(
@@ -824,12 +811,13 @@ def test_delete_surface_removes_its_holds_unused_asset_and_selects_a_new_default
         {
             "presentationID": "back",
             "displayName": "Back",
-            "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
-            "default": True,
+                "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
+                "default": True,
+                "contactIDs": ["contact-back"],
         }
     ]
     stored = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    assert [hold["id"] for hold in stored["holds"]] == ["hold-back"]
+    assert [contact["id"] for contact in stored["contacts"]] == ["contact-back"]
     assert not (package / "assets" / "primary.png").exists()
     assert board_package.load_board_package(package).presentation().id == "back"
 
@@ -849,24 +837,17 @@ def test_delete_only_surface_is_rejected_without_mutating_the_package(
         )
 
     assert status == 400
-    assert result == {"ok": False, "error": "cannot delete the only canonical presentation"}
+    assert result == {"ok": False, "error": "cannot delete the only original presentation"}
     assert (package / "board.json").read_bytes() == before
 
 
 def test_delete_nondefault_surface_keeps_the_existing_default(tmp_path: Path) -> None:
     library = _write_multi_presentation_library(tmp_path)
-    package = library / "fixture-v2"
+    package = library / "fixture-multi"
     board = json.loads((package / "board.json").read_text(encoding="utf-8"))
     board["presentations"] = [
-        {**board["presentations"][0], "default": False},
-        {**board["presentations"][1], "default": True},
-        {
-            "id": "alternate",
-            "name": "Alternate",
-            "assetPath": "assets/back.png",
-            "aspectRatio": 1774 / 887,
-            "default": False,
-        },
+        {**board["presentations"][0], "isDefault": False},
+        {**board["presentations"][1], "isDefault": True},
     ]
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
@@ -874,7 +855,7 @@ def test_delete_nondefault_surface_keeps_the_existing_default(tmp_path: Path) ->
         status, deleted = request_json(
             base,
             "DELETE",
-            "/api/boards/fixture.multi/presentations/alternate",
+            "/api/boards/fixture.multi/presentations/front",
         )
 
     assert status == 200
@@ -907,7 +888,7 @@ def test_save_keeps_geometry_inside_board_json_and_creates_no_registry_or_sideca
         document["regions"][0]["displayPath"]
     )
     board = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    assert board["holds"][0]["geometry"][0]["frame"] == {
+    assert geometry_for(board)["contact-left"][0]["frame"] == {
         "x": 0.1,
         "y": 0.1,
         "width": 0.1,
@@ -938,7 +919,7 @@ def test_invalid_save_leaves_board_json_and_inventory_unchanged(tmp_path: Path) 
     assert status == 400
     assert result == {
         "ok": False,
-        "error": "hold hold-left-piece-0 must be exactly one closed contour",
+        "error": "contact contact-left-piece-0 must be exactly one closed contour",
     }
     after = {
         path.relative_to(package).as_posix(): path.read_bytes()
@@ -1637,7 +1618,7 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
                 {
                     "boardId": "fixture.board",
                     "displayName": "Fixture Maker Fixture Board",
-                    "holdCount": 1,
+                    "contactCount": 1,
                     "needsAttention": False,
                     "href": "/api/boards/fixture.board",
                     "imageUrl": "/api/boards/fixture.board/image",
@@ -1650,7 +1631,7 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
         )
         assert status == 200
         board = opened["board"]
-        assert board["document"]["regions"][0]["key"] == "hold-left-piece-0"
+        assert board["document"]["regions"][0]["key"] == "contact-left-piece-0"
 
         status, image, headers = hosted_request(
             base, session, "GET", board["imageUrl"]
@@ -1670,47 +1651,56 @@ def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
     """Fails if opening one presentation downloads sibling image blobs."""
     board = multi_presentation_board_document("fixture.multi")
     presentations = board["presentations"]
-    holds = board["holds"]
+    contacts = board["contacts"]
     assert isinstance(presentations, list)
-    assert isinstance(holds, list)
+    assert isinstance(contacts, list)
     for presentation_id, name, asset_path in (
         ("profile", "Profile", "assets/profile.png"),
         ("detail", "Detail", "assets/detail.png"),
     ):
+        contact_id = f"contact-{presentation_id}"
         presentations.append(
             {
                 "id": presentation_id,
                 "name": name,
-                "assetPath": asset_path,
                 "aspectRatio": 1774 / 887,
-                "default": False,
+                "isDefault": False,
+                "derivation": {"type": "original"},
+                "media": {
+                    "type": "raster",
+                    "assetPath": asset_path,
+                    "contactGeometry": {
+                        contact_id: copy.deepcopy(
+                            geometry_for(board, "front")["contact-left"]
+                        )
+                    },
+                },
             }
         )
-        hold = copy.deepcopy(holds[0])
-        assert isinstance(hold, dict)
-        hold.update(
-            id=f"hold-{presentation_id}",
-            name=f"{name} hold",
-            presentationID=presentation_id,
+        contact = copy.deepcopy(contacts[0])
+        assert isinstance(contact, dict)
+        contact.update(
+            id=contact_id,
+            name=f"{name} contact",
         )
-        holds.append(hold)
+        contacts.append(contact)
     files: dict[str, bytes | tuple[bytes, str]] = {
-        "Hangboards/fixture-v2/board.json": (
+        "Hangboards/fixture-multi/board.json": (
             json.dumps(board, indent=2) + "\n"
         ).encode("utf-8"),
-        "Hangboards/fixture-v2/assets/primary.png": (
+        "Hangboards/fixture-multi/assets/primary.png": (
             PRIMARY_IMAGE.read_bytes(),
             "primary-presentation",
         ),
-        "Hangboards/fixture-v2/assets/back.png": (
+        "Hangboards/fixture-multi/assets/back.png": (
             PRIMARY_IMAGE.read_bytes(),
             "back-presentation",
         ),
-        "Hangboards/fixture-v2/assets/profile.png": (
+        "Hangboards/fixture-multi/assets/profile.png": (
             PRIMARY_IMAGE.read_bytes(),
             "profile-presentation",
         ),
-        "Hangboards/fixture-v2/assets/detail.png": (
+        "Hangboards/fixture-multi/assets/detail.png": (
             PRIMARY_IMAGE.read_bytes(),
             "detail-presentation",
         ),
@@ -1733,7 +1723,7 @@ def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
     image_shas = {
         name: content[1]
         for name, content in files.items()
-        if name.startswith("Hangboards/fixture-v2/assets/")
+        if name.startswith("Hangboards/fixture-multi/assets/")
         and isinstance(content, tuple)
     }
     loaded_image_shas = {
@@ -1741,14 +1731,14 @@ def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
         for call in client.calls_named("get_blob")
         if call.args[1] in image_shas.values()
     }
-    assert loaded_image_shas == {image_shas["Hangboards/fixture-v2/assets/back.png"]}
+    assert loaded_image_shas == {image_shas["Hangboards/fixture-multi/assets/back.png"]}
     opened_board = opened["board"]
     assert opened_board["selectedPresentationID"] == "back"
-    assert opened_board["holdIDs"] == [
-        "hold-left",
-        "hold-back",
-        "hold-profile",
-        "hold-detail",
+    assert opened_board["contactIDs"] == [
+        "contact-left",
+        "contact-back",
+        "contact-profile",
+        "contact-detail",
     ]
     assert opened_board["presentations"] == [
         {
@@ -1756,24 +1746,28 @@ def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
             "displayName": "Front",
             "imageUrl": "/api/boards/fixture.multi/image?presentationID=front",
             "default": True,
+            "contactIDs": ["contact-left"],
         },
         {
             "presentationID": "back",
             "displayName": "Back",
             "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
             "default": False,
+            "contactIDs": ["contact-back"],
         },
         {
             "presentationID": "profile",
             "displayName": "Profile",
             "imageUrl": "/api/boards/fixture.multi/image?presentationID=profile",
             "default": False,
+            "contactIDs": ["contact-profile"],
         },
         {
             "presentationID": "detail",
             "displayName": "Detail",
             "imageUrl": "/api/boards/fixture.multi/image?presentationID=detail",
             "default": False,
+            "contactIDs": ["contact-detail"],
         },
     ]
     assert opened_board["document"]["canvas"] == {"width": 1774, "height": 887}
@@ -2085,7 +2079,7 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
                 HOSTED_BRANCH, "Hangboards/fixture-board/board.json"
             )
         )
-        assert stored["holds"][0]["geometry"][0]["frame"] == {
+        assert geometry_for(stored)["contact-left"][0]["frame"] == {
             "x": 0.1,
             "y": 0.1,
             "width": 0.1,
@@ -2096,8 +2090,7 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
         assert put_call.args[2] == HOSTED_BRANCH
 
 
-def test_hosted_save_round_trips_fractional_fixed_depth() -> None:
-    """Hosted persistence must carry fixed depth through its tuple adapter."""
+def test_hosted_save_round_trips_depth_range() -> None:
     with running_server_with_github_backend(_github_files()) as (
         base,
         client,
@@ -2107,31 +2100,34 @@ def test_hosted_save_round_trips_fractional_fixed_depth() -> None:
             base, session, "GET", "/api/boards/fixture.board"
         )
         document = opened["board"]["document"]
-        for region in document["regions"]:
-            region["sizeMillimeters"] = 7.25
+        document["contacts"][0]["depthRangeMillimeters"] = {
+            "lowerBound": 7.25,
+            "upperBound": 9.5,
+        }
 
         status, saved, _headers = hosted_request_json(
             base, session, "PUT", "/api/boards/fixture.board", document
         )
 
     assert status == 200
-    assert {
-        region["sizeMillimeters"]
-        for region in saved["board"]["document"]["regions"]
-    } == {7.25}
+    assert saved["board"]["document"]["contacts"][0][
+        "depthRangeMillimeters"
+    ] == {"lowerBound": 7.25, "upperBound": 9.5}
     stored = json.loads(
         client.file_bytes(HOSTED_BRANCH, "Hangboards/fixture-board/board.json")
     )
-    assert stored["holds"][0]["sizeMillimeters"] == 7.25
-    assert "depthRangeMillimeters" not in stored["holds"][0]
+    assert stored["contacts"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 7.25,
+        "upperBound": 9.5,
+    }
 
 
-def test_hosted_save_round_trips_sloper_metadata() -> None:
+def test_hosted_save_round_trips_contact_side_metadata() -> None:
     files = _github_files()
     board_path = "Hangboards/fixture-board/board.json"
     board = json.loads(files[board_path])
-    board["holds"][0]["kind"] = "sloper"
-    board["holds"][0]["sloper"] = {"type": "flat", "angleDegrees": 20}
+    board["contacts"][0]["kind"] = "sloper"
+    board["contacts"][0]["side"] = "left"
     files[board_path] = (json.dumps(board, indent=2) + "\n").encode("utf-8")
 
     with running_server_with_github_backend(files) as (base, client, session):
@@ -2139,26 +2135,18 @@ def test_hosted_save_round_trips_sloper_metadata() -> None:
             base, session, "GET", "/api/boards/fixture.board"
         )
         document = opened["board"]["document"]
-        assert {tuple(region["sloper"].items()) for region in document["regions"]} == {
-            (("type", "flat"), ("angleDegrees", 20))
-        }
-        for region in document["regions"]:
-            region["handCapacity"] = 1
+        assert document["contacts"][0]["side"] == "left"
+        document["contacts"][0]["handCapacity"] = 1
 
         status, saved, _headers = hosted_request_json(
             base, session, "PUT", "/api/boards/fixture.board", document
         )
 
     assert status == 200
-    assert {
-        tuple(region["sloper"].items())
-        for region in saved["board"]["document"]["regions"]
-    } == {(("type", "flat"), ("angleDegrees", 20))}
+    assert saved["board"]["document"]["contacts"][0]["side"] == "left"
     stored = json.loads(client.file_bytes(HOSTED_BRANCH, board_path))
-    assert stored["holds"][0]["sloper"] == {
-        "type": "flat",
-        "angleDegrees": 20,
-    }
+    assert stored["contacts"][0]["side"] == "left"
+    assert stored["contacts"][0]["handCapacity"] == 1
 
 
 def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:
@@ -2335,7 +2323,7 @@ def test_hosted_open_pull_request_uses_the_session_branch_and_defaults() -> None
             session,
             "POST",
             "/api/git/open-pr",
-            {"title": "Update fixture", "body": "Precise holds"},
+            {"title": "Update fixture", "body": "Precise contacts"},
         )
 
     assert status == 200
@@ -2349,7 +2337,7 @@ def test_hosted_open_pull_request_uses_the_session_branch_and_defaults() -> None
         "Update fixture",
         HOSTED_BRANCH,
         "main",
-        "Precise holds",
+        "Precise contacts",
     )
 
 

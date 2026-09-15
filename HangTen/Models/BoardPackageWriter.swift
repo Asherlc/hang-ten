@@ -1,7 +1,9 @@
 import Foundation
 
 struct BoardEditableDocument: Equatable, Decodable {
+    var schemaVersion: Int
     var id: String
+    var revisionID: String
     var manufacturer: String
     var name: String
     var subtitle: String
@@ -9,13 +11,15 @@ struct BoardEditableDocument: Equatable, Decodable {
     var dimensions: String?
     var aspectRatio: Double
     var equipmentObjects: [EquipmentObject]
-    var holds: [BoardEditableHold]
+    var contacts: [BoardEditableContact]
     var presentations: [BoardEditablePresentation]
     var positions: [BoardPosition]?
     var positionTransitions: [BoardPositionTransition]?
 
     private enum CodingKeys: String, CodingKey {
+        case schemaVersion
         case id
+        case revisionID
         case manufacturer
         case name
         case subtitle
@@ -23,29 +27,31 @@ struct BoardEditableDocument: Equatable, Decodable {
         case dimensions
         case aspectRatio
         case equipmentObjects
-        case holds
+        case contacts
         case presentations
         case positions
         case positionTransitions
     }
 
     init(
+        schemaVersion: Int = 3,
         id: String,
+        revisionID: String,
         manufacturer: String,
         name: String,
         subtitle: String,
         productURL: URL,
         dimensions: String?,
         aspectRatio: Double,
-        equipmentObjects: [EquipmentObject] = [
-            .init(id: "primary", missingHandCapacityPolicy: .unavailable)
-        ],
-        holds: [BoardEditableHold],
+        equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
+        contacts: [BoardEditableContact],
         presentations: [BoardEditablePresentation],
         positions: [BoardPosition]? = nil,
         positionTransitions: [BoardPositionTransition]? = nil
     ) {
+        self.schemaVersion = schemaVersion
         self.id = id
+        self.revisionID = revisionID
         self.manufacturer = manufacturer
         self.name = name
         self.subtitle = subtitle
@@ -53,7 +59,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
         self.equipmentObjects = equipmentObjects
-        self.holds = holds
+        self.contacts = contacts
         self.presentations = presentations
         self.positions = positions
         self.positionTransitions = positionTransitions
@@ -61,12 +67,21 @@ struct BoardEditableDocument: Equatable, Decodable {
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
-            "id", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "equipmentObjects", "holds", "presentations",
+            "schemaVersion", "id", "revisionID", "manufacturer", "name", "subtitle", "productURL",
+            "dimensions", "aspectRatio", "equipmentObjects", "contacts", "presentations",
             "positions", "positionTransitions"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        guard schemaVersion == 3 else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .schemaVersion,
+                in: container,
+                debugDescription: "schemaVersion must be 3"
+            )
+        }
         id = try container.decode(String.self, forKey: .id)
+        revisionID = try container.decode(String.self, forKey: .revisionID)
         manufacturer = try container.decode(String.self, forKey: .manufacturer)
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
@@ -79,7 +94,7 @@ struct BoardEditableDocument: Equatable, Decodable {
                 forKey: .equipmentObjects
             ).map(\.equipmentObject)
             : [.init(id: "primary")]
-        holds = try container.decode([BoardEditableHold].self, forKey: .holds)
+        contacts = try container.decode([BoardEditableContact].self, forKey: .contacts)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
         positions = container.contains(.positions)
             ? try container.decode(
@@ -98,26 +113,80 @@ struct BoardEditableDocument: Equatable, Decodable {
     init(data: Data) throws {
         self = try JSONDecoder().decode(BoardEditableDocument.self, from: data)
     }
+
+    func geometry(forContactID contactID: String) -> [BoardEditablePiece]? {
+        guard let presentationIndex = defaultRasterPresentationIndex,
+              case .raster(_, let contactGeometry) = presentations[presentationIndex].media else {
+            return nil
+        }
+        return contactGeometry[contactID]
+    }
+
+    mutating func replaceGeometry(
+        forContactID contactID: String,
+        with pieces: [BoardEditablePiece]
+    ) {
+        guard let presentationIndex = originalDefaultRasterPresentationIndex else { return }
+        guard case .raster(let assetPath, var contactGeometry) = presentations[presentationIndex].media else {
+            return
+        }
+        guard contactGeometry[contactID] != nil else { return }
+        contactGeometry[contactID] = pieces
+        presentations[presentationIndex].media = .raster(
+            assetPath: assetPath,
+            contactGeometry: contactGeometry
+        )
+    }
+
+    private var defaultRasterPresentationIndex: Int? {
+        presentations.firstIndex { presentation in
+            guard presentation.isDefault,
+                  case .raster = presentation.media else {
+                return false
+            }
+            return true
+        }
+    }
+
+    private var originalDefaultRasterPresentationIndex: Int? {
+        presentations.firstIndex { presentation in
+            guard presentation.isDefault,
+                  presentation.derivation == .original,
+                  case .raster = presentation.media else {
+                return false
+            }
+            return true
+        }
+    }
 }
 
 private struct BoardEditablePositionDocument: Decodable {
     let id: String
     let presentationID: String
+    let contactIDs: [String]
+    let contactIDsWereExplicitlyAuthored: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id
         case presentationID
+        case contactIDs
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownEditorKeys(["id", "presentationID"])
+        try decoder.rejectUnknownEditorKeys(["id", "presentationID", "contactIDs"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         presentationID = try container.decode(String.self, forKey: .presentationID)
+        contactIDsWereExplicitlyAuthored = container.contains(.contactIDs)
+        contactIDs = contactIDsWereExplicitlyAuthored
+            ? try container.decode([String].self, forKey: .contactIDs)
+            : []
     }
 
     var position: BoardPosition {
-        BoardPosition(id: id, presentationID: presentationID)
+        contactIDsWereExplicitlyAuthored
+            ? BoardPosition(id: id, presentationID: presentationID, contactIDs: contactIDs)
+            : BoardPosition(id: id, presentationID: presentationID)
     }
 }
 
@@ -153,163 +222,224 @@ private struct BoardEditablePositionTransitionDocument: Decodable {
 
 private struct BoardEditableEquipmentObjectDocument: Decodable {
     let id: String
-    let missingHandCapacityPolicy: MissingHandCapacityPolicy
 
     private enum CodingKeys: String, CodingKey {
         case id
-        case missingHandCapacityPolicy
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownEditorKeys(["id", "missingHandCapacityPolicy"])
+        try decoder.rejectUnknownEditorKeys(["id"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        missingHandCapacityPolicy = try container.decodeIfPresent(
-            MissingHandCapacityPolicy.self,
-            forKey: .missingHandCapacityPolicy
-        ) ?? .legacyBilateral
     }
 
     var equipmentObject: EquipmentObject {
-        EquipmentObject(
-            id: id,
-            missingHandCapacityPolicy: missingHandCapacityPolicy
-        )
+        EquipmentObject(id: id)
+    }
+}
+
+enum BoardEditablePresentationDerivation: Equatable, Decodable {
+    case original
+    case derived(sourcePresentationID: String, isInverted: Bool)
+
+    private enum CodingKeys: String, CodingKey { case type, sourcePresentationID, isInverted }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "original":
+            try decoder.rejectUnknownEditorKeys(["type"])
+            self = .original
+        case "derived":
+            try decoder.rejectUnknownEditorKeys(["type", "sourcePresentationID", "isInverted"])
+            self = .derived(
+                sourcePresentationID: try container.decode(String.self, forKey: .sourcePresentationID),
+                isInverted: try container.decode(Bool.self, forKey: .isInverted)
+            )
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "derivation type must be original or derived"
+            )
+        }
+    }
+}
+
+enum BoardEditablePresentationMedia: Equatable, Decodable {
+    case raster(assetPath: String, contactGeometry: [String: [BoardEditablePiece]])
+    case model(
+        assetPath: String,
+        descriptorPath: String,
+        display: BoardPackageModelDisplayDocument,
+        suspension: BoardPackageSuspensionDocument?,
+        orientation: BoardPackageModelOrientationDocument?
+    )
+
+    private enum CodingKeys: String, CodingKey {
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation
+    }
+
+    var assetPath: String {
+        switch self {
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _): assetPath
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "raster":
+            try decoder.rejectUnknownEditorKeys(["type", "assetPath", "contactGeometry"])
+            self = .raster(
+                assetPath: try container.decode(String.self, forKey: .assetPath),
+                contactGeometry: try container.decode(
+                    [String: [BoardEditablePiece]].self,
+                    forKey: .contactGeometry
+                )
+            )
+        case "model":
+            try decoder.rejectUnknownEditorKeys([
+                "type", "assetPath", "descriptorPath", "display", "suspension", "orientation"
+            ])
+            self = .model(
+                assetPath: try container.decode(String.self, forKey: .assetPath),
+                descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
+                display: try container.decode(
+                    BoardPackageModelDisplayDocument.self,
+                    forKey: .display
+                ),
+                suspension: container.contains(.suspension)
+                    ? try container.decode(BoardPackageSuspensionDocument.self, forKey: .suspension)
+                    : nil,
+                orientation: container.contains(.orientation)
+                    ? try container.decode(
+                        BoardPackageModelOrientationDocument.self,
+                        forKey: .orientation
+                    )
+                    : nil
+            )
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "media type must be raster or model"
+            )
+        }
     }
 }
 
 struct BoardEditablePresentation: Equatable, Decodable {
     var id: String
     var name: String
-    var assetPath: String
     var aspectRatio: Double
     var isDefault: Bool
-    /// An alternate rendering of a canonical presentation, such as an
-    /// upside-down mounting. Holds remain owned by the canonical source.
-    var sourcePresentationID: String?
-    var isInverted: Bool
+    var derivation: BoardEditablePresentationDerivation
+    var media: BoardEditablePresentationMedia
 
     private enum CodingKeys: String, CodingKey {
         case id
         case name
-        case assetPath
         case aspectRatio
-        case isDefault = "default"
-        case sourcePresentationID
-        case isInverted
+        case isDefault
+        case derivation
+        case media
     }
 
     init(
         id: String,
         name: String,
-        assetPath: String,
         aspectRatio: Double,
         isDefault: Bool,
-        sourcePresentationID: String? = nil,
-        isInverted: Bool = false
+        derivation: BoardEditablePresentationDerivation = .original,
+        media: BoardEditablePresentationMedia
     ) {
         self.id = id
         self.name = name
-        self.assetPath = assetPath
         self.aspectRatio = aspectRatio
         self.isDefault = isDefault
-        self.sourcePresentationID = sourcePresentationID
-        self.isInverted = isInverted
+        self.derivation = derivation
+        self.media = media
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
-            "id", "name", "assetPath", "aspectRatio", "default",
-            "sourcePresentationID", "isInverted"
+            "id", "name", "aspectRatio", "isDefault", "derivation", "media"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
-        assetPath = try container.decode(String.self, forKey: .assetPath)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         isDefault = try container.decode(Bool.self, forKey: .isDefault)
-        sourcePresentationID = try container.decodeIfPresent(
-            String.self,
-            forKey: .sourcePresentationID
-        )
-        isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
+        derivation = try container.decode(BoardEditablePresentationDerivation.self, forKey: .derivation)
+        media = try container.decode(BoardEditablePresentationMedia.self, forKey: .media)
     }
 }
 
-struct BoardEditableHold: Equatable, Decodable {
+struct BoardEditableContact: Equatable, Decodable {
     var id: String
     var name: String
     /// Editor packages may omit `kind` while metadata is being completed.
     /// Training-board decoding remains strict in `BoardPackageStore`.
     var kind: HoldKind?
-    var sloper: SloperMetadata?
-    var sizeMillimeters: Double?
     var depthRangeMillimeters: BoardEditableMillimeterRange?
-    var gripType: GripType?
+    var gripTypes: [GripType]
     var fingerCapacity: Int?
     var handCapacity: Int?
-    var features: [HoldFeature]?
-    var pairedHoldID: String?
-    var declaresPairedHoldID: Bool
+    var features: [HoldFeature]
+    var side: ContactSide?
+    var pairedContactID: String?
+    var declaresPairedContactID: Bool
     var equipmentObjectID: String
-    var presentationID: String
-    var geometry: [BoardEditablePiece]
 
     private enum CodingKeys: String, CodingKey {
         case id
         case name
         case kind
-        case sloper
-        case geometry
-        case sizeMillimeters
         case depthRangeMillimeters
-        case gripType
+        case gripTypes
         case fingerCapacity
         case handCapacity
         case features
-        case pairedHoldID
+        case side
+        case pairedContactID
         case equipmentObjectID
-        case presentationID
     }
 
     init(
         id: String,
         name: String,
         kind: HoldKind?,
-        sloper: SloperMetadata? = nil,
-        sizeMillimeters: Double? = nil,
         depthRangeMillimeters: BoardEditableMillimeterRange? = nil,
-        gripType: GripType? = nil,
+        gripTypes: [GripType] = [],
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        features: [HoldFeature]? = nil,
-        pairedHoldID: String? = nil,
-        equipmentObjectID: String = "primary",
-        presentationID: String,
-        geometry: [BoardEditablePiece]
+        features: [HoldFeature] = [],
+        side: ContactSide? = nil,
+        pairedContactID: String? = nil,
+        equipmentObjectID: String = "primary"
     ) {
         self.id = id
         self.name = name
         self.kind = kind
-        self.sloper = sloper
-        self.sizeMillimeters = sizeMillimeters
         self.depthRangeMillimeters = depthRangeMillimeters
-        self.gripType = gripType
+        self.gripTypes = gripTypes
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
         self.features = features
-        self.pairedHoldID = pairedHoldID
-        declaresPairedHoldID = pairedHoldID != nil
+        self.side = side
+        self.pairedContactID = pairedContactID
+        declaresPairedContactID = pairedContactID != nil
         self.equipmentObjectID = equipmentObjectID
-        self.presentationID = presentationID
-        self.geometry = geometry
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
-            "id", "name", "kind", "geometry", "sizeMillimeters",
-            "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "pairedHoldID", "equipmentObjectID", "presentationID", "sloper"
+            "id", "equipmentObjectID", "name", "kind", "features",
+            "depthRangeMillimeters", "gripTypes", "fingerCapacity", "handCapacity",
+            "side", "pairedContactID"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -317,34 +447,20 @@ struct BoardEditableHold: Equatable, Decodable {
         kind = container.contains(.kind)
             ? try container.decode(HoldKind.self, forKey: .kind)
             : nil
-        sloper = container.contains(.sloper)
-            ? try container.decode(SloperMetadata.self, forKey: .sloper)
-            : nil
-        if sloper != nil, kind != .sloper {
-            throw DecodingError.dataCorruptedError(
-                forKey: .sloper,
-                in: container,
-                debugDescription: "Sloper metadata is only valid for sloper holds."
-            )
-        }
-        geometry = try container.decode([BoardEditablePiece].self, forKey: .geometry)
-        sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
             BoardEditableMillimeterRange.self,
             forKey: .depthRangeMillimeters
         )
-        gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
+        gripTypes = try container.decode([GripType].self, forKey: .gripTypes)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
-        features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
-        declaresPairedHoldID = container.contains(.pairedHoldID)
-        pairedHoldID = declaresPairedHoldID
-            ? try container.decode(String.self, forKey: .pairedHoldID)
+        features = try container.decode([HoldFeature].self, forKey: .features)
+        side = try container.decodeIfPresent(ContactSide.self, forKey: .side)
+        declaresPairedContactID = container.contains(.pairedContactID)
+        pairedContactID = declaresPairedContactID
+            ? try container.decode(String.self, forKey: .pairedContactID)
             : nil
-        equipmentObjectID = container.contains(.equipmentObjectID)
-            ? try container.decode(String.self, forKey: .equipmentObjectID)
-            : "primary"
-        presentationID = try container.decode(String.self, forKey: .presentationID)
+        equipmentObjectID = try container.decode(String.self, forKey: .equipmentObjectID)
     }
 }
 
@@ -483,8 +599,14 @@ enum BoardPackageWriter {
     }
 
     static func validate(_ document: BoardEditableDocument) throws {
+        guard document.schemaVersion == 3 else {
+            throw invalid("schemaVersion must be 3", document)
+        }
         guard document.id.isEditorBoardIdentifier else {
             throw invalid("board ID must be identifier-shaped", document)
+        }
+        guard document.revisionID.isEditorBoardIdentifier else {
+            throw invalid("revisionID must be identifier-shaped", document)
         }
         let requiredStrings = [
             document.manufacturer,
@@ -516,13 +638,28 @@ enum BoardPackageWriter {
             guard presentationIDs.insert(presentation.id).inserted else {
                 throw invalid("presentation ID \(presentation.id) is duplicated", document)
             }
-            guard presentation.assetPath.hasPrefix("assets/"),
-                  !presentation.assetPath.hasSuffix("/"),
-                  !presentation.assetPath.contains("..") else {
-                throw invalid("presentation \(presentation.id) assetPath must stay inside the package assets directory", document)
-            }
             guard presentation.aspectRatio.isFinite, presentation.aspectRatio > 0 else {
                 throw invalid("presentation \(presentation.id) aspect ratio must be positive", document)
+            }
+            guard case .raster(let assetPath, let contactGeometry) = presentation.media else {
+                throw invalid("model-only packages are not editable", document)
+            }
+            guard assetPath.hasPrefix("assets/"),
+                  assetPath.hasSuffix(".png"),
+                  !assetPath.hasSuffix("/"),
+                  !assetPath.contains("..") else {
+                throw invalid("presentation \(presentation.id) raster assetPath must name a package PNG", document)
+            }
+            guard !contactGeometry.isEmpty else {
+                throw invalid("presentation \(presentation.id) contactGeometry must not be empty", document)
+            }
+            for (contactID, pieces) in contactGeometry {
+                guard contactID.isEditorBoardIdentifier, !pieces.isEmpty else {
+                    throw invalid("presentation \(presentation.id) has invalid contactGeometry", document)
+                }
+                for (pieceIndex, piece) in pieces.enumerated() {
+                    try validatePiece(piece, contactID: contactID, pieceIndex: pieceIndex)
+                }
             }
             if presentation.isDefault {
                 defaultPresentationCount += 1
@@ -536,10 +673,10 @@ enum BoardPackageWriter {
             uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
         )
         for presentation in document.presentations {
-            if let sourcePresentationID = presentation.sourcePresentationID {
+            if case .derived(let sourcePresentationID, _) = presentation.derivation {
                 guard sourcePresentationID != presentation.id,
                       let sourcePresentation = presentationsByID[sourcePresentationID],
-                      sourcePresentation.sourcePresentationID == nil else {
+                      sourcePresentation.derivation == .original else {
                     throw invalid(
                         "presentation \(presentation.id) must reference a canonical presentation",
                         document
@@ -548,8 +685,8 @@ enum BoardPackageWriter {
             }
         }
 
-        guard !document.holds.isEmpty else {
-            throw invalid("holds must not be empty", document)
+        guard !document.contacts.isEmpty else {
+            throw invalid("contacts must not be empty", document)
         }
         let positions = document.positions ?? document.presentations.map {
             BoardPosition(id: $0.id, presentationID: $0.id)
@@ -568,9 +705,11 @@ enum BoardPackageWriter {
             guard let presentation = presentationsByID[position.presentationID] else {
                 throw invalid("position \(position.id) references unknown presentationID", document)
             }
-            let canonicalPresentationID = presentation.sourcePresentationID ?? presentation.id
-            guard document.holds.contains(where: { $0.presentationID == canonicalPresentationID }) else {
-                throw invalid("position \(position.id) must own at least one hold", document)
+            guard !position.contactIDsWereExplicitlyAuthored || !position.contactIDs.isEmpty else {
+                throw invalid("position \(position.id) contactIDs must not be empty", document)
+            }
+            if case .model = presentation.media, !position.contactIDsWereExplicitlyAuthored {
+                throw invalid("model position \(position.id) must declare contactIDs", document)
             }
         }
         if let transitions = document.positionTransitions {
@@ -591,93 +730,81 @@ enum BoardPackageWriter {
                 }
             }
         }
-        var holdIDs = Set<String>()
-        for hold in document.holds {
-            guard hold.id.isEditorBoardIdentifier, !hold.name.isEmpty else {
-                throw invalid("hold \(hold.id) metadata must be non-empty and identifier-shaped", document)
+        var contactIDs = Set<String>()
+        for contact in document.contacts {
+            guard contact.id.isEditorBoardIdentifier, !contact.name.isEmpty, contact.kind != nil else {
+                throw invalid("contact \(contact.id) metadata must be complete and identifier-shaped", document)
             }
-            guard holdIDs.insert(hold.id).inserted else {
-                throw invalid("hold ID \(hold.id) is duplicated", document)
+            guard contactIDs.insert(contact.id).inserted else {
+                throw invalid("contact ID \(contact.id) is duplicated", document)
             }
             try validateEquipmentObjectReference(
-                for: hold,
+                for: contact,
                 validIDs: equipmentObjectIDs,
                 in: document
             )
-            guard presentationIDs.contains(hold.presentationID) else {
-                throw invalid("hold \(hold.id) references unknown presentation \(hold.presentationID)", document)
-            }
-            guard presentationsByID[hold.presentationID]?.sourcePresentationID == nil else {
-                throw invalid(
-                    "hold \(hold.id) must be owned by a canonical presentation",
-                    document
-                )
-            }
-            if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
-                throw invalid("hold \(hold.id) must not specify both a size and depth range", document)
-            }
-            if let sloper = hold.sloper {
-                guard hold.kind == .sloper else {
-                    throw invalid("hold \(hold.id) has sloper metadata but is not a sloper", document)
-                }
-                guard sloper.isValid else {
-                    throw invalid("hold \(hold.id) has invalid sloper metadata", document)
-                }
-            }
-            if hold.kind == .gaston {
-                guard let pairedHoldID = hold.pairedHoldID,
-                      pairedHoldID.isEditorBoardIdentifier else {
+            if let pairedContactID = contact.pairedContactID {
+                guard pairedContactID.isEditorBoardIdentifier else {
                     throw invalid(
-                        "gaston hold \(hold.id) must declare an identifier-shaped pairedHoldID",
+                        "contact \(contact.id) must declare an identifier-shaped pairedContactID",
                         document
                     )
                 }
-            } else if hold.declaresPairedHoldID {
-                throw invalid("non-gaston hold \(hold.id) must not declare pairedHoldID", document)
+            } else if contact.kind == .gaston {
+                throw invalid("gaston contact \(contact.id) must declare a pairedContactID", document)
             }
-            if let fingerCapacity = hold.fingerCapacity,
-               !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
-                throw invalid("hold \(hold.id) has an invalid finger capacity", document)
+            if let fingerCapacity = contact.fingerCapacity,
+               !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
+                throw invalid("contact \(contact.id) has an invalid finger capacity", document)
             }
-            if let handCapacity = hold.handCapacity,
-               !BoardHold.validHandCapacityRange.contains(handCapacity) {
-                throw invalid("hold \(hold.id) has an invalid hand capacity", document)
+            if let handCapacity = contact.handCapacity,
+               !PhysicalContact.validHandCapacityRange.contains(handCapacity) {
+                throw invalid("contact \(contact.id) has an invalid hand capacity", document)
             }
-            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
-                throw invalid("hold \(hold.id) has a non-positive size", document)
-            }
-            if let depthRange = hold.depthRangeMillimeters,
+            if let depthRange = contact.depthRangeMillimeters,
                !depthRange.lowerBound.isFinite ||
                !depthRange.upperBound.isFinite ||
                depthRange.lowerBound <= 0 ||
                depthRange.upperBound <= 0 ||
                depthRange.lowerBound > depthRange.upperBound {
-                throw invalid("hold \(hold.id) has an invalid depth range", document)
+                throw invalid("contact \(contact.id) has an invalid depth range", document)
             }
-            if let features = hold.features, Set(features).count != features.count {
-                throw invalid("hold \(hold.id) has duplicate features", document)
+            if Set(contact.features).count != contact.features.count {
+                throw invalid("contact \(contact.id) has duplicate features", document)
             }
-            guard !hold.geometry.isEmpty else {
-                throw invalid("hold \(hold.id) geometry must include at least one piece", document)
-            }
-            for (pieceIndex, piece) in hold.geometry.enumerated() {
-                try validatePiece(piece, holdID: hold.id, pieceIndex: pieceIndex)
+            if Set(contact.gripTypes).count != contact.gripTypes.count {
+                throw invalid("contact \(contact.id) has duplicate gripTypes", document)
             }
         }
-        guard !document.holds.isEmpty else {
-            throw invalid("holds must not be empty", document)
+        for presentation in document.presentations {
+            guard case .raster(_, let geometry) = presentation.media else { continue }
+            for contactID in geometry.keys where !contactIDs.contains(contactID) {
+                throw invalid("presentation \(presentation.id) references unknown contact \(contactID)", document)
+            }
+        }
+        let coveredContactIDs = Set(document.presentations.flatMap { presentation -> [String] in
+            guard case .raster(_, let geometry) = presentation.media else { return [] }
+            return Array(geometry.keys)
+        })
+        guard coveredContactIDs == contactIDs else {
+            throw invalid("raster contactGeometry must cover every contact", document)
+        }
+        for position in positions {
+            for contactID in position.contactIDs where !contactIDs.contains(contactID) {
+                throw invalid("position \(position.id) references unknown contactID", document)
+            }
         }
         try validateEquipmentObjectOwnership(in: document)
-        let holdsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
-        for hold in document.holds where hold.kind == .gaston {
-            let pairedHoldID = hold.pairedHoldID!
-            guard pairedHoldID != hold.id,
-                  let pairedHold = holdsByID[pairedHoldID] else {
-                throw invalid("gaston hold \(hold.id) must pair with a distinct existing hold", document)
+        let contactsByID = Dictionary(uniqueKeysWithValues: document.contacts.map { ($0.id, $0) })
+        for contact in document.contacts where contact.declaresPairedContactID {
+            guard let pairedContactID = contact.pairedContactID else { continue }
+            guard pairedContactID != contact.id,
+                  let pairedContact = contactsByID[pairedContactID] else {
+                throw invalid("contact \(contact.id) must pair with a distinct existing contact", document)
             }
-            guard pairedHold.kind == .gaston,
-                  pairedHold.pairedHoldID == hold.id else {
-                throw invalid("gaston hold \(hold.id) must have a reciprocal gaston pair", document)
+            guard pairedContact.kind == contact.kind,
+                  pairedContact.pairedContactID == contact.id else {
+                throw invalid("contact \(contact.id) must have a reciprocal same-kind pair", document)
             }
         }
     }
@@ -701,13 +828,13 @@ enum BoardPackageWriter {
     }
 
     private static func validateEquipmentObjectReference(
-        for hold: BoardEditableHold,
+        for contact: BoardEditableContact,
         validIDs: Set<String>,
         in document: BoardEditableDocument
     ) throws {
-        guard validIDs.contains(hold.equipmentObjectID) else {
+        guard validIDs.contains(contact.equipmentObjectID) else {
             throw invalid(
-                "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)",
+                "contact \(contact.id) references unknown equipment object \(contact.equipmentObjectID)",
                 document
             )
         }
@@ -716,19 +843,19 @@ enum BoardPackageWriter {
     private static func validateEquipmentObjectOwnership(
         in document: BoardEditableDocument
     ) throws {
-        let ownedEquipmentObjectIDs = Set(document.holds.map(\.equipmentObjectID))
+        let ownedEquipmentObjectIDs = Set(document.contacts.map(\.equipmentObjectID))
         for object in document.equipmentObjects where !ownedEquipmentObjectIDs.contains(object.id) {
-            throw invalid("equipment object \(object.id) must own at least one hold", document)
+            throw invalid("equipment object \(object.id) must own at least one contact", document)
         }
     }
 
     private static func validatePiece(
         _ piece: BoardEditablePiece,
-        holdID: String,
+        contactID: String,
         pieceIndex: Int
     ) throws {
         guard piece.frame.isValid else {
-            throw invalid("hold \(holdID) geometry[\(pieceIndex)] has an invalid frame")
+            throw invalid("contact \(contactID) geometry[\(pieceIndex)] has an invalid frame")
         }
         switch piece.shape.type {
         case "roundedRect":
@@ -797,6 +924,7 @@ enum BoardPackageWriter {
 
     private static func canonicalValue(_ document: BoardEditableDocument) -> CanonicalJSONValue {
         var entries: [(String, CanonicalJSONValue)] = [
+            ("schemaVersion", .int(3)),
             ("id", .string(document.id)),
             ("manufacturer", .string(document.manufacturer)),
             ("name", .string(document.name)),
@@ -804,18 +932,8 @@ enum BoardPackageWriter {
             ("productURL", .string(document.productURL.absoluteString)),
             ("aspectRatio", .double(document.aspectRatio)),
             ("equipmentObjects", .array(document.equipmentObjects.map { object in
-                var entries: [(String, CanonicalJSONValue)] = [
-                    ("id", .string(object.id))
-                ]
-                if object.missingHandCapacityPolicy != .legacyBilateral {
-                    entries.append((
-                        "missingHandCapacityPolicy",
-                        .string(object.missingHandCapacityPolicy.rawValue)
-                    ))
-                }
-                return .object(entries)
+                .object([("id", .string(object.id))])
             })),
-            ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
         ]
         if let positions = document.positions {
@@ -828,82 +946,91 @@ enum BoardPackageWriter {
             ))
         }
         if let dimensions = document.dimensions {
-            entries.insert(("dimensions", .string(dimensions)), at: 5)
+            entries.insert(("dimensions", .string(dimensions)), at: 6)
         }
+        entries.append(("revisionID", .string(document.revisionID)))
+        entries.append(("contacts", .array(document.contacts.map(canonicalContactValue))))
         return .object(entries)
     }
 
-    private static func canonicalHoldValue(_ hold: BoardEditableHold) -> CanonicalJSONValue {
+    private static func canonicalContactValue(_ contact: BoardEditableContact) -> CanonicalJSONValue {
         var entries: [(String, CanonicalJSONValue)] = [
-            ("id", .string(hold.id)),
-            ("name", .string(hold.name)),
+            ("id", .string(contact.id)),
+            ("equipmentObjectID", .string(contact.equipmentObjectID)),
+            ("name", .string(contact.name)),
         ]
-        if let kind = hold.kind {
+        if let kind = contact.kind {
             entries.append(("kind", .string(kind.rawValue)))
         }
-        if let pairedHoldID = hold.pairedHoldID {
-            entries.append(("pairedHoldID", .string(pairedHoldID)))
+        entries.append(("features", .array(contact.features.map { .string($0.rawValue) })))
+        if let fingerCapacity = contact.fingerCapacity {
+            entries.append(("fingerCapacity", .int(fingerCapacity)))
         }
-        if let sloper = hold.sloper {
-            var sloperEntries: [(String, CanonicalJSONValue)] = [
-                ("type", .string(sloper.type.rawValue)),
-            ]
-            if let angleDegrees = sloper.angleDegrees {
-                sloperEntries.append(("angleDegrees", .double(angleDegrees)))
-            }
-            entries.append(("sloper", .object(sloperEntries)))
+        if let handCapacity = contact.handCapacity {
+            entries.append(("handCapacity", .int(handCapacity)))
         }
-        if let sizeMillimeters = hold.sizeMillimeters {
-            entries.append(("sizeMillimeters", .double(sizeMillimeters)))
-        }
-        if let depthRange = hold.depthRangeMillimeters {
+        if let depthRange = contact.depthRangeMillimeters {
             entries.append(("depthRangeMillimeters", .object([
                 ("lowerBound", .double(depthRange.lowerBound)),
                 ("upperBound", .double(depthRange.upperBound)),
             ])))
         }
-        if let gripType = hold.gripType {
-            entries.append(("gripType", .string(gripType.rawValue)))
+        entries.append(("gripTypes", .array(contact.gripTypes.map { .string($0.rawValue) })))
+        if let side = contact.side {
+            entries.append(("side", .string(side.rawValue)))
         }
-        if let fingerCapacity = hold.fingerCapacity {
-            entries.append(("fingerCapacity", .int(fingerCapacity)))
+        if let pairedContactID = contact.pairedContactID {
+            entries.append(("pairedContactID", .string(pairedContactID)))
         }
-        if let handCapacity = hold.handCapacity {
-            entries.append(("handCapacity", .int(handCapacity)))
-        }
-        if let features = hold.features {
-            entries.append(("features", .array(features.map { .string($0.rawValue) })))
-        }
-        entries.append(("equipmentObjectID", .string(hold.equipmentObjectID)))
-        entries.append(("presentationID", .string(hold.presentationID)))
-        entries.append(("geometry", .array(hold.geometry.map(canonicalPieceValue))))
         return .object(entries)
     }
 
     private static func canonicalPresentationValue(
         _ presentation: BoardEditablePresentation
     ) -> CanonicalJSONValue {
-        var entries: [(String, CanonicalJSONValue)] = [
+        let derivation: CanonicalJSONValue
+        switch presentation.derivation {
+        case .original:
+            derivation = .object([("type", .string("original"))])
+        case .derived(let sourcePresentationID, let isInverted):
+            derivation = .object([
+                ("type", .string("derived")),
+                ("sourcePresentationID", .string(sourcePresentationID)),
+                ("isInverted", .bool(isInverted)),
+            ])
+        }
+        let media: CanonicalJSONValue
+        switch presentation.media {
+        case .raster(let assetPath, let contactGeometry):
+            media = .object([
+                ("type", .string("raster")),
+                ("assetPath", .string(assetPath)),
+                ("contactGeometry", .object(contactGeometry.keys.sorted().map { contactID in
+                    (contactID, .array((contactGeometry[contactID] ?? []).map(canonicalPieceValue)))
+                })),
+            ])
+        case .model:
+            preconditionFailure("model-only packages are not editable")
+        }
+        return .object([
             ("id", .string(presentation.id)),
             ("name", .string(presentation.name)),
-            ("assetPath", .string(presentation.assetPath)),
             ("aspectRatio", .double(presentation.aspectRatio)),
-            ("default", .bool(presentation.isDefault)),
-        ]
-        if let sourcePresentationID = presentation.sourcePresentationID {
-            entries.append(("sourcePresentationID", .string(sourcePresentationID)))
-        }
-        if presentation.isInverted {
-            entries.append(("isInverted", .bool(true)))
-        }
-        return .object(entries)
+            ("isDefault", .bool(presentation.isDefault)),
+            ("derivation", derivation),
+            ("media", media),
+        ])
     }
 
     private static func canonicalPositionValue(_ position: BoardPosition) -> CanonicalJSONValue {
-        .object([
+        var entries: [(String, CanonicalJSONValue)] = [
             ("id", .string(position.id)),
             ("presentationID", .string(position.presentationID)),
-        ])
+        ]
+        if position.contactIDsWereExplicitlyAuthored {
+            entries.append(("contactIDs", .array(position.contactIDs.map(CanonicalJSONValue.string))))
+        }
+        return .object(entries)
     }
 
     private static func canonicalPositionTransitionValue(

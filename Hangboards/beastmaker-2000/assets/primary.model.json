@@ -1,6 +1,161 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.289999992,
+      0.150000006,
+      0.057999998
+    ],
+    "min": [
+      -0.289999992,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "231fad8a6ff75fa45647fbe9388e208a73561b781eac5129d3034c6577c3c293",
+  "nodes": [
+    {
+      "nodeID": "BoardBody_surface_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "front_lower_1_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-1"
+    },
+    {
+      "nodeID": "front_lower_2_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-2"
+    },
+    {
+      "nodeID": "front_lower_3_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-3"
+    },
+    {
+      "nodeID": "front_lower_4_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-4"
+    },
+    {
+      "nodeID": "front_lower_5_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-5"
+    },
+    {
+      "nodeID": "front_lower_6_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-6"
+    },
+    {
+      "nodeID": "front_lower_7_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-7"
+    },
+    {
+      "nodeID": "front_lower_8_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-8"
+    },
+    {
+      "nodeID": "front_lower_9_surface_001",
+      "role": "contact",
+      "contactID": "front-lower-9"
+    },
+    {
+      "nodeID": "front_middle_1_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-1"
+    },
+    {
+      "nodeID": "front_middle_2_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-2"
+    },
+    {
+      "nodeID": "front_middle_3_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-3"
+    },
+    {
+      "nodeID": "front_middle_4_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-4"
+    },
+    {
+      "nodeID": "front_middle_5_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-5"
+    },
+    {
+      "nodeID": "front_middle_6_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-6"
+    },
+    {
+      "nodeID": "front_middle_7_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-7"
+    },
+    {
+      "nodeID": "front_middle_8_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-8"
+    },
+    {
+      "nodeID": "front_middle_9_surface_001",
+      "role": "contact",
+      "contactID": "front-middle-9"
+    },
+    {
+      "nodeID": "front_upper_1_surface_001",
+      "role": "contact",
+      "contactID": "front-upper-1"
+    },
+    {
+      "nodeID": "front_upper_2_surface_001",
+      "role": "contact",
+      "contactID": "front-upper-2"
+    },
+    {
+      "nodeID": "hold_26_surface_001",
+      "role": "contact",
+      "contactID": "hold-26"
+    },
+    {
+      "nodeID": "hold_27_surface_001",
+      "role": "contact",
+      "contactID": "hold-27"
+    },
+    {
+      "nodeID": "hold_28_surface_001",
+      "role": "contact",
+      "contactID": "hold-28"
+    },
+    {
+      "nodeID": "top_sloper_1_surface_001",
+      "role": "contact",
+      "contactID": "top-sloper-1"
+    },
+    {
+      "nodeID": "top_sloper_2_surface_001",
+      "role": "contact",
+      "contactID": "top-sloper-2"
+    },
+    {
+      "nodeID": "top_sloper_3_surface_001",
+      "role": "contact",
+      "contactID": "top-sloper-3"
+    },
+    {
+      "nodeID": "top_sloper_4_surface_001",
+      "role": "contact",
+      "contactID": "top-sloper-4"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "front-lower-1": {
       "center": [
         0.086206894,
@@ -514,160 +669,5 @@
         "top_sloper_4_surface_001"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.289999992,
-      0.150000006,
-      0.057999998
-    ],
-    "min": [
-      -0.289999992,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "231fad8a6ff75fa45647fbe9388e208a73561b781eac5129d3034c6577c3c293",
-  "nodes": [
-    {
-      "nodeID": "BoardBody_surface_001",
-      "role": "body"
-    },
-    {
-      "holdID": "front-lower-1",
-      "nodeID": "front_lower_1_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-2",
-      "nodeID": "front_lower_2_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-3",
-      "nodeID": "front_lower_3_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-4",
-      "nodeID": "front_lower_4_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-5",
-      "nodeID": "front_lower_5_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-6",
-      "nodeID": "front_lower_6_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-7",
-      "nodeID": "front_lower_7_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-8",
-      "nodeID": "front_lower_8_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-lower-9",
-      "nodeID": "front_lower_9_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-1",
-      "nodeID": "front_middle_1_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-2",
-      "nodeID": "front_middle_2_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-3",
-      "nodeID": "front_middle_3_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-4",
-      "nodeID": "front_middle_4_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-5",
-      "nodeID": "front_middle_5_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-6",
-      "nodeID": "front_middle_6_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-7",
-      "nodeID": "front_middle_7_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-8",
-      "nodeID": "front_middle_8_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-middle-9",
-      "nodeID": "front_middle_9_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-upper-1",
-      "nodeID": "front_upper_1_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "front-upper-2",
-      "nodeID": "front_upper_2_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "hold-26",
-      "nodeID": "hold_26_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "hold-27",
-      "nodeID": "hold_27_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "hold-28",
-      "nodeID": "hold_28_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "top-sloper-1",
-      "nodeID": "top_sloper_1_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "top-sloper-2",
-      "nodeID": "top_sloper_2_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "top-sloper-3",
-      "nodeID": "top_sloper_3_surface_001",
-      "role": "hold"
-    },
-    {
-      "holdID": "top-sloper-4",
-      "nodeID": "top_sloper_4_surface_001",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }

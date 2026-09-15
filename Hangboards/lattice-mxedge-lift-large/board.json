@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "lattice.mxedge-lift-large",
   "manufacturer": "Lattice",
   "name": "MXEdge Lift Large",
@@ -9,8 +9,7 @@
   "aspectRatio": 1.7142857142857142,
   "equipmentObjects": [
     {
-      "id": "primary",
-      "missingHandCapacityPolicy": "unavailable"
+      "id": "primary"
     }
   ],
   "presentations": [
@@ -54,66 +53,15 @@
             "lower-lips-front": {"rotation": [0.190808995, 0.0, 0.0, 0.981627183], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "upper-lip-inverted": {"rotation": [0.0, 0.190808995, -0.981627183, 0.0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [-0.068, -0.048999998, 0], "right-lead": [0.068, -0.048999998, 0]}}
           }
-        },
-        "orientation": {
-          "pivot": "modelBoundsCenter",
-          "rotations": {
-            "lower-lips-front": [
-              0.190808995,
-              0.0,
-              0.0,
-              0.981627183
-            ],
-            "upper-lip-inverted": [
-              0.0,
-              0.190808995,
-              -0.981627183,
-              0.0
-            ]
-          }
         }
       }
-    }
-  ],
-  "holds": [
-    {
-      "id": "edge-22",
-      "equipmentObjectID": "primary",
-      "name": "MX22 edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 22
-    },
-    {
-      "id": "edge-16",
-      "equipmentObjectID": "primary",
-      "name": "MX16 edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 16
-    },
-    {
-      "id": "edge-12",
-      "equipmentObjectID": "primary",
-      "name": "MX12 edge",
-      "kind": "edge",
-      "handCapacity": 1,
-      "sizeMillimeters": 12
-    },
-    {
-      "id": "mono-28",
-      "equipmentObjectID": "primary",
-      "name": "28 mm mono",
-      "kind": "pocket",
-      "handCapacity": 1,
-      "sizeMillimeters": 28
     }
   ],
   "positions": [
     {
       "id": "lower-lips-front",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "edge-22",
         "edge-16",
         "mono-28"
@@ -122,9 +70,64 @@
     {
       "id": "upper-lip-inverted",
       "presentationID": "primary",
-      "holdIDs": [
+      "contactIDs": [
         "edge-12"
       ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-22",
+      "equipmentObjectID": "primary",
+      "name": "MX22 edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 22,
+        "upperBound": 22
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-16",
+      "equipmentObjectID": "primary",
+      "name": "MX16 edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 16,
+        "upperBound": 16
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12",
+      "equipmentObjectID": "primary",
+      "name": "MX12 edge",
+      "kind": "edge",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 12,
+        "upperBound": 12
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "mono-28",
+      "equipmentObjectID": "primary",
+      "name": "28 mm mono",
+      "kind": "pocket",
+      "features": [],
+      "handCapacity": 1,
+      "depthRangeMillimeters": {
+        "lowerBound": 28,
+        "upperBound": 28
+      },
+      "gripTypes": []
     }
   ]
 }

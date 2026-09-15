@@ -124,6 +124,53 @@ final class WorkoutHistoryTests: XCTestCase {
         XCTAssertTrue(records[0].shouldUploadToHealthKit)
     }
 
+    func testPendingWorkoutRecordRejectsUnknownLegacyField() {
+        let data = Data("""
+        {
+          "id": "00000000-0000-0000-0000-000000000123",
+          "planTitle": "Plan",
+          "startDate": 700000000,
+          "endDate": 700000600,
+          "healthUploadAttempted": false,
+          "healthWorkoutUUID": null,
+          "holdID": "legacy-hold"
+        }
+        """.utf8)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(PendingWorkoutRecord.self, from: data)) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict pending-record rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("Unsupported pending workout field holdID"))
+        }
+    }
+
+    func testPendingWorkoutRecordRejectsUnknownFieldNestedInActivityContext() {
+        let data = Data("""
+        {
+          "id": "00000000-0000-0000-0000-000000000123",
+          "planTitle": "Plan",
+          "startDate": 700000000,
+          "endDate": 700000600,
+          "healthUploadAttempted": false,
+          "healthWorkoutUUID": null,
+          "activityContext": {
+            "boardID": "fixture.board",
+            "boardName": "Fixture",
+            "activityMetadata": {"segments": [], "version": 2},
+            "holdIDs": []
+          }
+        }
+        """.utf8)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(PendingWorkoutRecord.self, from: data)) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected strict pending-context rejection, got \(error)")
+            }
+            XCTAssertTrue(context.debugDescription.contains("Unsupported pending workout activity context field holdIDs"))
+        }
+    }
+
     func testSnapshotSortsDeduplicatesAndAddsUnmatchedLocalRecords() {
         let newerID = UUID(uuidString: "DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD")!
         let newer = healthRecord.with(

@@ -1185,8 +1185,8 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             .map {
             BoardModelNodeDescriptor(
                 nodeID: $0.nodeID,
-                role: $0.nodeID == holdNodeID ? .hold : ($0.nodeID == bodyNodeID ? .body : .attachment),
-                holdID: $0.nodeID == holdNodeID ? "hold" : nil
+                role: $0.nodeID == holdNodeID ? .contact : ($0.nodeID == bodyNodeID ? .body : .attachment),
+                contactID: $0.nodeID == holdNodeID ? "hold" : nil
             )
         }
         return BoardModelDescriptor(
@@ -1195,11 +1195,11 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             modelSHA256: String(repeating: "0", count: 64),
             modelBounds: bounds,
             nodes: [
-                BoardModelNodeDescriptor(nodeID: "Body", role: .body, holdID: nil),
-                BoardModelNodeDescriptor(nodeID: "Hold", role: .hold, holdID: "hold"),
+                BoardModelNodeDescriptor(nodeID: "Body", role: .body, contactID: nil),
+                BoardModelNodeDescriptor(nodeID: "Hold", role: .contact, contactID: "hold"),
             ] + passageNodes,
-            holds: [
-                "hold": BoardModelHoldDescriptor(
+            contacts: [
+                "hold": BoardModelContactDescriptor(
                     nodeIDs: ["Hold"] + (holdNodeID.map { [$0] } ?? []),
                     facePlaneAABB: BoardModelFacePlaneAABB(minimum: [0, 0], maximum: [1, 1]),
                     center: [0.5, 0.5]

@@ -1,6 +1,136 @@
 {
   "coordinateFrame": "hang-ten-board-v1",
-  "holds": {
+  "modelBounds": {
+    "max": [
+      0.579999983,
+      0.150000006,
+      0.057999995
+    ],
+    "min": [
+      0.0,
+      0.0,
+      -1.1E-8
+    ]
+  },
+  "modelSHA256": "19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d",
+  "nodes": [
+    {
+      "nodeID": "BeastmakerBody_023",
+      "role": "body"
+    },
+    {
+      "nodeID": "BeastmakerBody_024",
+      "role": "contact",
+      "contactID": "jug-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_025",
+      "role": "contact",
+      "contactID": "jug-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_026",
+      "role": "contact",
+      "contactID": "pocket-bottom-inner-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_027",
+      "role": "contact",
+      "contactID": "pocket-bottom-inner-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_028",
+      "role": "contact",
+      "contactID": "pocket-bottom-mid-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_029",
+      "role": "contact",
+      "contactID": "pocket-bottom-mid-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_030",
+      "role": "contact",
+      "contactID": "pocket-bottom-outer-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_031",
+      "role": "contact",
+      "contactID": "pocket-bottom-outer-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_032",
+      "role": "contact",
+      "contactID": "pocket-middle-center"
+    },
+    {
+      "nodeID": "BeastmakerBody_033",
+      "role": "contact",
+      "contactID": "pocket-middle-inner-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_034",
+      "role": "contact",
+      "contactID": "pocket-middle-inner-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_035",
+      "role": "contact",
+      "contactID": "pocket-middle-mid-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_036",
+      "role": "contact",
+      "contactID": "pocket-middle-mid-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_037",
+      "role": "contact",
+      "contactID": "pocket-middle-outer-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_038",
+      "role": "contact",
+      "contactID": "pocket-middle-outer-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_039",
+      "role": "contact",
+      "contactID": "pocket-top-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_040",
+      "role": "contact",
+      "contactID": "pocket-top-outer-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_041",
+      "role": "contact",
+      "contactID": "pocket-top-outer-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_042",
+      "role": "contact",
+      "contactID": "pocket-top-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_043",
+      "role": "contact",
+      "contactID": "sloper-35-left"
+    },
+    {
+      "nodeID": "BeastmakerBody_044",
+      "role": "contact",
+      "contactID": "sloper-35-right"
+    },
+    {
+      "nodeID": "BeastmakerBody_045",
+      "role": "contact",
+      "contactID": "sloper-center"
+    }
+  ],
+  "schemaVersion": 1,
+  "contacts": {
     "jug-left": {
       "center": [
         0.121551725,
@@ -419,135 +549,5 @@
         "BeastmakerBody_045"
       ]
     }
-  },
-  "modelBounds": {
-    "max": [
-      0.579999983,
-      0.150000006,
-      0.057999995
-    ],
-    "min": [
-      0.0,
-      0.0,
-      -1.1e-08
-    ]
-  },
-  "modelSHA256": "19fb5895575792fb69e82aa3c8a04fa14a6bd40a8a97f486bc16be014e546f3d",
-  "nodes": [
-    {
-      "nodeID": "BeastmakerBody_023",
-      "role": "body"
-    },
-    {
-      "holdID": "jug-left",
-      "nodeID": "BeastmakerBody_024",
-      "role": "hold"
-    },
-    {
-      "holdID": "jug-right",
-      "nodeID": "BeastmakerBody_025",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-bottom-inner-left",
-      "nodeID": "BeastmakerBody_026",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-bottom-inner-right",
-      "nodeID": "BeastmakerBody_027",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-bottom-mid-left",
-      "nodeID": "BeastmakerBody_028",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-bottom-mid-right",
-      "nodeID": "BeastmakerBody_029",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-bottom-outer-left",
-      "nodeID": "BeastmakerBody_030",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-bottom-outer-right",
-      "nodeID": "BeastmakerBody_031",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-center",
-      "nodeID": "BeastmakerBody_032",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-inner-left",
-      "nodeID": "BeastmakerBody_033",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-inner-right",
-      "nodeID": "BeastmakerBody_034",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-mid-left",
-      "nodeID": "BeastmakerBody_035",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-mid-right",
-      "nodeID": "BeastmakerBody_036",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-outer-left",
-      "nodeID": "BeastmakerBody_037",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-middle-outer-right",
-      "nodeID": "BeastmakerBody_038",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-top-left",
-      "nodeID": "BeastmakerBody_039",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-top-outer-left",
-      "nodeID": "BeastmakerBody_040",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-top-outer-right",
-      "nodeID": "BeastmakerBody_041",
-      "role": "hold"
-    },
-    {
-      "holdID": "pocket-top-right",
-      "nodeID": "BeastmakerBody_042",
-      "role": "hold"
-    },
-    {
-      "holdID": "sloper-35-left",
-      "nodeID": "BeastmakerBody_043",
-      "role": "hold"
-    },
-    {
-      "holdID": "sloper-35-right",
-      "nodeID": "BeastmakerBody_044",
-      "role": "hold"
-    },
-    {
-      "holdID": "sloper-center",
-      "nodeID": "BeastmakerBody_045",
-      "role": "hold"
-    }
-  ],
-  "schemaVersion": 1
+  }
 }
