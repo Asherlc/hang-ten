@@ -76,3 +76,75 @@ not inspect a compiler staging asset or source blend.
 and `status --root Hangboards` passed after promotion. The package has exactly
 `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; it has no
 raster asset, canonical path, or fallback geometry.
+
+## Metolius Climber's Edge (`metolius.climbers-edge`)
+
+Reviewed 2026-09-15. `Hangboards/metolius-climbers-edge/board.json` remains
+the authority for the current redesigned Climber's Edge identity and its
+existing 15-contact inventory, names, kinds, depth facts, and product metadata.
+No catalog contact or factual field was added, removed, renamed, or edited.
+
+### Retained visual evidence
+
+| ID | Publisher and URL | Retained local copy and SHA-256 | Supports | Does not support |
+| --- | --- | --- | --- | --- |
+| CE-DIAGRAM | Metolius — [dimension/hold diagram](https://www.metoliusclimbing.com/cdn/shop/files/Climber_s-Edge-Spec.jpg?v=1765309719) | `.context/lumpy-liger-hangboard-collection/metolius-climbers-edge/retained-evidence/climbers-edge-spec.jpg` — `a96263a9b46e148ddc6817f5173494c871e38871d7c02c6b8ce5ba1e98ee38c8` | Exact 600 × 160 mm revision envelope, 15-contact layout, six edge depths, two jugs, two flat slopers, central round sloper, and mounting-opening existence. | Body thickness, bore centers/radii/countersinks, rear construction, or local curvature. |
+| CE-PHOTO | Metolius — [product photograph](https://www.metoliusclimbing.com/cdn/shop/files/The-Climber_s-Edge-Training-Board_67ebe212-d205-4f2c-9ca9-048b1792351d.jpg?v=1765309719) | `.context/lumpy-liger-hangboard-collection/metolius-climbers-edge/retained-evidence/climbers-edge-product.jpg` — `f77709e5ef37fea421bdf08cd85b6fa88709da76e4ea3a861a3a4e2c673ae3ed` | Exact revision’s oblique silhouette, open-ended sculpted tiers, tapered ends, top-contact arrangement, and wood appearance. | A scan, exact bore dimensions/locations, hidden geometry, or machining sections. |
+
+The user-supplied download’s source register is retained at
+`.context/lumpy-liger-hangboard-collection/metolius-climbers-edge/retained-evidence/source-register.json`
+(SHA-256 `af2b1588b0325826fea5e60f12284c4b5705512ad485380aa76588ebfd375b68`).
+The product page was also reviewed for identity and the documented 20-degree
+flat slopers and 40 mm-radius round sloper. These sources establish factual
+identity only. No source pixels, image tracing, positional inference, or
+visual auto-geometry process was used in the mapping or correction.
+
+### Audited source and approved corrective ruling
+
+The supplied user-provided source GLB is
+`~/Downloads/hangboard-collection/models/metolius-climbers-edge/metolius-climbers-edge.glb`,
+SHA-256 `32f9b1d0c851536b61ca8d900b8d8488ebc2f707844598741f75793537271bb1`
+(7,885,360 bytes). The retained delivery structural record declares 16 mesh
+nodes—one `body` plus the 15 mapped contacts—and confirms eight open authored
+mounting bores. Those unsupported hardware openings are body topology, not
+standalone source nodes.
+
+The user expressly authorized a narrow pre-export correction. The importer and
+compiler remain transport-only. The correction was authored directly in the
+workspace-owned native source as follows:
+
+| Artifact | SHA-256 | Ruling |
+| --- | --- | --- |
+| Supplied GLB | `32f9b1d0c851536b61ca8d900b8d8488ebc2f707844598741f75793537271bb1` | Contains eight open body bore rays; not promoted. |
+| Corrected native source | `d7d052a716e25b2f4348882f265ec8c33fdf87db06d5ef9296011ca33fdcd4d8` | Deletes 1,239 body-only bore/countersink triangles and adds 16 nonselectable planar body caps. Every cap uses the supplied authored bore center/countersink radius and the exact exterior mouth plane read from the deleted source faces; no planar cap estimate was introduced. |
+| Promoted `assets/primary.usdz` | `b17ea53a25d2050ab1424748ceab10fb7da0ba15faddcede8ec39c256b9c5fe3` | Deterministic transport/export/reimport from the corrected source. |
+| Promoted descriptor | `d2805c4735239508e6bf9b3b146cc06a3f4d0ace22130e8c79013cb2716d0952` | Generated from importer-visible USDZ triangles and hash-binds the promoted USDZ. |
+
+The supplied GLB expands to unwelded triangles on native import, so source
+boundary loops cannot be relied upon as a closed-loop authoring interface. The
+correction therefore uses only the retained source’s explicit bore records and
+the selected source faces’ exterior planes: front `0 m`, with rear mouth planes
+`-0.041 m` for bores 1–3, `-0.047 m` for bores 4–5, and `-0.055 m` for bores
+6–8. These are source-derived display geometry values, not new product facts
+or positional estimates. The 15 contact meshes retain their exact supplied
+triangle counts. Records, pre-correction failure, corrected-source check,
+mapping, manifest, compiler report, and shipped-USDZ check are retained under
+`.context/lumpy-liger-hangboard-collection/metolius-climbers-edge/`.
+
+### Explicit binding and shipped-asset verification
+
+`contact-mapping.json` is ordered exactly as the board’s existing 15 contact
+IDs. Each named source contact maps identically to its catalog ID. `body` and
+`bore-free-body-caps` are the only nonselectable `body` nodes; neither has a
+contact identity. The compiler cleanly reimported the USDZ from an empty scene,
+producing 17 importer-visible mesh nodes, 15 contact bindings, and a descriptor
+whose contact keyset exactly equals the catalog inventory.
+
+`verify_promoted_usdz.py` verified the exact shipped USDZ hash against both
+the expected promotion hash and the shipped descriptor, then imported that
+shipping asset into an empty Blender scene. Its retained
+`shipped-usdz-bore-validation.json` records all eight audited bore-center rays
+intersecting the nonselectable `bore_free_body_caps_001` node. It does not
+inspect an intermediate source or staging asset. The promoted package contains
+only `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; it
+has no raster media, canonical path, or fallback geometry.

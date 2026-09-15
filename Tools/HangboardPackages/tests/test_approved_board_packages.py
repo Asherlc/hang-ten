@@ -15,6 +15,7 @@ from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
+CLIMBERS_EDGE_ROOT = HANGBOARDS_ROOT / "metolius-climbers-edge"
 CONTACT_ROOT = HANGBOARDS_ROOT / "metolius-contact"
 DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
@@ -85,6 +86,32 @@ def _assert_model_descriptor(
             if node.get("contactID") == contact_id
         ]
     return descriptor
+
+
+def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
+    board = json.loads((CLIMBERS_EDGE_ROOT / "board.json").read_text(encoding="utf-8"))
+    presentations = board["presentations"]
+    assert isinstance(presentations, list) and len(presentations) == 1
+    media = presentations[0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in media
+    assert {
+        path.relative_to(CLIMBERS_EDGE_ROOT).as_posix()
+        for path in CLIMBERS_EDGE_ROOT.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    descriptor = json.loads(
+        (CLIMBERS_EDGE_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (CLIMBERS_EDGE_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["contacts"]) == {contact["id"] for contact in board["contacts"]}
+    assert {node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"} == {
+        "body_001", "bore_free_body_caps_001"
+    }
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
