@@ -53,7 +53,7 @@ Start with a failing parser/audit/runtime regression. Validate the closed cord
 audit, package inventory, JSON, and unchanged USDZ/descriptor hash boundary.
 Run relevant Python and XCTest suites. Use `validate-hang-ten-ios` for a
 current-source isolated Simulator review of every canonical pose: front,
-oblique, active hold, clearance, self-intersection, selection, clear/reappear,
+oblique, active contact, clearance, self-intersection, selection, clear/reappear,
 orbit/reset, and workout-driven position. The cord must remain non-pickable and
 outside accessibility. Retain provenance for screenshots and clean only exact
 workspace-owned simulators and artifacts.

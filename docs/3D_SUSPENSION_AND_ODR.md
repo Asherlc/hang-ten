@@ -12,7 +12,7 @@ A model presentation crosses two different delivery paths:
 | Content | Source | Shipping path | Runtime role |
 | --- | --- | --- | --- |
 | Board identity, positions, `media.suspension`, and display configuration | `board.json` | Main app bundle | Parsed into `BoardModelMedia`; selects and solves transient cord geometry |
-| Model descriptor and its expected `modelSHA256` | `assets/*.model.json` | Main app bundle | Validates model identity, bounds, nodes, attachments, and logical hold bindings |
+| Model descriptor and its expected `modelSHA256` | `assets/*.model.json` | Main app bundle | Validates model identity, bounds, nodes, attachments, and physical-contact bindings |
 | Board mesh and embedded materials | `assets/*.usdz` | Apple On-Demand Resources (ODR) in production | Decoded by SceneKit after access and SHA-256 validation |
 
 `scripts/stage-board-packages.py` copies each validated regular-file package
@@ -49,8 +49,8 @@ match the descriptor, or SceneKit cannot decode it.
 | Correct model loads, expected cord absent | Bundled `media.suspension`, selected `positionID`, parser dispatch, transient scene layer | ODR cache purge or USDZ replacement |
 | Model is explicitly unavailable | ODR acquisition/debug packaged URL, resource lease, regular-file check, SHA-256, SceneKit decode | Raster fallback or a guessed model path |
 | Wrong or stale mesh appears | Installed app/build provenance, ODR tag and descriptor hash, staging output | A screenshot from an unproven prebuilt app |
-| Cord moves incorrectly for one hold/face | Position-to-pose mapping, attachment override, solved destination state | Independent animation or camera changes that hide the defect |
-| Cord is selectable or blocks a hold | Native picking and scene-category configuration | Moving the cord visually without proving clearance |
+| Cord moves incorrectly for one contact/face | Position-to-pose mapping, attachment override, solved destination state | Independent animation or camera changes that hide the defect |
+| Cord is selectable or blocks a contact | Native picking and scene-category configuration | Moving the cord visually without proving clearance |
 
 A prebuilt app or CI artifact is valid visual evidence only when its commit is
 at or after both the renderer implementation and the bundled metadata being
@@ -96,12 +96,12 @@ otherwise.
 
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
-| `singleCord` | One attachment and one branch to a shared invisible display anchor | Use only when one physical attachment is established. The attachment binds to an importer-visible body/attachment node, never a hold. |
+| `singleCord` | One attachment and one branch to a shared invisible display anchor | Use only when one physical attachment is established. The attachment binds to an importer-visible body/attachment node, never a selectable contact node. |
 | `pairedLeadCord` | Two independent exterior leads from two distinct attachment points to one invisible anchor | Represents visible leads without inventing a lead-to-lead or hidden interior route. Optional ordered `contactPointsInModel` may preserve an evidenced exterior over-lip route before the terminal attachment; per-pose attachment-point overrides must retain both lead IDs and remain distinct and in bounds. |
 | `twoBranchCord` | Two branch routes through four uniquely identified passages arranged as two ordered pairs | Use directed entry/exit bore routes only when the complete through-route is evidenced. Never fabricate a hidden bore from a visible mouth. |
 
 Attachments and passages bind against importer-visible IDs in the hash-bound
-descriptor. Preserve logical hold IDs as selectable contacts, not suspension
+descriptor. Preserve contact IDs as selectable contacts, not suspension
 anchors. Cord guides, anchor placement, radius, rest length, material, pose,
 and camera values remain `displayEstimate` unless a source establishes the
 specific numeric fact.
@@ -191,8 +191,8 @@ change.
 | Asset boundary | USDZ and descriptor paths and bytes are unchanged for metadata-only corrections; staged USDZ bytes match source and descriptor SHA-256 |
 | Solver/renderer | Relevant `SuspendedBoardPresentationTests`, `BoardModelTests`, and package-store tests pass for real packages and malformed fixtures |
 | Geometry | Every canonical pose passes sampled length, self-intersection, board/tube clearance away from the attachment interface, and camera framing |
-| Picking/accessibility | The active hold remains the nearest descriptor-bound triangle; cord groups cannot become a hit or accessibility element |
-| Native visuals | Current-source app captures cover every pose in front, oblique, and active-hold states, plus clear/reappear, orbit/reset, and workout-driven selection |
+| Picking/accessibility | The active contact remains the nearest descriptor-bound triangle; cord groups cannot become a hit or accessibility element |
+| Native visuals | Current-source app captures cover every pose in front, oblique, and active-contact states, plus clear/reappear, orbit/reset, and workout-driven selection |
 
 Repository commands from the checkout root:
 
@@ -205,9 +205,14 @@ rtk .context/hangboard-packages-venv/bin/python -m pytest \
   Tools/HangboardPackages/tests/test_cord_audit.py -q
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
   Tools/HangboardPackages/tests -q
+rtk proxy env PYTHONPATH=Tools/HangboardModels \
+  .context/hangboard-packages-venv/bin/python -m pytest \
+  Tools/HangboardModels/test_contact_model_descriptor.py \
+  Tools/HangboardModels/test_contact_model_package.py \
+  Tools/HangboardModels/test_import_contact_model_source.py \
+  Tools/HangboardModels/test_verify_yy_baguette_evo.py -q
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardModels/test_model_verification.py \
-  Tools/HangboardModels/test_model_reports.py -q
+  Tools/HangboardPackages/tests/test_hard_cut_audit.py -q
 rtk python3 -m compileall -q Tools/HangboardPackages/src
 rtk git diff --check
 ```
@@ -261,7 +266,7 @@ process state show that same probe making no progress:
    retain no misleading screenshots.
 
 For every canonical suspended pose, inspect the board/cord junction, free-leg
-clearance, self-intersection, camera framing, active hold, and ignored cord
+clearance, self-intersection, camera framing, active contact, and ignored cord
 picking. Exercise selection clear/reappear, camera orbit followed by canonical
 reset, and workout-driven position resolution. Simulator captures establish
 app integration, not guaranteed physical-device PBR parity.
