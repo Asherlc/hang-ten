@@ -2050,10 +2050,11 @@ final class BoardModelTests: XCTestCase {
             from: ray.from,
             to: ray.to,
             options: [
+                SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
                 SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue
             ]
         )
-        XCTAssertTrue(hits.isEmpty, "\(boardID): body geometry must be nonpickable")
+        XCTAssertTrue(hits.isEmpty, "\(boardID): body geometry must not be selectable")
     }
 
     private func headOnRay(
