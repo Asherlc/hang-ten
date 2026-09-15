@@ -912,6 +912,35 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.camera.camera?.orthographicScale, expected.camera.camera?.orthographicScale)
     }
 
+    func testOrbitAllowsACompleteAzimuthRotation() throws {
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
+            ]
+        )
+        let orientation = BoardModelOrientation(
+            pivot: "modelBoundsCenter",
+            rotations: ["front": SIMD4<Double>(0, 0, 0, 1)]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front"]
+        ))
+        model.frame(in: CGSize(width: 386, height: 100))
+        XCTAssertTrue(model.select(positionID: "front"))
+        let canonicalPosition = model.camera.simdPosition
+
+        model.orbit(azimuth: 2 * .pi, elevation: 0)
+
+        XCTAssertEqual(model.camera.simdPosition.x, canonicalPosition.x, accuracy: 0.000_01)
+        XCTAssertEqual(model.camera.simdPosition.y, canonicalPosition.y, accuracy: 0.000_01)
+        XCTAssertEqual(model.camera.simdPosition.z, canonicalPosition.z, accuracy: 0.000_01)
+    }
+
     func testFlashBoardTwoEdgeSceneProjectsOrbitsAndRendersEachComponentSeparately() async throws {
         let (_, _, model) = try await loadMigratedModel("tension.flash-board")
         let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
