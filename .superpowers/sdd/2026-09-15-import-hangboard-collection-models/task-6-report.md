@@ -43,3 +43,12 @@ ordered 24 IDs and four independent pinch bindings.
 All generated source, mapping, evidence, and verification artifacts are under
 the workspace-owned ignored `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/` directory. No HTTP server or external runtime
 resource was created.
+
+## Reviewer follow-up — model-only package regression
+
+The prior board-package test still read the removed raster
+`media.contactGeometry` and failed with `KeyError` after this migration. It
+now verifies the model-only package boundary, descriptor schema/frame, exact
+USDZ SHA-256 binding, complete 24-contact inventory, two body nodes, and all
+four separate bilateral pinch bindings. Focused command:
+`Tools/HangboardPackages/.venv/bin/python -m pytest tests/test_trango_rock_prodigy_training_center_board_package.py -q` — `1 passed`.
