@@ -1,0 +1,18 @@
+# Model hangboard cord source-artifact index
+
+This file is an index only; it is not an evidence snapshot and is never
+referenced by the machine-readable cord-audit manifest. The manifest points to
+the retained source responses under
+`2026-09-13-model-cord-snapshots/`, records each source URL/view, and verifies
+the bytes against its SHA-256 digest.
+
+Every represented board has at least two materially distinct retained source
+artifacts. A single artifact cannot stand in for multiple evidence views, and
+markdown audit ledgers are rejected by the validator. When a cited page or
+media response could not be retained, the affected board is conservatively
+excluded rather than receiving invented evidence or suspension metadata.
+
+The snapshots preserve source responses as fetched on 2026-09-13/14. They are
+provenance inputs only: they do not establish unpublished dimensions, load
+ratings, knot details, or hidden cord routes. Display estimates remain labeled
+in the package metadata and are not manufacturer specifications.

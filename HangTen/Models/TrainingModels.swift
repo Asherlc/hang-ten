@@ -124,10 +124,26 @@ struct BoardModelCanonicalPose: Hashable {
     let rotation: [Double]
     let translation: [Double]
     let camera: BoardModelCanonicalCamera
+    // External mouths used in this pose; never an inferred interior route.
+    var attachmentPoints: [String: [Double]]? = nil
 }
 
 struct BoardModelSingleCordSuspension: Hashable {
     let attachment: BoardModelAttachment
+    let anchor: BoardModelInvisibleAnchor
+    let cord: BoardModelCord
+    let canonicalPoses: [String: BoardModelCanonicalPose]
+}
+
+struct BoardModelPairedLeadAttachment: Hashable {
+    let id: String
+    let nodeID: String
+    let pointInModel: [Double]
+    let provenance: String
+}
+
+struct BoardModelPairedLeadCord: Hashable {
+    let attachments: [BoardModelPairedLeadAttachment]
     let anchor: BoardModelInvisibleAnchor
     let cord: BoardModelCord
     let canonicalPoses: [String: BoardModelCanonicalPose]
@@ -207,6 +223,7 @@ struct BoardModelTwoBranchSuspension: Hashable {
 
 enum BoardModelSuspension: Hashable {
     case singleCord(BoardModelSingleCordSuspension)
+    case pairedLeadCord(BoardModelPairedLeadCord)
     case twoBranchCord(BoardModelTwoBranchSuspension)
 
     // Compatibility projections for the existing single-cord renderer. New
@@ -227,15 +244,23 @@ enum BoardModelSuspension: Hashable {
 
     var attachment: BoardModelAttachment {
         switch self {
-        case .singleCord(let suspension): suspension.attachment
+        case .singleCord(let suspension): return suspension.attachment
+        case .pairedLeadCord(let suspension):
+            let attachment = suspension.attachments[0]
+            return BoardModelAttachment(
+                nodeID: attachment.nodeID,
+                pointInModel: attachment.pointInModel,
+                provenance: attachment.provenance
+            )
         case .twoBranchCord(let suspension):
-            suspension.passages.left[0].asAttachment
+            return suspension.passages.left[0].asAttachment
         }
     }
 
     var anchor: BoardModelInvisibleAnchor {
         switch self {
         case .singleCord(let suspension): suspension.anchor
+        case .pairedLeadCord(let suspension): suspension.anchor
         case .twoBranchCord(let suspension): suspension.anchor
         }
     }
@@ -243,6 +268,7 @@ enum BoardModelSuspension: Hashable {
     var cord: BoardModelCord {
         switch self {
         case .singleCord(let suspension): return suspension.cord
+        case .pairedLeadCord(let suspension): return suspension.cord
         case .twoBranchCord(let suspension):
             let branch = suspension.branches[0]
             return BoardModelCord(
@@ -257,6 +283,7 @@ enum BoardModelSuspension: Hashable {
     var canonicalPoses: [String: BoardModelCanonicalPose] {
         switch self {
         case .singleCord(let suspension): suspension.canonicalPoses
+        case .pairedLeadCord(let suspension): suspension.canonicalPoses
         case .twoBranchCord(let suspension): suspension.canonicalPoses
         }
     }

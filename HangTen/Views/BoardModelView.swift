@@ -124,11 +124,13 @@ struct BoardModelResourceAccess {
 
 enum BoardModelSolvedSuspension {
     case single(SuspendedSolvedPresentation)
+    case pairedLead(SuspendedPairedLeadSolvedPresentation)
     case twoBranch(SuspendedTwoBranchSolvedPresentation)
 
     var boardTransform: simd_float4x4 {
         switch self {
         case .single(let solved): solved.boardTransform
+        case .pairedLead(let solved): solved.boardTransform
         case .twoBranch(let solved): solved.boardTransform
         }
     }
@@ -136,6 +138,7 @@ enum BoardModelSolvedSuspension {
     var cameraFraming: SuspendedCameraFraming {
         switch self {
         case .single(let solved): solved.cameraFraming
+        case .pairedLead(let solved): solved.cameraFraming
         case .twoBranch(let solved): solved.cameraFraming
         }
     }
@@ -266,10 +269,14 @@ private enum BoardModelCache {
             for: board,
             presentationID: presentationID
         ) {
-            resourceLease = await resourceAccess.acquire(
-                resource,
-                bundle: store.resourceBundle
-            )
+            if let packagedURL = resource.debugSimulatorPackagedURL(in: store.resourceBundle) {
+                resourceLease = BoardModelResourceLease(url: packagedURL)
+            } else {
+                resourceLease = await resourceAccess.acquire(
+                    resource,
+                    bundle: store.resourceBundle
+                )
+            }
         } else {
             resourceLease = nil
         }
@@ -718,6 +725,9 @@ final class BoardModelScene {
         switch suspension {
         case .singleCord(let single):
             nodeIDs = [single.attachment.nodeID]
+        case .pairedLeadCord(let pairedLead):
+            nodeIDs = pairedLead.attachments.map(\.nodeID)
+            guard nodeIDs.count == 2 else { return false }
         case .twoBranchCord(let twoBranch):
             nodeIDs = (twoBranch.passages.left + twoBranch.passages.right).map(\.nodeID)
             guard nodeIDs.count == 4 else { return false }
@@ -740,6 +750,10 @@ final class BoardModelScene {
         case .singleCord(let single):
             return .single(try SuspendedBoardPresentation.solve(
                 pose: pose, suspension: .singleCord(single), bounds: bounds
+            ))
+        case .pairedLeadCord(let pairedLead):
+            return .pairedLead(try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: pairedLead, bounds: bounds
             ))
         case .twoBranchCord(let twoBranch):
             return .twoBranch(try SuspendedBoardPresentation.solve(
@@ -1014,6 +1028,8 @@ final class BoardModelScene {
         switch solved {
         case .single(let single):
             paths = [(single.centerlineSamples, single.tubeRadius)]
+        case .pairedLead(let pairedLead):
+            paths = pairedLead.leads.map { ($0.centerlineSamples, pairedLead.tubeRadius) }
         case .twoBranch(let twoBranch):
             paths = twoBranch.branches.map { ($0.centerlineSamples, twoBranch.tubeRadius) }
         }
@@ -1050,6 +1066,7 @@ final class BoardModelScene {
             let segmentParameter: Float
             let nodeID: String
             let point: SIMD3<Float>
+            var mouthRadius: Float = 0
         }
         let paths: [[SIMD3<Float>]]
         let clearanceRadius: Float
@@ -1069,6 +1086,22 @@ final class BoardModelScene {
                 nodeID: singleSuspension.attachment.nodeID,
                 point: single.transformedAttachment
             )]
+        case .pairedLead(let pairedLead):
+            paths = pairedLead.leads.map(\.centerlineSamples)
+            clearanceRadius = pairedLead.requiredClearance
+            guard case .some(.pairedLeadCord(let pairedLeadSuspension)) = suspension,
+                  pairedLeadSuspension.attachments.count == pairedLead.leads.count else { return false }
+            intentionalContacts = zip(pairedLead.leads, pairedLeadSuspension.attachments).enumerated().map {
+                index, pair in
+                IntentionalContact(
+                    pathIndex: index,
+                    segmentIndex: pair.0.centerlineSamples.count - 2,
+                    segmentParameter: 1,
+                    nodeID: pair.1.nodeID,
+                    point: pair.0.centerlineSamples[pair.0.centerlineSamples.count - 1],
+                    mouthRadius: pairedLead.tubeRadius + pairedLead.requiredClearance
+                )
+            }
         case .twoBranch(let twoBranch):
             paths = twoBranch.branches.map(\.centerlineSamples)
             clearanceRadius = twoBranch.requiredClearance
@@ -1124,7 +1157,16 @@ final class BoardModelScene {
                         $0.path == pathIndex && $0.segments.contains(segmentIndex) && $0.nodes.contains(nodeID)
                     }
                     let requiredDistance = bearing?.radius ?? clearanceRadius
+                    let segmentMinimum = simd_min(points.0, points.1) - SIMD3<Float>(repeating: requiredDistance)
+                    let segmentMaximum = simd_max(points.0, points.1) + SIMD3<Float>(repeating: requiredDistance)
                 for triangle in triangles {
+                    // A conservative broad phase avoids expensive triangle
+                    // distance work for the rest of the imported mesh. Bounds
+                    // include the entire cord clearance tube, so no possible
+                    // contact can be skipped.
+                    if triangle.maximum.x < segmentMinimum.x || triangle.minimum.x > segmentMaximum.x
+                        || triangle.maximum.y < segmentMinimum.y || triangle.minimum.y > segmentMaximum.y
+                        || triangle.maximum.z < segmentMinimum.z || triangle.minimum.z > segmentMaximum.z { continue }
                     let approach = Self.closestApproach(
                         from: points.0,
                         to: points.1,
@@ -1132,12 +1174,30 @@ final class BoardModelScene {
                     )
                     guard approach.distanceSquared.isFinite else { return false }
                     if approach.distanceSquared >= requiredDistance * requiredDistance { continue }
-                    if intentionalContacts.contains(where: {
-                        $0.pathIndex == pathIndex &&
-                        $0.segmentIndex == segmentIndex &&
-                        $0.nodeID == nodeID &&
-                        abs(approach.segmentParameter - $0.segmentParameter) <= 1e-5 &&
-                        simd_length(approach.trianglePoint - $0.point) <= 1e-5
+                    if intentionalContacts.contains(where: { contact in
+                        guard contact.pathIndex == pathIndex,
+                              contact.segmentIndex == segmentIndex,
+                              contact.nodeID == nodeID else { return false }
+                        if contact.mouthRadius == 0 {
+                            return abs(approach.segmentParameter - contact.segmentParameter) <= 1e-5
+                                && simd_length(approach.trianglePoint - contact.point) <= requiredDistance
+                        }
+                        // The terminal mouth interface is at most one tube
+                        // radius plus its required clearance along the lead.
+                        // Mesh proximity includes the tube around that short
+                        // span. Recheck the entire remaining free span, so a
+                        // nearby closest point cannot hide a farther collision
+                        // against the same large triangle.
+                        let direction = points.1 - points.0
+                        let contactPoint = points.0 + direction * approach.segmentParameter
+                        guard simd_length(contactPoint - contact.point) <= contact.mouthRadius,
+                              simd_length(approach.trianglePoint - contact.point) <= contact.mouthRadius + requiredDistance else { return false }
+                        let length = simd_length(direction)
+                        if length <= contact.mouthRadius { return true }
+                        let freeEnd = points.1 - direction * (contact.mouthRadius / length)
+                        let freeApproach = Self.closestApproach(from: points.0, to: freeEnd, triangle: triangle)
+                        return freeApproach.distanceSquared.isFinite
+                            && freeApproach.distanceSquared >= requiredDistance * requiredDistance
                     }) {
                         continue
                     }
@@ -1153,6 +1213,16 @@ final class BoardModelScene {
         let a: SIMD3<Float>
         let b: SIMD3<Float>
         let c: SIMD3<Float>
+        let minimum: SIMD3<Float>
+        let maximum: SIMD3<Float>
+
+        init(a: SIMD3<Float>, b: SIMD3<Float>, c: SIMD3<Float>) {
+            self.a = a
+            self.b = b
+            self.c = c
+            minimum = simd_min(a, simd_min(b, c))
+            maximum = simd_max(a, simd_max(b, c))
+        }
     }
 
     private struct TriangleApproach {

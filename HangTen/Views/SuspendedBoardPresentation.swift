@@ -24,9 +24,23 @@ struct SuspendedTwoBranchSolvedPresentation {
     let requiredClearance: Float
 }
 
+struct SuspendedPairedLeadSolvedPresentation {
+    let boardTransform: simd_float4x4
+    let fixedAnchor: SIMD3<Float>
+    let leads: [SolvedCordBranch]
+    let cameraFraming: SuspendedCameraFraming
+    let tubeRadius: Float
+    let requiredClearance: Float
+}
+
 
 enum SuspendedBoardPresentation {
     static let additionalClearance: Float = 0.001
+    // Two independent hanging leads need more than the generic model edge
+    // padding so the free span stays plainly visible in the detail view.
+    // This is presentation-only framing; it does not alter any authored cord
+    // route, attachment, anchor, or board geometry.
+    static let pairedLeadMinimumCameraFitPadding: Float = 1.4
 
     static func solve(
         pose: BoardModelCanonicalPose,
@@ -38,6 +52,8 @@ enum SuspendedBoardPresentation {
         switch suspension {
         case .singleCord(let single):
             profile = single
+        case .pairedLeadCord:
+            throw SuspendedPresentationError.invalidSuspension
         case .twoBranchCord:
             // Preserve the compatibility projection for callers that still
             // route an enum value through the historical single-cord facade.
@@ -52,6 +68,106 @@ enum SuspendedBoardPresentation {
             pose: pose,
             profile: profile,
             bounds: bounds
+        )
+    }
+
+    static func solve(
+        pose: BoardModelCanonicalPose,
+        suspension: BoardModelPairedLeadCord,
+        bounds: BoardModelBounds
+    ) throws -> SuspendedPairedLeadSolvedPresentation {
+        let transform = try boardTransform(for: pose)
+        let (minimum, maximum) = try validatedBounds(bounds)
+        if let points = pose.attachmentPoints {
+            guard Set(points.keys) == Set(suspension.attachments.map(\.id)),
+                  Set(points.values).count == 2,
+                  points.values.allSatisfy({ point in
+                      point.count == 3 && point.allSatisfy(\.isFinite)
+                          && zip(point, bounds.minimum).allSatisfy({ $0 >= $1 })
+                          && zip(point, bounds.maximum).allSatisfy({ $0 <= $1 })
+                  }) else { throw SuspendedPresentationError.invalidSuspension }
+        }
+        guard suspension.attachments.count == 2,
+              Set(suspension.attachments.map(\.id)).count == suspension.attachments.count,
+              suspension.attachments.allSatisfy({
+                  $0.pointInModel.count == 3
+                      && $0.pointInModel.allSatisfy(\.isFinite)
+                      && zip($0.pointInModel, bounds.minimum).allSatisfy({ $0 >= $1 })
+                      && zip($0.pointInModel, bounds.maximum).allSatisfy({ $0 <= $1 })
+              }),
+              suspension.anchor.visibility == "invisible",
+              suspension.anchor.position.count == 3,
+              suspension.anchor.position.allSatisfy(\.isFinite) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        guard suspension.cord.restLength.isFinite,
+              suspension.cord.restLength > 0,
+              suspension.cord.radius.isFinite,
+              suspension.cord.radius > 0 else {
+            throw SuspendedPresentationError.invalidCord
+        }
+
+        let fixedAnchor = SIMD3<Float>(
+            Float(suspension.anchor.position[0]),
+            Float(suspension.anchor.position[1]),
+            Float(suspension.anchor.position[2])
+        )
+        guard fixedAnchor.allFinite else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let transformedAttachments = suspension.attachments.map { attachment in
+            let point = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
+            return transformPoint(
+                transform,
+                SIMD3<Float>(
+                    Float(point[0]),
+                    Float(point[1]),
+                    Float(point[2])
+                )
+            )
+        }
+        guard transformedAttachments.allSatisfy(\.allFinite) else {
+            throw SuspendedPresentationError.invalidPose
+        }
+        let leads = try transformedAttachments.map {
+            try SuspendedCordSolver.solve(
+                start: fixedAnchor,
+                end: $0,
+                restLength: Float(suspension.cord.restLength)
+            )
+        }
+        guard leads.count == 2,
+              leads.allSatisfy({
+                  $0.samples.count == SuspendedCordSolver.sampleCount
+                      && $0.samples.first == fixedAnchor
+                      && $0.samples.allSatisfy(\.allFinite)
+                      && $0.tangents.allSatisfy(\.allFinite)
+              }),
+              zip(leads, transformedAttachments).allSatisfy({ $0.0.samples.last == $0.1 }) else {
+            throw SuspendedPresentationError.nonFiniteCurve
+        }
+        let tubeRadius = Float(suspension.cord.radius)
+        try validatePairedLeadClearance(
+            leads,
+            requiredClearance: 2 * tubeRadius + additionalClearance
+        )
+
+        let framing = try makeCameraFraming(
+            pose: pose,
+            transform: transform,
+            minimumFitPadding: pairedLeadMinimumCameraFitPadding,
+            points: transformedBoundsCorners(minimum: minimum, maximum: maximum, transform: transform)
+                + [fixedAnchor]
+                + transformedAttachments
+                + leads.flatMap(\.samples)
+        )
+        return SuspendedPairedLeadSolvedPresentation(
+            boardTransform: transform,
+            fixedAnchor: fixedAnchor,
+            leads: leads,
+            cameraFraming: framing,
+            tubeRadius: tubeRadius,
+            requiredClearance: tubeRadius + additionalClearance
         )
     }
 
@@ -347,6 +463,217 @@ enum SuspendedBoardPresentation {
         }
     }
 
+    static func validatePairedLeadClearance(
+        _ leads: [SolvedCordBranch],
+        requiredClearance: Float
+    ) throws {
+        guard leads.count == 2,
+              leads.allSatisfy({ $0.samples.count >= 2 }),
+              requiredClearance.isFinite,
+              requiredClearance > 0 else {
+            throw SuspendedPresentationError.invalidCord
+        }
+        let firstPath = leads[0].samples
+        let secondPath = leads[1].samples
+        let sharedAnchor = firstPath[0]
+        guard sharedAnchor == secondPath[0] else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let clearanceSquared = requiredClearance * requiredClearance
+        // A paired lead may have an authored common trunk before it forks,
+        // and a pair that immediately diverges can still be within tube
+        // clearance for one or two discretized samples at the anchor. Both
+        // are one initial topology: a contiguous prefix ending at the first
+        // aligned pair that has full clearance. A pair that never reaches
+        // that state is two overlapping leads, not a valid suspension.
+        guard let forkIndex = firstPath.indices.first(where: {
+            $0 > 0 && $0 < secondPath.count
+                && simd_length_squared(firstPath[$0] - secondPath[$0]) >= clearanceSquared
+        }) else {
+            throw SuspendedPresentationError.selfIntersection
+        }
+        for (firstIndex, firstSegment) in zip(firstPath, firstPath.dropFirst()).enumerated() {
+            for (secondIndex, secondSegment) in zip(secondPath, secondPath.dropFirst()).enumerated() {
+                let approach = segmentClosestApproach(
+                    firstSegment.0, firstSegment.1,
+                    secondSegment.0, secondSegment.1
+                )
+                guard approach.distanceSquared.isFinite else {
+                    throw SuspendedPresentationError.nonFiniteCurve
+                }
+                guard approach.distanceSquared < clearanceSquared else { continue }
+                let firstPoint = pointOnSegment(
+                    firstSegment.0,
+                    firstSegment.1,
+                    parameter: approach.firstParameter
+                )
+                let secondPoint = pointOnSegment(
+                    secondSegment.0,
+                    secondSegment.1,
+                    parameter: approach.secondParameter
+                )
+                let isSharedAnchorContact = firstIndex == 0
+                    && secondIndex == 0
+                    && simd_length_squared(firstPoint - sharedAnchor) <= 1e-12
+                    && simd_length_squared(secondPoint - sharedAnchor) <= 1e-12
+                    && firstSegmentsContactOnlyAtSharedAnchor(
+                        firstSegment,
+                        secondSegment,
+                        sharedAnchor: sharedAnchor
+                    )
+                // Before the verified fork, both leads are one intentional
+                // anchor-to-fork assembly. Once either segment is past that
+                // fork, even a return to the anchor area must have the full
+                // two-tube clearance.
+                let isWithinInitialCommonTrunk = firstIndex < forkIndex
+                    && secondIndex < forkIndex
+                // Sampled leads that leave the same anchor can yield their
+                // closest approach on different early segments. That contact
+                // is part of the anchor knot only while both segments are in
+                // their contiguous, anchor-contained prefixes. In particular,
+                // do not use this exception for a later segment that returns
+                // to the anchor after the leads have forked.
+                let isCrossSegmentInsideInitialAnchorKnot = firstIndex != secondIndex
+                    && simd_length_squared(firstPoint - sharedAnchor) <= clearanceSquared
+                    && simd_length_squared(secondPoint - sharedAnchor) <= clearanceSquared
+                    && isInitialAnchorKnotSegment(
+                        firstIndex,
+                        in: firstPath,
+                        sharedAnchor: sharedAnchor,
+                        clearanceSquared: clearanceSquared
+                    )
+                    && isInitialAnchorKnotSegment(
+                        secondIndex,
+                        in: secondPath,
+                        sharedAnchor: sharedAnchor,
+                        clearanceSquared: clearanceSquared
+                    )
+                if !isSharedAnchorContact
+                    && !isWithinInitialCommonTrunk
+                    && !isCrossSegmentInsideInitialAnchorKnot {
+                    throw SuspendedPresentationError.selfIntersection
+                }
+            }
+        }
+    }
+
+    /// Returns whether a segment enters from the leading anchor knot. Every
+    /// preceding sample through the segment's start must remain inside the
+    /// knot; the caller separately verifies that the closest contact itself
+    /// is inside it. This permits the contact portion of the one segment that
+    /// exits the knot, without allowing a re-entry after a real fork.
+    private static func isInitialAnchorKnotSegment(
+        _ segmentIndex: Int,
+        in path: [SIMD3<Float>],
+        sharedAnchor: SIMD3<Float>,
+        clearanceSquared: Float
+    ) -> Bool {
+        guard segmentIndex >= 0, segmentIndex + 1 < path.count else {
+            return false
+        }
+        return path.prefix(segmentIndex + 1).allSatisfy {
+            simd_length_squared($0 - sharedAnchor) <= clearanceSquared
+        }
+    }
+
+    private static func segmentClosestApproach(
+        _ firstStart: SIMD3<Float>,
+        _ firstEnd: SIMD3<Float>,
+        _ secondStart: SIMD3<Float>,
+        _ secondEnd: SIMD3<Float>
+    ) -> (distanceSquared: Float, firstParameter: Float, secondParameter: Float) {
+        let firstDirection = firstEnd - firstStart
+        let secondDirection = secondEnd - secondStart
+        let startDifference = firstStart - secondStart
+        let firstLengthSquared = simd_dot(firstDirection, firstDirection)
+        let directionDot = simd_dot(firstDirection, secondDirection)
+        let secondLengthSquared = simd_dot(secondDirection, secondDirection)
+        let firstOffset = simd_dot(firstDirection, startDifference)
+        let secondOffset = simd_dot(secondDirection, startDifference)
+        let denominator = firstLengthSquared * secondLengthSquared - directionDot * directionDot
+        var firstNumerator: Float
+        var firstDenominator = denominator
+        var secondNumerator: Float
+        var secondDenominator = denominator
+
+        if denominator < 1e-12 {
+            firstNumerator = 0
+            firstDenominator = 1
+            secondNumerator = secondOffset
+            secondDenominator = secondLengthSquared
+        } else {
+            firstNumerator = directionDot * secondOffset - secondLengthSquared * firstOffset
+            secondNumerator = firstLengthSquared * secondOffset - directionDot * firstOffset
+            if firstNumerator < 0 {
+                firstNumerator = 0
+                secondNumerator = secondOffset
+                secondDenominator = secondLengthSquared
+            } else if firstNumerator > firstDenominator {
+                firstNumerator = firstDenominator
+                secondNumerator = secondOffset + directionDot
+                secondDenominator = secondLengthSquared
+            }
+        }
+        if secondNumerator < 0 {
+            secondNumerator = 0
+            if -firstOffset < 0 {
+                firstNumerator = 0
+            } else if -firstOffset > firstLengthSquared {
+                firstNumerator = firstDenominator
+            } else {
+                firstNumerator = -firstOffset
+                firstDenominator = firstLengthSquared
+            }
+        } else if secondNumerator > secondDenominator {
+            secondNumerator = secondDenominator
+            if -firstOffset + directionDot < 0 {
+                firstNumerator = 0
+            } else if -firstOffset + directionDot > firstLengthSquared {
+                firstNumerator = firstDenominator
+            } else {
+                firstNumerator = -firstOffset + directionDot
+                firstDenominator = firstLengthSquared
+            }
+        }
+        let firstParameter = abs(firstNumerator) < 1e-12 ? 0 : firstNumerator / firstDenominator
+        let secondParameter = abs(secondNumerator) < 1e-12 ? 0 : secondNumerator / secondDenominator
+        let difference = startDifference + firstDirection * firstParameter - secondDirection * secondParameter
+        return (simd_dot(difference, difference), firstParameter, secondParameter)
+    }
+
+    private static func pointOnSegment(
+        _ start: SIMD3<Float>,
+        _ end: SIMD3<Float>,
+        parameter: Float
+    ) -> SIMD3<Float> {
+        start + (end - start) * parameter
+    }
+
+    private static func firstSegmentsContactOnlyAtSharedAnchor(
+        _ firstSegment: (SIMD3<Float>, SIMD3<Float>),
+        _ secondSegment: (SIMD3<Float>, SIMD3<Float>),
+        sharedAnchor: SIMD3<Float>
+    ) -> Bool {
+        let firstDirection = firstSegment.1 - firstSegment.0
+        let secondDirection = secondSegment.1 - secondSegment.0
+        let firstLengthSquared = simd_length_squared(firstDirection)
+        let secondLengthSquared = simd_length_squared(secondDirection)
+        guard firstSegment.0 == sharedAnchor,
+              secondSegment.0 == sharedAnchor,
+              firstLengthSquared.isFinite,
+              secondLengthSquared.isFinite,
+              firstLengthSquared > 1e-12,
+              secondLengthSquared > 1e-12 else {
+            return false
+        }
+
+        // Non-collinear rays intersect only at their shared origin. Collinear
+        // rays are deliberately excluded so a same-ray pair cannot masquerade
+        // as a valid fork.
+        return simd_length_squared(simd_cross(firstDirection, secondDirection))
+            > 1e-12 * firstLengthSquared * secondLengthSquared
+    }
+
     private static func transformedBoundsCorners(
         minimum: SIMD3<Float>,
         maximum: SIMD3<Float>,
@@ -364,6 +691,7 @@ enum SuspendedBoardPresentation {
     private static func makeCameraFraming(
         pose: BoardModelCanonicalPose,
         transform: simd_float4x4,
+        minimumFitPadding: Float = 1,
         points: [SIMD3<Float>]
     ) throws -> SuspendedCameraFraming {
         guard pose.camera.viewDirection.count == 3,
@@ -404,9 +732,11 @@ enum SuspendedBoardPresentation {
         let width = maxHorizontal - minHorizontal
         let height = maxVertical - minVertical
         let depthSpan = maxDepth - minDepth
-        let fitPadding = Float(1 + pose.camera.fitPadding * 2)
+        let fitPadding = max(Float(1 + pose.camera.fitPadding * 2), minimumFitPadding)
         guard width.isFinite, height.isFinite, depthSpan.isFinite,
-              width > 0, height > 0, depthSpan > 0, fitPadding.isFinite else {
+              width > 0, height > 0, depthSpan > 0,
+              minimumFitPadding.isFinite, minimumFitPadding >= 1,
+              fitPadding.isFinite else {
             throw SuspendedPresentationError.invalidCamera
         }
         let target = right * ((minHorizontal + maxHorizontal) / 2)

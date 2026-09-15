@@ -71,6 +71,19 @@ source-audited ledger against its hold metadata, and prints a sorted coverage
 report. Like the other package commands, it is source-only and read-only: it
 does not alter packages or the ledger.
 
+`audit-cords` requires one closed record for every discovered model package.
+Each evidence entry must retain `exactRevisionID`, a controlled `sourceTier`,
+`snapshotSHA256`, and a relative `snapshotPath` to a retained source response
+or media file. Snapshot paths and SHA-256 values must be distinct for every
+distinct evidence view in a represented record; markdown audit ledgers are
+rejected as snapshots. A conservative excluded record may carry an empty
+evidence array when its source artifact could not be retained, but it must
+have no package suspension. Every record must also contain an explicit
+approved `humanApproval` object with reviewer, date, and notes. Incomplete
+provenance or approval is rejected before topology coverage is checked.
+Baguette Evo is recorded as excluded unless primary evidence proves that a
+rope or bungee is supplied or integral.
+
 Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
 must have one outcome for each supported metadata field. Boards in the
 disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`

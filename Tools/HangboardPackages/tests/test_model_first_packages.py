@@ -115,6 +115,46 @@ def _write_shared_model_parser_parity_package(
             '"suspension":' + json.dumps(reordered, separators=(",", ":")),
             1,
         )
+    if fixture.get("reorderPairedLeadSuspensionMembers"):
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = {
+            key: suspension[key]
+            for key in ("anchor", "attachments", "canonicalPoses", "cord", "type")
+        }
+        board_json = board_json.replace(
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            1,
+        )
+    if fixture.get("reorderPairedLeadAnchorMembers"):
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = dict(suspension)
+        anchor = suspension["anchor"]
+        reordered["anchor"] = {
+            key: anchor[key]
+            for key in ("visibility", "offsetFromBoardBounds", "provenance")
+        }
+        board_json = board_json.replace(
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            1,
+        )
+    if fixture.get("reorderPairedLeadCordMembers"):
+        suspension = board["presentations"][0]["media"]["suspension"]
+        canonical = json.dumps(suspension, separators=(",", ":"))
+        reordered = dict(suspension)
+        cord = suspension["cord"]
+        reordered["cord"] = {
+            key: cord[key]
+            for key in ("radius", "restLength", "material", "provenance")
+        }
+        board_json = board_json.replace(
+            '"suspension":' + canonical,
+            '"suspension":' + json.dumps(reordered, separators=(",", ":")),
+            1,
+        )
     board_path.write_text(board_json, encoding="utf-8")
     (assets / "primary.model.json").write_text(
         _dump_shared_json_document(descriptor), encoding="utf-8"
@@ -487,6 +527,63 @@ def test_v2_model_preserves_valid_single_cord_behavior(tmp_path: Path) -> None:
     suspension = package.board.presentations[0].media.suspension
     assert suspension is not None
     assert suspension.__class__.__name__ == "BoardModelSingleCordSuspension"
+
+
+def test_v2_model_accepts_valid_paired_lead_cord_suspension(tmp_path: Path) -> None:
+    """Catches removal or mis-decoding of the two exterior lead contract."""
+
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "valid-paired-lead", {"base": "pairedLeadCordModel", "mutations": []}
+    )
+
+    suspension = load_board_catalog_module().load_board_package(
+        package_root
+    ).board.presentations[0].media.suspension
+    assert suspension is not None
+    assert suspension.__class__.__name__ == "BoardModelPairedLeadCord"
+    assert [attachment.id for attachment in suspension.attachments] == [
+        "left-lead", "right-lead"
+    ]
+    assert suspension.cord.rest_length == 0.8
+    assert set(suspension.canonical_poses) == {"primary"}
+
+
+def test_v2_paired_leads_preserve_distinct_points_when_sharing_node(tmp_path: Path) -> None:
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "shared-paired-lead-node",
+        {
+            "base": "pairedLeadCordModel",
+            "mutations": [{
+                "target": "board",
+                "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "attachments", 1, "nodeID"],
+                "value": "Body",
+            }],
+        },
+    )
+
+    suspension = load_board_catalog_module().load_board_package(
+        package_root
+    ).board.presentations[0].media.suspension
+    assert suspension is not None
+    assert [attachment.id for attachment in suspension.attachments] == ["left-lead", "right-lead"]
+    assert [attachment.node_id for attachment in suspension.attachments] == ["Body", "Body"]
+    assert [attachment.point_in_model for attachment in suspension.attachments] == [
+        (0.2, 0.5, 0.1), (0.8, 0.5, 0.1)
+    ]
+
+
+def test_v2_paired_leads_preserve_pose_specific_mouths(tmp_path: Path) -> None:
+    points = {"left-lead": [0.2, 0.45, 0.1], "right-lead": [0.8, 0.45, 0.1]}
+    package = _write_shared_model_parser_parity_package(tmp_path, {
+        "base": "pairedLeadCordModel", "mutations": [{
+            "target": "board", "op": "replace",
+            "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"],
+            "value": points,
+        }],
+    })
+    suspension = load_board_catalog_module().load_board_package(package).board.presentations[0].media.suspension
+    assert dict(suspension.canonical_poses["primary"].attachment_points) == {key: tuple(value) for key, value in points.items()}
 
 
 def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
