@@ -934,11 +934,31 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(model.select(positionID: "front"))
         let canonicalPosition = model.camera.simdPosition
 
-        model.orbit(azimuth: 2 * .pi, elevation: 0)
+        let azimuthStep: Float = .pi / 16
+        for _ in 0..<32 {
+            model.orbit(azimuth: azimuthStep, elevation: 0)
+        }
 
         XCTAssertEqual(model.camera.simdPosition.x, canonicalPosition.x, accuracy: 0.000_01)
         XCTAssertEqual(model.camera.simdPosition.y, canonicalPosition.y, accuracy: 0.000_01)
         XCTAssertEqual(model.camera.simdPosition.z, canonicalPosition.z, accuracy: 0.000_01)
+
+        model.orbit(azimuth: azimuthStep, elevation: 0)
+
+        let expected = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            orientation: orientation,
+            allowedPositionIDs: ["front"]
+        ))
+        expected.frame(in: CGSize(width: 386, height: 100))
+        XCTAssertTrue(expected.select(positionID: "front"))
+        expected.orbit(azimuth: azimuthStep, elevation: 0)
+
+        XCTAssertEqual(model.camera.simdPosition.x, expected.camera.simdPosition.x, accuracy: 0.000_01)
+        XCTAssertEqual(model.camera.simdPosition.y, expected.camera.simdPosition.y, accuracy: 0.000_01)
+        XCTAssertEqual(model.camera.simdPosition.z, expected.camera.simdPosition.z, accuracy: 0.000_01)
     }
 
     func testFlashBoardTwoEdgeSceneProjectsOrbitsAndRendersEachComponentSeparately() async throws {
