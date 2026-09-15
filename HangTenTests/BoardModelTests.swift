@@ -1095,9 +1095,11 @@ final class BoardModelTests: XCTestCase {
     // broke between the loader and the renderer.
     func testNatureStoneHangerOrientationSelectsBothFacesWithVisibleFraming() async throws {
         let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
-        let orientation = try XCTUnwrap(media.orientation, "Nature must declare orientation metadata")
-        XCTAssertEqual(orientation.pivot, "modelBoundsCenter")
-        XCTAssertEqual(Set(orientation.rotations.keys), ["front", "reverse"])
+        guard case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("Nature Stone Hanger must load the approved pairedLeadCord suspension")
+        }
+        XCTAssertEqual(suspension.canonicalPoses["front"]?.rotation, [0, 0, 0, 1])
+        XCTAssertEqual(suspension.canonicalPoses["reverse"]?.rotation, [0, 1, 0, 0])
         XCTAssertFalse(model.geometryNodes.isEmpty, "Nature scene must contain geometry")
         XCTAssertEqual(model.contactNodes.count, board.contacts.count)
         try assertVisibleFraming(model, positionIDs: ["front", "reverse"])

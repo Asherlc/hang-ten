@@ -361,9 +361,9 @@ def test_nature_stone_hanger_declares_reviewed_front_and_reverse_orientation() -
     assert {position.id for position in board.positions} == {"front", "reverse"}
     assert all(position.presentation_id == "primary" for position in board.positions)
     _assert_model_position_union_coverage(board)
-    assert media.orientation is not None
-    assert media.orientation.pivot == "modelBoundsCenter"
-    assert set(media.orientation.rotations) == {"front", "reverse"}
+    assert isinstance(media.suspension, BOARD_CATALOG.BoardModelPairedLeadCord)
+    assert media.suspension.canonical_poses["front"].rotation == (0, 0, 0, 1)
+    assert media.suspension.canonical_poses["reverse"].rotation == (0, 1, 0, 0)
 
 
 def test_baguette_evo_requires_authored_contact_groupings_and_orientation() -> None:
