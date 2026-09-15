@@ -1,5 +1,97 @@
 # Hangboard Collection model imports
 
+## So iLL Training Tiles (`soill.training-tiles`)
+
+Reviewed 2026-09-15. `Hangboards/soill-training-tiles/board.json` remains the
+sole authority for this paired-tile revision's existing 20 `contacts[].id`
+values, names, kinds, and deliberately empty optional factual fields. The
+model conversion does not add or revise a contact fact. The catalog's 20
+descriptive selection regions are retained exactly: the source manufacturer
+evidence describes grouped families rather than a 20-contact factory map.
+
+### Retained visual evidence
+
+| ID | Publisher and URL | Retained local copy and SHA-256 | Supports | Does not support |
+| --- | --- | --- | --- |
+| ST-FRONT | So iLL — [official front photograph](https://soillholds.com/cdn/shop/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960_2048x.jpg?v=1677258630) | `.context/lumpy-liger-hangboard-collection/soill-training-tiles/retained-evidence/soill-training-tiles-front.jpg` — `1061453fa5110467cc0110007555bb70a946b8012b00bb5dc462d60677123c86` | Mirrored two-piece arrangement, visible contact-family positions, front contours, and visible mounting-opening existence. | A 20-contact factory inventory, contact depths, hole measurements, rear geometry, or a fixed installation gap. |
+| ST-OBLIQUE | So iLL — [official oblique photograph](https://soillholds.com/cdn/shop/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-235347_2048x.jpg?v=1677258630) | `.context/lumpy-liger-hangboard-collection/soill-training-tiles/retained-evidence/soill-training-tiles-oblique.jpg` — `c1643a70b32b10b04d62ddc11bc1cd987976e883e26e9838f0509ce809d2b67a` | Relative front projection of the paired tiles, pocket/crown relationship, and non-contact body transitions. | Exact section profiles, material microtexture, unshown rear features, or a mapping of published grouped measurements to individual IDs. |
+
+The So iLL [Training Tiles product page](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin)
+and existing `2026-08-12-soill-tension-board-packages.md` audit were also
+reviewed for revision identity: it describes a two-piece So iLL x Meagan
+Martin set, approximately 14 × 8 in per tile, and grouped pocket, sloper, and
+edge families. It does not publish a 20-ID map. The source-delivery README
+calls the 0.026 m inter-tile gap a display arrangement, not an installation
+measurement; no gap fact is stored in the catalog.
+
+### Source, omissions, and explicit mapping
+
+The user-provided source delivery is retained at
+`.context/lumpy-liger-hangboard-collection/soill-training-tiles/source-delivery/soill-training-tiles.glb`,
+SHA-256 `775b5f985d47894836aa5bb897a82be68edee64e0c46d9567b136c3956576186`.
+It contains 22 reviewed mesh nodes: `body-L`, `body-R`, and the exact 20
+named contact meshes below. Its source document identifies the top pocket and
+crown as three user-approved selection regions per tile—not distinct
+manufacturer-listed holds. That decision is already represented by the
+pre-existing contact IDs and is neither altered nor converted into a factual
+measurement here.
+
+The delivery does not include screws, but does visibly model ten mounting
+bores per tile and an approximate body wordmark. Mounting holes and the
+unverified approximate wordmarks are excluded by the model-package display
+contract: a reviewed direct-author correction adds 20 nonselectable bore caps
+and two plain wordmark covers. The supplied model's rear treatment, fillets,
+bore locations, and display gap remain source model caveats only. No logo,
+hardware, bore, spacing, or reconstruction detail is bound as a contact or
+promoted to `board.json` facts.
+
+| Left source node → stable contact ID | Right source node → stable contact ID |
+| --- | --- |
+| `hold-L-sloper-outer` → `upper-sloper-outer-left` | `hold-R-sloper-outer` → `upper-sloper-outer-right` |
+| `hold-L-sloper-inner` → `upper-sloper-inner-left` | `hold-R-sloper-inner` → `upper-sloper-inner-right` |
+| `hold-L-edge-middle-outer` → `middle-edge-outer-left` | `hold-R-edge-middle-outer` → `middle-edge-outer-right` |
+| `hold-L-edge-middle-inner` → `middle-edge-inner-left` | `hold-R-edge-middle-inner` → `middle-edge-inner-right` |
+| `hold-L-edge-bottom-center` → `bottom-edge-center-left` | `hold-R-edge-bottom-center` → `bottom-edge-center-right` |
+| `top-pocket-left` → `top-pocket-outer-left` | `top-pocket-right` → `top-pocket-outer-right` |
+| `hold-L-edge-bottom-inner` → `bottom-edge-inner-left` | `hold-R-edge-bottom-inner` → `bottom-edge-inner-right` |
+| `hold-L-edge-bottom-outer` → `bottom-edge-outer-left` | `hold-R-edge-bottom-outer` → `bottom-edge-outer-right` |
+| `top-pocket-inner-left` → `top-pocket-inner-left` | `top-pocket-inner-right` → `top-pocket-inner-right` |
+| `top-jug-left` → `top-jug-left` | `top-jug-right` → `top-jug-right` |
+
+`body-L`, `body-R`, and the direct-authored
+`mounting-hardware-omission-caps` are the only nonselectable source nodes. The
+complete ordered mapping is retained at
+`.context/lumpy-liger-hangboard-collection/soill-training-tiles/contact-mapping.json`.
+It maps every source node explicitly, binds each existing contact once, and
+keeps the upper outer rim, recessed inner pocket, and upper jug/crown regions
+separate on both tiles.
+
+| Artifact | SHA-256 | Disposition |
+| --- | --- | --- |
+| Material-only transport source | `06179e3b5ca5c8fcdd2303e358f9575d927c02e248aace60e234a55ddc3ee198` | Empty-scene GLB import with one directly authored packed color image, required by the USDZ image-material contract; contact topology is unchanged. |
+| Corrected transport source | `5b1aaeed8a05d76653453bd2bb693c3498b1cd1bcaaf3a2cd9005bba83ae9364` | Adds 20 nonselectable direct-authored mounting-bore caps and two plain wordmark covers only; all 20 contact mesh triangle counts are unchanged. |
+| Promoted `assets/primary.usdz` | `4cb007105f5c70d57e739c884964d130f6ccf524d4c4adb974892bda4f670ebf` | Exact shipped USDZ, exported then imported into an empty Blender scene. |
+| Promoted descriptor | `fa3e18d155a9ba3f808fef2ce9c1c4e6a076cd141f1d842440cf6dcb192395b8` | Hash-binds the shipped USDZ and is compiled from actual importer-visible triangles. |
+
+The exact shipped asset verifier starts from an empty Blender scene and checks
+the promoted USDZ hash, all 23 importer-visible triangulated mesh nodes, 20
+contact keys, three nonselectable body nodes, usable image materials, and 494
+triangles in the bore/wordmark-omission cap node. Its report is
+`.context/lumpy-liger-hangboard-collection/soill-training-tiles/shipped-usdz-verification.json`.
+The shipped package has only `board.json`, `assets/primary.usdz`, and
+`assets/primary.model.json`; the raster presentation, primary PNG, canonical
+paths, and fallback geometry are removed.
+
+A human front render of the exact shipped USDZ was reviewed at
+`.context/lumpy-liger-hangboard-collection/soill-training-tiles/reports/shipped-front-review.png`
+(SHA-256 `a4a20d853f0e90cca3a909479f202380ee6ab87aa3d361e5dd6b4da9745727bb`):
+it retains both mirrored tiles and the distinct rim/interior/jug regions while
+the direct omission covers remove the approximate wordmarks and do not create
+selectable contacts. Focused descriptor/importer/package tests passed, as did
+`scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`
+and `status --root Hangboards`; the iOS `build-for-testing` product was also
+generated from the exact package.
+
 ## Metolius Simulator 3-D (`metolius.simulator-3d`)
 
 Reviewed 2026-09-15. `Hangboards/metolius-simulator-3d/board.json` remains

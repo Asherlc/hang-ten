@@ -1025,6 +1025,17 @@ def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
         ("top-jug-left", "Left top jug", "jug"),
         ("top-jug-right", "Right top jug", "jug"),
     )
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in media
+    descriptor = json.loads((TRAINING_TILES_ROOT / media["descriptorPath"]).read_text(encoding="utf-8"))
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert set(descriptor["contacts"]) == contact_ids
+    assert {
+        node["contactID"] for node in descriptor["nodes"] if node["role"] == "contact"
+    } == contact_ids
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:

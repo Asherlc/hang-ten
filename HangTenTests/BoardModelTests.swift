@@ -1330,8 +1330,10 @@ final class BoardModelTests: XCTestCase {
             "nature.stone-hanger",
             "yy.baguette-evo",
             "metolius.wood-grips-compact-ii",
+            "metolius.simulator-3d",
+            "soill.training-tiles",
         ]
-        let rasterBoardIDs = ["metolius.simulator-3d", "soill.training-tiles"]
+        let rasterBoardIDs = ["soill.split-palm"]
 
         for boardID in modelBoardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
