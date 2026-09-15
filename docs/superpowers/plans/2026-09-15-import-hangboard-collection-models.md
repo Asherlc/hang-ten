@@ -119,10 +119,10 @@
 - Delete: declared raster media from `Hangboards/trango-rock-prodigy-training-center/`
 - Create/modify: `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/*`, `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 
-- [ ] Audit the exact Training Center revision against its existing Trango source audit and the model evidence; do not use Forge, Natural, or Pivot facts as substitutes.
-- [ ] Map the current 24 contacts to reviewed source nodes and explicitly retain separate pockets, pinches, and bilateral contacts.
-- [ ] Compile/reimport/descriptor-validate the USDZ and promote it only when all contacts bind.
-- [ ] Remove raster media, run focused tests, and commit/push the completed board migration.
+- [x] Audit the exact Training Center revision against its existing Trango source audit and the model evidence; do not use Forge, Natural, or Pivot facts as substitutes.
+- [x] Map the current 24 contacts to reviewed source nodes and explicitly retain separate pockets, pinches, and bilateral contacts.
+- [x] Compile/reimport/descriptor-validate the USDZ and promote it only when all contacts bind.
+- [x] Remove raster media, run focused tests, and commit/push the completed board migration.
 
 **Review gate:** A fresh reviewer checks revision isolation and one-to-one identity coverage of the full 24-contact inventory.
 

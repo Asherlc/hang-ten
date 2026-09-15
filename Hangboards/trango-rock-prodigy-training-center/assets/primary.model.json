@@ -1,0 +1,605 @@
+{
+  "contacts": {
+    "edge-large-vder-left": {
+      "center": [
+        0.2875719,
+        0.751677855
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.408335191,
+          0.822313389
+        ],
+        "min": [
+          0.166808609,
+          0.681042321
+        ]
+      },
+      "nodeIDs": [
+        "upper_variable_rail_left_001"
+      ]
+    },
+    "edge-large-vder-right": {
+      "center": [
+        0.7124281,
+        0.751677855
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.833191391,
+          0.822313389
+        ],
+        "min": [
+          0.591664809,
+          0.681042321
+        ]
+      },
+      "nodeIDs": [
+        "upper_variable_rail_right_001"
+      ]
+    },
+    "edge-shallow-vder-left": {
+      "center": [
+        0.287047802,
+        0.612416103
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.407162839,
+          0.677907188
+        ],
+        "min": [
+          0.166932765,
+          0.546925018
+        ]
+      },
+      "nodeIDs": [
+        "lower_variable_rail_left_001"
+      ]
+    },
+    "edge-shallow-vder-right": {
+      "center": [
+        0.712952198,
+        0.612416103
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.833067235,
+          0.677907188
+        ],
+        "min": [
+          0.592837161,
+          0.546925018
+        ]
+      },
+      "nodeIDs": [
+        "lower_variable_rail_right_001"
+      ]
+    },
+    "edge-thin-crimp-left": {
+      "center": [
+        0.244595968,
+        0.453020135
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.297005646,
+          0.496644295
+        ],
+        "min": [
+          0.192186289,
+          0.409395974
+        ]
+      },
+      "nodeIDs": [
+        "thin_crimp_left_001"
+      ]
+    },
+    "edge-thin-crimp-right": {
+      "center": [
+        0.755404032,
+        0.453020135
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.807813711,
+          0.496644295
+        ],
+        "min": [
+          0.702994354,
+          0.409395974
+        ]
+      },
+      "nodeIDs": [
+        "thin_crimp_right_001"
+      ]
+    },
+    "jug-left": {
+      "center": [
+        0.359373145,
+        0.930475034
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.429078013,
+          1.0
+        ],
+        "min": [
+          0.289668278,
+          0.860950068
+        ]
+      },
+      "nodeIDs": [
+        "jug_left_001"
+      ]
+    },
+    "jug-right": {
+      "center": [
+        0.640626855,
+        0.930475034
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.710331722,
+          1.0
+        ],
+        "min": [
+          0.570921987,
+          0.860950068
+        ]
+      },
+      "nodeIDs": [
+        "jug_right_001"
+      ]
+    },
+    "pinch-medium-left": {
+      "center": [
+        0.076885025,
+        0.664429531
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.153770051,
+          0.898239782
+        ],
+        "min": [
+          0.0,
+          0.430619281
+        ]
+      },
+      "nodeIDs": [
+        "pinch_combination_left_001"
+      ]
+    },
+    "pinch-medium-right": {
+      "center": [
+        0.923114975,
+        0.664429531
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.898239782
+        ],
+        "min": [
+          0.846229949,
+          0.430619281
+        ]
+      },
+      "nodeIDs": [
+        "pinch_combination_right_001"
+      ]
+    },
+    "pinch-wide-left": {
+      "center": [
+        0.076885025,
+        0.664429531
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.153770051,
+          0.898239782
+        ],
+        "min": [
+          0.0,
+          0.430619281
+        ]
+      },
+      "nodeIDs": [
+        "pinch_combination_left_002"
+      ]
+    },
+    "pinch-wide-right": {
+      "center": [
+        0.923114975,
+        0.664429531
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.898239782
+        ],
+        "min": [
+          0.846229949,
+          0.430619281
+        ]
+      },
+      "nodeIDs": [
+        "pinch_combination_right_002"
+      ]
+    },
+    "pocket-index-middle-deep-left": {
+      "center": [
+        0.241451388,
+        0.100671158
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.268221969,
+          0.142637067
+        ],
+        "min": [
+          0.214680806,
+          0.058705249
+        ]
+      },
+      "nodeIDs": [
+        "shallow_index_middle_pocket_left_001"
+      ]
+    },
+    "pocket-index-middle-deep-right": {
+      "center": [
+        0.758548613,
+        0.100671158
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.785319194,
+          0.142637067
+        ],
+        "min": [
+          0.731778031,
+          0.058705249
+        ]
+      },
+      "nodeIDs": [
+        "shallow_index_middle_pocket_right_001"
+      ]
+    },
+    "pocket-index-middle-medium-shallow-left": {
+      "center": [
+        0.215770652,
+        0.278523492
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.253669558,
+          0.323950509
+        ],
+        "min": [
+          0.177871746,
+          0.233096475
+        ]
+      },
+      "nodeIDs": [
+        "medium_index_middle_pocket_left_001"
+      ]
+    },
+    "pocket-index-middle-medium-shallow-right": {
+      "center": [
+        0.784229348,
+        0.278523492
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.822128254,
+          0.323950509
+        ],
+        "min": [
+          0.746330442,
+          0.233096475
+        ]
+      },
+      "nodeIDs": [
+        "medium_index_middle_pocket_right_001"
+      ]
+    },
+    "pocket-middle-ring-deep-left": {
+      "center": [
+        0.316397211,
+        0.281879194
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.343765041,
+          0.324061426
+        ],
+        "min": [
+          0.289029381,
+          0.239696963
+        ]
+      },
+      "nodeIDs": [
+        "deep_middle_ring_pocket_left_001"
+      ]
+    },
+    "pocket-middle-ring-deep-right": {
+      "center": [
+        0.683602789,
+        0.281879194
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.710970619,
+          0.324061426
+        ],
+        "min": [
+          0.656234959,
+          0.239696963
+        ]
+      },
+      "nodeIDs": [
+        "deep_middle_ring_pocket_right_001"
+      ]
+    },
+    "pocket-middle-ring-shallow-left": {
+      "center": [
+        0.316397221,
+        0.107382547
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.343033484,
+          0.147401583
+        ],
+        "min": [
+          0.289760958,
+          0.067363511
+        ]
+      },
+      "nodeIDs": [
+        "shallow_middle_ring_pocket_left_001"
+      ]
+    },
+    "pocket-middle-ring-shallow-right": {
+      "center": [
+        0.683602779,
+        0.107382547
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.710239042,
+          0.147401583
+        ],
+        "min": [
+          0.656966516,
+          0.067363511
+        ]
+      },
+      "nodeIDs": [
+        "shallow_middle_ring_pocket_right_001"
+      ]
+    },
+    "pocket-three-finger-slot-left": {
+      "center": [
+        0.358849056,
+        0.483221476
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.407022436,
+          0.526485298
+        ],
+        "min": [
+          0.310675675,
+          0.439957654
+        ]
+      },
+      "nodeIDs": [
+        "three_finger_slot_left_001"
+      ]
+    },
+    "pocket-three-finger-slot-right": {
+      "center": [
+        0.641150944,
+        0.483221476
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.689324325,
+          0.526485298
+        ],
+        "min": [
+          0.592977564,
+          0.439957654
+        ]
+      },
+      "nodeIDs": [
+        "three_finger_slot_right_001"
+      ]
+    },
+    "sloper-left": {
+      "center": [
+        0.198470488,
+        0.894569837
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.290192382,
+          0.966992033
+        ],
+        "min": [
+          0.106748594,
+          0.822147642
+        ]
+      },
+      "nodeIDs": [
+        "sloper_left_001"
+      ]
+    },
+    "sloper-right": {
+      "center": [
+        0.801529512,
+        0.894569837
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.893251406,
+          0.966992033
+        ],
+        "min": [
+          0.709807618,
+          0.822147642
+        ]
+      },
+      "nodeIDs": [
+        "sloper_right_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.358139992,
+      0.115570001,
+      0.101000004
+    ],
+    "min": [
+      -0.358139992,
+      -0.115570001,
+      0.0
+    ]
+  },
+  "modelSHA256": "bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d",
+  "nodes": [
+    {
+      "nodeID": "body_left_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "body_right_001",
+      "role": "body"
+    },
+    {
+      "contactID": "pocket-middle-ring-deep-left",
+      "nodeID": "deep_middle_ring_pocket_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-middle-ring-deep-right",
+      "nodeID": "deep_middle_ring_pocket_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-left",
+      "nodeID": "jug_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-right",
+      "nodeID": "jug_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-shallow-vder-left",
+      "nodeID": "lower_variable_rail_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-shallow-vder-right",
+      "nodeID": "lower_variable_rail_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-index-middle-medium-shallow-left",
+      "nodeID": "medium_index_middle_pocket_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-index-middle-medium-shallow-right",
+      "nodeID": "medium_index_middle_pocket_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pinch-medium-left",
+      "nodeID": "pinch_combination_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pinch-wide-left",
+      "nodeID": "pinch_combination_left_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "pinch-medium-right",
+      "nodeID": "pinch_combination_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pinch-wide-right",
+      "nodeID": "pinch_combination_right_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-index-middle-deep-left",
+      "nodeID": "shallow_index_middle_pocket_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-index-middle-deep-right",
+      "nodeID": "shallow_index_middle_pocket_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-middle-ring-shallow-left",
+      "nodeID": "shallow_middle_ring_pocket_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-middle-ring-shallow-right",
+      "nodeID": "shallow_middle_ring_pocket_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-left",
+      "nodeID": "sloper_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-right",
+      "nodeID": "sloper_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-thin-crimp-left",
+      "nodeID": "thin_crimp_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-thin-crimp-right",
+      "nodeID": "thin_crimp_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-three-finger-slot-left",
+      "nodeID": "three_finger_slot_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-three-finger-slot-right",
+      "nodeID": "three_finger_slot_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-large-vder-left",
+      "nodeID": "upper_variable_rail_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-large-vder-right",
+      "nodeID": "upper_variable_rail_right_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

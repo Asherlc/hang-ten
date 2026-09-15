@@ -372,3 +372,33 @@ The model-only package contains only `board.json`, `assets/primary.usdz`, and
 geometry are removed. `test_verify_the_hangboard.py` locks the ordered
 15-contact inventory and rejects a hardware-cover ray that resolves to the
 body rather than the cap node.
+
+## Trango Rock Prodigy Training Center (`trango.rock-prodigy-training-center`)
+
+Reviewed 2026-09-15. This migration is limited to the exact Training Center revision documented in `2026-08-12-rock-prodigy-board-package.md`. Its existing `board.json` remains the sole authority for its revision identity, 24 stable contact IDs, ordering, names, kinds, optional facts, and product metadata. No Forge, Natural, or Pivot claim, contact map, dimension, or model detail was used as a substitute; those are separate Trango revisions.
+
+### Retained visual evidence
+
+| ID | Publisher and URL | Retained local copy and SHA-256 | Supports | Does not support |
+| --- | --- | --- | --- | --- |
+| RPTC-FRONT | Trango — [official Training Center main image](https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946) | `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/retained-evidence/trango-training-center-main.jpg` — `8293f7bd2c2517f8fda72d7ad678671cc801cd7d31fecd4e20ee42eea7170ebf` | Exact two-piece Training Center revision, bilateral presentation, visible contact arrangement, and exterior silhouette. | Per-contact depths/capacities, hidden geometry, or a Forge/Natural/Pivot equivalence. |
+| RPTC-GUIDE | Trango — [official Training Center use instructions](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155) | `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/retained-evidence/rptc-use-instructions.pdf` — `9800be405e9aa58fd8d9bd1fefbf9ac5bcd738baaa344c6af084fbf98a44465c` | Training Center identity and broad jug, edge, pocket, pinch, and sloper grip families. | A one-to-one cavity/rail map, individual pocket capacity/depth, or any fact for a different Rock Prodigy revision. |
+
+The existing Trango product page and audit establish the Training Center's two-piece symmetric construction and source-limited contact interpretation. These files were reviewed to preserve that existing inventory, not to trace, register, segment, or infer new model geometry.
+
+### Source decision and explicit mapping
+
+The user-provided source delivery is retained at `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/source-delivery/trango-rock-prodigy-training-center.glb`, SHA-256 `59bb4bc1d1930b2fa14266d5f17e67859815912e2decab15dd1861c07f452c57`. It has two nonselectable body meshes and 20 named selectable meshes. Every source node is explicitly recorded in `contact-mapping.json`; its ordered logical IDs exactly equal the catalog’s current ordered 24 IDs.
+
+The only correction is contract-only. Each supplied `pinch-combination-*` mesh is represented by two linked transport nodes, `pinch-medium-*` and `pinch-wide-*`, preserving source mesh data and triangles without a geometry edit. This retains the two existing overlapping pinch selection identities on each side as separately bindable contacts. The native transport source SHA-256 is `44f578442c2b80e05e4c790d81b99790defdf147ea7e5a1b3ab13f7faedf5ac5`. No bore, hardware, logo, rear, pocket, or rail geometry was added, removed, or used as a factual catalog claim.
+
+The explicit mapping preserves two independent body nodes; two jugs; each bilateral variable rail and thin crimp; all ten bilateral pocket identities; both bilateral slopers; and all four bilateral pinch identities. In particular, `pinch-medium-left`, `pinch-wide-left`, `pinch-medium-right`, and `pinch-wide-right` are never merged. Delivery source names are transport labels only; the pre-existing catalog IDs and facts remain the factual identity source.
+
+### Promoted model-only package and exact shipped validation
+
+| Artifact | SHA-256 | Disposition |
+| --- | --- | --- |
+| Promoted `assets/primary.usdz` | `bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d` | Exact shipped model generated through the explicit importer/compiler and reopened from an empty Blender scene. |
+| Promoted descriptor | `026573be4eb702f64d8a807e7a2685356949e381ddab73ff3e49aa486d90bda6` | Generated from importer-visible USDZ triangles and hash-binds the shipped model. |
+
+`Tools/HangboardModels/verify_trango_rock_prodigy_training_center.py` checks the exact shipped package inventory and model hash, starts with an empty Blender scene, imports the shipped USDZ, validates 26 tagged nodes (two body, 24 contact), rebuilds the descriptor from material-bearing triangulated meshes, and requires the exact 24-contact keyset plus four distinct bilateral-pinch bindings. Its retained report is `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/shipped-usdz-verification.json`. The package contains only `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; the raster asset, canonical paths, cached frames, and fallback geometry are removed.
