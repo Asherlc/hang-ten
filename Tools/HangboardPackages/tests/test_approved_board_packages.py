@@ -15,6 +15,8 @@ from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
+CLIMBERS_EDGE_ROOT = HANGBOARDS_ROOT / "metolius-climbers-edge"
+CONTACT_ROOT = HANGBOARDS_ROOT / "metolius-contact"
 DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
@@ -50,12 +52,13 @@ def _single_grip_type(contact: dict[str, object]) -> str | None:
 
 
 def _assert_model_descriptor(
-    root: Path, board: dict[str, object], body_node_id: str
+    root: Path, board: dict[str, object], body_node_ids: str | set[str]
 ) -> dict[str, object]:
     presentations = board["presentations"]
     assert isinstance(presentations, list)
     media = presentations[0]["media"]
     assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "contactGeometry" not in media
     assert {
@@ -74,8 +77,9 @@ def _assert_model_descriptor(
     contacts = board["contacts"]
     assert isinstance(contacts, list)
     assert set(descriptor["contacts"]) == {contact["id"] for contact in contacts}
+    expected_body_ids = {body_node_ids} if isinstance(body_node_ids, str) else body_node_ids
     assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
-        {"nodeID": body_node_id, "role": "body"},
+        {"nodeID": node_id, "role": "body"} for node_id in sorted(expected_body_ids)
     ]
     for contact_id, contact in descriptor["contacts"].items():
         assert contact["nodeIDs"] == [
@@ -84,6 +88,20 @@ def _assert_model_descriptor(
             if node.get("contactID") == contact_id
         ]
     return descriptor
+
+
+def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
+    board = json.loads((CLIMBERS_EDGE_ROOT / "board.json").read_text(encoding="utf-8"))
+    assert len(board["presentations"]) == 1
+    descriptor = _assert_model_descriptor(
+        CLIMBERS_EDGE_ROOT, board, {"body_001", "bore_free_body_caps_001"}
+    )
+    bounds = descriptor["modelBounds"]
+    front_aspect = (bounds["max"][0] - bounds["min"][0]) / (
+        bounds["max"][1] - bounds["min"][1]
+    )
+    assert board["aspectRatio"] == pytest.approx(front_aspect)
+    assert board["presentations"][0]["aspectRatio"] == pytest.approx(front_aspect)
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
@@ -997,6 +1015,17 @@ def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
         ("top-jug-left", "Left top jug", "jug"),
         ("top-jug-right", "Right top jug", "jug"),
     )
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in media
+    descriptor = json.loads((TRAINING_TILES_ROOT / media["descriptorPath"]).read_text(encoding="utf-8"))
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert set(descriptor["contacts"]) == contact_ids
+    assert {
+        node["contactID"] for node in descriptor["nodes"] if node["role"] == "contact"
+    } == contact_ids
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
@@ -1067,6 +1096,35 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+
+
+def test_contact_is_a_bore_free_model_only_package_with_its_existing_contacts() -> None:
+    board = json.loads((CONTACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    media = board["presentations"][0]["media"]
+
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in media
+    assert {
+        path.relative_to(CONTACT_ROOT).as_posix()
+        for path in CONTACT_ROOT.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    descriptor = json.loads((CONTACT_ROOT / media["descriptorPath"]).read_text(encoding="utf-8"))
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert len(contact_ids) == 33
+    assert set(descriptor["contacts"]) == contact_ids
+    assert {
+        node["contactID"] for node in descriptor["nodes"] if node["role"] == "contact"
+    } == contact_ids
+    assert [node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"] == [
+        "body_001",
+        "bore_free_body_caps_001",
+    ]
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (CONTACT_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
 
 
 def test_compact_package_loader_preserves_identity_inventory_and_model_frames() -> None:

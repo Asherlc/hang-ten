@@ -15,11 +15,17 @@
 		D10000000000000000000006 /* lattice-mxedge-lift-large Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-mxedge-lift-large", ); }; };
 		D10000000000000000000007 /* lattice-mxedge-lift-small Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-mxedge-lift-small", ); }; };
 		D10000000000000000000008 /* lattice-triple-rung Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000008 /* lattice-triple-rung Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-triple-rung", ); }; };
+		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
+		D10000000000000000000010 /* metolius-contact Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000010 /* metolius-contact Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-contact", ); }; };
 		D10000000000000000000009 /* metolius-prime-rib Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000009 /* metolius-prime-rib Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-prime-rib", ); }; };
 		D1000000000000000000000A /* metolius-project Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000A /* metolius-project Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-project", ); }; };
+		D10000000000000000000011 /* metolius-simulator-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000011 /* metolius-simulator-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-simulator-3d", ); }; };
 		D1000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-compact-ii", ); }; };
 		D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* nature-stone-hanger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger", ); }; };
+		D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000012 /* soill-training-tiles Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-training-tiles", ); }; };
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
+		D10000000000000000000013 /* the-hangboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000013 /* the-hangboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-the-hangboard", ); }; };
+		D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-training-center", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
@@ -164,11 +170,17 @@
 		D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-mxedge-lift-large Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-mxedge-lift-large/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-mxedge-lift-small Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-mxedge-lift-small/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000008 /* lattice-triple-rung Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-triple-rung Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-triple-rung/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000010 /* metolius-contact Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-contact Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-contact/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000009 /* metolius-prime-rib Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-prime-rib Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-prime-rib/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000A /* metolius-project Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-project Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-project/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000011 /* metolius-simulator-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-simulator-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-simulator-3d/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-compact-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-compact-ii/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000C /* nature-stone-hanger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000012 /* soill-training-tiles Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-training-tiles Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-training-tiles/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000013 /* the-hangboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "the-hangboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/the-hangboard/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-training-center Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-training-center/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
@@ -359,11 +371,17 @@
 				D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */,
 				D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */,
 				D20000000000000000000008 /* lattice-triple-rung Hangboards */,
+				D2000000000000000000000F /* metolius-climbers-edge Hangboards */,
+				D20000000000000000000010 /* metolius-contact Hangboards */,
 				D20000000000000000000009 /* metolius-prime-rib Hangboards */,
 				D2000000000000000000000A /* metolius-project Hangboards */,
+				D20000000000000000000011 /* metolius-simulator-3d Hangboards */,
 				D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */,
 				D2000000000000000000000C /* nature-stone-hanger Hangboards */,
+				D20000000000000000000012 /* soill-training-tiles Hangboards */,
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
+				D20000000000000000000013 /* the-hangboard Hangboards */,
+				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
 			);
 			name = "On-Demand Model Resources";
@@ -711,11 +729,17 @@
 				D10000000000000000000006 /* lattice-mxedge-lift-large Hangboards in Resources */,
 				D10000000000000000000007 /* lattice-mxedge-lift-small Hangboards in Resources */,
 				D10000000000000000000008 /* lattice-triple-rung Hangboards in Resources */,
+				D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */,
+				D10000000000000000000010 /* metolius-contact Hangboards in Resources */,
 				D10000000000000000000009 /* metolius-prime-rib Hangboards in Resources */,
 				D1000000000000000000000A /* metolius-project Hangboards in Resources */,
+				D10000000000000000000011 /* metolius-simulator-3d Hangboards in Resources */,
 				D1000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards in Resources */,
 				D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */,
+				D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */,
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
+				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
+				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,

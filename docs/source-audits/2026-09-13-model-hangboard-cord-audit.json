@@ -226,6 +226,52 @@
       }
     },
     {
+      "packageID": "metolius.climbers-edge",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Climber's Edge manufacturer product view establishes a board with mounting openings but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/The-Climber_s-Edge-Training-Board_67ebe212-d205-4f2c-9ca9-048b1792351d.jpg?v=1765309719",
+          "exactRevisionID": "climbers-edge-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "f77709e5ef37fea421bdf08cd85b6fa88709da76e4ea3a861a3a4e2c673ae3ed",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-climbers-edge-product.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "metolius.contact",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Contact manufacturer product view establishes a board with mounting openings but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Contact-Hangboard-black-white.jpg?v=1759459002",
+          "exactRevisionID": "contact-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "b9cf153d82f0072ae2e4b0064821dee1d666ff1d8b34ba21fed1fcfd6944c055",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-contact-product.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
+      }
+    },
+    {
       "packageID": "metolius.prime-rib",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
@@ -269,6 +315,29 @@
         "reviewer": "hang-ten-cord-audit",
         "reviewedAt": "2026-09-13",
         "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "metolius.simulator-3d",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Simulator 3-D manufacturer product view establishes a board with mounting openings but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Simulator-black-white.jpg?v=1759460469",
+          "exactRevisionID": "simulator-3d-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-simulator-product.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
       }
     },
     {
@@ -326,6 +395,29 @@
       }
     },
     {
+      "packageID": "soill.training-tiles",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Training Tiles manufacturer product view establishes the two-piece board arrangement but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://soillholds.com/cdn/shop/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960_2048x.jpg?v=1677258630",
+          "exactRevisionID": "training-tiles-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "1061453fa5110467cc0110007555bb70a946b8012b00bb5dc462d60677123c86",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill-training-tiles-front.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
+      }
+    },
+    {
       "packageID": "tension.flash-board",
       "decision": "represented",
       "sourceFact": "documentedSuspension",
@@ -354,6 +446,52 @@
         "reviewer": "hang-ten-cord-audit",
         "reviewedAt": "2026-09-13",
         "notes": "Reviewed the retained manufacturer product and training-article source artifacts."
+      }
+    },
+    {
+      "packageID": "the-hangboard.the-hangboard",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current The Hangboard manufacturer product view establishes the board layout but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://cdn.shopify.com/s/files/1/0764/5210/2426/files/hangboard-straight-2.png",
+          "exactRevisionID": "the-hangboard-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "4db9e95721bd43cf6df3ee5974865948c9353f2f366c4f2957b08206442122d3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/the-hangboard-straight.png"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "trango.rock-prodigy-training-center",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Rock Prodigy Training Center manufacturer product view establishes the two-piece board arrangement but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946",
+          "exactRevisionID": "rock-prodigy-training-center-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "8293f7bd2c2517f8fda72d7ad678671cc801cd7d31fecd4e20ee42eea7170ebf",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-training-center-main.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
       }
     },
     {

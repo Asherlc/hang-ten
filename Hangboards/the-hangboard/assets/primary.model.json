@@ -1,0 +1,389 @@
+{
+  "contacts": {
+    "edge-10-left": {
+      "center": [
+        0.405979982,
+        0.163165981
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.481446759,
+          0.188536698
+        ],
+        "min": [
+          0.330513205,
+          0.137795264
+        ]
+      },
+      "nodeIDs": [
+        "edge_10_left_001"
+      ]
+    },
+    "edge-10-right": {
+      "center": [
+        0.891823508,
+        0.163165981
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.96729029,
+          0.188536698
+        ],
+        "min": [
+          0.816356727,
+          0.137795264
+        ]
+      },
+      "nodeIDs": [
+        "edge_10_right_001"
+      ]
+    },
+    "edge-15-left": {
+      "center": [
+        0.257078239,
+        0.151023611
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.330513205,
+          0.164251959
+        ],
+        "min": [
+          0.183643273,
+          0.137795264
+        ]
+      },
+      "nodeIDs": [
+        "edge_15_left_001"
+      ]
+    },
+    "edge-15-right": {
+      "center": [
+        0.742921761,
+        0.151023611
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.816356727,
+          0.164251959
+        ],
+        "min": [
+          0.669486795,
+          0.137795264
+        ]
+      },
+      "nodeIDs": [
+        "edge_15_right_001"
+      ]
+    },
+    "edge-20-left": {
+      "center": [
+        0.108176491,
+        0.163165981
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.183643273,
+          0.188536698
+        ],
+        "min": [
+          0.03270971,
+          0.137795264
+        ]
+      },
+      "nodeIDs": [
+        "edge_20_left_001"
+      ]
+    },
+    "edge-20-right": {
+      "center": [
+        0.594020018,
+        0.163165981
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.669486795,
+          0.188536698
+        ],
+        "min": [
+          0.518553241,
+          0.137795264
+        ]
+      },
+      "nodeIDs": [
+        "edge_20_right_001"
+      ]
+    },
+    "edge-25-left": {
+      "center": [
+        0.405979982,
+        0.515952366
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.481446759,
+          0.541353551
+        ],
+        "min": [
+          0.330513205,
+          0.490551181
+        ]
+      },
+      "nodeIDs": [
+        "edge_25_left_001"
+      ]
+    },
+    "edge-25-right": {
+      "center": [
+        0.891823508,
+        0.515952366
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.96729029,
+          0.541353551
+        ],
+        "min": [
+          0.816356727,
+          0.490551181
+        ]
+      },
+      "nodeIDs": [
+        "edge_25_right_001"
+      ]
+    },
+    "edge-30-left": {
+      "center": [
+        0.257078239,
+        0.504094488
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.330513205,
+          0.517637795
+        ],
+        "min": [
+          0.183643273,
+          0.490551181
+        ]
+      },
+      "nodeIDs": [
+        "edge_30_left_001"
+      ]
+    },
+    "edge-30-right": {
+      "center": [
+        0.742921761,
+        0.504094488
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.816356727,
+          0.517637795
+        ],
+        "min": [
+          0.669486795,
+          0.490551181
+        ]
+      },
+      "nodeIDs": [
+        "edge_30_right_001"
+      ]
+    },
+    "edge-40-left": {
+      "center": [
+        0.108176491,
+        0.515952366
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.183643273,
+          0.541353551
+        ],
+        "min": [
+          0.03270971,
+          0.490551181
+        ]
+      },
+      "nodeIDs": [
+        "edge_40_left_001"
+      ]
+    },
+    "edge-40-right": {
+      "center": [
+        0.594020018,
+        0.515952366
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.669486795,
+          0.541353551
+        ],
+        "min": [
+          0.518553241,
+          0.490551181
+        ]
+      },
+      "nodeIDs": [
+        "edge_40_right_001"
+      ]
+    },
+    "jug-left": {
+      "center": [
+        0.112543899,
+        0.876294582
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.209054459,
+          1.0
+        ],
+        "min": [
+          0.01603334,
+          0.752589165
+        ]
+      },
+      "nodeIDs": [
+        "jug_left_001"
+      ]
+    },
+    "jug-right": {
+      "center": [
+        0.887456101,
+        0.876294582
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.98396666,
+          1.0
+        ],
+        "min": [
+          0.790945541,
+          0.752589165
+        ]
+      },
+      "nodeIDs": [
+        "jug_right_001"
+      ]
+    },
+    "sloper-40-center": {
+      "center": [
+        0.5,
+        0.852218553
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.790945541,
+          0.950578832
+        ],
+        "min": [
+          0.209054459,
+          0.753858274
+        ]
+      },
+      "nodeIDs": [
+        "sloper_40_center_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.298449993,
+      0.079374999,
+      0.050799999
+    ],
+    "min": [
+      -0.298449993,
+      -0.079374999,
+      -1e-05
+    ]
+  },
+  "modelSHA256": "212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f",
+  "nodes": [
+    {
+      "nodeID": "body_001",
+      "role": "body"
+    },
+    {
+      "contactID": "edge-10-left",
+      "nodeID": "edge_10_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-10-right",
+      "nodeID": "edge_10_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-15-left",
+      "nodeID": "edge_15_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-15-right",
+      "nodeID": "edge_15_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20-left",
+      "nodeID": "edge_20_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20-right",
+      "nodeID": "edge_20_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-25-left",
+      "nodeID": "edge_25_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-25-right",
+      "nodeID": "edge_25_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-30-left",
+      "nodeID": "edge_30_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-30-right",
+      "nodeID": "edge_30_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-40-left",
+      "nodeID": "edge_40_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-40-right",
+      "nodeID": "edge_40_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-left",
+      "nodeID": "jug_left_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-right",
+      "nodeID": "jug_right_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "mounting_hardware_omission_caps_001",
+      "role": "body"
+    },
+    {
+      "contactID": "sloper-40-center",
+      "nodeID": "sloper_40_center_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

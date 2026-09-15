@@ -1222,7 +1222,24 @@ final class BoardModelTests: XCTestCase {
     }
 
     func testBaguetteEvoNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
-        let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
+        try await assertNativeNearestTrianglePicking(boardID: "yy.baguette-evo")
+    }
+
+    func testCollectionModelsNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
+        for boardID in [
+            "metolius.climbers-edge", "metolius.contact", "metolius.simulator-3d",
+            "soill.training-tiles", "the-hangboard.the-hangboard",
+            "trango.rock-prodigy-training-center",
+        ] {
+            try await assertNativeNearestTrianglePicking(boardID: boardID)
+        }
+    }
+
+    private func assertNativeNearestTrianglePicking(boardID: String) async throws {
+        let (board, media, model) = try await loadMigratedModel(boardID)
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 800, height: 600))
+        view.display(model)
+        model.frame(in: view.bounds.size)
         let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
             .map { Float($1 - $0) }
             .max() ?? 1
@@ -1264,12 +1281,28 @@ final class BoardModelTests: XCTestCase {
                                     SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
                                 ]
                             ).first
-                            return closest.flatMap { model.contactID(for: $0.node) } == contactID
+                            guard closest?.node === node,
+                                  closest.flatMap({ model.contactID(for: $0.node) }) == contactID else {
+                                return false
+                            }
+                            // Exercise the same projected-point nearest hit used by
+                            // selectContact, not an accessibility/legend identity lookup.
+                            let projected = view.projectPoint(center)
+                            let point = CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
+                            guard projected.z >= 0, projected.z <= 1, view.bounds.contains(point) else {
+                                return false
+                            }
+                            let screenHit = view.hitTest(point, options: [
+                                SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
+                                SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
+                            ]).first
+                            return screenHit?.node === node
+                                && screenHit.flatMap { model.contactID(for: $0.node) } == contactID
                         }
                     }
                     XCTAssertTrue(
                         hasNativePick,
-                        "\(position.id): \(contactID): \(node.name ?? "unnamed") has no nearest native triangle pick across its bounds"
+                        "\(boardID): \(position.id): \(contactID): \(node.name ?? "unnamed") has no nearest native triangle pick across the reviewed camera angles"
                     )
                 }
             }
@@ -1341,8 +1374,10 @@ final class BoardModelTests: XCTestCase {
             "nature.stone-hanger",
             "yy.baguette-evo",
             "metolius.wood-grips-compact-ii",
+            "metolius.simulator-3d",
+            "soill.training-tiles",
         ]
-        let rasterBoardIDs = ["metolius.simulator-3d", "soill.training-tiles"]
+        let rasterBoardIDs = ["soill.split-palm"]
 
         for boardID in modelBoardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
@@ -1986,19 +2021,21 @@ final class BoardModelTests: XCTestCase {
         var centers: [SCNVector3] = []
         for element in geometry.elements where element.primitiveType == .triangles {
             let plainSize = element.primitiveCount * 3 * element.bytesPerIndex
-            let importerMultiIndexSize = element.primitiveCount * 9 * element.bytesPerIndex
+            let attributeCount = geometry.sources.count
+            let importerMultiIndexSize = plainSize * attributeCount
             let layout: (stride: Int, corners: [Int])
             if element.data.count == plainSize {
                 layout = (3, [0, 1, 2])
-            } else if element.data.count == importerMultiIndexSize {
-                // USD-imported SceneKit geometry carries vertex/normal/UV
-                // tuples for each corner. Vertex indexes are lanes 0, 3, 6.
-                layout = (9, [0, 3, 6])
+            } else if element.data.count == importerMultiIndexSize,
+                      geometry.sources.first?.semantic == .vertex {
+                // USD-imported meshes use one index per attribute per corner:
+                // vertex/normal, or vertex/normal/UV for textured sources.
+                layout = (3 * attributeCount, [0, attributeCount, 2 * attributeCount])
             } else {
                 throw NSError(
                     domain: "BoardModelTests.nativeTriangleCenters",
                     code: 4,
-                    userInfo: [NSLocalizedDescriptionKey: "unknown native triangle element layout"]
+                    userInfo: [NSLocalizedDescriptionKey: "\(node.name ?? "unnamed"): unknown native triangle element layout: bytes=\(element.data.count), triangles=\(element.primitiveCount), bytesPerIndex=\(element.bytesPerIndex), sources=\(geometry.sources.map { $0.semantic.rawValue })"]
                 )
             }
             for triangle in 0..<element.primitiveCount {
