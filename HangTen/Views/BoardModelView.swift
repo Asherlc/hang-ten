@@ -289,13 +289,18 @@ private enum BoardModelCache {
         guard let resourceLease, !Task.isCancelled else { return nil }
         #if DEBUG
         let willDecodeForTesting = BoardModelAsset.willDecodeForTesting
+        let sceneLoaderForTesting = BoardModelAsset.sceneLoaderForTesting
         #endif
         let scene = await Task.detached(priority: .userInitiated) {
             withExtendedLifetime(resourceLease) {
                 #if DEBUG
                 willDecodeForTesting?(resourceLease.url)
-                #endif
+                return BoardModelAsset.$sceneLoaderForTesting.withValue(sceneLoaderForTesting) {
+                    BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+                }
+                #else
                 return BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+                #endif
             }
         }.value
         guard let scene, !Task.isCancelled else { return nil }
