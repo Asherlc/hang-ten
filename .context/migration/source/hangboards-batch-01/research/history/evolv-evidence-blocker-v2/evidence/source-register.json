@@ -1,0 +1,122 @@
+[
+  {
+    "id": "P1",
+    "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+    "publisher": "Evolv",
+    "evidenceTier": "manufacturer",
+    "accessDate": "2026-09-15",
+    "supports": "Exact Long SKU 66-0000082105; resin, black, 6.25 lb; 790 \u00d7 160 \u00d7 60 mm; rounded jug and 20/15/10 mm edges.",
+    "doesNotEstablish": "Metric and inch dimensions conflict; hidden rear construction and precise local curvature.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P2",
+    "url": "https://www.alpenglowgear.com/basic-training-board-long.html",
+    "publisher": "Alpenglow Adventure Sports",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "Exact Long SKU, metric dimensions and four named contact types.",
+    "doesNotEstablish": "Photo downloads returned cache misses; text is not a contour measurement.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P3",
+    "url": "https://www.backcountry.com/evolv-basic-training-board",
+    "publisher": "Backcountry",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "Lists Long as 31 \u00d7 6.25 \u00d7 2.25 inches, distinct from Short.",
+    "doesNotEstablish": "Mixed-variant page is not sufficient to transplant Short geometry into Long.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I1",
+    "url": "https://oberalp.imgix.net/ef857c73-13f1-4205-ac47-706cd101e1bb.jpg?auto=format&cs=srgb&fit=clip&type=still&w=628",
+    "publisher": "Evolv (Oberalp image CDN)",
+    "evidenceTier": "manufacturer image locator",
+    "accessDate": "2026-09-15",
+    "supports": "Long-specific image link located on an exact product page.",
+    "doesNotEstablish": "Image content could not be loaded; not used to infer physical geometry.",
+    "review": "unavailable: web image requests failed",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I2",
+    "url": "https://oberalp.imgix.net/f8a564c9-b501-445f-bd43-af630730abfd.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628",
+    "publisher": "Evolv (Oberalp image CDN)",
+    "evidenceTier": "manufacturer image locator",
+    "accessDate": "2026-09-15",
+    "supports": "Long-specific image link located on an exact product page.",
+    "doesNotEstablish": "Image content could not be loaded; not used to infer physical geometry.",
+    "review": "unavailable: web image requests failed",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I3",
+    "url": "https://oberalp.imgix.net/e3b05632-02ce-467f-9226-d2a2862c482a.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628",
+    "publisher": "Evolv (Oberalp image CDN)",
+    "evidenceTier": "manufacturer image locator",
+    "accessDate": "2026-09-15",
+    "supports": "Long-specific image link located on an exact product page.",
+    "doesNotEstablish": "Image content could not be loaded; not used to infer physical geometry.",
+    "review": "unavailable: web image requests failed",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I4",
+    "url": "https://oberalp.imgix.net/88ad8128-f05a-45e1-8060-6a5dc3c74052.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628",
+    "publisher": "Evolv (Oberalp image CDN)",
+    "evidenceTier": "manufacturer image locator",
+    "accessDate": "2026-09-15",
+    "supports": "Long-specific image link located on an exact product page.",
+    "doesNotEstablish": "Image content could not be loaded; not used to infer physical geometry.",
+    "review": "unavailable: web image requests failed",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I5",
+    "url": "https://cdn.shoplightspeed.com/shops/608154/files/44167238/image.jpg",
+    "publisher": "Alpenglow",
+    "evidenceTier": "retailer image locator",
+    "accessDate": "2026-09-15",
+    "supports": "Long-specific image link located on an exact product page.",
+    "doesNotEstablish": "Image content could not be loaded; not used to infer physical geometry.",
+    "review": "unavailable: web image requests failed",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P4",
+    "url": "https://settercloset.com/en-ca/products/ku007",
+    "publisher": "Kilter / Setter Closet",
+    "evidenceTier": "co-designer, different named size",
+    "accessDate": "2026-09-15",
+    "supports": "KU007 is explicitly 24 inches long.",
+    "doesNotEstablish": "Does not establish the geometry of the Evolv 31-inch Long; rejected as a substitute.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P5",
+    "url": "https://www.campsaver.com/evolv-basic-training-board.html",
+    "publisher": "CampSaver",
+    "evidenceTier": "retailer mixed-variant listing",
+    "accessDate": "2026-09-15",
+    "supports": "Long EVL0462-999 / UPC 849948023883 distinguished from Short EVL0461-999.",
+    "doesNotEstablish": "Photos are captioned Short; not accepted as Long geometry evidence.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  }
+]

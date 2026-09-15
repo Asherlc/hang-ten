@@ -1,0 +1,60 @@
+{
+  "previousPackage": "original Batch 1 repair",
+  "currentPackageRevision": 2,
+  "models": [
+    {
+      "slug": "dewoodstok-woodbord",
+      "previousGlbSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "deliveredGlbSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "geometryChanged": false,
+      "logicalContactCountUnchanged": true,
+      "currentTriangles": 42000,
+      "currentStatus": "PARTIAL"
+    },
+    {
+      "slug": "escape-unlimited-board",
+      "previousGlbSha256": "ca06ebc019bab52c0f576064b8893c7dbc5b44d2ada34927234db3892f5936e6",
+      "deliveredGlbSha256": "ca06ebc019bab52c0f576064b8893c7dbc5b44d2ada34927234db3892f5936e6",
+      "geometryChanged": false,
+      "logicalContactCountUnchanged": true,
+      "currentTriangles": 36000,
+      "currentStatus": "PARTIAL"
+    },
+    {
+      "slug": "evolv-basic-training-board-long",
+      "previousGlbSha256": null,
+      "deliveredGlbSha256": null,
+      "geometryChanged": false,
+      "logicalContactCountUnchanged": true,
+      "currentTriangles": null,
+      "currentStatus": "EVIDENCE-BLOCKED"
+    },
+    {
+      "slug": "metolius-wood-grips-ii-deluxe",
+      "previousGlbSha256": "5f9811ff5ca7e6dacb2a2215d3fe1c0b65ba1b49ef1238590197ebd085fdd26e",
+      "deliveredGlbSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+      "geometryChanged": true,
+      "logicalContactCountUnchanged": true,
+      "currentTriangles": 65000,
+      "currentStatus": "PARTIAL"
+    },
+    {
+      "slug": "moon-armstrong-ash",
+      "previousGlbSha256": "c5b183678f905e5239ba765b7b93ac2365a51014a6b6b374b4a0dfbf9ba1b914",
+      "deliveredGlbSha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
+      "geometryChanged": true,
+      "logicalContactCountUnchanged": true,
+      "currentTriangles": 46000,
+      "currentStatus": "PARTIAL"
+    },
+    {
+      "slug": "target10a-linebreaker-base",
+      "previousGlbSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+      "deliveredGlbSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+      "geometryChanged": false,
+      "logicalContactCountUnchanged": true,
+      "currentTriangles": 46000,
+      "currentStatus": "PARTIAL"
+    }
+  ]
+}

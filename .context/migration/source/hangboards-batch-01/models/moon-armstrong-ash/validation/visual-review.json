@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "assetSha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
+  "reviewDate": "2026-09-15",
+  "reviewedRenders": [
+    "01-canonical-front.png",
+    "02-reverse.png",
+    "03-oblique.png",
+    "04-contact-detail.png",
+    "05-neutral-material.png",
+    "06-side.png",
+    "details/07-arched-jug.png",
+    "details/08-mono-through.png"
+  ],
+  "sourceComparison": "Reviewed front, reverse, oblique, contact, material and side renders plus arched-jug and rear mono details. New centre is an arched upper lip and two open shelves, not three closed capsule recesses. Mono openings visibly pass through. Asymmetric layout and 21 stable contact IDs are retained. The authored side/rear profile remains approximate; some polygonal shading remains at relief transitions.",
+  "sourceFidelityCertified": false,
+  "displayApproximationLimits": [
+    "The Ash manufacturer photograph has an asymmetric column layout: four-edge columns at far left and right-of-centre, jug columns left-of-centre and far right. The asset preserves this layout rather than imposing mirror symmetry.",
+    "The 21-contact inventory is manufacturer-supported. Local widths, heights, bores, radii and body relief are display estimates.",
+    "The two mono openings now pass through as shown by the Ash photo. Their front nominal contact length remains 22 mm; a straight continuation to the planar estimated rear is an explicit display approximation, not verified rear machining or pulley routing.",
+    "The central jug is now a rolled upper lip with an arched underside notch, not a capsule recess. Arch radius, undercut depth and rear termination are photo-derived display estimates. Logos, grain, pulley hardware and external mounting hardware are omitted.",
+    "Central 22/18 mm contacts are continuous open shelves. Tier Z positions, lip rounding and rear projection are photo-derived display estimates."
+  ],
+  "renderGeometryAuthentic": true
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "dewoodstok-woodbord",
+    "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+    "checks": 45,
+    "structuralPass": true
+  },
+  {
+    "slug": "escape-unlimited-board",
+    "assetSha256": "ca06ebc019bab52c0f576064b8893c7dbc5b44d2ada34927234db3892f5936e6",
+    "checks": 35,
+    "structuralPass": true
+  },
+  {
+    "slug": "target10a-linebreaker-base",
+    "assetSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+    "checks": 51,
+    "structuralPass": true
+  }
+]

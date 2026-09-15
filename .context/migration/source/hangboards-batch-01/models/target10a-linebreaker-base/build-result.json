@@ -1,0 +1,59 @@
+{
+  "bytes": 4995476,
+  "sha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+  "triangles": 46000,
+  "objects": 24,
+  "geometry": {
+    "rawTriangles": 1105484,
+    "finalTriangles": 46000,
+    "voxelMm": 0.8,
+    "boundsMm": [
+      [
+        -289.4696960449219,
+        -54.999996185302734,
+        0.5000011920928955
+      ],
+      [
+        289.4786376953125,
+        5.340576171875e-05,
+        149.50001525878906
+      ]
+    ],
+    "watertight": true,
+    "windingConsistent": true,
+    "volumeMm3": 3135188.2488070824,
+    "contactIds": [
+      "top-jug-left",
+      "top-jug-right",
+      "top-sloper-left",
+      "top-sloper-right",
+      "upper-four-finger-left",
+      "upper-three-finger-left",
+      "middle-four-finger-left",
+      "middle-three-finger-left",
+      "middle-two-finger-left",
+      "lower-outer-two-finger-left",
+      "lower-inner-two-finger-left",
+      "lower-four-finger-left",
+      "lower-three-finger-left",
+      "upper-four-finger-right",
+      "upper-three-finger-right",
+      "middle-four-finger-right",
+      "middle-three-finger-right",
+      "middle-two-finger-right",
+      "lower-outer-two-finger-right",
+      "lower-inner-two-finger-right",
+      "lower-four-finger-right",
+      "lower-three-finger-right",
+      "central-35deg-sloper-bar"
+    ],
+    "partitionCleanup": [
+      {
+        "holdId": "top-sloper-left",
+        "trianglesReassignedToBody": 1,
+        "reason": "isolated centroid-selection boundary fragment; physical geometry unchanged"
+      }
+    ]
+  },
+  "seconds": 8.920228004455566
+}

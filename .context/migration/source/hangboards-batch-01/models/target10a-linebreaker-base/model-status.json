@@ -1,0 +1,13 @@
+{
+  "status": "NO_SCREWHOLES_VARIANT",
+  "model": "target10a Linebreaker BASE",
+  "slug": "target10a-linebreaker-base",
+  "mountingHolesRemoved": true,
+  "originalMountCount": 0,
+  "currentMountCount": 0,
+  "glb": "target10a-linebreaker-base.glb",
+  "glbSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+  "triangleCount": 46000,
+  "objectCount": 24,
+  "notes": "Model rebuilt from packaged source with cfg[\"mounts\"]=[]"
+}

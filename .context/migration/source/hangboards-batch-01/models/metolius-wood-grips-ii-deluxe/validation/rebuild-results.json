@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "slug": "metolius-wood-grips-ii-deluxe",
+  "assetSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "method": "Executed delivered source/rebuild.py in a fresh temporary directory with only delivered source/ files, no original export and no working-tree build scripts.",
+  "command": "python source/rebuild.py --output rebuilt",
+  "exitCode": 0,
+  "rebuiltSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "byteIdentical": true,
+  "sourceFilesSha256": {
+    "validate.py": "d39b7ad59eaf55eba527407ba85ae5c21de624eb3a9244e3204fa5330e13944e",
+    "geometry.py": "aa4c425ef6449dc71d7b58b5445c31127e860a697ba6812ac048e080c9ba2d59",
+    "render_glb.py": "d69776e51b6120ead377135396f374cb28a1436efa3820e423c88cdb670f9ec2",
+    "geometry-config.json": "dbfec1744d54321b167e5c7b948d2abc77961dbffdc1fc10d8d2606b38eb6cae",
+    "asset_io.py": "96471b169cdd099114b4b15accc23da95529153c94528d331f99cc27f5a7de9c",
+    "assembled-source-z-up.ply": "f6f7a8452859c1564fbf5f9a6751e7daad8d7e034a95e715abb9973221754075",
+    "rebuild.py": "dcbe1bc5412006ee3f9a0f8b81ee59d255c74829fbacbe60c5141ce048a44037",
+    "software-versions.json": "70124c90063d25c34aa694a627a7791ad55d6aa9e48d618aa31338541b3139d7",
+    "editable-assembled-mesh.npz": "a57694ad5d0d9064b1d85532e650f5425854d47e4e33a88b04e5c153ba46938c",
+    "requirements.txt": "78a99fd938a85a56f4f047712353049c5cee5f23a6b8791c03e89d9b7d019fe9"
+  },
+  "elapsedSeconds": 17.52,
+  "stdout": "validation/rebuild-stdout.txt",
+  "stderr": "validation/rebuild-stderr.txt"
+}

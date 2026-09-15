@@ -1,0 +1,23 @@
+F..                                                                      [100%]
+=================================== FAILURES ===================================
+__________________ test_all_hold_evidence_references_resolve ___________________
+
+    def test_all_hold_evidence_references_resolve():
+        for d in active_models():
+            ids={x['id'] for x in json.loads((d/'evidence/source-register.json').read_text())}
+            for h in json.loads((d/'hold-map.json').read_text())['holds']:
+>               assert set(h['evidenceRefs'])<=ids, (d.name,h['holdId'],set(h['evidenceRefs'])-ids)
+E               AssertionError: ('metolius-wood-grips-ii-deluxe', '03-edge-left', {'I2'})
+E               assert {'I1', 'I2', 'P1'} <= {'I1', 'M1', 'P1', 'P2', 'P3'}
+E                 
+E                 Extra items in the left set:
+E                 'I2'
+
+tests/test_export_contract.py:14: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_export_contract.py::test_all_hold_evidence_references_resolve - AssertionError: ('metolius-wood-grips-ii-deluxe', '03-edge-left', {'I2'})
+assert {'I1', 'I2', 'P1'} <= {'I1', 'M1', 'P1', 'P2', 'P3'}
+  
+  Extra items in the left set:
+  'I2'
+1 failed, 2 passed in 0.10s

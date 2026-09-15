@@ -1,0 +1,12 @@
+{
+  "assetSha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
+  "rulings": [
+    "The Ash-specific photo controls topology. The prior blind central capsule, two closed centre pockets and blind mono caps contradicted that image and have been replaced. The mono passage is now visibly open, but its hidden straight rear continuation is explicitly an estimate; no pulley routing is claimed. Nominal 22 mm mono contact length is not asserted to be the total through-bore length."
+  ],
+  "changedFeatures": [
+    "Replaced the central capsule recess with an integral upper lip and arched underside notch.",
+    "Replaced the two central capsule pockets with continuous 22 mm and 18 mm nominal open shelves.",
+    "Removed the false rear caps on both mono openings; front nominal grip length is distinguished from the estimated rear continuation.",
+    "Kept all 21 logical IDs; regenerated current node indices, meshes, authoring source, mappings, validation and renders."
+  ]
+}

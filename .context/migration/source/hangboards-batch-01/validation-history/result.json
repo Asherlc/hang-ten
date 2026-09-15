@@ -1,0 +1,170 @@
+{
+  "bytes": 2756,
+  "sha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+  "triangles": 12,
+  "objects": 1,
+  "trimeshImport": true,
+  "bounds": [
+    [
+      -0.05999999865889549,
+      -0.02500000037252903,
+      -0.012500000186264515
+    ],
+    [
+      0.05999999865889549,
+      0.02500000037252903,
+      0.012500000186264515
+    ]
+  ],
+  "vtkRender": {
+    "reader": "VTK vtkGLTFImporter",
+    "version": "9.6.2",
+    "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+    "isolatedDirectoryContents": [
+      "asset.glb"
+    ],
+    "actorCount": 1,
+    "bounds": [
+      -0.05999999865889549,
+      0.05999999865889549,
+      -0.02500000037252903,
+      0.02500000037252903,
+      -0.012500000186264515,
+      0.012500000186264515
+    ],
+    "renders": [
+      {
+        "path": "01-canonical-front.png",
+        "sha256": "dae9d9339bb0473ab902ee21e8e0edfe4bb05f0803fe50fbd042a36d8213e5ac",
+        "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+        "label": "CANONICAL FRONT",
+        "cameraPosition": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "cameraTarget": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cameraUp": [
+          0,
+          1,
+          0
+        ],
+        "parallelScale": 0.037199999168515206
+      },
+      {
+        "path": "02-reverse.png",
+        "sha256": "5ed045609f308300f15b6f97734248915ee82fec4ff1b5ef7e1952ca7ed60ca9",
+        "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+        "label": "REVERSE",
+        "cameraPosition": [
+          0.0,
+          0.0,
+          -2.0
+        ],
+        "cameraTarget": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cameraUp": [
+          0,
+          1,
+          0
+        ],
+        "parallelScale": 0.037199999168515206
+      },
+      {
+        "path": "03-oblique.png",
+        "sha256": "a2d2f4eca3bab049858081788cb00c93eae9ecdf5a7f643082c8ddf9e33faa49",
+        "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+        "label": "OBLIQUE",
+        "cameraPosition": [
+          0.9,
+          0.65,
+          2.0
+        ],
+        "cameraTarget": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cameraUp": [
+          0,
+          1,
+          0
+        ],
+        "parallelScale": 0.037500000558793545
+      },
+      {
+        "path": "04-contact-detail.png",
+        "sha256": "b507ee30c1894f1daea949d73f4359691e5d2a79ad713af48b6ed6023d4f9854",
+        "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+        "label": "CONTACT DETAIL",
+        "cameraPosition": [
+          0.4272000005096197,
+          0.6,
+          2.0012500000186266
+        ],
+        "cameraTarget": [
+          -0.022799999490380286,
+          0.0,
+          0.0012500000186264515
+        ],
+        "cameraUp": [
+          0,
+          1,
+          0
+        ],
+        "parallelScale": 0.014399999678134918
+      },
+      {
+        "path": "05-neutral-material.png",
+        "sha256": "74ffd45c3d484f41fcf42967721e043977e19173030bae91727d7bd41edcfbcd",
+        "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+        "label": "NEUTRAL MATERIAL / CONTINUITY",
+        "cameraPosition": [
+          -0.22840000048279763,
+          0.6060000000894069,
+          2.002500000037253
+        ],
+        "cameraTarget": [
+          0.021599999517202376,
+          0.006000000089406967,
+          0.002500000037252903
+        ],
+        "cameraUp": [
+          0,
+          1,
+          0
+        ],
+        "parallelScale": 0.013199999704957008
+      },
+      {
+        "path": "06-side.png",
+        "sha256": "1b79b3c68115a70e90f4265c82b3ec00ee32e1254760f18d6cc5e7d590d9e668",
+        "assetSha256": "be2b37410bd15c3d37ba33abad11dd72b488d1898bff3f110854412bf1a9ded1",
+        "label": "SIDE PROFILE",
+        "cameraPosition": [
+          2.0,
+          0.3,
+          0.45
+        ],
+        "cameraTarget": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cameraUp": [
+          0,
+          1,
+          0
+        ],
+        "parallelScale": 0.037500000558793545
+      }
+    ]
+  }
+}

@@ -1,0 +1,686 @@
+{
+  "slug": "target10a-linebreaker-base",
+  "name": "target10a Linebreaker BASE",
+  "revision": "talbBASE00000 / EAN 4260501621043",
+  "material": "Yellow poplar; neutral untextured approximation",
+  "dimensionsMm": [
+    580,
+    150,
+    55
+  ],
+  "dimensionsClassification": [
+    "manufacturer",
+    "manufacturer",
+    "manufacturer"
+  ],
+  "color": [
+    0.65,
+    0.58,
+    0.36
+  ],
+  "cornerRadiusMm": 16,
+  "rimRadiusMm": 3.5,
+  "targetTriangles": 46000,
+  "voxelMm": 0.8,
+  "outlineXZ": [
+    [
+      -272,
+      0
+    ],
+    [
+      272,
+      0
+    ],
+    [
+      286,
+      10
+    ],
+    [
+      290,
+      26
+    ],
+    [
+      285,
+      43
+    ],
+    [
+      278,
+      52
+    ],
+    [
+      286,
+      66
+    ],
+    [
+      290,
+      95
+    ],
+    [
+      286,
+      124
+    ],
+    [
+      275,
+      143
+    ],
+    [
+      265,
+      150
+    ],
+    [
+      185,
+      150
+    ],
+    [
+      180,
+      132
+    ],
+    [
+      83,
+      132
+    ],
+    [
+      78,
+      142
+    ],
+    [
+      -78,
+      142
+    ],
+    [
+      -83,
+      132
+    ],
+    [
+      -180,
+      132
+    ],
+    [
+      -185,
+      150
+    ],
+    [
+      -265,
+      150
+    ],
+    [
+      -275,
+      143
+    ],
+    [
+      -286,
+      124
+    ],
+    [
+      -290,
+      95
+    ],
+    [
+      -286,
+      66
+    ],
+    [
+      -278,
+      52
+    ],
+    [
+      -285,
+      43
+    ],
+    [
+      -290,
+      26
+    ],
+    [
+      -286,
+      10
+    ]
+  ],
+  "surfaceContacts": [
+    {
+      "id": "top-jug-left",
+      "label": "Upper outer jug, left",
+      "xRange": [
+        -280,
+        -181
+      ],
+      "yRange": [
+        -56,
+        0.1
+      ],
+      "zRange": [
+        126,
+        151
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ]
+    },
+    {
+      "id": "top-jug-right",
+      "label": "Upper outer jug, right",
+      "xRange": [
+        181,
+        280
+      ],
+      "yRange": [
+        -56,
+        0.1
+      ],
+      "zRange": [
+        126,
+        151
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ]
+    },
+    {
+      "id": "top-sloper-left",
+      "label": "Upper intermediate sloper, left",
+      "xRange": [
+        -179,
+        -83
+      ],
+      "yRange": [
+        -56,
+        0.1
+      ],
+      "zRange": [
+        99,
+        143
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ]
+    },
+    {
+      "id": "top-sloper-right",
+      "label": "Upper intermediate sloper, right",
+      "xRange": [
+        83,
+        179
+      ],
+      "yRange": [
+        -56,
+        0.1
+      ],
+      "zRange": [
+        105,
+        143
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ]
+    }
+  ],
+  "bodyCuts": [
+    {
+      "kind": "planePatch",
+      "xRange": [
+        -180,
+        -81
+      ],
+      "intercept": 132,
+      "slope": 0.6370702608074932,
+      "blend": 3,
+      "rim": 2
+    },
+    {
+      "kind": "planePatch",
+      "xRange": [
+        81,
+        180
+      ],
+      "intercept": 132,
+      "slope": 0.41421356237309503,
+      "blend": 3,
+      "rim": 2
+    },
+    {
+      "kind": "profileVoid",
+      "xRange": [
+        -176,
+        176
+      ],
+      "profileYZ": [
+        [
+          -100,
+          0
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          37
+        ],
+        [
+          -42,
+          45
+        ],
+        [
+          -55,
+          53
+        ],
+        [
+          -100,
+          53
+        ]
+      ],
+      "blend": 4,
+      "rim": 3
+    }
+  ],
+  "pockets": [
+    {
+      "holdId": "upper-four-finger-left",
+      "x": -233,
+      "z": 116,
+      "width": 82,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -18,
+      "displayDepthMm": 37,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "upper-three-finger-left",
+      "x": -40,
+      "z": 116,
+      "width": 61,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -10,
+      "displayDepthMm": 45,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "middle-four-finger-left",
+      "x": -233,
+      "z": 81,
+      "width": 84,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -35,
+      "displayDepthMm": 20,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "middle-three-finger-left",
+      "x": -153,
+      "z": 81,
+      "width": 61,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -27,
+      "displayDepthMm": 28,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "middle-two-finger-left",
+      "x": -93,
+      "z": 81,
+      "width": 43,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -25,
+      "displayDepthMm": 30,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-outer-two-finger-left",
+      "x": -255,
+      "z": 26,
+      "width": 42,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -31,
+      "displayDepthMm": 24,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-inner-two-finger-left",
+      "x": -201,
+      "z": 26,
+      "width": 42,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -5,
+      "displayDepthMm": 50,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-four-finger-left",
+      "x": -112,
+      "z": 26,
+      "width": 81,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -20,
+      "displayDepthMm": 16,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-three-finger-left",
+      "x": -35,
+      "z": 26,
+      "width": 60,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -18,
+      "displayDepthMm": 18,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "upper-four-finger-right",
+      "x": 233,
+      "z": 116,
+      "width": 82,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -18,
+      "displayDepthMm": 37,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "upper-three-finger-right",
+      "x": 40,
+      "z": 116,
+      "width": 61,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -10,
+      "displayDepthMm": 45,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "middle-four-finger-right",
+      "x": 233,
+      "z": 81,
+      "width": 84,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -35,
+      "displayDepthMm": 20,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "middle-three-finger-right",
+      "x": 153,
+      "z": 81,
+      "width": 61,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -27,
+      "displayDepthMm": 28,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "middle-two-finger-right",
+      "x": 93,
+      "z": 81,
+      "width": 43,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -25,
+      "displayDepthMm": 30,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-outer-two-finger-right",
+      "x": 255,
+      "z": 26,
+      "width": 42,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -31,
+      "displayDepthMm": 24,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-inner-two-finger-right",
+      "x": 201,
+      "z": 26,
+      "width": 42,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -5,
+      "displayDepthMm": 50,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-four-finger-right",
+      "x": 112,
+      "z": 26,
+      "width": 81,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -20,
+      "displayDepthMm": 16,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "lower-three-finger-right",
+      "x": 35,
+      "z": 26,
+      "width": 60,
+      "height": 24,
+      "radius": 12.0,
+      "floorY": -18,
+      "displayDepthMm": 18,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "central-35deg-sloper-bar",
+      "x": 0,
+      "z": 81,
+      "width": 122,
+      "height": 23,
+      "radius": 11.5,
+      "floorY": -20,
+      "displayDepthMm": 35,
+      "publishedDepthMm": null,
+      "depthClassification": "authored estimate; per-position mapping unconfirmed",
+      "kind": "35 degree sloper bar",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2,
+      "floorSlopeZ": 0.7002075382097097,
+      "publishedAngleDegrees": 35
+    }
+  ],
+  "mounts": [
+    {
+      "x": -233,
+      "z": 116,
+      "radius": 2.5
+    },
+    {
+      "x": 233,
+      "z": 116,
+      "radius": 2.5
+    },
+    {
+      "x": -40,
+      "z": 116,
+      "radius": 2.5
+    },
+    {
+      "x": 40,
+      "z": 116,
+      "radius": 2.5
+    },
+    {
+      "x": -201,
+      "z": 26,
+      "radius": 2.5
+    },
+    {
+      "x": 201,
+      "z": 26,
+      "radius": 2.5
+    }
+  ],
+  "publishedDepthFamiliesMm": {
+    "fourFinger": [
+      16,
+      20,
+      37
+    ],
+    "threeFinger": [
+      18,
+      28,
+      45
+    ],
+    "twoFinger": [
+      24,
+      30,
+      50
+    ]
+  },
+  "publishedTopSloperAnglesDegrees": [
+    32.5,
+    22.5
+  ],
+  "limitations": [
+    "The physical inventory is 19 front recesses plus four upper contacts: 23, not the unsupported earlier 24-contact count.",
+    "The manufacturer publishes depth families but no inspected source binds every family member to a numbered pocket. Positions are photo-supported; per-position depth assignments are explicitly authored estimates.",
+    "The two upper sloper angles are published as 32.5 and 22.5 degrees, but their handed assignment is not independently established. Left/right assignments here are display choices, not manufacturer claims.",
+    "The central 35-degree bar has an authored sloping cavity floor; its nominal 35 mm grip length is not certified as a 35 mm curved contact arc.",
+    "Tier relief, rear plane, local radii and hole centres are estimates. The 55 cm depth in a retailer listing is rejected as inconsistent with the manufacturer 55 mm value."
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 3,
+  "fullySourceVerified": false,
+  "essentialInventoryBlockedCount": 0,
+  "models": [
+    {
+      "slug": "dewoodstok-woodbord",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "remainingLimitations": [
+        "The sixteen pocket locations and continuous upper rim are photo-supported; individual depth-to-position mapping is not published in the inspected references.",
+        "All local radii, pocket widths/heights, mounting-hole centres and the 14-degree top slope are authored display estimates.",
+        "The published depth families are preserved separately; do not interpret the estimated per-pocket depths as manufacturer measurements.",
+        "Native .blend and Blender Outliner screenshot unavailable after installation attempts; supported fallback delivered.",
+        "Original source photographs/diagrams could not be downloaded; source URLs, observations and failure logs are included.",
+        "No physical specimen metrology; unresolved dimension/depth/profile matters are itemized, not certified."
+      ],
+      "referenceImageRetention": "Prior revision source-retention limitations unchanged"
+    },
+    {
+      "slug": "escape-unlimited-board",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "remainingLimitations": [
+        "The product-page text says 23.5 \u00d7 6 inches, but manufacturer dimensioned images say 23.75 \u00d7 7.25 \u00d7 1.875 inches. This asset explicitly follows the dimensioned-photo revision, not an asserted reconciliation.",
+        "The 60 mm top label is a grip surface length, not a 60 mm perpendicular pocket depth; its exact curved arc length is not certified.",
+        "Tier heights, step fillets, slot widths/heights and mounting centres are photo-derived estimates; rear is an unconfirmed planar approximation.",
+        "Native .blend and Blender Outliner screenshot unavailable after installation attempts; supported fallback delivered.",
+        "Original source photographs/diagrams could not be downloaded; source URLs, observations and failure logs are included.",
+        "No physical specimen metrology; unresolved dimension/depth/profile matters are itemized, not certified."
+      ],
+      "referenceImageRetention": "Prior revision source-retention limitations unchanged"
+    },
+    {
+      "slug": "evolv-basic-training-board-long",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "remainingLimitations": [
+        "The top-to-bottom 10/15/20 mm depth assignment is photo-inferred, not a manufacturer-numbered position map; depth labels remain explicitly non-certified.",
+        "The metric and imperial manufacturer dimensions conflict. This asset uses the metric envelope under a recorded ruling, not a measured reconciliation.",
+        "Local curves, shell thickness, rear relief, bore positions/radii and countersink dimensions are photo-derived display estimates. Fine casting wrinkles and surface texture are not reproduced.",
+        "Native Blender and an Outliner screenshot are unavailable after the documented installation attempt; the permitted GLB/PLY/NPZ plus executed-source fallback is delivered."
+      ],
+      "referenceImageRetention": "Four original uploads retained"
+    },
+    {
+      "slug": "metolius-wood-grips-ii-deluxe",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "remainingLimitations": [
+        "Overall width and height are manufacturer values. Projection 70 mm follows a rounded retailer listing, not a manufacturer dimensioned drawing.",
+        "The 26 physical contacts and nonuniform 31/32/38 mm and 25/25/28 mm rows are corroborated by the readable Deluxe numbered diagram M-DIAGRAM-V2. Six mounting bores are now present; centres are estimates, not a drilling template.",
+        "Tier profiles, outer-jug undercut, stopper curvature, pocket widths/heights and mounting centres are authored photo-derived estimates. The model does not claim a measured replica.",
+        "Top 55/58 mm labels are grip surface dimensions and are not treated as blind-cavity depths. External screws and wood grain are omitted.",
+        "Original reference-image bytes were not retained; download attempts failed.",
+        "Native Blender unavailable; actual editable GLB/PLY/NPZ and executed construction source provided under the allowed fallback."
+      ],
+      "referenceImageRetention": "Prior revision source-retention limitations unchanged"
+    },
+    {
+      "slug": "moon-armstrong-ash",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "remainingLimitations": [
+        "The Ash manufacturer photograph has an asymmetric column layout: four-edge columns at far left and right-of-centre, jug columns left-of-centre and far right. The asset preserves this layout rather than imposing mirror symmetry.",
+        "The 21-contact inventory is manufacturer-supported. Local widths, heights, bores, radii and body relief are display estimates.",
+        "The two mono openings now pass through as shown by the Ash photo. Their front nominal contact length remains 22 mm; a straight continuation to the planar estimated rear is an explicit display approximation, not verified rear machining or pulley routing.",
+        "The central jug is now a rolled upper lip with an arched underside notch, not a capsule recess. Arch radius, undercut depth and rear termination are photo-derived display estimates. Logos, grain, pulley hardware and external mounting hardware are omitted.",
+        "Central 22/18 mm contacts are continuous open shelves. Tier Z positions, lip rounding and rear projection are photo-derived display estimates.",
+        "Original reference-image bytes were not retained; download attempts failed.",
+        "Native Blender unavailable; actual editable GLB/PLY/NPZ and executed construction source provided under the allowed fallback."
+      ],
+      "referenceImageRetention": "Prior revision source-retention limitations unchanged"
+    },
+    {
+      "slug": "target10a-linebreaker-base",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "remainingLimitations": [
+        "The physical inventory is 19 front recesses plus four upper contacts: 23, not the unsupported earlier 24-contact count.",
+        "The manufacturer publishes depth families but no inspected source binds every family member to a numbered pocket. Positions are photo-supported; per-position depth assignments are explicitly authored estimates.",
+        "The two upper sloper angles are published as 32.5 and 22.5 degrees, but their handed assignment is not independently established. Left/right assignments here are display choices, not manufacturer claims.",
+        "The central 35-degree bar has an authored sloping cavity floor; its nominal 35 mm grip length is not certified as a 35 mm curved contact arc.",
+        "Tier relief, rear plane, local radii and hole centres are estimates. The 55 cm depth in a retailer listing is rejected as inconsistent with the manufacturer 55 mm value.",
+        "Native .blend and Blender Outliner screenshot unavailable after installation attempts; supported fallback delivered.",
+        "Original source photographs/diagrams could not be downloaded; source URLs, observations and failure logs are included.",
+        "No physical specimen metrology; unresolved dimension/depth/profile matters are itemized, not certified."
+      ],
+      "referenceImageRetention": "Prior revision source-retention limitations unchanged"
+    }
+  ]
+}

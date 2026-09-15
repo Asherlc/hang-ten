@@ -1,0 +1,4009 @@
+{
+  "schemaVersion": 1,
+  "auditUtc": "2026-09-15T18:18:53.463074+00:00",
+  "meaning": "Structural and package consistency, not manufacturer fidelity certification.",
+  "passed": true,
+  "allDeliveredAssetsStructurallyValid": true,
+  "allRequestedExportsPresent": false,
+  "allDeliverablesComplete": false,
+  "productionAssetCount": 5,
+  "fullyCompleteModelCount": 0,
+  "partialModelCount": 5,
+  "evidenceBlockedModelCount": 1,
+  "checks": [
+    {
+      "check": "exact_six_requested_entries",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "path_dewoodstok-woodbord_directory",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_readme",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/README.md"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_statusFile",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/model-status.json"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_glb",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/dewoodstok-woodbord.glb"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_holdMap",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/hold-map.json"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_source",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/source/rebuild.py"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_validation",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/validation/structural-results.json"
+    },
+    {
+      "check": "path_dewoodstok-woodbord_reviewSheet",
+      "pass": true,
+      "detail": "models/dewoodstok-woodbord/renders/review-sheet.jpg"
+    },
+    {
+      "check": "manifest_asset_hash_dewoodstok-woodbord",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "path_escape-unlimited-board_directory",
+      "pass": true,
+      "detail": "models/escape-unlimited-board"
+    },
+    {
+      "check": "path_escape-unlimited-board_readme",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/README.md"
+    },
+    {
+      "check": "path_escape-unlimited-board_statusFile",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/model-status.json"
+    },
+    {
+      "check": "path_escape-unlimited-board_glb",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/escape-unlimited-board.glb"
+    },
+    {
+      "check": "path_escape-unlimited-board_holdMap",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/hold-map.json"
+    },
+    {
+      "check": "path_escape-unlimited-board_source",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/source/rebuild.py"
+    },
+    {
+      "check": "path_escape-unlimited-board_validation",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/validation/structural-results.json"
+    },
+    {
+      "check": "path_escape-unlimited-board_reviewSheet",
+      "pass": true,
+      "detail": "models/escape-unlimited-board/renders/review-sheet.jpg"
+    },
+    {
+      "check": "manifest_asset_hash_escape-unlimited-board",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "path_evolv-basic-training-board-long_directory",
+      "pass": true,
+      "detail": "models/evolv-basic-training-board-long"
+    },
+    {
+      "check": "path_evolv-basic-training-board-long_readme",
+      "pass": true,
+      "detail": "models/evolv-basic-training-board-long/README.md"
+    },
+    {
+      "check": "path_evolv-basic-training-board-long_statusFile",
+      "pass": true,
+      "detail": "models/evolv-basic-training-board-long/model-status.json"
+    },
+    {
+      "check": "path_evolv-basic-training-board-long_blockerReport",
+      "pass": true,
+      "detail": "models/evolv-basic-training-board-long/blocker-report.md"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_directory",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_readme",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/README.md"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_statusFile",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/model-status.json"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_glb",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/metolius-wood-grips-ii-deluxe.glb"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_holdMap",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/hold-map.json"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_source",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/source/rebuild.py"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_validation",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/validation/structural-results.json"
+    },
+    {
+      "check": "path_metolius-wood-grips-ii-deluxe_reviewSheet",
+      "pass": true,
+      "detail": "models/metolius-wood-grips-ii-deluxe/renders/review-sheet.jpg"
+    },
+    {
+      "check": "manifest_asset_hash_metolius-wood-grips-ii-deluxe",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "path_moon-armstrong-ash_directory",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash"
+    },
+    {
+      "check": "path_moon-armstrong-ash_readme",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/README.md"
+    },
+    {
+      "check": "path_moon-armstrong-ash_statusFile",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/model-status.json"
+    },
+    {
+      "check": "path_moon-armstrong-ash_glb",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/moon-armstrong-ash.glb"
+    },
+    {
+      "check": "path_moon-armstrong-ash_holdMap",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/hold-map.json"
+    },
+    {
+      "check": "path_moon-armstrong-ash_source",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/source/rebuild.py"
+    },
+    {
+      "check": "path_moon-armstrong-ash_validation",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/validation/structural-results.json"
+    },
+    {
+      "check": "path_moon-armstrong-ash_reviewSheet",
+      "pass": true,
+      "detail": "models/moon-armstrong-ash/renders/review-sheet.jpg"
+    },
+    {
+      "check": "manifest_asset_hash_moon-armstrong-ash",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "path_target10a-linebreaker-base_directory",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_readme",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/README.md"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_statusFile",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/model-status.json"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_glb",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/target10a-linebreaker-base.glb"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_holdMap",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/hold-map.json"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_source",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/source/rebuild.py"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_validation",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/validation/structural-results.json"
+    },
+    {
+      "check": "path_target10a-linebreaker-base_reviewSheet",
+      "pass": true,
+      "detail": "models/target10a-linebreaker-base/renders/review-sheet.jpg"
+    },
+    {
+      "check": "manifest_asset_hash_target10a-linebreaker-base",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "only_declared_production_glbs",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "production_triangle_total",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "contact_total",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "no_font_files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "six_model_completeness_not_misrepresented",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "models": [
+    {
+      "slug": "dewoodstok-woodbord",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "sha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "contactCount": 17,
+      "triangleCount": 42000,
+      "structuralCheckCount": 45,
+      "checks": [
+        {
+          "check": "per_model_checksums",
+          "pass": true,
+          "detail": {
+            "files": 38,
+            "failures": []
+          }
+        },
+        {
+          "check": "per_model_checksum_coverage",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "check": "fresh_geometry_validation",
+          "pass": true,
+          "detail": [
+            {
+              "check": "glb_payload_integrity",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "exact_node_names",
+              "pass": true,
+              "detail": [
+                "body",
+                "hold-top-rim",
+                "hold-upper-outer-left",
+                "hold-upper-two-finger-left",
+                "hold-upper-inner-left",
+                "hold-upper-outer-right",
+                "hold-upper-two-finger-right",
+                "hold-upper-inner-right",
+                "hold-middle-outer-left",
+                "hold-middle-inner-left",
+                "hold-middle-outer-right",
+                "hold-middle-inner-right",
+                "hold-lower-outer-left",
+                "hold-lower-two-finger-left",
+                "hold-lower-inner-left",
+                "hold-lower-outer-right",
+                "hold-lower-two-finger-right",
+                "hold-lower-inner-right"
+              ]
+            },
+            {
+              "check": "one_node_per_contact",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "baked_identity_transforms",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_buffers",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_images",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cameras_lights_rigs_animations",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_forbidden_production_objects",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "one_neutral_material_no_highlight_materials",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cord_markers_on_fixed_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_body",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-rim",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-outer-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-inner-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-outer-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-inner-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-outer-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-inner-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-outer-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-inner-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-outer-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-inner-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-outer-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-inner-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_finite_geometry",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "nondegenerate_triangles",
+              "pass": true,
+              "detail": {
+                "minimumAreaM2": 5.964902608328763e-15
+              }
+            },
+            {
+              "check": "unit_normals",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "normals_winding_hemisphere",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_uvs_finite_in_unit_square",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "material_assigned_every_mesh",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_duplicate_surfaces",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_watertight",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_consistent_winding",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_positive_volume",
+              "pass": true,
+              "detail": 0.0027982833364502448
+            },
+            {
+              "check": "one_connected_physical_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "metric_envelope_within_1p5_mm",
+              "pass": true,
+              "detail": {
+                "sourceXYZExtentsM": [
+                  0.5900089740753174,
+                  0.040000033527611834,
+                  0.1470835040807723
+                ],
+                "absoluteErrorMm": [
+                  0.008974075317413899,
+                  3.3527611832673276e-05,
+                  0.9164959192276834
+                ]
+              }
+            },
+            {
+              "check": "declared_rear_bottom_origin",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "pocket_rays_reach_recess_floors_not_front_caps",
+              "pass": true,
+              "detail": [
+                {
+                  "holdId": "upper-outer-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -4.999961704015725,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-outer-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.052302532674191,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.000009676881974,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.005825123752312,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-inner-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -10.01617182386024,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-inner-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -9.99996904283751,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-outer-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.001669535958729,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-outer-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.002145542493467,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.000412329640803,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.005052480467106,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-inner-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -10.004565624912892,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-inner-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -10.004565624912892,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-outer-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -15,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -14.99997358769195,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-outer-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -15,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -14.999983690644175,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-inner-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.017621653534924,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-inner-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.001678194511378,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-outer-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -15,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -15.005492709181139,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-outer-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -15,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -15.003508983798978,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-inner-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.02519835902122,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-inner-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.00136749261391,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.00839437329945,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.0011655142964,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.00864781907594,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.000126844088147,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -26.99998393654823,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -26.999983936548237,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.00097204568576,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.004168802883974,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.04196999728013,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.004996508235767,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.00709870717617,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -26.999986669363768,
+                  "pass": true
+                }
+              ]
+            },
+            {
+              "check": "mount_bores_are_actual_openings",
+              "pass": true,
+              "detail": [
+                {
+                  "centreXmm": -184,
+                  "centreZmm": 50,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -184,
+                  "centreZmm": 91,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 184,
+                  "centreZmm": 50,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 184,
+                  "centreZmm": 91,
+                  "unobstructedThroughBore": true
+                }
+              ]
+            },
+            {
+              "check": "isolated_trimesh_import",
+              "pass": true,
+              "detail": {
+                "reader": "4.11.1",
+                "geometryCount": 18,
+                "directoryContents": [
+                  "asset.glb"
+                ]
+              }
+            },
+            {
+              "check": "import_triangle_count",
+              "pass": true,
+              "detail": 42000
+            }
+          ]
+        },
+        {
+          "check": "current_status_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "status_geometry_counts",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_build-result.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_hold-map.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/structural-results.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/visual-review.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/render-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/review-sheet-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "every_hold_evidence_reference_resolves",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "at_least_five_actual_render_records",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_01-canonical-front.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_02-reverse.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_03-oblique.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_04-contact-detail.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_05-neutral-material.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_06-side.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "review_sheet_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "executed_source_reproduced_current_glb",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "reproduction_source_hashes_current",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "each_contact_one_connected_surface",
+          "pass": true,
+          "detail": {
+            "hold-top-rim": 1,
+            "hold-upper-outer-left": 1,
+            "hold-upper-two-finger-left": 1,
+            "hold-upper-inner-left": 1,
+            "hold-upper-outer-right": 1,
+            "hold-upper-two-finger-right": 1,
+            "hold-upper-inner-right": 1,
+            "hold-middle-outer-left": 1,
+            "hold-middle-inner-left": 1,
+            "hold-middle-outer-right": 1,
+            "hold-middle-inner-right": 1,
+            "hold-lower-outer-left": 1,
+            "hold-lower-two-finger-left": 1,
+            "hold-lower-inner-left": 1,
+            "hold-lower-outer-right": 1,
+            "hold-lower-two-finger-right": 1,
+            "hold-lower-inner-right": 1
+          }
+        },
+        {
+          "check": "fresh_isolated_vtk_import",
+          "pass": true,
+          "detail": {
+            "reader": "9.6.2",
+            "actors": 18,
+            "triangles": 42000,
+            "directoryContents": [
+              "asset.glb"
+            ]
+          }
+        }
+      ],
+      "passed": true
+    },
+    {
+      "slug": "escape-unlimited-board",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "sha256": "ca06ebc019bab52c0f576064b8893c7dbc5b44d2ada34927234db3892f5936e6",
+      "contactCount": 7,
+      "triangleCount": 36000,
+      "structuralCheckCount": 35,
+      "checks": [
+        {
+          "check": "per_model_checksums",
+          "pass": true,
+          "detail": {
+            "files": 38,
+            "failures": []
+          }
+        },
+        {
+          "check": "per_model_checksum_coverage",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "check": "fresh_geometry_validation",
+          "pass": true,
+          "detail": [
+            {
+              "check": "glb_payload_integrity",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "exact_node_names",
+              "pass": true,
+              "detail": [
+                "body",
+                "hold-top-roll",
+                "hold-upper-left",
+                "hold-upper-right",
+                "hold-middle-left",
+                "hold-middle-right",
+                "hold-lower-left",
+                "hold-lower-right"
+              ]
+            },
+            {
+              "check": "one_node_per_contact",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "baked_identity_transforms",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_buffers",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_images",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cameras_lights_rigs_animations",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_forbidden_production_objects",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "one_neutral_material_no_highlight_materials",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cord_markers_on_fixed_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_body",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-roll",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_finite_geometry",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "nondegenerate_triangles",
+              "pass": true,
+              "detail": {
+                "minimumAreaM2": 2.0763011001969286e-13
+              }
+            },
+            {
+              "check": "unit_normals",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "normals_winding_hemisphere",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_uvs_finite_in_unit_square",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "material_assigned_every_mesh",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_duplicate_surfaces",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_watertight",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_consistent_winding",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_positive_volume",
+              "pass": true,
+              "detail": 0.003158614384471575
+            },
+            {
+              "check": "one_connected_physical_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "metric_envelope_within_1p5_mm",
+              "pass": true,
+              "detail": {
+                "sourceXYZExtentsM": [
+                  0.6022499799728394,
+                  0.04762500151991844,
+                  0.18314344534883276
+                ],
+                "absoluteErrorMm": [
+                  1.0000200271605975,
+                  1.5199184411063271e-06,
+                  1.0065546511672518
+                ]
+              }
+            },
+            {
+              "check": "declared_rear_bottom_origin",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "pocket_rays_reach_recess_floors_not_front_caps",
+              "pass": true,
+              "detail": [
+                {
+                  "holdId": "upper-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -2.625,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -2.6249999646096587,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -2.625,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -2.624999964609742,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -2.625,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -2.624999964609742,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -2.625,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -2.624999964609735,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.008388580934746,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.000937320542317,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.01629149076642,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.07374409417044,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -13.5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.510601349961522,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -13.5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.500120727065418,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -13.5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.510615405557965,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -13.5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.52791853251112,
+                  "pass": true
+                }
+              ]
+            },
+            {
+              "check": "mount_bores_are_actual_openings",
+              "pass": true,
+              "detail": [
+                {
+                  "centreXmm": -285,
+                  "centreZmm": 20,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -285,
+                  "centreZmm": 132,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 285,
+                  "centreZmm": 20,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 285,
+                  "centreZmm": 132,
+                  "unobstructedThroughBore": true
+                }
+              ]
+            },
+            {
+              "check": "isolated_trimesh_import",
+              "pass": true,
+              "detail": {
+                "reader": "4.11.1",
+                "geometryCount": 8,
+                "directoryContents": [
+                  "asset.glb"
+                ]
+              }
+            },
+            {
+              "check": "import_triangle_count",
+              "pass": true,
+              "detail": 36000
+            }
+          ]
+        },
+        {
+          "check": "current_status_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "status_geometry_counts",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_build-result.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_hold-map.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/structural-results.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/visual-review.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/render-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/review-sheet-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "every_hold_evidence_reference_resolves",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "at_least_five_actual_render_records",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_01-canonical-front.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_02-reverse.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_03-oblique.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_04-contact-detail.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_05-neutral-material.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_06-side.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "review_sheet_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "executed_source_reproduced_current_glb",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "reproduction_source_hashes_current",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "each_contact_one_connected_surface",
+          "pass": true,
+          "detail": {
+            "hold-top-roll": 1,
+            "hold-upper-left": 1,
+            "hold-upper-right": 1,
+            "hold-middle-left": 1,
+            "hold-middle-right": 1,
+            "hold-lower-left": 1,
+            "hold-lower-right": 1
+          }
+        },
+        {
+          "check": "fresh_isolated_vtk_import",
+          "pass": true,
+          "detail": {
+            "reader": "9.6.2",
+            "actors": 8,
+            "triangles": 36000,
+            "directoryContents": [
+              "asset.glb"
+            ]
+          }
+        }
+      ],
+      "passed": true
+    },
+    {
+      "slug": "evolv-basic-training-board-long",
+      "status": "EVIDENCE-BLOCKED",
+      "usableExport": false,
+      "checks": [
+        {
+          "check": "per_model_checksums",
+          "pass": true,
+          "detail": {
+            "files": 7,
+            "failures": []
+          }
+        },
+        {
+          "check": "per_model_checksum_coverage",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "check": "blocked_entry_has_no_invented_glb",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "blocker_report_present",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "blocked_counts_are_unknown",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "passed": true
+    },
+    {
+      "slug": "metolius-wood-grips-ii-deluxe",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "sha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+      "contactCount": 26,
+      "triangleCount": 65000,
+      "structuralCheckCount": 54,
+      "checks": [
+        {
+          "check": "per_model_checksums",
+          "pass": true,
+          "detail": {
+            "files": 39,
+            "failures": []
+          }
+        },
+        {
+          "check": "per_model_checksum_coverage",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "check": "fresh_geometry_validation",
+          "pass": true,
+          "detail": [
+            {
+              "check": "glb_payload_integrity",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "exact_node_names",
+              "pass": true,
+              "detail": [
+                "body",
+                "hold-01-jug-left",
+                "hold-01-jug-right",
+                "hold-02-flat-stopper-left",
+                "hold-02-flat-stopper-right",
+                "hold-12-round-stopper-centre",
+                "hold-03-edge-left",
+                "hold-04-three-finger-left",
+                "hold-05-two-finger-left",
+                "hold-03-edge-right",
+                "hold-04-three-finger-right",
+                "hold-05-two-finger-right",
+                "hold-13-four-finger-centre",
+                "hold-06-edge-left",
+                "hold-07-three-finger-left",
+                "hold-08-two-finger-left",
+                "hold-06-edge-right",
+                "hold-07-three-finger-right",
+                "hold-08-two-finger-right",
+                "hold-14-four-finger-centre",
+                "hold-09-edge-left",
+                "hold-10-three-finger-left",
+                "hold-11-two-finger-left",
+                "hold-09-edge-right",
+                "hold-10-three-finger-right",
+                "hold-11-two-finger-right",
+                "hold-15-four-finger-centre"
+              ]
+            },
+            {
+              "check": "one_node_per_contact",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "baked_identity_transforms",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_buffers",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_images",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cameras_lights_rigs_animations",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_forbidden_production_objects",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "one_neutral_material_no_highlight_materials",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cord_markers_on_fixed_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_body",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-01-jug-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-01-jug-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-02-flat-stopper-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-02-flat-stopper-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-12-round-stopper-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-03-edge-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-04-three-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-05-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-03-edge-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-04-three-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-05-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-13-four-finger-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-06-edge-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-07-three-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-08-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-06-edge-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-07-three-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-08-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-14-four-finger-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-09-edge-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-10-three-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-11-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-09-edge-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-10-three-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-11-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-15-four-finger-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_finite_geometry",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "nondegenerate_triangles",
+              "pass": true,
+              "detail": {
+                "minimumAreaM2": 6.231111271582837e-16
+              }
+            },
+            {
+              "check": "unit_normals",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "normals_winding_hemisphere",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_uvs_finite_in_unit_square",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "material_assigned_every_mesh",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_duplicate_surfaces",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_watertight",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_consistent_winding",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_positive_volume",
+              "pass": true,
+              "detail": 0.006210125792945397
+            },
+            {
+              "check": "one_connected_physical_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "metric_envelope_within_1p5_mm",
+              "pass": true,
+              "detail": {
+                "sourceXYZExtentsM": [
+                  0.6087593138217926,
+                  0.06999972546100253,
+                  0.21475002088118345
+                ],
+                "absoluteErrorMm": [
+                  1.2406861782073841,
+                  0.00027453899748008936,
+                  1.249979118816552
+                ]
+              }
+            },
+            {
+              "check": "declared_rear_bottom_origin",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "pocket_rays_reach_recess_floors_not_front_caps",
+              "pass": true,
+              "detail": [
+                {
+                  "holdId": "03-edge-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -39,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -39.00013491511345,
+                  "pass": true
+                },
+                {
+                  "holdId": "03-edge-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -39,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -39.0001473074679,
+                  "pass": true
+                },
+                {
+                  "holdId": "04-three-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -38,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -38.01123840364123,
+                  "pass": true
+                },
+                {
+                  "holdId": "04-three-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -38,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -38.00013661384583,
+                  "pass": true
+                },
+                {
+                  "holdId": "05-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -32,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -32.00085077268116,
+                  "pass": true
+                },
+                {
+                  "holdId": "05-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -32,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -32.01920855580429,
+                  "pass": true
+                },
+                {
+                  "holdId": "03-edge-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -39,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -39.00450219571195,
+                  "pass": true
+                },
+                {
+                  "holdId": "03-edge-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -39,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -39.00428469422007,
+                  "pass": true
+                },
+                {
+                  "holdId": "04-three-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -38,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -38.00169775604815,
+                  "pass": true
+                },
+                {
+                  "holdId": "04-three-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -38,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -38.0149051210848,
+                  "pass": true
+                },
+                {
+                  "holdId": "05-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -32,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -32.00273791537765,
+                  "pass": true
+                },
+                {
+                  "holdId": "05-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -32,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -32.0138980434408,
+                  "pass": true
+                },
+                {
+                  "holdId": "13-four-finger-centre",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -38,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -38.00636178689909,
+                  "pass": true
+                },
+                {
+                  "holdId": "13-four-finger-centre",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -38,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -38.00353445913893,
+                  "pass": true
+                },
+                {
+                  "holdId": "06-edge-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.996338469671215,
+                  "pass": true
+                },
+                {
+                  "holdId": "06-edge-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.998897960681184,
+                  "pass": true
+                },
+                {
+                  "holdId": "07-three-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.000166967511184,
+                  "pass": true
+                },
+                {
+                  "holdId": "07-three-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.00016696751117,
+                  "pass": true
+                },
+                {
+                  "holdId": "08-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.00020609623431,
+                  "pass": true
+                },
+                {
+                  "holdId": "08-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.002639972775896,
+                  "pass": true
+                },
+                {
+                  "holdId": "06-edge-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.01682184411046,
+                  "pass": true
+                },
+                {
+                  "holdId": "06-edge-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.987762863995016,
+                  "pass": true
+                },
+                {
+                  "holdId": "07-three-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.00016971752844,
+                  "pass": true
+                },
+                {
+                  "holdId": "07-three-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.01230539826033,
+                  "pass": true
+                },
+                {
+                  "holdId": "08-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.06242270768147,
+                  "pass": true
+                },
+                {
+                  "holdId": "08-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.00017951428891,
+                  "pass": true
+                },
+                {
+                  "holdId": "14-four-finger-centre",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.017815298915174,
+                  "pass": true
+                },
+                {
+                  "holdId": "14-four-finger-centre",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.000166967511177,
+                  "pass": true
+                },
+                {
+                  "holdId": "09-edge-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.026502554650136,
+                  "pass": true
+                },
+                {
+                  "holdId": "09-edge-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.009607890086734,
+                  "pass": true
+                },
+                {
+                  "holdId": "10-three-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.016471936467152,
+                  "pass": true
+                },
+                {
+                  "holdId": "10-three-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.02354678922994,
+                  "pass": true
+                },
+                {
+                  "holdId": "11-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.00376110393413,
+                  "pass": true
+                },
+                {
+                  "holdId": "11-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.000190198421514,
+                  "pass": true
+                },
+                {
+                  "holdId": "09-edge-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.001000944223993,
+                  "pass": true
+                },
+                {
+                  "holdId": "09-edge-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.017899582070644,
+                  "pass": true
+                },
+                {
+                  "holdId": "10-three-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.013215411558118,
+                  "pass": true
+                },
+                {
+                  "holdId": "10-three-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.002913080842216,
+                  "pass": true
+                },
+                {
+                  "holdId": "11-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.019873877039515,
+                  "pass": true
+                },
+                {
+                  "holdId": "11-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.003097092369302,
+                  "pass": true
+                },
+                {
+                  "holdId": "15-four-finger-centre",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.013800028612245,
+                  "pass": true
+                },
+                {
+                  "holdId": "15-four-finger-centre",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -24,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -24.035271012025643,
+                  "pass": true
+                }
+              ]
+            },
+            {
+              "check": "mount_bores_are_actual_openings",
+              "pass": true,
+              "detail": [
+                {
+                  "centreXmm": -215,
+                  "centreZmm": 180,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -215,
+                  "centreZmm": 116,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -215,
+                  "centreZmm": 55,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 215,
+                  "centreZmm": 180,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 215,
+                  "centreZmm": 116,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 215,
+                  "centreZmm": 55,
+                  "unobstructedThroughBore": true
+                }
+              ]
+            },
+            {
+              "check": "isolated_trimesh_import",
+              "pass": true,
+              "detail": {
+                "reader": "4.11.1",
+                "geometryCount": 27,
+                "directoryContents": [
+                  "asset.glb"
+                ]
+              }
+            },
+            {
+              "check": "import_triangle_count",
+              "pass": true,
+              "detail": 65000
+            }
+          ]
+        },
+        {
+          "check": "current_status_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "status_geometry_counts",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_build-result.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_hold-map.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/structural-results.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/visual-review.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/render-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/review-sheet-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "every_hold_evidence_reference_resolves",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "at_least_five_actual_render_records",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_01-canonical-front.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_02-reverse.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_03-oblique.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_04-contact-detail.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_05-neutral-material.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_06-side.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "review_sheet_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "executed_source_reproduced_current_glb",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "reproduction_source_hashes_current",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "each_contact_one_connected_surface",
+          "pass": true,
+          "detail": {
+            "hold-01-jug-left": 1,
+            "hold-01-jug-right": 1,
+            "hold-02-flat-stopper-left": 1,
+            "hold-02-flat-stopper-right": 1,
+            "hold-12-round-stopper-centre": 1,
+            "hold-03-edge-left": 1,
+            "hold-04-three-finger-left": 1,
+            "hold-05-two-finger-left": 1,
+            "hold-03-edge-right": 1,
+            "hold-04-three-finger-right": 1,
+            "hold-05-two-finger-right": 1,
+            "hold-13-four-finger-centre": 1,
+            "hold-06-edge-left": 1,
+            "hold-07-three-finger-left": 1,
+            "hold-08-two-finger-left": 1,
+            "hold-06-edge-right": 1,
+            "hold-07-three-finger-right": 1,
+            "hold-08-two-finger-right": 1,
+            "hold-14-four-finger-centre": 1,
+            "hold-09-edge-left": 1,
+            "hold-10-three-finger-left": 1,
+            "hold-11-two-finger-left": 1,
+            "hold-09-edge-right": 1,
+            "hold-10-three-finger-right": 1,
+            "hold-11-two-finger-right": 1,
+            "hold-15-four-finger-centre": 1
+          }
+        },
+        {
+          "check": "fresh_isolated_vtk_import",
+          "pass": true,
+          "detail": {
+            "reader": "9.6.2",
+            "actors": 27,
+            "triangles": 65000,
+            "directoryContents": [
+              "asset.glb"
+            ]
+          }
+        }
+      ],
+      "passed": true
+    },
+    {
+      "slug": "moon-armstrong-ash",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "sha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
+      "contactCount": 21,
+      "triangleCount": 46000,
+      "structuralCheckCount": 50,
+      "checks": [
+        {
+          "check": "per_model_checksums",
+          "pass": true,
+          "detail": {
+            "files": 42,
+            "failures": []
+          }
+        },
+        {
+          "check": "per_model_checksum_coverage",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "check": "fresh_geometry_validation",
+          "pass": true,
+          "detail": [
+            {
+              "check": "glb_payload_integrity",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "exact_node_names",
+              "pass": true,
+              "detail": [
+                "body",
+                "hold-top-35deg-left",
+                "hold-top-35deg-right",
+                "hold-jug-centre",
+                "hold-edge-22mm-centre",
+                "hold-edge-18mm-centre",
+                "hold-edge-25mm-left",
+                "hold-edge-20mm-left",
+                "hold-edge-10mm-left",
+                "hold-edge-08mm-left",
+                "hold-edge-25mm-right",
+                "hold-edge-20mm-right",
+                "hold-edge-10mm-right",
+                "hold-edge-08mm-right",
+                "hold-jug-left",
+                "hold-edge-15mm-left",
+                "hold-jug-right",
+                "hold-edge-15mm-right",
+                "hold-two-finger-22mm-left",
+                "hold-one-finger-22mm-left",
+                "hold-two-finger-22mm-right",
+                "hold-one-finger-22mm-right"
+              ]
+            },
+            {
+              "check": "one_node_per_contact",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "baked_identity_transforms",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_buffers",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_images",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cameras_lights_rigs_animations",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_forbidden_production_objects",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "one_neutral_material_no_highlight_materials",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cord_markers_on_fixed_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_body",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-35deg-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-35deg-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-jug-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-22mm-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-18mm-centre",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-25mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-20mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-10mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-08mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-25mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-20mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-10mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-08mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-jug-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-15mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-jug-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-edge-15mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-two-finger-22mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-one-finger-22mm-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-two-finger-22mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-one-finger-22mm-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_finite_geometry",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "nondegenerate_triangles",
+              "pass": true,
+              "detail": {
+                "minimumAreaM2": 8.89938504269054e-16
+              }
+            },
+            {
+              "check": "unit_normals",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "normals_winding_hemisphere",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_uvs_finite_in_unit_square",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "material_assigned_every_mesh",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_duplicate_surfaces",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_watertight",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_consistent_winding",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_positive_volume",
+              "pass": true,
+              "detail": 0.0037917282123782173
+            },
+            {
+              "check": "one_connected_physical_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "metric_envelope_within_1p5_mm",
+              "pass": true,
+              "detail": {
+                "sourceXYZExtentsM": [
+                  0.6490098834037781,
+                  0.055000049382449845,
+                  0.16400001180591062
+                ],
+                "absoluteErrorMm": [
+                  0.990116596221946,
+                  4.9382449844592724e-05,
+                  0.9999881940893907
+                ]
+              }
+            },
+            {
+              "check": "declared_rear_bottom_origin",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "pocket_rays_reach_recess_floors_not_front_caps",
+              "pass": true,
+              "detail": [
+                {
+                  "holdId": "edge-25mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.999973252415657,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-25mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.999973252415657,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-20mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.016371835198395,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-20mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.036766913171167,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-10mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.097448543012693,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-10mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.105982089137065,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-08mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -22,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -21.999966353178024,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-08mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -22,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -21.999966353178024,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-25mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.999973252415657,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-25mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.99997325241565,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-20mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.007535626675406,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-20mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.001902603232583,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-10mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.002269689856895,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-10mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.000527943453246,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-08mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -22,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -21.99996635317803,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-08mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -22,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -21.99996635317803,
+                  "pass": true
+                },
+                {
+                  "holdId": "jug-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -16,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -16.092929226516965,
+                  "pass": true
+                },
+                {
+                  "holdId": "jug-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -16,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -16.090048077415513,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-15mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.999973252415657,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-15mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.999973252415657,
+                  "pass": true
+                },
+                {
+                  "holdId": "jug-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -16,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -16.000733005715592,
+                  "pass": true
+                },
+                {
+                  "holdId": "jug-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -16,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -16.04133570621876,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-15mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -30.00386742995162,
+                  "pass": true
+                },
+                {
+                  "holdId": "edge-15mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -30,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -29.999999329447746,
+                  "pass": true
+                },
+                {
+                  "holdId": "two-finger-22mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -13,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.013117800189072,
+                  "pass": true
+                },
+                {
+                  "holdId": "two-finger-22mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -13,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.000246773963019,
+                  "pass": true
+                },
+                {
+                  "holdId": "one-finger-22mm-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": null,
+                  "expectedThroughOpening": true,
+                  "actualFirstHitYmm": null,
+                  "pass": true
+                },
+                {
+                  "holdId": "one-finger-22mm-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": null,
+                  "expectedThroughOpening": true,
+                  "actualFirstHitYmm": null,
+                  "pass": true
+                },
+                {
+                  "holdId": "two-finger-22mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -13,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.009062168636309,
+                  "pass": true
+                },
+                {
+                  "holdId": "two-finger-22mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -13,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -13.00697027403061,
+                  "pass": true
+                },
+                {
+                  "holdId": "one-finger-22mm-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": null,
+                  "expectedThroughOpening": true,
+                  "actualFirstHitYmm": null,
+                  "pass": true
+                },
+                {
+                  "holdId": "one-finger-22mm-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": null,
+                  "expectedThroughOpening": true,
+                  "actualFirstHitYmm": null,
+                  "pass": true
+                }
+              ]
+            },
+            {
+              "check": "source_correction_feature_rays",
+              "pass": true,
+              "detail": [
+                {
+                  "feature": "central arch clearance",
+                  "actualHitMm": [
+                    0.0,
+                    -23.0011772145653,
+                    142.0
+                  ],
+                  "expectedHitMm": [
+                    0,
+                    -23,
+                    142
+                  ],
+                  "pass": true
+                },
+                {
+                  "feature": "central jug lateral lip remains",
+                  "actualHitMm": [
+                    35.0,
+                    -54.62344208835361,
+                    142.0
+                  ],
+                  "expectedHitMm": [
+                    35,
+                    -55,
+                    142
+                  ],
+                  "pass": true
+                },
+                {
+                  "feature": "open middle shelf vertical access",
+                  "actualHitMm": [
+                    0.0,
+                    -33.0,
+                    82.0000097155571
+                  ],
+                  "expectedHitMm": [
+                    0,
+                    -33,
+                    82
+                  ],
+                  "pass": true
+                },
+                {
+                  "feature": "open lower shelf vertical access",
+                  "actualHitMm": [
+                    0.0,
+                    -25.0,
+                    20.00000141561031
+                  ],
+                  "expectedHitMm": [
+                    0,
+                    -25,
+                    20
+                  ],
+                  "pass": true
+                },
+                {
+                  "feature": "no false cap above lower shelf",
+                  "actualHitMm": [
+                    0.0,
+                    -17.999961972236633,
+                    55.0
+                  ],
+                  "expectedHitMm": [
+                    0,
+                    -18,
+                    55
+                  ],
+                  "pass": true
+                },
+                {
+                  "feature": "no false cap above middle shelf",
+                  "actualHitMm": [
+                    0.0,
+                    -21.984344577733115,
+                    110.0
+                  ],
+                  "expectedHitMm": [
+                    0,
+                    -22,
+                    110
+                  ],
+                  "pass": true
+                }
+              ]
+            },
+            {
+              "check": "mount_bores_are_actual_openings",
+              "pass": true,
+              "detail": [
+                {
+                  "centreXmm": -205,
+                  "centreZmm": 17,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -205,
+                  "centreZmm": 58,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -205,
+                  "centreZmm": 123,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 195,
+                  "centreZmm": 17,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 195,
+                  "centreZmm": 58,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 195,
+                  "centreZmm": 123,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -68,
+                  "centreZmm": 107,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 67,
+                  "centreZmm": 107,
+                  "unobstructedThroughBore": true
+                }
+              ]
+            },
+            {
+              "check": "isolated_trimesh_import",
+              "pass": true,
+              "detail": {
+                "reader": "4.11.1",
+                "geometryCount": 22,
+                "directoryContents": [
+                  "asset.glb"
+                ]
+              }
+            },
+            {
+              "check": "import_triangle_count",
+              "pass": true,
+              "detail": 46000
+            }
+          ]
+        },
+        {
+          "check": "current_status_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "status_geometry_counts",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_build-result.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_hold-map.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/structural-results.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/visual-review.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/render-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/review-sheet-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "every_hold_evidence_reference_resolves",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "at_least_five_actual_render_records",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_01-canonical-front.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_02-reverse.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_03-oblique.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_04-contact-detail.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_05-neutral-material.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_06-side.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_details/07-arched-jug.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_details/08-mono-through.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "review_sheet_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "executed_source_reproduced_current_glb",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "reproduction_source_hashes_current",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "each_contact_one_connected_surface",
+          "pass": true,
+          "detail": {
+            "hold-top-35deg-left": 1,
+            "hold-top-35deg-right": 1,
+            "hold-jug-centre": 1,
+            "hold-edge-22mm-centre": 1,
+            "hold-edge-18mm-centre": 1,
+            "hold-edge-25mm-left": 1,
+            "hold-edge-20mm-left": 1,
+            "hold-edge-10mm-left": 1,
+            "hold-edge-08mm-left": 1,
+            "hold-edge-25mm-right": 1,
+            "hold-edge-20mm-right": 1,
+            "hold-edge-10mm-right": 1,
+            "hold-edge-08mm-right": 1,
+            "hold-jug-left": 1,
+            "hold-edge-15mm-left": 1,
+            "hold-jug-right": 1,
+            "hold-edge-15mm-right": 1,
+            "hold-two-finger-22mm-left": 1,
+            "hold-one-finger-22mm-left": 1,
+            "hold-two-finger-22mm-right": 1,
+            "hold-one-finger-22mm-right": 1
+          }
+        },
+        {
+          "check": "fresh_isolated_vtk_import",
+          "pass": true,
+          "detail": {
+            "reader": "9.6.2",
+            "actors": 22,
+            "triangles": 46000,
+            "directoryContents": [
+              "asset.glb"
+            ]
+          }
+        }
+      ],
+      "passed": true
+    },
+    {
+      "slug": "target10a-linebreaker-base",
+      "status": "PARTIAL",
+      "usableExport": true,
+      "sha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+      "contactCount": 23,
+      "triangleCount": 46000,
+      "structuralCheckCount": 51,
+      "checks": [
+        {
+          "check": "per_model_checksums",
+          "pass": true,
+          "detail": {
+            "files": 38,
+            "failures": []
+          }
+        },
+        {
+          "check": "per_model_checksum_coverage",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "check": "fresh_geometry_validation",
+          "pass": true,
+          "detail": [
+            {
+              "check": "glb_payload_integrity",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "exact_node_names",
+              "pass": true,
+              "detail": [
+                "body",
+                "hold-top-jug-left",
+                "hold-top-jug-right",
+                "hold-top-sloper-left",
+                "hold-top-sloper-right",
+                "hold-upper-four-finger-left",
+                "hold-upper-three-finger-left",
+                "hold-middle-four-finger-left",
+                "hold-middle-three-finger-left",
+                "hold-middle-two-finger-left",
+                "hold-lower-outer-two-finger-left",
+                "hold-lower-inner-two-finger-left",
+                "hold-lower-four-finger-left",
+                "hold-lower-three-finger-left",
+                "hold-upper-four-finger-right",
+                "hold-upper-three-finger-right",
+                "hold-middle-four-finger-right",
+                "hold-middle-three-finger-right",
+                "hold-middle-two-finger-right",
+                "hold-lower-outer-two-finger-right",
+                "hold-lower-inner-two-finger-right",
+                "hold-lower-four-finger-right",
+                "hold-lower-three-finger-right",
+                "hold-central-35deg-sloper-bar"
+              ]
+            },
+            {
+              "check": "one_node_per_contact",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "baked_identity_transforms",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_buffers",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_external_images",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cameras_lights_rigs_animations",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_forbidden_production_objects",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "one_neutral_material_no_highlight_materials",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_cord_markers_on_fixed_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_body",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-jug-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-jug-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-sloper-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-top-sloper-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-four-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-three-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-four-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-three-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-outer-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-inner-two-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-four-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-three-finger-left",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-four-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-upper-three-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-four-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-three-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-middle-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-outer-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-inner-two-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-four-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-lower-three-finger-right",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "mapping_hold-central-35deg-sloper-bar",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_finite_geometry",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "nondegenerate_triangles",
+              "pass": true,
+              "detail": {
+                "minimumAreaM2": 2.0816681711721685e-17
+              }
+            },
+            {
+              "check": "unit_normals",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "normals_winding_hemisphere",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "all_uvs_finite_in_unit_square",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "material_assigned_every_mesh",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "no_duplicate_surfaces",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_watertight",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_consistent_winding",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "assembled_positive_volume",
+              "pass": true,
+              "detail": 0.003135188252943698
+            },
+            {
+              "check": "one_connected_physical_board",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "metric_envelope_within_1p5_mm",
+              "pass": true,
+              "detail": {
+                "sourceXYZExtentsM": [
+                  0.5789483189582825,
+                  0.055000049382449845,
+                  0.14900001120986417
+                ],
+                "absoluteErrorMm": [
+                  1.0516810417174893,
+                  4.9382449844592724e-05,
+                  0.9999887901358251
+                ]
+              }
+            },
+            {
+              "check": "declared_rear_bottom_origin",
+              "pass": true,
+              "detail": null
+            },
+            {
+              "check": "pocket_rays_reach_recess_floors_not_front_caps",
+              "pass": true,
+              "detail": [
+                {
+                  "holdId": "upper-four-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -18.006521692693692,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-four-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -18.021620471417865,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-three-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -10.000408397856042,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-three-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -9.999954141676447,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-four-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -35,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -35.02127412895681,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-four-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -35,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -35.00874529614731,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-three-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.01479256112934,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-three-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.014815827879055,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.042501865416746,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.000837833872186,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -31,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -31.005684713189602,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -31,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -31.010889083058032,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-two-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.000861087886617,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-two-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.0039247292498965,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-four-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.00099281967494,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-four-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.004841454009757,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-three-finger-left",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -17.999961972236633,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-three-finger-left",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -18.000033297575673,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-four-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -18.000120019381768,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-four-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -17.999944008904986,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-three-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -10.001340250262704,
+                  "pass": true
+                },
+                {
+                  "holdId": "upper-three-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -10,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -9.999949466790184,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-four-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -35,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -35.01814446828646,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-four-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -35,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -35.0290235163707,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-three-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.00929740436406,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-three-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -27,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -27.001935793233066,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.001165629710478,
+                  "pass": true
+                },
+                {
+                  "holdId": "middle-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -25,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -25.005057694492855,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -31,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -31.018868313561953,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-outer-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -31,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -31.006614549371182,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-two-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -4.98343094285085,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-inner-two-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -5,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -5.0026326635248735,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-four-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.024228793648998,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-four-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -20.00149110343334,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-three-finger-right",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -18.006093932695645,
+                  "pass": true
+                },
+                {
+                  "holdId": "lower-three-finger-right",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -18,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -17.99996197223664,
+                  "pass": true
+                },
+                {
+                  "holdId": "central-35deg-sloper-bar",
+                  "xOffsetFraction": -0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -19.99996272215443,
+                  "pass": true
+                },
+                {
+                  "holdId": "central-35deg-sloper-bar",
+                  "xOffsetFraction": 0.17,
+                  "expectedFloorYmm": -20,
+                  "expectedThroughOpening": false,
+                  "actualFirstHitYmm": -19.9999611816497,
+                  "pass": true
+                }
+              ]
+            },
+            {
+              "check": "mount_bores_are_actual_openings",
+              "pass": true,
+              "detail": [
+                {
+                  "centreXmm": -233,
+                  "centreZmm": 116,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 233,
+                  "centreZmm": 116,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -40,
+                  "centreZmm": 116,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 40,
+                  "centreZmm": 116,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": -201,
+                  "centreZmm": 26,
+                  "unobstructedThroughBore": true
+                },
+                {
+                  "centreXmm": 201,
+                  "centreZmm": 26,
+                  "unobstructedThroughBore": true
+                }
+              ]
+            },
+            {
+              "check": "isolated_trimesh_import",
+              "pass": true,
+              "detail": {
+                "reader": "4.11.1",
+                "geometryCount": 24,
+                "directoryContents": [
+                  "asset.glb"
+                ]
+              }
+            },
+            {
+              "check": "import_triangle_count",
+              "pass": true,
+              "detail": 46000
+            }
+          ]
+        },
+        {
+          "check": "current_status_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "status_geometry_counts",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_build-result.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_hold-map.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/structural-results.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_validation/visual-review.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/render-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "hash_binding_renders/review-sheet-provenance.json",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "every_hold_evidence_reference_resolves",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "at_least_five_actual_render_records",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_01-canonical-front.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_02-reverse.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_03-oblique.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_04-contact-detail.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_05-neutral-material.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "render_06-side.png",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "review_sheet_hash",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "executed_source_reproduced_current_glb",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "reproduction_source_hashes_current",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "check": "each_contact_one_connected_surface",
+          "pass": true,
+          "detail": {
+            "hold-top-jug-left": 1,
+            "hold-top-jug-right": 1,
+            "hold-top-sloper-left": 1,
+            "hold-top-sloper-right": 1,
+            "hold-upper-four-finger-left": 1,
+            "hold-upper-three-finger-left": 1,
+            "hold-middle-four-finger-left": 1,
+            "hold-middle-three-finger-left": 1,
+            "hold-middle-two-finger-left": 1,
+            "hold-lower-outer-two-finger-left": 1,
+            "hold-lower-inner-two-finger-left": 1,
+            "hold-lower-four-finger-left": 1,
+            "hold-lower-three-finger-left": 1,
+            "hold-upper-four-finger-right": 1,
+            "hold-upper-three-finger-right": 1,
+            "hold-middle-four-finger-right": 1,
+            "hold-middle-three-finger-right": 1,
+            "hold-middle-two-finger-right": 1,
+            "hold-lower-outer-two-finger-right": 1,
+            "hold-lower-inner-two-finger-right": 1,
+            "hold-lower-four-finger-right": 1,
+            "hold-lower-three-finger-right": 1,
+            "hold-central-35deg-sloper-bar": 1
+          }
+        },
+        {
+          "check": "fresh_isolated_vtk_import",
+          "pass": true,
+          "detail": {
+            "reader": "9.6.2",
+            "actors": 24,
+            "triangles": 46000,
+            "directoryContents": [
+              "asset.glb"
+            ]
+          }
+        }
+      ],
+      "passed": true
+    }
+  ]
+}

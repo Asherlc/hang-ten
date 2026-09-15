@@ -1,0 +1,74 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______________ test_all_current_status_records_locate_actual_glb _______________
+
+    def test_all_current_status_records_locate_actual_glb():
+        for p in (ROOT/'models').glob('*/model-status.json'):
+            st=json.loads(p.read_text())
+            if st['usableExport']:
+>               assert st.get('glb')==p.parent.name+'.glb',p.parent.name
+E               AssertionError: moon-armstrong-ash
+E               assert None == ('moon-armstrong-ash' + '.glb')
+E                +  where None = <built-in method get of dict object at 0x7fd7ecbaacc0>('glb')
+E                +    where <built-in method get of dict object at 0x7fd7ecbaacc0> = {'changes': ['Replaced the central capsule recess with an integral upper lip and arched underside notch.', 'Replaced t...appings, validation and renders.'], 'contactCount': 21, 'name': 'Moon Armstrong', 'nativeBlenderAvailable': False, ...}.get
+E                +  and   'moon-armstrong-ash' = PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash').name
+E                +    where PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash') = PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash/model-status.json').parent
+
+tests/test_current_package_schema.py:11: AssertionError
+________________ test_review_sheet_records_name_existing_output ________________
+
+    def test_review_sheet_records_name_existing_output():
+        for p in (ROOT/'models').glob('*/renders/review-sheet-provenance.json'):
+            data=json.loads(p.read_text())
+>           assert data.get('output'),str(p)
+E           AssertionError: /mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash/renders/review-sheet-provenance.json
+E           assert None
+E            +  where None = <built-in method get of dict object at 0x7fd7eca09f40>('output')
+E            +    where <built-in method get of dict object at 0x7fd7eca09f40> = {'assetSha256': '80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8', 'inputs': ['01-canonical-front.png...utral-material.png', '06-side.png', ...], 'sha256': 'd113039c6c1cb928c0f958b8facbc932308e2b7b20ca8daff2c0da38dafdeed2'}.get
+
+tests/test_current_package_schema.py:17: AssertionError
+__________________ test_extra_moon_review_views_are_permitted __________________
+
+    def test_extra_moon_review_views_are_permitted():
+        import audit_archive
+        d=ROOT/'models/moon-armstrong-ash'
+        actual=json.loads((d/'renders/render-provenance.json').read_text())
+        assert len(actual['renders'])==8
+>       result=audit_archive.verify_model(d)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_current_package_schema.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash')
+
+    def verify_model(directory: Path) -> dict[str,Any]:
+        d=Path(directory);s=read(d/'model-status.json');checks=[]
+        def check(name: str, ok: Any, detail: Any=None) -> None:
+            checks.append({'check':name,'pass':bool(ok),'detail':detail})
+        sums=check_checksums(d);check('per_model_checksums',sums['passed'],{'files':sums['checked'],'failures':sums['failures']})
+        actual={p.relative_to(d).as_posix() for p in d.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.name!='SHA256SUMS.txt'}
+        check('per_model_checksum_coverage',set(sums['paths'])==actual,sorted(actual-set(sums['paths'])))
+        if not s['usableExport']:
+            check('blocked_entry_has_no_invented_glb',not list(d.rglob('*.glb')))
+            check('blocker_report_present',(d/'blocker-report.md').is_file())
+            check('blocked_counts_are_unknown',s.get('contactCount') is None and s.get('triangleCount') is None)
+            return {'slug':d.name,'status':s['status'],'usableExport':False,'checks':checks,'passed':all(c['pass'] for c in checks)}
+>       p=d/s['glb'];h=sha(p);cfg=read(d/'source/geometry-config.json');hm=read(d/'hold-map.json')
+            ^^^^^^^^
+E       KeyError: 'glb'
+
+tools/audit_archive.py:76: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_current_package_schema.py::test_all_current_status_records_locate_actual_glb - AssertionError: moon-armstrong-ash
+assert None == ('moon-armstrong-ash' + '.glb')
+ +  where None = <built-in method get of dict object at 0x7fd7ecbaacc0>('glb')
+ +    where <built-in method get of dict object at 0x7fd7ecbaacc0> = {'changes': ['Replaced the central capsule recess with an integral upper lip and arched underside notch.', 'Replaced t...appings, validation and renders.'], 'contactCount': 21, 'name': 'Moon Armstrong', 'nativeBlenderAvailable': False, ...}.get
+ +  and   'moon-armstrong-ash' = PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash').name
+ +    where PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash') = PosixPath('/mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash/model-status.json').parent
+FAILED tests/test_current_package_schema.py::test_review_sheet_records_name_existing_output - AssertionError: /mnt/data/batch01_completion_v2/release/models/moon-armstrong-ash/renders/review-sheet-provenance.json
+assert None
+ +  where None = <built-in method get of dict object at 0x7fd7eca09f40>('output')
+ +    where <built-in method get of dict object at 0x7fd7eca09f40> = {'assetSha256': '80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8', 'inputs': ['01-canonical-front.png...utral-material.png', '06-side.png', ...], 'sha256': 'd113039c6c1cb928c0f958b8facbc932308e2b7b20ca8daff2c0da38dafdeed2'}.get
+FAILED tests/test_current_package_schema.py::test_extra_moon_review_views_are_permitted - KeyError: 'glb'
+3 failed in 0.77s

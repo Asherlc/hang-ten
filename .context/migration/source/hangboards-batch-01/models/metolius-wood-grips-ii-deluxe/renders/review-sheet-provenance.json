@@ -1,0 +1,13 @@
+{
+  "assetSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "output": "review-sheet.jpg",
+  "sha256": "399ca2d6bbea9e0dcb11d8a9eed0d919338c6f849dad3eb3fc65ba627884ec31",
+  "inputs": [
+    "01-canonical-front.png",
+    "02-reverse.png",
+    "03-oblique.png",
+    "04-contact-detail.png",
+    "05-neutral-material.png",
+    "06-side.png"
+  ]
+}

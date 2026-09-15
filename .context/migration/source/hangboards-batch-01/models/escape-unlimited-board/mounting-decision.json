@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "assetSha256": "ca06ebc019bab52c0f576064b8893c7dbc5b44d2ada34927234db3892f5936e6",
+  "mode": "fixed wall-mounted",
+  "cordGeometry": false,
+  "cordMarkers": [],
+  "orientationMetadata": "not applicable: fixed board",
+  "boardMountingBores": [
+    {
+      "x": -285,
+      "z": 20,
+      "radius": 2.5,
+      "counterbore": 4.5,
+      "counterboreFloorY": -23
+    },
+    {
+      "x": -285,
+      "z": 132,
+      "radius": 2.5,
+      "counterbore": 4.5,
+      "counterboreFloorY": -43
+    },
+    {
+      "x": 285,
+      "z": 20,
+      "radius": 2.5,
+      "counterbore": 4.5,
+      "counterboreFloorY": -23
+    },
+    {
+      "x": 285,
+      "z": 132,
+      "radius": 2.5,
+      "counterbore": 4.5,
+      "counterboreFloorY": -43
+    }
+  ],
+  "coordinateUnits": "millimetres in source frame",
+  "borePlacementClassification": "photo-derived estimate unless explicitly specified",
+  "externalHardware": "Not modelled. No screws, wall, pulley fittings, hooks, knots, carabiners or ropes."
+}

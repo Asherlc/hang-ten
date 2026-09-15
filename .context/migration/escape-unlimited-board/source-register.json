@@ -1,0 +1,74 @@
+[
+  {
+    "id": "P1",
+    "url": "https://escapeclimbing.com/products/ec72000",
+    "publisher": "Escape Climbing",
+    "evidenceTier": "manufacturer",
+    "accessDate": "2026-09-15",
+    "supports": "EC72000, Baltic birch, continuous top and six recessed slots; product-page text states 23.5 × 6 inches.",
+    "doesNotEstablish": "Page text conflicts with its own dimensioned photographs; exact revision dates unknown.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I1",
+    "url": "https://escapeclimbing.com/cdn/shop/files/PDP_EC72000_UnlimitedBoard-01.png?v=1690380978&width=1946",
+    "publisher": "Escape Climbing",
+    "evidenceTier": "manufacturer product photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Front layout: three split rows, central bridge, full-width top roll, four mounting holes.",
+    "doesNotEstablish": "Exact slot widths, vertical centres and rear details.",
+    "review": "actual image visually inspected",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I2",
+    "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_ProductImage_UnlimtedBoardListing_Final-B.png?v=1690380978&width=1946",
+    "publisher": "Escape Climbing",
+    "evidenceTier": "manufacturer dimensioned photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Overall width 23.75 inches; grip span 21.75 inches.",
+    "doesNotEstablish": "A manufacturing tolerance or resolution of conflicting page text.",
+    "review": "actual image visually inspected",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I3",
+    "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_ProductImage_UnlimtedBoardListing_Final-C.png?v=1690380978&width=1946",
+    "publisher": "Escape Climbing",
+    "evidenceTier": "manufacturer dimensioned photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Overall height 7.25 inches; depth 1.875 inches; three-step side profile.",
+    "doesNotEstablish": "Exact profile curvature and step heights.",
+    "review": "actual image visually inspected",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I4",
+    "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_ProductImage_UnlimtedBoardListing_Final-E.png?v=1690380978&width=1946",
+    "publisher": "Escape Climbing",
+    "evidenceTier": "manufacturer grip guide",
+    "accessDate": "2026-09-15",
+    "supports": "Nominal top 60 mm, upper slots 45 mm, middle 20 mm, lower 15 mm.",
+    "doesNotEstablish": "60 mm is not perpendicular thickness; exact top arc length unverified.",
+    "review": "actual image visually inspected",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I5",
+    "url": "https://escapeclimbing.com/cdn/shop/products/PDP_EC72000_UnlimitedBoard-05.png?v=1690380978&width=1946",
+    "publisher": "Escape Climbing",
+    "evidenceTier": "manufacturer product photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Oblique close-up of tiering, rounded lips and lamination.",
+    "doesNotEstablish": "No rights to ship photograph as a material texture established.",
+    "review": "actual image visually inspected",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  }
+]

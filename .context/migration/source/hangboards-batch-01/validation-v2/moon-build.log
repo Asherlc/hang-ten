@@ -1,0 +1,57 @@
+{
+  "bytes": 4992632,
+  "sha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
+  "triangles": 46000,
+  "objects": 22,
+  "geometry": {
+    "rawTriangles": 1336270,
+    "finalTriangles": 46000,
+    "voxelMm": 0.8,
+    "boundsMm": [
+      [
+        -324.49993896484375,
+        -54.999996185302734,
+        0.5000011920928955
+      ],
+      [
+        324.50994873046875,
+        5.340576171875e-05,
+        164.50001525878906
+      ]
+    ],
+    "watertight": true,
+    "windingConsistent": true,
+    "volumeMm3": 3791728.242531279,
+    "contactIds": [
+      "top-35deg-left",
+      "top-35deg-right",
+      "jug-centre",
+      "edge-22mm-centre",
+      "edge-18mm-centre",
+      "edge-25mm-left",
+      "edge-20mm-left",
+      "edge-10mm-left",
+      "edge-08mm-left",
+      "edge-25mm-right",
+      "edge-20mm-right",
+      "edge-10mm-right",
+      "edge-08mm-right",
+      "jug-left",
+      "edge-15mm-left",
+      "jug-right",
+      "edge-15mm-right",
+      "two-finger-22mm-left",
+      "one-finger-22mm-left",
+      "two-finger-22mm-right",
+      "one-finger-22mm-right"
+    ],
+    "partitionCleanup": [
+      {
+        "holdId": "top-35deg-right",
+        "trianglesReassignedToBody": 1,
+        "reason": "isolated centroid-selection boundary fragment; physical geometry unchanged"
+      }
+    ]
+  },
+  "seconds": 14.38577127456665
+}

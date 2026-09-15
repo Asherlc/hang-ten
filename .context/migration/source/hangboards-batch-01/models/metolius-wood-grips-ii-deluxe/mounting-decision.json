@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "assetSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "mode": "fixed wall-mounted",
+  "cordGeometry": false,
+  "cordMarkers": [],
+  "orientationMetadata": "not applicable",
+  "boardBores": [
+    {
+      "x": -215,
+      "z": 180,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": -215,
+      "z": 116,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": -215,
+      "z": 55,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": 215,
+      "z": 180,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": 215,
+      "z": 116,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": 215,
+      "z": 55,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    }
+  ],
+  "coordinateUnits": "mm source X-right Y-rear Z-up",
+  "borePlacementClassification": "photo-derived estimate; not installation or manufacturing dimensions",
+  "purposeLimit": "Six visible mounting apertures; dimensions are not a drill template.",
+  "externalHardware": "No screws, walls, pulley fittings, hooks or ropes in export."
+}

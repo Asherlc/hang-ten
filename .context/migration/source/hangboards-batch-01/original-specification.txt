@@ -1,0 +1,418 @@
+Create researched, source-faithful, integration-ready 3D display models for the six hangboards in ACTIVE_BATCH below.
+
+ACTIVE_BATCH = 1
+
+This is an artifact-production task. Research the products, create the actual model files, render them, validate the exports, and deliver a downloadable ZIP. Do not respond only with a plan, proposed workflow, source list, or promise to work later.
+
+Complete one batch of six at a time. Do not attempt all 30 in one execution. Do not ask for approval to begin, approval between products, or optional preferences already resolved by this prompt.
+
+If I say “continue” after you have delivered a batch, proceed to the next undelivered batch. If the current batch is incomplete, finish its outstanding work first rather than advancing.
+
+────────────────────────────────────────
+BATCHES
+────────────────────────────────────────
+
+BATCH 1
+1. deWoodstok Woodbord
+2. Escape Unlimited Board
+3. Evolv Basic Training Board (Long)
+4. Metolius Wood Grips II Deluxe
+5. Moon Armstrong
+6. target10a Linebreaker BASE
+
+BATCH 2
+1. Escape Beta Board
+2. Mammut Diamond Finger
+3. Metolius Foundry
+4. Nature Climbing Stoak Board III
+5. So iLL Iron Palm 2.0
+6. So iLL Split Palm
+
+BATCH 3
+1. Aelith Cyclops #011
+2. Plateau Lifting Edge
+3. Frictitious NUG
+4. Frictitious Port-A-Board
+5. Nature Climbing Stone Hanger Mini
+6. Nature Climbing Stone Hanger Mini × KARMA8A
+
+BATCH 4
+1. Crimptonite Helium Mobile
+2. Metolius Light Rail 2.0
+3. Metolius Rock Rings 3D
+4. Owl Climb Poker
+5. YY Vertical Penta Evo
+6. Trango Rock Prodigy Pivot
+
+BATCH 5
+1. Frictitious DoorMount Pro 7
+2. Frictitious Megalith
+3. Trango Rock Prodigy Forge
+4. Trango Rock Prodigy Natural
+5. Zlagboard.Evo
+6. Zlagboard.Pro 2.0
+
+IMPORTANT IDENTITY NOTES
+- Linebreaker BASE is listed under target10a, not Tension. Verify the exact product.
+- Keep the two Stone Hanger Mini variants separate.
+- Keep Zlagboard.Evo and Zlagboard.Pro 2.0 separate; do not substitute Pro 1.0.
+- Do not substitute another YY board for Penta Evo.
+- Verify every exact revision independently. Shared branding is not evidence of shared geometry.
+
+EXCLUDED: THESE ALREADY HAVE SEPARATE DELIVERIES
+Do not rebuild or count these toward this task:
+- Metolius Climber’s Edge
+- Metolius Contact
+- Metolius Simulator 3-D
+- So iLL Training Tiles
+- The Hangboard
+- Trango Rock Prodigy Training Center
+
+────────────────────────────────────────
+1. EXECUTION AND FILE-PRESERVATION RULES
+────────────────────────────────────────
+
+Start with a short execution preflight:
+- Check whether Blender or bpy actually works.
+- Check available geometry, rendering, download, and export tools.
+- Establish a writable, uniquely named working directory.
+- Test a small export and clean reimport before launching substantial builds.
+
+Prefer genuine Blender authoring and native .blend delivery. If Blender is absent, make a reasonable installation attempt when supported. Do not spend the entire task repeatedly trying the same failed installation.
+
+If native Blender remains unavailable, continue with an available geometry/export/rendering workflow. Deliver genuine GLBs and editable geometry/source code. Explicitly mark .blend files and Blender screenshots as unavailable; never manufacture substitutes or claim a conversion script is a .blend.
+
+Use a reliable, sequential production workflow:
+1. Save the authoring code and configuration to disk.
+2. Execute it.
+3. Inspect the exit status and error output.
+4. Fix the root cause before running dependent steps.
+5. Save and validate the resulting model.
+6. Create a per-model ZIP before moving to the next model.
+
+Do not continue repeatedly trying to read a file that an earlier failed step never created.
+
+Use fresh output paths rather than overwriting read-only attachments. Use atomic writes where practical. Preserve successful outputs when another model fails.
+
+Keep the uncompressed working package and per-model ZIPs until the final batch ZIP has been reopened and checked.
+
+Reports and renders must identify the exact exported file they validate, preferably by SHA-256. A report for an earlier geometry revision does not validate a changed export.
+
+Do not treat previous assistant claims, manifests, receipts, screenshots, or file headers as proof that a complete working model exists. Inspect and load the actual files.
+
+Give brief progress updates during execution. Updates are not final answers and must not imply background work will continue after the response ends.
+
+Do not return a final answer consisting only of “I’m working on it,” another proposed plan, or an unverified completion count.
+
+────────────────────────────────────────
+2. RESEARCH BEFORE MODELING
+────────────────────────────────────────
+
+For each exact product:
+
+- Locate manufacturer product pages, manuals, technical drawings, numbered hold guides, videos, catalog pages, and original product photographs.
+- Search for front, reverse, side, oblique, underside, close-up, attachment, and in-use views.
+- Inspect the actual images and diagrams, not just search snippets.
+- Retain useful original source files at their highest available resolution.
+- Record each source URL, publisher, access date, evidence tier, local filename, and supported facts.
+- Identify what each source does NOT establish.
+
+Prefer manufacturer evidence. Clearly label retailer, distributor, archival, owner-photo, and third-party evidence.
+
+Existing app data or generated illustrations may help locate references, but are not independent physical-product evidence. Do not model from AI-generated catalogue artwork.
+
+Collect all published specifications:
+- Overall dimensions and material.
+- Edge depths and other measured grip dimensions.
+- Physical hold inventory and layout.
+- Mounting or suspension method.
+- Passages, attachment points, adjustment mechanisms, and supplied hardware.
+- Whether the product is fixed, reversible, flippable, rotatable, or composed of independently moving pieces.
+
+Distinguish:
+- Published measurements.
+- Photo-derived estimates.
+- Authored display choices.
+- Unknown or conflicting facts.
+
+A marketing count of “grips,” “positions,” or “depths” is not automatically a count of separate physical contacts.
+
+For each conflict, retain the conflicting sources and record a non-empty ruling. Do not silently pick whichever value is convenient.
+
+Do not transplant dimensions, contact inventories, or attachment details from a similar model.
+
+If thorough research cannot establish the exact product identity or essential physical-contact inventory, mark that product EVIDENCE-BLOCKED and explain precisely what is missing. Continue the other products in the batch. Do not fill the gap with a generic board, invented holds, or another revision.
+
+Photo-derived curvature estimates are acceptable for a display model when documented. Invented physical topology is not.
+
+────────────────────────────────────────
+3. GEOMETRY AND SELECTION CONTRACT
+────────────────────────────────────────
+
+Use real-world metric scale and Blender Z-up source coordinates.
+
+Declare:
+- Source units and axes.
+- Which direction is the physical front.
+- Canonical camera view direction and up direction.
+- Deliberate origin and pivot placement.
+- The coordinate conversion used by the integration export.
+
+Camera directions must be internally consistent. Distinguish “front-facing surface direction” from “camera looking direction.”
+
+Apply object transforms before delivery, while documenting any standard coordinate-conversion root used by the export format.
+
+Model each product’s actual silhouette and construction. Do not use one generic slab-and-pockets template for unrelated boards.
+
+Author silhouettes, sections, recesses, lips, rolls, notches, curved surfaces, and transitions deliberately.
+
+Do not use:
+- Image segmentation.
+- Automatic contour detection or vectorization.
+- Generated masks.
+- Automatic image-to-geometry tracing.
+- Global beveling or smooth shading as substitutes for properly authored shape.
+
+Continuous contact surfaces should actually be continuous. Cavities must be actual recesses or openings, not dark planes or floating inserts.
+
+Keep the nonselectable body separate from every selectable physical contact.
+
+Every selectable contact needs:
+- A stable logical hold ID.
+- A stable exported object/node identity.
+- A documented hold-ID-to-object mapping.
+- Specific evidence references.
+
+A selectable mesh should contain actual contact-surface geometry, not an overlapping highlight shell.
+
+Multiple disconnected pieces may share one logical ID only when they genuinely represent one selectable physical contact.
+
+Do not create duplicate holds merely because a contact appears in multiple photographs or orientations.
+
+Do not classify mounting holes, cord passages, logos, texture, incidental grooves, or uncertain features as holds.
+
+Preserve deliberate physical symmetry and stable left/right identities. Do not mirror depth order when the actual board is asymmetric.
+
+Keep the model practical for mobile display. Avoid enormous triangle counts caused by indiscriminate dense meshing. Optimize without destroying silhouettes, lips, or independently selectable surfaces, and report the resulting counts.
+
+This is a display/interaction asset, not manufacturing CAD or a load-bearing design.
+
+────────────────────────────────────────
+4. ATTACHMENTS AND SUSPENSION
+────────────────────────────────────────
+
+Determine the attachment system from evidence rather than assuming all portable boards use the same arrangement.
+
+For wall-mounted boards:
+- Include no cord geometry or cord markers.
+
+For a supported single-cord attachment:
+- Model source-supported board passages or attachment geometry.
+- Add a separate nonselectable marker named `cord-attachment`.
+
+For supported multiple passages/branches:
+- Add ordered separate nonselectable markers named `cord-passage-1`, `cord-passage-2`, etc.
+
+For products with multiple physical units, clearly associate each marker with its unit.
+
+Document:
+- Marker coordinates.
+- Associated physical opening.
+- Outward axis or passage direction when established.
+- Ordering convention.
+- Source-backed facts versus estimated placement.
+
+Preserve marker objects through export.
+
+Do not invent hidden cord routing, branch order, length, diameter, knot, anchor position, or suspension physics.
+
+Do not bake ropes, knots, hooks, carabiners, walls, ceilings, screws, external mounting hardware, or environmental objects into the production asset.
+
+Missing suspension-simulation information must not prevent documenting independently established board orientations.
+
+────────────────────────────────────────
+5. MULTI-SIDED AND ROTATABLE PRODUCTS
+────────────────────────────────────────
+
+Determine which contacts become accessible through rotation, inversion, flipping, or changing the orientation of separate components.
+
+Keep physical-contact identity independent of display orientation.
+
+For every selectable hold on a multi-sided/rotatable product:
+- Assign exactly one preferred canonical display orientation.
+- Group contacts sharing the same preferred orientation.
+- Reuse a position rather than creating redundant positions.
+- Keep left/right and component identities stable.
+
+Save `model-orientations.json` containing:
+- schemaVersion.
+- Source coordinate system.
+- Canonical camera view and up directions.
+- Rotation axis and pivot.
+- Stable position IDs and names.
+- Associated logical hold IDs.
+- Normalized rotation quaternions in [x, y, z, w] order.
+- Evidence references.
+- Source-backed versus authored-display-estimate classifications.
+- Explanations of what the evidence establishes and how any display angle was chosen.
+
+Each quaternion must rotate the BOARD from its delivered base pose around the declared pivot. Moving only the camera does not count.
+
+Do not derive production pose metadata automatically from image pixels, object names, or unreviewed mesh-normal analysis.
+
+When evidence establishes opposing usable lips, provide the necessary distinct preferred poses without duplicating the physical contacts.
+
+For independently moving products, especially Trango Pivot:
+- A single whole-assembly quaternion may be insufficient.
+- Document per-component axes, pivots, rigid transforms, and any required side swap.
+- Extend the orientation schema explicitly.
+- Do not pretend a single rigid rotation reproduces independent half rotations or a component swap.
+
+Render and visually review every canonical position after clean reimport. Confirm that it exposes the assigned contacts and does not translate, deform, or misidentify the board.
+
+Label authored display poses as display choices, not manufacturer-prescribed training instructions.
+
+If the evidence cannot resolve a contact-to-orientation assignment, document the gap instead of inventing certainty.
+
+Fixed boards should not receive unnecessary orientation metadata.
+
+────────────────────────────────────────
+6. MATERIALS AND TEXTURES
+────────────────────────────────────────
+
+Use the best available product evidence for material and color.
+
+Do not invent:
+- Wood grain.
+- Stone patterns.
+- Logos or engravings.
+- Stains, labels, or distinctive decorative markings.
+
+Use an original neutral PBR approximation when detailed surface appearance is not adequately established.
+
+Use one material per genuinely different physical surface. Do not create separate materials solely for highlighting; the app can clone or replace a selected object’s material.
+
+Every rendered mesh must have a material.
+
+UV unwrap without noticeable stretching. Document overlap or other UV limitations honestly.
+
+When texture maps are used:
+- Normally use practical 1K–2K resolutions.
+- Use standard sRGB for color textures.
+- Keep non-color data in its appropriate color space.
+- Do not bake lighting, shadows, reflections, ambient occlusion, or backgrounds into base color.
+- Embed textures in the GLB.
+- Pack them in the .blend.
+- Include source texture files under `textures/`.
+
+Create `texture-manifest.md` recording filename, resolution, color space, material assignment, origin, license, and approximation status.
+
+Reference photography retained for research must be distinguished from licensed, shippable application textures. Do not claim commercial rights that have not been established.
+
+Render a neutral-lighting close-up showing material continuity across body/contact boundaries.
+
+────────────────────────────────────────
+7. EXPORT AND VALIDATION
+────────────────────────────────────────
+
+Default integration format: self-contained GLB.
+
+Preserve editable source geometry. Production exports must not depend on:
+- Missing external files.
+- Live Geometry Nodes.
+- Unapplied geometry-generating modifiers.
+- Cameras, lights, reference planes, labels, or scene environments.
+
+Use deterministic triangulation where necessary.
+
+Reimport each GLB into a clean environment with its original source files and textures unavailable.
+
+Verify:
+- File format and payload integrity.
+- Metric bounds and dimensions.
+- Coordinate conversion and orientation.
+- Mesh/node names.
+- Exact hold-ID mapping.
+- Separate nonselectable bodies and attachment markers.
+- Independent addressability of every contact.
+- Assigned materials and embedded textures.
+- Triangle counts.
+- Finite geometry and nondegenerate triangles.
+- Normals and visible shading.
+- No accidental duplicate surfaces or caps over cavities.
+- No unexpected external dependencies.
+- No forbidden production objects.
+
+Where contact meshes partition one body surface, check the assembled geometry rather than incorrectly requiring every individual surface patch to be a closed solid.
+
+Use meaningful geometry tests. A passing GLB header check is not proof of correct geometry or successful import.
+
+For rotatable products, apply all canonical poses to the reimported asset and review the actual rotated geometry.
+
+If .blend files are produced, open them in Blender and verify their contents. A Blender file header alone is insufficient.
+
+All claimed model renders must be genuine renders of the delivered geometry. Do not use image generation to fabricate renders or an Outliner screenshot.
+
+Structural validation does not establish photographic fidelity. Report structural checks, evidence coverage, and visual review separately.
+
+────────────────────────────────────────
+8. REQUIRED PER-MODEL PACKAGE
+────────────────────────────────────────
+
+Each successful model directory must contain:
+
+1. `<model-slug>.blend` — genuine editable Blender file, when actually created.
+2. `<model-slug>.glb` — validated self-contained integration export.
+3. `README.md` — identity, revision, published specifications, coordinate frame, origin, inventory, mounting decision, approximation limits, software versions, licensing, and integration instructions.
+4. `hold-map.json` — exact stable hold-ID/object mapping.
+5. `sources.md` — source register and conflict rulings.
+6. `evidence/` — retained source files and feature-to-evidence mapping.
+7. `textures/` — all used source textures.
+8. `texture-manifest.md`.
+9. `model-orientations.json` when applicable.
+10. Cord-marker mapping when applicable.
+11. Editable geometry and reproducible authoring code under `source/`.
+12. Validation report and machine-readable validation results.
+13. Checksums tying outputs and review records to the actual delivered files.
+14. At least five labeled actual renders:
+    - Canonical front.
+    - Reverse.
+    - Oblique.
+    - Complex contact or attachment detail.
+    - Neutral material close-up.
+15. Additional review renders for every canonical orientation not already covered.
+16. A genuine Blender Outliner screenshot showing the separate objects, when Blender UI access permits.
+
+Missing items must be explicitly reported. Never silently replace a required artifact with an unexecuted helper script.
+
+────────────────────────────────────────
+9. FINAL BATCH DELIVERY
+────────────────────────────────────────
+
+Deliver:
+- One ZIP named `hangboards-batch-0N.zip`.
+- Six individual model ZIPs when all six are produced.
+- A batch comparison/contact sheet made from actual model renders.
+- A batch manifest with exactly the six requested entries.
+- A short table of actual model status, contact count, triangle count, native Blender availability, and remaining limitations.
+
+Use explicit status values:
+- COMPLETE: all requested deliverables and reviews for that model are satisfied within documented display-model approximations.
+- PARTIAL: actual usable assets exist, but specified deliverables or reviews remain missing.
+- EVIDENCE-BLOCKED: identity or essential physical inventory cannot be established.
+- BUILD-FAILED: no validated usable export was produced.
+
+Do not count PARTIAL, EVIDENCE-BLOCKED, or BUILD-FAILED entries as fully complete.
+
+Before posting links:
+- Confirm the exact files exist.
+- Reopen and integrity-check every delivered ZIP.
+- Confirm every manifest path exists inside the ZIP.
+- Load the actual GLBs.
+- Verify that the final ZIP contains the current versions, not stale earlier models.
+- Exclude all font files from the delivery.
+- Do not provide invented or anticipated download links.
+
+If one product is genuinely blocked, deliver the completed work for the other products and a precise blocker report. Do not substitute fake geometry, abandon the whole batch, or present the batch as fully complete.
+
+Start ACTIVE_BATCH now and carry it through research, modeling, validation, and the actual downloadable delivery.

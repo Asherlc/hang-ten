@@ -1,0 +1,48 @@
+{
+  "bytes": 4556484,
+  "sha256": "8ef554950a9d4078f39b122df8e570b691853e257ea9e8066220d22681e44085",
+  "triangles": 42000,
+  "objects": 18,
+  "geometry": {
+    "rawTriangles": 964524,
+    "finalTriangles": 42000,
+    "voxelMm": 0.8,
+    "boundsMm": [
+      [
+        -294.99993896484375,
+        -39.999996185302734,
+        1.9073486328125e-06
+      ],
+      [
+        295.009033203125,
+        3.814697265625e-05,
+        147.08351135253906
+      ]
+    ],
+    "watertight": true,
+    "windingConsistent": true,
+    "volumeMm3": 2801048.2466450683,
+    "contactIds": [
+      "top-rim",
+      "upper-outer-left",
+      "upper-two-finger-left",
+      "upper-inner-left",
+      "upper-outer-right",
+      "upper-two-finger-right",
+      "upper-inner-right",
+      "middle-outer-left",
+      "middle-inner-left",
+      "middle-outer-right",
+      "middle-inner-right",
+      "lower-outer-left",
+      "lower-two-finger-left",
+      "lower-inner-left",
+      "lower-outer-right",
+      "lower-two-finger-right",
+      "lower-inner-right"
+    ],
+    "partitionCleanup": []
+  },
+  "mountingHolesRemoved": true,
+  "originalMountCount": 4
+}

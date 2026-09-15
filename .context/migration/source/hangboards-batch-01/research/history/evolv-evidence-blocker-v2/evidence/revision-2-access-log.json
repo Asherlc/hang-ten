@@ -1,0 +1,42 @@
+{
+  "accessDate": "2026-09-15",
+  "entries": [
+    {
+      "publisher": "Evolv",
+      "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+      "result": "Exact Long product text loads; all four actual Long gallery-image fetches failed.",
+      "usefulUserAction": "Save or screenshot the front and oblique/side photographs from this exact Long gallery, preserving product identity."
+    },
+    {
+      "publisher": "Outland USA",
+      "url": "https://www.outlandusa.com/p/evolv-basictraining-board-black-long",
+      "result": "Long name, MPN 66-0000082105 and UPC 849948023883 verified; image link resolves to incomplete Cloudinary URL and returns 400."
+    },
+    {
+      "publisher": "Wilderness Exchange",
+      "url": "https://www.wildernessx.com/products/basic-training-board-long",
+      "result": "Long-specific named gallery files found (Long, Side and Side2); image fetches failed."
+    },
+    {
+      "publisher": "Alpenglow",
+      "url": "https://www.alpenglowgear.com/basic-training-board-long.html",
+      "result": "Long textual listing retrieved; CDN image fetches failed."
+    },
+    {
+      "publisher": "Backcountry",
+      "url": "https://www.backcountry.com/evolv-basic-training-board",
+      "result": "Shared Short/Long listing and one black board photo accessible. Cannot independently assign that shared photo to Long; not used to transplant the Short geometry."
+    },
+    {
+      "publisher": "Kilter / Setter Closet",
+      "url": "https://settercloset.com/en-ca/products/ku007",
+      "result": "24-inch Kilter/Evolv board identified; deliberately not accepted as exact Long."
+    },
+    {
+      "publisher": "Vertimania",
+      "url": "https://www.vertimania.com/evolv",
+      "result": "Search exposes distinct Long/Short items; page fetch returns 403."
+    }
+  ],
+  "originalImageFilesRetained": false
+}

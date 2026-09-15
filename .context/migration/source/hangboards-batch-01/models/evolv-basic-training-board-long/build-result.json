@@ -1,0 +1,42 @@
+{
+  "bytes": 5406056,
+  "sha256": "3fe7b9faba447f89936ff6a8e4d367276046e974b96e839aaeab5afb3c7c6e2b",
+  "triangles": 50000,
+  "objects": 5,
+  "geometry": {
+    "rawTriangles": 1968610,
+    "finalTriangles": 50000,
+    "voxelMm": 0.75,
+    "boundsMm": [
+      [
+        -395.0,
+        -60.0,
+        0.0
+      ],
+      [
+        395.0,
+        0.0,
+        159.939208984375
+      ]
+    ],
+    "watertight": true,
+    "windingConsistent": true,
+    "volumeMm3": 3029195.0069021326,
+    "contactIds": [
+      "jug",
+      "edge-upper",
+      "edge-middle",
+      "edge-lower"
+    ],
+    "partitionCleanup": [
+      {
+        "holdId": "edge-upper",
+        "trianglesReassignedToBody": 1,
+        "reason": "isolated centroid-selection boundary fragment; physical geometry unchanged"
+      }
+    ],
+    "opposingZeroVolumeTrianglesRemoved": 0
+  },
+  "mountingHolesRemoved": true,
+  "originalMountCount": 11
+}

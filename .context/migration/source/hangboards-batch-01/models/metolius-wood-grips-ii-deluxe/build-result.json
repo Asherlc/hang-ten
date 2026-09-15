@@ -1,0 +1,62 @@
+{
+  "bytes": 7050372,
+  "sha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "triangles": 65000,
+  "objects": 27,
+  "geometry": {
+    "rawTriangles": 1480104,
+    "finalTriangles": 65000,
+    "voxelMm": 0.8,
+    "boundsMm": [
+      [
+        -304.37493896484375,
+        -70.00000762939453,
+        0.6250002384185791
+      ],
+      [
+        304.3843688964844,
+        -0.00028228759765625,
+        215.37501525878906
+      ]
+    ],
+    "watertight": true,
+    "windingConsistent": true,
+    "volumeMm3": 6210125.821013458,
+    "contactIds": [
+      "01-jug-left",
+      "01-jug-right",
+      "02-flat-stopper-left",
+      "02-flat-stopper-right",
+      "12-round-stopper-centre",
+      "03-edge-left",
+      "04-three-finger-left",
+      "05-two-finger-left",
+      "03-edge-right",
+      "04-three-finger-right",
+      "05-two-finger-right",
+      "13-four-finger-centre",
+      "06-edge-left",
+      "07-three-finger-left",
+      "08-two-finger-left",
+      "06-edge-right",
+      "07-three-finger-right",
+      "08-two-finger-right",
+      "14-four-finger-centre",
+      "09-edge-left",
+      "10-three-finger-left",
+      "11-two-finger-left",
+      "09-edge-right",
+      "10-three-finger-right",
+      "11-two-finger-right",
+      "15-four-finger-centre"
+    ],
+    "partitionCleanup": [
+      {
+        "holdId": "02-flat-stopper-left",
+        "trianglesReassignedToBody": 1,
+        "reason": "isolated centroid-selection boundary fragment; physical geometry unchanged"
+      }
+    ]
+  },
+  "seconds": 16.09270215034485
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "slug": "target10a-linebreaker-base",
+  "assetSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+  "method": "Executed delivered source/rebuild.py in a fresh temporary directory with only delivered source/ files, no original export and no working-tree build scripts.",
+  "command": "python source/rebuild.py --output rebuilt",
+  "exitCode": 0,
+  "rebuiltSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+  "byteIdentical": true,
+  "sourceFilesSha256": {
+    "validate.py": "416f7b1bafc26eeba8f645f880d288b894e9af06fdf26ee1682be8e9407ef7e2",
+    "geometry.py": "174bcd2a0426617fd91ece598b252094e84f9e16529cf12750972c1a25c2fefd",
+    "render_glb.py": "d69776e51b6120ead377135396f374cb28a1436efa3820e423c88cdb670f9ec2",
+    "geometry-config.json": "56f7fb239f09783ece678c7c6cbcb14b8bf6db973144587d41f0fb3552b61dac",
+    "asset_io.py": "96471b169cdd099114b4b15accc23da95529153c94528d331f99cc27f5a7de9c",
+    "assembled-source-z-up.ply": "88c29af9ba3edf5b24f494aa4021a47944221ba7df19b6905f01fa49dd0eb5ae",
+    "rebuild.py": "dcbe1bc5412006ee3f9a0f8b81ee59d255c74829fbacbe60c5141ce048a44037",
+    "software-versions.json": "70124c90063d25c34aa694a627a7791ad55d6aa9e48d618aa31338541b3139d7",
+    "editable-assembled-mesh.npz": "e7b16693e0d905c9ee509924d14e55b64a96e15d10d058f0c0a787d8f4a122b4",
+    "requirements.txt": "78a99fd938a85a56f4f047712353049c5cee5f23a6b8791c03e89d9b7d019fe9"
+  },
+  "elapsedSeconds": 12.413,
+  "stdout": "validation/rebuild-stdout.txt",
+  "stderr": "validation/rebuild-stderr.txt"
+}

@@ -1,0 +1,152 @@
+2026-09-15 18:13:49.904 (   0.465s) [    7F9B7D0D7780]vtkXOpenGLRenderWindow.:1460  WARN| bad X server connection. DISPLAY=:0
+{
+  "reader": "VTK vtkGLTFImporter",
+  "version": "9.6.2",
+  "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+  "isolatedDirectoryContents": [
+    "asset.glb"
+  ],
+  "actorCount": 18,
+  "bounds": [
+    -0.2949999272823334,
+    0.295009046792984,
+    1.907348723406699e-09,
+    0.14708350598812103,
+    -3.814697180359872e-08,
+    0.03999999538064003
+  ],
+  "renders": [
+    {
+      "path": "01-canonical-front.png",
+      "sha256": "671b03ad2164ae64c2052cdda0954ce1e10e1f5330379b807a9357d58b5bf27c",
+      "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "label": "CANONICAL FRONT",
+      "cameraPosition": [
+        4.559755325317383e-06,
+        0.07354175394773488,
+        2.019999978616834
+      ],
+      "cameraTarget": [
+        4.559755325317383e-06,
+        0.07354175394773488,
+        0.019999978616834113
+      ],
+      "cameraUp": [
+        0,
+        1,
+        0
+      ],
+      "parallelScale": 0.1829027819633484
+    },
+    {
+      "path": "02-reverse.png",
+      "sha256": "c3196a22d990497eb1e7c19f1f378b0669ace9eb601f6be099e079e84882224a",
+      "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "label": "REVERSE",
+      "cameraPosition": [
+        4.559755325317383e-06,
+        0.07354175394773488,
+        -1.9800000213831659
+      ],
+      "cameraTarget": [
+        4.559755325317383e-06,
+        0.07354175394773488,
+        0.019999978616834113
+      ],
+      "cameraUp": [
+        0,
+        1,
+        0
+      ],
+      "parallelScale": 0.1829027819633484
+    },
+    {
+      "path": "03-oblique.png",
+      "sha256": "5dba2a85ddb34694a4d2e121f37cdc7e5586b03608215cdb951b225fd048388d",
+      "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "label": "OBLIQUE",
+      "cameraPosition": [
+        0.9000045597553253,
+        0.7235417539477349,
+        2.019999978616834
+      ],
+      "cameraTarget": [
+        4.559755325317383e-06,
+        0.07354175394773488,
+        0.019999978616834113
+      ],
+      "cameraUp": [
+        0,
+        1,
+        0
+      ],
+      "parallelScale": 0.1829027819633484
+    },
+    {
+      "path": "04-contact-detail.png",
+      "sha256": "b1262b766c91422aff102e8bcc03caf5288aacb4e0470d2c313f571b47f61da2",
+      "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "label": "CONTACT DETAIL",
+      "cameraPosition": [
+        0.337902854681015,
+        0.6735417539477349,
+        2.0219999802932147
+      ],
+      "cameraTarget": [
+        -0.11209714531898499,
+        0.07354175394773488,
+        0.021999980293214705
+      ],
+      "cameraUp": [
+        0,
+        1,
+        0
+      ],
+      "parallelScale": 0.07080107688903808
+    },
+    {
+      "path": "05-neutral-material.png",
+      "sha256": "8decd5a35cb497dcc249ee5b2277e13c94d1a7a02905f885d5b0756d63a00c4a",
+      "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "label": "NEUTRAL MATERIAL / CONTINUITY",
+      "cameraPosition": [
+        -0.14379382491111756,
+        0.6911917744374275,
+        2.0239999819695953
+      ],
+      "cameraTarget": [
+        0.10620617508888244,
+        0.09119177443742756,
+        0.023999981969595297
+      ],
+      "cameraUp": [
+        0,
+        1,
+        0
+      ],
+      "parallelScale": 0.06490098714828492
+    },
+    {
+      "path": "06-side.png",
+      "sha256": "33db33457d7eba08791f5e1aca119ad609a9255ac9f3babd5cb0f5438627fcc8",
+      "assetSha256": "9622a07177b1421675c607b4eabbd88a43f3831f7d23168fb94ad2dcee1f5eff",
+      "label": "SIDE PROFILE",
+      "cameraPosition": [
+        2.0000045597553253,
+        0.37354175394773487,
+        0.4699999786168341
+      ],
+      "cameraTarget": [
+        4.559755325317383e-06,
+        0.07354175394773488,
+        0.019999978616834113
+      ],
+      "cameraUp": [
+        0,
+        1,
+        0
+      ],
+      "parallelScale": 0.12980197429656984
+    }
+  ]
+}

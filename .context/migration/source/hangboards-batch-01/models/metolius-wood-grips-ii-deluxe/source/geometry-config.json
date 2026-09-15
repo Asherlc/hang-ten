@@ -1,0 +1,709 @@
+{
+  "slug": "metolius-wood-grips-ii-deluxe",
+  "name": "Metolius Wood Grips II Deluxe",
+  "revision": "WOOD005 / Deluxe, not Compact",
+  "material": "FSC wood; neutral untextured approximation",
+  "dimensionsMm": [
+    610,
+    216,
+    70
+  ],
+  "dimensionsClassification": [
+    "manufacturer",
+    "manufacturer",
+    "retailer rounded 7 cm; exact profile unconfirmed"
+  ],
+  "color": [
+    0.73,
+    0.58,
+    0.39
+  ],
+  "endRoundMm": 3,
+  "outlineRoundMm": 2.5,
+  "targetTriangles": 65000,
+  "voxelMm": 0.8,
+  "gridPhaseMm": [
+    0.137,
+    0.173,
+    0.113
+  ],
+  "profileYZ": [
+    [
+      0,
+      0
+    ],
+    [
+      -39,
+      0
+    ],
+    [
+      -43,
+      5
+    ],
+    [
+      -43,
+      59
+    ],
+    [
+      -48,
+      64
+    ],
+    [
+      -52,
+      64
+    ],
+    [
+      -55,
+      69
+    ],
+    [
+      -55,
+      121
+    ],
+    [
+      -61,
+      128
+    ],
+    [
+      -66,
+      128
+    ],
+    [
+      -70,
+      134
+    ],
+    [
+      -70,
+      187
+    ],
+    [
+      -68,
+      199
+    ],
+    [
+      -60,
+      209
+    ],
+    [
+      -45,
+      216
+    ],
+    [
+      0,
+      216
+    ]
+  ],
+  "outlineXZ": [
+    [
+      -296,
+      0
+    ],
+    [
+      296,
+      0
+    ],
+    [
+      305,
+      9
+    ],
+    [
+      305,
+      205
+    ],
+    [
+      297,
+      216
+    ],
+    [
+      247,
+      216
+    ],
+    [
+      238,
+      205
+    ],
+    [
+      81,
+      205
+    ],
+    [
+      69,
+      211
+    ],
+    [
+      -69,
+      211
+    ],
+    [
+      -81,
+      205
+    ],
+    [
+      -238,
+      205
+    ],
+    [
+      -247,
+      216
+    ],
+    [
+      -297,
+      216
+    ],
+    [
+      -305,
+      205
+    ],
+    [
+      -305,
+      9
+    ]
+  ],
+  "surfaceContacts": [
+    {
+      "id": "01-jug-left",
+      "label": "Diagram 1: outer jug, left",
+      "xRange": [
+        -306,
+        -240
+      ],
+      "yRange": [
+        -71,
+        0.1
+      ],
+      "zRange": [
+        186,
+        217
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ]
+    },
+    {
+      "id": "01-jug-right",
+      "label": "Diagram 1: outer jug, right",
+      "xRange": [
+        240,
+        306
+      ],
+      "yRange": [
+        -71,
+        0.1
+      ],
+      "zRange": [
+        186,
+        217
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ]
+    },
+    {
+      "id": "02-flat-stopper-left",
+      "label": "Diagram 2: 55 mm flat stopper, left",
+      "xRange": [
+        -238,
+        -80
+      ],
+      "yRange": [
+        -71,
+        0.1
+      ],
+      "zRange": [
+        194,
+        217
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "publishedGripLengthMm": 55
+    },
+    {
+      "id": "02-flat-stopper-right",
+      "label": "Diagram 2: 55 mm flat stopper, right",
+      "xRange": [
+        80,
+        238
+      ],
+      "yRange": [
+        -71,
+        0.1
+      ],
+      "zRange": [
+        194,
+        217
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "publishedGripLengthMm": 55
+    },
+    {
+      "id": "12-round-stopper-centre",
+      "label": "Diagram 12: 58 mm central round stopper",
+      "xRange": [
+        -79,
+        79
+      ],
+      "yRange": [
+        -71,
+        0.1
+      ],
+      "zRange": [
+        192,
+        217
+      ],
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "publishedGripLengthMm": 58
+    }
+  ],
+  "pockets": [
+    {
+      "holdId": "03-edge-left",
+      "x": -275,
+      "z": 161,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -39,
+      "displayDepthMm": 31,
+      "publishedDepthMm": 31,
+      "depthClassification": "published nominal",
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "04-three-finger-left",
+      "x": -170,
+      "z": 161,
+      "width": 78,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -38,
+      "displayDepthMm": 32,
+      "publishedDepthMm": 32,
+      "depthClassification": "published nominal",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "05-two-finger-left",
+      "x": -95,
+      "z": 161,
+      "width": 48,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -32,
+      "displayDepthMm": 38,
+      "publishedDepthMm": 38,
+      "depthClassification": "published nominal",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "03-edge-right",
+      "x": 275,
+      "z": 161,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -39,
+      "displayDepthMm": 31,
+      "publishedDepthMm": 31,
+      "depthClassification": "published nominal",
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "04-three-finger-right",
+      "x": 170,
+      "z": 161,
+      "width": 78,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -38,
+      "displayDepthMm": 32,
+      "publishedDepthMm": 32,
+      "depthClassification": "published nominal",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "05-two-finger-right",
+      "x": 95,
+      "z": 161,
+      "width": 48,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -32,
+      "displayDepthMm": 38,
+      "publishedDepthMm": 38,
+      "depthClassification": "published nominal",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "13-four-finger-centre",
+      "x": 0,
+      "z": 161,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -38,
+      "displayDepthMm": 32,
+      "publishedDepthMm": 32,
+      "depthClassification": "published nominal",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "06-edge-left",
+      "x": -275,
+      "z": 96,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -30,
+      "displayDepthMm": 25,
+      "publishedDepthMm": 25,
+      "depthClassification": "published nominal",
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "07-three-finger-left",
+      "x": -170,
+      "z": 96,
+      "width": 78,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -30,
+      "displayDepthMm": 25,
+      "publishedDepthMm": 25,
+      "depthClassification": "published nominal",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "08-two-finger-left",
+      "x": -95,
+      "z": 96,
+      "width": 48,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -27,
+      "displayDepthMm": 28,
+      "publishedDepthMm": 28,
+      "depthClassification": "published nominal",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "06-edge-right",
+      "x": 275,
+      "z": 96,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -30,
+      "displayDepthMm": 25,
+      "publishedDepthMm": 25,
+      "depthClassification": "published nominal",
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "07-three-finger-right",
+      "x": 170,
+      "z": 96,
+      "width": 78,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -30,
+      "displayDepthMm": 25,
+      "publishedDepthMm": 25,
+      "depthClassification": "published nominal",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "08-two-finger-right",
+      "x": 95,
+      "z": 96,
+      "width": 48,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -27,
+      "displayDepthMm": 28,
+      "publishedDepthMm": 28,
+      "depthClassification": "published nominal",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "14-four-finger-centre",
+      "x": 0,
+      "z": 96,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -30,
+      "displayDepthMm": 25,
+      "publishedDepthMm": 25,
+      "depthClassification": "published nominal",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "09-edge-left",
+      "x": -275,
+      "z": 31,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "10-three-finger-left",
+      "x": -170,
+      "z": 31,
+      "width": 78,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "11-two-finger-left",
+      "x": -95,
+      "z": 31,
+      "width": 48,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "09-edge-right",
+      "x": 275,
+      "z": 31,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "10-three-finger-right",
+      "x": 170,
+      "z": 31,
+      "width": 78,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "11-two-finger-right",
+      "x": 95,
+      "z": 31,
+      "width": 48,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    },
+    {
+      "holdId": "15-four-finger-centre",
+      "x": 0,
+      "z": 31,
+      "width": 110,
+      "height": 25,
+      "radius": 12.5,
+      "floorY": -24,
+      "displayDepthMm": 19,
+      "publishedDepthMm": 19,
+      "depthClassification": "published nominal",
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "lipRound": 2
+    }
+  ],
+  "mounts": [
+    {
+      "x": -215,
+      "z": 180,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": -215,
+      "z": 116,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": -215,
+      "z": 55,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": 215,
+      "z": 180,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": 215,
+      "z": 116,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    },
+    {
+      "x": 215,
+      "z": 55,
+      "radius": 2.5,
+      "evidenceRefs": [
+        "M-DIAGRAM-V2"
+      ],
+      "placementClassification": "manually photo-derived centre; not a measured drilling template"
+    }
+  ],
+  "limitations": [
+    "Overall width and height are manufacturer values. Projection 70 mm follows a rounded retailer listing, not a manufacturer dimensioned drawing.",
+    "The 26 physical contacts and nonuniform 31/32/38 mm and 25/25/28 mm rows are corroborated by the readable Deluxe numbered diagram M-DIAGRAM-V2. Six mounting bores are now present; centres are estimates, not a drilling template.",
+    "Tier profiles, outer-jug undercut, stopper curvature, pocket widths/heights and mounting centres are authored photo-derived estimates. The model does not claim a measured replica.",
+    "Top 55/58 mm labels are grip surface dimensions and are not treated as blind-cavity depths. External screws and wood grain are omitted."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "NO_SCREWHOLES_VARIANT",
+  "model": "Metolius Wood Grips II Deluxe",
+  "slug": "metolius-wood-grips-ii-deluxe",
+  "mountingHolesRemoved": true,
+  "originalMountCount": 0,
+  "currentMountCount": 0,
+  "glb": "metolius-wood-grips-ii-deluxe.glb",
+  "glbSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "triangleCount": 65000,
+  "objectCount": 27,
+  "notes": "Model rebuilt from packaged source with cfg[\"mounts\"]=[]"
+}

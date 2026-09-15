@@ -1,0 +1,14 @@
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+__________ test_moon_central_edges_are_open_shelves_not_closed_pills ___________
+
+    def test_moon_central_edges_are_open_shelves_not_closed_pills():
+        c=moon()
+        for hold in ('edge-22mm-centre','edge-18mm-centre'):
+>           assert hold not in [p['holdId'] for p in c['pockets']]
+E           AssertionError: assert 'edge-22mm-centre' not in ['edge-25mm-left', 'edge-20mm-left', 'edge-10mm-left', 'edge-08mm-left', 'edge-25mm-right', 'edge-20mm-right', ...]
+
+tests/test_source_corrections_v2.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_source_corrections_v2.py::test_moon_central_edges_are_open_shelves_not_closed_pills - AssertionError: assert 'edge-22mm-centre' not in ['edge-25mm-left', 'edge-20mm-left', 'edge-10mm-left', 'edge-08mm-left', 'edge-25mm-right', 'edge-20mm-right', ...]
+1 failed, 5 passed in 1.58s

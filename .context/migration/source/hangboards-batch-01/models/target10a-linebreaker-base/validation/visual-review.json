@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "assetSha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3",
+  "renderProvenance": "renders/render-provenance.json",
+  "method": "Visual inspection of actual reimported GLB renders; independent of structural tests",
+  "notes": [
+    "Six actual final-export views inspected via the hash-bound review sheet: canonical front, reverse, oblique, contact detail, neutral material close-up and side oblique.",
+    "Cavities, board-only reverse surfaces and continuous body/contact material are visible. Some decimation shading lines and angular authored profile sections remain visible; this is not a photorealistic or dimensional-fidelity certification.",
+    "No ropes, mounting hardware, logo, texture image, reference plane or environmental object appears in the production asset.",
+    "Four/seven/eight front recesses and four top contacts reviewed. Nineteen recesses plus four top contacts give 23 physical IDs. Upper angle handedness and per-position depth assignment remain unverified.",
+    "Fresh six-view render set reviewed during revision 2. The GLB is byte-identical to the preceding delivery; this review is not an assertion of newly resolved physical dimensions."
+  ],
+  "renderSha256": {
+    "01-canonical-front.png": "34967faacf0cc463b8042378a561d1a83da85f7ec2861c47fa51ab9563f493ed",
+    "02-reverse.png": "89d1ecf42209eb33e43d89623a0155d566680f7bae2c5f81aeac595665c75f00",
+    "03-oblique.png": "28b0a13d00a7ae18604d7274d818bae9ea43ef59664c4f30e2d3db0c67dc73b1",
+    "04-contact-detail.png": "2f075b165946817142a1d3154ef77065749db5cc1044a120706b0518776476fb",
+    "05-neutral-material.png": "fcb27779ab306685df4d3b31ed7078267349fde63a7b012887f2cff914f26b55",
+    "06-side.png": "48929931f3aa6593a5d6a93a6ee23ee67911cddf44141faa7cc9c75dfc29c9b2"
+  },
+  "fidelityCertification": false,
+  "unresolved": [
+    "The physical inventory is 19 front recesses plus four upper contacts: 23, not the unsupported earlier 24-contact count.",
+    "The manufacturer publishes depth families but no inspected source binds every family member to a numbered pocket. Positions are photo-supported; per-position depth assignments are explicitly authored estimates.",
+    "The two upper sloper angles are published as 32.5 and 22.5 degrees, but their handed assignment is not independently established. Left/right assignments here are display choices, not manufacturer claims.",
+    "The central 35-degree bar has an authored sloping cavity floor; its nominal 35 mm grip length is not certified as a 35 mm curved contact arc.",
+    "Tier relief, rear plane, local radii and hole centres are estimates. The 55 cm depth in a retailer listing is rejected as inconsistent with the manufacturer 55 mm value."
+  ],
+  "reviewDate": "2026-09-15",
+  "geometryChanged": false
+}

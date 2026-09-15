@@ -1,0 +1,62 @@
+[
+  {
+    "id": "P1",
+    "url": "https://www.target10a.com/magazin/2017/01/01/linebreaker-base/",
+    "publisher": "target10a",
+    "evidenceTier": "manufacturer",
+    "accessDate": "2026-09-15",
+    "supports": "Fixed BASE, 580 × 150 × 55 mm, approximately 1.7 kg, Yellow Poplar; two jugs, two different slopers, nine paired edge/pocket families and one centre sloper bar; six supplied mounting screws.",
+    "doesNotEstablish": "HTML open returned 403; indexed manufacturer text inspected. Numbered diagram not accessible; left/right sloper angle assignment unresolved.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P2",
+    "url": "https://www.target10a.com/de/linebreaker-boards/409-554-linebreaker-base-trainingsboard.html",
+    "publisher": "target10a",
+    "evidenceTier": "manufacturer",
+    "accessDate": "2026-09-15",
+    "supports": "Exact SKU talbBASE00000, fixed BASE; not AIRBASE.",
+    "doesNotEstablish": "Exact revision date and local curvature.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I1",
+    "url": "https://www.camp4.de/media/image/70/52/fd/linebreaker-base-front-1-big_600x600.jpg",
+    "publisher": "Camp4",
+    "evidenceTier": "retailer product photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Nineteen front recesses (4 upper, 7 middle, 8 lower), two outer top jugs and two intermediate top slopes; six mounting bores. Contact count is 23, not inherited earlier 24.",
+    "doesNotEstablish": "Unlabelled photo does not prove each depth-to-position assignment or sloper angle by side.",
+    "review": "actual image visually inspected",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P3",
+    "url": "https://www.camp4.de/target-10a/linebreaker-base/",
+    "publisher": "Camp4",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "580 × 150 × 55 mm; depth families 16/20/37 four-finger, 18/28/45 three-finger, 24/30/50 two-finger; 35-degree 35 mm central bar.",
+    "doesNotEstablish": "Exact per-position mapping not established by the list alone.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P4",
+    "url": "https://chalkr.de/linebreaker-base-trainingsboard.html",
+    "publisher": "Chalkr",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "EAN 4260501621043; six 5 mm mounting screws; stepped construction.",
+    "doesNotEstablish": "55 cm depth label is inconsistent with manufacturer 5.5 cm and physical photo; rejected as a decimal-place error.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  }
+]

@@ -1,0 +1,24 @@
+...F                                                                     [100%]
+=================================== FAILURES ===================================
+________________ test_every_hold_is_one_connected_surface_patch ________________
+
+    def test_every_hold_is_one_connected_surface_patch():
+        import numpy as np,trimesh
+        for d in active_models():
+            scene=trimesh.load(d/(d.name+'.glb'),force='scene',process=False)
+            for name,g in scene.geometry.items():
+                if name=='body':continue
+                v,inv=np.unique(np.asarray(g.vertices),axis=0,return_inverse=True)
+                m=trimesh.Trimesh(vertices=v,faces=inv[np.asarray(g.faces)],process=False)
+                groups=trimesh.graph.connected_components(m.face_adjacency,nodes=np.arange(len(m.faces)),min_len=1)
+>               assert len(groups)==1,(d.name,name,[len(x) for x in groups])
+E               AssertionError: ('escape-unlimited-board', 'hold-lower-right', [1406, 1])
+E               assert 2 == 1
+E                +  where 2 = len([array([934, 944, 943, ..., 465, 464, 463], shape=(1406,)), array([612])])
+
+tests/test_export_contract.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_export_contract.py::test_every_hold_is_one_connected_surface_patch - AssertionError: ('escape-unlimited-board', 'hold-lower-right', [1406, 1])
+assert 2 == 1
+ +  where 2 = len([array([934, 944, 943, ..., 465, 464, 463], shape=(1406,)), array([612])])
+1 failed, 3 passed in 0.80s
