@@ -63,7 +63,15 @@ the catalog's 33-contact keyset.
 blend through the explicit manifest/mapping, exported the USDZ, reopened it in
 an empty Blender scene, checked triangulated importer-visible material-bearing
 nodes, preserved bindings and bounds, and generated the hash-bound descriptor.
-The actual corrected source passes all ten bore-center ray intersections.
+The actual corrected source passes all ten bore-center ray intersections. On
+2026-09-15, `verify_promoted_usdz.py` also imported the exact shipped
+`Hangboards/metolius-contact/assets/primary.usdz` from an empty Blender scene
+after verifying SHA-256
+`b944c78e1621bb0fece926e2f8d45608c2d391c6311e8557010ad153b8bcaa59`
+against both the expected promotion hash and the shipped descriptor. Its
+retained `shipped-usdz-bore-validation.json` records all ten center rays as
+intersecting the imported nonselectable `bore_free_body_caps_001` node; it does
+not inspect a compiler staging asset or source blend.
 `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`
 and `status --root Hangboards` passed after promotion. The package has exactly
 `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; it has no
