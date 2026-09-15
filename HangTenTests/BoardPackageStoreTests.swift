@@ -58,7 +58,8 @@ final class BoardPackageStoreTests: XCTestCase {
 
     @MainActor
     func testOnDemandModelLoaderRetainsAccessForSceneLifetimeAndSupportsRepeatedLoads() async throws {
-        let fixture = try makeSceneModelFixtureBundle(
+        let fixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
             boardID: "fixture.scene-lifetime-\(UUID().uuidString.lowercased())"
         )
         defer { fixture.remove() }
@@ -103,12 +104,16 @@ final class BoardPackageStoreTests: XCTestCase {
         )
 
         for attempt in 1...2 {
-            var scene = await BoardModelLoader.load(
-                board: board,
-                presentation: presentation,
-                store: store,
-                resourceAccess: access
-            )
+            var scene = await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                makeBoardModelFixtureScene()
+            }) {
+                await BoardModelLoader.load(
+                    board: board,
+                    presentation: presentation,
+                    store: store,
+                    resourceAccess: access
+                )
+            }
 
             XCTAssertNotNil(scene, "load \(attempt)")
             XCTAssertEqual(
@@ -3669,35 +3674,6 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    /// Validation fixtures contain placeholder bytes; loader tests require a
-    /// real packaged model while retaining the production contact inventory.
-    private func makeSceneModelFixtureBundle(boardID: String) throws -> FixtureBundle {
-        let sourcePackageURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("Hangboards/metolius-prime-rib", isDirectory: true)
-        let fixture = try makeFixtureBundle { hangboardsURL in
-            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
-            let assetsURL = packageURL.appendingPathComponent("assets")
-            try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
-            for path in ["board.json", "assets/primary.model.json", "assets/primary.usdz"] {
-                try Data(contentsOf: sourcePackageURL.appendingPathComponent(path))
-                    .write(to: packageURL.appendingPathComponent(path))
-            }
-            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) {
-                $0["id"] = boardID
-            }
-        }
-        do {
-            let store = try BoardPackageStore(bundle: fixture.bundle)
-            XCTAssertEqual(store.boards.map(\.id), [boardID])
-            return fixture
-        } catch {
-            fixture.remove()
-            throw error
-        }
-    }
-
     private func fixtureBundle(schemaVersion: Int) throws -> Bundle {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
@@ -4594,6 +4570,22 @@ private struct FixtureBundle {
     func remove() {
         try? FileManager.default.removeItem(at: rootURL)
     }
+}
+
+private func makeBoardModelFixtureScene() -> SCNScene {
+    let scene = SCNScene()
+    for (nodeID, size, position) in [
+        ("Body", SIMD3<Float>(1, 1, 0.1), SIMD3<Float>(0.5, 0.5, 0.05)),
+        ("Left", SIMD3<Float>(0.3, 0.4, 0.1), SIMD3<Float>(0.25, 0.4, 0.05))
+    ] {
+        let geometry = SCNBox(width: CGFloat(size.x), height: CGFloat(size.y), length: CGFloat(size.z), chamferRadius: 0)
+        geometry.firstMaterial = SCNMaterial()
+        let node = SCNNode(geometry: geometry)
+        node.name = nodeID
+        node.simdPosition = position
+        scene.rootNode.addChildNode(node)
+    }
+    return scene
 }
 
 private final class TestBoardModelResourceRequest: BoardModelResourceRequesting {

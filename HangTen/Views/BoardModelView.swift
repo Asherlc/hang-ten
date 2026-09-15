@@ -149,6 +149,7 @@ enum BoardModelAsset {
     // Task-scoped synchronization for the decode lifetime regression. The
     // production decoder and model source remain unchanged by the test hook.
     @TaskLocal static var willDecodeForTesting: (@Sendable (URL) -> Void)?
+    @TaskLocal static var sceneLoaderForTesting: (@Sendable (URL) -> SCNScene?)?
     #endif
 
     static func load(media: BoardModelMedia, packageURL: URL) -> SCNScene? {
@@ -159,6 +160,11 @@ enum BoardModelAsset {
             return nil
         }
         // SceneKit can otherwise return an empty scene for a missing asset.
+        #if DEBUG
+        if let sceneLoaderForTesting {
+            return sceneLoaderForTesting(packageURL)
+        }
+        #endif
         return try? SCNScene(url: packageURL, options: [.convertToYUp: true])
     }
 
